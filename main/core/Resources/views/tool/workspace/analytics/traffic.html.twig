@@ -1,4 +1,4 @@
-{% extends 'ClarolineCoreBundle:Tool/workspace/analytics:analyticsTabs.html.twig' %}
+{% extends 'ClarolineCoreBundle:tool/workspace/analytics:analytics_tabs.html.twig' %}
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
@@ -21,7 +21,7 @@
 {% block analytics %}
     <div class="logs-container">
         {% if 0 < chartData|length %}
-            {% include 'ClarolineCoreBundle:Log:count_by_day_chart.html.twig' with {'actionName' : 'entries_per_day'} %}
+            {% include 'ClarolineCoreBundle:log:count_by_day_chart.html.twig' with {'actionName' : 'entries_per_day'} %}
             <br/><br/>
         {% endif %}
     </div>

@@ -25,12 +25,12 @@
                 <div class="pdf-contents-title">
                     {{ 'wiki_contents'|trans({},'icap_wiki') }}
                 </div>
-                {% include "IcapWikiBundle:Wiki:wikiContents.pdf.twig" with {'sections' : tree[0].__children, 'isAdmin' : isAdmin, 'delimeter' : '.', 'rootId' : tree[0].id } %}
+                {% include "IcapWikiBundle:wiki:wiki_contents.pdf.twig" with {'sections' : tree[0].__children, 'isAdmin' : isAdmin, 'delimeter' : '.', 'rootId' : tree[0].id } %}
             </div>
             <div class="clearfix"></div>
         </div>
         <div class="wiki-sections">
-            {% include "IcapWikiBundle:Wiki:wikiSections.pdf.twig" with {'sections' : tree[0].__children, 'wikiId' : _resource.id, 'isAdmin' : isAdmin, 'wikiMode' : _resource.mode, 'user' : user } %}
+            {% include "IcapWikiBundle:wiki:wiki_sections.pdf.twig" with {'sections' : tree[0].__children, 'wikiId' : _resource.id, 'isAdmin' : isAdmin, 'wikiMode' : _resource.mode, 'user' : user } %}
         </div>
     {% endif %}
 </body>

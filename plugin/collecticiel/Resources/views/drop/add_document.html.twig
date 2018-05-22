@@ -93,7 +93,7 @@
                         {% set activeClass = "" %}
                     {% endif %}
                     <div class="tab-pane {{ activeClass }}" id="file-tab">
-                        {% include 'InnovaCollecticielBundle:Document:documentForm.html.twig'
+                        {% include 'InnovaCollecticielBundle:document:document_form.html.twig'
                         with {'form':form_file, 'documentType': 'file'} %}
                     </div>
                 {% endif %}
@@ -105,7 +105,7 @@
                         {% set activeClass = "" %}
                     {% endif %}
                     <div class="tab-pane {{ activeClass }}" id="url-tab">
-                        {% include 'InnovaCollecticielBundle:Document:documentForm.html.twig'
+                        {% include 'InnovaCollecticielBundle:document:document_form.html.twig'
                         with {'form':form_url, 'documentType': 'url'} %}
                     </div>
                 {% endif %}
@@ -117,7 +117,7 @@
                         {% set activeClass = "" %}
                     {% endif %}
                     <div class="tab-pane {{ activeClass }}" id="resource-tab">
-                        {% include 'InnovaCollecticielBundle:Document:documentForm.html.twig'
+                        {% include 'InnovaCollecticielBundle:document:document_form.html.twig'
                         with {'form':form_resource, 'documentType': 'resource'} %}
                     </div>
                 {% endif %}
@@ -129,7 +129,7 @@
                         {% set activeClass = "" %}
                     {% endif %}
                     <div class="tab-pane {{ activeClass }}" id="text-tab">
-                        {% include 'InnovaCollecticielBundle:Document:documentForm.html.twig'
+                        {% include 'InnovaCollecticielBundle:document:document_form.html.twig'
                         with {'form':form_text, 'documentType': 'text'} %}
                     </div>
                 {% endif %}

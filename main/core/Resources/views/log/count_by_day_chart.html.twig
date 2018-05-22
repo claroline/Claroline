@@ -14,7 +14,7 @@
 {% if not app.request.isXmlHttpRequest() %}
     <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
 
-    {% include 'ClarolineCoreBundle:Layout:jqplot_script.html.twig' %}
+    {% include 'ClarolineCoreBundle:layout:jqplot_script.html.twig' %}
     {% javascripts debug=false output='js/corebundle/jqplot.count-by-day.min.js'
     'bundles/clarolinecore/js/jqplot/jqplot.colors.js'
     'packages/jqplot/src/plugins/jqplot.highlighter.js'

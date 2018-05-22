@@ -5,7 +5,7 @@
 </style>
 {% if isDesktop %}
     <div class="col-md-2 log_list_item">
-        {% include 'ClarolineCoreBundle:Log:view_list_item_workspace.html.twig' %}
+        {% include 'ClarolineCoreBundle:log:view_list_item_workspace.html.twig' %}
     </div>
 {% endif %}
 
@@ -19,11 +19,11 @@
 </div>
 
 <div class="col-md-2 log_list_item">
-    {% include 'ClarolineCoreBundle:Log:view_list_item_label.html.twig' %}
+    {% include 'ClarolineCoreBundle:log:view_list_item_label.html.twig' %}
 </div>
 
 <div class="col-md-2 log_list_item">
-    {% include 'ClarolineCoreBundle:Log:view_list_item_doer.html.twig' %}
+    {% include 'ClarolineCoreBundle:log:view_list_item_doer.html.twig' %}
 </div>
 
 {% if isDesktop %}
@@ -31,5 +31,5 @@
 {% else %}
     <div class='col-md-6 log_list_item'>
 {% endif %}
-    {% include 'ClarolineCoreBundle:Log:view_list_item_sentence.html.twig' %}
+    {% include 'ClarolineCoreBundle:log:view_list_item_sentence.html.twig' %}
 </div>

@@ -1,4 +1,4 @@
-{% extends 'ClarolineCoreBundle:Resource/logs:layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:resource/logs:layout.html.twig' %}
 
 {% set routeParams = filter|merge({'node': _resource.resourceNode.id}) %}
 {% block section_content %}
@@ -17,5 +17,5 @@
         }}
     {% endset %}
 
-    {% include 'ClarolineCoreBundle:Log:tool_view_by_user_list.html.twig' with {'filterFormAction': filterFormAction, 'pagination': pagination, 'isDesktop': false} %}
+    {% include 'ClarolineCoreBundle:log:tool_view_by_user_list.html.twig' with {'filterFormAction': filterFormAction, 'pagination': pagination, 'isDesktop': false} %}
 {% endblock %}

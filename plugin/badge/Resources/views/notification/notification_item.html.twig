@@ -1,4 +1,4 @@
-{% extends 'ClarolineCoreBundle:Notification:notification_item.html.twig' %}
+{% extends 'ClarolineCoreBundle:notification:notification_item.html.twig' %}
 
 {% block notificationText %}
     {% if notification.userId is not empty and notification.details.doer is defined %}
@@ -7,6 +7,6 @@
         <strong>{{ systemName }}</strong>
     {% endif %}
     {% if constant('Icap\\BadgeBundle\\Event\\Log\\LogBadgeAwardEvent::ACTION') == notification.actionKey %}
-        {% include 'IcapBadgeBundle:Notification:notification_badge_awarding.html.twig' %}
+        {% include 'IcapBadgeBundle:notification:notification_badge_awarding.html.twig' %}
     {% endif %}
 {% endblock %}

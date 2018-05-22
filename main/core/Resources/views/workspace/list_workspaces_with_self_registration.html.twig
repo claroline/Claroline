@@ -25,7 +25,7 @@
                     {% if tagWorkspaces[workspaceTagId] is defined %}
                         {% set relations = tagWorkspaces[workspaceTagId] %}
                         <div id="workspace-list-pager-{{ currentIndex }}" class="workspace-list-pager">
-                            {% include 'ClarolineCoreBundle:Workspace:workspaceListWithSelfRegByTagPager.html.twig' %}
+                            {% include 'ClarolineCoreBundle:workspace:workspace_list_with_self_reg_by_tag_pager.html.twig' %}
                         </div>
                     {% endif %}
                 </div>
@@ -103,7 +103,7 @@
                     </a>
                 </div>
                 <div id="collapse-all" class="panel-body collapse {% if tags|length == 0 %}in{% endif %}">
-                    {% include 'ClarolineCoreBundle:Workspace:workspaceCompleteListWithSelfRegPager.html.twig' %}
+                    {% include 'ClarolineCoreBundle:workspace:workspace_complete_list_with_self_reg_pager.html.twig' %}
                 </div>
             </div>
         {% endif %}

@@ -53,7 +53,7 @@
 
             {# Bloc "Rappel des instructions ..." #}
             {% if dropzone.instruction != null %}
-                {% include 'InnovaCollecticielBundle:Dropzone:recallInstruction.html.twig' %}
+                {% include 'InnovaCollecticielBundle:dropzone:recall_instruction.html.twig' %}
                 <br/>
             {% endif %}
 
@@ -61,7 +61,7 @@
             {% if dropzone.correctionInstruction|default
               and dropzone.correctionInstruction != ''
               and dropzone.correctionInstruction != '<p></p>' %}
-                {% include 'InnovaCollecticielBundle:Correction:correctionInstructions.html.twig' %}
+                {% include 'InnovaCollecticielBundle:correction:correction_instructions.html.twig' %}
                 <br/>
             {% endif %}
 
@@ -182,7 +182,7 @@
 
                 {# Partie "Ajout d'un commentaire" #}
                 <div class="form-group">
-                    {% include 'InnovaCollecticielBundle:Comment:addComment.html.twig' %}
+                    {% include 'InnovaCollecticielBundle:comment:add_comment.html.twig' %}
                 </div>
 
             {% endblock %}
@@ -201,14 +201,14 @@
             </div>
             {{ macros.flashBox() }}
             {# DROP STATUS BAR #}
-            {% include 'InnovaCollecticielBundle:Drop:dropStatus.html.twig' %}
+            {% include 'InnovaCollecticielBundle:drop:drop_status.html.twig' %}
 
             {% if dropzone.instruction != null %}
-                {% include 'InnovaCollecticielBundle:Dropzone:recallInstruction.html.twig' %}
+                {% include 'InnovaCollecticielBundle:dropzone:recall_instruction.html.twig' %}
             {% endif %}
 
             {% if dropzone.correctionInstruction|default and dropzone.correctionInstruction != ''  and dropzone.correctionInstruction != '<p></p>' %}
-                {% include 'InnovaCollecticielBundle:Correction:correctionInstructions.html.twig' %}
+                {% include 'InnovaCollecticielBundle:correction:correction_instructions.html.twig' %}
                 <br/>
             {% endif %}
 

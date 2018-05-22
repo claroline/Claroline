@@ -59,10 +59,10 @@
 
         {% if search == '' %}
             <div id="search-mode" search=""></div>
-            {% include 'ClarolineCoreBundle:Administration\\WorkspaceRegistration:registrationManagementCompleteWorkspacesList.html.twig' %}
+            {% include 'ClarolineCoreBundle:administration\\workspace_registration:registration_management_complete_workspaces_list.html.twig' %}
         {% else %}
             <div id="search-mode" search="{{ search }}"></div>
-            {% include 'ClarolineCoreBundle:Workspace:workspaceSearchedListRegistrationPager.html.twig' %}
+            {% include 'ClarolineCoreBundle:workspace:workspace_searched_list_registration_pager.html.twig' %}
         {% endif %}
 
         <br>

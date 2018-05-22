@@ -1,4 +1,4 @@
-{% extends 'ClarolineCoreBundle:Tool/workspace/logs:layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:tool/workspace/logs:layout.html.twig' %}
 {% set routeParams = filterForCSV|merge({'workspaceId': workspace.id}) %}
 {% block section_content %}
     {% set filterFormAction = path('claro_workspace_logs_show', {'workspaceId': workspace.id}) %}
@@ -16,5 +16,5 @@
         }}
     {% endset %}
 
-    {% include 'ClarolineCoreBundle:Log:tool_view_list.html.twig' with {'filterFormAction': filterFormAction, 'pagination': pagination, 'isDesktop': false} %}
+    {% include 'ClarolineCoreBundle:log:tool_view_list.html.twig' with {'filterFormAction': filterFormAction, 'pagination': pagination, 'isDesktop': false} %}
 {% endblock %}

@@ -44,7 +44,7 @@
                 {% if (tagWorkspaces[workspaceTagId] is defined and tagWorkspaces[workspaceTagId]|length > 0) %}
                     {% set relations = tagWorkspaces[workspaceTagId] %}
                     <div id="workspace-list-pager-{{ currentIndex }}" class="workspace-list-pager">
-                        {% include 'ClarolineCoreBundle:Workspace:workspaceListByTagRegistrationPager.html.twig' %}
+                        {% include 'ClarolineCoreBundle:workspace:workspace_list_by_tag_registration_pager.html.twig' %}
                     </div>
                 {% endif %}
 
@@ -85,7 +85,7 @@
                 </div>
                 <div id="collapse-all-non-personal" class="collapse {% if tags|length == 0 %}in{% endif %}">
                     <div id="workspace-list-pager-all" class="workspace-list-pager">
-                        {% include 'ClarolineCoreBundle:Workspace:nonPersonalWorkspacesListRegistrationPager.html.twig' %}
+                        {% include 'ClarolineCoreBundle:workspace:non_personal_workspaces_list_registration_pager.html.twig' %}
                     </div>
                 </div>
             </div>
@@ -112,7 +112,7 @@
                 </div>
                 <div id="collapse-all-personal" class="collapse {% if tags|length == 0 %}in{% endif %}">
                     <div id="workspace-list-pager-all" class="workspace-list-pager">
-                        {% include 'ClarolineCoreBundle:Workspace:personalWorkspacesListRegistrationPager.html.twig' %}
+                        {% include 'ClarolineCoreBundle:workspace:personal_workspaces_list_registration_pager.html.twig' %}
                     </div>
                 </div>
             </div>

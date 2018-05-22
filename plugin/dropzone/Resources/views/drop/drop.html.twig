@@ -33,11 +33,11 @@
         {{ macros.flashBox() }}
 
         {# DROP STATUS BAR #}
-        {% include 'IcapDropzoneBundle:Drop:dropStatus.html.twig' %}
+        {% include 'IcapDropzoneBundle:drop:drop_status.html.twig' %}
 
         {# INSTRUCTIONS #}
         {% if dropzone.instruction != null %}
-            {% include 'IcapDropzoneBundle:Dropzone:recallInstruction.html.twig' %}
+            {% include 'IcapDropzoneBundle:dropzone:recall_instruction.html.twig' %}
             <br/>
         {% endif %}
         <div class="panel panel-default">
@@ -54,7 +54,7 @@
 
         <br/>
         {# ADD DOCUMENT #}
-        {% include 'IcapDropzoneBundle:Drop:addDocument.html.twig' %}
+        {% include 'IcapDropzoneBundle:drop:add_document.html.twig' %}
 
         {# GLOBAL DROP FORM #}
         <form id='dropzone_global_drop_form' class="form-horizontal" method="POST"

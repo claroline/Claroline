@@ -30,14 +30,14 @@
         <h3 class="panel-title">{{ 'admin_analytics'|trans({}, 'platform') }}</h3>
     </div>
     <div class="panel-body" id="workspace-list-div">
-        {% include 'ClarolineCoreBundle:Administration\\Analytics:analytics_navbar.html.twig'%}
+        {% include 'ClarolineCoreBundle:administration\\analytics:analytics_navbar.html.twig'%}
 
         <div class="margin">
             <h1>{{ wsCount }} <span class="small"><i class="fa fa-book"></i> {{'workspaces'|trans({}, 'platform')}}</span></h1>
         </div>
         <div class="row">
             <div class="col-md-6">
-                {% include 'ClarolineCoreBundle:Log:resource_by_type_chart.html.twig' %}
+                {% include 'ClarolineCoreBundle:log:resource_by_type_chart.html.twig' %}
             </div>
             <div class="col-md-6">
                 <div id="analytics-resources-list" class="panel panel-default">

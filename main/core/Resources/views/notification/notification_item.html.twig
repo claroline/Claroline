@@ -1,4 +1,4 @@
-{% extends 'IcapNotificationBundle:Templates:notification.html.twig' %}
+{% extends 'IcapNotificationBundle:templates:notification.html.twig' %}
 {% set avatarUrlPrefix = asset('uploads/pictures/') %}
 
 {% block notificationText %}
@@ -8,23 +8,23 @@
         <strong>{{ systemName }}</strong>
     {% endif %}
     {% if constant('Claroline\\CoreBundle\\Event\\Log\\LogWorkspaceRoleChangeRightEvent::ACTION') == notification.actionKey %}
-        {% include 'ClarolineCoreBundle:Notification:notification_role_change_right.html.twig' %}
+        {% include 'ClarolineCoreBundle:notification:notification_role_change_right.html.twig' %}
     {% elseif constant('Claroline\\CoreBundle\\Event\\Log\\LogRoleSubscribeEvent::ACTION_WORKSPACE_USER') == notification.actionKey %}
-        {% include 'ClarolineCoreBundle:Notification:notification_workspace_subscribe_user.html.twig' %}
+        {% include 'ClarolineCoreBundle:notification:notification_workspace_subscribe_user.html.twig' %}
     {% elseif constant('Claroline\\CoreBundle\\Event\\Log\\LogRoleSubscribeEvent::ACTION_WORKSPACE_GROUP') == notification.actionKey %}
-        {% include 'ClarolineCoreBundle:Notification:notification_workspace_subscribe_group.html.twig' %}
+        {% include 'ClarolineCoreBundle:notification:notification_workspace_subscribe_group.html.twig' %}
     {% elseif constant('Claroline\\CoreBundle\\Event\\Log\\LogRoleSubscribeEvent::ACTION_GROUP') == notification.actionKey %}
-        {% include 'ClarolineCoreBundle:Notification:notification_subscribe_group.html.twig' %}
+        {% include 'ClarolineCoreBundle:notification:notification_subscribe_group.html.twig' %}
     {% elseif constant('Claroline\\CoreBundle\\Event\\Log\\LogRoleSubscribeEvent::ACTION_USER') == notification.actionKey %}
-        {% include 'ClarolineCoreBundle:Notification:notification_subscribe_user.html.twig' %}
+        {% include 'ClarolineCoreBundle:notification:notification_subscribe_user.html.twig' %}
     {% elseif constant('Claroline\\CoreBundle\\Event\\Log\\LogResourceCreateEvent::ACTION') == notification.actionKey %}
-        {% include 'ClarolineCoreBundle:Notification:notification_resource_creation.html.twig' %}
+        {% include 'ClarolineCoreBundle:notification:notification_resource_creation.html.twig' %}
     {% elseif constant('Claroline\\CoreBundle\\Event\\Log\\LogResourcePublishEvent::ACTION') == notification.actionKey %}
-        {% include 'ClarolineCoreBundle:Notification:notification_resource_publish.html.twig' %}
+        {% include 'ClarolineCoreBundle:notification:notification_resource_publish.html.twig' %}
     {% elseif constant('Claroline\\CoreBundle\\Event\\Log\\LogWorkspaceRegistrationQueueEvent::ACTION') == notification.actionKey %}
-        {% include 'ClarolineCoreBundle:Notification:notification_workspace_role_queue.html.twig' %}
+        {% include 'ClarolineCoreBundle:notification:notification_workspace_role_queue.html.twig' %}
     {% elseif constant('Claroline\\CoreBundle\\Event\\Log\\LogEditResourceTextEvent::ACTION') == notification.actionKey %}
-        {% include 'ClarolineCoreBundle:Notification:notification_text_update.html.twig' %}
+        {% include 'ClarolineCoreBundle:notification:notification_text_update.html.twig' %}
     {% endif %}
 
 {% endblock %}

@@ -1,4 +1,4 @@
-{% extends 'IcapNotificationBundle:Templates:notification.html.twig' %}
+{% extends 'IcapNotificationBundle:templates:notification.html.twig' %}
 
 {% block notificationText %}
     {% if notification.userId is not empty and notification.details.doer is defined %}
@@ -7,12 +7,12 @@
         <strong>{{ systemName }}</strong>
     {% endif %}
     {% if constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioRemoveGuideEvent::ACTION') == notification.actionKey %}
-        {% include 'IcapPortfolioBundle:Notification:notification_portfolio-guide.html.twig' %}
+        {% include 'IcapPortfolioBundle:notification:notification_portfolio-guide.html.twig' %}
     {% elseif constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioAddGuideEvent::ACTION') == notification.actionKey %}
-        {% include 'IcapPortfolioBundle:Notification:notification_portfolio-guide.html.twig' %}
+        {% include 'IcapPortfolioBundle:notification:notification_portfolio-guide.html.twig' %}
     {% elseif constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioAddViewerEvent::ACTION') == notification.actionKey or
                 constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioEditEvent::ACTION') == notification.actionKey
     %}
-        {% include 'IcapPortfolioBundle:Notification:notification_portfolio-viewer.html.twig' %}
+        {% include 'IcapPortfolioBundle:notification:notification_portfolio-viewer.html.twig' %}
     {% endif %}
 {% endblock %}

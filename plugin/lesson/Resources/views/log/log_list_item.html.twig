@@ -1,9 +1,9 @@
 {% set chapter %}
-    {% include 'IcapLessonBundle:Log:log_list_item_chapter.html.twig' %}
+    {% include 'IcapLessonBundle:log:log_list_item_chapter.html.twig' %}
 {% endset %}
 
 {% set resource %}
-    {% include 'ClarolineCoreBundle:Log:view_list_item_resource.html.twig' %}
+    {% include 'ClarolineCoreBundle:log:view_list_item_resource.html.twig' %}
 {% endset %}
 
 {% if constant('Icap\\LessonBundle\\Event\\Log\\LogChapterCreateEvent::ACTION') == log.action %}

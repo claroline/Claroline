@@ -130,7 +130,7 @@
     {# Quand on arrive dans un collecticiel (vue étudiant), on appelle dropStatus #}
     {# pour afficher la barre de progression que l'on ne veut plus #}
     {#
-    {% include 'InnovaCollecticielBundle:Drop:dropStatus.html.twig' %}
+    {% include 'InnovaCollecticielBundle:drop:drop_status.html.twig' %}
     #}
 
     {% if dropzone.instruction is not null and not dropzone.isNotStarted %}
@@ -240,7 +240,7 @@
                         {% endif %}
                         {% if dropzone.displayNotationToLearners %}
                             <div class="col-md-3">
-                                Note : {% include 'InnovaCollecticielBundle:Drop:dropsTotalGrade.html.twig' %}
+                                Note : {% include 'InnovaCollecticielBundle:drop:drops_total_grade.html.twig' %}
                             </div>
                         {% endif %}
                     </div>
@@ -254,7 +254,7 @@
                         {% endif %}
                         {% if dropzone.displayNotationToLearners %}
                             <div class="col-md-6">
-                                Note : {% include 'InnovaCollecticielBundle:Drop:dropsTotalGrade.html.twig' %}
+                                Note : {% include 'InnovaCollecticielBundle:drop:drops_total_grade.html.twig' %}
                             </div>
                         {% endif %}
                     </div>

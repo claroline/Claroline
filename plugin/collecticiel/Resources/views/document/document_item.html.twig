@@ -69,7 +69,7 @@
     {#  {% if not adminInnova %} #}
     {# InnovaERV : Ajout d'id "is-valide" afin d'exécuter le traitement pour l'affichage de "Demande adressée" #}
     <td class="{{ classArray }} centered centering-columnsComment-study" id="is-validate-{{ document.id }}">
-        {% include 'InnovaCollecticielBundle:Document:documentIsValidate.html.twig' %}
+        {% include 'InnovaCollecticielBundle:document:document_is_validate.html.twig' %}
     </td>
     {# {% endif %} #}
 
@@ -101,7 +101,7 @@
             {{ render(controller('InnovaCollecticielBundle:Document:renderReturnReceipt',
             {'documentId': document.id, 'dropzoneId': dropzone.id})) }} #}
 
-            {% include 'InnovaCollecticielBundle:Document:renderReturnReceipt.html.twig'
+            {% include 'InnovaCollecticielBundle:document:render_return_receipt.html.twig'
             with {'value': returnReceiptArray[document.id]}
             %}
         </td>
@@ -122,7 +122,7 @@
         <td class="{{ classArray }} centered centering-columnsComment-study">
             <div class="short-div">
                 {% if recordOrTransmitNotationsArray[document.id] == 1 %}
-                    {% include 'InnovaCollecticielBundle:Document:viewNotation.html.twig'
+                    {% include 'InnovaCollecticielBundle:document:view_notation.html.twig'
                         with {
                         'notationCommentDocument': notationCommentDocumentsArray[document.id],
                         'notationQualityDocument': notationQualityDocumentsArray[document.id],

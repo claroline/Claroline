@@ -4,11 +4,11 @@
         <button type="button" data-item-id="{{ item.id }}" class="close remove-sociamedia-wall-item"><span aria-hidden="true">&times;</span></button>
         {% endif %}
         {% if item.like is defined and item.like is not null %}
-            {% include "IcapSocialmediaBundle:Wall:likeItem.html.twig" with {"item":item} %}
+            {% include "IcapSocialmediaBundle:wall:like_item.html.twig" with {"item":item} %}
         {% elseif item.share is defined and item.share is not null %}
-            {% include "IcapSocialmediaBundle:Wall:shareItem.html.twig" with {"item":item} %}
+            {% include "IcapSocialmediaBundle:wall:share_item.html.twig" with {"item":item} %}
         {% elseif item.comment is defined and item.comment is not null %}
-            {% include "IcapSocialmediaBundle:Wall:commentItem.html.twig" with {"item":item} %}
+            {% include "IcapSocialmediaBundle:wall:comment_item.html.twig" with {"item":item} %}
         {% endif %}
         <br/>
         <small class="small">{{ item.creationDate|date("date_format"|trans({}, "icap_socialmedia")) }}</small>

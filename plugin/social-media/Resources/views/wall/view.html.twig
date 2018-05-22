@@ -14,7 +14,7 @@
             <div class="social-media-wall-list">
                 {% if pager.nbResults > 0 %}
                 <div class="jscroll-wall-list list-group">
-                    {% include "IcapSocialmediaBundle:Wall:itemList.html.twig" with {'pager':pager, 'userId':userId} %}
+                    {% include "IcapSocialmediaBundle:wall:item_list.html.twig" with {'pager':pager, 'userId':userId} %}
                 </div>
                 {% else %}
                 <div>{{ "no_wall_item"|trans({}, 'icap_socialmedia') }}</div>

@@ -14,7 +14,7 @@
 <form action="{{ path('inwicast_mediacenter_media_post', {'widgetId': widget.getId()}) }}" method="post"
       id="inwicast_claroline_plugin_diplay" class="widget-content-config-form">
     <link href="{{ themeAsset('claroline-distribution-plugin-inwicast-media-list.css') }}" type="text/css" rel="stylesheet"/>
-    {% include 'IcapInwicastBundle:Media:videosListTpl.html.twig' with {'medialist' : medialist}  %}
+    {% include 'IcapInwicastBundle:media:videos_list_tpl.html.twig' with {'medialist' : medialist}  %}
     <br/>
 
     <div class="row container-fluid">

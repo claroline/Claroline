@@ -47,13 +47,13 @@
                 </div>
             {% endif %}
 
-            {% include  "IcapNotificationBundle:Templates:pagination.html.twig" with {'pager' : pager, 'category' : category} %}
+            {% include  "IcapNotificationBundle:templates:pagination.html.twig" with {'pager' : pager, 'category' : category} %}
 
             {% block notification_widget %}
                 {% if pager.getNbResults() > 0 %}
                     <div class="notification-list-container">
                         <ul id="notification-list" class="list-group">
-                            {% include "IcapNotificationBundle:Templates:notificationList.html.twig" with {'pager' : pager, 'systemName' : systemName, 'notificationViews' : notificationViews } %}
+                            {% include "IcapNotificationBundle:templates:notification_list.html.twig" with {'pager' : pager, 'systemName' : systemName, 'notificationViews' : notificationViews } %}
                         </ul>
                     </div>
                 {% else %}
@@ -62,7 +62,7 @@
 
             {% endblock %}
 
-            {% include  "IcapNotificationBundle:Templates:pagination.html.twig" with {'pager' : pager, 'category' : category} %}
+            {% include  "IcapNotificationBundle:templates:pagination.html.twig" with {'pager' : pager, 'category' : category} %}
 
         </div>
     </div>

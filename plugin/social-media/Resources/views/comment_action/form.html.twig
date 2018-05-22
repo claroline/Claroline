@@ -11,7 +11,7 @@
                     <h4>{{ 'comments'|trans({}, 'icap_socialmedia') }} <small>[{{ pager.nbResults }}]</small> <br/><small>*{{ 'comments_are_public'|trans({}, "icap_socialmedia") }}</small></h4>
                     <div class="jscroll-comment-list-container">
                         <div class="jscroll-comment-list list-group">
-                            {% include "IcapSocialmediaBundle:CommentAction:commentList.html.twig" with {'pager':pager, 'resourceId':resourceId} %}
+                            {% include "IcapSocialmediaBundle:comment_action:comment_list.html.twig" with {'pager':pager, 'resourceId':resourceId} %}
                         </div>
                     </div>
                 {% else %}

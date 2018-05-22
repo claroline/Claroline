@@ -1,4 +1,4 @@
-{% extends 'IcapLessonBundle:Lesson:layout.html.twig' %}
+{% extends 'IcapLessonBundle:lesson:layout.html.twig' %}
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block lesson_content %}
     <a id='top'></a>
@@ -25,7 +25,7 @@
     <div id="lesson-main-container" class="row">
         {% if chapter is defined and chapter != null %}
             <div class="col-md-3" id='lesson_left_column'>
-                {% include 'IcapLessonBundle:Lesson:viewChild.html.twig' %}
+                {% include 'IcapLessonBundle:lesson:view_child.html.twig' %}
             </div>
             <div class="col-md-9">
                 <div class='panel panel-default' id='chapter_content'>

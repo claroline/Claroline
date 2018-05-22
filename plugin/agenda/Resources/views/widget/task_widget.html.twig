@@ -1,6 +1,6 @@
 <div>
     {% for event in listTasks %}
-            {% include 'ClarolineAgendaBundle:Widget:event_widget.html.twig' %}
+            {% include 'ClarolineAgendaBundle:widget:event_widget.html.twig' %}
         {% else %}
             <div><em>{{ 'no_task_now'|trans({}, 'agenda') }}</em></div>
     {% endfor %}

@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
 
 {% if filesImported is not defined or filesImported is empty %}
-    {% include 'ClarolineCoreBundle:Layout:jqplot_script.html.twig' %}
+    {% include 'ClarolineCoreBundle:layout:jqplot_script.html.twig' %}
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/jqplot/jqplot.colors.js') }}"></script>
     <script type="text/javascript" src="{{ asset('packages/jqplot/src/plugins/jqplot.pieRenderer.js') }}"></script>
     <script type="text/javascript" src="{{ asset('packages/jqplot/src/plugins/jqplot.canvasTextRenderer.js') }}"></script>

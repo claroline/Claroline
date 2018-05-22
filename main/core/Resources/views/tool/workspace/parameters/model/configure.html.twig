@@ -47,7 +47,7 @@
                             </thead>
                             <tbody id="table-user-body">
                             {% for user in model.getUsers() %}
-                                {% include "ClarolineCoreBundle:Tool\\workspace\\parameters\\model:userRow.html.twig" with {'user': user, 'model': model} %}
+                                {% include "ClarolineCoreBundle:tool\\workspace\\parameters\\model:user_row.html.twig" with {'user': user, 'model': model} %}
                             {% endfor %}
                             </tbody>
                         </table>
@@ -62,7 +62,7 @@
                             </thead>
                             <tbody id="table-group-body">
                             {% for group in model.getGroups() %}
-                                {% include "ClarolineCoreBundle:Tool\\workspace\\parameters\\model:groupRow.html.twig" with {'group': group, 'model': model} %}
+                                {% include "ClarolineCoreBundle:tool\\workspace\\parameters\\model:group_row.html.twig" with {'group': group, 'model': model} %}
                             {% endfor %}
                             </tbody>
                         </table>
@@ -73,7 +73,7 @@
                 <button id="add-resnode-link" class="btn btn-primary margin-bottom-md">{{ 'link'|trans({}, 'platform') }}</button>
                 <ul class="list-group" id="list-resnode-link">
                     {% for link in links %}
-                        {% include "ClarolineCoreBundle:Tool\\workspace\\parameters\\model:resourceElement.html.twig"
+                        {% include "ClarolineCoreBundle:tool\\workspace\\parameters\\model:resource_element.html.twig"
                         with {'name': link.getResourceNode().getName(), 'resourceModelId': link.getId()} %}
                     {% endfor %}
                 </ul>
@@ -82,7 +82,7 @@
                 <button id="add-resnode-copy" class="btn btn-primary margin-bottom-md">{{ 'copy'|trans({}, 'platform') }}</button>
                 <ul class="list-group" id="list-resnode-copy">
                     {% for copy in copied %}
-                        {% include "ClarolineCoreBundle:Tool\\workspace\\parameters\\model:resourceElement.html.twig"
+                        {% include "ClarolineCoreBundle:tool\\workspace\\parameters\\model:resource_element.html.twig"
                         with {'name': copy.getResourceNode().getName(), 'resourceModelId': copy.getId()} %}
                     {% endfor %}
                 </ul>
@@ -92,7 +92,7 @@
                         class="btn btn-primary margin-bottom-md">{{ 'tab'|trans({}, 'platform') }}</button>
                 <div id="tab-list">
                     {% for tab in model.getHomeTabs() %}
-                        {% include "ClarolineCoreBundle:Tool\\workspace\\parameters\\model:tabElement.html.twig"
+                        {% include "ClarolineCoreBundle:tool\\workspace\\parameters\\model:tab_element.html.twig"
                         with {'name': tab.getName(), 'homeTabId': tab.getId(), 'modelId': model.getId()} %}
                     {% endfor %}
                 </div>

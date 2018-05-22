@@ -127,7 +127,7 @@
         </div>
     {% endif %}
 
-    {% include 'IcapDropzoneBundle:Drop:dropStatus.html.twig' %}
+    {% include 'IcapDropzoneBundle:drop:drop_status.html.twig' %}
 
     {% if dropzone.instruction is not null and not dropzone.isNotStarted %}
         <hr/>
@@ -232,7 +232,7 @@
                         {% endif %}
                         {% if dropzone.displayNotationToLearners %}
                             <div class="col-md-3">
-                                Note : {% include 'IcapDropzoneBundle:Drop:dropsTotalGrade.html.twig' %}
+                                Note : {% include 'IcapDropzoneBundle:drop:drops_total_grade.html.twig' %}
                             </div>
                         {% endif %}
                     </div>
@@ -246,7 +246,7 @@
                         {% endif %}
                         {% if dropzone.displayNotationToLearners %}
                             <div class="col-md-6">
-                                Note : {% include 'IcapDropzoneBundle:Drop:dropsTotalGrade.html.twig' %}
+                                Note : {% include 'IcapDropzoneBundle:drop:drops_total_grade.html.twig' %}
                             </div>
                         {% endif %}
                     </div>

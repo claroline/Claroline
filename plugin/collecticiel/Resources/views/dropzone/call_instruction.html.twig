@@ -1,12 +1,12 @@
 {# Bloc "Rappel des instructions ..." #}
 {% if not adminInnova %}
     {% if dropzone.instruction != null %}
-        {% include 'InnovaCollecticielBundle:Dropzone:recallInstruction.html.twig' %}
+        {% include 'InnovaCollecticielBundle:dropzone:recall_instruction.html.twig' %}
     {% endif %}
 {% else %}
     {# Bloc "Rappel des instructions ..." #}
     {% if dropzone.instruction != null %}
-        {% include 'InnovaCollecticielBundle:Dropzone:recallInstructionShareSpaces.html.twig' %}
+        {% include 'InnovaCollecticielBundle:dropzone:recall_instruction_share_spaces.html.twig' %}
     {% endif %}
 {% endif %}
 <br/>
@@ -15,6 +15,6 @@
 {% if dropzone.correctionInstruction|default
   and dropzone.correctionInstruction != ''
   and dropzone.correctionInstruction != '<p></p>' %}
-    {% include 'InnovaCollecticielBundle:Correction:correctionInstructions.html.twig' %}
+    {% include 'InnovaCollecticielBundle:correction:correction_instructions.html.twig' %}
     <br/>
 {% endif %}

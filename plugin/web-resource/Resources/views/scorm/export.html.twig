@@ -1,4 +1,4 @@
-{% extends "ClarolineScormBundle:Export:layout.html.twig" %}
+{% extends "ClarolineScormBundle:export:layout.html.twig" %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -12,7 +12,7 @@
 
 {% block javascripts_header %}
     {{ parent() }}
-    {% include "ClarolineWebResourceBundle:Layout:javascripts_header.html.twig" %}
+    {% include "ClarolineWebResourceBundle:layout:javascripts_header.html.twig" %}
 {% endblock %}
 
 {% set absolutePath = '../files/' ~ path %}
@@ -50,5 +50,5 @@
     <script src="../commons/translator.js"></script>
     <script src="../translations/platform.js"></script>
 
-    {% include "ClarolineWebResourceBundle:Layout:javascripts.html.twig" %}
+    {% include "ClarolineWebResourceBundle:layout:javascripts.html.twig" %}
 {% endblock %}

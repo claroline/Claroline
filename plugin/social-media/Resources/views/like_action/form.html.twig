@@ -21,7 +21,7 @@
                 {% if pager.nbResults > 0 %}
                 <h4>{{ 'people_who_like_this'|trans({}, 'icap_socialmedia') }} <small>[{{ pager.nbResults }}]</small></h4>
                 <div class="jscroll-like-list list-group">
-                    {% include "IcapSocialmediaBundle:LikeAction:likeList.html.twig" with {'pager':pager, 'parameters':{'page':pager.hasNextPage?pager.getNextPage:0, 'resourceId':resourceId}}%}
+                    {% include "IcapSocialmediaBundle:like_action:like_list.html.twig" with {'pager':pager, 'parameters':{'page':pager.hasNextPage?pager.getNextPage:0, 'resourceId':resourceId}}%}
                 </div>
                 {% else %}
                 <div>{{ "no_like"|trans({}, 'icap_socialmedia') }}</div>

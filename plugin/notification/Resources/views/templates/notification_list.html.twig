@@ -2,6 +2,6 @@
     {% if notificationViews[notificationViewer.id] is defined %}
         {{ notificationViews[notificationViewer.id]|raw }}
     {% else %}
-        {% include "IcapNotificationBundle:Templates:notification.html.twig" with {'notification' : notificationViewer.notification, 'status' : notificationViewer.status, 'systemName' : systemName } %}
+        {% include "IcapNotificationBundle:templates:notification.html.twig" with {'notification' : notificationViewer.notification, 'status' : notificationViewer.status, 'systemName' : systemName } %}
     {% endif %}
 {% endfor %}

@@ -37,7 +37,7 @@
         <h4>{{ 'select_users_for_registration_to_workspace'|trans({}, 'platform') }}</h4>
         <br>
 
-        {% include 'ClarolineCoreBundle:Administration\\WorkspaceRegistration:registrationManagementSelectedWorkspacesAndRoles.html.twig' %}
+        {% include 'ClarolineCoreBundle:administration\\workspace_registration:registration_management_selected_workspaces_and_roles.html.twig' %}
 
         <br>
         <div class="search-bar row">
@@ -61,7 +61,7 @@
 
         <div id="pager-block">
             <div id="list-pager" class="list-pager">
-                {% include 'ClarolineCoreBundle:Administration\\WorkspaceRegistration:userListPager.html.twig' %}
+                {% include 'ClarolineCoreBundle:administration\\workspace_registration:user_list_pager.html.twig' %}
             </div>
         </div>
         <button class="btn btn-default subscribe-subjects-button" disabled="disabled">

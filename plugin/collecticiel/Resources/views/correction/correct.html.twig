@@ -57,10 +57,10 @@
             <!-- InnovaERV : ajout du traitement car les onglets ne sont pas identiques -->
             <!-- suivant si on est ADMIN ou pas -->
             {% if adminInnova %}
-                {% include "InnovaCollecticielBundle:Dropzone:editAdmin.html.twig" %}
+                {% include "InnovaCollecticielBundle:dropzone:edit_admin.html.twig" %}
             {% else %}
                 <!-- (Mon) Espace collecticiel -->
-                {% include "InnovaCollecticielBundle:Dropzone:editNotAdmin.html.twig" %}
+                {% include "InnovaCollecticielBundle:dropzone:edit_not_admin.html.twig" %}
             {% endif %}
         </ul>
 
@@ -91,13 +91,13 @@
 {#           <br/> #}
 
             {# Bloc "Rappel des instructions ..." #}
-            {% include 'InnovaCollecticielBundle:Dropzone:callInstruction.html.twig' %}
+            {% include 'InnovaCollecticielBundle:dropzone:call_instruction.html.twig' %}
 
             {# Bloc "Instructions aux correcteurs ..." #}
             {% if dropzone.correctionInstruction|default
               and dropzone.correctionInstruction != ''
               and dropzone.correctionInstruction != '<p></p>' %}
-                {% include 'InnovaCollecticielBundle:Correction:correctionInstructions.html.twig' %}
+                {% include 'InnovaCollecticielBundle:correction:correction_instructions.html.twig' %}
                 <br/>
             {% endif %}
 
@@ -222,7 +222,7 @@
 
                 {# Partie "Ajout d'un commentaire" #}
                 <div class="form-group">
-                    {% include 'InnovaCollecticielBundle:Comment:addComment.html.twig' %}
+                    {% include 'InnovaCollecticielBundle:comment:add_comment.html.twig' %}
                 </div>
 
             {% endblock %}
@@ -241,14 +241,14 @@
             </div>
             {{ macros.flashBox() }}
             {# DROP STATUS BAR #}
-            {% include 'InnovaCollecticielBundle:Drop:dropStatus.html.twig' %}
+            {% include 'InnovaCollecticielBundle:drop:drop_status.html.twig' %}
 
             {% if dropzone.instruction != null %}
-                {% include 'InnovaCollecticielBundle:Dropzone:recallInstruction.html.twig' %}
+                {% include 'InnovaCollecticielBundle:dropzone:recall_instruction.html.twig' %}
             {% endif %}
 
             {% if dropzone.correctionInstruction|default and dropzone.correctionInstruction != ''  and dropzone.correctionInstruction != '<p></p>' %}
-                {% include 'InnovaCollecticielBundle:Correction:correctionInstructions.html.twig' %}
+                {% include 'InnovaCollecticielBundle:correction:correction_instructions.html.twig' %}
                 <br/>
             {% endif %}
 

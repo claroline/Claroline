@@ -1,4 +1,4 @@
-{% extends "InnovaCollecticielBundle:Dropzone:edit.html.twig" %}
+{% extends "InnovaCollecticielBundle:dropzone:edit.html.twig" %}
 
 {# Gestion des onglets #}
 {% block collecticiel_demandes_active %}active{% endblock %}
@@ -8,7 +8,7 @@
 
     <!-- ERV/La conformation de la suppression est à demander -->
     <!-- ERV/Suppression "Aide sur le mode d'évaluation par les pairs" -->
-    <!-- {% include 'InnovaCollecticielBundle:Drop:peerReviewHelper.html.twig' %} -->
+    <!-- {% include 'InnovaCollecticielBundle:drop:peer_review_helper.html.twig' %} -->
 
     <!-- Copies terminées en attente de correction(s) -->
     <!-- <h3>{{ 'Awaiting for correction copies'|trans({}, 'innova_collecticiel') }}</h3> -->
@@ -31,7 +31,7 @@
     {% set AwaitingMode = true %}
 
     {% if pager.nbResults != 0 %}
-        {% include 'InnovaCollecticielBundle:Drop:Listing/dropsListing.html.twig' %}
+        {% include 'InnovaCollecticielBundle:drop:listing/drops_listing.html.twig' %}
     {% endif %}
 
     <div class="container row">

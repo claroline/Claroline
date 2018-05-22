@@ -233,7 +233,7 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
             {% for document in drop.documents %}
                 {% if (document.validate == 1) %}
                     {# Séparation de l'affichage de la vue. InnovaERV #}
-                    {% include 'InnovaCollecticielBundle:Drop:Listing/dropsListingList.html.twig'
+                    {% include 'InnovaCollecticielBundle:drop:listing/drops_listing_list.html.twig'
                         with {
                         'maximumNotation' : maximumNotation,
                         'notationDocument' : notationDocuments[document.id],

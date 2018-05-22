@@ -19,14 +19,14 @@
 
 <div class='logs-list'>
     <div class='row'>
-        {% include 'ClarolineCoreBundle:Log:view_list_item_header.html.twig' with {'isDesktop': isDesktop} %}
+        {% include 'ClarolineCoreBundle:log:view_list_item_header.html.twig' with {'isDesktop': isDesktop} %}
     </div>
     {% for log in logs %}
     <div class='row {% if loop.index is divisibleby(2) %}row-odd{% else %}row-even{% endif %}'>
         {% if listItemViews[log.getId()] is defined %}
-            {% include 'ClarolineCoreBundle:Log:view_list_item.html.twig' with {'isDesktop': isDesktop, 'listItemView': listItemViews[log.getId()]} %}
+            {% include 'ClarolineCoreBundle:log:view_list_item.html.twig' with {'isDesktop': isDesktop, 'listItemView': listItemViews[log.getId()]} %}
         {% else %}
-            {% include 'ClarolineCoreBundle:Log:view_list_item.html.twig' with {'isDesktop': isDesktop} %}
+            {% include 'ClarolineCoreBundle:log:view_list_item.html.twig' with {'isDesktop': isDesktop} %}
         {% endif %}
     </div>
     {% endfor %}

@@ -59,7 +59,7 @@
     <td class="centered centering-columns">
         {# Afficher ici la valeur "Devoirs à corriger" modifiée en "Etat" #}
         <div class="btn-group">
-            {% include 'InnovaCollecticielBundle:Document:documentsNbTextToRead.html.twig' %}
+            {% include 'InnovaCollecticielBundle:document:documents_nb_text_to_read.html.twig' %}
         </div>
     </td>
     {% endif %}
@@ -93,7 +93,7 @@
             <td class="centered centering-columnsAR">
                 <div class="btn-group">
                     {# Afficher ici la valeur de l'accusé de réception #}
-                    {% include 'InnovaCollecticielBundle:Document:returnReceipt.html.twig' %}
+                    {% include 'InnovaCollecticielBundle:document:return_receipt.html.twig' %}
                 </div>
             </td>
         {% endif %}
@@ -102,9 +102,9 @@
         {% if dropzone.evaluation == 1  %}
             <td class="centered centering-columnsAR">
                 <div class="btn-group">
-                    {% include 'InnovaCollecticielBundle:Document:modalDisplayNotation.html.twig' %}
+                    {% include 'InnovaCollecticielBundle:document:modal_display_notation.html.twig' %}
                     {# Afficher ici la valeur de la notation #}
-                    {% include 'InnovaCollecticielBundle:Document:notation.html.twig' 
+                    {% include 'InnovaCollecticielBundle:document:notation.html.twig'
                         with {
                         'recordOrTransmitNotation': recordOrTransmitNotation,
                         'notationDocument': notationDocument,
@@ -122,7 +122,7 @@
         {% if dropzone.evaluation == 1  %}
             <td class="centered centering-columnsAR" id="is-transmit-{{ document.id }}">
                 <div class="btn-group">
-                    {% include 'InnovaCollecticielBundle:Document:documentIsTransmit.html.twig'
+                    {% include 'InnovaCollecticielBundle:document:document_is_transmit.html.twig'
                         with {
                         'notationScaleDocument' : notationScaleDocument,
                         'notationDocument': notationDocuments[document.id]
@@ -136,7 +136,7 @@
     <td class="centered no-sort sorting_disabled">
     <div>
         {# Affiche de la case à cocher en étant "coché" ou "décoche". Demande JJQ. InnovaERV #}
-        {% include 'InnovaCollecticielBundle:Document:inputReturnReceipt.html.twig' %}
+        {% include 'InnovaCollecticielBundle:document:input_return_receipt.html.twig' %}
     </div>
     </td>
 </tr>

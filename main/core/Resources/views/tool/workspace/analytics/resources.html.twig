@@ -1,4 +1,4 @@
-{% extends 'ClarolineCoreBundle:Tool/workspace/analytics:analyticsTabs.html.twig' %}
+{% extends 'ClarolineCoreBundle:tool/workspace/analytics:analytics_tabs.html.twig' %}
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
@@ -23,7 +23,7 @@
         {% if 0 < resourceCount|length %}
             <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
 
-            {% include 'ClarolineCoreBundle:Layout:jqplot_script.html.twig' %}
+            {% include 'ClarolineCoreBundle:layout:jqplot_script.html.twig' %}
             {% javascripts debug=false output='js/corebundle/jqplot.resources.min.js'
             'bundles/clarolinecore/js/jqplot/jqplot.colors.js'
             'packages/jqplot/src/plugins/jqplot.highlighter.js'
@@ -37,7 +37,7 @@
             {% endjavascripts %}
             <div class="row">
                 <div class="col-md-6">
-                    {% include 'ClarolineCoreBundle:Log:resource_by_type_chart.html.twig' with {'filesImported' : true, 'resourceCount' : resourceCount, 'chartHeight' : 400, 'numberRows' : 4} %}
+                    {% include 'ClarolineCoreBundle:log:resource_by_type_chart.html.twig' with {'filesImported' : true, 'resourceCount' : resourceCount, 'chartHeight' : 400, 'numberRows' : 4} %}
                 </div>
                 <div class="col-md-6">
                     <div id="analytics-resources-list" class="panel panel-default">

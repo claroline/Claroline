@@ -80,7 +80,7 @@ notationQualityDocumentsArray, notationAssessorDocumentsArray, recordOrTransmitN
                     <tbody>
                         {% set maximumNotation = dropzone.maximumNotation %}
                         {% for index, document in drop.documents %}
-                            {% include 'InnovaCollecticielBundle:Document:documentItem.html.twig'
+                            {% include 'InnovaCollecticielBundle:document:document_item.html.twig'
                             with {
                                     'returnReceiptArray': returnReceiptArray,
                                     'teacherCommentDocArray': teacherCommentDocArray,

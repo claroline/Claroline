@@ -55,7 +55,7 @@
         <h3 class="panel-title">{{ 'admin_analytics'|trans({}, 'platform') }}</h3>
     </div>
     <div class="panel-body" id="workspace-list-div">
-        {% include 'ClarolineCoreBundle:Administration\\Analytics:analytics_navbar.html.twig'%}
+        {% include 'ClarolineCoreBundle:administration\\analytics:analytics_navbar.html.twig'%}
         <div class="margin">
             <h1>{{activeUsers}} <span class="small">{{'users_connected_once'|trans({}, 'platform')}}</span></h1>
         </div>
@@ -82,7 +82,7 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {% include 'ClarolineCoreBundle:Layout:jqplot_script.html.twig' %}
+    {% include 'ClarolineCoreBundle:layout:jqplot_script.html.twig' %}
     {% javascripts debug=false output='js/corebundle/jqplot.analytics-connections.min.js'
     'bundles/clarolinecore/js/jqplot/jqplot.colors.js'
     'packages/jqplot/src/plugins/jqplot.highlighter.js'

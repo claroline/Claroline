@@ -297,19 +297,19 @@ Below is given the code of this view:
 
 ```php
 {% set doer %}
-    {% include 'ClarolineCoreBundle:Log:view_list_item_doer.html.twig' %}
+    {% include 'ClarolineCoreBundle:log:view_list_item_doer.html.twig' %}
 {% endset %}
 
 {% set blog %}
-    {% include 'ICAPBlogBundle:Log:log_list_item_blog.html.twig' %}
+    {% include 'ICAPBlogBundle:log:log_list_item_blog.html.twig' %}
 {% endset %}
 
 {% set post %}
-    {% include 'ICAPBlogBundle:Log:log_list_item_post.html.twig' %}
+    {% include 'ICAPBlogBundle:log:log_list_item_post.html.twig' %}
 {% endset %}
 
 {% set resource %}
-    {% include 'ClarolineCoreBundle:Log:view_list_item_resource.html.twig' %}
+    {% include 'ClarolineCoreBundle:log:view_list_item_resource.html.twig' %}
 {% endset %}
 
 {% if constant('ICAP\\BlogBundle\\Event\\Log\\LogPostCreateEvent::ACTION') == log.action %}
@@ -352,12 +352,12 @@ The associated view is the **log_details.html.twig** and its code is given
 below:
 
 ```php
-{% extends 'ClarolineCoreBundle:Log:view_details.html.twig' %}
+{% extends 'ClarolineCoreBundle:log:view_details.html.twig' %}
 
 {% block logDetailsContext %}
     {{ parent() }}
     {% if constant('ICAP\\BlogBundle\\Event\\Log\\LogPostCreateEvent::ACTION') == log.action %}
-        {% include 'ICAPBlogBundle:Log:log_details_post.html.twig' %}
+        {% include 'ICAPBlogBundle:log:log_details_post.html.twig' %}
     {% endif %}
 {% endblock %}
 ```

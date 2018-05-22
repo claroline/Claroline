@@ -1,4 +1,4 @@
-{% extends "InnovaCollecticielBundle:Drop:dropsByBase.html.twig" %}
+{% extends "InnovaCollecticielBundle:drop:drops_by_base.html.twig" %}
 
 {% block  drops_examiners_active %} active {% endblock %}
 {% block drops_examiners_link %} # {% endblock %}
@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block dropzone_content_drops_by_beforeTitle %}
-    {% include 'InnovaCollecticielBundle:Drop:peerReviewHelper.html.twig' %}
+    {% include 'InnovaCollecticielBundle:drop:peer_review_helper.html.twig' %}
 {% endblock %}
 
 {% block dropzone_content_drops_by_default %}
@@ -45,7 +45,7 @@
 
 {% block dropzone_content_drops_by_Listing %}
 
-    {% include 'InnovaCollecticielBundle:Drop:Listing/examinersListing.html.twig' %}
+    {% include 'InnovaCollecticielBundle:drop:listing/examiners_listing.html.twig' %}
 {% endblock %}
 
 {% block dropzone_content_drops_by_pager %}

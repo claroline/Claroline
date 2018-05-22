@@ -1,6 +1,6 @@
-{% extends 'IcapBadgeBundle:Tool:Workspace/layout.html.twig' %}
+{% extends 'IcapBadgeBundle:tool:workspace/layout.html.twig' %}
 
-{% form_theme form 'IcapBadgeBundle:Form:rules.html.twig' %}
+{% form_theme form 'IcapBadgeBundle:form:rules.html.twig' %}
 
 {% trans_default_domain "icap_badge" %}
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
@@ -151,7 +151,7 @@
                         {{ awardButtons.awardButtons(badge.slug) }}
                     </p>
                 {% endif %}
-                {% include 'IcapBadgeBundle:Tool:Workspace/recalculate.modal.html.twig' %}
+                {% include 'IcapBadgeBundle:tool:workspace/recalculate.modal.html.twig' %}
             </div>
             <div id="award_form_container">
                 <h3 class="sub-section-header">
@@ -299,7 +299,7 @@
                     </a>
                 </div>
                 {% if 0 < pager.currentPageResults|length %}
-                    {% include 'IcapBadgeBundle:Tool:Workspace/unaward.modal.html.twig' %}
+                    {% include 'IcapBadgeBundle:tool:workspace/unaward.modal.html.twig' %}
                 {% endif %}
             </form>
         </div>

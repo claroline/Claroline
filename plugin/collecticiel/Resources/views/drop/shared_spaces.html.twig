@@ -1,4 +1,4 @@
-{% extends "InnovaCollecticielBundle:Dropzone:edit.html.twig" %}
+{% extends "InnovaCollecticielBundle:dropzone:edit.html.twig" %}
 
 {# Gestion des onglets #}
 {% block collecticiel_shared_active %}active{% endblock %}
@@ -8,7 +8,7 @@
 
     <!-- ERV/La conformation de la suppression est à demander -->
     <!-- ERV/Suppression "Aide sur le mode d'évaluation par les pairs" -->
-    <!-- {% include 'InnovaCollecticielBundle:Drop:peerReviewHelper.html.twig' %} -->
+    <!-- {% include 'InnovaCollecticielBundle:drop:peer_review_helper.html.twig' %} -->
 
     <!-- Liste des espaces collecticiel -->
     <!-- <h3>{{ 'Shared list'|trans({}, 'innova_collecticiel') }}</h3> -->
@@ -29,7 +29,7 @@
 
     <!-- InnovaERV : ici, appel à la vue qui traite l'affichage de la liste -->
     {% set AwaitingMode = true %}
-    {% include 'InnovaCollecticielBundle:Drop:Shared/dropsShared.html.twig' %}
+    {% include 'InnovaCollecticielBundle:drop:shared/drops_shared.html.twig' %}
 
     {% if pager.nbResults == 0 and usersByWorkspaces|length == 0 %}
         <div class="row">

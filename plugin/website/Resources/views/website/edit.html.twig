@@ -1,7 +1,7 @@
 {% extends 'ClarolineCoreBundle:workspace:layout.html.twig' %}
 
-{% import 'IcapWebsiteBundle:Website:Macros/common_macros.html.twig' as commonMacros %}
-{% import 'IcapWebsiteBundle:Website:Macros/edit_macros.html.twig' as editMacros %}
+{% import 'IcapWebsiteBundle:website:macros/common_macros.html.twig' as commonMacros %}
+{% import 'IcapWebsiteBundle:website:macros/edit_macros.html.twig' as editMacros %}
 
 {% block layout %}
     <div class="loading text-center" data-ng-if="!pageLoaded" >
@@ -24,11 +24,11 @@
                     <li class="pull-right" data-ng-hide="optionWindow=='structure'"><button class="btn btn-primary save-options-btn" data-ng-click="vm.options.save()"><i class="fa fa-floppy-o"></i> <span class="visible-md-inline visible-lg-inline"> {{ 'save_all_options'|trans({}, 'icap_website') }}</span></button></li>
                 </ul>
                 <div class="admin-tabs">
-                    {% include 'IcapWebsiteBundle:Website:Edit/general_options.html.twig' %}
-                    {% include 'IcapWebsiteBundle:Website:Edit/menu_options.html.twig' %}
-                    {% include 'IcapWebsiteBundle:Website:Edit/banner_footer_options.html.twig' with {'tag':'banner'} %}
-                    {% include 'IcapWebsiteBundle:Website:Edit/banner_footer_options.html.twig' with {'tag':'footer'} %}
-                    {% include 'IcapWebsiteBundle:Website:Edit/structure.html.twig' with {'pageTypes': pageTypes} %}
+                    {% include 'IcapWebsiteBundle:website:edit/general_options.html.twig' %}
+                    {% include 'IcapWebsiteBundle:website:edit/menu_options.html.twig' %}
+                    {% include 'IcapWebsiteBundle:website:edit/banner_footer_options.html.twig' with {'tag':'banner'} %}
+                    {% include 'IcapWebsiteBundle:website:edit/banner_footer_options.html.twig' with {'tag':'footer'} %}
+                    {% include 'IcapWebsiteBundle:website:edit/structure.html.twig' with {'pageTypes': pageTypes} %}
                 </div>
             </div>
             <div class="website-preview" data-ng-show="optionWindow!='structure'" data-ng-style="vm.websitePreviewStyle()">

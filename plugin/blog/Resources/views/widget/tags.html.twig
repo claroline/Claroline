@@ -2,7 +2,7 @@
     <p>{{ blog.resourceNode.name }}</p>
 
     <div class="tag-cloud-container">
-        {% include 'IcapBlogBundle:Layout:tags.html.twig' with {'blogOptions': blogOptions} %}
+        {% include 'IcapBlogBundle:layout:tags.html.twig' with {'blogOptions': blogOptions} %}
     </div>
 {% else %}
     <p>{{ 'no_blog_selected'|trans({}, 'icap_blog') }}</p>

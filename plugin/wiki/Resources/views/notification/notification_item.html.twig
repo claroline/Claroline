@@ -1,4 +1,4 @@
-{% extends 'IcapNotificationBundle:Templates:notification.html.twig' %}
+{% extends 'IcapNotificationBundle:templates:notification.html.twig' %}
 {% set avatarUrlPrefix = asset('uploads/pictures/') %}
 
 {% block notificationText %}
@@ -8,10 +8,10 @@
         <strong>{{ systemName }}</strong>
     {% endif %}
     {% if constant('Icap\\WikiBundle\\Event\\Log\\LogSectionCreateEvent::ACTION') == notification.actionKey %}
-        {% include 'IcapWikiBundle:Notification:notification_section_create.html.twig' %}
+        {% include 'IcapWikiBundle:notification:notification_section_create.html.twig' %}
     {% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogContributionCreateEvent::ACTION') == notification.actionKey %}
-        {% include 'IcapWikiBundle:Notification:notification_contribution_create.html.twig' %}
+        {% include 'IcapWikiBundle:notification:notification_contribution_create.html.twig' %}
     {% elseif 'resource-icap_wiki-user_tagged' == notification.actionKey %}
-        {% include 'IcapWikiBundle:Notification:notification_user_tagged.html.twig' %}
+        {% include 'IcapWikiBundle:notification:notification_user_tagged.html.twig' %}
     {% endif %}
 {% endblock %}

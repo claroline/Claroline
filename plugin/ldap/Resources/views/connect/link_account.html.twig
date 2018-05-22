@@ -1,5 +1,5 @@
 {% set formAction = path('claro_ldap_login_link', {'name': serverName}) %}
 
-{% extends 'ClarolineCoreBundle:Authentication:thirdPartyLogin.html.twig' %}
+{% extends 'ClarolineCoreBundle:authentication:third_party_login.html.twig' %}
 
 {% block title %}{{ 'login' | trans({}, 'platform') ~ ' - ' ~ parent() | striptags | raw }}{% endblock %}

@@ -1,4 +1,4 @@
-{% extends 'IcapNotificationBundle:Templates:notification.html.twig' %}
+{% extends 'IcapNotificationBundle:templates:notification.html.twig' %}
 {% set avatarUrlPrefix = asset('uploads/pictures/') %}
 
 {% block notificationText %}
@@ -11,13 +11,13 @@
           constant('Icap\\BlogBundle\\Event\\Log\\LogPostUpdateEvent::ACTION') == notification.actionKey or
           constant('Icap\\BlogBundle\\Event\\Log\\LogPostPublishEvent::ACTION') == notification.actionKey
     %}
-        {% include 'IcapBlogBundle:Notification:notification_post_create_update.html.twig' %}
+        {% include 'IcapBlogBundle:notification:notification_post_create_update.html.twig' %}
     {% elseif constant('Icap\\BlogBundle\\Event\\Log\\LogCommentCreateEvent::ACTION') == notification.actionKey or
               constant('Icap\\BlogBundle\\Event\\Log\\LogCommentUpdateEvent::ACTION') == notification.actionKey or
               constant('Icap\\BlogBundle\\Event\\Log\\LogCommentPublishEvent::ACTION') == notification.actionKey
     %}
-            {% include 'IcapBlogBundle:Notification:notification_comment_create_update.html.twig' %}
+            {% include 'IcapBlogBundle:notification:notification_comment_create_update.html.twig' %}
     {% elseif 'resource-icap_blog-post-user_tagged' == notification.actionKey or 'resource-icap_blog-comment-user_tagged' == notification.actionKey %}
-        {% include 'IcapBlogBundle:Notification:notification_user_tagged.html.twig' %}
+        {% include 'IcapBlogBundle:notification:notification_user_tagged.html.twig' %}
     {% endif %}
 {% endblock %}

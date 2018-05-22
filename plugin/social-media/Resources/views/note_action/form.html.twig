@@ -11,7 +11,7 @@
                     <h4>{{ 'your_notes'|trans({}, 'icap_socialmedia') }} <small>[{{ pager.nbResults }}]</small> <br/> <small>*{{ "notes_are_private"|trans({}, "icap_socialmedia") }}</small></h4>
                     <div class="jscroll-note-list-container">
                         <div class="jscroll-note-list list-group">
-                            {% include "IcapSocialmediaBundle:NoteAction:noteList.html.twig" with {'pager':pager, 'resourceId':resourceId} %}
+                            {% include "IcapSocialmediaBundle:note_action:note_list.html.twig" with {'pager':pager, 'resourceId':resourceId} %}
                         </div>
                     </div>
                 {% else %}

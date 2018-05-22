@@ -1,7 +1,7 @@
 {% extends 'ClarolineCoreBundle:workspace:layout.html.twig' %}
 
-{% import 'IcapWebsiteBundle:Website:Macros/common_macros.html.twig' as commonMacros %}
-{% import 'IcapWebsiteBundle:Website:Macros/view_macros.html.twig' as viewMacros %}
+{% import 'IcapWebsiteBundle:website:macros/common_macros.html.twig' as commonMacros %}
+{% import 'IcapWebsiteBundle:website:macros/view_macros.html.twig' as viewMacros %}
 
 {% set options = _resource.options %}
 {% set hideTopBar = true %}
@@ -136,5 +136,5 @@
 {% block stylesheets %}
     {{ parent() }}
     {{ viewMacros.getStylesheets(options.menuOrientation) }}
-    {% include 'IcapWebsiteBundle:Website:View/view.css.twig' with {'options': _resource.options, 'commonMacros': commonMacros} %}
+    {% include 'IcapWebsiteBundle:website:view/view.css.twig' with {'options': _resource.options, 'commonMacros': commonMacros} %}
 {% endblock %}

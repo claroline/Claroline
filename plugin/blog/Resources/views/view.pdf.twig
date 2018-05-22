@@ -19,7 +19,7 @@
     <div class="blog-posts">
         {% for post in posts %}
         <article>
-            {% include 'IcapBlogBundle::postHeader.pdf.twig'%}
+            {% include 'IcapBlogBundle::post_header.pdf.twig'%}
             <div class="content">{{ post.content|preg_replace("/src=\"\\/\\//","src=\"http://")|preg_replace("/src=\"\\//","src=\""~app.request.getSchemeAndHttpHost()~"/")|raw }}</div>
         </article>
         {% endfor %}

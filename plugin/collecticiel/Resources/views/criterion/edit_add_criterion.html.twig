@@ -1,4 +1,4 @@
-{% extends "InnovaCollecticielBundle:Dropzone:edit.html.twig" %}
+{% extends "InnovaCollecticielBundle:dropzone:edit.html.twig" %}
 
 {% block drop_zone_content_edit %}
     <h3>
@@ -9,5 +9,5 @@
             {{ 'Edit a criterion'|trans({}, 'innova_collecticiel') }}
         {% endif %}
     </h3>
-    {% include "InnovaCollecticielBundle:Criterion:editAddCriterionForm.html.twig" %}
+    {% include "InnovaCollecticielBundle:criterion:edit_add_criterion_form.html.twig" %}
 {% endblock %}

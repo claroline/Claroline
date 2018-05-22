@@ -20,12 +20,12 @@
             <div class="pdf-contents-title">
                 {{ 'chapter_list_header'|trans({}, 'icap_lesson') }}
             </div>
-            {% include "IcapLessonBundle:Lesson:lessonContents.pdf.twig" with {'chapters' : tree[0].__children, 'delimeter' : '.', 'rootId' : tree[0].id} %}
+            {% include "IcapLessonBundle:lesson:lesson_contents.pdf.twig" with {'chapters' : tree[0].__children, 'delimeter' : '.', 'rootId' : tree[0].id} %}
         </div>
         <div class="clearfix"></div>
     </div>
     <div class="lesson-chapters">
-        {% include "IcapLessonBundle:Lesson:lessonChapters.pdf.twig" with {'chapters' : tree[0].__children, 'lessonId' : _resource.id} %}
+        {% include "IcapLessonBundle:lesson:lesson_chapters.pdf.twig" with {'chapters' : tree[0].__children, 'lessonId' : _resource.id} %}
     </div>
 {% endif %}
 </body>

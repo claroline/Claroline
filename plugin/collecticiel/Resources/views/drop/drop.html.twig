@@ -1,5 +1,5 @@
 {# InnovaERV : "Espaces partagés" puis "Afficher"  #}
-{% extends "InnovaCollecticielBundle:Dropzone:edit.html.twig" %}
+{% extends "InnovaCollecticielBundle:dropzone:edit.html.twig" %}
 
 {% form_theme form "InnovaCollecticielBundle::form_theme_bootstrap3.html.twig" %}
 
@@ -47,14 +47,14 @@
         {# Quand on arrive dans un collecticiel (vue étudiant), on appelle dropStatus #}
         {# pour afficher la barre de progression que l'on ne veut plus #}
         {#
-        {% include 'InnovaCollecticielBundle:Drop:dropStatus.html.twig' %}
+        {% include 'InnovaCollecticielBundle:drop:drop_status.html.twig' %}
         #}
 
         {# affichage : INSTRUCTIONS/CONSIGNES #}
         {# innovaERV : JJQ veut que les consignes s'affichent #}
         {# seulement si on est étudiant, pas enseignant #}
         {# Changement septembre 2015 : on affiche la consigne mais dans un accordéon différent suivant le rôle #}
-        {% include 'InnovaCollecticielBundle:Dropzone:callInstruction.html.twig' %}
+        {% include 'InnovaCollecticielBundle:dropzone:call_instruction.html.twig' %}
 
         {# DOCUMENTS ALREADY ADDED #}
         <h4>{{ 'Documents added  the copy %nom% %prenom% %pseudo%'|trans({'%nom%': drop.user.firstName, '%prenom%': drop.user.lastName, '%pseudo%': drop.user.username},'innova_collecticiel') }}</h4>
@@ -84,7 +84,7 @@
 
         <br/>
         {# ADD DOCUMENT #}
-        {% include 'InnovaCollecticielBundle:Drop:addDocument.html.twig'
+        {% include 'InnovaCollecticielBundle:drop:add_document.html.twig'
          with {'lastType': lastType, 'collecticielOpenOrNot': collecticielOpenOrNot}
         %}
 

@@ -10,14 +10,14 @@
 <div class="panel-body logs-container">
     {% if _resource is defined %}
         {% set csv_path = 'claro_resource_logs_csv' %}
-        {% include 'ClarolineCoreBundle:Log:workspace_resource_tabs.html.twig' with {'_resource':_resource, 'activeTab': 'global'} %}
+        {% include 'ClarolineCoreBundle:log:workspace_resource_tabs.html.twig' with {'_resource':_resource, 'activeTab': 'global'} %}
     {% elseif workspace is defined %}
         {% set csv_path = 'claro_workspace_logs_csv' %}
-        {% include 'ClarolineCoreBundle:Log:workspace_resource_tabs.html.twig' with {'workspace':workspace, 'activeTab': 'global'} %}
+        {% include 'ClarolineCoreBundle:log:workspace_resource_tabs.html.twig' with {'workspace':workspace, 'activeTab': 'global'} %}
     {% endif %}
     <div>
         {% if 0 < pager.nbResults %}
-            {% include 'ClarolineCoreBundle:Log:count_by_day_chart.html.twig'%}
+            {% include 'ClarolineCoreBundle:log:count_by_day_chart.html.twig'%}
             <br/><br/>
         {% else %}
             <div style="text-align:center;">
@@ -91,7 +91,7 @@
             {% endif %}
         </div>
 
-        {% include 'ClarolineCoreBundle:Log:view_list.html.twig' with {'logs': pager.currentPageResults, 'isDesktop': isDesktop} %}
+        {% include 'ClarolineCoreBundle:log:view_list.html.twig' with {'logs': pager.currentPageResults, 'isDesktop': isDesktop} %}
 
         <div class="text-center">
             {% if pager.haveToPaginate %}

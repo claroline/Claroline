@@ -6,10 +6,10 @@
 <div class="panel-body logs-container">
     {% if _resource is defined %}
         {% set csv_path = 'claro_resource_logs_by_user_csv' %}
-        {% include 'ClarolineCoreBundle:Log:workspace_resource_tabs.html.twig' with {'_resource':_resource, 'activeTab': 'user'} %}
+        {% include 'ClarolineCoreBundle:log:workspace_resource_tabs.html.twig' with {'_resource':_resource, 'activeTab': 'user'} %}
     {% elseif workspace is defined %}
         {% set csv_path = 'claro_workspace_logs_by_user_csv' %}
-        {% include 'ClarolineCoreBundle:Log:workspace_resource_tabs.html.twig' with {'workspace':workspace, 'activeTab': 'user'} %}
+        {% include 'ClarolineCoreBundle:log:workspace_resource_tabs.html.twig' with {'workspace':workspace, 'activeTab': 'user'} %}
     {% endif %}
     <div class="logs-form-container" style="margin: 20px 0;">
         <div class="panel panel-default">
@@ -73,7 +73,7 @@
             {% endif %}
         </div>
 
-        {% include 'ClarolineCoreBundle:Log:view_user_list.html.twig' with {'logs': pager.currentPageResults, 'isDesktop': isDesktop} %}
+        {% include 'ClarolineCoreBundle:log:view_user_list.html.twig' with {'logs': pager.currentPageResults, 'isDesktop': isDesktop} %}
 
         <div class="text-center">
             {% if pager.haveToPaginate %}

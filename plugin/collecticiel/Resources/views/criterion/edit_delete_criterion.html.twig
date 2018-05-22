@@ -1,4 +1,4 @@
-{% extends "InnovaCollecticielBundle:Dropzone:edit.html.twig" %}
+{% extends "InnovaCollecticielBundle:dropzone:edit.html.twig" %}
 
 {% block drop_zone_content_edit %}
 
@@ -7,7 +7,7 @@
         {{ 'Warning'|trans({}, 'innova_collecticiel') }}
     </h3>
 
-    {% include "InnovaCollecticielBundle:Criterion:editDeleteCriterionForm.html.twig" %}
+    {% include "InnovaCollecticielBundle:criterion:edit_delete_criterion_form.html.twig" %}
 {% endblock %}
 
 {% block javascripts %}

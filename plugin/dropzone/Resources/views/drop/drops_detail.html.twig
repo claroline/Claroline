@@ -93,7 +93,7 @@
             <div class="text-muted col-md-4">{{ 'Number of validated corrections'|trans({}, 'icap_dropzone') }}
             </div>
             <div class="col-md-8">
-                {% include 'IcapDropzoneBundle:Drop:dropsNbCorrections.html.twig' %}
+                {% include 'IcapDropzoneBundle:drop:drops_nb_corrections.html.twig' %}
                 {% if drop.unlockedDrop %}
                     {% if drop.unlockedDrop %}
                         <span class="text-warning fa fa-info-circle" data-toggle="tooltip" title=""
@@ -106,7 +106,7 @@
         {% if byUserMod == 0   or showCorrections or dropzone.displayNotationToLearners %}
             <div class="row">
                 <div class="text-muted col-md-4">{{ 'Average validated corrections'|trans({}, 'icap_dropzone') }}</div>
-                <div class="col-md-8">{% include 'IcapDropzoneBundle:Drop:dropsTotalGrade.html.twig' %}</div>
+                <div class="col-md-8">{% include 'IcapDropzoneBundle:drop:drops_total_grade.html.twig' %}</div>
             </div>
         {% endif %}
         <br/>
@@ -133,7 +133,7 @@
             <hr/>
 
             {% set corrections = drop.corrections %}
-            {% include 'IcapDropzoneBundle:Correction:Listing/correctionListing.html.twig' %}
+            {% include 'IcapDropzoneBundle:correction:listing/correction_listing.html.twig' %}
         {% endif %}
 
         {% if byUserMod == 1 %}
