@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "8599c34e6042e67fb139d727a19cae7f299b9728"
+                "reference": "9a24181f4c1ad8dc7510c7e5ef1d060b22e593a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/8599c34e6042e67fb139d727a19cae7f299b9728",
-                "reference": "8599c34e6042e67fb139d727a19cae7f299b9728",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/9a24181f4c1ad8dc7510c7e5ef1d060b22e593a3",
+                "reference": "9a24181f4c1ad8dc7510c7e5ef1d060b22e593a3",
                 "shasum": ""
             },
             "require": {
@@ -397,7 +397,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2018-05-18 13:51:59"
+            "time": "2018-05-22 12:51:56"
         },
         {
             "name": "cocur/slugify",
@@ -1875,7 +1875,7 @@
                     "homepage": "https://github.com/friendsofsymfony/FOSJsRoutingBundle/contributors"
                 },
                 {
-                    "name": "William Durand",
+                    "name": "William DURAND",
                     "email": "william.durand1@gmail.com"
                 }
             ],
@@ -7758,12 +7758,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "b3d384006662916bfcf294de26a860aa14f1f35b"
+                "reference": "c7f40ef32d7e8f6eff64f0b7ccc17ce1a0bb7e1a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/b3d384006662916bfcf294de26a860aa14f1f35b",
-                "reference": "b3d384006662916bfcf294de26a860aa14f1f35b",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/c7f40ef32d7e8f6eff64f0b7ccc17ce1a0bb7e1a",
+                "reference": "c7f40ef32d7e8f6eff64f0b7ccc17ce1a0bb7e1a",
                 "shasum": ""
             },
             "require": {
@@ -7816,7 +7816,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2018-05-16 14:42:13"
+            "time": "2018-05-21 10:10:22"
         },
         {
             "name": "symfony/polyfill-php54",
