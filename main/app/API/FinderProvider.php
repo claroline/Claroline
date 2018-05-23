@@ -92,40 +92,34 @@ class FinderProvider
      */
     public function search($class, array $finderParams = [], array $serializerOptions = [])
     {
-        // get search params
-        $filters = isset($finderParams['filters']) ? $this->parseFilters($finderParams['filters']) : [];
-        $sortBy = isset($finderParams['sortBy']) ? $this->parseSortBy($finderParams['sortBy']) : null;
-        $page = isset($finderParams['page']) ? (int) $finderParams['page'] : 0;
-        $limit = isset($finderParams['limit']) ? (int) $finderParams['limit'] : -1;
-
-        // these filters are not configurable/displayed in UI
-        // it's mostly used for access restrictions or entity collections
-        $hiddenFilters = isset($finderParams['hiddenFilters']) ? $this->parseFilters($finderParams['hiddenFilters']) : [];
-
-        $queryFilters = array_merge_recursive($filters, $hiddenFilters);
-
+        $queryParams = self::parseQueryParams($finderParams);
+        $page = $queryParams['page'];
+        $limit = $queryParams['limit'];
+        $filters = $queryParams['filters'];
+        $allFilters = $queryParams['allFilters'];
+        $sortBy = $queryParams['sortBy'];
         // count the total results (without pagination)
-        $count = $this->fetch($class, $queryFilters, $sortBy, $page, $limit, true);
+        $count = $this->fetch($class, $allFilters, $sortBy, $page, $limit, true);
         // get the list of data for the current search and page
-        $data = $this->fetch($class, $queryFilters, $sortBy, $page, $limit);
+        $data = $this->fetch($class, $allFilters, $sortBy, $page, $limit);
 
         if (0 < $count && empty($data)) {
             // search should have returned results, but we have requested a non existent page => get the last page
             $page = ceil($count / $limit) - 1;
             // load last page data
-            $data = $this->fetch($class, $queryFilters, $sortBy, $page, $limit);
+            $data = $this->fetch($class, $allFilters, $sortBy, $page, $limit);
         }
 
-        return [
-            'data' => array_map(function ($result) use ($serializerOptions) {
+        return self::formatPaginatedData(
+            array_map(function ($result) use ($serializerOptions) {
                 return $this->serializer->serialize($result, $serializerOptions);
             }, $data),
-            'totalResults' => $count,
-            'page' => $page,
-            'pageSize' => $limit,
-            'filters' => $this->decodeFilters($filters),
-            'sortBy' => $sortBy,
-        ];
+            $count,
+            $page,
+            $limit,
+            $filters,
+            $sortBy
+        );
     }
 
     /**
@@ -171,29 +165,13 @@ class FinderProvider
     }
 
     /**
-     * @param QueryBuilder $qb
-     * @param array|null   $sortBy
-     */
-    private function sortResults(QueryBuilder $qb, array $sortBy = null)
-    {
-        if (!empty($sortBy) && !empty($sortBy['property']) && 0 !== $sortBy['direction']) {
-            // query needs to be sorted, check if the Finder implementation has a custom sort system
-            $queryOrder = $qb->getDQLPart('orderBy');
-            if (empty($queryOrder)) {
-                // no order by defined
-                $qb->orderBy('obj.'.$sortBy['property'], 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
-            }
-        }
-    }
-
-    /**
      * @param string $sortBy
      *
      * @todo : we should make UI and API formats uniform to avoid such transformations
      *
      * @return array
      */
-    private function parseSortBy($sortBy)
+    public static function parseSortBy($sortBy)
     {
         // default values
         $property = null;
@@ -222,7 +200,7 @@ class FinderProvider
      *
      * @return array
      */
-    private function parseFilters(array $filters)
+    public static function parseFilters(array $filters)
     {
         $parsed = [];
         foreach ($filters as $property => $value) {
@@ -256,7 +234,7 @@ class FinderProvider
      *
      * @return array
      */
-    private function decodeFilters(array $filters)
+    public static function decodeFilters(array $filters)
     {
         $decodedFilters = [];
         foreach ($filters as $property => $value) {
@@ -264,5 +242,61 @@ class FinderProvider
         }
 
         return $decodedFilters;
+    }
+
+    /**
+     * Parses query params to their appropriate filter values.
+     *
+     * @param array $finderParams
+     *
+     * @return array
+     */
+    public static function parseQueryParams(array $finderParams = [])
+    {
+        $filters = isset($finderParams['filters']) ? self::parseFilters($finderParams['filters']) : [];
+        $sortBy = isset($finderParams['sortBy']) ? self::parseSortBy($finderParams['sortBy']) : null;
+        $page = isset($finderParams['page']) ? (int) $finderParams['page'] : 0;
+        $limit = isset($finderParams['limit']) ? (int) $finderParams['limit'] : -1;
+
+        // these filters are not configurable/displayed in UI
+        // it's mostly used for access restrictions or entity collections
+        $hiddenFilters = isset($finderParams['hiddenFilters']) ? self::parseFilters($finderParams['hiddenFilters']) : [];
+
+        return [
+            'filters' => $filters,
+            'hiddenFilters' => $hiddenFilters,
+            'allFilters' => array_merge_recursive($filters, $hiddenFilters),
+            'sortBy' => $sortBy,
+            'page' => $page,
+            'limit' => $limit,
+        ];
+    }
+
+    public static function formatPaginatedData($data, $total, $page, $limit, $filters, $sortBy)
+    {
+        return [
+            'data' => $data,
+            'totalResults' => $total,
+            'page' => $page,
+            'pageSize' => $limit,
+            'filters' => self::decodeFilters($filters),
+            'sortBy' => $sortBy,
+        ];
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param array|null   $sortBy
+     */
+    private function sortResults(QueryBuilder $qb, array $sortBy = null)
+    {
+        if (!empty($sortBy) && !empty($sortBy['property']) && 0 !== $sortBy['direction']) {
+            // query needs to be sorted, check if the Finder implementation has a custom sort system
+            $queryOrder = $qb->getDQLPart('orderBy');
+            if (empty($queryOrder)) {
+                // no order by defined
+                $qb->orderBy('obj.'.$sortBy['property'], 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
+            }
+        }
     }
 }

@@ -42,7 +42,7 @@
                         <div class="carousel-card-content">{{ path.entity.resourceNode.name }}</div>
 
                         <div class="carousel-card-btns btn-group btn-group-justified" role="group">
-                            <a class="btn btn-link" href="{{ path('claro_resource_open', { node: path.entity.resourceNode.id, type: 'innova_path' }) }}">
+                            <a class="btn btn-link" href="{{ path('claro_resource_open_short', { node: path.entity.resourceNode.id }) }}">
                                 {% if path.progression == 0 %}
                                     {{ 'path_start'|trans({}, 'widget') }}
                                 {% elseif path.progression == 100 %}
@@ -51,7 +51,6 @@
                                     {{ 'path_continue'|trans({}, 'widget') }}
                                 {% endif %}
                             </a>
-                            {% endif %}
                         </div>
                     </div>
                 {% else %}

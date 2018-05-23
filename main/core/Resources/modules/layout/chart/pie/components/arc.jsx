@@ -11,16 +11,17 @@ const Arc = props => {
     .outerRadius(props.outerRadius)
     .startAngle(props.startAngle)
     .endAngle(props.endAngle)
-
+  const centroid = arcInstance.centroid().map(v => 1.5 * v)
   return (
-    <path
-      d={arcInstance()}
-      fill={props.color}
-    >
+    <g>
+      <path
+        d={arcInstance()}
+        fill={props.color}
+      />
       {props.showValue &&
-        <title>{props.value}</title>
+        <text textAnchor={'middle'} transform={`translate(${centroid})`}>{props.value}</text>
       }
-    </path>
+    </g>
   )
 }
 
@@ -31,7 +32,7 @@ Arc.propTypes = {
   startAngle: T.number.isRequired,
   endAngle: T.number.isRequired,
   showValue: T.bool.isRequired,
-  value: T.number
+  value: T.oneOfType([T.number, T.string])
 }
 
 Arc.defaultProps = {

@@ -110,7 +110,7 @@ const DataTableRow = props => {
 
 DataTableRow.propTypes = {
   row: T.shape({
-    id: T.string.isRequired
+    id: T.oneOfType([T.string, T.number]).isRequired
   }).isRequired,
   columns: T.arrayOf(
     T.shape(DataListProperty.propTypes)

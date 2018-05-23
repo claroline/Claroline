@@ -34,7 +34,7 @@ class DisplayLogListener
     public function onCreateLogDetails(LogCreateDelegateViewEvent $event)
     {
         $content = $this->container->get('templating')->render(
-            'UJMExoBundle:Log:show.html.twig',
+            'UJMExoBundle:log:show.html.twig',
             [
                 'log' => $event->getLog(),
             ]

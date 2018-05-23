@@ -20,8 +20,8 @@ class CorrectionManager
     /**
      * @DI\InjectParams({
      *     "container" = @DI\Inject("service_container"),
-     *        "maskManager" = @DI\Inject("claroline.manager.mask_manager"),
-     * "em" = @DI\Inject("doctrine.orm.entity_manager")
+     *     "maskManager" = @DI\Inject("claroline.manager.mask_manager"),
+     *     "em" = @DI\Inject("doctrine.orm.entity_manager")
      * })
      */
     public function __construct($container, MaskManager $maskManager, $em)
@@ -49,7 +49,7 @@ class CorrectionManager
         }
 
         $totalGrade = 0;
-        if ($nbCriteria != 0) {
+        if ($nbCriteria !== 0) {
             $totalGrade = $sumGrades / ($nbCriteria);
             $totalGrade = ($totalGrade * 20) / ($maxGrade);
         }
@@ -70,11 +70,34 @@ class CorrectionManager
             $em->persist($correction);
 
             $currentDrop = $correction->getDrop();
-            if ($currentDrop != null && $oldTotalGrade != $totalGrade) {
+            if ($currentDrop !== null && $oldTotalGrade !== $totalGrade) {
                 $event = new LogCorrectionUpdateEvent($dropzone, $currentDrop, $correction);
                 $this->container->get('event_dispatcher')->dispatch('log', $event);
             }
         }
         $em->flush();
+    }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceUser(User $from, User $to)
+    {
+        $corrections = $this->em->getRepository('InnovaCollecticielBundle:Correction')->findByUser($from);
+
+        if (count($corrections) > 0) {
+            foreach ($corrections as $correction) {
+                $correction->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($corrections);
     }
 }

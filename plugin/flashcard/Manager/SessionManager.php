@@ -72,4 +72,27 @@ class SessionManager
 
         return $repo->find($id);
     }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceUser(User $from, User $to)
+    {
+        $sessions = $this->om->getRepository('ClarolineFlashCardBundle:Session')->findByUser($from);
+
+        if (count($sessions) > 0) {
+            foreach ($sessions as $session) {
+                $session->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($sessions);
+    }
 }

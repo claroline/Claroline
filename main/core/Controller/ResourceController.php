@@ -16,10 +16,12 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
+use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Form\ImportResourcesType;
 use Claroline\CoreBundle\Form\Resource\UnlockType;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
+use Claroline\CoreBundle\Manager\EventManager;
 use Claroline\CoreBundle\Manager\Exception\ResourceMoveException;
 use Claroline\CoreBundle\Manager\Exception\ResourceNotFoundException;
 use Claroline\CoreBundle\Manager\FileManager;
@@ -69,6 +71,8 @@ class ResourceController extends Controller
     private $formFactory;
     private $userManager;
     private $eventDispatcher;
+    /** @var EventManager */
+    private $eventManager;
 
     /**
      * @DI\InjectParams({
@@ -88,7 +92,8 @@ class ResourceController extends Controller
      *     "formFactory"         = @DI\Inject("form.factory"),
      *     "userManager"         = @DI\Inject("claroline.manager.user_manager"),
      *     "eventDispatcher"     = @DI\Inject("event_dispatcher"),
-     *     "resourceNodeManager" = @DI\Inject("claroline.manager.resource_node")
+     *     "resourceNodeManager" = @DI\Inject("claroline.manager.resource_node"),
+     *     "eventManager"        = @DI\Inject("claroline.event.manager")
      * })
      */
     public function __construct(
@@ -108,7 +113,8 @@ class ResourceController extends Controller
         FormFactory $formFactory,
         UserManager $userManager,
         EventDispatcherInterface $eventDispatcher,
-        ResourceNodeManager $resourceNodeManager
+        ResourceNodeManager $resourceNodeManager,
+        EventManager $eventManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
@@ -127,6 +133,7 @@ class ResourceController extends Controller
         $this->userManager = $userManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->resourceNodeManager = $resourceNodeManager;
+        $this->eventManager = $eventManager;
     }
 
     /**
@@ -499,176 +506,32 @@ class ResourceController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/log/{node}",
+     *     "/logs/{node}",
      *     name="claro_resource_logs",
-     *     defaults={"page" = 1},
      *     options={"expose"=true}
      * )
      *
-     * @EXT\Route(
-     *     "/log/{node}/{page}",
-     *     name="claro_resource_logs_paginated",
-     *     requirements={"page" = "\d+"},
-     *     defaults={"page" = 1},
-     *     options={"expose"=true}
-     * )
-     *
-     * @EXT\Template("ClarolineCoreBundle:resource/logs:log_list.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:resource/logs:list.html.twig")
      *
      * Shows resource logs list
      *
      * @param ResourceNode $node the resource
-     * @param int          $page
      *
-     * @return Response
-     *
-     * @throws \Exception
-     */
-    public function logAction(ResourceNode $node, $page)
-    {
-        $resource = $this->resourceManager->getResourceFromNode($node);
-        $collection = new ResourceCollection([$node]);
-        $this->checkAccess('ADMINISTRATE', $collection);
-        $logs = $this->logManager->getResourceList($resource, $page);
-
-        return $logs;
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/log/{node}/csv",
-     *     name="claro_resource_logs_csv",
-     *     requirements={"node" = "\d+"}
-     * )
-     *
-     * @param ResourceNode $node the resource
-     *
-     * @return Response
-     */
-    public function logCSVAction(ResourceNode $node)
-    {
-        $resource = $this->resourceManager->getResourceFromNode($node);
-        $collection = new ResourceCollection([$node]);
-        $this->checkAccess('ADMINISTRATE', $collection);
-
-        $response = new StreamedResponse(function () use ($resource) {
-            $resourceList = $this->logManager->getResourceList($resource);
-            $results = $resourceList['results'];
-            $date_format = $this->translator->trans('date_format', [], 'platform');
-            $handle = fopen('php://output', 'w+');
-            fputcsv($handle, [
-                $this->translator->trans('date', [], 'platform'),
-                $this->translator->trans('action', [], 'platform'),
-                $this->translator->trans('user', [], 'platform'),
-                $this->translator->trans('action', [], 'platform'),
-            ]);
-            foreach ($results as $result) {
-                fputcsv($handle, [
-                    $result->getDateLog()->format($date_format).' '.$result->getDateLog()->format('H:i'),
-                    $this->translator->trans('log_'.$result->getAction().'_shortname', [], 'log'),
-                    $this->str_to_csv($this->renderView('ClarolineCoreBundle:log:view_list_item_doer.html.twig', ['log' => $result])),
-                    $this->str_to_csv($this->renderView('ClarolineCoreBundle:log:view_list_item_sentence.html.twig', [
-                        'log' => $result,
-                        'listItemView' => array_key_exists($result->getId(), $resourceList['listItemViews']) ? $resourceList['listItemViews'][$result->getId()] : null,
-                    ])),
-                ]);
-            }
-
-            fclose($handle);
-        });
-        $dateStr = date('YmdHis');
-        $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename="actions_'.$dateStr.'.csv"');
-
-        return $response;
-    }
-
-    /**
-     * @param string $string
-     *
-     * @return string
-     *
-     * Sanitize a string by removing html tags, multiple spaces and new lines
-     */
-    private function str_to_csv($string)
-    {
-        return trim(preg_replace('/\s+/', ' ', strip_tags($string)));
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/log/{node}/user",
-     *     name="claro_resource_logs_by_user",
-     *     defaults={"page" = 1},
-     *     options={"expose"=true}
-     * )
-     *
-     * @EXT\Route(
-     *     "/log/{node}/user/{page}",
-     *     name="claro_resource_logs_by_user_paginated",
-     *     requirements={"page" = "\d+"},
-     *     defaults={"page" = 1},
-     *     options={"expose"=true}
-     * )
-     *
-     * @EXT\Template("ClarolineCoreBundle:resource/logs:log_by_user.html.twig")
-     *
-     * Shows resource logs list
-     *
-     * @param ResourceNode $node the resource
-     * @param int          $page
-     *
-     * @return Response
+     * @return array
      *
      * @throws \Exception
      */
-    public function logByUserAction(ResourceNode $node, $page)
+    public function logListAction(ResourceNode $node)
     {
         $resource = $this->resourceManager->getResourceFromNode($node);
         $collection = new ResourceCollection([$node]);
         $this->checkAccess('ADMINISTRATE', $collection);
 
-        return $this->logManager->countByUserResourceList($resource, $page);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/log/{node}/user/csv",
-     *     name="claro_resource_logs_by_user_csv"
-     * )
-     *
-     * Exports in CSV the list of user actions for the given criteria
-     *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
-     *
-     * @throws \Exception
-     *
-     * @return Response
-     */
-    public function logByUserCSVAction(ResourceNode $node)
-    {
-        $resource = $this->resourceManager->getResourceFromNode($node);
-        $collection = new ResourceCollection([$node]);
-        $this->checkAccess('ADMINISTRATE', $collection);
-
-        $logManager = $this->logManager;
-
-        $response = new StreamedResponse(function () use ($logManager, $resource) {
-            $results = $logManager->countByUserListForCSV('workspace', null, $resource);
-            $handle = fopen('php://output', 'w+');
-            while (false !== ($row = $results->next())) {
-                // add a line in the csv file. You need to implement a toArray() method
-                // to transform your object into an array
-                fputcsv($handle, [$row[$results->key()]['name'], $row[$results->key()]['actions']]);
-            }
-
-            fclose($handle);
-        });
-        $dateStr = date('YmdHis');
-        $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename="user_actions_'.$dateStr.'.csv"');
-
-        return $response;
+        return [
+            'workspace' => $node->getWorkspace(),
+            '_resource' => $resource,
+            'actions' => $this->eventManager->getEventsForApiFilter(LogGenericEvent::DISPLAYED_WORKSPACE),
+        ];
     }
 
     /**

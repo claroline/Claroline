@@ -23,7 +23,12 @@
       "contacts-tool": "user/contact",
       "workspace-user-management": "workspace/user",
       "workspace-parameters-management": "workspace/parameters",
-      "text-resource": "resources/text/bootstrap"
+      "text-resource": "resources/text/bootstrap",
+      "tools-workspace-logs": "tools/workspace/logs",
+      "tools-workspace-dashboard": "tools/workspace/dashboard",
+      "resource-logs": "resource/logs",
+      "tools-admin-logs": "administration/logs",
+      "tools-admin-analytics": "administration/analytics"
     }
   },
 

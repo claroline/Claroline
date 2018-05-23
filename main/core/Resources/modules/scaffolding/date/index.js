@@ -1,5 +1,4 @@
 import moment from 'moment'
-
 import {getLocale} from '#/main/core/intl/locale'
 
 // configure moment
@@ -36,6 +35,15 @@ function getDisplayFormat(long = false, withTime = false) {
   }
 
   return displayFormat
+}
+
+/**
+ * Gets formated date from Date object
+ * @param {Date} date
+ * @returns {string} formatted date
+ */
+function dateToDisplayFormat(date) {
+  return moment(date).format(getDisplayFormat())
 }
 
 function isValidDate(value, format = null) {
@@ -78,6 +86,15 @@ function displayDate(apiDate, long = false, withTime = false) {
 }
 
 /**
+ * Returns a date object based on api received date
+ * @param {String} apiDate
+ * @returns {Date | false} - Returns a date object or false if apiDate is not valid
+ */
+function apiToDateObject(apiDate) {
+  return isValidDate(apiDate, getApiFormat()) && moment(apiDate, getApiFormat()).toDate()
+}
+
+/**
  * Gets API now value.
  *
  * @return {string}
@@ -92,5 +109,7 @@ export {
   isValidDate,
   apiDate,
   displayDate,
-  now
+  now,
+  apiToDateObject,
+  dateToDisplayFormat
 }

@@ -83,6 +83,14 @@ const UsersList = props =>
         callback: () => props.deleteWorkspace(rows[0]),
         dangerous: true
       },
+      {
+        type: 'link',
+        icon: 'fa fa-fw fa-compress',
+        label: t('merge_accounts'),
+        target: rows.length === 2 ? `/users/merge/${rows[0].id}/${rows[1].id}`: '',
+        displayed: rows.length === 2,
+        dangerous: true
+      },
       ...Configuration.getUsersAdministrationActions().map(action => action.options.modal ? {
         type: 'modal',
         icon: action.icon,

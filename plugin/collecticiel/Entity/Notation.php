@@ -9,11 +9,12 @@
 namespace Innova\CollecticielBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Innova\CollecticielBundle\Repository\NotationRepository")
  * @ORM\Table(name="innova_collecticielbundle_notation")
  */
 class Notation
@@ -214,7 +215,7 @@ class Notation
      *
      * @return Notation
      */
-    public function setUser(\Claroline\CoreBundle\Entity\User $user)
+    public function setUser(User $user)
     {
         $this->user = $user;
 
@@ -238,7 +239,7 @@ class Notation
      *
      * @return Notation
      */
-    public function setDocument(\Innova\CollecticielBundle\Entity\Document $document)
+    public function setDocument(Document $document)
     {
         $this->document = $document;
 
@@ -262,7 +263,7 @@ class Notation
      *
      * @return Notation
      */
-    public function setDropzone(\Innova\CollecticielBundle\Entity\Dropzone $dropzone)
+    public function setDropzone(Dropzone $dropzone)
     {
         $this->dropzone = $dropzone;
 
@@ -326,12 +327,13 @@ class Notation
     {
         return $this->appreciation;
     }
+
     /**
      * Constructor.
      */
     public function __construct()
     {
-        $this->choiceCriterias = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->choiceCriterias = new ArrayCollection();
     }
 
     /**
@@ -341,7 +343,7 @@ class Notation
      *
      * @return Notation
      */
-    public function addChoiceCriteria(\Innova\CollecticielBundle\Entity\ChoiceCriteria $choiceCriteria)
+    public function addChoiceCriteria(ChoiceCriteria $choiceCriteria)
     {
         $this->choiceCriterias[] = $choiceCriteria;
 
@@ -353,7 +355,7 @@ class Notation
      *
      * @param \Innova\CollecticielBundle\Entity\ChoiceCriteria $choiceCriteria
      */
-    public function removeChoiceCriteria(\Innova\CollecticielBundle\Entity\ChoiceCriteria $choiceCriteria)
+    public function removeChoiceCriteria(ChoiceCriteria $choiceCriteria)
     {
         $this->choiceCriterias->removeElement($choiceCriteria);
     }

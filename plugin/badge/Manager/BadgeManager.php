@@ -38,6 +38,7 @@ class BadgeManager
      * @var TokenStorageInterface
      */
     protected $tokenStorage;
+
     /**
      * Constructor.
      *
@@ -53,6 +54,7 @@ class BadgeManager
         $this->eventDispatcher = $eventDispatcher;
         $this->tokenStorage = $tokenStorage;
     }
+
     /**
      * @param int $id
      *
@@ -65,6 +67,7 @@ class BadgeManager
 
         return $badge;
     }
+
     /**
      * @param Badge     $badge
      * @param User[]    $users
@@ -84,6 +87,7 @@ class BadgeManager
 
         return $addedBadge;
     }
+
     /**
      * @param Badge     $badge
      * @param User      $user
@@ -162,6 +166,7 @@ class BadgeManager
         $event = new LogBadgeAwardEvent($badge, $receiver, $doer);
         $this->dispatch($event);
     }
+
     /**
      * @param LogGenericEvent $event
      */
@@ -169,6 +174,7 @@ class BadgeManager
     {
         $this->eventDispatcher->dispatch('log', $event);
     }
+
     /**
      * @param Badge          $badge
      * @param \DateTime|null $currentDate
@@ -184,6 +190,7 @@ class BadgeManager
 
         return $currentDate->modify($modifier);
     }
+
     /**
      * @param BadgeRule[]|\Doctrine\Common\Collections\ArrayCollection $newRules
      * @param BadgeRule[]|\Doctrine\Common\Collections\ArrayCollection $originalRules
@@ -255,6 +262,7 @@ class BadgeManager
 
         return $lastAwardedBadges;
     }
+
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param int                                              $limit
@@ -270,6 +278,7 @@ class BadgeManager
 
         return $lastAwardedBadges;
     }
+
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param int                                              $limit
@@ -284,6 +293,7 @@ class BadgeManager
 
         return $lastAwardedBadges;
     }
+
     /**
      * @param array $parameters array of : locale (for ordering badge), mode, user, workspace
      *
@@ -315,6 +325,7 @@ class BadgeManager
 
         return $badgeQueryBuilder->getQuery()->getResult();
     }
+
     /**
      * @param Pagerfanta     $userPager
      * @param Workspace|null $workspace
@@ -444,5 +455,51 @@ class BadgeManager
             [];
 
         return $lastAwardedBadges;
+    }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceBadgeCollectionUser(User $from, User $to)
+    {
+        $badgeCollections = $this->entityManager->getRepository('IcapBadgeBundle:BadgeCollection')->findByUser($from);
+
+        if (count($badgeCollections) > 0) {
+            foreach ($badgeCollections as $badgeCollection) {
+                $badgeCollection->setUser($to);
+            }
+
+            $this->entityManager->flush();
+        }
+
+        return count($badgeCollections);
+    }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceUserBadgeUser(User $from, User $to)
+    {
+        $userBadges = $this->entityManager->getRepository('IcapBadgeBundle:UserBadge')->findByUser($from);
+
+        if (count($userBadges) > 0) {
+            foreach ($userBadges as $userBadge) {
+                $userBadge->setUser($to);
+            }
+
+            $this->entityManager->flush();
+        }
+
+        return count($userBadges);
     }
 }

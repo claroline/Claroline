@@ -17,7 +17,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation\Groups;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\PdfGeneratorBundle\Repository\PdfRepository")
  * @ORM\Table(name="claro_pdf_generator")
  */
 class Pdf

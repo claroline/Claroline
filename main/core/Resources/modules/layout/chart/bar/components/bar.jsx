@@ -1,22 +1,18 @@
-import React, { Component } from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 /**
  * Draws a rectangle to represent a Bar on a chart.
  */
-class Bar extends Component {
-  render() {
-    return (
-      <rect
-        fill={this.props.color}
-        width={this.props.width}
-        height={this.props.maxHeight - this.props.height}
-        x={this.props.offsetX}
-        y={this.props.height + this.props.offsetY}
-      />
-    )
-  }
-}
+const Bar = (props) => 
+  <rect
+    fill={props.color}
+    width={props.width}
+    height={props.maxHeight - props.height}
+    x={props.offsetX}
+    y={props.height + props.offsetY}
+  />
+    
 
 Bar.propTypes = {
   color: T.string,

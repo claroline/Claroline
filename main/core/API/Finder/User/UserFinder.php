@@ -84,6 +84,9 @@ class UserFinder implements FinderInterface
                 case 'name':
                     $qb->andWhere('UPPER(obj.username) LIKE :name OR UPPER(CONCAT(obj.firstName, \' \', obj.lastName)) LIKE :name');
                     $qb->setParameter('name', '%'.strtoupper($filterValue).'%');
+                case 'id':
+                    $qb->andWhere('obj.uuid IN (:userUuids)');
+                    $qb->setParameter('userUuids', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
                 case 'isDisabled':
                     $qb->andWhere('obj.isEnabled = :isEnabled');

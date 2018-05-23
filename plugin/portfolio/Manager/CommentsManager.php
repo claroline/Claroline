@@ -15,16 +15,16 @@ use Symfony\Component\Form\FormFactory;
  */
 class CommentsManager
 {
-    /** @var EntityManager  */
+    /** @var EntityManager */
     protected $entityManager;
 
-    /** @var FormFactory  */
+    /** @var FormFactory */
     protected $formFactory;
 
-    /** @var CommentFactory  */
+    /** @var CommentFactory */
     protected $commentFactory;
 
-    /** @var PortfolioGuideManager  */
+    /** @var PortfolioGuideManager */
     protected $portfolioGuideManager;
 
     /**
@@ -100,7 +100,7 @@ class CommentsManager
      */
     public function getCommentsByPortfolio(Portfolio $portfolio)
     {
-        $comments = array();
+        $comments = [];
 
         /** @var \Icap\PortfolioBundle\Entity\PortfolioComment[] $commentObjects */
         $commentObjects = $this->entityManager->getRepository('IcapPortfolioBundle:PortfolioComment')->findByPortfolio($portfolio);
@@ -110,5 +110,28 @@ class CommentsManager
         }
 
         return $comments;
+    }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceUser(User $from, User $to)
+    {
+        $portfolioComments = $this->entityManager->getRepository('IcapPortfolioBundle:PortfolioComment')->findBySender($from);
+
+        if (count($portfolioComments) > 0) {
+            foreach ($portfolioComments as $portfolioComment) {
+                $portfolioComment->setSender($to);
+            }
+
+            $this->entityManager->flush();
+        }
+
+        return count($portfolioComments);
     }
 }

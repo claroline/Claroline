@@ -942,4 +942,27 @@ class SurveyManager
     {
         return file_get_contents($rootPath.DIRECTORY_SEPARATOR.$filePath);
     }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceSurveyAnswerUser(User $from, User $to)
+    {
+        $surveyAnswers = $this->surveyAnswerRepo->findByUser($from);
+
+        if (count($surveyAnswers) > 0) {
+            foreach ($surveyAnswers as $surveyAnswer) {
+                $surveyAnswer->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($surveyAnswers);
+    }
 }

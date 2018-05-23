@@ -156,5 +156,7 @@ const DataCard = props =>
 implementPropTypes(DataCard, DataCardTypes)
 
 export {
-  DataCard
+  DataCard,
+  CardHeader as DataCardHeader,
+  CardContent as DataCardContent
 }

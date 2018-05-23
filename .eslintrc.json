@@ -14,7 +14,9 @@
   "parserOptions": {
     "sourceType": "module",
     "ecmaFeatures": {
-      "jsx": true
+      "jsx": true,
+      "spread": true,
+      "experimentalObjectRestSpread": true
     }
   },
   "rules": {

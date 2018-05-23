@@ -463,4 +463,96 @@ class ProgressManager
             $progress->setResourceId($resourceId);
         }
     }
+
+    /**
+     * Find all content for a given user and replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceUserProgressUser(User $from, User $to)
+    {
+        $userProgresses = $this->userProgressRepo->findByUser($from);
+
+        if (count($userProgresses) > 0) {
+            foreach ($userProgresses as $userProgress) {
+                $userProgress->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($userProgresses);
+    }
+
+    /**
+     * Find all content for a given user and replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceObjectiveProgressUser(User $from, User $to)
+    {
+        $objectiveProgresses = $this->objectiveProgressRepo->findByUser($from);
+
+        if (count($objectiveProgresses) > 0) {
+            foreach ($objectiveProgresses as $objectiveProgress) {
+                $objectiveProgress->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($objectiveProgresses);
+    }
+
+    /**
+     * Find all content for a given user and replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceCompetencyProgressUser(User $from, User $to)
+    {
+        $competencyProgresses = $this->competencyProgressRepo->findByUser($from);
+
+        if (count($competencyProgresses) > 0) {
+            foreach ($competencyProgresses as $competencyProgress) {
+                $competencyProgress->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($competencyProgresses);
+    }
+
+    /**
+     * Find all content for a given user and replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceAbilityProgressUser(User $from, User $to)
+    {
+        $abilityyProgresses = $this->abilityProgressRepo->findByUser($from);
+
+        if (count($abilityyProgresses) > 0) {
+            foreach ($abilityyProgresses as $abilityyProgress) {
+                $abilityyProgress->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($abilityyProgresses);
+    }
 }

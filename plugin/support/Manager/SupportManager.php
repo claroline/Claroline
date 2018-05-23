@@ -37,6 +37,8 @@ class SupportManager
     private $ticketRepo;
     private $ticketUserRepo;
     private $typeRepo;
+    private $commentRepo;
+    private $interventionRepo;
 
     /**
      * @DI\InjectParams({
@@ -71,6 +73,8 @@ class SupportManager
         $this->ticketRepo = $om->getRepository('FormaLibreSupportBundle:Ticket');
         $this->ticketUserRepo = $om->getRepository('FormaLibreSupportBundle:TicketUser');
         $this->typeRepo = $om->getRepository('FormaLibreSupportBundle:Type');
+        $this->commentRepo = $om->getRepository('FormaLibreSupportBundle:Comment');
+        $this->interventionRepo = $om->getRepository('FormaLibreSupportBundle:Intervention');
     }
 
     public function persistTicket(Ticket $ticket)
@@ -787,5 +791,97 @@ class SupportManager
     public function getActiveTicketUserByUser(User $user)
     {
         return $this->ticketUserRepo->findBy(['user' => $user, 'active' => true], ['activationDate' => 'ASC']);
+    }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceCommentUser(User $from, User $to)
+    {
+        $comments = $this->commentRepo->findByUser($from);
+
+        if (count($comments) > 0) {
+            foreach ($comments as $comment) {
+                $comment->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($comments);
+    }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceTicketUserUser(User $from, User $to)
+    {
+        $ticketUsers = $this->ticketUserRepo->findByUser($from);
+
+        if (count($ticketUsers) > 0) {
+            foreach ($ticketUsers as $ticketUser) {
+                $ticketUser->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($ticketUsers);
+    }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceTicketUser(User $from, User $to)
+    {
+        $tickets = $this->ticketRepo->findByUser($from);
+
+        if (count($tickets) > 0) {
+            foreach ($tickets as $ticket) {
+                $ticket->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($tickets);
+    }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceInterventionUser(User $from, User $to)
+    {
+        $interventions = $this->interventionRepo->findByUser($from);
+
+        if (count($interventions) > 0) {
+            foreach ($interventions as $intervention) {
+                $intervention->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($interventions);
     }
 }

@@ -152,7 +152,8 @@ class EventManager
             if ($restriction
                 && ($restrictions = $classNamespace::getRestriction())
                 && 1 === count($restrictions)
-                && LogGenericEvent::DISPLAYED_ADMIN === $restrictions[0]
+                && (LogGenericEvent::DISPLAYED_ADMIN === $restrictions[0]
+                    || LogGenericEvent::PLATFORM_EVENT_TYPE === $restrictions[0])
                 && $restriction !== $restrictions[0]) {
                 return $constants; // event is admin only
             }
@@ -255,6 +256,80 @@ class EventManager
     }
 
     /**
+     * Gets formated events for API filter.
+     *
+     * @param null|string $restriction
+     *
+     * @return array
+     */
+    public function getEventsForApiFilter($restriction = null)
+    {
+        $resourceOption = 'resource';
+        $allOption = 'all';
+        $eventNames = $this->getEvents($restriction);
+        sort($eventNames);
+        $sortedEvents = ['all' => 'all'];
+        $genericResourceEvents = ['all' => 'all'];
+        $tempResourceEvents = ['all' => []];
+
+        foreach ($eventNames as $eventName) {
+            $eventNameChunks = explode('-', $eventName);
+            $eventKey = "log_${eventName}_filter";
+
+            if ($eventNameChunks[0] !== 'clacoformbundle' && !isset($sortedEvents[$eventNameChunks[0]])) {
+                $sortedEvents[$eventNameChunks[0]] = ['all' => "${eventNameChunks[0]}::all"];
+            }
+
+            if ($resourceOption === $eventNameChunks[0]) {
+                if (isset($eventNameChunks[2])) {
+                    $tempResourceEvents[$eventNameChunks[1]][$eventKey] = $eventName;
+                } else {
+                    $genericResourceEvents[$eventKey] = $eventName;
+                }
+            } elseif ($eventNameChunks[0] === 'clacoformbundle') {
+                $tempResourceEvents[$eventNameChunks[0]][$eventKey] = $eventName;
+            } else {
+                $sortedEvents[$eventNameChunks[0]][$eventKey] = $eventName;
+            }
+        }
+
+        // adding resource types that don't define specific event classes
+        $sortedEvents[$resourceOption][$allOption] = [];
+        $remainingTypes = $this->om
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+            ->findTypeNamesNotIn(array_keys($tempResourceEvents));
+
+        foreach ($remainingTypes as $type) {
+            $tempResourceEvents[$type['name']] = [];
+        }
+
+        foreach (array_keys($tempResourceEvents) as $resourceType) {
+            if ($resourceType === 'resource_shortcut') {
+                continue;
+            }
+
+            foreach ($genericResourceEvents as $genericEventKey => $genericEventName) {
+                $eventPrefix = '';
+                if ($allOption !== $resourceType) {
+                    $eventPrefix = "${resourceOption}::${resourceType}::";
+                }
+                if ($allOption === $resourceType && $genericEventName === $allOption) {
+                    $eventPrefix = "${resourceOption}::";
+                }
+                $sortedEvents[$resourceOption][$resourceType][$genericEventKey] = $eventPrefix.$genericEventName;
+            }
+
+            if ($allOption !== $resourceType) {
+                foreach ($tempResourceEvents[$resourceType] as $resourceEventKey => $resourceEventName) {
+                    $sortedEvents[$resourceOption][$resourceType][$resourceEventKey] = $resourceEventName;
+                }
+            }
+        }
+
+        return $this->formatEventsTableForApi($sortedEvents);
+    }
+
+    /**
      * @param string|null $restriction
      * @param string|null $resourceClass
      *
@@ -290,5 +365,24 @@ class EventManager
         }
 
         return $events;
+    }
+
+    private function formatEventsTableForApi($events)
+    {
+        $formatedEvents = [];
+        foreach ($events as $key => $value) {
+            $formatedEvents[] = $this->formatEventEntryForApi($key, $value);
+        }
+
+        return $formatedEvents;
+    }
+
+    private function formatEventEntryForApi($key, $value)
+    {
+        return [
+            'label' => $this->translator->trans($key, [], 'resource'),
+            'value' => is_string($value) ? $value : uniqid('group', true),
+            'choices' => is_array($value) ? $this->formatEventsTableForApi($value) : [],
+        ];
     }
 }

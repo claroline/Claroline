@@ -1013,13 +1013,16 @@ class ClacoFormManager
                 if (FieldFacet::FILE_TYPE === $field->getType()) {
                     /* TODO: change this when FILE_TYPE can accept an array of files again */
                     $file = $fieldFacetValue->getValue();
-                    $filePath = $this->filesDir.DIRECTORY_SEPARATOR.$file['url'];
-                    $fileParts = explode('/', $file['url']);
-                    $fileName = count($fileParts) > 0 ? $fileParts[count($fileParts) - 1] : $file['name'];
-                    $archive->addFile(
-                        $filePath,
-                        'files'.DIRECTORY_SEPARATOR.$entry->getId().DIRECTORY_SEPARATOR.$fileName
-                    );
+
+                    if (!empty($file) && is_array($file)) {
+                        $filePath = $this->filesDir.DIRECTORY_SEPARATOR.$file['url'];
+                        $fileParts = explode('/', $file['url']);
+                        $fileName = count($fileParts) > 0 ? $fileParts[count($fileParts) - 1] : $file['name'];
+                        $archive->addFile(
+                            $filePath,
+                            'files'.DIRECTORY_SEPARATOR.$entry->getId().DIRECTORY_SEPARATOR.$fileName
+                        );
+                    }
                 }
             }
         }
@@ -1055,9 +1058,6 @@ class ClacoFormManager
                     $fieldFacet = $field->getFieldFacet();
 
                     switch ($fieldFacet->getType()) {
-                        case FieldFacet::DATE_TYPE:
-                            $value = $fieldValues[$field->getId()]->format('d/m/Y');
-                            break;
                         case FieldFacet::CASCADE_TYPE:
                             $value = implode(', ', $fieldValues[$field->getId()]);
                             break;
@@ -1843,5 +1843,98 @@ class ClacoFormManager
             'mimeType' => $file->getClientMimeType(),
             'url' => '../files/clacoform'.$ds.$clacoForm->getUuid().$ds.$fileName,
         ];
+    }
+
+    /**
+     * Find all content for a given user and replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceCategoryManager(User $from, User $to)
+    {
+        $categories = $this->categoryRepo->findAllCategoriesByManager($from);
+
+        if (count($categories) > 0) {
+            foreach ($categories as $category) {
+                $category->removeManager($from);
+                $category->addManager($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($categories);
+    }
+
+    /**
+     * Find all content for a given user and replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceCommentUser(User $from, User $to)
+    {
+        $comments = $this->commentRepo->findByUser($from);
+
+        if (count($comments) > 0) {
+            foreach ($comments as $comment) {
+                $comment->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($comments);
+    }
+
+    /**
+     * Find all content for a given user and replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceEntryUser(User $from, User $to)
+    {
+        $entries = $this->entryRepo->findByUser($from);
+
+        if (count($entries) > 0) {
+            foreach ($entries as $entry) {
+                $entry->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($entries);
+    }
+
+    /**
+     * Find all content for a given user and replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceEntryUserUser(User $from, User $to)
+    {
+        $entryUsers = $this->entryUserRepo->findByUser($from);
+
+        if (count($entryUsers) > 0) {
+            foreach ($entryUsers as $entryUser) {
+                $entryUser->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($entryUsers);
     }
 }

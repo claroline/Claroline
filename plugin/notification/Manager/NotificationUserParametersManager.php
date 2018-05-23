@@ -142,4 +142,27 @@ class NotificationUserParametersManager
     {
         return md5(uniqid());
     }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceUser(User $from, User $to)
+    {
+        $notificationUserParameters = $this->notificationUserParametersRepository->findByUser($from);
+
+        if (count($notificationUserParameters) > 0) {
+            foreach ($notificationUserParameters as $notificationUserParameter) {
+                $notificationUserParameter->setUser($to);
+            }
+
+            $this->em->flush();
+        }
+
+        return count($notificationUserParameters);
+    }
 }

@@ -323,13 +323,20 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
      *
      * @return array
      */
-    public function findMimeTypesWithMostResources($max)
+    public function findMimeTypesWithMostResources($max, $organizations = null)
     {
         $qb = $this->createQueryBuilder('resource');
         $qb->select('resource.mimeType AS type, COUNT(resource.id) AS total')
             ->where($qb->expr()->isNotNull('resource.mimeType'))
             ->groupBy('resource.mimeType')
             ->orderBy('total', 'DESC');
+
+        if ($organizations !== null) {
+            $qb->leftJoin('resource.workspace', 'ws')
+                ->leftJoin('ws.organizations', 'orgas')
+                ->andWhere('orgas IN (:organizations)')
+                ->setParameter('organizations', $organizations);
+        }
 
         if ($max > 1) {
             $qb->setMaxResults($max);

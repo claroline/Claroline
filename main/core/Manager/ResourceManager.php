@@ -2073,4 +2073,27 @@ class ResourceManager
     {
         return $this->resourceNodeRepo->findBy(['workspace' => $workspace, 'deletable' => false]);
     }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceCreator(User $from, User $to)
+    {
+        $nodes = $this->resourceNodeRepo->findByCreator($from);
+
+        if (count($nodes) > 0) {
+            foreach ($nodes as $node) {
+                $node->setCreator($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($nodes);
+    }
 }

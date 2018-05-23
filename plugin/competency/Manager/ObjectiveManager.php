@@ -526,4 +526,28 @@ class ObjectiveManager
 
         return 'ujm_exercise' === $type;
     }
+
+    /**
+     * Find all content for a given user and replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceUser(User $from, User $to)
+    {
+        $objectives = $this->objectiveRepo->findAllByUser($from);
+
+        if (count($objectives) > 0) {
+            foreach ($objectives as $objective) {
+                $objective->removeUser($from);
+                $objectives->addUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($objectives);
+    }
 }

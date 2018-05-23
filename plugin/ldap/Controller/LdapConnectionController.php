@@ -25,7 +25,7 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 class LdapConnectionController extends Controller
 {
     /**
-     * @Inject("claroline.ldap_bundle.manager.ldap_manager")
+     * @Inject("claroline.manager.ldap_manager")
      *
      * @var LdapManager
      */

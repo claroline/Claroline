@@ -474,4 +474,27 @@ class PaperManager
             $data
         );
     }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceUser(User $from, User $to)
+    {
+        $papers = $this->repository->findByUser($from);
+
+        if (count($papers) > 0) {
+            foreach ($papers as $paper) {
+                $paper->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($papers);
+    }
 }

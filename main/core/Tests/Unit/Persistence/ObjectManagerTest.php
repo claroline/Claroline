@@ -22,7 +22,7 @@ class ObjectManagerTest extends MockeryTestCase
      */
     public function testHasSupportMethods($managerClass, $method, $returnValue)
     {
-        $om = new ObjectManager($this->mock($managerClass));
+        $om = new ObjectManager($this->mock($managerClass), $this->mock('Psr\Log\LoggerInterface'));
         $this->assertEquals($returnValue, $om->{$method}());
     }
 
@@ -32,7 +32,7 @@ class ObjectManagerTest extends MockeryTestCase
      */
     public function testWrappedManagerDependentMethodsThrowAnExceptionOnUnsupportedMethods($method)
     {
-        $om = new ObjectManager($this->mock('Doctrine\Common\Persistence\ObjectManager'));
+        $om = new ObjectManager($this->mock('Doctrine\Common\Persistence\ObjectManager'), $this->mock('Psr\Log\LoggerInterface'));
         $om->{$method}();
     }
 
@@ -45,7 +45,7 @@ class ObjectManagerTest extends MockeryTestCase
         $cn = $this->mock('Doctrine\DBAL\Connection');
         $oom->shouldReceive('getConnection')->once()->andReturn($cn);
         $cn->shouldReceive($method)->once();
-        $om = new ObjectManager($oom);
+        $om = new ObjectManager($oom, $this->mock('Psr\Log\LoggerInterface'));
         $om->{$method}();
     }
 
@@ -53,7 +53,7 @@ class ObjectManagerTest extends MockeryTestCase
     {
         $oom = $this->mock('Doctrine\ORM\EntityManagerInterface');
         $oom->shouldReceive('getEventManager')->once()->andReturn('evm');
-        $om = new ObjectManager($oom);
+        $om = new ObjectManager($oom, $this->mock('Psr\Log\LoggerInterface'));
         $this->assertEquals('evm', $om->getEventManager());
     }
 
@@ -61,7 +61,7 @@ class ObjectManagerTest extends MockeryTestCase
     {
         $oom = $this->mock('Doctrine\ORM\EntityManagerInterface');
         $oom->shouldReceive('getUnitOfWork')->once()->andReturn('uow');
-        $om = new ObjectManager($oom);
+        $om = new ObjectManager($oom, $this->mock('Psr\Log\LoggerInterface'));
         $this->assertEquals('uow', $om->getUnitOfWork());
     }
 
@@ -70,7 +70,7 @@ class ObjectManagerTest extends MockeryTestCase
      */
     public function testEndFlushSuiteThrowsAnExceptionIfNoSuiteHasBeenStarted()
     {
-        $om = new ObjectManager($this->mock('Doctrine\Common\Persistence\ObjectManager'));
+        $om = new ObjectManager($this->mock('Doctrine\Common\Persistence\ObjectManager'), $this->mock('Psr\Log\LoggerInterface'));
         $om->endFlushSuite();
     }
 
@@ -78,7 +78,7 @@ class ObjectManagerTest extends MockeryTestCase
     {
         $oom = $this->mock('Doctrine\Common\Persistence\ObjectManager');
         $oom->shouldReceive('flush')->once();
-        $om = new ObjectManager($oom);
+        $om = new ObjectManager($oom, $this->mock('Psr\Log\LoggerInterface'));
         $om->flush();
     }
 
@@ -86,7 +86,7 @@ class ObjectManagerTest extends MockeryTestCase
     {
         $oom = $this->mock('Doctrine\Common\Persistence\ObjectManager');
         $oom->shouldReceive('flush')->never();
-        $om = new ObjectManager($oom);
+        $om = new ObjectManager($oom, $this->mock('Psr\Log\LoggerInterface'));
         $om->startFlushSuite();
         $om->flush();
     }
@@ -95,7 +95,7 @@ class ObjectManagerTest extends MockeryTestCase
     {
         $oom = $this->mock('Doctrine\Common\Persistence\ObjectManager');
         $oom->shouldReceive('flush')->once();
-        $om = new ObjectManager($oom);
+        $om = new ObjectManager($oom, $this->mock('Psr\Log\LoggerInterface'));
         $om->startFlushSuite();
         $om->flush();
         $om->flush();
@@ -107,16 +107,15 @@ class ObjectManagerTest extends MockeryTestCase
         $om->endFlushSuite();
     }
 
-    /**
-     * @expectedException \Claroline\AppBundle\Persistence\MissingObjectException
-     */
-    public function testFindByIdsThrowsAnExceptionIfSomeEntitiesCannotBeRetreived()
+    public function testFindByLogsStuff()
     {
         $oom = $this->mock('Doctrine\ORM\EntityManager');
+        $logger = $this->mock('Psr\Log\LoggerInterface');
+        $logger->shouldReceive('warning')->once();
         $query = $this->getQuery();
         $oom->shouldReceive('createQuery')->once()->andReturn($query);
         $query->shouldReceive('getResult')->once()->andReturn(['object 1']);
-        $om = new ObjectManager($oom);
+        $om = new ObjectManager($oom, $logger);
         $om->findByIds('Foo\Bar', [1, 2]);
     }
 
@@ -130,7 +129,7 @@ class ObjectManagerTest extends MockeryTestCase
             ->andReturn($query);
         $query->shouldReceive('setParameter')->with('list', [1, 2])->once();
         $query->shouldReceive('getResult')->once()->andReturn(['object 1', 'object 2']);
-        $om = new ObjectManager($oom);
+        $om = new ObjectManager($oom, $this->mock('Psr\Log\LoggerInterface'));
         $this->assertEquals(['object 1', 'object 2'], $om->findByIds('Foo\Bar', [1, 2]));
     }
 
@@ -143,7 +142,7 @@ class ObjectManagerTest extends MockeryTestCase
             ->with('SELECT COUNT(object) FROM Foo\Bar object')
             ->andReturn($query);
         $query->shouldReceive('getSingleScalarResult')->once()->andReturn(5);
-        $om = new ObjectManager($oom);
+        $om = new ObjectManager($oom, $this->mock('Psr\Log\LoggerInterface'));
         $this->assertEquals(5, $om->count('Foo\Bar'));
     }
 

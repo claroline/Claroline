@@ -137,15 +137,20 @@ class WorkspaceRepository extends EntityRepository
      *
      * @return int
      */
-    public function countNonPersonalWorkspaces()
+    public function countNonPersonalWorkspaces($organizations = null)
     {
-        return $this->_em
-            ->createQuery('
-                SELECT COUNT(w)
-                FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-                WHERE w.personal = false
-            ')
-            ->getSingleScalarResult();
+        $qb = $this
+            ->createQueryBuilder('w')
+            ->select('COUNT(w.id)')
+            ->andWhere('w.personal = :personal')
+            ->setParameter('personal', false);
+        if ($organizations !== null) {
+            $qb->join('w.organizations', 'orgas')
+                ->andWhere('orgas IN (:organizations)')
+                ->setParameter('organizations', $organizations);
+        }
+
+        return $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -397,7 +402,7 @@ class WorkspaceRepository extends EntityRepository
      *
      * @return array
      */
-    public function findWorkspacesWithMostResources($max)
+    public function findWorkspacesWithMostResources($max, $organizations = null)
     {
         $qb = $this
             ->createQueryBuilder('ws')
@@ -405,6 +410,12 @@ class WorkspaceRepository extends EntityRepository
             ->leftJoin('Claroline\CoreBundle\Entity\Resource\ResourceNode', 'rs', 'WITH', 'ws = rs.workspace')
             ->groupBy('ws.id')
             ->orderBy('total', 'DESC');
+
+        if ($organizations !== null) {
+            $qb->leftJoin('ws.organizations', 'orgas')
+                ->andWhere('orgas IN (:organizations)')
+                ->setParameter('organizations', $organizations);
+        }
 
         if ($max > 1) {
             $qb->setMaxResults($max);

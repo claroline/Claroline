@@ -29,7 +29,7 @@ use Symfony\Component\Yaml\Dumper;
 use Symfony\Component\Yaml\Parser;
 
 /**
- * @Service()
+ * @Service("claroline.manager.ldap_manager")
  */
 class LdapManager
 {
@@ -618,5 +618,28 @@ class LdapManager
         $server['locale'] = '';
 
         return $server;
+    }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceUser(User $from, User $to)
+    {
+        $ldapUsers = $this->messageRepo->findByUser($from);
+
+        if (count($ldapUsers) > 0) {
+            foreach ($ldapUsers as $ldapUser) {
+                $ldapUser->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($ldapUsers);
     }
 }

@@ -892,4 +892,51 @@ class TeamManager
     {
         return $this->workspaceTeamParamsRepo->findParametersByWorkspace($workspace, $executeQuery);
     }
+
+    /**
+     * Find all content for a given user and replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceManager(User $from, User $to)
+    {
+        $teams = $this->teamRepo->findByTeamManager($from);
+
+        if (count($teams) > 0) {
+            foreach ($teams as $team) {
+                $team->setTeamManager($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($teams);
+    }
+
+    /**
+     * Find all content for a given user and replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceUser(User $from, User $to)
+    {
+        $teams = $this->teamRepo->findTeamsByUser($from);
+
+        if (count($teams) > 0) {
+            foreach ($teams as $team) {
+                $team->removeUser($from);
+                $team->addUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($teams);
+    }
 }

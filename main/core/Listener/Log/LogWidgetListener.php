@@ -87,11 +87,11 @@ class LogWidgetListener
         $params = ($instance->isDesktop()) ?
             $this->logManager->getDesktopWidgetList($instance) :
             $this->logManager->getWorkspaceWidgetList($instance);
-        $view = $this->twig->render('ClarolineCoreBundle:Log:no_action_found.html.twig', []);
+        $view = $this->twig->render('ClarolineCoreBundle:log:no_action_found.html.twig', []);
 
         if ($params && count($params['logs']) > 0) {
             $view = $this->twig->render(
-                'ClarolineCoreBundle:Log:view_short_list.html.twig',
+                'ClarolineCoreBundle:log:view_short_list.html.twig',
                 $params
             );
         }
@@ -138,7 +138,7 @@ class LogWidgetListener
                     ['workspaces' => $workspaces]
                 );
             $content = $this->twig->render(
-                'ClarolineCoreBundle:Log:config_desktop_widget_form.html.twig',
+                'ClarolineCoreBundle:log:config_desktop_widget_form.html.twig',
                 [
                     'form' => $form->createView(),
                     'instance' => $instance,
@@ -147,7 +147,7 @@ class LogWidgetListener
         } else {
             $form = $this->formFactory->create($this->logWorkspaceWidgetConfigForm, $config);
             $content = $this->twig->render(
-                'ClarolineCoreBundle:Log:config_workspace_widget_form.html.twig',
+                'ClarolineCoreBundle:log:config_workspace_widget_form.html.twig',
                 [
                     'form' => $form->createView(),
                     'instance' => $instance,

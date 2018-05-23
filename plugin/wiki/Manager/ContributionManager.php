@@ -2,6 +2,8 @@
 
 namespace Icap\WikiBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\User;
 use Icap\HtmlDiff\HtmlDiff;
 use Icap\WikiBundle\Entity\Contribution;
 use Icap\WikiBundle\Entity\Section;
@@ -13,16 +15,24 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class ContributionManager
 {
+    /** @var ObjectManager */
+    protected $om;
+
     /** @var \Icap\WikiBundle\Repository\ContributionRepository */
     protected $contributionRepository;
 
     /**
      * @DI\InjectParams({
+     *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
      *     "contributionRepository" = @DI\Inject("icap.wiki.contribution_repository")
      * })
+     *
+     * @param ObjectManager          $om
+     * @param ContributionRepository $contributionRepository
      */
-    public function __construct(ContributionRepository $contributionRepository)
+    public function __construct(ObjectManager $om, ContributionRepository $contributionRepository)
     {
+        $this->om = $om;
         $this->contributionRepository = $contributionRepository;
     }
 
@@ -63,5 +73,28 @@ class ContributionManager
     public function getContribution(Contribution $contribution)
     {
         return $this->contributionRepository->findById($contribution->getId());
+    }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceUser(User $from, User $to)
+    {
+        $contributions = $this->contributionRepository->findByContributor($from);
+
+        if (count($contributions) > 0) {
+            foreach ($contributions as $contribution) {
+                $contribution->setContributor($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($contributions);
     }
 }

@@ -452,32 +452,45 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
     /**
      * Counts the users subscribed in a platform role.
      *
-     * @param $role
+     * @param Role $role
      * @param $restrictionRoleNames
+     * @param null $organizations
      *
      * @return int
      */
-    public function countUsersByRole(Role $role, $restrictionRoleNames = null)
+    public function countUsersByRole(Role $role, $restrictionRoleNames = null, $organizations = null)
     {
         $qb = $this->createQueryBuilder('user')
             ->select('COUNT(DISTINCT user.id)')
             ->leftJoin('user.roles', 'roles')
             ->andWhere('roles.id = :roleId')
-            ->setParameter('roleId', $role->getId());
+            ->andWhere('user.isEnabled = :enabled')
+            ->setParameter('roleId', $role->getId())
+            ->setParameter('enabled', true);
         if (!empty($restrictionRoleNames)) {
             $qb->andWhere('user.id NOT IN (:userIds)')
                 ->setParameter('userIds', $this->findUserIdsInRoles($restrictionRoleNames));
+        }
+        if ($organizations !== null) {
+            $qb->join('user.userOrganizationReferences', 'orgaRef')
+                ->andWhere('orgaRef.organization IN (:organizations)')
+                ->setParameter('organizations', $organizations);
         }
         $query = $qb->getQuery();
 
         return $query->getSingleScalarResult();
     }
 
-    public function countUsers()
+    public function countUsers($organizations = null)
     {
         $qb = $this->createQueryBuilder('user')
             ->select('COUNT(user.id)')
             ->where('user.isRemoved = false');
+        if ($organizations !== null) {
+            $qb->join('user.userOrganizationReferences', 'orgaRef')
+                ->andWhere('orgaRef.organization IN (:organizations)')
+                ->setParameter('organizations', $organizations);
+        }
 
         return $qb->getQuery()->getSingleScalarResult();
     }
@@ -492,14 +505,14 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
     public function findUserIdsInRoles($roleNames)
     {
         $qb = $this->createQueryBuilder('user')
-            ->select('user.id')
+            ->select('DISTINCT(user.id) as id')
             ->leftJoin('user.roles', 'roles')
             ->andWhere('roles.name IN (:roleNames)')
             ->andWhere('user.isRemoved = false')
             ->setParameter('roleNames', $roleNames);
         $query = $qb->getQuery();
 
-        return $query->getArrayResult();
+        return array_column($query->getScalarResult(), 'id');
     }
 
     /**
@@ -510,12 +523,19 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
      *
      * @return User[]
      */
-    public function findUsersEnrolledInMostWorkspaces($max)
+    public function findUsersEnrolledInMostWorkspaces($max, $organizations = null)
     {
+        $orgasJoin = '';
+        $orgasCondition = '';
+        if ($organizations !== null) {
+            $orgasJoin = 'JOIN ws.organizations orgas';
+            $orgasCondition = 'AND orgas IN (:organizations)';
+        }
         $dql = "
             SELECT CONCAT(CONCAT(u.firstName, ' '), u.lastName) AS name, u.username, COUNT(DISTINCT ws.id) AS total
             FROM Claroline\CoreBundle\Entity\User u, Claroline\CoreBundle\Entity\Workspace\Workspace ws
-            WHERE CONCAT(CONCAT(u.id,':'), ws.id) IN
+            ${orgasJoin}
+            WHERE (CONCAT(CONCAT(u.id,':'), ws.id) IN
             (
                 SELECT CONCAT(CONCAT(u1.id, ':'), ws1.id)
                 FROM Claroline\CoreBundle\Entity\Workspace\Workspace ws1
@@ -528,13 +548,18 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
                 JOIN ws2.roles r2
                 JOIN r2.groups g2
                 JOIN g2.users u2
-            )
+            ))
+            ${orgasCondition}
             AND u.isRemoved = false
             GROUP BY u.id
             ORDER BY total DESC, name ASC
         ";
 
         $query = $this->_em->createQuery($dql);
+
+        if ($organizations !== null) {
+            $query->setParameter('organizations', $organizations);
+        }
 
         if ($max > 1) {
             $query->setMaxResults($max);
@@ -755,17 +780,30 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
      *
      * @return array
      */
-    public function findUsersOwnersOfMostWorkspaces($max)
+    public function findUsersOwnersOfMostWorkspaces($max, $organizations = null)
     {
+        $orgasJoin = '';
+        $orgasCondition = '';
+        if ($organizations !== null) {
+            $orgasJoin = 'JOIN ws.organizations orgas';
+            $orgasCondition = 'AND orgas IN (:organizations)';
+        }
+
         $dql = "
             SELECT CONCAT(CONCAT(u.firstName,' '), u.lastName) AS name, u.username, COUNT(DISTINCT ws.id) AS total
             FROM Claroline\CoreBundle\Entity\Workspace\Workspace ws
             JOIN ws.creator u
+            ${orgasJoin}
             WHERE u.isRemoved = false
+            ${orgasCondition}
             GROUP BY u.id
             ORDER BY total DESC
         ";
         $query = $this->_em->createQuery($dql);
+
+        if ($organizations !== null) {
+            $query->setParameter('organizations', $organizations);
+        }
 
         if ($max > 1) {
             $query->setMaxResults($max);

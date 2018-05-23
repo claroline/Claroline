@@ -46,7 +46,7 @@ class LogListener
     public function onCreateLogListItem(LogCreateDelegateViewEvent $event)
     {
         $content = $this->container->get('templating')->render(
-            'IcapSocialmediaBundle:Log:log_list_item.html.twig',
+            'IcapSocialmediaBundle:log:log_list_item.html.twig',
             ['log' => $event->getLog()]
         );
 
@@ -64,11 +64,11 @@ class LogListener
     public function onCreateLogDetails(LogCreateDelegateViewEvent $event)
     {
         $content = $this->container->get('templating')->render(
-            'IcapSocialmediaBundle:Log:log_details.html.twig',
+            'IcapSocialmediaBundle:log:log_details.html.twig',
             [
                 'log' => $event->getLog(),
                 'listItemView' => $this->container->get('templating')->render(
-                    'IcapSocialmediaBundle:Log:log_list_item.html.twig',
+                    'IcapSocialmediaBundle:log:log_list_item.html.twig',
                     ['log' => $event->getLog()]
                 ),
             ]

@@ -27,6 +27,7 @@ class ObjectManager extends ObjectManagerDecorator
 {
     use LoggableTrait;
 
+    private $monolog;
     private $flushSuiteLevel = 0;
     private $supportsTransactions = false;
     private $hasEventManager = false;
@@ -39,18 +40,20 @@ class ObjectManager extends ObjectManagerDecorator
      * ObjectManager constructor.
      *
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("doctrine.orm.entity_manager")
+     *     "om"     = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "logger" = @DI\Inject("logger")
      * })
      *
      * @param ObjectManagerInterface $om
      */
-    public function __construct(ObjectManagerInterface $om)
+    public function __construct(ObjectManagerInterface $om, LoggerInterface $logger)
     {
         $this->wrapped = $om;
         $this->supportsTransactions
             = $this->hasEventManager
             = $this->hasUnitOfWork
             = $om instanceof EntityManagerInterface;
+        $this->monolog = $logger;
     }
 
     /**
@@ -260,9 +263,7 @@ class ObjectManager extends ObjectManagerDecorator
         $objects = $query->getResult();
 
         if (($entityCount = count($objects)) !== ($idCount = count($list))) {
-            throw new MissingObjectException(
-                "{$entityCount} out of {$idCount} ids don't match any existing object"
-            );
+            $this->monolog->warning("{$entityCount} out of {$idCount} ids don't match any existing object");
         }
 
         if ($orderStrict) {
@@ -310,6 +311,7 @@ class ObjectManager extends ObjectManagerDecorator
         $this->allowForceFlush = $bool;
     }
 
+    //override the monolog logger if something else is needed for debug
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;

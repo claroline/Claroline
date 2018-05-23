@@ -23,7 +23,7 @@ use JMS\Serializer\Annotation\Groups;
  *         @ORM\UniqueConstraint(name="uniq", columns={"user", "deck"})
  *     }
  *  )
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\FlashCardBundle\Repository\UserPreferenceRepository")
  */
 class UserPreference
 {

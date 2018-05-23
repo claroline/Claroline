@@ -34,6 +34,20 @@ class CategoryRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function findAllCategoriesByManager(User $manager)
+    {
+        $dql = '
+            SELECT c
+            FROM Claroline\ClacoFormBundle\Entity\Category c
+            JOIN c.managers m
+            WHERE m = :manager
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('manager', $manager);
+
+        return $query->getResult();
+    }
+
     public function findCategoriesByIds(array $ids)
     {
         $dql = '

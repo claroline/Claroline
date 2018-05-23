@@ -94,23 +94,32 @@ class WidgetInstanceRepository extends EntityRepository implements ContainerAwar
      *
      * @return int
      */
-    public function countWidgetInstances($filter = null)
+    public function countWidgetInstances($filter = null, $organizations = null)
     {
-        $query = $this->createQueryBuilder('widget')
-            ->select('COUNT(widget)');
+        $qb = $this->createQueryBuilder('widget')
+            ->select('COUNT(widget.id)');
 
         switch ($filter) {
             case 'workspace':
-                $query->where('widget.isDesktop = FALSE');
+                $qb->where('widget.isDesktop = FALSE');
                 break;
             case 'desktop':
-                $query->where('widget.isDesktop = TRUE');
+                $qb->where('widget.isDesktop = TRUE');
                 break;
             default:
                 break;
         }
 
-        return $query->getQuery()->getSingleScalarResult();
+        if ($organizations !== null) {
+            $qb->leftJoin('widget.user', 'user')
+                ->leftJoin('user.userOrganizationReferences', 'orgaRef')
+                ->leftJoin('widget.workspace', 'ws')
+                ->leftJoin('ws.organizations', 'orgas')
+                ->andWhere($qb->expr()->orX('orgaRef.organization IN (:organizations)', 'orgas IN (:organizations)'))
+                ->setParameter('organizations', $organizations);
+        }
+
+        return $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -118,14 +127,23 @@ class WidgetInstanceRepository extends EntityRepository implements ContainerAwar
      *
      * @return array
      */
-    public function countByType()
+    public function countByType($organizations = null)
     {
-        return $this->createQueryBuilder('wi')
+        $qb = $this->createQueryBuilder('wi')
             ->select('wi.id, w.name, COUNT(w.id) AS total, SUM(CASE WHEN wi.isDesktop = TRUE THEN 1 ELSE 0 END) AS totalByDesktop, SUM(CASE WHEN wi.isDesktop = FALSE THEN 1 ELSE 0 END) AS totalByWorkspace')
             ->leftJoin('wi.widget', 'w')
             ->groupBy('w.id')
-            ->orderBy('total', 'DESC')
-            ->getQuery()
-            ->getResult();
+            ->orderBy('total', 'DESC');
+
+        if ($organizations !== null) {
+            $qb->leftJoin('wi.user', 'user')
+                ->leftJoin('user.userOrganizationReferences', 'orgaRef')
+                ->leftJoin('wi.workspace', 'ws')
+                ->leftJoin('ws.organizations', 'orgas')
+                ->andWhere($qb->expr()->orX('orgaRef.organization IN (:organizations)', 'orgas IN (:organizations)'))
+                ->setParameter('organizations', $organizations);
+        }
+
+        return $qb->getQuery()->getResult();
     }
 }

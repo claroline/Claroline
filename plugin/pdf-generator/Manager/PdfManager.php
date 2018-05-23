@@ -13,6 +13,7 @@ namespace Claroline\PdfGeneratorBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\ForumBundle\Repository\PdfRepository;
 use Claroline\PdfGeneratorBundle\Entity\Pdf;
 use JMS\DiExtraBundle\Annotation as DI;
 use Knp\Snappy\Pdf as PdfSnappy;
@@ -22,12 +23,15 @@ use Knp\Snappy\Pdf as PdfSnappy;
  */
 class PdfManager
 {
+    /** @var PdfRepository */
+    private $repo;
+
     /**
      * @DI\InjectParams({
-     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
-     *     "snappy"       = @DI\Inject("knp_snappy.pdf"),
-     *     "pdfDir"       = @DI\Inject("%claroline.param.pdf_directory%"),
-     *     "ut"          = @DI\Inject("claroline.utilities.misc")
+     *     "om"     = @DI\Inject("claroline.persistence.object_manager"),
+     *     "snappy" = @DI\Inject("knp_snappy.pdf"),
+     *     "pdfDir" = @DI\Inject("%claroline.param.pdf_directory%"),
+     *     "ut"     = @DI\Inject("claroline.utilities.misc")
      * })
      */
     public function __construct(
@@ -40,6 +44,7 @@ class PdfManager
         $this->snappy = $snappy;
         $this->pdfDir = $pdfDir;
         $this->ut = $ut;
+        $this->repo = $om->getRepository('ClarolinePdfGeneratorBundle:Pdf');
     }
 
     public function create($html, $name, User $creator, $subFolder = 'main')
@@ -74,5 +79,28 @@ class PdfManager
         $ds = DIRECTORY_SEPARATOR;
 
         return realpath($this->pdfDir.$ds.$pdf->getPath());
+    }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceUser(User $from, User $to)
+    {
+        $pdfs = $this->repo->findByCreator($from);
+
+        if (count($pdfs) > 0) {
+            foreach ($pdfs as $pdf) {
+                $pdf->setCreator($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($pdfs);
     }
 }

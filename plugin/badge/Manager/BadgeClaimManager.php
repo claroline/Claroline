@@ -47,4 +47,27 @@ class BadgeClaimManager
 
         return $claimedBadges;
     }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceBadgeClaimUser(User $from, User $to)
+    {
+        $badgeClaims = $this->entityManager->getRepository('IcapBadgeBundle:BadgeClaim')->findByUser($from);
+
+        if (count($badgeClaims) > 0) {
+            foreach ($badgeClaims as $badgeClaim) {
+                $badgeClaim->setUser($to);
+            }
+
+            $this->entityManager->flush();
+        }
+
+        return count($badgeClaims);
+    }
 }

@@ -386,4 +386,50 @@ class AgendaManager
             throw new AccessDeniedException('You cannot edit the agenda');
         }
     }
+
+    /**
+     * Find every Event for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceEventUser(User $from, User $to)
+    {
+        $events = $this->om->getRepository('ClarolineAgendaBundle:Event')->findBy(['user' => $from]);
+
+        if (count($events) > 0) {
+            foreach ($events as $event) {
+                $event->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($events);
+    }
+
+    /**
+     * Find every EventInvitation for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceEventInvitationUser(User $from, User $to)
+    {
+        $eventInvitations = $this->om->getRepository('ClarolineAgendaBundle:EventInvitation')->findByUser($from);
+
+        if (count($eventInvitations) > 0) {
+            foreach ($eventInvitations as $eventInvitation) {
+                $eventInvitation->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($eventInvitations);
+    }
 }

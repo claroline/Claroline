@@ -11,16 +11,17 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\Log\LogResourceExportEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
-use Claroline\CoreBundle\Repository\AbstractResourceRepository;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
-use Claroline\CoreBundle\Repository\UserRepository;
-use Claroline\CoreBundle\Repository\WorkspaceRepository;
+use Claroline\CoreBundle\Repository\ResourceNodeRepository;
+use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -28,228 +29,271 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class AnalyticsManager
 {
-    /** @var AbstractResourceRepository */
+    /** @var ResourceNodeRepository */
     private $resourceRepo;
-    /** @var AbstractResourceRepository */
+
+    /** @var ResourceTypeRepository */
     private $resourceTypeRepo;
-    /** @var UserRepository */
-    private $userRepo;
-    /** @var WorkspaceRepository */
-    private $workspaceRepo;
+
     /** @var LogRepository */
     private $logRepository;
 
+    /** @var LogManager */
+    private $logManager;
+
+    /** @var UserManager */
+    private $userManager;
+
+    /** @var WorkspaceManager */
+    private $workspaceManager;
+
+    /** @var WidgetManager */
+    private $widgetManager;
+
+    /** @var StrictDispatcher */
+    private $dispatcher;
+
     /**
      * @DI\InjectParams({
-     *     "objectManager" = @DI\Inject("claroline.persistence.object_manager")
+     *     "objectManager"          = @DI\Inject("claroline.persistence.object_manager"),
+     *     "logManager"             = @DI\Inject("claroline.log.manager"),
+     *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),
+     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "widgetManager"          = @DI\Inject("claroline.manager.widget_manager"),
+     *     "dispatcher"             = @DI\Inject("claroline.event.event_dispatcher")
      * })
+     *
+     * @param ObjectManager    $objectManager
+     * @param LogManager       $logManager
+     * @param UserManager      $userManager
+     * @param WorkspaceManager $workspaceManager
+     * @param WidgetManager    $widgetManager
+     * @param StrictDispatcher $dispatcher
      */
-    public function __construct(ObjectManager $objectManager)
-    {
-        $this->om = $objectManager;
+    public function __construct(
+        ObjectManager $objectManager,
+        LogManager $logManager,
+        UserManager $userManager,
+        WorkspaceManager $workspaceManager,
+        WidgetManager $widgetManager,
+        StrictDispatcher $dispatcher
+    ) {
+        $this->logManager = $logManager;
+        $this->userManager = $userManager;
+        $this->workspaceManager = $workspaceManager;
+        $this->widgetManager = $widgetManager;
+        $this->dispatcher = $dispatcher;
         $this->resourceRepo = $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
         $this->resourceTypeRepo = $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceType');
-        $this->userRepo = $objectManager->getRepository('ClarolineCoreBundle:User');
-        $this->workspaceRepo = $objectManager->getRepository('ClarolineCoreBundle:Workspace\Workspace');
         $this->logRepository = $objectManager->getRepository('ClarolineCoreBundle:Log\Log');
     }
 
-    public function getDefaultRange()
+    public function getResourceTypesCount(Workspace $workspace = null, $organizations = null)
     {
-        //By default last thirty days :
-        $startDate = new \DateTime('now');
-        $startDate->setTime(0, 0, 0);
-        $startDate->sub(new \DateInterval('P29D')); // P29D means a period of 29 days
-
-        $endDate = new \DateTime('now');
-        $endDate->setTime(23, 59, 59);
-
-        return [$startDate->getTimestamp(), $endDate->getTimestamp()];
-    }
-
-    public function getYesterdayRange()
-    {
-        //By default last thirty days :
-        $startDate = new \DateTime('now');
-        $startDate->setTime(0, 0, 0);
-        $startDate->sub(new \DateInterval('P1D')); // P1D means a period of 1 days
-
-        $endDate = new \DateTime('now');
-        $endDate->setTime(23, 59, 59);
-        $endDate->sub(new \DateInterval('P1D')); // P1D means a period of 1 days
-
-        return [$startDate->getTimestamp(), $endDate->getTimestamp()];
-    }
-
-    public function getDailyActionNumberForDateRange(
-        $range = null,
-        $action = null,
-        $unique = false,
-        $workspaceIds = null
-    ) {
-        if (null === $action) {
-            $action = '';
+        $resourceTypes = $this->resourceTypeRepo->countResourcesByType($workspace, $organizations);
+        $chartData = [];
+        foreach ($resourceTypes as $type) {
+            $chartData["rt-${type['id']}"] = [
+                'xData' => $type['name'],
+                'yData' => floatval($type['total']),
+            ];
         }
-
-        if (null === $range) {
-            $range = $this->getDefaultRange();
-        }
-
-        $userSearch = null;
-        $actionRestriction = null;
-        $chartData = $this->logRepository->countByDayFilteredLogs(
-            $action,
-            $range,
-            $userSearch,
-            $actionRestriction,
-            $workspaceIds,
-            $unique
-        );
 
         return $chartData;
     }
 
-    public function getTopByCriteria($range = null, $topType = null, $max = 30)
+    public function getOtherResourceTypesCount()
     {
-        if (null === $topType) {
-            $topType = 'top_users_connections';
-        }
-        $listData = [];
+        /** @var \Claroline\CoreBundle\Event\Analytics\PlatformContentItemEvent $event */
+        $event = $this->dispatcher->dispatch(
+            'administration_analytics_platform_content_item_add',
+            'Analytics\PlatformContentItem'
+        );
 
-        switch ($topType) {
-            case 'top_extension':
-                $listData = $this->resourceRepo->findMimeTypesWithMostResources($max);
-                break;
-            case 'top_workspaces_resources':
-                $listData = $this->workspaceRepo->findWorkspacesWithMostResources($max);
-                break;
-            case 'top_workspaces_connections':
-                $listData = $this->topWSByAction($range, LogWorkspaceToolReadEvent::ACTION, $max);
-                break;
-            case 'top_resources_views':
-                $listData = $this->topResourcesByAction($range, LogResourceReadEvent::ACTION, $max);
-                break;
-            case 'top_resources_downloads':
-                $listData = $this->topResourcesByAction($range, LogResourceExportEvent::ACTION, $max);
-                break;
-            case 'top_users_connections':
-                $listData = $this->topUsersByAction($range, LogUserLoginEvent::ACTION, $max);
-                break;
-            case 'top_users_workspaces_enrolled':
-                $listData = $this->userRepo->findUsersEnrolledInMostWorkspaces($max);
-                break;
-            case 'top_users_workspaces_owners':
-                $listData = $this->userRepo->findUsersOwnersOfMostWorkspaces($max);
-                break;
-            case 'top_media_views':
-                $listData = $this->topMediaByAction($range, LogResourceReadEvent::ACTION, $max);
-                break;
+        $resourceTypes = [];
+        foreach ($event->getItems() as $type) {
+            if (floatval($type['value']) > 0) {
+                $resourceTypes['ort-'.$type['item']] = [
+                    'id' => $type['item'],
+                    'xData' => $type['label'],
+                    'yData' => floatval($type['value']),
+                ];
+            }
         }
 
-        return $listData;
+        return $resourceTypes;
     }
 
-    public function topWSByAction($range = null, $action = null, $max = -1)
+    public function getDailyActions(array $finderParams = [])
     {
-        if (null === $range) {
-            $range = $this->getYesterdayRange();
-        }
-
-        if (null === $action) {
-            $action = LogWorkspaceToolReadEvent::ACTION;
-        }
-
-        $resultData = $this->logRepository->topWSByAction($range, $action, $max);
-
-        return $resultData;
+        return $this->logManager->getChartData($this->formatQueryParams($finderParams));
     }
 
-    public function topMediaByAction($range = null, $action = null, $max = -1)
+    public function topWorkspaceByAction(array $finderParams)
     {
-        if (null === $range) {
-            $range = $this->getYesterdayRange();
+        $query = $this->formatQueryParams($finderParams);
+
+        if (!isset($query['filters']['action'])) {
+            $query['filters']['action'] = LogWorkspaceToolReadEvent::ACTION;
         }
+        $queryParams = FinderProvider::parseQueryParams($query);
 
-        if (null === $action) {
-            $action = LogResourceReadEvent::ACTION;
-        }
-
-        $resultData = $this->logRepository->topMediaByAction($range, $action, $max);
-
-        return $resultData;
+        return $this->logRepository->findTopWorkspaceByAction($queryParams['allFilters'], $queryParams['limit']);
     }
 
-    public function topResourcesByAction($range = null, $action = null, $max = -1)
+    public function topResourcesByAction(array $finderParams, $onlyMedia = false)
     {
-        if (null === $range) {
-            $range = $this->getYesterdayRange();
+        $query = $this->formatQueryParams($finderParams);
+
+        if (!isset($query['filters']['action'])) {
+            $query['filters']['action'] = LogResourceReadEvent::ACTION;
         }
 
-        if (null === $action) {
-            $action = LogResourceReadEvent::ACTION;
+        if ($onlyMedia) {
+            $query['filters']['resourceType'] = 'file';
         }
+        $queryParams = FinderProvider::parseQueryParams($query);
 
-        $resultData = $this->logRepository->topResourcesByAction($range, $action, $max);
-
-        return $resultData;
+        return $this->logRepository->findTopResourcesByAction($queryParams['allFilters'], $queryParams['limit']);
     }
 
-    public function topUsersByAction($range = null, $action = null, $max = -1)
+    public function userRolesData($organizations = null)
     {
-        if (null === $range) {
-            $range = $this->getYesterdayRange();
-        }
+        return $this->userManager->countUsersForPlatformRoles($organizations);
+    }
 
-        if (null === $action) {
-            $action = LogUserLoginEvent::ACTION;
-        }
+    public function countNonPersonalWorkspaces($organizations = null)
+    {
+        return $this->workspaceManager->getNbNonPersonalWorkspaces($organizations);
+    }
 
-        $resultData = $this->logRepository->topUsersByAction($range, $action, $max);
+    public function getWidgetsData($organizations = null)
+    {
+        $all = floatval($this->widgetManager->getNbWidgetInstances($organizations));
+        $ws = floatval($this->widgetManager->getNbWorkspaceWidgetInstances($organizations));
+        $desktop = floatval($this->widgetManager->getNbDesktopWidgetInstances($organizations));
+        $list = $this->widgetManager->countWidgetsByType($organizations);
 
-        return $resultData;
+        return [
+            'all' => $all,
+            'workspace' => $ws,
+            'desktop' => $desktop,
+            'list' => $list,
+        ];
     }
 
     /**
      * Retrieve user who connected at least one time on the application.
      *
-     * @return mixed
+     * @param array $finderParams
+     * @param bool  $defaultPeriod
+     *
+     * @return int
      */
-    public function getActiveUsers()
+    public function countActiveUsers(array $finderParams = [], $defaultPeriod = false)
     {
-        $resultData = $this->logRepository->activeUsers();
+        if ($defaultPeriod) {
+            $finderParams = $this->formatQueryParams($finderParams);
+        }
+        $queryParams = FinderProvider::parseQueryParams($finderParams);
+        $resultData = $this->logRepository->countActiveUsers($queryParams['allFilters']);
 
-        return $resultData;
+        return floatval($resultData);
     }
 
-    /**
-     * Retrieve users who connected at least one time on the application in the given time frame.
-     */
-    public function getActiveUsersForDateRange($range)
+    private function formatQueryParams(array $finderParams = [])
     {
-        $resultData = $this->logRepository->activeUsersByDateRange($range);
+        $filters = isset($finderParams['filters']) ? $finderParams['filters'] : [];
+        $hiddenFilters = isset($finderParams['hiddenFilters']) ? $finderParams['hiddenFilters'] : [];
 
-        return $resultData;
+        return [
+            'filters' => $this->formatDateRange($filters),
+            'hiddenFilters' => $hiddenFilters,
+        ];
     }
 
-    public function getWorkspaceResourceTypesCount(Workspace $workspace)
+    private function formatDateRange(array $filters)
     {
-        return $this->resourceTypeRepo->countResourcesByType($workspace);
+        // Default 30 days analytics
+        if (!isset($filters['dateLog'])) {
+            $date = new \DateTime('now');
+            $date->setTime(0, 0, 0);
+            $date->sub(new \DateInterval('P30D'));
+            $filters['dateLog'] = clone $date;
+        }
+
+        if (!isset($filters['dateTo'])) {
+            $date = clone $filters['dateLog'];
+            $date->add(new \DateInterval('P30D'));
+            $date->setTime(23, 59, 59);
+            $filters['dateTo'] = clone $date;
+        }
+
+        return $filters;
     }
 
-    /**
-     * Retrieve analytics for workspace: chartData and resource statistics.
-     */
-    public function getWorkspaceAnalytics(Workspace $workspace)
+    public function getTopActions(array $finderParams = [])
     {
-        $range = $this->getDefaultRange();
-        $action = 'workspace-enter';
-        $workspaceIds = [$workspace->getId()];
-        $chartData = $this->getDailyActionNumberForDateRange($range, $action, false, $workspaceIds);
-        $resourcesByType = $this->resourceTypeRepo->countResourcesByType($workspace);
+        $finderParams['filters'] = isset($finderParams['filters']) ? $finderParams['filters'] : [];
+        $topType = isset($finderParams['filters']['type']) ? $finderParams['filters']['type'] : 'top_users_connections';
+        unset($finderParams['filters']['type']);
+        $organizations = isset($finderParams['hiddenFilters']['organization']) ?
+            $finderParams['hiddenFilters']['organization'] :
+            null;
+        $finderParams['limit'] = isset($finderParams['limit']) ? intval($finderParams['limit']) : 10;
+        switch ($topType) {
+            case 'top_extension':
+                $listData = $this->resourceRepo->findMimeTypesWithMostResources($finderParams['limit'], $organizations);
+                break;
+            case 'top_workspaces_resources':
+                $listData = $this->workspaceManager->getWorkspacesWithMostResources($finderParams['limit'], $organizations);
+                break;
+            case 'top_workspaces_connections':
+                $finderParams['filters']['action'] = LogWorkspaceToolReadEvent::ACTION;
+                $listData = $this->topWorkspaceByAction($finderParams);
+                break;
+            case 'top_resources_views':
+                $finderParams['filters']['action'] = LogResourceReadEvent::ACTION;
+                $listData = $this->topResourcesByAction($finderParams);
+                break;
+            case 'top_resources_downloads':
+                $finderParams['filters']['action'] = LogResourceExportEvent::ACTION;
+                $listData = $this->topResourcesByAction($finderParams);
+                break;
+            case 'top_users_workspaces_enrolled':
+                $listData = $this->userManager->getUsersEnrolledInMostWorkspaces($finderParams['limit'], $organizations);
+                break;
+            case 'top_users_workspaces_owners':
+                $listData = $this->userManager->getUsersOwnersOfMostWorkspaces($finderParams['limit'], $organizations);
+                break;
+            case 'top_media_views':
+                $finderParams['filters']['action'] = LogResourceReadEvent::ACTION;
+                $listData = $this->topResourcesByAction($finderParams, true);
+                break;
+            case 'top_users_connections':
+            default:
+                $finderParams['filters']['action'] = LogUserLoginEvent::ACTION;
+                $finderParams['sortBy'] = '-actions';
+                $listData = $this->logManager->getUserActionsList($finderParams);
+                $listData = $listData['data'];
+                break;
+        }
 
-        return ['chartData' => $chartData,
-            'resourceCount' => $resourcesByType,
-            'workspace' => $workspace,
+        foreach ($listData as $idx => &$data) {
+            if (!isset($data['id'])) {
+                $data['id'] = "top-{$idx}";
+            }
+        }
+
+        return [
+            'data' => $listData,
+            'filters' => [
+                ['property' => 'type', 'value' => $topType],
+            ],
+            'page' => 0,
+            'pageSize' => $finderParams['limit'],
+            'sortBy' => null,
+            'totalResults' => count($listData),
         ];
     }
 }

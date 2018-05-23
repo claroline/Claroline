@@ -54,4 +54,27 @@ class PortfolioGuideManager
 
         $this->entityManager->flush($portfolioGuide);
     }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceUser(User $from, User $to)
+    {
+        $portfolioGuides = $this->entityManager->getRepository('IcapPortfolioBundle:PortfolioGuide')->findByUser($from);
+
+        if (count($portfolioGuides) > 0) {
+            foreach ($portfolioGuides as $portfolioGuide) {
+                $portfolioGuide->setUser($to);
+            }
+
+            $this->entityManager->flush();
+        }
+
+        return count($portfolioGuides);
+    }
 }

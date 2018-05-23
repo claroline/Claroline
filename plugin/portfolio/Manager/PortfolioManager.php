@@ -448,4 +448,27 @@ class PortfolioManager
 
         return $portfolioRepository->countAllByVisibilityStatus();
     }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceUser(User $from, User $to)
+    {
+        $portfolios = $this->entityManager->getRepository('IcapPortfolioBundle:Portfolio')->findByUser($from);
+
+        if (count($portfolios) > 0) {
+            foreach ($portfolios as $portfolio) {
+                $portfolio->setUser($to);
+            }
+
+            $this->entityManager->flush();
+        }
+
+        return count($portfolios);
+    }
 }

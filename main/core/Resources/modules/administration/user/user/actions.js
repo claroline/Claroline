@@ -1,8 +1,10 @@
 import {url} from '#/main/core/api/router'
+import {navigate} from '#/main/core/router'
 
 import {API_REQUEST} from '#/main/core/api/actions'
 import {actions as listActions} from '#/main/core/data/list/actions'
 import {actions as formActions} from '#/main/core/data/form/actions'
+import {actions as compareActions} from '#/main/core/data/comparisonTable/actions'
 
 import {User as UserTypes} from '#/main/core/user/prop-types'
 
@@ -18,6 +20,21 @@ actions.open = (formName, id = null) => {
     }
   } else {
     return formActions.resetForm(formName, UserTypes.defaultProps, true)
+  }
+}
+
+actions.compare = (ids) => {
+  const queryParams = []
+
+  ids.map((id, index) => {
+    queryParams.push(`filters[id][${index}]=${id}`)
+  })
+
+  return {
+    [API_REQUEST]: {
+      url: url(['apiv2_user_list']) + '?' + queryParams.join('&'),
+      success: (response, dispatch) => dispatch(compareActions.open(response.data))
+    }
   }
 }
 
@@ -99,5 +116,17 @@ actions.deleteWorkspace = (user) => ({
     url: ['apiv2_user_pws_delete', {id: user.id}],
     request: {method: 'DELETE'},
     success: (data, dispatch) => dispatch(listActions.invalidateData('users.list'))
+  }
+})
+
+actions.merge = (id1, id2) => ({
+  [API_REQUEST]: {
+    url: ['apiv2_user_merge', {keep: id1, remove: id2}],
+    request: {method: 'PUT'},
+    success: (data, dispatch) => {
+      dispatch(listActions.invalidateData('users.list'))
+      dispatch(listActions.resetSelect('users.list'))
+      navigate('/users')
+    }
   }
 })

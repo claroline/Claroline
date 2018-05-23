@@ -40,7 +40,7 @@ class LdapController extends Controller
 
     /**
      * @InjectParams({
-     *     "ldap"               = @Inject("claroline.ldap_bundle.manager.ldap_manager"),
+     *     "ldap"               = @Inject("claroline.manager.ldap_manager"),
      *     "request"            = @Inject("request_stack"),
      *     "formFactory"        = @Inject("form.factory"),
      *     "translator"         = @Inject("translator"),

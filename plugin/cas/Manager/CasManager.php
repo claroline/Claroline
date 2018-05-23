@@ -216,11 +216,39 @@ class CasManager
         return $this->om->getRepository('ClarolineCasBundle:CasUser')->findCasUsersByCasIdsOrUserIds($casIds, $userIds);
     }
 
+    public function getCasUserIdByUserId($userId)
+    {
+        return $this->om->getRepository('ClarolineCasBundle:CasUser')->findCasUserIdByUserId($userId);
+    }
+
     /**
      * @param $userId
      */
     public function unlinkAccount($userId)
     {
         $this->om->getRepository("Claroline\CasBundle\Entity\CasUser")->unlinkCasUser($userId);
+    }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceCasUserUser(User $from, User $to)
+    {
+        $casUsers = $this->om->getRepository("Claroline\CasBundle\Entity\CasUser")->findByUser($from);
+
+        if (count($casUsers) > 0) {
+            foreach ($casUsers as $casUser) {
+                $casUser->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($casUsers);
     }
 }

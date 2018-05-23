@@ -150,4 +150,27 @@ class ShareManager
 
         return $errors;
     }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceUser(User $from, User $to)
+    {
+        $shareds = $this->om->getRepository('UJMExoBundle:Item\Shared')->findByUser($from);
+
+        if (count($shareds) > 0) {
+            foreach ($shareds as $shared) {
+                $shared->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($shareds);
+    }
 }

@@ -1,42 +1,51 @@
-import React, { Component } from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import {schemeCategory20c} from 'd3-scale'
 
+import { implementPropTypes } from '#/main/core/scaffolding/prop-types'
+import {Chart as ChartTypes} from '#/main/core/layout/chart/prop-types'
 import {Chart} from '#/main/core/layout/chart/components/chart.jsx'
-import {DataSeries} from './data-series.jsx'
+import {DataSeries} from '#/main/core/layout/chart/pie/components/data-series.jsx'
 
 /**
  * Draws a Bar chart
  */
-class PieChart extends Component {
-  render() {
-    return (
-      <Chart
-        width={this.props.width}
-        height={this.props.width}
-      >
-        <DataSeries
-          data={this.props.data}
-          colors={this.props.colors}
-          innerRadius={0}
-          outerRadius={this.props.width/2}
-          showValue={this.props.showValue}
-        />
-      </Chart>
-    )
-  }
+const PieChart = props => {
+  let radius = props.width/2 - props.margin.top
+  return (
+    <Chart
+      width={props.width}
+      height={props.width}
+      margin={{
+        'top': radius + props.margin.top,
+        'left': radius + props.margin.top
+      }}
+      responsive={props.responsive}
+      style={props.style}
+    >
+      <DataSeries
+        data={props.data}
+        colors={props.colors}
+        innerRadius={0}
+        outerRadius={radius}
+        showValue={props.showValue}
+        showPercentage={props.showPercentage}
+      />
+    </Chart>
+  )
 }
 
-PieChart.propTypes = {
-  data: T.array.isRequired,
+implementPropTypes(PieChart, ChartTypes, {
+  data: T.oneOfType([T.array, T.object]).isRequired,
   colors: T.arrayOf(T.string).isRequired,
-  width: T.number,
-  showValue: T.bool.isRequired
-}
-
-PieChart.defaultProps = {
+  showValue: T.bool.isRequired,
+  showPercentage: T.bool.isRequired
+}, {
+  colors: schemeCategory20c,
   width: 550,
-  showValue: true
-}
+  showValue: true,
+  showPercentage: false
+})
 
 export {
   PieChart

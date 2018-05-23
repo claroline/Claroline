@@ -91,4 +91,27 @@ class RemoteUserTokenManager
     {
         return $this->remoteUserTokenRepo->findOneByUser($user);
     }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceUser(User $from, User $to)
+    {
+        $remoteUserTokens = $this->remoteUserTokenRepo->findByUser($from);
+
+        if (count($remoteUserTokens) > 0) {
+            foreach ($remoteUserTokens as $remoteUserToken) {
+                $remoteUserToken->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($remoteUserTokens);
+    }
 }

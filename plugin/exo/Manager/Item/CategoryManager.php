@@ -152,4 +152,27 @@ class CategoryManager
         $this->om->remove($category);
         $this->om->flush();
     }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceUser(User $from, User $to)
+    {
+        $categories = $this->repository->findByUser($from);
+
+        if (count($categories) > 0) {
+            foreach ($categories as $category) {
+                $category->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($categories);
+    }
 }

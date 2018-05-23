@@ -11,10 +11,12 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Claroline\CoreBundle\Event\Log\LogGenericEvent;
+use Claroline\CoreBundle\Manager\EventManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -22,30 +24,36 @@ use JMS\SecurityExtraBundle\Annotation as SEC;
  */
 class LogsController extends Controller
 {
+    /** @var \Claroline\CoreBundle\Manager\EventManager */
+    private $eventManager;
+
+    /**
+     * @DI\InjectParams({
+     *     "eventManager" = @DI\Inject("claroline.event.manager")
+     * })
+     */
+    public function __construct(EventManager $eventManager)
+    {
+        $this->eventManager = $eventManager;
+    }
+
     /**
      * @EXT\Route(
      *     "/",
-     *     name="claro_admin_logs_show",
-     *     defaults={"page" = 1}
-     * )
-     * @EXT\Route(
-     *     "/{page}",
-     *     name="claro_admin_logs_show_paginated",
-     *     requirements={"page" = "\d+"},
-     *     defaults={"page" = 1}
+     *     name="claro_admin_logs"
      * )
      * @EXT\Template()
      *
      * Displays logs list using filter parameters and page number
      *
-     * @param $page int The requested page number.
-     *
-     * @return Response
+     * @return array
      *
      * @throws \Exception
      */
-    public function logListAction($page)
+    public function indexAction()
     {
-        return $this->get('claroline.log.manager')->getAdminList($page);
+        return [
+            'actions' => $this->eventManager->getEventsForApiFilter(LogGenericEvent::DISPLAYED_ADMIN),
+        ];
     }
 }

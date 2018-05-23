@@ -94,4 +94,27 @@ class CardLearningManager
 
         return $repo->findByDeckAndUser($deck, $user);
     }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceUser(User $from, User $to)
+    {
+        $cardLearnings = $this->om->getRepository('ClarolineFlashCardBundle:CardLearning')->findByUser($from);
+
+        if (count($cardLearnings) > 0) {
+            foreach ($cardLearnings as $cardLearning) {
+                $cardLearning->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($cardLearnings);
+    }
 }

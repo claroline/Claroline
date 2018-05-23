@@ -2,6 +2,7 @@
 
 namespace Icap\DropzoneBundle\Manager;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Icap\DropzoneBundle\Entity\Drop;
@@ -161,7 +162,6 @@ class DropzoneManager
         // set the states of the dropzone.
 
         if ($dropzone->getPeerReview()) {
-
             // case of peerReview
 
             /*
@@ -326,7 +326,6 @@ class DropzoneManager
         // on veut récupérer uniquement les drops terminés.
         foreach ($dropzone->getDrops() as $drop) {
             if ($drop->getFinished()) {
-
                 //si date début & date de fin
                 // no date => get all completed drops
                 // if dates are not null , get only complete drop between the 2 dates.
@@ -429,7 +428,6 @@ class DropzoneManager
             'autoCloseOpenedDropsWhenTimeIsUp' => $dropzone->getAutoCloseOpenedDropsWhenTimeIsUp(),
             'autoCloseState' => $dropzone->getAutoCloseState(),
             'notifyOnDrop' => $dropzone->getNotifyOnDrop(),
-
         ];
     }
 
@@ -446,5 +444,28 @@ class DropzoneManager
     private function getFromFile($filePath, $rootPath)
     {
         return file_get_contents($rootPath.DIRECTORY_SEPARATOR.$filePath);
+    }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceUser(User $from, User $to)
+    {
+        $drops = $this->em->getRepository('IcapDropzoneBundle:Drop')->findByUser($from);
+
+        if (count($drops) > 0) {
+            foreach ($drops as $drop) {
+                $drop->setUser($to);
+            }
+
+            $this->em->flush();
+        }
+
+        return count($drops);
     }
 }

@@ -14,6 +14,8 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\Widget\WidgetRepository;
+use Claroline\CoreBundle\Repository\WidgetDisplayConfigRepository;
+use Claroline\CoreBundle\Repository\WidgetInstanceRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -26,6 +28,12 @@ class WidgetManager
 
     /** @var WidgetRepository */
     private $widgetRepository;
+
+    /** @var WidgetInstanceRepository */
+    private $widgetInstanceRepository;
+
+    /** @var WidgetDisplayConfigRepository */
+    private $widgetDisplayConfigRepository;
 
     /** @var PluginManager */
     private $pluginManager;
@@ -48,6 +56,8 @@ class WidgetManager
         $this->om = $om;
         $this->pluginManager = $pluginManager;
         $this->widgetRepository = $om->getRepository('ClarolineCoreBundle:Widget\Widget');
+        $this->widgetInstanceRepository = $om->getRepository('ClarolineCoreBundle:Widget\WidgetInstance');
+        $this->widgetDisplayConfigRepository = $om->getRepository('ClarolineCoreBundle:Widget\WidgetDisplayConfig');
     }
 
     /**
@@ -70,11 +80,47 @@ class WidgetManager
         $executeQuery = true
     ) {
         return count($widgetHomeTabConfigs) > 0 ?
-        $this->widgetDisplayConfigRepo->findWidgetDisplayConfigsByWorkspaceAndWidgetHTCs(
+        $this->widgetDisplayConfigRepository->findWidgetDisplayConfigsByWorkspaceAndWidgetHTCs(
             $workspace,
             $widgetHomeTabConfigs,
             $executeQuery
         ) :
         [];
+    }
+
+    /**
+     * @param null $organizations
+     * @return int
+     */
+    public function getNbWidgetInstances($organizations = null)
+    {
+        return $this->widgetInstanceRepository->countWidgetInstances(null, $organizations);
+    }
+
+    /**
+     * @param null $organizations
+     * @return int
+     */
+    public function getNbWorkspaceWidgetInstances($organizations = null)
+    {
+        return $this->widgetInstanceRepository->countWidgetInstances('workspace', $organizations);
+    }
+
+    /**
+     * @param null $organizations
+     * @return int
+     */
+    public function getNbDesktopWidgetInstances($organizations = null)
+    {
+        return $this->widgetInstanceRepository->countWidgetInstances('desktop', $organizations);
+    }
+
+    /**
+     * @param null $organizations
+     * @return array
+     */
+    public function countWidgetsByType($organizations = null)
+    {
+        return $this->widgetInstanceRepository->countByType($organizations);
     }
 }

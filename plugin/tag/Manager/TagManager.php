@@ -461,4 +461,27 @@ class TagManager
     {
         return $this->taggedObjectRepo->findTaggedResourcesByRoles($user, $roleNames);
     }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceTagUser(User $from, User $to)
+    {
+        $tags = $this->tagRepo->findByUser($from);
+
+        if (count($tags) > 0) {
+            foreach ($tags as $tag) {
+                $tag->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($tags);
+    }
 }

@@ -72,4 +72,27 @@ class CardLogManager
 
         return $repo->findOneByCardAndUserOrderByDate($card, $user);
     }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceUser(User $from, User $to)
+    {
+        $cardLogs = $this->om->getRepository('ClarolineFlashCardBundle:CardLog')->findByUser($from);
+
+        if (count($cardLogs) > 0) {
+            foreach ($cardLogs as $cardLog) {
+                $cardLog->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($cardLogs);
+    }
 }

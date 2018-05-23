@@ -51,7 +51,7 @@ class ResourceTypeRepository extends EntityRepository implements ContainerAwareI
      *
      * @return array
      */
-    public function countResourcesByType($workspace = null)
+    public function countResourcesByType($workspace = null, $organizations = null)
     {
         $qb = $this
             ->createQueryBuilder('type')
@@ -67,6 +67,13 @@ class ResourceTypeRepository extends EntityRepository implements ContainerAwareI
             $qb->leftJoin('Claroline\CoreBundle\Entity\Workspace\Workspace', 'ws', 'WITH', 'ws = rs.workspace')
                 ->andWhere('ws = :workspace')
                 ->setParameter('workspace', $workspace);
+        }
+
+        if ($organizations !== null) {
+            $qb->leftJoin('Claroline\CoreBundle\Entity\Workspace\Workspace', 'ws', 'WITH', 'ws = rs.workspace')
+                ->join('ws.organizations', 'orgas')
+                ->andWhere('orgas IN (:organizations)')
+                ->setParameter('organizations', $organizations);
         }
 
         return $qb->getQuery()->getResult();

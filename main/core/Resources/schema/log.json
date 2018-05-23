@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "int",
+      "description": "The log id"
+    },
+    "action": {
+      "type": "string",
+      "description": "The log action"
+    },
+    "dateLog": {
+      "type": ["string"],
+      "description": "The workspace creation date"
+    },
+    "details": {
+      "type": "object",
+      "description": "The log's details"
+    },
+    "doer": {
+      "type": "string",
+      "description": "The doer's id"
+    },
+    "workspace": {
+      "type": "string",
+      "description": "The workspace's id"
+    },
+    "resourceNode": {
+      "type": "string",
+      "description": "The resource node's id"
+    },
+    "resourceType": {
+      "type": "string",
+      "description": "The resource node's type"
+    }
+  },
+  "claroIds": ["id"]
+}

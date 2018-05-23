@@ -820,4 +820,74 @@ class Manager
     {
         return $this->subjectRepo->findSubjectsByParticipant($user);
     }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceSubjectUser(User $from, User $to)
+    {
+        $subjects = $this->subjectRepo->findByCreator($from);
+
+        if (count($subjects) > 0) {
+            foreach ($subjects as $subject) {
+                $subject->setCreator($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($subjects);
+    }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceNotificationUser(User $from, User $to)
+    {
+        $notifications = $this->notificationRepo->findByUser($from);
+
+        if (count($notifications) > 0) {
+            foreach ($notifications as $notification) {
+                $notification->setUser($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($notifications);
+    }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceMessageUser(User $from, User $to)
+    {
+        $messages = $this->messageRepo->findByCreator($from);
+
+        if (count($messages) > 0) {
+            foreach ($messages as $message) {
+                $message->setCreator($to);
+                $message->setAuthor($to->getFirstName().' '.$to->getLastName());
+            }
+
+            $this->om->flush();
+        }
+
+        return count($messages);
+    }
 }

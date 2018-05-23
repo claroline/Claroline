@@ -2,6 +2,7 @@
 
 namespace Icap\DropzoneBundle\Manager;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Icap\DropzoneBundle\Entity\Correction;
 use Icap\DropzoneBundle\Entity\Dropzone;
@@ -49,7 +50,7 @@ class CorrectionManager
         }
 
         $totalGrade = 0;
-        if ($nbCriteria != 0) {
+        if ($nbCriteria !== 0) {
             $totalGrade = $sumGrades / ($nbCriteria);
             $totalGrade = ($totalGrade * 20) / ($maxGrade);
         }
@@ -71,10 +72,33 @@ class CorrectionManager
             $em->flush();
 
             $currentDrop = $correction->getDrop();
-            if ($currentDrop != null && $oldTotalGrade != $totalGrade) {
+            if ($currentDrop !== null && $oldTotalGrade !== $totalGrade) {
                 $event = new LogCorrectionUpdateEvent($dropzone, $currentDrop, $correction);
                 $this->container->get('event_dispatcher')->dispatch('log', $event);
             }
         }
+    }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceUser(User $from, User $to)
+    {
+        $corrections = $this->em->getRepository('IcapDropzoneBundle:Correction')->findByUser($from);
+
+        if (count($corrections) > 0) {
+            foreach ($corrections as $correction) {
+                $correction->setUser($to);
+            }
+
+            $this->em->flush();
+        }
+
+        return count($corrections);
     }
 }

@@ -1,0 +1,57 @@
+.select-plus {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  width: 15em;
+}
+
+.select-plus-value {
+  padding: 0 0.8em 0 0;
+  white-space: nowrap;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  &::after {
+    content: "";
+    width: 0;
+    height: 0;
+    border: 5px solid transparent;
+    border-color: black transparent transparent transparent;
+    position: absolute;
+    top: 1em;
+    right: 0.5em;
+  }
+}
+
+.select-plus-options {
+  width: auto;
+  background-color: white;
+  position: absolute;
+  max-height: 18em;
+  overflow-y: auto;
+  top: 100%;
+  right: 0;
+  z-index: 999;
+  margin: 0 0;
+  border: 1px solid lighten(@gray, 50%);
+  .box-shadow(@dropdown-menu-box-shadow);
+  &.hidden{
+    display: none;
+  }
+  .select-plus-option {
+    white-space: nowrap;
+    padding: 5px;
+    &:hover {
+      background: @dropdown-link-hover-bg;
+    }
+  }
+  .select-plus-option-group {
+    padding: 5px 0 0 5px;
+    .select-plus-option-group-label {
+      font-weight: bold;
+      white-space: nowrap;
+      padding: 0 0 5px 0;
+    }
+  }
+}
+

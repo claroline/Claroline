@@ -11,15 +11,190 @@
 
 namespace Claroline\CoreBundle\Repository\Log;
 
+use Claroline\AppBundle\API\FinderInterface;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use JMS\DiExtraBundle\Annotation as DI;
 
 class LogRepository extends EntityRepository
 {
+    /** @var FinderInterface */
+    private $finder;
+
+    /**
+     * @DI\InjectParams({
+     *     "finder" = @DI\Inject("claroline.api.finder.log")
+     * })
+     *
+     * @param FinderInterface $finder
+     */
+    public function setFinder(FinderInterface $finder)
+    {
+        $this->finder = $finder;
+    }
+
+    /**
+     * Fetches data for line chart.
+     *
+     * @param array $filters
+     * @param bool  $unique
+     *
+     * @return array
+     */
+    public function fetchChartData(array $filters = [], $unique = false)
+    {
+        $qb = $this->createQueryBuilder('obj');
+
+        if ($unique === true) {
+            $qb->select('obj.shortDateLog as date, COUNT(DISTINCT obj.doer) as total');
+        } else {
+            $qb->select('obj.shortDateLog as date, COUNT(obj.id) as total');
+        }
+        $qb
+            ->orderBy('date', 'ASC')
+            ->groupBy('date');
+
+        $this->finder->configureQueryBuilder($qb, $filters);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function fetchUserActionsList(
+        array $filters = [],
+        $count = false,
+        $page = 0,
+        $limit = -1,
+        $sortBy = null
+    ) {
+        $qb = $this->createQueryBuilder('obj');
+        $this->finder->configureQueryBuilder($qb, $filters, $limit < 0 ? $sortBy : []);
+        if ($count) {
+            $qb->select('COUNT(DISTINCT obj.doer)');
+        } else {
+            $qb->select('
+                doer.id as doerId, 
+                doer.firstName as doerFirstName, 
+                doer.lastName as doerLastName,
+                doer.picture as doerPicture,
+                obj.shortDateLog as date, 
+                CONCAT(CONCAT(IDENTITY(obj.doer), \'#\'), obj.shortDateLog) as criteria, 
+                COUNT(obj.id) as total
+            ')
+                ->groupBy('criteria');
+            if (!in_array('doer', $qb->getAllAliases())) {
+                $qb->join('obj.doer', 'doer');
+            }
+            if ($limit > 0) {
+                $ids = array_column($this->fetchUsersByActionsList($filters, true, $page, $limit, $sortBy), 'doerId');
+                $qb->andWhere('obj.doer IN (:ids)')
+                    ->setParameter('ids', $ids);
+            }
+            if (empty($sortBy) || empty($sortBy['property']) || $sortBy['property'] !== 'doer.name') {
+                $qb->addOrderBy('obj.doer');
+            }
+            $qb->addOrderBy('date');
+        }
+
+        return $count ? $qb->getQuery()->getSingleScalarResult() : $qb->getQuery()->getResult();
+    }
+
+    public function fetchUsersByActionsList(
+        array $filters = [],
+        $idsOnly = false,
+        $page = 0,
+        $limit = -1,
+        $sortBy = null
+    ) {
+        $qb = $this->createQueryBuilder('obj');
+        if ($idsOnly) {
+            $qb->select('DISTINCT(IDENTITY(obj.doer)) AS doerId, COUNT(obj.id) AS actions');
+        } else {
+            $qb->select('
+                DISTINCT(doer.id) AS doerId, 
+                doer.firstName AS doerFirstName, 
+                doer.lastName AS doerLastName, 
+                COUNT(obj.id) AS actions
+            ');
+        }
+
+        if ($limit > 0) {
+            $qb->setFirstResult($page * $limit);
+            $qb->setMaxResults($limit);
+        }
+
+        $this->finder->configureQueryBuilder($qb, $filters, $sortBy);
+
+        if (!$idsOnly && !in_array('doer', $qb->getAllAliases())) {
+            $qb->join('obj.doer', 'doer');
+        }
+
+        $qb->groupBy('obj.doer');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findTopWorkspaceByAction(
+        array $filters = [],
+        $limit = -1
+    ) {
+        $qb = $this
+            ->createQueryBuilder('obj')
+            ->select('ws.id, ws.name, ws.code, count(obj.id) AS actions')
+            ->leftJoin('obj.workspace', 'ws')
+            ->groupBy('ws')
+            ->orderBy('actions', 'DESC');
+
+        $this->finder->configureQueryBuilder($qb, $filters);
+
+        if ($limit > 0) {
+            $qb->setMaxResults($limit);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findTopResourcesByAction(
+        array $filters = [],
+        $limit = -1
+    ) {
+        $qb = $this
+            ->createQueryBuilder('obj')
+            ->select('node.id, node.name, count(obj.id) AS actions')
+            ->leftJoin('obj.resourceNode', 'node')
+            ->groupBy('node.id')
+            ->orderBy('actions', 'DESC');
+        $this->finder->configureQueryBuilder($qb, $filters);
+
+        if ($limit > 0) {
+            $qb->setMaxResults($limit);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function countActiveUsers(
+        array $filters = []
+    ) {
+        $filters['action'] = LogUserLoginEvent::ACTION;
+
+        $qb = $this
+            ->createQueryBuilder('obj')
+            ->select('COUNT(DISTINCT obj.doer) AS users');
+
+        $this->finder->configureQueryBuilder($qb, $filters);
+
+        $query = $qb->getQuery();
+        $result = $query->getResult();
+
+        return $result[0]['users'];
+    }
+
+    // TODO: Clean old methods after refactoring
+
     /**
      * @param $configs
      * @param $range
@@ -231,171 +406,6 @@ class LogRepository extends EntityRepository
         return $logs;
     }
 
-    public function topWSByAction($range, $action, $max)
-    {
-        $queryBuilder = $this
-            ->createQueryBuilder('log')
-            ->select('ws.id, ws.name, ws.code, count(log.id) AS actions')
-            ->leftJoin('log.workspace', 'ws')
-            ->groupBy('ws')
-            ->orderBy('actions', 'DESC');
-
-        if ($max > 0) {
-            $queryBuilder->setMaxResults($max);
-        }
-
-        $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, $action, null);
-        $queryBuilder = $this->addDateRangeFilterToQueryBuilder($queryBuilder, $range);
-        $query = $queryBuilder->getQuery();
-
-        return $query->getResult();
-    }
-
-    public function topMediaByAction($range, $action, $max)
-    {
-        $queryBuilder = $this
-            ->createQueryBuilder('log')
-            ->select('node.id, node.name, count(log.id) AS actions')
-            ->leftJoin('log.resourceNode', 'node')
-            ->leftJoin('log.resourceType', 'resource_type')
-            ->andWhere('resource_type.name=:fileType')
-            ->groupBy('node')
-            ->orderBy('actions', 'DESC')
-            ->setParameter('fileType', 'file');
-
-        if ($max > 0) {
-            $queryBuilder->setMaxResults($max);
-        }
-
-        $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, $action, null);
-        $queryBuilder = $this->addDateRangeFilterToQueryBuilder($queryBuilder, $range);
-        $query = $queryBuilder->getQuery();
-
-        return $query->getResult();
-    }
-
-    public function topResourcesByAction($range, $action, $max)
-    {
-        $queryBuilder = $this
-            ->createQueryBuilder('log')
-            ->select('node.id, node.name, count(log.id) AS actions')
-            ->leftJoin('log.resourceNode', 'node')
-            ->groupBy('node')
-            ->orderBy('actions', 'DESC');
-
-        if ($max > 0) {
-            $queryBuilder->setMaxResults($max);
-        }
-
-        $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, $action, null);
-        $queryBuilder = $this->addDateRangeFilterToQueryBuilder($queryBuilder, $range);
-        $query = $queryBuilder->getQuery();
-
-        return $query->getResult();
-    }
-
-    public function topUsersByAction($range, $action, $max)
-    {
-        $query = $this->topUsersByActionQuery($action, $range, null, null, null, $max);
-
-        return $query->getResult();
-    }
-
-    public function topUsersByActionQuery(
-        $action,
-        $range,
-        $userSearch,
-        $actionsRestriction,
-        $workspaceIds = null,
-        $maxResult = -1,
-        $resourceType = null,
-        $resourceNodeIds = null,
-        $enableAnonymous = true,
-        $page = null,
-        $orderBy = null,
-        $order = 'DESC'
-    ) {
-        $queryBuilder = $this
-            ->createQueryBuilder('log')
-            ->select(
-                'doer.id, '
-                ."CONCAT(CONCAT(doer.firstName, ' '), doer.lastName) AS name, "
-                ."CONCAT(CONCAT(doer.lastName, ' '), doer.firstName) AS sortingName, "
-                .'doer.username, count(log.id) AS actions'
-            )
-            ->groupBy('doer');
-        if ($orderBy === 'name') {
-            $orderBy = 'sortingName';
-        }
-        if ($orderBy === null) {
-            $orderBy = 'actions';
-        }
-        $queryBuilder->orderBy($orderBy, $order);
-        $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, $action, $actionsRestriction);
-        $queryBuilder = $this->addDateRangeFilterToQueryBuilder($queryBuilder, $range);
-        if ($userSearch !== null && $userSearch !== '') {
-            $queryBuilder = $this->addUserFilterToQueryBuilder($queryBuilder, $userSearch);
-        } else {
-            $queryBuilder->leftJoin('log.doer', 'doer');
-        }
-        $queryBuilder = $this->addResourceTypeFilterToQueryBuilder($queryBuilder, $resourceType);
-
-        if ($workspaceIds !== null && count($workspaceIds) > 0) {
-            $queryBuilder = $this->addWorkspaceFilterToQueryBuilder($queryBuilder, $workspaceIds);
-        }
-        if ($resourceNodeIds !== null && count($resourceNodeIds) > 0) {
-            $queryBuilder = $this->addResourceFilterToQueryBuilder($queryBuilder, $resourceNodeIds);
-        }
-        if (!$enableAnonymous) {
-            $queryBuilder->andWhere(
-                $queryBuilder->expr()->isNotNull('log.doer')
-            );
-        }
-
-        if ($maxResult > 0) {
-            $queryBuilder->setMaxResults($maxResult);
-            if ($page !== null) {
-                $page = max(0, $page - 1);
-                $queryBuilder->setFirstResult($page * $maxResult);
-            }
-        }
-
-        return $queryBuilder->getQuery();
-    }
-
-    public function countTopUsersByAction(
-        $action,
-        $range,
-        $userSearch,
-        $actionsRestriction,
-        $workspaceIds = null,
-        $resourceType = null,
-        $resourceNodeIds = null,
-        $enableAnonymous = true
-    ) {
-        $queryBuilder = $this->createQueryBuilder('log');
-        $queryBuilder->select($queryBuilder->expr()->countDistinct('log.doer'));
-        $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, $action, $actionsRestriction);
-        $queryBuilder = $this->addDateRangeFilterToQueryBuilder($queryBuilder, $range);
-        $queryBuilder = $this->addUserFilterToQueryBuilder($queryBuilder, $userSearch);
-        $queryBuilder = $this->addResourceTypeFilterToQueryBuilder($queryBuilder, $resourceType);
-
-        if ($workspaceIds !== null && count($workspaceIds) > 0) {
-            $queryBuilder = $this->addWorkspaceFilterToQueryBuilder($queryBuilder, $workspaceIds);
-        }
-        if ($resourceNodeIds !== null && count($resourceNodeIds) > 0) {
-            $queryBuilder = $this->addResourceFilterToQueryBuilder($queryBuilder, $resourceNodeIds);
-        }
-        if (!$enableAnonymous) {
-            $queryBuilder->andWhere(
-                $queryBuilder->expr()->isNotNull('log.doer')
-            );
-        }
-        $result = $queryBuilder->getQuery()->getSingleScalarResult();
-
-        return intval($result);
-    }
-
     public function findUserActionsByDay(
         $action,
         $range,
@@ -433,36 +443,6 @@ class LogRepository extends EntityRepository
         }
 
         return $queryBuilder->getQuery()->getResult();
-    }
-
-    public function activeUsers()
-    {
-        $queryBuilder = $this
-            ->createQueryBuilder('log')
-            ->select('COUNT(DISTINCT log.doer) AS users');
-
-        $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, LogUserLoginEvent::ACTION);
-
-        $query = $queryBuilder->getQuery();
-        $result = $query->getResult();
-
-        return $result[0]['users'];
-    }
-
-    public function activeUsersByDateRange($range)
-    {
-        $queryBuilder = $this
-            ->createQueryBuilder('log')
-            ->select('COUNT(DISTINCT log.doer) AS users');
-
-        $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, LogUserLoginEvent::ACTION);
-
-        $queryBuilder = $this->addDateRangeFilterToQueryBuilder($queryBuilder, $range);
-
-        $query = $queryBuilder->getQuery();
-        $result = $query->getResult();
-
-        return $result[0]['users'];
     }
 
     public function addActionFilterToQueryBuilder(QueryBuilder $queryBuilder, $action, $actionRestriction = null)

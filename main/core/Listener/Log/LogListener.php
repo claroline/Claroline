@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Listener\Log;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
+use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\LogGroupDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogNotRepeatableInterface;
@@ -319,6 +320,38 @@ class LogListener
                 );
             }
         }
+    }
+
+    /**
+     * @DI\Observe("create_log_list_item")
+     *
+     * @param LogCreateDelegateViewEvent $event
+     */
+    public function onLogListItem(LogCreateDelegateViewEvent $event)
+    {
+        $content = $this->container->get('templating')->render(
+            'ClarolineCoreBundle:log:view_list_item_sentence.html.twig',
+            ['log' => $event->getLog()]
+        );
+
+        $event->setResponseContent($content);
+        $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("create_log_details")
+     *
+     * @param LogCreateDelegateViewEvent $event
+     */
+    public function onLogDetails(LogCreateDelegateViewEvent $event)
+    {
+        $content = $this->container->get('templating')->render(
+            'ClarolineCoreBundle:log:view_details.html.twig',
+            ['log' => $event->getLog()]
+        );
+
+        $event->setResponseContent($content);
+        $event->stopPropagation();
     }
 
     public function disable()

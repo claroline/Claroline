@@ -78,7 +78,7 @@ class MessageListener
         $user = $this->tokenStorage->getToken()->getUser();
         $tool = $event->getTool();
 
-        if ($user !== 'anon.') {
+        if ('anon.' !== $user) {
             $countUnreadMessages = $this->messageManager->getNbUnreadMessages($user);
             $messageTitle = $this->translator->trans(
                 'new_message_alert',

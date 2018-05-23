@@ -1,39 +1,39 @@
-import React, { Component } from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {pie} from 'd3-shape'
+import {formatData} from '#/main/core/layout/chart/utils'
+import {Arc} from '#/main/core/layout/chart/pie/components/arc.jsx'
 
-import {Arc} from './arc.jsx'
-
-class DataSeries extends Component {
-  render() {
-    const pieInstance = pie().sort(null)
-    const arcData = pieInstance(this.props.data)
-
-    return (
-      <g transform={`translate(${ this.props.outerRadius }, ${ this.props.outerRadius })`}>
-        {arcData.map((arc, index) => (
-          <Arc
-            key={index}
-            color={this.props.colors[index]}
-            innerRadius={this.props.innerRadius}
-            outerRadius={this.props.outerRadius}
-            startAngle={arc.startAngle}
-            endAngle={arc.endAngle}
-            value={arc.value}
-            showValue={this.props.showValue}
-          />
-        ))}
-      </g>
-    )
-  }
+const DataSeries = props => {
+  const pieInstance = pie().sort(null)
+  const formattedData = formatData(props.data)
+  const arcData = pieInstance(formattedData.y.values)
+  const total = formattedData.y.values.reduce((t, v) => t+v, 0)
+  return (
+    <g>
+      {arcData.map((arc, index) => (
+        <Arc
+          key={index}
+          color={props.colors[index]}
+          innerRadius={props.innerRadius}
+          outerRadius={props.outerRadius}
+          startAngle={arc.startAngle}
+          endAngle={arc.endAngle}
+          value={props.showPercentage ? (arc.value/total*100).toFixed(2) + '%' : arc.value}
+          showValue={props.showValue && arc.value > 0}
+        />
+      ))}
+    </g>
+  )
 }
 
 DataSeries.propTypes = {
-  data: T.array.isRequired,
+  data: T.oneOfType([T.array, T.object]).isRequired,
   colors: T.arrayOf(T.string).isRequired,
   innerRadius: T.number.isRequired,
   outerRadius: T.number.isRequired,
-  showValue: T.bool.isRequired
+  showValue: T.bool.isRequired,
+  showPercentage: T.bool.isRequired
 }
 
 export {

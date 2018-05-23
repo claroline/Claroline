@@ -100,4 +100,50 @@ class PresenceManager
             ) :
             [];
     }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceUserTeacher(User $from, User $to)
+    {
+        $presences = $this->presenceRepo->findByUserTeacher($from);
+
+        if (count($presences) > 0) {
+            foreach ($presences as $presence) {
+                $presence->setUserTeacher($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($presences);
+    }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceUserStudent(User $from, User $to)
+    {
+        $presences = $this->presenceRepo->findByUserStudent($from);
+
+        if (count($presences) > 0) {
+            foreach ($presences as $presence) {
+                $presence->setUserStudent($to);
+            }
+
+            $this->om->flush();
+        }
+
+        return count($presences);
+    }
 }

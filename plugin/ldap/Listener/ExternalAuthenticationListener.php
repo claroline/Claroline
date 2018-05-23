@@ -26,7 +26,7 @@ class ExternalAuthenticationListener
     /**
      * @DI\InjectParams({
      *     "templating"             = @DI\Inject("templating"),
-     *     "ldapManager"            = @DI\Inject("claroline.ldap_bundle.manager.ldap_manager"),
+     *     "ldapManager"            = @DI\Inject("claroline.manager.ldap_manager"),
      *     "router"                 = @DI\Inject("router")
      * })
      *

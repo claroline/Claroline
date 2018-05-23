@@ -211,4 +211,27 @@ class DashboardManager
           'workspace' => $this->workspaceManager->exportWorkspace($dashboard->getWorkspace()),
       ];
     }
+
+    /**
+     * Find all content for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     *
+     * @return int
+     */
+    public function replaceUser(User $from, User $to)
+    {
+        $dashboards = $this->getRepository()->findByCreator($from);
+
+        if (count($dashboards) > 0) {
+            foreach ($dashboards as $dashboard) {
+                $dashboard->setCreator($to);
+            }
+
+            $this->em->flush();
+        }
+
+        return count($dashboards);
+    }
 }

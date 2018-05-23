@@ -12,7 +12,7 @@ class LogListener
     public function onCreateLogListItem(LogCreateDelegateViewEvent $event)
     {
         $content = $this->container->get('templating')->render(
-            'IcapLessonBundle:Log:log_list_item.html.twig',
+            'IcapLessonBundle:log:log_list_item.html.twig',
             ['log' => $event->getLog()]
         );
 
@@ -23,11 +23,11 @@ class LogListener
     public function onChapterCreateLogDetails(LogCreateDelegateViewEvent $event)
     {
         $content = $this->container->get('templating')->render(
-            'IcapLessonBundle:Log:log_details.html.twig',
+            'IcapLessonBundle:log:log_details.html.twig',
             [
                 'log' => $event->getLog(),
                 'listItemView' => $this->container->get('templating')->render(
-                    'IcapLessonBundle:Log:log_list_item.html.twig',
+                    'IcapLessonBundle:log:log_list_item.html.twig',
                     ['log' => $event->getLog()]
                 ),
             ]

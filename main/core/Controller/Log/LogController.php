@@ -24,6 +24,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -99,7 +100,7 @@ class LogController extends Controller
         }
 
         return $this->render(
-            'ClarolineCoreBundle:Log:view_details.html.twig',
+            'ClarolineCoreBundle:log:view_details.html.twig',
             ['log' => $log]
         );
     }
@@ -114,7 +115,7 @@ class LogController extends Controller
     public function updateLogWorkspaceWidgetConfig(WidgetInstance $widgetInstance)
     {
         if (!$this->authorization->isGranted('edit', $widgetInstance)) {
-            throw new AccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
 
         $config = $this->get('claroline.log.manager')->getLogConfig($widgetInstance);
@@ -134,7 +135,7 @@ class LogController extends Controller
             }
         } else {
             return $this->render(
-                'ClarolineCoreBundle:Log:config_workspace_widget_form.html.twig',
+                'ClarolineCoreBundle:log:config_workspace_widget_form.html.twig',
                 [
                     'form' => $form->createView(),
                     'instance' => $widgetInstance,
@@ -159,7 +160,7 @@ class LogController extends Controller
     public function updateLogDesktopWidgetConfig(WidgetInstance $widgetInstance)
     {
         if (!$this->authorization->isGranted('edit', $widgetInstance)) {
-            throw new AccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -211,7 +212,7 @@ class LogController extends Controller
             $em->flush();
         } else {
             return $this->render(
-                'ClarolineCoreBundle:Log:config_desktop_widget_form.html.twig',
+                'ClarolineCoreBundle:log:config_desktop_widget_form.html.twig',
                 [
                     'form' => $form->createView(),
                     'instance' => $widgetInstance,
