@@ -32,7 +32,7 @@ class BlogOptionsType extends AbstractType
             ->add('post_per_page', ChoiceType::class, array(
                 'choices' => array('5' => 5, '10' => 10, '20' => 20),
                 'required' => false,
-                'theme_options' => array('control_width' => 'col-md-2'),
+                'attr' => array('control_width' => 'col-md-2'),
             ))
             ->add('tag_cloud', ChoiceType::class, array(
                 'choices' => array('0' => 'classic', '1' => '3D', '2' => 'advanced'),

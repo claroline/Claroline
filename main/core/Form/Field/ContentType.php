@@ -59,7 +59,7 @@ class ContentType extends AbstractType
             $translatedContent = $builder->getData();
         }
 
-        if (isset($options['theme_options']['tinymce']) && !$options['theme_options']['tinymce']) {
+        if (isset($options['attr']['tinymce']) && !$options['attr']['tinymce']) {
             $this->tinymce = false;
         }
 
@@ -70,12 +70,12 @@ class ContentType extends AbstractType
                         $lang,
                         BaseContentType::class,
                         [
-                            'theme_options' => ['tinymce' => $this->tinymce],
+                            'attr' => ['tinymce' => $this->tinymce],
                             'data' => $translatedContent[$lang],
                         ]
                     );
                 } else {
-                    $builder->add($lang, BaseContentType::class, ['theme_options' => ['tinymce' => $this->tinymce]]);
+                    $builder->add($lang, BaseContentType::class, ['attr' => ['tinymce' => $this->tinymce]]);
                 }
             }
         }
@@ -103,8 +103,8 @@ class ContentType extends AbstractType
         ];
 
         foreach ($themeOptions as $option => $defaultValue) {
-            if (isset($options['theme_options']) && isset($options['theme_options'][$option])) {
-                $view->vars[$option] = $options['theme_options'][$option];
+            if (isset($options['attr']) && isset($options['attr'][$option])) {
+                $view->vars[$option] = $options['attr'][$option];
             } else {
                 $view->vars[$option] = $defaultValue;
             }

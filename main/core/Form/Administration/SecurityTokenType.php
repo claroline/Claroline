@@ -38,11 +38,6 @@ class SecurityTokenType extends AbstractType
         );
     }
 
-    public function getName()
-    {
-        return 'security_token_form';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(

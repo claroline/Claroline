@@ -52,11 +52,6 @@ class OauthClientType extends AbstractType
         );
     }
 
-    public function getName()
-    {
-        return 'oauth_client_form';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['translation_domain' => 'platform']);

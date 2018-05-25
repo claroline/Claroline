@@ -3,10 +3,10 @@
 {% block form_row %}
     {% spaceless %}
         <div class="form-group row{% if errors|length > 0 %} has-error{% endif %}"
-            {% set display_row = theme_options.display_row is defined ? theme_options.display_row : true %}
+            {% set display_row = attr.display_row is defined ? attr.display_row : true %}
             {% if display_row == false %} style="display: none;" {% endif %}>
             {{ form_label(form, label|default(null)) }}
-            {% set ctrl_width = theme_options.control_width is defined ? theme_options.control_width : 'col-md-10' %}
+            {% set ctrl_width = attr.control_width is defined ? attr.control_width : 'col-md-10' %}
             <div class="{{ ctrl_width }}">
                 {{ form_widget(form) }}
                 {{ form_errors(form) }}
@@ -25,7 +25,7 @@
         {% if is_multichoice_widget %}
             {% set label_attr = label_attr|merge({'class': 'radio' in block_prefixes ? 'radio-inline' : 'checkbox'}) %}
         {% else %}
-            {% set lbl_width = theme_options.label_width is defined ? theme_options.label_width : 'col-md-2' %}
+            {% set lbl_width = attr.label_width is defined ? attr.label_width : 'col-md-2' %}
             {% set label_attr = label_attr|merge({'class': 'control-label ' ~ lbl_width}) %}
         {% endif %}
         {% if not compound %}

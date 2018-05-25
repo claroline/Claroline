@@ -48,7 +48,7 @@ class AnalyticsViewsType extends AbstractType
                     'label' => $this->translator->trans('period', [], 'icap_portfolio').' :',
                     'required' => true,
                     'attr' => array('class' => 'input-sm'),
-                    'theme_options' => array('label_width' => 'col-md-2', 'control_width' => 'col-md-3'),
+                    'attr' => array('label_width' => 'col-md-2', 'control_width' => 'col-md-3'),
                 )
             );
 
@@ -69,7 +69,7 @@ class AnalyticsViewsType extends AbstractType
                             },
                             'label' => 'show',
                             'attr' => array('class' => 'input-sm'),
-                            'theme_options' => array('label_width' => 'col-md-2', 'control_width' => 'col-md-3'),
+                            'attr' => array('label_width' => 'col-md-2', 'control_width' => 'col-md-3'),
                         )
                     );
             }

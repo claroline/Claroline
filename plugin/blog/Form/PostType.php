@@ -34,7 +34,7 @@ class PostType extends AbstractType
     {
         $builder
             ->add('title', TextType::class, array(
-                    'theme_options' => array('control_width' => 'col-md-12'),
+                    'attr' => array('control_width' => 'col-md-12'),
                     'constraints' => new Assert\NotBlank(array(
                         'message' => 'blog_post_need_title',
                     )),
@@ -44,7 +44,7 @@ class PostType extends AbstractType
                     'attr' => array(
                         'style' => 'height: 300px;',
                     ),
-                    'theme_options' => array('control_width' => 'col-md-12'),
+                    'attr' => array('control_width' => 'col-md-12'),
                     'constraints' => new Assert\NotBlank(array(
                         'message' => 'blog_post_need_content',
                     )),

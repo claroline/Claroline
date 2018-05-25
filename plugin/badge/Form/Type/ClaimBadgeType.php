@@ -48,7 +48,7 @@ class ClaimBadgeType extends AbstractType
         $builder
             ->add('badge', 'zenstruck_ajax_entity', array(
                 'attr' => array('class' => 'fullwidth'),
-                'theme_options' => array('control_width' => 'col-md-3'),
+                'attr' => array('control_width' => 'col-md-3'),
                 'placeholder' => $this->translator->trans('badge_form_badge_selection', array(), 'icap_badge'),
                 'class' => 'IcapBadgeBundle:Badge',
                 'use_controller' => true,

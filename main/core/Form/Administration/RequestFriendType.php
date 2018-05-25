@@ -33,11 +33,6 @@ class RequestFriendType extends AbstractType
         );
     }
 
-    public function getName()
-    {
-        return 'request_friend_form';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['translation_domain' => 'platform']);

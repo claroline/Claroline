@@ -42,7 +42,7 @@ class ResourceLogFilterType extends AbstractType
                 [
                     'label' => 'Show actions for',
                     'attr' => ['class' => 'input-sm'],
-                    'theme_options' => ['label_width' => 'col-md-3', 'control_width' => 'col-md-3'],
+                    'attr' => ['label_width' => 'col-md-3', 'control_width' => 'col-md-3'],
                     'choices' => $actionChoices,
                 ]
             )
@@ -53,7 +53,7 @@ class ResourceLogFilterType extends AbstractType
                     'label' => 'for_period',
                     'required' => false,
                     'attr' => ['class' => 'input-sm'],
-                    'theme_options' => ['label_width' => 'col-md-3', 'control_width' => 'col-md-3'],
+                    'attr' => ['label_width' => 'col-md-3', 'control_width' => 'col-md-3'],
                 ]
             )
             ->add(
@@ -64,7 +64,7 @@ class ResourceLogFilterType extends AbstractType
                     'entity_reference' => 'user',
                     'required' => false,
                     'attr' => ['class' => 'input-sm'],
-                    'theme_options' => ['label_width' => 'col-md-3', 'control_width' => 'col-md-3'],
+                    'attr' => ['label_width' => 'col-md-3', 'control_width' => 'col-md-3'],
                 ]
             )
             ->add(
@@ -75,7 +75,7 @@ class ResourceLogFilterType extends AbstractType
                     'entity_reference' => 'group',
                     'required' => false,
                     'attr' => ['class' => 'input-sm'],
-                    'theme_options' => ['label_width' => 'col-md-3', 'control_width' => 'col-md-3'],
+                    'attr' => ['label_width' => 'col-md-3', 'control_width' => 'col-md-3'],
                 ]
             );
     }

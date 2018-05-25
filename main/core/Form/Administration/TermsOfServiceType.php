@@ -19,15 +19,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TermsOfServiceType extends AbstractType
 {
-    private $active;
-    private $lockedParams;
-
-    public function __construct($active = false, array $lockedParams = [])
-    {
-        $this->active = $active;
-        $this->lockedParams = $lockedParams;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
@@ -36,7 +27,7 @@ class TermsOfServiceType extends AbstractType
             [
                 'required' => false,
                 'data' => $builder->getData(),
-                'theme_options' => ['contentTitle' => false],
+                'attr' => ['contentTitle' => false],
                 'label' => 'term_of_service',
             ]
         )
@@ -46,20 +37,19 @@ class TermsOfServiceType extends AbstractType
             [
                 'required' => false,
                 'mapped' => false,
-                'data' => $this->active,
+                'data' => $options['active'],
                 'label' => 'term_of_service_activation_message',
-                'disabled' => isset($this->lockedParams['terms_of_service']),
+                'disabled' => isset($options['locked_params']['terms_of_service']),
             ]
         );
     }
 
-    public function getName()
-    {
-        return 'terms_of_service_form';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(['translation_domain' => 'platform']);
+        $resolver->setDefaults([
+          'translation_domain' => 'platform',
+          'active' => false,
+          'locked_params' => [],
+        ]);
     }
 }

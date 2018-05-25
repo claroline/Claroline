@@ -38,7 +38,7 @@ class AdminAnalyticsTopType extends AbstractType
                         'top_users_connections' => 'top_users_connections',
                         'top_media_views' => 'top_media_views',
                     ],
-                    'theme_options' => ['label_width' => 'col-md-2', 'control_width' => 'col-md-4'],
+                    'attr' => ['label_width' => 'col-md-2', 'control_width' => 'col-md-4'],
                 ]
             )
             ->add(
@@ -48,7 +48,7 @@ class AdminAnalyticsTopType extends AbstractType
                     'label' => 'for_period',
                     'required' => false,
                     'attr' => ['class' => 'input-sm'],
-                    'theme_options' => ['label_width' => 'col-md-2', 'control_width' => 'col-md-4'],
+                    'attr' => ['label_width' => 'col-md-2', 'control_width' => 'col-md-4'],
                 ]
             )
             ->add(
@@ -61,7 +61,7 @@ class AdminAnalyticsTopType extends AbstractType
                         '50' => '50',
                         '100' => '100',
                     ],
-                    'theme_options' => ['label_width' => 'col-md-2', 'control_width' => 'col-md-3'],
+                    'attr' => ['label_width' => 'col-md-2', 'control_width' => 'col-md-3'],
                 ]
             );
     }

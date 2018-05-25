@@ -25,7 +25,7 @@ class MailLayoutType extends AbstractType
             ContentType::class,
             [
                 'data' => $builder->getData(),
-                //'theme_options' => ['contentTitle' => false],
+                'attr' => ['contentTitle' => false],
                 'label' => ContentType::class,
             ]
         );

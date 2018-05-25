@@ -29,26 +29,26 @@ class NotificationPluginConfigurationType extends AbstractType
             ->add('dropdownItems', IntegerType::class,
                 array(
                     'label' => 'dropdown_items',
-                    'theme_options' => array('control_width' => 'col-md-2'),
+                    'attr' => array('control_width' => 'col-md-2'),
                 )
             )
             ->add('maxPerPage', IntegerType::class,
                 array(
                     'label' => 'max_per_page',
-                    'theme_options' => array('control_width' => 'col-md-2'),
+                    'attr' => array('control_width' => 'col-md-2'),
                 )
             )
             ->add('purgeEnabled', CheckboxType::class,
                 array(
                     'required' => false,
                     'label' => 'purge_enabled',
-                    'theme_options' => array('control_width' => 'col-md-2'),
+                    'attr' => array('control_width' => 'col-md-2'),
                 )
             )
             ->add('purgeAfterDays', IntegerType::class,
                 array(
                     'label' => 'purge_after_days',
-                    'theme_options' => array('control_width' => 'col-md-2'),
+                    'attr' => array('control_width' => 'col-md-2'),
                 )
             );
     }

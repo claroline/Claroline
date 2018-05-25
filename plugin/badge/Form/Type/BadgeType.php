@@ -97,7 +97,7 @@ class BadgeType extends AbstractType
                             'type' => $this->badgeRuleType,
                             'by_reference' => false,
                             'attr' => array('class' => 'rule-collections'),
-                            'theme_options' => array('label_width' => 'col-md-3'),
+                            'attr' => array('label_width' => 'col-md-3'),
                             'prototype' => true,
                             'allow_add' => true,
                             'allow_delete' => true,

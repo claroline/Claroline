@@ -53,7 +53,7 @@ class GeneralType extends AbstractType
                     'mapped' => false,
                     'required' => false,
                     'label' => 'description',
-    //                'theme_options' => ['contentTitle' => false, 'tinymce' => false],
+                    'attr' => ['contentTitle' => false, 'tinymce' => false],
                 ]
             )
             ->add(

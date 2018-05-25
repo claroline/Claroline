@@ -17,7 +17,7 @@ class WidgetTagListBlogType extends AbstractType
     {
         $builder
             ->add('resourceNode', 'resourcePicker', array(
-                'theme_options' => array(
+                'attr' => array(
                     'label_width' => 'col-md-6',
                     'control_width' => 'col-md-6',
                 ),

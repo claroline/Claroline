@@ -43,7 +43,7 @@ class MailServerType extends AbstractType
                 TextType::class,
                 [
                     'required' => false,
-                    //'theme_options' => ['display_row' => $options['formDisplay'][$options['transport']]['host']],
+                    'attr' => ['display_row' => $options['formDisplay'][$options['transport']]['host']],
                     'disabled' => isset($options['lockedParams']['mailer_host']),
                     'label' => 'host',
                 ]
@@ -53,7 +53,7 @@ class MailServerType extends AbstractType
                 TextType::class,
                 [
                     'required' => false,
-                    //'theme_options' => ['display_row' => $options['formDisplay'][$options['transport']]['username']],
+                    'attr' => ['display_row' => $options['formDisplay'][$options['transport']]['username']],
                     'disabled' => isset($options['lockedParams']['mailer_username']),
                     'label' => 'username',
                 ]
@@ -63,7 +63,7 @@ class MailServerType extends AbstractType
                 PasswordType::class,
                 [
                     'required' => false,
-                    //'theme_options' => ['display_row' => $options['formDisplay'][$options['transport']]['password']],
+                    'attr' => ['display_row' => $options['formDisplay'][$options['transport']]['password']],
                     'disabled' => isset($options['lockedParams']['mailer_password']),
                     'label' => 'password',
                 ]
@@ -74,7 +74,7 @@ class MailServerType extends AbstractType
                 [
                     'choices' => [null => '', 'plain' => 'plain', 'login' => 'login', 'cram-md5' => 'cram-md5'],
                     'required' => false,
-                    //'theme_options' => ['display_row' => $options['formDisplay'][$options['transport']]['auth_mode']],
+                    'attr' => ['display_row' => $options['formDisplay'][$options['transport']]['auth_mode']],
                     'disabled' => isset($options['lockedParams']['mailer_auth_mode']),
                     'label' => 'auth_mode',
                 ]
@@ -85,7 +85,7 @@ class MailServerType extends AbstractType
                 [
                     'choices' => [null => '', 'tls' => 'tls', 'ssl' => 'ssl'],
                     'required' => false,
-                    //'theme_options' => ['display_row' => $options['formDisplay'][$options['transport']]['encryption']],
+                    'attr' => ['display_row' => $options['formDisplay'][$options['transport']]['encryption']],
                     'disabled' => isset($options['lockedParams']['mailer_encryption']),
                     'label' => 'encryption',
                 ]
@@ -95,7 +95,7 @@ class MailServerType extends AbstractType
                 NumberType::class,
                 [
                     'required' => false,
-                    //'theme_options' => ['display_row' => $options['formDisplay'][$options['transport']]['port']],
+                    'attr' => ['display_row' => $options['formDisplay'][$options['transport']]['port']],
                     'disabled' => isset($options['lockedParams']['mailer_port']),
                     'label' => 'port',
                 ]
@@ -105,7 +105,7 @@ class MailServerType extends AbstractType
                 TextType::class,
                 [
                     'required' => false,
-                    //'theme_options' => ['display_row' => $options['formDisplay'][$options['transport']]['api_key']],
+                    'attr' => ['display_row' => $options['formDisplay'][$options['transport']]['api_key']],
                     'disabled' => isset($options['lockedParams']['mailer_api_key']),
                     'label' => 'api_key',
                 ]
@@ -115,16 +115,11 @@ class MailServerType extends AbstractType
                 TextType::class,
                 [
                     'required' => false,
-                    //'theme_options' => ['display_row' => $options['formDisplay'][$options['transport']]['tag']],
+                    'attr' => ['display_row' => $options['formDisplay'][$options['transport']]['tag']],
                     'disabled' => isset($options['lockedParams']['mailer_tag']),
                     'label' => 'tag',
                 ]
             );
-    }
-
-    public function getName()
-    {
-        return 'platform_parameters_form';
     }
 
     public function configureOptions(OptionsResolver $resolver)

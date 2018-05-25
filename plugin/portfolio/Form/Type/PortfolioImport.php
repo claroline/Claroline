@@ -25,7 +25,7 @@ class PortfolioImport extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('content', 'file', [
-            'theme_options' => [
+            'attr' => [
                 'label_width' => 'col-md-5',
                 'control_width' => 'col-md-7',
             ],
@@ -38,7 +38,7 @@ class PortfolioImport extends AbstractType
             $form->add('format', 'choice', [
                 'choices' => $this->availableImportFormats,
                 'expanded' => true,
-                'theme_options' => [
+                'attr' => [
                     'label_width' => 'col-md-5',
                     'control_width' => 'col-md-7',
                 ],

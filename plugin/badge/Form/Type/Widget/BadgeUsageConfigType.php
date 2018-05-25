@@ -16,20 +16,20 @@ class BadgeUsageConfigType extends AbstractType
     {
         $builder
             ->add('number_last_awarded_badge', IntegerType::class, array(
-                'theme_options' => array(
+                'attr' => array(
                     'label_width' => 'col-md-7',
                     'control_width' => 'col-md-2',
                 ),
             ))
             ->add('number_most_awarded_badge', IntegerType::class, array(
-                'theme_options' => array(
+                'attr' => array(
                     'label_width' => 'col-md-7',
                     'control_width' => 'col-md-2',
                 ),
             ))
             ->add('simple_view', CheckboxType::class, array(
                 'required' => false,
-                'theme_options' => array(
+                'attr' => array(
                     'label_width' => 'col-md-7',
                     'control_width' => 'col-md-2',
                 ),

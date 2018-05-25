@@ -32,7 +32,7 @@ class WidgetListBlogType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('resourceNode', 'resourcePicker', array(
-            'theme_options' => array(
+            'attr' => array(
                 'label_width' => 'col-md-6',
                 'control_width' => 'col-md-6',
             ),

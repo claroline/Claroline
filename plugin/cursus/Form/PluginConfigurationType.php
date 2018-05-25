@@ -76,7 +76,7 @@ class PluginConfigurationType extends AbstractType
             ContentType::class,
             [
                 'data' => $builder->getData(),
-                'theme_options' => ['contentTitle' => true],
+                'attr' => ['contentTitle' => true],
             ]
         );
     }

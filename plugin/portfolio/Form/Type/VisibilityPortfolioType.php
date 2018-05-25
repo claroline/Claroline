@@ -34,12 +34,12 @@ class VisibilityPortfolioType extends AbstractType
                 'choices' => Portfolio::getVisibilityLabels(),
                 'required' => true,
                 'label' => 'visibility',
-                'theme_options' => array('label_width' => 'col-md-2'),
+                'attr' => array('label_width' => 'col-md-2'),
             ))
             ->add('portfolio_users', 'collection', array(
                 'type' => 'icap_portfolio_visible_user_form',
                 'by_reference' => false,
-                'theme_options' => array('label_width' => 'col-md-12'),
+                'attr' => array('label_width' => 'col-md-12'),
                 'prototype' => true,
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -55,7 +55,7 @@ class VisibilityPortfolioType extends AbstractType
             ->add('portfolio_groups', 'collection', array(
                 'type' => 'icap_portfolio_visible_group_form',
                 'by_reference' => false,
-                'theme_options' => array('label_width' => 'col-md-12'),
+                'attr' => array('label_width' => 'col-md-12'),
                 'prototype' => true,
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -71,7 +71,7 @@ class VisibilityPortfolioType extends AbstractType
             ->add('portfolio_teams', 'collection', array(
                 'type' => 'icap_portfolio_visible_team_form',
                 'by_reference' => false,
-                'theme_options' => array('label_width' => 'col-md-12'),
+                'attr' => array('label_width' => 'col-md-12'),
                 'prototype' => true,
                 'allow_add' => true,
                 'allow_delete' => true,

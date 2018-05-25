@@ -46,7 +46,7 @@ class ImportWorkspaceType extends AbstractType
         );
         $builder->add(
             'description',
-            isset($options['theme_options']['tinymce']) && !$options['theme_options']['tinymce'] ?
+            isset($options['attr']['tinymce']) && !$options['attr']['tinymce'] ?
                 'textarea' :
                 'tinymce',
             ['required' => false, 'label' => 'description']

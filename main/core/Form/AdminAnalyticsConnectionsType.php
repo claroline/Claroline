@@ -28,7 +28,7 @@ class AdminAnalyticsConnectionsType extends AbstractType
                         'false' => 'connections',
                         'true' => 'unique_connections',
                     ],
-                    'theme_options' => ['label_width' => 'col-md-2', 'control_width' => 'col-md-3'],
+                    'attr' => ['label_width' => 'col-md-2', 'control_width' => 'col-md-3'],
                 ]
             )
             ->add(
@@ -38,7 +38,7 @@ class AdminAnalyticsConnectionsType extends AbstractType
                     'label' => 'for_period',
                     'required' => false,
                     'attr' => ['class' => 'input-sm'],
-                    'theme_options' => ['label_width' => 'col-md-2', 'control_width' => 'col-md-3'],
+                    'attr' => ['label_width' => 'col-md-2', 'control_width' => 'col-md-3'],
                 ]
             );
     }

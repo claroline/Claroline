@@ -38,7 +38,7 @@ class HomeContentType extends AbstractType
                 ContentType::class,
                 [
                     'data' => $builder->getData(),
-                    'theme_options' => [
+                    'attr' => [
                         'titlePlaceHolder' => 'menu_title',
                         'contentText' => false,
                         'tinymce' => false,
@@ -51,7 +51,7 @@ class HomeContentType extends AbstractType
                 ContentType::class,
                 [
                     'data' => $builder->getData(),
-                    'theme_options' => [
+                    'attr' => [
                         'titlePlaceHolder' => 'link_title',
                         'textPlaceHolder' => 'link_address',
                         'tinymce' => false,

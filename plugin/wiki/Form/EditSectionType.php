@@ -47,17 +47,17 @@ class EditSectionType extends AbstractType
                     $form
                         ->add('visible', CheckboxType::class, array(
                                 'required' => false,
-                                'theme_options' => array('label_width' => 'col-md-12', 'control_width' => 'hidden'),
+                                'attr' => array('label_width' => 'col-md-12', 'control_width' => 'hidden'),
                             )
                         )
                         ->add('position', ChoiceType::class, array(
                                 'choices' => $sectionManager->getArchivedSectionsForPosition($data),
-                                'theme_options' => array('label_width' => 'col-md-12', 'control_width' => 'col-md-12'),
+                                'attr' => array('label_width' => 'col-md-12', 'control_width' => 'col-md-12'),
                             )
                         )
                         ->add('brother', CheckboxType::class, array(
                                 'required' => false,
-                                'theme_options' => array('label_width' => 'col-md-12', 'control_width' => 'hidden'),
+                                'attr' => array('label_width' => 'col-md-12', 'control_width' => 'hidden'),
                             )
                         );
                 }

@@ -15,10 +15,10 @@ class BlogBannerType extends AbstractType
                 'required' => false,
             ))
             ->add('banner_background_color', TextType::class, array(
-                'theme_options' => array('label_width' => ''),
+                'attr' => array('label_width' => ''),
             ))
             ->add('banner_height', TextType::class, array(
-                'theme_options' => array('label_width' => ''),
+                'attr' => array('label_width' => ''),
                 'attr' => array(
                     'class' => 'input-sm',
                     'data-min' => 100,
@@ -26,15 +26,15 @@ class BlogBannerType extends AbstractType
             ))
             ->add(FileType::class, FileType::class, array(
                 'label' => 'icap_blog_banner_form_banner_background_image',
-                'theme_options' => array('label_width' => ''),
+                'attr' => array('label_width' => ''),
                 'required' => false,
             ))
             ->add('banner_background_image_position', TextType::class, array(
-                'theme_options' => array('label_width' => ''),
+                'attr' => array('label_width' => ''),
                 'required' => false,
             ))
             ->add('banner_background_image_repeat', TextType::class, array(
-                'theme_options' => array('label_width' => ''),
+                'attr' => array('label_width' => ''),
                 'required' => false,
             ))
         ;

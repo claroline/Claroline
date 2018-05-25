@@ -79,7 +79,6 @@ class AnalyticsController extends Controller
      */
     public function indexAction()
     {
-
         return [];
     }
 

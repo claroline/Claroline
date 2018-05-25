@@ -100,7 +100,7 @@ class WidgetController extends Controller
      */
     public function widgetEditFormAction(Widget $widget)
     {
-        $form = $this->formFactory->create(new WidgetEditType(), $widget);
+        $form = $this->formFactory->create(WidgetEditType::class, $widget);
 
         return ['form' => $form->createView(), 'widget' => $widget];
     }
@@ -118,7 +118,7 @@ class WidgetController extends Controller
      */
     public function widgetEditAction(Widget $widget)
     {
-        $form = $this->formFactory->create(new WidgetEditType(), $widget);
+        $form = $this->formFactory->create(WidgetEditType::class, $widget);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {

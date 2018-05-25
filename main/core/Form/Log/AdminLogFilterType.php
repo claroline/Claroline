@@ -48,7 +48,7 @@ class AdminLogFilterType extends AbstractType
                     'attr' => ['class' => 'input-sm'],
                     'choices' => $actionChoices,
                     'choices_as_values' => true,
-                    'theme_options' => ['label_width' => 'col-md-3'],
+                    'attr' => ['label_width' => 'col-md-3'],
                 ]
             )
             ->add(
@@ -58,7 +58,7 @@ class AdminLogFilterType extends AbstractType
                     'label' => 'for_period',
                     'required' => false,
                     'attr' => ['class' => 'input-sm'],
-                    'theme_options' => ['label_width' => 'col-md-3', 'control_width' => 'col-md-3'],
+                    'attr' => ['label_width' => 'col-md-3', 'control_width' => 'col-md-3'],
                 ]
             )
             ->add(
@@ -69,7 +69,7 @@ class AdminLogFilterType extends AbstractType
                     'entity_reference' => 'user',
                     'required' => false,
                     'attr' => ['class' => 'input-sm'],
-                    'theme_options' => ['label_width' => 'col-md-3', 'control_width' => 'col-md-3'],
+                    'attr' => ['label_width' => 'col-md-3', 'control_width' => 'col-md-3'],
                 ]
             )
             ->add(
@@ -80,7 +80,7 @@ class AdminLogFilterType extends AbstractType
                     'entity_reference' => 'group',
                     'required' => false,
                     'attr' => ['class' => 'input-sm'],
-                    'theme_options' => ['label_width' => 'col-md-3', 'control_width' => 'col-md-3'],
+                    'attr' => ['label_width' => 'col-md-3', 'control_width' => 'col-md-3'],
                 ]
             );
     }

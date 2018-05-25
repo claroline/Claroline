@@ -32,11 +32,6 @@ class MailOptionType extends AbstractType
             );
     }
 
-    public function getName()
-    {
-        return 'platform_parameters_form';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['translation_domain' => 'platform', 'from' => null]);

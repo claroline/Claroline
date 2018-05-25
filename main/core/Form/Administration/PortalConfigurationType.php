@@ -50,7 +50,7 @@ class PortalConfigurationType extends AbstractType
                 ChoiceType::class,
                 [
                     'required' => false,
-                    'choices' => $this->choices,
+                    'choices' => $options['choices'],
                     'label' => 'portal_resources_configuration',
                     'expanded' => true,
                     'multiple' => true,
@@ -68,18 +68,8 @@ class PortalConfigurationType extends AbstractType
     {
         $resolver->setDefaults(
             [
-                'translation_domain' => 'platform',
+                'translation_domain' => 'platform', 'choices' => [],
             ]
         );
-    }
-
-    /**
-     * Returns the name of this type.
-     *
-     * @return string The name of this type
-     */
-    public function getName()
-    {
-        return 'portal_configuration_form';
     }
 }

@@ -45,7 +45,7 @@ class BaseContentType extends BaseType
         }
 
         $builder->add('title', TextType::class, ['data' => $title]);
-        if (isset($options['theme_options']['tinymce']) && !$options['theme_options']['tinymce']) {
+        if (isset($options['attr']['tinymce']) && !$options['attr']['tinymce']) {
             $builder->add(
                 'content',
                 TextareaType::class,
@@ -62,6 +62,6 @@ class BaseContentType extends BaseType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(['required' => false, 'mapped' => false, 'theme_options' => []]);
+        $resolver->setDefaults(['required' => false, 'mapped' => false, 'attr' => []]);
     }
 }
