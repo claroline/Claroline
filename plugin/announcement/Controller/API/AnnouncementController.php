@@ -5,6 +5,9 @@ namespace Claroline\AnnouncementBundle\Controller\API;
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
 use Claroline\AnnouncementBundle\Manager\AnnouncementManager;
+use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -32,14 +35,20 @@ class AnnouncementController
      * AnnouncementController constructor.
      *
      * @DI\InjectParams({
-     *     "manager" = @DI\Inject("claroline.manager.announcement_manager")
+     *     "manager"    = @DI\Inject("claroline.manager.announcement_manager"),
+     *     "serializer" = @DI\Inject("claroline.api.serializer"),
+     *     "crud"       = @DI\Inject("claroline.api.crud"),
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
-     * @param AnnouncementManager $manager
+     * @param AnnouncementManager $managersuppression
      */
-    public function __construct(AnnouncementManager $manager)
+    public function __construct(AnnouncementManager $manager, SerializerProvider $serializer, Crud $crud, ObjectManager $om)
     {
         $this->manager = $manager;
+        $this->serializer = $serializer;
+        $this->crud = $crud;
+        $this->om = $om;
     }
 
     /**
@@ -57,16 +66,14 @@ class AnnouncementController
     {
         $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
 
-        try {
-            $announcement = $this->manager->create($aggregate, json_decode($request->getContent(), true));
+        $announcement = $this->crud->create($this->getClass(), $this->decodeRequest($request), [
+          'announcement_aggregate' => $aggregate,
+        ]);
 
-            return new JsonResponse(
-                $this->manager->serialize($announcement),
-                201
-            );
-        } catch (\Exception $e) {
-            return new JsonResponse($e->getMessage(), 422);
-        }
+        return new JsonResponse(
+            $this->serializer->serialize($announcement),
+            201
+        );
     }
 
     /**
@@ -90,15 +97,14 @@ class AnnouncementController
     {
         $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
 
-        try {
-            $this->manager->update($announcement, json_decode($request->getContent(), true));
+        $announcement = $this->crud->update($this->getClass(), $this->decodeRequest($request), [
+          'announcement_aggregate' => $aggregate,
+        ]);
 
-            return new JsonResponse(
-                $this->manager->serialize($announcement)
-            );
-        } catch (\Exception $e) {
-            return new JsonResponse($e->getMessage(), 422);
-        }
+        return new JsonResponse(
+            $this->serializer->serialize($announcement),
+            201
+        );
     }
 
     /**
@@ -120,14 +126,50 @@ class AnnouncementController
     public function deleteAction(AnnouncementAggregate $aggregate, Announcement $announcement)
     {
         $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
+        $this->crud->delete($announcement, ['announcement_aggregate' => $aggregate]);
 
-        try {
-            $this->manager->delete($announcement);
+        return new JsonResponse(null, 204);
+    }
 
-            return new JsonResponse(null, 204);
-        } catch (\Exception $e) {
-            return new JsonResponse($e->getMessage(), 422);
+    /**
+     * Sends an announce (in current implementation, it's sent by email).
+     *
+     * @EXT\Route("/{id}/validate", name="claro_announcement_validate")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "announcement",
+     *      class="ClarolineAnnouncementBundle:Announcement",
+     *      options={"mapping": {"id": "uuid"}}
+     * )
+     *
+     * @param AnnouncementAggregate $aggregate
+     * @param Announcement          $announcement
+     *
+     * @return JsonResponse
+     */
+    public function validateSendAction(AnnouncementAggregate $aggregate, Announcement $announcement, Request $request)
+    {
+        $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
+        $ids = $request->query->all()['filters']['roles'];
+        $ids = explode(',', $ids);
+        $roles = $this->om->findList('Claroline\CoreBundle\Entity\Role', 'uuid', $ids);
+        $users = $this->manager->getVisibleBy($announcement, $roles);
+        $serialized = [];
+
+        foreach ($users as $user) {
+            $serialized[] = $this->serializer->serialize($user);
         }
+
+        $data = [
+          'data' => $serialized,
+          'totalResults' => count($serialized),
+          'page' => 1,
+          'pageSize' => count($serialized),
+          'filters' => $request->query->all()['filters'],
+          'sortBy' => [],
+        ];
+
+        return new JsonResponse($data, 200);
     }
 
     /**
@@ -146,16 +188,41 @@ class AnnouncementController
      *
      * @return JsonResponse
      */
-    public function sendAction(AnnouncementAggregate $aggregate, Announcement $announcement)
+    public function sendAction(AnnouncementAggregate $aggregate, Announcement $announcement, Request $request)
     {
         $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
+        $roles = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Role');
+        $users = $this->manager->getVisibleBy($announcement, $roles);
+        $this->manager->sendMessage($announcement, $users);
 
-        try {
-            $this->manager->sendMail($announcement);
+        return new JsonResponse(null, 200);
+    }
 
-            return new JsonResponse(null, 204);
-        } catch (\Exception $e) {
-            return new JsonResponse($e->getMessage(), 422);
+    public function getClass()
+    {
+        return 'Claroline\AnnouncementBundle\Entity\Announcement';
+    }
+
+    protected function decodeRequest(Request $request)
+    {
+        $decodedRequest = json_decode($request->getContent(), true);
+
+        if (null === $decodedRequest) {
+            throw new InvalidDataException('Invalid request content sent.', []);
         }
+
+        return $decodedRequest;
+    }
+
+    /**
+     * @param Request $request
+     * @param string  $class
+     */
+    protected function decodeIdsString(Request $request, $class)
+    {
+        $ids = $request->query->get('ids');
+        $property = is_numeric($ids[0]) ? 'id' : 'uuid';
+
+        return $this->om->findList($class, $property, $ids);
     }
 }

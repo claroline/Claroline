@@ -27,19 +27,19 @@ class TeamType extends AbstractType
         $builder->add(
             'description',
             'tinymce',
-            array('required' => false)
+            ['required' => false]
         );
         $builder->add(
             'defaultResource',
             'resourcePicker',
-            array(
+            [
                 'required' => false,
                 'mapped' => false,
                 'label' => 'default_resource',
-                'attr' => array(
+                'attr' => [
                     'data-restrict-for-owner' => 1,
-                ),
-            )
+                ],
+            ]
         );
         $builder->add(
             'maxUsers',
@@ -47,7 +47,7 @@ class TeamType extends AbstractType
             array(
                 'attr' => array('min' => 0),
                 'required' => false,
-            )
+            ]
         );
         $builder->add(
             'isPublic',
@@ -56,31 +56,31 @@ class TeamType extends AbstractType
                 'choices' => array(
                     true => 'public',
                     false => 'private',
-                ),
+                ],
                 'required' => true,
-                'attr' => array('class' => 'advanced-param'),
-            )
+                'attr' => ['class' => 'advanced-param'],
+            ]
         );
         $builder->add(
             'selfRegistration',
             CheckboxType::class,
             array(
                 'required' => true,
-                'attr' => array('class' => 'advanced-param'),
-            )
+                'attr' => ['class' => 'advanced-param'],
+            ]
         );
         $builder->add(
             'selfUnregistration',
             CheckboxType::class,
             array(
                 'required' => true,
-                'attr' => array('class' => 'advanced-param'),
-            )
+                'attr' => ['class' => 'advanced-param'],
+            ]
         );
         $builder->add(
             'resourceTypes',
             'entity',
-            array(
+            [
                 'required' => false,
                 'mapped' => false,
                 'expanded' => true,
@@ -89,8 +89,8 @@ class TeamType extends AbstractType
                 'label' => 'user_creatable_resources',
                 'class' => 'ClarolineCoreBundle:Resource\ResourceType',
                 'property' => 'name',
-                'attr' => array('class' => 'advanced-param'),
-            )
+                'attr' => ['class' => 'advanced-param'],
+            ]
         );
     }
 
@@ -101,6 +101,6 @@ class TeamType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'team'));
+        $resolver->setDefaults(['translation_domain' => 'team']);
     }
 }

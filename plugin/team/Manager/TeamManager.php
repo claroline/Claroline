@@ -397,7 +397,10 @@ class TeamManager
         $this->setRightsForOldTeams($workspace, $role);
         $orderedTool = $this->om->getRepository('ClarolineCoreBundle:Tool\OrderedTool')
           ->findOneBy(['workspace' => $workspace, 'name' => 'resource_manager']);
-        $this->toolRightsManager->setToolRights($orderedTool, $role, 1);
+
+        if (!empty($orderedTool)) {
+            $this->toolRightsManager->setToolRights($orderedTool, $role, 1);
+        }
 
         return $role;
     }
@@ -423,8 +426,10 @@ class TeamManager
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
         $this->rightsManager->editPerms(['open' => true], $role, $root);
         $orderedTool = $this->om->getRepository('ClarolineCoreBundle:Tool\OrderedTool')->findOneBy(['workspace' => $workspace, 'name' => 'resource_manager']);
-        $this->toolRightsManager->setToolRights($orderedTool, $role, 1);
 
+        if (!empty($orderedTool)) {
+            $this->toolRightsManager->setToolRights($orderedTool, $role, 1);
+        }
         $this->setRightsForOldTeams($workspace, $role);
 
         return $role;

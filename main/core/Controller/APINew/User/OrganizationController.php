@@ -137,7 +137,7 @@ class OrganizationController extends AbstractCrudController
             }
         }
 
-        return $organizations;
+        return array_values($organizations);
     }
 
     private function hasRecursiveChild($parent, $target)

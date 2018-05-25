@@ -194,13 +194,16 @@ class DropzoneSerializer
             $dropzone->setReviewStartDate(null);
             $dropzone->setReviewEndDate(null);
         } else {
-            $dropRange = DateRangeNormalizer::denormalize($planningData['drop']);
-            $dropzone->setDropStartDate($dropRange[0]);
-            $dropzone->setDropEndDate($dropRange[1]);
-
-            $reviewRange = DateRangeNormalizer::denormalize($planningData['review']);
-            $dropzone->setReviewStartDate($reviewRange[0]);
-            $dropzone->setReviewEndDate($reviewRange[1]);
+            if (isset($planningData['drop'])) {
+                $dropRange = DateRangeNormalizer::denormalize($planningData['drop']);
+                $dropzone->setDropStartDate($dropRange[0]);
+                $dropzone->setDropEndDate($dropRange[1]);
+            }
+            if (isset($planningData['review'])) {
+                $reviewRange = DateRangeNormalizer::denormalize($planningData['review']);
+                $dropzone->setReviewStartDate($reviewRange[0]);
+                $dropzone->setReviewEndDate($reviewRange[1]);
+            }
         }
     }
 

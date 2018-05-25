@@ -39,16 +39,12 @@ use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\FacetManager;
-use Claroline\CoreBundle\Manager\Organization\LocationManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\MessageBundle\Manager\MessageManager;
-use Claroline\PdfGeneratorBundle\Manager\PdfManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Ramsey\Uuid\Uuid;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -63,24 +59,21 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class ClacoFormManager
 {
-    private $archiveDir;
     private $authorization;
-    private $configHandler;
     private $eventDispatcher;
     private $facetManager;
     private $fileSystem;
     private $filesDir;
-    private $locationManager;
     private $messageManager;
     private $om;
-    private $pdfManager;
     private $router;
-    private $templating;
     private $tokenStorage;
     private $translator;
     private $userManager;
 
     private $categoryRepo;
+    private $clacoFormRepo;
+    private $clacoFormWidgetConfigRepo;
     private $commentRepo;
     private $entryRepo;
     private $entryUserRepo;
@@ -91,55 +84,40 @@ class ClacoFormManager
 
     /**
      * @DI\InjectParams({
-     *     "archiveDir"      = @DI\Inject("%claroline.param.platform_generated_archive_path%"),
      *     "authorization"   = @DI\Inject("security.authorization_checker"),
-     *     "configHandler"   = @DI\Inject("claroline.config.platform_config_handler"),
      *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
      *     "facetManager"    = @DI\Inject("claroline.manager.facet_manager"),
      *     "fileSystem"      = @DI\Inject("filesystem"),
      *     "filesDir"        = @DI\Inject("%claroline.param.files_directory%"),
-     *     "locationManager" = @DI\Inject("claroline.manager.organization.location_manager"),
      *     "messageManager"  = @DI\Inject("claroline.manager.message_manager"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "pdfManager"      = @DI\Inject("claroline.manager.pdf_manager"),
      *     "router"          = @DI\Inject("router"),
-     *     "templating"      = @DI\Inject("templating"),
      *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "translator"      = @DI\Inject("translator"),
      *     "userManager"     = @DI\Inject("claroline.manager.user_manager")
      * })
      */
     public function __construct(
-        $archiveDir,
         AuthorizationCheckerInterface $authorization,
-        PlatformConfigurationHandler $configHandler,
         EventDispatcherInterface $eventDispatcher,
         FacetManager $facetManager,
         Filesystem $fileSystem,
         $filesDir,
-        LocationManager $locationManager,
         MessageManager $messageManager,
         ObjectManager $om,
-        PdfManager $pdfManager,
         RouterInterface $router,
-        TwigEngine $templating,
         TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator,
         UserManager $userManager
     ) {
-        $this->archiveDir = $archiveDir;
         $this->authorization = $authorization;
-        $this->configHandler = $configHandler;
         $this->eventDispatcher = $eventDispatcher;
         $this->facetManager = $facetManager;
         $this->fileSystem = $fileSystem;
         $this->filesDir = $filesDir;
-        $this->locationManager = $locationManager;
         $this->messageManager = $messageManager;
         $this->om = $om;
-        $this->pdfManager = $pdfManager;
         $this->router = $router;
-        $this->templating = $templating;
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
         $this->userManager = $userManager;
@@ -934,208 +912,6 @@ class ClacoFormManager
         }
 
         return $hasFiles;
-    }
-
-    public function exportEntries(ClacoForm $clacoForm)
-    {
-        $entriesData = [];
-        $fields = $clacoForm->getFields();
-        $entries = $this->getAllEntries($clacoForm);
-
-        foreach ($entries as $entry) {
-            $user = $entry->getUser();
-            $publicationDate = $entry->getPublicationDate();
-            $editionDate = $entry->getEditionDate();
-            $fieldValues = $entry->getFieldValues();
-            $data = [];
-            $data['id'] = $entry->getId();
-            $data['uuid'] = $entry->getUuid();
-            $data['title'] = $entry->getTitle();
-            $data['author'] = empty($user) ?
-                $this->translator->trans('anonymous', [], 'platform') :
-                $user->getFirstName().' '.$user->getLastName();
-            $data['publicationDate'] = empty($publicationDate) ? '' : $publicationDate->format('d/m/Y');
-            $data['editionDate'] = empty($editionDate) ? '' : $editionDate->format('d/m/Y');
-
-            foreach ($fieldValues as $fiedValue) {
-                $field = $fiedValue->getField();
-                $fieldFacet = $field->getFieldFacet();
-                $fieldFacetValue = $fiedValue->getFieldFacetValue();
-                $val = $fieldFacetValue->getValue();
-
-                switch ($fieldFacet->getType()) {
-                    case FieldFacet::CHOICE_TYPE:
-                        $value = is_array($val) ? implode(', ', $val) : $val;
-                        break;
-                    case FieldFacet::CASCADE_TYPE:
-                        $value = is_array($val) ? implode(', ', $val) : '';
-                        break;
-                    case FieldFacet::COUNTRY_TYPE:
-                        $value = $this->locationManager->getCountryByCode($val);
-                        break;
-                    case FieldFacet::FILE_TYPE:
-                        /* TODO: change this when FILE_TYPE can accept an array of files again */
-                        $value = is_array($val) ? '['.implode(', ', $val).']' : '['.$val.']';
-                        break;
-                    default:
-                        $value = $val;
-                }
-                $data[$field->getId()] = $value;
-            }
-            $entriesData[] = $data;
-        }
-
-        return $this->templating->render(
-            'ClarolineClacoFormBundle:ClacoForm:entries_export.html.twig',
-            [
-                'fields' => $fields,
-                'entries' => $entriesData,
-            ]
-        );
-    }
-
-    public function zipEntries($content, ClacoForm $clacoForm)
-    {
-        $archive = new \ZipArchive();
-        $pathArch = $this->configHandler->getParameter('tmp_dir').DIRECTORY_SEPARATOR.Uuid::uuid4()->toString().'.zip';
-        $archive->open($pathArch, \ZipArchive::CREATE);
-        $archive->addFromString($clacoForm->getResourceNode()->getName().'.xls', $content);
-
-        $entries = $this->getAllEntries($clacoForm);
-
-        foreach ($entries as $entry) {
-            $fieldValues = $entry->getFieldValues();
-
-            foreach ($fieldValues as $fiedValue) {
-                $field = $fiedValue->getField();
-                $fieldFacetValue = $fiedValue->getFieldFacetValue();
-
-                if (FieldFacet::FILE_TYPE === $field->getType()) {
-                    /* TODO: change this when FILE_TYPE can accept an array of files again */
-                    $file = $fieldFacetValue->getValue();
-
-                    if (!empty($file) && is_array($file)) {
-                        $filePath = $this->filesDir.DIRECTORY_SEPARATOR.$file['url'];
-                        $fileParts = explode('/', $file['url']);
-                        $fileName = count($fileParts) > 0 ? $fileParts[count($fileParts) - 1] : $file['name'];
-                        $archive->addFile(
-                            $filePath,
-                            'files'.DIRECTORY_SEPARATOR.$entry->getId().DIRECTORY_SEPARATOR.$fileName
-                        );
-                    }
-                }
-            }
-        }
-        $archive->close();
-        file_put_contents($this->archiveDir, $pathArch."\n", FILE_APPEND);
-
-        return $pathArch;
-    }
-
-    public function generatePdfForEntry(Entry $entry, User $user)
-    {
-        $clacoForm = $entry->getClacoForm();
-        $fields = $clacoForm->getFields();
-        $fieldValues = [];
-
-        foreach ($entry->getFieldValues() as $fieldValue) {
-            $field = $fieldValue->getField();
-            $fieldValues[$field->getId()] = $fieldValue->getFieldFacetValue()->getValue();
-        }
-        $canEdit = $this->hasRight($clacoForm, 'EDIT');
-        $template = $clacoForm->getTemplate();
-        $useTemplate = $clacoForm->getUseTemplate();
-        $displayMeta = $clacoForm->getDisplayMetadata();
-        $isEntryManager = 'anon.' !== $user && $this->isEntryManager($entry, $user);
-        $withMeta = $canEdit || 'all' === $displayMeta || ('manager' === $displayMeta && $isEntryManager);
-        $countries = $this->locationManager->getCountries();
-
-        if (!empty($template) && $useTemplate) {
-            $template = str_replace('%clacoform_entry_title%', $entry->getTitle(), $template);
-
-            foreach ($fields as $field) {
-                if (!$field->isHidden() && ($withMeta || !$field->getIsMetadata()) && isset($fieldValues[$field->getId()])) {
-                    $fieldFacet = $field->getFieldFacet();
-
-                    switch ($fieldFacet->getType()) {
-                        case FieldFacet::CASCADE_TYPE:
-                            $value = implode(', ', $fieldValues[$field->getId()]);
-                            break;
-                        case FieldFacet::COUNTRY_TYPE:
-                            $value = $this->locationManager->getCountryByCode($fieldValues[$field->getId()]);
-                            break;
-                        case FieldFacet::FILE_TYPE:
-                            $values = [];
-
-                            foreach ($fieldValues[$field->getId()] as $fileValue) {
-                                $values[] = '['.implode(', ', $fileValue).']';
-                            }
-                            $value = implode(', ', $values);
-                            break;
-                        default:
-                            $value = $fieldValues[$field->getId()];
-                    }
-                } else {
-                    $value = '';
-                }
-                $name = 'field_'.$field->getId();
-                $template = str_replace("%$name%", $value, $template);
-            }
-        }
-        $canViewComments = $this->canViewComments($clacoForm);
-        $comments = [];
-
-        if ($canViewComments) {
-            $entryComments = $entry->getComments();
-
-            foreach ($entryComments as $comment) {
-                if (Comment::VALIDATED === $comment->getStatus()) {
-                    $comments[] = $comment;
-                }
-            }
-        }
-
-        $html = $this->templating->render(
-            'ClarolineClacoFormBundle:ClacoForm:entry.html.twig',
-            [
-                'entry' => $entry,
-                'template' => $template,
-                'useTemplate' => $useTemplate,
-                'withMeta' => $withMeta,
-                'fields' => $fields,
-                'fieldValues' => $fieldValues,
-                'countries' => $countries,
-                'canViewComments' => $canViewComments,
-                'comments' => $comments,
-            ]
-        );
-
-        return $this->pdfManager->create($html, $entry->getTitle(), $user, 'clacoform_entries');
-    }
-
-    public function generateArchiveForEntries(array $entries, User $user)
-    {
-        $pdfs = [];
-        $ds = DIRECTORY_SEPARATOR;
-
-        foreach ($entries as $entry) {
-            $pdfs[] = $this->generatePdfForEntry($entry, $user);
-        }
-
-        $archive = new \ZipArchive();
-        $pathArch = $this->configHandler->getParameter('tmp_dir').$ds.Uuid::uuid4()->toString().'.zip';
-        $archive->open($pathArch, \ZipArchive::CREATE);
-
-        foreach ($pdfs as $pdf) {
-            $archive->addFromString(
-                $pdf->getName().'.pdf',
-                file_get_contents($this->filesDir.$ds.'pdf'.$ds.$pdf->getPath())
-            );
-        }
-        $archive->close();
-        file_put_contents($this->archiveDir, $pathArch."\n", FILE_APPEND);
-
-        return $pathArch;
     }
 
     public function removeQuote($str)

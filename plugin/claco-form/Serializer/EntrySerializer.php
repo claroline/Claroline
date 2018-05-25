@@ -10,6 +10,7 @@ use Claroline\ClacoFormBundle\Entity\Comment;
 use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\ClacoFormBundle\Entity\FieldValue;
 use Claroline\ClacoFormBundle\Entity\Keyword;
+use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
@@ -22,6 +23,9 @@ use JMS\DiExtraBundle\Annotation as DI;
 class EntrySerializer
 {
     use SerializerTrait;
+
+    /** @var ClacoFormManager */
+    private $clacoFormManager;
 
     /** @var CategorySerializer */
     private $categorySerializer;
@@ -53,6 +57,7 @@ class EntrySerializer
      * EntrySerializer constructor.
      *
      * @DI\InjectParams({
+     *     "clacoFormManager"     = @DI\Inject("claroline.manager.claco_form_manager"),
      *     "categorySerializer"   = @DI\Inject("claroline.serializer.clacoform.category"),
      *     "commentSerializer"    = @DI\Inject("claroline.serializer.clacoform.comment"),
      *     "fieldValueSerializer" = @DI\Inject("claroline.serializer.clacoform.field_value"),
@@ -61,6 +66,7 @@ class EntrySerializer
      *     "om"                   = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
+     * @param ClacoFormManager     $clacoFormManager
      * @param CategorySerializer   $categorySerializer
      * @param CommentSerializer    $commentSerializer
      * @param FieldValueSerializer $fieldValueSerializer
@@ -69,6 +75,7 @@ class EntrySerializer
      * @param ObjectManager        $om
      */
     public function __construct(
+        ClacoFormManager $clacoFormManager,
         CategorySerializer $categorySerializer,
         CommentSerializer $commentSerializer,
         FieldValueSerializer $fieldValueSerializer,
@@ -76,6 +83,7 @@ class EntrySerializer
         UserSerializer $userSerializer,
         ObjectManager $om
     ) {
+        $this->clacoFormManager = $clacoFormManager;
         $this->categorySerializer = $categorySerializer;
         $this->commentSerializer = $commentSerializer;
         $this->fieldValueSerializer = $fieldValueSerializer;
@@ -216,8 +224,10 @@ class EntrySerializer
 
         if (empty($entry->getCreationDate())) {
             $entry->setCreationDate($currentDate);
+            $this->clacoFormManager->notifyCategoriesManagers($entry, [], $entry->getCategories());
         } else {
             $entry->setEditionDate($currentDate);
+            $this->clacoFormManager->notifyCategoriesManagers($entry, $entry->getCategories(), $entry->getCategories());
         }
 
         return $entry;

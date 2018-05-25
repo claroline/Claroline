@@ -46,14 +46,14 @@ const AnnouncePost = props =>
             </TooltipLink>
           }
           {props.editable &&
-            <TooltipButton
+            <TooltipLink
               id={`${props.id}-send`}
               title={t('send_mail')}
-              onClick={props.sendPost}
+              target={`#/${props.id}/send`}
               className="btn-link-default"
             >
               <span className="fa fa-fw fa-at"/>
-            </TooltipButton>
+            </TooltipLink>
           }
 
           {props.editable &&

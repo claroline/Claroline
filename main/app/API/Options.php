@@ -47,6 +47,7 @@ final class Options
 
     //do something better with these options
 
+    const NO_LOG = 'no_log';
     const SOFT_DELETE = 'soft_delete';
     const THROW_VALIDATION_EXCEPTION = 'throw_validation_exception';
     const NO_VALIDATE = 'no_validate'; //if validation is too long for huge csv

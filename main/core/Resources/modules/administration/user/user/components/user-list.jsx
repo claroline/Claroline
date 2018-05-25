@@ -59,6 +59,11 @@ const UserList = {
       options: {
         time: true
       }
+    }, {
+      name: 'roles',
+      type: 'choice',
+      displayed: false,
+      label: trans('roles')
     }
   ],
   card: UserCard

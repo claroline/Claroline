@@ -628,8 +628,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
             $order;
         $query = $this->_em->createQuery($dql);
         $query
-            ->setParameter('ids', $userIds)
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            ->setParameter('ids', $userIds);
+        //->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
 
         return ($getQuery) ? $query : $query->getResult();
     }

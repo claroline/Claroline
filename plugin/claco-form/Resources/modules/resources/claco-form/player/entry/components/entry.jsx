@@ -15,7 +15,6 @@ import {TooltipLink} from '#/main/core/layout/button/components/tooltip-link.jsx
 import {UserMicro} from '#/main/core/user/components/micro.jsx'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
-import {FileThumbnail} from '#/main/core/layout/form/components/field/file-thumbnail.jsx'
 import {DataDetailsContainer} from '#/main/core/data/details/containers/details.jsx'
 
 import {
@@ -23,33 +22,11 @@ import {
   Entry as EntryType,
   EntryUser as EntryUserType
 } from '#/plugin/claco-form/resources/claco-form/prop-types'
-import {getCountry, getFileType} from '#/plugin/claco-form/resources/claco-form/utils'
+import {getCountry} from '#/plugin/claco-form/resources/claco-form/utils'
 import {select} from '#/plugin/claco-form/resources/claco-form/selectors'
 import {actions} from '#/plugin/claco-form/resources/claco-form/player/entry/actions'
 import {EntryComments} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entry-comments.jsx'
 import {EntryMenu} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entry-menu.jsx'
-
-const FilesThumbnails = props =>
-  <div className="file-thumbnails">
-    {props.files.map((f, idx) =>
-      <FileThumbnail
-        key={`file-thumbnail-${idx}`}
-        type={!f.mimeType ? 'file' : getFileType(f.mimeType)}
-        data={f}
-        canEdit={false}
-        canExpand={false}
-        canDelete={false}
-      />
-    )}
-  </div>
-
-FilesThumbnails.propTypes = {
-  files: T.arrayOf(T.shape({
-    name: T.string,
-    mimeType: T.string,
-    url: T.string
-  }))
-}
 
 const EntryActions = props =>
   <div className="entry-actions">
@@ -296,7 +273,7 @@ class EntryComponent extends Component {
   generateTemplate() {
     let template = this.props.template
     template = template.replace('%clacoform_entry_title%', this.props.entry.title)
-    this.props.fields.filter(f => f.type !== 'file').forEach(f => {
+    this.props.fields.forEach(f => {
       let replacedField = ''
       const fieldValue = this.props.entry.values ? this.props.entry.values[f.id] : ''
 
@@ -321,8 +298,10 @@ class EntryComponent extends Component {
             replacedField = getCountry(fieldValue) || ''
             break
           case 'file':
-            replacedField = fieldValue && Array.isArray(fieldValue) ?
-              React.createElement(FilesThumbnails, {files: fieldValue}) :
+            replacedField = fieldValue && fieldValue['name'] ? `
+              <a href="${url(['claro_claco_form_field_value_file_download', {entry: this.props.entry.id, field: f.id}])}">
+                ${fieldValue['name']}
+              </a>` :
               ''
             break
           default:
@@ -358,18 +337,29 @@ class EntryComponent extends Component {
         displayed: this.isFieldDisplayable(f)
       }
 
-      if (f.type === 'choice') {
-        params['options'] = {
-          multiple: f.options.multiple !== undefined ? f.options.multiple : false,
-          condensed: f.options.condensed !== undefined ? f.options.condensed : false,
-          choices: f.options.choices ?
-            f.options.choices.reduce((acc, choice) => {
-              acc[choice.value] = choice.value
+      switch (f.type) {
+        case 'choice':
+          params['options'] = {
+            multiple: f.options.multiple !== undefined ? f.options.multiple : false,
+            condensed: f.options.condensed !== undefined ? f.options.condensed : false,
+            choices: f.options.choices ?
+              f.options.choices.reduce((acc, choice) => {
+                acc[choice.value] = choice.value
 
-              return acc
-            }, {}) :
-            {}
-        }
+                return acc
+              }, {}) :
+              {}
+          }
+          break
+        case 'file':
+          if (this.props.entry && this.props.entry.values && this.props.entry.values[f.id]) {
+            params['calculated'] = (data) => Object.assign(
+              {},
+              data.values[f.id],
+              {url: url(['claro_claco_form_field_value_file_download', {entry: data.id, field: f.id}])}
+            )
+          }
+          break
       }
       sectionFields.push(params)
     })

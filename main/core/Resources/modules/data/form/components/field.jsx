@@ -11,7 +11,7 @@ import {validateProp} from '#/main/core/data/form/validator'
 const FormField = props => {
   const typeDef = getTypeOrDefault(props.type)
   invariant(typeDef.components.form, `form component cannot be found for '${props.type}'`)
-  
+
   if (props.readOnly) {
     return (
       <FormGroup
@@ -36,11 +36,11 @@ const FormField = props => {
       value: props.value,
       onChange: (value) => {
         props.updateProp(props.name, value) // todo : maybe disable for calculated value
-        
+
         if (props.onChange) {
           props.onChange(value)
         }
-        
+
         props.setErrors(validateProp(props, value))
       }
     }))

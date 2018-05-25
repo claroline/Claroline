@@ -27,7 +27,7 @@ class TeamEditType extends AbstractType
         $builder->add(
             'description',
             'tinymce',
-            array('required' => false)
+            ['required' => false]
         );
         $builder->add(
             'maxUsers',
@@ -35,7 +35,7 @@ class TeamEditType extends AbstractType
             array(
                 'attr' => array('min' => 0),
                 'required' => false,
-            )
+            ]
         );
         $builder->add(
             'isPublic',
@@ -44,9 +44,9 @@ class TeamEditType extends AbstractType
                 'choices' => array(
                     true => 'public',
                     false => 'private',
-                ),
+                ],
                 'required' => true,
-            )
+            ]
         );
         $builder->add(
             'selfRegistration',
@@ -67,6 +67,6 @@ class TeamEditType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'team'));
+        $resolver->setDefaults(['translation_domain' => 'team']);
     }
 }

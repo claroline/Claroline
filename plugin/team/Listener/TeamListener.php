@@ -45,10 +45,10 @@ class TeamListener
      */
     public function onWorkspaceToolOpen(DisplayToolEvent $event)
     {
-        $params = array();
+        $params = [];
         $params['_controller'] = 'ClarolineTeamBundle:Team:index';
         $params['workspace'] = $event->getWorkspace()->getId();
-        $subRequest = $this->request->duplicate(array(), null, $params);
+        $subRequest = $this->request->duplicate([], null, $params);
         $response = $this->httpKernel
             ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setContent($response->getContent());

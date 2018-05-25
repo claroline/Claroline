@@ -148,4 +148,9 @@ class AnnouncementSerializer
 
         return $announce;
     }
+
+    public function getClass()
+    {
+        return 'Claroline\AnnouncementBundle\Entity\Announcement';
+    }
 }

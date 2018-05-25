@@ -7,12 +7,12 @@ use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
+use Claroline\CoreBundle\Event\User\MergeUsersEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceNodeManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\Response;
-use Claroline\CoreBundle\Event\User\MergeUsersEvent;
 
 /**
  * User administration tool.
@@ -106,11 +106,11 @@ class UserListener
     public function onMergeUsers(MergeUsersEvent $event)
     {
         // Replace creator of resource nodes
-        $resourcesCount = $this->resourceNodeManager->replaceCreator($event->getRemoved(), $event->getKept());
+        $resourcesCount = $this->container->get('claroline.manager.resource_node')->replaceCreator($event->getRemoved(), $event->getKept());
         $event->addMessage("[CoreBundle] updated resources count: $resourcesCount");
 
         // Merge all roles onto user to keep
-        $rolesCount = $this->userManager->transferRoles($event->getRemoved(), $event->getKept());
+        $rolesCount = $this->container->get('claroline.manager.user_manager')->transferRoles($event->getRemoved(), $event->getKept());
         $event->addMessage("[CoreBundle] transferred roles count: $rolesCount");
 
         // Change personal workspace into regular

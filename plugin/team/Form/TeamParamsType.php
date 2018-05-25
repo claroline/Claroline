@@ -25,7 +25,7 @@ class TeamParamsType extends AbstractType
             array(
                 'attr' => array('min' => 0),
                 'required' => false,
-            )
+            ]
         );
         $builder->add(
             'isPublic',
@@ -34,9 +34,9 @@ class TeamParamsType extends AbstractType
                 'choices' => array(
                     true => 'public',
                     false => 'private',
-                ),
+                ],
                 'required' => true,
-            )
+            ]
         );
         $builder->add(
             'selfRegistration',
@@ -57,6 +57,6 @@ class TeamParamsType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'team'));
+        $resolver->setDefaults(['translation_domain' => 'team']);
     }
 }

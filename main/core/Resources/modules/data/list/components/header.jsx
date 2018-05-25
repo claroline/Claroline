@@ -155,7 +155,7 @@ ListActions.propTypes = {
  */
 const ListHeader = props =>
   <div className="list-header">
-    {props.filters &&
+    {props.filters && !props.filters.readOnly &&
       <ListSearch
         {...props.filters}
         disabled={props.disabled}
@@ -196,6 +196,7 @@ ListHeader.propTypes = {
     available: T.arrayOf(
       T.shape(DataListProperty.propTypes)
     ).isRequired,
+    readOnly: T.bool.isRequired,
     addFilter: T.func.isRequired,
     removeFilter: T.func.isRequired
   })

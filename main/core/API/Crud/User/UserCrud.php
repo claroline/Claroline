@@ -70,6 +70,10 @@ class UserCrud
         $user->addRole($roleUser);
         $this->roleManager->createUserRole($user);
 
+        $user->setIsMailNotified($this->config->getParameter('auto_enable_email_redirect'));
+        $user->setHideMailWarning($this->config->getParameter('auto_validate_email'));
+        $user->setIsMailValidated($this->config->getParameter('auto_validate_email'));
+
         if ($this->mailManager->isMailerAvailable() && in_array(Options::SEND_EMAIL, $options)) {
             //send a validation by hash
             $mailValidation = $this->config->getParameter('registration_mail_validation');

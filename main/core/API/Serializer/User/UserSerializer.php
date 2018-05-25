@@ -149,19 +149,32 @@ class UserSerializer
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+            $userRoles = array_map(function (Role $role) {
+                return [
+                    'id' => $role->getUuid(),
+                    'type' => $role->getType(),
+                    'name' => $role->getName(),
+                    'translationKey' => $role->getTranslationKey(),
+                    'workspace' => $role->getWorkspace() ? ['id' => $role->getWorkspace()->getUuid()] : null,
+                    'context' => 'user',
+                ];
+            }, $user->getEntityRoles(false));
+            $groupRoles = array_map(function (Role $role) {
+                return [
+                    'id' => $role->getUuid(),
+                    'type' => $role->getType(),
+                    'name' => $role->getName(),
+                    'translationKey' => $role->getTranslationKey(),
+                    'workspace' => $role->getWorkspace() ? ['id' => $role->getWorkspace()->getUuid()] : null,
+                    'context' => 'group',
+                ];
+            }, $user->getGroupRoles());
+
             $serializedUser = array_merge($serializedUser, [
                 'meta' => $this->serializeMeta($user),
                 'restrictions' => $this->serializeRestrictions($user),
                 'rights' => $this->serializeRights($user),
-                'roles' => array_map(function (Role $role) {
-                    return [
-                        'id' => $role->getUuid(),
-                        'type' => $role->getType(),
-                        'name' => $role->getName(),
-                        'translationKey' => $role->getTranslationKey(),
-                        'workspace' => $role->getWorkspace() ? ['id' => $role->getWorkspace()->getUuid()] : null,
-                    ];
-                }, $user->getEntityRoles()),
+                'roles' => array_merge($userRoles, $groupRoles),
                 'groups' => array_map(function (Group $group) {
                     return [
                         'id' => $group->getUuid(),
@@ -446,15 +459,26 @@ class UserSerializer
             }
         }
 
-        //only add role here. If we want to remove them, use the crud remove method instead
+        //only add groups here. If we want to remove them, use the crud remove method instead
         //it's usefull if we want to create a user with a list of roles
-
         if (isset($data['groups'])) {
             foreach ($data['groups'] as $group) {
                 $group = $this->container->get('claroline.api.serializer')
                     ->deserialize('Claroline\CoreBundle\Entity\Group', $group);
                 if ($group && $group->getId()) {
                     $user->addGroup($group);
+                }
+            }
+        }
+
+        //only add organizations here. If we want to remove them, use the crud remove method instead
+        //it's usefull if we want to create a user with a list of roles
+        if (isset($data['organizations'])) {
+            foreach ($data['organizations'] as $organization) {
+                $organization = $this->container->get('claroline.api.serializer')
+                    ->deserialize('Claroline\CoreBundle\Entity\Organization\Organization', $organization);
+                if ($organization && $organization->getId()) {
+                    $user->addOrganization($organization);
                 }
             }
         }

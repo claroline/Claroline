@@ -10,6 +10,7 @@ import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
 import {Announces} from './announces.jsx'
 import {Announce} from './announce.jsx'
 import {AnnounceForm} from './announce-form.jsx'
+import {SendForm} from './send-form.jsx'
 
 import {Announcement as AnnouncementTypes} from './../prop-types'
 import {select} from './../selectors.js'
@@ -62,6 +63,11 @@ const Resource = props =>
           component: AnnounceForm,
           onEnter: (params) => props.openForm(props.posts.find(post => post.id === params.id)),
           onLeave: props.resetForm
+        }, {
+          path: '/:id/send',
+          component: SendForm,
+          onEnter: (params) => props.openForm(props.posts.find(post => post.id === params.id)),
+          onLeave: () => props.resetForm
         }
       ]}
     />

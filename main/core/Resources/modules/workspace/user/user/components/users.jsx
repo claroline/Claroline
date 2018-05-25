@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {trans} from '#/main/core/translation'
+import {trans, transChoice} from '#/main/core/translation'
 
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 
@@ -27,7 +27,7 @@ const UsersList = props =>
       label: trans('unregister', {}, 'actions'),
       callback: () => props.unregister(rows, props.workspace),
       dangerous: true,
-      disabled: rows.find(row => row.groups.length > 0)
+      disabled: rows.find(row => row.roles.filter(r => r.context === 'group' && props.workspace.roles.findIndex(wr => wr.name === r.name) > -1).length > 0)
     }]}
     definition={getUserList(props.workspace).definition}
     card={getUserList(props.workspace).card}
@@ -46,8 +46,8 @@ const Users = connect(
     unregister(users, workspace) {
       dispatch(
         modalActions.showModal(MODAL_DELETE_CONFIRM, {
-          title: trans('unregister_users'),
-          question: trans('unregister_users'),
+          title: trans('unregister'),
+          question: transChoice('unregister_users_confirm_message', users.length, {'count': users.length}),
           handleConfirm: () => dispatch(actions.unregister(users, workspace))
         })
       )

@@ -668,6 +668,26 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     }
 
     /**
+     * Returns the roles owned by groups the user is a member.
+     *
+     * @return Role[]
+     */
+    public function getGroupRoles()
+    {
+        $roles = [];
+
+        foreach ($this->getGroups() as $group) {
+            foreach ($group->getEntityRoles() as $role) {
+                if (!in_array($role, $roles)) {
+                    $roles[] = $role;
+                }
+            }
+        }
+
+        return $roles;
+    }
+
+    /**
      * Checks if the user has a given role.
      *
      * @param bool   $includeGroup

@@ -163,7 +163,8 @@ class DataList extends Component {
     let filtersTool
     if (this.props.filters) {
       filtersTool = Object.assign({}, this.props.filters, {
-        available: getFilterableProps(this.state.definition)
+        available: getFilterableProps(this.state.definition),
+        readOnly: this.props.readOnly
       })
     }
 
@@ -176,7 +177,7 @@ class DataList extends Component {
           filters={filtersTool}
         />
 
-        {0 < this.props.totalResults &&
+        {0 !== this.props.totalResults &&
           React.createElement(listConst.DISPLAY_MODES[this.state.display.current].component, Object.assign({},
             listConst.DISPLAY_MODES[this.state.display.current].options,
             {
@@ -192,7 +193,7 @@ class DataList extends Component {
           ))
         }
 
-        {0 < this.props.totalResults &&
+        {0 !== this.props.totalResults &&
           <ListFooter totalResults={this.props.totalResults} pagination={this.props.pagination} />
         }
 
@@ -259,6 +260,11 @@ DataList.propTypes = {
    * Setting it to true automatically enable the filter columns tool for supported displays.
    */
   filterColumns: T.bool,
+
+  /**
+   * Is the filter in readonly mode.
+   */
+  readOnly: T.bool,
 
   /**
    * Search filters configuration.

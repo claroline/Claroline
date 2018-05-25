@@ -39,7 +39,7 @@ actions.unregister = (users, workspace) => ({
       method: 'DELETE'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData('users.list'))
+      dispatch(listActions.deleteItems('users.list', users))
     }
   }
 })

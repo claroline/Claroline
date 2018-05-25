@@ -1290,6 +1290,7 @@
     "unregister_group_s_confirm_message": "Are you sure you want to unsubscribe these %count% groups?",
     "unregister_user_confirm_message": "Are you sure you want to unsubscribe this user ?",
     "unregister_user_s_confirm_message": "Are you sure you want to unsubscribe these %count% users ?",
+    "unregister_users_confirm_message": "{1} Are you sure you want to unsubscribe this user ?|[2,Inf[ Are you sure you want to unsubscribe these %count% users ?",
     "unregistered": "Unregistered",
     "unregistered_groups": "Unsubscribed groups",
     "unregistered_users": "Unsubscribed users",

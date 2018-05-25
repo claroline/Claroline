@@ -1311,6 +1311,7 @@
     "unregister_group_s_confirm_message": "Êtes-vous sûr de vouloir désinscrire ces %count% groupes ?",
     "unregister_user_confirm_message": "Êtes-vous sûr de vouloir désinscrire cet utilisateur ?",
     "unregister_user_s_confirm_message": "Êtes-vous sûr de vouloir désinscrire ces %count% utilisateurs ?",
+    "unregister_users_confirm_message": "{1} Êtes-vous sûr de vouloir désinscrire cet utilisateur ?|[2,Inf[ Êtes-vous sûr de vouloir désinscrire ces %count% utilisateurs ?",
     "unregistered": "Non inscrit",
     "unregistered_groups": "Groupes non enregistrés",
     "unregistered_users": "Utilisateurs non enregistrés",

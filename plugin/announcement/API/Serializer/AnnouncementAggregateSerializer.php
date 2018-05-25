@@ -60,4 +60,9 @@ class AnnouncementAggregateSerializer
             }, $announcePosts),
         ];
     }
+
+    public function getClass()
+    {
+        return 'Claroline\AnnouncementBundle\Entity\AnnouncementAggregate';
+    }
 }
