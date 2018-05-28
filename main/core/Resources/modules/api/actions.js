@@ -23,7 +23,11 @@ actions.uploadFile = (file, uploadUrl = ['apiv2_file_upload'], onSuccess = () =>
       type: 'upload',
       request: {
         method: 'POST',
-        body: formData
+        body: formData,
+        headers: new Headers({
+          //no Content type for automatic detection of boundaries.
+          'X-Requested-With': 'XMLHttpRequest'
+        })
       },
       success: (response) => onSuccess(response[0])
     }
