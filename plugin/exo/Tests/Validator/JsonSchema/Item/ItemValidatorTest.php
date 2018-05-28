@@ -42,7 +42,7 @@ class ItemValidatorTest extends JsonSchemaTestCase
         parent::setUp();
 
         // Mock Item Type validation (it's tested individually)
-        $this->itemDefinitions = $this->getMock('UJM\ExoBundle\Library\Item\ItemDefinitionsCollection', [], [], '', false);
+        $this->itemDefinitions = $this->createMock('UJM\ExoBundle\Library\Item\ItemDefinitionsCollection', [], [], '', false);
 
         // Do not check if the Item Type is supported
         $this->itemDefinitions
@@ -57,19 +57,19 @@ class ItemValidatorTest extends JsonSchemaTestCase
             ->willReturn([]);
 
         // Do not validate Categories
-        $this->categoryValidator = $this->getMock('UJM\ExoBundle\Validator\JsonSchema\Item\CategoryValidator', [], [], '', false);
+        $this->categoryValidator = $this->createMock('UJM\ExoBundle\Validator\JsonSchema\Item\CategoryValidator', [], [], '', false);
         $this->categoryValidator->expects($this->any())
             ->method('validateAfterSchema')
             ->willReturn([]);
 
         // Do not validate Hints
-        $this->hintValidator = $this->getMock('UJM\ExoBundle\Validator\JsonSchema\Item\HintValidator', [], [], '', false);
+        $this->hintValidator = $this->createMock('UJM\ExoBundle\Validator\JsonSchema\Item\HintValidator', [], [], '', false);
         $this->hintValidator->expects($this->any())
             ->method('validateAfterSchema')
             ->willReturn([]);
 
         // Do not validate Contents
-        $this->contentValidator = $this->getMock('UJM\ExoBundle\Validator\JsonSchema\Content\ContentValidator', [], [], '', false);
+        $this->contentValidator = $this->createMock('UJM\ExoBundle\Validator\JsonSchema\Content\ContentValidator', [], [], '', false);
         $this->contentValidator->expects($this->any())
             ->method('validateAfterSchema')
             ->willReturn([]);

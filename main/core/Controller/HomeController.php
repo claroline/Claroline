@@ -257,8 +257,9 @@ class HomeController
     public function changeTemplateFormAction(Type $type)
     {
         $form = $this->formFactory->create(
-            new HomeTemplateType($this->templatesDirectory),
-            $type
+            HomeTemplateType::class,
+            $type,
+            ['dir' => $this->templatesDirectory]
         );
 
         return ['form' => $form->createView(), 'type' => $type];
@@ -281,8 +282,9 @@ class HomeController
     public function changeTemplateAction(Type $type)
     {
         $form = $this->formFactory->create(
-            new HomeTemplateType($this->templatesDirectory),
-            $type
+            HomeTemplateType::class,
+            $type,
+            ['dir' => $this->templatesDirectory]
         );
         $form->handleRequest($this->request);
 

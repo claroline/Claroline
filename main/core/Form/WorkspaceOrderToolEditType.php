@@ -23,11 +23,6 @@ class WorkspaceOrderToolEditType extends AbstractType
         $builder->add('name', TextType::class, ['required' => true]);
     }
 
-    public function getName()
-    {
-        return 'workspace_order_tool_edit_form';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver

@@ -16,6 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+//TODO FORM
 class ActivityParametersType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)

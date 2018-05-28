@@ -28,12 +28,12 @@ class StepValidatorTest extends JsonSchemaTestCase
     {
         parent::setUp();
 
-        $this->itemValidator = $this->getMock('UJM\ExoBundle\Validator\JsonSchema\Item\ItemValidator', [], [], '', false);
+        $this->itemValidator = $this->createMock('UJM\ExoBundle\Validator\JsonSchema\Item\ItemValidator', [], [], '', false);
         $this->itemValidator->expects($this->any())
             ->method('validateAfterSchema')
             ->willReturn([]);
 
-        $this->contentValidator = $this->getMock('UJM\ExoBundle\Validator\JsonSchema\Content\ContentValidator', [], [], '', false);
+        $this->contentValidator = $this->createMock('UJM\ExoBundle\Validator\JsonSchema\Content\ContentValidator', [], [], '', false);
         $this->contentValidator->expects($this->any())
             ->method('validateAfterSchema')
             ->willReturn([]);

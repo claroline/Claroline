@@ -24,6 +24,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
+//FORM TODO
+//Il va falloir faire qqch pour les registrations externes et plus passer par celui là. En suspens pour le moment
 class BaseProfileType extends AbstractType
 {
     private $langs;

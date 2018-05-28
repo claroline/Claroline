@@ -154,7 +154,7 @@ class AuthenticationController
     public function forgotPasswordAction()
     {
         if ($this->mailManager->isMailerAvailable()) {
-            $form = $this->formFactory->create(new EmailType());
+            $form = $this->formFactory->create(EmailType::class);
 
             return ['form' => $form->createView()];
         }
@@ -177,7 +177,7 @@ class AuthenticationController
      */
     public function sendEmailAction()
     {
-        $form = $this->formFactory->create(new EmailType());
+        $form = $this->formFactory->create(EmailType::class);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -235,7 +235,7 @@ class AuthenticationController
             ];
         }
 
-        $form = $this->formFactory->create(new ResetPasswordType(), $user);
+        $form = $this->formFactory->create(ResetPasswordType::class, $user);
         $currentTime = time();
 
         // the link is valid for 24h
@@ -262,7 +262,7 @@ class AuthenticationController
     public function newPasswordAction($hash)
     {
         $user = $this->userManager->getByResetPasswordHash($hash);
-        $form = $this->formFactory->create(new ResetPasswordType(), $user);
+        $form = $this->formFactory->create(ResetPasswordType::class, $user);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {

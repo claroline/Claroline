@@ -258,7 +258,7 @@ class DesktopParametersController extends Controller
         }
 
         $form = $this->formFactory->create(
-            new UserOptionsType(),
+            UserOptionsType::class,
             $options
         );
 
@@ -283,7 +283,7 @@ class DesktopParametersController extends Controller
     public function desktopParametersUserOptionsEditAction(UserOptions $options)
     {
         $form = $this->formFactory->create(
-            new UserOptionsType(),
+            UserOptionsType::class,
             $options
         );
         $form->handleRequest($this->request);

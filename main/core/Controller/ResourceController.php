@@ -1152,7 +1152,7 @@ class ResourceController extends Controller
      */
     public function importFormAction(ResourceNode $node)
     {
-        $form = $this->formFactory->create(new ImportResourcesType());
+        $form = $this->formFactory->create(ImportResourcesType::class);
 
         return ['form' => $form->createView(), 'directory' => $node];
     }
@@ -1169,7 +1169,7 @@ class ResourceController extends Controller
      */
     public function importAction(ResourceNode $directory)
     {
-        $form = $this->formFactory->create(new ImportResourcesType());
+        $form = $this->formFactory->create(ImportResourcesType::class);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -1209,7 +1209,7 @@ class ResourceController extends Controller
      */
     public function unlockCodeFormAction(ResourceNode $node)
     {
-        $form = $this->formFactory->create(new UnlockType());
+        $form = $this->formFactory->create(UnlockType::class);
 
         return ['form' => $form->createView(), 'node' => $node];
     }
@@ -1225,7 +1225,7 @@ class ResourceController extends Controller
      */
     public function unlockCodeAction(ResourceNode $node)
     {
-        $form = $this->formFactory->create(new UnlockType());
+        $form = $this->formFactory->create(UnlockType::class);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {

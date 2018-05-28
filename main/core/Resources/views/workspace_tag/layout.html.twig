@@ -15,7 +15,7 @@
                 {{ 'my_workspaces'|trans({}, 'platform') }}
             </a>
             {% if is_granted('ADMIN') %}
-                <a class="list-group-item {{ "/workspaces/new/form" | activeLink  }}" href="{{ path('claro_workspace_creation_form') }}">
+                <a class="list-group-item {{ "/workspaces/new/form" | activeLink  }}" href="{{ path('claro_admin_open_tool', {'toolName': 'workspace_management'}) ~ '#/workspaces/form' }}">
                     <i class="fa fa-pencil"></i>
                     {{ 'create_workspace'|trans({}, 'platform') }}
                 </a>

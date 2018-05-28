@@ -39,11 +39,6 @@ class UpdateFileType extends AbstractType
         );
     }
 
-    public function getName()
-    {
-        return 'file_form';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver

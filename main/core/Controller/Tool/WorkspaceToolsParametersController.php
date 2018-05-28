@@ -131,7 +131,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         $ot = $this->toolManager->getOneByWorkspaceAndTool($workspace, $tool);
 
         return [
-            'form' => $this->formFactory->create(new WorkspaceOrderToolEditType(), $ot)->createView(),
+            'form' => $this->formFactory->create(WorkspaceOrderToolEditType::class, $ot)->createView(),
             'workspace' => $workspace,
             'wot' => $ot,
         ];
@@ -154,7 +154,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
     public function workspaceOrderToolEditAction(Workspace $workspace, OrderedTool $workspaceOrderTool)
     {
         $this->checkAccess($workspace);
-        $form = $this->formFactory->create(new WorkspaceOrderToolEditType(), $workspaceOrderTool);
+        $form = $this->formFactory->create(WorkspaceOrderToolEditType::class, $workspaceOrderTool);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {

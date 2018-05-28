@@ -286,7 +286,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
                 $this->manager->persist($user);
                 $this->manager->flush();
             } else {
-                $form = $this->formFactory->create(new TermsOfServiceType(), $content);
+                $form = $this->formFactory->create(TermsOfServiceType::class, $content);
                 $response = $this->templating->render(
                     'ClarolineCoreBundle:Authentication:termsOfService.html.twig',
                     ['form' => $form->createView()]

@@ -25,6 +25,7 @@ class FileType extends AbstractType
     private $uncompress;
     private $forApi;
 
+    //FORM TODO
     public function __construct($uncompress = false)
     {
         $this->uncompress = $uncompress;

@@ -22,7 +22,7 @@ class ExerciseValidatorTest extends JsonSchemaTestCase
     {
         parent::setUp();
 
-        $this->stepValidator = $this->getMock('UJM\ExoBundle\Validator\JsonSchema\StepValidator', [], [], '', false);
+        $this->stepValidator = $this->createMock('UJM\ExoBundle\Validator\JsonSchema\StepValidator', [], [], '', false);
         $this->stepValidator->expects($this->any())
             ->method('validateAfterSchema')
             ->willReturn([]);

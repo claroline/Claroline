@@ -62,11 +62,13 @@ class UserValidator implements ValidatorInterface
             ];
         }
 
-        if ($this->exists('publicUrl', $data['meta']['publicUrl'], isset($data['id']) ? $data['id'] : null)) {
-            $errors[] = [
-                'path' => 'meta/publicUrl',
-                'message' => 'The public url '.$data['meta']['publicUrl'].' already exists.',
-            ];
+        if (isset($data['meta']) && isset($data['meta']['publicUrl'])) {
+            if ($this->exists('publicUrl', $data['meta']['publicUrl'], isset($data['id']) ? $data['id'] : null)) {
+                $errors[] = [
+                  'path' => 'meta/publicUrl',
+                  'message' => 'The public url '.$data['meta']['publicUrl'].' already exists.',
+              ];
+            }
         }
 
         return $errors;

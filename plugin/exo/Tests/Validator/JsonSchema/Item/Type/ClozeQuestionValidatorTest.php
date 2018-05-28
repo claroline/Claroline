@@ -24,7 +24,7 @@ class ClozeQuestionValidatorTest extends JsonSchemaTestCase
         parent::setUp();
 
         // Do not validate Keywords
-        $this->keywordValidator = $this->getMock('UJM\ExoBundle\Validator\JsonSchema\Misc\KeywordValidator', [], [], '', false);
+        $this->keywordValidator = $this->createMock('UJM\ExoBundle\Validator\JsonSchema\Misc\KeywordValidator', [], [], '', false);
         $this->keywordValidator->expects($this->any())
             ->method('validateCollection')
             ->willReturn([]);

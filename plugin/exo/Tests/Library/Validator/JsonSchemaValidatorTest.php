@@ -25,7 +25,7 @@ class JsonSchemaValidatorTest extends TransactionalTestCase
 
         $this->validator = $this->getMockForAbstractClass('UJM\ExoBundle\Library\Validator\JsonSchemaValidator');
 
-        $this->jsonSchema = $this->getMock('UJM\ExoBundle\Library\Json\JsonSchema', [], [], '', false);
+        $this->jsonSchema = $this->createMock('UJM\ExoBundle\Library\Json\JsonSchema', [], [], '', false);
         $this->validator->setJsonSchema($this->jsonSchema);
     }
 

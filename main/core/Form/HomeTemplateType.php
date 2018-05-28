@@ -18,39 +18,31 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class HomeTemplateType extends AbstractType
 {
-    private $templates = [];
-
-    public function __construct($templatesDir)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $contents = is_dir($templatesDir) ? scandir($templatesDir) : [];
+        $templates = [];
+
+        $contents = is_dir($options['dir']) ? scandir($options['dir']) : [];
 
         foreach ($contents as $content) {
             if (!is_dir($content)) {
-                $this->templates[$content] = $content;
+                $templates[$content] = $content;
             }
         }
-    }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
         $builder->add(
             'template',
             ChoiceType::class,
             [
                 'required' => false,
-                'choices' => $this->templates,
+                'choices' => $templates,
                 'label' => 'template',
             ]
         );
     }
 
-    public function getName()
-    {
-        return 'home_template_form';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(['translation_domain' => 'platform']);
+        $resolver->setDefaults(['translation_domain' => 'platform', 'dir' => tmp_dir()]);
     }
 }

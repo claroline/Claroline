@@ -11,13 +11,13 @@
 
 namespace Claroline\CoreBundle\Form;
 
-use Claroline\CoreBundle\Form\Field\ContentType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SimpleTextType extends AbstractType
 {
+    //FORM TODO
     private $formName;
 
     public function __construct($formName = null)
@@ -27,7 +27,7 @@ class SimpleTextType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add(ContentType::class, 'tinymce');
+        $builder->add('content', 'tinymce');
     }
 
     public function getName()

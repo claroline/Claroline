@@ -23,11 +23,6 @@ class UserOptionsType extends AbstractType
         $builder->add('desktopBackgroundColor', TextType::class, ['required' => false]);
     }
 
-    public function getName()
-    {
-        return 'user_options_form';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['translation_domain' => 'platform']);

@@ -281,7 +281,7 @@ class FileController extends Controller
         $destinations = $this->resourceManager->getDefaultUploadDestinations();
 
         return [
-            'form' => $this->formFactory->create(new TinyMceUploadModalType($destinations))->createView(),
+            'form' => $this->formFactory->create(TinyMceUploadModalType::class, null, ['destinations' => $destinations])->createView(),
         ];
     }
 
@@ -294,7 +294,7 @@ class FileController extends Controller
     {
         $collection = new ResourceCollection([$file->getResourceNode()]);
         $this->checkAccess('EDIT', $collection);
-        $form = $this->formFactory->create(new UpdateFileType(), new File());
+        $form = $this->formFactory->create(UpdateFileType::class, new File());
 
         return [
             'form' => $form->createView(),
@@ -313,7 +313,7 @@ class FileController extends Controller
     {
         $collection = new ResourceCollection([$file->getResourceNode()]);
         $this->checkAccess('EDIT', $collection);
-        $form = $this->formFactory->create(new UpdateFileType(), new File());
+        $form = $this->formFactory->create(UpdateFileType::class, new File());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {

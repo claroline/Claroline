@@ -23,24 +23,17 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class TinyMceUploadModalType extends AbstractType
 {
-    private $uncompress;
-    private $destinations;
-
-    public function __construct($destinations = [], $uncompress = false)
-    {
-        $this->uncompress = $uncompress;
-        $this->destinations = [];
-
-        foreach ($destinations as $destination) {
-            $nodeId = $destination->getResourceNode()->getId();
-            $this->destinations[$nodeId] = $destination->getResourceNode()->getPathForDisplay();
-        }
-
-        $this->destinations['others'] = 'others';
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $destinations = [];
+
+        foreach ($options['destinations'] as $destination) {
+            $nodeId = $destination->getResourceNode()->getId();
+            $destinations[$nodeId] = $destination->getResourceNode()->getPathForDisplay();
+        }
+
+        $destinations['others'] = 'others';
+
         $builder->add('name', HiddenType::class, ['data' => 'tmpname']);
         $builder->add(
             FileType::class,
@@ -55,18 +48,20 @@ class TinyMceUploadModalType extends AbstractType
                 ],
            ]
         );
-        if (count($this->destinations) > 1) {
+
+        if (count($destinations) > 1) {
             $builder->add(
                 'destination',
                 ChoiceType::class,
                 [
                     'label' => 'destination',
                     'mapped' => false,
-                    'choices' => $this->destinations,
+                    'choices' => $destinations,
                 ]
             );
         }
-        if ($this->uncompress) {
+
+        if ($options['uncompress']) {
             $builder->add(
                 'uncompress',
                 CheckboxType::class,
@@ -77,6 +72,7 @@ class TinyMceUploadModalType extends AbstractType
                 ]
             );
         }
+
         $builder->add(
             'published',
             CheckboxType::class,
@@ -89,18 +85,14 @@ class TinyMceUploadModalType extends AbstractType
         );
     }
 
-    public function getName()
-    {
-        return 'file_form';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver
-        ->setDefaults(
+        $resolver->setDefaults(
             [
                 'translation_domain' => 'platform',
-                ]
+                'destinations' => [],
+                'uncompress' => false,
+            ]
         );
     }
 }

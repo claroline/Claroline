@@ -39,11 +39,6 @@ class WorkspaceImportType extends AbstractType
         );
     }
 
-    public function getName()
-    {
-        return 'workspace_import_form';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver

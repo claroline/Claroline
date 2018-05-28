@@ -178,11 +178,6 @@ claro_widget:
     prefix: widget
     type: annotation
 
-claro_mail:
-    resource: "@ClarolineCoreBundle/Controller/MailController.php"
-    prefix: email
-    type: annotation
-
 claro_activity:
     resource: "@ClarolineCoreBundle/Controller/ActivityController.php"
     prefix: activity/

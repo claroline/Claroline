@@ -24,11 +24,6 @@ class UnlockType extends AbstractType
         $builder->add('code', TextType::class, ['label' => 'code', 'constraints' => new NotBlank()]);
     }
 
-    public function getName()
-    {
-        return 'resource_code_form';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['translation_domain' => 'platform']);

@@ -18,6 +18,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+//FORM TODO
 class DirectoryType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -41,11 +42,6 @@ class DirectoryType extends AbstractType
                 'label' => 'publish_resource',
             ]
         );
-    }
-
-    public function getName()
-    {
-        return 'directory_form';
     }
 
     public function configureOptions(OptionsResolver $resolver)

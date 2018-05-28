@@ -22,11 +22,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ScrollType extends BaseType
 {
-    public function getName()
-    {
-        return 'scroll';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(

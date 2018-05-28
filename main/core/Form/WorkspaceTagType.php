@@ -28,11 +28,6 @@ class WorkspaceTagType extends AbstractType
         );
     }
 
-    public function getName()
-    {
-        return 'workspace_tag_form';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(

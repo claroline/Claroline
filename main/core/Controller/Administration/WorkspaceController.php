@@ -85,7 +85,7 @@ class WorkspaceController extends Controller
      */
     public function importWorkspaceFormAction()
     {
-        $form = $this->createForm(new WorkspaceImportType());
+        $form = $this->createForm(WorkspaceImportType::class);
 
         return ['form' => $form->createView()];
     }
@@ -96,7 +96,7 @@ class WorkspaceController extends Controller
      */
     public function importWorkspaceAction()
     {
-        $form = $this->createForm(new WorkspaceImportType());
+        $form = $this->createForm(WorkspaceImportType::class);
         $form->handleRequest($this->get('request_stack')->getMasterRequest());
 
         if ($form->isValid()) {

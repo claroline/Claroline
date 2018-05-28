@@ -23,7 +23,7 @@ class ImportResourcesType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-            FileType::class,
+            'file',
             FileType::class,
             [
                 'label' => FileType::class,
@@ -35,11 +35,6 @@ class ImportResourcesType extends AbstractType
                 ],
            ]
         );
-    }
-
-    public function getName()
-    {
-        return 'resources_import_form';
     }
 
     public function configureOptions(OptionsResolver $resolver)

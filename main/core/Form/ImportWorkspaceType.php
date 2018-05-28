@@ -11,10 +11,12 @@
 
 namespace Claroline\CoreBundle\Form;
 
+use Claroline\CoreBundle\Form\Field\TinymceType;
 use Claroline\CoreBundle\Validator\Constraints\FileUpload;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -47,8 +49,8 @@ class ImportWorkspaceType extends AbstractType
         $builder->add(
             'description',
             isset($options['attr']['tinymce']) && !$options['attr']['tinymce'] ?
-                'textarea' :
-                'tinymce',
+                TextareaType::class :
+                TinymceType::class,
             ['required' => false, 'label' => 'description']
         );
         $builder->add(
@@ -71,11 +73,6 @@ class ImportWorkspaceType extends AbstractType
             CheckboxType::class,
             ['required' => false, 'label' => 'public_unregistration']
         );
-    }
-
-    public function getName()
-    {
-        return 'workspace_template_form';
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -27,14 +27,9 @@ class EmailType extends AbstractType
             [
                 'required' => true,
                 'constraints' => new Email(),
-                'label' => self::class,
+                'label' => 'email',
             ]
         );
-    }
-
-    public function getName()
-    {
-        return 'email_form';
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -21,7 +21,6 @@ use Claroline\CoreBundle\Event\Log\LogWorkspaceDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Form\ImportWorkspaceType;
-use Claroline\CoreBundle\Form\WorkspaceType;
 use Claroline\CoreBundle\Library\Logger\FileLogger;
 use Claroline\CoreBundle\Library\Security\TokenUpdater;
 use Claroline\CoreBundle\Library\Security\Utilities;
@@ -324,80 +323,6 @@ class WorkspaceController extends Controller
             'user' => $currentUser,
             'workspaces' => $workspacesPager,
         ];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/new/form",
-     *     name="claro_workspace_creation_form",
-     *     options={"expose"=true}
-     * )
-     *
-     * @EXT\Template()
-     *
-     * Renders the workspace creation form.
-     *
-     * @return array
-     */
-    public function creationFormAction()
-    {
-        $this->assertIsGranted('ROLE_WS_CREATOR');
-        $user = $this->tokenStorage->getToken()->getUser();
-        $workspaceType = new WorkspaceType($user);
-        $form = $this->formFactory->create($workspaceType);
-
-        return ['form' => $form->createView()];
-    }
-
-    /**
-     * Creates a workspace from a form sent by POST.
-     *
-     * @EXT\Route(
-     *     "/",
-     *     name="claro_workspace_create"
-     * )
-     * @EXT\Method("POST")
-     *
-     * @EXT\Template("ClarolineCoreBundle:workspace:creation_form.html.twig")
-     *
-     * @return RedirectResponse | array
-     */
-    public function createAction()
-    {
-        $this->assertIsGranted('ROLE_WS_CREATOR');
-        $user = $this->tokenStorage->getToken()->getUser();
-        $workspaceType = new WorkspaceType($user);
-        $form = $this->formFactory->create($workspaceType, new Workspace());
-        $form->handleRequest($this->request);
-        $modelLog = $this->container->getParameter('kernel.root_dir').'/logs/models.log';
-        $logger = FileLogger::get($modelLog);
-        $this->workspaceManager->setLogger($logger);
-
-        if ($form->isValid()) {
-            $modelFrom = $form->get('modelFrom')->getData();
-            $workspace = $form->getData();
-            $user = $this->tokenStorage->getToken()->getUser();
-            $workspace->setCreator($user);
-
-            if (!$modelFrom) {
-                $modelFrom = $this->workspaceManager->getDefaultModel();
-            }
-
-            $workspace = $this->workspaceManager->copy($modelFrom, $workspace, $workspace->isModel());
-            $this->tokenUpdater->update($this->tokenStorage->getToken());
-            $route = $this->router->generate('claro_workspace_open', ['workspaceId' => $workspace->getId()]);
-
-            $msg = $this->get('translator')->trans(
-                'successfull_workspace_creation',
-                ['%name%' => $form->get('name')->getData()],
-                'platform'
-            );
-            $this->get('request_stack')->getMasterRequest()->getSession()->getFlashBag()->add('success', $msg);
-
-            return new RedirectResponse($route);
-        }
-
-        return ['form' => $form->createView()];
     }
 
     /**
@@ -1212,8 +1137,7 @@ class WorkspaceController extends Controller
     public function importFormAction()
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
-        $importType = new ImportWorkspaceType();
-        $form = $this->container->get('form.factory')->create($importType);
+        $form = $this->container->get('form.factory')->create(ImportWorkspaceType::class);
 
         return ['form' => $form->createView()];
     }
@@ -1232,8 +1156,7 @@ class WorkspaceController extends Controller
     public function importAction()
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
-        $importType = new ImportWorkspaceType();
-        $form = $this->container->get('form.factory')->create($importType, new Workspace());
+        $form = $this->container->get('form.factory')->create(ImportWorkspaceType::class, new Workspace());
         $form->handleRequest($this->request);
         $modelLog = $this->container->getParameter('kernel.root_dir').'/logs/models.log';
         $logger = FileLogger::get($modelLog);

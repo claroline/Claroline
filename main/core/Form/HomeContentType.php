@@ -63,11 +63,6 @@ class HomeContentType extends AbstractType
         }
     }
 
-    public function getName()
-    {
-        return 'home_content_form';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
