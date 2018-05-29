@@ -2,7 +2,13 @@
 
 namespace Icap\WebsiteBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -37,30 +43,30 @@ class WebsitePageType extends AbstractType
             )
             ->add(
                 'richText',
-                'textarea'
+                TextareaType::class
             )
             ->add(
-                UrlType::class,
-                'url'
+                'url',
+                UrlType::class
             )
             ->add(
                 'target',
                 ChoiceType::class,
-                array(
-                    'choices' => array(
+                [
+                    'choices' => [
                         'embed' => 0,
                         'new_window' => 1,
-                    ),
+                    ],
                     'choices_as_values' => true,
-                )
+                ]
             )
             ->add(
                 'resourceNode',
-                'entity',
-                array(
+                EntityType::class,
+                [
                     'class' => 'ClarolineCoreBundle:Resource\ResourceNode',
                     'choice_label' => 'id',
-                )
+                ]
             )
             ->add(
                 'resourceNodeType',
@@ -70,23 +76,15 @@ class WebsitePageType extends AbstractType
     }
 
     /**
-     * @return string
-     */
-    public function getName()
-    {
-        return 'icap_website_page_type';
-    }
-
-    /**
      * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => 'Icap\WebsiteBundle\Entity\WebsitePage',
             'translation_domain' => 'icap_website',
             'csrf_protection' => false,
             'intention' => 'create_website_page',
-        ));
+        ]);
     }
 }

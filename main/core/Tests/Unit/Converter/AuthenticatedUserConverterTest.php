@@ -28,7 +28,7 @@ class AuthenticatedUserConverterTest extends MockeryTestCase
     {
         $this->request = $this->mock('Symfony\Component\HttpFoundation\Request');
         $this->configuration = $this->mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
-        $this->securityContext = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');
+        $this->securityContext = $this->mock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
         $this->token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $this->securityContext->shouldReceive('getToken')->andReturn($this->token);
         $this->translator = $this->mock('Symfony\Component\Translation\TranslatorInterface');
@@ -47,7 +47,7 @@ class AuthenticatedUserConverterTest extends MockeryTestCase
     }
 
     /**
-     * @expectedException       Claroline\CoreBundle\Converter\InvalidConfigurationException
+     * @expectedException       \Claroline\CoreBundle\Converter\InvalidConfigurationException
      * @expectedExceptionCode   1
      */
     public function testApplyThrowsAnExceptionIfTheNameParameterIsMissing()
@@ -57,7 +57,7 @@ class AuthenticatedUserConverterTest extends MockeryTestCase
     }
 
     /**
-     * @expectedException Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @expectedException \Symfony\Component\Security\Core\Exception\AccessDeniedException
      */
     public function testApplyThrowsAnExceptionIfThereIsNoAuthenticatedUser()
     {

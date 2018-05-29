@@ -43,7 +43,7 @@ class ToolImporterTest extends MockeryTestCase
     public function testValidate($basePath, $configPath, $isExceptionExpected, $rolefile)
     {
         if ($isExceptionExpected) {
-            $this->setExpectedException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
+            $this->expectException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
         }
 
         $roles = Yaml::parse(file_get_contents($rolefile));

@@ -37,7 +37,7 @@
             <directory>plugin/collecticiel/Tests/</directory>
             <directory>plugin/message/Tests/</directory>
             <directory>plugin/notification/Tests/</directory>
-            <directory>plugin/competency/Tests/</directory>
+            <!-- <directory>plugin/competency/Tests/</directory> -->
             <directory>plugin/cursus/Tests/</directory>
             <directory>plugin/dropzone/Tests/</directory>
             <directory>plugin/favourite/Tests/</directory>

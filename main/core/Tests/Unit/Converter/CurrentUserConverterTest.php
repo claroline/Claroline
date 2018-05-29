@@ -27,7 +27,7 @@ class CurrentUserConverterTest extends MockeryTestCase
     {
         $this->request = $this->mock('Symfony\Component\HttpFoundation\Request');
         $this->configuration = $this->mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
-        $this->securityContext = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');
+        $this->securityContext = $this->mock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
         $this->token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $this->securityContext->shouldReceive('getToken')->andReturn($this->token);
         $this->converter = new CurrentUserConverter($this->securityContext);

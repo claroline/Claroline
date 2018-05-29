@@ -67,7 +67,7 @@ class WebsiteOptionsManager
 
     public function processForm(WebsiteOptions $options, array $parameters, $method = 'PUT')
     {
-        $form = $this->formFactory->create(new WebsiteOptionsType(), $options, ['method' => $method]);
+        $form = $this->formFactory->create(WebsiteOptionsType::class, $options, ['method' => $method]);
         $form->submit($parameters, 'PATCH' !== $method);
         if ($form->isValid()) {
             $options = $form->getData();

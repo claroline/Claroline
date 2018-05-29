@@ -37,7 +37,7 @@ class OwnerImporterTest extends MockeryTestCase
         $this->importer->setConfiguration($manifest);
 
         if ($isExceptionThrown) {
-            $this->setExpectedException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
+            $this->expectException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
         }
 
         $repo = $this->mock('Claroline\CoreBundle\Repository\UserRepository');

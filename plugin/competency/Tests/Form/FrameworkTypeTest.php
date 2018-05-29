@@ -14,7 +14,7 @@ class FrameworkTypeTest extends FormTestCase
     protected function setUp()
     {
         parent::setUp();
-        $validator = $this->getMock('Symfony\Component\Validator\ValidatorInterface');
+        $validator = $this->createMock('Symfony\Component\Validator\ValidatorInterface');
         $validator->expects($this->any())->method('validate')->willReturn([]);
         $this->factory = Forms::createFormFactoryBuilder()
             ->addExtensions($this->getExtensions())

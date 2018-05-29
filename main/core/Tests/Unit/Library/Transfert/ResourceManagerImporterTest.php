@@ -50,7 +50,7 @@ class ResourceManagerImporterTest extends MockeryTestCase
         $this->importer->setConfiguration(Yaml::parse(file_get_contents($rolefile)));
 
         if ($isExceptionExpected) {
-            $this->setExpectedException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
+            $this->expectException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
         }
 
         $resolver = new Resolver($basePath, $managerPath);

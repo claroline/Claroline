@@ -15,14 +15,14 @@ class ReaderProviderTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetReaderThrowsAnExceptionIfFormatIsUnknown()
     {
-        $this->setExpectedException('Claroline\RssReaderBundle\Library\UnknownFormatException');
+        $this->expectException('Claroline\RssReaderBundle\Library\UnknownFormatException');
         $parser = new ReaderProvider([]);
         $parser->getReaderFor('<unknown/>');
     }
 
     public function testGetReaderReturnsAReaderForTheFeedIfFormatIsSupported()
     {
-        $mockReader = $this->getMock('Claroline\RssReaderBundle\Library\FeedReaderInterface');
+        $mockReader = $this->createMock('Claroline\RssReaderBundle\Library\FeedReaderInterface');
         $mockReader->expects($this->any())
             ->method('supports')
             ->with('someFormat')

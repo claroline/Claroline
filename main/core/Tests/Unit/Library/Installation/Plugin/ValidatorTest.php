@@ -20,7 +20,7 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidatorAcceptsOnlyInstancesOfCheckerInterface()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         $checkers = [
             'regular' => $this->mock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface'),
             'wrong' => new \stdClass(),

@@ -20,7 +20,7 @@ class AbilityImportTypeTest extends FormTestCase
     {
         parent::setUp();
         $this->om = $om = $this->client->getContainer()->get('claroline.persistence.object_manager');
-        $validator = $this->getMock('Symfony\Component\Validator\ValidatorInterface');
+        $validator = $this->createMock('Symfony\Component\Validator\ValidatorInterface');
         $validator->expects($this->any())->method('validate')->willReturn([]);
         $this->factory = Forms::createFormFactoryBuilder()
             ->addExtensions($this->getExtensions())

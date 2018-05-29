@@ -39,7 +39,7 @@ class GroupsImporterTest extends MockeryTestCase
         $this->importer->setConfiguration(['members' => ['users' => []], 'roles' => $roles['roles']]);
 
         if ($isExceptionExpected) {
-            $this->setExpectedException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
+            $this->expectException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
         }
 
         $groupRepo = $this->mock('Claroline\CoreBundle\Repository\GroupRepository');

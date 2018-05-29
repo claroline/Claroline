@@ -110,7 +110,7 @@ class ToolManagerTest extends MockeryTestCase
             ->with(['workspace' => $workspace, 'order' => $position])->andReturn($switchTool);
 
         if ($isExceptionExpected) {
-            $this->setExpectedException('Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException');
+            $this->expectException('Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException');
         } else {
             $otr = $this->mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
             $this->om->shouldReceive('factory')->once()
@@ -227,7 +227,7 @@ class ToolManagerTest extends MockeryTestCase
         $removedTool->shouldReceive('getName')->once()->andReturn($name);
 
         if ($isExceptionExpected) {
-            $this->setExpectedException('Claroline\CoreBundle\Manager\Exception\UnremovableToolException');
+            $this->expectException('Claroline\CoreBundle\Manager\Exception\UnremovableToolException');
         } else {
             $this->orderedToolRepo->shouldReceive('findOneBy')
                 ->once()
@@ -253,7 +253,7 @@ class ToolManagerTest extends MockeryTestCase
             ->with(['user' => $user, 'order' => $position])->andReturn($switchTool);
 
         if ($isExceptionExpected) {
-            $this->setExpectedException('Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException');
+            $this->expectException('Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException');
         } else {
             $otr = $this->mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
             $otr->shouldReceive('setUser')->once()->with($user);

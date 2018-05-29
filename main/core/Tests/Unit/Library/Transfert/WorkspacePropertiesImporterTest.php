@@ -40,7 +40,7 @@ class WorkspacePropertiesImporterTest extends MockeryTestCase
         $properties['properties'] = $data['properties'];
 
         if ($isExceptionExpected) {
-            $this->setExpectedException('Exception');
+            $this->expectException('Exception');
         }
 
         m::getConfiguration()->allowMockingNonExistentMethods(true);

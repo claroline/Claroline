@@ -32,7 +32,7 @@ class FileImporterTest extends MockeryTestCase
     public function testValidate($basePath, $path, $isExceptionExpected)
     {
         if ($isExceptionExpected) {
-            $this->setExpectedException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
+            $this->expectException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
         }
 
         $data = Yaml::parse(file_get_contents($basePath.'/'.$path));

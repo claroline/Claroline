@@ -56,7 +56,7 @@ class WebsiteListener
      */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-        $form = $this->container->get('form.factory')->create(new WebsiteType(), new Website());
+        $form = $this->container->get('form.factory')->create(WebsiteType::class, new Website());
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             [
@@ -76,7 +76,7 @@ class WebsiteListener
     public function onCreate(CreateResourceEvent $event)
     {
         $request = $this->container->get('request_stack')->getMasterRequest();
-        $form = $this->container->get('form.factory')->create(new WebsiteType(), new Website());
+        $form = $this->container->get('form.factory')->create(WebsiteType::class, new Website());
         $form->handleRequest($request);
         if ($form->isValid()) {
             $website = $form->getData();
@@ -146,8 +146,8 @@ class WebsiteListener
     {
         if (
             $event instanceof LogResourceUpdateEvent
-            && $event->getResource()->getClass() === 'Icap\WebsiteBundle\Entity\Website'
-            && $event->getAction() === 'resource-update_rename'
+            && 'Icap\WebsiteBundle\Entity\Website' === $event->getResource()->getClass()
+            && 'resource-update_rename' === $event->getAction()
             && $event->getDetails()['resource']['changeSet']['name'][0] !== $event->getDetails()['resource']['changeSet']['name'][1]
         ) {
             $resourceNode = $event->getResource();

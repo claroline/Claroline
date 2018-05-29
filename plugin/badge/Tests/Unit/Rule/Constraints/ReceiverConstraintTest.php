@@ -32,7 +32,7 @@ class ReceiverConstraintTest extends MockeryTestCase
     }
     public function testIsApplicableToNoUser()
     {
-        $this->setExpectedException('RuntimeException');
+        $this->expectException('RuntimeException');
 
         $badgeRule = new BadgeRule();
         $badgeRule->setUserType(0);

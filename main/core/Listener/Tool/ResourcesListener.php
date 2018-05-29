@@ -71,9 +71,9 @@ class ResourcesListener
     public function onDisplayDesktop(DisplayToolEvent $event)
     {
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Tool:resources.html.twig', [
+            'ClarolineCoreBundle:tool:resources.html.twig', [
                 'context' => [
-                    'type' => Widget::CONTEXT_DESKTOP
+                    'type' => Widget::CONTEXT_DESKTOP,
                 ],
                 'root' => null,
             ]
@@ -95,11 +95,11 @@ class ResourcesListener
         $workspace = $event->getWorkspace();
 
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Tool:resources.html.twig', [
+            'ClarolineCoreBundle:tool:resources.html.twig', [
                 'workspace' => $workspace,
                 'context' => [
                     'type' => Widget::CONTEXT_WORKSPACE,
-                    'data' => $this->serializer->serialize($workspace)
+                    'data' => $this->serializer->serialize($workspace),
                 ],
                 'root' => $this->serializer->serialize(
                     $this->resourceRepository->findWorkspaceRoot($workspace)

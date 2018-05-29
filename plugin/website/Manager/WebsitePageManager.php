@@ -100,7 +100,7 @@ class WebsitePageManager
 
     public function processForm(Website $website, WebsitePage $page, array $parameters, $method = 'PUT')
     {
-        $form = $this->formFactory->create(new WebsitePageType(), $page, ['method' => $method]);
+        $form = $this->formFactory->create(WebsitePageType::class, $page, ['method' => $method]);
         $form->submit($parameters, 'PATCH' !== $method);
         if ($form->isValid()) {
             $page = $form->getData();
