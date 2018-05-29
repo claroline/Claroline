@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\InstallationBundle\Updater\Updater;
@@ -33,19 +32,6 @@ class Updater120000 extends Updater
 
         $this->removeTool('parameters');
         $this->removeTool('claroline_activity_tool');
-
-        // update resource shortcut
-        $this->log('Renaming `resource_shortcut` into `shortcut`...');
-        /** @var ResourceType $type */
-        $type = $this->om
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findOneBy(['name' => 'resource_shortcut']);
-
-        if (!empty($type)) {
-            $type->setName('shortcut');
-            $this->om->persist($type);
-            $this->om->flush();
-        }
     }
 
     private function updatePlatformParameters()
