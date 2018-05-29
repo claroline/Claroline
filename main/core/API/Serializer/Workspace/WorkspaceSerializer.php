@@ -119,7 +119,7 @@ class WorkspaceSerializer
                     'open' => $this->authorization->isGranted('OPEN', $workspace),
                     'delete' => $this->authorization->isGranted('DELETE', $workspace),
                     'administrate' => $this->authorization->isGranted('ADMINISTRATE', $workspace),
-                    'export' => $this->authorization->isGranted('EXPORT', $workspace)
+                    'export' => $this->authorization->isGranted('EXPORT', $workspace),
                 ],
                 'meta' => $this->getMeta($workspace, $options),
                 'opening' => $this->getOpening($workspace),
@@ -143,7 +143,7 @@ class WorkspaceSerializer
         if (in_array(Options::WORKSPACE_FETCH_GROUPS, $options)) {
             $groups = $this->om
                 ->getRepository('Claroline\CoreBundle\Entity\Group')
-                ->findBy(['workspace' => $workspace]);
+                ->findByWorkspace($workspace);
 
             $serialized['groups'] = array_map(function (Group $group) {
                 return $this->serializer->serialize($group, [Options::SERIALIZE_MINIMAL, Options::NO_COUNT]);

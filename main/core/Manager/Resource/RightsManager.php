@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\Resource\UpdateResourceRightsEvent;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
@@ -180,7 +181,7 @@ class RightsManager
             //well, nowadays I think we can do this.
             if (!$isRecursive) {
                 $this->logChangeSet($toUpdate);
-                $this->dispatcher->dispatch('resource_change_permissions', 'UpdateResourceRights', [$node, $toUpdate]);
+                $this->dispatcher->dispatch('resource_change_permissions', UpdateResourceRightsEvent::class, [$node, $toUpdate]);
             }
         }
 
