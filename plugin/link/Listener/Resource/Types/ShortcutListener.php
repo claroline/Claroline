@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\LinkBundle\Listener\Resource;
+namespace Claroline\LinkBundle\Listener\Resource\Types;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
-use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
+use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\LinkBundle\Entity\Resource\Shortcut;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
@@ -84,7 +84,6 @@ class ShortcutListener
      */
     public function onLoad(LoadResourceEvent $event)
     {
-        //
         /*$shortcut = $event->getResource();
         $event->setAdditionalData([
             //'directory' => $this->serializer->serialize(),
@@ -103,7 +102,6 @@ class ShortcutListener
      */
     public function onOpen(OpenResourceEvent $event)
     {
-
     }
 
     /**
@@ -116,7 +114,6 @@ class ShortcutListener
      */
     public function onExport(DownloadResourceEvent $event)
     {
-
     }
 
     /**
@@ -140,7 +137,7 @@ class ShortcutListener
      */
     public function onCopy(CopyResourceEvent $event)
     {
-        /** @var Shortcut $shortcut */
+        /* @var Shortcut $shortcut */
         /*$shortcut = $event->getResource();
 
         $copy = new ResourceShortcut();
