@@ -33,9 +33,9 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
         self::createUser('john', [self::get('ROLE_1'), self::get('ROLE_2')]);
         self::createUser('jane', [self::get('ROLE_2')]);
         self::createUser('manager_ws_1', [self::get(self::$roleManagerName)]);
-        self::createResourceType('t_dir');
-        self::createResourceType('t_file');
-        self::createResourceType('t_link', false);
+        self::createResourceType('t_dir', 'Directory');
+        self::createResourceType('t_file', 'File');
+        self::createResourceType('t_link', 'Link', false);
 
         /*
          * Structure :
@@ -62,9 +62,6 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
         self::createDirectory('dir_4', self::get('t_dir'), self::get('john'), self::get('ws_1'), self::get('dir_3'));
         self::createDirectory('dir_5', self::get('t_dir'), self::get('jane'), self::get('ws_2'));
         self::createFile('file_1', self::get('t_file'), self::get('john'), self::get('dir_4'));
-        self::createShortcut('l_dir_2', self::get('t_link'), self::get('dir_2'), self::get('john'), self::get('dir_5'));
-        self::createShortcut('l_dir_3', self::get('t_link'), self::get('dir_3'), self::get('john'), self::get('dir_2'));
-        self::createShortcut('l_dir_4', self::get('t_link'), self::get('dir_4'), self::get('john'), self::get('dir_4'));
         self::createResourceRights(self::get('ROLE_1'), self::get('dir_1'), 1);
         self::createResourceRights(self::get('ROLE_2'), self::get('dir_2'), 3);
         self::createResourceRights(self::get('ROLE_1'), self::get('dir_2'), 6);

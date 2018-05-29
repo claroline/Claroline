@@ -20,7 +20,6 @@ use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
-use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\Revision;
 use Claroline\CoreBundle\Entity\Resource\Text;
@@ -179,7 +178,11 @@ abstract class RepositoryTestCase extends WebTestCase
             $role->setWorkspace($workspace);
         }
 
-        self::create($name, $role);
+        if ($exists = self::$om->getRepository('ClarolineCoreBundle:Role')->findOneByName($name)) {
+            self::set($name, $exists);
+        } else {
+            self::create($name, $role);
+        }
     }
 
     protected static function createWorkspace($name)
@@ -202,10 +205,11 @@ abstract class RepositoryTestCase extends WebTestCase
         self::create($name, $workspace);
     }
 
-    protected static function createResourceType($name, $isExportable = true, Plugin $plugin = null)
+    protected static function createResourceType($name, $class, $isExportable = true, Plugin $plugin = null)
     {
         $type = new ResourceType();
         $type->setName($name);
+        $type->setClass($class);
         $type->setExportable($isExportable);
 
         if ($plugin) {
@@ -277,25 +281,6 @@ abstract class RepositoryTestCase extends WebTestCase
         $revision->setContent($name.'Content');
         $revision->setText($text);
         self::create("revision/{$text->getName()}-{$revisionNumber}", $revision);
-    }
-
-    protected static function createShortcut(
-        $name,
-        ResourceType $type,
-        AbstractResource $target,
-        User $creator,
-        Directory $parent
-    ) {
-        $shortcut = self::prepareResource(
-            new ResourceShortcut(),
-            $type, $creator,
-            $parent->getResourceNode()->getWorkspace(),
-            $name,
-            'shortcut/mime',
-            $parent->getResourceNode()
-        );
-        $shortcut->setTarget($target->getResourceNode());
-        self::create($name, $shortcut);
     }
 
     protected static function createResourceRights(

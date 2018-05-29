@@ -24,8 +24,8 @@ class RevisionRepositoryTest extends RepositoryTestCase
 
         self::createUser('john');
         self::createWorkspace('ws_1');
-        self::createResourceType('t_dir');
-        self::createResourceType('t_text');
+        self::createResourceType('t_dir', 'Directory');
+        self::createResourceType('t_text', 'Text');
         self::createDirectory('dir_1', self::get('t_dir'), self::get('john'), self::get('ws_1'));
         self::createText('text_1', 3, self::get('t_text'), self::get('john'), self::get('dir_1'));
     }

@@ -26,9 +26,9 @@ class ResourceTypeRepositoryTest extends RepositoryTestCase
         self::createWorkspace('ws_1');
         self::createPlugin('Vendor1', 'Bundle1');
         self::createPlugin('Vendor2', 'Bundle2');
-        self::createResourceType('type_1');
-        self::createResourceType('type_2', true, self::get('Vendor1Bundle1'));
-        self::createResourceType('type_3', true, self::get('Vendor2Bundle2'));
+        self::createResourceType('type_1', 'Class1');
+        self::createResourceType('type_2', 'Class2', true, self::get('Vendor1Bundle1'));
+        self::createResourceType('type_3', 'Class3', true, self::get('Vendor2Bundle2'));
         self::createDirectory('dir_1', self::get('type_1'), self::get('john'), self::get('ws_1'));
     }
 

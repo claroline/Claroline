@@ -36,13 +36,13 @@ class WorkspaceRepositoryTest extends RepositoryTestCase
         self::createRole('ROLE_ANONYMOUS');
         self::createTool('tool_1');
         self::createTool('tool_2');
-        self::createWorkspaceTool(self::get('tool_1'), self::get('ws_1'), array(self::get('ROLE_ANONYMOUS')), 1);
-        self::createWorkspaceTool(self::get('tool_2'), self::get('ws_2'), array(self::get('ROLE_2')), 1);
-        self::createUser('john', array(self::get('ROLE_1'), self::get('ROLE_2')), self::get('ws_1'));
+        self::createWorkspaceTool(self::get('tool_1'), self::get('ws_1'), [self::get('ROLE_ANONYMOUS')], 1);
+        self::createWorkspaceTool(self::get('tool_2'), self::get('ws_2'), [self::get('ROLE_2')], 1);
+        self::createUser('john', [self::get('ROLE_1'), self::get('ROLE_2')], self::get('ws_1'));
         self::createLog(self::get('john'), 'workspace-tool-read', self::get('ws_1'));
         self::sleep(1); // dates involved
         self::createLog(self::get('john'), 'workspace-tool-read', self::get('ws_2'));
-        self::createResourceType('t_dir');
+        self::createResourceType('t_dir', 'Directory');
         self::createDirectory('dir_1', self::get('t_dir'), self::get('john'), self::get('ws_2'));
     }
 
@@ -73,27 +73,27 @@ class WorkspaceRepositoryTest extends RepositoryTestCase
 
     public function testFindByRoles()
     {
-        $workspaces = self::$repo->findByRoles(array('ROLE_2', 'ROLE_ANONYMOUS'));
+        $workspaces = self::$repo->findByRoles(['ROLE_2', 'ROLE_ANONYMOUS']);
         $this->assertEquals(2, count($workspaces));
     }
 
     public function testFindIdsByUserAndRoleNames()
     {
-        $ids = self::$repo->findIdsByUserAndRoleNames(self::get('john'), array('ROLE'));
+        $ids = self::$repo->findIdsByUserAndRoleNames(self::get('john'), ['ROLE']);
         $this->assertEquals(2, count($ids));
         $this->assertEquals(self::get('ws_1')->getId(), $ids[0]['id']);
         $this->assertEquals(self::get('ws_2')->getId(), $ids[1]['id']);
-        $ids = self::$repo->findIdsByUserAndRoleNames(self::get('john'), array('ROLE_BIS'));
+        $ids = self::$repo->findIdsByUserAndRoleNames(self::get('john'), ['ROLE_BIS']);
         $this->assertEquals(0, count($ids));
     }
 
     public function testFindByUserAndRoleNames()
     {
-        $workspaces = self::$repo->findByUserAndRoleNames(self::get('john'), array('ROLE'));
+        $workspaces = self::$repo->findByUserAndRoleNames(self::get('john'), ['ROLE']);
         $this->assertEquals(2, count($workspaces));
         $this->assertEquals(self::get('ws_1'), $workspaces[0]);
         $this->assertEquals(self::get('ws_2'), $workspaces[1]);
-        $workspaces = self::$repo->findIdsByUserAndRoleNames(self::get('john'), array('ROLE_BIS'));
+        $workspaces = self::$repo->findIdsByUserAndRoleNames(self::get('john'), ['ROLE_BIS']);
         $this->assertEquals(0, count($workspaces));
     }
 
@@ -101,8 +101,8 @@ class WorkspaceRepositoryTest extends RepositoryTestCase
     {
         $workspaces = self::$repo->findByUserAndRoleNamesNotIn(
             self::get('john'),
-            array('ROLE'),
-            array(self::get('ws_1')->getId())
+            ['ROLE'],
+            [self::get('ws_1')->getId()]
         );
         $this->assertEquals(1, count($workspaces));
         $this->assertEquals(self::get('ws_2'), $workspaces[0]);
@@ -112,13 +112,13 @@ class WorkspaceRepositoryTest extends RepositoryTestCase
     {
         $workspaces = self::$repo->findLatestWorkspacesByUser(
             self::get('john'),
-            array('ROLE_1', 'ROLE_2')
+            ['ROLE_1', 'ROLE_2']
         );
         $this->assertEquals(2, count($workspaces));
         $this->assertEquals('ws_2', $workspaces[0]['workspace']->getName());
         $workspaces = self::$repo->findLatestWorkspacesByUser(
             self::get('john'),
-            array('ROLE_1')
+            ['ROLE_1']
         );
         $this->assertEquals(1, count($workspaces));
         $this->assertEquals('ws_1', $workspaces[0]['workspace']->getName());

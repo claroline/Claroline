@@ -26,32 +26,32 @@ class ResourceRightsRepositoryTest extends RepositoryTestCase
         self::createRole('ROLE_ADMIN');
         self::createRole('ROLE_1', self::get('ws_1'));
         self::createRole('ROLE_2', self::get('ws_1'));
-        self::createUser('john', array(self::get('ROLE_1')));
-        self::createResourceType('t_dir');
+        self::createUser('john', [self::get('ROLE_1')]);
+        self::createResourceType('t_dir', 'Directory');
         self::createDirectory('dir_1', self::get('t_dir'), self::get('john'), self::get('ws_1'));
         self::createDirectory('dir_2', self::get('t_dir'), self::get('john'), self::get('ws_1'), self::get('dir_1'));
         self::createResourceRights(self::get('ROLE_1'), self::get('dir_1'), 3);
         self::createResourceRights(self::get('ROLE_1'), self::get('dir_2'), 1);
-        self::createResourceRights(self::get('ROLE_2'), self::get('dir_1'), 33, array(self::get('t_dir')));
+        self::createResourceRights(self::get('ROLE_2'), self::get('dir_1'), 33, [self::get('t_dir')]);
     }
 
     public function testFindMaximumRights()
     {
-        $mask = self::$repo->findMaximumRights(array('ROLE_1'), self::get('dir_1')->getResourceNode());
-        $this->assertTrue((1 & $mask) !== 0);
-        $this->assertTrue((2 & $mask) !== 0);
-        $mask = self::$repo->findMaximumRights(array('ROLE_1', 'ROLE_2'), self::get('dir_1')->getResourceNode());
-        $this->assertTrue((32 & $mask) !== 0);
-        $this->assertTrue((1 & $mask) !== 0);
-        $this->assertTrue((2 & $mask) !== 0);
+        $mask = self::$repo->findMaximumRights(['ROLE_1'], self::get('dir_1')->getResourceNode());
+        $this->assertTrue(0 !== (1 & $mask));
+        $this->assertTrue(0 !== (2 & $mask));
+        $mask = self::$repo->findMaximumRights(['ROLE_1', 'ROLE_2'], self::get('dir_1')->getResourceNode());
+        $this->assertTrue(0 !== (32 & $mask));
+        $this->assertTrue(0 !== (1 & $mask));
+        $this->assertTrue(0 !== (2 & $mask));
     }
 
     public function testFindCreationRights()
     {
-        $creationRights = self::$repo->findCreationRights(array('ROLE_1'), self::get('dir_1')->getResourceNode());
+        $creationRights = self::$repo->findCreationRights(['ROLE_1'], self::get('dir_1')->getResourceNode());
         $this->assertEquals(0, count($creationRights));
         $creationRights = self::$repo->findCreationRights(
-            array('ROLE_1', 'ROLE_2'),
+            ['ROLE_1', 'ROLE_2'],
             self::get('dir_1')->getResourceNode()
         );
         $this->assertEquals(1, count($creationRights));
