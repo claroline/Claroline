@@ -1,7 +1,5 @@
-import {makeActionCreator} from '#/main/core/scaffolding/actions'
-import {navigate} from '#/main/core/router'
-import {getUrl} from '#/main/core/api/router'
-import {API_REQUEST} from '#/main/core/api/actions'
+import {makeActionCreator} from '#/main/app/store/actions'
+import {url, API_REQUEST} from '#/main/app/api'
 
 import {isValid} from './validator'
 
@@ -96,7 +94,7 @@ actions.removeAnnounce = (aggregateId, announce) => ({
 
 actions.sendAnnounce = (aggregateId, announce) => ({
   [API_REQUEST]: {
-    url: getUrl(['claro_announcement_send', {aggregateId: aggregateId, id: announce.id}]) + '?' + announce.roles.map(role => 'ids[]=' + role).join('&'),
+    url: url(['claro_announcement_send', {aggregateId: aggregateId, id: announce.id}], {ids: announce.roles}),
     request: {
       method: 'POST'
     }

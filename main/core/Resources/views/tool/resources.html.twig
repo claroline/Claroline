@@ -1,0 +1,49 @@
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
+{% if 'desktop' == context.type %}
+    {% set layout = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+    {% set breadcrumb = macros.breadcrumbs([{
+        'name': 'desktop'|trans({}, 'platform'),
+        'href': path('claro_desktop_open')
+    }, {
+        'name': 'resources'|trans({}, 'tools'),
+        'href': ''
+    }]) %}
+{% else %}
+    {% set layout = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+    {% set breadcrumb = macros.workspaceBreadcrumbs(workspace, [{
+        'name': 'resources'|trans({}, 'tools'),
+        'href': ''
+    }]) %}
+{% endif %}
+
+{% extends layout %}
+
+{# Title of the Page #}
+{% block title %}
+    {{ parent() ~ ' - ' ~ "resources" | trans({}, "tools") | striptags | raw }}
+{% endblock %}
+
+{# Override breadcrumbs #}
+{% block breadcrumb %}
+    {{ breadcrumb }}
+{% endblock %}
+
+{# Content of the Page #}
+{% block content %}
+    <div
+        class="page-container resources-container"
+        data-context="{{ context | json_encode | raw | escape }}"
+        data-root="{{ root | json_encode | raw | escape }}"
+    ></div>
+{% endblock %}
+
+{% block javascripts %}
+    {# Claroline JS #}
+    {{ parent() }}
+
+    {# Translations #}
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'resource' }) }}"></script>
+
+    <script src="{{ hotAsset('dist/claroline-distribution-main-core-resources-tool.js') }}"></script>
+{% endblock %}

@@ -1,7 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 
 import {makeReducer} from '#/main/core/scaffolding/reducer'
-import {makeResourceReducer} from '#/main/core/resource/reducer'
 import {FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
 
 import {
@@ -109,7 +108,7 @@ const clacoFormReducer = makeReducer({}, {
   }
 })
 
-const reducer = makeResourceReducer({}, {
+const reducer = {
   clacoForm: clacoFormReducer,
   clacoFormForm: editorReducer,
   canGeneratePdf: makeReducer({}, {}),
@@ -118,7 +117,7 @@ const reducer = makeResourceReducer({}, {
   message: messageReducer,
   roles: makeReducer({}, {}),
   myRoles: makeReducer({}, {})
-})
+}
 
 export {
   reducer

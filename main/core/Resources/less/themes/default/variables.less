@@ -61,14 +61,16 @@
 // ---
 
 @top-bar-max-width:           none; // max width for the top bar content (do not affect top bar container)
-@top-bar-height:              @navbar-height + @top-bar-border-bottom-size;
+@top-bar-height:              60px + @top-bar-border-bottom-size;
 @top-bar-font-size:           @font-size-base;
+@top-bar-padding-vertical:    ((@top-bar-height - @line-height-computed) / 2);
+@top-bar-padding-horizontal:  floor(@grid-gutter-width / 2);
 @top-bar-color:               lighten(@top-bar-bg, 30%);
 @top-bar-bg:                  @navbar-inverse-bg;
-@top-bar-border-bottom-size:  3px;
+@top-bar-border-bottom-size:  0;
 @top-bar-border-bottom-color: @brand-primary;
 @top-bar-border-bottom:       @top-bar-border-bottom-size solid @top-bar-border-bottom-color;
-@top-bar-box-shadow:          0 0 3px rgba(0, 0, 0, 0.5);
+@top-bar-box-shadow:          none;
 
 @top-bar-logo-height:         35px;
 
@@ -115,9 +117,10 @@
 
 
 // -
-// Sidebars
+// Toolbars
 // ---
 
+@toolbar-size:         60px;
 @sidebar-bg:           white;
 @sidebar-color:        #555555;
 @sidebar-font-size:    floor(16px * @font-size-modifier);
@@ -274,6 +277,7 @@
 
 @nav-pills-link-color:   @brand-primary;
 @nav-pills-link-bg:      transparent;
+
 
 // -
 // Carousel

@@ -11,12 +11,10 @@
 
 namespace Claroline\CoreBundle\Entity\Facet;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Facet\PanelFacetRepository")
@@ -24,22 +22,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class PanelFacet
 {
-    use UuidTrait;
-
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_facet_admin", "api_profile"})
-     *
-     * @var int
-     */
-    protected $id;
+    use Id;
+    use Uuid;
 
     /**
      * @ORM\Column
-     * @Assert\NotBlank()
-     * @Groups({"api_facet_admin", "api_profile"})
      *
      * @var string
      */
@@ -64,8 +51,6 @@ class PanelFacet
      *     orphanRemoval=true
      * )
      * @ORM\OrderBy({"position" = "ASC"})
-     * @Groups({"api_facet_admin", "api_profile"})
-     * @SerializedName("fields")
      *
      * @var ArrayCollection
      */
@@ -73,7 +58,6 @@ class PanelFacet
 
     /**
      * @ORM\Column(type="integer", name="position")
-     * @Groups({"api_facet_admin", "api_profile"})
      *
      * @var int
      */
@@ -81,7 +65,6 @@ class PanelFacet
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"api_facet_admin", "api_profile"})
      *
      * @var bool
      */
@@ -89,7 +72,6 @@ class PanelFacet
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"api_facet_admin", "api_profile"})
      *
      * @var bool
      */
@@ -100,7 +82,6 @@ class PanelFacet
      *     targetEntity="Claroline\CoreBundle\Entity\Facet\PanelFacetRole",
      *     mappedBy="panelFacet"
      * )
-     * @Groups({"api_facet_admin"})
      *
      * @var ArrayCollection
      */
@@ -114,14 +95,6 @@ class PanelFacet
         $this->fieldsFacet = new ArrayCollection();
         $this->panelFacetsRole = new ArrayCollection();
         $this->refreshUuid();
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

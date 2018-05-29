@@ -3,7 +3,7 @@
 namespace Claroline\VideoPlayerBundle\Listener;
 
 use Claroline\CoreBundle\Event\InjectJavascriptEvent;
-use Claroline\CoreBundle\Event\PlayFileEvent;
+use Claroline\CoreBundle\Event\Resource\File\PlayFileEvent;
 use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\ScormBundle\Event\ExportScormResourceEvent;

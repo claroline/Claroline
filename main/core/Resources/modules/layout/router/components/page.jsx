@@ -1,11 +1,11 @@
 import React from 'react'
 
-import {Router, Routes} from '#/main/core/router'
+import {Router, Routes} from '#/main/app/router'
 import {Page, PageContent} from '#/main/core/layout/page'
 
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {Page as PageTypes} from '#/main/core/layout/page/prop-types'
-import {Route as RouteTypes} from '#/main/core/router/prop-types'
+import {Route as RouteTypes} from '#/main/app/router/prop-types'
 
 const RoutedPage = props =>
   <Router embedded={props.embedded}>

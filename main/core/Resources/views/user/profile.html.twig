@@ -4,7 +4,7 @@
 
 {% block content %}
     <div
-        class="user-profile-container"
+        class="user-profile-container page-container"
         data-user="{{ user | json_encode | raw | escape }}"
         data-facets="{{ facets | json_encode | raw | escape }}"
         data-parameters="{{ parameters | json_encode | raw | escape }}"

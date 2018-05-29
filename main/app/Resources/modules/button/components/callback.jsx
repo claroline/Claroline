@@ -2,7 +2,9 @@ import React from 'react'
 import classes from 'classnames'
 import omit from 'lodash/omit'
 
-import {withModal, MODAL_CONFIRM} from '#/main/core/layout/modal'
+import {withModal} from '#/main/app/overlay/modal'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
+
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {Button as ButtonTypes} from '#/main/app/button/prop-types'
 
@@ -15,7 +17,7 @@ import {Button as ButtonTypes} from '#/main/app/button/prop-types'
  */
 const CallbackButton = withModal(props =>
   <button
-    {...omit(props, 'displayed', 'primary', 'dangerous', 'size', 'callback', 'bsRole', 'bsClass', 'confirm', 'showModal')}
+    {...omit(props, 'active', 'displayed', 'primary', 'dangerous', 'size', 'callback', 'bsRole', 'bsClass', 'confirm', 'showModal')}
     type="button"
     role="button"
     tabIndex={props.tabIndex}
@@ -38,6 +40,7 @@ const CallbackButton = withModal(props =>
           props.showModal(MODAL_CONFIRM, {
             icon: props.confirm.icon,
             title: props.confirm.title,
+            subtitle: props.confirm.subtitle,
             question: props.confirm.message,
             confirmButtonText: props.confirm.button,
             dangerous: props.dangerous,

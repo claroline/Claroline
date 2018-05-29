@@ -87,21 +87,6 @@
         height: 100%; // fill container
 
         // todo : make it on every card with mixins
-        &:hover {
-            z-index: 2;
-            color: @data-card-active-color;
-            background-color: @data-card-active-bg;
-            .box-shadow(@data-card-active-box-shadow);
-
-            .data-card-header {
-                background: @data-card-active-header-bg;
-            }
-
-            .data-card-content {
-                color: @data-card-active-color;
-            }
-        }
-
         &.selected {
             background-color: @state-info-bg;
             border-color: #abcfe0; // todo : use a var same as .table

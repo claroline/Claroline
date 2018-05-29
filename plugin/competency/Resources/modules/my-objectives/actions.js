@@ -1,6 +1,6 @@
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
-import {generateUrl} from '#/main/core/api/router'
-import {API_REQUEST} from '#/main/core/api/actions'
+import {url} from '#/main/app/api'
+import {API_REQUEST} from '#/main/app/api'
 import {trans} from '#/main/core/translation'
 
 export const COMPETENCIES_DATA_UPDATE = 'COMPETENCIES_DATA_UPDATE'
@@ -56,8 +56,8 @@ actions.fetchRelevantResource = (competencyId, level) => {
         url: ['hevinci_my_objectives_competency_resource_fetch', {competency: competencyId, level: level}],
         success: (data) => {
           if (data && data['resourceId']) {
-            const url = generateUrl('claro_resource_open_short', {node: data['resourceId']})
-            window.location.href = url
+            const redirect = url(['claro_resource_open_short', {node: data['resourceId']}])
+            window.location.href = redirect
           } else {
             dispatch(actions.updateCompetenciesData(competencyId, 'error', trans('objective.invalid_challenge_msg', {}, 'competency')))
           }

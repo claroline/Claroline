@@ -146,6 +146,8 @@ class ClaroUtilities
 
     /**
      * Take a file size (B) and displays it in a more readable way.
+     *
+     * @deprecated. just let the client do it for you
      */
     public function formatFileSize($fileSize)
     {
@@ -173,6 +175,8 @@ class ClaroUtilities
 
     /**
      * Take a formatted file size and returns the number of bytes.
+     *
+     * @deprecated. just let the client do it for you
      */
     public function getRealFileSize($fileSize)
     {

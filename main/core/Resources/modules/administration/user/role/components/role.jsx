@@ -11,7 +11,7 @@ import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 import {Checkbox} from '#/main/core/layout/form/components/field/checkbox.jsx'
 import {select as formSelect} from '#/main/core/data/form/selectors'
 import {actions as formActions} from '#/main/core/data/form/actions'
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
 
 import {enumRole, PLATFORM_ROLE} from '#/main/core/user/role/constants'
@@ -36,7 +36,7 @@ const RoleForm = props =>
             required: true,
             disabled: props.role.meta && props.role.meta.readOnly
           }, {
-            name: 'meta.type',
+            name: 'type',
             type: 'choice',
             label: t('type'),
             readOnly: true,
@@ -94,7 +94,7 @@ const RoleForm = props =>
     <FormSections
       level={3}
     >
-      {props.role.meta && PLATFORM_ROLE === props.role.meta.type &&
+      {PLATFORM_ROLE === props.role.type &&
         <FormSection
           icon="fa fa-fw fa-cogs"
           title={t('administration_tools')}

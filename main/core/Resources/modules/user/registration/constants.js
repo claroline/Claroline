@@ -1,4 +1,4 @@
-import {constants as alertConstants} from '#/main/core/layout/alert/constants'
+import {constants as alertConstants} from '#/main/app/overlay/alert/constants'
 
 const ALERT_REGISTRATION = {
   [alertConstants.ALERT_STATUS_PENDING]: {

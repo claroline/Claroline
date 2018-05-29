@@ -4,10 +4,10 @@ import {connect} from 'react-redux'
 import Panel from 'react-bootstrap/lib/Panel'
 
 import {trans} from '#/main/core/translation'
-import {withRouter} from '#/main/core/router'
+import {withRouter} from '#/main/app/router'
 
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {MODAL_CONFIRM} from '#/main/core/layout/modal'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 
 import {getDefinition, isQuestionType} from './../../../items/item-types'

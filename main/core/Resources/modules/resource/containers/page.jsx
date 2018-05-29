@@ -1,8 +1,9 @@
-import {connectPage} from '#/main/core/layout/page/connect'
+import {connect} from 'react-redux'
 
-import {select as evaluationSelect} from '#/main/core/resource/evaluation/selectors'
-import {select as resourceSelect} from '#/main/core/resource/selectors'
-import {actions as resourceActions} from '#/main/core/resource/actions'
+// the store to use
+import {actions, selectors} from '#/main/core/resource/store'
+
+// the component to connect
 import {ResourcePage} from '#/main/core/resource/components/page'
 
 /**
@@ -10,29 +11,25 @@ import {ResourcePage} from '#/main/core/resource/components/page'
  *
  * Connects the <Resource> component to a redux store.
  * If you don't use redux in your implementation @see Resource functional component.
- *
- * Requires the following reducers to be registered in your store (@see makePageReducer) :
- *   - modal
- *   - alerts [optional]
- *   - resource
  */
-const ResourcePageContainer = connectPage(
+const ResourcePageContainer = connect(
   (state) => ({
-    resourceNode: resourceSelect.resourceNode(state),
-    userEvaluation: evaluationSelect.evaluation(state)
+    embedded: selectors.embedded(state),
+    resourceNode: selectors.resourceNode(state),
+    userEvaluation: selectors.resourceEvaluation(state)
   }),
   (dispatch) => ({
     updateNode(resourceNode) {
-      dispatch(resourceActions.updateNode(resourceNode))
+      dispatch(actions.updateNode(resourceNode))
     },
     updatePublication(resourceNode) {
-      dispatch(resourceActions.updatePublication(resourceNode))
+      dispatch(actions.updatePublication(resourceNode))
     },
     togglePublication(resourceNode) {
-      dispatch(resourceActions.togglePublication(resourceNode))
+      dispatch(actions.togglePublication(resourceNode))
     },
     toggleNotifications(resourceNode) {
-      dispatch(resourceActions.toggleNotifications(resourceNode))
+      dispatch(actions.toggleNotifications(resourceNode))
     }
   })
 )(ResourcePage)

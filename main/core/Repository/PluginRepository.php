@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Repository;
 
+use Claroline\CoreBundle\Entity\Plugin;
 use Doctrine\ORM\EntityRepository;
 
 class PluginRepository extends EntityRepository
@@ -25,34 +26,33 @@ class PluginRepository extends EntityRepository
     public function findOneByBundleFQCN($fqcn)
     {
         $split = explode('\\', $fqcn);
-        $dql = '
-            SELECT p FROM Claroline\CoreBundle\Entity\Plugin p
-            WHERE p.vendorName = :vendor
-            AND p.bundleName = :bundle
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('vendor', $split[0]);
-        $query->setParameter('bundle', $split[1]);
 
-        return $query->getOneOrNullResult();
+        return $this->_em
+            ->createQuery('
+                SELECT p FROM Claroline\CoreBundle\Entity\Plugin p
+                WHERE p.vendorName = :vendor
+                AND p.bundleName = :bundle
+            ')
+            ->setParameter('vendor', $split[0])
+            ->setParameter('bundle', $split[1])
+            ->getOneOrNullResult();
     }
 
     /**
      * Returns a plugin by its fully qualified class name.
      *
-     * @param string $fqcn
+     * @param string $name
      *
      * @return Plugin
      */
     public function findPluginByShortName($name)
     {
-        $dql = '
-            SELECT p FROM Claroline\CoreBundle\Entity\Plugin p
-            WHERE CONCAT(p.vendorName, p.bundleName) LIKE :name
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('name', $name);
-
-        return $query->getOneOrNullResult();
+        return $this->_em
+            ->createQuery('
+                SELECT p FROM Claroline\CoreBundle\Entity\Plugin p
+                WHERE CONCAT(p.vendorName, p.bundleName) LIKE :name
+            ')
+            ->setParameter('name', $name)
+            ->getOneOrNullResult();
     }
 }

@@ -1,7 +1,7 @@
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
 
-import {url} from '#/main/core/api/router'
-import {API_REQUEST} from '#/main/core/api/actions'
+import {url} from '#/main/app/api'
+import {API_REQUEST} from '#/main/app/api'
 
 export const THEMES_REMOVE    = 'THEMES_REMOVE'
 export const THEMES_REBUILD   = 'THEMES_REBUILD'

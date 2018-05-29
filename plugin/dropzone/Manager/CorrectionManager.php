@@ -2,8 +2,7 @@
 
 namespace Icap\DropzoneBundle\Manager;
 
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Manager\Resource\MaskManager;
 use Icap\DropzoneBundle\Entity\Correction;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Event\Log\LogCorrectionUpdateEvent;

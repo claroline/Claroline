@@ -13,8 +13,8 @@ namespace Claroline\FlashCardBundle\Listener;
 
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Form\Handler\FormHandler;
 use Claroline\FlashCardBundle\Entity\Deck;
 use Claroline\FlashCardBundle\Manager\DeckManager;

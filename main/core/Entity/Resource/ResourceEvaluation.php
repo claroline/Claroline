@@ -25,34 +25,52 @@ class ResourceEvaluation extends AbstractResourceEvaluation
      *     inversedBy="evaluations"
      * )
      * @ORM\JoinColumn(name="resource_user_evaluation", onDelete="CASCADE")
+     *
+     * @var ResourceUserEvaluation
      */
-    protected $resourceUserEvaluation;
+    private $resourceUserEvaluation;
 
     /**
      * @ORM\Column(type="text", name="evaluation_comment", nullable=true)
+     *
+     * @var string
      */
-    protected $comment;
+    private $comment;
 
     /**
      * @ORM\Column(name="more_data", type="json_array", nullable=true)
+     *
+     * @var array
      */
-    protected $data;
+    private $data;
 
+    /**
+     * @return ResourceUserEvaluation
+     */
     public function getResourceUserEvaluation()
     {
         return $this->resourceUserEvaluation;
     }
 
+    /**
+     * @param ResourceUserEvaluation $resourceUserEvaluation
+     */
     public function setResourceUserEvaluation(ResourceUserEvaluation $resourceUserEvaluation)
     {
         $this->resourceUserEvaluation = $resourceUserEvaluation;
     }
 
+    /**
+     * @return string
+     */
     public function getComment()
     {
         return $this->comment;
     }
 
+    /**
+     * @param string $comment
+     */
     public function setComment($comment)
     {
         $this->comment = $comment;

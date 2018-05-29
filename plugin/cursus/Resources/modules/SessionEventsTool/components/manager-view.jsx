@@ -3,154 +3,108 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans, t} from '#/main/core/translation'
-import {makeModal, MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
+
+import {actions as listActions} from '#/main/core/data/list/actions'
+import {select as listSelect} from '#/main/core/data/list/selectors'
+import {DataList} from '#/main/core/data/list/components/data-list'
+
+import {withModal} from '#/main/app/overlay/modal'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
+import {MODAL_EVENT_COMMENTS} from '#/plugin/cursus/SessionEventsTool/components/event-comments-modal'
+import {MODAL_EVENT_FORM} from '#/plugin/cursus/SessionEventsTool/components/event-form-modal'
+import {MODAL_EVENT_REPEAT_FORM} from '#/plugin/cursus/SessionEventsTool/components/event-repeat-form-modal'
+import {MODAL_EVENT_SET_FORM} from '#/plugin/cursus/SessionEventsTool/components/event-set-form-modal'
+
 import {selectors} from '../selectors'
 import {actions} from '../actions'
 import {registrationTypes} from '../enums'
-import {actions as listActions} from '#/main/core/data/list/actions'
-import {select as listSelect} from '#/main/core/data/list/selectors'
-import {DataList} from '#/main/core/data/list/components/data-list.jsx'
 
 // todo upgrade data list
+// todo change to a dump component
 
 class ManagerView extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      modal: {}
-    }
+
     this.deleteSessionEvent = this.deleteSessionEvent.bind(this)
   }
 
   deleteSessionEvent(sessionEvent) {
-    this.setState({
-      modal: {
-        type: MODAL_DELETE_CONFIRM,
-        urlModal: null,
-        props: {
-          url: null,
-          dangerous: true,
-          question: trans('delete_session_event_confirm_message', {}, 'cursus'),
-          handleConfirm: () =>  {
-            this.setState({modal: {fading: true}})
+    this.props.showModal(MODAL_CONFIRM, {
+      icon: 'fa fa-fw fa-trash-o',
+      title: `${trans('delete_session_event', {}, 'cursus')} [${sessionEvent.name}]`,
+      question: trans('delete_session_event_confirm_message', {}, 'cursus'),
+      dangerous: true,
+      handleConfirm: () =>  {
+        this.setState({modal: {fading: true}})
 
-            this.props.deleteSessionEvent(this.props.workspaceId, sessionEvent.id)
-          },
-          title: `${trans('delete_session_event', {}, 'cursus')} [${sessionEvent.name}]`
-        },
-        fading: false
+        this.props.deleteSessionEvent(this.props.workspaceId, sessionEvent.id)
       }
     })
   }
 
   deleteSessionEvents(sessionEvents) {
-    this.setState({
-      modal: {
-        type: MODAL_DELETE_CONFIRM,
-        urlModal: null,
-        props: {
-          url: null,
-          dangerous: true,
-          question: trans('delete_selected_session_events_confirm_message', {}, 'cursus'),
-          handleConfirm: () =>  {
-            this.setState({modal: {fading: true}})
+    this.props.showModal(MODAL_CONFIRM, {
+      icon: 'fa fa-fw fa-trash-o',
+      title: `${trans('delete_selected_session_events', {}, 'cursus')}`,
+      question: trans('delete_selected_session_events_confirm_message', {}, 'cursus'),
+      dangerous: true,
+      handleConfirm: () =>  {
+        this.setState({modal: {fading: true}})
 
-            this.props.deleteSessionEvents(this.props.workspaceId, sessionEvents)
-          },
-          title: `${trans('delete_selected_session_events', {}, 'cursus')}`
-        },
-        fading: false
+        this.props.deleteSessionEvents(this.props.workspaceId, sessionEvents)
       }
     })
   }
 
   showEventCreationForm() {
-    this.setState({
-      modal: {
-        type: 'MODAL_EVENT_FORM',
-        urlModal: null,
-        props: {
-          mode: 'creation',
-          title: `${trans('session_event_creation', {}, 'cursus')}`,
-          event: {
-            id: null,
-            name: null,
-            description: null,
-            startDate: null,
-            endDate: null,
-            registrationType: 0,
-            maxUsers: null,
-            locationExtra: null
-          },
-          session: this.props.session,
-          confirmAction: this.props.createSessionEvent
-        },
-        fading: false
-      }
+    this.props.showModal(MODAL_EVENT_FORM, {
+      mode: 'creation',
+      title: `${trans('session_event_creation', {}, 'cursus')}`,
+      event: {
+        id: null,
+        name: null,
+        description: null,
+        startDate: null,
+        endDate: null,
+        registrationType: 0,
+        maxUsers: null,
+        locationExtra: null
+      },
+      session: this.props.session,
+      confirmAction: this.props.createSessionEvent
     })
   }
 
   showEventEditionForm(sessionEvent) {
-    this.setState({
-      modal: {
-        type: 'MODAL_EVENT_FORM',
-        urlModal: null,
-        props: {
-          mode: 'edition',
-          title: trans('session_event_edition', {}, 'cursus'),
-          event: sessionEvent,
-          session: this.props.session,
-          confirmAction: this.props.editSessionEvent
-        },
-        fading: false
-      }
+    this.props.showModal(MODAL_EVENT_FORM, {
+      mode: 'edition',
+      title: trans('session_event_edition', {}, 'cursus'),
+      event: sessionEvent,
+      session: this.props.session,
+      confirmAction: this.props.editSessionEvent
     })
   }
 
   showEventRepeatForm(sessionEvent) {
-    this.setState({
-      modal: {
-        type: 'MODAL_EVENT_REPEAT_FORM',
-        urlModal: null,
-        props: {
-          title: trans('repeat_session_event', {}, 'cursus'),
-          event: sessionEvent,
-          repeatSessionEvent: this.props.repeatSessionEvent
-        },
-        fading: false
-      }
+    this.props.showModal(MODAL_EVENT_REPEAT_FORM, {
+      title: trans('repeat_session_event', {}, 'cursus'),
+      event: sessionEvent,
+      repeatSessionEvent: this.props.repeatSessionEvent
     })
   }
 
   showEventCommentsManagement(sessionEvent) {
-    this.setState({
-      modal: {
-        type: 'MODAL_EVENT_COMMENTS',
-        urlModal: null,
-        props: {
-          title:trans('informations_management', {}, 'cursus'),
-          event: sessionEvent
-        },
-        fading: false
-      }
+    this.props.showModal(MODAL_EVENT_COMMENTS, {
+      title:trans('informations_management', {}, 'cursus'),
+      event: sessionEvent
     })
   }
 
-  hideModal() {
-    this.setState({modal: {fading: true, urlModal: null}})
-  }
-
   showEventSetForm(eventSet) {
-    this.setState({
-      modal: {
-        type: 'MODAL_EVENT_SET_FORM',
-        urlModal: null,
-        props: {
-          title: trans('session_event_set_edition', {}, 'cursus'),
-          eventSet: eventSet
-        },
-        fading: false
-      }
+    this.props.showModal(MODAL_EVENT_SET_FORM, {
+      title: trans('session_event_set_edition', {}, 'cursus'),
+      eventSet: eventSet
     })
   }
 
@@ -265,14 +219,6 @@ class ManagerView extends Component {
           <button className="btn btn-primary" onClick={() => this.showEventCreationForm()}>
             {trans('create_session_event', {}, 'cursus')}
           </button>
-          {this.state.modal.type &&
-            this.props.createModal(
-              this.state.modal.type,
-              this.state.modal.props,
-              this.state.modal.fading,
-              this.hideModal.bind(this)
-            )
-          }
         </div>
       )
     } else {
@@ -302,7 +248,6 @@ ManagerView.propTypes = {
   deleteSessionEvent: T.func.isRequired,
   repeatSessionEvent: T.func.isRequired,
   deleteSessionEvents: T.func.isRequired,
-  createModal: T.func.isRequired,
   filters: T.array.isRequired,
   addListFilter: T.func.isRequired,
   removeListFilter: T.func.isRequired,
@@ -316,7 +261,8 @@ ManagerView.propTypes = {
   pagination: T.shape({
     pageSize: T.number.isRequired,
     current: T.number.isRequired
-  }).isRequired
+  }).isRequired,
+  showModal: T.func.isRequired
 }
 
 function mapStateToProps(state) {
@@ -352,7 +298,6 @@ function mapDispatchToProps(dispatch) {
     deleteSessionEvents: (workspaceId, sessionEvents) => {
       dispatch(actions.deleteSessionEvents(workspaceId, sessionEvents))
     },
-    createModal: (type, props, fading, hideModal) => makeModal(type, props, fading, hideModal, hideModal),
     // search
     addListFilter: (property, value) => {
       dispatch(listActions.addFilter(property, value))
@@ -382,6 +327,6 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-const ConnectedManagerView = connect(mapStateToProps, mapDispatchToProps)(ManagerView)
+const ConnectedManagerView = connect(mapStateToProps, mapDispatchToProps)(withModal(ManagerView))
 
 export {ConnectedManagerView as ManagerView}

@@ -2,6 +2,7 @@
 
 namespace Innova\PathBundle\Serializer;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
@@ -11,7 +12,6 @@ use Innova\PathBundle\Entity\InheritedResource;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\SecondaryResource;
 use Innova\PathBundle\Entity\Step;
-use Innova\PathBundle\Manager\PathManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -31,9 +31,6 @@ class PathSerializer
     /** @var ResourceNodeSerializer */
     private $resourceNodeSerializer;
 
-    /** @var PathManager */
-    private $pathManager;
-
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
@@ -50,28 +47,25 @@ class PathSerializer
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "fileSerializer"     = @DI\Inject("claroline.serializer.public_file"),
      *     "resourceSerializer" = @DI\Inject("claroline.serializer.resource_node"),
-     *     "pathManager"        = @DI\Inject("innova_path.manager.path"),
      *     "tokenStorage"       = @DI\Inject("security.token_storage")
      * })
      *
      * @param ObjectManager          $om
      * @param PublicFileSerializer   $fileSerializer
      * @param ResourceNodeSerializer $resourceSerializer
-     * @param PathManager            $pathManager
      * @param TokenStorageInterface  $tokenStorage
      */
     public function __construct(
         ObjectManager $om,
         PublicFileSerializer $fileSerializer,
         ResourceNodeSerializer $resourceSerializer,
-        PathManager $pathManager,
         TokenStorageInterface $tokenStorage
     ) {
         $this->om = $om;
         $this->fileSerializer = $fileSerializer;
         $this->resourceNodeSerializer = $resourceSerializer;
-        $this->pathManager = $pathManager;
         $this->tokenStorage = $tokenStorage;
+
         $this->resourceNodeRepo = $om->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $this->stepRepo = $om->getRepository('Innova\PathBundle\Entity\Step');
         $this->secondaryResourceRepo = $om->getRepository('Innova\PathBundle\Entity\SecondaryResource');
@@ -130,7 +124,6 @@ class PathSerializer
         if (isset($data['steps'])) {
             $this->deserializeSteps($data['steps'], $path);
         }
-        $this->pathManager->updateResourcesRights($path);
 
         return $path;
     }
@@ -159,7 +152,7 @@ class PathSerializer
             'title' => $step->getTitle(),
             'description' => $step->getDescription(),
             'poster' => $poster,
-            'primaryResource' => $step->getResource() ? $this->resourceNodeSerializer->serialize($step->getResource()) : null,
+            'primaryResource' => $step->getResource() ? $this->resourceNodeSerializer->serialize($step->getResource(), [Options::SERIALIZE_MINIMAL]) : null,
             'secondaryResources' => array_map(function (SecondaryResource $secondaryResource) {
                 return $this->serializeSecondaryResource($secondaryResource);
             }, $step->getSecondaryResources()->toArray()),
@@ -187,7 +180,7 @@ class PathSerializer
         return [
             'id' => $secondaryResource->getUuid(),
             'inheritanceEnabled' => $secondaryResource->isInheritanceEnabled(),
-            'resource' => $this->resourceNodeSerializer->serialize($secondaryResource->getResource()),
+            'resource' => $this->resourceNodeSerializer->serialize($secondaryResource->getResource(), [Options::SERIALIZE_MINIMAL]),
         ];
     }
 
@@ -200,7 +193,7 @@ class PathSerializer
     {
         return [
             'id' => $inheritedResource->getUuid(),
-            'resource' => $this->resourceNodeSerializer->serialize($inheritedResource->getResource()),
+            'resource' => $this->resourceNodeSerializer->serialize($inheritedResource->getResource(), [Options::SERIALIZE_MINIMAL]),
             'lvl' => $inheritedResource->getLvl(),
             'sourceUuid' => $inheritedResource->getSourceUuid(),
         ];
@@ -283,7 +276,7 @@ class PathSerializer
 
         /* Set primary resource */
         $resource = isset($data['primaryResource']['id']) ?
-            $this->resourceNodeRepo->findOneBy(['guid' => $data['primaryResource']['id']]) :
+            $this->resourceNodeRepo->findOneBy(['uuid' => $data['primaryResource']['id']]) :
             null;
         $step->setResource($resource);
 
@@ -390,7 +383,7 @@ class PathSerializer
             $secondaryResource->setUuid($data['id']);
 
             /* Set resource */
-            $resource = $this->resourceNodeRepo->findOneBy(['guid' => $data['resource']['id']]);
+            $resource = $this->resourceNodeRepo->findOneBy(['uuid' => $data['resource']['id']]);
             $secondaryResource->setResource($resource);
         }
         $secondaryResource->setInheritanceEnabled($data['inheritanceEnabled']);
@@ -420,7 +413,7 @@ class PathSerializer
             $inheritedResource->setSourceUuid($data['sourceUuid']);
 
             /* Set resource */
-            $resource = $this->resourceNodeRepo->findOneBy(['guid' => $data['resource']['id']]);
+            $resource = $this->resourceNodeRepo->findOneBy(['uuid' => $data['resource']['id']]);
             $inheritedResource->setResource($resource);
 
             /* Set lvl */

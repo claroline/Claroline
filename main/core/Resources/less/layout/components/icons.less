@@ -10,3 +10,23 @@
 .icon-with-text-right {
     margin-right: @icon-text-spacer;
 }
+
+.fa-composite {
+    position: relative;
+
+    .fa-composite-secondary {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        transform: translate(50%, 50%);
+        font-size: 50%;
+        width: 1.6em;
+        height: 1.6em;
+        border-radius: 100%;
+        border: 2px solid #777;
+        background: white;
+    }
+}

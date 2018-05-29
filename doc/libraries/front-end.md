@@ -54,8 +54,6 @@
 
 
 ## TO REMOVE WITH REFACTORING
-- backbone (gestionnaire de ressource va disparaitre au profit d'angular)
-- underscore (gestionnaire de ressource va disparaitre au profit d'angular)
 
 - angular-toarrayfilter (certainement utilisé, mais ça ne vaut pas le coup d'avoir une dépendance pour un filtre)
 => écrire le filtre nous même

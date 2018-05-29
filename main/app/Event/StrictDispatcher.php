@@ -22,6 +22,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * plugin didn't respond as expected).
  *
  * @DI\Service("claroline.event.event_dispatcher")
+ *
+ * @todo : move me inside \EventDispatcher namespace
  */
 class StrictDispatcher
 {

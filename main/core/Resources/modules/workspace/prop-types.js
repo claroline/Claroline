@@ -8,7 +8,6 @@ const Workspace = {
     uuid: T.string,
     name: T.string,
     poster: T.string,
-    roles: T.array,
     meta: T.shape({
       slug: T.string,
       model: T.bool,
@@ -42,7 +41,12 @@ const Workspace = {
     }).isRequired,
     notifications: T.shape({
       enabled: T.bool
-    })
+    }),
+    roles: T.arrayOf(T.shape({
+      id: T.string.isRequired,
+      name: T.string.isRequired,
+      translationKey: T.string.isRequired
+    }))
   },
   defaultProps: {
     meta: {

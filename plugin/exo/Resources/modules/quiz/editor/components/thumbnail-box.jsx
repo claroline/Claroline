@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {t, tex} from '#/main/core/translation'
-import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 
 import {SORT_DETECT, makeSortable} from './../../../utils/sortable'
@@ -20,9 +20,11 @@ const Actions = props =>
       className="fa fa-fw fa-trash-o"
       onClick={e => {
         e.stopPropagation()
-        props.showModal(MODAL_DELETE_CONFIRM, {
+        props.showModal(MODAL_CONFIRM, {
+          icon: 'fa fa-fw fa-trash-o',
           title: tex('delete_step'),
           question: tex('remove_step_confirm_message'),
+          dangerous: true,
           handleConfirm: () => props.onDeleteClick(props.id)
         })
       }}

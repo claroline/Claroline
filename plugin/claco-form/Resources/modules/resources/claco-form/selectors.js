@@ -1,7 +1,8 @@
 import {createSelector} from 'reselect'
 
 import {currentUser} from '#/main/core/user/current'
-import {select as resourceSelect} from '#/main/core/resource/selectors'
+import {selectors as resourceSelect} from '#/main/core/resource/store'
+import {hasPermission} from '#/main/core/resource/permissions'
 
 const authenticatedUser = currentUser()
 
@@ -23,10 +24,10 @@ const entryUser = state => state.entries.entryUser
 const usedCountries = state => state.entries.countries
 
 const canSearchEntry = createSelector(
-  resourceSelect.editable,
+  resourceSelect.resourceNode,
   isAnon,
   params,
-  (editable, isAnon, params) => editable || !isAnon || params['search_enabled']
+  (resourceNode, isAnon, params) => hasPermission('edit', resourceNode) || !isAnon || params['search_enabled']
 )
 
 const isCurrentEntryOwner = createSelector(
@@ -61,10 +62,10 @@ const isCurrentEntryManager = createSelector(
 
 const canManageCurrentEntry = createSelector(
   isAnon,
-  resourceSelect.editable,
+  resourceSelect.resourceNode,
   currentEntry,
-  (isAnon, editable, currentEntry) => {
-    let canManage = editable
+  (isAnon, resourceNode, currentEntry) => {
+    let canManage = hasPermission('edit', resourceNode)
 
     if (!canManage && !isAnon && authenticatedUser && currentEntry && currentEntry.categories) {
       currentEntry.categories.forEach(category => {

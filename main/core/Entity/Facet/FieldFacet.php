@@ -11,11 +11,11 @@
 
 namespace Claroline\CoreBundle\Entity\Facet;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Facet\FieldFacetRepository")
@@ -23,7 +23,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class FieldFacet
 {
-    use UuidTrait;
+    use Id;
+    use Uuid;
 
     /** @var int */
     const STRING_TYPE = 1;
@@ -66,17 +67,7 @@ class FieldFacet
     ];
 
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    private $id;
-
-    /**
      * @ORM\Column(name="name")
-     * @Assert\NotBlank()
      *
      * @var string
      */
@@ -127,10 +118,7 @@ class FieldFacet
     private $required = false;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
-     *     inversedBy="fields"
-     * )
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
      * @ORM\JoinColumn(name="resource_node", onDelete="CASCADE", nullable=true)
      *
      * @var ResourceNode
@@ -177,7 +165,6 @@ class FieldFacet
     public function __construct()
     {
         $this->refreshUuid();
-        $this->fieldsFacetValue = new ArrayCollection();
         $this->fieldFacetChoices = new ArrayCollection();
     }
 

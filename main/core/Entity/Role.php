@@ -88,22 +88,6 @@ class Role extends BaseRole
 
     /**
      * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Facet\Facet",
-     *     mappedBy="roles"
-     * )
-     */
-    protected $facets;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Facet\GeneralFacetPreference",
-     *     mappedBy="role"
-     * )
-     */
-    protected $generalFacetPreference;
-
-    /**
-     * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\AdminTool",
      *     mappedBy="roles"
      * )
@@ -193,7 +177,6 @@ class Role extends BaseRole
 
         $this->users = new ArrayCollection();
         $this->groups = new ArrayCollection();
-        $this->facets = new ArrayCollection();
         $this->toolRights = new ArrayCollection();
         $this->pwsToolConfig = new ArrayCollection();
         $this->profileProperties = new ArrayCollection();

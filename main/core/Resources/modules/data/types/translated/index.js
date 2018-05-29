@@ -2,7 +2,7 @@
 //it will be improved later
 
 import {t} from '#/main/core/translation'
-import {getLocale} from '#/main/core/intl/locale'
+import {getLocale} from '#/main/app/intl/locale'
 
 import {TranslatedGroup} from '#/main/core/layout/form/components/group/translated-group.jsx'
 

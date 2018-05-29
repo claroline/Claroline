@@ -1,17 +1,17 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {Provider} from 'react-redux'
-import {createStore} from '#/main/core/scaffolding/store'
+import {createStore} from '#/main/app/store'
 import {registerModals} from '#/main/core/layout/modal'
-import {makeRouter} from './router'
 import {reducers} from './reducers'
-import {VIEW_MANAGER, VIEW_USER} from './enums'
 import {EventFormModal} from './components/event-form-modal.jsx'
 import {EventRepeatFormModal} from './components/event-repeat-form-modal.jsx'
 import {SessionEventsToolLayout} from './components/session-events-tool-layout.jsx'
 import {EventCommentsModal} from './components/event-comments-modal.jsx'
 import {EventSetFormModal} from './components/event-set-form-modal.jsx'
 import {EventSetRegistrationModal} from './components/event-set-registration-modal.jsx'
+
+// TODO : rewrite using last core components
 
 class SessionEventsTool {
   constructor(workspaceId, canEdit, sessions, events, eventsUsers) {
@@ -23,7 +23,6 @@ class SessionEventsTool {
       ['MODAL_EVENT_SET_REGISTRATION', EventSetRegistrationModal]
     ])
     const sessionId = sessions.length === 1 ? sessions[0]['id'] : null
-    this.viewMode = canEdit ? VIEW_MANAGER : VIEW_USER
     this.store = createStore(
       reducers,
       {
@@ -36,11 +35,9 @@ class SessionEventsTool {
           data: events,
           totalResults: eventsTotal
         },
-        eventsUsers: eventsUsers,
-        viewMode: this.viewMode
+        eventsUsers: eventsUsers
       }
     )
-    makeRouter(this.store.dispatch.bind(this.store))
   }
 
   render(element) {

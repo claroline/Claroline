@@ -2,7 +2,7 @@
 
 namespace Innova\CollecticielBundle\Manager;
 
-use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Manager\Resource\MaskManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\AgendaBundle\Entity\Event;
 use Innova\CollecticielBundle\Entity\Dropzone;

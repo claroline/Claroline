@@ -4,7 +4,7 @@ import {makeListReducer} from '#/main/core/data/list/reducer'
 import {makeFormReducer} from '#/main/core/data/form/reducer'
 
 import {FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
-import {COMPARE_OPEN, COMPARE_RESET} from '#/main/core/data/comparisonTable/actions'
+import {USER_COMPARE} from '#/main/core/administration/user/user/actions'
 
 const reducer = combineReducers({
   picker: makeListReducer('users.picker'),
@@ -14,18 +14,20 @@ const reducer = combineReducers({
     })
   }),
   current: makeFormReducer('users.current', {}, {
-    workspaces: makeListReducer('users.current.workspaces'),
     groups: makeListReducer('users.current.groups'),
     organizations: makeListReducer('users.current.organizations'),
     roles: makeListReducer('users.current.roles')
   }),
   compare: combineReducers({
     selected: makeReducer([], {
-      [COMPARE_OPEN]: (state, action) => action.data,
-      [COMPARE_RESET]: () => []
+      [USER_COMPARE]: (state, action) => action.data
     }),
-    rolesUser0: makeListReducer('users.compare.rolesUser0'),
-    rolesUser1: makeListReducer('users.compare.rolesUser1')
+    groupsUser0: makeListReducer('users.compare.groupsUser0', {}, {}, {selectable: false}),
+    groupsUser1: makeListReducer('users.compare.groupsUser1', {}, {}, {selectable: false}),
+    organizationsUser0: makeListReducer('users.compare.organizationsUser0', {}, {}, {selectable: false}),
+    organizationsUser1: makeListReducer('users.compare.organizationsUser1', {}, {}, {selectable: false}),
+    rolesUser0: makeListReducer('users.compare.rolesUser0', {}, {}, {selectable: false}),
+    rolesUser1: makeListReducer('users.compare.rolesUser1', {}, {}, {selectable: false})
   })
 })
 

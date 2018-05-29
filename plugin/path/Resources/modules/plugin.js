@@ -1,5 +1,5 @@
 
-const PATH_PLUGIN = 'PATH_PLUGIN'
+const PATH_PLUGIN = 'path'
 
 const pathConfiguration = {
   actions: [],

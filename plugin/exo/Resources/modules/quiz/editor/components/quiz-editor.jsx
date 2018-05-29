@@ -19,7 +19,7 @@ import {SelectGroup} from '#/main/core/layout/form/components/group/select-group
 import {ValidationStatus} from './validation-status.jsx'
 import {RandomPicking} from './random-picking.jsx'
 import {TagPicking} from './tag-picking.jsx'
-import {AlertBlock} from '#/main/core/layout/alert/components/alert-block.jsx'
+import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {
   correctionModes,
   markModes,

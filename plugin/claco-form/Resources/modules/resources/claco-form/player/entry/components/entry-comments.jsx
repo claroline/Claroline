@@ -6,8 +6,8 @@ import classes from 'classnames'
 import {currentUser} from '#/main/core/user/current'
 import {trans} from '#/main/core/translation'
 import {select as formSelect} from '#/main/core/data/form/selectors'
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {UserMessage} from '#/main/core/user/message/components/user-message.jsx'
 import {UserMessageForm} from '#/main/core/user/message/components/user-message-form.jsx'
 
@@ -39,7 +39,8 @@ class EntryCommentsComponent extends Component {
   }
 
   deleteComment(commentId) {
-    this.props.showModal(MODAL_DELETE_CONFIRM, {
+    this.props.showModal(MODAL_CONFIRM, {
+      icon: 'fa fa-fw fa-trash-o',
       title: trans('delete_comment', {}, 'clacoform'),
       question: trans('delete_comment_confirm_message', {}, 'clacoform'),
       handleConfirm: () => this.props.deleteComment(commentId)

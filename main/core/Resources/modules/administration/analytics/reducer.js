@@ -1,5 +1,4 @@
 import {makeReducer, combineReducers} from '#/main/core/scaffolding/reducer'
-import {makePageReducer} from '#/main/core/layout/page/reducer'
 import {makeListReducer} from '#/main/core/data/list/reducer'
 import {
   LOAD_OVERVIEW,
@@ -8,7 +7,7 @@ import {
   LOAD_WIDGETS
 } from '#/main/core/administration/analytics/actions'
 
-const reducer = makePageReducer([], {
+const reducer = {
   overview: combineReducers({
     loaded: makeReducer(false, {
       [LOAD_OVERVIEW] : () => true
@@ -46,6 +45,6 @@ const reducer = makePageReducer([], {
     {},
     { selectable: false }
   )
-})
+}
 
 export {reducer}

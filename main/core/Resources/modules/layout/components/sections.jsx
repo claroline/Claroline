@@ -84,7 +84,7 @@ Section.defaultProps = {
 
 const Sections = props =>
   <PanelGroup
-    className={props.className}
+    className={classes('sections', props.className)}
     accordion={props.accordion}
     defaultActiveKey={props.defaultOpened}
   >

@@ -1,19 +1,33 @@
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
-import {connectPage} from '#/main/core/layout/page/connect'
-import {Page} from '#/main/core/layout/page/components/page.jsx'
+import {Router} from '#/main/app/router'
+import {ModalOverlay} from '#/main/app/overlay/modal/containers/overlay'
+import {AlertOverlay} from '#/main/app/overlay/alert/containers/overlay'
+
+import {Page} from '#/main/core/layout/page/components/page'
 
 /**
  * Connected container for pages.
  *
- * Connects the <Page> component to a redux store.
- * If you don't use redux in your implementation @see Page functional component.
- *
- * To use with `makePageReducer()`
- *
  * @param props
  * @constructor
  */
-const PageContainer = connectPage()(Page)
+const PageContainer = props =>
+  <Router embedded={props.embedded}>
+    <Page {...props}>
+      <AlertOverlay />
+
+      {props.children}
+
+      <ModalOverlay />
+    </Page>
+  </Router>
+
+PageContainer.propTypes = {
+  embedded: T.bool,
+  children: T.node.isRequired
+}
 
 export {
   PageContainer

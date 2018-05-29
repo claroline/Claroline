@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
+import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 
 import {actions as listActions} from '#/main/core/data/list/actions'
@@ -14,7 +14,7 @@ import {DataListProperty} from '#/main/core/data/list/prop-types'
 const MODAL_DATA_PICKER = 'MODAL_DATA_PICKER'
 
 const DataPicker = props =>
-  <BaseModal
+  <Modal
     {...props}
     className="data-picker-modal"
     bsSize="lg"
@@ -40,7 +40,7 @@ const DataPicker = props =>
     >
       {props.confirmText}
     </button>
-  </BaseModal>
+  </Modal>
 
 DataPicker.propTypes = {
   name: T.string.isRequired,

@@ -2,17 +2,17 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {t, Translator} from '#/main/core/translation'
-import Configuration from '#/main/core/library/Configuration/Configuration'
+import {trans} from '#/main/core/translation'
 
 import {DataListContainer} from '#/main/core/data/list/containers/data-list'
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {MODAL_CHANGE_PASSWORD} from '#/main/core/user/modals/components/change-password.jsx'
-import {MODAL_URL} from '#/main/core/layout/modal'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {MODAL_USER_PASSWORD} from '#/main/core/user/modals/password'
 import {actions as userActions} from '#/main/core/user/actions'
 
 import {actions} from '#/main/core/administration/user/user/actions'
-import {UserList} from '#/main/core/administration/user/user/components/user-list.jsx'
+import {UserList} from '#/main/core/administration/user/user/components/user-list'
+
+// todo : restore custom actions the same way resource actions
 
 const UsersList = props =>
   <DataListContainer
@@ -30,39 +30,39 @@ const UsersList = props =>
       {
         type: 'url',
         icon: 'fa fa-fw fa-id-card-o',
-        label: t('show_profile'),
+        label: trans('show_profile'),
         target: ['claro_user_profile', {publicUrl: rows[0].meta.publicUrl}],
         context: 'row'
       }, {
         type: 'callback',
         icon: 'fa fa-fw fa-lock',
-        label: t('change_password'),
+        label: trans('change_password'),
         context: 'row',
         callback: () => props.updatePassword(rows[0]),
         dangerous: true
       }, {
         type: 'url',
         icon: 'fa fa-fw fa-line-chart',
-        label: t('show_tracking'),
+        label: trans('show_tracking'),
         target: ['claro_user_tracking', {publicUrl: rows[0].meta.publicUrl}],
         context: 'row'
       }, {
         type: 'url',
         icon: 'fa fa-fw fa-user-secret',
-        label: t('show_as'),
+        label: trans('show_as'),
         target: ['claro_desktop_open', {_switch: rows[0].username}],
         context: 'row'
       }, {
         type: 'callback',
         icon: 'fa fa-fw fa-check-circle-o',
-        label: t('enable_user'),
+        label: trans('enable_user'),
         context: 'row', // todo should be a selection action too
         displayed: rows[0].restrictions.disabled,
         callback: () => props.enable(rows[0])
       }, {
         type: 'callback',
         icon: 'fa fa-fw fa-times-circle-o',
-        label: t('disable_user'),
+        label: trans('disable_user'),
         context: 'row', // todo should be a selection action too
         displayed: !rows[0].restrictions.disabled,
         callback: () => props.disable(rows[0]),
@@ -70,42 +70,26 @@ const UsersList = props =>
       }, {
         type: 'callback',
         icon: 'fa fa-fw fa-book',
-        label: t('enable_personal_ws'),
+        label: trans('enable_personal_ws'),
         context: 'row', // todo should be a selection action too
         displayed: !rows[0].meta.personalWorkspace,
         callback: () => props.createWorkspace(rows[0])
       }, {
         type: 'callback',
         icon: 'fa fa-fw fa-book',
-        label: t('disable_personal_ws'),
+        label: trans('disable_personal_ws'),
         context: 'row', // todo should be a selection action too
         displayed: rows[0].meta.personalWorkspace,
         callback: () => props.deleteWorkspace(rows[0]),
         dangerous: true
-      },
-      {
+      }, {
         type: 'link',
         icon: 'fa fa-fw fa-compress',
-        label: t('merge_accounts'),
+        label: trans('merge_accounts'),
         target: rows.length === 2 ? `/users/merge/${rows[0].id}/${rows[1].id}`: '',
         displayed: rows.length === 2,
         dangerous: true
-      },
-      ...Configuration.getUsersAdministrationActions().map(action => action.options.modal ? {
-        type: 'modal',
-        icon: action.icon,
-        label: action.name(Translator),
-        modal: [MODAL_URL, {
-          url: action.url(rows[0].id)
-        }],
-        context: 'row'
-      } : {
-        type: 'url',
-        icon: action.icon,
-        label: action.name(Translator),
-        target: action.url(rows[0].id),
-        context: 'row'
-      })
+      }
     ]}
     definition={UserList.definition}
     card={UserList.card}
@@ -126,17 +110,19 @@ const Users = connect(
       dispatch(actions.enable(user))
     },
     disable(user) {
+      // todo add confirm
       dispatch(actions.disable(user))
     },
     createWorkspace(user) {
       dispatch(actions.createWorkspace(user))
     },
     deleteWorkspace(user) {
+      // todo add confirm
       dispatch(actions.deleteWorkspace(user))
     },
     updatePassword(user) {
       dispatch(
-        modalActions.showModal(MODAL_CHANGE_PASSWORD, {
+        modalActions.showModal(MODAL_USER_PASSWORD, {
           changePassword: (password) => dispatch(userActions.updatePassword(user, password))
         })
       )

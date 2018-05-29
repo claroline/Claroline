@@ -1,13 +1,12 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
-import Modal from 'react-bootstrap/lib/Modal'
 import classes from 'classnames'
 
 import {trans} from '#/main/core/translation'
-import {url} from '#/main/core/api/router'
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
+import {url} from '#/main/app/api'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {Modal} from '#/main/app/overlay/modal/components/modal'
 
 import {Keyword as KeywordType} from '#/plugin/claco-form/resources/claco-form/prop-types'
 import {actions} from '#/plugin/claco-form/resources/claco-form/editor/actions'
@@ -82,8 +81,8 @@ class KeywordFormModalComponent extends Component {
 
   render() {
     return (
-      <BaseModal {...this.props}>
-        <Modal.Body>
+      <Modal {...this.props}>
+        <div className="modal-body">
           <div className={classes('form-group form-group-align row', {'has-error': this.state.nameError})}>
             <label className="control-label col-md-3">
               {trans('name')}
@@ -102,8 +101,8 @@ class KeywordFormModalComponent extends Component {
               }
             </div>
           </div>
-        </Modal.Body>
-        <Modal.Footer>
+        </div>
+        <div className="modal-footer">
           <button className="btn btn-default" onClick={this.props.fadeModal}>
             {trans('cancel')}
           </button>
@@ -113,8 +112,8 @@ class KeywordFormModalComponent extends Component {
               <span>{trans('ok')}</span>
             }
           </button>
-        </Modal.Footer>
-      </BaseModal>
+        </div>
+      </Modal>
     )
   }
 }

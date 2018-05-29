@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 
 import {actions} from '#/main/core/administration/transfer/components/log/actions'
-import {Routes} from '#/main/core/router'
+import {Routes} from '#/main/app/router'
 import {Logs} from '#/main/core/administration/transfer/components/log/components/logs.jsx'
 
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'

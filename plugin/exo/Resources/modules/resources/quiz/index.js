@@ -38,6 +38,9 @@ export const App = () => ({
   styles: 'claroline-distribution-plugin-exo-quiz-resource',
   initialData: (initialData) => Object.assign({}, {
     noServer: initialData.noServer,
-    resourceNode: initialData.resourceNode
+    resource: {
+      node: initialData.resourceNode,
+      evaluation: initialData.evaluation
+    }
   }, decorate(normalize(initialData.quiz), getDecorators(), initialData.resourceNode.rights.current.edit))
 })

@@ -3,14 +3,17 @@ plugin:
 
     resource_actions:
         - name: like_action
-          is_form: true
-          is_custom: true
+          group: social
+          decoder: open
+
         - name: share_action
-          is_form: true
-          is_custom: true
+          group: social
+          decoder: open
+
         - name: comment_action
-          is_form: true
-          is_custom: true
+          group: social
+          decoder: open
+
+        # TODO : should not be declared in this plugin (nothing to do with social here)
         - name: note_action
-          is_form: true
-          is_custom: true
+          decoder: open

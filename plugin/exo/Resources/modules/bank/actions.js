@@ -1,7 +1,7 @@
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
 import {actions as listActions} from '#/main/core/data/list/actions'
 
-import {API_REQUEST} from '#/main/core/api/actions'
+import {API_REQUEST} from '#/main/app/api'
 
 export const QUESTIONS_SHARE = 'QUESTIONS_SHARE'
 

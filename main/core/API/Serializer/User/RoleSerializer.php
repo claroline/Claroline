@@ -8,6 +8,7 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
+use Claroline\CoreBundle\Repository\UserRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -24,6 +25,9 @@ class RoleSerializer
     /** @var ObjectManager */
     private $om;
 
+    /** @var UserRepository */
+    private $userRepo;
+
     /**
      * RoleSerializer constructor.
      *
@@ -39,6 +43,24 @@ class RoleSerializer
     {
         $this->serializer = $serializer;
         $this->om = $om;
+
+        $this->userRepo = $this->om->getRepository('ClarolineCoreBundle:User');
+    }
+
+    /**
+     * @return string
+     */
+    public function getClass()
+    {
+        return 'Claroline\CoreBundle\Entity\Role';
+    }
+
+    /**
+     * @return string
+     */
+    public function getSchema()
+    {
+        return '#/main/core/role.json';
     }
 
     /**
@@ -53,8 +75,9 @@ class RoleSerializer
     {
         $serialized = [
             'id' => $role->getUuid(),
-            'translationKey' => $role->getTranslationKey(),
             'name' => $role->getName(),
+            'type' => $role->getType(), // TODO : should be a string for better data readability
+            'translationKey' => $role->getTranslationKey(),
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
@@ -95,13 +118,12 @@ class RoleSerializer
     {
         $meta = [
            'readOnly' => $role->isReadOnly(),
-           'type' => $role->getType(),
            'personalWorkspaceCreationEnabled' => $role->getPersonalWorkspaceCreationEnabled(),
        ];
 
         if (in_array(Options::SERIALIZE_COUNT_USER, $options)) {
             if (Role::USER_ROLE !== $role->getType()) {
-                $meta['users'] = $this->om->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
+                $meta['users'] = $this->userRepo->countUsersByRoleIncludingGroup($role);
             } else {
                 $meta['users'] = 1;
             }
@@ -129,13 +151,12 @@ class RoleSerializer
      *
      * @param \stdClass $data
      * @param Role      $role
-     * @param array     $options
      *
      * @return Role
      */
-    public function deserialize($data, Role $role, array $options = [])
+    public function deserialize($data, Role $role)
     {
-        // todo set readOnly based on role type
+        // TODO : set readOnly based on role type
         $this->sipe('name', 'setName', $data, $role);
 
         if (isset($data['translationKey'])) {
@@ -150,25 +171,24 @@ class RoleSerializer
         $this->sipe('restrictions.maxUsers', 'setMaxUsers', $data, $role);
         $this->sipe('type', 'setType', $data, $role);
 
-        if (isset($data['workspace'])) {
-            if (empty($data['workspace'])) {
-                //don't set workspace to null here or some bad things will happen
-            } else {
-                if (isset($data['workspace']['uuid'])) {
-                    $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')
-                      ->findOneBy(['uuid' => $data['workspace']['uuid']]);
+        // we should test role type before trying to set the workspace
+        if (!empty($data['workspace']) && !empty($data['workspace']['uuid'])) {
+            if (isset($data['workspace']['uuid'])) {
+                $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')
+                    ->findOneBy(['uuid' => $data['workspace']['uuid']]);
 
-                    if ($workspace) {
-                        $role->setWorkspace($workspace);
+                if ($workspace) {
+                    $role->setWorkspace($workspace);
+
+                    //this is if it's a workspace and we send the translationKey role
+                    if (isset($data['translationKey']) && (null === $role->getName())) {
+                        $role->setName('ROLE_WS_'.str_replace(' ', '_', strtoupper($data['translationKey'])).'_'.$workspace->getUuid());
                     }
-                }
-
-                //this is if it's a workspace and we send the translationKey role
-                if (isset($data['translationKey']) && (null === $role->getName())) {
-                    $role->setName('ROLE_WS_'.str_replace(' ', '_', strtoupper($data['translationKey'])).'_'.$workspace->getUuid());
                 }
             }
         }
+
+        // TODO : set the user for ROLE_USER
 
         if (isset($data['adminTools'])) {
             $adminTools = $this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findAll();
@@ -184,21 +204,5 @@ class RoleSerializer
         }
 
         return $role;
-    }
-
-    /**
-     * @return string
-     */
-    public function getClass()
-    {
-        return 'Claroline\CoreBundle\Entity\Role';
-    }
-
-    /**
-     * @return string
-     */
-    public function getSchema()
-    {
-        return '#/main/core/role.json';
     }
 }

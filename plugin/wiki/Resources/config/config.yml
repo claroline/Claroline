@@ -3,9 +3,9 @@ plugin:
     icon: icap_wiki_icon_admin.png
 
     resources:
-        - class: Icap\WikiBundle\Entity\Wiki
-          name: icap_wiki
-          is_exportable: false
+        - name: icap_wiki
+          class: Icap\WikiBundle\Entity\Wiki
+          exportable: false
           activity_rules:
             - action: resource-read
             - action: resource-icap_wiki-contribution_create

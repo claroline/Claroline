@@ -4,8 +4,7 @@ import classes from 'classnames'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 
 import {Page as PageTypes} from '#/main/core/layout/page/prop-types'
-import {PageContent} from '#/main/core/layout/page'
-import {RoutedPage} from '#/main/core/layout/router'
+import {PageContent, PageContainer} from '#/main/core/layout/page'
 
 import {UserPageActions} from '#/main/core/user/components/page-actions.jsx'
 import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
@@ -41,7 +40,7 @@ UserPageHeader.propTypes = {
 }
 
 const UserPage = props =>
-  <RoutedPage
+  <PageContainer
     {...props}
     className="user-page"
   >
@@ -63,7 +62,7 @@ const UserPage = props =>
     <PageContent>
       {props.children}
     </PageContent>
-  </RoutedPage>
+  </PageContainer>
 
 implementPropTypes(UserPage, PageTypes, {
   user: T.shape({

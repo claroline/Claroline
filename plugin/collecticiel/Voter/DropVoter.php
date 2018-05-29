@@ -3,7 +3,7 @@
 namespace Innova\CollecticielBundle\Voter;
 
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Manager\Resource\MaskManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 

@@ -6,8 +6,8 @@ import {withRouter} from 'react-router-dom'
 import {trans, transChoice} from '#/main/core/translation'
 import {DataCard} from '#/main/core/data/components/data-card'
 
-import {MODAL_CONFIRM, MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
 
 import {actions} from '#/main/core/administration/appearance/theme/actions'
 
@@ -57,7 +57,7 @@ const ThemesPage = props =>
           }, {
             type: 'callback',
             icon: 'fa fa-fw fa-trash-o',
-            label: trans('delete'),
+            label: trans('delete', {}, 'actions'),
             disabled: !rows.find(row => row.meta.custom), // at least one theme should be deletable
             callback: () => props.removeThemes(rows),
             dangerous: true
@@ -101,11 +101,13 @@ function mapDispatchToProps(dispatch) {
 
     removeThemes(themes) {
       dispatch(
-        modalActions.showModal(MODAL_DELETE_CONFIRM, {
+        modalActions.showModal(MODAL_CONFIRM, {
+          icon: 'fa fa-fw fa-trash-o',
           title: transChoice('remove_themes', themes.length, {count: themes.length}, 'theme'),
           question: trans('remove_themes_confirm', {
             theme_list: themes.map(theme => theme.name).join(', ')
           }, 'theme'),
+          dangerous: true,
           handleConfirm: () => dispatch(actions.deleteThemes(themes))
         })
       )

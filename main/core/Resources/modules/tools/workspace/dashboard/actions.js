@@ -1,6 +1,5 @@
-import {makeActionCreator} from '#/main/core/scaffolding/actions'
-import {API_REQUEST} from '#/main/core/api/actions'
-import {generateUrl} from '#/main/core/api/router'
+import {makeActionCreator} from '#/main/app/store/actions'
+import {API_REQUEST, url} from '#/main/app/api'
 
 export const LOAD_DASHBOARD = 'LOAD_DASHBOARD'
 
@@ -13,7 +12,7 @@ actions.getDashboardData = (route, params = {}, queryString = '') => (dispatch) 
   if (route) {
     dispatch({
       [API_REQUEST]: {
-        url: generateUrl(route, params) + queryString,
+        url: url([route, params]) + queryString,
         success: (response, dispatch) => {
           dispatch(actions.loadDashboard(response))
         },

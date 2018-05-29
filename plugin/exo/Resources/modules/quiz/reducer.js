@@ -1,12 +1,11 @@
 import {makeReducer} from '#/main/core/scaffolding/reducer'
-import {makeResourceReducer} from '#/main/core/resource/reducer'
 
 import {reducers as editorReducers} from './editor/reducers'
 import {reducers as playerReducers} from './player/reducers'
 import {reducePapers} from './papers/reducer'
 import {reduceCorrection} from './correction/reducer'
 
-export const reducer = makeResourceReducer({}, {
+export const reducer = {
   noServer: makeReducer(false, {}),
   quiz: editorReducers.quiz,
   steps: editorReducers.steps,
@@ -22,4 +21,4 @@ export const reducer = makeResourceReducer({}, {
   papers: reducePapers,
 
   correction: reduceCorrection
-})
+}

@@ -26,7 +26,7 @@ const DataListProperty = {
      *
      * @param {object} row - The full row data.
      *
-     * @type {mixed} - The computed value. Type depends on the data type.
+     * @type {*} - The computed value. Type depends on the data type.
      */
     calculated : T.func, // only used in tables representation
 

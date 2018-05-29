@@ -2,8 +2,6 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {trans} from '#/main/core/translation'
-import {select as resourceSelect} from '#/main/core/resource/selectors'
 import {actions as formActions} from '#/main/core/data/form/actions'
 import {RoutedPageContent} from '#/main/core/layout/router'
 import {select as formSelect} from '#/main/core/data/form/selectors'
@@ -22,29 +20,16 @@ const Resource = props =>
         action: () => props.saveForm(props.text.id)
       }
     }}
-    customActions={[
-      {
-        type: 'link',
-        icon: 'fa fa-fw fa-home',
-        label: trans('show_overview'),
-        displayed: props.canEdit,
-        target: '/'
-      }
-    ]}
   >
     <RoutedPageContent
       headerSpacer={true}
-      redirect={[
-        {from: '/', exact: true, to: '/play'}
-      ]}
       routes={[
         {
-          path: '/play',
+          path: '/',
           component: Player
         }, {
           path: '/edit',
           component: Editor,
-          canEnter: () => props.canEdit,
           onEnter: () => props.resetForm(props.text)
         }
       ]}
@@ -53,11 +38,6 @@ const Resource = props =>
 
 Resource.propTypes = {
   text: T.shape(TextTypes.propTypes).isRequired,
-  resource: T.shape({
-    id: T.string.isRequired,
-    autoId: T.number.isRequired
-  }).isRequired,
-  canEdit: T.bool.isRequired,
   saveEnabled: T.bool.isRequired,
   resetForm: T.func.isRequired,
   saveForm: T.func.isRequired
@@ -66,8 +46,6 @@ Resource.propTypes = {
 const TextResource = connect(
   state => ({
     text: state.text,
-    resource: state.resourceNode,
-    canEdit: resourceSelect.editable(state),
     saveEnabled: formSelect.saveEnabled(formSelect.form(state, 'textForm'))
   }),
   (dispatch) => ({

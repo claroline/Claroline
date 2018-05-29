@@ -2,9 +2,9 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {generateUrl} from '#/main/core/api/router'
+import {url} from '#/main/app/api'
 import {trans} from '#/main/core/translation'
-import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
 
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
@@ -59,7 +59,7 @@ const DocumentRow = props =>
 
     <td className="document-data">
       {props.document.type === constants.DOCUMENT_TYPE_FILE &&
-        <a href={generateUrl('claro_dropzone_document_download', {document: props.document.id})}>
+        <a href={url(['claro_dropzone_document_download', {document: props.document.id}])}>
           {props.document.data.name}
         </a>
       }
@@ -73,7 +73,7 @@ const DocumentRow = props =>
       }
 
       {props.document.type === constants.DOCUMENT_TYPE_RESOURCE &&
-        <a href={generateUrl('claro_resource_open_short', {node: props.document.data.actualId})}>
+        <a href={url(['claro_resource_open_short', {node: props.document.data.actualId}])}>
           {props.document.data.name}
         </a>
       }
@@ -83,9 +83,11 @@ const DocumentRow = props =>
         <span
           className="fa fa-fw fa-trash pointer-hand"
           onClick={() => {
-            props.showModal(MODAL_DELETE_CONFIRM, {
+            props.showModal(MODAL_CONFIRM, {
+              icon: 'fa fa-fw fa-trash-o',
               title: trans('delete_document', {}, 'dropzone'),
               question: trans('delete_document_confirm_message', {}, 'dropzone'),
+              dangerous: true,
               handleConfirm: () => props.deleteDocument(props.document.id)
             })
           }}

@@ -2,7 +2,7 @@ import invariant from 'invariant'
 
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
 import {selectors} from './selectors'
-import {API_REQUEST} from '#/main/core/api/actions'
+import {API_REQUEST} from '#/main/app/api'
 
 export const CORRECTION_INIT = 'CORRECTION_INIT'
 export const QUESTION_CURRENT = 'QUESTION_CURRENT'

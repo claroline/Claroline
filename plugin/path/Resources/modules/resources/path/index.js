@@ -11,6 +11,10 @@ export const App = () => ({
   store: reducer,
   styles: 'claroline-distribution-plugin-path-path-resource',
   initialData: initialData => Object.assign({}, initialData, {
+    resource: {
+      node: initialData.resourceNode,
+      evaluation: initialData.evaluation
+    },
     summary: {
       opened: initialData.path.display.openSummary,
       pinned: initialData.path.display.openSummary

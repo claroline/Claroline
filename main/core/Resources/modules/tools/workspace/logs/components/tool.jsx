@@ -3,11 +3,11 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/core/translation'
 import {select} from '#/main/core/data/list/selectors'
-import {generateUrl} from '#/main/core/api/router'
+import {url} from '#/main/app/api'
 import {
   matchPath,
   withRouter
-} from '#/main/core/router'
+} from '#/main/app/router'
 import {
   PageActions,
   MoreAction,
@@ -38,7 +38,7 @@ const Actions = (props) => {
       {
         type: 'download',
         file: {
-          url: generateUrl('apiv2_workspace_tool_logs_list_csv', {'workspaceId': props.workspaceId}) + props.logsQuery
+          url: url(['apiv2_workspace_tool_logs_list_csv', {'workspaceId': props.workspaceId}]) + props.logsQuery
         },
         label: trans('download_csv_list', {}, 'log'),
         icon: 'fa fa-download'
@@ -58,7 +58,7 @@ const Actions = (props) => {
       {
         type: 'download',
         file: {
-          url: generateUrl('apiv2_workspace_tool_logs_list_users_csv', {'workspaceId': props.workspaceId}) + props.usersQuery
+          url: url(['apiv2_workspace_tool_logs_list_users_csv', {'workspaceId': props.workspaceId}]) + props.usersQuery
         },
         label: trans('download_csv_list', {}, 'log'),
         icon: 'fa fa-download'

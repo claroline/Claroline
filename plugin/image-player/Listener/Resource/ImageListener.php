@@ -11,7 +11,7 @@
 
 namespace Claroline\ImagePlayerBundle\Listener\Resource;
 
-use Claroline\CoreBundle\Event\PlayFileEvent;
+use Claroline\CoreBundle\Event\Resource\File\PlayFileEvent;
 use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;

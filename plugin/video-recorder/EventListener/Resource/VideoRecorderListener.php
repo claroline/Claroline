@@ -4,12 +4,12 @@ namespace Innova\VideoRecorderBundle\EventListener\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\DownloadResourceEvent;
-use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
+use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use Innova\VideoRecorderBundle\Manager\VideoRecorderManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -41,7 +41,7 @@ class VideoRecorderListener
      * @DI\Observe("open_innova_video_recorder")
      * Fired when a ResourceNode of type VideoFile is opened
      *
-     * @param \Claroline\CoreBundle\Event\OpenResourceEvent $event
+     * @param \Claroline\CoreBundle\Event\Resource\OpenResourceEvent $event
      *
      * @throws \Exception
      */

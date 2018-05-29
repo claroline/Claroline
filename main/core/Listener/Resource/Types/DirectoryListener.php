@@ -11,167 +11,135 @@
 
 namespace Claroline\CoreBundle\Listener\Resource\Types;
 
-use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
+use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Form\DirectoryType;
-use Claroline\CoreBundle\Manager\MaskManager;
-use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Manager\RightsManager;
-use Claroline\CoreBundle\Manager\RoleManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
+ * Integrates the "Directory" resource.
+ *
  * @DI\Service
  */
 class DirectoryListener
 {
+    /** @var ContainerInterface */
     private $container;
-    private $roleManager;
-    private $resourceManager;
-    private $rightsManager;
-    private $maskManager;
-    private $eventDispatcher;
+
+    /** @var FormFactoryInterface */
     private $formFactory;
+
+    /** @var TwigEngine */
     private $templating;
 
+    /** @var SerializerProvider */
+    private $serializer;
+
     /**
+     * DirectoryListener constructor.
+     *
      * @DI\InjectParams({
-     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
-     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
-     *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager"),
-     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "formFactory"     = @DI\Inject("form.factory"),
-     *     "templating"      = @DI\Inject("templating"),
-     *     "container"       = @DI\Inject("service_container")
+     *     "container"   = @DI\Inject("service_container"),
+     *     "formFactory" = @DI\Inject("form.factory"),
+     *     "templating"  = @DI\Inject("templating"),
+     *     "serializer"  = @DI\Inject("claroline.api.serializer")
      * })
+     *
+     * @param ContainerInterface   $container
+     * @param FormFactoryInterface $formFactory
+     * @param TwigEngine           $templating
+     * @param SerializerProvider   $serializer
      */
     public function __construct(
-        RoleManager $roleManager,
-        ResourceManager $resourceManager,
-        RightsManager $rightsManager,
-        MaskManager $maskManager,
-        StrictDispatcher $eventDispatcher,
+        ContainerInterface $container,
         FormFactoryInterface $formFactory,
         TwigEngine $templating,
-        ContainerInterface $container
+        SerializerProvider $serializer
     ) {
-        $this->roleManager = $roleManager;
-        $this->resourceManager = $resourceManager;
-        $this->rightsManager = $rightsManager;
-        $this->eventDispatcher = $eventDispatcher;
+        $this->container = $container;
         $this->formFactory = $formFactory;
         $this->templating = $templating;
-        $this->container = $container;
-        $this->maskManager = $maskManager;
+        $this->serializer = $serializer;
     }
 
     /**
-     * @DI\Observe("create_form_directory")
-     *
-     * @param CreateFormResourceEvent $event
-     */
-    public function onCreateForm(CreateFormResourceEvent $event)
-    {
-        $form = $this->formFactory->create(new DirectoryType(), new Directory());
-        $response = $this->templating->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
-            [
-                'form' => $form->createView(),
-                'resourceType' => 'directory',
-            ]
-        );
-        $event->setResponseContent($response);
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("create_directory")
+     * @DI\Observe("resource.directory.create")
      *
      * @param CreateResourceEvent $event
      */
     public function onCreate(CreateResourceEvent $event)
     {
-        $request = $this->container->get('request_stack')->getMasterRequest();
-        $form = $this->formFactory->create(new DirectoryType(), new Directory());
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $published = $form->get('published')->getData();
-            $event->setPublished($published);
-            $event->setResources([$form->getData()]);
-            $event->stopPropagation();
-
-            return;
-        }
-
-        $content = $this->templating->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
-            [
-                'form' => $form->createView(),
-                'resourceType' => 'directory',
-            ]
-        );
-        $event->setErrorFormContent($content);
         $event->stopPropagation();
     }
 
     /**
+     * Loads a directory.
+     *
+     * @DI\Observe("load_directory")
+     *
+     * @param LoadResourceEvent $event
+     */
+    public function onLoad(LoadResourceEvent $event)
+    {
+        $event->setAdditionalData([
+            'directory' => $this->serializer->serialize($event->getResource()),
+        ]);
+
+        $event->stopPropagation();
+    }
+
+    /**
+     * Opens a directory.
+     *
      * @DI\Observe("open_directory")
      *
      * @param OpenResourceEvent $event
      */
     public function onOpen(OpenResourceEvent $event)
     {
-        $dir = $event->getResourceNode();
-        $file = $this->resourceManager->download([$dir]);
-        $response = new StreamedResponse();
-
-        $response->setCallBack(
-            function () use ($file) {
-                readfile($file);
-            }
+        $directory = $event->getResource();
+        $content = $this->templating->render(
+            'ClarolineCoreBundle:Directory:index.html.twig',
+            [
+                'directory' => $directory,
+                '_resource' => $directory,
+            ]
         );
-
-        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
-        $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename=archive');
-        $response->headers->set('Content-Type', 'application/zip');
-        $response->headers->set('Connection', 'close');
-
+        $response = new Response($content);
         $event->setResponse($response);
         $event->stopPropagation();
     }
 
     /**
+     * Removes a directory.
+     *
      * @DI\Observe("delete_directory")
      *
      * @param deleteResourceEvent $event
-     *
-     * Removes a directory
      */
-    public function delete(DeleteResourceEvent $event)
+    public function onDelete(DeleteResourceEvent $event)
     {
         $event->stopPropagation();
     }
 
     /**
+     * Copies a directory.
+     *
      * @DI\Observe("copy_directory")
      *
      * @param copyResourceEvent $event
-     *
-     * Copy a directory
      */
-    public function copy(CopyResourceEvent $event)
+    public function onCopy(CopyResourceEvent $event)
     {
         $resourceCopy = new Directory();
         $event->setCopy($resourceCopy);

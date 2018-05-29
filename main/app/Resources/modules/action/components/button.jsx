@@ -23,33 +23,45 @@ const Button = props => props.tooltip ?
     disabled={props.disabled}
   >
     <GenericButton
-      {...omit(props, 'tooltip', 'group', 'icon', 'label', 'children', 'context')}
+      {...omit(props, 'tooltip', 'group', 'icon', 'label', 'subscript', 'context', 'scope')}
+      id={props.id || toKey(props.label)}
       confirm={props.confirm ? Object.assign({}, props.confirm, {
         // append some defaults from action spec
         icon: props.icon,
-        title: props.confirm.title || props.label
+        title: props.confirm.title || props.label,
+        button: props.confirm.button || props.label
       }) : undefined}
     >
       {props.icon &&
         <span className={classes('action-icon', props.icon)} aria-hidden={true} />
       }
+
       <span className="sr-only">{props.label}</span>
-      {props.children}
+
+      {props.subscript &&
+        <span className={classes('action-subscript label ', `label-${props.subscript.type || 'primary'}`)}>{props.subscript.value}</span>
+      }
     </GenericButton>
   </TooltipElement> :
   <GenericButton
-    {...omit(props, 'tooltip', 'group', 'icon', 'label', 'children', 'context')}
+    {...omit(props, 'tooltip', 'group', 'icon', 'label', 'subscript', 'context')}
+    id={props.id || toKey(props.label)}
     confirm={props.confirm ? Object.assign({}, props.confirm, {
       // append some defaults from action spec
       icon: props.icon,
-      title: props.confirm.title || props.label
+      title: props.confirm.title || props.label,
+      button: props.confirm.button || props.label
     }) : undefined}
   >
     {props.icon &&
       <span className={classes('action-icon icon-with-text-right', props.icon)} aria-hidden={true} />
     }
+
     {props.label}
-    {props.children}
+
+    {props.subscript &&
+      <span className={classes('action-subscript label ', `label-${props.subscript.type || 'primary'}`)}>{props.subscript.value}</span>
+    }
   </GenericButton>
 
 implementPropTypes(Button, ActionTypes, {

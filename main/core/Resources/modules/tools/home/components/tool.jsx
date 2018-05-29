@@ -3,15 +3,17 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {matchPath, withRouter} from '#/main/core/router'
+import {matchPath, withRouter} from '#/main/app/router'
 import {
   PageHeader,
   PageActions
 } from '#/main/core/layout/page'
 import {
-  RoutedPageContainer,
   RoutedPageContent
 } from '#/main/core/layout/router'
+import {
+  ToolPageContainer
+} from '#/main/core/tool/containers/page'
 import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
 
 import {select} from '#/main/core/tools/home/selectors'
@@ -45,7 +47,7 @@ ToolActionsComponent.propTypes = {
 const ToolActions = withRouter(ToolActionsComponent)
 
 const Tool = props =>
-  <RoutedPageContainer>
+  <ToolPageContainer>
     <PageHeader
       title={'desktop' === props.context.type ? trans('desktop') : props.context.data.name}
     >
@@ -71,7 +73,7 @@ const Tool = props =>
       /> :
       <Player />
     }
-  </RoutedPageContainer>
+  </ToolPageContainer>
 
 Tool.propTypes = {
   context: T.shape({

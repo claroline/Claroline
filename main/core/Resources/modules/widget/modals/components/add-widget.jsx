@@ -5,7 +5,7 @@ import flatten from 'lodash/flatten'
 import uniq from 'lodash/uniq'
 
 import {trans} from '#/main/core/translation'
-import {BaseModal} from '#/main/core/layout/modal/components/base'
+import {Modal} from '#/main/app/overlay/modal/components/modal'
 
 import {Widget as WidgetTypes} from '#/main/core/widget/prop-types'
 
@@ -66,7 +66,7 @@ class AddWidgetModal extends Component {
 
   render() {
     return (
-      <BaseModal
+      <Modal
         {...this.props}
         icon="fa fa-fw fa-plus"
         title={trans('add_widget', {}, 'widget')}
@@ -95,7 +95,7 @@ class AddWidgetModal extends Component {
           widgets={this.state.widgets}
           add={this.props.add}
         />
-      </BaseModal>
+      </Modal>
     )
   }
 }

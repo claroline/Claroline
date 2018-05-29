@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import cloneDeep from 'lodash/cloneDeep'
 
 import {t} from '#/main/core/translation'
-import {generateUrl} from '#/main/core/api/router'
+import {url} from '#/main/app/api'
 import {actions} from './actions.js'
 
 const ItemTagsList = props => {
@@ -90,12 +90,12 @@ class TagsEditor extends Component {
     if (value) {
       this.setState({isFetching: true})
 
-      fetch(generateUrl('item_tags_search') + '?search=' + value, {
+      fetch(url(['item_tags_search']) + '?search=' + value, {
         method: 'GET' ,
         credentials: 'include'
       })
-      .then(response => response.json())
-      .then(results => this.setState({results: results, isFetching: false}))
+        .then(response => response.json())
+        .then(results => this.setState({results: results, isFetching: false}))
     } else {
       this.setState({results: [], isFetching: false})
     }
@@ -182,10 +182,6 @@ TagsEditor.propTypes = {
   }).isRequired,
   updateItemTags: T.func.isRequired,
   updateCallback: T.func.isRequired
-}
-
-TagsEditor.defaultProps = {
-  updateCallback: () => {}
 }
 
 function mapStateToProps() {

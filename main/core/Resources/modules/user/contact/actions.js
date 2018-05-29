@@ -1,5 +1,5 @@
-import {url} from '#/main/core/api/router'
-import {API_REQUEST} from '#/main/core/api/actions'
+import {url} from '#/main/app/api'
+import {API_REQUEST} from '#/main/app/api'
 import {actions as listActions} from '#/main/core/data/list/actions'
 
 export const actions = {}

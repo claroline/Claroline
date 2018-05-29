@@ -1,11 +1,10 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import Modal from 'react-bootstrap/lib/Modal'
 
 import {update} from './../../../utils/utils'
 import {tex} from '#/main/core/translation'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
-import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
+import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {UserTypeahead} from './../../../users/components/typeahead.jsx'
 
 export const MODAL_SHARE = 'MODAL_SHARE'
@@ -60,8 +59,8 @@ class ShareModal extends Component {
 
   render() {
     return (
-      <BaseModal {...this.props} className="share-modal">
-        <Modal.Body>
+      <Modal {...this.props} className="share-modal">
+        <div className="modal-body">
           <div className="checkbox">
             <label htmlFor="share-admin-rights">
               <input
@@ -92,7 +91,7 @@ class ShareModal extends Component {
               deselect={this.deselectUser.bind(this)}
             />
           }
-        </Modal.Body>
+        </div>
 
         <button
           className="modal-btn btn btn-primary"
@@ -101,7 +100,7 @@ class ShareModal extends Component {
         >
           {tex('share')}
         </button>
-      </BaseModal>
+      </Modal>
     )
   }
 }

@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEqual from 'lodash/isEqual'
 
-import {makeCancelable} from '#/main/core/api/utils'
+import {makeCancelable} from '#/main/app/api'
 
 import {connectList} from '#/main/core/data/list/connect'
 import {DataListProperty as DataListPropertyTypes} from '#/main/core/data/list/prop-types'
@@ -90,6 +90,15 @@ DataTree.propTypes = {
   fetch: T.shape({
     url: T.oneOfType([T.string, T.array]).isRequired,
     autoload: T.bool
+  }),
+
+  /**
+   * Provides data delete.
+   */
+  delete: T.shape({
+    url: T.oneOfType([T.string, T.array]).isRequired,
+    disabled: T.func, // receives the list of rows to delete
+    displayed: T.func // receives the list of rows to delete
   }),
 
   /**

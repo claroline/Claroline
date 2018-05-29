@@ -4,7 +4,7 @@ import classes from 'classnames'
 import cloneDeep from 'lodash/cloneDeep'
 
 import {t} from '#/main/core/translation'
-import {generateUrl} from '#/main/core/api/router'
+import {url} from '#/main/app/api'
 
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 
@@ -79,12 +79,12 @@ export class UserTypeahead extends Component {
     if (search && search.length > 2) {
       this.setState({isFetching: true})
 
-      fetch(generateUrl('apiv2_user_list', {limit: 20, page: 0}) + '?filters[name]=' + search, {
+      fetch(url(['apiv2_user_list', {limit: 20, page: 0}]) + '?filters[name]=' + search, {
         method: 'GET' ,
         credentials: 'include'
       })
-      .then(response => response.json())
-      .then(results => this.setState({results: results.data, isFetching: false}))
+        .then(response => response.json())
+        .then(results => this.setState({results: results.data, isFetching: false}))
     }
   }
 

@@ -11,13 +11,10 @@
 
 namespace Claroline\CoreBundle\Entity\Facet;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Accessor;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity()
@@ -25,23 +22,20 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class FieldFacetChoice
 {
-    use UuidTrait;
+    use Id;
+    use Uuid;
 
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_facet_admin", "api_profile"})
      *
      * @var int
      */
     private $id;
 
     /**
-     * @ORM\Column
-     * @Assert\NotBlank()
-     * @Groups({"api_facet_admin", "api_profile"})
-     * @SerializedName("label")
+     * @ORM\Column()
      *
      * @var string
      */
@@ -59,17 +53,13 @@ class FieldFacetChoice
     private $fieldFacet;
 
     /**
-     * @ORM\Column(type="integer", name="position")
-     * @Groups({"api_facet_admin", "api_profile"})
+     * @ORM\Column(type="integer")
      *
      * @var int
      */
     protected $position;
 
     /**
-     * @Groups({"api_profile"})
-     * @Accessor(getter="getValue")
-     *
      * @var mixed
      */
     protected $value;
@@ -80,7 +70,6 @@ class FieldFacetChoice
      *     inversedBy="children"
      * )
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
-     * @Groups({"api_facet_admin"})
      *
      * @var FieldFacetChoice
      */
@@ -104,14 +93,6 @@ class FieldFacetChoice
     {
         $this->children = new ArrayCollection();
         $this->refreshUuid();
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

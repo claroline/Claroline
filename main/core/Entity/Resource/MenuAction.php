@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -19,47 +20,42 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class MenuAction
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use Id;
 
     /**
      * @ORM\Column(nullable=true)
+     *
+     * @var string
      */
-    protected $name;
+    private $name;
 
     /**
-     * @ORM\Column(name="async", type="boolean", nullable=true)
+     * @ORM\Column(type="string")
+     *
+     * @var string
      */
-    protected $isAsync;
-
-    /**
-     * @ORM\Column(name="is_custom", type="boolean", nullable=false)
-     */
-    protected $isCustom = true;
-
-    /**
-     * @ORM\Column(name="is_form", type="boolean", nullable=false)
-     */
-    protected $isForm = false;
-
-    /**
-     * @ORM\Column(name="value", nullable=true)
-     */
-    protected $value;
+    private $decoder;
 
     /**
      * @ORM\Column(name="group_name", nullable=true)
+     *
+     * @var string
      */
-    protected $group;
+    private $group;
 
     /**
-     * @ORM\Column(name="icon", nullable=true)
+     * @ORM\Column(type="json_array")
+     *
+     * @var array
      */
-    protected $icon;
+    private $scope = [];
+
+    /**
+     * @ORM\Column(type="json_array")
+     *
+     * @var array
+     */
+    private $api = [];
 
     /**
      * @ORM\ManyToOne(
@@ -69,13 +65,11 @@ class MenuAction
      * )
      * @ORM\JoinColumn(name="resource_type_id", onDelete="SET NULL")
      */
-    protected $resourceType;
+    private $resourceType;
 
-    public function getId()
-    {
-        return $this->id;
-    }
-
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
@@ -83,33 +77,15 @@ class MenuAction
 
     /**
      * @param string $name
-     *
-     * @return MenuAction
      */
     public function setName($name)
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function isAsync()
-    {
-        return $this->isAsync;
     }
 
     /**
-     * @param bool $async
-     *
-     * @return MenuAction
+     * @return ResourceType
      */
-    public function setAsync($async)
-    {
-        $this->isAsync = $async;
-
-        return $this;
-    }
-
     public function getResourceType()
     {
         return $this->resourceType;
@@ -117,84 +93,73 @@ class MenuAction
 
     /**
      * @param ResourceType $resourceType
-     *
-     * @return MenuAction
      */
     public function setResourceType(ResourceType $resourceType = null)
     {
         $this->resourceType = $resourceType;
-
-        return $this;
     }
 
     /**
-     * @param $value
-     *
-     * @return MenuAction
+     * @param string $decoder
      */
-    public function setValue($value)
+    public function setDecoder($decoder)
     {
-        $this->value = $value;
-
-        return $this;
-    }
-
-    public function getValue()
-    {
-        return $this->value;
+        $this->decoder = $decoder;
     }
 
     /**
-     * @param bool $bool
-     *
-     * @return MenuAction
+     * @return string
      */
-    public function setIsCustom($bool)
+    public function getDecoder()
     {
-        $this->isCustom = $bool;
-
-        return $this;
-    }
-
-    public function isCustom()
-    {
-        return $this->isCustom;
+        return $this->decoder;
     }
 
     /**
-     * @param bool $bool
-     *
-     * @return MenuAction
+     * @param string $group
      */
-    public function setIsForm($bool)
-    {
-        $this->isForm = $bool;
-
-        return $this;
-    }
-
-    public function isForm()
-    {
-        return $this->isForm;
-    }
-
     public function setGroup($group)
     {
         $this->group = $group;
     }
 
+    /**
+     * @return string
+     */
     public function getGroup()
     {
         return $this->group;
     }
 
-    public function setIcon($icon)
+    /**
+     * @return array
+     */
+    public function getScope()
     {
-        $this->icon = $icon;
+        return $this->scope;
     }
 
-    public function getIcon()
+    /**
+     * @param array $scope
+     */
+    public function setScope(array $scope)
     {
-        return $this->icon;
+        $this->scope = $scope;
+    }
+
+    /**
+     * @return array
+     */
+    public function getApi()
+    {
+        return $this->api;
+    }
+
+    /**
+     * @param array $api
+     */
+    public function setApi(array $api)
+    {
+        $this->api = $api;
     }
 }

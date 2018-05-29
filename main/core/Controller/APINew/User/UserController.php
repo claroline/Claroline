@@ -302,6 +302,8 @@ class UserController extends AbstractCrudController
      * @param Workspace $workspace
      *
      * @return JsonResponse
+     *
+     * @todo move in workspace api
      */
     public function listManagedWorkspaceAction(User $user, Request $request)
     {

@@ -1,11 +1,12 @@
-import {connect} from 'react-redux'
 import React, {Component} from 'react'
+import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
-import Modal from 'react-bootstrap/lib/Modal'
 import classes from 'classnames'
 import moment from 'moment'
 
-import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
+import {registry} from '#/main/app/modals/registry'
+import {Modal} from '#/main/app/overlay/modal/components/modal'
+
 import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 import {t, trans} from '#/main/core/translation'
 import {Date} from '#/main/core/layout/form/components/field/date.jsx'
@@ -135,8 +136,8 @@ class EventFormModal  extends Component {
 
   render() {
     return (
-      <BaseModal {...this.props}>
-        <Modal.Body>
+      <Modal {...this.props}>
+        <div className="modal-body">
           <div className={classes('form-group row', {'has-error': this.state.nameError})}>
             <label className="control-label col-md-3">
               {t('name')}
@@ -329,16 +330,16 @@ class EventFormModal  extends Component {
               />
             </div>
           </div>
-        </Modal.Body>
-        <Modal.Footer>
+        </div>
+        <div className="modal-footer">
           <button className="btn btn-default" onClick={this.props.fadeModal}>
             {t('cancel')}
           </button>
           <button className="btn btn-primary" onClick={() => this.validateSessionEvent()}>
             {t('ok')}
           </button>
-        </Modal.Footer>
-      </BaseModal>
+        </div>
+      </Modal>
     )
   }
 }
@@ -384,5 +385,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 const ConnectedEventFormModal = connect(mapStateToProps, mapDispatchToProps)(EventFormModal)
+
+registry.add(MODAL_EVENT_FORM, ConnectedEventFormModal)
 
 export {ConnectedEventFormModal as EventFormModal}

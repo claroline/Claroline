@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Repository;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -47,7 +49,8 @@ class ResourceTypeRepository extends EntityRepository implements ContainerAwareI
     /**
      * Returns the number of existing resources for each resource type.
      *
-     * @param null $workspace
+     * @param Workspace $workspace
+     * @param null $organizations
      *
      * @return array
      */
@@ -82,7 +85,9 @@ class ResourceTypeRepository extends EntityRepository implements ContainerAwareI
     /**
      * Returns all the resource types introduced by plugins.
      *
-     * @return array[ResourceType]
+     * @param bool $filterEnabled - when true, it will only return resource types for enabled plugins
+     *
+     * @return ResourceType[]
      */
     public function findAll($filterEnabled = true)
     {
@@ -91,8 +96,7 @@ class ResourceTypeRepository extends EntityRepository implements ContainerAwareI
         }
 
         $dql = '
-          SELECT rt, ma FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
-          LEFT JOIN rt.actions ma
+          SELECT rt FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
           LEFT JOIN rt.plugin p
           WHERE (CONCAT(p.vendorName, p.bundleName) IN (:bundles)
           OR rt.plugin is NULL)

@@ -1,8 +1,8 @@
 import cloneDeep from 'lodash/cloneDeep'
 
-import {url} from '#/main/core/api/router'
+import {url} from '#/main/app/api'
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
-import {API_REQUEST} from '#/main/core/api/actions'
+import {API_REQUEST} from '#/main/app/api'
 import {actions as formActions} from '#/main/core/data/form/actions'
 import {actions as listActions} from '#/main/core/data/list/actions'
 

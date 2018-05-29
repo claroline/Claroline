@@ -63,35 +63,12 @@
     <script src="{{ asset('packages/bootstrap-datepicker/js/locales/bootstrap-datepicker.' ~ app.request.locale ~ '.js') }}"></script>
 {% endif %}
 
-<script src="{{ asset('packages/underscore/underscore.js') }}"></script>
-<script src="{{ asset('packages/backbone/backbone.js') }}"></script>
-
 {% javascripts debug=false output='vendor/claroline/js/libraries.js'
     '@ClarolineCoreBundle/Resources/public/js/common.js'
     '@ClarolineCoreBundle/Resources/public/js/modal.js'
     '@ClarolineCoreBundle/Resources/public/js/simplerights.js'
-    '@ClarolineCoreBundle/Resources/public/js/sidebar.js'
     '@ClarolineCoreBundle/Resources/public/js/topbar.js'
     '@ClarolineCoreBundle/Resources/public/js/checkbox-dropdown.js'
-    '@ClarolineCoreBundle/Resources/public/js/resource/manager/views/resource/actions.js'
-    '@ClarolineCoreBundle/Resources/public/js/resource/manager/views/resource/breadcrumbs.js'
-    '@ClarolineCoreBundle/Resources/public/js/resource/manager/views/resource/confirm.js'
-    '@ClarolineCoreBundle/Resources/public/js/resource/manager/views/resource/filters.js'
-    '@ClarolineCoreBundle/Resources/public/js/resource/manager/views/resource/form.js'
-    '@ClarolineCoreBundle/Resources/public/js/resource/manager/views/resource/rights.js'
-    '@ClarolineCoreBundle/Resources/public/js/resource/manager/views/resource/nodes.js'
-    '@ClarolineCoreBundle/Resources/public/js/resource/manager/views/resource/thumbnail.js'
-    '@ClarolineCoreBundle/Resources/public/js/resource/manager/views/resource/listElement.js'
-    '@ClarolineCoreBundle/Resources/public/js/resource/manager/views/resources.js'
-    '@ClarolineCoreBundle/Resources/public/js/resource/manager/views/master.js'
-    '@ClarolineCoreBundle/Resources/public/js/resource/manager/views/tabs.js'
-    '@ClarolineCoreBundle/Resources/public/js/resource/manager/views/widgets.js'
-    '@ClarolineCoreBundle/Resources/public/js/resource/manager/views/treelist.js'
-    '@ClarolineCoreBundle/Resources/public/js/resource/manager/views/treenode.js'
-    '@ClarolineCoreBundle/Resources/public/js/resource/manager/views/tabpanes.js'
-    '@ClarolineCoreBundle/Resources/public/js/resource/manager/router.js'
-    '@ClarolineCoreBundle/Resources/public/js/resource/manager/server.js'
-    '@ClarolineCoreBundle/Resources/public/js/resource/manager/manager.js'
     '@ClarolineCoreBundle/Resources/public/js/home/home.js'
     '@ClarolineCoreBundle/Resources/public/js/locale.js'
     '@ClarolineCoreBundle/Resources/public/js/resourceinput.js'

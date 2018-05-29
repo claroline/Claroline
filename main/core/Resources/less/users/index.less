@@ -13,6 +13,7 @@
 @import "profile"; // todo : should not be included in main theme file
 @import "timeline";
 
+// todo : try to merge all user-avatar styles here
 .user-avatar {
     border-radius: 50%;
 
@@ -37,6 +38,14 @@
 
         // for .fa when no picture
         font-size: 30px;
+    }
+}
+
+.panel-heading {
+    .user-avatar {
+        max-height: 160px;
+        font-size: 160px;
+        margin-bottom: 5px;
     }
 }
 

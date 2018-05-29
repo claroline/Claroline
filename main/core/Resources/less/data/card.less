@@ -27,7 +27,7 @@
         &.open {
             .data-actions-btn {
                 position: relative;
-                background: #eee;
+                background: #EEEEEE;
                 border-color: @dropdown-border;
                 border-bottom-color: @dropdown-bg;
                 box-shadow: @dropdown-menu-box-shadow;
@@ -37,6 +37,23 @@
 
         .dropdown-menu {
             margin-top: -1px;
+        }
+    }
+}
+
+.data-card-clickable {
+    &:hover {
+        z-index: 2;
+        color: @data-card-active-color;
+        background-color: @data-card-active-bg;
+        .box-shadow(@data-card-active-box-shadow);
+
+        .data-card-header {
+            background: @data-card-active-header-bg;
+        }
+
+        .data-card-content {
+            color: @data-card-active-color;
         }
     }
 }
@@ -64,11 +81,11 @@
     line-height: 0;
 
     // for FA icons
-    color: rgba(0, 0, 0, 0.5) !important;
+    color: #777777 !important;
 
     // for SVG icons
-    fill: rgba(0, 0, 0, 0.5) !important;
-    stroke: rgba(0, 0, 0, 0.5) !important;
+    fill: #777777 !important;
+    stroke: #777777 !important;
 
     img {
         max-width: 100%;
@@ -109,6 +126,7 @@
     color: @data-card-color; // reset color when card is clickable (uses a <a> tag)
     display: flex;
     flex-direction: column;
+    align-items: stretch;
     text-align: left;
 
     .border-radius(0 0 @data-card-border-radius @data-card-border-radius);
@@ -245,5 +263,6 @@
 
     .data-card-content {
         flex: 1 0 0;
+        max-width: 60%;
     }
 }

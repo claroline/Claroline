@@ -12,5 +12,12 @@ bootstrap(
   AnnouncementResource,
 
   // app store configuration
-  reducer
+  reducer,
+
+  (initialData) => Object.assign({}, initialData, {
+    resource: {
+      node: initialData.resourceNode,
+      evaluation: initialData.evaluation
+    }
+  })
 )

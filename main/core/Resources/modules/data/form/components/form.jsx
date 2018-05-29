@@ -181,10 +181,6 @@ class Form extends Component {
           </FormSections>
         }
 
-        {this.props.children &&
-          <hr />
-        }
-
         {this.props.children}
       </FormWrapper>
     )

@@ -9,13 +9,6 @@
 {% set hideFooter = true %}
 {% set hideBreadcrumb = true %}
 
-{# parent div#wrap classes must be kept only if website isn't displayed in fullscreen #}
-{% block wrap_attrs %}
- {% if options.totalWidth > 0 %}
-    {{ parent() }}
- {% endif %}
-{% endblock %}
-
 {% block section_panel %}
     <div class="website-container" data-ng-cloak ng-controller="MainController as vm">
         <div class="loading text-center" ng-if="!pageLoaded" >

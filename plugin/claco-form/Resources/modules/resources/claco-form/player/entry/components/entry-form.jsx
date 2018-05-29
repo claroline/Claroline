@@ -4,11 +4,11 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {mount} from '#/main/app/mount'
-import {makePageReducer} from '#/main/core/layout/page/reducer'
-import {withRouter} from '#/main/core/router'
+import {withRouter} from '#/main/app/router'
 import {currentUser} from '#/main/core/user/current'
 import {trans} from '#/main/core/translation'
-import {select as resourceSelect} from '#/main/core/resource/selectors'
+import {selectors as resourceSelect} from '#/main/core/resource/store'
+import {hasPermission} from '#/main/core/resource/permissions'
 import {select as formSelect} from '#/main/core/data/form/selectors'
 import {actions as formActions} from '#/main/core/data/form/actions'
 import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
@@ -166,7 +166,7 @@ class EntryFormComponent extends Component {
                 updateProp={(prop, value) => this.props.updateFormProp(prop, value)}
                 setErrors={this.props.setErrors}
               />
-            mount(fieldEl, fieldComponent, makePageReducer())
+            mount(fieldEl, fieldComponent, {})
           } else {
             const fieldComponent =
               <FormField
@@ -293,7 +293,7 @@ EntryFormComponent.propTypes = {
 
 const EntryForm = withRouter(connect(
   state => ({
-    canEdit: resourceSelect.editable(state),
+    canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
     clacoFormId: select.clacoForm(state).id,
     fields: select.visibleFields(state),
     useTemplate: select.getParam(state, 'use_template'),

@@ -3,8 +3,8 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {MODAL_CONFIRM} from '#/main/core/layout/modal'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
 import {Button} from '#/main/app/action/components/button'
 

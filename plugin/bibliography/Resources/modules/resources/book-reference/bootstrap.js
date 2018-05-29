@@ -1,8 +1,5 @@
 import {bootstrap} from '#/main/app/bootstrap'
 
-// reducers
-import {makeResourceReducer} from '#/main/core/resource/reducer'
-
 import {BookReferenceResource} from './components/resource.jsx'
 import {reducer} from './reducer'
 
@@ -15,15 +12,18 @@ bootstrap(
   BookReferenceResource,
 
   // app store configuration
-  makeResourceReducer({}, {
+  {
     bookReference: reducer
-  }),
+  },
 
-  initialState => ({
-    resourceNode: initialState.resourceNode,
+  (initialData) => Object.assign({}, initialData, {
     bookReference: {
-      data: initialState.bookReference,
-      originalData: initialState.bookReference
+      data: initialData.bookReference,
+      originalData: initialData.bookReference
+    },
+    resource: {
+      node: initialData.resourceNode,
+      evaluation: initialData.evaluation
     }
   })
 )

@@ -17,7 +17,7 @@ const roleReducer = combineReducers({
 ```
 
 ```
-  const reducer = makePageReducer({}, {
+  const reducer = {
     ...
     roles: rolesReducer
     ...

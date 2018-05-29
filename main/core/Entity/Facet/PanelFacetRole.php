@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Entity\Facet;
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity
@@ -28,19 +27,14 @@ class PanelFacetRole
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_facet_admin"})
      *
      * @var int
      */
     protected $id;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Role",
-     *     inversedBy="panelFacetsRole"
-     * )
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Role")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     * @Groups({"api_facet_admin"})
      *
      * @var Role
      */
@@ -59,7 +53,6 @@ class PanelFacetRole
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"api_facet_admin"})
      *
      * @var bool
      */
@@ -67,7 +60,6 @@ class PanelFacetRole
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"api_facet_admin"})
      *
      * @var bool
      */

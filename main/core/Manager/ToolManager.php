@@ -36,7 +36,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ToolManager
 {
     // todo adds a config in tools to avoid this
-    const WORKSPACE_MODEL_TOOLS = ['home', 'resource_manager', 'users', 'parameters'];
+    const WORKSPACE_MODEL_TOOLS = ['home', 'resource_manager', 'users'];
 
     /** @var OrderedToolRepository */
     private $orderedToolRepo;
@@ -435,10 +435,6 @@ class ToolManager
      */
     public function removeDesktopTool(Tool $tool, User $user, $type = 0)
     {
-        if ('parameters' === $tool->getName()) {
-            throw new UnremovableToolException('You cannot remove the parameter tool from the desktop.');
-        }
-
         $orderedTool = $this->orderedToolRepo->findOneBy(
             ['user' => $user, 'tool' => $tool, 'type' => $type]
         );
@@ -754,6 +750,11 @@ class ToolManager
             ->findOneByName($name);
     }
 
+    /**
+     * @param array $roles
+     *
+     * @return AdminTool[]
+     */
     public function getAdminToolsByRoles(array $roles)
     {
         return $this->om->getRepository('Claroline\CoreBundle\Entity\Tool\AdminTool')->findByRoles($roles);
@@ -765,9 +766,10 @@ class ToolManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $user
+     * @param User $user
+     * @param int $type
      *
-     * @return \Claroline\CoreBundle\Entity\Tool\OrderedTool[]
+     * @return OrderedTool[]
      */
     public function getOrderedToolsByUser(User $user, $type = 0)
     {
@@ -1087,11 +1089,7 @@ class ToolManager
         $type = 0,
         $executeQuery = true
     ) {
-        $excludedToolNames[] = 'home';
-
-        if (1 === $type) {
-            $excludedToolNames[] = 'parameters';
-        }
+        $excludedToolNames[] = 'home'; // maybe not
 
         return $this->orderedToolRepo->findConfigurableDesktopOrderedToolsByUser(
             $user,
@@ -1106,11 +1104,7 @@ class ToolManager
         array $excludedToolNames = [],
         $executeQuery = true
     ) {
-        $excludedToolNames[] = 'home';
-
-        if (1 === $type) {
-            $excludedToolNames[] = 'parameters';
-        }
+        $excludedToolNames[] = 'home'; // maybe not
 
         return $this->orderedToolRepo->findConfigurableDesktopOrderedToolsByTypeForAdmin(
             $excludedToolNames,
@@ -1124,11 +1118,7 @@ class ToolManager
         array $excludedToolNames = [],
         $executeQuery = true
     ) {
-        $excludedToolNames[] = 'home';
-
-        if (1 === $type) {
-            $excludedToolNames[] = 'parameters';
-        }
+        $excludedToolNames[] = 'home'; // maybe not
 
         return $this->orderedToolRepo->findLockedConfigurableDesktopOrderedToolsByTypeForAdmin(
             $excludedToolNames,

@@ -1,7 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 
 import {makeReducer} from '#/main/core/scaffolding/reducer'
-import {makePageReducer} from '#/main/core/layout/page/reducer'
 import {makeListReducer} from '#/main/core/data/list/reducer'
 
 import {
@@ -9,7 +8,7 @@ import {
   THEMES_REMOVE
 } from './actions'
 
-const reducer = makePageReducer({}, {
+const reducer = {
   themes: makeListReducer('themes', {}, {
     data: makeReducer([], {
       [THEME_UPDATE]: (state, action) => {
@@ -29,7 +28,7 @@ const reducer = makePageReducer({}, {
       }
     })
   })
-})
+}
 
 export {
   reducer

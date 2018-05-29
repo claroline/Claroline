@@ -3,10 +3,9 @@ plugin:
   icon: icap_bibliography_icon_admin.png
 
   resources:
-    - class: Icap\BibliographyBundle\Entity\BookReference
-      name: icap_bibliography
-      is_exportable: false
-      icon: icap_bibliography_icon.png
+    - name: icap_bibliography
+      class: Icap\BibliographyBundle\Entity\BookReference
+      exportable: false
 
   #widgets:
   #  - name: book_reference_list

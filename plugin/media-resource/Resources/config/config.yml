@@ -3,9 +3,6 @@ plugin:
   icon: res_file.png
 
   resources:
-    - class: Innova\MediaResourceBundle\Entity\MediaResource
-      name: innova_media_resource
-      is_exportable: false
-      actions:
-        - name: administrate
-          menu_name: innova_media_resource_administrate
+    - name: innova_media_resource
+      class: Innova\MediaResourceBundle\Entity\MediaResource
+      exportable: false

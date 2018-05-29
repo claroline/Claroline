@@ -3,8 +3,8 @@ plugin:
   icon: res_web.png
 
   resources:
-    - class: Claroline\CoreBundle\Entity\Resource\File
-      name: claroline_web_resource
-      is_exportable: false
+    - name: claroline_web_resource
+      class: Claroline\CoreBundle\Entity\Resource\File
+      exportable: false
       activity_rules:
         - action: resource-read

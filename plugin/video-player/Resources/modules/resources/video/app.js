@@ -2,3 +2,7 @@
 const App = () => ({
   
 })
+
+export {
+  App
+}

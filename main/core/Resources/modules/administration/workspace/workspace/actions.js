@@ -1,11 +1,11 @@
-import {url} from '#/main/core/api/router'
-import {API_REQUEST} from '#/main/core/api/actions'
+import {url} from '#/main/app/api'
+import {API_REQUEST} from '#/main/app/api'
 
 import {actions as listActions} from '#/main/core/data/list/actions'
 import {actions as formActions} from '#/main/core/data/form/actions'
-import {actions as alertActions} from '#/main/core/layout/alert/actions'
-import {constants as alertConstants} from '#/main/core/layout/alert/constants'
-import {constants as actionConstants} from '#/main/core/layout/action/constants'
+import {actions as alertActions} from '#/main/app/overlay/alert/store'
+import {constants as alertConstants} from '#/main/app/overlay/alert/constants'
+import {constants as actionConstants} from '#/main/app/action/constants'
 
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 

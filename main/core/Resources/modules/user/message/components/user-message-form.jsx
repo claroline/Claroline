@@ -47,16 +47,18 @@ class UserMessageForm extends Component {
               }
             </div>
 
-            <div className="user-message-actions">
-              <TooltipAction
-                id="close"
-                className="btn-link-default"
-                position="bottom"
-                icon="fa fa-fw fa-times"
-                label={t('cancel')}
-                action={this.props.cancel}
-              />
-            </div>
+            {this.props.cancel &&
+              <div className="user-message-actions">
+                <TooltipAction
+                  id="close"
+                  className="btn-link-default"
+                  position="bottom"
+                  icon="fa fa-fw fa-times"
+                  label={t('cancel')}
+                  action={this.props.cancel}
+                />
+              </div>
+            }
           </div>
 
           {React.createElement(

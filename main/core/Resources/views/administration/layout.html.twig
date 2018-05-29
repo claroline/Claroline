@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block leftbar %}
-    {{ render(controller("ClarolineCoreBundle:Administration:renderLeftBar")) }}
+    {{ render(controller("ClarolineCoreBundle:Administration:renderToolbar", {request: app.request})) }}
 {% endblock %}
 
 {% block content %}
@@ -29,4 +29,11 @@
             {% block section_content %}{% endblock %}
         </div>
     {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {# Administration toolbar #}
+    <script src="{{ hotAsset('claroline-distribution-main-core-administration-toolbar') }}"></script>
 {% endblock %}

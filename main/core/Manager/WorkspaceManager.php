@@ -35,6 +35,7 @@ use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Transfert\Resolver;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
+use Claroline\CoreBundle\Manager\Resource\MaskManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
@@ -209,7 +210,7 @@ class WorkspaceManager
      * Creates a workspace.
      *
      * @param Workspace $workspace
-     * @param $template uncompressed template
+     * @param $templateDirectory uncompressed template
      *
      * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
      */
@@ -246,9 +247,6 @@ class WorkspaceManager
         }
 
         $ch = $this->container->get('claroline.config.platform_config_handler');
-        if (!$workspace->getGuid()) {
-            $workspace->setGuid(uniqid('', true));
-        }
         $workspace->setMaxUploadResources($ch->getParameter('max_upload_resources'));
         $workspace->setMaxStorageSize($ch->getParameter('max_storage_size'));
         $workspace->setMaxUsers($ch->getParameter('max_workspace_users'));
@@ -833,6 +831,8 @@ class WorkspaceManager
             );
         }
 
+        // FIXME : you replace current user credentials by the added one, but why ?
+        // there is no reason to do this because it's not always the same user !!!
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $this->container->get('security.token_storage')->setToken($token);
 
@@ -1298,6 +1298,19 @@ class WorkspaceManager
         }
 
         return false;
+    }
+
+    /**
+     * Gets the list of role which have access to the workspace.
+     * (either workspace roles or a platform role with ws tool access)
+     *
+     * @param Workspace $workspace
+     *
+     * @return Role[]
+     */
+    public function getRolesWithAccess(Workspace $workspace)
+    {
+        return $this->roleManager->getWorkspaceRoleWithToolAccess($workspace);
     }
 
     //used for cli copy debug tool

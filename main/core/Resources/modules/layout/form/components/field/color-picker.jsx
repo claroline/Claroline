@@ -20,17 +20,17 @@ class ColorPicker extends Component {
     return (
       <span className="color-picker" id={this.props.id}>
         <button
-          className={classes('btn', this.props.className)}
+          className={classes('btn btn-default', this.props.className)}
           role="button"
           type="button"
           ref={element => this.refTarget = element}
           onClick={() => this.setState({open: !this.state.open})}
         >
           <span
-            className={classes('fa fa-fw',
-              {'fa-font': this.props.forFontColor},
-              {'fa-paint-brush': !this.props.forFontColor}
-            )}
+            className={classes('fa fa-fw', {
+              'fa-font': this.props.forFontColor,
+              'fa-paint-brush': !this.props.forFontColor
+            })}
           />
           <span
             className="color-indicator"
@@ -49,7 +49,7 @@ class ColorPicker extends Component {
           rootClose={true}
         >
           <TwitterPicker
-            color={this.props.value}
+            color={this.props.value || undefined}
             colors={this.props.colors}
             onChangeComplete={color => {
               this.setState({open: false})

@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 
 import get from 'lodash/get'
 
-import {url} from '#/main/core/api/router'
+import {url} from '#/main/app/api'
 import {trans} from '#/main/core/translation'
 
 import {PageActions} from '#/main/core/layout/page/components/page-actions.jsx'

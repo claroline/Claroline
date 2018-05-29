@@ -5,7 +5,7 @@ import {trans} from '#/main/core/translation'
 import {enumRole} from '#/main/core/user/role/constants'
 import {RoleCard} from '#/main/core/user/data/components/role-card'
 
-import {generateUrl} from '#/main/core/api/router'
+import {url} from '#/main/app/api'
 
 const RoleList = {
   open: (row) => ({
@@ -26,8 +26,7 @@ const RoleList = {
       label: trans('name'),
       displayed: true
     }, {
-      name: 'meta.type',
-      alias: 'type',
+      name: 'type',
       type: 'choice',
       label: trans('type'),
       options: {
@@ -49,7 +48,7 @@ const RoleList = {
         let WorkspaceLink
 
         if (rowData.workspace) {
-          WorkspaceLink = <a href={generateUrl('claro_workspace_open', {workspaceId: rowData.workspace.id})}>{rowData.workspace.name}</a>
+          WorkspaceLink = <a href={url(['claro_workspace_open', {workspaceId: rowData.workspace.id}])}>{rowData.workspace.name}</a>
         } else {
           WorkspaceLink = '-'
         }

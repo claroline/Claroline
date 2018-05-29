@@ -24,7 +24,7 @@
 
                 <nav class="page-actions">
                     {% if canDownload %}
-                    <a class="btn page-action-btn" href="{{ path('claro_resource_download') }}?ids[]={{ pdf.resourceNode.id }}">
+                    <a class="btn page-actions-btn" href="{{ path('claro_resource_download') }}?ids[]={{ pdf.resourceNode.id }}">
                         <span class="action-icon fa fa-download"></span>
                         <span class="sr-only">{{ 'download'|trans({}, 'platform') }}</span>
                     </a>

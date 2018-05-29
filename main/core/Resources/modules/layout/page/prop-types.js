@@ -8,26 +8,7 @@ const Page = {
      * Is the page displayed in full screen ?
      */
     fullscreen: T.bool,
-
-    /**
-     * Is the page embed into another ?
-     *
-     * Permits to know if we use a <main> or a <section> tag.
-     */
-    embedded: T.bool,
-
-    // alerts management
-    alerts: T.array,
-    removeAlert: T.func,
-
-    // modal management
-    modal: T.shape({
-      type: T.string,
-      fading: T.bool.isRequired,
-      props: T.object.isRequired
-    }),
-    fadeModal: T.func,
-    hideModal: T.func
+    embedded: T.bool
   },
   defaultProps: {
     fullscreen: false,

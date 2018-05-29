@@ -3,7 +3,7 @@ import classes from 'classnames'
 
 import {trans} from '#/main/core/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
-import {copy} from '#/main/core/scaffolding/clipboard'
+import {copy} from '#/main/app/clipboard'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
 import {Button} from '#/main/app/action/components/button'

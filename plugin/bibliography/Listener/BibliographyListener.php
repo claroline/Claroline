@@ -3,11 +3,11 @@
 namespace Icap\BibliographyBundle\Listener;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
-use Claroline\CoreBundle\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use Icap\BibliographyBundle\Entity\BookReference;
 use Icap\BibliographyBundle\Form\BookReferenceType;

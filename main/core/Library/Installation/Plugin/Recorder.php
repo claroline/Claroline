@@ -11,7 +11,8 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Entity\Plugin;
+use Claroline\CoreBundle\Library\PluginBundleInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -25,20 +26,29 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class Recorder
 {
+    /** @var DatabaseWriter */
     private $dbWriter;
 
+    /** @var Validator */
+    private $validator;
+
     /**
-     * Constructor.
-     *
-     * @param DatabaseWriter dbWriter
+     * Recorder constructor.
      *
      * @DI\InjectParams({
-     *     "dbWriter" = @DI\Inject("claroline.plugin.recorder_database_writer")
+     *     "dbWriter"  = @DI\Inject("claroline.plugin.recorder_database_writer"),
+     *     "validator" = @DI\Inject("claroline.plugin.validator")
      * })
+     *
+     * @param DatabaseWriter $dbWriter
+     * @param Validator      $validator
      */
-    public function __construct(DatabaseWriter $dbWriter)
+    public function __construct(
+        DatabaseWriter $dbWriter,
+        Validator $validator)
     {
         $this->dbWriter = $dbWriter;
+        $this->validator = $validator;
     }
 
     /**
@@ -54,31 +64,35 @@ class Recorder
     /**
      * Registers a plugin.
      *
-     * @param PluginBundle $plugin
-     * @param array        $pluginConfiguration
+     * @param PluginBundleInterface $plugin
+     *
+     * @return Plugin
      */
-    public function register(PluginBundle $plugin, array $pluginConfiguration)
+    public function register(PluginBundleInterface $plugin)
     {
-        return $this->dbWriter->insert($plugin, $pluginConfiguration);
+        $this->validate($plugin, false);
+
+        return $this->dbWriter->insert($plugin, $this->validator->getPluginConfiguration());
     }
 
     /**
      * Update configuration for a plugin.
      *
-     * @param PluginBundle $plugin
-     * @param array        $pluginConfiguration
+     * @param PluginBundleInterface $plugin
      */
-    public function update(PluginBundle $plugin, array $pluginConfiguration)
+    public function update(PluginBundleInterface $plugin)
     {
-        $this->dbWriter->update($plugin, $pluginConfiguration);
+        $this->validate($plugin, true);
+
+        $this->dbWriter->update($plugin, $this->validator->getPluginConfiguration());
     }
 
     /**
      * Unregisters a plugin.
      *
-     * @param PluginBundle $plugin
+     * @param PluginBundleInterface $plugin
      */
-    public function unregister(PluginBundle $plugin)
+    public function unregister(PluginBundleInterface $plugin)
     {
         $pluginFqcn = get_class($plugin);
         $this->dbWriter->delete($pluginFqcn);
@@ -87,13 +101,33 @@ class Recorder
     /**
      * Checks if a plugin is registered.
      *
-     * @param \Claroline\CoreBundle\Library\PluginBundle $plugin
+     * @param PluginBundleInterface $plugin
      *
      * @return bool
      */
-    public function isRegistered(PluginBundle $plugin)
+    public function isRegistered(PluginBundleInterface $plugin)
     {
         return $this->dbWriter->isSaved($plugin);
+    }
+
+    public function validate(PluginBundleInterface $plugin, $update = false)
+    {
+        if ($update) {
+            $this->validator->activeUpdateMode();
+        }
+        $errors = $this->validator->validate($plugin);
+        $this->validator->deactivateUpdateMode();
+
+        if (0 !== count($errors)) {
+            $report = "Plugin '{$plugin->getNamespace()}' cannot be installed, due to the "
+                .'following validation errors :'.PHP_EOL;
+
+            foreach ($errors as $error) {
+                $report .= $error->getMessage().PHP_EOL;
+            }
+
+            throw new \Exception($report);
+        }
     }
 
     public function setLogger($logger)

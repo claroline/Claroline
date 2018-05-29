@@ -1,5 +1,10 @@
 .page-container {
     display: flex; // this permits to have the .page component to fill the available height
+    margin-top: @component-margin-bottom; // add spacing with header
+}
+
+.breadcrumb + .page-container {
+    margin-top: 0; // reset spacing (it's added by the breadcrumb)
 }
 
 .page {
@@ -16,7 +21,7 @@
         top: 0;
         bottom: 0;
         right: 0;
-        padding: floor(@grid-gutter-width / 2); // mimic grid
+        padding-top: floor(@grid-gutter-width / 2);
         background: @body-bg; // regular page container has no background. We need to hide what is under
         overflow-y: scroll; // get the scrollbar
 
@@ -28,8 +33,8 @@
 
     &.main {
         > .flying-alerts {
-            top: @top-bar-height + @top-bar-border-bottom-size + floor(@grid-gutter-width / 2);
-            right: @grid-gutter-width;
+            top: floor(@grid-gutter-width / 2);
+            right: floor(@grid-gutter-width / 2);
         }
     }
 
@@ -51,7 +56,7 @@
     flex-wrap: nowrap;
 
     padding: @page-header-padding;
-    margin: 0 floor(-@grid-gutter-width / 2);
+    margin: 0;
     border-bottom: 1px solid @page-header-border-color;
 
     .page-title {
@@ -75,13 +80,14 @@
         justify-content: space-between;
         flex-shrink: 0;
         flex-wrap: nowrap;
+        margin-bottom: @component-margin-bottom; // surely not the best place
     }
 
     .page-header-picture {
         flex: 1;
         max-width: 200px;
         margin-bottom: -40px;
-        padding: 0 floor(@grid-gutter-width / 2);
+        padding: 0 floor(@grid-gutter-width / 2); // why ?
     }
 
     + .page-content-shift {
@@ -89,7 +95,7 @@
     }
 }
 
-.page-header-poster {
+.page-poster {
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
@@ -117,7 +123,7 @@
     padding: 0 floor(@grid-gutter-width / 2);
     white-space: nowrap;
 
-    .page-actions-group {
+    .page-actions-group { // todo remove me (for retro compatibility)
         display: inline-block;
         margin-left: floor(@grid-gutter-width / 2);
 
@@ -126,12 +132,12 @@
         }
     }
 
-    > .page-action-btn:first-child,
-    .page-actions-group .page-action-btn:first-child {
+    > .page-actions-btn:first-child,
+    .page-actions-group .page-actions-btn:first-child {
         margin-left: 0; // absorb first btn margin
     }
 
-    .page-action-btn,
+    .page-actions-btn,
     .dropdown {
         margin-left: .2em;
     }
@@ -141,8 +147,13 @@
     }
 }
 
+.page-actions-separator {
+    display: inline-block;
+    margin: 0 5px;
+}
+
 // Current styles permit to have 7 buttons in one line on 360px screens (without btn groups)
-.page-action-btn {
+.page-actions-btn {
     .button-base();
 
     position: relative; // for buttons with labels
@@ -170,7 +181,7 @@
     }
 
     // puts labels in the bottom right corner
-    .label {
+    .action-subscript {
         position: absolute;
         top: auto; // reset bootstrap default
         bottom: -5px;
@@ -179,11 +190,12 @@
         padding: .2em .4em;
     }
 
-    .fa-asterisk { // ugly selector for custom rights flag
+    // ugly selector for custom rights flag
+    /*.fa-asterisk {
         position: absolute;
         bottom: -5px;
         right: 0;
-    }
+    }*/
 }
 
 .tabbed-page {
@@ -203,6 +215,8 @@
     display: flex;
     flex-direction: column;
     flex: 1 0 auto; // only specifying flex property here make the item fill the remaining space in its parent
+    padding: 0 floor(@grid-gutter-width / 2);
+    margin-bottom: 20px;
 }
 
 .page-tabs {

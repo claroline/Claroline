@@ -1,5 +1,5 @@
 import {mock as mockAsset} from '#/main/core/scaffolding/asset/mock'
-import {mock as mockRouter} from '#/main/core/api/router/mock'
+import {mock as mockRouter} from '#/main/app/api/router/mock'
 import {mock as mockTranslation} from '#/main/core/translation/mock'
 import {mock as mockTinyMce} from '#/main/core/tinymce/mock'
 

@@ -534,6 +534,8 @@ class Workspace
      * Set guid.
      *
      * @param string $guid
+     *
+     * @deprecated use setUuid()
      */
     public function setGuid($guid)
     {
@@ -544,6 +546,8 @@ class Workspace
      * Get guid.
      *
      * @return string
+     *
+     * @deprecated use getUuid()
      */
     public function getGuid()
     {

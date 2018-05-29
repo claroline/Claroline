@@ -4,7 +4,7 @@ namespace Icap\DropzoneBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Manager\Resource\MaskManager;
 use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use JMS\DiExtraBundle\Annotation as DI;

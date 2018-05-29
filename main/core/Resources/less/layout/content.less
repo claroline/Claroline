@@ -1,0 +1,33 @@
+
+.content-public-url {
+    display: flex;
+    justify-content: space-between;
+
+    a {
+        font-weight: bold;
+    }
+}
+
+.content-meta {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.content-creator {
+
+}
+
+.content-dates {
+    color: #777; // todo use a var same than user micro
+    font-style: italic;
+    font-size: @font-size-small; // same than .user-micro
+    > span {
+        display: block;
+
+        + span {
+            margin-top: 5px;
+        }
+    }
+}

@@ -5,8 +5,8 @@ import classes from 'classnames'
 
 import {trans} from '#/main/core/translation'
 
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {MODAL_GENERIC_TYPE_PICKER} from '#/main/core/layout/modal'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {MODAL_SELECTION} from '#/main/app/modals/selection'
 import {MODAL_CONFIGURE_FIELD} from '#/main/core/data/form/modals'
 
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
@@ -150,7 +150,7 @@ class FieldList extends Component {
         <button
           type="button"
           className="btn btn-default btn-block"
-          onClick={() => this.props.showModal(MODAL_GENERIC_TYPE_PICKER, {
+          onClick={() => this.props.showModal(MODAL_SELECTION, {
             title: trans('create_field'),
             types: Object.keys(getCreatableTypes()).map(type => getCreatableTypes()[type].meta),
             handleSelect: (type) => this.open(

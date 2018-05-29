@@ -8,9 +8,9 @@ import set from 'lodash/set'
 
 import {t, trans, transChoice} from '#/main/core/translation'
 
-import {MODAL_CONFIRM, MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {actions} from '#/main/core/administration/appearance/theme/actions'
 
 import {select} from '#/main/core/administration/appearance/theme/selectors'
@@ -424,8 +424,10 @@ function mapDispatchToProps(dispatch) {
 
     removeTheme: (theme) => {
       dispatch(
-        modalActions.showModal(MODAL_DELETE_CONFIRM, {
+        modalActions.showModal(MODAL_CONFIRM, {
           title: transChoice('remove_themes', 1, {count: 1}, 'theme'),
+          dangerous: true,
+          icon: 'fa fa-fw fa-trash-o',
           question: trans('remove_themes_confirm', {
             theme_list: theme.name
           }, 'theme'),

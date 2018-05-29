@@ -1,4 +1,3 @@
-import {makePageReducer} from '#/main/core/layout/page/reducer'
 import {makeReducer} from '#/main/core/scaffolding/reducer'
 
 import {FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
@@ -9,7 +8,7 @@ import {reducer as groupsReducer} from '#/main/core/workspace/user/group/reducer
 import {reducer as rolesReducer} from '#/main/core/workspace/user/role/reducer'
 import {reducer as workspaceReducer} from '#/main/core/workspace/user/parameters/reducer'
 
-const reducer = makePageReducer({}, {
+const reducer = {
   users: usersReducer,
   groups: groupsReducer,
   roles: rolesReducer,
@@ -19,7 +18,7 @@ const reducer = makePageReducer({}, {
   }),
   parameters: workspaceReducer,
   restrictions: makeReducer({}, {})
-})
+}
 
 export {
   reducer

@@ -13,55 +13,53 @@ import {UserList} from '#/main/core/administration/user/user/components/user-lis
 
 import {MODAL_DATA_LIST} from '#/main/core/data/list/modals'
 
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {actions as listActions} from '#/main/core/data/list/actions'
 
-import {getUrl} from '#/main/core/api/router'
 import {Announcement as AnnouncementTypes} from './../prop-types'
 import {select} from './../selectors'
 import {actions} from './../actions'
 
 const SendForm = props =>
-  <div>
-    <form>
-      <FormSections level={2} defaultOpened="announcement-form">
-        <FormSection
-          icon="fa fa-fw fa-paper-plane-o"
-          title={trans('announcement_sending', {}, 'announcement')}
-          id="announcement-form"
-        >
-          <RadiosGroup
-            id="announcement-notify-users"
-            label={trans('announcement_notify_users', {}, 'announcement')}
-            choices={{
-              0: trans('do_not_send', {}, 'announcement'),
-              1: trans('send_directly', {}, 'announcement')
-            }}
-            value={props.announcement.meta.notifyUsers.toString()}
-            onChange={value => {
-              props.updateProperty('meta.notifyUsers', parseInt(value))
-            }}
+  <form>
+    <FormSections level={2} defaultOpened="announcement-form">
+      <FormSection
+        icon="fa fa-fw fa-paper-plane-o"
+        title={trans('announcement_sending', {}, 'announcement')}
+        id="announcement-form"
+      >
+        <RadiosGroup
+          id="announcement-notify-users"
+          label={trans('announcement_notify_users', {}, 'announcement')}
+          choices={{
+            0: trans('do_not_send', {}, 'announcement'),
+            1: trans('send_directly', {}, 'announcement')
+          }}
+          value={props.announcement.meta.notifyUsers.toString()}
+          onChange={value => {
+            props.updateProperty('meta.notifyUsers', parseInt(value))
+          }}
+        />
+
+        <ConditionalSet condition={0 !== props.announcement.meta.notifyUsers}>
+          <CheckboxesGroup
+            id="announcement-sending-roles"
+            label={trans('roles_to_send_to', {}, 'announcement')}
+            choices={props.workspaceRoles.reduce((acc, current) => {
+              acc[current.id] = trans(current.translationKey)
+
+              return acc
+            }, {})}
+            inline={false}
+            value={props.announcement.roles}
+            onChange={values => props.updateProperty('roles', values)}
+            warnOnly={!props.validating}
+            error={get(props.errors, 'roles')}
           />
+        </ConditionalSet>
+      </FormSection>
+    </FormSections>
 
-          <ConditionalSet condition={0 !== props.announcement.meta.notifyUsers}>
-            <CheckboxesGroup
-              id="announcement-sending-roles"
-              label={trans('roles_to_send_to', {}, 'announcement')}
-              choices={props.workspaceRoles.reduce((acc, current) => {
-                acc[current.id] = trans(current.translationKey)
-
-                return acc
-              }, {})}
-              inline={false}
-              value={props.announcement.roles}
-              onChange={values => props.updateProperty('roles', values)}
-              warnOnly={!props.validating}
-              error={get(props.errors, 'roles')}
-            />
-          </ConditionalSet>
-        </FormSection>
-      </FormSections>
-    </form>
     <Button
       primary={true}
       label={trans('validate')}
@@ -74,10 +72,7 @@ const SendForm = props =>
         props.history.push('/')
       }}
     />
-  </div>
-
-
-
+  </form>
 
 SendForm.defaultProps = {
   announcement: AnnouncementTypes.defaultProps
@@ -112,7 +107,7 @@ function mapDispatchToProps(dispatch) {
           card: UserList.card,
           filters: {roles: announce.roles},
           fetch: {
-            url: getUrl(['claro_announcement_validate', {aggregateId: aggregateId, id: announce.id}]),
+            url: ['claro_announcement_validate', {aggregateId: aggregateId, id: announce.id}],
             autoload: true
           },
           handleSelect: () => {

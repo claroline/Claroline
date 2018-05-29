@@ -161,16 +161,6 @@ class MaskManagerTest extends MockeryTestCase
         $this->assertEquals($decoder, $this->manager->getByValue($type, $value));
     }
 
-    public function testGetMenuFromNameAndResourceType()
-    {
-        $type = new ResourceType();
-        $name = 'menu';
-        $menu = new MenuAction();
-        $this->menuRepo->shouldReceive('findOneBy')->with(['resourceType' => $type, 'name' => $name])
-            ->andReturn($menu);
-        $this->assertEquals($menu, $this->manager->getMenuFromNameAndResourceType($name, $type));
-    }
-
     public function testAddDefaultPerms()
     {
         $type = new ResourceType();

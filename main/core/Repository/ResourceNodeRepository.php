@@ -31,7 +31,6 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
 {
     private $container;
     private $builder;
-    private $bundles = [];
 
     public function setContainer(ContainerInterface $container = null)
     {
@@ -55,7 +54,7 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
         if (preg_match('/^\d+$/', $id)) {
             $qb->where('n.id = :id');
         } else {
-            $qb->where('n.guid = :id');
+            $qb->where('n.uuid = :id');
         }
 
         return $qb
@@ -115,7 +114,8 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
      * @param ResourceNode $parent The id of the parent of the requested children
      * @param array        $roles  [string] $roles  An array of roles
      * @param User         $user   the user opening
-     * @param withLastOpenDate with the last openend node (with the last opened date)
+     * @param bool         $withLastOpenDate with the last openend node (with the last opened date)
+     * @param bool         $canAdministrate
      *
      * @throws \RuntimeException
      * @throw InvalidArgumentException if the array of roles is empty

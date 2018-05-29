@@ -196,6 +196,8 @@ class Organization
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="organization_id", nullable=false)
+     *
+     * @var ArrayCollection
      */
     private $userOrganizationReferences;
 
@@ -207,10 +209,10 @@ class Organization
         $this->refreshCode();
 
         $this->locations = new ArrayCollection();
-        $this->users = new ArrayCollection();
         $this->workspaces = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->administrators = new ArrayCollection();
+        $this->userOrganizationReferences = new ArrayCollection();
         $this->children = new ArrayCollection();
         $this->type = self::TYPE_INTERNAL;
     }

@@ -16,7 +16,6 @@
     var stackedRequests = 0;
     var modal = window.Claroline.Modal;
     var translator = window.Translator;
-    var claroDate = window.Claroline.ClaroDate;
 
     var ajaxServerErrorHandler = function (statusCode, responseText) {
         if (env !== 'prod') {
@@ -72,26 +71,6 @@
         } else if (jqXHR.status === 500 || jqXHR.status === 422 || jqXHR.status === 403) {
             ajaxServerErrorHandler(jqXHR.status, jqXHR.responseText);
         }
-    });
-
-    // Change this to a compile-time function.
-    Twig.setFunction('path', function (route, parameters) {
-        return Routing.generate(route, parameters);
-    });
-
-    // Required for variables translations (the language can't be known at the compile time)
-    Twig.setFilter('trans', function (name, parameters, domain) {
-        return translator.trans(name, parameters, domain);
-    });
-
-    // Required for variables translations (the language can't be known at the compile time)
-    Twig.setFilter('transchoice', function (name, amt, parameters, domain) {
-        return translator.transChoice(name, amt, parameters, domain);
-    });
-
-    //Required for the resource manager, when we want to open a directory after a search
-    Twig.setFunction('getCurrentUrl', function() {
-        return location.pathname;
     });
 
     // Without the next lines, the fixed top bar overlays content

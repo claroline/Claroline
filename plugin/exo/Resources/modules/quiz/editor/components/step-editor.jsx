@@ -14,7 +14,7 @@ import {makeSortable, SORT_VERTICAL} from './../../../utils/sortable'
 import {getDefinition, isQuestionType} from './../../../items/item-types'
 import {getContentDefinition} from './../../../contents/content-types'
 
-import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {MODAL_ADD_ITEM} from './modal/add-item-modal.jsx'
 import {MODAL_IMPORT_ITEMS} from './modal/import-items-modal.jsx'
 import {MODAL_ADD_CONTENT} from './modal/add-content-modal.jsx'
@@ -64,9 +64,11 @@ const ItemActions = props =>
       position="left"
       onClick={e => {
         e.stopPropagation()
-        props.showModal(MODAL_DELETE_CONFIRM, {
+        props.showModal(MODAL_CONFIRM, {
+          icon: 'fa fa-fw fa-trash-o',
           title: tex('delete_item'),
           question: tex('remove_question_confirm_message'),
+          dangerous: true,
           handleConfirm: () => props.handleItemDelete(props.itemId)
         })
       }}
@@ -322,8 +324,8 @@ class ContentPanel extends Component {
             item={this.props.item}
             validating={this.props.validating}
             onChange={(propertyPath, value) =>
-                this.props.handleContentItemUpdate(this.props.item.id, propertyPath, value)
-              }
+              this.props.handleContentItemUpdate(this.props.item.id, propertyPath, value)
+            }
           >
             {React.createElement(
               getContentDefinition(this.props.item.type).editor.component,
@@ -609,6 +611,8 @@ StepEditor.propTypes = {
   handleItemMove: T.func.isRequired,
   handleItemCreate: T.func.isRequired,
   handleItemUpdate: T.func.isRequired,
+  handleItemDetailUpdate: T.func.isRequired,
+  handleContentItemDetailUpdate: T.func.isRequired,
   handleItemHintsUpdate: T.func.isRequired,
   handleItemsImport: T.func.isRequired,
   handleContentItemCreate: T.func.isRequired,

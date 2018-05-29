@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
-import {navigate} from '#/main/core/router'
+import {navigate} from '#/main/app/router'
 
 import {DropzoneType, DropType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {select} from '#/plugin/drop-zone/resources/dropzone/selectors'
@@ -87,7 +87,7 @@ function mapStateToProps(state) {
     user: select.user(state),
     dropzone: select.dropzone(state),
     drop: select.peerDrop(state),
-    myTeamId: select.myTeamId(state),
+    myTeamId: select.myTeamId(state)
   }
 }
 

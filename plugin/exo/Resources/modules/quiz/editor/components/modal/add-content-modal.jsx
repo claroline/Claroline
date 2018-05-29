@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import Modal from 'react-bootstrap/lib/Modal'
+
 import {trans} from '#/main/core/translation'
 import {listContentTypes, getContentDefinition} from './../../../../contents/content-types'
-import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
+import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {ContentInput} from './../content-input.jsx'
 
 export const MODAL_ADD_CONTENT = 'MODAL_ADD_CONTENT'
@@ -31,8 +31,8 @@ class AddContentModal extends Component {
 
   render() {
     return (
-      <BaseModal {...this.props} className="add-item-modal">
-        <Modal.Body>
+      <Modal {...this.props} className="add-item-modal">
+        <div className="modal-body">
           <div className="modal-item-list" role="listbox">
             {this.state.contentTypes.map(type =>
               <ContentInput
@@ -50,8 +50,8 @@ class AddContentModal extends Component {
               {this.state.currentName}
             </span>
           </div>
-        </Modal.Body>
-      </BaseModal>
+        </div>
+      </Modal>
     )
   }
 }

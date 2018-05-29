@@ -4,9 +4,6 @@ import classes from 'classnames'
 
 import {trans} from '#/main/core/translation'
 
-import {CustomDragLayer} from '#/plugin/exo/utils/custom-drag-layer'
-import {makeDroppable, makeDraggable} from '#/plugin/exo/utils/dragAndDrop'
-
 import {
   createListDefinition,
   getPrimaryAction,
@@ -136,41 +133,7 @@ DataTreeItemContent.defaultProps = {
   selected: false
 }
 
-let DataTreeItemContainer = props => props.connectDropTarget(
-  <li className="data-tree-item-container" style={{opacity: props.isDragging ? 0.5:1}}>
-    {React.Children.map(props.children, (child, index) => child ?
-      React.cloneElement(child, {
-        key: index,
-        connectDragSource: props.connectDragSource
-      }) : null
-    )}
-  </li>
-)
-
-DataTreeItemContainer.propTypes = {
-  isDragging: T.bool.isRequired,
-  connectDragSource: T.func.isRequired,
-  connectDropTarget: T.func.isRequired,
-  children: T.any.isRequired
-}
-
-const DataPreview = () =>
-  <div className="data-tree-item">
-    IM A DRAG PREVIEW !!!! SEE ME
-  </div>
-
-DataTreeItemContainer = makeDraggable(
-  DataTreeItemContainer,
-  'TREE_ITEM',
-  DataPreview
-)
-
-DataTreeItemContainer = makeDroppable(
-  DataTreeItemContainer,
-  'TREE_ITEM'
-)
-
-class DataTreeItemComponent extends Component {
+class DataTreeItem extends Component {
   constructor(props) {
     super(props)
 
@@ -187,7 +150,7 @@ class DataTreeItemComponent extends Component {
 
   render() {
     return (
-      <DataTreeItemContainer onDrop={this.props.onDrop}>
+      <li className="data-tree-item-container">
         <DataTreeItemContent
           selected={isRowSelected(this.props.data, this.props.selected)}
           expanded={this.state.expanded}
@@ -222,12 +185,12 @@ class DataTreeItemComponent extends Component {
             )}
           </ul>
         }
-      </DataTreeItemContainer>
+      </li>
     )
   }
 }
 
-DataTreeItemComponent.propTypes = {
+DataTreeItem.propTypes = {
   expanded: T.bool,
   selected: T.array,
   data: T.shape({
@@ -239,27 +202,17 @@ DataTreeItemComponent.propTypes = {
 
   onSelect: T.func,
 
-  onDrop: T.func,
+  /*onDrop: T.func,
   connectDragSource: T.func.isRequired,
-  connectDropTarget: T.func.isRequired,
+  connectDropTarget: T.func.isRequired,*/
 
   card: T.func.isRequired
 }
 
-DataTreeItemComponent.defaultProps = {
+DataTreeItem.defaultProps = {
   expanded: false,
   selected: []
 }
-
-let DataTreeItem = makeDraggable(
-  DataTreeItemComponent,
-  'TREE_ITEM'
-)
-
-DataTreeItem = makeDroppable(
-  DataTreeItem,
-  'TREE_ITEM'
-)
 
 class DataTree extends Component {
   constructor(props) {
@@ -356,7 +309,6 @@ class DataTree extends Component {
         {0 === this.props.totalResults &&
           <ListEmpty hasFilters={this.props.filters && 0 < this.props.filters.current.length} />
         }
-        <CustomDragLayer/>
       </div>
     )
   }

@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 // TODO : do not redirect to a controller, directly renders the tool template
 
 /**
- *  @DI\Service()
+ * @DI\Service()
  */
 class AdministrationToolListener
 {

@@ -32,7 +32,7 @@ class DatabaseWriterTest extends MockeryTestCase
 
         $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
         $this->im = $this->mock('Claroline\CoreBundle\Manager\IconManager');
-        $this->mm = $this->mock('Claroline\CoreBundle\Manager\MaskManager');
+        $this->mm = $this->mock('Claroline\CoreBundle\Manager\Resource\MaskManager');
         $this->tm = $this->mock('Claroline\CoreBundle\Manager\ToolManager');
         $this->tmd = $this->mock('Claroline\CoreBundle\Manager\ToolMaskDecoderManager');
         $this->ism = $this->mock('Claroline\CoreBundle\Manager\IconSetManager');

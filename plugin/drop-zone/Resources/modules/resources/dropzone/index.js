@@ -30,7 +30,10 @@ bootstrap(
   (initialData) => {
     return {
       user: initialData.user,
-      resourceNode: initialData.resourceNode,
+      resource: {
+        node: initialData.resourceNode,
+        evaluation: initialData.evaluation
+      },
       dropzone: initialData.dropzone,
       myDrop: initialData.myDrop,
       nbCorrections: initialData.nbCorrections,
@@ -38,7 +41,6 @@ bootstrap(
         data: initialData.tools,
         totalResults: initialData.tools.length
       },
-      userEvaluation: initialData.userEvaluation,
       teams: initialData.teams,
       errorMessage: initialData.errorMessage
     }

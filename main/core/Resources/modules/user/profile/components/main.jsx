@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {Routes} from '#/main/core/router'
+import {Routes} from '#/main/app/router'
 
 import {UserPageContainer} from '#/main/core/user/containers/page'
 import {User as UserTypes} from '#/main/core/user/prop-types'

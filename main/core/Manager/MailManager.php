@@ -11,8 +11,9 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Manager\CacheManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\RefreshCacheEvent;
+use Claroline\AppBundle\Event\App\RefreshCacheEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Mailing\Mailer;
 use Claroline\CoreBundle\Library\Mailing\Message;

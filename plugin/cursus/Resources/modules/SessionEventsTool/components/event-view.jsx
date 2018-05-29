@@ -3,18 +3,19 @@ import {connect} from 'react-redux'
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import moment from 'moment'
+
+import {withModal} from '#/main/app/overlay/modal/withModal'
 import {trans, t} from '#/main/core/translation'
-import {makeModal} from '#/main/core/layout/modal'
 import {actions} from '../actions'
 import {selectors} from '../selectors'
 import {registrationTypes, registrationStatus} from '../enums'
 
+import {MODAL_EVENT_FORM} from '#/plugin/cursus/SessionEventsTool/components/event-form-modal'
+import {MODAL_EVENT_COMMENTS} from '#/plugin/cursus/SessionEventsTool/components/event-comments-modal'
+
 class EventView extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      modal: {}
-    }
     this.addParticipants = this.addParticipants.bind(this)
   }
 
@@ -23,33 +24,19 @@ class EventView extends Component {
   }
 
   showEventEditionForm(sessionEvent) {
-    this.setState({
-      modal: {
-        type: 'MODAL_EVENT_FORM',
-        urlModal: null,
-        props: {
-          mode: 'edition',
-          title: `${trans('session_event_edition', {}, 'cursus')}`,
-          event: sessionEvent,
-          session: this.props.session,
-          confirmAction: this.props.editSessionEvent
-        },
-        fading: false
-      }
+    this.props.showModal(MODAL_EVENT_FORM, {
+      mode: 'edition',
+      title: `${trans('session_event_edition', {}, 'cursus')}`,
+      event: sessionEvent,
+      session: this.props.session,
+      confirmAction: this.props.editSessionEvent
     })
   }
 
   showEventCommentsManagement(sessionEvent) {
-    this.setState({
-      modal: {
-        type: 'MODAL_EVENT_COMMENTS',
-        urlModal: null,
-        props: {
-          title: this.props.canEdit ? trans('informations_management', {}, 'cursus') : t('informations'),
-          event: sessionEvent
-        },
-        fading: false
-      }
+    this.props.showModal(MODAL_EVENT_COMMENTS, {
+      title: this.props.canEdit ? trans('informations_management', {}, 'cursus') : t('informations'),
+      event: sessionEvent
     })
   }
 
@@ -88,10 +75,6 @@ class EventView extends Component {
 
   acceptParticipant(id) {
     this.props.acceptParticipant(id)
-  }
-
-  hideModal() {
-    this.setState({modal: {fading: true, urlModal: null}})
   }
 
   render() {
@@ -265,12 +248,12 @@ class EventView extends Component {
                     <div className="table-responsive">
                       <table className="table table-stripped">
                         <thead>
-                        <tr>
-                          <th>{t('last_name')}</th>
-                          <th>{t('first_name')}</th>
-                          <th>{t('status')}</th>
-                          <th>{t('actions')}</th>
-                        </tr>
+                          <tr>
+                            <th>{t('last_name')}</th>
+                            <th>{t('first_name')}</th>
+                            <th>{t('status')}</th>
+                            <th>{t('actions')}</th>
+                          </tr>
                         </thead>
                         <tbody>
                           {this.props.participants.map((p, idx) =>
@@ -315,14 +298,6 @@ class EventView extends Component {
             ''
           }
         </div>
-        {this.state.modal.type &&
-          this.props.createModal(
-            this.state.modal.type,
-            this.state.modal.props,
-            this.state.modal.fading,
-            this.hideModal.bind(this)
-          )
-        }
         <br/>
         <a className="btn btn-default" href={'#'}>
           <i className="fa fa-arrow-left"></i>
@@ -358,7 +333,8 @@ EventView.propTypes = {
   deleteParticipants: T.func,
   acceptParticipant: T.func,
   resetCurrentError: T.func,
-  createModal: T.func
+  createModal: T.func,
+  showModal: T.func.isRequired
 }
 
 function mapStateToProps(state) {
@@ -383,11 +359,10 @@ function mapDispatchToProps(dispatch) {
     registerParticipants: (eventId, usersIds) => dispatch(actions.registerUsersToSessionEvent(eventId, usersIds)),
     deleteParticipants: (sessionEventUsersIds) => dispatch(actions.deleteSessionEventUsers(sessionEventUsersIds)),
     acceptParticipant: (sessionEventUserId) => dispatch(actions.acceptSessionEventUser(sessionEventUserId)),
-    resetCurrentError: () => dispatch(actions.resetCurrentError()),
-    createModal: (type, props, fading, hideModal) => makeModal(type, props, fading, hideModal, hideModal)
+    resetCurrentError: () => dispatch(actions.resetCurrentError())
   }
 }
 
-const ConnectedEventView = connect(mapStateToProps, mapDispatchToProps)(EventView)
+const ConnectedEventView = connect(mapStateToProps, mapDispatchToProps)(withModal(EventView))
 
 export {ConnectedEventView as EventView}

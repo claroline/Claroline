@@ -5,18 +5,17 @@ import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/core/translation'
-import {t_res} from '#/main/core/resource/translation'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
-import {constants as evaluationConstants} from '#/main/core/resource/evaluation/constants'
+import {constants} from '#/main/core/resource/constants'
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
 import {Button} from '#/main/app/action/components/button'
-import {Alert} from '#/main/core/layout/alert/components/alert.jsx'
-import {AlertBlock} from '#/main/core/layout/alert/components/alert-block.jsx'
+import {Alert} from '#/main/app/alert/components/alert'
+import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {ScoreGauge} from '#/main/core/layout/evaluation/components/score-gauge.jsx'
 
 const UserProgression = props =>
   <section className="user-progression">
-    <h3 className="h2">{t_res('resource_overview_progression')}</h3>
+    <h3 className="h2">{trans('resource_overview_progression', {}, 'resource')}</h3>
 
     <div className="panel panel-default">
       <div className="panel-body">
@@ -30,7 +29,7 @@ const UserProgression = props =>
         <h4 className="user-progression-status h5">
           {props.statusTexts[props.status] ?
             props.statusTexts[props.status] :
-            evaluationConstants.EVALUATION_STATUSES[props.status]
+            constants.EVALUATION_STATUSES[props.status]
           }
         </h4>
       </div>
@@ -64,7 +63,7 @@ UserProgression.propTypes = {
 
 UserProgression.defaultProps = {
   unlocked: false,
-  status: evaluationConstants.EVALUATION_STATUS_NOT_ATTEMPTED,
+  status: constants.EVALUATION_STATUS_NOT_ATTEMPTED,
   statusTexts: {},
   details: []
 }
@@ -72,9 +71,9 @@ UserProgression.defaultProps = {
 const UserFeedback = props => {
   const displayed = props.displayed // Feedback are enabled
     && [
-      evaluationConstants.EVALUATION_STATUS_PASSED,
-      evaluationConstants.EVALUATION_STATUS_FAILED,
-      evaluationConstants.EVALUATION_STATUS_COMPLETED
+      constants.EVALUATION_STATUS_PASSED,
+      constants.EVALUATION_STATUS_FAILED,
+      constants.EVALUATION_STATUS_COMPLETED
     ].indexOf(props.status) > -1 // Evaluation is finished
 
   if (displayed) {
@@ -82,17 +81,17 @@ const UserFeedback = props => {
     let alertTitle
     let alertMessage
     switch (props.status) {
-      case evaluationConstants.EVALUATION_STATUS_PASSED:
+      case constants.EVALUATION_STATUS_PASSED:
         alertType = 'success'
         alertTitle = trans('evaluation_passed_feedback')
         alertMessage = props.success
         break
-      case evaluationConstants.EVALUATION_STATUS_FAILED:
+      case constants.EVALUATION_STATUS_FAILED:
         alertType = 'danger'
         alertTitle = trans('evaluation_failed_feedback')
         alertMessage = props.failure
         break
-      case evaluationConstants.EVALUATION_STATUS_COMPLETED:
+      case constants.EVALUATION_STATUS_COMPLETED:
       default:
         alertType = 'info'
         alertTitle = trans('evaluation_completed_feedback')
@@ -120,14 +119,14 @@ UserFeedback.propTypes = {
 }
 
 UserFeedback.defaultProps = {
-  status: evaluationConstants.EVALUATION_STATUS_NOT_ATTEMPTED,
+  status: constants.EVALUATION_STATUS_NOT_ATTEMPTED,
   success: trans('evaluation_passed_feedback_msg'),
   failure: trans('evaluation_failed_feedback_msg')
 }
 
 const ResourceOverview = props =>
   <section className="resource-section resource-overview">
-    <h2 className="sr-only">{t_res('resource_overview')}</h2>
+    <h2 className="sr-only">{trans('resource_overview', {}, 'resource')}</h2>
 
     <div className="row">
       <div className="user-column col-md-4">
@@ -139,7 +138,7 @@ const ResourceOverview = props =>
 
         {0 !== props.actions.length &&
           <section className="user-actions">
-            <h3 className="sr-only">{t_res('resource_overview_actions')}</h3>
+            <h3 className="sr-only">{trans('resource_overview_actions', {}, 'resource')}</h3>
 
             {props.actions.map((action, index) => !action.disabled ?
               <Button
@@ -169,7 +168,7 @@ const ResourceOverview = props =>
 
         {props.contentText &&
           <section className="resource-info">
-            <h3 className="h2">{t_res('resource_overview_info')}</h3>
+            <h3 className="h2">{trans('resource_overview_info', {}, 'resource')}</h3>
 
             <div className="panel panel-default">
               {typeof props.contentText === 'string' ?

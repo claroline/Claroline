@@ -3,8 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {t} from '#/main/core/translation'
-import {Redirect as RedirectTypes} from '#/main/core/router/prop-types'
-import {Router, Routes, NavLink, withRouter} from '#/main/core/router'
+import {Redirect as RedirectTypes} from '#/main/app/router/prop-types'
+import {Router, Routes, NavLink, withRouter} from '#/main/app/router'
 
 /**
  * Renders the form navigation.

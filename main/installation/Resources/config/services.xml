@@ -20,7 +20,7 @@
             <argument>%kernel.environment%</argument>
         </service>
 
-        <service id="claroline.installation.fixture_loader" class="%claroline.installation_fixture_loader.class%" shared="false">
+        <service id="claroline.installation.fixture_loader" class="%claroline.installation_fixture_loader.class%">
             <argument type="service" id="service_container" />
             <argument type="service" id="claroline.doctrine_fixture_executor" />
         </service>

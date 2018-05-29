@@ -148,29 +148,14 @@ claro_resources_node_api:
     options:
         expose: true
 
+# todo : remove me
+claro_resource_old:
+    resource: "@ClarolineCoreBundle/Controller/ResourceOldController.php"
+    prefix: /old
+    type: annotation
+
 claro_resource:
     resource: "@ClarolineCoreBundle/Controller/ResourceController.php"
-    prefix: resource
-    type: annotation
-
-claro_resource_icon:
-    resource: "@ClarolineCoreBundle/Controller/ResourceIconController.php"
-    prefix: resource_icon
-    type: annotation
-
-claro_resource_parameters:
-    resource: "@ClarolineCoreBundle/Controller/ResourcePropertiesController.php"
-    prefix: resource
-    type: annotation
-
-claro_resource_rights:
-    resource: "@ClarolineCoreBundle/Controller/ResourceRightsController.php"
-    prefix: resource
-    type: annotation
-
-claro_tool_resoure_manager:
-    resource: "@ClarolineCoreBundle/Controller/Tool/ResourceManagerController.php"
-    prefix: resource
     type: annotation
 
 claro_widget:
@@ -250,14 +235,6 @@ claro_plugin_api:
     resource: "@ClarolineCoreBundle/Controller/API/Admin/PluginController.php"
     prefix: api
     type: rest
-    defaults: {_format: json}
-    options:
-        expose: true
-
-claro_resources_api:
-    resource: "@ClarolineCoreBundle/Controller/API/Resource/ResourceController.php"
-    type: rest
-    prefix: api
     defaults: {_format: json}
     options:
         expose: true

@@ -3,13 +3,12 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import cloneDeep from 'lodash/cloneDeep'
 import classes from 'classnames'
-import Modal from 'react-bootstrap/lib/Modal'
 
 import {trans} from '#/main/core/translation'
 import {actions as listActions} from '#/main/core/data/list/actions'
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
-import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
+import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {TextGroup}  from '#/main/core/layout/form/components/group/text-group.jsx'
 
 import {actions} from '#/plugin/reservation/administration/resource-type/actions'
@@ -93,13 +92,11 @@ class ResourceTypes extends Component {
 
   render() {
     return (
-      <BaseModal {...this.props}>
-        <Modal.Header closeButton>
-          <Modal.Title>
-            {trans('resource_types', {}, 'reservation')}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+      <Modal
+        {...this.props}
+        title={trans('resource_types', {}, 'reservation')}
+      >
+        <div className="modal-body">
           {!this.state.showForm['new'] &&
             <button
               className="btn btn-primary resource-type-creation-btn"
@@ -148,9 +145,11 @@ class ResourceTypes extends Component {
                       />
                       <span
                         className="fa fa-fw fa-trash pointer-hand text-danger"
-                        onClick={() => this.props.showModal(MODAL_DELETE_CONFIRM, {
+                        onClick={() => this.props.showModal(MODAL_CONFIRM, {
+                          icon: 'fa fa-fw fa-trash-o',
                           title: trans('confirm_resource_type_deletion_title', {}, 'reservation'),
                           question: trans('confirm_resource_type_deletion_content', {}, 'reservation'),
+                          dangerous: true,
                           handleConfirm: () => this.props.deleteResourceType(rt.id)
                         })}
                       />
@@ -160,8 +159,8 @@ class ResourceTypes extends Component {
               </li>
             )}
           </ul>
-        </Modal.Body>
-      </BaseModal>
+        </div>
+      </Modal>
     )
   }
 }

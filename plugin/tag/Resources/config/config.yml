@@ -7,8 +7,7 @@ plugin:
 
   resource_actions:
     - name: tag_action
-      is_form: true
-      is_custom: true
+      decoder: administrate
 
   #widgets:
   #  - name: claroline_tag_resources_widget

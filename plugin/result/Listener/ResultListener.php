@@ -13,9 +13,9 @@ namespace Claroline\ResultBundle\Listener;
 
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
-use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Form\Handler\FormHandler;
 use Claroline\ResultBundle\Entity\Result;
 use Claroline\ResultBundle\Manager\ResultManager;

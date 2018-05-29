@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/core/translation'
-import {generateUrl} from '#/main/core/api/router'
+import {url} from '#/main/app/api'
 import {DataListContainer} from '#/main/core/data/list/containers/data-list'
 import {UserCard} from '#/main/core/user/data/components/user-card'
 import {constants as listConst} from '#/main/core/data/list/constants'
@@ -45,7 +45,7 @@ const ContactsComponent = props =>
         type: 'url',
         icon: 'fa fa-fw fa-paper-plane-o',
         label: trans('send_message'),
-        target: `${generateUrl('claro_message_show', {'message': 0})}?${rows.map(c => `userIds[]=${c.data.autoId}`).join('&')}`
+        target: url(['claro_message_show', {message: 0}], {userIds: rows.map(user => user.data.autoId)})
       }
     ]}
     definition={[

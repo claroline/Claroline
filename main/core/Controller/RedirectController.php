@@ -14,9 +14,10 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * This controller is used to do some redirections/route alias. It's not always possible to do it
+ * This controller is used to do some redirects/route alias. It's not always possible to do it
  * in the concerned controller because path do have prefixes we want to remove/override sometimes.
  */
 class RedirectController extends Controller
@@ -25,6 +26,10 @@ class RedirectController extends Controller
      * @EXT\Route("ws/{slug}/")
      * @EXT\Route("ws/{slug}")
      * @EXT\ParamConverter("workspace",  options={"mapping": {"slug": "slug"}})
+     *
+     * @param Workspace $workspace
+     *
+     * @return RedirectResponse
      */
     public function openWorkspaceSlugAction(Workspace $workspace)
     {
@@ -43,7 +48,7 @@ class RedirectController extends Controller
      *
      * @param Workspace $workspace
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function urlSubscriptionGenerateAction(Workspace $workspace)
     {

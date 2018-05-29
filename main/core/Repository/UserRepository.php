@@ -1214,7 +1214,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
 
         $query = $this->_em->createQuery($dql);
 
-        return $executeQuery ? $query->getSingleScalarResult() : $query;
+        return $executeQuery ? (int) $query->getSingleScalarResult() : $query;
     }
 
     public function countByRoles(array $roles, $includeGrps)
@@ -1230,7 +1230,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
             $query = $this->_em->createQuery($dql);
             $query->setParameter('roles', $roles);
 
-            return $query->getSingleScalarResult();
+            return (int) $query->getSingleScalarResult();
         }
     }
 

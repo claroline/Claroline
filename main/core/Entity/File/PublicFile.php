@@ -69,19 +69,6 @@ class PublicFile
      */
     protected $sourceType;
 
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\File\PublicFile",
-     *     mappedBy="publicFile"
-     * )
-     */
-    protected $publicFileUses;
-
-    public function __construct()
-    {
-        $this->publicFileUses = new ArrayCollection();
-    }
-
     public function getId()
     {
         return $this->id;
@@ -102,6 +89,11 @@ class PublicFile
         $this->size = $size;
     }
 
+    /**
+     * @return string
+     *
+     * @depreacted always return raw size
+     */
     public function getFormattedSize()
     {
         if ($this->size < 1024) {
@@ -191,10 +183,5 @@ class PublicFile
     public function setSourceType($sourceType)
     {
         $this->sourceType = $sourceType;
-    }
-
-    public function getPublicFileUses()
-    {
-        return $this->publicFileUses->toArray();
     }
 }

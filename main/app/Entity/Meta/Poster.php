@@ -11,7 +11,7 @@ trait Poster
      *
      * @var string
      */
-    protected $poster;
+    private $poster;
 
     /**
      * @return string

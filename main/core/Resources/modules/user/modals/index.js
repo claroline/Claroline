@@ -1,20 +1,15 @@
-import {registerModals} from '#/main/core/layout/modal'
+/**
+ * User modals.
+ *
+ * Reexports all defined modals.
+ */
 
-// reexport message modals
-import {MODAL_SEND_MESSAGE} from '#/main/core/user/message/modals'
-
-// user modals
-import {MODAL_CHANGE_PASSWORD, ChangePasswordModal} from '#/main/core/user/modals/components/change-password'
-import {MODAL_CHANGE_PUBLIC_URL, ChangePublicUrlModal} from '#/main/core/user/modals/components/change-public-url'
-
-// register user modals
-registerModals([
-  [MODAL_CHANGE_PASSWORD, ChangePasswordModal],
-  [MODAL_CHANGE_PUBLIC_URL, ChangePublicUrlModal]
-])
+import {MODAL_USER_MESSAGE} from '#/main/core/user/modals/message'
+import {MODAL_USER_PASSWORD} from '#/main/core/user/modals/password'
+import {MODAL_USER_PUBLIC_URL} from '#/main/core/user/modals/public-url'
 
 export {
-  MODAL_SEND_MESSAGE,
-  MODAL_CHANGE_PASSWORD,
-  MODAL_CHANGE_PUBLIC_URL
+  MODAL_USER_MESSAGE,
+  MODAL_USER_PASSWORD,
+  MODAL_USER_PUBLIC_URL
 }

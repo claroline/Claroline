@@ -1,9 +1,8 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import Modal from 'react-bootstrap/lib/Modal'
 
 import {t, tex} from '#/main/core/translation'
-import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
+import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 
 export const MODAL_DUPLICATE_ITEM = 'MODAL_DUPLICATE_ITEM'
@@ -26,10 +25,10 @@ class DuplicateItemModal extends Component {
 
   render() {
     return (
-      <BaseModal
+      <Modal
         {...this.props}
       >
-        <Modal.Body>
+        <div className="modal-body">
           <FormGroup
             id="item-duplicate-amount"
             label={tex('amount')}
@@ -44,7 +43,7 @@ class DuplicateItemModal extends Component {
               onChange={e => this.handleChange(parseInt(e.target.value))}
             />
           </FormGroup>
-        </Modal.Body>
+        </div>
 
         <button
           className="modal-btn btn btn-primary"
@@ -53,7 +52,7 @@ class DuplicateItemModal extends Component {
         >
           {t('duplicate')}
         </button>
-      </BaseModal>
+      </Modal>
     )
   }
 }

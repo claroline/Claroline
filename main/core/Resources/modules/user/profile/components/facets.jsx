@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {Routes} from '#/main/core/router'
+import {Routes} from '#/main/app/router'
 
 import {ProfileFacet as ProfileFacetTypes} from '#/main/core/user/profile/prop-types'
 import {getMainFacet} from '#/main/core/user/profile/utils'

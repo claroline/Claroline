@@ -301,6 +301,7 @@ class LogListener
 
             // Increment view count if viewer is not creator of the resource
             if (is_null($user) || is_string($user) || $user !== $event->getResource()->getCreator()) {
+                // TODO : add me in an event on the resource 'open'
                 $this->resourceNodeManager->addView($event->getResource());
             }
             if ($logCreated && !empty($user) && 'anon.' !== $user && 'directory' !== $event->getResource()->getResourceType()->getName()) {

@@ -35,12 +35,19 @@ class UserOrganizationReference
      *     inversedBy="userOrganizationReferences"
      * )
      * @ORM\JoinColumn(name="user_id", nullable=false, onDelete="CASCADE")
+     *
+     * @var User
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization", inversedBy="userOrganizationReferences")
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization",
+     *     inversedBy="userOrganizationReferences"
+     * )
      * @ORM\JoinColumn(name="oganization_id", nullable=false, onDelete="CASCADE")
+     *
+     * @var Organization
      */
     private $organization;
 
@@ -48,6 +55,11 @@ class UserOrganizationReference
      * @ORM\Column(name="is_main", type="boolean")
      */
     private $isMain = false;
+
+    public function getId()
+    {
+        return $this->id;
+    }
 
     public function isMain()
     {

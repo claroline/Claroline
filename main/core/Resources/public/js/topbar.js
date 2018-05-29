@@ -15,7 +15,7 @@
     function responsiveTopBar() {
         $('#top_bar').removeClass('break');
 
-        if ($('#top_bar .navbar-collapse').outerHeight() > 55) {
+        if ($('#top_bar .navbar-collapse').outerHeight() > 75) {
             $('#top_bar').addClass('break');
         } else {
             $('#top_bar').css('overflow', 'visible');

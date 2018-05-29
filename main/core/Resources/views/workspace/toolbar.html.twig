@@ -1,0 +1,8 @@
+{% if not hideToolsMenu %}
+    <aside
+        class="workspace-toolbar-container app-toolbar"
+        data-workspace="{{ workspace | api_serialize | json_encode | raw | escape }}"
+        data-opened-tool="{{ '"' ~ current ~ '"' }}" {# double quotes are not a typo, this is needed to be catched as a string by JSON.parse #}
+        data-tools="{{ tools | json_encode | raw | escape }}"
+    ></aside>
+{% endif %}

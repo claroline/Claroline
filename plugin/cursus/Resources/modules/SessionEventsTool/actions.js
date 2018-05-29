@@ -1,10 +1,9 @@
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
-import {generateUrl} from '#/main/core/api/router'
-import {API_REQUEST} from '#/main/core/api/actions'
+import {url} from '#/main/app/api'
+import {API_REQUEST} from '#/main/app/api'
 import {actions as listActions} from '#/main/core/data/list/actions'
 import {select as listSelect} from '#/main/core/data/list/selectors'
 import {trans} from '#/main/core/translation'
-import {VIEW_MANAGER, VIEW_USER, VIEW_EVENT} from './enums'
 
 export const SESSION_EVENTS_LOAD = 'SESSION_EVENTS_LOAD'
 export const SESSION_EVENT_LOAD = 'SESSION_EVENT_LOAD'
@@ -57,7 +56,7 @@ actions.deleteSessionEvent = (workspaceId, sessionEventId) => ({
 
 actions.deleteSessionEvents = (workspaceId, sessionEvents) => ({
   [API_REQUEST]: {
-    url: generateUrl('claro_cursus_session_events_delete', {workspace: workspaceId}) + getQueryString(sessionEvents),
+    url: url(['claro_cursus_session_events_delete', {workspace: workspaceId}]) + getQueryString(sessionEvents),
     request: {
       method: 'DELETE'
     },
@@ -222,7 +221,7 @@ actions.fetchSessionEvents = () => (dispatch, getState) => {
   const state = getState()
   const page = listSelect.currentPage(state)
   const pageSize = listSelect.pageSize(state)
-  const url = generateUrl('claro_cursus_session_events_search', {session: state.sessionId, page: page, limit: pageSize}) + '?'
+  const url = url(['claro_cursus_session_events_search', {session: state.sessionId, page: page, limit: pageSize}]) + '?'
 
   // build queryString
   let queryString = ''
@@ -269,7 +268,7 @@ actions.fetchSessionEvent = (sessionEventId) => {
 
 actions.registerUsersToSessionEvent = (sessionEventId, usersIds) => ({
   [API_REQUEST]: {
-    url: generateUrl('claro_cursus_session_event_users_register', {sessionEvent: sessionEventId}) + getQueryString(usersIds),
+    url: url(['claro_cursus_session_event_users_register', {sessionEvent: sessionEventId}]) + getQueryString(usersIds),
     request: {
       method: 'PUT'
     },
@@ -293,7 +292,7 @@ actions.registerUsersToSessionEvent = (sessionEventId, usersIds) => ({
 
 actions.deleteSessionEventUsers = (sessionEventUsersIds) => ({
   [API_REQUEST]: {
-    url: generateUrl('claro_cursus_session_event_users_delete') + getQueryString(sessionEventUsersIds),
+    url: url(['claro_cursus_session_event_users_delete']) + getQueryString(sessionEventUsersIds),
     request: {
       method: 'DELETE'
     },
@@ -321,16 +320,11 @@ actions.acceptSessionEventUser = (sessionEventUserId) => ({
   }
 })
 
-actions.displayMainView = () => (dispatch, getState) => {
-  const state = getState()
-  const mode = state['canEdit'] ? VIEW_MANAGER : VIEW_USER
-  dispatch(actions.updateViewMode(mode))
-}
+actions.displayMainView = () => {}
 
 actions.displaySessionEvent = (sessionEventId) => {
   return (dispatch) => {
     dispatch(actions.fetchSessionEvent(sessionEventId))
-    dispatch(actions.updateViewMode(VIEW_EVENT))
   }
 }
 

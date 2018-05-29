@@ -3,8 +3,8 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
-import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
 
 import {DropzoneType, CorrectionType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {select} from '#/plugin/drop-zone/resources/dropzone/selectors'
@@ -40,9 +40,11 @@ class CorrectionRow extends Component {
   }
 
   deleteCorrection(correctionId) {
-    this.props.showModal(MODAL_DELETE_CONFIRM, {
+    this.props.showModal(MODAL_CONFIRM, {
+      icon: 'fa fa-fw fa-trash-o',
       title: trans('delete_correction', {}, 'dropzone'),
       question: trans('delete_correction_confirm_message', {}, 'dropzone'),
+      dangerous: true,
       handleConfirm: () => this.props.deleteCorrection(correctionId)
     })
   }

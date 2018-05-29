@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {Routes} from '#/main/core/router'
+import {Routes} from '#/main/app/router'
 import {currentUser} from '#/main/core/user/current'
 
 import {select} from '#/plugin/path/resources/path/selectors'

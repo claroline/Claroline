@@ -1,9 +1,11 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import Modal from 'react-bootstrap/lib/Modal'
 import classes from 'classnames'
 import moment from 'moment'
-import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
+
+import {registry} from '#/main/app/modals/registry'
+import {Modal} from '#/main/app/overlay/modal/components/modal'
+
 import {t, trans} from '#/main/core/translation'
 import {Date} from '#/main/core/layout/form/components/field/date.jsx'
 
@@ -105,8 +107,8 @@ export class EventRepeatFormModal  extends Component {
 
   render() {
     return (
-      <BaseModal {...this.props}>
-        <Modal.Body>
+      <Modal {...this.props}>
+        <div className="modal-body">
           <div className="row">
             <div className="col-md-12">
               <label className="control-label">
@@ -225,16 +227,16 @@ export class EventRepeatFormModal  extends Component {
               </div>
             </div>
           }
-        </Modal.Body>
-        <Modal.Footer>
+        </div>
+        <div className="modal-footer">
           <button className="btn btn-default" onClick={this.props.fadeModal}>
             {t('cancel')}
           </button>
           <button className="btn btn-primary" onClick={() => this.validateSessionEvent()}>
             {t('ok')}
           </button>
-        </Modal.Footer>
-      </BaseModal>
+        </div>
+      </Modal>
     )
   }
 }
@@ -253,3 +255,5 @@ EventRepeatFormModal.propTypes = {
   hideModal: T.func.isRequired,
   repeatSessionEvent: T.func.isRequired
 }
+
+registry.add(MODAL_EVENT_REPEAT_FORM, EventRepeatFormModal)

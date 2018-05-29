@@ -11,7 +11,7 @@
 
 namespace Claroline\PdfPlayerBundle\Listener;
 
-use Claroline\CoreBundle\Event\PlayFileEvent;
+use Claroline\CoreBundle\Event\Resource\File\PlayFileEvent;
 use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Response;

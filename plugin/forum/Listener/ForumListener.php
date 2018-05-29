@@ -12,14 +12,13 @@
 namespace Claroline\ForumBundle\Listener;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
-use Claroline\CoreBundle\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\DeleteUserEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
-use Claroline\CoreBundle\Event\OpenResourceEvent;
-use Claroline\CoreBundle\Event\ResourceCreatedEvent;
+use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Form\ForumType;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -110,12 +109,6 @@ class ForumListener
             }
             $em->flush();
         }
-    }
-
-    public function onResourceCreated(ResourceCreatedEvent $event)
-    {
-        $node = $event->getResourceNode();
-        $this->container->get('claroline.manager.forum_manager')->createDefaultPostRights($node);
     }
 
     public function onGenerateResourceTracking(GenericDataEvent $event)

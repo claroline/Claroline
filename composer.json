@@ -118,7 +118,8 @@
         "ujm/exo-bundle": "*",
         "icap/lesson-bundle": "*",
         "icap/inwicast-plugin-bundle": "*",
-        "claroline/drop-zone-bundle": "*"
+        "claroline/drop-zone-bundle": "*",
+        "claroline/link-bundle": "*"
     },
     "autoload": {
         "psr-4": {
@@ -184,7 +185,8 @@
             "Claroline\\BigBlueButtonBundle\\": "plugin/big-blue-button",
             "Icap\\InwicastBundle\\": "plugin/inwicast",
             "Claroline\\DropZoneBundle\\": "plugin/drop-zone",
-            "Claroline\\PlannedNotificationBundle\\": "plugin/planned-notification"
+            "Claroline\\PlannedNotificationBundle\\": "plugin/planned-notification",
+            "Claroline\\LinkBundle\\": "plugin/link"
         }
     },
     "extra": {
@@ -248,7 +250,8 @@
             "Claroline\\BigBlueButtonBundle\\ClarolineBigBlueButtonBundle",
             "Icap\\InwicastBundle\\IcapInwicastBundle",
             "Claroline\\DropZoneBundle\\ClarolineDropZoneBundle",
-            "Claroline\\PlannedNotificationBundle\\ClarolinePlannedNotificationBundle"
+            "Claroline\\PlannedNotificationBundle\\ClarolinePlannedNotificationBundle",
+            "Claroline\\LinkBundle\\ClarolineLinkBundle"
         ]
     }
 }

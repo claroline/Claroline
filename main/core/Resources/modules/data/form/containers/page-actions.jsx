@@ -1,7 +1,7 @@
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {url} from '#/main/core/api/router'
+import {url} from '#/main/app/api'
 import {FormPageActions} from '#/main/core/layout/form/components/page-actions.jsx'
 
 import {actions} from '#/main/core/data/form/actions'

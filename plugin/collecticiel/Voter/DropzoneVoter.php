@@ -10,7 +10,7 @@ namespace Innova\CollecticielBundle\Voter;
 
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Manager\Resource\MaskManager;
 use Innova\CollecticielBundle\Entity\Dropzone;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;

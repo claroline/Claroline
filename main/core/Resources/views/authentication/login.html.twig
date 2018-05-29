@@ -4,7 +4,7 @@
 
 {# we override wrapper to remove max-width to make the background fill the page #}
 {% block wrap_attrs %}
-    class="app-login app-content app-content-full container-fluid"
+    class="app-login app-content"
 {% endblock %}
 
 {% set externalAuthentication        = render(controller('ClarolineCoreBundle:Authentication:renderExternalAuthenticationButton', {})) %}

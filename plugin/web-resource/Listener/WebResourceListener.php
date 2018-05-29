@@ -13,12 +13,12 @@ namespace Claroline\WebResourceBundle\Listener;
 
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\DownloadResourceEvent;
-use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
+use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Form\FileType;
 use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -150,7 +150,7 @@ class WebResourceListener
     /**
      * @DI\Observe("open_claroline_web_resource")
      *
-     * @param \Claroline\CoreBundle\Event\CreateResourceEvent|\Claroline\CoreBundle\Event\OpenResourceEvent $event
+     * @param \Claroline\CoreBundle\Event\CreateResourceEvent|\Claroline\CoreBundle\Event\Resource\OpenResourceEvent $event
      */
     public function onOpenWebResource(OpenResourceEvent $event)
     {

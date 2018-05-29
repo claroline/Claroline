@@ -1,6 +1,6 @@
-import {url} from '#/main/core/api/router'
+import {url} from '#/main/app/api'
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
-import {API_REQUEST} from '#/main/core/api/actions'
+import {API_REQUEST} from '#/main/app/api'
 
 import {select} from '#/plugin/drop-zone/resources/dropzone/selectors'
 import {actions as playerActions} from '#/plugin/drop-zone/resources/dropzone/player/actions'

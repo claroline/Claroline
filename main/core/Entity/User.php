@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Entity\Model\OrganizationsTrait;
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Organization\UserOrganizationReference;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Task\ScheduledTask;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Validator\Constraints as ClaroAssert;
@@ -36,18 +35,17 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\UserRepository")
  * @ORM\Table(
  *     name="claro_user",
  *     indexes={
  *         @Index(name="code_idx", columns={"administrative_code"}),
  *         @Index(name="enabled_idx", columns={"is_enabled"}),
  *         @Index(name="is_removed", columns={"is_removed"})
- * }
- *
- * )
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\UserRepository")
+ * })
  * @ORM\EntityListeners({"Claroline\CoreBundle\Listener\Entity\UserListener"})
  * @ORM\HasLifecycleCallbacks
+ *
  * @DoctrineAssert\UniqueEntity("username")
  * @DoctrineAssert\UniqueEntity("email")
  * @ClaroAssert\Username()
@@ -185,18 +183,6 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\JoinTable(name="claro_user_role")
      */
     protected $roles;
-
-    /**
-     * @var ResourceNode[]|ArrayCollection
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
-     *     mappedBy="creator"
-     * )
-     *
-     * @todo relation should not be declared here (only use Unidirectional)
-     */
-    protected $resourceNodes;
 
     /**
      * @var Workspace\Workspace
@@ -446,7 +432,6 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         parent::__construct();
         $this->roles = new ArrayCollection();
         $this->groups = new ArrayCollection();
-        $this->resourceNodes = new ArrayCollection();
         $this->locations = new ArrayCollection();
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
         $this->orderedTools = new ArrayCollection();

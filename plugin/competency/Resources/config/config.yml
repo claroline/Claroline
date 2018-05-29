@@ -4,6 +4,7 @@ plugin:
     admin_tools:
         - name: competencies
           class: graduation-cap
+
         - name: learning-objectives
           class: arrow-up
 
@@ -19,6 +20,5 @@ plugin:
 
     resource_actions:
         - name: manage_competencies
-          is_form: false
-          is_custom: true
-          value: edit
+          group: management
+          decoder: administrate

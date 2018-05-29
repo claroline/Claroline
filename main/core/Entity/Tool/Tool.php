@@ -110,7 +110,8 @@ class Tool
     /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool",
-     *     mappedBy="tool"
+     *     mappedBy="tool",
+     *     cascade={"remove"}
      * )
      */
     protected $orderedTools;
@@ -119,7 +120,7 @@ class Tool
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder",
      *     mappedBy="tool",
-     *     cascade={"persist"}
+     *     cascade={"persist", "remove"}
      * )
      */
     protected $maskDecoders;
@@ -127,7 +128,8 @@ class Tool
     /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\PwsToolConfig",
-     *     mappedBy="tool"
+     *     mappedBy="tool",
+     *     cascade={"remove"}
      * )
      */
     protected $pwsToolConfig;

@@ -1,8 +1,7 @@
 import {makeReducer, combineReducers} from '#/main/core/scaffolding/reducer'
-import {makePageReducer} from '#/main/core/layout/page/reducer'
 import {LOAD_DASHBOARD} from '#/main/core/tools/workspace/dashboard/actions'
 
-const reducer = makePageReducer([], {
+const reducer = {
   workspaceId: makeReducer(null, {}),
   dashboard: combineReducers({
     loaded: makeReducer(false, {
@@ -12,6 +11,8 @@ const reducer = makePageReducer([], {
       [LOAD_DASHBOARD]: (state, action) => action.data
     })
   })
-})
+}
 
-export {reducer}
+export {
+  reducer
+}

@@ -5,7 +5,8 @@ import {connect} from 'react-redux'
 import {tex} from '#/main/core/translation'
 import {Button} from '#/main/app/action/components/button'
 import {HtmlText} from '#/main/core/layout/components/html-text'
-import {select as resourceSelect} from '#/main/core/resource/selectors'
+import {selectors as resourceSelect} from '#/main/core/resource/store'
+import {hasPermission} from '#/main/core/resource/permissions'
 import {select as playerSelectors} from './../selectors'
 import quizSelectors from './../../selectors'
 import {selectors as paperSelectors} from './../../papers/selectors'
@@ -74,7 +75,7 @@ AttemptEnd.propTypes = {
 
 const ConnectedAttemptEnd = connect(
   (state) => ({
-    admin: resourceSelect.editable(state) || quizSelectors.papersAdmin(state),
+    admin: hasPermission('edit', resourceSelect.resourceNode(state)) || quizSelectors.papersAdmin(state),
     paper: playerSelectors.paper(state),
     endMessage: playerSelectors.quizEndMessage(state),
     endNavigation: playerSelectors.quizEndNavigation(state),

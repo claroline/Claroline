@@ -3,7 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {select as resourceSelect} from '#/main/core/resource/selectors'
+import {selectors as resourceSelect} from '#/main/core/resource/store'
+import {hasPermission} from '#/main/core/resource/permissions'
 import {select as formSelect} from '#/main/core/data/form/selectors'
 import {actions as formActions} from '#/main/core/data/form/actions'
 import {RoutedPageContent} from '#/main/core/layout/router'
@@ -124,7 +125,7 @@ Resource.propTypes = {
 
 const DropzoneResource = connect(
   (state) => ({
-    canEdit: resourceSelect.editable(state),
+    canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
     dropzone: state.dropzone,
     saveEnabled: formSelect.saveEnabled(formSelect.form(state, 'dropzoneForm')),
     myDrop: select.myDrop(state)

@@ -2,5 +2,5 @@ plugin:
   has_options: true
 
   resources:
-    - class: Claroline\BigBlueButtonBundle\Entity\BBB
-      name: claroline_big_blue_button
+    - name: claroline_big_blue_button
+      class: Claroline\BigBlueButtonBundle\Entity\BBB

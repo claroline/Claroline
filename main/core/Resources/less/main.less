@@ -24,7 +24,6 @@
 @import "layout/index";
 @import "resources/index";
 @import "tinymce/index";
-@import "tools/index";
 @import "users/index";
 @import "widgets/index";
 
@@ -120,43 +119,6 @@ ul.desktop-parameters-menu {
    margin-left: 30px ;
    font-size: floor(16px * @font-size-modifier);
    cursor: pointer;
-}
-
-.impersonalitation {
-    &.spaced .spacer {
-        height: @navbar-height;
-    }
-
-    .navbar-fixed-top {
-        .box-shadow(0 2px 3px rgba(0,0,0,.25));
-
-        @media (max-width: @grid-float-breakpoint) {
-            .navbar-nav {
-                float: left;
-            }
-
-            .navbar-nav.navbar-right {
-                float: right;
-            }
-        }
-
-        z-index: (@zindex-navbar-fixed - 1);
-        background-color: darken(@brand-warning, 5%);
-        border: none;
-        .navbar-nav li a {
-            color: #fff;
-            font-weight: bold;
-        }
-
-        .navbar-nav.navbar-right li a {
-            .font-size-modifier(20px);
-        }
-    }
-
-    &.spaced .navbar-fixed-top {
-        margin-top: @navbar-height;
-        z-index: (@zindex-navbar-fixed - 3);
-    }
 }
 
 .ordering-icon.disabled {

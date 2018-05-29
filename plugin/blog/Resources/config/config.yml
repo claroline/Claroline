@@ -3,13 +3,12 @@ plugin:
     icon: icap_blog_icon.png
 
     resources:
-        - class: Icap\BlogBundle\Entity\Blog
-          name: icap_blog
-          is_exportable: false
+        - name: icap_blog
+          class: Icap\BlogBundle\Entity\Blog
+          exportable: false
           actions:
             - name: post
-            - name: administrate
-              menu_name: configure_blog
+
           activity_rules:
             - action: resource-read
             - action: resource-icap_blog-post_create

@@ -39,7 +39,10 @@ bootstrap(
 
     return {
       clacoForm: clacoForm,
-      resourceNode: initialData.resourceNode,
+      resource: {
+        node: initialData.resourceNode,
+        evaluation: initialData.evaluation
+      },
       canGeneratePdf: initialData.canGeneratePdf === 1,
       entries: {
         myEntriesCount: initialData.myEntriesCount

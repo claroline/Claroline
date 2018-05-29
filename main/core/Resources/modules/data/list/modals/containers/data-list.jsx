@@ -2,15 +2,15 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
-import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
-import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
+import {Modal} from '#/main/app/overlay/modal/components/modal'
 
+import {DataListContainer} from '#/main/core/data/list/containers/data-list'
 import {DataListProperty} from '#/main/core/data/list/prop-types'
 
 const MODAL_DATA_LIST = 'MODAL_DATA_LISt'
 
 const DataListModal = props =>
-  <BaseModal
+  <Modal
     {...props}
     className="data-picker-modal"
     bsSize="lg"
@@ -32,7 +32,7 @@ const DataListModal = props =>
     >
       {props.confirmText}
     </button>
-  </BaseModal>
+  </Modal>
 
 DataListModal.propTypes = {
   name: T.string.isRequired,

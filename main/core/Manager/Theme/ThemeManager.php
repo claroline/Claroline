@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Manager\Theme;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\ThemeSerializer;
+use Claroline\CoreBundle\API\Serializer\Platform\ThemeSerializer;
 use Claroline\CoreBundle\Entity\Theme\Theme;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;

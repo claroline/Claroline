@@ -209,6 +209,7 @@ class Persister
             if (!isset($this->exoType)) {
                 $this->exoType = new ResourceType();
                 $this->exoType->setName('exercise');
+                $this->exoType->setClass('UJM\ExoBundle\Entity\Exercise');
                 $this->om->persist($this->exoType);
             }
 

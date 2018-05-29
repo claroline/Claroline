@@ -1,5 +1,6 @@
 /* global document */
 
+import isEmpty   from 'lodash/isEmpty'
 import invariant from 'invariant'
 
 /**
@@ -33,6 +34,11 @@ function currentUser() {
   return user
 }
 
+function isAuthenticated() {
+  return !isEmpty(currentUser())
+}
+
 export {
-  currentUser
+  currentUser,
+  isAuthenticated
 }

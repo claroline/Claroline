@@ -1,7 +1,8 @@
 import {createSelector} from 'reselect'
 
 import {currentUser} from '#/main/core/user/current'
-import {select as resourceSelect} from '#/main/core/resource/selectors'
+import {selectors as resourceSelect} from '#/main/core/resource/store'
+import {hasPermission} from '#/main/core/resource/permissions'
 
 // TODO : use reselect
 // TODO : there is possible code refactoring with editor/selectors.js
@@ -38,13 +39,13 @@ const quizNumbering = createSelector(
 )
 
 const papersAdmin = createSelector(
-  [resourceSelect.currentRights],
-  (currentRights) => !!currentRights.manage_papers
+  [resourceSelect.resourceNode],
+  (resourceNode) => hasPermission('manage_papers', resourceNode)
 )
 
 const docimologyAdmin = createSelector(
-  [resourceSelect.currentRights],
-  (currentRights) => !!currentRights.view_docimology
+  [resourceSelect.resourceNode],
+  (resourceNode) => hasPermission('view_docimology', resourceNode)
 )
 
 // TODO : remove default export and use named one

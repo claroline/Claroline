@@ -20,9 +20,9 @@ use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\ResourceRichTextInterface;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Claroline\CoreBundle\Library\Transfert\ToolRichTextInterface;
-use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Manager\Resource\MaskManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -832,7 +832,6 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         $setParentNull = false
     ) {
         $parentId = $resourceNode->getParent() ? $resourceNode->getParent()->getGuid() : null;
-        $resourceNode = $this->resourceManager->getRealTarget($resourceNode, false);
 
         $data = [];
         $resElement = [];

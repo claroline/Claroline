@@ -247,15 +247,11 @@ class OperationExecutor
         $bundles = $this->getBundlesByFqcn();
 
         foreach ($operations as $operation) {
-            $installer = 'Claroline\CoreBundle\ClarolineCoreBundle' === $operation->getBundleFqcn() ?
-                $this->baseInstaller :
-                $this->pluginInstaller;
-
             if (Operation::INSTALL === $operation->getType()) {
-                $installer->install($bundles[$operation->getBundleFqcn()]);
+                $this->pluginInstaller->install($bundles[$operation->getBundleFqcn()]);
             } elseif (Operation::UPDATE === $operation->getType()) {
                 if (array_key_exists($operation->getBundleFqcn(), $bundles)) {
-                    $installer->update(
+                    $this->pluginInstaller->update(
                       $bundles[$operation->getBundleFqcn()],
                       $operation->getFromVersion(),
                       $operation->getToVersion()

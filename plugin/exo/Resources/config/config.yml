@@ -2,15 +2,16 @@ plugin:
     has_options: false
     icon: res_exo.png
     resources:
-        - class: UJM\ExoBundle\Entity\Exercise
-          name: ujm_exercise
-          is_exportable: true
+        - name: ujm_exercise
+          class: UJM\ExoBundle\Entity\Exercise
+          exportable: true
           actions:
-            - name: manage_papers
-            - name: view_docimology
-              menu_name: docimology
-          activity_rules:
-            - action: resource-ujm_exercise-exercise_evaluated
+              - name: manage_papers
+                decoder: manage_papers
+
+              - name: view_docimology
+                decoder: view_docimology
+                group: log
 
     tools:
         - name: ujm_questions

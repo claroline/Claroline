@@ -1,4 +1,4 @@
-import {API_REQUEST} from '#/main/core/api/actions'
+import {API_REQUEST} from '#/main/app/api'
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
 
 export const LOG_REFRESH = 'LOG_REFRESH'

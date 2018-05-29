@@ -17,6 +17,7 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
 
     private function addResourceCustomAction()
     {
+        // this should not be done like this
         $this->log('Adding custom action to resource...');
 
         $em = $this->container->get('doctrine.orm.entity_manager');
@@ -31,7 +32,7 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
             $action->setName('manage-competencies');
             $action->setResourceType($exoType);
             // the new action will be bound to the 'open' permission
-            $action->setValue(MaskDecoder::OPEN);
+            $action->setDecoder('open');
             $em->persist($action);
         }
 

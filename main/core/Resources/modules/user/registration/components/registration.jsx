@@ -3,13 +3,13 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import {select} from '#/main/core/user/registration/selectors'
 import {trans} from '#/main/core/translation'
-import {generateUrl} from '#/main/core/api/router'
+import {url} from '#/main/app/api'
 
 /**
  * @constructor
  */
 const Registration = props => {
-  const link = `<a href='${generateUrl('claro_workspace_subscription_url_generate_user', {workspace: props.defaultWorkspaces[0].id})}'>${trans('here')}</a>`
+  const link = `<a href='${url(['claro_workspace_subscription_url_generate_user', {workspace: props.defaultWorkspaces[0].id}])}'>${trans('here')}</a>`
 
   return (
     <div>

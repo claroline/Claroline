@@ -2,7 +2,6 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
-import {generateUrl} from '#/main/core/api/router'
 import {trans} from '#/main/core/translation'
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 
@@ -22,7 +21,7 @@ const Correctors = props =>
       <DataListContainer
         name="drops"
         fetch={{
-          url: generateUrl('claro_dropzone_drops_search', {id: props.dropzone.id}),
+          url: ['claro_dropzone_drops_search', {id: props.dropzone.id}],
           autoload: true
         }}
         primaryAction={(row) => ({

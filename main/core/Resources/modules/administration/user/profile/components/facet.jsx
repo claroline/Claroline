@@ -5,8 +5,8 @@ import omit from 'lodash/omit'
 
 import {t} from '#/main/core/translation'
 
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
 
 import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
 import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
@@ -152,9 +152,11 @@ const ProfileFacet = connect(
     },
     removeSection(facetId, sectionId) {
       dispatch(
-        modalActions.showModal(MODAL_DELETE_CONFIRM, {
+        modalActions.showModal(MODAL_CONFIRM, {
+          icon: 'fa fa-fw fa-trash-o',
           title: t('profile_remove_section'),
           question: t('profile_remove_section_question'),
+          dangerous: true,
           handleConfirm: () => dispatch(actions.removeSection(facetId, sectionId))
         })
       )

@@ -3,8 +3,7 @@ plugin:
 
     resource_actions:
       - name: hevinci_favourite
-        is_form: true
-        is_custom: true
+        decoder: open
 
     # widgets:
     #  - name: hevinci_favourite_widget

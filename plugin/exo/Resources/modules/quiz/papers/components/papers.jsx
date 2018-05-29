@@ -4,12 +4,13 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import quizSelect from './../../selectors'
-import {select as resourceSelect} from '#/main/core/resource/selectors'
+import {selectors as resourceSelect} from '#/main/core/resource/store'
+import {hasPermission} from '#/main/core/resource/permissions'
 import {selectors as paperSelect} from './../selectors'
 import {tex, t} from '#/main/core/translation'
 import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box.jsx'
 import {utils} from './../utils'
-import {generateUrl} from '#/main/core/api/router'
+import {url} from '#/main/app/api'
 
 export const PaperRow = props =>
   <tr>
@@ -60,9 +61,9 @@ PaperRow.propTypes = {
 let Papers = props =>
   <div className="papers-list">
     <div className="panel panel-heading">
-      <a className="btn btn-primary" href={generateUrl('exercise_papers_export_json', {'exerciseId': props.quiz.id})}> {tex('json_export')} </a>
+      <a className="btn btn-primary" href={url(['exercise_papers_export_json', {'exerciseId': props.quiz.id}])}> {tex('json_export')} </a>
       {' '}
-      <a className="btn btn-primary" href={generateUrl('exercise_papers_export_csv', {'exerciseId': props.quiz.id})}> {tex('csv_export')} </a>
+      <a className="btn btn-primary" href={url(['exercise_papers_export_csv', {'exerciseId': props.quiz.id}])}> {tex('csv_export')} </a>
     </div>
     <table className="table table-striped table-hover">
       <thead>
@@ -106,7 +107,7 @@ Papers.propTypes = {
 const ConnectedPapers = connect(
   (state) => ({
     quiz: quizSelect.quiz(state),
-    admin: resourceSelect.editable(state) || quizSelect.papersAdmin(state),
+    admin: hasPermission('edit', resourceSelect.resourceNode(state)) || quizSelect.papersAdmin(state),
     papers: paperSelect.papers(state)
   })
 )(Papers)

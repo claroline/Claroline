@@ -1,6 +1,6 @@
-import {API_REQUEST} from '#/main/core/api/actions'
+import {API_REQUEST} from '#/main/app/api'
 
-import {url} from '#/main/core/api'
+import {url} from '#/main/app/api'
 
 export const actions = {}
 

@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {t} from '#/main/core/translation'
-import {NavLink} from '#/main/core/router'
+import {NavLink} from '#/main/app/router'
 
 import {Action as ActionTypes} from '#/main/core/layout/action/prop-types'
 import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action.jsx'

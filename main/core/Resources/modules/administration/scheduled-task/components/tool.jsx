@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {matchPath, withRouter} from '#/main/core/router'
+import {matchPath, withRouter} from '#/main/app/router'
 import {
   PageActions,
   PageHeader

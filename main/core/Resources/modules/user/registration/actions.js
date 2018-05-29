@@ -1,4 +1,4 @@
-import {API_REQUEST} from '#/main/core/api/actions'
+import {API_REQUEST} from '#/main/app/api'
 
 import {constants} from '#/main/core/user/registration/constants'
 

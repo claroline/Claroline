@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import classes from 'classnames'
 
 import {trans} from '#/main/core/translation'
-import {url} from '#/main/core/api/router'
+import {url} from '#/main/app/api'
 import {asset} from '#/main/core/scaffolding/asset'
 import {currentUser} from '#/main/core/user/current'
 

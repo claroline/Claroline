@@ -1,6 +1,6 @@
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
-import {API_REQUEST} from '#/main/core/api/actions'
-import {generateUrl} from '#/main/core/api/router'
+import {API_REQUEST} from '#/main/app/api'
+import {url} from '#/main/app/api'
 
 const SUBTITLE_ADD = 'SUBTITLE_ADD'
 const SUBTITLE_UPDATE = 'SUBTITLE_UPDATE'
@@ -12,7 +12,7 @@ actions.saveSubtitle = (track) => (dispatch) => {
   if (track.autoId) {
     dispatch({
       [API_REQUEST]: {
-        url: generateUrl('apiv2_videotrack_update', {id: track.id}),
+        url: ['apiv2_videotrack_update'],
         request: {
           method: 'PUT',
           body: JSON.stringify(track)
@@ -29,7 +29,7 @@ actions.saveSubtitle = (track) => (dispatch) => {
 
     dispatch({
       [API_REQUEST]: {
-        url: generateUrl('apiv2_videotrack_create'),
+        url: ['apiv2_videotrack_create'],
         request: {
           method: 'POST',
           body: formData
@@ -44,7 +44,7 @@ actions.saveSubtitle = (track) => (dispatch) => {
 
 actions.deleteSubtitle = (id) => ({
   [API_REQUEST]: {
-    url: generateUrl('apiv2_videotrack_delete_bulk') + '?ids[]=' + id,
+    url: url(['apiv2_videotrack_delete_bulk'], {ids: [id]}),
     request: {
       method: 'DELETE'
     },

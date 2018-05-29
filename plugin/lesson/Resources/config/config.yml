@@ -3,13 +3,10 @@ plugin:
     icon: icap_lesson_icon.png
 
     resources:
-      - class: Icap\LessonBundle\Entity\Lesson
-        name: icap_lesson
+      - name: icap_lesson
+        class: Icap\LessonBundle\Entity\Lesson
         is_browsable: true
-        is_exportable: false
+        exportable: false
         activity_rules:
           - action: resource-read
           - action: resource-icap_lesson-chapter_read
-        #actions:
-          #- name: open
-            #is_action_in_new_page: true

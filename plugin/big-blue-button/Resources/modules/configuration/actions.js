@@ -1,5 +1,5 @@
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
-import {API_REQUEST} from '#/main/core/api/actions'
+import {API_REQUEST} from '#/main/app/api'
 import {trans} from '#/main/core/translation'
 
 export const CONFIGURATION_UPDATE = 'CONFIGURATION_UPDATE'

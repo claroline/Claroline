@@ -1,6 +1,6 @@
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
 
-import {API_REQUEST} from '#/main/core/api/actions'
+import {API_REQUEST} from '#/main/app/api'
 
 export const PROFILE_FACET_OPEN   = 'PROFILE_FACET_OPEN'
 export const PROFILE_FACET_ADD    = 'PROFILE_FACET_ADD'

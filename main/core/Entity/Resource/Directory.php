@@ -26,19 +26,9 @@ class Directory extends AbstractResource
      */
     protected $isUploadDestination = false;
 
-    public function hasChildren()
-    {
-        return count($this->children) > 0 ? true : false;
-    }
-
     public function setIsUploadDestination($boolean)
     {
         $this->isUploadDestination = $boolean;
-    }
-
-    public function getIsUploadDestination()
-    {
-        return $this->isUploadDestination;
     }
 
     public function isUploadDestination()

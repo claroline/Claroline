@@ -1,144 +1,172 @@
 plugin:
     resource_actions:
-        # the value come from the MaskDecoder Entity
-        # specific menus for a resource
-        - name: compose
-          is_form: false
-          is_async: false
-          is_custom: true
-          group: activity
-          class: activity-class
-          resource_type: activity
-          value: edit
+        # Opens a resource
+        - name: open
+          decoder: open
+          scope: [object]
+          api: [GET]
 
-        - name: update_file
-          is_form: false
-          is_async: true
-          is_custom: true
-          group: core
-          class: file-class
-          resource_type: file
-          value: edit
+        # Displays common resources info (the one from the node)
+        - name: about
+          decoder: open
+          scope: [object]
+          api: [GET]
 
-        # generic actions
+        # Changes changes the content of a resource
+        - name: edit
+          decoder: edit
+          group: management
+          scope: [object]
+          api: [PUT]
+
+        # Changes and manages the rights of a resource
+        - name: rights
+          decoder: administrate
+          group: management
+          scope: [object, collection]
+          api: [GET, POST]
+
+        - name: publish
+          decoder: administrate
+          group: management
+          scope: [object, collection]
+          api: [PUT]
+
+        - name: unpublish
+          decoder: administrate
+          group: management
+          scope: [object, collection]
+          api: [PUT]
+
+        # Exports one or more resources in a Claroline format (archive + manifest)
         - name: export
-          is_form: false
-          is_async: true
-          is_custom: false
-          group: core
-          class: changeme
-          value: export
+          decoder: export
+          group: transfer
+          scope: [object, collection] # The action can be executed on multiple resources at once.
+          api: [GET]
+          recursive: true
 
+        # Deletes a one or more resources
         - name: delete
-          is_form: false
-          is_async: true
-          is_custom: false
-          group: core
-          class: changeme
-          value: delete
+          decoder: delete
+          group: management
+          scope: [object, collection] # The action can be executed on multiple resources at once.
+          api: [DELETE]
+          recursive: true
 
-        - name: edit-rights
-          is_form: true
-          is_async: true
-          is_custom: false
-          group: core
-          class: changeme
-          value: administrate
+        # Changes common resources info (the one from the node) for one or more resources
+        - name: configure
+          decoder: administrate
+          group: management
+          scope: [object, collection] # The action can be executed on multiple resources at once.
+          api: [PUT]
+          recursive: true
 
-        - name: open-tracking
-          is_form: false
-          is_async: true
-          is_custom: false
-          group: core
-          class: changeme
-          value: administrate
+        # Creates a copy of one or more resources
+        - name: copy
+          decoder: administrate
+          group: management
+          scope: [object, collection] # The action can be executed on multiple resources at once.
+          api: [POST]
+          recursive: true
 
-        - name: rename
-          is_form: true
-          is_async: true
-          is_custom: false
-          group: core
-          class: changeme
-          value: administrate
+        # Changes the parent of one or more resources
+        - name: move
+          decoder: administrate
+          group: management
+          scope: [object, collection] # The action can be executed on multiple resources at once.
+          api: [PUT]
+          recursive: true
 
-        - name: edit-properties
-          is_form: true
-          is_async: true
-          is_custom: false
-          group: core
-          class: changeme
-          value: administrate
+        # Displays tracking info about the resource
+        - name: logs
+          decoder: administrate # todo : adds it's own right
+          scope: [object]
+          api: [GET]
 
     resources:
-        - class: Claroline\CoreBundle\Entity\Resource\File
-          name: file
-          is_exportable: true
-          activity_rules:
-            - action: resource-read
+        - name: file
+          class: Claroline\CoreBundle\Entity\Resource\File
+          exportable: true
+          actions:
+              - name: download
+                decoder: export
+                group: transfer
+                api: [GET]
 
-        - class: Claroline\CoreBundle\Entity\Resource\Directory
-          name: directory
-          is_exportable: true
+        - name: directory
+          class: Claroline\CoreBundle\Entity\Resource\Directory
+          exportable: true
+          actions:
+              # Creates a new resource in the directory
+              - name: add
+                decoder: create
+                group: management
+                api: [POST]
 
-        - class: Claroline\CoreBundle\Entity\Resource\Text
-          name: text
-          is_exportable: true
+        - name: text
+          class: Claroline\CoreBundle\Entity\Resource\Text
+          exportable: true
 
-        - class: Claroline\CoreBundle\Entity\Resource\ResourceShortcut
-          name: resource_shortcut
-          is_exportable: false
-
-        - class: Claroline\CoreBundle\Entity\Resource\Activity
-          name: activity
-          is_exportable: false
+        - name: activity
+          class: Claroline\CoreBundle\Entity\Resource\Activity
 
     admin_tools:
         - name: platform_parameters
           class: cog
+
         - name: user_management
-          class: users
+          class: user
+
         - name: workspace_management
           class: book
+
         - name: registration_to_workspace
           class: book
+
         - name: desktop_and_home
           class: home
+
         - name: platform_logs
           class: bars
+
         - name: platform_analytics
           class: bar-chart-o
+
         - name: widgets_management
           class: list-alt
+
         - name: tasks_scheduling
           class: clock-o
+
         - name: data_transfer
           class: exchange
 
     widgets:
         #- name: core_resource_logger
-        #  is_configurable: true
-        #  is_displayable_in_desktop: true
-        #  is_displayable_in_workspace: true
+        #      is_configurable: true
+        #      is_displayable_in_desktop: true
+        #      is_displayable_in_workspace: true
         #- name: simple_text
-        #  is_configurable: true
-        #  is_displayable_in_desktop: true
-        #  is_displayable_in_workspace: true
+        #      is_configurable: true
+        #      is_displayable_in_desktop: true
+        #      is_displayable_in_workspace: true
         #- name: my_workspaces
-        #  is_configurable: false
-        #  is_displayable_in_desktop: true
-        #  is_displayable_in_workspace: false
+        #      is_configurable: false
+        #      is_displayable_in_desktop: true
+        #      is_displayable_in_workspace: false
         #- name: my_profile
-        #  is_configurable: false
-        #  is_displayable_in_desktop: true
-        #  is_displayable_in_workspace: false
+        #      is_configurable: false
+        #      is_displayable_in_desktop: true
+        #      is_displayable_in_workspace: false
         #- name: resources_widget
-        #  is_configurable: true
-        #  is_displayable_in_desktop: true
-        #  is_displayable_in_workspace: true
+        #      is_configurable: true
+        #      is_displayable_in_desktop: true
+        #      is_displayable_in_workspace: true
         #- name: resource_text
-        #  is_configurable: true
-        #  is_displayable_in_desktop: true
-        #  is_displayable_in_workspace: true
+        #      is_configurable: true
+        #      is_displayable_in_desktop: true
+        #      is_displayable_in_workspace: true
 
         - name: simple
           class: Claroline\CoreBundle\Entity\Widget\Type\SimpleWidget
@@ -181,19 +209,9 @@ plugin:
           is_exportable: true
           is_locked_for_admin: false
           is_anonymous_excluded: false
-        - name: parameters
-          class: cog
-          is_displayable_in_workspace: true
-          is_displayable_in_desktop: true
-          is_configurable_in_workspace: false
-          is_configurable_in_desktop: false
-          is_desktop_required: false
-          is_workspace_required: false
-          is_exportable: false
-          is_locked_for_admin: true
-          is_anonymous_excluded: true
-        - name: resource_manager
-          class: folder-open
+
+        - name: resources
+          class: folder
           is_displayable_in_workspace: true
           is_displayable_in_desktop: true
           is_configurable_in_workspace: true
@@ -203,6 +221,7 @@ plugin:
           is_exportable: true
           is_locked_for_admin: false
           is_anonymous_excluded: false
+
         - name: logs
           class: list
           is_displayable_in_workspace: true
@@ -214,6 +233,7 @@ plugin:
           is_exportable: false
           is_locked_for_admin: false
           is_anonymous_excluded: true
+
         - name: analytics
           class: bar-chart-o
           is_displayable_in_workspace: true
@@ -225,6 +245,7 @@ plugin:
           is_exportable: false
           is_locked_for_admin: false
           is_anonymous_excluded: true
+
         - name: users
           class: user
           is_displayable_in_workspace: true
@@ -236,6 +257,7 @@ plugin:
           is_exportable: false
           is_locked_for_admin: false
           is_anonymous_excluded: true
+
         - name: my_contacts
           class: address-book
           is_displayable_in_workspace: false
@@ -247,16 +269,6 @@ plugin:
           is_exportable: false
           is_locked_for_admin: false
           is_anonymous_excluded: true
-
-    additional_action:
-        - action: edit
-          class: fa-pencil
-          displayed_name: edit
-          type: admin_user_action
-        - action: show_workspaces
-          class: fa-book
-          displayed_name: show_workspaces
-          type: admin_user_action
 
     themes:
         - name: Claroline

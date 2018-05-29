@@ -2,8 +2,8 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
-import {withRouter} from '#/main/core/router'
-import {url} from '#/main/core/api/router'
+import {withRouter} from '#/main/app/router'
+import {url} from '#/main/app/api'
 import {trans} from '#/main/core/translation'
 
 import {select} from '#/plugin/claco-form/resources/claco-form/selectors'

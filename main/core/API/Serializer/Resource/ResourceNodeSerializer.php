@@ -2,28 +2,23 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Resource;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
-use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Event\Resource\DecorateResourceNodeEvent;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
-use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
-use Claroline\CoreBundle\Manager\BreadcrumbManager;
-use Claroline\CoreBundle\Manager\MaskManager;
-use Claroline\CoreBundle\Manager\Resource\ResourceMenuManager;
-use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Manager\Resource\MaskManager;
+use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @todo : grab deserialization from Claroline\CoreBundle\Manager\Resource\ResourceNodeManager
- *
  * @DI\Service("claroline.serializer.resource_node")
  * @DI\Tag("claroline.serializer")
  */
@@ -33,9 +28,6 @@ class ResourceNodeSerializer
 
     /** @var ObjectManager */
     private $om;
-
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
 
     /** @var StrictDispatcher */
     private $eventDispatcher;
@@ -49,12 +41,6 @@ class ResourceNodeSerializer
     /** @var MaskManager */
     private $maskManager;
 
-    /** @var BreadcrumbManager */
-    private $breadcrumbManager;
-
-    /** @var ResourceMenuManager */
-    private $menuManager;
-
     /** @var RightsManager */
     private $rightsManager;
 
@@ -63,46 +49,34 @@ class ResourceNodeSerializer
      *
      * @DI\InjectParams({
      *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
-     *     "authorization"     = @DI\Inject("security.authorization_checker"),
      *     "eventDispatcher"   = @DI\Inject("claroline.event.event_dispatcher"),
      *     "fileSerializer"    = @DI\Inject("claroline.serializer.public_file"),
      *     "userSerializer"    = @DI\Inject("claroline.serializer.user"),
      *     "maskManager"       = @DI\Inject("claroline.manager.mask_manager"),
-     *     "rightsManager"     = @DI\Inject("claroline.manager.rights_manager"),
-     *     "breadcrumbManager" = @DI\Inject("claroline.manager.breadcrumb_manager"),
-     *     "menuManager"       = @DI\Inject("claroline.manager.resource_menu_manager")
+     *     "rightsManager"     = @DI\Inject("claroline.manager.rights_manager")
      * })
      *
-     * @param ObjectManager                 $om
-     * @param AuthorizationCheckerInterface $authorization
-     * @param StrictDispatcher              $eventDispatcher
-     * @param PublicFileSerializer          $fileSerializer
-     * @param UserSerializer                $userSerializer
-     * @param MaskManager                   $maskManager
-     * @param BreadcrumbManager             $breadcrumbManager
-     * @param ResourceMenuManager           $menuManager
-     * @param RightsManager                 $rightsManager
+     * @param ObjectManager         $om
+     * @param StrictDispatcher      $eventDispatcher
+     * @param PublicFileSerializer  $fileSerializer
+     * @param UserSerializer        $userSerializer
+     * @param MaskManager           $maskManager
+     * @param RightsManager         $rightsManager
      */
     public function __construct(
         ObjectManager $om,
-        AuthorizationCheckerInterface $authorization,
         StrictDispatcher $eventDispatcher,
         PublicFileSerializer $fileSerializer,
         UserSerializer $userSerializer,
         MaskManager $maskManager,
-        BreadcrumbManager $breadcrumbManager,
-        ResourceMenuManager $menuManager,
         RightsManager $rightsManager
     ) {
         $this->om = $om;
-        $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
         $this->fileSerializer = $fileSerializer;
         $this->userSerializer = $userSerializer;
         $this->maskManager = $maskManager;
-        $this->breadcrumbManager = $breadcrumbManager;
         $this->rightsManager = $rightsManager;
-        $this->menuManager = $menuManager;
     }
 
     /**
@@ -116,32 +90,30 @@ class ResourceNodeSerializer
     public function serialize(ResourceNode $resourceNode, array $options = [])
     {
         $serializedNode = [
-            'id' => $resourceNode->getGuid(),
-            'autoId' => $resourceNode->getId(),
-            'actualId' => $resourceNode->getId(),
+            'id' => $resourceNode->getUuid(),
+            'autoId' => $resourceNode->getId(), // TODO : remove me
+            'actualId' => $resourceNode->getId(), // TODO : remove me
             'name' => $resourceNode->getName(),
             'thumbnail' => $resourceNode->getThumbnail() ? $resourceNode->getThumbnail()->getRelativeUrl() : null,
-            'poster' => $this->serializePoster($resourceNode),
-            'meta' => $this->serializeMeta($resourceNode),
-            'display' => $this->serializeDisplay($resourceNode),
-            'restrictions' => $this->getRestrictions($resourceNode),
-            'rights' => [
-                'current' => $this->getCurrentPermissions($resourceNode),
-            ],
-            'shortcuts' => $this->getShortcuts($resourceNode),
-            'breadcrumb' => $this->breadcrumbManager->getBreadcrumb($resourceNode),
+            'permissions' => $this->rightsManager->getCurrentPermissionArray($resourceNode),
         ];
 
-        if (!empty($resourceNode->getWorkspace())) {
-            $serializedNode['workspace'] = [
-                'id' => $resourceNode->getWorkspace()->getGuid(),
-                'name' => $resourceNode->getWorkspace()->getName(),
-                'code' => $resourceNode->getWorkspace()->getCode(),
-            ];
-        }
+        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+            if (!empty($resourceNode->getWorkspace())) { // TODO : check if this is really required
+                $serializedNode['workspace'] = [ // TODO : use workspace serializer with minimal option
+                    'id' => $resourceNode->getWorkspace()->getUuid(),
+                    'name' => $resourceNode->getWorkspace()->getName(),
+                    'code' => $resourceNode->getWorkspace()->getCode(),
+                ];
+            }
 
-        if ($this->hasPermission('ADMINISTRATE', $resourceNode)) {
-            $serializedNode['rights']['all'] = $this->getRights($resourceNode);
+            $serializedNode = array_merge($serializedNode, [
+                'poster' => $this->serializePoster($resourceNode),
+                'meta' => $this->serializeMeta($resourceNode),
+                'display' => $this->serializeDisplay($resourceNode),
+                'restrictions' => $this->serializeRestrictions($resourceNode),
+                'rights' => $this->getRights($resourceNode), // todo : remove me
+            ]);
         }
 
         return $this->decorate($resourceNode, $serializedNode, $options);
@@ -159,9 +131,11 @@ class ResourceNodeSerializer
      */
     private function decorate(ResourceNode $resourceNode, array $serializedNode, array $options = [])
     {
+        // avoid plugins override the standard node properties
         $unauthorizedKeys = array_keys($serializedNode);
 
-        // 'poster' is a key that can be overridden by another plugin. For example: UrlBundle
+        // 'thumbnail' is a key that can be overridden by another plugin. For example: UrlBundle
+        // TODO : find a cleaner way to do it
         if (false !== ($key = array_search('thumbnail', $unauthorizedKeys))) {
             unset($unauthorizedKeys[$key]);
         }
@@ -177,10 +151,7 @@ class ResourceNodeSerializer
             ]
         );
 
-        return array_merge(
-            $serializedNode,
-            $event->getInjectedData()
-        );
+        return array_merge($serializedNode, $event->getInjectedData());
     }
 
     /**
@@ -209,31 +180,20 @@ class ResourceNodeSerializer
     private function serializeMeta(ResourceNode $resourceNode)
     {
         return [
-            'type' => $resourceNode->getResourceType()->getName(),
-            'mimeType' => $resourceNode->getMimeType(),
+            'type' => $resourceNode->getResourceType()->getName(), // todo : must be available in MINIMAL mode
+            'mimeType' => $resourceNode->getMimeType(), // todo : maybe too
             'description' => $resourceNode->getDescription(),
-            'created' => $resourceNode->getCreationDate()->format('Y-m-d\TH:i:s'),
-            'updated' => $resourceNode->getModificationDate()->format('Y-m-d\TH:i:s'),
+            'created' => DateNormalizer::normalize($resourceNode->getCreationDate()),
+            'updated' => DateNormalizer::normalize($resourceNode->getModificationDate()),
             'license' => $resourceNode->getLicense(),
             'authors' => $resourceNode->getAuthor(),
             'published' => $resourceNode->isPublished(),
             'portal' => $resourceNode->isPublishedToPortal(),
             'isManager' => $this->rightsManager->isManager($resourceNode), // todo : data about current user should not be here (should be in `rights` section)
             'creator' => $resourceNode->getCreator() ? $this->userSerializer->serialize($resourceNode->getCreator()) : null,
-            'actions' => $this->getActions($resourceNode),
             'views' => $resourceNode->getViewsCount(),
-            'icon' => $resourceNode->getIcon() ? '/'.$resourceNode->getIcon()->getRelativeUrl() : null,
-            'class' => $resourceNode->getClass(),
-            'parent' => $resourceNode->getParent() ? [
-                'id' => $resourceNode->getParent()->getGuid(),
-                'name' => $resourceNode->getParent()->getName(),
-            ] : null,
+            'icon' => $resourceNode->getIcon() ? '/'.$resourceNode->getIcon()->getRelativeUrl() : null, // todo : remove me
         ];
-    }
-
-    private function getCurrentPermissions($resourceNode)
-    {
-        return $this->rightsManager->getCurrentPermissionArray($resourceNode);
     }
 
     private function serializeDisplay(ResourceNode $resourceNode)
@@ -246,10 +206,10 @@ class ResourceNodeSerializer
         ];
     }
 
-    private function getRestrictions(ResourceNode $resourceNode)
+    private function serializeRestrictions(ResourceNode $resourceNode)
     {
         return [
-            //'hidden' => $resourceNode->isHidden(), // 12.x feature
+            'hidden' => $resourceNode->isHidden(),
             'dates' => DateRangeNormalizer::normalize(
                 $resourceNode->getAccessibleFrom(),
                 $resourceNode->getAccessibleUntil()
@@ -259,88 +219,79 @@ class ResourceNodeSerializer
         ];
     }
 
-    private function getActions(ResourceNode $resourceNode)
-    {
-        //ResourceManager::isResourceActionImplemented(ResourceType $resourceType = null, $actionName)
-        $actions = $this->menuManager->getMenus($resourceNode);
-        $data = [];
-        $currentPerms = $this->getCurrentPermissions($resourceNode); // todo : avoid duplicate by reusing the result of l115
-        $currentMask = $this->maskManager->encodeMask($currentPerms, $resourceNode->getResourceType());
-
-        foreach ($actions as $action) {
-            $data[$action->getName()] = [
-                'name' => $action->getName(),
-                'mask' => $action->getValue(),
-                'group' => $action->getGroup(),
-                'async' => $action->isAsync(),
-                'custom' => $action->isCustom(),
-                'form' => $action->isForm(),
-                'icon' => $action->getIcon(),
-            ];
-        }
-
-        return array_filter($data, function ($action) use ($currentMask) {
-            return $action['mask'] & $currentMask;
-        });
-    }
-
     private function getRights(ResourceNode $resourceNode)
     {
-        $decoders = $resourceNode->getResourceType()->getMaskDecoders()->toArray();
-        $serializedDecoders = array_map(function (MaskDecoder $decoder) {
-            return [
-                'name' => $decoder->getName(),
-                'value' => $decoder->getValue(),
-            ];
-        }, $decoders);
-
         $serializedRights = [];
         $rights = $resourceNode->getRights();
         foreach ($rights as $right) {
+            $role = $right->getRole();
             $serializedRights[$right->getRole()->getName()] = [
-                'id' => $right->getId(),
-                'mask' => $right->getMask(),
-                'role' => [
-                    'id' => $right->getRole()->getId(),
-                    'name' => $right->getRole()->getName(),
-                    'key' => $right->getRole()->getTranslationKey(),
-                ],
+                'name' => $role->getName(),
+                'translationKey' => $role->getTranslationKey(),
                 'permissions' => array_merge(
                     $this->maskManager->decodeMask($right->getMask(), $resourceNode->getResourceType()),
-                    // todo : array_keys should be remove when `getCreatableTypes` will return only types without translations
-                    ['create' => array_keys($this->rightsManager->getCreatableTypes([$right->getRole()->getName()], $resourceNode))]
+                    ['create' => $this->rightsManager->getCreatableTypes([$role->getName()], $resourceNode)]
                 ),
             ];
         }
 
-        return [
-            'decoders' => $serializedDecoders,
-            'permissions' => $serializedRights,
-        ];
+        return $serializedRights;
     }
 
-    private function getShortcuts(ResourceNode $resourceNode)
+    /**
+     * Deserializes resource node data into entities.
+     *
+     * @param array $data
+     * @param ResourceNode $resourceNode
+     */
+    public function deserialize(array $data, ResourceNode $resourceNode)
     {
-        $shortcuts = $resourceNode->getShortcuts()->toArray();
+        $this->sipe('name', 'setName', $data, $resourceNode);
+        if (isset($data['poster']) && isset($data['poster']['url'])) {
+            $resourceNode->setPoster($data['poster']['url']);
+        }
 
-        return array_map(function (ResourceShortcut $shortcut) {
-            $node = $shortcut->getResourceNode();
+        // meta
+        if (empty($resourceNode->getResourceType())) {
+            /** @var ResourceType $resourceType */
+            $resourceType = $this->om
+                ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+                ->findOneBy(['name' => $data['meta']['type']]);
 
-            return [
-                'name' => $node->getName(),
-                'workspace' => [
-                    'id' => $node->getWorkspace()->getId(),
-                    'name' => $node->getWorkspace()->getName(),
-                    'code' => $node->getWorkspace()->getCode(),
-                ],
-            ];
-        }, $shortcuts);
-    }
+            $resourceNode->setResourceType($resourceType);
+        }
 
-    private function hasPermission($permission, ResourceNode $resourceNode)
-    {
-        $collection = new ResourceCollection([$resourceNode]);
+        if (empty($resourceNode->getMimeType())) {
+            if (isset($data['meta']) && !empty($data['meta']['mimeType'])) {
+                $mimeType = $data['meta']['mimeType'];
+            } else {
+                $mimeType = 'custom/'.$resourceNode->getResourceType()->getName();
+            }
 
-        return $this->authorization->isGranted($permission, $collection);
+            $resourceNode->setMimeType($mimeType);
+        }
+
+        $this->sipe('meta.published', 'setPublished', $data, $resourceNode);
+        $this->sipe('meta.description', 'setDescription', $data, $resourceNode);
+        $this->sipe('meta.portal', 'setPublishedToPortal', $data, $resourceNode);
+        $this->sipe('meta.license', 'setLicense', $data, $resourceNode);
+        $this->sipe('meta.authors', 'setAuthor', $data, $resourceNode);
+
+        // display
+        $this->sipe('display.fullscreen', 'setFullscreen', $data, $resourceNode);
+        $this->sipe('display.showIcon', 'setShowIcon', $data, $resourceNode);
+        $this->sipe('display.closable', 'setClosable', $data, $resourceNode);
+        $this->sipe('display.closeTarget', 'setCloseTarget', $data, $resourceNode);
+
+        // restrictions
+        $this->sipe('restrictions.code', 'setAccessCode', $data, $resourceNode);
+        $this->sipe('restrictions.ips', 'setAllowedIps', $data, $resourceNode);
+
+        if (isset($restrictions['dates'])) {
+            $dateRange = DateRangeNormalizer::denormalize($restrictions['dates']);
+
+            $resourceNode->setAccessibleFrom($dateRange[0]);
+            $resourceNode->setAccessibleUntil($dateRange[1]);
+        }
     }
 }

@@ -4,10 +4,8 @@ namespace Innova\PathBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\RightsManager;
 use Innova\PathBundle\Entity\InheritedResource;
 use Innova\PathBundle\Entity\Path\Path;
-use Innova\PathBundle\Entity\SecondaryResource;
 use Innova\PathBundle\Entity\Step;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -15,6 +13,8 @@ use JMS\DiExtraBundle\Annotation as DI;
  * Manages life cycle of paths.
  *
  * @DI\Service("innova_path.manager.path")
+ *
+ * @todo reworks import/export
  */
 class PathManager
 {
@@ -24,30 +24,23 @@ class PathManager
     /** @var PlatformConfigurationHandler */
     private $platformConfig;
 
-    /** @var RightsManager */
-    private $rightsManager;
-
     /**
      * PathManager constructor.
      *
      * @DI\InjectParams({
      *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "platformConfig" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "rightsManager"  = @DI\Inject("claroline.manager.rights_manager")
+     *     "platformConfig" = @DI\Inject("claroline.config.platform_config_handler")
      * })
      *
      * @param ObjectManager                $om
      * @param PlatformConfigurationHandler $platformConfig
-     * @param RightsManager                $rightsManager
      */
     public function __construct(
         ObjectManager $om,
-        PlatformConfigurationHandler $platformConfig,
-        RightsManager $rightsManager
+        PlatformConfigurationHandler $platformConfig
     ) {
         $this->om = $om;
         $this->platformConfig = $platformConfig;
-        $this->rightsManager = $rightsManager;
     }
 
     public function export(Path $path, array &$files)
@@ -57,8 +50,6 @@ class PathManager
         // Get path data
         $pathData = [];
         $pathData['description'] = $path->getDescription();
-        $pathData['breadcrumbs'] = $path->hasBreadcrumbs();
-        $pathData['modified'] = $path->isModified();
         $pathData['published'] = $path->isPublished();
         $pathData['summaryDisplayed'] = $path->isSummaryDisplayed();
         $pathData['completeBlockingCondition'] = $path->isCompleteBlockingCondition();
@@ -106,7 +97,6 @@ class PathManager
         $pathData = $data['data']['path'];
 
         // Populate Path properties
-        $path->setBreadcrumbs(!empty($pathData['breadcrumbs']) ? $pathData['breadcrumbs'] : false);
         $path->setDescription($pathData['description']);
         $path->setModified($pathData['modified']);
         $path->setSummaryDisplayed($pathData['summaryDisplayed']);
@@ -126,42 +116,6 @@ class PathManager
         $path->setStructure($structure);
 
         return $path;
-    }
-
-    /**
-     * Check that all resources have at least the same rights than the path.
-     *
-     * @param Path $path
-     */
-    public function updateResourcesRights(Path $path)
-    {
-        $resourceNodes = [];
-
-        foreach ($path->getSteps() as $step) {
-            $primaryResource = $step->getResource();
-
-            if ($primaryResource) {
-                $resourceNodes[$primaryResource->getGuid()] = $primaryResource;
-            }
-
-            /** @var SecondaryResource $secondaryResource */
-            foreach ($step->getSecondaryResources() as $secondaryResource) {
-                $resource = $secondaryResource->getResource();
-                $resourceNodes[$resource->getGuid()] = $resource;
-            }
-        }
-        $pathRights = $path->getResourceNode()->getRights();
-
-        $this->om->startFlushSuite();
-
-        foreach ($resourceNodes as $resourceNode) {
-            foreach ($pathRights as $rights) {
-                if ($rights->getMask() & 1) {
-                    $this->rightsManager->editPerms($rights->getMask(), $rights->getRole(), $resourceNode, true, [], true);
-                }
-            }
-        }
-        $this->om->endFlushSuite();
     }
 
     /**

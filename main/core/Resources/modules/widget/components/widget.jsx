@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {EmbeddedApp} from '#/main/app/components/embedded-app'
+import {Embedded} from '#/main/app/components/embedded'
 
 import {WidgetInstance as WidgetInstanceTypes} from '#/main/core/widget/prop-types'
 import {getWidget} from '#/main/core/widget/types'
@@ -18,7 +18,7 @@ const Widget = props =>
       <h2 className="h-first widget-title">{props.instance.name}</h2>
     }
 
-    <EmbeddedApp
+    <Embedded
       name={`${props.instance.type}-${props.instance.id}`}
       load={getWidget(props.instance.type)}
       parameters={[props.context, props.instance.parameters]}

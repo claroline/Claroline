@@ -1,4 +1,4 @@
-import {API_REQUEST} from '#/main/core/api/actions'
+import {API_REQUEST} from '#/main/app/api'
 
 import {actions as clacoFormActions} from '#/plugin/claco-form/resources/claco-form/actions'
 import {actions as editorActions} from '#/plugin/claco-form/resources/claco-form/editor/actions'

@@ -1,11 +1,10 @@
 import cloneDeep from 'lodash/cloneDeep'
 import shajs from 'sha.js'
 
-import {generateUrl} from '#/main/core/api/router'
 import {trans, t} from '#/main/core/translation'
 import {isValidDate} from '#/main/core/scaffolding/date'
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
-import {API_REQUEST} from '#/main/core/api/actions'
+import {API_REQUEST} from '#/main/app/api'
 
 export const BBB_URL_UPDATE = 'BBB_URL_UPDATE'
 export const RESOURCE_FORM_INITIALIZE = 'RESOURCE_FORM_INITIALIZE'
@@ -26,7 +25,7 @@ actions.connectToBBB = () => (dispatch, getState) => {
   if (serverUrl && securitySalt) {
     dispatch({
       [API_REQUEST]: {
-        url: generateUrl('claro_bbb_create', {bbb: resourceId}),
+        url: ['claro_bbb_create', {bbb: resourceId}],
         request: {
           method: 'GET'
         },
@@ -123,7 +122,7 @@ actions.saveConfig = () => (dispatch, getState) => {
 
   dispatch({
     [API_REQUEST]: {
-      url: generateUrl('claro_bbb_configuration_save', {bbb: form.id}),
+      url: ['claro_bbb_configuration_save', {bbb: form.id}],
       request: {
         method: 'POST',
         body: formData
@@ -145,7 +144,7 @@ actions.endBBB = () => (dispatch, getState) => {
 
   dispatch({
     [API_REQUEST]: {
-      url: generateUrl('claro_bbb_end', {bbb: resourceId}),
+      url: ['claro_bbb_end', {bbb: resourceId}],
       request: {
         method: 'POST'
       }
@@ -158,7 +157,7 @@ actions.checkForModerators = () => (dispatch, getState) => {
 
   dispatch({
     [API_REQUEST]: {
-      url: generateUrl('claro_bbb_moderators_check', {bbb: resourceId}),
+      url: ['claro_bbb_moderators_check', {bbb: resourceId}],
       request: {
         method: 'GET'
       },

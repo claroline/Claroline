@@ -35,7 +35,7 @@ class RightsManagerTest extends MockeryTestCase
         parent::setUp();
 
         $this->rightsRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceRightsRepository');
-        $this->maskManager = $this->mock('Claroline\CoreBundle\Manager\MaskManager');
+        $this->maskManager = $this->mock('Claroline\CoreBundle\Manager\Resource\MaskManager');
         $this->roleManager = $this->mock('Claroline\CoreBundle\Manager\RoleManager');
         $this->resourceNodeRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceNodeRepository');
         $this->roleRepo = $this->mock('Claroline\CoreBundle\Repository\RoleRepository');
@@ -375,7 +375,7 @@ class RightsManagerTest extends MockeryTestCase
             $stringMocked .= ']';
 
             return $this->mock(
-                'Claroline\CoreBundle\Manager\RightsManager'.$stringMocked,
+                'Claroline\CoreBundle\Manager\Resource\RightsManager'.$stringMocked,
                 [
                     $this->translator,
                     $this->om,

@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {tex} from '#/main/core/translation'
-import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {MODAL_ADD_CONTENT} from './../components/modal/add-content-modal.jsx'
 import {actions, OBJECT_CHANGE, OBJECT_MOVE, OBJECT_REMOVE} from './../actions.js'
 import {getContentDefinition} from './../../../contents/content-types'
@@ -56,9 +56,11 @@ class ObjectsEditor extends Component {
               }}
               handleDelete={e => {
                 e.stopPropagation()
-                this.props.showModal(MODAL_DELETE_CONFIRM, {
+                this.props.showModal(MODAL_CONFIRM, {
+                  icon: 'fa fa-fw fa-trash-o',
                   title: tex('delete_object'),
                   question: tex('remove_object_confirm_message'),
+                  dangerous: true,
                   handleConfirm: () => {
                     this.selectObject('')
                     this.props.updateItemObjects(this.props.item.id, OBJECT_REMOVE, {id: object.id})

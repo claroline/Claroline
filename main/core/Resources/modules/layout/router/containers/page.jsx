@@ -1,19 +1,15 @@
 
-import {connectPage} from '#/main/core/layout/page/connect'
-import {RoutedPage} from '#/main/core/layout/router/components/page.jsx'
+import {PageContainer} from '#/main/core/layout/page/containers/page'
+
+// todo : remove me
 
 /**
  * Connected container for routed pages.
  *
- * Connects the <Page> component to a redux store.
- * If you don't use redux in your implementation @see Page functional component.
- *
- * To use with `makePageReducer()`
- *
  * @param props
  * @constructor
  */
-const RoutedPageContainer = connectPage()(RoutedPage)
+const RoutedPageContainer = PageContainer
 
 export {
   RoutedPageContainer

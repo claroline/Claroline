@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import invariant from 'invariant'
 
-import {url} from '#/main/core/api/router'
+import {url} from '#/main/app/api'
 import {theme} from '#/main/core/scaffolding/asset'
 import {mount, unmount} from '#/main/app/mount'
 
@@ -63,8 +63,8 @@ class EmbeddedResource extends Component {
                   const initialData = this.state.initialData(responseData)
 
                   // force some values in the embedded store
-                  initialData.embedded = true
-                  initialData.resourceLifecycle = this.props.lifecycle
+                  initialData.resource.embedded = true
+                  initialData.resource.lifecycle = this.props.lifecycle
 
                   mount(this.mountNode, this.state.component, this.state.store, initialData)
                 }

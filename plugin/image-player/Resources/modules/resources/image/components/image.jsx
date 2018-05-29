@@ -3,11 +3,12 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {copy} from '#/main/core/scaffolding/clipboard'
+import {copy} from '#/main/app/clipboard'
 import {PageContent} from '#/main/core/layout/page'
 import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
 
-import {select as resourceSelect} from '#/main/core/resource/selectors'
+import {selectors as resourceSelect} from '#/main/core/resource/store'
+import {hasPermission} from '#/main/core/resource/permissions'
 import {select} from './../selectors'
 
 const Image = props =>
@@ -36,7 +37,7 @@ function mapStateToProps(state) {
   return {
     url: select.url(state),
     hashName: select.hashName(state),
-    exportable: resourceSelect.exportable(state)
+    exportable: hasPermission('export', resourceSelect.resourceNode(state))
   }
 }
 

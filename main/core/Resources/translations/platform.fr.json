@@ -410,10 +410,6 @@
     "edit_organization": "Modifier une organisation",
     "edit_panel": "Modifier un panel",
     "edit_password": "Modifier le mot de passe",
-    "edit_password_error": "Une erreur est survenue pendant la modification du mot de passe.",
-    "edit_password_error_current": "Votre mot de passe actuel n'est pas correct.",
-    "edit_password_message": "Êtes-vous sur de vouloir modifier votre mot de passe ?",
-    "edit_password_success": "Modification de votre mot de passe effectuée avec succès.",
     "edit_rights_success": "Modification des droits effectuée avec succès.",
     "edit_root_directory_icon": "Modifier l'icône du répertoire racine",
     "edit_security_token": "Modification du jeton d'authentification",
@@ -1643,7 +1639,6 @@
     "register_groups": "Inscrire des groupes",
     "add_workspaces": "Ajouter des espaces d'activités",
     "pending_registrations": "Inscriptions en attente",
-
     "self_registration_platform_help": "Les utilisateurs pourront s'inscrire eux-même à la plateforme.",
     "self_registration_workspace_help": "Les utilisateurs pourront s'inscrire eux-même à l'espace d'activités.",
     "activate_self_unregistration": "Activer l'auto-désinscription",
@@ -1679,5 +1674,10 @@
     "captcha_help": "Saisissez le texte affiché ci-dessus",
     "log": "Log",
     "execution_date": "Date d'exécution",
-    "upload date": "Date d'upload"
+    "upload date": "Date d'upload",
+    "about": "À propos",
+    "created_at": "Créé le %date%",
+    "updated_at": "Mis à jour le %date%",
+    "authors": "Auteurs",
+    "authors_license": "Auteurs & License"
 }

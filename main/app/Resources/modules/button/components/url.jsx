@@ -4,7 +4,7 @@ import omit from 'lodash/omit'
 
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {Button as ButtonTypes} from '#/main/app/button/prop-types'
-import {url} from '#/main/core/api'
+import {url} from '#/main/app/api'
 
 // todo implement confirm behavior
 
@@ -25,7 +25,7 @@ const UrlButton = props => {
 
   return (
     <a
-      {...omit(props, 'displayed', 'primary', 'dangerous', 'size', 'target', 'confirm')}
+      {...omit(props, 'active', 'displayed', 'primary', 'dangerous', 'size', 'target', 'confirm')}
       role="link"
       tabIndex={props.tabIndex}
       href={!props.disabled ? target : ''}

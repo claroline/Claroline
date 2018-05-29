@@ -6,8 +6,8 @@ import {actions as logActions} from '#/main/core/administration/transfer/compone
 import has from 'lodash/has'
 import {trans} from '#/main/core/translation'
 import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
-import {Routes} from '#/main/core/router'
-import {withRouter} from '#/main/core/router'
+import {Routes} from '#/main/app/router'
+import {withRouter} from '#/main/app/router'
 import classes from 'classnames'
 import {Logs} from '#/main/core/administration/transfer/components/log/components/logs.jsx'
 

@@ -12,8 +12,8 @@ const Roles = () =>
     }}
     primaryAction={RoleList.open}
     delete={{
-      target: ['apiv2_role_delete_bulk'],
-      disabled: rows => !!rows.find(role => role.meta.readOnly)
+      url: ['apiv2_role_delete_bulk'],
+      disabled: (rows) => !!rows.find(role => role.meta.readOnly)
     }}
     definition={RoleList.definition}
     card={RoleList.card}

@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {asset} from '#/main/core/scaffolding/asset'
-import {generateUrl} from '#/main/core/api/router'
+import {url} from '#/main/app/api'
 import {trans} from '#/main/core/translation'
 import {displayDate} from '#/main/core/scaffolding/date'
 import {constants} from '#/main/core/user/tracking/constants'
@@ -31,7 +31,7 @@ const EventWrapper = props =>
 
       <div className="timeline-event-block">
         <div className="timeline-event-header">
-          <a href={generateUrl('claro_resource_open', {node: props.resource.autoId, resourceType: props.resource.meta.type})}>
+          <a href={url(['claro_resource_open', {node: props.resource.autoId, resourceType: props.resource.meta.type}])}>
             <img
               src={props.resource.thumbnail ? asset(props.resource.thumbnail) : asset(props.resource.meta.icon)}
               alt="resource_icon"

@@ -1,4 +1,4 @@
-import {connectPage} from '#/main/core/layout/page/connect'
+import {connect} from 'react-redux'
 
 import {currentUser} from '#/main/core/user/current'
 import {actions} from '#/main/core/user/actions'
@@ -12,13 +12,8 @@ const authenticatedUser = currentUser()
  *
  * Connects the <UserPage> component to a redux store.
  * If you don't use redux in your implementation @see Resource functional component.
- *
- * Requires the following reducers to be registered in your store (@see makePageReducer) :
- *   - modal
- *   - alerts
- *   - user
  */
-const UserPageContainer = connectPage(
+const UserPageContainer = connect(
   (state, ownProps) => ownProps.user ? ({
     user: ownProps.user,
     canEditProfile: authenticatedUser.roles.filter(r => ['ROLE_ADMIN'].concat(profileSelect.parameters(state)['roles_edition']).indexOf(r.name) > -1).length > 0

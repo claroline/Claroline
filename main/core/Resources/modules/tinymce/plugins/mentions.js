@@ -2,7 +2,7 @@ import $ from 'jquery'
 import invariant from 'invariant'
 import tinymce from 'tinymce/tinymce'
 
-import {url} from '#/main/core/api'
+import {url} from '#/main/app/api'
 import {trans} from '#/main/core/translation'
 import {asset} from '#/main/core/scaffolding/asset'
 

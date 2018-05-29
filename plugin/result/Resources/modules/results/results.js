@@ -4,7 +4,7 @@ import 'ng-file-upload'
 import listTemplate from './list.component.html'
 import controller from './list.component.js'
 import service from './results.service.js'
-import {Translator} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 angular
   .module('ResultModule', [
@@ -48,6 +48,4 @@ angular
         ctrl.$isEmpty(modelValue) || service.getMaximumMark() >= service.formatMark(modelValue)
     }
   })])
-  .filter('trans', () => (string, domain = 'platform') =>
-    Translator.trans(string, {}, domain)
-  )
+  .filter('trans', () => (string, domain = 'platform') => trans(string, {}, domain))

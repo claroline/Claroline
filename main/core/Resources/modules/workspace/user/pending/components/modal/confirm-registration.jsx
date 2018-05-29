@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
-import {ConfirmModal} from '#/main/core/layout/modal/components/confirm.jsx'
+import {ConfirmModal} from '#/main/app/modals/confirm/components/confirm'
 
 const MODAL_CONFIRM_REGISTRATION = 'MODAL_CONFIRM_REGISTRATION'
 

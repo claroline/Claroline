@@ -54,6 +54,25 @@
     flex: 1;
 }
 
+.modal-link {
+    /*display: flex;
+    justify-content: space-between;*/
+    background: @modal-footer-bg;
+    border-bottom: 1px solid @modal-header-border-color;
+
+    /*a {
+        font-weight: bold;
+    }*/
+
+    .btn-link {
+        padding: 10px @modal-inner-padding;
+    }
+}
+
+.modal-footer {
+    background: @modal-footer-bg;
+}
+
 .modal-btn {
     border-radius: 0 0 @modal-content-border-radius @modal-content-border-radius;
     display: block;
@@ -81,7 +100,8 @@
 // customize panel groups
 // we use direct child selector to avoid break the display of
 // groups inside the body.
-.data-form-modal .form-sections,
+.modal-content > .data-details .sections,
+.modal-content > .data-form .form-sections,
 .modal-content > .panel-group {
     margin: 0;
 
@@ -119,5 +139,19 @@
 
     + .modal-body {
         border-top: 1px solid @table-border-color;
+    }
+}
+
+.modal-content > .data-details .primary-section,
+.modal-content > .data-form .form-primary-section {
+    // removes panel styles
+    box-shadow: none;
+    border: none;
+    border-radius: 0;
+    background: @modal-content-bg;
+    margin-bottom: 0;
+
+    .panel-body {
+        padding: @modal-inner-padding;
     }
 }

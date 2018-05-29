@@ -9,9 +9,9 @@ function toKey(text) {
     // removes multiple whitespaces, new lines & tabs by single whitespace
     .replace(/\s\s+/g, ' ')
     // removes all non alpha-numeric chars
-    .replace(/[^a-zA-Z0-9 ]/g, '')
+    .replace(/[^a-zA-Z0-9\- ]/g, '')
     // replaces whitespaces by hyphen
-    .replace(' ', '-')
+    .replace(/\s/g, '-')
     // removes uppercase
     .toLowerCase()
     // shorten text

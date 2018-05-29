@@ -3,12 +3,11 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {t, tex, trans, transChoice} from '#/main/core/translation'
-import {generateUrl} from '#/main/core/api/router'
 
-import {MODAL_CONFIRM, MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {MODAL_SHARE} from '#/plugin/exo/bank/components/modal/share.jsx'
 
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {actions} from '#/plugin/exo/bank/actions'
 
 import {
@@ -32,7 +31,7 @@ const QuestionsPage = props =>
       <DataListContainer
         name="questions"
         fetch={{
-          url: generateUrl('question_list')
+          url: ['question_list']
         }}
         definition={[
           {
@@ -128,11 +127,13 @@ function mapDispatchToProps(dispatch) {
   return {
     removeQuestions(questions) {
       dispatch(
-        modalActions.showModal(MODAL_DELETE_CONFIRM, {
+        modalActions.showModal(MODAL_CONFIRM, {
+          icon: 'fa fa-fw fa-trash-o',
           title: transChoice('delete_items', questions.length, {count: questions.length}, 'quiz'),
           question: tex('remove_questions_confirm', {
             question_list: questions.map(question => question.title || question.content.substr(0, 40)).join(', ')
           }),
+          dangerous: true,
           handleConfirm: () => dispatch(actions.removeQuestions(questions))
         })
       )

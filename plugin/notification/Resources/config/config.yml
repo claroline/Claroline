@@ -1,6 +1,35 @@
 plugin:
     has_options: false
 
+    resource_actions:
+        # Gets all the notifications for the current user
+        - name: notifications
+          decoder: open
+          group: notifications
+          scope: [object]
+          api: [GET]
+
+        # Gets all the users following a resource
+        - name: followers
+          decoder: open
+          group: notifications
+          scope: [object]
+          api: [GET]
+
+        # Follows one or more resources
+        - name: follow
+          decoder: open
+          group: notifications
+          scope: [object, collection] # The action can be executed on multiple resources at once.
+          api: [PUT]
+
+        # Unfollows one or more resources
+        - name: unfollow
+          decoder: open
+          group: notifications
+          scope: [object, collection] # The action can be executed on multiple resources at once.
+          api: [PUT]
+
     admin_tools:
-          - name: notification_configuration
-            class: bell
+        - name: notification_configuration
+          class: bell

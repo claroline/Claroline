@@ -12,10 +12,10 @@
 namespace Icap\OAuthBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\RefreshCacheEvent;
+use Claroline\AppBundle\Event\App\RefreshCacheEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Authenticator;
-use Claroline\CoreBundle\Manager\CacheManager;
+use Claroline\AppBundle\Manager\CacheManager;
 use Claroline\CoreBundle\Manager\RegistrationManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Doctrine\ORM\EntityManager;

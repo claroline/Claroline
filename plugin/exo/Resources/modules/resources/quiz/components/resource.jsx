@@ -2,11 +2,12 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {DragNDropContext} from '#/main/app/dnd'
+import {DragNDropContext} from '#/main/app/overlay/dnd'
 import {trans} from '#/main/core/translation'
 import {RoutedPageContent} from '#/main/core/layout/router/components/page'
 import {ResourcePageContainer} from '#/main/core/resource/containers/page'
-import {select as resourceSelect} from '#/main/core/resource/selectors'
+import {selectors as resourceSelect} from '#/main/core/resource/store'
+import {hasPermission} from '#/main/core/resource/permissions'
 
 import {CustomDragLayer} from '#/plugin/exo/utils/custom-drag-layer'
 import {TYPE_QUIZ} from '#/plugin/exo/quiz/enums'
@@ -190,7 +191,7 @@ const QuizResource = DragNDropContext(
   connect(
     (state) => ({
       quizId: select.id(state),
-      editable: resourceSelect.editable(state),
+      editable: hasPermission('edit', resourceSelect.resourceNode(state)),
       hasPapers: select.hasPapers(state),
       hasOverview: select.hasOverview(state),
       papersAdmin: select.papersAdmin(state),

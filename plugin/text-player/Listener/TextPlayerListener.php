@@ -11,7 +11,7 @@
 
 namespace Claroline\TextPlayerBundle\Listener;
 
-use Claroline\CoreBundle\Event\PlayFileEvent;
+use Claroline\CoreBundle\Event\Resource\File\PlayFileEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;

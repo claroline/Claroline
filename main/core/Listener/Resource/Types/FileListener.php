@@ -17,15 +17,16 @@ use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
-use Claroline\CoreBundle\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\DownloadResourceEvent;
+use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\LoadFileEvent;
-use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\Resource\File\EncodeFileEvent;
+use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Form\FileType;
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
@@ -39,6 +40,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\File as SfFile;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -138,6 +140,8 @@ class FileListener implements ContainerAwareInterface
      * @DI\Observe("create_api_file")
      *
      * @param CreateResourceEvent $event
+     *
+     * @todo merge with onCreate
      */
     public function onApiCreate(CreateResourceEvent $event)
     {
@@ -255,7 +259,7 @@ class FileListener implements ContainerAwareInterface
         $playEvent = $this->container->get('claroline.event.event_dispatcher')
             ->dispatch(
                 $this->generateEventName($resource->getResourceNode(), 'play_file_'),
-                'PlayFile',
+                'Resource\File\PlayFile',
                 [$resource]
             );
 
@@ -264,7 +268,7 @@ class FileListener implements ContainerAwareInterface
         } else {
             $fallBackPlayEvent = $this->container->get('claroline.event.event_dispatcher')->dispatch(
                 $this->generateEventName($resource->getResourceNode(), 'play_file_', true),
-                'PlayFile',
+                'Resource\File\PlayFile',
                 [$resource]
             );
             if ($fallBackPlayEvent->getResponse() instanceof Response) {
@@ -610,10 +614,20 @@ class FileListener implements ContainerAwareInterface
         }
     }
 
-    private function encodeFile($file, $encoding)
+    /**
+     * @param UploadedFile $file
+     * @param $encoding
+     *
+     * @return UploadedFile
+     */
+    private function encodeFile(UploadedFile $file, $encoding)
     {
+        // I'm not sure this event is really needed
+        // and if it is should better be a File event than a Resource file event
         $eventName = 'encode_file_'.$encoding;
-        $encodeEvent = $this->container->get('claroline.event.event_dispatcher')->dispatch($eventName, 'EncodeFile', [$file]);
+
+        /** @var EncodeFileEvent $encodeEvent */
+        $encodeEvent = $this->container->get('claroline.event.event_dispatcher')->dispatch($eventName, 'Resource\File\EncodeFile', [$file]);
 
         return $encodeEvent->getFile();
     }

@@ -2,7 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Listener;
 
-use Claroline\CoreBundle\Event\ResourceEvaluationEvent;
+use Claroline\CoreBundle\Event\Resource\ResourceEvaluationEvent;
 use HeVinci\CompetencyBundle\Manager\ProgressManager;
 use JMS\DiExtraBundle\Annotation as DI;
 

@@ -1,0 +1,35 @@
+/**
+ * Styles for `boolean` data type.
+ */
+
+.boolean-display {
+    display: block;
+    border: 1px solid transparent;
+    border-radius: @border-radius-base;
+    padding: @padding-base-vertical @padding-base-horizontal;
+
+    &.false {
+        // this is the same colors than quiz answers
+        //color: @state-info-text;
+        background: @gray-lighter;
+        border-color: @gray-lighter;
+    }
+
+    &.true {
+        color: @state-info-text;
+        background: @state-info-bg;
+        border-color: @state-info-bg;
+    }
+}
+
+.boolean-filter {
+
+}
+
+.boolean-cell {
+    text-align: center;
+
+    .false {
+        opacity: 0.3;
+    }
+}

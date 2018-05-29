@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 
 import {makeId} from '#/main/core/scaffolding/id'
 import {trans} from '#/main/core/translation'
-import {matchPath, Routes, withRouter} from '#/main/core/router'
+import {matchPath, Routes, withRouter} from '#/main/app/router'
 
 import {PageActions} from '#/main/core/layout/page/components/page-actions.jsx'
 import {PageAction} from '#/main/core/layout/page'

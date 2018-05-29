@@ -1,5 +1,5 @@
 import uuid from 'uuid'
-import {generateUrl} from '#/main/core/api/router'
+import {url} from '#/main/app/api'
 
 const AUTH_WINDOW = 'claro_auth_window'
 
@@ -16,7 +16,7 @@ export function authenticate() {
     // generate a hash id for the authentication attempt (it will serve to catch the
     // authentication event, avoiding a generic "authenticated" event; see below)
     const authHash = uuid()
-    const authUrl = generateUrl('trigger_auth', {hash: authHash}, true)
+    const authUrl = url(['trigger_auth', {hash: authHash}, true])
 
     // open a dedicated (named) window for (re-)authentication
     const authWindow = window.open(authUrl, AUTH_WINDOW)

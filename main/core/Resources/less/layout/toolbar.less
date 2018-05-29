@@ -1,0 +1,130 @@
+
+.app-toolbar {
+    position: absolute;
+    max-width: @toolbar-size;
+    width: 100%;
+    top: @top-bar-height;
+    bottom: 0;
+
+    background: @top-bar-bg;
+
+    > nav { // temp wrapper since the toolbar is a standalone app
+        height: 100%;
+        padding: 5px 0;
+
+        // to be moved on .app-toolbar later
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .tools {
+        margin: floor(@grid-gutter-width / 2) 0;
+    }
+
+    .additional-tools {
+        margin-top: auto;
+    }
+
+
+    .btn-group { // for dropdown which wraps the .tool-link
+        display: block;
+    }
+
+    .dropdown {
+        &.open .dropdown-toggle {
+            color: @top-bar-link-hover-color;
+            background: @top-bar-link-hover-bg;
+        }
+
+        .dropdown-menu {
+            left: 100%;
+            bottom: 0;
+            top: auto;
+            margin-left: -1px;
+            margin-bottom: -1px;
+        }
+    }
+
+    .tool-link {
+        position: relative;
+        display: block;
+        width: 100%;
+        padding: floor(@grid-gutter-width / 2);
+        line-height: 1;
+        text-align: center;
+        color: @top-bar-link-color;
+        text-shadow: 0 0 3px rgba(0,0,0,0.75);
+
+        .fa {
+            font-size: 22px;
+        }
+
+        .label {
+            position: absolute;
+            bottom: floor(@grid-gutter-width / 4);
+            right: floor(@grid-gutter-width / 4);
+        }
+
+        &:hover {
+            color: @top-bar-link-hover-color;
+            background: @top-bar-link-hover-bg;
+        }
+
+        &:focus {
+            color: @top-bar-link-active-color;
+        }
+
+        &.danger {
+            color: @brand-danger;
+
+            &:hover {
+                color: white;
+                background: @brand-danger;
+            }
+
+            &:focus {
+                color: white;
+                background: @brand-danger;
+            }
+        }
+
+        &.active {
+            color: @top-bar-link-active-color; // todo : use var
+            background: @brand-primary;
+        }
+    }
+
+    .dropdown.open .dropdown-toggle,
+    .tool-link.active {
+        // add triangle shadow
+        &:before {
+            z-index: 1;
+            position: absolute;
+            right: 0;
+            top: floor(@grid-gutter-width / 2) - 2px;
+            content: " ";
+
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 13px 13px 13px 0;
+            border-color: transparent rgba(0, 0, 0, 0.25) transparent transparent;
+        }
+
+        // add triangle
+        &:after {
+            z-index: @zindex-dropdown + 1; // todo add var must overlaps app-content
+            position: absolute;
+            right: 0;
+            top: floor(@grid-gutter-width / 2);
+            content: " ";
+
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 11px 10px 11px 0;
+            border-color: transparent @body-bg transparent transparent; // todo fix use with dropdown (bg white)
+        }
+    }
+}

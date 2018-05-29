@@ -1,138 +1,31 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/core/translation'
-import {url} from '#/main/core/api/router'
 
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
-import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
-import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
-import {actions as formActions} from '#/main/core/data/form/actions'
+import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
 import {select as formSelect} from '#/main/core/data/form/selectors'
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 import {actions} from '#/main/core/administration/workspace/workspace/actions'
 
+import {WorkspaceForm} from '#/main/core/workspace/components/form'
+import {WorkspaceMetrics} from '#/main/core/workspace/components/metrics'
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
-import {OrganizationList} from '#/main/core/administration/user/organization/components/organization-list.jsx'
-import {UserList} from '#/main/core/administration/user/user/components/user-list.jsx'
+import {OrganizationList} from '#/main/core/administration/user/organization/components/organization-list'
+import {UserList} from '#/main/core/administration/user/user/components/user-list'
 
-const WorkspaceForm = (props) => {
-  const roleId = props.workspace.roles !== undefined && props.workspace.roles.length > 0 ?
-    props.workspace.roles.find(role => role.name.indexOf('ROLE_WS_MANAGER') > -1).id:
-    null
+const WorkspaceComponent = (props) =>
+  <div>
+    <WorkspaceMetrics
+      workspace={props.workspace}
+    />
 
-  const baseSectionFields = [
-    {
-      name: 'name',
-      type: 'string',
-      label: trans('name'),
-      required: true
-    }, {
-      name: 'code',
-      type: 'string',
-      label: trans('code'),
-      required: true
-    }, {
-      name: 'meta.description',
-      type: 'html',
-      label: trans('description')
-    }
-  ]
-
-  if (props.new) {
-    baseSectionFields.push({
-      name: 'extra.model',
-      type: 'model',
-      label: trans('model')
-    })
-  }
-
-  return (
-    <FormContainer
-      level={3}
-      name="workspaces.current"
-      sections={[
-        {
-          title: trans('general'),
-          primary: true,
-          fields: baseSectionFields
-        }, {
-          icon: 'fa fa-fw fa-user-plus',
-          title: trans('registration'),
-          fields: [
-            {
-              name: 'registration.url',
-              type: 'url',
-              label: trans('registration_url'),
-              calculated: () => url(['claro_workspace_subscription_url_generate', {slug: props.workspace.meta ? props.workspace.meta.slug : ''}, true]),
-              required: true,
-              disabled: true,
-              displayed: !props.new
-            }, {
-              name: 'registration.selfRegistration',
-              type: 'boolean',
-              label: trans('activate_self_registration'),
-              help: trans('self_registration_workspace_help'),
-              linked: [
-                {
-                  name: 'registration.validation',
-                  type: 'boolean',
-                  label: trans('validate_registration'),
-                  help: trans('validate_registration_help'),
-                  displayed: props.workspace.registration && props.workspace.registration.selfRegistration
-                }
-              ]
-            }, {
-              name: 'registration.selfUnregistration',
-              type: 'boolean',
-              label: trans('activate_self_unregistration'),
-              help: trans('self_unregistration_workspace_help')
-            }
-          ]
-        }, {
-          icon: 'fa fa-fw fa-key',
-          title: trans('access_restrictions'),
-          fields: [
-            {
-              name: 'restrictions.hidden',
-              type: 'boolean',
-              label: trans('hide_in_workspace_list')
-            }, {
-              name: 'access_max_users',
-              type: 'boolean',
-              label: trans('access_max_users'),
-              calculated: () => props.workspace.restrictions && null !== props.workspace.restrictions.maxUsers && '' !== props.workspace.restrictions.maxUsers,
-              onChange: checked => {
-                if (checked) {
-                  // initialize with the current nb of users with the role
-                  props.updateProp('restrictions.maxUsers', 0)
-                } else {
-                  // reset max users field
-                  props.updateProp('restrictions.maxUsers', null)
-                }
-              },
-              linked: [
-                {
-                  name: 'restrictions.maxUsers',
-                  type: 'number',
-                  label: trans('maxUsers'),
-                  displayed: props.workspace.restrictions && null !== props.workspace.restrictions.maxUsers && '' !== props.workspace.restrictions.maxUsers,
-                  required: true,
-                  options: {
-                    min: 0
-                  }
-                }
-              ]
-            }
-          ]
-        }
-      ]}
-    >
-      <FormSections
-        level={3}
-      >
+    <WorkspaceForm name="workspaces.current">
+      <FormSections level={3}>
         <FormSection
           className="embedded-list-section"
           icon="fa fa-fw fa-building"
@@ -166,7 +59,7 @@ const WorkspaceForm = (props) => {
           className="embedded-list-section"
           icon="fa fa-fw fa-user"
           title={trans('managers')}
-          disabled={props.new}
+          disabled={props.new || isEmpty(props.managerRole)}
           actions={[
             {
               type: 'callback',
@@ -184,35 +77,45 @@ const WorkspaceForm = (props) => {
             }}
             primaryAction={UserList.open}
             delete={{
-              url: ['apiv2_role_remove_users', {id: roleId}]
+              url: ['apiv2_role_remove_users', {id: props.managerRole.id}]
             }}
             definition={UserList.definition}
             card={UserList.card}
           />
         </FormSection>
       </FormSections>
-    </FormContainer>)
-}
+    </WorkspaceForm>
+  </div>
 
-WorkspaceForm.propTypes = {
+WorkspaceComponent.propTypes = {
   new: T.bool.isRequired,
   workspace: T.shape(
     WorkspaceTypes.propTypes
   ).isRequired,
-  updateProp: T.func.isRequired,
+  managerRole: T.shape({
+    id: T.string
+  }),
   pickOrganizations: T.func.isRequired,
   pickManagers: T.func.isRequired
 }
 
+WorkspaceComponent.defaultProps = {
+  managerRole: {}
+}
+
 const Workspace = connect(
-  state => ({
-    new: formSelect.isNew(formSelect.form(state, 'workspaces.current')),
-    workspace: formSelect.data(formSelect.form(state, 'workspaces.current'))
-  }),
+  state => {
+    const workspace = formSelect.data(formSelect.form(state, 'workspaces.current'))
+
+    return {
+      new: formSelect.isNew(formSelect.form(state, 'workspaces.current')),
+      workspace: workspace,
+      managerRole: !isEmpty(workspace.roles) ?
+        workspace.roles.find(role => role.name.indexOf('ROLE_WS_MANAGER') > -1) :
+        null
+    }
+  },
   dispatch =>({
-    updateProp(propName, propValue) {
-      dispatch(formActions.updateProp('workspaces.current', propName, propValue))
-    },
     pickOrganizations(workspaceId) {
       dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
         icon: 'fa fa-fw fa-buildings',
@@ -247,7 +150,7 @@ const Workspace = connect(
       }))
     }
   })
-)(WorkspaceForm)
+)(WorkspaceComponent)
 
 export {
   Workspace

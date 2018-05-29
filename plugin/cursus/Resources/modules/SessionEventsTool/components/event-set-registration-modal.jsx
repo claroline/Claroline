@@ -2,9 +2,12 @@ import {connect} from 'react-redux'
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import moment from 'moment'
-import Modal from 'react-bootstrap/lib/Modal'
-import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
+
+import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {registry} from '#/main/app/modals/registry'
+
 import {t, trans} from '#/main/core/translation'
+
 import {actions} from '../actions'
 import {selectors} from '../selectors'
 import {registrationStatus} from '../enums'
@@ -22,8 +25,8 @@ class EventSetRegistrationModal  extends Component {
 
   render() {
     return (
-      <BaseModal {...this.props}>
-        <Modal.Body>
+      <Modal {...this.props}>
+        <div className="modal-body">
           <div className="well well-sm">
             {trans('session_event_set_limit_info', {limit: this.props.eventSet.limit}, 'cursus')}
           </div>
@@ -114,13 +117,13 @@ class EventSetRegistrationModal  extends Component {
               </tbody>
             </table>
           </div>
-        </Modal.Body>
-        <Modal.Footer>
+        </div>
+        <div className="modal-footer">
           <button className="btn btn-default" onClick={this.props.fadeModal}>
             {t('close')}
           </button>
-        </Modal.Footer>
-      </BaseModal>
+        </div>
+      </Modal>
     )
   }
 }
@@ -160,5 +163,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 const ConnectedEventSetRegistrationModal = connect(mapStateToProps, mapDispatchToProps)(EventSetRegistrationModal)
+
+registry.add(MODAL_EVENT_SET_REGISTRATION, ConnectedEventSetRegistrationModal)
 
 export {ConnectedEventSetRegistrationModal as EventSetRegistrationModal}

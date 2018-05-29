@@ -1,5 +1,4 @@
 import {makeReducer} from '#/main/core/scaffolding/reducer'
-import {makeResourceReducer} from '#/main/core/resource/reducer'
 
 import {FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
 
@@ -14,7 +13,7 @@ const dropzoneReducer = makeReducer({}, {
   [FORM_SUBMIT_SUCCESS+'/dropzoneForm']: (state, action) => action.updatedData
 })
 
-const reducer = makeResourceReducer({}, {
+const reducer = {
   user: makeReducer({}, {}),
   dropzone: dropzoneReducer,
   dropzoneForm: editorReducer,
@@ -29,7 +28,7 @@ const reducer = makeResourceReducer({}, {
   userEvaluation: makeReducer({}, {}),
   teams: makeReducer({}, {}),
   errorMessage: makeReducer({}, {})
-})
+}
 
 export {
   reducer

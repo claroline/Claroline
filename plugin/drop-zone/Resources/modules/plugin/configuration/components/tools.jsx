@@ -4,8 +4,8 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
 import {makeId} from '#/main/core/scaffolding/id'
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {MODAL_GENERIC_TYPE_PICKER} from '#/main/core/layout/modal'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {MODAL_SELECTION} from '#/main/app/modals/selection'
 import {
   PageContainer,
   PageHeader,
@@ -38,7 +38,7 @@ class Tools extends Component {
   }
 
   showForm() {
-    this.props.showModal(MODAL_GENERIC_TYPE_PICKER, {
+    this.props.showModal(MODAL_SELECTION, {
       title: trans('tool_type_selection_title', {}, 'dropzone'),
       types: constants.toolTypes,
       handleSelect: (type) => this.handleToolTypeSelection(type)

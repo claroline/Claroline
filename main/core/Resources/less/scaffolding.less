@@ -4,8 +4,8 @@
 // Moves the app scroll bar after the fixed header
 html.claroline-app-container {
     height: 100%;
-    overflow-y: hidden;
-    padding-top: @top-bar-height;
+    /*overflow-y: hidden;*/
+    /*padding-top: @top-bar-height;*/
 }
 
 body {
@@ -13,32 +13,51 @@ body {
 
     &.claroline-app {
         height: 100%;
+        overflow-y: hidden;
+        padding-top: @top-bar-height;
+
         // only put body bg for claroline apps (avoids modifying TinyMCE content bg)
         background: @body-bg;
 
-        // Get the scroll bar
-        // Using `scroll` is not really aesthetic because it adds an empty one if no scroll
-        // but this is the only way to avoid content to move when the scroll appears in `auto` mode
-        // todo : try https://aykevl.nl/2014/09/fix-jumping-scrollbar
-        overflow-y: scroll;
+        position: relative; // to constrain sidebar
+    }
+}
+
+.app-toolbar {
+    //z-index: 1;
+    + .app-content {
+        margin-left: @toolbar-size;
     }
 }
 
 .app-content {
+    position: relative;
+    //z-index: 2;
+    flex: 1;
     display: flex;
     flex-direction: column;
-    min-height: 100%;
-    width: 100%;
-    max-width: @app-max-width;
-    margin: 0 auto;
-    padding: floor(@grid-gutter-width / 2);
+    height: 100%;
 
-    // Hack to force the display of footer at the bottom of the page if no scroll
-    // todo : find a better way to do it. expose content padding as a var
-    padding-bottom: @footer-height + 1 + floor(@grid-gutter-width / 2); // + 1 for the border of the footer
+    box-shadow: 0 0 3px 0 rgba(0,0,0,0.75);
+
+    // Get the scroll bar
+    // Using `scroll` is not really aesthetic because it adds an empty one if no scroll
+    // but this is the only way to avoid content to move when the scroll appears in `auto` mode
+    // todo : try https://aykevl.nl/2014/09/fix-jumping-scrollbar
+    overflow-y: scroll;
 
     .page-container {
         flex: 1 0 auto; // only specifying flex property here make the item fill the remaining space in its parent
+
+        max-width: @app-max-width;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .breadcrumb { // temp : should be moved inside page-container
+        max-width: @app-max-width;
+        width: 100%;
+        margin: 0 auto;
     }
 
     &.app-content-full {
@@ -46,7 +65,6 @@ body {
     }
 }
 
-.thumbnail,
-.img-thumbnail {
-    .box-shadow(@thumbnail-box-shadow);
+.component-container {
+    margin-bottom: @component-margin-bottom;
 }

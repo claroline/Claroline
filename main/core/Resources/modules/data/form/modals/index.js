@@ -1,11 +1,9 @@
-import {registerModals} from '#/main/core/layout/modal'
+import {registry} from '#/main/app/modals/registry'
 
 import {MODAL_CONFIGURE_FIELD, ConfigureFieldModal} from '#/main/core/data/form/modals/components/configure-field.jsx'
 
-// register message modals
-registerModals([
-  [MODAL_CONFIGURE_FIELD, ConfigureFieldModal]
-])
+// make the modal available for use
+registry.add(MODAL_CONFIGURE_FIELD, ConfigureFieldModal)
 
 export {
   MODAL_CONFIGURE_FIELD

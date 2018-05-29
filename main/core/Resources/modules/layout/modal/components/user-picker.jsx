@@ -1,19 +1,24 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import Modal from 'react-bootstrap/lib/Modal'
 
 import {t} from '#/main/core/translation'
-import {BaseModal} from './base.jsx'
+import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {UserTypeahead} from '#/main/core/layout/typeahead/users/typeahead.jsx'
 import {HelpBlock} from '#/main/core/layout/form/components/help-block.jsx'
 
+/**
+ *
+ * @param props
+ * @constructor
+ * @deprecated only used in claco-form
+ */
 const UserPickerModal = props =>
-  <BaseModal {...props}>
-    <Modal.Body>
+  <Modal {...props}>
+    <div className="modal-body">
       {props.help && <HelpBlock help={props.help} />}
       <UserTypeahead {...props}/>
-    </Modal.Body>
-  </BaseModal>
+    </div>
+  </Modal>
 
 UserPickerModal.propTypes = {
   bsStyle: T.oneOf(['info', 'warning', 'success', 'danger']).isRequired,

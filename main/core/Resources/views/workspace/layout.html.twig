@@ -28,7 +28,7 @@
 {% block claroline_danger %}
     {{ parent() }}
 
-    {% if workspace is defined and is_date_access_valid(workspace) == false %}
+    {% if workspace is defined and not is_date_access_valid(workspace) %}
         <div class="label label-danger">
             {{ 'workspace_access_date_invalid'|trans({}, 'platform') }}
         </div>
@@ -61,7 +61,7 @@
                     </a>
                 </li>
 
-                {{ render(controller("ClarolineCoreBundle:Resource:renderBreadcrumbs", {
+                {{ render(controller("ClarolineCoreBundle:ResourceOld:renderBreadcrumbs", {
                     'node': node,
                     '_breadcrumbs': app.request.query.get('_breadcrumbs', {})
                 })) }}
@@ -74,22 +74,9 @@
     {% endif %}
 {% endblock %}
 
-{# I don't know if it's still used. Can not find any reference to the anchor in the project... #}
-{% block server_vars %}
-    {% if _resource is defined %}
-        <div id="twig-resource-attributes"
-             data-resource-id="{{ _resource.getId() }}"
-             data-resource-name="{{ _resource.getName() }}"
-        >
-        </div>
-    {% endif %}
-{% endblock %}
-
 {% block leftbar %}
-    {% if workspace is defined and workspace != null %}
-        {% if is_granted('OPEN', workspace) %}
-            {{ render(controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspace': workspace})) }}
-        {% endif %}
+    {% if workspace is defined and workspace != null and is_granted('OPEN', workspace) %}
+        {{ render(controller("ClarolineCoreBundle:Workspace:renderToolbar", {workspace: workspace, request: app.request})) }}
     {% endif %}
 {% endblock %}
 
@@ -106,6 +93,9 @@
 {% block javascripts %}
     {{ parent() }}
 
+    {# Workspace toolbar #}
+    <script src="{{ hotAsset('claroline-distribution-main-core-workspace-toolbar') }}"></script>
+
     <script type="text/javascript">
         window.Workspace = {};
         {% if node is defined and node.getWorkspace() is not null %}
@@ -115,6 +105,7 @@
         {% endif %}
     </script>
 
+    {# all of the next code is deprecated #}
     <script>
         $(document).ready(function () {
             if (window.self !== window.top) {

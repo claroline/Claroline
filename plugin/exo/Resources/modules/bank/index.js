@@ -4,8 +4,6 @@ import {registerDefaultItemTypes} from '#/plugin/exo/items/item-types'
 import {registerModal} from '#/main/core/layout/modal'
 
 // reducers
-import {reducer as apiReducer} from '#/main/core/api/reducer'
-import {reducer as modalReducer} from '#/main/core/layout/modal/reducer'
 import {reducer} from '#/plugin/exo/bank/reducer'
 
 import {Questions} from '#/plugin/exo/bank/components/questions.jsx'
@@ -28,10 +26,6 @@ bootstrap(
   // app store configuration
   {
     currentUser: (state = null) => state,
-    questions: reducer,
-
-    // generic reducers
-    currentRequests: apiReducer,
-    modal: modalReducer
+    questions: reducer
   }
 )

@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Controller\Administration;
 
 use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Manager\CacheManager;
 use Claroline\CoreBundle\Entity\Icon\IconSetTypeEnum;
 use Claroline\CoreBundle\Entity\SecurityToken;
 use Claroline\CoreBundle\Form\Administration as AdminForm;
@@ -23,7 +24,6 @@ use Claroline\CoreBundle\Library\Configuration\UnwritableException;
 use Claroline\CoreBundle\Library\Installation\Refresher;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Library\Session\DatabaseSessionValidator;
-use Claroline\CoreBundle\Manager\CacheManager;
 use Claroline\CoreBundle\Manager\ContentManager;
 use Claroline\CoreBundle\Manager\IconSetManager;
 use Claroline\CoreBundle\Manager\IPWhiteListManager;
@@ -698,16 +698,12 @@ class ParametersController extends Controller
      */
     public function submitSessionAction()
     {
-        $formData = $this->request->request->get('platform_session_form', []);
-        $storageType = isset($formData['session_storage_type']) ?
-            $formData['session_storage_type'] :
-            $this->configHandler->getParameter('session_storage_type');
         $form = $this->formFactory->create(
             SessionType::class,
             $this->configHandler->getPlatformConfig(),
             [
-                'session_type' => $config->getSessionStorageType(),
-                'config' => $config,
+                'session_type' => $this->configHandler->getSessionStorageType(),
+                'config' => $this->configHandler->getPlatformConfig(),
                 'locked_params' => $this->configHandler->getLockedParameters(),
             ]
         );

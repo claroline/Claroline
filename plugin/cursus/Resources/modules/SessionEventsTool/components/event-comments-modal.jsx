@@ -2,10 +2,13 @@ import {connect} from 'react-redux'
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import moment from 'moment'
-import Modal from 'react-bootstrap/lib/Modal'
-import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
+
+import {registry} from '#/main/app/modals/registry'
+import {Modal} from '#/main/app/overlay/modal/components/modal'
+
 import {t, trans} from '#/main/core/translation'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
+
 import {actions} from '../actions'
 
 export const MODAL_EVENT_COMMENTS = 'MODAL_EVENT_COMMENTS'
@@ -57,8 +60,8 @@ class EventCommentsModal  extends Component {
 
   render() {
     return (
-      <BaseModal {...this.props}>
-        <Modal.Body>
+      <Modal {...this.props}>
+        <div className="modal-body">
           <div className="panel panel-default">
             <div className="panel-heading" role="tab" id="description-heading">
               <h4 className="panel-title">
@@ -151,11 +154,11 @@ class EventCommentsModal  extends Component {
                   />
                   <br/>
                   <button className="btn btn-primary" onClick={() => this.validateNewComment(false)}>
-                      {t('ok')}
+                    {t('ok')}
                   </button>
                   &nbsp;
                   <button className="btn btn-default" onClick={() => this.switchCreationForm(false)}>
-                      {t('cancel')}
+                    {t('cancel')}
                   </button>
                 </div> :
                 <button className="btn btn-default" onClick={() => this.switchCreationForm(true)}>
@@ -190,11 +193,11 @@ class EventCommentsModal  extends Component {
                             />
                             <br/>
                             <button className="btn btn-primary" onClick={() => this.validateEditionComment()}>
-                                {t('ok')}
+                              {t('ok')}
                             </button>
                             &nbsp;
                             <button className="btn btn-default" onClick={() => this.switchEditionForm(0, null)}>
-                                {t('cancel')}
+                              {t('cancel')}
                             </button>
                           </td>
                         </tr>
@@ -242,13 +245,13 @@ class EventCommentsModal  extends Component {
               {trans('no_information', {}, 'cursus')}
             </div>
           }
-        </Modal.Body>
-        <Modal.Footer>
+        </div>
+        <div className="modal-footer">
           <button className="btn btn-default" onClick={this.props.fadeModal}>
             {t('close')}
           </button>
-        </Modal.Footer>
-      </BaseModal>
+        </div>
+      </Modal>
     )
   }
 }
@@ -295,5 +298,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 const ConnectedEventCommentsModal = connect(mapStateToProps, mapDispatchToProps)(EventCommentsModal)
+
+registry.add(MODAL_EVENT_COMMENTS, ConnectedEventCommentsModal)
 
 export {ConnectedEventCommentsModal as EventCommentsModal}

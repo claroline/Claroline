@@ -64,7 +64,7 @@ class WorkspaceManagerTest extends MockeryTestCase
         $this->ut = $this->mock('Claroline\CoreBundle\Library\Utilities\ClaroUtilities');
         $this->templateDir = vfsStream::url('template');
         $this->pagerFactory = $this->mock('Claroline\CoreBundle\Pager\PagerFactory');
-        $this->maskManager = $this->mock('Claroline\CoreBundle\Manager\MaskManager');
+        $this->maskManager = $this->mock('Claroline\CoreBundle\Manager\Resource\MaskManager');
         $this->security = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');
     }
 

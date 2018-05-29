@@ -4,9 +4,10 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
 
-import {MODAL_CONFIRM, MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {select as resourceSelect} from '#/main/core/resource/selectors'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {selectors as resourceSelect} from '#/main/core/resource/store'
+import {hasPermission} from '#/main/core/resource/permissions'
 
 import {actions} from '#/plugin/announcement/resources/announcement/actions'
 import {select} from '#/plugin/announcement/resources/announcement/selectors'
@@ -38,15 +39,17 @@ const Announce = connect(
   state => ({
     aggregateId: select.aggregateId(state),
     announcement: select.detail(state),
-    editable: resourceSelect.editable(state),
-    deletable: resourceSelect.deletable(state)
+    editable: hasPermission('edit', resourceSelect.resourceNode(state)),
+    deletable: hasPermission('delete', resourceSelect.resourceNode(state))
   }),
   dispatch => ({
     removePost(aggregateId, announcePost) {
       dispatch(
-        modalActions.showModal(MODAL_DELETE_CONFIRM, {
+        modalActions.showModal(MODAL_CONFIRM, {
+          icon: 'fa fa-fw fa-trash-o',
           title: trans('remove_announce', {}, 'announcement'),
           question: trans('remove_announce_confirm', {}, 'announcement'),
+          dangerous: true,
           handleConfirm: () => dispatch(actions.removeAnnounce(aggregateId, announcePost))
         })
       )

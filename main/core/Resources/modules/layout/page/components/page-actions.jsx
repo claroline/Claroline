@@ -5,7 +5,6 @@ import {trans} from '#/main/core/translation'
 
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {Button} from '#/main/app/action/components/button'
-import {DropdownButton} from '#/main/app/action/components/dropdown-button'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
 /**
@@ -18,7 +17,7 @@ const PageAction = props =>
   <Button
     {...props}
     tooltip="bottom"
-    className={classes('page-action-btn', props.className)}
+    className={classes('page-actions-btn', props.className)}
   >
     {props.children}
   </Button>
@@ -36,6 +35,7 @@ implementPropTypes(PageAction, ActionTypes, {
  */
 const FullScreenAction = props =>
   <PageAction
+    id={props.id}
     type="callback"
     label={trans(props.fullscreen ? 'fullscreen_off' : 'fullscreen_on')}
     icon={classes('fa', {
@@ -46,23 +46,38 @@ const FullScreenAction = props =>
   />
 
 FullScreenAction.propTypes = {
+  id: T.string,
   fullscreen: T.bool.isRequired,
   toggleFullscreen: T.func.isRequired
 }
 
+FullScreenAction.defaultProps = {
+  id: 'page-fullscreen-action'
+}
+
 const MoreAction = props =>
-  <DropdownButton
-    {...props}
-    tooltip="bottom"
-    className={classes('page-action-btn', props.className)}
+  <PageAction
+    id={props.id}
+    type="menu"
     icon="fa fa-ellipsis-v"
-    label={trans('show_more_actions')}
-    pullRight={true}
+    label={trans('show-more-actions', {}, 'actions')}
+    menu={{
+      label: props.menuLabel,
+      align: 'right',
+      items: props.actions
+    }}
   />
 
-implementPropTypes(MoreAction, DropdownButton, {}, {
-  menuLabel: trans('more_actions')
-})
+MoreAction.propTypes = {
+  id: T.string,
+  menuLabel: T.string,
+  actions: T.array.isRequired
+}
+
+MoreAction.defaultProps = {
+  id: 'page-more-action',
+  menuLabel: trans('actions')
+}
 
 /**
  * Groups some actions together.

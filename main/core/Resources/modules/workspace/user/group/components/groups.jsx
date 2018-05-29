@@ -6,8 +6,8 @@ import {trans} from '#/main/core/translation'
 
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 import {actions} from '#/main/core/workspace/user/group/actions'
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {select} from '#/main/core/workspace/user/selectors'
 import {getGroupList} from '#/main/core/workspace/user/group/components/group-list.jsx'
 
@@ -41,9 +41,11 @@ const Groups = connect(
   dispatch => ({
     unregister(users, workspace) {
       dispatch(
-        modalActions.showModal(MODAL_DELETE_CONFIRM, {
+        modalActions.showModal(MODAL_CONFIRM, {
+          icon: 'fa fa-fw fa-trash-o',
           title: trans('unregister_groups'),
           question: trans('unregister_groups'),
+          dangerous: true,
           handleConfirm: () => dispatch(actions.unregister(users, workspace))
         })
       )

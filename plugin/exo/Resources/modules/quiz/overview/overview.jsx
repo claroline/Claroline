@@ -8,7 +8,8 @@ import {tex} from '#/main/core/translation'
 import {Button} from '#/main/app/action/components/button'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 
-import {select as resourceSelect} from '#/main/core/resource/selectors'
+import {selectors as resourceSelect} from '#/main/core/resource/store'
+import {hasPermission} from '#/main/core/resource/permissions'
 import {select} from '#/plugin/exo/quiz/selectors'
 import {
   correctionModes,
@@ -155,10 +156,12 @@ const Layout = props =>
       ) && ((props.meta.paperCount < props.parameters.maxPapers) || props.parameters.maxPapers === 0) ?
       <Button
         type="link"
-        className="btn btn-start btn-lg btn-primary btn-block"
+        className="btn btn-start btn-block"
         icon="fa fa-fw fa-play"
         label={tex('exercise_start')}
         target="/play"
+        primary={true}
+        size="lg"
       />
       :
       <Alert bsStyle="danger overview-warning">
@@ -238,7 +241,7 @@ OverviewComponent.propTypes = {
 const Overview = connect(
   (state) => ({
     empty: select.empty(state),
-    editable: resourceSelect.editable(state),
+    editable: hasPermission('edit', resourceSelect.resourceNode(state)),
     quiz: select.quiz(state)
   })
 )(OverviewComponent)

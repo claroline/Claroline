@@ -1,7 +1,7 @@
-import {url} from '#/main/core/api/router'
+import {url} from '#/main/app/api'
 import {makeInstanceActionCreator} from '#/main/core/scaffolding/actions'
 
-import {API_REQUEST} from '#/main/core/api/actions'
+import {API_REQUEST} from '#/main/app/api'
 import {select as listSelect} from '#/main/core/data/list/selectors'
 
 export const actions = {}

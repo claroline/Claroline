@@ -2,11 +2,12 @@ plugin:
   has_options: false
 
   resources:
-    - class: Claroline\ScormBundle\Entity\Scorm12Resource
-      name: claroline_scorm_12
+    - name: claroline_scorm_12
+      class: Claroline\ScormBundle\Entity\Scorm12Resource
       activity_rules:
         - action: resource-scorm_12-sco_result
-    - class: Claroline\ScormBundle\Entity\Scorm2004Resource
-      name: claroline_scorm_2004
+
+    - name: claroline_scorm_2004
+      class: Claroline\ScormBundle\Entity\Scorm2004Resource
       activity_rules:
         - action: resource-scorm_2004-sco_result

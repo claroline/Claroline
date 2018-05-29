@@ -1,9 +1,13 @@
 plugin:
-  has_options: false
+    has_options: false
 
-  resources:
-    - class: Claroline\AnnouncementBundle\Entity\AnnouncementAggregate
-      name: claroline_announcement_aggregate
+    resources:
+        - name: claroline_announcement_aggregate
+          class: Claroline\AnnouncementBundle\Entity\AnnouncementAggregate
+          actions:
+              - name: create-announce
+                decoder: create-announce
+
 
   #widgets:
   #  - name: claroline_announcement_widget

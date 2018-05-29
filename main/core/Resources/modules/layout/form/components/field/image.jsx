@@ -6,7 +6,7 @@ import {trans} from '#/main/core/translation'
 import {asset} from '#/main/core/scaffolding/asset'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
-import {actions} from '#/main/core/api/actions'
+import {actions} from '#/main/app/api/store'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 
 // todo : merge with file type

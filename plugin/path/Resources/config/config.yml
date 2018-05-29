@@ -3,9 +3,9 @@ plugin:
   icon: res_file.png
 
   resources:
-    - class: Innova\PathBundle\Entity\Path\Path
-      name: innova_path
-      is_exportable: true
+    - name: innova_path
+      class: Innova\PathBundle\Entity\Path\Path
+      exportable: true
 
   #widgets:
   #   - name:                        innova_path_widget

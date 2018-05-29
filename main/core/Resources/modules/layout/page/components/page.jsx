@@ -1,19 +1,15 @@
 import React from 'react'
-import get from 'lodash/get'
 import classes from 'classnames'
 
 import {asset} from '#/main/core/scaffolding/asset'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
-import {makeModal} from '#/main/core/layout/modal'
 import {Page as PageTypes} from '#/main/core/layout/page/prop-types'
 
-import {FlyingAlerts} from '#/main/core/layout/alert/components/flying-alerts.jsx'
-
 const PageWrapper = props => !props.embedded ?
-  <main className={props.className}>
+  <main className={classes('page main', props.className)}>
     {props.children}
   </main> :
-  <section className={props.className}>
+  <section className={classes('page embedded', props.className)}>
     {props.children}
   </section>
 
@@ -33,24 +29,10 @@ PageWrapper.propTypes = {
 const Page = props =>
   <PageWrapper
     embedded={props.embedded}
-    className={classes('page', props.className, {
-      fullscreen: props.fullscreen,
-      main: !props.embedded,
-      embedded: props.embedded
+    className={classes(props.className, {
+      fullscreen: props.fullscreen
     })}
   >
-    {props.alerts && 0 !== props.alerts.length &&
-      <FlyingAlerts alerts={props.alerts} removeAlert={props.removeAlert}/>
-    }
-
-    {get(props, 'modal.type') && makeModal(
-      props.modal.type,
-      props.modal.props,
-      props.modal.fading,
-      props.fadeModal,
-      props.hideModal
-    )}
-
     {props.children}
   </PageWrapper>
 
@@ -101,7 +83,7 @@ const PageHeader = props => {
     <header
       style={styles}
       className={classes('page-header', props.className, {
-        'page-header-poster': !!props.poster
+        'page-poster': !!props.poster
       })}
     >
       <PageTitle

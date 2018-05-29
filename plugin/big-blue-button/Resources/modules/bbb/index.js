@@ -1,7 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 
 import {bootstrap} from '#/main/app/bootstrap'
-import {makeResourceReducer} from '#/main/core/resource/reducer'
 
 import {
   bbbReducers,
@@ -22,7 +21,7 @@ bootstrap(
   BBBResource,
 
   // app store configuration
-  makeResourceReducer({}, {
+  {
     // app reducers
     user: mainReducers,
     resourceForm: resourceFormReducers,
@@ -32,7 +31,7 @@ bootstrap(
     canEdit: mainReducers,
     canJoin: canJoinReducers,
     message: messageReducers
-  }),
+  },
 
   // transform data attributes for redux store
   (initialData) => {

@@ -1,10 +1,12 @@
 import {connect} from 'react-redux'
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import Modal from 'react-bootstrap/lib/Modal'
 import classes from 'classnames'
-import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
+
+import {registry} from '#/main/app/modals/registry'
+import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {t, trans} from '#/main/core/translation'
+
 import {actions} from '../actions'
 
 export const MODAL_EVENT_SET_FORM = 'MODAL_EVENT_SET_FORM'
@@ -67,8 +69,8 @@ class EventSetFormModal  extends Component {
 
   render() {
     return (
-      <BaseModal {...this.props}>
-        <Modal.Body>
+      <Modal {...this.props}>
+        <div className="modal-body">
           <div className={classes('form-group row', {'has-error': this.state.nameError})}>
             <label className="control-label col-md-3">
               {t('name')}
@@ -107,8 +109,8 @@ class EventSetFormModal  extends Component {
               }
             </div>
           </div>
-        </Modal.Body>
-        <Modal.Footer>
+        </div>
+        <div className="modal-footer">
           <button className="btn btn-danger pull-left" onClick={() => this.deleteEventSet()}>
             {t('delete')}
           </button>
@@ -118,8 +120,8 @@ class EventSetFormModal  extends Component {
           <button className="btn btn-primary" onClick={() => this.validateEventSet()}>
             {t('ok')}
           </button>
-        </Modal.Footer>
-      </BaseModal>
+        </div>
+      </Modal>
     )
   }
 }
@@ -148,5 +150,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 const ConnectedEventSetFormModal = connect(mapStateToProps, mapDispatchToProps)(EventSetFormModal)
+
+registry.add(MODAL_EVENT_SET_FORM, ConnectedEventSetFormModal)
 
 export {ConnectedEventSetFormModal as EventSetFormModal}

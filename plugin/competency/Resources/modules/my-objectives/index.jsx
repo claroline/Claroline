@@ -1,5 +1,4 @@
 import {bootstrap} from '#/main/app/bootstrap'
-import {reducer as modalReducer}    from '#/main/core/layout/modal/reducer'
 
 import {
   objectivesReducers,
@@ -22,10 +21,7 @@ bootstrap(
     objectives: objectivesReducers,
     objectivesCompetencies: objectivesReducers,
     competencies: competenciesReducers,
-    competency: competencyReducers,
-
-    // generic reducers
-    modal: modalReducer
+    competency: competencyReducers
   },
 
   // transform data attributes for redux store

@@ -1,20 +1,19 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
-import Modal from 'react-bootstrap/lib/Modal'
 
 import {tex} from '#/main/core/translation'
-import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
+import {Modal} from '#/main/app/overlay/modal/components/modal'
 import select from '../../selectors'
 
 export const MODAL_MOVE_ITEM = 'MODAL_MOVE_ITEM'
 
 const MoveItemModal = props =>
-  <BaseModal
+  <Modal
     {...props}
     className="step-move-item-modal"
   >
-    <Modal.Body>
+    <div className="modal-body">
       <div className="step-list-box">
         {Object.keys(props.steps).map((stepId, index) =>
           <span
@@ -29,8 +28,8 @@ const MoveItemModal = props =>
           </span>
         )}
       </div>
-    </Modal.Body>
-  </BaseModal>
+    </div>
+  </Modal>
 
 MoveItemModal.propTypes = {
   handleClick: T.func.isRequired,

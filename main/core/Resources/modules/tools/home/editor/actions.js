@@ -1,9 +1,9 @@
 import {trans} from '#/main/core/translation'
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
-import {API_REQUEST} from '#/main/core/api/actions'
+import {API_REQUEST} from '#/main/app/api'
 
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {MODAL_ADD_WIDGET} from '#/main/core/widget/modals/components/add-widget'
 import {MODAL_EDIT_WIDGET} from '#/main/core/widget/modals/components/edit-widget'
 
@@ -39,8 +39,10 @@ actions.editWidget = (position, widget) => (dispatch) => dispatch(modalActions.s
   save: (updated) => dispatch(actions.updateWidget(position, updated))
 }))
 
-actions.deleteWidget = (position) => (dispatch) => dispatch(modalActions.showModal(MODAL_DELETE_CONFIRM, {
+actions.deleteWidget = (position) => (dispatch) => dispatch(modalActions.showModal(MODAL_CONFIRM, {
+  icon: 'fa fa-fw fa-trash-o',
   title: trans('widget_delete_confirm_title', {}, 'widget'),
   question: trans('widget_delete_confirm_message', {}, 'widget'),
+  dangerous: true,
   handleConfirm: () => dispatch(actions.removeWidget(position))
 }))

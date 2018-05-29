@@ -3,10 +3,6 @@ plugin:
   icon: res_url.png
 
   resources:
-    - class: HeVinci\UrlBundle\Entity\Url
-      name: hevinci_url
-      is_exportable: false
-      actions:
-        - name: edit
-          menu_name: change_url_menu
-          is_form: true
+    - name: hevinci_url
+      class: HeVinci\UrlBundle\Entity\Url
+      exportable: false

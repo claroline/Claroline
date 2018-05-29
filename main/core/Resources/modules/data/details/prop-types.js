@@ -5,6 +5,14 @@ import {DataProperty} from '#/main/core/data/prop-types'
 
 const DataDetailsProperty = {
   propTypes: merge({}, DataProperty.propTypes, {
+    /**
+     * The calculated value for virtual properties.
+     *
+     * @param {object} row - The full row data.
+     *
+     * @type {*} - The computed value. Type depends on the data type.
+     */
+    calculated : T.func,
     hideLabel: T.bool,
     displayed: T.bool
   }),
@@ -17,7 +25,6 @@ const DataDetailsProperty = {
 // todo merge with DataFormSection
 const DataDetailsSection = {
   propTypes: {
-    id: T.string.isRequired,
     icon: T.string,
     title: T.string.isRequired,
     primary: T.bool,

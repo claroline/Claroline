@@ -12,7 +12,7 @@ const DataFormProperty = {
      *
      * @param {object} row - The full row data.
      *
-     * @type {mixed} - The computed value. Type depends on the data type.
+     * @type {*} - The computed value. Type depends on the data type.
      */
     calculated : T.func,
 
@@ -28,7 +28,6 @@ const DataFormProperty = {
       T.func // a function that receives the whole form data and returns the new state
     ]),
     readOnly: T.bool,
-    options: T.object,
     required: T.bool,
 
     // field methods

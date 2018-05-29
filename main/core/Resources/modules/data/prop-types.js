@@ -1,7 +1,6 @@
 import {PropTypes as T} from 'prop-types'
 
 import {Action} from '#/main/app/action/prop-types'
-//import {getTypes} from '#/main/core/data'
 
 const DataProperty = {
   propTypes: {
@@ -27,7 +26,6 @@ const DataProperty = {
      *
      * @type {string}
      */
-    /*type: T.oneOf(Object.keys(getTypes())),*/
     type: T.string,
 
     /**
@@ -54,10 +52,14 @@ const DataCell = {
 
 const DataDetails = {
   propTypes: {
-    data: T.any
+    id: T.string.isRequired,
+    data: T.any,
+    label: T.string,
+    hideLabel: T.bool
   },
   defaultTypes: {
-    data: null
+    data: null,
+    hideLabel: false
   }
 }
 

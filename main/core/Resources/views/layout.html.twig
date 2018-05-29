@@ -53,27 +53,16 @@
                 {{ render(controller('ClarolineCoreBundle:Layout:renderWarningImpersonation')) }}
             {% endif %}
         {% endblock %}
-
-        {% if hideSidebars is not defined or not hideSidebars %}
-        {# Sidebars #}
-        <div class="hidden-xs">
-            <div id="left-bar" class="sidebar hide">
-                {% block leftbar %}{% endblock %}
-            </div>
-
-            <div id="right-bar" class="sidebar hide">
-                {% block rightbar %}{% endblock %}
-            </div>
-        </div>
-
-        {# FIXME : As is we get the sidebar 2 times in the DOM. Responsivity should be fully managed in LESS #}
-        <div class="menu-xs visible-xs">
-        {{ block("leftbar") }}
-        </div>
-        {% endif %}
     {% endif %}
 
-    <div id="wrap" {% block wrap_attrs %}class="app-content container-fluid"{% endblock %}>
+    {# Toolbar #}
+    {% if hideSidebars is not defined or not hideSidebars %}
+        {% block leftbar %}{% endblock %}
+    {% endif %}
+
+    {# Content #}
+    {# do not use block `wrap_attrs` it will be removed (only used in login) #}
+    <div {% block wrap_attrs %}class="app-content"{% endblock %}>
         {% if (hideBreadcrumb is not defined or not hideBreadcrumb) and not isRenderedInIframe %}
             {% block breadcrumb %}{% endblock %}
         {% endif %}
@@ -81,30 +70,30 @@
         {% block content %}
             <div class="page-container">
                 <main class="page">
-                {% block page %}
-                    <header class="page-header">
-                    {% block page_header %}
-                        <h1>
-                            {% block page_title %}{% endblock %}
-                        </h1>
-                    {% endblock %}
-                    </header>
+                    {% block page %}
+                        <header class="page-header">
+                            {% block page_header %}
+                                <h1 class="page-title">
+                                    {% block page_title %}{% endblock %}
+                                </h1>
+                            {% endblock %}
+                        </header>
 
-                    <div class="page-content">
-                    {% block page_content %}
+                        <div class="page-content">
+                            {% block page_content %}
+                            {% endblock %}
+                        </div>
                     {% endblock %}
-                    </div>
-                {% endblock %}
                 </main>
             </div>
         {% endblock %}
-    </div>
 
-    {% if not isRenderedInIframe and (hideFooter is not defined or not hideFooter) %}
-        {% block footer %}
-            {{ render(controller('ClarolineCoreBundle:layout:footer')) }}
-        {% endblock%}
-    {% endif %}
+        {% if not isRenderedInIframe and (hideFooter is not defined or not hideFooter) %}
+            {% block footer %}
+                {{ render(controller('ClarolineCoreBundle:layout:footer')) }}
+            {% endblock%}
+        {% endif %}
+    </div>
 {% endblock %}
 
 {% block javascripts %}

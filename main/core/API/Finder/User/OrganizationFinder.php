@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\API\Finder\User;
 
 use Claroline\AppBundle\API\FinderInterface;
-use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;

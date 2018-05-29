@@ -1,6 +1,5 @@
 import merge from 'lodash/merge'
 import {makeReducer, combineReducers} from '#/main/core/scaffolding/reducer'
-import {makePageReducer} from '#/main/core/layout/page/reducer'
 import {makeListReducer} from '#/main/core/data/list/reducer'
 import {LOAD_LOG, RESET_LOG, LOAD_CHART_DATA} from '#/main/core/layout/logs/actions'
 import {LIST_FILTER_ADD, LIST_FILTER_REMOVE} from '#/main/core/data/list/actions'
@@ -64,7 +63,7 @@ const makeLogReducer = (initialState = {}, customReducer = {}) => {
     })
   }
 
-  return makePageReducer([], merge({}, customReducer, reducer))
+  return merge({}, customReducer, reducer)
 }
 
 export {

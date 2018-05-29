@@ -61,6 +61,8 @@ class ResourceRights
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     *
+     * @var ResourceNode
      */
     protected $resourceNode;
 
@@ -102,6 +104,9 @@ class ResourceRights
         $this->role = $role;
     }
 
+    /**
+     * @return ResourceNode
+     */
     public function getResourceNode()
     {
         return $this->resourceNode;

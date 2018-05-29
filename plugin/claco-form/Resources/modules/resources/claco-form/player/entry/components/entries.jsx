@@ -3,17 +3,18 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
 import {currentUser} from '#/main/core/user/current'
-import {constants as intlConstants} from '#/main/core/intl/constants'
-import {url} from '#/main/core/api/router'
+import {constants as intlConstants} from '#/main/app/intl/constants'
+import {url} from '#/main/app/api'
 import {trans, transChoice} from '#/main/core/translation'
 import {displayDate} from '#/main/core/scaffolding/date'
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 
 import {DataListContainer} from '#/main/core/data/list/containers/data-list'
 import {DataCard} from '#/main/core/data/components/data-card'
 import {constants as listConstants} from '#/main/core/data/list/constants'
-import {select as resourceSelect} from '#/main/core/resource/selectors'
+import {selectors as resourceSelect} from '#/main/core/resource/store'
+import {hasPermission} from '#/main/core/resource/permissions'
 import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
 
 import {Field as FieldType} from '#/plugin/claco-form/resources/claco-form/prop-types'
@@ -25,9 +26,11 @@ const authenticatedUser = currentUser()
 
 class EntriesComponent extends Component {
   deleteEntries(entries) {
-    this.props.showModal(MODAL_DELETE_CONFIRM, {
+    this.props.showModal(MODAL_CONFIRM, {
+      icon: 'fa fa-fw fa-trash-o',
       title: transChoice('delete_selected_entries', entries.length, {count: entries.length}, 'clacoform'),
       question: transChoice('delete_selected_entries_confirm_message', entries.length, {count: entries.length}, 'clacoform'),
+      dangerous: true,
       handleConfirm: () => this.props.deleteEntries(entries)
     })
   }
@@ -510,8 +513,8 @@ EntriesComponent.propTypes = {
 
 const Entries = connect(
   (state) => ({
-    canEdit: resourceSelect.editable(state),
-    canAdministrate: resourceSelect.administrable(state),
+    canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
+    canAdministrate: hasPermission('administrate', resourceSelect.resourceNode(state)),
     fields: select.fields(state),
     canGeneratePdf: state.canGeneratePdf,
     clacoFormId: state.clacoForm.id,

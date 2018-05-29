@@ -8,7 +8,7 @@ import {FormSections, FormSection} from '#/main/core/layout/form/components/form
 import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 import {select as formSelect} from '#/main/core/data/form/selectors'
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
 import {actions} from '#/main/core/administration/user/location/actions'
 import {OrganizationList} from '#/main/core/administration/user/organization/components/organization-list.jsx'

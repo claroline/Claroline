@@ -34,7 +34,7 @@ class ResourceVoterTest extends MockeryTestCase
         $this->em = $this->mock("Doctrine\ORM\EntityManager");
         $this->translator = $this->mock("Symfony\Component\Translation\Translator");
         $this->ut = $this->mock("Claroline\CoreBundle\Library\Security\Utilities");
-        $this->maskManager = $this->mock("Claroline\CoreBundle\Manager\MaskManager");
+        $this->maskManager = $this->mock("Claroline\CoreBundle\Manager\Resource\MaskManager");
         $this->repository = $this->mock("Claroline\CoreBundle\Repository\ResourceRightsRepository");
         $this->resourceManager = $this->mock('Claroline\CoreBundle\Manager\ResourceManager');
         $this->workspaceManager = $this->mock('Claroline\CoreBundle\Manager\WorkspaceManager');

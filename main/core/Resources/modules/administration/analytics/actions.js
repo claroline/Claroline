@@ -1,6 +1,5 @@
-import {makeActionCreator} from '#/main/core/scaffolding/actions'
-import {API_REQUEST} from '#/main/core/api/actions'
-import {generateUrl} from '#/main/core/api/router'
+import {makeActionCreator} from '#/main/app/store/actions'
+import {API_REQUEST} from '#/main/app/api'
 
 export const LOAD_OVERVIEW = 'LOAD_OVERVIEW'
 export const LOAD_AUDIENCE = 'LOAD_AUDIENCE'
@@ -18,7 +17,7 @@ actions.getOverviewData = () => (dispatch) => {
   actions.loadOverviewData({})
   dispatch({
     [API_REQUEST]: {
-      url: generateUrl('apiv2_admin_tool_analytics_overview'),
+      url: ['apiv2_admin_tool_analytics_overview'],
       success: (response, dispatch) => {
         dispatch(actions.loadOverviewData(response))
       }
@@ -33,7 +32,7 @@ actions.getAudienceData = (filters = {}) => (dispatch) => {
   }
   dispatch({
     [API_REQUEST]: {
-      url: generateUrl('apiv2_admin_tool_analytics_audience', filters),
+      url: ['apiv2_admin_tool_analytics_audience', filters],
       success: (response, dispatch) => {
         dispatch(actions.loadAudienceData(response))
       }
@@ -45,7 +44,7 @@ actions.getResourcesData = () => (dispatch) => {
   actions.loadResourcesData({})
   dispatch({
     [API_REQUEST]: {
-      url: generateUrl('apiv2_admin_tool_analytics_resources'),
+      url: ['apiv2_admin_tool_analytics_resources'],
       success: (response, dispatch) => {
         dispatch(actions.loadResourcesData(response))
       }
@@ -57,7 +56,7 @@ actions.getWidgetsData = () => (dispatch) => {
   actions.loadWidgetsData({})
   dispatch({
     [API_REQUEST]: {
-      url: generateUrl('apiv2_admin_tool_analytics_widgets'),
+      url: ['apiv2_admin_tool_analytics_widgets'],
       success: (response, dispatch) => {
         dispatch(actions.loadWidgetsData(response))
       }

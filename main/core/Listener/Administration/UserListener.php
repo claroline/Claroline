@@ -117,3 +117,4 @@ class UserListener
         $event->getRemoved()->getPersonalWorkspace()->setPersonal(false);
     }
 }
+

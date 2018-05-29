@@ -3,7 +3,7 @@ plugin:
     icon: icap_website_icon_admin.png
 
     resources:
-        - class: Icap\WebsiteBundle\Entity\Website
-          name: icap_website
+        - name: icap_website
+          class: Icap\WebsiteBundle\Entity\Website
           is_browsable: false
-          is_exportable: false
+          exportable: false

@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {url} from '#/main/core/api/router'
+import {url} from '#/main/app/api'
 import {t, tex} from '#/main/core/translation'
 import {
   Page,

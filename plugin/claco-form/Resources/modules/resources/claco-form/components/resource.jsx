@@ -5,10 +5,11 @@ import {PropTypes as T} from 'prop-types'
 import {currentUser} from '#/main/core/user/current'
 import {makeId} from '#/main/core/scaffolding/id'
 import {now} from '#/main/core/scaffolding/date'
-import {url} from '#/main/core/api/router'
+import {url} from '#/main/app/api'
 import {trans} from '#/main/core/translation'
 import {RoutedPageContent} from '#/main/core/layout/router'
-import {select as resourceSelect} from '#/main/core/resource/selectors'
+import {selectors as resourceSelect} from '#/main/core/resource/store'
+import {hasPermission} from '#/main/core/resource/permissions'
 import {select as formSelect} from '#/main/core/data/form/selectors'
 import {actions as formActions} from '#/main/core/data/form/actions'
 import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
@@ -185,7 +186,7 @@ Resource.propTypes = {
 const ClacoFormResource = connect(
   (state) => ({
     clacoForm: select.clacoForm(state),
-    canEdit: resourceSelect.editable(state),
+    canEdit: hasPermission('edit', resourceSelect.editable(state)),
     canAddEntry: select.canAddEntry(state),
     canSearchEntry: select.canSearchEntry(state),
     defaultHome: select.getParam(state, 'default_home'),

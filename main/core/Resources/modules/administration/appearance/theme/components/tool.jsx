@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {Router, Routes} from '#/main/core/router'
+import {Router, Routes} from '#/main/app/router'
 
 import {Themes} from '#/main/core/administration/appearance/theme/components/themes.jsx'
 import {Theme} from '#/main/core/administration/appearance/theme/components/theme.jsx'

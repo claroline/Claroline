@@ -15,6 +15,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Library\PluginBundleInterface;
 use Claroline\CoreBundle\Manager\PluginManager;
+use Claroline\CoreBundle\Manager\VersionManager;
 use Claroline\InstallationBundle\Manager\InstallationManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
@@ -29,18 +30,29 @@ class Installer
 {
     use LoggableTrait;
 
+    /** @var Validator */
     private $validator;
+
+    /** @var Recorder */
     private $recorder;
+
+    /** @var InstallationManager */
     private $baseInstaller;
+
+    /** @var ObjectManager */
     private $om;
+
+    /** @var TranslatorInterface */
+    private $translator;
+
+    /** @var VersionManager */
     private $versionManager;
 
+    /** @var PluginManager */
+    private $pluginManager;
+
     /**
-     * Constructor.
-     *
-     * @param Validator           $validator
-     * @param Recorder            $recorder
-     * @param InstallationManager $installer
+     * Installer constructor.
      *
      * @DI\InjectParams({
      *     "validator"     = @DI\Inject("claroline.plugin.validator"),
@@ -51,6 +63,14 @@ class Installer
      *     "translator"    = @DI\Inject("translator"),
      *     "versionManager" = @DI\Inject("claroline.manager.version_manager")
      * })
+     *
+     * @param Validator           $validator
+     * @param Recorder            $recorder
+     * @param InstallationManager $installer
+     * @param ObjectManager       $om
+     * @param PluginManager       $pluginManager
+     * @param TranslatorInterface $translator
+     * @param VersionManager      $versionManager
      */
     public function __construct(
         Validator $validator,
@@ -59,7 +79,7 @@ class Installer
         ObjectManager $om,
         PluginManager $pluginManager,
         TranslatorInterface $translator,
-        $versionManager
+        VersionManager $versionManager
     ) {
         $this->validator = $validator;
         $this->recorder = $recorder;
@@ -91,13 +111,11 @@ class Installer
      */
     public function install(PluginBundleInterface $plugin)
     {
-        $this->versionManager->setLogger($this->logger);
-        $version = $this->versionManager->register($plugin);
-        $this->checkInstallationStatus($plugin, false);
-        $this->validatePlugin($plugin);
-        $this->log('Saving configuration...');
-        $pluginEntity = $this->recorder->register($plugin, $this->validator->getPluginConfiguration());
-        $this->baseInstaller->install($plugin, false);
+        $this->baseInstaller->install($plugin);
+
+        $pluginEntity = $this->pluginManager->getPluginByShortName(
+            $plugin->getName()
+        );
 
         if (!$this->pluginManager->isReady($pluginEntity) || !$this->pluginManager->isActivatedByDefault($pluginEntity)) {
             $errors = $this->pluginManager->getMissingRequirements($pluginEntity);
@@ -118,7 +136,9 @@ class Installer
             $this->pluginManager->disable($pluginEntity);
         }
 
-        $version = $this->versionManager->execute($version);
+        $this->versionManager->setLogger($this->logger);
+        $version = $this->versionManager->register($plugin);
+        $this->versionManager->execute($version);
     }
 
     /**
@@ -143,15 +163,13 @@ class Installer
      */
     public function update(PluginBundleInterface $plugin, $currentVersion, $targetVersion)
     {
+        $this->checkInstallationStatus($plugin, true);
+
+        $this->baseInstaller->update($plugin, $currentVersion, $targetVersion);
+
+        // updates plugin version
         $this->versionManager->setLogger($this->logger);
         $version = $this->versionManager->register($plugin);
-        $this->checkInstallationStatus($plugin, true);
-        $this->validator->activeUpdateMode();
-        $this->validatePlugin($plugin);
-        $this->validator->deactivateUpdateMode();
-        $this->log('Updating plugin configuration...');
-        $this->baseInstaller->update($plugin, $currentVersion, $targetVersion);
-        $this->recorder->update($plugin, $this->validator->getPluginConfiguration());
         $this->versionManager->execute($version);
     }
 
@@ -173,35 +191,15 @@ class Installer
         }
     }
 
-    public function validatePlugin(PluginBundleInterface $plugin)
-    {
-        $this->log('Validating configuration...');
-        $errors = $this->validator->validate($plugin);
-
-        if (0 !== count($errors)) {
-            $report = "Plugin '{$plugin->getNamespace()}' cannot be installed, due to the "
-                .'following validation errors :'.PHP_EOL;
-
-            foreach ($errors as $error) {
-                $report .= $error->getMessage().PHP_EOL;
-            }
-
-            throw new \Exception($report);
-        }
-    }
-
     public function updateAllConfigurations()
     {
         $bundles = $this->pluginManager->getInstalledBundles();
 
         foreach ($bundles as $bundle) {
             $this->log('Updating configuration for '.get_class($bundle['instance']));
-            $this->validator->activeUpdateMode();
-            $this->validatePlugin($bundle['instance']);
-            $this->validator->deactivateUpdateMode();
             $this->log('Plugin validated: proceed to database changes...');
             $this->om->clear();
-            $this->recorder->update($bundle['instance'], $this->validator->getPluginConfiguration());
+            $this->recorder->update($bundle['instance']);
         }
     }
 }

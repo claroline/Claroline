@@ -1,24 +1,52 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
-import {viewComponents} from '../views'
 import {selectors} from '../selectors'
+import {actions} from '../actions'
+
+import {Router} from '#/main/app/router'
+
+import {ManagerView} from './manager-view.jsx'
+import {UserView} from './user-view.jsx'
+import {EventView} from './event-view.jsx'
+
+import {ModalOverlay} from '#/main/app/overlay/modal/containers/overlay'
 
 let SessionEventsToolLayout = props =>
   <div>
-    {React.createElement(viewComponents[props.viewMode])}
+    <Router
+      routes={[
+        {
+          path: '/',
+          exact: true,
+          component: props.canEdit ? ManagerView : UserView
+        }, {
+          path: '/event/:id',
+          component: EventView,
+          onEnter: (params = {}) => props.fetch(params.id)
+        }
+      ]}
+    />
+
+    <ModalOverlay />
   </div>
 
 SessionEventsToolLayout.propTypes = {
-  viewMode: T.string.isRequired
+  canEdit: T.bool,
+  fetch: T.func.isRequired
 }
 
-function mapStateToProps(state) {
-  return {
-    viewMode: selectors.viewMode(state)
-  }
+SessionEventsToolLayout = connect(
+  (state) => ({
+    canEdit: selectors.canEdit(state)
+  }),
+  (dispatch) => ({
+    fetch(id) {
+      dispatch(actions.fetchSessionEvent(id))
+    }
+  })
+)(SessionEventsToolLayout)
+
+export {
+  SessionEventsToolLayout
 }
-
-SessionEventsToolLayout = connect(mapStateToProps)(SessionEventsToolLayout)
-
-export {SessionEventsToolLayout}

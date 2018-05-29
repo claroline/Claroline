@@ -11,15 +11,19 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Creator;
+use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\Poster;
+use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
+use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as Serializer;
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -31,7 +35,18 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class ResourceNode
 {
+    // identifiers
+    use Id;
+    use Uuid;
+
+    // meta
     use Poster;
+    use Description;
+    use Creator;
+
+    // restrictions
+    use AccessibleFrom;
+    use AccessibleUntil;
 
     /**
      * @var string
@@ -39,28 +54,11 @@ class ResourceNode
     const PATH_SEPARATOR = '`';
 
     /**
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @Serializer\Groups({"api_resource_node"})
-     */
-    protected $id;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column()
-     */
-    protected $guid;
-
-    /**
      * @var string
      *
      * @ORM\Column(nullable=true)
      */
-    protected $license;
+    private $license;
 
     /**
      * @var \DateTime
@@ -68,7 +66,7 @@ class ResourceNode
      * @ORM\Column(name="creation_date", type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
-    protected $creationDate;
+    private $creationDate;
 
     /**
      * @var \DateTime
@@ -76,7 +74,7 @@ class ResourceNode
      * @ORM\Column(name="modification_date", type="datetime")
      * @Gedmo\Timestampable(on="update")
      */
-    protected $modificationDate;
+    private $modificationDate;
 
     /**
      * @var ResourceType
@@ -88,19 +86,7 @@ class ResourceNode
      * )
      * @ORM\JoinColumn(name="resource_type_id", onDelete="CASCADE", nullable=false)
      */
-    protected $resourceType;
-
-    /**
-     * @var \Claroline\CoreBundle\Entity\User
-     *
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     inversedBy="resourceNodes",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
-     */
-    protected $creator;
+    private $resourceType;
 
     /**
      * @var ResourceIcon
@@ -110,8 +96,10 @@ class ResourceNode
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(onDelete="SET NULL")
+     *
+     * @todo remove me
      */
-    protected $icon;
+    private $icon;
 
     /**
      * Display resource icon/evaluation when the resource is rendered.
@@ -130,18 +118,18 @@ class ResourceNode
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(onDelete="SET NULL")
+     *
+     * @todo use PublicFile api instead
      */
-    protected $thumbnail;
+    private $thumbnail;
 
     /**
      * @var string
      *
      * @Gedmo\TreePathSource
      * @ORM\Column()
-     * @Assert\NotBlank()
-     * @Serializer\Groups({"api_resource_node"})
      */
-    protected $name;
+    private $name;
 
     /**
      * Permits to hide resources.
@@ -152,13 +140,6 @@ class ResourceNode
      * @var bool
      */
     private $hidden = false;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="description", type="text", nullable=true)
-     */
-    protected $description = null;
 
     /**
      * @var ResourceNode
@@ -190,17 +171,6 @@ class ResourceNode
      * @ORM\OrderBy({"index" = "ASC"})
      */
     protected $children;
-
-    /**
-     * @var ArrayCollection|ResourceShortcut[]
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceShortcut",
-     *     mappedBy="target",
-     *     cascade={"remove"}
-     * )
-     */
-    protected $shortcuts;
 
     /**
      * @var \Claroline\CoreBundle\Entity\Workspace\Workspace
@@ -255,19 +225,6 @@ class ResourceNode
     protected $class;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="accessible_from", type="datetime", nullable=true)
-     */
-    protected $accessibleFrom;
-
-    /**
-     * @var \DateTime
-     * @ORM\Column(name="accessible_until", type="datetime", nullable=true)
-     */
-    protected $accessibleUntil;
-
-    /**
      * @var string
      */
     private $pathForCreationLog = '';
@@ -310,14 +267,6 @@ class ResourceNode
     protected $active = true;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacet",
-     *     mappedBy="resourceNode"
-     * )
-     */
-    protected $fields;
-
-    /**
      * @ORM\Column(type="boolean", nullable=false)
      */
     protected $fullscreen = false;
@@ -357,49 +306,12 @@ class ResourceNode
 
     public function __construct()
     {
-        $this->guid = Uuid::uuid4()->toString();
+        $this->refreshUuid();
+
         $this->rights = new ArrayCollection();
         $this->children = new ArrayCollection();
         $this->logs = new ArrayCollection();
         $this->fields = new ArrayCollection();
-        $this->shortcuts = new ArrayCollection();
-    }
-
-    /**
-     * Returns the resource id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param string $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * Sets the resource id.
-     * Required by the ResourceController when it creates a fictional root.
-     *
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     public function isHidden()
@@ -494,26 +406,6 @@ class ResourceNode
     public function setResourceType(ResourceType $resourceType)
     {
         $this->resourceType = $resourceType;
-    }
-
-    /**
-     * Returns the resource creator.
-     *
-     * @return User
-     */
-    public function getCreator()
-    {
-        return $this->creator;
-    }
-
-    /**
-     * Sets the resource creator.
-     *
-     * @param User $creator
-     */
-    public function setCreator(User $creator)
-    {
-        $this->creator = $creator;
     }
 
     /**
@@ -696,16 +588,6 @@ class ResourceNode
     }
 
     /**
-     * Returns the resource shortcuts.
-     *
-     * @return ResourceShortcut[]|ArrayCollection
-     */
-    public function getShortcuts()
-    {
-        return $this->shortcuts;
-    }
-
-    /**
      * Returns the resource rights.
      *
      * @return ResourceRights[]|ArrayCollection
@@ -763,46 +645,6 @@ class ResourceNode
     public function setClass($class)
     {
         $this->class = $class;
-    }
-
-    /**
-     * Returns the resource accessible from date.
-     *
-     * @return \DateTime
-     */
-    public function getAccessibleFrom()
-    {
-        return $this->accessibleFrom;
-    }
-
-    /**
-     * Sets the resource accessible from date.
-     *
-     * @param \DateTime $accessibleFrom
-     */
-    public function setAccessibleFrom(\DateTime $accessibleFrom = null)
-    {
-        $this->accessibleFrom = $accessibleFrom;
-    }
-
-    /**
-     * Returns the resource accessible until date.
-     *
-     * @return \DateTime
-     */
-    public function getAccessibleUntil()
-    {
-        return $this->accessibleUntil;
-    }
-
-    /**
-     * Sets the resource accessible until date.
-     *
-     * @param \DateTime $accessibleUntil
-     */
-    public function setAccessibleUntil(\DateTime $accessibleUntil = null)
-    {
-        $this->accessibleUntil = $accessibleUntil;
     }
 
     /**
@@ -934,6 +776,8 @@ class ResourceNode
      * used to display the no path in forms.
      *
      * @return string
+     *
+     * @deprecated
      */
     public function __toString()
     {
@@ -944,43 +788,24 @@ class ResourceNode
      * Sets the resource GUID.
      *
      * @param string $guid
+     *
+     * @deprecated
      */
     public function setGuid($guid)
     {
-        $this->guid = $guid;
+        $this->uuid = $guid;
     }
 
     /**
      * Returns the resource GUID.
      *
      * @return string
+     *
+     * @deprecated
      */
     public function getGuid()
     {
-        return $this->guid;
-    }
-
-    public function getFields()
-    {
-        return $this->fields->toArray();
-    }
-
-    public function addField(FieldFacet $field)
-    {
-        if (!$this->fields->contains($field)) {
-            $this->fields->add($field);
-        }
-
-        return $this;
-    }
-
-    public function removeField(FieldFacet $field)
-    {
-        if ($this->fields->contains($field)) {
-            $this->fields->removeElement($field);
-        }
-
-        return $this;
+        return $this->uuid;
     }
 
     public function setFullscreen($fullscreen)

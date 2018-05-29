@@ -11,11 +11,10 @@
 
 namespace Claroline\CoreBundle\Entity\Facet;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Accessor;
-use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Facet\FieldFacetValueRepository")
@@ -23,17 +22,8 @@ use JMS\Serializer\Annotation\Groups;
  */
 class FieldFacetValue
 {
-    use UuidTrait;
-
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_user", "api_profile", "api_user_min"})
-     *
-     * @var int
-     */
-    protected $id;
+    use Id;
+    use Uuid;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -85,20 +75,15 @@ class FieldFacetValue
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacet",
-     *     inversedBy="fieldsFacetValue",
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
-     * @Groups({"api_user_min"})
      *
      * @var FieldFacet
      */
     protected $fieldFacet;
 
     /**
-     * @Groups({"api_user", "api_profile", "api_user_min"})
-     * @Accessor(getter="getValue")
-     *
      * @var mixed
      */
     protected $value;
@@ -161,14 +146,6 @@ class FieldFacetValue
     public function getFloatValue()
     {
         return $this->floatValue;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

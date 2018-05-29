@@ -1,13 +1,12 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
 
 import cloneDeep from 'lodash/cloneDeep'
 import isEmpty from 'lodash/isEmpty'
 import set from 'lodash/set'
 
 import {trans} from '#/main/core/translation'
-import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
+import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {DataFormSection as DataFormSectionTypes} from '#/main/core/data/form/prop-types'
 import {Form} from '#/main/core/data/form/components/form.jsx'
 import {cleanErrors} from '#/main/core/data/form/utils'
@@ -73,10 +72,7 @@ class DataFormModal extends Component {
 
   render() {
     return (
-      <BaseModal
-        {...this.props}
-        className={classes('data-form-modal', this.props.className)}
-      >
+      <Modal {...this.props}>
         <Form
           level={5}
           data={this.state.data}
@@ -96,7 +92,7 @@ class DataFormModal extends Component {
         >
           {this.props.saveButtonText}
         </button>
-      </BaseModal>
+      </Modal>
     )}
 }
 

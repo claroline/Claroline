@@ -4,8 +4,9 @@ import classes from 'classnames'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {Page as PageTypes} from '#/main/core/layout/page/prop-types'
 
-import {Route, NavLink, Switch} from '#/main/core/router'
-import {RoutedPage, RoutedPageContent} from '#/main/core/layout/router'
+import {Route, NavLink, Switch} from '#/main/app/router'
+import {PageContainer} from '#/main/core/layout/page'
+import {RoutedPageContent} from '#/main/core/layout/router'
 
 const PageHeader = props =>
   <header className={classes('page-header', props.className)}>
@@ -54,7 +55,7 @@ const TabbedPage = props => {
   const displayedTabs = props.tabs.filter(tab => undefined === tab.displayed || tab.displayed)
 
   return (
-    <RoutedPage {...props} className="tabbed-page">
+    <PageContainer {...props} className="tabbed-page">
       <PageHeader
         title={props.title}
         tabs={displayedTabs}
@@ -82,7 +83,7 @@ const TabbedPage = props => {
         }))}
         redirect={props.redirect}
       />
-    </RoutedPage>
+    </PageContainer>
   )
 }
 

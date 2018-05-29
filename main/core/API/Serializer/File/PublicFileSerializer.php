@@ -8,6 +8,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 /**
  * @DI\Service("claroline.serializer.public_file")
  * @DI\Tag("claroline.serializer")
+ *
+ * @todo move me in AppBundle
  */
 class PublicFileSerializer
 {

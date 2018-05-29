@@ -38,10 +38,10 @@ function getInitialData(container) {
 /**
  * Bootstraps a new React/Redux app.
  *
- * @param {string}          containerSelector - a selector to retrieve the HTML element which will hold the JS app.
- * @param {mixed}           rootComponent     - the React root component of the app.
- * @param {object|function} reducers          - an object containing the reducers of the app.
- * @param {function}        transformData     - a function to transform data before adding them to the store.
+ * @param {string}   containerSelector - a selector to retrieve the HTML element which will hold the JS app.
+ * @param {*}        rootComponent     - the React root component of the app.
+ * @param {object}   reducers          - an object containing the reducers of the app.
+ * @param {function} transformData     - a function to transform data before adding them to the store.
  */
 function bootstrap(containerSelector, rootComponent, reducers = null, transformData = (data) => data) {
   // retrieve app container

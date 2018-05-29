@@ -9,8 +9,8 @@ import {FormStepper} from '#/main/core/layout/form/components/form-stepper.jsx'
 import {actions as formActions} from '#/main/core/data/form/actions'
 import {select as formSelect} from '#/main/core/data/form/selectors'
 
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {MODAL_CONFIRM} from '#/main/core/layout/modal'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
 
 import {Facet} from '#/main/core/user/registration/components/facet.jsx'
 import {Required} from '#/main/core/user/registration/components/required.jsx'

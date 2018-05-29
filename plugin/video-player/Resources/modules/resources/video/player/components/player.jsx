@@ -2,8 +2,9 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {generateUrl} from '#/main/core/api/router'
-import {select as resourceSelect} from '#/main/core/resource/selectors'
+import {url} from '#/main/app/api'
+import {selectors as resourceSelect} from '#/main/core/resource/store'
+import {hasPermission} from '#/main/core/resource/permissions'
 
 import {Track as TrackTypes} from '#/plugin/video-player/resources/video/prop-types'
 
@@ -18,7 +19,7 @@ const PlayerComponent = props =>
     {props.tracks.map(t =>
       <track
         key={`track-${t.id}`}
-        src={generateUrl('api_get_video_track_stream', {'track': t.autoId})}
+        src={url(['api_get_video_track_stream', {track: t.autoId}])}
         label={t.meta.label}
         kind={t.meta.kind}
         srcLang={t.meta.lang}
@@ -40,10 +41,10 @@ PlayerComponent.propTypes = {
 
 const Player = connect(
   state => ({
-    resource: state.resourceNode,
+    resource: resourceSelect.resourceNode(state),
     url: state.url,
     tracks: state.tracks,
-    canDownload: resourceSelect.exportable(state)
+    canDownload: hasPermission('export', resourceSelect.resourceNode(state))
   })
 )(PlayerComponent)
 

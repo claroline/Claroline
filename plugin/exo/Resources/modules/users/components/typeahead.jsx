@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {generateUrl} from '#/main/core/api/router'
+import {url} from '#/main/app/api'
 
 const UsersList = props =>
   <ul className="dropdown-menu">
@@ -47,7 +47,7 @@ export class UserTypeahead extends Component {
     if (search && search.length > 2) {
       this.setState({isFetching: true})
 
-      fetch(generateUrl('questions_share_users', {search: search}), {
+      fetch(url(['questions_share_users', {search: search}]), {
         method: 'GET' ,
         credentials: 'include'
       })

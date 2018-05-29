@@ -1,5 +1,21 @@
 import {PropTypes as T} from 'prop-types'
 
+const ResourceType = {
+  propTypes: {
+    name: T.string.isRequired,
+    class: T.string.isRequired,
+    actions: T.arrayOf(T.shape({
+      name: T.string.isRequired,
+      scope: T.arrayOf(T.oneOf(['object', 'collection'])),
+      group: T.string,
+      permission: T.string.isRequired
+    }))
+  },
+  defaultProps: {
+    actions: []
+  }
+}
+
 const ResourceNode = {
   propTypes: {
     id: T.string.isRequired,
@@ -88,6 +104,20 @@ const ResourceNode = {
   }
 }
 
+const UserEvaluation = {
+  propTypes: {
+    id: T.number.isRequired,
+    date: T.string,
+    status: T.string.isRequired,
+    duration: T.number,
+    score: T.number,
+    scoreMin: T.number,
+    scoreMax: T.number
+  }
+}
+
 export {
-  ResourceNode
+  ResourceType,
+  ResourceNode,
+  UserEvaluation
 }

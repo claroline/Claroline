@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {Router, Routes} from '#/main/core/router'
+import {Router, Routes} from '#/main/app/router'
 
 import {MainView} from './main-view.jsx'
 import {CompetencyView} from './competency-view.jsx'

@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\PluginBundleInterface;
 
 /**
  * Interface of the plugin checkers. Plugin checkers are used by the validator
@@ -22,11 +22,10 @@ interface CheckerInterface
     /**
      * Performs the validation of a plugin.
      *
-     * @param \Claroline\CoreBundle\Library\PluginBundle $plugin
+     * @param PluginBundleInterface $plugin
+     * @param bool                  $updateMode
      *
-     * @return null|array[ValidationError]
-     *
-     * @todo Add the "update mode" as second arugment
+     * @return ValidationError[]
      */
-    public function check(PluginBundle $plugin);
+    public function check(PluginBundleInterface $plugin, $updateMode = false);
 }

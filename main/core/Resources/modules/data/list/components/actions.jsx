@@ -1,12 +1,11 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {transChoice} from '#/main/core/translation'
+import {trans, transChoice} from '#/main/core/translation'
 import {toKey} from '#/main/core/scaffolding/text/utils'
 
 import {GenericButton} from '#/main/app/button/components/generic'
 import {Button} from '#/main/app/action/components/button'
-import {DropdownButton} from '#/main/app/action/components/dropdown-button'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
 const ListPrimaryAction = props => {
@@ -47,12 +46,18 @@ ListPrimaryAction.defaultProps = {
  * @constructor
  */
 const ListActions = props =>
-  <DropdownButton
+  <Button
     id={`${props.id}-btn`}
     className="data-actions-btn btn btn-link"
-    pullRight={true}
+    type="menu"
     tooltip="left"
-    actions={props.actions.filter(action => undefined === action.displayed || action.displayed)}
+    icon="fa fa-fw fa-ellipsis-v"
+    label={trans('show-actions', {}, 'actions')}
+    menu={{
+      label: trans('actions'),
+      align: 'right',
+      items: props.actions
+    }}
   />
 
 ListActions.propTypes = {
@@ -67,6 +72,8 @@ ListActions.propTypes = {
  *
  * @param props
  * @constructor
+ *
+ * @todo create and use an action bar
  */
 const ListBulkActions = props =>
   <div className="data-bulk-actions list-selected">

@@ -1,16 +1,15 @@
 
 import {makeReducer} from '#/main/core/scaffolding/reducer'
-import {makePageReducer} from '#/main/core/layout/page/reducer'
 import {makeFormReducer} from '#/main/core/data/form/reducer'
 import {makeListReducer} from '#/main/core/data/list/reducer'
-import {url} from '#/main/core/api/router'
+import {url} from '#/main/app/api'
 import {FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
 import {LIST_TOGGLE_SELECT, LIST_TOGGLE_SELECT_ALL} from '#/main/core/data/list/actions'
 import cloneDeep from 'lodash/cloneDeep'
 
 const getCollaboratorRole = (workspace) => workspace.roles.find(role => role.name.indexOf('COLLABORATOR') > -1)
 
-export const reducer = makePageReducer({}, {
+export const reducer = {
   workspaces: makeListReducer('workspaces'),
   defaultWorkspaces: (state = null) => state,
   termOfService: (state = null) => state,
@@ -55,4 +54,4 @@ export const reducer = makePageReducer({}, {
       }
     })
   })
-})
+}

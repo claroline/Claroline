@@ -4,7 +4,7 @@ import {makeActionCreator} from '#/main/core/scaffolding/actions'
 import {selectors} from './selectors'
 import quizSelectors from './../selectors'
 import {normalize} from './normalizer'
-import {API_REQUEST} from '#/main/core/api/actions'
+import {API_REQUEST} from '#/main/app/api'
 
 export const PAPER_ADD = 'PAPER_ADD'
 export const PAPERS_INIT = 'PAPERS_INIT'

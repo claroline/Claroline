@@ -3,7 +3,7 @@ import classes from 'classnames'
 
 import {trans} from '#/main/core/translation'
 import {asset} from '#/main/core/scaffolding/asset'
-import {platformConfig} from '#/main/core/platform'
+import {param} from '#/main/app/config'
 
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
@@ -12,7 +12,7 @@ import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button
 
 const Locale = props =>
   <div className="locales" role="checklist">
-    {platformConfig('locale.available').map(locale =>
+    {param('locale.available').map(locale =>
       <TooltipButton
         id={`btn-${locale}`}
         key={locale}

@@ -3,8 +3,8 @@ import pickBy from 'lodash/pickBy'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 
 import {t} from '#/main/core/translation'
-import {makeCancelable} from '#/main/core/api/utils'
-import {generateUrl} from '#/main/core/api/router'
+import {makeCancelable} from '#/main/app/api'
+import {url} from '#/main/app/api'
 
 import {FormGroup as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
@@ -27,7 +27,7 @@ class OrganizationGroup extends Component {
   fetchOrganizations() {
     this.pending = makeCancelable(
       fetch(
-        generateUrl('apiv2_organization_list'), {credentials: 'include'}
+        url(['apiv2_organization_list']), {credentials: 'include'}
       )
         .then(response => response.json())
         .then(

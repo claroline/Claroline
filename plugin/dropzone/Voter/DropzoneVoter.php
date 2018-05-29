@@ -10,7 +10,7 @@ namespace Icap\DropzoneBundle\Voter;
 
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
-use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Manager\Resource\MaskManager;
 use Claroline\CoreBundle\Entity\User;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use JMS\DiExtraBundle\Annotation as DI;

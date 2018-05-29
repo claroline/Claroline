@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
@@ -44,6 +45,7 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -387,16 +389,16 @@ class WorkspaceController extends Controller
     /**
      * Renders the left tool bar. Not routed.
      *
-     * @EXT\Template()
+     * @EXT\Template("ClarolineCoreBundle:workspace:toolbar.html.twig")
      *
      * @param Workspace $workspace
+     * @param Request   $request
      *
      * @return array
      */
-    public function renderToolListAction(Workspace $workspace)
+    public function renderToolbarAction(Workspace $workspace, Request $request)
     {
         $orderedTools = [];
-        $roleHasAccess = []; // for impersonation
 
         $hasManagerAccess = $this->workspaceManager->isManager($workspace, $this->tokenStorage->getToken());
         $hideToolsMenu = $this->workspaceManager->isToolsMenuHidden($workspace);
@@ -407,14 +409,6 @@ class WorkspaceController extends Controller
                 $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace);
                 // always display tools to managers
                 $hideToolsMenu = false;
-
-                // gets Workspace roles for impersonation
-                $workspaceRolesWithAccess = $this->roleManager
-                    ->getWorkspaceRoleWithToolAccess($workspace);
-
-                foreach ($workspaceRolesWithAccess as $workspaceRole) {
-                    $roleHasAccess[$workspaceRole->getId()] = $workspaceRole;
-                }
             } else {
                 // gets accessible tools by user
                 $currentRoles = $this->utils->getRoles($this->tokenStorage->getToken());
@@ -422,11 +416,24 @@ class WorkspaceController extends Controller
             }
         }
 
+        $current = null;
+        if ('claro_workspace_open_tool' === $request->get('_route')) {
+            $params = $request->get('_route_params');
+            if (!empty($params['toolName'])) {
+                $current = $params['toolName'];
+            }
+        }
+
         return [
-            'hasManagerAccess' => $hasManagerAccess,
-            'orderedTools' => $orderedTools,
+            'current' => $current,
+            'tools' => array_map(function (OrderedTool $orderedTool) use ($workspace) { // todo : create a serializer
+                return [
+                    'icon' => $orderedTool->getTool()->getClass(),
+                    'name' => $orderedTool->getTool()->getName(),
+                    'open' => ['claro_workspace_open_tool', ['workspaceId' => $workspace->getId(), 'toolName' => $orderedTool->getTool()->getName()]],
+                ];
+            }, $orderedTools),
             'workspace' => $workspace,
-            'roleHasAccess' => $roleHasAccess,
             'hideToolsMenu' => $hideToolsMenu,
         ];
     }

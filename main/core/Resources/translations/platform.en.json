@@ -255,7 +255,6 @@
     "create_users": "Create users",
     "create_widget_instance": "Create a widget",
     "create_workspace": "Create a workspace",
-    "created_at": "Created at",
     "created_by": "Created by %creator% on %creationDate%",
     "created_before": "Created before",
     "created_after": "Created after",
@@ -1614,7 +1613,6 @@
     "register_groups": "Register groups",
     "add_workspaces": "Add workspaces",
     "pending_registrations": "Pending registrations",
-
     "self_registration_platform_help": "Users will be able to register themselves on the platform.",
     "self_registration_workspace_help": "Users will be able to register themselves in the workspace.",
     "activate_self_unregistration": "Enable self-unregistrations",
@@ -1652,5 +1650,10 @@
     "success": "Success",
     "log": "Log",
     "execution_date": "Execution date",
-    "upload date": "Upload date"
+    "upload date": "Upload date",
+    "about": "About",
+    "created_at": "Created at %date%",
+    "updated_at": "Updated at %date%",
+    "authors": "Authors",
+    "authors_license": "Authors & License"
 }

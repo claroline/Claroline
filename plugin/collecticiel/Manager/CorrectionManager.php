@@ -2,7 +2,7 @@
 
 namespace Innova\CollecticielBundle\Manager;
 
-use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Manager\Resource\MaskManager;
 use Innova\CollecticielBundle\Entity\Correction;
 use Innova\CollecticielBundle\Entity\Dropzone;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionUpdateEvent;

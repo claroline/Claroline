@@ -6,8 +6,9 @@ import {t} from '#/main/core/translation'
 
 import {PageActions} from '#/main/core/layout/page/components/page-actions.jsx'
 import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
+
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
 
 import {ProfileNav} from '#/main/core/user/profile/components/nav.jsx'
 import {ProfileFacets} from '#/main/core/user/profile/components/facets.jsx'
@@ -85,9 +86,11 @@ const ProfileTab = connect(
     },
     removeFacet(id) {
       dispatch(
-        modalActions.showModal(MODAL_DELETE_CONFIRM, {
+        modalActions.showModal(MODAL_CONFIRM, {
+          icon: 'fa fa-fw fa-trash-o',
           title: t('profile_remove_facet'),
           question: t('profile_remove_facet_question'),
+          dangerous: true,
           handleConfirm: () => dispatch(actions.removeFacet(id))
         })
       )

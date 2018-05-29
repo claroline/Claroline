@@ -6,7 +6,8 @@ import Panel from 'react-bootstrap/lib/Panel'
 
 import {tex} from '#/main/core/translation'
 import {getDefinition, isQuestionType} from './../../../items/item-types'
-import {select as resourceSelect} from '#/main/core/resource/selectors'
+import {selectors as resourceSelect} from '#/main/core/resource/store'
+import {hasPermission} from '#/main/core/resource/permissions'
 import quizSelect from './../../selectors'
 import {selectors as paperSelect} from './../selectors'
 import {Metadata as ItemMetadata} from './../../../items/components/metadata.jsx'
@@ -131,7 +132,7 @@ PaperComponent.propTypes = {
 
 const Paper = connect(
   (state) => ({
-    admin: resourceSelect.editable(state) || quizSelect.papersAdmin(state),
+    admin: hasPermission('edit', resourceSelect.resourceNode(state)) || quizSelect.papersAdmin(state),
     numbering: quizSelect.quizNumbering(state),
     paper: paperSelect.currentPaper(state),
     steps: paperSelect.paperSteps(state),

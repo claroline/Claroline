@@ -4,8 +4,8 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
 import {displayDate} from '#/main/core/scaffolding/date'
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {MODAL_GENERIC_TYPE_PICKER} from '#/main/core/layout/modal'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {MODAL_SELECTION} from '#/main/app/modals/selection'
 
 import {ResourceOverview} from '#/main/core/resource/components/overview.jsx'
 
@@ -145,7 +145,7 @@ const Overview = connect(
             dispatch(actions.initializeMyDrop(dropzoneId, teams[0].id))
           } else {
             dispatch(
-              modalActions.showModal(MODAL_GENERIC_TYPE_PICKER, {
+              modalActions.showModal(MODAL_SELECTION, {
                 title: trans('team_selection_title', {}, 'dropzone'),
                 types: teams.map(t => ({
                   type: t.id,

@@ -1,0 +1,4 @@
+plugin:
+    resources:
+        - name: shortcut
+          class: Claroline\LinkBundle\Entity\Resource\Shortcut

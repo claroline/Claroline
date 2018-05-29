@@ -1,6 +1,6 @@
-import {generateUrl} from '#/main/core/api/router'
+import {url} from '#/main/app/api'
 
-import {API_REQUEST} from '#/main/core/api/actions'
+import {API_REQUEST} from '#/main/app/api'
 import {actions as formActions} from '#/main/core/data/form/actions'
 import {actions as listActions} from '#/main/core/data/list/actions'
 
@@ -25,7 +25,7 @@ actions.open = (formName, id = null) => (dispatch) => {
 
 actions.addUsers = (id, users) => ({
   [API_REQUEST]: {
-    url: generateUrl('apiv2_role_add_users', {id: id}) +'?'+ users.map(id => 'ids[]='+id).join('&'),
+    url: url(['apiv2_role_add_users', {id: id}], {ids: users}),
     request: {
       method: 'PATCH'
     },
@@ -38,7 +38,7 @@ actions.addUsers = (id, users) => ({
 
 actions.addGroups = (id, groups) => ({
   [API_REQUEST]: {
-    url: generateUrl('apiv2_role_add_groups', {id: id}) +'?'+ groups.map(id => 'ids[]='+id).join('&'),
+    url: url(['apiv2_role_add_groups', {id: id}], {ids: groups}),
     request: {
       method: 'PATCH'
     },

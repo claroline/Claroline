@@ -129,8 +129,12 @@ class ConvertDropzoneCommand extends ContainerAwareCommand
 
                 $output->writeln('<info>      Updating resource node shortcuts...</info>');
 
+                $shortcuts = $om->getRepository('ClarolineCoreBundle:Resource\ResourceShortcut')->findBy([
+                    'target' => $node,
+                ]);
+
                 /* Updates shortcuts */
-                foreach ($node->getShortcuts()->toArray() as $shortcut) {
+                foreach ($shortcuts as $shortcut) {
                     $shortcutNode = $shortcut->getResourceNode();
                     $shortcutNode->setMimeType('custom/claroline_dropzone');
                     $shortcutNode->setResourceType($dropzoneType);

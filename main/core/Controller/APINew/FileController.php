@@ -69,7 +69,7 @@ class FileController extends AbstractCrudController
               ['file' => $file]
           );
 
-            $dispatcher->dispatch(strtolower('upload_file_'.$handler), 'UploadFile', [$object]);
+            $dispatcher->dispatch(strtolower('upload_file_'.$handler), 'File\UploadFile', [$object]);
             $objects[] = $object;
         }
 

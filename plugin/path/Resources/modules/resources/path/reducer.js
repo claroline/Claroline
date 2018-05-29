@@ -1,7 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 
 import {makeReducer, combineReducers} from '#/main/core/scaffolding/reducer'
-import {makeResourceReducer} from '#/main/core/resource/reducer'
 
 import {FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
 
@@ -18,7 +17,7 @@ import {
 import {reducer as editorReducer} from '#/plugin/path/resources/path/editor/reducer'
 import {getStepPath} from '#/plugin/path/resources/path/editor/utils'
 
-const reducer = makeResourceReducer({}, {
+const reducer = {
   summary: combineReducers({
     pinned: makeReducer(false, {
       [SUMMARY_PIN_TOGGLE]: (state) => !state
@@ -49,9 +48,8 @@ const reducer = makeResourceReducer({}, {
 
       return newState
     }
-  }),
-  resourceTypes: makeReducer({}, {})
-})
+  })
+}
 
 export {
   reducer

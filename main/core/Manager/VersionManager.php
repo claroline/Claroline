@@ -61,10 +61,14 @@ class VersionManager
     {
         $data = $this->getVersionFile();
 
+        /** @var Version $version */
         $version = $this->repo->findOneBy(['version' => $data[0], 'bundle' => $bundle->getBundleFQCN()]);
 
-        if ($version) {
-            $this->log("Version {$version->getBundle()} {$version->getVersion()} already registered !", LogLevel::ERROR);
+        if (!empty($version)) {
+            $this->log(
+                sprintf('Version "%s" of "%s" already registered !', trim($version->getVersion()), $version->getBundle()),
+                LogLevel::ERROR
+            );
 
             return $version;
         }

@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import classes from 'classnames'
 
 import {trans} from '#/main/core/translation'
-import {NavLink} from '#/main/core/router'
+import {NavLink} from '#/main/app/router'
 import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action.jsx'
 import {Action as ActionTypes} from '#/main/core/layout/action/prop-types'
 

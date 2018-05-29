@@ -1,12 +1,11 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import Modal from 'react-bootstrap/lib/Modal'
 
 import {trans} from '#/main/core/translation'
 import {listItemMimeTypes, getDefinition} from './../../../../items/item-types'
 import {Icon as ItemIcon} from './../../../../items/components/icon.jsx'
-import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
+import {Modal} from '#/main/app/overlay/modal/components/modal'
 
 export const MODAL_ADD_ITEM = 'MODAL_ADD_ITEM'
 
@@ -35,8 +34,8 @@ class AddItemModal extends Component {
 
   render() {
     return (
-      <BaseModal {...this.props} className="add-item-modal">
-        <Modal.Body>
+      <Modal {...this.props} className="add-item-modal">
+        <div className="modal-body">
           <div className="modal-item-list" role="listbox">
             {this.state.itemMimeTypes.map(type =>
               <div
@@ -59,8 +58,8 @@ class AddItemModal extends Component {
               {this.state.currentDesc}
             </p>
           </div>
-        </Modal.Body>
-      </BaseModal>
+        </div>
+      </Modal>
     )
   }
 }

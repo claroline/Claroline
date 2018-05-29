@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEqual from 'lodash/isEqual'
 
-import {makeCancelable} from '#/main/core/api/utils'
+import {makeCancelable} from '#/main/app/api'
 
 import {connectList} from '#/main/core/data/list/connect'
 

@@ -132,6 +132,7 @@ class UserSerializer
     public function serialize(User $user, array $options = [])
     {
         if (isset($options['public']) && $options['public']) {
+            // TODO : remove me (only used by BBBPlugin and it's not maintained)
             return $this->serializePublic($user);
         }
 
@@ -146,6 +147,7 @@ class UserSerializer
             'email' => $user->getEmail(),
             'administrativeCode' => $user->getAdministrativeCode(),
             'phone' => $user->getPhone(),
+            'publicUrl' => $user->getPublicUrl(), // todo : merge with the one from meta (I do it to have it in minimal)
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {

@@ -1,6 +1,6 @@
-import {generateUrl} from '#/main/core/api/router'
+import {url} from '#/main/app/api'
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
-import {API_REQUEST} from '#/main/core/api/actions'
+import {API_REQUEST} from '#/main/app/api'
 
 const RESOURCE_TYPE_ADD = 'RESOURCE_TYPE_ADD'
 const RESOURCE_TYPE_UPDATE = 'RESOURCE_TYPE_UPDATE'
@@ -16,7 +16,7 @@ actions.saveResourceType = (resourceType) => (dispatch) => {
   if (resourceType.id) {
     dispatch({
       [API_REQUEST]: {
-        url: generateUrl('apiv2_reservationresourcetype_update', {id: resourceType.id}),
+        url: ['apiv2_reservationresourcetype_update', {id: resourceType.id}],
         request: {
           method: 'PUT',
           body: JSON.stringify(resourceType)
@@ -29,7 +29,7 @@ actions.saveResourceType = (resourceType) => (dispatch) => {
   } else {
     dispatch({
       [API_REQUEST]: {
-        url: generateUrl('apiv2_reservationresourcetype_create'),
+        url: ['apiv2_reservationresourcetype_create'],
         request: {
           method: 'POST',
           body: JSON.stringify(resourceType)
@@ -44,7 +44,7 @@ actions.saveResourceType = (resourceType) => (dispatch) => {
 
 actions.deleteResourceType = (resourceTypeId) => ({
   [API_REQUEST]: {
-    url: generateUrl('apiv2_reservationresourcetype_delete_bulk') + '?ids[]=' + resourceTypeId,
+    url: url(['apiv2_reservationresourcetype_delete_bulk'], {ids: [resourceTypeId]}),
     request: {
       method: 'DELETE'
     },

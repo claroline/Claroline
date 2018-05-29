@@ -1,11 +1,12 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {t} from '#/main/core/translation'
-import {withRouter, matchPath} from '#/main/core/router'
+import {trans} from '#/main/core/translation'
+import {withRouter, matchPath} from '#/main/app/router'
 
-import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
-import {MODAL_CHANGE_PASSWORD, MODAL_CHANGE_PUBLIC_URL, MODAL_SEND_MESSAGE} from '#/main/core/user/modals'
+import {hasPermission} from '#/main/core/user/permissions'
+
+import {MODAL_USER_PASSWORD, MODAL_USER_PUBLIC_URL, MODAL_USER_MESSAGE} from '#/main/core/user/modals'
 import {
   PageGroupActions,
   PageActions,
@@ -22,7 +23,7 @@ const EditGroupActionsComponent = props =>
       target={(user) => ['apiv2_user_update', {id: user.id}]}
       open={{
         type: 'link',
-        label: t('edit_profile'),
+        label: trans('edit_profile'),
         target: '/edit'
       }}
       cancel={{
@@ -44,39 +45,50 @@ const EditGroupActions = withRouter(EditGroupActionsComponent)
 const UserPageActions = props => {
   const moreActions = [].concat(props.customActions, [
     {
-      type: 'callback',
+      type: 'modal',
       icon: 'fa fa-fw fa-lock',
-      label: t('change_password'),
-      group: t('user_management'),
-      displayed: props.user.rights.current.edit,
-      callback: () => props.showModal(MODAL_CHANGE_PASSWORD, {
+      label: trans('change_password'),
+      group: trans('user_management'),
+      displayed: hasPermission('edit', props.user),
+      modal: [MODAL_USER_PASSWORD, {
         changePassword: (password) => props.updatePassword(props.user, password)
-      })
+      }]
     }, {
-      type: 'callback',
+      type: 'modal',
       icon: 'fa fa-fw fa-link',
-      label: t('change_profile_public_url'),
-      group: t('user_management'),
-      displayed: props.user.rights.current.edit,
+      label: trans('change_profile_public_url'),
+      group: trans('user_management'),
+      displayed: hasPermission('edit', props.user),
       disabled: props.user.meta.publicUrlTuned,
-      callback: () => props.showModal(MODAL_CHANGE_PUBLIC_URL, {
+      modal: [MODAL_USER_PUBLIC_URL, {
         url: props.user.meta.publicUrl,
         changeUrl: (publicUrl) => props.updatePublicUrl(props.user, publicUrl)
-      })
+      }]
     }, {
       type: 'url',
       icon: 'fa fa-fw fa-line-chart',
-      label: t('show_tracking'),
-      group: t('user_management'),
-      displayed: props.user.rights.current.edit,
+      label: trans('show_tracking'),
+      group: trans('user_management'),
+      displayed: hasPermission('edit', props.user),
       target: ['claro_user_tracking', {publicUrl: props.user.meta.publicUrl}]
     }, {
-      type: 'callback',
+      type: 'async',
       icon: 'fa fa-fw fa-trash-o',
-      label: t('delete'),
-      displayed: props.user.rights.current.delete,
-      callback: () =>  props.showModal(MODAL_DELETE_CONFIRM),
-      dangerous: true
+      label: trans('delete', {}, 'actions'),
+      displayed: hasPermission('delete', props.user),
+      request: {
+        type: 'delete',
+        url: ['apiv2_user_delete_bulk', {ids: [props.user.id]}],
+        request: {
+          method: 'DELETE'
+        }
+        //success: () => window.location = url(['claro_desktop_open']) todo redirect
+      },
+      dangerous: true,
+      confirm: {
+        title: trans('user_delete_confirm_title'),
+        message: trans('user_delete_confirm_message')
+      }
     }
   ])
 
@@ -90,17 +102,17 @@ const UserPageActions = props => {
         <PageGroupActions>
           <PageAction
             id="send-message"
-            type="callback"
-            label={t('send_message')}
+            type="modal"
+            label={trans('send_message')}
             icon="fa fa-paper-plane-o"
-            callback={() => props.showModal(MODAL_SEND_MESSAGE, {
+            modal={[MODAL_USER_MESSAGE, {
 
-            })}
+            }]}
           />
           <PageAction
             id="add-contact"
             type="callback"
-            label={t('add_contact')}
+            label={trans('add_contact')}
             icon="fa fa-address-book-o"
             action={() => true}
           />
@@ -110,7 +122,7 @@ const UserPageActions = props => {
       {0 !== moreActions.length &&
         <PageGroupActions>
           <MoreAction
-            menuLabel={t('user')}
+            menuLabel={trans('user')}
             actions={moreActions}
           />
         </PageGroupActions>
@@ -121,6 +133,7 @@ const UserPageActions = props => {
 
 UserPageActions.propTypes = {
   user: T.shape({
+    id: T.string.isRequired,
     meta: T.shape({
       publicUrl: T.string.isRequired,
       publicUrlTuned: T.bool
@@ -134,7 +147,6 @@ UserPageActions.propTypes = {
     }).isRequired
   }).isRequired,
   customActions: T.array,
-  showModal: T.func.isRequired,
   updatePassword: T.func.isRequired,
   updatePublicUrl: T.func.isRequired,
   canEditProfile: T.bool.isRequired

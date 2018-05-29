@@ -1,5 +1,5 @@
 import {loadFile} from '#/main/core/scaffolding/loader/file'
-import {web} from '#/main/core/scaffolding/path'
+import {asset} from '#/main/core/scaffolding/asset'
 
 /**
  * This class was copied from BazingaJsTranslationBundle
@@ -359,7 +359,7 @@ function has_domain(locale, domain) {
 function load_domain(locale, domain) {
 
   if (!has_domain(locale, domain) && Translator.loaded_domains.indexOf(domain) === -1) {
-    loadFile(web(`js/translations/${domain}/${locale}.js`))
+    loadFile(asset(`js/translations/${domain}/${locale}.js`))
   }
 
   if (Translator.loaded_domains.indexOf(domain) === -1) {

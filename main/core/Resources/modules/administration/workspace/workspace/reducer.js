@@ -2,10 +2,9 @@ import {combineReducers, makeReducer} from '#/main/core/scaffolding/reducer'
 
 import {makeListReducer} from '#/main/core/data/list/reducer'
 import {makeFormReducer} from '#/main/core/data/form/reducer'
-import {makePageReducer} from '#/main/core/layout/page/reducer'
 import {FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
 
-const reducer = makePageReducer({}, {
+const reducer = {
   workspaces: combineReducers({
     picker: makeListReducer('workspaces.picker'),
     list: makeListReducer('workspaces.list', {
@@ -29,7 +28,7 @@ const reducer = makePageReducer({}, {
   managers: combineReducers({
     picker: makeListReducer('managers.picker')
   })
-})
+}
 
 export {
   reducer

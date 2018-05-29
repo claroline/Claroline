@@ -1,3 +1,5 @@
+// todo detach from native .navbar fro cleaner implementation
+
 #top_bar,
 .top-bar {
     min-height: @top-bar-height;
@@ -17,7 +19,7 @@
     }
 
     .navbar-header {
-        max-height: @navbar-height;
+        max-height: @top-bar-height;
         overflow: hidden !important;
         position: relative;
     }
@@ -25,6 +27,10 @@
     .navbar-brand {
         font-size: @top-bar-brand-font-size;
         color: @top-bar-brand-color;
+        min-width: @toolbar-size;
+        height: @top-bar-height;
+        padding: @top-bar-padding-vertical @top-bar-padding-horizontal;
+
         &:hover,
         &:focus {
             color: @top-bar-brand-hover-color;
@@ -39,6 +45,7 @@
             // vertical align the logo img using flex box
             display: flex;
             align-items: center;
+            justify-content: center;
 
             img {
                 height: @top-bar-logo-height;
@@ -72,6 +79,8 @@
     }
 
     .navbar-nav {
+        margin: (@top-bar-padding-vertical / 2) -@top-bar-padding-horizontal;
+
         > li > a {
             color: @top-bar-link-color;
 
@@ -106,6 +115,20 @@
             &:focus {
                 background-color: @top-bar-link-active-bg;
                 color: @top-bar-link-active-color;
+            }
+        }
+
+        // Uncollapse the nav
+        @media (min-width: @grid-float-breakpoint) {
+            float: left;
+            margin: 0;
+
+            > li {
+                float: left;
+                > a {
+                    padding-top:    @top-bar-padding-vertical;
+                    padding-bottom: @top-bar-padding-vertical;
+                }
             }
         }
 
@@ -160,10 +183,6 @@
         }
     }
 
-    /*.navbar-collapse {
-        margin-left: -15px;
-    }*/
-
     .break-hide {
         display: none;
     }
@@ -174,33 +193,15 @@
         }
     }
 
-    .navbar-form button {
+    /*.navbar-form button {
         background-color: @navbar-inverse-link-color;
         border: none;
         color: @navbar-inverse-bg;
         font-weight: bold;
-    }
-
-    /*@media(max-width: (@screen-md - 1)) {
-        .dropdown-menu {
-            .dropdown-fix;
-        }
-    }
-
-    @media(min-width: @screen-md) {
-        .dropdown-menu {
-            position: absolute;
-            left: auto;
-            right:0;
-        }
-
-        li:not(:last-child) > a {
-            border-right:1px solid darken(@navbar-inverse-bg, 5%) !important;
-        }
     }*/
 
-    @media(min-width: @screen-md) {
-        max-height: (@navbar-height + 3);
+    @media (min-width: @screen-md) {
+        max-height: @top-bar-height;
         overflow: hidden;
 
         &.break {
@@ -232,21 +233,45 @@
                     &, li {
                         width: 100%;
                     }
-
-                    /*li a {
-                        padding-left: 10px;
-                        padding-right: 10px;
-                    }*/
-
-                    /*&.navbar-right {
-                        margin-right: 0;
-                    }*/
-
-                    .dropdown-menu {
-                        /*.dropdown-fix;*/
-                    }
                 }
             }
         }
+    }
+}
+
+.impersonalitation {
+    &.spaced .spacer {
+        height: @navbar-height;
+    }
+
+    .navbar-fixed-top {
+        .box-shadow(0 2px 3px rgba(0,0,0,.25));
+
+        @media (max-width: @grid-float-breakpoint) {
+            .navbar-nav {
+                float: left;
+            }
+
+            .navbar-nav.navbar-right {
+                float: right;
+            }
+        }
+
+        z-index: (@zindex-navbar-fixed - 1);
+        background-color: darken(@brand-warning, 5%);
+        border: none;
+        .navbar-nav li a {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .navbar-nav.navbar-right li a {
+            .font-size-modifier(20px);
+        }
+    }
+
+    &.spaced .navbar-fixed-top {
+        margin-top: @navbar-height;
+        z-index: (@zindex-navbar-fixed - 3);
     }
 }

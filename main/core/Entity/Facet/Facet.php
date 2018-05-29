@@ -11,34 +11,25 @@
 
 namespace Claroline\CoreBundle\Entity\Facet;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Facet\FacetRepository")
  * @ORM\Table(name="claro_facet")
- * @UniqueEntity("name")
+ * @DoctrineAssert\UniqueEntity("name")
  */
 class Facet
 {
-    use UuidTrait;
-
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    protected $id;
+    use Id;
+    use Uuid;
 
     /**
      * @ORM\Column(unique=true)
-     * @Assert\NotBlank()
      *
      * @var string
      */
@@ -65,10 +56,7 @@ class Facet
     protected $panelFacets;
 
     /**
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Role",
-     *     inversedBy="facets"
-     * )
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Role")
      * @ORM\JoinTable(name="claro_facet_role")
      *
      * @var ArrayCollection|Role[]
@@ -97,14 +85,6 @@ class Facet
         $this->roles = new ArrayCollection();
         $this->panelFacets = new ArrayCollection();
         $this->refreshUuid();
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

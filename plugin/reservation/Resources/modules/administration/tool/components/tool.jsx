@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {matchPath, withRouter} from '#/main/core/router'
+import {matchPath, withRouter} from '#/main/app/router'
 import {
   PageActions,
   PageAction,
@@ -13,7 +13,7 @@ import {
   RoutedPageContainer,
   RoutedPageContent
 } from '#/main/core/layout/router'
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
 
 import {actions} from '#/plugin/reservation/administration/resource/actions'

@@ -1,4 +1,4 @@
-import {constants as intlConstants} from '#/main/core/intl/constants'
+import {constants as intlConstants} from '#/main/app/intl/constants'
 
 const generateFieldKey = (id) => {
   return  `%field_${id}%`

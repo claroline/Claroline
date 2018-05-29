@@ -4,15 +4,12 @@
       "polyfills": "scaffolding/shim",
       "translator": "translation/browser",
       "tinymce": "tinymce/browser",
-      "organization-field": "symfony/form/organization/index",
       "user-management": "administration/user",
       "workspace-management": "administration/workspace",
       "theme-management": "administration/appearance/theme",
       "transfer-management": "administration/transfer",
       "plugin-management": "administration/plugins/module",
-      "portal": "resource/portal",
-      "desktop-home": "desktopHome/desktopHome",
-      "admin-home-tabs-config": "adminHomeTabsConfig/adminHomeTabsConfig",
+      "portal": "portal",
       "resource-icon-set-list": "administration/appearance/icon/resource-icon-set-list/module",
       "resource-icon-item-list": "administration/appearance/icon/resource-icon-item-list/module",
       "scheduled-task-management": "administration/scheduled-task",
@@ -21,9 +18,12 @@
       "home-tool": "tools/home",
       "user-tracking": "user/tracking",
       "contacts-tool": "user/contact",
+      "resources-tool": "tools/resources/bootstrap",
       "workspace-user-management": "workspace/user",
-      "workspace-parameters-management": "workspace/parameters",
       "text-resource": "resources/text/bootstrap",
+      "directory-resource": "resources/directory/bootstrap",
+      "administration-toolbar": "administration/toolbar",
+      "workspace-toolbar": "workspace/toolbar",
       "tools-workspace-logs": "tools/workspace/logs",
       "tools-workspace-dashboard": "tools/workspace/dashboard",
       "resource-logs": "resource/logs",
@@ -34,7 +34,6 @@
 
   "styles": {
     "entry": {
-      "home": "tools/home.less",
       "home-tool": "tools/home.less",
       "theme-management": "tools/theme-management.less",
       "portal": "portal/portal.less"

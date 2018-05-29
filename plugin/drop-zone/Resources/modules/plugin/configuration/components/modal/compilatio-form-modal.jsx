@@ -2,18 +2,17 @@ import React from 'react'
 import get from 'lodash/get'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
-import Modal from 'react-bootstrap/lib/Modal'
 
-import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
+import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {TextGroup}  from '#/main/core/layout/form/components/group/text-group.jsx'
 import {trans} from '#/main/core/translation'
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
 
 import {actions} from '#/plugin/drop-zone/plugin/configuration/actions'
 
 const CompilatioFormModal = props =>
-  <BaseModal {...props}>
-    <Modal.Body>
+  <Modal {...props}>
+    <div className="modal-body">
       {props.toolForm.data ?
         <form>
           <TextGroup
@@ -43,8 +42,8 @@ const CompilatioFormModal = props =>
         </form> :
         <span className="fa fa-fw fa-circle-o-notch fa-spin"></span>
       }
-    </Modal.Body>
-    <Modal.Footer>
+    </div>
+    <div className="modal-footer">
       <button
         className="btn btn-default"
         onClick={() => {
@@ -62,8 +61,8 @@ const CompilatioFormModal = props =>
       >
         {trans('ok', {}, 'platform')}
       </button>
-    </Modal.Footer>
-  </BaseModal>
+    </div>
+  </Modal>
 
 CompilatioFormModal.propTypes = {
   toolForm: T.object,

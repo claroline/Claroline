@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\ORM\EntityRepository;
 
@@ -108,6 +109,8 @@ class ResourceRightsRepository extends EntityRepository
 
     /**
      * @todo to be removed
+     *
+     * @return ResourceRights[]
      */
     public function findConfigurableRights(ResourceNode $resource)
     {

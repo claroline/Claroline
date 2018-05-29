@@ -1,7 +1,7 @@
 import tinymce from 'tinymce/tinymce'
 import invariant from 'invariant'
 
-import {url} from '#/main/core/api'
+import {url} from '#/main/app/api'
 import {trans} from '#/main/core/translation'
 
 const resourceManager = window.Claroline.ResourceManager

@@ -1,7 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 import set from 'lodash/set'
 
-import {makeResourceReducer} from '#/main/core/resource/reducer'
 import {makeListReducer} from '#/main/core/data/list/reducer'
 import {combineReducers, makeReducer} from '#/main/core/scaffolding/reducer'
 
@@ -114,7 +113,7 @@ const announcementDetailReducer = makeReducer(null, {
   [ANNOUNCE_DETAIL_RESET]: () => null
 })
 
-const reducer = makeResourceReducer({}, {
+const reducer = {
   currentPage: pageReducer,
   sortOrder: sortReducer,
   announcement: announcementReducer,
@@ -136,7 +135,7 @@ const reducer = makeResourceReducer({}, {
   }),
 
   workspaceRoles: makeReducer({}, {})
-})
+}
 
 export {
   reducer

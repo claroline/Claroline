@@ -19,7 +19,10 @@ bootstrap(
   // initial data
   (initialData) => {
     return {
-      resourceNode: initialData.resourceNode,
+      resource: {
+        node: initialData.resourceNode,
+        evaluation: initialData.evaluation
+      },
       textFile: initialData.textFile,
       isHtml: initialData.isHtml,
       content: initialData.content

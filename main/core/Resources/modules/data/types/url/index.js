@@ -1,6 +1,7 @@
 import {trans} from '#/main/core/translation'
 
-import {UrlGroup} from '#/main/core/layout/form/components/group/url-group.jsx'
+import {UrlGroup} from '#/main/core/layout/form/components/group/url-group'
+import {UrlDisplay} from '#/main/core/data/types/url/components/display'
 
 const URL_TYPE = 'url'
 
@@ -13,6 +14,7 @@ const urlDefinition = {
     description: trans('url_desc', {}, 'data')
   },
   components: {
+    details: UrlDisplay,
     form: UrlGroup
   }
 }

@@ -1,8 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import Modal from 'react-bootstrap/lib/Modal'
 
-import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
+import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {trans} from '#/main/core/translation'
 import {HtmlGroup}  from '#/main/core/layout/form/components/group/html-group.jsx'
 import {RadiosGroup}  from '#/main/core/layout/form/components/group/radios-group.jsx'
@@ -118,8 +117,8 @@ export class CorrectionModal extends Component {
 
   render() {
     return (
-      <BaseModal {...this.props}>
-        <Modal.Body>
+      <Modal {...this.props}>
+        <div className="modal-body">
           {this.props.dropzone.display.showScore &&
             <ScoreBox
               score={this.props.correction.score}
@@ -172,8 +171,8 @@ export class CorrectionModal extends Component {
           {this.props.showDenialBox &&
             <DenialBox {...this.props}/>
           }
-        </Modal.Body>
-        <Modal.Footer>
+        </div>
+        <div className="modal-footer">
           <button
             className="btn btn-default"
             type="button"
@@ -181,8 +180,8 @@ export class CorrectionModal extends Component {
           >
             {trans('close', {}, 'platform')}
           </button>
-        </Modal.Footer>
-      </BaseModal>
+        </div>
+      </Modal>
     )
   }
 }
