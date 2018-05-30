@@ -20,7 +20,7 @@ import {UserList} from '#/main/core/administration/user/user/components/user-lis
 
 const WorkspaceComponent = (props) =>
   <div>
-    {!props.new &&
+    {!props.new && props.workspace.meta &&
       <WorkspaceMetrics
         className="component-container"
         workspace={props.workspace}
@@ -103,7 +103,8 @@ WorkspaceComponent.propTypes = {
 }
 
 WorkspaceComponent.defaultProps = {
-  managerRole: {}
+  managerRole: {},
+  workspace: WorkspaceTypes.defaultProps,
 }
 
 const Workspace = connect(

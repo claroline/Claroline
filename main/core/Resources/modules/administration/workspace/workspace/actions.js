@@ -16,6 +16,9 @@ actions.open = (formName, id = null) => {
     return {
       [API_REQUEST]: {
         url: ['apiv2_workspace_get', {id}],
+        before: (dispatch) => {
+          dispatch(formActions.resetForm(formName, WorkspaceTypes.defaultProps, false))
+        },
         success: (response, dispatch) => {
           dispatch(formActions.resetForm(formName, response, false))
         }

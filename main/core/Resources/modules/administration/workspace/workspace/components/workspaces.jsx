@@ -26,6 +26,11 @@ const WorkspacesList = props =>
     primaryAction={WorkspaceList.open}
     actions={(rows) => [
       {
+        type: 'link',
+        icon: 'fa fa-fw fa-cog',
+        label: trans('configure', {}, 'actions'),
+        target: `/workspaces/form/${rows[0].uuid}`
+      }, {
         type: 'callback',
         icon: 'fa fa-fw fa-copy',
         label: trans('duplicate'),
@@ -35,11 +40,6 @@ const WorkspacesList = props =>
         icon: 'fa fa-fw fa-clone',
         label: trans('duplicate_model'),
         callback: () => props.copyWorkspaces(rows, true)
-      }, {
-        type: 'link',
-        icon: 'fa fa-fw fa-book',
-        label: trans('edit'),
-        target: `/workspaces/form/${rows[0].uuid}`
       },
       // TODO / FIXME : Uses component delete option.
       // Not possible for the moment because it is not possible to display an alert message if the workspace contains not deletable resources.
@@ -58,8 +58,7 @@ const WorkspacesList = props =>
 
 WorkspacesList.propTypes = {
   copyWorkspaces: T.func.isRequired,
-  deleteWorkspaces: T.func.isRequired,
-  showModal: T.func.isRequired
+  deleteWorkspaces: T.func.isRequired
 }
 
 const Workspaces = connect(
@@ -75,10 +74,6 @@ const Workspaces = connect(
           handleConfirm: () => dispatch(actions.copyWorkspaces(workspaces, asModel))
         })
       )
-    },
-
-    showModal(type, props) {
-      dispatch(modalActions.showModal(type, props))
     },
 
     deleteWorkspaces(workspaces) {
