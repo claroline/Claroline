@@ -112,7 +112,8 @@ const UserEvaluation = {
     duration: T.number,
     score: T.number,
     scoreMin: T.number,
-    scoreMax: T.number
+    scoreMax: T.number,
+    progression: T.number
   }
 }
 

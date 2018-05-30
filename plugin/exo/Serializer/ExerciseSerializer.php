@@ -182,6 +182,7 @@ class ExerciseSerializer implements SerializerInterface
         $parameters->maxAttemptsPerDay = $exercise->getMaxAttemptsPerDay();
         $parameters->maxPapers = $exercise->getMaxPapers();
         $parameters->showFeedback = $exercise->getShowFeedback();
+        $parameters->timeLimited = $exercise->isTimeLimited();
         $parameters->duration = $exercise->getDuration();
         $parameters->anonymizeAttempts = $exercise->getAnonymizeAttempts();
         $parameters->interruptible = $exercise->isInterruptible();
@@ -260,6 +261,10 @@ class ExerciseSerializer implements SerializerInterface
 
         if (isset($parameters->showFeedback)) {
             $exercise->setShowFeedback($parameters->showFeedback);
+        }
+
+        if (isset($parameters->timeLimited)) {
+            $exercise->setTimeLimited($parameters->timeLimited);
         }
 
         if (isset($parameters->duration)) {
@@ -344,7 +349,7 @@ class ExerciseSerializer implements SerializerInterface
             $exercise->setTotalScoreOn($parameters->totalScoreOn);
         }
         $success = isset($parameters->successScore) &&
-            $parameters->successScore !== '' &&
+            '' !== $parameters->successScore &&
             $parameters->successScore >= 0 &&
             $parameters->successScore <= 100 ?
             $parameters->successScore :

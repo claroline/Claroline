@@ -46,7 +46,7 @@ class SelectionQuestionValidator extends JsonSchemaValidator
     {
         $errors = [];
 
-        if ($question->mode === 'highlight' || $question->mode === 'select') {
+        if ('highlight' === $question->mode || 'select' === $question->mode) {
             // check solution IDs are consistent with selectionId IDs
             $selectionIds = array_map(function (\stdClass $selection) {
                 return $selection->id;
@@ -69,7 +69,7 @@ class SelectionQuestionValidator extends JsonSchemaValidator
             }
         }
 
-        if ($question->mode === 'highlight') {
+        if ('highlight' === $question->mode) {
             // check solution IDs are consistent with selectionId IDs
             $colorIds = array_map(function (\stdClass $color) {
                 return $color->id;

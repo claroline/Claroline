@@ -31,7 +31,7 @@ class Updater100600 extends Updater
                 ++$i;
             }
 
-            if ($i % 200 === 0) {
+            if (0 === $i % 200) {
                 $om->flush();
             }
         }

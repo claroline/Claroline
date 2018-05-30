@@ -7,3 +7,21 @@
 .overview-warning {
   text-align: center
 }
+
+.exercise-parameters {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: @component-margin-bottom;
+
+    .exercise-parameter {
+        flex: 1;
+        background: #EBEBEB;
+        padding: 10px @panel-body-padding;
+        border: 1px solid transparent;
+        border-radius: @border-radius-small;
+
+        + .exercise-parameter {
+            margin-top: 5px;
+        }
+    }
+}

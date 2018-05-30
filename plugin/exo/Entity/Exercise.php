@@ -239,6 +239,15 @@ class Exercise extends AbstractResource
     private $mandatoryQuestions = false;
 
     /**
+     * If true, the time to answer the exercise will be limited by the defined duration.
+     *
+     * @var bool
+     *
+     * @ORM\Column(name="time_limited", type="boolean", options={"default" = 0})
+     */
+    private $timeLimited = false;
+
+    /**
      * Exercise constructor.
      */
     public function __construct()
@@ -751,5 +760,21 @@ class Exercise extends AbstractResource
     public function setEndNavigation($endNavigation)
     {
         $this->endNavigation = $endNavigation;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTimeLimited()
+    {
+        return $this->timeLimited;
+    }
+
+    /**
+     * @param bool $timeLimited
+     */
+    public function setTimeLimited($timeLimited)
+    {
+        $this->timeLimited = $timeLimited;
     }
 }

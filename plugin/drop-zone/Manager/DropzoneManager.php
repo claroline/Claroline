@@ -1218,6 +1218,7 @@ class DropzoneManager
             null,
             null,
             null,
+            null,
             $data,
             $forceStatus
         );

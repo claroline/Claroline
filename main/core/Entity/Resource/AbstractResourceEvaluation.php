@@ -80,6 +80,11 @@ class AbstractResourceEvaluation
      */
     protected $customScore;
 
+    /**
+     * @ORM\Column(name="progression", type="integer", nullable=true)
+     */
+    protected $progression;
+
     public function getId()
     {
         return $this->id;
@@ -158,6 +163,16 @@ class AbstractResourceEvaluation
     public function setCustomScore($customScore)
     {
         $this->customScore = $customScore;
+    }
+
+    public function getProgression()
+    {
+        return $this->progression;
+    }
+
+    public function setProgression($progression)
+    {
+        $this->progression = $progression;
     }
 
     public function isTerminated()

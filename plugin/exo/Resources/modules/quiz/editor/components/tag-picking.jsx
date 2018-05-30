@@ -17,7 +17,7 @@ import {
   SHUFFLE_ALWAYS,
   SHUFFLE_ONCE,
   SHUFFLE_NEVER
-} from './../../enums'
+} from '#/plugin/exo/quiz/enums'
 
 // todo : huge c/c from IP list control. Find a way to merge in a generic "item-control/item-list-control" or something like that
 const Tag = props =>
@@ -182,7 +182,7 @@ const TagPicking = props =>
     <RadiosGroup
       id="quiz-random-pick"
       label={tex('random_picking')}
-      choices={shuffleModes.filter(m => SHUFFLE_NEVER !== m.value)}
+      choices={omit(shuffleModes, SHUFFLE_NEVER)}
       value={props.randomPick}
       onChange={mode => props.onChange('randomPick', mode)}
       warnOnly={!props.validating}

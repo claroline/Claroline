@@ -57,3 +57,14 @@ export function decorateItem(item, subDecorator = item => item) {
 
   return subDecorator(decorated)
 }
+
+export function formatQuizForTimer(data) {
+  const newData = cloneDeep(data)
+
+  if (newData['parameters']['timeLimited']) {
+    newData['parameters']['showOverview'] = true
+    newData['steps'].forEach(step => step.items.forEach(item => item['meta']['mandatory'] = false))
+  }
+
+  return newData
+}

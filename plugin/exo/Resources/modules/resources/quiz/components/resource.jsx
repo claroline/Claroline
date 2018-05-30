@@ -62,7 +62,8 @@ const Resource = props =>
         label: trans('results_list', {}, 'quiz'),
         disabled: !props.hasPapers,
         displayed: props.registeredUser,
-        target: '/papers'
+        target: '/papers',
+        exact: true
       }, {
         type: 'url',
         icon: 'fa fa-fw fa-table',
@@ -125,12 +126,12 @@ const Resource = props =>
           path: '/papers',
           exact: true,
           component: Papers,
-          disabled: !props.registeredUser,
-          onEnter: () => props.results()
+          disabled: !props.registeredUser
         }, {
           path: '/papers/:id', // todo : declare inside papers module
           component: Paper,
-          onEnter: (params = {}) => props.result(params.id)
+          onEnter: (params) => props.loadCurrentPaper(params.id),
+          onLeave: () => props.resetCurrentPaper()
         }, {
           path: '/correction/questions',
           exact: true,
@@ -181,10 +182,10 @@ Resource.propTypes = {
   save: T.func.isRequired,
   edit: T.func.isRequired,
   testMode: T.func.isRequired,
-  results: T.func.isRequired,
-  result: T.func.isRequired,
   statistics: T.func.isRequired,
-  correction: T.func.isRequired
+  correction: T.func.isRequired,
+  loadCurrentPaper: T.func.isRequired,
+  resetCurrentPaper: T.func.isRequired
 }
 
 const QuizResource = DragNDropContext(
@@ -209,12 +210,6 @@ const QuizResource = DragNDropContext(
       testMode(testMode) {
         dispatch(playerActions.setTestMode(testMode))
       },
-      results() {
-        dispatch(papersActions.listPapers())
-      },
-      result(paperId) {
-        dispatch(papersActions.displayPaper(paperId))
-      },
       statistics() {
         dispatch(statisticsActions.displayStatistics())
       },
@@ -224,6 +219,12 @@ const QuizResource = DragNDropContext(
         } else {
           dispatch(correctionActions.displayQuestionAnswers(questionId))
         }
+      },
+      loadCurrentPaper(paperId) {
+        dispatch(papersActions.loadCurrentPaper(paperId))
+      },
+      resetCurrentPaper() {
+        dispatch(papersActions.setCurrentPaper(null))
       }
     })
   )(Resource)

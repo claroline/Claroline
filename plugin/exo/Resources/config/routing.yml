@@ -59,3 +59,10 @@ ujm_api_qti:
     resource: "@UJMExoBundle/Controller/Api/QTIController.php"
     type: annotation
     prefix: /api
+
+ujm_api_new:
+    resource: "@UJMExoBundle/Controller/APINew/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

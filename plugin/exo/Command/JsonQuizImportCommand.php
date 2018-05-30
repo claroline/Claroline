@@ -107,7 +107,7 @@ class JsonQuizImportCommand extends ContainerAwareCommand
               );
             }
 
-            if ($i % self::BATCH_SIZE === 0) {
+            if (0 === $i % self::BATCH_SIZE) {
                 $om->clear();
                 $file = $input->getArgument('file');
                 $owner = $input->getArgument('owner');

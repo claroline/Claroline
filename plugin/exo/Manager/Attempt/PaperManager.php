@@ -459,6 +459,21 @@ class PaperManager
         } else {
             $status = AbstractResourceEvaluation::STATUS_INCOMPLETE;
         }
+        $nbQuestions = 0;
+        $structure = json_decode($paper->getStructure());
+
+        if (isset($structure->steps)) {
+            foreach ($structure->steps as $step) {
+                $nbQuestions += count($step->items);
+            }
+        }
+        $nbAnswers = 0;
+
+        foreach ($paper->getAnswers() as $answer) {
+            if (!is_null($answer->getData())) {
+                ++$nbAnswers;
+            }
+        }
 
         $this->resourceEvalManager->createResourceEvaluation(
             $paper->getExercise()->getResourceNode(),
@@ -469,6 +484,7 @@ class PaperManager
             null,
             $total,
             null,
+            $nbQuestions > 0 ? floor(($nbAnswers / $nbQuestions) * 100) : null,
             null,
             null,
             $data

@@ -83,7 +83,7 @@ class OrderingQuestion extends AbstractItem
      */
     public function setMode($mode)
     {
-        if ($mode === self::MODE_INSIDE || $mode === self::MODE_BESIDE) {
+        if (self::MODE_INSIDE === $mode || self::MODE_BESIDE === $mode) {
             $this->mode = $mode;
         }
     }
@@ -101,7 +101,7 @@ class OrderingQuestion extends AbstractItem
      */
     public function setDirection($direction)
     {
-        if ($direction === self::DIRECTION_HORIZONTAL || $direction === self::DIRECTION_VERTICAL) {
+        if (self::DIRECTION_HORIZONTAL === $direction || self::DIRECTION_VERTICAL === $direction) {
             $this->direction = $direction;
         }
     }

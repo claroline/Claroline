@@ -215,5 +215,7 @@ class Step
         $stepQuestion->setOrder($this->stepQuestions->count());
         $stepQuestion->setStep($this);
         $stepQuestion->setQuestion($question);
+
+        return $stepQuestion;
     }
 }

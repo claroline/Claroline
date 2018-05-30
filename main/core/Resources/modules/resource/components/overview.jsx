@@ -21,7 +21,7 @@ const UserProgression = props =>
       <div className="panel-body">
         {props.score && props.score.displayed &&
           <ScoreGauge
-            score={props.score.current}
+            userScore={props.score.current}
             maxScore={props.score.total}
           />
         }

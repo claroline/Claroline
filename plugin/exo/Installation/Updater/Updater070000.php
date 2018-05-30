@@ -34,7 +34,7 @@ class Updater070000
             WHERE value = \'To pair\'
         ';
         $res = $this->connection->query($query);
-        if ($res->rowCount() === 0) {
+        if (0 === $res->rowCount()) {
             $this->connection->exec("
                 INSERT INTO ujm_type_matching VALUES(3,'To pair', 3)
             ");

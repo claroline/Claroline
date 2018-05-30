@@ -126,7 +126,7 @@ class GridDefinition extends AbstractDefinition
     {
         $scoreRule = json_decode($question->getQuestion()->getScoreRule());
 
-        if ($scoreRule->type === 'fixed') {
+        if ('fixed' === $scoreRule->type) {
             return $this->getCorrectAnswerForFixMode($question, $answer);
         } else {
             // 3 sum submode
@@ -288,7 +288,6 @@ class GridDefinition extends AbstractDefinition
         if (!is_null($answer)) {
             // correct answers per row
             for ($i = 0; $i < $question->getColumns(); ++$i) {
-
                 // get cells where there is at least 1 expected answers for the current column (none possible)
                 $colCellsUuids = [];
                 foreach ($question->getCells() as $cell) {

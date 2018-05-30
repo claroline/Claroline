@@ -13,7 +13,7 @@ const UserProgression = props =>
   <LiquidGauge
     id="user-progression"
     type="user"
-    value={props.userEvaluation.score ? (props.userEvaluation.score / props.userEvaluation.scoreMax)*100 : 0}
+    value={props.userEvaluation.progression ? props.userEvaluation.progression : 0}
     displayValue={(value) => number(value)}
     unit="%"
     width={props.width}

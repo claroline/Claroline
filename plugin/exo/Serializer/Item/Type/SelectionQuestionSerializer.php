@@ -90,11 +90,11 @@ class SelectionQuestionSerializer implements SerializerInterface
 
         $options['selection_mode'] = $data->mode;
 
-        if (isset($data->selections) && $data->mode !== 'find') {
+        if (isset($data->selections) && 'find' !== $data->mode) {
             $this->deserializeSelections($selectionQuestion, $data->selections, $data->solutions, $options);
         }
 
-        if (isset($data->solutions) && $data->mode === 'find') {
+        if (isset($data->solutions) && 'find' === $data->mode) {
             $this->deserializeSolutions($selectionQuestion, $data->solutions, $options);
         }
 

@@ -200,7 +200,7 @@ class UserProgressionManager
         $statusData = $this->computeResourceUserEvaluation($step->getPath(), $user);
         $stepIndex = array_search($step->getUuid(), $statusData['stepsToDo']);
 
-        if ($stepIndex !== false && array_search($status, ['seen', 'done']) !== false) {
+        if (false !== $stepIndex && false !== array_search($status, ['seen', 'done'])) {
             ++$statusData['score'];
             array_splice($statusData['stepsToDo'], $stepIndex, 1);
         }
@@ -210,6 +210,9 @@ class UserProgressionManager
             'status' => $status,
             'toDo' => $statusData['stepsToDo'],
         ];
+        $progression = !is_null($statusData['score']) && $statusData['scoreMax'] > 0 ?
+            floor(($statusData['score'] / $statusData['scoreMax']) * 100) :
+            null;
 
         return $this->resourceEvalManager->createResourceEvaluation(
             $step->getPath()->getResourceNode(),
@@ -220,6 +223,7 @@ class UserProgressionManager
             null,
             $statusData['scoreMax'],
             null,
+            $progression,
             null,
             null,
             $evaluationData,
@@ -254,7 +258,7 @@ class UserProgressionManager
                 $statusIndex = array_search($data['status'], ['seen', 'done']);
                 $uuidIndex = array_search($data['step'], $stepsUuids);
 
-                if ($statusIndex !== false && $uuidIndex !== false) {
+                if (false !== $statusIndex && false !== $uuidIndex) {
                     ++$score;
                     array_splice($stepsUuids, $uuidIndex, 1);
                 }

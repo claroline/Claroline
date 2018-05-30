@@ -110,9 +110,9 @@ class DocimologyManager
         $scores = $this->getPapersScores($papers, $scoreOn);
 
         $result = new \stdClass();
-        $result->min = count($scores) === 0 ? 0 : min($scores);
-        $result->max = count($scores) === 0 ? 0 : max($scores);
-        $average = count($scores) === 0 ? 0 : array_sum($scores) / count($scores);
+        $result->min = 0 === count($scores) ? 0 : min($scores);
+        $result->max = 0 === count($scores) ? 0 : max($scores);
+        $average = 0 === count($scores) ? 0 : array_sum($scores) / count($scores);
         $result->avg = $average !== floor($average) ? floatval(number_format($average, 2)) : $average;
 
         return $result;

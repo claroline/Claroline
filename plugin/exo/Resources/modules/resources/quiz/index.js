@@ -42,5 +42,5 @@ export const App = () => ({
       node: initialData.resourceNode,
       evaluation: initialData.evaluation
     }
-  }, decorate(normalize(initialData.quiz), getDecorators(), initialData.resourceNode.rights.current.edit))
+  }, decorate(normalize(initialData.quiz), getDecorators(), initialData.resourceNode.permissions.edit))
 })

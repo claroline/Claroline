@@ -45,6 +45,7 @@ class ResourceEvaluationSerializer
             'scoreMin' => $resourceEvaluation->getScoreMin(),
             'scoreMax' => $resourceEvaluation->getScoreMax(),
             'customScore' => $resourceEvaluation->getCustomScore(),
+            'progression' => $resourceEvaluation->getProgression(),
             'comment' => $resourceEvaluation->getComment(),
             'data' => $resourceEvaluation->getData(),
             'resourceUserEvaluation' => $this->resourceUserEvaluationSerializer->serialize($resourceEvaluation->getResourceUserEvaluation()),

@@ -7,7 +7,7 @@ import get from 'lodash/get'
 import Panel from 'react-bootstrap/lib/Panel'
 import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 
-import {tex, t} from '#/main/core/translation'
+import {trans, tex} from '#/main/core/translation'
 import {ActivableSet} from '#/main/core/layout/form/components/fieldset/activable-set.jsx'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
@@ -16,10 +16,8 @@ import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group.jsx
 import {NumberGroup} from '#/main/core/layout/form/components/group/number-group.jsx'
 import {RadiosGroup} from '#/main/core/layout/form/components/group/radios-group.jsx'
 import {SelectGroup} from '#/main/core/layout/form/components/group/select-group.jsx'
-import {ValidationStatus} from './validation-status.jsx'
-import {RandomPicking} from './random-picking.jsx'
-import {TagPicking} from './tag-picking.jsx'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
+
 import {
   correctionModes,
   markModes,
@@ -34,9 +32,11 @@ import {
   NUMBERING_NUMERIC,
   STATISTICS_ALL_PAPERS,
   statisticsModes
-} from './../../enums'
-
+} from '#/plugin/exo/quiz/enums'
 import select from '#/plugin/exo/quiz/editor/selectors'
+import {ValidationStatus} from '#/plugin/exo/quiz/editor/components/validation-status.jsx'
+import {RandomPicking} from '#/plugin/exo/quiz/editor/components/random-picking.jsx'
+import {TagPicking} from '#/plugin/exo/quiz/editor/components/tag-picking.jsx'
 
 const TOTAL_SCORE_ON_DEFAULT_VALUE = 100
 
@@ -188,24 +188,6 @@ Picking.propTypes = {
 
 const Signing = props =>
   <fieldset>
-    {/* TODO: enable this when feature is back
-    <FormGroup
-      id="quiz-duration"
-      label={tex('duration')}
-      help={tex('duration_help')}
-      warnOnly={!props.validating}
-      error={get(props, 'errors.parameters.duration')}
-    >
-      <input
-        id="quiz-duration"
-        type="number"
-        min="0"
-        value={props.parameters.duration}
-        className="form-control"
-        onChange={e => props.onChange('parameters.duration', e.target.value)}
-      />
-    </FormGroup>
-    */}
     <NumberGroup
       id="quiz-maxAttempts"
       label={tex('maximum_attempts')}
@@ -251,10 +233,31 @@ const Signing = props =>
       help={tex('show_end_confirm_help')}
       onChange={checked => props.onChange('parameters.showEndConfirm', checked)}
     />
+
+    <ActivableSet
+      id="quiz-time-limited"
+      label={tex('limit_quiz_duration')}
+      activated={props.parameters.timeLimited}
+      onChange={checked => props.onChange('parameters.timeLimited', checked)}
+    >
+      <NumberGroup
+        id="quiz-duration"
+        label={tex('duration')}
+        help={tex('duration_help')}
+        min={0}
+        unit={trans('minutes')}
+        required={props.parameters.timeLimited}
+        value={props.parameters.duration}
+        onChange={duration => props.onChange('parameters.duration', duration)}
+        warnOnly={!props.validating}
+        error={get(props, 'errors.parameters.duration')}
+      />
+    </ActivableSet>
   </fieldset>
 
 Signing.propTypes = {
   parameters: T.shape({
+    timeLimited: T.bool.isRequired,
     duration: T.number.isRequired,
     maxAttempts: T.number.isRequired,
     mandatoryQuestions: T.bool.isRequired,
@@ -491,7 +494,7 @@ const QuizEditor = props =>
       accordion
       activeKey={props.activePanelKey}
     >
-      {makePanel(Display, t('display_parameters'), 'display_mode', props)}
+      {makePanel(Display, trans('display_parameters'), 'display_mode', props)}
       {makePanel(Picking, tex('step_picking'), 'step-picking', props, ['picking'])}
       {makePanel(Signing, tex('signing'), 'signing', props, ['duration', 'maxAttempts'])}
       {makePanel(Correction, tex('correction'), 'correction', props)}
@@ -506,6 +509,7 @@ QuizEditor.propTypes = {
       type: T.string.isRequired,
       showOverview: T.bool.isRequired,
       showMetadata: T.bool.isRequired,
+      timeLimited: T.bool.isRequired,
       duration: T.number.isRequired,
       maxAttempts: T.number.isRequired,
       interruptible: T.bool.isRequired,

@@ -248,6 +248,7 @@ class ScormManager
             $scoTracking->getScoreMin(),
             $scoTracking->getScoreMax(),
             null,
+            null,
             $scoTracking->getSessionTime() ? $scoTracking->getSessionTime() / 100 : $scoTracking->getSessionTime()
         );
     }
@@ -296,6 +297,7 @@ class ScormManager
             $score,
             $scoreMin,
             $scoreMax,
+            null,
             null,
             $duration
         );

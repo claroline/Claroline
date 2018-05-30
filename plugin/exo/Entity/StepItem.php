@@ -43,6 +43,15 @@ class StepItem
     private $question;
 
     /**
+     * The answer is mandatory to continue the quiz.
+     *
+     * @var bool
+     *
+     * @ORM\Column(name="mandatory", type="boolean", nullable=true)
+     */
+    private $mandatory = false;
+
+    /**
      * Set Step.
      *
      * @param Step $step
@@ -82,5 +91,21 @@ class StepItem
     public function getQuestion()
     {
         return $this->question;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMandatory()
+    {
+        return $this->mandatory;
+    }
+
+    /**
+     * @param bool $mandatory
+     */
+    public function setMandatory($mandatory)
+    {
+        $this->mandatory = $mandatory;
     }
 }

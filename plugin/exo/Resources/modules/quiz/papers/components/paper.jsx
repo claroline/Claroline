@@ -5,19 +5,20 @@ import classes from 'classnames'
 import Panel from 'react-bootstrap/lib/Panel'
 
 import {tex} from '#/main/core/translation'
-import {getDefinition, isQuestionType} from './../../../items/item-types'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
-import quizSelect from './../../selectors'
-import {selectors as paperSelect} from './../selectors'
-import {Metadata as ItemMetadata} from './../../../items/components/metadata.jsx'
 import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box.jsx'
-import {ScoreGauge} from './../../../components/score-gauge.jsx'
-import {utils} from './../utils'
-import {getNumbering} from './../../../utils/numbering'
+
+import quizSelect from '#/plugin/exo/quiz/selectors'
 import {
   NUMBERING_NONE
-} from './../../../quiz/enums'
+} from '#/plugin/exo/quiz/enums'
+import {getDefinition, isQuestionType} from '#/plugin/exo/items/item-types'
+import {selectors as paperSelect} from '#/plugin/exo/quiz/papers/selectors'
+import {utils} from '#/plugin/exo/quiz/papers/utils'
+import {getNumbering} from '#/plugin/exo/utils/numbering'
+import {ScoreGauge} from '#/plugin/exo/components/score-gauge.jsx'
+import {Metadata as ItemMetadata} from '#/plugin/exo/items/components/metadata.jsx'
 
 function getAnswer(itemId, answers) {
   const answer = answers.find(answer => answer.questionId === itemId)
@@ -38,13 +39,15 @@ function getAnswerScore(itemId, answers) {
 }
 
 const PaperComponent = props => {
-  const showScore = utils.showScore(
-    props.admin,
-    props.paper.finished,
-    paperSelect.showScoreAt(props.paper),
-    paperSelect.showCorrectionAt(props.paper),
-    paperSelect.correctionDate(props.paper)
-  )
+  const showScore = props.paper ?
+    utils.showScore(
+      props.admin,
+      props.paper.finished,
+      props.paper.structure.parameters.showScoreAt,
+      props.paper.structure.parameters.showCorrectionAt,
+      props.paper.structure.parameters.correctionDate
+    ) :
+    false
 
   return (
     <div className="paper">
@@ -52,10 +55,10 @@ const PaperComponent = props => {
         {showScore &&
           <ScoreGauge userScore={props.paper.score} maxScore={paperSelect.paperScoreMax(props.paper)} size="sm" />
         }
-        {tex('correction')}&nbsp;{props.paper.number}
+        {tex('correction')}&nbsp;{props.paper ? props.paper.number : ''}
       </h2>
 
-      {props.steps.map((step, idx) =>
+      {props.paper && props.paper.structure.steps.map((step, idx) =>
         <div key={idx} className="quiz-item item-paper">
           <h3 className={classes('h4', 0 === idx && 'h-first')}>
             {step.title ? step.title : tex('step') + ' ' + (idx + 1)}
@@ -116,14 +119,7 @@ PaperComponent.propTypes = {
     score: T.number,
     finished: T.bool.isRequired,
     structure: T.object.isRequired
-  }).isRequired,
-  steps: T.arrayOf(T.shape({
-    items: T.arrayOf(T.shape({
-      id: T.string.isRequired,
-      content: T.string,
-      type: T.string.isRequired
-    })).isRequired
-  })).isRequired,
+  }),
   showExpectedAnswers: T.bool.isRequired,
   showStatistics: T.bool.isRequired,
   allPapersStatistics: T.bool.isRequired,
@@ -135,7 +131,6 @@ const Paper = connect(
     admin: hasPermission('edit', resourceSelect.resourceNode(state)) || quizSelect.papersAdmin(state),
     numbering: quizSelect.quizNumbering(state),
     paper: paperSelect.currentPaper(state),
-    steps: paperSelect.paperSteps(state),
     showExpectedAnswers: quizSelect.papersShowExpectedAnswers(state),
     showStatistics: quizSelect.papersShowStatistics(state),
     allPapersStatistics: quizSelect.allPapersStatistics(state),

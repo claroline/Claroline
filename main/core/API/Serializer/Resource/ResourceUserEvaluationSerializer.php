@@ -50,6 +50,7 @@ class ResourceUserEvaluationSerializer
             'scoreMin' => $resourceUserEvaluation->getScoreMin(),
             'scoreMax' => $resourceUserEvaluation->getScoreMax(),
             'customScore' => $resourceUserEvaluation->getCustomScore(),
+            'progression' => $resourceUserEvaluation->getProgression(),
             'resourceNode' => $this->resourceNodeSerializer->serialize($resourceUserEvaluation->getResourceNode()),
             'user' => $this->userSerializer->serialize($resourceUserEvaluation->getUser()),
             'userName' => $resourceUserEvaluation->getUserName(),

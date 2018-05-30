@@ -97,7 +97,7 @@ class GraphicQuestionSerializer implements SerializerInterface
             $image->id = $questionImg->getUuid();
             $image->type = $questionImg->getType();
 
-            if (strpos($questionImg->getUrl(), './') === 0) {
+            if (0 === strpos($questionImg->getUrl(), './')) {
                 // the way URLs were written previously isn't spec compliant
                 $image->url = substr($questionImg->getUrl(), 2);
             } else {

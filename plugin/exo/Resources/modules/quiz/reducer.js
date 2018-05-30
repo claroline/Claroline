@@ -1,9 +1,9 @@
 import {makeReducer} from '#/main/core/scaffolding/reducer'
 
-import {reducers as editorReducers} from './editor/reducers'
-import {reducers as playerReducers} from './player/reducers'
-import {reducePapers} from './papers/reducer'
-import {reduceCorrection} from './correction/reducer'
+import {reducers as editorReducers} from '#/plugin/exo/quiz/editor/reducers'
+import {reducers as playerReducers} from '#/plugin/exo/quiz/player/reducers'
+import {reducer as papersReducer} from '#/plugin/exo/quiz/papers/reducer'
+import {reduceCorrection} from '#/plugin/exo/quiz/correction/reducer'
 
 export const reducer = {
   noServer: makeReducer(false, {}),
@@ -18,7 +18,7 @@ export const reducer = {
   paper: playerReducers.paper,
   answers: playerReducers.answers,
 
-  papers: reducePapers,
+  papers: papersReducer,
 
   correction: reduceCorrection
 }

@@ -1,4 +1,5 @@
 import isEmpty from 'lodash/isEmpty'
+import moment from 'moment'
 
 // TODO : remove the use of navigate()
 
@@ -6,12 +7,12 @@ import {makeActionCreator} from '#/main/core/scaffolding/actions'
 import {API_REQUEST} from '#/main/app/api'
 import {actions as resourceActions} from '#/main/core/resource/store'
 
-import quizSelectors from './../selectors'
-import {select as playerSelectors} from './selectors'
-import {generatePaper} from './../papers/generator'
-import {normalize, denormalizeAnswers, denormalize} from './normalizer'
-import moment from 'moment'
-import {actions as paperAction} from '../papers/actions'
+import quizSelectors from '#/plugin/exo/quiz/selectors'
+import {select as playerSelectors} from '#/plugin/exo/quiz/player/selectors'
+import {normalize, denormalizeAnswers, denormalize} from '#/plugin/exo/quiz/player/normalizer'
+import {generatePaper} from '#/plugin/exo/quiz/papers/generator'
+import {actions as paperAction} from '#/plugin/exo/quiz/papers/actions'
+import {utils as paperUtils} from '#/plugin/exo/quiz/papers/utils'
 
 export const ATTEMPT_START  = 'ATTEMPT_START'
 export const ATTEMPT_FINISH = 'ATTEMPT_FINISH'
@@ -165,7 +166,12 @@ actions.handleAttemptEnd = (paper, navigate) => {
   return (dispatch, getState) => {
     // Finish the current attempt
     dispatch(actions.finishAttempt(paper, playerSelectors.answers(getState())))
-    dispatch(paperAction.addPaper(buildPaper(paper, playerSelectors.answers(getState()))))
+    const newPaper = buildPaper(paper, playerSelectors.answers(getState()))
+
+    if (!newPaper.score && newPaper.score !== 0) {
+      newPaper['score'] = paperUtils.computeScore(newPaper, newPaper.answers)
+    }
+    dispatch(paperAction.addPaper(newPaper))
 
     // We will decide here if we show the correction now or not and where we redirect the user
     if (playerSelectors.hasEndPage(getState())) {
@@ -174,7 +180,7 @@ actions.handleAttemptEnd = (paper, navigate) => {
     } else {
       switch (playerSelectors.showCorrectionAt(getState())) {
         case 'validation': {
-          dispatch(paperAction.setCurrentPaper(paper.id))
+          dispatch(paperAction.setCurrentPaper(newPaper))
           navigate('papers/' + paper.id)
           break
         }
@@ -184,7 +190,7 @@ actions.handleAttemptEnd = (paper, navigate) => {
           const showPaper = today.diff(correctionDate, 'days') >= 0
 
           if (showPaper) {
-            dispatch(paperAction.setCurrentPaper(paper.id))
+            dispatch(paperAction.setCurrentPaper(newPaper))
             navigate('papers/' + paper.id)
           } else {
             navigate('overview')

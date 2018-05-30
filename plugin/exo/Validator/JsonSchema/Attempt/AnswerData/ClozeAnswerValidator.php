@@ -18,37 +18,37 @@ class ClozeAnswerValidator extends JsonSchemaValidator
         return 'answer-data/cloze/schema.json';
     }
 
-     /**
-      * Performs additional validations.
-      *
-      * @param array $answerData
-      * @param array $options
-      *
-      * @return array
-      */
-     public function validateAfterSchema($answerData, array $options = [])
-     {
-         /** @var ClozeQuestion $question */
-         $question = !empty($options[Validation::QUESTION]) ? $options[Validation::QUESTION] : null;
+    /**
+     * Performs additional validations.
+     *
+     * @param array $answerData
+     * @param array $options
+     *
+     * @return array
+     */
+    public function validateAfterSchema($answerData, array $options = [])
+    {
+        /** @var ClozeQuestion $question */
+        $question = !empty($options[Validation::QUESTION]) ? $options[Validation::QUESTION] : null;
 
-         if (empty($question)) {
-             throw new \LogicException('Answer validation : Cannot perform additional validation without question.');
-         }
+        if (empty($question)) {
+            throw new \LogicException('Answer validation : Cannot perform additional validation without question.');
+        }
 
-         $holeIds = array_map(function (Hole $hole) {
-             return $hole->getUuid();
-         }, $question->getHoles()->toArray());
+        $holeIds = array_map(function (Hole $hole) {
+            return $hole->getUuid();
+        }, $question->getHoles()->toArray());
 
-         foreach ($answerData as $answer) {
-             if (empty($answer->holeId)) {
-                 return ['Answer `holeId` cannot be empty'];
-             }
+        foreach ($answerData as $answer) {
+            if (empty($answer->holeId)) {
+                return ['Answer `holeId` cannot be empty'];
+            }
 
-             if (!in_array($answer->holeId, $holeIds)) {
-                 return ['Answer array identifiers must reference question holes'];
-             }
-         }
+            if (!in_array($answer->holeId, $holeIds)) {
+                return ['Answer array identifiers must reference question holes'];
+            }
+        }
 
-         return [];
-     }
+        return [];
+    }
 }

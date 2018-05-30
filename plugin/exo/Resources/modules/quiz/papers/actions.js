@@ -1,10 +1,8 @@
-import invariant from 'invariant'
-
-import {makeActionCreator} from '#/main/core/scaffolding/actions'
-import {selectors} from './selectors'
-import quizSelectors from './../selectors'
-import {normalize} from './normalizer'
 import {API_REQUEST} from '#/main/app/api'
+import {makeActionCreator} from '#/main/core/scaffolding/actions'
+
+import {normalize} from '#/plugin/exo/quiz/papers/normalizer'
+import {utils as paperUtils} from '#/plugin/exo/quiz/papers/utils'
 
 export const PAPER_ADD = 'PAPER_ADD'
 export const PAPERS_INIT = 'PAPERS_INIT'
@@ -16,7 +14,7 @@ export const actions = {}
 
 const initPapers = makeActionCreator(PAPERS_INIT, 'papers')
 const setPaperFetched = makeActionCreator(PAPER_FETCHED)
-actions.setCurrentPaper = makeActionCreator(PAPER_CURRENT, 'id')
+actions.setCurrentPaper = makeActionCreator(PAPER_CURRENT, 'paper')
 actions.addPaper = makeActionCreator(PAPER_ADD, 'paper')
 
 actions.fetchPapers = quizId => ({
@@ -30,23 +28,14 @@ actions.fetchPapers = quizId => ({
   }
 })
 
-actions.displayPaper = id => {
-  invariant(id, 'Paper id is mandatory')
-  return (dispatch, getState) => {
-    if (!selectors.papersFetched(getState()) && (!selectors.papers(getState())[id] || quizSelectors.papersShowStatistics(getState()))) {
-      dispatch(actions.fetchPapers(selectors.quizId(getState()))).then(() => {
-        dispatch(actions.setCurrentPaper(id)) // TODO : remove me this should be managed by router
-      })
-    } else {
-      dispatch(actions.setCurrentPaper(id)) // TODO : remove me this should be managed by router
+actions.loadCurrentPaper = (paperId) => ({
+  [API_REQUEST]: {
+    url: ['apiv2_exopaper_get', {id: paperId}],
+    success: (data, dispatch) => {
+      if (data.structure.parameters.showScoreAt !== 'never' && !data.score && data.score !== 0) {
+        data['score'] = paperUtils.computeScore(data, data.answers)
+      }
+      dispatch(actions.setCurrentPaper(data))
     }
   }
-}
-
-actions.listPapers = () => {
-  return (dispatch, getState) => {
-    if (!selectors.papersFetched(getState())) {
-      dispatch(actions.fetchPapers(selectors.quizId(getState())))
-    }
-  }
-}
+})

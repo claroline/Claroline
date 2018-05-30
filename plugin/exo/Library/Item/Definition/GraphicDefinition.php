@@ -188,8 +188,8 @@ class GraphicDefinition extends AbstractDefinition
     {
         $coords = explode(',', $area->getValue());
 
-        if (count($coords) === 2) {
-            if ($area->getShape() !== GraphicQuestion::SHAPE_CIRCLE) {
+        if (2 === count($coords)) {
+            if (GraphicQuestion::SHAPE_CIRCLE !== $area->getShape()) {
                 // must be old "square" shape
                 $coords[] = $coords[0] + $area->getSize();
                 $coords[] = $coords[1] + $area->getSize();

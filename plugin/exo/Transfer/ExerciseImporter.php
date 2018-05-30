@@ -97,7 +97,7 @@ class ExerciseImporter extends Importer implements ResourceRichTextInterface
         foreach ($exercise->getSteps() as $step) {
             foreach ($step->getStepQuestions() as $stepItem) {
                 foreach ($stepItem->getQuestion()->getObjects() as $object) {
-                    if ($object->getMimeType() !== 'text/html') {
+                    if ('text/html' !== $object->getMimeType()) {
                         $basename = basename($object->getData());
                         $file = new File($this->getRootPath().DIRECTORY_SEPARATOR.$basename);
                         $file = $fileUtilities->createFile($file);
@@ -141,7 +141,7 @@ class ExerciseImporter extends Importer implements ResourceRichTextInterface
         foreach ($exercise->getSteps() as $step) {
             foreach ($step->getStepQuestions() as $stepItem) {
                 foreach ($stepItem->getQuestion()->getObjects() as $object) {
-                    if ($object->getMimeType() !== 'text/html') {
+                    if ('text/html' !== $object->getMimeType()) {
                         $files[basename($object->getData())] = $this->container
                             ->getParameter('claroline.param.web_dir').DIRECTORY_SEPARATOR.$object->getData();
                     }

@@ -3,12 +3,12 @@ import cloneDeep from 'lodash/cloneDeep'
 import merge from 'lodash/merge'
 import set from 'lodash/set'
 
-import validate from './validators'
-import {decorateItem} from './../decorators'
-import {getIndex, makeId, makeItemPanelKey, update, refreshIds} from './../../utils/utils'
-import {getDefinition} from './../../items/item-types'
-import {getContentDefinition} from './../../contents/content-types'
-import {ATTEMPT_FINISH} from './../player/actions'
+import validate from '#/plugin/exo/quiz/editor/validators'
+import {decorateItem} from '#/plugin/exo/quiz/decorators'
+import {getIndex, makeId, makeItemPanelKey, update, refreshIds} from '#/plugin/exo/utils/utils'
+import {getDefinition} from '#/plugin/exo/items/item-types'
+import {getContentDefinition} from '#/plugin/exo/contents/content-types'
+import {ATTEMPT_FINISH} from '#/plugin/exo/quiz/player/actions'
 import {
   TYPE_QUIZ,
   TYPE_STEP,
@@ -17,7 +17,7 @@ import {
   SHUFFLE_NEVER,
   SHUFFLE_ONCE,
   SHUFFLE_ALWAYS
-} from './../enums'
+} from '#/plugin/exo/quiz/enums'
 import {
   ITEM_CREATE,
   ITEM_DELETE,
@@ -54,7 +54,7 @@ import {
   OBJECT_CHANGE,
   OBJECT_REMOVE,
   OBJECT_MOVE
-} from './actions'
+} from '#/plugin/exo/quiz/editor/actions'
 
 import {
   ITEM_UPDATE_TAGS

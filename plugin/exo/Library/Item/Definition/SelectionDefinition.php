@@ -316,7 +316,7 @@ class SelectionDefinition extends AbstractDefinition
             $i = 0;
 
             foreach ($expected as $expectedAnswer) {
-                if ($i !== 0) {
+                if (0 !== $i) {
                     $strcsv .= ',';
                 }
                 $strcsv .= $this->getSelectedText($item, $expectedAnswer);
@@ -333,7 +333,7 @@ class SelectionDefinition extends AbstractDefinition
             $i = 0;
 
             foreach ($expected as $expectedAnswer) {
-                if ($i !== 0) {
+                if (0 !== $i) {
                     $strcsv .= ',';
                 }
                 $strcsv .= $this->getSelectedText($item, $expectedAnswer);
@@ -350,7 +350,7 @@ class SelectionDefinition extends AbstractDefinition
             $i = 0;
 
             foreach ($expected as $expectedAnswer) {
-                if ($i !== 0) {
+                if (0 !== $i) {
                     $strcsv .= ',';
                 }
                 $strcsv .= '{';

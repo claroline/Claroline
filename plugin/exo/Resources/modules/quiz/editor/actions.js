@@ -1,14 +1,18 @@
 import invariant from 'invariant'
-import select from './selectors'
+import forOwn from 'lodash/forOwn'
 import times from 'lodash/times'
+
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
-import {makeId} from './../../utils/utils'
 import {API_REQUEST} from '#/main/app/api'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {tex} from '#/main/core/translation'
 import {MODAL_ALERT} from '#/main/app/modals/alert'
-import {denormalize} from './../normalizer'
-import forOwn from 'lodash/forOwn'
+
+import select from '#/plugin/exo/quiz/editor/selectors'
+import {makeId} from '#/plugin/exo/utils/utils'
+import {denormalize} from '#/plugin/exo/quiz/normalizer'
+import {formatQuizForTimer} from '#/plugin/exo/quiz/decorators'
+
 import {ITEM_UPDATE_TAGS} from '#/plugin/tag/actions'
 
 export const ITEM_CREATE = 'ITEM_CREATE'
@@ -193,7 +197,7 @@ actions.save = () => {
         type: 'warning'
       }))
     } else {
-      const denormalized = denormalize(state.quiz, state.steps, state.items)
+      const denormalized = formatQuizForTimer(denormalize(state.quiz, state.steps, state.items))
       dispatch({
         [API_REQUEST]: {
           url: ['exercise_update', {id: state.quiz.id}],

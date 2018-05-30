@@ -7,20 +7,24 @@ import {trans} from '#/main/core/translation'
 import {withRouter} from '#/main/app/router'
 
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
+import {MODAL_ALERT} from '#/main/app/modals/alert'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {HtmlText} from '#/main/core/layout/components/html-text'
+import {Timer} from '#/main/core/layout/timer/components/timer'
+import {ProgressBar} from '#/main/core/layout/components/progress-bar'
 
-import {getDefinition, isQuestionType} from './../../../items/item-types'
-import {getContentDefinition} from './../../../contents/content-types'
-import selectQuiz from './../../selectors'
-import {select} from './../selectors'
-import {actions} from './../actions'
+import {getDefinition, isQuestionType} from '#/plugin/exo/items/item-types'
+import {getContentDefinition} from '#/plugin/exo/contents/content-types'
+import selectQuiz from '#/plugin/exo/quiz/selectors'
+import {select} from '#/plugin/exo/quiz/player/selectors'
+import {selectors as papersSelect} from '#/plugin/exo/quiz/papers/selectors'
+import {actions} from '#/plugin/exo/quiz/player/actions'
 import {ItemPlayer} from '#/plugin/exo/items/components/item-player'
 import {ItemFeedback} from '#/plugin/exo/items/components/item-feedback'
 import {ContentItemPlayer} from '#/plugin/exo/contents/components/content-item-player'
-import {PlayerNav} from './nav-bar.jsx'
-import {getNumbering} from './../../../utils/numbering'
-import {NUMBERING_NONE} from './../../../quiz/enums'
+import {PlayerNav} from '#/plugin/exo/quiz/player/components/nav-bar.jsx'
+import {getNumbering} from '#/plugin/exo/utils/numbering'
+import {NUMBERING_NONE} from '#/plugin/exo/quiz/enums'
 
 // TODO : rethink the loading paper process (it's a little hacky to make it quickly compatible with Router)
 
@@ -109,6 +113,27 @@ class PlayerComponent extends Component {
   render() {
     return (
       <div className="quiz-player">
+        {this.props.paper && this.props.paper.structure &&
+          <ProgressBar
+            value={papersSelect.paperItemsCount(this.props.paper) ?
+              Math.floor((Object.values(this.props.allAnswers).filter(a => a.data && a.data.length > 0).length / papersSelect.paperItemsCount(this.props.paper)) * 100) :
+              0
+            }
+            size="xs"
+            type="user"
+          />
+        }
+        {this.props.isTimed && this.props.duration > 0 && this.props.paper.startDate &&
+          <Timer
+            totalTime={this.props.duration * 60}
+            startDate={this.props.paper.startDate}
+            onTimeOver={() => {
+              this.props.finish(this.props.quizId, this.props.paper, this.props.answers, this.props.showFeedback, false, this.props.history.push)
+              this.props.showTimeOverMessage()
+            }}
+          />
+        }
+
         {this.state.fetching &&
           <span>{trans('attempt_loading', {}, 'quiz')}</span>
         }
@@ -157,13 +182,18 @@ PlayerComponent.propTypes = {
   quizId: T.string.isRequired,
   numbering: T.string.isRequired,
   number: T.number.isRequired,
+  isTimed: T.bool.isRequired,
+  duration: T.number,
   step: T.object,
   items: T.array.isRequired,
   mandatoryQuestions: T.bool.isRequired,
   answers: T.object.isRequired,
+  allAnswers: T.object.isRequired,
   paper: T.shape({
     id: T.string.isRequired,
-    number: T.number.isRequired
+    number: T.number.isRequired,
+    startDate: T.string.isRequired,
+    structure: T.object.isRequired
   }).isRequired,
   next: T.object,
   previous: T.object,
@@ -177,7 +207,8 @@ PlayerComponent.propTypes = {
   navigateTo: T.func.isRequired,
   submit: T.func.isRequired,
   finish: T.func.isRequired,
-  showHint: T.func.isRequired
+  showHint: T.func.isRequired,
+  showTimeOverMessage: T.func.isRequired
 }
 
 PlayerComponent.defaultProps = {
@@ -195,13 +226,16 @@ const Player = withRouter(connect(
     items: select.currentStepItems(state),
     paper: select.paper(state),
     answers: select.currentStepAnswers(state),
+    allAnswers: select.answers(state),
     next: select.next(state),
     previous: select.previous(state),
     showFeedback: select.showFeedback(state),
     showEndConfirm: select.showEndConfirm(state),
     feedbackEnabled: select.feedbackEnabled(state),
     currentStepSend: select.currentStepSend(state),
-    numbering: selectQuiz.quizNumbering(state)
+    numbering: selectQuiz.quizNumbering(state),
+    isTimed: selectQuiz.parameters(state).timeLimited,
+    duration: selectQuiz.parameters(state).duration
   }),
   dispatch => ({
     start() {
@@ -233,6 +267,13 @@ const Player = withRouter(connect(
         title: trans('hint_confirm_title', {}, 'quiz'),
         question: trans('hint_confirm_question', {}, 'quiz'),
         handleConfirm: () => dispatch(actions.showHint(quizId, paperId, questionId, hint))
+      }))
+    },
+    showTimeOverMessage() {
+      dispatch(modalActions.showModal(MODAL_ALERT, {
+        title: trans('time_over', {}, 'quiz'),
+        message: trans('time_over_message', {}, 'quiz'),
+        type: 'info'
       }))
     }
   })

@@ -181,7 +181,10 @@ class StepSerializer implements SerializerInterface
         $stepQuestions = $step->getStepQuestions()->toArray();
 
         return array_map(function (StepItem $stepQuestion) use ($options) {
-            return $this->itemSerializer->serialize($stepQuestion->getQuestion(), $options);
+            $serialized = $this->itemSerializer->serialize($stepQuestion->getQuestion(), $options);
+            $serialized->meta->mandatory = $stepQuestion->isMandatory();
+
+            return $serialized;
         }, $stepQuestions);
     }
 
@@ -216,10 +219,13 @@ class StepSerializer implements SerializerInterface
 
             if (empty($stepQuestion)) {
                 // Creation of a new item (we need to link it to the Step)
-                $step->addQuestion($entity);
+                $stepQuestion = $step->addQuestion($entity);
             } else {
                 // Update order of the Item in the Step
                 $stepQuestion->setOrder($index);
+            }
+            if (isset($itemData->meta->mandatory)) {
+                $stepQuestion->setMandatory($itemData->meta->mandatory);
             }
         }
 
