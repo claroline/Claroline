@@ -123,7 +123,7 @@ public function onCreateForm(CreateFormResourceEvent $event)
 {
     $form = $this->container->get('form.factory')->create(new FileType, new File());
     $content = $this->container->get('templating')->render(
-        'ClarolineCoreBundle:Resource:createForm.html.twig',
+        'ClarolineCoreBundle:resource:create_form.html.twig',
         array(
             'form' => $form->createView(),
             'resourceType' => 'file'
@@ -136,7 +136,7 @@ public function onCreateForm(CreateFormResourceEvent $event)
 
 Please find the Symfony documentation [here](http://symfony.com/doc/2.0/book/forms.html)
 
-You can use the 'ClarolineCoreBundle:Resource:createForm.html.twig' as default
+You can use the 'ClarolineCoreBundle:resource:create_form.html.twig' as default
 form for your resource wich is what's happening here.
 
 **Note**: don't forget the 'resourceType' attribute. Its value must be the
@@ -183,7 +183,7 @@ public function onCreate(CreateResourceEvent $event)
     }
 
     $content = $this->container->get('templating')->render(
-        'ClarolineCoreBundle:Resource:createForm.html.twig',
+        'ClarolineCoreBundle:resource:create_form.html.twig',
         array(
             'form' => $form->createView(),
             'resourceType' => $event->getResourceType()

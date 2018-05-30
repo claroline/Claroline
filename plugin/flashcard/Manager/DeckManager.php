@@ -79,7 +79,7 @@ class DeckManager
     public function getDeckFormContent(FormView $view)
     {
         return $this->templating->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            'ClarolineCoreBundle:resource:create_form.html.twig',
             [
                 'form' => $view,
                 'resourceType' => 'claroline_flashcard',

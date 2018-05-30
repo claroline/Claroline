@@ -78,7 +78,7 @@ class ClacoFormListener
     {
         $form = $this->formFactory->create(new ResourceNameType(true), new ClacoForm());
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            'ClarolineCoreBundle:resource:create_form.html.twig',
             [
                 'form' => $form->createView(),
                 'resourceType' => 'claroline_claco_form',
@@ -106,7 +106,7 @@ class ClacoFormListener
             $event->stopPropagation();
         } else {
             $content = $this->templating->render(
-                'ClarolineCoreBundle:Resource:createForm.html.twig',
+                'ClarolineCoreBundle:resource:create_form.html.twig',
                 [
                     'form' => $form->createView(),
                     'resourceType' => 'claroline_claco_form',

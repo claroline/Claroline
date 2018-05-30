@@ -147,7 +147,7 @@ class PathListener
         $form = $this->container->get('form.factory')->create(new ResourceNameType(true), new Path());
 
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig', [
+            'ClarolineCoreBundle:resource:create_form.html.twig', [
                 'form' => $form->createView(),
                 'resourceType' => 'innova_path',
             ]
@@ -181,7 +181,7 @@ class PathListener
             );
         } else {
             $content = $this->container->get('templating')->render(
-                'ClarolineCoreBundle:Resource:createForm.html.twig', [
+                'ClarolineCoreBundle:resource:create_form.html.twig', [
                     'form' => $form->createView(),
                     'resourceType' => 'innova_path',
                 ]

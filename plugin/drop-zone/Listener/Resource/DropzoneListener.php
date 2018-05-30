@@ -82,7 +82,7 @@ class DropzoneListener
     {
         $form = $this->formFactory->create(new ResourceNameType(true), new Dropzone());
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            'ClarolineCoreBundle:resource:create_form.html.twig',
             [
                 'form' => $form->createView(),
                 'resourceType' => 'claroline_dropzone',
@@ -110,7 +110,7 @@ class DropzoneListener
             $event->stopPropagation();
         } else {
             $content = $this->templating->render(
-                'ClarolineCoreBundle:Resource:createForm.html.twig',
+                'ClarolineCoreBundle:resource:create_form.html.twig',
                 [
                     'form' => $form->createView(),
                     'resourceType' => 'claroline_dropzone',

@@ -71,7 +71,7 @@ class UrlListener
             new UrlType(), new Url()
         );
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig', [
+            'ClarolineCoreBundle:resource:create_form.html.twig', [
                 'form' => $form->createView(),
                 'resourceType' => 'hevinci_url',
             ]
@@ -103,7 +103,7 @@ class UrlListener
         }
 
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig', [
+            'ClarolineCoreBundle:resource:create_form.html.twig', [
                 'form' => $form->createView(),
                 'resourceType' => $event->getResourceType(),
             ]

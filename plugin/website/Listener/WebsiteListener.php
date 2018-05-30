@@ -58,7 +58,7 @@ class WebsiteListener
     {
         $form = $this->container->get('form.factory')->create(WebsiteType::class, new Website());
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            'ClarolineCoreBundle:resource:create_form.html.twig',
             [
                 'form' => $form->createView(),
                 'resourceType' => 'icap_website',
@@ -83,7 +83,7 @@ class WebsiteListener
             $event->setResources([$website]);
         } else {
             $content = $this->container->get('templating')->render(
-                'ClarolineCoreBundle:Resource:createForm.html.twig',
+                'ClarolineCoreBundle:resource:create_form.html.twig',
                 [
                     'form' => $form->createView(),
                     'resourceType' => 'icap_website',

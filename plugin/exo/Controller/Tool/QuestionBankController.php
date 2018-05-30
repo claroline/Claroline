@@ -54,7 +54,7 @@ class QuestionBankController
      * @EXT\Route("", name="question_bank")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("user", converter="current_user")
-     * @EXT\Template("UJMExoBundle:tool:question-bank.html.twig")
+     * @EXT\Template("UJMExoBundle:tool:question_bank.html.twig")
      *
      * @return array
      */

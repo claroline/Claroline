@@ -101,7 +101,7 @@ class WebResourceListener
     {
         $form = $this->container->get('form.factory')->create(new FileType(), new File());
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            'ClarolineCoreBundle:resource:create_form.html.twig',
             [
                 'form' => $form->createView(),
                 'resourceType' => 'claroline_web_resource',
@@ -137,7 +137,7 @@ class WebResourceListener
         }
 
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            'ClarolineCoreBundle:resource:create_form.html.twig',
             [
                 'form' => $form->createView(),
                 'resourceType' => $event->getResourceType(),

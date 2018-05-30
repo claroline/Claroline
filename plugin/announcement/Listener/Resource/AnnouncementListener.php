@@ -107,7 +107,7 @@ class AnnouncementListener
     {
         $form = $this->formFactory->create(new ResourceNameType(), new AnnouncementAggregate());
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig', [
+            'ClarolineCoreBundle:resource:create_form.html.twig', [
                 'form' => $form->createView(),
                 'resourceType' => 'claroline_announcement_aggregate',
             ]
@@ -141,7 +141,7 @@ class AnnouncementListener
         }
 
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig', [
+            'ClarolineCoreBundle:resource:create_form.html.twig', [
                 'form' => $form->createView(),
                 'resourceType' => 'claroline_announcement_aggregate',
             ]

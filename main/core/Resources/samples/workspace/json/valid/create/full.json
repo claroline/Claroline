@@ -1,8 +1,8 @@
 {
-  "id": 6,
+  "id": 123456789,
   "uuid": "59d245173680e9.83088773",
   "name": "Espace personnel - toto4",
-  "code": "toto4",
+  "code": "toto41",
   "thumbnail": "",
   "poster": "",
   "meta": {
@@ -29,7 +29,7 @@
     "accessibleFrom": null,
     "accessibleUntil": null,
     "maxUsers": 10000,
-    "maxStorage": "1 TB",
+    "maxStorage": "123654987",
     "maxResources": 10000
   },
   "registration": {

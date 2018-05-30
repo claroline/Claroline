@@ -84,7 +84,7 @@ class MediaResourceListener
             $event->setResources([$mediaResource]);
         } else {
             $content = $this->container->get('templating')->render(
-                    'ClarolineCoreBundle:Resource:createForm.html.twig', [
+                    'ClarolineCoreBundle:resource:create_form.html.twig', [
                       'form' => $form->createView(),
                       'resourceType' => 'innova_media_resource',
                     ]
@@ -104,7 +104,7 @@ class MediaResourceListener
         // Create form
         $form = $this->container->get('form.factory')->create(new MediaResourceType(), new MediaResource());
         $content = $this->container->get('templating')->render(
-                'ClarolineCoreBundle:Resource:createForm.html.twig', [
+                'ClarolineCoreBundle:resource:create_form.html.twig', [
                     'form' => $form->createView(),
                     'resourceType' => 'innova_media_resource',
                 ]

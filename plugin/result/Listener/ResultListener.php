@@ -13,11 +13,12 @@ namespace Claroline\ResultBundle\Listener;
 
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Form\Handler\FormHandler;
 use Claroline\ResultBundle\Entity\Result;
+use Claroline\ResultBundle\Form\ResultType;
 use Claroline\ResultBundle\Manager\ResultManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Request;
@@ -82,7 +83,7 @@ class ResultListener
      */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-        $view = $this->formHandler->getView('claroline_form_result');
+        $view = $this->formHandler->getView(ResultType::class);
         $event->setResponseContent($this->manager->getResultFormContent($view));
         $event->stopPropagation();
     }
@@ -94,7 +95,7 @@ class ResultListener
      */
     public function onCreate(CreateResourceEvent $event)
     {
-        if ($this->formHandler->isValid('claroline_form_result', $this->request, new Result())) {
+        if ($this->formHandler->isValid(ResultType::class, $this->request, new Result())) {
             $event->setResources([$this->manager->create($this->formHandler->getData())]);
         } else {
             $view = $this->formHandler->getView();
@@ -138,7 +139,7 @@ class ResultListener
     public function onDisplayWidget(DisplayWidgetEvent $event)
     {
         $loggedUser = $this->tokenStorage->getToken()->getUser();
-        $user = $loggedUser !== 'anon.' ? $loggedUser : null;
+        $user = 'anon.' !== $loggedUser ? $loggedUser : null;
         $workspace = $event->getInstance()->getWorkspace();
         $content = $this->manager->getWidgetContent($workspace, $user);
         $event->setContent($content);

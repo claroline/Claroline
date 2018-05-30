@@ -100,7 +100,7 @@ class FileListener implements ContainerAwareInterface
     {
         $form = $this->container->get('form.factory')->create(new FileType(true), new File());
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            'ClarolineCoreBundle:resource:create_form.html.twig',
             [
                 'form' => $form->createView(),
                 'resourceType' => 'file',
@@ -126,7 +126,7 @@ class FileListener implements ContainerAwareInterface
         }
 
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            'ClarolineCoreBundle:resource:create_form.html.twig',
             [
                 'form' => $form->createView(),
                 'resourceType' => $event->getResourceType(),

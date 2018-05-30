@@ -145,8 +145,8 @@ class ExerciseListener
         /** @var FormInterface $form */
         $form = $this->formFactory->create(new ExerciseType());
 
-        $content = $this->templating->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig', [
+        $content = $this->container->get('templating')->render(
+            'ClarolineCoreBundle:resource:create_form.html.twig', [
                 'resourceType' => 'ujm_exercise',
                 'form' => $form->createView(),
             ]
@@ -180,8 +180,8 @@ class ExerciseListener
 
             $event->setResources([$exercise]);
         } else {
-            $content = $this->templating->render(
-                'ClarolineCoreBundle:Resource:createForm.html.twig', [
+            $content = $this->container->get('templating')->render(
+                'ClarolineCoreBundle:resource:create_form.html.twig', [
                     'resourceType' => 'ujm_exercise',
                     'form' => $form->createView(),
                 ]

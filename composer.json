@@ -30,7 +30,7 @@
         "egulias/email-validator": "2.1.4",
         "fabiang/xmpp": "0.7.0",
         "friendsofsymfony/jsrouting-bundle": "2.2.0",
-        "friendsofsymfony/oauth-server-bundle": "2.0.x-dev",
+        "friendsofsymfony/oauth-server-bundle": "1.5.2",
         "friendsofsymfony/rest-bundle": "2.3.1",
         "gedmo/doctrine-extensions": "2.4.35",
         "gregwar/captcha-bundle": "2.0.4",

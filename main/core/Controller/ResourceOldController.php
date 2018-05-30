@@ -974,4 +974,86 @@ class ResourceOldController extends Controller
 
         return $resources;
     }
+
+    /**
+     * @EXT\Route(
+     *     "/create/{resourceType}/{parentId}/published/{published}",
+     *     name="claro_resource_create",
+     *     defaults={"published"=0},
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *      "parent",
+     *      class="ClarolineCoreBundle:Resource\ResourceNode",
+     *      options={"id" = "parentId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * Creates a resource.
+     *
+     * @param string       $resourceType the resource type
+     * @param ResourceNode $parent       the parent
+     * @param User         $user         the user
+     *
+     * @throws \Exception
+     *
+     * @return Response
+     */
+    public function createAction(
+    $resourceType,
+    ResourceNode $parent,
+    User $user,
+    $published = 0
+) {
+        $collection = new ResourceCollection([$parent]);
+        $collection->setAttributes(['type' => $resourceType]);
+        if (!$this->authorization->isGranted('CREATE', $collection)) {
+            $errors = $collection->getErrors();
+            $content = $this->templating->render(
+            'ClarolineCoreBundle:Resource:errors.html.twig',
+            ['errors' => $errors]
+        );
+            $response = new Response($content, 403);
+            $response->headers->add(['XXX-Claroline' => 'resource-error']);
+
+            return $response;
+        }
+        $event = $this->dispatcher->dispatch('create_'.$resourceType, 'CreateResource', [$parent, $resourceType]);
+        $isPublished = 1 === intval($published) ? true : $event->isPublished();
+        if (count($event->getResources()) > 0) {
+            $nodesArray = [];
+            foreach ($event->getResources() as $resource) {
+                if ($event->getProcess()) {
+                    $createdResource = $this->resourceManager->create(
+                    $resource,
+                    $this->resourceManager->getResourceTypeByName($resourceType),
+                    $user,
+                    $parent->getWorkspace(),
+                    $parent,
+                    null,
+                    [],
+                    $isPublished
+                );
+                    $this->dispatcher->dispatch(
+                    'resource_created_'.$resourceType,
+                    'ResourceCreated',
+                    [$createdResource->getResourceNode()]
+                );
+                    $nodesArray[] = $this->resourceManager->toArray(
+                    $createdResource->getResourceNode(),
+                    $this->tokenStorage->getToken()
+                );
+                } else {
+                    $nodesArray[] = $this->resourceManager->toArray(
+                    $resource->getResourceNode(),
+                    $this->tokenStorage->getToken()
+                );
+                }
+            }
+
+            return new JsonResponse($nodesArray);
+        }
+
+        return new Response($event->getErrorFormContent());
+    }
 }

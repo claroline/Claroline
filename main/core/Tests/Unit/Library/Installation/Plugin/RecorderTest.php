@@ -23,12 +23,17 @@ class RecorderTest extends MockeryTestCase
     {
         $this->plugin = $this->mock('Claroline\CoreBundle\Library\DistributionPluginBundle');
         $this->dbWriter = $this->mock('Claroline\CoreBundle\Library\Installation\Plugin\DatabaseWriter');
-        $this->recorder = new Recorder($this->dbWriter);
+        $this->validator = $this->mock('Claroline\CoreBundle\Library\Installation\Plugin\Validator');
+
+        $this->recorder = new Recorder($this->dbWriter, $this->validator);
     }
 
     public function testRecorderProperlyDelegatesToWritersOnRegister()
     {
         $this->dbWriter->shouldReceive('insert')->once()->with($this->plugin, []);
+        $this->validator->shouldReceive('validate')->once()->with($this->plugin);
+        $this->validator->shouldReceive('deactivateUpdateMode')->once();
+        $this->validator->shouldReceive('getPluginConfiguration')->once()->andReturn([]);
         $this->recorder->register($this->plugin, []);
     }
 

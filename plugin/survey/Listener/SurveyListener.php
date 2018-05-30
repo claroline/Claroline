@@ -82,7 +82,7 @@ class SurveyListener
     {
         $form = $this->formFactory->create(new SurveyType(), new Survey());
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            'ClarolineCoreBundle:resource:create_form.html.twig',
             [
                 'form' => $form->createView(),
                 'resourceType' => 'claroline_survey',
@@ -112,7 +112,7 @@ class SurveyListener
         }
 
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            'ClarolineCoreBundle:resource:create_form.html.twig',
             [
                 'form' => $form->createView(),
                 'resourceType' => 'claroline_survey',

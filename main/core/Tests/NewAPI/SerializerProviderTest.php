@@ -66,8 +66,8 @@ class SerializerProviderTest extends TransactionalTestCase
                         $data['plainPassword'] = '123';
                     }
                     //is the result... valid ?
-                    $errors = $this->validator->validate($class, $data, ValidatorProvider::CREATE);
-                    $this->assertTrue(0 === count($errors)/*, print_r(['data' => $data, 'errors' => $errors], true)*/);
+                    $errors = $this->validator->validate($class, $data, ValidatorProvider::UPDATE);
+                    $this->assertTrue(0 === count($errors), print_r(['data' => $data, 'errors' => $errors], true));
                 }
             }
         } else {

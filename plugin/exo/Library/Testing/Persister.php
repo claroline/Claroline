@@ -219,7 +219,7 @@ class Persister
             $node->setResourceType($this->exoType);
             $node->setWorkspace($user->getPersonalWorkspace());
             $node->setClass('UJM\ExoBundle\Entity\Exercise');
-            $node->setGuid(time());
+            $node->setGuid(uniqid('', true));
             $exercise->setResourceNode($node);
             $this->om->persist($node);
         }

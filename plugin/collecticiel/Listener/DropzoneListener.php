@@ -60,7 +60,7 @@ class DropzoneListener
         $form = $this->container->get('form.factory')->create(new DropzoneType(), new Dropzone());
 
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            'ClarolineCoreBundle:resource:create_form.html.twig',
             [
                 'form' => $form->createView(),
                 'resourceType' => 'innova_collecticiel',
@@ -86,7 +86,7 @@ class DropzoneListener
             $event->setResources([$dropzone]);
         } else {
             $content = $this->container->get('templating')->render(
-                'ClarolineCoreBundle:Resource:createForm.html.twig',
+                'ClarolineCoreBundle:resource:create_form.html.twig',
                 [
                     'form' => $form->createView(),
                     'resourceType' => 'innova_collecticiel',

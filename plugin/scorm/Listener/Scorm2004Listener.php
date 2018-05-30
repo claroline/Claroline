@@ -111,7 +111,7 @@ class Scorm2004Listener
             new Scorm2004Resource()
         );
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            'ClarolineCoreBundle:resource:create_form.html.twig',
             [
                 'form' => $form->createView(),
                 'resourceType' => 'claroline_scorm_2004',
@@ -158,7 +158,7 @@ class Scorm2004Listener
             $form->addError(new FormError($errorMsg));
         }
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            'ClarolineCoreBundle:resource:create_form.html.twig',
             [
                 'form' => $form->createView(),
                 'resourceType' => $event->getResourceType(),

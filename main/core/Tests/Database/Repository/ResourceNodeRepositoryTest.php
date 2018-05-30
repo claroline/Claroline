@@ -78,9 +78,9 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
 
     public function testFindDescendants()
     {
-        $this->assertEquals(1, count(self::$repo->findDescendants(self::get('dir_2')->getResourceNode())));
-        $this->assertEquals(6, count(self::$repo->findDescendants(self::get('dir_1')->getResourceNode())));
-        $this->assertEquals(7, count(self::$repo->findDescendants(self::get('dir_1')->getResourceNode(), true)));
+        $this->assertEquals(0, count(self::$repo->findDescendants(self::get('dir_2')->getResourceNode())));
+        $this->assertEquals(4, count(self::$repo->findDescendants(self::get('dir_1')->getResourceNode())));
+        $this->assertEquals(5, count(self::$repo->findDescendants(self::get('dir_1')->getResourceNode(), true)));
         $this->assertEquals(
             2,
             count(self::$repo->findDescendants(self::get('dir_3')->getResourceNode(), true, 't_dir'))
@@ -220,11 +220,11 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
     public function testFindMimeTypesWithMostResources()
     {
         $mimeTypes = self::$repo->findMimeTypesWithMostResources(10);
-        $this->assertEquals(4, count($mimeTypes));
+        $this->assertEquals(3, count($mimeTypes));
         $this->assertEquals('directory/mime', $mimeTypes[0]['type']);
-        $this->assertEquals('custom/directory', $mimeTypes[2]['type']);
+        $this->assertEquals('file/mime', $mimeTypes[2]['type']);
         $this->assertEquals(5, $mimeTypes[0]['total']);
-        $this->assertEquals(2, $mimeTypes[2]['total']);
+        $this->assertEquals(1, $mimeTypes[2]['total']);
     }
 
     public function testFindByMimeTypeAndParent()

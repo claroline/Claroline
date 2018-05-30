@@ -78,7 +78,7 @@ class LtiListener
         $form = $this->container->get('form.factory')->create(new LtiResourceType());
 
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig', [
+            'ClarolineCoreBundle:resource:create_form.html.twig', [
                 'resourceType' => 'ujm_lti_resource',
                 'form' => $form->createView(),
             ]
@@ -110,7 +110,7 @@ class LtiListener
             return;
         }
         $content = $this->container->get('templating')->render(
-               'ClarolineCoreBundle:Resource:createForm.html.twig', [
+               'ClarolineCoreBundle:resource:create_form.html.twig', [
                    'resourceType' => 'ujm_lti',
                    'form' => $form->createView(),
                ]

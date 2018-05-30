@@ -81,7 +81,7 @@ class ActivityListener
     {
         $form = $this->formFactory->create(new ActivityType(), new Activity());
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            'ClarolineCoreBundle:resource:create_form.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'activity',
@@ -116,7 +116,7 @@ class ActivityListener
         }
 
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            'ClarolineCoreBundle:resource:create_form.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'activity',

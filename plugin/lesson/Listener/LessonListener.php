@@ -22,7 +22,7 @@ class LessonListener
     {
         $form = $this->container->get('form.factory')->create(new LessonType(), new Lesson());
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            'ClarolineCoreBundle:resource:create_form.html.twig',
             [
                 'form' => $form->createView(),
                 'resourceType' => 'icap_lesson',

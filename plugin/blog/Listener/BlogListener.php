@@ -28,7 +28,7 @@ class BlogListener
     {
         $form = $this->container->get('form.factory')->create(new BlogType(), new Blog());
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            'ClarolineCoreBundle:resource:create_form.html.twig',
             [
                 'form' => $form->createView(),
                 'resourceType' => 'icap_blog',
@@ -55,7 +55,7 @@ class BlogListener
         }
 
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            'ClarolineCoreBundle:resource:create_form.html.twig',
             [
                 'form' => $form->createView(),
                 'resourceType' => 'icap_blog',

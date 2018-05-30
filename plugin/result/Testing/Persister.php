@@ -63,7 +63,7 @@ class Persister extends ClarolinePersister
         $node->setResourceType($this->resultType);
         $node->setWorkspace($creator->getPersonalWorkspace());
         $node->setClass('Claroline\ResultBundle\Entity\Result');
-        $node->setGuid(time());
+        $node->setGuid(uniqid());
 
         // create 'open' mask in db
         $this->maskDecoder($node->getResourceType(), 'open', 1);

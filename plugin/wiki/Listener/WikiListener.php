@@ -48,7 +48,7 @@ class WikiListener
     {
         $form = $this->container->get('form.factory')->create(new WikiType(), new Wiki());
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            'ClarolineCoreBundle:resource:create_form.html.twig',
             [
                 'form' => $form->createView(),
                 'resourceType' => 'icap_wiki',
@@ -73,7 +73,7 @@ class WikiListener
             $event->setResources([$wiki]);
         } else {
             $content = $this->container->get('templating')->render(
-                'ClarolineCoreBundle:Resource:createForm.html.twig',
+                'ClarolineCoreBundle:resource:create_form.html.twig',
                 [
                     'form' => $form->createView(),
                     'resourceType' => 'icap_wiki',

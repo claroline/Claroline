@@ -34,7 +34,6 @@ class QuestionBankControllerTest extends TransactionalTestCase
         $this->om->flush();
 
         $crawler = $this->request('GET', '/questions', $user);
-
         // The user must have access to the exercise
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($crawler->filter('html')->count() > 0);

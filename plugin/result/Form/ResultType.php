@@ -11,17 +11,14 @@
 
 namespace Claroline\ResultBundle\Form;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Range;
 
-/**
- * @DI\Service("claroline_form_result")
- * @DI\Tag("form.type")
- */
 class ResultType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -39,11 +36,6 @@ class ResultType extends AbstractType
                 'attr' => ['min' => 1],
                 'data' => 20,
             ]);
-    }
-
-    public function getName()
-    {
-        return 'claroline_form_result';
     }
 
     public function configureOptions(OptionsResolver $resolver)

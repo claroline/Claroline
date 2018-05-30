@@ -112,7 +112,7 @@ class ResultManager
                 $this->om->getRepository('ClarolineResultBundle:Result')->findByUserAndWorkspace($user, $workspace);
         }
 
-        return $this->templating->render('ClarolineResultBundle:Result:widget.html.twig', [
+        return $this->templating->render('ClarolineResultBundle:result:widget.html.twig', [
             'results' => $results,
         ]);
     }
@@ -127,7 +127,7 @@ class ResultManager
     public function getResultFormContent(FormView $view)
     {
         return $this->templating->render(
-             'ClarolineCoreBundle:Resource:createForm.html.twig',
+             'ClarolineCoreBundle:resource:create_form.html.twig',
              [
                  'form' => $view,
                  'resourceType' => 'claroline_result',

@@ -338,8 +338,8 @@ class WorkspaceSerializer
             $workspaceOptions = $this->workspaceManager->getWorkspaceOptions($workspace);
             $workspaceOptions->setDetails([
                 'background_color' => !empty($data['display']['color']) ? $data['display']['color'] : null,
-                'hide_tools_menu' => !$data['display']['showTools'],
-                'hide_breadcrumb' => !$data['display']['showBreadcrumbs'],
+                'hide_tools_menu' => isset($data['display']['showTools']) ? !$data['display']['showTools'] : true,
+                'hide_breadcrumb' => isset($data['display']['showBreadcrumbs']) ? !$data['display']['showBreadcrumbs'] : true,
                 'use_workspace_opening_resource' => !empty($data['display']['openResource']),
                 'workspace_opening_resource' => !empty($data['display']['openResource']) ? !empty($data['display']['openResource']['autoId']) : null,
             ]);
