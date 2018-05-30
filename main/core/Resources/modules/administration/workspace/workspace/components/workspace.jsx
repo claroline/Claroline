@@ -20,9 +20,12 @@ import {UserList} from '#/main/core/administration/user/user/components/user-lis
 
 const WorkspaceComponent = (props) =>
   <div>
-    <WorkspaceMetrics
-      workspace={props.workspace}
-    />
+    {!props.new &&
+      <WorkspaceMetrics
+        className="component-container"
+        workspace={props.workspace}
+      />
+    }
 
     <WorkspaceForm name="workspaces.current">
       <FormSections level={3}>
@@ -77,7 +80,7 @@ const WorkspaceComponent = (props) =>
             }}
             primaryAction={UserList.open}
             delete={{
-              url: ['apiv2_role_remove_users', {id: props.managerRole.id}]
+              url: ['apiv2_role_remove_users', {id: !isEmpty(props.managerRole) && props.managerRole.id}]
             }}
             definition={UserList.definition}
             card={UserList.card}

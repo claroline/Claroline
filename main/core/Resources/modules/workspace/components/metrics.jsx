@@ -9,7 +9,7 @@ import {CountGauge} from '#/main/core/layout/gauge/components/count-gauge'
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 
 const WorkspaceMetrics = props =>
-  <div className="row">
+  <div className={classes('row', props.className)}>
     <div className="col-md-4 col-sm-4 col-xs-4">
       <div className="metric-card">
         <CountGauge
@@ -58,6 +58,7 @@ const WorkspaceMetrics = props =>
   </div>
 
 WorkspaceMetrics.propTypes = {
+  className: T.string,
   level: T.number,
   width: T.number,
   height: T.number,
