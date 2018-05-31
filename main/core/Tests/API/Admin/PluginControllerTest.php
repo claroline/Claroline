@@ -45,7 +45,6 @@ class PluginControllerTest extends TransactionalTestCase
     public function testDisablePluginAction()
     {
         //ça se relog pas bien
-        /*
         $this->logIn($this->admin);
 
         //get the plugin list
@@ -57,7 +56,6 @@ class PluginControllerTest extends TransactionalTestCase
         $data = $this->client->getResponse()->getContent();
         $data = json_decode($data, true);
         $this->assertEquals(false, $data[0]['is_loaded']);
-        */
     }
 
     //@route: api_enable_plugin
@@ -65,7 +63,6 @@ class PluginControllerTest extends TransactionalTestCase
     public function testEnablePluginAction()
     {
         //ça se relog pas bien
-        /*
         $this->logIn($this->admin);
 
         //get the plugin list
@@ -77,6 +74,5 @@ class PluginControllerTest extends TransactionalTestCase
         $data = $this->client->getResponse()->getContent();
         $data = json_decode($data, true);
         $this->assertEquals(true, $data[0]['is_loaded']);
-        */
     }
 }
