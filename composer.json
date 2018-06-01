@@ -12,7 +12,8 @@
         "mikey179/vfsStream": "1.6.4",
         "phpmd/phpmd": "@stable",
         "phpunit/phpunit": "7.1.5",
-        "symfony/phpunit-bridge": "4.0.9"
+        "symfony/phpunit-bridge": "4.0.9",
+        "stefk/md": "dev-master"
     },
     "scripts": {
         "fast-install" : [
