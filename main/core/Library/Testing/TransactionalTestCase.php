@@ -26,6 +26,7 @@ abstract class TransactionalTestCase extends WebTestCase
     {
         parent::setUp();
         $this->client = self::createClient();
+        $this->client->disableReboot();
         $this->client->getContainer()->get('claroline.persistence.object_manager')->beginTransaction();
     }
 

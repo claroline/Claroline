@@ -195,8 +195,6 @@ class ClarolineApiListener implements ListenerInterface
         $returnValue = $this->authenticationManager->authenticate($token);
 
         try {
-            $returnValue = $this->authenticationManager->authenticate($token);
-
             if ($returnValue instanceof TokenInterface) {
                 return $this->securityContext->setToken($returnValue);
             }

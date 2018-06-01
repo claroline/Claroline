@@ -12,15 +12,15 @@
 namespace Claroline\CoreBundle\Library\Security\Provider;
 
 use FOS\OAuthServerBundle\Security\Authentication\Token\OAuthToken;
+use OAuth2\OAuth2;
+use OAuth2\OAuth2AuthenticateException;
+use OAuth2\OAuth2ServerException;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\AccountStatusException;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
-use OAuth2\OAuth2;
-use OAuth2\OAuth2ServerException;
-use OAuth2\OAuth2AuthenticateException;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * OAuthProvider class.
@@ -45,8 +45,8 @@ class OAuthProvider implements AuthenticationProviderInterface
     protected $userChecker;
 
     /**
-     * @param UserProviderInterface $userProvider  The user provider.
-     * @param OAuth2                $serverService The OAuth2 server service.
+     * @param UserProviderInterface $userProvider  the user provider
+     * @param OAuth2                $serverService the OAuth2 server service
      * @param UserCheckerInterface  $userChecker   The Symfony User Checker for Pre and Post auth checks
      */
     public function __construct(UserProviderInterface $userProvider, OAuth2 $serverService, UserCheckerInterface $userChecker)
@@ -64,7 +64,6 @@ class OAuthProvider implements AuthenticationProviderInterface
         if (!$this->supports($token)) {
             return;
         }
-
         try {
             $tokenString = $token->getToken();
 
@@ -87,14 +86,14 @@ class OAuthProvider implements AuthenticationProviderInterface
                     $token->setUser($user);
                 }
 
-                $roles = (null !== $user) ? $user->getRoles() : array();
+                $roles = (null !== $user) ? $user->getRoles() : [];
 
                 /*
                  * This is the only modification from the base class.
                  * We only add scopes if we're not connected as user.
                  * Otherwise, if we support the scope admin, everyone will be admin if no scope are requested because fos-oauth2-lib
                  * doesn't support different scope by clients (https://github.com/FriendsOfSymfony/FOSOAuthServerBundle/issues/201)
-                 * This way, we can bypass this by creating 2 clients: 1 wich grant the password (and refresh) types 
+                 * This way, we can bypass this by creating 2 clients: 1 wich grant the password (and refresh) types
                  * (and will require a user authentication)
                  * One that grant pretty much all the rest.
                  */
