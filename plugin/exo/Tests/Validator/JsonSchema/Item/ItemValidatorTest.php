@@ -50,12 +50,6 @@ class ItemValidatorTest extends JsonSchemaTestCase
             ->method('has')
             ->willReturn(true);
 
-        // Do not validate Item Type specific data
-        $this->itemDefinitions
-            ->expects($this->any())
-            ->method('validateQuestion')
-            ->willReturn([]);
-
         // Do not validate Categories
         $this->categoryValidator = $this->createMock('UJM\ExoBundle\Validator\JsonSchema\Item\CategoryValidator', [], [], '', false);
         $this->categoryValidator->expects($this->any())

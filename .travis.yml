@@ -78,7 +78,7 @@ script:
   - if [ "$DIFF" != '' ]; then $ROOT/vendor/bin/php-cs-fixer fix --dry-run --diff --config=main/dev/Resources/travis/php-cs.php; fi
   - if [ "$DIFF" != '' ]; then $ROOT/node_modules/.bin/eslint --ext js --ext jsx `echo "$DIFF" | grep 'Resources/modules/.\+\.js' | tr '\n' ' '`; fi
   # launch php tests
-  - SYMFONY_DEPRECATIONS_HELPER=weak $ROOT/vendor/bin/phpunit
+  - SYMFONY_DEPRECATIONS_HELPER=weak $ROOT/vendor/bin/phpunit --dont-report-useless-tests
   # launch js tests
   # FIXME : enable JS test suite while fixed
   # - $ROOT/node_modules/.bin/karma start --single-run

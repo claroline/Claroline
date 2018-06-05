@@ -14,7 +14,7 @@ class ExerciseTypeTest extends TypeTestCase
 {
     protected function setUp()
     {
-        $validator = $this->createMock('Symfony\Component\Validator\ValidatorInterface');
+        $validator = $this->createMock('Symfony\Component\Validator\Validator\RecursiveValidator');
         $validator->expects($this->any())->method('validate')->willReturn([]);
         $this->factory = Forms::createFormFactoryBuilder()
             ->addExtensions($this->getExtensions())
@@ -26,7 +26,7 @@ class ExerciseTypeTest extends TypeTestCase
     {
         $tinyType = new TinymceType();
 
-        return [new PreloadedExtension([$tinyType->getName() => $tinyType], [])];
+        return [new PreloadedExtension([TinymceType::class => $tinyType], [])];
     }
 
     public function testSubmitCreationFormWithValidData()
@@ -36,7 +36,7 @@ class ExerciseTypeTest extends TypeTestCase
             'published' => '1',
         ];
 
-        $form = $this->factory->create(new ExerciseType());
+        $form = $this->factory->create(ExerciseType::class);
         $form->submit($formData);
         $this->assertTrue($form->isSynchronized());
 
