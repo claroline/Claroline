@@ -2,37 +2,34 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {Button} from '#/main/app/action/components/button'
+import {CallbackButton} from '#/main/app/button/components/callback'
 
 import {getNextView} from '#/main/core/layout/calendar/utils'
 
 const CalendarNav = props =>
   <div className="calendar-nav">
-    <Button
-      type="callback"
+    <CallbackButton
       className="btn btn-link calendar-previous"
       disabled={props.previousRange[1].isSameOrBefore(props.calendarRange[0])}
       callback={() => props.changeView(props.view, props.previousRange)}
     >
       <span className="fa fa-chevron-left" />
-    </Button>
+    </CallbackButton>
 
-    <Button
-      type="callback"
+    <CallbackButton
       className="btn btn-link calendar-current"
       callback={() => props.changeView(getNextView(props.view))}
     >
       {props.title}
-    </Button>
+    </CallbackButton>
 
-    <Button
-      type="callback"
+    <CallbackButton
       className="btn btn-link calendar-next"
       disabled={props.nextRange[0].isSameOrAfter(props.calendarRange[1])}
       callback={() => props.changeView(props.view, props.nextRange)}
     >
       <span className="fa fa-chevron-right" />
-    </Button>
+    </CallbackButton>
   </div>
 
 CalendarNav.propTypes = {

@@ -4,14 +4,14 @@ import moment from 'moment'
 import times from 'lodash/times'
 
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
-import {Button} from '#/main/app/action/components/button'
+import {CallbackButton} from '#/main/app/button/components/callback'
 
 import {CalendarView as CalendarViewTypes} from '#/main/core/layout/calendar/prop-types'
 import {CalendarLayout} from '#/main/core/layout/calendar/components/view/layout.jsx'
 import {constants} from '#/main/core/layout/calendar/constants'
 
 const Day = props =>
-  <Button
+  <CallbackButton
     type="callback"
     className={classes('btn btn-link day', {
       now:      props.current.isSame(props.now, 'day'),
@@ -37,7 +37,7 @@ const Day = props =>
     }}
   >
     {props.current.format('D')}
-  </Button>
+  </CallbackButton>
 
 Day.propTypes = {
   current: T.object.isRequired,

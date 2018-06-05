@@ -4,7 +4,7 @@ import times from 'lodash/times'
 import moment from 'moment'
 
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
-import {Button} from '#/main/app/action/components/button'
+import {CallbackButton} from '#/main/app/button/components/callback'
 
 import {CalendarView as CalendarViewTypes} from '#/main/core/layout/calendar/prop-types'
 import {CalendarLayout} from '#/main/core/layout/calendar/components/view/layout.jsx'
@@ -12,8 +12,7 @@ import {constants} from '#/main/core/layout/calendar/constants'
 import {monthNum} from '#/main/core/layout/calendar/utils'
 
 const Month = props =>
-  <Button
-    type="callback"
+  <CallbackButton
     className={classes('btn btn-link month', {
       now:      props.current.isSame(props.now, 'month'),
       selected: props.selected && props.current.isSame(props.selected, 'month')
@@ -22,7 +21,7 @@ const Month = props =>
     callback={props.onClick}
   >
     {props.current.format('MMM')}
-  </Button>
+  </CallbackButton>
 
 Month.propTypes = {
   calendarRange: T.arrayOf(

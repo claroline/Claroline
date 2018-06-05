@@ -5,7 +5,7 @@ import padStart from 'lodash/padStart'
 import {trans} from '#/main/core/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {isValidDate, getApiFormat} from '#/main/core/scaffolding/date'
-import {Button} from '#/main/app/action/components/button'
+import {CallbackButton} from '#/main/app/button/components/callback'
 
 import {Calendar as CalendarTypes} from '#/main/core/layout/calendar/prop-types'
 import {constants} from '#/main/core/layout/calendar/constants'
@@ -17,14 +17,13 @@ import {Years} from '#/main/core/layout/calendar/components/view/years.jsx'
 
 const TimeInput = props =>
   <div className="time-input">
-    <Button
-      type="callback"
+    <CallbackButton
       className="btn btn-link btn-sm"
       disabled={props.max === props.value}
       callback={() => props.onChange(calculateTime(props.value + props.step, props.max))}
     >
       <span className="fa fa-fw fa-caret-up" />
-    </Button>
+    </CallbackButton>
 
     <input
       type="text"
@@ -37,14 +36,13 @@ const TimeInput = props =>
       }}
     />
 
-    <Button
-      type="callback"
+    <CallbackButton
       className="btn btn-link btn-sm"
       disabled={0 === props.value}
       callback={() => props.onChange(calculateTime(props.value - props.step, props.max))}
     >
       <span className="fa fa-fw fa-caret-down" />
-    </Button>
+    </CallbackButton>
   </div>
 
 TimeInput.propTypes = {
@@ -94,13 +92,12 @@ const CurrentDate = props =>
       />
     }
 
-    <Button
-      type="callback"
+    <CallbackButton
       className="btn btn-now btn-block btn-sm"
       callback={props.today}
     >
       {trans(props.time ? 'now': 'today')}
-    </Button>
+    </CallbackButton>
   </div>
 
 CurrentDate.propTypes = {
