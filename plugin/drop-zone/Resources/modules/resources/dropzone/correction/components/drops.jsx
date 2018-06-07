@@ -57,7 +57,7 @@ const DropsList = props =>
           name: 'evaluated',
           label: trans('evaluated', {}, 'dropzone'),
           type: 'boolean',
-          computed: (rowData) => {
+          calculated: (rowData) => {
             const nbExpectedCorrections = constants.REVIEW_TYPE_PEER === props.dropzone.parameters.reviewType ? props.dropzone.parameters.expectedCorrectionTotal : 1
             const nbValidCorrections = rowData.corrections.filter(c => c.finished && c.valid).length
 
