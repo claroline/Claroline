@@ -5,6 +5,7 @@
 const Encore = require('@symfony/webpack-encore')
 
 const entries = require('./webpack/entries')
+const config = require('./webpack/config')
 const plugins = require('./webpack/plugins')
 const paths = require('./webpack/paths')
 const shared = require('./webpack/shared')
@@ -34,12 +35,11 @@ Encore
     options.compress = true
     options.beautify = true
   })
-  .addPlugin(plugins.distributionShortcut())
   .addPlugin(plugins.assetsInfoFile())
+  .addPlugin(plugins.distributionShortcut())
   .addPlugin(plugins.scaffoldingDllReference())
   .addPlugin(plugins.reactDllReference())
   .addPlugin(plugins.angularDllReference())
-  .addPlugin(plugins.configShortcut())
   .addPlugin(plugins.commonsChunk())
 
   // Babel configuration
@@ -57,22 +57,25 @@ Encore
     loader: 'html-loader'
   })
 
+  // configuration from plugins
+  .addEntry('plugins', config.collectConfig())
+
 // grab plugins entries
 const collectedEntries = entries.collectEntries()
 Object.keys(collectedEntries).forEach(key => Encore.addEntry(key, collectedEntries[key]))
 
-const config = Encore.getWebpackConfig()
+const webpackConfig = Encore.getWebpackConfig()
 
-config.resolve.modules = ['./node_modules', './web/packages']
+webpackConfig.resolve.modules = ['./node_modules', './web/packages']
 //in that order it solves some issues... if we start with bower.json, many packages don't work
-config.resolve.descriptionFiles = ['package.json', '.bower.json', 'bower.json']
-config.resolve.alias = shared.aliases()
-config.externals = shared.externals()
+webpackConfig.resolve.descriptionFiles = ['package.json', '.bower.json', 'bower.json']
+webpackConfig.resolve.alias = shared.aliases()
+webpackConfig.externals = shared.externals()
 
 // for webpack dynamic import
 // override name for non entry chunk files
 // todo : find a way to use versioning
-config.output.chunkFilename = '[name].js'
+webpackConfig.output.chunkFilename = '[name].js'
 
 // export the final configuration
-module.exports = config
+module.exports = webpackConfig

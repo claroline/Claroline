@@ -4,10 +4,12 @@ plugin:
   resources:
     - name: claroline_scorm_12
       class: Claroline\ScormBundle\Entity\Scorm12Resource
+      tags: [content, evaluation]
       activity_rules:
         - action: resource-scorm_12-sco_result
 
     - name: claroline_scorm_2004
       class: Claroline\ScormBundle\Entity\Scorm2004Resource
+      tags: [content, evaluation]
       activity_rules:
         - action: resource-scorm_2004-sco_result

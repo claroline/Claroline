@@ -6,7 +6,7 @@
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {DataFormModal} from '#/main/app/modals/iframe/components/iframe'
+import {DataFormModal} from '#/main/app/modals/form/components/data-form'
 
 const MODAL_DATA_FORM = 'MODAL_DATA_FORM'
 

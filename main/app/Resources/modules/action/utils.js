@@ -1,3 +1,5 @@
+import isEmpty from 'lodash/isEmpty'
+
 import {trans} from '#/main/core/translation'
 
 const GROUP_SEPARATOR  = '|'
@@ -25,11 +27,20 @@ function parseToolbar(toolbarConfig) {
  *
  * @param {string} toolbarConfig
  * @param {Array}  actions
+ * @param {string} scope
  *
  * @todo improve implementation (the part for more menu)
  */
-function buildToolbar(toolbarConfig, actions) {
+function buildToolbar(toolbarConfig, actions, scope) {
   let toolbar = []
+
+  // filters toolbar actions
+  actions = actions.filter(action =>
+    // only get displayed actions
+    (undefined === action.displayed || !!action.displayed)
+    // only get actions for the requested scope
+    && (!scope || isEmpty(action.scope) || -1 !== action.scope.indexOf(scope))
+  )
 
   // retrieves defined actions groups
   const config = parseToolbar(toolbarConfig)

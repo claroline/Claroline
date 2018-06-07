@@ -2,12 +2,12 @@
 
 namespace Innova\PathBundle\Serializer;
 
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Innova\PathBundle\Entity\InheritedResource;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\SecondaryResource;
@@ -152,7 +152,7 @@ class PathSerializer
             'title' => $step->getTitle(),
             'description' => $step->getDescription(),
             'poster' => $poster,
-            'primaryResource' => $step->getResource() ? $this->resourceNodeSerializer->serialize($step->getResource(), [Options::SERIALIZE_MINIMAL]) : null,
+            'primaryResource' => $step->getResource() ? $this->resourceNodeSerializer->serialize($step->getResource()) : null,
             'secondaryResources' => array_map(function (SecondaryResource $secondaryResource) {
                 return $this->serializeSecondaryResource($secondaryResource);
             }, $step->getSecondaryResources()->toArray()),
@@ -180,7 +180,7 @@ class PathSerializer
         return [
             'id' => $secondaryResource->getUuid(),
             'inheritanceEnabled' => $secondaryResource->isInheritanceEnabled(),
-            'resource' => $this->resourceNodeSerializer->serialize($secondaryResource->getResource(), [Options::SERIALIZE_MINIMAL]),
+            'resource' => $this->resourceNodeSerializer->serialize($secondaryResource->getResource()),
         ];
     }
 
@@ -193,7 +193,7 @@ class PathSerializer
     {
         return [
             'id' => $inheritedResource->getUuid(),
-            'resource' => $this->resourceNodeSerializer->serialize($inheritedResource->getResource(), [Options::SERIALIZE_MINIMAL]),
+            'resource' => $this->resourceNodeSerializer->serialize($inheritedResource->getResource()),
             'lvl' => $inheritedResource->getLvl(),
             'sourceUuid' => $inheritedResource->getSourceUuid(),
         ];
@@ -223,6 +223,7 @@ class PathSerializer
      */
     private function deserializeSteps($stepsData, Path $path)
     {
+        /** @var Step[] $oldSteps */
         $oldSteps = $path->getSteps()->toArray();
         $newStepsUuids = [];
         $path->emptySteps();
@@ -382,7 +383,7 @@ class PathSerializer
             $secondaryResource = new SecondaryResource();
             $secondaryResource->setUuid($data['id']);
 
-            /* Set resource */
+            /** @var ResourceNode $resource */
             $resource = $this->resourceNodeRepo->findOneBy(['uuid' => $data['resource']['id']]);
             $secondaryResource->setResource($resource);
         }
@@ -412,7 +413,7 @@ class PathSerializer
             $inheritedResource->setUuid($data['id']);
             $inheritedResource->setSourceUuid($data['sourceUuid']);
 
-            /* Set resource */
+            /** @var ResourceNode $resource */
             $resource = $this->resourceNodeRepo->findOneBy(['uuid' => $data['resource']['id']]);
             $inheritedResource->setResource($resource);
 

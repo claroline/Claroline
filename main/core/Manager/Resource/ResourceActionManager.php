@@ -83,7 +83,7 @@ class ResourceActionManager
             return false;
         }
 
-        return true; // return $this->dispatcher->hasListeners($eventName);
+        return true;
     }
 
     /**
@@ -176,7 +176,7 @@ class ResourceActionManager
     {
         if (!empty($resourceType)) {
             // This is an action only available for the current type
-            return 'resource.'.$resourceType->getName().'.'.$actionName;;
+            return 'resource.'.$resourceType->getName().'.'.$actionName;
         }
 
         // This is an action available for all resource types
@@ -189,6 +189,6 @@ class ResourceActionManager
         // it will avoid having to load it for each node
         // this is safe because the only way to change actions is through
         // the platform install/update process
-        $this->actions = $this->repository->findAll();
+        $this->actions = $this->repository->findAll(true);
     }
 }

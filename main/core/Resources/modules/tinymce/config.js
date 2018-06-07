@@ -3,8 +3,7 @@ import '#/main/core/tinymce/langs'
 import '#/main/core/tinymce/themes'
 
 import {locale} from '#/main/app/intl/locale'
-import {param} from '#/main/app/config'
-import {asset, theme} from '#/main/core/scaffolding/asset'
+import {asset, param, theme} from '#/main/app/config'
 
 const config = {
   //TODO: this is for retro comp purpose

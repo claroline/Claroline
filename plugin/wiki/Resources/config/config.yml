@@ -5,6 +5,7 @@ plugin:
     resources:
         - name: icap_wiki
           class: Icap\WikiBundle\Entity\Wiki
+          tags: [content, community]
           exportable: false
           activity_rules:
             - action: resource-read

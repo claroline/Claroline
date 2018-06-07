@@ -34,7 +34,5 @@
     "resource_overview_info": "Information",
     "resource_overview_progression": "My progression",
     "resource_showIcon": "Display the resource icon in the header",
-    "resource_showIcon_help": "For evaluative resources, icon is replaced by a progression gauge.",
-    "management": "Management",
-    "transfer": "Transfer"
+    "resource_showIcon_help": "For evaluative resources, icon is replaced by a progression gauge."
 }

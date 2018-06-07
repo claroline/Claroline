@@ -5,6 +5,7 @@ plugin:
   resources:
     - name: claroline_forum
       class: Claroline\ForumBundle\Entity\Forum
+      tags: [community]
       exportable: true
       actions:
         - name: post

@@ -48,20 +48,20 @@ class ResourceNodeSerializer
      * ResourceNodeManager constructor.
      *
      * @DI\InjectParams({
-     *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
-     *     "eventDispatcher"   = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "fileSerializer"    = @DI\Inject("claroline.serializer.public_file"),
-     *     "userSerializer"    = @DI\Inject("claroline.serializer.user"),
-     *     "maskManager"       = @DI\Inject("claroline.manager.mask_manager"),
-     *     "rightsManager"     = @DI\Inject("claroline.manager.rights_manager")
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "fileSerializer"  = @DI\Inject("claroline.serializer.public_file"),
+     *     "userSerializer"  = @DI\Inject("claroline.serializer.user"),
+     *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
+     *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager")
      * })
      *
-     * @param ObjectManager         $om
-     * @param StrictDispatcher      $eventDispatcher
-     * @param PublicFileSerializer  $fileSerializer
-     * @param UserSerializer        $userSerializer
-     * @param MaskManager           $maskManager
-     * @param RightsManager         $rightsManager
+     * @param ObjectManager        $om
+     * @param StrictDispatcher     $eventDispatcher
+     * @param PublicFileSerializer $fileSerializer
+     * @param UserSerializer       $userSerializer
+     * @param MaskManager          $maskManager
+     * @param RightsManager        $rightsManager
      */
     public function __construct(
         ObjectManager $om,
@@ -181,7 +181,7 @@ class ResourceNodeSerializer
     {
         return [
             'type' => $resourceNode->getResourceType()->getName(), // todo : must be available in MINIMAL mode
-            'mimeType' => $resourceNode->getMimeType(), // todo : maybe too
+            'mimeType' => $resourceNode->getMimeType(), // todo : must be available in MINIMAL mode
             'description' => $resourceNode->getDescription(),
             'created' => DateNormalizer::normalize($resourceNode->getCreationDate()),
             'updated' => DateNormalizer::normalize($resourceNode->getModificationDate()),
@@ -192,7 +192,6 @@ class ResourceNodeSerializer
             'isManager' => $this->rightsManager->isManager($resourceNode), // todo : data about current user should not be here (should be in `rights` section)
             'creator' => $resourceNode->getCreator() ? $this->userSerializer->serialize($resourceNode->getCreator()) : null,
             'views' => $resourceNode->getViewsCount(),
-            'icon' => $resourceNode->getIcon() ? '/'.$resourceNode->getIcon()->getRelativeUrl() : null, // todo : remove me
         ];
     }
 
@@ -241,7 +240,7 @@ class ResourceNodeSerializer
     /**
      * Deserializes resource node data into entities.
      *
-     * @param array $data
+     * @param array        $data
      * @param ResourceNode $resourceNode
      */
     public function deserialize(array $data, ResourceNode $resourceNode)

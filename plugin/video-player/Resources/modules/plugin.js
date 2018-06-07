@@ -1,17 +1,10 @@
-
-const VIDEO_PLAYER_PLUGIN = 'video-player'
+import {registry} from '#/main/app/plugins/registry'
 
 /**
  * Declares applications provided by the VideoPlayer plugin.
  */
-const videoPlayerConfiguration = {
+registry.add('video', {
   resources: {
-    'video': () => { return import(/* webpackChunkName: "video-player-video-resource" */ '#/plugin/video-player/resources/video') },
-    'audio': () => { return import(/* webpackChunkName: "video-player-audio-resource" */ '#/plugin/video-player/resources/audio') }
+    'video': () => { return import(/* webpackChunkName: "video-player-video-resource" */ '#/plugin/video-player/resources/video') }
   }
-}
-
-export {
-  VIDEO_PLAYER_PLUGIN,
-  videoPlayerConfiguration
-}
+})

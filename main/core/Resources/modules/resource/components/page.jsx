@@ -19,6 +19,17 @@ class ResourcePage extends Component {
     }
 
     this.toggleFullscreen = this.toggleFullscreen.bind(this)
+
+    /*{
+     name: 'fullscreen',
+     type: 'callback',
+     icon: classes('fa fa-fw', {
+     'fa-expand': !this.state.fullscreen,
+     'fa-compress': this.state.fullscreen
+     }),
+     label: trans(this.state.fullscreen ? 'fullscreen_off' : 'fullscreen_on'),
+     callback: this.toggleFullscreen
+     }*/
   }
 
   toggleFullscreen() {
@@ -28,13 +39,11 @@ class ResourcePage extends Component {
   render() {
     return (
       <PageContainer
-        className="resource-page"
         embedded={this.props.embedded}
         fullscreen={this.state.fullscreen}
       >
         {!this.props.embedded &&
           <PageHeader
-            className="resource-header"
             title={this.props.resourceNode.name}
             poster={this.props.resourceNode.poster ? this.props.resourceNode.poster.url : undefined}
           >

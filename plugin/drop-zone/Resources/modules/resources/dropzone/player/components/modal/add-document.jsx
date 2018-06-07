@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
+import {registry} from '#/main/app/modals/registry'
 import {trans} from '#/main/core/translation'
 import {DataFormModal} from '#/main/core/data/form/modals/components/data-form.jsx'
 
@@ -70,6 +71,8 @@ AddDocumentModal.propTypes = {
     T.oneOf(Object.keys(constants.DOCUMENT_TYPES))
   ).isRequired
 }
+
+registry.add(MODAL_ADD_DOCUMENT, AddDocumentModal)
 
 export {
   MODAL_ADD_DOCUMENT,

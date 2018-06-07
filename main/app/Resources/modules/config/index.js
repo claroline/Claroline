@@ -2,11 +2,14 @@
  * Configuration module.
  */
 
-import {asset, theme} from '#/main/app/config/asset'
+import {asset} from '#/main/app/config/asset'
 import {param} from '#/main/app/config/parameters'
+import {currentTheme, theme, icon} from '#/main/app/config/theme'
 
 export {
   asset,
+  param,
   theme,
-  param
+  currentTheme,
+  icon
 }

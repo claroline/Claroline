@@ -1,10 +1,5 @@
 # Plugin
 claro_dropzone_plugin:
-    resource: "@ClarolineDropZoneBundle/Controller/Resource/DropzoneController.php"
-    type: annotation
-
-# Resource
-claro_dropzone_resource:
     resource: "@ClarolineDropZoneBundle/Controller/PluginController.php"
     type: annotation
 

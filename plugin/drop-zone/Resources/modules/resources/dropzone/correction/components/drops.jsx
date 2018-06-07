@@ -93,14 +93,14 @@ const DropsList = props =>
           label: trans('unlock_drop', {}, 'dropzone'),
           displayed: !rows[0].unlockedDrop,
           callback: () => props.unlockDrop(rows[0].id),
-          context: 'row' // todo should be selection action too
+          scope: ['object'] // todo should be selection action too
         }, {
           type: 'callback',
           icon: 'fa fa-fw fa-undo',
           label: trans('cancel_drop_submission', {}, 'dropzone'),
           displayed: rows[0].finished,
           callback: (rows) => props.cancelDrop(rows[0].id),
-          context: 'row' // todo should be selection action too
+          scope: ['object'] // todo should be selection action too
         }, {
           type: 'callback',
           icon: 'fa fa-fw fa-download',

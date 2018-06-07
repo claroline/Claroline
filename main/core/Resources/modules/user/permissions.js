@@ -1,6 +1,5 @@
-// TODO : migrate rights
 function hasPermission(action, user) {
-  return !!user.rights.current[action]
+  return !!user.permissions[action]
 }
 
 export {

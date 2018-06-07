@@ -1,12 +1,14 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {trans, transChoice} from '#/main/core/translation'
-import {toKey} from '#/main/core/scaffolding/text/utils'
+import {transChoice} from '#/main/core/translation'
 
 import {GenericButton} from '#/main/app/button/components/generic'
-import {Button} from '#/main/app/action/components/button'
-import {Action as ActionTypes} from '#/main/app/action/prop-types'
+import {Toolbar} from '#/main/app/action/components/toolbar'
+import {
+  Action as ActionTypes,
+  PromisedAction as PromisedActionTypes
+} from '#/main/app/action/prop-types'
 
 const ListPrimaryAction = props => {
   if (!props.action || props.action.disabled) {
@@ -46,25 +48,28 @@ ListPrimaryAction.defaultProps = {
  * @constructor
  */
 const ListActions = props =>
-  <Button
+  <Toolbar
     id={`${props.id}-btn`}
-    className="data-actions-btn btn btn-link"
-    type="menu"
+    className="data-actions"
+    buttonName="btn btn-link"
     tooltip="left"
-    icon="fa fa-fw fa-ellipsis-v"
-    label={trans('show-actions', {}, 'actions')}
-    menu={{
-      label: trans('actions'),
-      align: 'right',
-      items: props.actions
-    }}
+    toolbar="more"
+    actions={props.actions}
+    scope="object"
   />
 
 ListActions.propTypes = {
   id: T.string.isRequired,
-  actions: T.arrayOf(
-    T.shape(ActionTypes.propTypes)
-  ).isRequired
+  actions: T.oneOfType([
+    // a regular array of actions
+    T.arrayOf(T.shape(
+      ActionTypes.propTypes
+    )),
+    // a promise that will resolve a list of actions
+    T.shape(
+      PromisedActionTypes.propTypes
+    )
+  ]).isRequired
 }
 
 /**
@@ -83,25 +88,27 @@ const ListBulkActions = props =>
     </div>
 
     <div className="list-selected-actions">
-      {props.actions
-        .filter(action => undefined === action.displayed || action.displayed)
-        .map((action) =>
-          <Button
-            {...action}
-            key={toKey(action.label)}
-            className="btn btn-link"
-            tooltip="top"
-          />
-        )
-      }
+      <Toolbar
+        buttonName="btn btn-link"
+        tooltip="left"
+        actions={props.actions}
+        scope="collection"
+      />
     </div>
   </div>
 
 ListBulkActions.propTypes = {
   count: T.number.isRequired,
-  actions: T.arrayOf(
-    T.shape(ActionTypes.propTypes)
-  ).isRequired
+  actions: T.oneOfType([
+    // a regular array of actions
+    T.arrayOf(T.shape(
+      ActionTypes.propTypes
+    )),
+    // a promise that will resolve a list of actions
+    T.shape(
+      PromisedActionTypes.propTypes
+    )
+  ]).isRequired
 }
 
 export {

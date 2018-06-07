@@ -7,10 +7,11 @@ const Encore = require('@symfony/webpack-encore')
 
 const libraries = require('./webpack/libraries')
 const plugins = require('./webpack/plugins')
+const paths = require('./webpack/paths')
 
 Encore
   .configureRuntimeEnvironment('production')
-  .setOutputPath('web/dist')
+  .setOutputPath(paths.output())
   .setPublicPath('/dist')
   //.cleanupOutputBeforeBuild()
   .enableBuildNotifications()
@@ -27,7 +28,6 @@ Encore
   })
   .addPlugin(plugins.dlls())
   .addPlugin(plugins.assetsInfoFile('webpack-dlls.json'))
-  .addPlugin(plugins.clarolineConfiguration())
 
   // Babel configuration
   .configureBabel(babelConfig => {

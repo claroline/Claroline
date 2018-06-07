@@ -81,7 +81,6 @@
     "add_workspace": "Add a workspace",
     "address": "Address",
     "admin": "Administrator",
-    "admin_analytics": "Platform analytics",
     "admin_analytics_no_data": "No data.",
     "admin_desktop_and_home_tabs_configuration": "Desktop and home tabs configuration",
     "admin_home_tabs_configuration": "Home tabs configuration",
@@ -802,7 +801,6 @@
     "no_filter": "No filter",
     "no_group": "No group",
     "no_home_tab": "There is no Home tab",
-    "no_item": "No item",
     "no_learning_outcomes": "No learning outcomes",
     "no_message": "No message",
     "no_model": "No model",
@@ -1656,5 +1654,9 @@
     "created_at": "Created at %date%",
     "updated_at": "Updated at %date%",
     "authors": "Authors",
-    "authors_license": "Authors & License"
+    "authors_license": "Authors & License",
+    "structure": "Organization",
+    "community": "Community",
+    "management": "Management",
+    "transfer": "Transfer"
 }

@@ -3,11 +3,6 @@ ujm_question_bank:
     resource: "@UJMExoBundle/Controller/Tool/QuestionBankController.php"
     type: annotation
 
-# Resource
-ujm_exercise:
-    resource: "@UJMExoBundle/Controller/Resource/ExerciseController.php"
-    type: annotation
-
 # JSON API
 
 # Exposes CRUD actions for exercises

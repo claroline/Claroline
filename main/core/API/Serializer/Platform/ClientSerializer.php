@@ -7,6 +7,8 @@ use Claroline\CoreBundle\API\Serializer\Resource\ResourceTypeSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Icon\ResourceIconItemFilename;
+use Claroline\CoreBundle\Manager\IconSetManager;
 use Claroline\CoreBundle\Manager\PluginManager;
 use Claroline\CoreBundle\Manager\VersionManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -41,6 +43,9 @@ class ClientSerializer
     /** @var PluginManager */
     private $pluginManager;
 
+    /** @var IconSetManager */
+    private $iconManager;
+
     /** @var ResourceTypeSerializer */
     private $resourceTypeSerializer;
 
@@ -55,6 +60,7 @@ class ClientSerializer
      *     "config"                 = @DI\Inject("claroline.config.platform_config_handler"),
      *     "versionManager"         = @DI\Inject("claroline.manager.version_manager"),
      *     "pluginManager"          = @DI\Inject("claroline.manager.plugin_manager"),
+     *     "iconManager"            = @DI\Inject("claroline.manager.icon_set_manager"),
      *     "resourceTypeSerializer" = @DI\Inject("claroline.serializer.resource_type")
      * })
      *
@@ -65,6 +71,7 @@ class ClientSerializer
      * @param PlatformConfigurationHandler $config
      * @param VersionManager               $versionManager
      * @param PluginManager                $pluginManager
+     * @param IconSetManager               $iconManager
      * @param ResourceTypeSerializer       $resourceTypeSerializer
      */
     public function __construct(
@@ -75,6 +82,7 @@ class ClientSerializer
         PlatformConfigurationHandler $config,
         VersionManager $versionManager,
         PluginManager $pluginManager,
+        IconSetManager $iconManager,
         ResourceTypeSerializer $resourceTypeSerializer
     ) {
         $this->env = $env;
@@ -84,6 +92,7 @@ class ClientSerializer
         $this->config = $config;
         $this->versionManager = $versionManager;
         $this->pluginManager = $pluginManager;
+        $this->iconManager = $iconManager;
         $this->resourceTypeSerializer = $resourceTypeSerializer;
     }
 
@@ -109,18 +118,33 @@ class ClientSerializer
             $locale = $request->getLocale();
         }
 
+        $icons = $this->iconManager->getIconSetIconsByType(
+            $this->iconManager->getActiveResourceIconSet()
+        );
+
         return [
             'name' => $this->config->getParameter('name'),
             'description' => null, // the one for the current locale
             'version' => $this->versionManager->getDistributionVersion(),
             'help' => $this->config->getParameter('help_url'),
             'environment' => $this->env,
+            'asset' => null,
             'server' => [
                 'protocol' => $request->isSecure() || $this->config->getParameter('ssl_enabled') ? 'https' : 'http',
                 'host' => $this->config->getParameter('domain_name') ? $this->config->getParameter('domain_name') : $request->getHost(),
+                'path' => $request->getBasePath(),
             ],
             'theme' => [
                 'name' => $this->config->getParameter('theme'),
+                'icons' => array_map(function (ResourceIconItemFilename $icon) {
+                    return [
+                        'mimeTypes' => $icon->getMimeTypes(),
+                        'url' => $icon->getRelativeUrl(),
+                    ];
+                }, array_values(array_merge(
+                    $icons->getDefaultIcons()->getAllIcons(),
+                    $icons->getSetIcons()->getAllIcons()
+                ))),
             ],
             'locale' => [
                 'current' => $locale,

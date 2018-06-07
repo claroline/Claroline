@@ -168,26 +168,26 @@ class ManagerView extends Component {
                 icon: 'fa fa-fw fa-edit',
                 label: t('edit'),
                 callback: () => this.showEventEditionForm(rows[0]),
-                context: 'row'
+                scope: ['object']
               }, {
                 type: 'callback',
                 icon: 'fa fa-fw fa-info',
                 label: trans('informations_management', {}, 'cursus'),
                 callback: () => this.showEventCommentsManagement(rows[0]),
-                context: 'row'
+                scope: ['object']
               }, {
                 type: 'callback',
                 icon: 'fa fa-fw fa-files-o',
                 label: trans('repeat_session_event', {}, 'cursus'),
                 callback: () => this.showEventRepeatForm(rows[0]),
-                context: 'row'
+                scope: ['object']
               }, {
                 type: 'callback',
                 icon: 'fa fa-fw fa-trash-o',
                 label: t('delete'),
                 callback: () => this.deleteSessionEvent(rows[0]),
                 dangerous: true,
-                context: 'row'
+                scope: ['object']
               }
             ]}
             filters={{

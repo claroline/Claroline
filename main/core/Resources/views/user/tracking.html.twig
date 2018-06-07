@@ -4,7 +4,7 @@
 
 {% block content %}
     <div
-        class="user-tracking-container"
+        class="user-tracking-container page-container"
         data-user="{{ user | json_encode | raw | escape }}"
         data-evaluations="{{ evaluations | json_encode | raw | escape }}"
     ></div>

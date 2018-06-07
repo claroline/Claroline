@@ -2,6 +2,7 @@ import {PropTypes as T} from 'prop-types'
 
 const Button = {
   propTypes: {
+    id: T.string,
     className: T.string,
     size: T.oneOf(['sm', 'lg']),
     children: T.node.isRequired,

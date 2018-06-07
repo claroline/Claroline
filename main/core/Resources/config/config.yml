@@ -4,6 +4,7 @@ plugin:
         - name: open
           decoder: open
           scope: [object]
+          default: true # This is the default action of the resource (it SHOULD NOT be overridden)
           api: [GET]
 
         # Displays common resources info (the one from the node)
@@ -26,12 +27,14 @@ plugin:
           scope: [object, collection]
           api: [GET, POST]
 
+        # Publishes one ore more resources
         - name: publish
           decoder: administrate
           group: management
           scope: [object, collection]
           api: [PUT]
 
+        # Unpublishes one ore more resources
         - name: unpublish
           decoder: administrate
           group: management
@@ -84,9 +87,15 @@ plugin:
           scope: [object]
           api: [GET]
 
+        - name: notes
+          decoder: open
+          scope: [object]
+          api: [GET, POST, PUT, DELETE]
+
     resources:
         - name: file
           class: Claroline\CoreBundle\Entity\Resource\File
+          tags: [content]
           exportable: true
           actions:
               - name: download
@@ -96,6 +105,7 @@ plugin:
 
         - name: directory
           class: Claroline\CoreBundle\Entity\Resource\Directory
+          tags: [structure]
           exportable: true
           actions:
               # Creates a new resource in the directory
@@ -104,8 +114,15 @@ plugin:
                 group: management
                 api: [POST]
 
+              # Imports one or more resources in the directory
+              - name: import
+                decoder: create
+                group: transfer
+                api: [POST]
+
         - name: text
           class: Claroline\CoreBundle\Entity\Resource\Text
+          tags: [content]
           exportable: true
 
         - name: activity
@@ -127,11 +144,13 @@ plugin:
         - name: desktop_and_home
           class: home
 
+        # todo move as desktop tool
         - name: platform_logs
-          class: bars
+          class: line-chart
 
+        # todo move as desktop tool
         - name: platform_analytics
-          class: bar-chart-o
+          class: pie-chart
 
         - name: widgets_management
           class: list-alt
@@ -223,7 +242,7 @@ plugin:
           is_anonymous_excluded: false
 
         - name: logs
-          class: list
+          class: line-chart
           is_displayable_in_workspace: true
           is_displayable_in_desktop: false
           is_configurable_in_workspace: false
@@ -235,7 +254,7 @@ plugin:
           is_anonymous_excluded: true
 
         - name: analytics
-          class: bar-chart-o
+          class: pie-chart
           is_displayable_in_workspace: true
           is_displayable_in_desktop: false
           is_configurable_in_workspace: false

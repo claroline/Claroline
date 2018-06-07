@@ -9,6 +9,10 @@ import {constants as listConstants} from '#/main/core/data/list/constants'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {ResourceCard} from '#/main/core/resource/data/components/resource-card'
 
+import {getActions} from '#/main/core/resource/utils'
+
+// todo create a full app with store
+
 const ResourceExplorer = props =>
   <SummarizedContent
     className="resources-explorer"
@@ -20,7 +24,18 @@ const ResourceExplorer = props =>
   >
     <DataListContainer
       name="resources"
-      primaryAction={props.primaryAction}
+      primaryAction={props.primaryAction && ((resourceNode) => {
+        if ('directory' !== resourceNode.meta.type) {
+          return props.primaryAction(resourceNode)
+        } else {
+          // do not open directory, just change the target of the explorer
+          return {
+            label: trans('open', {}, 'actions'),
+            type: 'callback',
+            callback: () => props.changeDirectory(resourceNode)
+          }
+        }
+      })}
       fetch={{
         url: ['apiv2_resource_list', {parent: props.current.id || props.root.id || null}],
         autoload: true
@@ -50,7 +65,7 @@ const ResourceExplorer = props =>
           displayable: false
         }
       ]}
-
+      actions={getActions}
       card={ResourceCard}
 
       display={{
@@ -66,7 +81,8 @@ ResourceExplorer.propTypes = {
   ),
   current: T.shape(
     ResourceNodeTypes.propTypes
-  )
+  ),
+  changeDirectory: T.func.isRequired
 }
 
 ResourceExplorer.defaultProps = {

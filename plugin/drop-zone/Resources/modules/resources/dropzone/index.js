@@ -1,48 +1,33 @@
-import {bootstrap} from '#/main/app/bootstrap'
-import {registerModals} from '#/main/core/layout/modal'
-
 import {reducer} from '#/plugin/drop-zone/resources/dropzone/reducer'
 
 import {registerDropzoneTypes} from '#/plugin/drop-zone/data/types'
-import {DropzoneResource} from '#/plugin/drop-zone/resources/dropzone/components/resource.jsx'
-import {CorrectionModal} from '#/plugin/drop-zone/resources/dropzone/correction/components/modal/correction-modal.jsx'
-import {MODAL_ADD_DOCUMENT, AddDocumentModal} from '#/plugin/drop-zone/resources/dropzone/player/components/modal/add-document.jsx'
+import {DropzoneResource} from '#/plugin/drop-zone/resources/dropzone/components/resource'
 
 registerDropzoneTypes()
 
-registerModals([
-  ['MODAL_CORRECTION', CorrectionModal],
-  [MODAL_ADD_DOCUMENT, AddDocumentModal]
-])
-
-// mount the react application
-bootstrap(
-  // app DOM container (also holds initial app data as data attributes)
-  '.dropzone-container',
-
-  // app main component
-  DropzoneResource,
-
-  // app store configuration
-  reducer,
-
-  // transform data attributes for redux store
-  (initialData) => {
-    return {
-      user: initialData.user,
-      resource: {
-        node: initialData.resourceNode,
-        evaluation: initialData.evaluation
-      },
-      dropzone: initialData.dropzone,
-      myDrop: initialData.myDrop,
-      nbCorrections: initialData.nbCorrections,
-      tools: {
-        data: initialData.tools,
-        totalResults: initialData.tools.length
-      },
-      teams: initialData.teams,
-      errorMessage: initialData.errorMessage
-    }
-  }
-)
+/**
+ * Dropzone resource application.
+ *
+ * @constructor
+ */
+export const App = () => ({
+  component: DropzoneResource,
+  store: reducer,
+  styles: 'claroline-distribution-plugin-drop-zone-dropzone-resource',
+  initialData: (initialData) => ({
+    user: initialData.user, // todo remove me can be found in the app
+    resource: {
+      node: initialData.resourceNode,
+      evaluation: initialData.evaluation
+    },
+    dropzone: initialData.dropzone,
+    myDrop: initialData.myDrop,
+    nbCorrections: initialData.nbCorrections,
+    tools: {
+      data: initialData.tools,
+      totalResults: initialData.tools.length
+    },
+    teams: initialData.teams,
+    errorMessage: initialData.errorMessage
+  })
+})

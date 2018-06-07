@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars, no-global-assign */
-/* global __webpack_public_path__ */
 
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -7,9 +6,8 @@ import {Provider} from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
 
 // todo : find where I must put it
-// I put it here for now because it's the root of all apps
-import {asset} from '#/main/core/scaffolding/asset'
-
+// (I put it here for now because it's the root of all apps)
+import {asset} from '#/main/app/config'
 __webpack_public_path__ = asset('dist/')
 
 import {createStore} from '#/main/app/store'

@@ -4,7 +4,7 @@
 
 .data-card {
     display: flex;
-    position: relative; // constrain actions btn
+    position: relative; // constrain actions toolbar
     border: 1px solid @data-card-border;
     color: @data-card-color;
     background: @data-card-bg;
@@ -12,38 +12,37 @@
 
     .border-radius(@data-card-border-radius);
     .box-shadow(@data-card-box-shadow);
+}
 
-    // item actions dropdown
-    // (I can not add a better selector because of `react-bootstrap`)
-    > .dropdown {
-        position: absolute;
-        top: -1px; // absorb btn border
-        right: -1px; // absorb btn border
+.data-card-toolbar {
+    position: absolute;
+    top: -1px; // absorb btn border
+    right: -1px; // absorb btn border
 
-        .data-actions-btn {
-            padding: @data-grid-gutter;
+    .btn {
+        padding: @data-grid-gutter;
+    }
+
+    .dropdown.open {
+        .btn {
+            position: relative;
+            background: #EEEEEE;
+            border-color: @dropdown-border;
+            border-bottom-color: @dropdown-bg;
+            box-shadow: @dropdown-menu-box-shadow;
+            background-clip: padding-box;
         }
+    }
 
-        &.open {
-            .data-actions-btn {
-                position: relative;
-                background: #EEEEEE;
-                border-color: @dropdown-border;
-                border-bottom-color: @dropdown-bg;
-                box-shadow: @dropdown-menu-box-shadow;
-                background-clip: padding-box;
-            }
-        }
-
-        .dropdown-menu {
-            margin-top: -1px;
-        }
+    .dropdown-menu {
+        margin-top: -1px;
     }
 }
 
+// clickable variant
 .data-card-clickable {
     &:hover {
-        z-index: 2;
+        //z-index: 2;
         color: @data-card-active-color;
         background-color: @data-card-active-bg;
         .box-shadow(@data-card-active-box-shadow);
@@ -58,18 +57,20 @@
     }
 }
 
+// with poster image variant
+.data-card-poster {
+    .data-card-toolbar .dropdown:not(.open) .btn,
+    .data-card-flag {
+        .text-movie-subtitles();
+    }
+}
+
 .data-card-header {
     position: relative; // constrain flags
     text-align: center;
     background: @data-card-header-bg;
 
     .border-radius(@data-card-border-radius @data-card-border-radius 0 0);
-}
-
-.data-card-header-poster {
-    .data-card-flag {
-        .text-movie-subtitles();
-    }
 }
 
 .data-card-icon {

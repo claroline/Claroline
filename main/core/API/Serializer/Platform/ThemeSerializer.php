@@ -16,6 +16,9 @@ class ThemeSerializer
     /** @var PlatformConfigurationHandler */
     private $config;
 
+    /** @var UserSerializer */
+    private $userSerializer;
+
     /**
      * ThemeSerializer constructor.
      *

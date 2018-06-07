@@ -47,7 +47,7 @@ class ResourceTypeSerializer
             'id' => $resourceType->getId(),
             'name' => $resourceType->getName(),
             'class' => $resourceType->getClass(),
-            'icon' => null, // todo
+            'tags' => $resourceType->getTags(),
             'enabled' => $resourceType->isEnabled(),
             'actions' => array_map(function (MenuAction $resourceAction) {
                 return [
@@ -55,6 +55,7 @@ class ResourceTypeSerializer
                     'group' => $resourceAction->getGroup(),
                     'scope' => $resourceAction->getScope(),
                     'permission' => $resourceAction->getDecoder(),
+                    'default' => $resourceAction->isDefault(),
                 ];
             }, $this->actionManager->all($resourceType)),
         ];

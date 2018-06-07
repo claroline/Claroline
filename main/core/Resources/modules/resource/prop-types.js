@@ -39,6 +39,7 @@ const ResourceNode = {
      */
     meta: T.shape({
       type: T.string.isRequired,
+      mimeType: T.string.isRequired,
       published: T.bool.isRequired,
       views: T.number,
       creator: T.shape({

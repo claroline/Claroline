@@ -2,9 +2,14 @@
 .content-public-url {
     display: flex;
     justify-content: space-between;
+    max-width: 100%;
 
     a {
+        flex: 1;
         font-weight: bold;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
     }
 }
 

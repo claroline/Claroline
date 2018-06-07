@@ -35,10 +35,17 @@
     .radio {
         margin: 0;
     }
+
+    > li {
+        .label {
+            float: right; // todo : find a better approach
+        }
+    }
 }
 
 .dropdown-header {
     font-weight: bold;
+    font-style: italic;
     padding: @dropdown-link-padding;
 }
 
@@ -92,7 +99,24 @@
     }
 
     &.disabled {
-        color: #c57878;
+        opacity: .65; // same than standard button
+        color: @brand-danger;
+        background: transparent;
+    }
+}
+
+.dropdown-menu > li > .primary {
+    color: @brand-primary;
+
+    &:hover,
+    &:focus {
+        color: white;
+        background: @brand-primary;
+    }
+
+    &.disabled {
+        opacity: .65; // same than standard button
+        color: @brand-primary;
         background: transparent;
     }
 }

@@ -4,6 +4,7 @@ plugin:
   resources:
     - class: Claroline\ClacoFormBundle\Entity\ClacoForm
       name: claroline_claco_form
+      tags: [content, community]
 
   #widgets:
   #  - name: claroline_claco_form_widget

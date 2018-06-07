@@ -86,7 +86,7 @@ class FileListener implements ContainerAwareInterface
         $this->om = $container->get('claroline.persistence.object_manager');
         $this->tokenStorage = $container->get('security.token_storage');
         $this->request = $container->get('request_stack');
-        $this->httpKernel = $container->get('httpKernel');
+        $this->httpKernel = $container->get('http_kernel');
         $this->filesDir = $container->getParameter('claroline.param.files_directory');
         $this->resourceEvalManager = $container->get('claroline.manager.resource_evaluation_manager');
     }

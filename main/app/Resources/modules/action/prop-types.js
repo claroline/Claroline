@@ -1,16 +1,22 @@
 import {PropTypes as T} from 'prop-types'
 
-// TODO : use specific action types
+import {constants} from '#/main/app/action/constants'
 
 /**
  * Definition of the action.
  */
 const Action = {
   propTypes: {
-    // an unique identifier for the action
-    // most of the time we can generate it from label (that's why it's optional)
-    // but it's not sufficient, for actions on data collection (same action names for each items)
+    /**
+     * An unique identifier for the action
+     *
+     * Most of the time we can generate it from label (that's why it's optional)
+     * but it's not sufficient, for actions on data collection (same action names for each items)
+     *
+     * @type {string}
+     */
     id: T.string,
+    name: T.string,
     type: T.oneOf([
       'async',
       'callback',
@@ -26,8 +32,23 @@ const Action = {
       type: T.oneOf(['default', 'primary', 'danger', 'warning']),
       value: T.oneOfType([T.string, T.number]).isRequired
     }),
+
+    /**
+     * The display label of the action.
+     *
+     * @type {string}
+     */
     label: T.string.isRequired,
     group: T.string,
+
+    /**
+     * The scope of the action.
+     *
+     * @type {string}
+     */
+    scope: T.arrayOf(
+      T.oneOf(constants.ACTION_SCOPES)
+    ),
     disabled: T.bool,
     displayed: T.bool,
     primary: T.bool,
@@ -53,6 +74,77 @@ const Action = {
     dangerous: false
   }
 }
+
+const PromisedAction = {
+  propTypes: {
+    then: T.func.isRequired,
+    catch: T.func.isRequired
+  }
+}
+
+const Toolbar = {
+  propTypes: {
+    id: T.string,
+
+    /**
+     * The base class of the toolbar (it's used to generate classNames which can be used for styling).
+     *
+     * @type {string}
+     */
+    className: T.string,
+
+    /**
+     * The base class for buttons.
+     *
+     * @type {string}
+     */
+    buttonName: T.string,
+
+    /**
+     * The toolbar display configuration as a string.
+     *
+     * It uses the same format than tinyMCE.
+     * Example : 'edit publish | like'.
+     *
+     * @type {string}
+     */
+    toolbar: T.string,
+
+    /**
+     * The scope of the toolbar (to know which actions to display)
+     *
+     * @type {string}
+     */
+    scope: T.oneOf(constants.ACTION_SCOPES),
+
+    /**
+     * The position for button tooltips.
+     *
+     * @type {string}
+     */
+    tooltip: T.oneOf(['left', 'top', 'right', 'bottom']),
+
+    /**
+     * The list of actions available in the toolbar.
+     */
+    actions: T.oneOfType([
+      // a regular array of actions
+      T.arrayOf(T.shape(
+        Action.propTypes
+      )),
+      // a promise that will resolve a list of actions
+      T.shape(
+        PromisedAction.propTypes
+      )
+    ]).isRequired
+  },
+  defaultProps: {
+    className: 'toolbar',
+    tooltip: 'bottom'
+  }
+}
+
+// TODO : use specific action types
 
 const AsyncAction = {
   propTypes: {
@@ -139,6 +231,8 @@ const UrlAction = {
 
 export {
   Action,
+  PromisedAction,
+  Toolbar,
 
   AsyncAction,
   CallbackAction,

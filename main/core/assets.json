@@ -24,8 +24,8 @@
       "directory-resource": "resources/directory/bootstrap",
       "administration-toolbar": "administration/toolbar",
       "workspace-toolbar": "workspace/toolbar",
-      "tools-workspace-logs": "tools/workspace/logs",
-      "tools-workspace-dashboard": "tools/workspace/dashboard",
+      "workspace-logs": "workspace/logs",
+      "workspace-analytics": "workspace/analytics",
       "resource-logs": "resource/logs",
       "tools-admin-logs": "administration/logs",
       "tools-admin-analytics": "administration/analytics"

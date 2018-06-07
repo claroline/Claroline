@@ -516,7 +516,7 @@ const EditorComponent = props =>
                   isNew: false,
                   category: rows[0]
                 }),
-                context: 'row'
+                scope: ['object']
               }, {
                 type: 'callback',
                 icon: 'fa fa-fw fa-trash-o',
@@ -582,7 +582,7 @@ const EditorComponent = props =>
                     isNew: false,
                     keyword: rows[0]
                   }),
-                  context: 'row'
+                  scope: ['object']
                 }, {
                   type: 'callback',
                   icon: 'fa fa-fw fa-trash-o',

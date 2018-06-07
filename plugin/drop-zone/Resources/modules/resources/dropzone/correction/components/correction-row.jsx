@@ -11,6 +11,7 @@ import {select} from '#/plugin/drop-zone/resources/dropzone/selectors'
 import {generateCorrectionGrades} from '#/plugin/drop-zone/resources/dropzone/utils'
 import {actions} from '#/plugin/drop-zone/resources/dropzone/correction/actions'
 import {CorrectionForm} from '#/plugin/drop-zone/resources/dropzone/correction/components/correction-form.jsx'
+import {MODAL_CORRECTION} from '#/plugin/drop-zone/resources/dropzone/correction/components/modal/correction-modal'
 
 class CorrectionRow extends Component {
   constructor(props) {
@@ -72,7 +73,7 @@ class CorrectionRow extends Component {
             className="pointer-hand"
             onClick={() => {
               this.props.showModal(
-                'MODAL_CORRECTION',
+                MODAL_CORRECTION,
                 {
                   title: trans(
                     'correction_from',

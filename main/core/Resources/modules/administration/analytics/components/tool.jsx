@@ -11,7 +11,7 @@ import {TopActionsTab} from '#/main/core/administration/analytics/components/top
 
 const Tool = () =>
   <TabbedPageContainer
-    title={trans('admin_analytics')}
+    title={trans('dashboard', {}, 'tools')}
     redirect={[
       {from: '/', exact: true, to: '/overview'}
     ]}

@@ -1,7 +1,7 @@
 {
   "webpack": {
     "entry": {
-      "dropzone-resource": "resources/dropzone",
+      "dropzone-resource": "resources/dropzone/bootstrap",
       "configuration": "plugin/configuration"
     }
   },

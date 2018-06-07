@@ -152,7 +152,7 @@ class FieldList extends Component {
           className="btn btn-default btn-block"
           onClick={() => this.props.showModal(MODAL_SELECTION, {
             title: trans('create_field'),
-            types: Object.keys(getCreatableTypes()).map(type => getCreatableTypes()[type].meta),
+            items: Object.keys(getCreatableTypes()).map(type => getCreatableTypes()[type].meta),
             handleSelect: (type) => this.open(
               {
                 type: type.type,

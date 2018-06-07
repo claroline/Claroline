@@ -14,8 +14,13 @@
     min-height: 100%; // fill parent
     max-width: 100%;
 
+    > .flying-alerts {
+        top: floor(@grid-gutter-width / 2) + @top-bar-height;
+        right: floor(@grid-gutter-width / 2);
+    }
+
     &.fullscreen {
-        position: fixed !important; // important is to override embedded default if needed
+        position: fixed;
         z-index: @zindex-fullscreen;
         left: 0;
         top: 0;
@@ -26,25 +31,16 @@
         overflow-y: scroll; // get the scrollbar
 
         > .flying-alerts {
-            top: floor(@grid-gutter-width / 2) !important; // important is to override embedded default if needed
-            right: floor(@grid-gutter-width / 2) !important; // important is to override embedded default if needed
+            top: floor(@grid-gutter-width / 2) !important;
         }
     }
 
-    &.main {
-        > .flying-alerts {
-            top: floor(@grid-gutter-width / 2);
-            right: floor(@grid-gutter-width / 2);
-        }
+    &.sm {
+
     }
 
-    &.embedded {
-        position: relative;
+    &.lg {
 
-        > .flying-alerts {
-            top: 0;
-            right: 0;
-        }
     }
 }
 
@@ -59,21 +55,7 @@
     margin: 0;
     border-bottom: 1px solid @page-header-border-color;
 
-    .page-title {
-        order: 1;
-        margin: 0;
-        margin-bottom: floor(@grid-gutter-width / 2);
-        padding: 0 floor(@grid-gutter-width / 2);
-
-        > small {
-            display: block; // todo this may have broken some things
-            margin-top: 5px;
-            font-size: 50%;
-            font-style: italic;
-        }
-    }
-
-    .page-header-content {
+    .page-header-content { // todo : remove me (old pages)
         flex: 3;
         display: flex;
         align-items: flex-end;
@@ -83,7 +65,7 @@
         margin-bottom: @component-margin-bottom; // surely not the best place
     }
 
-    .page-header-picture {
+    .page-header-picture { // todo : remove me (old pages)
         flex: 1;
         max-width: 200px;
         margin-bottom: -40px;
@@ -110,10 +92,26 @@
     }
 }
 
+.page-icon {
+    order: 0;
+    width: 70px;
+    height: 70px;
+}
+
 .page-title {
+    order: 1;
     flex: 1;
     font-size: @page-header-font-size;
     font-weight: @page-header-weight;
+    margin: 0 0 floor(@grid-gutter-width / 2);
+    padding: 0 floor(@grid-gutter-width / 2);
+
+    > small {
+        display: block; // todo this may have broken some things
+        margin-top: 5px;
+        font-size: 50%;
+        font-style: italic;
+    }
 }
 
 .page-actions {
@@ -189,13 +187,15 @@
         font-size: 10px;
         padding: .2em .4em;
     }
+}
 
-    // ugly selector for custom rights flag
-    /*.fa-asterisk {
-        position: absolute;
-        bottom: -5px;
-        right: 0;
-    }*/
+.page-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto; // only specifying flex property here make the item fill the remaining space in its parent
+    padding: 0 floor(@grid-gutter-width / 2);
+    margin-bottom: 20px;
 }
 
 .tabbed-page {
@@ -208,15 +208,6 @@
     .page-title {
         margin-bottom: 5px;
     }
-}
-
-.page-content {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    flex: 1 0 auto; // only specifying flex property here make the item fill the remaining space in its parent
-    padding: 0 floor(@grid-gutter-width / 2);
-    margin-bottom: 20px;
 }
 
 .page-tabs {

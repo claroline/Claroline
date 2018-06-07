@@ -3,15 +3,17 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
+import {asset} from '#/main/app/config'
 import {copy} from '#/main/app/clipboard'
 import {PageContent} from '#/main/core/layout/page'
-import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
+import {ResourcePageContainer} from '#/main/core/resource/containers/page'
 
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
-import {select} from './../selectors'
 
-const Image = props =>
+import {select} from '#/plugin/image-player/resources/image/selectors'
+
+const ImageComponent = props =>
   <ResourcePageContainer
     customActions={[
       {
@@ -23,36 +25,33 @@ const Image = props =>
     ]}
   >
     <PageContent className="text-center">
-      <img src={props.url} alt={props.hashName} onContextMenu={(e)=>{checkDownload(e, props.exportable)}}/>
+      <img
+        className="img-responsive"
+        src={props.url}
+        alt={props.hashName}
+        onContextMenu={(e)=> {
+          if (!props.exportable) {
+            e.preventDefault()
+          }
+        }}
+      />
     </PageContent>
   </ResourcePageContainer>
 
-Image.propTypes = {
+ImageComponent.propTypes = {
   url: T.string.isRequired,
   hashName: T.string.isRequired,
   exportable: T.bool.isRequired
 }
 
-function mapStateToProps(state) {
-  return {
+const Image = connect(
+  (state) => ({
     url: select.url(state),
     hashName: select.hashName(state),
     exportable: hasPermission('export', resourceSelect.resourceNode(state))
-  }
-}
-
-function checkDownload(e, exportable) {
-  if (!exportable) {
-    e.preventDefault()
-  }
-}
-
-function mapDispatchToProps() {
-  return {}
-}
-
-const ConnectedImage = connect(mapStateToProps, mapDispatchToProps)(Image)
+  })
+)(ImageComponent)
 
 export {
-  ConnectedImage as Image
+  Image
 }

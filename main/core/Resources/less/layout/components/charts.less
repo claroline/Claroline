@@ -11,4 +11,72 @@ svg.chart {
       stroke: @gray-light;
     }
   }
+
+  .axis-label {
+    font-size: @font-size;
+    font-weight: bold;
+  }
+}
+
+.chart-legend {
+  list-style: none;
+  margin-bottom: @component-margin-bottom;
+  padding: 0;
+
+  > li {
+    background: #EBEBEB;
+    border-radius: @border-radius-base;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+
+    + li {
+      margin-top: 5px;
+    }
+
+    + .total {
+      margin-top: 10px;
+    }
+  }
+
+  .total {
+    font-size: @font-size-h3;
+
+    .legend-label {
+      padding-left: 30px;
+    }
+
+    .legend-value {
+      font-size: @font-size-h3;
+    }
+  }
+
+  .legend-color {
+    width: 20px;
+    border-top-left-radius: @border-radius-base;
+    border-bottom-left-radius: @border-radius-base;
+  }
+
+  .legend-label {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 5px 10px;
+  }
+
+  .legend-icon {
+    font-size: 30px;
+    max-height: 30px;
+    margin-right: 10px;
+  }
+
+  .legend-value {
+    padding: 5px 10px;
+    margin-left: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+    font-size: @font-size-h4;
+    font-weight: bold;
+  }
 }

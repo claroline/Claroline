@@ -5,8 +5,11 @@ import merge from 'lodash/merge'
 
 import {t} from '#/main/core/translation'
 import {getTypeOrDefault} from '#/main/core/data/index'
-import {getPrimaryAction, getBulkActions, getRowActions, isRowSelected} from '#/main/core/data/list/utils'
-import {Action as ActionTypes} from '#/main/app/action/prop-types'
+import {getPrimaryAction, getActions, isRowSelected} from '#/main/core/data/list/utils'
+import {
+  Action as ActionTypes,
+  PromisedAction as PromisedActionTypes
+} from '#/main/app/action/prop-types'
 import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
 import {
   Table,
@@ -96,7 +99,7 @@ const DataTableRow = props => {
         />
       )}
 
-      {0 < props.actions.length &&
+      {(0 < props.actions.length || props.actions instanceof Promise) &&
         <TableCell align="right" className="actions-cell">
           <ListActions
             id={`data-table-item-${props.row.id}-actions`}
@@ -118,9 +121,16 @@ DataTableRow.propTypes = {
   primaryAction: T.shape(
     ActionTypes.propTypes
   ),
-  actions: T.arrayOf(T.shape(
-    ActionTypes.propTypes
-  )),
+  actions: T.oneOfType([
+    // a regular array of actions
+    T.arrayOf(T.shape(
+      ActionTypes.propTypes
+    )),
+    // a promise that will resolve a list of actions
+    T.shape(
+      PromisedActionTypes.propTypes
+    )
+  ]),
   selected: T.bool,
   onSelect: T.func
 }
@@ -171,7 +181,7 @@ const DataTable = props =>
           <td colSpan={props.columns.length + (props.selection ? 1:0) + (props.actions ? 1:0) }>
             <ListBulkActions
               count={props.selection.current.length}
-              actions={getBulkActions(
+              actions={getActions(
                 props.selection.current.map(id => props.data.find(row => id === row.id) || {id: id}),
                 props.actions
               )}
@@ -188,7 +198,7 @@ const DataTable = props =>
           row={row}
           columns={props.columns}
           primaryAction={getPrimaryAction(row, props.primaryAction)}
-          actions={getRowActions(row, props.actions)}
+          actions={getActions([row], props.actions)}
           selected={isRowSelected(row, props.selection ? props.selection.current : [])}
           onSelect={
             props.selection ? () => {

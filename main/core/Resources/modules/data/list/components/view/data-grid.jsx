@@ -6,12 +6,14 @@ import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-t
 import {DropdownButton, MenuItem} from '#/main/core/layout/components/dropdown'
 import {Checkbox} from '#/main/core/layout/form/components/field/checkbox'
 
-import {Action as ActionTypes} from '#/main/app/action/prop-types'
+import {
+  Action as ActionTypes,
+  PromisedAction as PromisedActionTypes
+} from '#/main/app/action/prop-types'
 import {DataListProperty, DataListView} from '#/main/core/data/list/prop-types'
 import {
   getPrimaryAction,
-  getBulkActions,
-  getRowActions,
+  getActions,
   getPropDefinition,
   getSortableProps,
   isRowSelected
@@ -48,9 +50,16 @@ DataGridItem.propTypes = {
     ActionTypes.propTypes
   ),
 
-  actions: T.arrayOf(
-    T.shape(ActionTypes.propTypes)
-  ),
+  actions: T.oneOfType([
+    // a regular array of actions
+    T.arrayOf(T.shape(
+      ActionTypes.propTypes
+    )),
+    // a promise that will resolve a list of actions
+    T.shape(
+      PromisedActionTypes.propTypes
+    )
+  ]),
 
   card: T.func.isRequired, // It must be a react component.
   selected: T.bool,
@@ -140,7 +149,7 @@ const DataGrid = props =>
     {props.selection && 0 < props.selection.current.length &&
       <ListBulkActions
         count={props.selection.current.length}
-        actions={getBulkActions(
+        actions={getActions(
           props.selection.current.map(id => props.data.find(row => id === row.id) || {id: id}),
           props.actions
         )}
@@ -156,7 +165,7 @@ const DataGrid = props =>
           row={row}
           card={props.card}
           primaryAction={getPrimaryAction(row, props.primaryAction)}
-          actions={getRowActions(row, props.actions)}
+          actions={getActions([row], props.actions)}
           selected={isRowSelected(row, props.selection ? props.selection.current : [])}
           onSelect={
             props.selection ? () => {

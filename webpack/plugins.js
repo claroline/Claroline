@@ -1,7 +1,6 @@
 const webpack = require('webpack')
 
 const paths = require('./paths')
-const ConfigurationPlugin = require('./build/configuration/plugin')
 const AssetsPlugin = require('assets-webpack-plugin')
 
 /**
@@ -24,19 +23,6 @@ const distributionShortcut = () => {
     const parts = request.request.substr(2).split('/')
     const resolved = [...parts.slice(0, 2), 'Resources/modules', ...parts.slice(2)]
     request.request = [paths.root(), 'vendor/claroline/distribution', ...resolved].join('/')
-  })
-}
-
-/**
- * Adds a custom resolver that will resolve the configuration file path
- *
- * Example:
- *
- * import from 'clarolineconfig'
- */
-const configShortcut = () => {
-  return new webpack.NormalModuleReplacementPlugin(/^bundle-configs$/, request => {
-    request.request = paths.root() + '/web/dist/plugins-config.js'
   })
 }
 
@@ -82,10 +68,6 @@ const angularDllReference = () => {
     manifest: require(paths.output() + '/angular_dll.manifest.json'),
     name: 'angular_dll.js'
   })
-}
-
-const clarolineConfiguration = () => {
-  return new ConfigurationPlugin()
 }
 
 /**
@@ -140,8 +122,6 @@ module.exports = {
   commonsChunk,
   rethrowCompilationErrors,
   dllReferences,
-  configShortcut,
-  clarolineConfiguration,
   assetsInfoFile,
   reactDllReference,
   angularDllReference,

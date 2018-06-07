@@ -21,6 +21,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Role\Role as BaseRole;
 
 /**
  * @DI\Service("claroline.serializer.user")
@@ -148,10 +149,11 @@ class UserSerializer
             'administrativeCode' => $user->getAdministrativeCode(),
             'phone' => $user->getPhone(),
             'publicUrl' => $user->getPublicUrl(), // todo : merge with the one from meta (I do it to have it in minimal)
+            'permissions' => $this->serializePermissions($user),
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
-            $userRoles = array_map(function (Role $role) {
+            $userRoles = array_map(function (Role $role) { // todo use role serializer with minimal option
                 return [
                     'id' => $role->getUuid(),
                     'type' => $role->getType(),
@@ -161,7 +163,7 @@ class UserSerializer
                     'context' => 'user',
                 ];
             }, $user->getEntityRoles(false));
-            $groupRoles = array_map(function (Role $role) {
+            $groupRoles = array_map(function (Role $role) { // todo use role serializer with minimal option
                 return [
                     'id' => $role->getUuid(),
                     'type' => $role->getType(),
@@ -175,9 +177,8 @@ class UserSerializer
             $serializedUser = array_merge($serializedUser, [
                 'meta' => $this->serializeMeta($user),
                 'restrictions' => $this->serializeRestrictions($user),
-                'rights' => $this->serializeRights($user),
                 'roles' => array_merge($userRoles, $groupRoles),
-                'groups' => array_map(function (Group $group) {
+                'groups' => array_map(function (Group $group) { // todo use group serializer with minimal option
                     return [
                         'id' => $group->getUuid(),
                         'name' => $group->getName(),
@@ -366,21 +367,27 @@ class UserSerializer
      *
      * @return array
      */
-    private function serializeRights(User $user)
+    private function serializePermissions(User $user)
     {
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
         $isOwner = $currentUser instanceof User && $currentUser->getUuid() === $user->getUuid();
         $isAdmin = $this->authChecker->isGranted('ROLE_ADMIN'); // todo maybe add those who have access to UserManagement tool
 
-        // return same structure than ResourceNode
+        // todo : move role check elsewhere
+        $profileConfig = $this->config->getParameter('profile');
+        $editRoles = [];
+        if (!empty($profileConfig['roles_edition'])) {
+            $editRoles = array_filter($this->tokenStorage->getToken()->getRoles(), function (BaseRole $role) use ($profileConfig) {
+                return in_array($role->getRole(), $profileConfig['roles_edition']);
+            });
+        }
+
         return [
-            'current' => [
-                'contact' => !$isOwner,
-                'edit' => $isOwner || $isAdmin,
-                'administrate' => $isAdmin,
-                'delete' => $isOwner || $isAdmin, // todo check platform param to now if current user can destroy is account
-            ],
+            'contact' => !$isOwner,
+            'edit' => $isAdmin || !empty($editRoles),
+            'administrate' => $isAdmin,
+            'delete' => $isOwner || $isAdmin, // todo check platform param to now if current user can destroy is account
         ];
     }
 
@@ -450,9 +457,10 @@ class UserSerializer
         }
 
         //only add role here. If we want to remove them, use the crud remove method instead
-        //it's usefull if we want to create a user with a list of roles
+        //it's useful if we want to create a user with a list of roles
         if (isset($data['roles'])) {
             foreach ($data['roles'] as $role) {
+                /** @var Role $role */
                 $role = $this->container->get('claroline.api.serializer')
                     ->deserialize('Claroline\CoreBundle\Entity\Role', $role);
                 if ($role && $role->getId()) {
@@ -462,9 +470,10 @@ class UserSerializer
         }
 
         //only add groups here. If we want to remove them, use the crud remove method instead
-        //it's usefull if we want to create a user with a list of roles
+        //it's useful if we want to create a user with a list of roles
         if (isset($data['groups'])) {
             foreach ($data['groups'] as $group) {
+                /** @var Group $group */
                 $group = $this->container->get('claroline.api.serializer')
                     ->deserialize('Claroline\CoreBundle\Entity\Group', $group);
                 if ($group && $group->getId()) {
@@ -474,7 +483,7 @@ class UserSerializer
         }
 
         //only add organizations here. If we want to remove them, use the crud remove method instead
-        //it's usefull if we want to create a user with a list of roles
+        //it's useful if we want to create a user with a list of roles
         if (isset($data['organizations'])) {
             foreach ($data['organizations'] as $organization) {
                 $organization = $this->container->get('claroline.api.serializer')

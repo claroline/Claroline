@@ -1,0 +1,29 @@
+{% extends 'ClarolineCoreBundle:workspace:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "logs" | trans({}, "tools") | striptags | raw }}{% endblock %}
+
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
+{% block breadcrumb %}
+    {{ macros.workspaceBreadcrumbs(workspace, [
+        {
+            'name': 'logs'|trans({}, 'tools'),
+            'href': ''
+        }
+    ]) }}
+{% endblock %}
+
+{% block content %}
+    <div
+        class="page-container logs-container"
+        data-workspace-id="{{ workspace.id | json_encode | raw | escape }}"
+        data-actions="{{ actions | json_encode | raw | escape }}"
+    >
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ hotAsset('dist/claroline-distribution-main-core-workspace-logs.js') }}"></script>
+{% endblock %}

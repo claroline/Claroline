@@ -18,13 +18,10 @@ use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
 use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
-use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use JMS\Serializer\Annotation as Serializer;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Base entity for all resources.
@@ -97,7 +94,9 @@ class ResourceNode
      * )
      * @ORM\JoinColumn(onDelete="SET NULL")
      *
-     * @todo remove me
+     * @deprecated
+     *
+     * @todo remove me with migration (was used to store thumbnails in some cases)
      */
     private $icon;
 
@@ -442,6 +441,8 @@ class ResourceNode
      * Returns the resource icon.
      *
      * @return ResourceIcon
+     *
+     * @deprecated
      */
     public function getIcon()
     {
@@ -452,6 +453,8 @@ class ResourceNode
      * Sets the resource icon.
      *
      * @param ResourceIcon $icon
+     *
+     * @deprecated
      */
     public function setIcon(ResourceIcon $icon)
     {
@@ -550,7 +553,7 @@ class ResourceNode
      */
     public function setName($name)
     {
-        if (strpos(self::PATH_SEPARATOR, $name) !== false) {
+        if (false !== strpos(self::PATH_SEPARATOR, $name)) {
             throw new \InvalidArgumentException(
                 'Invalid character "'.self::PATH_SEPARATOR.'" in resource name.'
             );
@@ -580,7 +583,7 @@ class ResourceNode
     {
         $pathForDisplay = preg_replace('/-\d+'.self::PATH_SEPARATOR.'/', ' / ', $path);
 
-        if ($pathForDisplay !== null && strlen($pathForDisplay) > 0) {
+        if (null !== $pathForDisplay && strlen($pathForDisplay) > 0) {
             $pathForDisplay = substr_replace($pathForDisplay, '', -3);
         }
 

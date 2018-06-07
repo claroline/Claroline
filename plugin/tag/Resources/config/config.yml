@@ -6,8 +6,10 @@ plugin:
       class: tags
 
   resource_actions:
-    - name: tag_action
+    - name: tags
+      group: management
       decoder: administrate
+      api: [GET, POST, PUT, DELETE]
 
   #widgets:
   #  - name: claroline_tag_resources_widget

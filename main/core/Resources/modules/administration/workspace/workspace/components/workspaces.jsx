@@ -12,7 +12,7 @@ import {DataListContainer} from '#/main/core/data/list/containers/data-list'
 import {actions} from '#/main/core/administration/workspace/workspace/actions'
 import {WorkspaceList} from '#/main/core/administration/workspace/workspace/components/workspace-list.jsx'
 
-// TODO : restore custom actions the same way resource actions
+// todo : restore custom actions the same way resource actions are implemented
 
 const WorkspacesList = props =>
   <DataListContainer

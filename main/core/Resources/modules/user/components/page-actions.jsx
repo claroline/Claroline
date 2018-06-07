@@ -4,6 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/core/translation'
 import {withRouter, matchPath} from '#/main/app/router'
 
+import {isAuthenticated, currentUser} from '#/main/core/user/current'
 import {hasPermission} from '#/main/core/user/permissions'
 
 import {MODAL_USER_PASSWORD, MODAL_USER_PUBLIC_URL, MODAL_USER_MESSAGE} from '#/main/core/user/modals'
@@ -14,6 +15,8 @@ import {
   MoreAction
 } from '#/main/core/layout/page'
 import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
+
+import {User as UserTypes} from '#/main/core/user/prop-types'
 
 const EditGroupActionsComponent = props =>
   <PageGroupActions>
@@ -43,13 +46,15 @@ EditGroupActionsComponent.propTypes = {
 const EditGroupActions = withRouter(EditGroupActionsComponent)
 
 const UserPageActions = props => {
+  const isOwner = isAuthenticated() && currentUser().id === props.user.id
+
   const moreActions = [].concat(props.customActions, [
     {
       type: 'modal',
       icon: 'fa fa-fw fa-lock',
       label: trans('change_password'),
       group: trans('user_management'),
-      displayed: hasPermission('edit', props.user),
+      displayed: hasPermission('administrate', props.user) || isOwner,
       modal: [MODAL_USER_PASSWORD, {
         changePassword: (password) => props.updatePassword(props.user, password)
       }]
@@ -69,7 +74,7 @@ const UserPageActions = props => {
       icon: 'fa fa-fw fa-line-chart',
       label: trans('show_tracking'),
       group: trans('user_management'),
-      displayed: hasPermission('edit', props.user),
+      displayed: hasPermission('administrate', props.user),
       target: ['claro_user_tracking', {publicUrl: props.user.meta.publicUrl}]
     }, {
       type: 'async',
@@ -94,11 +99,11 @@ const UserPageActions = props => {
 
   return (
     <PageActions>
-      {(props.user.rights.current.edit || props.canEditProfile) &&
+      {hasPermission('edit', props.user) &&
         <EditGroupActions />
       }
 
-      {props.user.rights.current.contact &&
+      {hasPermission('contact', props.user) &&
         <PageGroupActions>
           <PageAction
             id="send-message"
@@ -132,29 +137,16 @@ const UserPageActions = props => {
 }
 
 UserPageActions.propTypes = {
-  user: T.shape({
-    id: T.string.isRequired,
-    meta: T.shape({
-      publicUrl: T.string.isRequired,
-      publicUrlTuned: T.bool
-    }).isRequired,
-    rights: T.shape({
-      current: T.shape({
-        contact: T.bool.isRequired,
-        edit: T.bool.isRequired,
-        delete: T.bool.isRequired
-      }).isRequired
-    }).isRequired
-  }).isRequired,
+  user: T.shape(
+    UserTypes.propTypes
+  ).isRequired,
   customActions: T.array,
   updatePassword: T.func.isRequired,
-  updatePublicUrl: T.func.isRequired,
-  canEditProfile: T.bool.isRequired
+  updatePublicUrl: T.func.isRequired
 }
 
 UserPageActions.defaultProps = {
-  customActions: [],
-  canEditProfile: false
+  customActions: []
 }
 
 export {

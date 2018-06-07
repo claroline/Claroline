@@ -12,7 +12,7 @@ import {actions as userActions} from '#/main/core/user/actions'
 import {actions} from '#/main/core/administration/user/user/actions'
 import {UserList} from '#/main/core/administration/user/user/components/user-list'
 
-// todo : restore custom actions the same way resource actions
+// todo : restore custom actions the same way resource actions are implemented
 
 const UsersList = props =>
   <DataListContainer
@@ -32,12 +32,12 @@ const UsersList = props =>
         icon: 'fa fa-fw fa-id-card-o',
         label: trans('show_profile'),
         target: ['claro_user_profile', {publicUrl: rows[0].meta.publicUrl}],
-        context: 'row'
+        scope: ['object']
       }, {
         type: 'callback',
         icon: 'fa fa-fw fa-lock',
         label: trans('change_password'),
-        context: 'row',
+        scope: ['object'],
         callback: () => props.updatePassword(rows[0]),
         dangerous: true
       }, {
@@ -45,25 +45,25 @@ const UsersList = props =>
         icon: 'fa fa-fw fa-line-chart',
         label: trans('show_tracking'),
         target: ['claro_user_tracking', {publicUrl: rows[0].meta.publicUrl}],
-        context: 'row'
+        scope: ['object']
       }, {
         type: 'url',
         icon: 'fa fa-fw fa-user-secret',
         label: trans('show_as'),
         target: ['claro_desktop_open', {_switch: rows[0].username}],
-        context: 'row'
+        scope: ['object']
       }, {
         type: 'callback',
         icon: 'fa fa-fw fa-check-circle-o',
         label: trans('enable_user'),
-        context: 'row', // todo should be a selection action too
+        scope: ['object'], // todo should be a selection action too
         displayed: rows[0].restrictions.disabled,
         callback: () => props.enable(rows[0])
       }, {
         type: 'callback',
         icon: 'fa fa-fw fa-times-circle-o',
         label: trans('disable_user'),
-        context: 'row', // todo should be a selection action too
+        scope: ['object'], // todo should be a selection action too
         displayed: !rows[0].restrictions.disabled,
         callback: () => props.disable(rows[0]),
         dangerous: true
@@ -71,14 +71,14 @@ const UsersList = props =>
         type: 'callback',
         icon: 'fa fa-fw fa-book',
         label: trans('enable_personal_ws'),
-        context: 'row', // todo should be a selection action too
+        scope: ['object'], // todo should be a selection action too
         displayed: !rows[0].meta.personalWorkspace,
         callback: () => props.createWorkspace(rows[0])
       }, {
         type: 'callback',
         icon: 'fa fa-fw fa-book',
         label: trans('disable_personal_ws'),
-        context: 'row', // todo should be a selection action too
+        scope: ['object'], // todo should be a selection action too
         displayed: rows[0].meta.personalWorkspace,
         callback: () => props.deleteWorkspace(rows[0]),
         dangerous: true

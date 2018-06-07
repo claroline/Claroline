@@ -6,4 +6,4 @@ import {App} from '#/main/core/resources/text'
 const DirectoryApp = new App()
 
 // mount the react application
-bootstrap('.directory-container', DirectoryApp.component, DirectoryApp.store)
+bootstrap('.directory-container', DirectoryApp.component, DirectoryApp.store, DirectoryApp.initialData)

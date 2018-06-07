@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import invariant from 'invariant'
 
 import {bootstrap} from '#/main/app/bootstrap'
-import {theme} from '#/main/core/scaffolding/asset'
+import {theme} from '#/main/app/config'
 
 /**
  * Mounts an entire React application (components + store) inside another.
@@ -37,8 +37,6 @@ class Embedded extends Component {
         invariant(false, `An error occurred while loading the EmbeddedApp : ${error}`)
       })
   }
-
-  componentWillUnmount() {}
 
   render() {
     return (

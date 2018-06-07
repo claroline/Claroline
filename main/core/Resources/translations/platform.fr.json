@@ -83,7 +83,6 @@
     "add_workspace": "Ajouter un espace d'activités",
     "address": "Adresse",
     "admin": "Administrateur",
-    "admin_analytics": "Statistiques plateforme",
     "admin_analytics_no_data": "Aucune donnée.",
     "admin_desktop_and_home_tabs_configuration": "Configuration du bureau et des onglets",
     "admin_home_tabs_configuration": "Configuration des onglets pour les pages d'accueil",
@@ -811,7 +810,6 @@
     "no_filter": "Aucun filtre",
     "no_group": "Aucun groupe",
     "no_home_tab": "Il n'y a aucun onglet",
-    "no_item": "Aucun élément",
     "no_learning_outcomes": "Aucun référentiel de compétences",
     "no_message": "Aucun message",
     "no_model": "Aucun modèle",
@@ -1680,5 +1678,9 @@
     "created_at": "Créé le %date%",
     "updated_at": "Mis à jour le %date%",
     "authors": "Auteurs",
-    "authors_license": "Auteurs & License"
+    "authors_license": "Auteurs & License",
+    "structure": "Organisation",
+    "community": "Communauté",
+    "management": "Gestion",
+    "transfer": "Transfert"
 }

@@ -74,14 +74,14 @@ class DatabaseWriter
      *     "iconSetManager"  = @DI\Inject("claroline.manager.icon_set_manager")
      * })
      *
-     * @param ObjectManager $em
-     * @param IconManager $im
-     * @param Filesystem $fileSystem
-     * @param KernelInterface $kernel
-     * @param MaskManager $mm
-     * @param ToolManager $toolManager
+     * @param ObjectManager          $em
+     * @param IconManager            $im
+     * @param Filesystem             $fileSystem
+     * @param KernelInterface        $kernel
+     * @param MaskManager            $mm
+     * @param ToolManager            $toolManager
      * @param ToolMaskDecoderManager $toolMaskManager
-     * @param IconSetManager $iconSetManager
+     * @param IconSetManager         $iconSetManager
      */
     public function __construct(
         ObjectManager $em,
@@ -128,7 +128,7 @@ class DatabaseWriter
 
     /**
      * @param PluginBundleInterface $pluginBundle
-     * @param array $pluginConfiguration
+     * @param array                 $pluginConfiguration
      *
      * @return Plugin|null
      *
@@ -228,7 +228,7 @@ class DatabaseWriter
         }
 
         foreach ($processedConfiguration['resource_actions'] as $resourceAction) {
-            $this->persistResourceAction($resourceAction);
+            $this->persistResourceAction($resourceAction, $plugin);
         }
 
         foreach ($processedConfiguration['widgets'] as $widget) {
@@ -253,8 +253,8 @@ class DatabaseWriter
     }
 
     /**
-     * @param array        $processedConfiguration
-     * @param Plugin       $plugin
+     * @param array                 $processedConfiguration
+     * @param Plugin                $plugin
      * @param PluginBundleInterface $pluginBundle
      */
     private function updateConfiguration($processedConfiguration, Plugin $plugin, PluginBundleInterface $pluginBundle)
@@ -264,11 +264,11 @@ class DatabaseWriter
         }
 
         foreach ($processedConfiguration['resource_actions'] as $resourceAction) {
-            $this->updateResourceAction($resourceAction);
+            $this->updateResourceAction($resourceAction, $plugin);
         }
 
         foreach ($processedConfiguration['widgets'] as $widgetConfiguration) {
-            $this->updateWidget($widgetConfiguration, $plugin, $pluginBundle);
+            $this->updateWidget($widgetConfiguration, $plugin);
         }
 
         // cleans deleted widgets
@@ -341,8 +341,8 @@ class DatabaseWriter
     }
 
     /**
-     * @param array        $resourceConfiguration
-     * @param Plugin       $plugin
+     * @param array                 $resourceConfiguration
+     * @param Plugin                $plugin
      * @param PluginBundleInterface $pluginBundle
      *
      * @return ResourceType
@@ -360,6 +360,7 @@ class DatabaseWriter
         }
 
         $resourceType->setClass($resourceConfiguration['class']);
+        $resourceType->setTags($resourceConfiguration['tags']);
         $resourceType->setPlugin($plugin);
         $resourceType->setExportable($resourceConfiguration['exportable']);
         $this->em->persist($resourceType);
@@ -372,7 +373,7 @@ class DatabaseWriter
             foreach ($resourceConfiguration['actions'] as $resourceAction) {
                 $this->updateResourceAction(array_merge($resourceAction, [
                     'resource_type' => $resourceType->getName(),
-                ]));
+                ]), $plugin);
             }
         }
 
@@ -401,13 +402,12 @@ class DatabaseWriter
     }
 
     /**
-     * @param array        $widgetConfiguration
-     * @param Plugin       $plugin
-     * @param PluginBundleInterface $pluginBundle
+     * @param array  $widgetConfiguration
+     * @param Plugin $plugin
      *
      * @return Widget
      */
-    private function updateWidget($widgetConfiguration, Plugin $plugin, PluginBundleInterface $pluginBundle)
+    private function updateWidget($widgetConfiguration, Plugin $plugin)
     {
         /** @var Widget $widget */
         $widget = $this->em
@@ -415,7 +415,7 @@ class DatabaseWriter
             ->findOneBy(['name' => $widgetConfiguration['name']]);
 
         if (is_null($widget)) {
-            return $this->createWidget($widgetConfiguration, $plugin, $pluginBundle);
+            return $this->createWidget($widgetConfiguration, $plugin);
         } else {
             return $this->persistWidget($widgetConfiguration, $widget);
         }
@@ -442,8 +442,8 @@ class DatabaseWriter
     }
 
     /**
-     * @param array        $resource
-     * @param ResourceType $resourceType
+     * @param array                 $resource
+     * @param ResourceType          $resourceType
      * @param PluginBundleInterface $pluginBundle
      */
     private function persistIcons(array $resource, ResourceType $resourceType, PluginBundleInterface $pluginBundle)
@@ -481,8 +481,8 @@ class DatabaseWriter
     }
 
     /**
-     * @param array        $resource
-     * @param ResourceType $resourceType
+     * @param array                 $resource
+     * @param ResourceType          $resourceType
      * @param PluginBundleInterface $pluginBundle
      */
     private function updateIcons(array $resource, ResourceType $resourceType, PluginBundleInterface $pluginBundle)
@@ -521,9 +521,10 @@ class DatabaseWriter
     }
 
     /**
-     * @param array $action
+     * @param array  $action
+     * @param Plugin $plugin
      */
-    public function persistResourceAction(array $action)
+    public function persistResourceAction(array $action, Plugin $plugin)
     {
         // also remove duplicates if some are found
         $resourceType = null;
@@ -564,10 +565,12 @@ class DatabaseWriter
         }
 
         $resourceAction->setName($action['name']);
+        $resourceAction->setPlugin($plugin);
         $resourceAction->setDecoder($action['decoder']);
         $resourceAction->setGroup($action['group']);
         $resourceAction->setScope($action['scope']);
         $resourceAction->setApi($action['api']);
+        $resourceAction->setDefault($action['default']);
         $resourceAction->setResourceType($resourceType);
 
         $this->em->persist($resourceAction);
@@ -575,16 +578,17 @@ class DatabaseWriter
     }
 
     /**
-     * @param array $action
+     * @param array  $action
+     * @param Plugin $plugin
      */
-    public function updateResourceAction(array $action)
+    public function updateResourceAction(array $action, Plugin $plugin)
     {
-        $this->persistResourceAction($action);
+        $this->persistResourceAction($action, $plugin);
     }
 
     /**
-     * @param array        $resourceConfiguration
-     * @param Plugin       $plugin
+     * @param array                 $resourceConfiguration
+     * @param Plugin                $plugin
      * @param PluginBundleInterface $pluginBundle
      *
      * @return ResourceType
@@ -596,6 +600,7 @@ class DatabaseWriter
         $resourceType->setName($resourceConfiguration['name']);
         $resourceType->setClass($resourceConfiguration['class']);
         $resourceType->setExportable($resourceConfiguration['exportable']);
+        $resourceType->setTags($resourceConfiguration['tags']);
         $resourceType->setPlugin($plugin);
         $this->em->persist($resourceType);
         $this->mm->addDefaultPerms($resourceType);
@@ -604,7 +609,7 @@ class DatabaseWriter
             foreach ($resourceConfiguration['actions'] as $resourceAction) {
                 $this->persistResourceAction(array_merge($resourceAction, [
                     'resource_type' => $resourceType->getName(),
-                ]));
+                ]), $plugin);
             }
         }
 
@@ -661,8 +666,8 @@ class DatabaseWriter
     }
 
     /**
-     * @param array        $widgetConfiguration
-     * @param Widget       $widget
+     * @param array  $widgetConfiguration
+     * @param Widget $widget
      *
      * @return Widget
      */

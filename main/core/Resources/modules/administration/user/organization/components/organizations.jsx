@@ -24,7 +24,7 @@ const Organizations = () =>
         type: 'link',
         icon: 'fa fa-fw fa-plus',
         label: trans('add_sub_organization'),
-        context: 'row',
+        scope: ['object'],
         target: 'organizations/form/parent/' + rows[0].id
       }
     ]}

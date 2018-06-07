@@ -1,14 +1,7 @@
+import {registry} from '#/main/app/plugins/registry'
 
-const PATH_PLUGIN = 'path'
-
-const pathConfiguration = {
-  actions: [],
-  resources: [],
-  tools: [],
-  widgets: []
-}
-
-export {
-  PATH_PLUGIN,
-  pathConfiguration
-}
+registry.add('path', {
+  resources: {
+    'innova_path': () => { return import(/* webpackChunkName: "plugin-path-path-resource" */ '#/plugin/path/resources/path') }
+  }
+})

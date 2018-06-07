@@ -2,8 +2,10 @@ plugin:
     has_options: false
 
     resource_actions:
-      - name: hevinci_favourite
-        decoder: open
+        - name: favourite
+          decoder: open
+          scope: [object, collection]
+          api: [GET, POST, DELETE]
 
     # widgets:
     #  - name: hevinci_favourite_widget

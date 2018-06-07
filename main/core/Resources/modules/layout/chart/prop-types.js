@@ -2,6 +2,7 @@ import {PropTypes as T} from 'prop-types'
 
 const Chart = {
   propTypes: {
+    responsive: T.bool,
     width: T.number,
     height: T.number,
     margin: T.shape({
@@ -12,6 +13,7 @@ const Chart = {
     }).isRequired
   },
   defaultProps: {
+    responsive: false,
     width: 400,
     height: 400,
     margin: {
@@ -35,7 +37,6 @@ const AxisChart = {
       text: T.string.isRequired,
       grid: T.bool
     }),
-    responsive: T.bool,
     ticksAsYValues: T.bool,
     minMaxAsYDomain:T.bool,
     color: T.string,
@@ -53,7 +54,6 @@ const AxisChart = {
       text: 'Y Axis DATA',
       grid: false
     }),
-    responsive: false,
     ticksAsYValues: false,
     minMaxAsYDomain: false,
     color: '#337ab7',

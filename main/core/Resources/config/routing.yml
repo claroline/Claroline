@@ -55,11 +55,6 @@ claro_log:
     prefix: log
     type: annotation
 
-claro_log_workspace:
-    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceLogController.php"
-    prefix: workspaces
-    type: annotation
-
 # old
 claro_profile:
     resource: "@ClarolineCoreBundle/Controller/ProfileController.php"
@@ -114,11 +109,6 @@ claro_workspace_tool_tools_properties:
 claro_workspace_tool_home:
     resource: "@ClarolineCoreBundle/Controller/Tool/HomeController.php"
     prefix: workspaces/tool/home
-    type: annotation
-
-claro_workspace_dashboard:
-    prefix: workspace/dashboard
-    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceDashboardController.php"
     type: annotation
 
 claro_admin:
@@ -191,16 +181,6 @@ claro_user:
 claro_admin_parameters:
     prefix: admin/parameters
     resource: "@ClarolineCoreBundle/Controller/Administration/ParametersController.php"
-    type: annotation
-
-claro_admin_logs:
-    prefix: admin/logs
-    resource: "@ClarolineCoreBundle/Controller/Administration/LogsController.php"
-    type: annotation
-
-claro_admin_analytics:
-    prefix: admin/analytics
-    resource: "@ClarolineCoreBundle/Controller/Administration/AnalyticsController.php"
     type: annotation
 
 claro_admin_workspace_registration:

@@ -16,12 +16,16 @@ const useTemplate = state => state.clacoForm.details['use_template']
 const getParam = (state, property) => state.clacoForm.details[property]
 const currentEntry = state => state.entries.current.data
 const myEntriesCount = state => state.entries.myEntriesCount
-const canAdministrate = state => state.resourceNode.rights.current.administrate
 const categories = state => state.clacoForm.categories
 const keywords = state => state.clacoForm.keywords
 const myRoles = state => state.myRoles
 const entryUser = state => state.entries.entryUser
 const usedCountries = state => state.entries.countries
+
+const canAdministrate = createSelector(
+  resourceSelect.resourceNode,
+  (resourceNode) => hasPermission('edit', resourceNode)
+)
 
 const canSearchEntry = createSelector(
   resourceSelect.resourceNode,

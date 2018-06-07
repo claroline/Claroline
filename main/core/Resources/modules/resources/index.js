@@ -1,11 +1,7 @@
-import {coreConfiguration} from '#/main/core/plugin'
+import {getApp} from '#/main/app/plugins'
 
 function getResource(name) {
-  if (!coreConfiguration.resources[name]) {
-    throw new Error(`You have requested a non existent resource named ${name}`)
-  }
-
-  return coreConfiguration.resources[name]
+  return getApp('resources', name)
 }
 
 export {

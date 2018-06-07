@@ -11,66 +11,96 @@
 
 namespace Claroline\DropZoneBundle\Listener\Resource;
 
+use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Form\ResourceNameType;
 use Claroline\DropZoneBundle\Entity\Dropzone;
 use Claroline\DropZoneBundle\Manager\DropzoneManager;
+use Claroline\TeamBundle\Manager\TeamManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service
  */
 class DropzoneListener
 {
+    private $tokenStorage;
+
     /** @var DropzoneManager */
     private $dropzoneManager;
+
     /** @var FormFactory */
     private $formFactory;
-    /** @var HttpKernelInterface */
-    private $httpKernel;
+
     /** @var Request */
     private $request;
+
     /** @var TwigEngine */
     private $templating;
+
+    /** @var SerializerProvider */
+    private $serializer;
+
+    /** @var TeamManager */
+    private $teamManager;
+
+    /** @var TranslatorInterface */
+    private $translator;
 
     /**
      * DropzoneListener constructor.
      *
      * @DI\InjectParams({
-     *     "dropzoneManager"       = @DI\Inject("claroline.manager.dropzone_manager"),
-     *     "formFactory"           = @DI\Inject("form.factory"),
-     *     "httpKernel"            = @DI\Inject("http_kernel"),
-     *     "requestStack"          = @DI\Inject("request_stack"),
-     *     "templating"            = @DI\Inject("templating")
+     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
+     *     "dropzoneManager" = @DI\Inject("claroline.manager.dropzone_manager"),
+     *     "formFactory"     = @DI\Inject("form.factory"),
+     *     "requestStack"    = @DI\Inject("request_stack"),
+     *     "templating"      = @DI\Inject("templating"),
+     *     "serializer"      = @DI\Inject("claroline.api.serializer"),
+     *     "teamManager"     = @DI\Inject("claroline.manager.team_manager"),
+     *     "translator"      = @DI\Inject("translator")
      * })
      *
-     * @param DropzoneManager     $dropzoneManager
-     * @param FormFactory         $formFactory
-     * @param HttpKernelInterface $httpKernel
-     * @param RequestStack        $requestStack
-     * @param TwigEngine          $templating
+     * @param TokenStorageInterface $tokenStorage
+     * @param DropzoneManager       $dropzoneManager
+     * @param FormFactory           $formFactory
+     * @param RequestStack          $requestStack
+     * @param TwigEngine            $templating
+     * @param SerializerProvider    $serializer
+     * @param TeamManager           $teamManager
+     * @param TranslatorInterface   $translator
      */
     public function __construct(
+        TokenStorageInterface $tokenStorage,
         DropzoneManager $dropzoneManager,
         FormFactory $formFactory,
-        HttpKernelInterface $httpKernel,
         RequestStack $requestStack,
-        TwigEngine $templating
+        TwigEngine $templating,
+        SerializerProvider $serializer,
+        TeamManager $teamManager,
+        TranslatorInterface $translator
     ) {
+        $this->tokenStorage = $tokenStorage;
         $this->dropzoneManager = $dropzoneManager;
         $this->formFactory = $formFactory;
-        $this->httpKernel = $httpKernel;
         $this->request = $requestStack->getCurrentRequest();
         $this->templating = $templating;
+        $this->serializer = $serializer;
+        $this->teamManager = $teamManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -122,18 +152,38 @@ class DropzoneListener
     }
 
     /**
+     * @DI\Observe("load_claroline_dropzone")
+     *
+     * @param LoadResourceEvent $event
+     */
+    public function onLoad(LoadResourceEvent $event)
+    {
+        /** @var Dropzone $dropzone */
+        $dropzone = $event->getResource();
+
+        $event->setAdditionalData(
+            $this->getDropzoneData($dropzone)
+        );
+        $event->stopPropagation();
+    }
+
+    /**
      * @DI\Observe("open_claroline_dropzone")
      *
      * @param OpenResourceEvent $event
      */
     public function onOpen(OpenResourceEvent $event)
     {
-        $params = [];
-        $params['_controller'] = 'ClarolineDropZoneBundle:Resource\Dropzone:open';
-        $params['dropzone'] = $event->getResource()->getId();
-        $subRequest = $this->request->duplicate([], null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        $event->setResponse($response);
+        /** @var Dropzone $dropzone */
+        $dropzone = $event->getResource();
+
+        $content = $this->templating->render(
+            'ClarolineDropZoneBundle:dropzone:open.html.twig', array_merge([
+                '_resource' => $dropzone,
+            ], $this->getDropzoneData($dropzone))
+        );
+
+        $event->setResponse(new Response($content));
         $event->stopPropagation();
     }
 
@@ -144,7 +194,9 @@ class DropzoneListener
      */
     public function onCopy(CopyResourceEvent $event)
     {
+        /** @var Dropzone $dropzone */
         $dropzone = $event->getResource();
+
         $copy = $this->dropzoneManager->copyDropzone($dropzone);
 
         $event->setCopy($copy);
@@ -158,7 +210,93 @@ class DropzoneListener
      */
     public function onDelete(DeleteResourceEvent $event)
     {
-        $this->dropzoneManager->delete($event->getResource());
+        /** @var Dropzone $dropzone */
+        $dropzone = $event->getResource();
+
+        $this->dropzoneManager->delete($dropzone);
+
         $event->stopPropagation();
+    }
+
+    private function getDropzoneData(Dropzone $dropzone)
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        if (!$user instanceof User) {
+            $user = null;
+        }
+
+        $resourceNode = $dropzone->getResourceNode();
+
+        $teams = !empty($user) ?
+            $this->teamManager->getSearializedTeamsByUserAndWorkspace($user, $resourceNode->getWorkspace()) :
+            [];
+        $myDrop = null;
+        $finishedPeerDrops = [];
+        $errorMessage = null;
+        $teamId = null;
+
+        if (!$dropzone->getDropClosed() && $dropzone->getAutoCloseDropsAtDropEndDate() && !$dropzone->getManualPlanning()) {
+            $dropEndDate = $dropzone->getDropEndDate();
+
+            if ($dropEndDate < new \DateTime()) {
+                $this->dropzoneManager->closeAllUnfinishedDrops($dropzone);
+            }
+        }
+
+        switch ($dropzone->getDropType()) {
+            case Dropzone::DROP_TYPE_USER:
+                $myDrop = !empty($user) ? $this->dropzoneManager->getUserDrop($dropzone, $user) : null;
+                $finishedPeerDrops = $this->dropzoneManager->getFinishedPeerDrops($dropzone, $user);
+                break;
+            case Dropzone::DROP_TYPE_TEAM:
+                $drops = [];
+                $teamsIds = array_map(function ($team) {
+                    return $team['id'];
+                }, $teams);
+
+                /* Fetches team drops associated to user */
+                $teamDrops = !empty($user) ? $this->dropzoneManager->getTeamDrops($dropzone, $user) : [];
+
+                /* Unregisters user from unfinished drops associated to team he doesn't belong to anymore */
+                foreach ($teamDrops as $teamDrop) {
+                    if (!$teamDrop->isFinished() && !in_array($teamDrop->getTeamId(), $teamsIds)) {
+                        /* Unregisters user from unfinished drop */
+                        $this->dropzoneManager->unregisterUserFromTeamDrop($teamDrop, $user);
+                    } else {
+                        $drops[] = $teamDrop;
+                    }
+                }
+                if (0 === count($drops)) {
+                    /* Checks if there are unfinished drops from teams he belongs but not associated to him */
+                    $unfinishedTeamsDrops = $this->dropzoneManager->getTeamsUnfinishedDrops($dropzone, $teamsIds);
+
+                    if (count($unfinishedTeamsDrops) > 0) {
+                        $errorMessage = $this->translator->trans('existing_unfinished_team_drop_error', [], 'dropzone');
+                    }
+                } elseif (1 === count($drops)) {
+                    $myDrop = $drops[0];
+                } else {
+                    $errorMessage = $this->translator->trans('more_than_one_drop_error', [], 'dropzone');
+                }
+                if (!empty($myDrop)) {
+                    $teamId = $myDrop->getTeamId();
+                }
+                $finishedPeerDrops = $this->dropzoneManager->getFinishedPeerDrops($dropzone, $user, $teamId);
+                break;
+        }
+        $serializedTools = $this->dropzoneManager->getSerializedTools();
+        /* TODO: generate ResourceUserEvaluation for team */
+        $userEvaluation = !empty($user) ? $this->dropzoneManager->generateResourceUserEvaluation($dropzone, $user) : null;
+
+        return [
+            'dropzone' => $this->serializer->serialize($dropzone),
+            'user' => $this->serializer->serialize($user),
+            'myDrop' => $this->serializer->serialize($myDrop),
+            'nbCorrections' => count($finishedPeerDrops),
+            'tools' => $serializedTools,
+            'evaluation' => $this->serializer->serialize($userEvaluation),
+            'teams' => $teams,
+            'errorMessage' => $errorMessage,
+        ];
     }
 }

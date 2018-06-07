@@ -94,13 +94,13 @@ const Correctors = props =>
             icon: 'fa fa-fw fa-eye',
             label: trans('open', {}, 'platform'),
             target: `/corrector/${rows[0].id}`,
-            context: 'row'
+            scope: ['object']
           }, {
             type: 'callback',
             icon: 'fa fa-fw fa-unlock',
             label: trans('unlock_corrector', {}, 'dropzone'),
             callback: () => props.unlockUser(rows[0].id),
-            context: 'row'
+            scope: ['object']
           }
         ]}
       />

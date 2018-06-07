@@ -5,6 +5,7 @@ plugin:
   resources:
     - name: icap_bibliography
       class: Icap\BibliographyBundle\Entity\BookReference
+      tags: [content]
       exportable: false
 
   #widgets:

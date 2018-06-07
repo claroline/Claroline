@@ -7,8 +7,7 @@ import {trans} from '#/main/core/translation'
 import {
   createListDefinition,
   getPrimaryAction,
-  getBulkActions,
-  getRowActions,
+  getActions,
   getFilterableProps,
   isRowSelected
 } from '#/main/core/data/list/utils'
@@ -157,11 +156,10 @@ class DataTreeItem extends Component {
           hasChildren={this.props.data.children && 0 < this.props.data.children.length}
           data={this.props.data}
           computedData={this.props.card(this.props.data)}
-          actions={getRowActions(this.props.data, this.props.actions)}
+          actions={getActions([this.props.data], this.props.actions)}
           primaryAction={getPrimaryAction(this.props.data, this.props.primaryAction)}
           onSelect={this.props.onSelect ? () => this.props.onSelect(this.props.data) : undefined}
           toggle={() => this.toggle()}
-          connectDragSource={this.props.connectDragSource}
         />
 
         {this.props.data.children && 0 < this.props.data.children.length &&
@@ -180,7 +178,6 @@ class DataTreeItem extends Component {
                 selected={this.props.selected}
                 onSelect={this.props.onSelect}
                 card={this.props.card}
-                onDrop={this.props.onDrop}
               />
             )}
           </ul>
@@ -275,7 +272,7 @@ class DataTree extends Component {
             {this.props.selection && 0 < this.props.selection.current.length &&
               <ListBulkActions
                 count={this.props.selection.current.length}
-                actions={getBulkActions(
+                actions={getActions(
                   this.props.selection.current.map(id => this.props.data.find(row => id === row.id) || {id: id}),
                   this.props.actions
                 )}

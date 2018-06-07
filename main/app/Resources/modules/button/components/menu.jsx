@@ -29,14 +29,15 @@ const MenuButton = props => {
   )
 
   // filters and groups actions
-  const unclassifiedActions = displayedActions.filter(action => !action.dangerous && !action.group)
+  const primaryActions      = displayedActions.filter(action => action.primary && !action.dangerous)
+  const unclassifiedActions = displayedActions.filter(action => !action.primary && !action.dangerous && !action.group)
   const dangerousActions    = displayedActions.filter(action => action.dangerous)
 
   // generate actions groups
   const groupActions = {}
   for (let i=0; i < displayedActions.length; i++) {
     const action = displayedActions[i]
-    if (!action.dangerous && !!action.group) {
+    if (!action.primary && !action.dangerous && !!action.group) {
       if (!groupActions[action.group]) {
         groupActions[action.group] = []
       }
@@ -67,14 +68,34 @@ const MenuButton = props => {
           <MenuItem header={true}>{props.menu.label}</MenuItem>
         }
 
+        {primaryActions.map((action) =>
+          <MenuAction
+            {...action}
+            key={toKey(action.label)}
+            id={`${props.id}${action.id || toKey(action.label)}`}
+          />
+        )}
+
+        {(0 !== primaryActions.length && 0 !== unclassifiedActions.length) &&
+          <MenuItem divider={true} />
+        }
+
         {unclassifiedActions.map((action) =>
-          <MenuAction key={toKey(action.label)} {...action} />
+          <MenuAction
+            {...action}
+            key={toKey(action.label)}
+            id={`${props.id}${action.id || toKey(action.label)}`}
+          />
         )}
 
         {Object.keys(groupActions).map((group) => [
           <MenuItem key={toKey(group)} header={true}>{group}</MenuItem>,
           ...groupActions[group].map((action) =>
-            <MenuAction key={toKey(action.label)} {...action} />
+            <MenuAction
+              {...action}
+              key={toKey(action.label)}
+              id={`${props.id}${action.id || toKey(action.label)}`}
+            />
           )
         ])}
 
@@ -83,7 +104,11 @@ const MenuButton = props => {
         }
 
         {dangerousActions.map((action) =>
-          <MenuAction key={toKey(action.label)} {...action} />
+          <MenuAction
+            {...action}
+            key={toKey(action.label)}
+            id={`${props.id}${action.id || toKey(action.label)}`}
+          />
         )}
       </Menu>
     </MenuOverlay>

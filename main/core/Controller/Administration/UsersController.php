@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Controller\Administration;
 
 use Claroline\AppBundle\API\FinderProvider;
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
@@ -21,13 +20,12 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Form\Administration\ProfilePicsImportType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\MailManager;
-use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\ToolMaskDecoderManager;
@@ -39,7 +37,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -50,7 +47,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * @todo rename UserController (without s)
+ * @todo check what is still used
  *
  * @DI\Tag("security.secure_service")
  * @SEC\PreAuthorize("canOpenAdminTool('user_management')")
@@ -157,30 +154,6 @@ class UsersController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/index",
-     *     name="claro_admin_users_index",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Template("ClarolineCoreBundle:administration/user:index.html.twig")
-     *
-     * Displays the platform user list.
-     *
-     * @return array
-     */
-    public function indexAction()
-    {
-        return [
-            // todo : put it in the async load of form
-            'parameters' => $this->parametersSerializer->serialize(),
-            'profile' => $this->profileSerializer->serialize(),
-            'platformRoles' => $this->finder->search('Claroline\CoreBundle\Entity\Role', [
-              'filters' => ['type' => Role::PLATFORM_ROLE],
-            ]),
-        ];
-    }
-
-    /**
-     * @EXT\Route(
      *     "/user/{user}/workspaces/page/{page}/max/{max}",
      *     name="claro_admin_user_workspaces",
      *     defaults={"page"=1, "max"=50},
@@ -283,43 +256,6 @@ class UsersController extends Controller
         $this->toolManager->removePersonalWorkspaceToolPerm($perm, $tool, $role);
 
         return new JsonResponse([], 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "import/profile/pics/form",
-     *     name="import_profile_pics_form",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Template("ClarolineCoreBundle:administration/user:import_profile_pics_form.html.twig")
-     * )
-     */
-    public function importProfilePicsFormAction()
-    {
-        $form = $this->createForm(new ProfilePicsImportType());
-
-        return ['form' => $form->createView()];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "import/profile/pics",
-     *     name="import_profile_pics",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Template("ClarolineCoreBundle:administration/user:import_profile_pics_form.html.twig")
-     */
-    public function importProfilePicsAction()
-    {
-        $form = $this->createForm(new ProfilePicsImportType());
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $file = $form->get('file')->getData();
-            $this->userManager->importPictureFiles($file);
-        }
-
-        return ['form' => $form->createView()];
     }
 
     /**

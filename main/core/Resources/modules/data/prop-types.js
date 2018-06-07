@@ -1,6 +1,6 @@
 import {PropTypes as T} from 'prop-types'
 
-import {Action} from '#/main/app/action/prop-types'
+import {Action, PromisedAction} from '#/main/app/action/prop-types'
 
 const DataProperty = {
   propTypes: {
@@ -94,9 +94,16 @@ const DataCard = {
     primaryAction: T.shape(
       Action.propTypes
     ),
-    actions: T.arrayOf(T.shape(
-      Action.propTypes
-    )),
+    actions: T.oneOfType([
+      // a regular array of actions
+      T.arrayOf(T.shape(
+        Action.propTypes
+      )),
+      // a promise that will resolve a list of actions
+      T.shape(
+        PromisedAction.propTypes
+      )
+    ]),
 
     footer: T.node
   },

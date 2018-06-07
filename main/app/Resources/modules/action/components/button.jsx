@@ -44,7 +44,7 @@ const Button = props => props.tooltip ?
     </GenericButton>
   </TooltipElement> :
   <GenericButton
-    {...omit(props, 'tooltip', 'group', 'icon', 'label', 'subscript', 'context')}
+    {...omit(props, 'tooltip', 'group', 'icon', 'label', 'subscript', 'context', 'scope')}
     id={props.id || toKey(props.label)}
     confirm={props.confirm ? Object.assign({}, props.confirm, {
       // append some defaults from action spec

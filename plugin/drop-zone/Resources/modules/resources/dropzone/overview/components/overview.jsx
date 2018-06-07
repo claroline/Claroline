@@ -147,7 +147,7 @@ const Overview = connect(
             dispatch(
               modalActions.showModal(MODAL_SELECTION, {
                 title: trans('team_selection_title', {}, 'dropzone'),
-                types: teams.map(t => ({
+                items: teams.map(t => ({
                   type: t.id,
                   name: t.name,
                   icon: 'fa fa-users'

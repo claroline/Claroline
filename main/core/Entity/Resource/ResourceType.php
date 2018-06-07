@@ -57,6 +57,15 @@ class ResourceType
     private $exportable = false;
 
     /**
+     * A list of tags to group similar types.
+     *
+     * @ORM\Column(type="json_array")
+     *
+     * @var array
+     */
+    private $tags = [];
+
+    /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
@@ -128,6 +137,26 @@ class ResourceType
     public function setClass($class)
     {
         $this->class = $class;
+    }
+
+    /**
+     * Get tags.
+     *
+     * @return array
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * Set tags.
+     *
+     * @param array $tags
+     */
+    public function setTags(array $tags)
+    {
+        $this->tags = $tags;
     }
 
     public function setPlugin(Plugin $plugin)

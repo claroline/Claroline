@@ -34,7 +34,5 @@
     "resource_overview_info": "Informations",
     "resource_overview_progression": "Ma progression",
     "resource_showIcon": "Afficher l'icône de la ressource dans l'entête",
-    "resource_showIcon_help": "Pour les ressources évaluatives, l'icône est remplacée par une jauge de progression.",
-    "management": "Gestion",
-    "transfer": "Transfert"
+    "resource_showIcon_help": "Pour les ressources évaluatives, l'icône est remplacée par une jauge de progression."
 }

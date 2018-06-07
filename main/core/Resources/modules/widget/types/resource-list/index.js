@@ -4,7 +4,7 @@ import {trans} from '#/main/core/translation'
 
 import {constants} from '#/main/core/widget/constants'
 import {App as ListApp} from '#/main/core/widget/types/list'
-import {ResourceCardMinimal} from '#/main/core/resource/data/components/resource-card'
+import {ResourceCard} from '#/main/core/resource/data/components/resource-card'
 
 import {actions as listWidgetActions} from '#/main/core/widget/types/list/actions'
 
@@ -58,7 +58,7 @@ const App = (context, parameters) => ListApp(context, merge({}, parameters, {
       filterable: false
     }
   ],
-  card: ResourceCardMinimal
+  card: ResourceCard
 }))
 
 export {

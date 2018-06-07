@@ -2,18 +2,22 @@ plugin:
     has_options: false
 
     resource_actions:
-        - name: like_action
-          group: social
+        - name: like
+          group: community
           decoder: open
+          api: [PUT]
 
-        - name: share_action
-          group: social
+        - name: unlike
+          group: community
           decoder: open
+          api: [PUT]
 
-        - name: comment_action
-          group: social
+        - name: share
+          group: community
           decoder: open
+          api: [POST]
 
-        # TODO : should not be declared in this plugin (nothing to do with social here)
-        - name: note_action
+        - name: comments
+          group: community
           decoder: open
+          api: [GET, POST, PUT, DELETE]

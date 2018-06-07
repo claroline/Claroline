@@ -45,7 +45,7 @@ Resource.propTypes = {
   saveForm: T.func.isRequired
 }
 
-const TextResource = connect(
+const DirectoryResource = connect(
   state => ({
     text: state.text,
     saveEnabled: formSelect.saveEnabled(formSelect.form(state, 'textForm'))
@@ -57,5 +57,5 @@ const TextResource = connect(
 )(Resource)
 
 export {
-  TextResource
+  DirectoryResource
 }

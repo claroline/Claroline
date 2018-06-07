@@ -3,41 +3,36 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-
 import {Page} from '#/main/app/page/components/page'
-import {PageContent} from '#/main/core/layout/page'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {ResourceExplorer} from '#/main/core/resource/components/explorer'
+import {getActions} from '#/main/core/resource/utils'
+import {hasPermission} from '#/main/core/resource/permissions'
 
-import {getActions, getDefaultAction} from '#/main/core/resource/utils'
 import {actions} from '#/main/core/tools/resources/store'
 
 const Tool = props =>
   <Page
     title={trans('resources', {}, 'tools')}
     subtitle={props.current && props.current.name}
-    toolbar="edit rights publish unpublish | fullscreen more"
-    actions={props.current && getActions(props.current, 'object')}
+    toolbar="edit rights publish unpublish | more"
+    actions={props.current && getActions([props.current])}
   >
-    <PageContent>
-      <ResourceExplorer
-        root={props.root}
-        current={props.current}
-        primaryAction={(resourceNode) => {
-          if ('directory' !== resourceNode.meta.type) {
-            return getDefaultAction(resourceNode, 'object') // todo use action constant
-          } else {
-            // do not open directory, just change the target of the explorer
-            return {
-              label: trans('open', {}, 'actions'),
-              type: 'callback',
-              callback: () => props.changeDirectory(resourceNode)
-            }
-          }
-        }}
-      />
-    </PageContent>
+    <ResourceExplorer
+      root={props.root}
+      current={props.current}
+      primaryAction={(resourceNode) => ({
+        type: 'url',
+        label: trans('open', {}, 'actions'),
+        disabled: !hasPermission('open', resourceNode),
+        target: [ 'claro_resource_open', {
+          node: resourceNode.autoId,
+          resourceType: resourceNode.meta.type
+        }]
+      })}
+      changeDirectory={props.changeDirectory}
+    />
   </Page>
 
 Tool.propTypes = {

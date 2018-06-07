@@ -4,7 +4,7 @@ import classes from 'classnames'
 import invariant from 'invariant'
 
 import {url} from '#/main/app/api'
-import {theme} from '#/main/core/scaffolding/asset'
+import {theme} from '#/main/app/config'
 import {mount, unmount} from '#/main/app/mount'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'

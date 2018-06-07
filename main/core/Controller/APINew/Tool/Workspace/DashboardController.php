@@ -5,16 +5,14 @@ namespace Claroline\CoreBundle\Controller\APINew\Tool\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\AnalyticsManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @Route("/tools/workspace/{workspaceId}/dashboard", requirements={"workspaceId"="\d+"})
+ * @EXT\Route("/tools/workspace/{workspaceId}/dashboard", requirements={"workspaceId"="\d+"})
  */
 class DashboardController
 {
@@ -25,14 +23,15 @@ class DashboardController
     private $analyticsManager;
 
     /**
-     * @DI\InjectParams({
-     *     "authorizationChecker"   = @DI\Inject("security.authorization_checker"),
-     *     "analyticsManager"       = @DI\Inject("claroline.manager.analytics_manager")
-     * })
-     *
      * LogController constructor.
      *
+     * @DI\InjectParams({
+     *     "authorizationChecker" = @DI\Inject("security.authorization_checker"),
+     *     "analyticsManager"     = @DI\Inject("claroline.manager.analytics_manager")
+     * })
+     *
      * @param AuthorizationCheckerInterface $authorizationChecker
+     * @param AnalyticsManager              $analyticsManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker,
@@ -43,18 +42,18 @@ class DashboardController
     }
 
     /**
-     * @param Request   $request
-     * @param Workspace $workspace
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @Route("/", name="apiv2_workspace_tool_dashboard")
-     * @Method("GET")
-     *
-     * @ParamConverter(
+     * @EXT\Route("/", name="apiv2_workspace_tool_dashboard")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
      *     "workspace",
      *     class="Claroline\CoreBundle\Entity\Workspace\Workspace",
      *     options={"mapping": {"workspaceId": "id"}}
      * )
+     *
+     * @param Request   $request
+     * @param Workspace $workspace
+     *
+     * @return JsonResponse
      */
     public function getAction(Request $request, Workspace $workspace)
     {

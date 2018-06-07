@@ -31,7 +31,7 @@ const LocationsList = props =>
       icon: 'fa fa-fw fa-map-marker',
       label: t('geolocate'),
       callback: () => props.geolocate(rows[0]),
-      context: 'row' // todo should be available in selection mode too
+      scope: ['object'] // todo should be available in selection mode too
     }]}
     card={LocationList.card}
   />

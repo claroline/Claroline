@@ -37,6 +37,7 @@ class UserListener
     /** @var ResourceNodeManager */
     private $resourceNodeManager;
 
+    /** @var UserManager */
     private $userManager;
 
     /**
@@ -84,7 +85,7 @@ class UserListener
     public function onDisplayTool(OpenAdministrationToolEvent $event)
     {
         $content = $this->templating->render(
-            'ClarolineCoreBundle:administration:user\index.html.twig', [
+            'ClarolineCoreBundle:administration:users.html.twig', [
                 // todo : put it in the async load of form
                 'parameters' => $this->parametersSerializer->serialize(),
                 'profile' => $this->profileSerializer->serialize(),
@@ -106,15 +107,14 @@ class UserListener
     public function onMergeUsers(MergeUsersEvent $event)
     {
         // Replace creator of resource nodes
-        $resourcesCount = $this->container->get('claroline.manager.resource_node')->replaceCreator($event->getRemoved(), $event->getKept());
+        $resourcesCount = $this->resourceNodeManager->replaceCreator($event->getRemoved(), $event->getKept());
         $event->addMessage("[CoreBundle] updated resources count: $resourcesCount");
 
         // Merge all roles onto user to keep
-        $rolesCount = $this->container->get('claroline.manager.user_manager')->transferRoles($event->getRemoved(), $event->getKept());
+        $rolesCount = $this->userManager->transferRoles($event->getRemoved(), $event->getKept());
         $event->addMessage("[CoreBundle] transferred roles count: $rolesCount");
 
         // Change personal workspace into regular
         $event->getRemoved()->getPersonalWorkspace()->setPersonal(false);
     }
 }
-

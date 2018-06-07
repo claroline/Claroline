@@ -1,11 +1,7 @@
-import {coreConfiguration} from '#/main/core/plugin'
+import {getApp} from '#/main/app/plugins'
 
 function getWidget(name) {
-  if (!coreConfiguration.widgets[name]) {
-    throw new Error(`You have requested a non existent widget named ${name}`)
-  }
-
-  return coreConfiguration.widgets[name]
+  return getApp('widgets', name)
 }
 
 export {

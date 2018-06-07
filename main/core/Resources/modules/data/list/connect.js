@@ -172,17 +172,16 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 
   // create the final list of actions
   // merge standard actions with the delete one
+  // todo find a better way to handle difference between promised actions and standard ones
   props.actions = (rows) => {
-    let actions = []
-
+    // generates defined list actions
+    let actions
     if (ownProps.actions) {
-      actions = actions.concat(
-        ownProps.actions(rows)
-      )
+      actions = ownProps.actions(rows)
     }
 
     if (ownProps.delete) {
-      actions = actions.concat([{
+      const deleteAction = {
         type: 'callback',
         icon: 'fa fa-fw fa-trash-o',
         label: trans('delete', {}, 'actions'),
@@ -195,7 +194,22 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
         disabled: undefined !== ownProps.delete.disabled && ownProps.delete.disabled(rows),
         displayed: undefined === ownProps.delete.displayed || ownProps.delete.displayed(rows),
         callback: () => dispatchProps.deleteItems(rows)
-      }])
+      }
+
+      if (actions instanceof Promise) {
+        if (actions) {
+          actions = actions.then((actions) => actions.concat([deleteAction]))
+        } else {
+          actions = Promise.resolve([deleteAction])
+        }
+
+      } else {
+        if (actions) {
+          actions = actions.concat([deleteAction])
+        } else {
+          actions = [deleteAction]
+        }
+      }
     }
 
     return actions

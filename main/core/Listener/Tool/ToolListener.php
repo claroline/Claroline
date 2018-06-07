@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Listener\Tool;
 
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Manager\ToolManager;
@@ -41,8 +40,6 @@ class ToolListener
     private $toolManager;
     private $translator;
     private $workspaceManager;
-    const R_U = 'ROLE_USER';
-    const R_A = 'ROLE_ADMIN';
 
     /**
      * @DI\InjectParams({
@@ -80,73 +77,11 @@ class ToolListener
     }
 
     /**
-     * @DI\Observe("open_tool_workspace_parameters")
-     *
-     * @param DisplayToolEvent $event
-     */
-    public function onDisplayWorkspaceParameters(DisplayToolEvent $event)
-    {
-        $event->setContent($this->workspaceParameters($event->getWorkspace()->getId()));
-    }
-
-    /**
-     * @DI\Observe("open_tool_workspace_logs")
-     *
-     * @param DisplayToolEvent $event
-     */
-    public function onDisplayWorkspaceLogs(DisplayToolEvent $event)
-    {
-        $event->setContent($this->workspaceLogs($event->getWorkspace()->getId()));
-    }
-
-    /**
-     * @DI\Observe("open_tool_workspace_analytics")
-     *
-     * @param DisplayToolEvent $event
-     */
-    public function onDisplayWorkspaceAnalytics(DisplayToolEvent $event)
-    {
-        $event->setContent($this->workspaceAnalytics($event->getWorkspace()->getId()));
-    }
-
-    /**
      * @DI\Observe("open_tool_desktop_parameters")
      *
      * @param DisplayToolEvent $event
      */
     public function onDisplayDesktopParameters(DisplayToolEvent $event)
-    {
-        $event->setContent($this->desktopParameters());
-    }
-
-    /**
-     * Renders the workspace properties page.
-     *
-     * @param int $workspaceId
-     *
-     * @return string
-     */
-    public function workspaceParameters($workspaceId)
-    {
-        $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
-        $tools = $this->toolManager->getToolByCriterias(
-            ['isConfigurableInWorkspace' => true, 'isDisplayableInWorkspace' => true]
-        );
-
-        $canOpenResRights = true;
-
-        return $this->templating->render(
-            'ClarolineCoreBundle:Tool\workspace\parameters:parameters.html.twig',
-            ['workspace' => $workspace, 'tools' => $tools, 'canOpenResRights' => $canOpenResRights]
-        );
-    }
-
-    /**
-     * Displays the Info desktop tab.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function desktopParameters()
     {
         $desktopTools = $this->toolManager->getToolByCriterias(
             ['isConfigurableInDesktop' => true, 'isDisplayableInDesktop' => true]
@@ -178,60 +113,15 @@ class ToolListener
         );
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 
-        return $response->getContent();
-    }
-
-    public function workspaceLogs($workspaceId)
-    {
-        $params = [
-            '_controller' => 'ClarolineCoreBundle:Tool\WorkspaceLog:index',
-            'workspaceId' => $workspaceId,
-        ];
-
-        $subRequest = $this->container->get('request_stack')->getMasterRequest()->duplicate([], null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-
-        return $response->getContent();
-    }
-
-    public function workspaceAnalytics($workspaceId)
-    {
-        $params = [
-            '_controller' => 'ClarolineCoreBundle:Tool\WorkspaceDashboard:index',
-            'workspaceId' => $workspaceId,
-        ];
-
-        $subRequest = $this->container->get('request_stack')->getMasterRequest()->duplicate([], null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-
-        return $response->getContent();
-    }
-
-    /**
-     * @DI\Observe("open_tool_workspace_users")
-     *
-     * @param DisplayToolEvent $event
-     *
-     * @throws \Claroline\CoreBundle\Listener\NoHttpRequestException
-     */
-    public function onDisplay(DisplayToolEvent $event)
-    {
-        $subRequest = $this->container->get('request_stack')->getMasterRequest()->duplicate(
-            [], null,
-            [
-                '_controller' => 'ClarolineCoreBundle:Workspace:usersManagement',
-                'workspace' => $event->getWorkspace(),
-            ]
-        );
-
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setContent($response->getContent());
     }
 
     /**
      * @DI\Observe("claroline_top_bar_left_menu_configure_desktop_tool")
      *
-     * @param \Acme\DemoBundle\Event\ConfigureMenuEvent $event
+     * @param ConfigureMenuEvent $event
+     *
+     * @return \Knp\Menu\ItemInterface
      */
     public function onTopBarLeftMenuConfigureDesktopTool(ConfigureMenuEvent $event)
     {
@@ -255,12 +145,16 @@ class ToolListener
 
             return $menu;
         }
+
+        return null;
     }
 
     /**
      * @DI\Observe("claroline_top_bar_right_menu_configure_desktop_tool")
      *
-     * @param \Acme\DemoBundle\Event\ConfigureMenuEvent $event
+     * @param ConfigureMenuEvent $event
+     *
+     * @return \Knp\Menu\ItemInterface
      */
     public function onTopBarRightMenuConfigureDesktopTool(ConfigureMenuEvent $event)
     {
@@ -283,12 +177,16 @@ class ToolListener
 
             return $menu;
         }
+
+        return null;
     }
 
     /**
      * @DI\Observe("claroline_top_bar_left_menu_configure_desktop_tool_parameters")
      *
-     * @param \Acme\DemoBundle\Event\ConfigureMenuEvent $event
+     * @param ConfigureMenuEvent $event
+     *
+     * @return \Knp\Menu\ItemInterface
      */
     public function onTopBarLeftMenuConfigureParameters(ConfigureMenuEvent $event)
     {
@@ -310,5 +208,7 @@ class ToolListener
 
             return $menu;
         }
+
+        return null;
     }
 }

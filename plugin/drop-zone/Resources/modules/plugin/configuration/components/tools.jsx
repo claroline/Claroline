@@ -40,7 +40,7 @@ class Tools extends Component {
   showForm() {
     this.props.showModal(MODAL_SELECTION, {
       title: trans('tool_type_selection_title', {}, 'dropzone'),
-      types: constants.toolTypes,
+      items: constants.toolTypes,
       handleSelect: (type) => this.handleToolTypeSelection(type)
     })
   }
@@ -146,7 +146,7 @@ class Tools extends Component {
                 icon: 'fa fa-fw fa-pencil',
                 label: trans('edit_tool', {}, 'dropzone'),
                 callback: () => this.editTool(rows[0]),
-                context: 'row'
+                scope: ['object']
               }
             ]}
           />

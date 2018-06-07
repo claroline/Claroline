@@ -75,23 +75,9 @@ class PathListener
         /** @var Path $path */
         $path = $event->getResource();
 
-        $canEdit = $this->container
-            ->get('security.authorization_checker')
-            ->isGranted('EDIT', new ResourceCollection([$path->getResourceNode()]));
-
-        $resourceTypes = [];
-        if ($canEdit) {
-            $resourceTypes = $this->om
-                ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-                ->findBy(['isEnabled' => true]);
-        }
-
         $event->setAdditionalData([
             'path' => $this->serializer->serialize($path),
-            'userEvaluation' => $this->userProgressionManager->getUpdatedResourceUserEvaluation($path),
-            'resourceTypes' => array_map(function (ResourceType $resourceType) {
-                return $this->serializer->serialize($resourceType);
-            }, $resourceTypes),
+            'evaluation' => $this->userProgressionManager->getUpdatedResourceUserEvaluation($path)
         ]);
         $event->stopPropagation();
     }
@@ -108,25 +94,11 @@ class PathListener
         /** @var Path $path */
         $path = $event->getResource();
 
-        $canEdit = $this->container
-            ->get('security.authorization_checker')
-            ->isGranted('EDIT', new ResourceCollection([$path->getResourceNode()]));
-
-        $resourceTypes = [];
-        if ($canEdit) {
-            $resourceTypes = $this->om
-                ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-                ->findBy(['isEnabled' => true]);
-        }
-
         $content = $this->container->get('templating')->render(
-            'InnovaPathBundle:Path:open.html.twig', [
+            'InnovaPathBundle:path:open.html.twig', [
                 '_resource' => $path,
                 'path' => $this->serializer->serialize($path),
-                'userEvaluation' => $this->userProgressionManager->getUpdatedResourceUserEvaluation($path),
-                'resourceTypes' => array_map(function (ResourceType $resourceType) {
-                    return $this->serializer->serialize($resourceType);
-                }, $resourceTypes),
+                'evaluation' => $this->userProgressionManager->getUpdatedResourceUserEvaluation($path),
             ]
         );
 

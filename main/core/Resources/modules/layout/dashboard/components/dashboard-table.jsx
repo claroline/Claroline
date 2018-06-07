@@ -28,7 +28,12 @@ const DashboardTable = (props) =>
               { val.colorLegend &&
                 <span
                   className="dashboard-color-legend"
-                  style={{backgroundColor: props.colors[idx % props.colors.length]}}
+                  style={{
+                    width: 12,
+                    height: 12,
+                    display: 'inline-block',
+                    backgroundColor: props.colors[idx % props.colors.length]
+                  }}
                 />
               }
               <span>{val.transDomain ? trans(data[val.name], {}, val.transDomain) : data[val.name]}</span>

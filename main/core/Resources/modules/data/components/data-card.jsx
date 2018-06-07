@@ -4,9 +4,8 @@ import omit from 'lodash/omit'
 
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {getPlainText} from '#/main/core/data/types/html/utils'
-import {trans} from '#/main/core/translation'
 import {number} from '#/main/app/intl'
-import {Button} from '#/main/app/action/components/button'
+import {Toolbar} from '#/main/app/action/components/toolbar'
 import {GenericButton} from '#/main/app/button/components/generic'
 import {TooltipElement} from '#/main/core/layout/components/tooltip-element'
 import {Heading} from '#/main/core/layout/components/heading'
@@ -110,7 +109,8 @@ CardContent.defaultProps = {
  */
 const DataCard = props =>
   <div className={classes(`data-card data-card-${props.orientation} data-card-${props.size}`, props.className, {
-    'data-card-clickable': props.primaryAction && !props.primaryAction.disabled
+    'data-card-clickable': props.primaryAction && !props.primaryAction.disabled,
+    'data-card-poster': !!props.poster
   })}>
     <CardHeader
       id={props.id}
@@ -147,18 +147,14 @@ const DataCard = props =>
     </CardContent>
 
     {0 !== props.actions.length &&
-      <Button
+      <Toolbar
         id={`actions-${props.id}`}
-        className="data-actions-btn btn btn-link"
-        type="menu"
+        className="data-card-toolbar"
+        buttonName="btn btn-link"
         tooltip="left"
-        icon="fa fa-fw fa-ellipsis-v"
-        label={trans('show-actions', {}, 'actions')}
-        menu={{
-          label: trans('actions'),
-          align: 'right',
-          items: props.actions
-        }}
+        toolbar="more"
+        actions={props.actions}
+        scope="object"
       />
     }
   </div>

@@ -1,4 +1,12 @@
 plugin:
+    resource_actions:
+        # Shows all the shortcuts to a resource
+        - name: shortcuts
+          decoder: open
+          scope: [object]
+          api: [GET]
+
     resources:
         - name: shortcut
           class: Claroline\LinkBundle\Entity\Resource\Shortcut
+          tags: [structure]

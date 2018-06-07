@@ -86,30 +86,6 @@ class AdministrationToolListener
     }
 
     /**
-     * @DI\Observe("administration_tool_platform_logs")
-     *
-     * @param OpenAdministrationToolEvent $event
-     */
-    public function onOpenPlatformLogs(OpenAdministrationToolEvent $event)
-    {
-        $this->redirect([
-            '_controller' => 'ClarolineCoreBundle:Administration/Logs:index',
-        ], $event);
-    }
-
-    /**
-     * @DI\Observe("administration_tool_platform_analytics")
-     *
-     * @param OpenAdministrationToolEvent $event
-     */
-    public function onOpenPlatformAnalytics(OpenAdministrationToolEvent $event)
-    {
-        $this->redirect([
-            '_controller' => 'ClarolineCoreBundle:Administration/Analytics:index',
-        ], $event);
-    }
-
-    /**
      * @DI\Observe("administration_tool_widgets_management")
      *
      * @param OpenAdministrationToolEvent $event

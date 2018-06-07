@@ -14,7 +14,7 @@ import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types
 
 const AboutModal = props =>
   <Modal
-    {...omit(props, 'workspace')}
+    {...omit(props, 'resourceNode')}
     icon="fa fa-fw fa-info"
     title={trans('about')}
     subtitle={props.resourceNode.name}

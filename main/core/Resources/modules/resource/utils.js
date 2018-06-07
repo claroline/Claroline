@@ -1,48 +1,81 @@
-import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 import omit from 'lodash/omit'
+import uniq from 'lodash/uniq'
 
 import {param} from '#/main/app/config'
+import {getApps} from '#/main/app/plugins'
 import {trans} from '#/main/core/translation'
 
-// todo load dynamically
-import {actions} from '#/main/core/resource/actions/actions'
+import {hasPermission} from '#/main/core/resource/permissions'
 
 /**
  * Get the type implemented by a resource node.
  *
- * @param resourceNode
+ * @param {object} resourceNode
  */
 function getType(resourceNode) {
   return param('resourceTypes')
     .find(type => type.name === resourceNode.meta.type)
 }
 
-/**
- * Gets the list of available for a resource.
- *
- * @param resourceNode
- * @param scope
- */
-function getActions(resourceNode, scope = null) {
-  return getType(resourceNode).actions
-    .filter(action =>
-      // filter by scope
-      (!scope || isEmpty(action.scope) || -1 !== action.scope.indexOf(scope))
-      // filter by permissions
-      && !!resourceNode.permissions[action.permission]
-      // filter implemented actions only
-      && undefined !== actions[action.name]
-    )
+function loadActions(resourceNodes, actions) {
+  const asyncActions = getApps('actions')
 
-    // merge server conf with ui
-    .map(action => merge({}, omit(action, 'permission'), actions[action.name]([resourceNode], scope), {
-      group: trans(action.group, {}, 'resource')
+  // only get implemented actions
+  const implementedActions = actions.filter(action => undefined !== asyncActions[action.name])
+
+  return Promise.all(
+    Object.keys(asyncActions).map(action => asyncActions[action]())
+  ).then((loadedActions) => {
+    // generates action from loaded modules
+    const realActions = {}
+    loadedActions.map(actionModule => {
+      const generated = actionModule.action(resourceNodes)
+      realActions[generated.name] = generated
+    })
+
+    // merge server action with ui implementation
+    return implementedActions.map(action => merge({}, omit(action, 'permission'), realActions[action.name], {
+      group: trans(action.group)
     }))
+  })
 }
 
-function getDefaultAction(resourceNode, scope) {
-  return getActions(resourceNode, scope).find(action => action.default)
+/**
+ * Gets the list of available actions for a resource.
+ *
+ * @param {Array}   resourceNodes - the current resource node
+ * @param {boolean} withDefault   - include the default action (most of the time, it's not useful to get it)
+ */
+function getActions(resourceNodes, withDefault = false) {
+  const resourceTypes = uniq(resourceNodes.map(resourceNode => resourceNode.meta.type))
+
+  const collectionActions = resourceTypes
+    .reduce((accumulator, resourceType) => {
+      let typeActions = getType({meta: {type: resourceType}}).actions
+        .filter(action =>
+          // filter default if needed
+          (withDefault || undefined === action.default || !action.default)
+          // filter by permissions (the user must have perms on AT LEAST ONE node in the collection)
+          && !!resourceNodes.find(resourceNode => hasPermission(action.permission, resourceNode))
+        )
+
+      return accumulator.concat(typeActions)
+    }, [])
+
+  return loadActions(resourceNodes, collectionActions, withDefault)
+}
+
+function getDefaultAction(resourceNode) {
+  const defaultAction = getType(resourceNode).actions
+    .find(action => action.default)
+
+  if (hasPermission(defaultAction.permission, resourceNode)) {
+    return loadActions([resourceNode], [defaultAction], 'object')
+      .then(loadActions => loadActions[0] || null)
+  }
+
+  return null
 }
 
 export {

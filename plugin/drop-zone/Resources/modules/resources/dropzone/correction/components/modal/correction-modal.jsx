@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
+import {registry} from '#/main/app/modals/registry'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {trans} from '#/main/core/translation'
 import {HtmlGroup}  from '#/main/core/layout/form/components/group/html-group.jsx'
@@ -11,7 +12,7 @@ import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box.jsx'
 import {DropzoneType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {validateNotBlank} from '#/plugin/drop-zone/resources/dropzone/correction/validator'
 
-export const MODAL_CORRECTION = 'MODAL_CORRECTION'
+const MODAL_CORRECTION = 'MODAL_CORRECTION'
 
 class DenialBox extends Component {
   constructor(props) {
@@ -107,7 +108,7 @@ DenialBox.propTypes = {
   fadeModal: T.func.isRequired
 }
 
-export class CorrectionModal extends Component {
+class CorrectionModal extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -197,4 +198,11 @@ CorrectionModal.propTypes = {
 CorrectionModal.defaultProps = {
   showDenialBox: false,
   denyCorrection: () => {}
+}
+
+registry.add(MODAL_CORRECTION, CorrectionModal)
+
+export {
+  MODAL_CORRECTION,
+  CorrectionModal
 }

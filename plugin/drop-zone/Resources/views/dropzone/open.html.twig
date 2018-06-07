@@ -9,13 +9,13 @@
 {% block content %}
     <div
         class="page-container dropzone-container"
-        data-user="{{ user | api_serialize | json_encode | raw | escape }}"
+        data-user="{{ user | json_encode | raw | escape }}"
         data-resource-node="{{ _resource.resourceNode | api_serialize | json_encode | raw | escape }}"
-        data-dropzone="{{ _resource | api_serialize | json_encode | raw | escape }}"
-        data-my-drop="{{ myDrop | api_serialize | json_encode | raw | escape }}"
+        data-dropzone="{{ dropzone | json_encode | raw | escape }}"
+        data-my-drop="{{ myDrop | json_encode | raw | escape }}"
         data-nb-corrections="{{ nbCorrections | json_encode | raw | escape }}"
         data-tools="{{ tools | json_encode | raw | escape }}"
-        data-user-evaluation="{{ userEvaluation | api_serialize | json_encode | raw | escape }}"
+        data-evaluation="{{ evaluation | json_encode | raw | escape }}"
         data-teams="{{ teams | json_encode | raw | escape }}"
         data-error-message="{{ errorMessage | json_encode | raw | escape }}"
     >

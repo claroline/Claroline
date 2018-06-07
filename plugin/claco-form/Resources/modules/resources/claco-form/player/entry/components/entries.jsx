@@ -250,23 +250,24 @@ class EntriesComponent extends Component {
       icon: 'fa fa-fw fa-eye',
       label: trans('view_entry', {}, 'clacoform'),
       target: `/entries/${rows[0].id}`,
-      context: 'row'
+      scope: ['object']
     }]
 
     if (this.props.canGeneratePdf) {
+      // todo : both actions must be merged
       dataListActions.push({
         type: 'callback',
         icon: 'fa fa-fw fa-print',
         label: trans('print_entry', {}, 'clacoform'),
         callback: () => this.props.downloadEntryPdf(rows[0].id),
-        context: 'row'
+        scope: ['object']
       })
       dataListActions.push({
         type: 'callback',
         icon: 'fa fa-w fa-print',
         label: trans('print_selected_entries', {}, 'clacoform'),
         callback: () => this.props.downloadEntriesPdf(rows),
-        context: 'selection'
+        scope: ['collection']
       })
     }
     dataListActions.push({
@@ -275,7 +276,7 @@ class EntriesComponent extends Component {
       label: trans('edit'),
       target: `/entry/form/${rows[0].id}`,
       displayed: !rows[0].locked && this.canEditEntry(rows[0]),
-      context: 'row'
+      scope: ['object']
     })
     dataListActions.push({
       type: 'callback',

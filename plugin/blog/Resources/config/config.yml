@@ -5,6 +5,7 @@ plugin:
     resources:
         - name: icap_blog
           class: Icap\BlogBundle\Entity\Blog
+          tags: [community, content]
           exportable: false
           actions:
             - name: post

@@ -65,7 +65,7 @@ class FileController extends Controller
      *     "formFactory"     = @DI\Inject("form.factory"),
      *     "homeExtension"   = @DI\Inject("claroline.twig.home_extension"),
      *     "mimeTypeGuesser" = @DI\Inject("claroline.utilities.mime_type_guesser"),
-     *     "requestStack"         = @DI\Inject("request_stack"),
+     *     "request"         = @DI\Inject("request_stack"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
      *     "session"         = @DI\Inject("session"),

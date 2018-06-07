@@ -1,0 +1,28 @@
+{% extends 'ClarolineCoreBundle:workspace:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "analytics" | trans({}, "tools") }}{% endblock %}
+
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
+{% block breadcrumb %}
+    {{ macros.workspaceBreadcrumbs(workspace, [
+        {
+            'name': 'dashboard'|trans({}, 'platform'),
+            'href': ''
+        }
+    ]) }}
+{% endblock %}
+
+{% block content %}
+    <div
+        class="page-container dashboard-container"
+        data-workspace="{{ workspace | api_serialize | json_encode | raw | escape }}"
+    >
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ hotAsset('dist/claroline-distribution-main-core-workspace-analytics.js') }}"></script>
+{% endblock %}

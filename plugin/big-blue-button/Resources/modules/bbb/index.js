@@ -1,6 +1,7 @@
 import cloneDeep from 'lodash/cloneDeep'
 
 import {bootstrap} from '#/main/app/bootstrap'
+import {hasPermission} from '#/main/core/resource/permissions'
 
 import {
   bbbReducers,
@@ -50,8 +51,8 @@ bootstrap(
         serverUrl: initialData.serverUrl,
         securitySalt: initialData.securitySalt
       },
-      canEdit: resourceNode.rights.current.edit,
-      canJoin: resourceNode.rights.current.edit || !resource.moderatorRequired,
+      canEdit: hasPermission('edit', resourceNode),
+      canJoin: hasPermission('edit', resourceNode) || !resource.moderatorRequired,
       bbbUrl: null
     }
   }

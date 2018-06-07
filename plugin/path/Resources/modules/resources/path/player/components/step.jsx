@@ -110,6 +110,8 @@ PrimaryResource.propTypes = {
 // todo : replace by a better code later if we keep iFrame compatibility
 const AVAILABLE_EMBEDDED_RESOURCES = [
   'text',
+  'innova_path',
+  'claroline_dropzone',
   'ujm_exercise'
 ]
 

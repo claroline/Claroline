@@ -42,34 +42,16 @@ function getPrimaryAction(item, actionGenerator) {
 }
 
 /**
- * Gets available actions for each data object.
- *
- * @param {object}   item             - The current row data.
- * @param {function} actionsGenerator - A function to generate the set of available actions for a data row.
- *
- * @returns {Array}
- */
-function getRowActions(item, actionsGenerator) {
-  if (actionsGenerator) {
-    return actionsGenerator([item]) // generates actions
-      .filter(action => !action.context || 'row' === action.context)
-  }
-
-  return []
-}
-
-/**
  * Gets available actions for selected data objects.
  *
- * @param {Array}    selected         - The current selection.
+ * @param {Array}    items            - The current item list.
  * @param {function} actionsGenerator - A function to generate the set of available actions for a data selection.
  *
  * @returns {Array}
  */
-function getBulkActions(selected, actionsGenerator) {
+function getActions(items, actionsGenerator) {
   if (actionsGenerator) {
-    return actionsGenerator(selected) // generates actions
-      .filter(action => !action.context || 'selection' === action.context)
+    return actionsGenerator(items) // generates actions
   }
 
   return []
@@ -153,8 +135,7 @@ export {
   createListDefinition,
   getPropDefinition,
   getPrimaryAction,
-  getRowActions,
-  getBulkActions,
+  getActions,
   getDisplayableProps,
   getDisplayedProps,
   getFilterableProps,

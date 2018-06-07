@@ -4,6 +4,7 @@ plugin:
     resources:
         - name: ujm_exercise
           class: UJM\ExoBundle\Entity\Exercise
+          tags: [evaluation]
           exportable: true
           actions:
               - name: manage_papers

@@ -22,15 +22,22 @@ const User = {
       disabled: T.bool,
       dates: T.arrayOf(T.string)
     }),
-    rights: T.shape({
-      current: T.shape({
-        edit: T.bool.isRequired
-      }).isRequired
+    permissions: T.shape({
+      contact: T.bool.isRequired,
+      edit: T.bool.isRequired,
+      administrate: T.bool.isRequired,
+      delete: T.bool.isRequired
     })
   },
   defaultProps: {
     meta: {
       publicUrlTuned: false
+    },
+    permissions: {
+      contact: false,
+      edit: false,
+      administrate: false,
+      delete: false
     },
     restrictions: {
       disabled: false,
