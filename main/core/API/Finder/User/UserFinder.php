@@ -84,6 +84,7 @@ class UserFinder implements FinderInterface
                 case 'name':
                     $qb->andWhere('UPPER(obj.username) LIKE :name OR UPPER(CONCAT(obj.firstName, \' \', obj.lastName)) LIKE :name');
                     $qb->setParameter('name', '%'.strtoupper($filterValue).'%');
+                    break;
                 case 'id':
                     $qb->andWhere('obj.uuid IN (:userUuids)');
                     $qb->setParameter('userUuids', is_array($filterValue) ? $filterValue : [$filterValue]);
@@ -122,20 +123,27 @@ class UserFinder implements FinderInterface
                     $value = is_array($filterValue) ? $filterValue : [$filterValue];
                     $roots = $this->om->findList('Claroline\CoreBundle\Entity\Organization\Organization', 'uuid', $value);
 
-                    $qb->leftJoin('obj.userOrganizationReferences', 'oref');
-                    $qb->leftJoin('oref.organization', 'oparent');
-                    $qb->leftJoin('oref.organization', 'organization');
+                    if (count($roots) > 0) {
+                        $qb->leftJoin('obj.userOrganizationReferences', 'oref');
+                        $qb->leftJoin('oref.organization', 'oparent');
+                        $qb->leftJoin('oref.organization', 'organization');
 
-                    foreach ($roots as $root) {
-                        $expr[] = $qb->expr()->andX(
-                          $qb->expr()->gte('organization.lft', $root->getLeft()),
-                          $qb->expr()->lte('organization.rgt', $root->getRight()),
-                          $qb->expr()->eq('oparent.root', $root->getRoot())
-                        );
+                        foreach ($roots as $root) {
+                            $expr[] = $qb->expr()->andX(
+                                  $qb->expr()->gte('organization.lft', $root->getLeft()),
+                                  $qb->expr()->lte('organization.rgt', $root->getRight()),
+                                  $qb->expr()->eq('oparent.root', $root->getRoot())
+                                );
+                        }
+
+                        $orX = $qb->expr()->orX(...$expr);
+                        $qb->andWhere($orX);
+                    } else {
+                        //no roots mean no user so we stop it here and make a crazy search
+                        $qb->andWhere('obj.id = -1');
+
+                        return $qb;
                     }
-
-                    $orX = $qb->expr()->orX(...$expr);
-                    $qb->andWhere($orX);
                     break;
                 case 'location':
                     $qb->leftJoin('obj.locations', 'l');
