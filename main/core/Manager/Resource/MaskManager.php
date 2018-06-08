@@ -296,4 +296,19 @@ class MaskManager
 
         return $actions;
     }
+
+    /**
+     * @param string       $name
+     * @param ResourceType $type
+     *
+     * @return MenuAction
+     */
+    public function getMenuFromNameAndResourceType($name, ResourceType $type)
+    {
+        if ($this->menuRepo->findOneBy(['name' => $name, 'resourceType' => $type])) {
+            return $this->menuRepo->findOneBy(['name' => $name, 'resourceType' => $type]);
+        }
+
+        return $this->menuRepo->findOneBy(['name' => $name]);
+    }
 }

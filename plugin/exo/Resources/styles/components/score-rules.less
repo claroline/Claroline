@@ -1,0 +1,61 @@
+.score-rules-group {
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+    }
+
+    .no-rule-info {
+        font-style: italic;
+        text-align: center;
+
+        // todo use vars
+        margin-bottom: 10px;
+        line-height: 30px;
+        border: 1px dashed #999;
+        padding: 5px;
+        color: #999;
+
+        .border-radius(@border-radius-base);
+    }
+}
+
+.score-rule-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: @gray-lighter;
+    margin-bottom: 5px;
+
+    .border-radius(@border-radius-base);
+
+    .form-group {
+        margin: 0 !important;
+    }
+
+    .form-control {
+        flex: 1;
+        text-align: right;
+        min-width: 0; // hack to avoid overflow in FF
+    }
+
+    .score-rule-row {
+        display: flex;
+        align-items: center;
+        margin: 5px;
+    }
+
+    .score-rule-component {
+        margin-right: 5px !important;
+    }
+
+    .score-rule-number-component {
+        max-width: 80px;
+    }
+}
+
+.score-rules-info-list {
+    margin-bottom: 15px !important;
+    padding-left: 30px !important;
+    list-style-type: disc !important;
+}

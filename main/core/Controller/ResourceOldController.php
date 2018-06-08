@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
@@ -23,14 +22,12 @@ use Claroline\CoreBundle\Form\ImportResourcesType;
 use Claroline\CoreBundle\Form\Resource\UnlockType;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\EventManager;
-use Claroline\CoreBundle\Manager\Exception\ResourceMoveException;
-use Claroline\CoreBundle\Manager\Exception\ResourceNotFoundException;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\LogManager;
 use Claroline\CoreBundle\Manager\Resource\MaskManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceNodeManager;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\TransferManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -43,7 +40,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -54,8 +50,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class ResourceOldController
- * @package Claroline\CoreBundle\Controller
+ * Class ResourceOldController.
  *
  * @todo restore used before remove (eg. the action about lock / unlock)
  */
@@ -164,7 +159,6 @@ class ResourceOldController extends Controller
 
         return new Response($event->getResponseContent());
     }
-
 
     /**
      * Opens a resource.
@@ -340,6 +334,7 @@ class ResourceOldController extends Controller
         $resource = $this->resourceManager->getResourceFromNode($node);
         $collection = new ResourceCollection([$node]);
         $this->checkAccess('ADMINISTRATE', $collection);
+
         return [
             'workspace' => $node->getWorkspace(),
             '_resource' => $resource,
@@ -1000,11 +995,11 @@ class ResourceOldController extends Controller
      * @return Response
      */
     public function createAction(
-    $resourceType,
-    ResourceNode $parent,
-    User $user,
-    $published = 0
-) {
+        $resourceType,
+        ResourceNode $parent,
+        User $user,
+        $published = 0
+    ) {
         $collection = new ResourceCollection([$parent]);
         $collection->setAttributes(['type' => $resourceType]);
         if (!$this->authorization->isGranted('CREATE', $collection)) {
@@ -1055,5 +1050,54 @@ class ResourceOldController extends Controller
         }
 
         return new Response($event->getErrorFormContent());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/custom/{action}/{node}",
+     *     name="claro_resource_custom_action",
+     *     options={"expose"=true}
+     * )
+     *
+     * Handles any custom action (i.e. not defined in this controller) on a
+     * resource of a given type.
+     *
+     * If the ResourceType is null, it's an action (resource action) valides for all type of resources.
+     *
+     * @param string       $action the action
+     * @param ResourceNode $node   the resource
+     *
+     * @throws \Exception
+     *
+     * @return Response
+     */
+    public function customAction($action, ResourceNode $node)
+    {
+        $type = $node->getResourceType();
+        $menuAction = $this->maskManager->getMenuFromNameAndResourceType($action, $type);
+
+        if (!$menuAction) {
+            throw new \Exception("The menu {$action} doesn't exists");
+        }
+        $collection = new ResourceCollection([$node]);
+
+        if (null === $menuAction->getResourceType()) {
+            if (!$this->authorization->isGranted('ROLE_USER')) {
+                throw new AccessDeniedException('You must be log in to execute this action !');
+            }
+            $this->checkAccess('open', $collection);
+            $eventName = 'resource_action_'.$action;
+        } else {
+            $decoder = $menuAction->getDecoder();
+            $this->checkAccess($decoder, $collection);
+            $eventName = $action.'_'.$type->getName();
+        }
+        $event = $this->dispatcher->dispatch(
+            $eventName,
+            'CustomActionResource',
+            [$this->resourceManager->getResourceFromNode($node)]
+        );
+
+        return $event->getResponse();
     }
 }

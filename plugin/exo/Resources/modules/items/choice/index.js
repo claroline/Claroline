@@ -9,12 +9,17 @@ function getCorrectedAnswer(item, answers = null) {
 
   item.solutions.forEach(choice => {
     const score = choice.score
+
     if (answers && answers.data && answers.data.indexOf(choice.id) > -1) {
       score > 0 ?
         corrected.addExpected(new Answerable(score)) :
         corrected.addUnexpected(new Answerable(score))
     } else {
-      if (score > 0) corrected.addMissing(new Answerable(score))
+      if (score > 0) {
+        corrected.addMissing(new Answerable(score))
+      } else {
+        corrected.addExpectedMissing(new Answerable(score))
+      }
     }
   })
 

@@ -1,20 +1,20 @@
 import cloneDeep from 'lodash/cloneDeep'
-import merge from 'lodash/merge'
 import zipObject from 'lodash/zipObject'
 import set from 'lodash/set'
 
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
-import {tex} from '#/main/core/translation'
+import {tex, trans} from '#/main/core/translation'
 import {notBlank} from '#/main/core/validation'
 
-import {ITEM_CREATE} from './../../quiz/editor/actions'
-import {SCORE_FIXED} from './../../quiz/enums'
-import {makeId} from './../../utils/utils'
-import {Choice as component} from './editor.jsx'
-
+import {ITEM_CREATE} from '#/plugin/exo/quiz/editor/actions'
+import {SCORE_FIXED, SCORE_RULES, NUMBERING_NONE} from '#/plugin/exo/quiz/enums'
+import {makeId} from '#/plugin/exo/utils/utils'
+import {Choice as component} from '#/plugin/exo/items/choice/editor.jsx'
 import {
-  NUMBERING_NONE
-} from './../../quiz/enums'
+  RULE_TYPE_MORE,
+  RULE_TYPE_LESS,
+  RULE_TYPE_BETWEEN
+} from '#/plugin/exo/items/choice/constants'
 
 const UPDATE_PROP = 'UPDATE_PROP'
 const UPDATE_CHOICE = 'UPDATE_CHOICE'
@@ -95,8 +95,8 @@ function reduce(item = {}, action) {
       }
 
       const newItem = cloneDeep(item)
-      const property = set({}, action.property, value)
-      setChoiceTicks(merge(newItem, property))
+      set(newItem, action.property, value)
+      setChoiceTicks(newItem)
 
       if (newItem.score.type === SCORE_FIXED) {
         setScores(newItem, choice => choice._checked ? 1 : 0)
@@ -183,6 +183,51 @@ function validate(item) {
           'fixed_score_choice_at_least_one_correct_answer_error' :
           'fixed_score_choice_no_correct_answer_error'
       )
+    }
+  } else if (item.score.type === SCORE_RULES) {
+    if (!item.score.rules || 1 > item.score.rules.length) {
+      errors.rules = tex('ruled_score_choice_no_rule_error')
+    } else {
+      item.score.rules.forEach((rule, index) => {
+        const error = {}
+        let hasError = false
+
+        if (!rule.type) {
+          error['type'] = trans('value_not_blank', {}, 'validators')
+          hasError = true
+        }
+        if (!rule.source) {
+          error['source'] = trans('value_not_blank', {}, 'validators')
+          hasError = true
+        }
+        if (!rule.target) {
+          error['target'] = trans('value_not_blank', {}, 'validators')
+          hasError = true
+        }
+        if (!rule.points && 0 !== rule.points) {
+          error['points'] = trans('value_not_blank', {}, 'validators')
+          hasError = true
+        }
+        if (-1 < [RULE_TYPE_MORE, RULE_TYPE_LESS].indexOf(rule.type) && !rule.count && 0 !== rule.count) {
+          error['count'] = trans('value_not_blank', {}, 'validators')
+          hasError = true
+        }
+        if (RULE_TYPE_BETWEEN === rule.type && !rule.countMin && 0 !== rule.countMin) {
+          error['countMin'] = trans('value_not_blank', {}, 'validators')
+          hasError = true
+        }
+        if (RULE_TYPE_BETWEEN === rule.type && !rule.countMax && 0 !== rule.countMax) {
+          error['countMax'] = trans('value_not_blank', {}, 'validators')
+          hasError = true
+        }
+
+        if (hasError) {
+          if (!errors.rules) {
+            errors.rules = {}
+          }
+          errors.rules[index] = error
+        }
+      })
     }
   } else {
     if (!item.choices.find(choice => choice._score > 0)) {

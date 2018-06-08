@@ -89,7 +89,7 @@ const Resource = props =>
         icon: 'fa fa-fw fa-pie-chart',
         label: trans('docimology', {}, 'quiz'),
         displayed: props.docimologyAdmin,
-        target: ['ujm_exercise_docimology', {id: props.quizId}]
+        target: ['claro_resource_custom_action', {action: 'docimology', node: props.resourceNodeId}]
       }
     ]}
   >
@@ -172,6 +172,7 @@ const Resource = props =>
 
 Resource.propTypes = {
   quizId: T.string.isRequired,
+  resourceNodeId: T.string.isRequired,
   editable: T.bool.isRequired,
   papersAdmin: T.bool.isRequired,
   docimologyAdmin: T.bool.isRequired,
@@ -192,6 +193,7 @@ const QuizResource = DragNDropContext(
   connect(
     (state) => ({
       quizId: select.id(state),
+      resourceNodeId: resourceSelect.resourceNode(state).id,
       editable: hasPermission('edit', resourceSelect.resourceNode(state)),
       hasPapers: select.hasPapers(state),
       hasOverview: select.hasOverview(state),

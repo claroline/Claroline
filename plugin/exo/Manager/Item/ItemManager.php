@@ -271,7 +271,7 @@ class ItemManager
                 $score = $this->calculateScore($question, $answer);
                 // get total available for the question
                 $expected = $definition->expectAnswer($question->getInteraction());
-                $total = $this->scoreManager->calculateTotal(json_decode($question->getScoreRule()), $expected);
+                $total = $this->scoreManager->calculateTotal(json_decode($question->getScoreRule()), $expected, $question->getInteraction());
                 // report the score on 100
                 $score = $total > 0 ? (100 * $score) / $total : 0;
 
@@ -298,7 +298,7 @@ class ItemManager
         $definition = $this->itemDefinitions->get($question->getMimeType());
         $expected = $definition->expectAnswer($question->getInteraction());
 
-        return $this->scoreManager->calculateTotal(json_decode($question->getScoreRule()), $expected);
+        return $this->scoreManager->calculateTotal(json_decode($question->getScoreRule()), $expected, $question->getInteraction());
     }
 
     /**

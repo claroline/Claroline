@@ -36,23 +36,33 @@ class CorrectedAnswer
     private $penalties = [];
 
     /**
+     * The answers that have been correctly not chosen by the user.
+     *
+     * @var AnswerPartInterface[]
+     */
+    private $expectedMissing = [];
+
+    /**
      * CorrectedAnswer constructor.
      *
      * @param AnswerPartInterface[]  $expected
      * @param AnswerPartInterface[]  $missing
      * @param AnswerPartInterface[]  $unexpected
      * @param PenaltyItemInterface[] $penalties
+     * @param AnswerPartInterface[]  $expectedMissing
      */
     public function __construct(
         array $expected = [],
         array $missing = [],
         array $unexpected = [],
-        array $penalties = []
+        array $penalties = [],
+        array $expectedMissing = []
     ) {
         $this->expected = $expected;
         $this->missing = $missing;
         $this->unexpected = $unexpected;
         $this->penalties = $penalties;
+        $this->expectedMissing = $expectedMissing;
     }
 
     /**
@@ -140,5 +150,23 @@ class CorrectedAnswer
     public function addPenalty(PenaltyItemInterface $penalty)
     {
         $this->penalties[] = $penalty;
+    }
+
+    /**
+     * Get expected missing answers.
+     *
+     * @return AnswerPartInterface[]
+     */
+    public function getExpectedMissing()
+    {
+        return $this->expectedMissing;
+    }
+
+    /**
+     * @param AnswerPartInterface $expectedMissing
+     */
+    public function addExpectedMissing(AnswerPartInterface $expectedMissing)
+    {
+        $this->expectedMissing[] = $expectedMissing;
     }
 }

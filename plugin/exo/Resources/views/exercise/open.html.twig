@@ -12,7 +12,7 @@
       class="page-container quiz-container"
       data-quiz="{{ quiz | json_encode | raw | escape }}"
       data-resource-node="{{ _resource.resourceNode | api_serialize | json_encode | raw | escape }}"
-      data-evaluation="{{ evaluation | api_serialize | json_encode | raw | escape }}"
+      data-evaluation="{{ userEvaluation | api_serialize | json_encode | raw | escape }}"
     >
     </div>
 {% endblock %}

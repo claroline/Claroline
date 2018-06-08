@@ -3,13 +3,14 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {tex} from '#/main/core/translation'
-import {SCORE_FIXED} from '../../quiz/enums'
-import {Feedback} from '../components/feedback-btn.jsx'
-import {SolutionScore} from '../components/score.jsx'
-import {AnswerStats} from '../components/stats.jsx'
-import {WarningIcon} from './utils/warning-icon.jsx'
-import {utils} from './utils/utils'
-import {PaperTabs} from '../components/paper-tabs.jsx'
+
+import {SCORE_FIXED, SCORE_RULES} from '#/plugin/exo/quiz/enums'
+import {utils} from '#/plugin/exo/items/choice/utils/utils'
+import {Feedback} from '#/plugin/exo/items/components/feedback-btn.jsx'
+import {SolutionScore} from '#/plugin/exo/items/components/score.jsx'
+import {AnswerStats} from '#/plugin/exo/items/components/stats.jsx'
+import {PaperTabs} from '#/plugin/exo/items/components/paper-tabs.jsx'
+import {WarningIcon} from '#/plugin/exo/items/choice/utils/warning-icon.jsx'
 
 export const ChoicePaper = props => {
   return (
@@ -53,7 +54,7 @@ export const ChoicePaper = props => {
                 />
               </div>
 
-              {props.showScore && SCORE_FIXED !== props.item.score.type &&
+              {props.showScore && -1 === [SCORE_FIXED, SCORE_RULES].indexOf(props.item.score.type) &&
                 <SolutionScore score={solution.score} />
               }
             </label>
@@ -94,7 +95,7 @@ export const ChoicePaper = props => {
                 />
               </div>
 
-              {props.showScore && SCORE_FIXED !== props.item.score.type &&
+              {props.showScore && -1 === [SCORE_FIXED, SCORE_RULES].indexOf(props.item.score.type) &&
                 <SolutionScore score={solution.score} />
               }
             </label>

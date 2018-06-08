@@ -32,7 +32,7 @@ const CircularGauge = props => {
           strokeWidth={1}
           textAnchor="middle"
         >
-          {this.props.label}
+          {props.label}
         </text>
 
         <text
@@ -42,7 +42,7 @@ const CircularGauge = props => {
           textAnchor="middle"
           y={24}
         >
-          {this.props.value}
+          {props.value}
         </text>
       </g>
 

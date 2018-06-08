@@ -4,20 +4,23 @@ import get from 'lodash/get'
 import classes from 'classnames'
 
 import {t, tex} from '#/main/core/translation'
-import {SCORE_SUM, SCORE_FIXED} from './../../quiz/enums'
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 import {RadiosGroup} from '#/main/core/layout/form/components/group/radios-group.jsx'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
-import {QCM_MULTIPLE, QCM_SINGLE, actions} from './editor'
 
 import {
+  SCORE_SUM,
+  SCORE_FIXED,
+  SCORE_RULES,
   NUMBERING_LITTERAL,
   NUMBERING_NONE,
   NUMBERING_NUMERIC
-} from './../../quiz/enums'
+} from '#/plugin/exo/quiz/enums'
+import {QCM_MULTIPLE, QCM_SINGLE, actions} from '#/plugin/exo/items/choice/editor'
+import {ScoreRulesGroup} from '#/plugin/exo/data/types/score-rules/components/form-group.jsx'
 
 class ChoiceItem extends Component {
   constructor(props) {
@@ -131,7 +134,7 @@ const ChoiceItems = props =>
           score={choice._score}
           feedback={choice._feedback}
           multiple={props.item.multiple}
-          fixedScore={props.item.score.type === SCORE_FIXED}
+          fixedScore={-1 < [SCORE_FIXED, SCORE_RULES].indexOf(props.item.score.type)}
           checked={choice._checked}
           deletable={choice._deletable}
           onChange={props.onChange}
@@ -180,18 +183,20 @@ const Choice = props =>
         [QCM_MULTIPLE]: tex('qcm_multiple_answers')
       }}
       value={props.item.multiple ? QCM_MULTIPLE : QCM_SINGLE}
-      onChange={value => props.onChange(
-        actions.updateProperty('multiple', value === QCM_MULTIPLE)
-      )}
+      onChange={value => {
+        props.onChange(actions.updateProperty('multiple', value === QCM_MULTIPLE))
+
+        if (value !== QCM_MULTIPLE && props.item.score.type === SCORE_RULES) {
+          props.onChange(actions.updateProperty('score.type', SCORE_SUM))
+        }
+      }}
     />
 
     <CheckGroup
       id={`item-${props.item.id}-fixedScore`}
       value={props.item.score.type === SCORE_FIXED}
       label={tex('fixed_score')}
-      onChange={checked => props.onChange(
-        actions.updateProperty('score.type', checked ? SCORE_FIXED : SCORE_SUM)
-      )}
+      onChange={checked => props.onChange(actions.updateProperty('score.type', checked ? SCORE_FIXED : SCORE_SUM))}
     />
 
     {props.item.score.type === SCORE_FIXED &&
@@ -208,9 +213,7 @@ const Choice = props =>
             min="0"
             value={props.item.score.success}
             className="form-control"
-            onChange={e => props.onChange(
-              actions.updateProperty('score.success', e.target.value)
-            )}
+            onChange={e => props.onChange(actions.updateProperty('score.success', e.target.value))}
           />
         </FormGroup>
         <FormGroup
@@ -224,11 +227,36 @@ const Choice = props =>
             type="number"
             value={props.item.score.failure}
             className="form-control"
-            onChange={e => props.onChange(
-              actions.updateProperty('score.failure', e.target.value)
-            )}
+            onChange={e => props.onChange(actions.updateProperty('score.failure', e.target.value))}
           />
         </FormGroup>
+      </div>
+    }
+
+    {props.item.multiple &&
+      <CheckGroup
+        id={`item-${props.item.id}-scoreRules`}
+        value={props.item.score.type === SCORE_RULES}
+        label={tex('score_by_rules')}
+        onChange={checked => props.onChange(actions.updateProperty('score.type', checked ? SCORE_RULES : SCORE_SUM))}
+      />
+    }
+
+    {props.item.multiple && props.item.score.type === SCORE_RULES &&
+      <div className="sub-fields">
+        <CheckGroup
+          id={`item-${props.item.id}-no-wrong-choice`}
+          value={props.item.score.noWrongChoice}
+          label={tex('no_wrong_checked_choice_info')}
+          onChange={checked => props.onChange(actions.updateProperty('score.noWrongChoice', checked))}
+        />
+        <ScoreRulesGroup
+          id={`item-${props.item.id}-rules`}
+          label={tex('rules')}
+          value={props.item.score.rules || []}
+          onChange={value => props.onChange(actions.updateProperty('score.rules', value))}
+          error={get(props.item, '_errors.rules')}
+        />
       </div>
     }
 
@@ -265,7 +293,9 @@ Choice.propTypes = {
     score: T.shape({
       type: T.string.isRequired,
       success: T.number.isRequired,
-      failure: T.number.isRequired
+      failure: T.number.isRequired,
+      noWrongChoice: T.bool,
+      rules: T.array
     }),
     choices: T.arrayOf(T.object).isRequired
   }).isRequired,

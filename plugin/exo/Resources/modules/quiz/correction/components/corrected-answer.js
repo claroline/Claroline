@@ -14,11 +14,12 @@ export class Answerable {
 }
 
 export class CorrectedAnswer {
-  constructor(expected = [], missing = [], unexpected = [], penalties = []) {
+  constructor(expected = [], missing = [], unexpected = [], penalties = [], expectedMissing = []) {
     this.expected = expected
     this.missing = missing
     this.unexpected = unexpected
     this.penalties = penalties
+    this.expectedMissing = expectedMissing
   }
 
   getExpected() {
@@ -51,6 +52,14 @@ export class CorrectedAnswer {
 
   addPenalty(penalty) {
     this.addElement(penalty, 'penalties')
+  }
+
+  getExpectedMissing() {
+    return this.expectedMissing
+  }
+
+  addExpectedMissing(expectedMissing) {
+    this.addElement(expectedMissing, 'expectedMissing')
   }
 
   addElement(element, property) {

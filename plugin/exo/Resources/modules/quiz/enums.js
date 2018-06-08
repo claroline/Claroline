@@ -67,6 +67,7 @@ export const markModes = [
 export const SCORE_SUM = 'sum'
 export const SCORE_FIXED = 'fixed'
 export const SCORE_MANUAL = 'manual'
+export const SCORE_RULES = 'rules'
 
 export const TOTAL_SCORE_ON_DEFAULT = 'default'
 export const TOTAL_SCORE_ON_CUSTOM = 'custom'

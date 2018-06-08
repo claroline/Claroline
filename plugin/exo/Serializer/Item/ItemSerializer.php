@@ -600,6 +600,11 @@ class ItemSerializer extends AbstractSerializer
             case 'manual':
                 $sanitized->max = $score->max;
                 break;
+
+            case 'rules':
+                $sanitized->noWrongChoice = $score->noWrongChoice;
+                $sanitized->rules = $score->rules;
+                break;
         }
 
         return $sanitized;
