@@ -50,6 +50,8 @@ implementPropTypes(StaticToolbar, ToolbarTypes, {
   actions: T.arrayOf(T.shape(
     ActionTypes.propTypes
   ))
+}, {
+  actions: []
 })
 
 class PromisedToolbar extends Component {

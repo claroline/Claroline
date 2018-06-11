@@ -31,7 +31,7 @@ function parseToolbar(toolbarConfig) {
  *
  * @todo improve implementation (the part for more menu)
  */
-function buildToolbar(toolbarConfig, actions, scope) {
+function buildToolbar(toolbarConfig, actions = [], scope) {
   let toolbar = []
 
   // filters toolbar actions

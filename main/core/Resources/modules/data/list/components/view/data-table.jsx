@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
+import isEmpty from 'lodash/isEmpty'
 
 import {t} from '#/main/core/translation'
 import {getTypeOrDefault} from '#/main/core/data/index'
@@ -99,7 +100,7 @@ const DataTableRow = props => {
         />
       )}
 
-      {(0 < props.actions.length || props.actions instanceof Promise) &&
+      {(!isEmpty(props.actions) || props.actions instanceof Promise) &&
         <TableCell align="right" className="actions-cell">
           <ListActions
             id={`data-table-item-${props.row.id}-actions`}
