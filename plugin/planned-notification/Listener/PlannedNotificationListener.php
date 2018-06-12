@@ -14,11 +14,13 @@ namespace Claroline\PlannedNotificationBundle\Listener;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\LogRoleSubscribeEvent;
+use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\PlannedNotificationBundle\Manager\PlannedNotificationManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @DI\Service
@@ -31,26 +33,32 @@ class PlannedNotificationListener
     private $httpKernel;
     /** @var Request */
     private $request;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
 
     /**
      * @DI\InjectParams({
      *     "manager"      = @DI\Inject("claroline.manager.planned_notification_manager"),
      *     "httpKernel"   = @DI\Inject("http_kernel"),
-     *     "requestStack" = @DI\Inject("request_stack")
+     *     "requestStack" = @DI\Inject("request_stack"),
+     *     "tokenStorage" = @DI\Inject("security.token_storage")
      * })
      *
      * @param PlannedNotificationManager $manager
      * @param HttpKernelInterface        $httpKernel
      * @param RequestStack               $requestStack
+     * @param TokenStorageInterface      $tokenStorage
      */
     public function __construct(
         PlannedNotificationManager $manager,
         HttpKernelInterface $httpKernel,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        TokenStorageInterface $tokenStorage
     ) {
         $this->manager = $manager;
         $this->httpKernel = $httpKernel;
         $this->request = $requestStack->getCurrentRequest();
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -70,7 +78,7 @@ class PlannedNotificationListener
     }
 
     /**
-     * @DI\Observe("log")
+     * @DI\Observe("log", priority=1)
      *
      * @param LogGenericEvent $event
      */
@@ -82,12 +90,18 @@ class PlannedNotificationListener
 
             if (!empty($workspace)) {
                 $this->manager->generateScheduledTasks(
-                    $workspace,
                     $event->getActionKey(),
                     $event->getReceiver(),
+                    $workspace,
                     $event->getReceiverGroup(),
                     $role
                 );
+            }
+        } elseif ($event instanceof LogWorkspaceEnterEvent) {
+            $user = $this->tokenStorage->getToken()->getUser();
+
+            if ('anon.' !== $user) {
+                $this->manager->generateScheduledTasks($event->getAction(), $user, $event->getWorkspace());
             }
         }
     }

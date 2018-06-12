@@ -16,7 +16,11 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
+use Claroline\CoreBundle\Repository\Log\LogRepository;
+use Claroline\PlannedNotificationBundle\Entity\Message;
+use Claroline\PlannedNotificationBundle\Entity\PlannedNotification;
 use Claroline\PlannedNotificationBundle\Repository\PlannedNotificationRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -26,6 +30,9 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class PlannedNotificationManager
 {
+    /** @var MailManager */
+    private $mailManager;
+
     /** @var ObjectManager */
     private $om;
 
@@ -35,6 +42,9 @@ class PlannedNotificationManager
     /** @var TranslatorInterface */
     private $translator;
 
+    /** @var LogRepository */
+    private $logRepo;
+
     /** @var PlannedNotificationRepository */
     private $plannedNotificationRepo;
 
@@ -42,44 +52,74 @@ class PlannedNotificationManager
      * PlannedNotificationManager constructor.
      *
      * @DI\InjectParams({
+     *     "mailManager"          = @DI\Inject("claroline.manager.mail_manager"),
      *     "om"                   = @DI\Inject("claroline.persistence.object_manager"),
      *     "scheduledTaskManager" = @DI\Inject("claroline.manager.scheduled_task_manager"),
      *     "translator"           = @DI\Inject("translator")
      * })
      *
+     * @param MailManager          $mailManager
      * @param ObjectManager        $om
      * @param ScheduledTaskManager $scheduledTaskManager
      * @param TranslatorInterface  $translator
      */
     public function __construct(
+        MailManager $mailManager,
         ObjectManager $om,
         ScheduledTaskManager $scheduledTaskManager,
         TranslatorInterface $translator
     ) {
+        $this->mailManager = $mailManager;
         $this->om = $om;
         $this->scheduledTaskManager = $scheduledTaskManager;
         $this->translator = $translator;
 
+        $this->logRepo = $om->getRepository('Claroline\CoreBundle\Entity\Log\Log');
         $this->plannedNotificationRepo = $om->getRepository('Claroline\PlannedNotificationBundle\Entity\PlannedNotification');
     }
 
     /**
-     * @param Workspace $workspace
      * @param string    $action
      * @param User      $user
+     * @param Workspace $workspace
      * @param Group     $group
      * @param Role      $role
      */
-    public function generateScheduledTasks(Workspace $workspace, $action, User $user = null, Group $group = null, Role $role = null)
-    {
-        $notifications = is_null($role) ?
-            $this->plannedNotificationRepo->findByAction($workspace, $action) :
-            $this->plannedNotificationRepo->findByActionAndRole($workspace, $action, $role);
+    public function generateScheduledTasks(
+        $action,
+        User $user = null,
+        Workspace $workspace = null,
+        Group $group = null,
+        Role $role = null
+    ) {
+        $notifications = [];
+        $currentDate = new \DateTime();
+        $isFirstConnection = null;
+
+        switch ($action) {
+            case PlannedNotification::TYPE_WORKSPACE_USER_REGISTRATION:
+            case PlannedNotification::TYPE_WORKSPACE_GROUP_REGISTRATION:
+                $notifications = is_null($role) ?
+                    $this->plannedNotificationRepo->findByAction($workspace, $action) :
+                    $this->plannedNotificationRepo->findByActionAndRole($workspace, $action, $role);
+                break;
+            case PlannedNotification::TYPE_WORKSPACE_FIRST_CONNECTION:
+                $notifications = $this->plannedNotificationRepo->findByAction($workspace, $action);
+                break;
+        }
 
         $this->om->startFlushSuite();
-        $currentDate = new \DateTime();
 
         foreach ($notifications as $notification) {
+            if (PlannedNotification::TYPE_WORKSPACE_FIRST_CONNECTION === $action) {
+                if (is_null($isFirstConnection)) {
+                    $logs = $this->logRepo->findBy(['action' => $action, 'doer' => $user, 'workspace' => $workspace]);
+                    $isFirstConnection = 0 === count($logs);
+                }
+                if (!$isFirstConnection) {
+                    continue;
+                }
+            }
             $name = $this->translator->trans($notification->getAction(), [], 'planned_notification');
 
             if (!empty($user)) {
@@ -127,5 +167,16 @@ class PlannedNotificationManager
             }
         }
         $this->om->endFlushSuite();
+    }
+
+    /**
+     * @param Message[] $messages
+     * @param User[]    $users
+     */
+    public function sendMessages(array $messages, array $users)
+    {
+        foreach ($messages as $message) {
+            $this->mailManager->send($message->getTitle(), $message->getContent(), $users);
+        }
     }
 }

@@ -11,7 +11,7 @@ import {PageAction} from '#/main/core/layout/page'
 import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
 
 import {select} from '#/plugin/planned-notification/tools/planned-notification/selectors'
-import {constants} from '#/plugin/planned-notification/tools/planned-notification/constants'
+import {WORKSPACE_REGISTRATION_USER} from '#/plugin/planned-notification/tools/planned-notification/constants'
 import {actions} from '#/plugin/planned-notification/tools/planned-notification/notification/actions'
 import {Notifications} from '#/plugin/planned-notification/tools/planned-notification/notification/components/notifications.jsx'
 import {Notification} from '#/plugin/planned-notification/tools/planned-notification/notification/components/notification.jsx'
@@ -96,7 +96,7 @@ const NotificationTab = connect(
         id: makeId(),
         workspace: workspace,
         parameters: {
-          action: constants.WORKSPACE_REGISTRATION_USER,
+          action: WORKSPACE_REGISTRATION_USER,
           interval: 1,
           byMail: true,
           byMessage: false

@@ -12,7 +12,8 @@ const reducer = combineReducers({
       [FORM_SUBMIT_SUCCESS+'/messages.current']: () => true
     })
   }),
-  current: makeFormReducer('messages.current', {}, {})
+  current: makeFormReducer('messages.current', {}, {}),
+  userspicker: makeListReducer('messages.userspicker')
 })
 
 export {

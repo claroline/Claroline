@@ -23,6 +23,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PlannedNotification
 {
+    const TYPE_WORKSPACE_USER_REGISTRATION = 'workspace-role-subscribe_user';
+    const TYPE_WORKSPACE_GROUP_REGISTRATION = 'workspace-role-subscribe_group';
+    const TYPE_WORKSPACE_FIRST_CONNECTION = 'workspace-enter';
+
     use UuidTrait;
 
     /**

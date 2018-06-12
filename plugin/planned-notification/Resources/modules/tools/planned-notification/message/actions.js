@@ -15,3 +15,16 @@ actions.open = (formName, id = null, defaultProps) => {
     return formActions.resetForm(formName, defaultProps, true)
   }
 }
+
+actions.sendMessages = (messages, users) => ({
+  [API_REQUEST]: {
+    url: ['apiv2_plannednotificationmessage_messages_send'],
+    request: {
+      method: 'POST',
+      body: JSON.stringify({
+        messages: messages.map(message => message.id),
+        users: users
+      })
+    }
+  }
+})

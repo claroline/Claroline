@@ -6,7 +6,11 @@ import {trans} from '#/main/core/translation'
 import {select as formSelect} from '#/main/core/data/form/selectors'
 import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
 
-import {constants} from '#/plugin/planned-notification/tools/planned-notification/constants'
+import {
+  TRIGGERING_ACTIONS,
+  WORKSPACE_REGISTRATION_USER,
+  WORKSPACE_REGISTRATION_GROUP
+} from '#/plugin/planned-notification/tools/planned-notification/constants'
 import {select} from '#/plugin/planned-notification/tools/planned-notification/selectors'
 import {Notification as NotificationTypes} from '#/plugin/planned-notification/tools/planned-notification/prop-types'
 
@@ -29,14 +33,18 @@ const NotificationForm = props =>
             options: {
               noEmpty: true,
               condensed: true,
-              choices: constants.TRIGGERING_ACTIONS
-            }
-          }, {
-            name: 'roles',
-            label: trans('roles'),
-            type: 'workspace_roles',
-            disabled: !props.canEdit,
-            required: false
+              choices: TRIGGERING_ACTIONS
+            },
+            linked: [
+              {
+                name: 'roles',
+                label: trans('roles'),
+                type: 'workspace_roles',
+                disabled: !props.canEdit,
+                required: false,
+                displayed: -1 < [WORKSPACE_REGISTRATION_USER, WORKSPACE_REGISTRATION_GROUP].indexOf(props.notification.parameters.action)
+              }
+            ]
           }, {
             name: 'message',
             type: 'message',

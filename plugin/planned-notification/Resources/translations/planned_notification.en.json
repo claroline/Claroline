@@ -8,6 +8,7 @@
     "select_roles": "Select roles",
     "send_a_mail": "Send a mail",
     "send_a_message": "Send a message",
+    "workspace-enter": "User's first connection in workspace",
     "workspace-role-subscribe_group": "Workspace registration of a group",
     "workspace-role-subscribe_user": "Workspace registration of an user"
 }

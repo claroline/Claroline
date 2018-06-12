@@ -8,6 +8,7 @@
     "select_roles": "Sélectionner des rôles",
     "send_a_mail": "Envoyer un mail",
     "send_a_message": "Envoyer un message",
+    "workspace-enter": "Première connexion de l'utilisateur dans l'espace d'activités",
     "workspace-role-subscribe_group": "Inscription d'un groupe à un espace d'activités",
     "workspace-role-subscribe_user": "Inscription d'un utilisateur à un espace d'activités"
 }
