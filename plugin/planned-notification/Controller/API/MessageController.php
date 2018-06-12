@@ -12,9 +12,7 @@
 namespace Claroline\PlannedNotificationBundle\Controller\API;
 
 use Claroline\AppBundle\Annotations\ApiMeta;
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\PlannedNotificationBundle\Manager\PlannedNotificationManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -31,33 +29,21 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class MessageController extends AbstractCrudController
 {
-    /* var FinderProvider */
-    protected $finder;
-
     /** @var PlannedNotificationManager */
     protected $manager;
-
-    /** @var ObjectManager */
-    protected $om;
 
     /**
      * MessageController constructor.
      *
      * @DI\InjectParams({
-     *     "finder"  = @DI\Inject("claroline.api.finder"),
-     *     "manager" = @DI\Inject("claroline.manager.planned_notification_manager"),
-     *     "om"      = @DI\Inject("claroline.persistence.object_manager")
+     *     "manager" = @DI\Inject("claroline.manager.planned_notification_manager")
      * })
      *
-     * @param FinderProvider             $finder
      * @param PlannedNotificationManager $manager
-     * @param ObjectManager              $om
      */
-    public function __construct(FinderProvider $finder, PlannedNotificationManager $manager, ObjectManager $om)
+    public function __construct(PlannedNotificationManager $manager)
     {
-        $this->finder = $finder;
         $this->manager = $manager;
-        $this->om = $om;
     }
 
     public function getName()
