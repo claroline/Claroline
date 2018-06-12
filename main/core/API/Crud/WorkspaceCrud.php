@@ -62,6 +62,8 @@ class WorkspaceCrud
      */
     public function preCreate(CreateEvent $event)
     {
+        $this->om->startFlushSuite();
+
         $workspace = $this->manager->createWorkspace($event->getObject());
         $user = $this->tokenStorage->getToken()->getUser();
 
@@ -72,6 +74,7 @@ class WorkspaceCrud
             $workspace->setCreator($user);
             $workspace->addOrganization($user->getMainOrganization());
         }
+        $this->om->endFlushSuite();
 
         return $workspace;
     }

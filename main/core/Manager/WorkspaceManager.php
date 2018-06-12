@@ -1119,6 +1119,19 @@ class WorkspaceManager
     {
         $workspaceOptions = $this->workspaceOptionsRepo->findOneByWorkspace($workspace);
 
+        //might not be required
+        if (!$workspaceOptions) {
+            $scheduledForInsert = $this->om->getUnitOfWork()->getScheduledEntityInsertions();
+
+            foreach ($scheduledForInsert as $entity) {
+                if (WorkspaceOptions::class === get_class($entity)) {
+                    if ($entity->getWorkspace()->getCode() === $workspace->getCode()) {
+                        $workspaceOptions = $entity;
+                    }
+                }
+            }
+        }
+
         if (!$workspaceOptions) {
             $workspaceOptions = new WorkspaceOptions();
             $workspaceOptions->setWorkspace($workspace);
@@ -1302,7 +1315,7 @@ class WorkspaceManager
 
     /**
      * Gets the list of role which have access to the workspace.
-     * (either workspace roles or a platform role with ws tool access)
+     * (either workspace roles or a platform role with ws tool access).
      *
      * @param Workspace $workspace
      *
@@ -1813,8 +1826,9 @@ class WorkspaceManager
     public function duplicateWorkspaceOptions(Workspace $source, Workspace $workspace)
     {
         $sourceOptions = $source->getOptions();
+
         if (!is_null($sourceOptions)) {
-            $options = new WorkspaceOptions();
+            $options = !$workspace->getOptions() ? new WorkspaceOptions() : $workspace->getOptions();
             $options->setWorkspace($workspace);
             $details = $sourceOptions->getDetails();
             if (!is_null($details)) {
@@ -1875,6 +1889,7 @@ class WorkspaceManager
             $templateName = $isPersonal ? 'claroline.param.personal_template' : 'claroline.param.default_template';
             $template = new File($this->container->getParameter($templateName));
             $this->container->get('claroline.manager.transfer_manager')->createWorkspace($workspace, $template, true);
+            $this->container->get('claroline.manager.tool_manager')->addMissingWorkspaceTools($workspace);
             $this->container->get('claroline.core_bundle.listener.log.log_listener')->setDefaults();
         }
 
