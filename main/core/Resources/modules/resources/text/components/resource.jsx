@@ -26,7 +26,8 @@ const Resource = props =>
       routes={[
         {
           path: '/',
-          component: Player
+          component: Player,
+          exact: true
         }, {
           path: '/edit',
           component: Editor,

@@ -13,12 +13,12 @@ namespace Claroline\CoreBundle\Listener\Resource\Types;
 
 use Claroline\CoreBundle\Entity\Resource\Revision;
 use Claroline\CoreBundle\Entity\Resource\Text;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
+use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Form\TextType;
 use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -57,7 +57,7 @@ class TextListener implements ContainerAwareInterface
         $textType = new TextType('text_'.rand(0, 1000000000));
         $form = $formFactory->create($textType);
         $response = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Text:createForm.html.twig',
+            'ClarolineCoreBundle:text:create_form.html.twig',
             [
                 'form' => $form->createView(),
                 'resourceType' => 'text',
@@ -112,7 +112,7 @@ class TextListener implements ContainerAwareInterface
         }
 
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Text:createForm.html.twig',
+            'ClarolineCoreBundle:text:create_form.html.twig',
             [
                 'form' => $errorForm->createView(),
                 'resourceType' => 'text',
@@ -172,7 +172,7 @@ class TextListener implements ContainerAwareInterface
     {
         $text = $event->getResource();
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Text:index.html.twig',
+            'ClarolineCoreBundle:text:index.html.twig',
             [
                 'text' => $text,
                 '_resource' => $text,
