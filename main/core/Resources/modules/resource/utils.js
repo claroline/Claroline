@@ -18,7 +18,7 @@ function getType(resourceNode) {
     .find(type => type.name === resourceNode.meta.type)
 }
 
-function loadActions(resourceNodes, actions) {
+function loadActions(resourceNodes, actions, dispatch) {
   const asyncActions = getApps('actions')
 
   // only get implemented actions
@@ -30,7 +30,7 @@ function loadActions(resourceNodes, actions) {
     // generates action from loaded modules
     const realActions = {}
     loadedActions.map(actionModule => {
-      const generated = actionModule.action(resourceNodes)
+      const generated = actionModule.action(resourceNodes, dispatch)
       realActions[generated.name] = generated
     })
 
@@ -44,10 +44,15 @@ function loadActions(resourceNodes, actions) {
 /**
  * Gets the list of available actions for a resource.
  *
- * @param {Array}   resourceNodes - the current resource node
- * @param {boolean} withDefault   - include the default action (most of the time, it's not useful to get it)
+ * NB. Action generators receive the current store dispatcher.
+ * It's not really aesthetic to pass it like it but I have no choice
+ * because actions are plain objects, not components.
+ *
+ * @param {Array}    resourceNodes - the current resource node
+ * @param {function} dispatch      - the store dispatcher
+ * @param {boolean}  withDefault   - include the default action (most of the time, it's not useful to get it)
  */
-function getActions(resourceNodes, withDefault = false) {
+function getActions(resourceNodes, dispatch, withDefault = false) {
   const resourceTypes = uniq(resourceNodes.map(resourceNode => resourceNode.meta.type))
 
   const collectionActions = resourceTypes
@@ -63,15 +68,15 @@ function getActions(resourceNodes, withDefault = false) {
       return accumulator.concat(typeActions)
     }, [])
 
-  return loadActions(resourceNodes, collectionActions, withDefault)
+  return loadActions(resourceNodes, collectionActions, dispatch)
 }
 
-function getDefaultAction(resourceNode) {
+function getDefaultAction(resourceNode, dispatch) {
   const defaultAction = getType(resourceNode).actions
     .find(action => action.default)
 
   if (hasPermission(defaultAction.permission, resourceNode)) {
-    return loadActions([resourceNode], [defaultAction], 'object')
+    return loadActions([resourceNode], [defaultAction], dispatch)
       .then(loadActions => loadActions[0] || null)
   }
 

@@ -11,18 +11,14 @@
 
 namespace Claroline\LinkBundle\Listener\Resource\Types;
 
-use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
+use Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager;
 use Claroline\LinkBundle\Entity\Resource\Shortcut;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Form\FormFactoryInterface;
 
 /**
  * Integrates the "Shortcut" resource.
@@ -31,47 +27,22 @@ use Symfony\Component\Form\FormFactoryInterface;
  */
 class ShortcutListener
 {
-    /** @var ContainerInterface */
-    private $container;
-
-    /** @var FormFactoryInterface */
-    private $formFactory;
-
-    /** @var TwigEngine */
-    private $templating;
-
-    /** @var SerializerProvider */
-    private $serializer;
+    /** @var ResourceLifecycleManager */
+    private $resourceLifecycle;
 
     /**
      * ShortcutListener constructor.
      *
      * @DI\InjectParams({
-     *     "container"       = @DI\Inject("service_container"),
-     *     "formFactory"     = @DI\Inject("form.factory"),
-     *     "templating"      = @DI\Inject("templating"),
-     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "serializer"      = @DI\Inject("claroline.api.serializer")
+     *     "resourceLifecycleManager" = @DI\Inject("claroline.manager.resource_lifecycle")
      * })
      *
-     * @param ContainerInterface   $container
-     * @param FormFactoryInterface $formFactory
-     * @param TwigEngine           $templating
-     * @param StrictDispatcher     $eventDispatcher
-     * @param SerializerProvider   $serializer
+     * @param ResourceLifecycleManager $resourceLifecycleManager
      */
     public function __construct(
-        ContainerInterface $container,
-        FormFactoryInterface $formFactory,
-        TwigEngine $templating,
-        StrictDispatcher $eventDispatcher,
-        SerializerProvider $serializer
+        ResourceLifecycleManager $resourceLifecycleManager
     ) {
-        $this->container = $container;
-        $this->formFactory = $formFactory;
-        $this->templating = $templating;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->serializer = $serializer;
+        $this->resourceLifecycle = $resourceLifecycleManager;
     }
 
     /**
@@ -82,14 +53,12 @@ class ShortcutListener
      *
      * @param LoadResourceEvent $event
      */
-    public function onLoad(LoadResourceEvent $event)
+    public function load(LoadResourceEvent $event)
     {
-        /*$shortcut = $event->getResource();
-        $event->setAdditionalData([
-            //'directory' => $this->serializer->serialize(),
-        ]);
+        /** @var Shortcut $shortcut */
+        $shortcut = $event->getResource();
 
-        $event->stopPropagation();*/
+        $this->resourceLifecycle->load($shortcut->getTarget());
     }
 
     /**
@@ -100,8 +69,12 @@ class ShortcutListener
      *
      * @param OpenResourceEvent $event
      */
-    public function onOpen(OpenResourceEvent $event)
+    public function open(OpenResourceEvent $event)
     {
+        /** @var Shortcut $shortcut */
+        $shortcut = $event->getResource();
+
+        $this->resourceLifecycle->open($shortcut->getTarget());
     }
 
     /**
@@ -112,8 +85,12 @@ class ShortcutListener
      *
      * @param DownloadResourceEvent $event
      */
-    public function onExport(DownloadResourceEvent $event)
+    public function export(DownloadResourceEvent $event)
     {
+        /** @var Shortcut $shortcut */
+        $shortcut = $event->getResource();
+
+        $this->resourceLifecycle->export($shortcut->getTarget());
     }
 
     /**
@@ -123,7 +100,7 @@ class ShortcutListener
      *
      * @param DeleteResourceEvent $event
      */
-    public function onDelete(DeleteResourceEvent $event)
+    public function delete(DeleteResourceEvent $event)
     {
         $event->stopPropagation();
     }
@@ -135,7 +112,7 @@ class ShortcutListener
      *
      * @param CopyResourceEvent $event
      */
-    public function onCopy(CopyResourceEvent $event)
+    public function copy(CopyResourceEvent $event)
     {
         /* @var Shortcut $shortcut */
         /*$shortcut = $event->getResource();

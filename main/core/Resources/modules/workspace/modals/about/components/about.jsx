@@ -2,11 +2,11 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
+import {url} from '#/main/app/api'
 import {trans} from '#/main/core/translation'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {DataDetails} from '#/main/core/data/details/components/details'
 import {ContentMeta} from '#/main/app/content/meta/components/meta'
-import {ContentPublicUrl} from '#/main/app/content/meta/components/public-url'
 
 import {WorkspaceMetrics} from '#/main/core/workspace/components/metrics'
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
@@ -18,9 +18,8 @@ const AboutModal = props =>
     title={trans('about')}
     subtitle={props.workspace.name}
   >
-    <ContentPublicUrl
-      className="modal-link"
-      url={['claro_workspace_subscription_url_generate', {slug: props.workspace.meta.slug}, true]}
+    <ContentMeta
+      meta={props.workspace.meta}
     />
 
     <div className="modal-body">
@@ -40,6 +39,13 @@ const AboutModal = props =>
           primary: true,
           fields: [
             {
+              name: 'url',
+              type: 'url',
+              label: trans('url', {}, 'data'),
+              calculated: (workspace) => url(['claro_workspace_subscription_url_generate', {
+                slug: workspace.meta.slug
+              }, true])
+            }, {
               name: 'meta.description',
               label: trans('description'),
               type: 'string'
@@ -53,7 +59,7 @@ const AboutModal = props =>
               type: 'boolean',
               options: {
                 icon: 'fa fa-fw fa-object-group',
-                labelChecked: 'Cette espace d\'activités est un modèle.'
+                labelChecked: 'Cet espace d\'activités est un modèle.'
               }
             }, {
               name: 'meta.personal',
@@ -84,12 +90,6 @@ const AboutModal = props =>
         }
       ]}
     />
-
-    <div className="modal-footer">
-      <ContentMeta
-        meta={props.workspace.meta}
-      />
-    </div>
   </Modal>
 
 AboutModal.propTypes = {

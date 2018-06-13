@@ -29,8 +29,9 @@ const Action = {
     ]).isRequired,
     icon: T.string,
     subscript: T.shape({
-      type: T.oneOf(['default', 'primary', 'danger', 'warning']),
-      value: T.oneOfType([T.string, T.number]).isRequired
+      type: T.oneOf(['text', 'label']),
+      status: T.oneOf(['default', 'primary', 'danger', 'warning']),
+      value: T.node.isRequired
     }),
 
     /**
@@ -219,6 +220,17 @@ const ModalAction = {
   defaultProps: {}
 }
 
+const PopoverAction = {
+  propTypes: {
+    popover: T.shape({
+      className: T.string,
+      label: T.string,
+      position: T.oneOf(['top', 'bottom', 'left', 'right']),
+      content: T.node.isRequired
+    }).isRequired
+  }
+}
+
 const UrlAction = {
   propTypes: {
     target: T.arrayOf([
@@ -241,5 +253,6 @@ export {
   LinkAction,
   MenuAction,
   ModalAction,
+  PopoverAction,
   UrlAction
 }

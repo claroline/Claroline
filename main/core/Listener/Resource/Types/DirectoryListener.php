@@ -12,19 +12,24 @@
 namespace Claroline\CoreBundle\Listener\Resource\Types;
 
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\CreateFormResourceEvent;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Form\DirectoryType;
+use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
+use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
+use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Integrates the "Directory" resource.
@@ -33,11 +38,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class DirectoryListener
 {
-    /** @var ContainerInterface */
-    private $container;
-
-    /** @var FormFactoryInterface */
-    private $formFactory;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
 
     /** @var TwigEngine */
     private $templating;
@@ -45,31 +47,101 @@ class DirectoryListener
     /** @var SerializerProvider */
     private $serializer;
 
+    /** @var RightsManager */
+    private $rightsManager;
+
     /**
      * DirectoryListener constructor.
      *
      * @DI\InjectParams({
-     *     "container"   = @DI\Inject("service_container"),
-     *     "formFactory" = @DI\Inject("form.factory"),
-     *     "templating"  = @DI\Inject("templating"),
-     *     "serializer"  = @DI\Inject("claroline.api.serializer")
+     *     "tokenStorage"  = @DI\Inject("security.token_storage"),
+     *     "templating"    = @DI\Inject("templating"),
+     *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
+     *     "serializer"    = @DI\Inject("claroline.api.serializer"),
+     *     "rightsManager" = @DI\Inject("claroline.manager.rights_manager")
      * })
      *
-     * @param ContainerInterface   $container
-     * @param FormFactoryInterface $formFactory
-     * @param TwigEngine           $templating
-     * @param SerializerProvider   $serializer
+     * @param TokenStorageInterface $tokenStorage
+     * @param TwigEngine            $templating
+     * @param ObjectManager         $om
+     * @param SerializerProvider    $serializer
+     * @param RightsManager         $rightsManager
      */
     public function __construct(
-        ContainerInterface $container,
-        FormFactoryInterface $formFactory,
+        TokenStorageInterface $tokenStorage,
         TwigEngine $templating,
-        SerializerProvider $serializer
+        ObjectManager $om,
+        SerializerProvider $serializer,
+        RightsManager $rightsManager
     ) {
-        $this->container = $container;
-        $this->formFactory = $formFactory;
+        $this->tokenStorage = $tokenStorage;
         $this->templating = $templating;
+        $this->om = $om;
         $this->serializer = $serializer;
+        $this->rightsManager = $rightsManager;
+    }
+
+    /**
+     * Creates a new resource inside a directory.
+     *
+     * @DI\Observe("resource.directory.add")
+     *
+     * @param ResourceActionEvent $event
+     */
+    public function onAdd(ResourceActionEvent $event)
+    {
+        $parent = $event->getResourceNode();
+        $data = $event->getData();
+        $options = $event->getOptions();
+
+        // create the resource node
+
+        /** @var ResourceNode $resourceNode */
+        $resourceNode = $this->serializer->deserialize(ResourceNode::class, $data['resourceNode'], $options);
+        $resourceNode->setParent($parent);
+        $resourceNode->setWorkspace($parent->getWorkspace());
+        if ($this->tokenStorage->getToken()->getUser() instanceof User) {
+            $resourceNode->setCreator($this->tokenStorage->getToken()->getUser());
+        }
+
+        // initialize custom resource Entity
+        $resourceClass = $resourceNode->getResourceType()->getClass();
+
+        /** @var AbstractResource $resource */
+        $resource = new $resourceClass();
+        if (!empty($data['resource'])) {
+            $resource = $this->serializer->deserialize($resourceClass, $data['resource'], $options);
+        }
+
+        $resourceNode->setClass($resourceClass);
+        $resource->setResourceNode($resourceNode);
+
+        // maybe do it in the serializer (if it can be done without intermediate flush)
+        if (!empty($data['resourceNode']['rights'])) {
+            foreach ($data['resourceNode']['rights'] as $rights) {
+                /** @var Role $role */
+                $role = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneBy(['name' => $rights['name']]);
+                $this->rightsManager->editPerms($rights['permissions'], $role, $resourceNode);
+            }
+        } else {
+            // todo : initialize default rights
+        }
+
+        // todo : dispatch creation event
+
+        $this->om->persist($resource);
+        $this->om->persist($resourceNode);
+
+        $this->om->flush();
+
+        // todo : dispatch get/load action instead
+        $event->setResponse(new JsonResponse(
+            [
+                'resourceNode' => $this->serializer->serialize($resourceNode),
+                'resource' => $this->serializer->serialize($resource),
+            ],
+            201
+        ));
     }
 
     /**
@@ -108,15 +180,17 @@ class DirectoryListener
     public function onOpen(OpenResourceEvent $event)
     {
         $directory = $event->getResource();
+
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Directory:index.html.twig',
-            [
+            'ClarolineCoreBundle:Directory:index.html.twig', [
                 'directory' => $directory,
                 '_resource' => $directory,
             ]
         );
+
         $response = new Response($content);
         $event->setResponse($response);
+
         $event->stopPropagation();
     }
 

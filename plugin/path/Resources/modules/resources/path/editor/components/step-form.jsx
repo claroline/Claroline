@@ -15,12 +15,12 @@ const PrimaryResourceSection = props =>
     {!props.resource &&
       <EmptyPlaceholder
         size="lg"
-        icon="fa fa-folder-open"
+        icon="fa fa-folder"
         title={trans('no_primary_resource', {}, 'path')}
       >
         <button
           type="button"
-          className="btn btn-primary btn-primary-resource"
+          className="btn btn-primary btn-primary-resource btn-emphasis"
           onClick={() => props.pickPrimaryResource(props.stepId)}
         >
           <span className="fa fa-fw fa-plus icon-with-text-right"/>

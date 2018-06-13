@@ -12,9 +12,12 @@ use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Event\Resource\PublicationChangeEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceEvaluationEvent;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Centralizes events dispatched for resources integration.
+ *
+ * @DI\Service("claroline.manager.resource_lifecycle")
  */
 class ResourceLifecycleManager
 {
@@ -43,9 +46,12 @@ class ResourceLifecycleManager
         $this->om = $om;
     }
 
+    public function load(ResourceNode $resourceNode)
+    {
+    }
+
     public function create(ResourceNode $resourceNode)
     {
-
     }
 
     public function open(ResourceNode $resourceNode)

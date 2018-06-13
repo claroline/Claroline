@@ -644,6 +644,8 @@ class ResourceNode
      * Sets the resource class name.
      *
      * @param string $class
+     *
+     * @deprecated should be retrieved from resource type
      */
     public function setClass($class)
     {

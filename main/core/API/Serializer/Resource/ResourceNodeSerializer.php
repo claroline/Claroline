@@ -38,9 +38,6 @@ class ResourceNodeSerializer
     /** @var UserSerializer */
     private $userSerializer;
 
-    /** @var MaskManager */
-    private $maskManager;
-
     /** @var RightsManager */
     private $rightsManager;
 
@@ -75,7 +72,6 @@ class ResourceNodeSerializer
         $this->eventDispatcher = $eventDispatcher;
         $this->fileSerializer = $fileSerializer;
         $this->userSerializer = $userSerializer;
-        $this->maskManager = $maskManager;
         $this->rightsManager = $rightsManager;
     }
 
@@ -99,7 +95,7 @@ class ResourceNodeSerializer
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
-            if (!empty($resourceNode->getWorkspace())) { // TODO : check if this is really required
+            if (!empty($resourceNode->getWorkspace())) {
                 $serializedNode['workspace'] = [ // TODO : use workspace serializer with minimal option
                     'id' => $resourceNode->getWorkspace()->getUuid(),
                     'name' => $resourceNode->getWorkspace()->getName(),
@@ -112,7 +108,7 @@ class ResourceNodeSerializer
                 'meta' => $this->serializeMeta($resourceNode),
                 'display' => $this->serializeDisplay($resourceNode),
                 'restrictions' => $this->serializeRestrictions($resourceNode),
-                'rights' => $this->getRights($resourceNode), // todo : remove me
+                'rights' => $this->rightsManager->getRights($resourceNode),
             ]);
         }
 
@@ -216,25 +212,6 @@ class ResourceNodeSerializer
             'code' => $resourceNode->getAccessCode(),
             'allowedIps' => $resourceNode->getAllowedIps(),
         ];
-    }
-
-    private function getRights(ResourceNode $resourceNode)
-    {
-        $serializedRights = [];
-        $rights = $resourceNode->getRights();
-        foreach ($rights as $right) {
-            $role = $right->getRole();
-            $serializedRights[$right->getRole()->getName()] = [
-                'name' => $role->getName(),
-                'translationKey' => $role->getTranslationKey(),
-                'permissions' => array_merge(
-                    $this->maskManager->decodeMask($right->getMask(), $resourceNode->getResourceType()),
-                    ['create' => $this->rightsManager->getCreatableTypes([$role->getName()], $resourceNode)]
-                ),
-            ];
-        }
-
-        return $serializedRights;
     }
 
     /**

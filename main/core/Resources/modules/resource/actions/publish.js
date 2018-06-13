@@ -9,7 +9,8 @@ const action = (resourceNodes) => ({ // todo collection
   label: trans('publish', {}, 'actions'),
   displayed: -1 !== resourceNodes.findIndex(node => !get(node, 'meta.published')),
   subscript: 1 === resourceNodes.length && {
-    type: 'default',
+    type: 'label',
+    status: 'default',
     value: get(resourceNodes[0], 'meta.views')
   },
   request: {

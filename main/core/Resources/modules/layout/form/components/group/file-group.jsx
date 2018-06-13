@@ -20,6 +20,7 @@ implementPropTypes(FileGroup, FormGroupWithFieldTypes, {
   min: T.number,
   max: T.number,
   autoUpload: T.bool,
+  unzippable: T.bool,
   uploadUrl: T.array
 })
 

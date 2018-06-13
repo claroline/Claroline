@@ -9,8 +9,6 @@ import {constants as listConstants} from '#/main/core/data/list/constants'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {ResourceCard} from '#/main/core/resource/data/components/resource-card'
 
-import {getActions} from '#/main/core/resource/utils'
-
 // todo create a full app with store
 
 const ResourceExplorer = props =>
@@ -65,7 +63,7 @@ const ResourceExplorer = props =>
           displayable: false
         }
       ]}
-      actions={getActions}
+      actions={props.actions}
       card={ResourceCard}
 
       display={{
@@ -82,7 +80,8 @@ ResourceExplorer.propTypes = {
   current: T.shape(
     ResourceNodeTypes.propTypes
   ),
-  changeDirectory: T.func.isRequired
+  changeDirectory: T.func.isRequired,
+  actions: T.oneOfType([T.array, T.object])
 }
 
 ResourceExplorer.defaultProps = {

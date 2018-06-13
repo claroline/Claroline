@@ -59,7 +59,6 @@
 
 // with poster image variant
 .data-card-poster {
-    .data-card-toolbar .dropdown:not(.open) .btn,
     .data-card-flag {
         .text-movie-subtitles();
     }
@@ -241,6 +240,12 @@
 
     .data-card-header {
         border-bottom: 1px solid @data-card-inner-border;
+    }
+
+    &.data-card-poster {
+        .data-card-toolbar .dropdown:not(.open) .dropdown-toggle {
+            .text-movie-subtitles();
+        }
     }
 
     .data-card-content {

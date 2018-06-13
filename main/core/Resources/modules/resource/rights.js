@@ -28,7 +28,7 @@ const standardRoles = (workspace = null) => {
  *
  * @return {object}
  */
-const findRolePermissions = (roleName, perms) => perms[roleName] ? perms[roleName].permissions : {}
+const findRolePermissions = (roleName, perms) => perms.find(perm => perm.name === roleName) || {}
 
 /**
  * Checks if a role has custom permissions.

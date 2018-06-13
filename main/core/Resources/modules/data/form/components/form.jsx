@@ -7,6 +7,7 @@ import {trans} from '#/main/core/translation'
 import {toKey} from '#/main/core/scaffolding/text/utils'
 
 import {Heading} from '#/main/core/layout/components/heading'
+import {ContentMeta} from '#/main/app/content/meta/components/meta'
 import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
 import {SubSet} from '#/main/core/layout/form/components/fieldset/sub-set'
 import {ToggleableSet} from '#/main/core/layout/form/components/fieldset/toggleable-set'
@@ -137,6 +138,10 @@ class Form extends Component {
           </Heading>
         }
 
+        {this.props.meta &&
+          <ContentMeta meta={get(this.props.data, 'meta')} />
+        }
+
         {primarySections.map(primarySection =>
           <div key={toKey(primarySection.title)} className="form-primary-section panel panel-default">
             <fieldset className="panel-body">
@@ -208,7 +213,8 @@ Form.propTypes = {
   updateProp: T.func.isRequired,
   className: T.string,
   disabled: T.bool,
-  children: T.node
+  children: T.node,
+  meta: T.bool
 }
 
 Form.defaultProps = {
@@ -217,7 +223,8 @@ Form.defaultProps = {
   level: 2,
   errors: {},
   validating: false,
-  pendingChanges: false
+  pendingChanges: false,
+  meta: false
 }
 
 export {

@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Doctrine\Common\Persistence\ObjectRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,6 +46,9 @@ class ResourceActionManager
     /** @var ObjectRepository */
     private $repository;
 
+    /** @var ResourceManager */
+    private $resourceManager;
+
     /**
      * @var MenuAction[]
      */
@@ -54,23 +58,27 @@ class ResourceActionManager
      * ResourceMenuManager constructor.
      *
      * @DI\InjectParams({
-     *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
-     *     "authorization" = @DI\Inject("security.authorization_checker"),
-     *     "dispatcher"    = @DI\Inject("claroline.event.event_dispatcher")
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "authorization"   = @DI\Inject("security.authorization_checker"),
+     *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager")
      * })
      *
      * @param ObjectManager                 $om
      * @param AuthorizationCheckerInterface $authorization
      * @param StrictDispatcher              $dispatcher
+     * @param ResourceManager               $resourceManager
      */
     public function __construct(
         ObjectManager $om,
         AuthorizationCheckerInterface $authorization,
-        StrictDispatcher $dispatcher)
+        StrictDispatcher $dispatcher,
+        ResourceManager $resourceManager)
     {
         $this->om = $om;
         $this->authorization = $authorization;
         $this->dispatcher = $dispatcher;
+        $this->resourceManager = $resourceManager;
 
         $this->repository = $this->om->getRepository('ClarolineCoreBundle:Resource\MenuAction');
     }
@@ -99,12 +107,13 @@ class ResourceActionManager
     public function execute(ResourceNode $resourceNode, string $actionName, array $options = [], array $content = null): Response
     {
         $resourceAction = $this->get($resourceNode, $actionName);
+        $resource = $this->resourceManager->getResourceFromNode($resourceNode);
 
         /** @var ResourceActionEvent $event */
         $event = $this->dispatcher->dispatch(
             static::eventName($actionName, $resourceAction->getResourceType()),
             ResourceActionEvent::class,
-            [$options, $content] // todo : pass current resource
+            [$resource, $options, $content]
         );
 
         return $event->getResponse();

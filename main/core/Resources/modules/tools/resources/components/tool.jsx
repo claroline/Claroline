@@ -17,7 +17,7 @@ const Tool = props =>
     title={trans('resources', {}, 'tools')}
     subtitle={props.current && props.current.name}
     toolbar="edit rights publish unpublish | more"
-    actions={props.current && getActions([props.current])}
+    actions={props.current && props.getActions([props.current])}
   >
     <ResourceExplorer
       root={props.root}
@@ -31,6 +31,7 @@ const Tool = props =>
           resourceType: resourceNode.meta.type
         }]
       })}
+      actions={(resourceNodes) => props.getActions(resourceNodes)}
       changeDirectory={props.changeDirectory}
     />
   </Page>
@@ -42,6 +43,7 @@ Tool.propTypes = {
   current: T.shape(
     ResourceNodeTypes.propTypes
   ),
+  getActions: T.func.isRequired,
   changeDirectory: T.func.isRequired
 }
 
@@ -51,6 +53,10 @@ const ResourcesTool = connect(
     current: state.current
   }),
   dispatch => ({
+    getActions(resourceNodes) {
+      return getActions(resourceNodes, dispatch)
+    },
+
     changeDirectory(directoryNode) {
       dispatch(actions.changeDirectory(directoryNode))
     }

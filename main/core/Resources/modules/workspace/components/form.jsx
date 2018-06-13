@@ -20,8 +20,9 @@ const restrictStorage   = (workspace) => workspace.restrictions.enableMaxStorage
 
 const WorkspaceFormComponent = (props) =>
   <FormContainer
-    level={3}
+    level={props.level}
     name={props.name}
+    meta={true}
     sections={[
       {
         title: trans('general'),
@@ -273,12 +274,17 @@ const WorkspaceFormComponent = (props) =>
   </FormContainer>
 
 WorkspaceFormComponent.propTypes = {
+  level: T.number,
   name: T.string.isRequired,
   children: T.any,
 
   // from redux
   new: T.bool.isRequired,
   updateProp: T.func.isRequired
+}
+
+WorkspaceFormComponent.defaultProps = {
+  level: 3
 }
 
 const WorkspaceForm = connect(

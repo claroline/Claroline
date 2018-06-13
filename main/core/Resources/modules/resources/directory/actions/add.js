@@ -1,10 +1,5 @@
-import React from 'react'
-
 import {trans} from '#/main/core/translation'
-import {MODAL_SELECTION} from '#/main/app/modals/selection'
-
-import {getType} from '#/main/core/resource/utils'
-import {ResourceIcon} from '#/main/core/resource/components/icon'
+import {MODAL_RESOURCE_CREATION} from '#/main/core/resource/modals/creation'
 
 const action = (resourceNodes) => ({
   name: 'add',
@@ -12,24 +7,8 @@ const action = (resourceNodes) => ({
   label: trans('add', {}, 'actions'),
   icon: 'fa fa-fw fa-plus',
   primary: true,
-  modal: [MODAL_SELECTION, {
-    icon: 'fa fa-fw fa-plus',
-    title: trans('create_resource'),
-    items: resourceNodes[0].permissions.create.map(name => {
-      const tags = getType({meta: {type: name}}).tags || []
-
-      return ({ // todo maybe filter disabled types
-        icon: React.createElement(ResourceIcon, {
-          mimeType: `custom/${name}`
-        }),
-        label: trans(name, {}, 'resource'),
-        description: trans(`${name}_desc`, {}, 'resource'),
-        tags: tags.map(tag => trans(tag))
-      })
-    }),
-    handleSelect: () => {
-
-    }
+  modal: [MODAL_RESOURCE_CREATION, {
+    parent: resourceNodes[0]
   }]
 })
 

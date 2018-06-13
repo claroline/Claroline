@@ -26,6 +26,7 @@
     }
 
     // increases space between icons and text
+    // todo remove me and use `.icon-with-text-*`
     .fa {
         margin-right: @icon-dropdown-spacer;
     }
@@ -37,8 +38,12 @@
     }
 
     > li {
-        .label {
+        .action-subscript {
             float: right; // todo : find a better approach
+
+            .fa {
+                margin: 0;
+            }
         }
     }
 }

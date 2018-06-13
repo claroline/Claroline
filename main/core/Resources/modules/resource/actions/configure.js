@@ -8,8 +8,7 @@ const action = (resourceNodes) => ({ // todo collection
   icon: 'fa fa-fw fa-cog',
   label: trans('configure', {}, 'actions'),
   modal: [MODAL_RESOURCE_PARAMETERS, {
-    resourceNode: 1 === resourceNodes.length && resourceNodes[0],
-    bulk: 1 < resourceNodes.length
+    resourceNode: 1 === resourceNodes.length && resourceNodes[0]
   }]
 })
 

@@ -42,13 +42,25 @@ class ResourceListener
     }
 
     /**
+     * Gets all shortcuts of a resource.
+     *
+     * @DI\Observe("resource.shortcuts")
+     *
+     * @param DeleteResourceEvent $event
+     */
+    public function shortcuts(DeleteResourceEvent $event)
+    {
+        /*$this->shortcutManager->removeShortcutsTo($event->getResourceNode());*/
+    }
+
+    /**
      * Removes all linked shortcuts when a resource is deleted.
      *
      * @DI\Observe("resource.delete")
      *
      * @param DeleteResourceEvent $event
      */
-    public function onDelete(DeleteResourceEvent $event)
+    public function delete(DeleteResourceEvent $event)
     {
         $this->shortcutManager->removeShortcutsTo($event->getResourceNode());
     }

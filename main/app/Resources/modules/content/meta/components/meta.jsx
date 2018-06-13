@@ -18,13 +18,9 @@ const ContentMeta = props =>
     />
 
     <div className="content-dates">
-      {props.meta.created &&
-        <span>{trans('created_at', {date: displayDate(props.meta.created, false, true)})}</span>
-      }
+      <span>{trans('created_at', {date: props.meta.created ? displayDate(props.meta.created, false, true) : '-'})}</span>
 
-      {props.meta.updated &&
-        <span>{trans('updated_at', {date: displayDate(props.meta.updated, false, true)})}</span>
-      }
+      <span>{trans('updated_at', {date: props.meta.updated ? displayDate(props.meta.updated, false, true) : '-'})}</span>
     </div>
   </div>
 

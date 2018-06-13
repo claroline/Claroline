@@ -15,7 +15,6 @@ use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -26,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
  *     class="Claroline\CoreBundle\Entity\File\PublicFile",
  *     ignore={"update", "exist", "list", "copyBulk"}
  * )
- * @Route("/publicfile")
+ * @EXT\Route("/publicfile")
  */
 class FileController extends AbstractCrudController
 {

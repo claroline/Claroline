@@ -2,11 +2,11 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
+import {url} from '#/main/app/api'
 import {trans} from '#/main/core/translation'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {DataDetails} from '#/main/core/data/details/components/details'
 import {ContentMeta} from '#/main/app/content/meta/components/meta'
-import {ContentPublicUrl} from '#/main/app/content/meta/components/public-url'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 
@@ -19,13 +19,8 @@ const AboutModal = props =>
     title={trans('about')}
     subtitle={props.resourceNode.name}
   >
-    <ContentPublicUrl
-      className="modal-link"
-      url={['claro_resource_action', {
-        resourceType: props.resourceNode.meta.type,
-        action: 'open', // todo : get default from resource action list
-        id: props.resourceNode.id
-      }, true]}
+    <ContentMeta
+      meta={props.resourceNode.meta}
     />
 
     <div className="modal-body">
@@ -40,6 +35,14 @@ const AboutModal = props =>
           primary: true,
           fields: [
             {
+              name: 'url',
+              type: 'url',
+              label: trans('url', {}, 'data'),
+              calculated: (resourceNode) => url(['claro_resource_open', {
+                resourceType: resourceNode.meta.type,
+                node: resourceNode.id
+              }, true])
+            }, {
               name: 'meta.description',
               label: trans('description'),
               type: 'string'
@@ -48,12 +51,6 @@ const AboutModal = props =>
         }
       ]}
     />
-
-    <div className="modal-footer">
-      <ContentMeta
-        meta={props.resourceNode.meta}
-      />
-    </div>
   </Modal>
 
 AboutModal.propTypes = {

@@ -20,7 +20,7 @@ import {DataCard as DataCardTypes} from '#/main/core/data/prop-types'
  * @constructor
  */
 const CardHeader = props =>
-  <div className={classes('data-card-header', props.poster && 'data-card-header-poster')} style={props.poster && {
+  <div className="data-card-header" style={props.poster && {
     backgroundImage: 'url(' + props.poster + ')',
     backgroundSize: 'cover',
     backgroundPosition: 'center'

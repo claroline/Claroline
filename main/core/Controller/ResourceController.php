@@ -16,7 +16,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,9 +27,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class ResourceController
 {
-    /** @var ResourceManager */
-    private $resourceManager;
-
     /** @var ResourceActionManager */
     private $actionManager;
 
@@ -38,18 +34,14 @@ class ResourceController
      * ResourceController constructor.
      *
      * @DI\InjectParams({
-     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "actionManager"   = @DI\Inject("claroline.manager.resource_action")
+     *     "actionManager" = @DI\Inject("claroline.manager.resource_action")
      * })
      *
-     * @param ResourceManager       $resourceManager
      * @param ResourceActionManager $actionManager
      */
     public function __construct(
-        ResourceManager $resourceManager,
         ResourceActionManager $actionManager)
     {
-        $this->resourceManager = $resourceManager;
         $this->actionManager = $actionManager;
     }
 
@@ -69,9 +61,6 @@ class ResourceController
      */
     public function objectAction($action, ResourceNode $resourceNode, Request $request)
     {
-        // retrieve the resource instance
-        $resource = $this->resourceManager->getResourceFromNode($resourceNode);
-
         // check the requested action exists
         if (!$this->actionManager->support($resourceNode, $action, $request->getMethod())) {
             // undefined action
@@ -96,7 +85,6 @@ class ResourceController
 
     public function collectionAction(Request $request)
     {
-
     }
 
     /**

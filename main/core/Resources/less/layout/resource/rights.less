@@ -1,8 +1,12 @@
 
 .resource-rights-simple {
-    display: flex;
-    justify-content: space-around;
-    align-items: stretch;
+    padding: @modal-inner-padding;
+
+    .resource-rights-simple-group {
+        display: flex;
+        justify-content: space-around;
+        align-items: stretch;
+    }
 
     .simple-right {
         flex: 1;
@@ -62,6 +66,8 @@
 }
 
 .resource-rights-advanced {
+    margin-bottom: 0;
+
     thead {
         overflow: hidden;
     }

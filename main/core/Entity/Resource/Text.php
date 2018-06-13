@@ -97,7 +97,7 @@ class Text extends AbstractResource
     public function getContent()
     {
         $content = null;
-        if (!empty($this->revisions)) {
+        if (0 < $this->revisions->count()) {
             $content = $this->revisions->get(0)->getContent();
         }
 

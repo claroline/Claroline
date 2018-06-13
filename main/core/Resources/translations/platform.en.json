@@ -1658,5 +1658,6 @@
     "structure": "Organization",
     "community": "Community",
     "management": "Management",
-    "transfer": "Transfer"
+    "transfer": "Transfer",
+    "unzip_file": "Unzip the file"
 }

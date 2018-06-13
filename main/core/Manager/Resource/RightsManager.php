@@ -554,6 +554,8 @@ class RightsManager
      * @param ResourceNode $node
      *
      * @return array
+     *
+     * @deprecated use getRights()
      */
     public function getCustomRoleRights(ResourceNode $node)
     {
@@ -571,6 +573,22 @@ class RightsManager
         }
 
         return $perms;
+    }
+
+    public function getRights(ResourceNode $resourceNode)
+    {
+        return array_map(function (ResourceRights $rights) use ($resourceNode) {
+            $role = $rights->getRole();
+
+            return [
+                'name' => $role->getName(),
+                'translationKey' => $role->getTranslationKey(),
+                'permissions' => array_merge(
+                    $this->maskManager->decodeMask($rights->getMask(), $resourceNode->getResourceType()),
+                    ['create' => $this->getCreatableTypes([$role->getName()], $resourceNode)]
+                ),
+            ];
+        }, $resourceNode->getRights()->toArray());
     }
 
     /**

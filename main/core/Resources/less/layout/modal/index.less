@@ -54,21 +54,6 @@
     flex: 1;
 }
 
-.modal-link {
-    /*display: flex;
-    justify-content: space-between;*/
-    background: @modal-footer-bg;
-    border-bottom: 1px solid @modal-header-border-color;
-
-    /*a {
-        font-weight: bold;
-    }*/
-
-    .btn-link {
-        padding: 10px @modal-inner-padding;
-    }
-}
-
 .modal-footer {
     background: @modal-footer-bg;
 }
@@ -82,7 +67,6 @@
 }
 
 // customize nav tabs
-// todo : create a new class .modal-tabs
 .modal-content .nav-tabs {
     padding: 0 @modal-inner-padding;
     border-color: @modal-header-border-color;
@@ -154,4 +138,12 @@
     .panel-body {
         padding: @modal-inner-padding;
     }
+}
+
+// customize meta
+.modal-content .content-meta {
+    background: @modal-footer-bg;
+    padding: 10px @modal-inner-padding;
+    border-bottom: 1px solid @modal-header-border-color;
+    margin-bottom: 0;
 }

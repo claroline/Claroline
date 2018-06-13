@@ -75,6 +75,7 @@ class DataFormModal extends Component {
       <Modal {...this.props}>
         <Form
           level={5}
+          meta={this.props.meta}
           data={this.state.data}
           errors={this.state.errors}
           pendingChanges={this.state.pendingChanges}
@@ -106,6 +107,7 @@ DataFormModal.propTypes = {
 
   // form configuration
   data: T.any,
+  meta: T.bool,
   sections: T.arrayOf(T.shape(
     DataFormSectionTypes.propTypes
   )).isRequired,
@@ -117,7 +119,8 @@ DataFormModal.defaultProps = {
   icon: 'fa fa-fw fa-pencil',
   title: trans('edit'),
   saveButtonText: trans('save'),
-  data: {}
+  data: {},
+  meta: false
 }
 
 export {
