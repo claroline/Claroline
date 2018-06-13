@@ -51,7 +51,8 @@ const MoreTools = props =>
       }))
     }}
     subscript={{
-      type: 'primary',
+      type: 'label',
+      status: 'primary',
       value: props.tools.length
     }}
   />
