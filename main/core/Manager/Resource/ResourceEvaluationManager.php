@@ -217,11 +217,11 @@ class ResourceEvaluationManager
         } elseif (!empty($score) || !is_null($progression)) {
             $newScore = empty($scoreMax) ? $score : $score / $scoreMax;
 
-            $rueScore = $rue->getScore() ? $rue->getScore() : 0;
+            $rueScore = $rue->getScore();
             $rueScoreMax = $rue->getScoreMax();
             $oldScore = empty($rueScoreMax) ? $rueScore : $rueScore / $rueScoreMax;
 
-            if ($newScore >= $oldScore) {
+            if (is_null($oldScore) || $newScore >= $oldScore) {
                 $rue->setScore($score);
                 $rue->setScoreMax($scoreMax);
                 $rue->setScoreMin($evaluation->getScoreMin());

@@ -2,8 +2,10 @@
 
 namespace UJM\ExoBundle\Controller\Api;
 
+use Claroline\CoreBundle\API\Serializer\Resource\ResourceUserEvaluationSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
+use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -40,26 +42,44 @@ class AttemptController extends AbstractController
     private $paperManager;
 
     /**
+     * @var ResourceEvaluationManager
+     */
+    private $resourceEvalManager;
+
+    /**
+     * @var ResourceUserEvaluationSerializer
+     */
+    private $userEvalSerializer;
+
+    /**
      * AttemptController constructor.
      *
      * @DI\InjectParams({
-     *     "authorization" = @DI\Inject("security.authorization_checker"),
-     *     "attemptManager" = @DI\Inject("ujm_exo.manager.attempt"),
-     *     "paperManager" = @DI\Inject("ujm_exo.manager.paper")
+     *     "authorization"       = @DI\Inject("security.authorization_checker"),
+     *     "attemptManager"      = @DI\Inject("ujm_exo.manager.attempt"),
+     *     "paperManager"        = @DI\Inject("ujm_exo.manager.paper"),
+     *     "resourceEvalManager" = @DI\Inject("claroline.manager.resource_evaluation_manager"),
+     *     "userEvalSerializer"  = @DI\Inject("claroline.serializer.resource_user_evaluation")
      * })
      *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param AttemptManager                $attemptManager
-     * @param PaperManager                  $paperManager
+     * @param AuthorizationCheckerInterface    $authorization
+     * @param AttemptManager                   $attemptManager
+     * @param PaperManager                     $paperManager
+     * @param ResourceEvaluationManager        $resourceEvalManager
+     * @param ResourceUserEvaluationSerializer $userEvalSerializer
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         AttemptManager $attemptManager,
-        PaperManager $paperManager)
-    {
+        PaperManager $paperManager,
+        ResourceEvaluationManager $resourceEvalManager,
+        ResourceUserEvaluationSerializer $userEvalSerializer
+    ) {
         $this->authorization = $authorization;
         $this->attemptManager = $attemptManager;
         $this->paperManager = $paperManager;
+        $this->resourceEvalManager = $resourceEvalManager;
+        $this->userEvalSerializer = $userEvalSerializer;
     }
 
     /**
@@ -149,8 +169,17 @@ class AttemptController extends AbstractController
         $this->assertHasPaperAccess($paper, $user);
 
         $this->attemptManager->end($paper, true);
+        $userEvaluation = !empty($user) ?
+            $this->resourceEvalManager->getResourceUserEvaluation($paper->getExercise()->getResourceNode(), $user) :
+            null;
 
-        return new JsonResponse($this->paperManager->serialize($paper), 200);
+        return new JsonResponse(
+            [
+                'paper' => $this->paperManager->serialize($paper),
+                'userEvaluation' => !empty($userEvaluation) ? $this->userEvalSerializer->serialize($userEvaluation) : null,
+            ],
+            200
+        );
     }
 
     /**

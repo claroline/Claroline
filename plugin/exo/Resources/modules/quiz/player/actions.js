@@ -75,8 +75,9 @@ actions.requestEnd = (quizId, paperId, navigate) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      const normalized = normalize(data)
+      const normalized = normalize(data.paper)
       dispatch(actions.handleAttemptEnd(normalized.paper, navigate))
+      dispatch(resourceActions.updateUserEvaluation(data.userEvaluation))
     }
   }
 })

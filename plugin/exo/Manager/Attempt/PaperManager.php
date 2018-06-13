@@ -475,7 +475,7 @@ class PaperManager
             }
         }
 
-        $this->resourceEvalManager->createResourceEvaluation(
+        return $this->resourceEvalManager->createResourceEvaluation(
             $paper->getExercise()->getResourceNode(),
             $paper->getUser(),
             new \DateTime(),

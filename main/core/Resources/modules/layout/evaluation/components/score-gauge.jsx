@@ -12,7 +12,7 @@ const ScoreGauge = props => {
   
   return (
     <div className={classes('score-gauge c100', props.size, fillClass)}>
-      <span>{(userScore || 0 === userScore ? userScore+'' : '-') + '/' + props.maxScore}</span>
+      <span>{(userScore || 0 === userScore ? userScore+'' : '-') + '/' + (props.maxScore ? props.maxScore : '-')}</span>
 
       <div className="slice" role="presentation">
         <div className="bar" role="presentation"></div>
@@ -25,11 +25,12 @@ const ScoreGauge = props => {
 ScoreGauge.propTypes = {
   size: T.oneOf(['sm']),
   userScore: T.number,
-  maxScore: T.number.isRequired
+  maxScore: T.number
 }
 
 ScoreGauge.defaultProps = {
-  userScore: null
+  userScore: null,
+  maxScore: null
 }
 
 export {ScoreGauge}

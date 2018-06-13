@@ -31,7 +31,8 @@ const QuestionsPage = props =>
       <DataListContainer
         name="questions"
         fetch={{
-          url: ['question_list']
+          url: ['question_list'],
+          autoload: true
         }}
         definition={[
           {
@@ -72,12 +73,12 @@ const QuestionsPage = props =>
             name: 'meta.created',
             label: t('creation_date'),
             type: 'date',
-            alias: 'created'
+            alias: 'dateCreate'
           }, {
             name: 'meta.updated',
             label: t('last_modification'),
             type: 'date',
-            alias: 'updated',
+            alias: 'dateModify',
             displayed: true,
             options: {
               time: true
