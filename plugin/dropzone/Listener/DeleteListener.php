@@ -22,15 +22,15 @@ class DeleteListener
     {
         $entity = $args->getEntity();
         if ($entity instanceof Document) {
-            if (null != $entity->getResourceNode()) {
+            if (null !== $entity->getResourceNode()) {
                 $this->container->get('claroline.manager.resource_manager')->delete($entity->getResourceNode());
             }
         } elseif ($entity instanceof Drop) {
-            if (null != $entity->getHiddenDirectory()) {
+            if (null !== $entity->getHiddenDirectory()) {
                 $this->container->get('claroline.manager.resource_manager')->delete($entity->getHiddenDirectory());
             }
         } elseif ($entity instanceof Dropzone) {
-            if (null != $entity->getHiddenDirectory()) {
+            if (null !== $entity->getHiddenDirectory()) {
                 $this->container->get('claroline.manager.resource_manager')->delete($entity->getHiddenDirectory());
             }
         }

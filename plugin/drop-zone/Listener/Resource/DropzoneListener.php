@@ -13,9 +13,9 @@ namespace Claroline\DropZoneBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
@@ -291,7 +291,7 @@ class DropzoneListener
         return [
             'dropzone' => $this->serializer->serialize($dropzone),
             'user' => $this->serializer->serialize($user),
-            'myDrop' => $this->serializer->serialize($myDrop),
+            'myDrop' => !empty($myDrop) ? $this->serializer->serialize($myDrop) : null,
             'nbCorrections' => count($finishedPeerDrops),
             'tools' => $serializedTools,
             'evaluation' => $this->serializer->serialize($userEvaluation),

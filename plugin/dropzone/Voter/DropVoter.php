@@ -29,7 +29,7 @@ class DropVoter
 
     public function isAllowToOpenDrop(Drop $drop)
     {
-        $collection = new ResourceCollection(array($drop->getResourceNode()));
+        $collection = new ResourceCollection([$drop->getResourceNode()]);
         if (false === $this->get('security.authorization_checker')->isGranted('OPEN', $collection)) {
             throw new AccessDeniedException();
         }

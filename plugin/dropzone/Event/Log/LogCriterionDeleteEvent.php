@@ -17,15 +17,15 @@ class LogCriterionDeleteEvent extends AbstractLogResourceEvent
      */
     public function __construct(Dropzone $dropzone, Criterion $criterion)
     {
-        $details = array(
-            'dropzone' => array(
+        $details = [
+            'dropzone' => [
                 'id' => $dropzone->getId(),
-            ),
-            'criterion' => array(
+            ],
+            'criterion' => [
                 'id' => $criterion->getId(),
                 'instruction' => $criterion->getInstruction(),
-            ),
-        );
+            ],
+        ];
 
         parent::__construct($dropzone->getResourceNode(), $details);
     }
@@ -35,6 +35,6 @@ class LogCriterionDeleteEvent extends AbstractLogResourceEvent
      */
     public static function getRestriction()
     {
-        return array(LogGenericEvent::DISPLAYED_WORKSPACE);
+        return [LogGenericEvent::DISPLAYED_WORKSPACE];
     }
 }

@@ -12,10 +12,10 @@
 namespace Claroline\SurveyBundle\Repository\Answer;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\SurveyBundle\Entity\Answer\QuestionAnswer;
 use Claroline\SurveyBundle\Entity\Choice;
 use Claroline\SurveyBundle\Entity\Question;
 use Claroline\SurveyBundle\Entity\Survey;
-use Claroline\SurveyBundle\Entity\Answer\QuestionAnswer;
 use Doctrine\ORM\EntityRepository;
 
 class MultipleChoiceQuestionAnswerRepository extends EntityRepository

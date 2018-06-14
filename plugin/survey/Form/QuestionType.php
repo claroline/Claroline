@@ -11,7 +11,11 @@
 
 namespace Claroline\SurveyBundle\Form;
 
+use Claroline\CoreBundle\Form\Field\TinymceType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -25,7 +29,7 @@ class QuestionType extends AbstractType
         );
         $builder->add(
             'question',
-            'tinymce'
+            TinymceType::class
         );
         $builder->add(
             'type',
@@ -51,11 +55,6 @@ class QuestionType extends AbstractType
             TextType::class,
             ['required' => false]
         );
-    }
-
-    public function getName()
-    {
-        return 'question_form';
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -49,7 +49,7 @@ class DeleteDropzoneCommand extends ContainerAwareCommand
                 $output->writeln('<info>  Resource deleted.</info>');
                 ++$nbResources;
 
-                if ($i % 100 === 0) {
+                if (0 === $i % 100) {
                     $output->writeln('<info>  Flushing...</info>');
                     $om->forceFlush();
                 }

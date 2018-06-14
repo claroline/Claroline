@@ -11,6 +11,7 @@
 
 namespace Claroline\SurveyBundle\Form;
 
+use Claroline\CoreBundle\Form\Field\TinymceType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -21,17 +22,12 @@ class QuestionTitleType extends AbstractType
     {
         $builder->add(
             'question',
-            'tinymce'
+            TinymceType::class
         );
-    }
-
-    public function getName()
-    {
-        return 'question_title_form';
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'survey'));
+        $resolver->setDefaults(['translation_domain' => 'survey']);
     }
 }

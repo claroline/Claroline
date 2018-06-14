@@ -18,16 +18,16 @@ class LogCriterionCreateEvent extends AbstractLogResourceEvent
      */
     public function __construct(Dropzone $dropzone, $dropzoneChangeSet, Criterion $criterion)
     {
-        $details = array(
-            'dropzone' => array(
+        $details = [
+            'dropzone' => [
                 'id' => $dropzone->getId(),
                 'changeSet' => $dropzoneChangeSet,
-            ),
-            'criterion' => array(
+            ],
+            'criterion' => [
                 'id' => $criterion->getId(),
                 'instruction' => $criterion->getInstruction(),
-            ),
-        );
+            ],
+        ];
 
         parent::__construct($dropzone->getResourceNode(), $details);
     }
@@ -37,6 +37,6 @@ class LogCriterionCreateEvent extends AbstractLogResourceEvent
      */
     public static function getRestriction()
     {
-        return array(LogGenericEvent::DISPLAYED_WORKSPACE);
+        return [LogGenericEvent::DISPLAYED_WORKSPACE];
     }
 }

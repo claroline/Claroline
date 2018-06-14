@@ -21,8 +21,8 @@ use Icap\DropzoneBundle\Event\Log\LogDocumentDeleteEvent;
 use Icap\DropzoneBundle\Event\Log\LogDocumentOpenEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropEndEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropEvaluateEvent;
-use Icap\DropzoneBundle\Event\Log\LogDropStartEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropReportEvent;
+use Icap\DropzoneBundle\Event\Log\LogDropStartEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropzoneConfigureEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropzoneManualStateChangedEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -55,11 +55,9 @@ class DropzoneBaseController extends Controller
             $event instanceof LogDropReportEvent ||
             $event instanceof LogDropzoneManualStateChangedEvent
         ) {
-
             // Other logs are WIP.
             $this->get('event_dispatcher')->dispatch('log', $event);
         }
-        //$this->get('event_dispatcher')->dispatch('log', $event);
 
         return $this;
     }

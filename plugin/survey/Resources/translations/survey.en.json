@@ -88,6 +88,7 @@
     "questions_management": "Questions management",
     "ratio": "Ratio",
     "remove_question_btn_explanation": "Remove question from survey",
+    "resource_exo_usage_msg": "Use <Exercise> resource instead.",
     "results": "Results",
     "return": "Return",
     "selected_answers_deletion": "Delete selected answers",

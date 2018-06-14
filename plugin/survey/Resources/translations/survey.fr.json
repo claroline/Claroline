@@ -88,6 +88,7 @@
     "questions_management": "Gestion des questions",
     "ratio": "Ratio",
     "remove_question_btn_explanation": "Retirer la question du sondage",
+    "resource_exo_usage_msg": "Veuillez utiliser la ressource <Questionnaire> à la place.",
     "results": "Résultats",
     "return": "Retour",
     "selected_answers_deletion": "Supprimer les réponses sélectionnées",

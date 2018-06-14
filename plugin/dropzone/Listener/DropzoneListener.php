@@ -2,13 +2,13 @@
 
 namespace Icap\DropzoneBundle\Listener;
 
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
+use Claroline\CoreBundle\Event\PluginOptionsEvent;
+use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
-use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Icap\DropzoneBundle\Entity\Criterion;
@@ -56,7 +56,7 @@ class DropzoneListener
      */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-        $form = $this->container->get('form.factory')->create(new DropzoneType(), new Dropzone());
+        $form = $this->container->get('form.factory')->create(DropzoneType::class, new Dropzone());
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:resource:create_form.html.twig',
             [
@@ -76,7 +76,7 @@ class DropzoneListener
      */
     public function onCreate(CreateResourceEvent $event)
     {
-        $form = $this->container->get('form.factory')->create(new DropzoneType(), new Dropzone());
+        $form = $this->container->get('form.factory')->create(DropzoneType::class, new Dropzone());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -124,7 +124,7 @@ class DropzoneListener
      */
     public function onOpenCustom(CustomActionResourceEvent $event)
     {
-        $resource = get_class($event->getResource()) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut' ?
+        $resource = 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut' === get_class($event->getResource()) ?
             $this->resourceManager->getResourceFromShortcut($event->getResource()->getResourceNode()) :
             $event->getResource();
         $params = [];
@@ -143,7 +143,7 @@ class DropzoneListener
      */
     public function onEdit(CustomActionResourceEvent $event)
     {
-        $resource = get_class($event->getResource()) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut' ?
+        $resource = 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut' === get_class($event->getResource()) ?
             $this->resourceManager->getResourceFromShortcut($event->getResource()->getResourceNode()) :
             $event->getResource();
         $params = [];
@@ -162,7 +162,7 @@ class DropzoneListener
      */
     public function onList(CustomActionResourceEvent $event)
     {
-        $resource = get_class($event->getResource()) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut' ?
+        $resource = 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut' === get_class($event->getResource()) ?
             $this->resourceManager->getResourceFromShortcut($event->getResource()->getResourceNode()) :
             $event->getResource();
         $params = [];

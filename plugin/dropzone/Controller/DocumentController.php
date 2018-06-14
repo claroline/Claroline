@@ -17,7 +17,6 @@ use Icap\DropzoneBundle\Form\DocumentDeleteType;
 use Icap\DropzoneBundle\Form\DocumentType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -28,7 +27,7 @@ class DocumentController extends DropzoneBaseController
         $em = $this->getDoctrine()->getManager();
         $hiddenDirectory = $dropzone->getHiddenDirectory();
 
-        if ($hiddenDirectory === null) {
+        if (null === $hiddenDirectory) {
             $hiddenDirectory = new Directory();
             $name = $this->get('translator')->trans(
                 'Hidden folder for "%dropzoneName%"',
@@ -68,7 +67,7 @@ class DocumentController extends DropzoneBaseController
         $em = $this->getDoctrine()->getManager();
         $hiddenDropDirectory = $drop->getHiddenDirectory();
 
-        if ($hiddenDropDirectory === null) {
+        if (null === $hiddenDropDirectory) {
             $hiddenDropDirectory = new Directory();
             // slugify user name
             $slugify = new Slugify();
@@ -169,7 +168,7 @@ class DocumentController extends DropzoneBaseController
 
     private function createResource(Dropzone $dropzone, Drop $drop, $resourceId)
     {
-        if ($resourceId === null) {
+        if (null === $resourceId) {
             throw new \ErrorException();
         }
         $em = $this->getDoctrine()->getManager();
@@ -192,17 +191,17 @@ class DocumentController extends DropzoneBaseController
         $document->setType($documentType);
 
         $node = null;
-        if ($documentType === 'url') {
+        if ('url' === $documentType) {
             $data = $form->getData();
             $url = $data['document'];
             $document->setUrl($url);
-        } elseif ($documentType === 'file') {
+        } elseif ('file' === $documentType) {
             $file = $form['document'];
             $node = $this->createFile($dropzone, $drop, $file->getData());
-        } elseif ($documentType === 'text') {
+        } elseif ('text' === $documentType) {
             $data = $form->getData();
             $node = $this->createText($dropzone, $drop, $data['document']);
-        } elseif ($documentType === 'resource') {
+        } elseif ('resource' === $documentType) {
             $data = $form->getData();
             $node = $this->createResource($dropzone, $drop, $data['document']);
         } else {
@@ -232,24 +231,24 @@ class DocumentController extends DropzoneBaseController
     {
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
-        if ($documentType === 'url') {
+        if ('url' === $documentType) {
             if (!$dropzone->getAllowUrl()) {
                 throw new AccessDeniedException();
             }
-        } elseif ($documentType === 'file') {
+        } elseif ('file' === $documentType) {
             if (!$dropzone->getAllowUpload()) {
                 throw new AccessDeniedException();
             }
-        } elseif ($documentType === 'resource') {
+        } elseif ('resource' === $documentType) {
             if (!$dropzone->getAllowWorkspaceResource()) {
                 throw new AccessDeniedException();
             }
-        } elseif ($documentType === 'text') {
+        } elseif ('text' === $documentType) {
             if (!$dropzone->getAllowRichText()) {
                 throw new AccessDeniedException();
             }
         }
-        $form = $this->createForm(new DocumentType(), null, ['documentType' => $documentType]);
+        $form = $this->createForm(DocumentType::class, null, ['documentType' => $documentType]);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -309,7 +308,7 @@ class DocumentController extends DropzoneBaseController
             throw new AccessDeniedException();
         }
 
-        $form = $this->createForm(new DocumentDeleteType(), $document);
+        $form = $this->createForm(DocumentDeleteType::class, $document);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -365,19 +364,19 @@ class DocumentController extends DropzoneBaseController
     {
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
-        if ($document->getType() === 'url') {
+        if ('url' === $document->getType()) {
             return $this->redirect($document->getUrl());
         } elseif (
-            $document->getType() === 'text'
-            || $document->getType() === 'resource'
-            || $document->getType() === 'file'
+            'text' === $document->getType()
+            || 'resource' === $document->getType()
+            || 'file' === $document->getType()
         ) {
             $this->get('claroline.temporary_access_resource_manager')->addTemporaryAccess($document->getResourceNode(), $user);
 
             $event = new LogDocumentOpenEvent($dropzone, $document->getDrop(), $document);
             $this->dispatch($event);
 
-            if ($document->getResourceNode()->getResourceType()->getName() === 'file') {
+            if ('file' === $document->getResourceNode()->getResourceType()->getName()) {
                 return $this->redirect(
                     $this->generateUrl('claro_resource_download').'?ids[]='.$document->getResourceNode()->getId()
                 );

@@ -17,9 +17,9 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Form\ResourceNameType;
@@ -185,7 +185,7 @@ class AnnouncementListener
         }
 
         $content = $this->templating->render(
-            'ClarolineAnnouncementBundle:Announcement:open.html.twig', [
+            'ClarolineAnnouncementBundle:announcement:open.html.twig', [
                 '_resource' => $resource,
                 'roles' => $serializedRoles,
             ]

@@ -16,12 +16,12 @@ class LogDropzoneConfigureEvent extends AbstractLogResourceEvent
      */
     public function __construct(Dropzone $dropzone, $changeSet)
     {
-        $details = array(
-            'dropzone' => array(
+        $details = [
+            'dropzone' => [
                 'id' => $dropzone->getId(),
                 'changeSet' => $changeSet,
-            ),
-        );
+            ],
+        ];
 
         parent::__construct($dropzone->getResourceNode(), $details);
     }
@@ -31,6 +31,6 @@ class LogDropzoneConfigureEvent extends AbstractLogResourceEvent
      */
     public static function getRestriction()
     {
-        return array(LogGenericEvent::DISPLAYED_WORKSPACE);
+        return [LogGenericEvent::DISPLAYED_WORKSPACE];
     }
 }

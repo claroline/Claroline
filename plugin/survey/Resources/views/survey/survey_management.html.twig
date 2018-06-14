@@ -83,6 +83,11 @@
         </h3>
     </div>
     <div class="panel-body">
+        <div class="alert alert-danger">
+            <p>{{ 'deprecated_resource_warning'|trans({}, 'platform') }}</p>
+            <p>{{ 'resource_exo_usage_msg'|trans({}, 'survey') }}</p>
+        </div>
+
         {% if status == 'unpublished' %}
             <div class="alert alert-info">
                 {{ 'how_to_publish_message'|trans({}, 'survey') }}

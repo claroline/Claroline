@@ -7,11 +7,11 @@
 
 namespace Icap\DropzoneBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\Common\Collections\ArrayCollection;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -249,8 +249,8 @@ class Dropzone extends AbstractResource
     protected $eventDrop = null;
 
     /**
-     * @var Event
-     *            Event for Workspace Agenda linked to Correction phase.
+     * @var event
+     *            Event for Workspace Agenda linked to Correction phase
      *
      * @ORM\OneToOne(
      *    targetEntity="Claroline\AgendaBundle\Entity\Event",cascade={"remove"})
@@ -356,7 +356,7 @@ class Dropzone extends AbstractResource
      */
     public function setForceCommentInCorrection($forceCommentInCorrection)
     {
-        if ($this->getAllowCommentInCorrection() == true) {
+        if (true === $this->getAllowCommentInCorrection()) {
             $this->forceCommentInCorrection = $forceCommentInCorrection;
         } else {
             $this->forceCommentInCorrection = false;
@@ -560,13 +560,13 @@ class Dropzone extends AbstractResource
      */
     public function setManualState($manualState)
     {
-        $ms_tab_values = array(
+        $ms_tab_values = [
             self::MANUAL_STATE_NOT_STARTED,
             self::MANUAL_STATE_PEER_REVIEW,
             self::MANUAL_STATE_ALLOW_DROP,
             self::MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW,
-            self::MANUAL_STATE_FINISHED, );
-        if (array_search($manualState, $ms_tab_values) !== false) {
+            self::MANUAL_STATE_FINISHED, ];
+        if (false !== array_search($manualState, $ms_tab_values)) {
             $this->manualState = $manualState;
         }
     }
@@ -765,18 +765,18 @@ class Dropzone extends AbstractResource
     public function isNotStarted()
     {
         if ($this->manualPlanning) {
-            return $this->manualState == $this::MANUAL_STATE_NOT_STARTED;
+            return $this->manualState === $this::MANUAL_STATE_NOT_STARTED;
         } else {
             $now = new \DateTime();
 
-            return $now->getTimestamp() < $this->getStartAllowDrop()->getTimestamp() && ($this->getStartReview() == null || $now->getTimestamp() < $this->getStartReview()->getTimestamp());
+            return $now->getTimestamp() < $this->getStartAllowDrop()->getTimestamp() && (null === $this->getStartReview() || $now->getTimestamp() < $this->getStartReview()->getTimestamp());
         }
     }
 
     public function isAllowDrop()
     {
         if ($this->manualPlanning) {
-            return $this->manualState == $this::MANUAL_STATE_ALLOW_DROP || $this->manualState == $this::MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW;
+            return $this->manualState === $this::MANUAL_STATE_ALLOW_DROP || $this->manualState === $this::MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW;
         } else {
             $now = new \DateTime();
 
@@ -794,11 +794,11 @@ class Dropzone extends AbstractResource
     {
         if ($this->peerReview) {
             if ($this->manualPlanning) {
-                return $this->manualState == $this::MANUAL_STATE_PEER_REVIEW || $this->manualState == $this::MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW;
+                return $this->manualState === $this::MANUAL_STATE_PEER_REVIEW || $this->manualState === $this::MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW;
             } else {
                 $now = new \DateTime();
 
-                return $this->startReview != null && $this->endReview != null && $now->getTimestamp() >= $this->startReview->getTimestamp() && $now->getTimestamp() < $this->endReview->getTimestamp();
+                return null !== $this->startReview && null !== $this->endReview && $now->getTimestamp() >= $this->startReview->getTimestamp() && $now->getTimestamp() < $this->endReview->getTimestamp();
             }
         } else {
             return false;
@@ -808,7 +808,7 @@ class Dropzone extends AbstractResource
     public function isFinished()
     {
         if ($this->manualPlanning) {
-            return $this->manualState == $this::MANUAL_STATE_FINISHED;
+            return $this->manualState === $this::MANUAL_STATE_FINISHED;
         } else {
             $now = new \DateTime();
 
@@ -824,7 +824,7 @@ class Dropzone extends AbstractResource
 
     public function getTimeRemaining($reference)
     {
-        if ($this->manualPlanning || $reference == null) {
+        if ($this->manualPlanning || null === $reference) {
             return -1;
         }
         $now = new \DateTime();
@@ -906,7 +906,7 @@ class Dropzone extends AbstractResource
      */
     public function setAutoCloseState($autoCloseState)
     {
-        $authorizedValues = array(self::AUTO_CLOSED_STATE_CLOSED, self::AUTO_CLOSED_STATE_WAITING);
+        $authorizedValues = [self::AUTO_CLOSED_STATE_CLOSED, self::AUTO_CLOSED_STATE_WAITING];
         if (in_array($autoCloseState, $authorizedValues)) {
             $this->autoCloseState = $autoCloseState;
         }

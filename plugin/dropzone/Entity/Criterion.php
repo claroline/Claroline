@@ -119,6 +119,6 @@ class Criterion
      */
     public function setAllowCommentInCorrection($value)
     {
-        $this->getDropzone()->setAllowCommentInCorrection($value == 1);
+        $this->getDropzone()->setAllowCommentInCorrection(1 === $value);
     }
 }

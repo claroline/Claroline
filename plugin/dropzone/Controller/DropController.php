@@ -108,11 +108,11 @@ class DropController extends DropzoneBaseController
             $this->dispatch($event);
         }
 
-        $form = $this->createForm(new DropType(), $notFinishedDrop);
-        $form_url = $this->createForm(new DocumentType(), null, ['documentType' => 'url']);
-        $form_file = $this->createForm(new DocumentType(), null, ['documentType' => 'file']);
-        $form_resource = $this->createForm(new DocumentType(), null, ['documentType' => 'resource']);
-        $form_text = $this->createForm(new DocumentType(), null, ['documentType' => 'text']);
+        $form = $this->createForm(DropType::class, $notFinishedDrop);
+        $form_url = $this->createForm(DocumentType::class, null, ['documentType' => 'url']);
+        $form_file = $this->createForm(DocumentType::class, null, ['documentType' => 'file']);
+        $form_resource = $this->createForm(DocumentType::class, null, ['documentType' => 'resource']);
+        $form_text = $this->createForm(DocumentType::class, null, ['documentType' => 'text']);
         $drop = $notFinishedDrop;
 
         if ($request->isMethod('POST')) {
@@ -666,7 +666,7 @@ class DropController extends DropzoneBaseController
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
-        $form = $this->createForm(new DropType(), $drop);
+        $form = $this->createForm(DropType::class, $drop);
 
         $previousPath = 'icap_dropzone_drops_by_user_paginated';
         if (1 === $tab) {
@@ -884,7 +884,7 @@ class DropController extends DropzoneBaseController
         if (null === $curent_user_correction || $curent_user_correction->getId() !== $correction->getId()) {
             throw new AccessDeniedException();
         }
-        $form = $this->createForm(new CorrectionReportType(), $correction);
+        $form = $this->createForm(CorrectionReportType::class, $correction);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);

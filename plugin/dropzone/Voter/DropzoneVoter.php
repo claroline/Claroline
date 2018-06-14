@@ -8,10 +8,10 @@
 
 namespace Icap\DropzoneBundle\Voter;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\Resource\MaskManager;
-use Claroline\CoreBundle\Entity\User;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -44,7 +44,7 @@ class DropzoneVoter
      */
     protected function isAllow(Dropzone $dropzone, $actionName)
     {
-        $collection = new ResourceCollection(array($dropzone->getResourceNode()));
+        $collection = new ResourceCollection([$dropzone->getResourceNode()]);
 
         if (false === $this->container->get('security.authorization_checker')->isGranted($actionName, $collection)) {
             throw new AccessDeniedException();

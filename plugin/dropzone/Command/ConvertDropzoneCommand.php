@@ -350,7 +350,7 @@ class ConvertDropzoneCommand extends ContainerAwareCommand
 
                 $output->writeln('<info>  Conversion of resource ['.$node->getName().'] is finished.</info>');
 
-                if ($i % 20 === 0) {
+                if (0 === $i % 20) {
                     $output->writeln('<info>  Flushing...</info>');
                     $om->forceFlush();
                 }

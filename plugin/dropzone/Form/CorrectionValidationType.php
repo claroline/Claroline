@@ -12,15 +12,10 @@ class CorrectionValidationType extends AbstractType
     {
     }
 
-    public function getName()
-    {
-        return 'icap_dropzone_correct_validation_form';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'translation_domain' => 'icap_dropzone',
-        ));
+        ]);
     }
 }

@@ -49,7 +49,7 @@ class CorrectionManager
         }
 
         $totalGrade = 0;
-        if ($nbCriteria !== 0) {
+        if (0 !== $nbCriteria) {
             $totalGrade = $sumGrades / ($nbCriteria);
             $totalGrade = ($totalGrade * 20) / ($maxGrade);
         }
@@ -71,7 +71,7 @@ class CorrectionManager
             $em->flush();
 
             $currentDrop = $correction->getDrop();
-            if ($currentDrop !== null && $oldTotalGrade !== $totalGrade) {
+            if (null !== $currentDrop && $oldTotalGrade !== $totalGrade) {
                 $event = new LogCorrectionUpdateEvent($dropzone, $currentDrop, $correction);
                 $this->container->get('event_dispatcher')->dispatch('log', $event);
             }

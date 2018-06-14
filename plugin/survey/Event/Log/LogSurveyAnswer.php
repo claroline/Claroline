@@ -25,7 +25,7 @@ class LogSurveyAnswer extends LogGenericEvent
     ) {
         parent::__construct(
             self::ACTION,
-            array(),
+            [],
             $user,
             null,
             $survey->getResourceNode(),
@@ -39,6 +39,6 @@ class LogSurveyAnswer extends LogGenericEvent
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_WORKSPACE);
+        return [self::DISPLAYED_WORKSPACE];
     }
 }

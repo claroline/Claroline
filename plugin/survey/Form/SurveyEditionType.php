@@ -11,7 +11,10 @@
 
 namespace Claroline\SurveyBundle\Form;
 
+use Claroline\CoreBundle\Form\Field\TinymceType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -21,45 +24,40 @@ class SurveyEditionType extends AbstractType
     {
         $builder->add(
             'description',
-            'tinymce'
+            TinymceType::class
         );
         $builder->add(
             'startDate',
-            'date',
-            array(
+            DateType::class,
+            [
                 'required' => false,
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
-            )
+            ]
         );
         $builder->add(
             'endDate',
-            'date',
-            array(
+            DateType::class,
+            [
                 'required' => false,
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
-            )
+            ]
         );
         $builder->add(
             'hasPublicResult',
             CheckboxType::class,
-            array('required' => true)
+            ['required' => true]
         );
         $builder->add(
             'allowAnswerEdition',
             CheckboxType::class,
-            array('required' => true)
+            ['required' => true]
         );
-    }
-
-    public function getName()
-    {
-        return 'survey_edition_form';
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'survey'));
+        $resolver->setDefaults(['translation_domain' => 'survey']);
     }
 }

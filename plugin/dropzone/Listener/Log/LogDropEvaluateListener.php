@@ -2,14 +2,14 @@
 
 namespace Icap\DropzoneBundle\Listener\Log;
 
-use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Entity\Log\Log;
+use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Doctrine\ORM\EntityManager;
 use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Event\Log\LogDropEvaluateEvent;
 use Icap\DropzoneBundle\Event\Log\PotentialEvaluationEndInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @DI\Service()
@@ -41,9 +41,9 @@ class LogDropEvaluateListener
         if ($event instanceof PotentialEvaluationEndInterface) {
             $correction = $event->getCorrection();
             $this->sendFinishedLog($correction->getDrop());
-            if ($correction->getDrop()->getUser()->getId() != $correction->getUser()->getId()) {
-                $drop = $this->entityManager->getRepository('IcapDropzoneBundle:Drop')->findOneBy(array('user' => $correction->getUser()));
-                if ($drop !== null) {
+            if ($correction->getDrop()->getUser()->getId() !== $correction->getUser()->getId()) {
+                $drop = $this->entityManager->getRepository('IcapDropzoneBundle:Drop')->findOneBy(['user' => $correction->getUser()]);
+                if (null !== $drop) {
                     $this->sendFinishedLog($drop);
                 }
             }
@@ -52,10 +52,10 @@ class LogDropEvaluateListener
 
     private function sendFinishedLog(Drop $drop)
     {
-        if ($drop != null) {
-            if ($drop->getDropzone()->getPeerReview() === false || $drop->countFinishedCorrections() >= $drop->getDropzone()->getExpectedTotalCorrection()) {
+        if (null !== $drop) {
+            if (false === $drop->getDropzone()->getPeerReview() || $drop->countFinishedCorrections() >= $drop->getDropzone()->getExpectedTotalCorrection()) {
                 $finished = false;
-                if ($drop->getDropzone()->getPeerReview() === true) {
+                if (true === $drop->getDropzone()->getPeerReview()) {
                     $nbCorrections = $this->entityManager
                         ->getRepository('IcapDropzoneBundle:Correction')
                         ->countFinished($drop->getDropzone(), $drop->getUser());
@@ -67,7 +67,7 @@ class LogDropEvaluateListener
                     $finished = true;
                 }
 
-                if ($finished === true) {
+                if (true === $finished) {
                     $grade = $drop->getCalculatedGrade();
                     $event = new LogDropEvaluateEvent($drop->getDropzone(), $drop, $grade);
                     $event->setDoer($drop->getUser());

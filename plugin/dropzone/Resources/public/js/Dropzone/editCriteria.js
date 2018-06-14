@@ -22,7 +22,7 @@ $(document).ready(function () {
 
 
     $('#icap_dropzone_criteria_form_allowCommentInCorrection').on('click', function () {
-        if (comment == 0) {
+        if (comment === 0) {
             comment = 1;
         } else {
             comment = 0;
@@ -203,11 +203,11 @@ function setSaveListener() {
     $('.form-cancel').unbind('click').click(function (event) {
         event.preventDefault();
         var criterionId = $(this).data('criterion');
-        if (criterionId == 'new') {
+        if (criterionId === 'new') {
             $('.new-criteria').hide();
             $('.add-criteria-zone').show();
 
-            if ((nbResults == 0) ? 'true' : 'false') {
+            if ((nbResults === 0) ? 'true' : 'false') {
                 $('.add-remove-column').hide();
             }
         } else {

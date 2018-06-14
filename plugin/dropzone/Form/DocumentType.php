@@ -2,7 +2,12 @@
 
 namespace Icap\DropzoneBundle\Form;
 
+use Claroline\CoreBundle\Form\Field\TinymceType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -12,28 +17,28 @@ class DocumentType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($options['documentType'] == TextType::class) {
+        if (TextType::class === $options['documentType']) {
             $this->setName('icap_dropzone_document_file_form_text');
-            $builder->add('document', 'tinymce', array(
+            $builder->add('document', TinymceType::class, [
                 'required' => true,
-            ));
-        } elseif ($options['documentType'] == 'file') {
+            ]);
+        } elseif ('file' === $options['documentType']) {
             $this->setName('icap_dropzone_document_file_form_file');
-            $builder->add('document', FileType::class, array('required' => true, 'label' => 'file document'));
-        } elseif ($options['documentType'] == 'resource') {
+            $builder->add('document', FileType::class, ['required' => true, 'label' => 'file document']);
+        } elseif ('resource' === $options['documentType']) {
             $this->setName('icap_dropzone_document_file_form_resource');
             $builder->add(
                 'document',
                 HiddenType::class,
-                array(
+                [
                     'required' => true,
                     'label' => '',
-                    'label_attr' => array('style' => 'display: none;'),
-                )
+                    'label_attr' => ['style' => 'display: none;'],
+                ]
             );
         } else {
             $this->setName('icap_dropzone_document_file_form_url');
-            $builder->add('document', UrlType::class, array('required' => true, 'label' => 'url document'));
+            $builder->add('document', UrlType::class, ['required' => true, 'label' => 'url document']);
         }
     }
 
@@ -49,9 +54,9 @@ class DocumentType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'documentType' => UrlType::class,
             'translation_domain' => 'icap_dropzone',
-        ));
+        ]);
     }
 }

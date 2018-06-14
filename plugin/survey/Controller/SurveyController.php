@@ -108,7 +108,7 @@ class SurveyController extends Controller
     {
         $this->checkSurveyRight($survey, 'OPEN');
         $user = $this->tokenStorage->getToken()->getUser();
-        $isAnon = ($user === 'anon.');
+        $isAnon = ('anon.' === $user);
         $canEdit = $this->hasSurveyRight($survey, 'EDIT');
         $this->surveyManager->updateSurveyStatus($survey);
         $status = $this->computeStatus($survey);
@@ -182,7 +182,7 @@ class SurveyController extends Controller
     {
         $this->checkSurveyRight($survey, 'EDIT');
         $form = $this->formFactory->create(
-            new SurveyEditionType(),
+            SurveyEditionType::class,
             $survey
         );
 
@@ -205,7 +205,7 @@ class SurveyController extends Controller
     {
         $this->checkSurveyRight($survey, 'EDIT');
         $form = $this->formFactory->create(
-            new SurveyEditionType(),
+            SurveyEditionType::class,
             $survey
         );
         $form->handleRequest($this->request->getCurrentRequest());
@@ -239,8 +239,7 @@ class SurveyController extends Controller
     public function surveyManagementAction(Survey $survey)
     {
         $this->checkSurveyRight($survey, 'EDIT');
-        $questionRelations = $this->surveyManager
-            ->getQuestionRelationsBySurvey($survey);
+        $questionRelations = $this->surveyManager->getQuestionRelationsBySurvey($survey);
         $status = $this->computeStatus($survey);
         $questionResult = null;
         $questions = [];
@@ -248,7 +247,7 @@ class SurveyController extends Controller
         foreach ($questionRelations as $relation) {
             $question = $relation->getQuestion();
 
-            if ($question->getType() !== 'title') {
+            if ('title' !== $question->getType()) {
                 $questions[] = $question;
 
                 if (is_null($questionResult)) {
@@ -281,13 +280,12 @@ class SurveyController extends Controller
     {
         $this->checkSurveyRight($survey, 'EDIT');
         $questionViews = [];
-        $questionRelations = $this->surveyManager
-            ->getQuestionRelationsBySurvey($survey);
+        $questionRelations = $this->surveyManager->getQuestionRelationsBySurvey($survey);
 
         foreach ($questionRelations as $relation) {
             $question = $relation->getQuestion();
 
-            if ($question->getType() !== 'title') {
+            if ('title' !== $question->getType()) {
                 $questionViews[] =
                     $this->typedQuestionDisplayAction($survey, $question)->getContent();
             } else {
@@ -520,7 +518,7 @@ class SurveyController extends Controller
     {
         $this->checkSurveyRight($survey, 'EDIT');
         $form = $this->formFactory->create(
-            new QuestionType(),
+            QuestionType::class,
             new Question()
         );
         $models = $this->surveyManager->getQuestionModelsByWorkspace(
@@ -550,7 +548,7 @@ class SurveyController extends Controller
         $this->checkSurveyRight($survey, 'EDIT');
         $question = new Question();
         $form = $this->formFactory->create(
-            new QuestionType(),
+            QuestionType::class,
             $question
         );
         $form->handleRequest($this->request->getCurrentRequest());
@@ -578,7 +576,7 @@ class SurveyController extends Controller
                     break;
             }
 
-            if ($source === 'survey') {
+            if ('survey' === $source) {
                 $this->surveyManager
                     ->createSurveyQuestionRelation($survey, $question);
 
@@ -631,7 +629,7 @@ class SurveyController extends Controller
         $this->checkQuestionRight($survey, $question, 'EDIT');
         $this->checkAnsweredQuestion($question);
         $form = $this->formFactory->create(
-            new QuestionType(),
+            QuestionType::class,
             $question
         );
         $models = $this->surveyManager->getQuestionModelsByWorkspace(
@@ -665,7 +663,7 @@ class SurveyController extends Controller
         $this->checkQuestionRight($survey, $question, 'EDIT');
         $this->checkAnsweredQuestion($question);
         $form = $this->formFactory->create(
-            new QuestionType(),
+            QuestionType::class,
             $question
         );
         $form->handleRequest($this->request->getCurrentRequest());
@@ -692,7 +690,7 @@ class SurveyController extends Controller
                     break;
             }
 
-            if ($source === 'survey') {
+            if ('survey' === $source) {
                 return new RedirectResponse(
                     $this->router->generate(
                         'claro_survey_management',
@@ -765,7 +763,7 @@ class SurveyController extends Controller
     {
         $this->checkSurveyRight($survey, 'EDIT');
         $form = $this->formFactory->create(
-            new QuestionTitleType(),
+            QuestionTitleType::class,
             new Question()
         );
 
@@ -790,7 +788,7 @@ class SurveyController extends Controller
         $question = new Question();
         $question->setTitle('TITLE');
         $form = $this->formFactory->create(
-            new QuestionTitleType(),
+            QuestionTitleType::class,
             $question
         );
         $form->handleRequest($this->request->getCurrentRequest());
@@ -830,7 +828,7 @@ class SurveyController extends Controller
     {
         $this->checkQuestionRight($survey, $question, 'EDIT');
         $form = $this->formFactory->create(
-            new QuestionTitleType(),
+            QuestionTitleType::class,
             $question
         );
 
@@ -854,7 +852,7 @@ class SurveyController extends Controller
     {
         $this->checkQuestionRight($survey, $question, 'EDIT');
         $form = $this->formFactory->create(
-            new QuestionTitleType(),
+            QuestionTitleType::class,
             $question
         );
         $form->handleRequest($this->request->getCurrentRequest());
@@ -889,7 +887,7 @@ class SurveyController extends Controller
     {
         $this->checkQuestionRight($survey, $question, 'EDIT');
 
-        if ($question->getType() === 'title') {
+        if ('title' === $question->getType()) {
             $this->surveyManager->deleteQuestion($question);
         }
 
@@ -967,7 +965,7 @@ class SurveyController extends Controller
             case 'open_ended':
             case 'open_ended_bare':
 
-                $isRich = $questionType === 'open_ended';
+                $isRich = 'open_ended' === $questionType;
 
                 return $this->displayOpenEndedQuestion($question, null, false, $isRich);
             case 'simple_text':
@@ -989,10 +987,8 @@ class SurveyController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function typedQuestionCreateFormAction(
-        Survey $survey,
-        $questionType
-    ) {
+    public function typedQuestionCreateFormAction(Survey $survey, $questionType)
+    {
         $this->checkSurveyRight($survey, 'EDIT');
 
         switch ($questionType) {
@@ -1017,11 +1013,8 @@ class SurveyController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function typedQuestionEditFormAction(
-        Question $question,
-        Survey $survey,
-        $questionType
-    ) {
+    public function typedQuestionEditFormAction(Question $question, Survey $survey, $questionType)
+    {
         $this->checkQuestionRight($survey, $question, 'EDIT');
 
         switch ($questionType) {
@@ -1049,9 +1042,8 @@ class SurveyController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function surveyQuestionRelationMandatorySwitchAction(
-        SurveyQuestionRelation $relation
-    ) {
+    public function surveyQuestionRelationMandatorySwitchAction(SurveyQuestionRelation $relation)
+    {
         $survey = $relation->getSurvey();
         $this->checkSurveyRight($survey, 'EDIT');
 
@@ -1076,7 +1068,7 @@ class SurveyController extends Controller
         $this->checkSurveyRight($survey, 'OPEN');
         $status = $this->computeStatus($survey);
         $user = $this->tokenStorage->getToken()->getUser();
-        $isAnon = ($user === 'anon.');
+        $isAnon = ('anon.' === $user);
         $questionViews = [];
         $errors = [];
 
@@ -1084,7 +1076,7 @@ class SurveyController extends Controller
             null :
             $this->surveyManager->getSurveyAnswerBySurveyAndUser($survey, $user);
         $answersDatas = [];
-        $canEdit = $status === 'published' &&
+        $canEdit = 'published' === $status &&
             (is_null($surveyAnswer) || $survey->getAllowAnswerEdition());
 
         if (!is_null($surveyAnswer)) {
@@ -1099,7 +1091,7 @@ class SurveyController extends Controller
                     $answersDatas[$questionId]['comment'] = $questionAnswer->getComment();
                 }
 
-                if ($question->getType() === 'open_ended' || $question->getType() === 'open_ended_bare') {
+                if ('open_ended' === $question->getType() || 'open_ended_bare' === $question->getType()) {
                     $openEndedAnswer = $this->surveyManager
                         ->getOpenEndedAnswerByUserAndSurveyAndQuestion(
                             $user,
@@ -1111,8 +1103,8 @@ class SurveyController extends Controller
                         $answersDatas[$questionId]['answer'] =
                             $openEndedAnswer->getContent();
                     }
-                } elseif ($question->getType() === 'multiple_choice_single' ||
-                        $question->getType() === 'multiple_choice_multiple') {
+                } elseif ('multiple_choice_single' === $question->getType() ||
+                        'multiple_choice_multiple' === $question->getType()) {
                     $choiceAnswers = $this->surveyManager
                         ->getMultipleChoiceAnswersByUserAndSurveyAndQuestion(
                             $user,
@@ -1129,7 +1121,7 @@ class SurveyController extends Controller
                                 $choiceAnswer->getContent();
                         }
                     }
-                } elseif ($question->getType() === 'simple_text') {
+                } elseif ('simple_text' === $question->getType()) {
                     $simpleTextAnswer = $this->surveyManager
                         ->getSimpleTextAnswerByUserAndSurveyAndQuestion(
                             $user,
@@ -1150,7 +1142,7 @@ class SurveyController extends Controller
         foreach ($questionRelations as $relation) {
             $question = $relation->getQuestion();
 
-            if ($question->getType() !== 'title') {
+            if ('title' !== $question->getType()) {
                 $questionAnswer = isset($answersDatas[$question->getId()]) ?
                     $answersDatas[$question->getId()] :
                     [];
@@ -1192,9 +1184,9 @@ class SurveyController extends Controller
         $this->checkSurveyRight($survey, 'OPEN');
         $status = $this->computeStatus($survey);
         $user = $this->tokenStorage->getToken()->getUser();
-        $isAnon = ($user === 'anon.');
+        $isAnon = ('anon.' === $user);
 
-        if ($status === 'published') {
+        if ('published' === $status) {
             $postDatas = $this->request->getCurrentRequest()->request->all();
             $errors = $this->validateSurveyAnswer($survey, $postDatas);
 
@@ -1234,7 +1226,7 @@ class SurveyController extends Controller
                 foreach ($questionRelations as $relation) {
                     $question = $relation->getQuestion();
 
-                    if ($question->getType() !== 'title') {
+                    if ('title' !== $question->getType()) {
                         $answerData = isset($answersDatas[$question->getId()]) ? $answersDatas[$question->getId()] : [];
                         $questionViews[$relation->getId()] = $this->displayTypedQuestion(
                             $survey,
@@ -1295,19 +1287,19 @@ class SurveyController extends Controller
                         }
                         $this->surveyManager->persistQuestionAnswer($questionAnswer);
 
-                        if (($questionType === 'open_ended' || $questionType === 'open_ended_bare') &&
+                        if (('open_ended' === $questionType || 'open_ended_bare' === $questionType) &&
                                 isset($questionResponse['answer']) && !empty($questionResponse['answer'])) {
                             $openEndedAnswer = new OpenEndedQuestionAnswer();
                             $openEndedAnswer->setQuestionAnswer($questionAnswer);
                             $openEndedAnswer->setContent($questionResponse['answer']);
                             $this->surveyManager->persistOpenEndedQuestionAnswer($openEndedAnswer);
-                        } elseif ($questionType === 'multiple_choice_single' || $questionType === 'multiple_choice_multiple') {
+                        } elseif ('multiple_choice_single' === $questionType || 'multiple_choice_multiple' === $questionType) {
                             $multipleChoiceQuestion = $this->surveyManager->getMultipleChoiceQuestionByQuestion($question);
 
                             if (!is_null($multipleChoiceQuestion)) {
-                                if ($questionType === 'multiple_choice_multiple') {
+                                if ('multiple_choice_multiple' === $questionType) {
                                     foreach ($questionResponse as $choiceId => $response) {
-                                        if ($choiceId !== 'comment' && $choiceId !== 'other') {
+                                        if ('comment' !== $choiceId && 'other' !== $choiceId) {
                                             $choice = $this->surveyManager->getChoiceById($choiceId);
                                             $choiceAnswer = new MultipleChoiceQuestionAnswer();
                                             $choiceAnswer->setQuestionAnswer($questionAnswer);
@@ -1319,7 +1311,7 @@ class SurveyController extends Controller
                                             $this->surveyManager->persistMultipleChoiceQuestionAnswer($choiceAnswer);
                                         }
                                     }
-                                } elseif ($questionType === 'multiple_choice_single' &&
+                                } elseif ('multiple_choice_single' === $questionType &&
                                     isset($questionResponse['choice']) &&
                                     !empty($questionResponse['choice'])) {
                                     $choiceId = (int) $questionResponse['choice'];
@@ -1334,7 +1326,7 @@ class SurveyController extends Controller
                                     $this->surveyManager->persistMultipleChoiceQuestionAnswer($choiceAnswer);
                                 }
                             }
-                        } elseif ($questionType === 'simple_text' &&
+                        } elseif ('simple_text' === $questionType &&
                             isset($questionResponse['answer']) &&
                             !empty($questionResponse['answer'])) {
                             $simpleTextAnswer = new SimpleTextQuestionAnswer();
@@ -1361,7 +1353,7 @@ class SurveyController extends Controller
                             $this->surveyManager->persistQuestionAnswer($questionAnswer);
                         }
 
-                        if (($questionType === 'open_ended' || $questionType === 'open_ended_bare') &&
+                        if (('open_ended' === $questionType || 'open_ended_bare' === $questionType) &&
                                 isset($questionResponse['answer']) && !empty($questionResponse['answer'])) {
                             $openEndedAnswer = $this->surveyManager->getOpenEndedAnswerByQuestionAnswer($questionAnswer);
 
@@ -1371,15 +1363,15 @@ class SurveyController extends Controller
                             }
                             $openEndedAnswer->setContent($questionResponse['answer']);
                             $this->surveyManager->persistOpenEndedQuestionAnswer($openEndedAnswer);
-                        } elseif ($questionType === 'multiple_choice_single' || $questionType === 'multiple_choice_multiple') {
+                        } elseif ('multiple_choice_single' === $questionType || 'multiple_choice_multiple' === $questionType) {
                             $multipleChoiceQuestion = $this->surveyManager->getMultipleChoiceQuestionByQuestion($question);
 
                             if (!is_null($multipleChoiceQuestion)) {
-                                if ($questionType === 'multiple_choice_multiple') {
+                                if ('multiple_choice_multiple' === $questionType) {
                                     $this->surveyManager->deleteMultipleChoiceAnswersByQuestionAnswer($questionAnswer);
 
                                     foreach ($questionResponse as $choiceId => $response) {
-                                        if ($choiceId !== 'comment' && $choiceId !== 'other') {
+                                        if ('comment' !== $choiceId && 'other' !== $choiceId) {
                                             $choice = $this->surveyManager->getChoiceById($choiceId);
                                             $choiceAnswer = new MultipleChoiceQuestionAnswer();
                                             $choiceAnswer->setQuestionAnswer($questionAnswer);
@@ -1391,7 +1383,7 @@ class SurveyController extends Controller
                                             $this->surveyManager->persistMultipleChoiceQuestionAnswer($choiceAnswer);
                                         }
                                     }
-                                } elseif ($questionType === 'multiple_choice_single' &&
+                                } elseif ('multiple_choice_single' === $questionType &&
                                     isset($questionResponse['choice']) &&
                                     !empty($questionResponse['choice'])) {
                                     $this->surveyManager->deleteMultipleChoiceAnswersByQuestionAnswer($questionAnswer);
@@ -1407,7 +1399,7 @@ class SurveyController extends Controller
                                     $this->surveyManager->persistMultipleChoiceQuestionAnswer($choiceAnswer);
                                 }
                             }
-                        } elseif ($questionType === 'simple_text' &&
+                        } elseif ('simple_text' === $questionType &&
                             isset($questionResponse['answer']) &&
                             !empty($questionResponse['answer'])) {
                             $simpleTextAnswer = new SimpleTextQuestionAnswer();
@@ -1459,20 +1451,18 @@ class SurveyController extends Controller
         if (!$canEdit && !$survey->getHasPublicResult()) {
             throw new AccessDeniedException();
         }
-        $questionRelations = $this->surveyManager
-            ->getQuestionRelationsBySurvey($survey);
+        $questionRelations = $this->surveyManager->getQuestionRelationsBySurvey($survey);
         $questions = [];
 
         foreach ($questionRelations as $relation) {
             $relationQuestion = $relation->getQuestion();
 
-            if ($relationQuestion->getType() !== 'title') {
+            if ('title' !== $relationQuestion->getType()) {
                 $questions[] = $relation->getQuestion();
             }
         }
 
-        $results = $this->showTypedQuestionResults($survey, $question, $page, $max)
-            ->getContent();
+        $results = $this->showTypedQuestionResults($survey, $question, $page, $max)->getContent();
         $comments = $this->surveyManager->getCommentsFromQuestionBySurveyAndQuestion(
             $survey,
             $question
@@ -1606,7 +1596,7 @@ class SurveyController extends Controller
             $otherRelation->getSurvey()->getId() === $survey->getId()) {
             $newOrder = $otherRelation->getQuestionOrder();
 
-            if ($mode === 'next') {
+            if ('next' === $mode) {
                 $this->surveyManager
                     ->updateQuestionOrder($survey, $relation, $newOrder);
             } else {
@@ -1636,8 +1626,7 @@ class SurveyController extends Controller
         if (!$canEdit && !$survey->getHasPublicResult()) {
             throw new AccessDeniedException();
         }
-        $questionRelations = $this->surveyManager
-            ->getQuestionRelationsBySurvey($survey);
+        $questionRelations = $this->surveyManager->getQuestionRelationsBySurvey($survey);
         $questions = [];
         $results = [];
         $comments = [];
@@ -1645,7 +1634,7 @@ class SurveyController extends Controller
         foreach ($questionRelations as $relation) {
             $relationQuestion = $relation->getQuestion();
 
-            if ($relationQuestion->getType() !== 'title') {
+            if ('title' !== $relationQuestion->getType()) {
                 $questions[] = $relation->getQuestion();
             }
         }
@@ -1920,7 +1909,7 @@ class SurveyController extends Controller
         $this->checkToolAccess();
         $results = $this->cursusManager->registerGroupToSessions($sessions, $group, $type);
 
-        if ($results['status'] === 'failed') {
+        if ('failed' === $results['status']) {
             $datas = $results['datas'];
             $sessionFlashBag = $this->session->getFlashBag();
 
@@ -2148,7 +2137,7 @@ class SurveyController extends Controller
                 );
             case 'open_ended':
             case 'open_ended_bare':
-                $isRich = $questionType === 'open_ended';
+                $isRich = 'open_ended' === $questionType;
 
                 return $this->displayOpenEndedQuestion(
                     $question,
@@ -2269,7 +2258,7 @@ class SurveyController extends Controller
         array $datas
     ) {
         $horizontal = isset($datas['choice-display']) &&
-            ($datas['choice-display'] === 'horizontal');
+            ('horizontal' === $datas['choice-display']);
         $choices = isset($datas['choice']) ?
             $datas['choice'] :
             [];
@@ -2350,17 +2339,17 @@ class SurveyController extends Controller
                     case 'multiple_choice_multiple':
 
                         if (!isset($datas[$questionId]) ||
-                            count($datas[$questionId]) === 0 ||
+                            0 === count($datas[$questionId]) ||
                             (
-                                count($datas[$questionId]) === 1 &&
+                                1 === count($datas[$questionId]) &&
                                 isset($datas[$questionId]['comment'])
                             ) ||
                             (
-                                count($datas[$questionId]) === 1 &&
+                                1 === count($datas[$questionId]) &&
                                 isset($datas[$questionId]['other'])
                             ) ||
                             (
-                                count($datas[$questionId]) === 2 &&
+                                2 === count($datas[$questionId]) &&
                                 isset($datas[$questionId]['comment']) &&
                                 isset($datas[$questionId]['other'])
                             )

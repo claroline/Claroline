@@ -19,21 +19,21 @@ class LogDocumentOpenEvent extends AbstractLogResourceEvent
      */
     public function __construct(Dropzone $dropzone, Drop $drop, Document $document)
     {
-        $details = array(
-            'dropzone' => array(
+        $details = [
+            'dropzone' => [
                 'id' => $dropzone->getId(),
-            ),
-            'drop' => array(
+            ],
+            'drop' => [
                 'id' => $drop->getId(),
-                'owner' => array(
+                'owner' => [
                     'id' => $drop->getUser()->getId(),
                     'lastName' => $drop->getUser()->getLastName(),
                     'firstName' => $drop->getUser()->getFirstName(),
                     'username' => $drop->getUser()->getUsername(),
-                ),
-            ),
+                ],
+            ],
             'document' => $document->toArray(),
-        );
+        ];
 
         parent::__construct($dropzone->getResourceNode(), $details);
     }
@@ -43,6 +43,6 @@ class LogDocumentOpenEvent extends AbstractLogResourceEvent
      */
     public static function getRestriction()
     {
-        return array(LogGenericEvent::DISPLAYED_WORKSPACE);
+        return [LogGenericEvent::DISPLAYED_WORKSPACE];
     }
 }

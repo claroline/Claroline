@@ -4,9 +4,9 @@ namespace Icap\DropzoneBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
+use Icap\DropzoneBundle\Entity\Correction;
 use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Dropzone;
-use Icap\DropzoneBundle\Entity\Correction;
 
 class LogDropReportEvent extends AbstractLogResourceEvent implements NotifiableInterface
 {
@@ -24,16 +24,16 @@ class LogDropReportEvent extends AbstractLogResourceEvent implements NotifiableI
     {
         $this->dropzone = $dropzone;
         $this->role_manager = $roleManager;
-        $this->details = array(
-            'report' => array(
+        $this->details = [
+            'report' => [
                 'drop' => $drop,
                 'correction' => $correction,
                 'report_comment' => $correction->getReportComment(),
                 'dropzoneId' => $dropzone->getId(),
                 'dropId' => $drop->getId(),
                 'correctionId' => $correction->getId(),
-            ),
-        );
+            ],
+        ];
 
         parent::__construct($dropzone->getResourceNode(), $this->details);
     }
@@ -43,12 +43,12 @@ class LogDropReportEvent extends AbstractLogResourceEvent implements NotifiableI
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_WORKSPACE);
+        return [self::DISPLAYED_WORKSPACE];
     }
 
     /**
      * Get sendToFollowers boolean.
-     * 
+     *
      * @return bool
      */
     public function getSendToFollowers()
@@ -74,7 +74,7 @@ class LogDropReportEvent extends AbstractLogResourceEvent implements NotifiableI
 
         // to finaly have the users.
         $users = $role->getUsers();
-        $ids = array();
+        $ids = [];
         foreach ($users as $user) {
             array_push($ids, $user->getId());
         }
@@ -89,7 +89,7 @@ class LogDropReportEvent extends AbstractLogResourceEvent implements NotifiableI
      */
     public function getExcludeUserIds()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -119,12 +119,12 @@ class LogDropReportEvent extends AbstractLogResourceEvent implements NotifiableI
      */
     public function getNotificationDetails()
     {
-        $notificationDetails = array_merge($this->details, array());
-        $notificationDetails['resource'] = array(
+        $notificationDetails = array_merge($this->details, []);
+        $notificationDetails['resource'] = [
             'id' => $this->dropzone->getId(),
             'name' => $this->resource->getName(),
             'type' => $this->resource->getResourceType()->getName(),
-        );
+        ];
 
         return $notificationDetails;
     }

@@ -6,4 +6,4 @@ import {App} from '#/plugin/drop-zone/resources/dropzone'
 const DropzoneApp = new App()
 
 // mount the react application
-bootstrap('.quiz-container', DropzoneApp.component, DropzoneApp.store, DropzoneApp.initialData)
+bootstrap('.dropzone-container', DropzoneApp.component, DropzoneApp.store, DropzoneApp.initialData)

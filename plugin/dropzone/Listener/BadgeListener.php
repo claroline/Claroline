@@ -19,9 +19,9 @@ use Icap\DropzoneBundle\Event\Log\LogDropEndEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropEvaluateEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropStartEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropzoneConfigureEvent;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("icap.listener.dropzone.badge_listener")
@@ -85,7 +85,7 @@ class BadgeListener
             case LogDropStartEvent::ACTION:
             case LogDropzoneConfigureEvent::ACTION:
                 $logDetails = $event->getLog()->getDetails();
-                $parameters = array('resourceId' => $logDetails['dropzone']['id']);
+                $parameters = ['resourceId' => $logDetails['dropzone']['id']];
                 $url = $this->router->generate('icap_dropzone_open', $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
 
                 /** @var Dropzone $dropzone */

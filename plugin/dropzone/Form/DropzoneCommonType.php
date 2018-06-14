@@ -2,8 +2,14 @@
 
 namespace Icap\DropzoneBundle\Form;
 
+use Claroline\CoreBundle\Form\Field\DateTimePickerType;
+use Claroline\CoreBundle\Form\Field\TinymceType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -11,76 +17,75 @@ class DropzoneCommonType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $defaultDateTimeOptions = array(
+        $defaultDateTimeOptions = [
             'required' => false,
-            'read_only' => false,
             'component' => true,
             'autoclose' => true,
             'language' => $options['language'],
             'date_format' => $options['date_format'],
-        );
+        ];
 
         $builder
-            ->add('stayHere', HiddenType::class, array(
+            ->add('stayHere', HiddenType::class, [
                 'mapped' => false,
-            ))
-            ->add('autoCloseForManualStates', HiddenType::class, array(
+            ])
+            ->add('autoCloseForManualStates', HiddenType::class, [
                 'mapped' => false,
-            ))
-            ->add('instruction', 'tinymce', array(
+            ])
+            ->add('instruction', TinymceType::class, [
                 'required' => false,
-            ))
+            ])
 
-            ->add('allowWorkspaceResource', CheckboxType::class, array('required' => false))
-            ->add('allowUpload', CheckboxType::class, array('required' => false))
-            ->add('allowUrl', CheckboxType::class, array('required' => false))
-            ->add('allowRichText', CheckboxType::class, array('required' => false))
+            ->add('allowWorkspaceResource', CheckboxType::class, ['required' => false])
+            ->add('allowUpload', CheckboxType::class, ['required' => false])
+            ->add('allowUrl', CheckboxType::class, ['required' => false])
+            ->add('allowRichText', CheckboxType::class, ['required' => false])
 
-            ->add('peerReview', ChoiceType::class, array(
+            ->add('peerReview', ChoiceType::class, [
                 'required' => true,
-                'choices' => array(
+                'choices' => [
                     'Standard evaluation' => false,
                     'Peer review evaluation' => true,
-                ),
+                ],
                 'choices_as_values' => true,
                 'expanded' => true,
                 'multiple' => false,
-            ))
-            ->add('expectedTotalCorrection', IntegerType::class, array('required' => true))
+            ])
+            ->add('expectedTotalCorrection', IntegerType::class, ['required' => true])
 
-            ->add('displayNotationToLearners', CheckboxType::class, array('required' => false))
-            ->add('diplayCorrectionsToLearners', CheckboxType::class, array('required' => false))
-            ->add('allowCorrectionDeny', CheckboxType::class, array('required' => false))
-            ->add('displayNotationMessageToLearners', CheckboxType::class, array('required' => false))
-            ->add('successMessage', 'tinymce', array('required' => false))
-            ->add('failMessage', 'tinymce', array('required' => false))
-            ->add('minimumScoreToPass', IntegerType::class, array('required' => true))
+            ->add('displayNotationToLearners', CheckboxType::class, ['required' => false])
+            ->add('diplayCorrectionsToLearners', CheckboxType::class, ['required' => false])
+            ->add('allowCorrectionDeny', CheckboxType::class, ['required' => false])
+            ->add('displayNotationMessageToLearners', CheckboxType::class, ['required' => false])
+            ->add('successMessage', TinymceType::class, ['required' => false])
+            ->add('failMessage', TinymceType::class, ['required' => false])
+            ->add('minimumScoreToPass', IntegerType::class, ['required' => true])
 
-            ->add('manualPlanning', ChoiceType::class, array(
+            ->add('manualPlanning', ChoiceType::class, [
                 'required' => true,
-                'choices' => array(
+                'choices' => [
                     'manualPlanning' => true,
                     'sheduleByDate' => false,
-                ),
+                ],
                 'choices_as_values' => true,
                 'expanded' => true,
                 'multiple' => false,
-            ))
+            ])
 
-            ->add('manualState', ChoiceType::class, array(
-                'choices' => array(
+            ->add('manualState', ChoiceType::class, [
+                'choices' => [
                     'notStartedManualState' => 'notStarted',
                     'allowDropManualState' => 'allowDrop',
                     'peerReviewManualState' => 'peerReview',
                     'allowDropAndPeerReviewManualState' => 'allowDropAndPeerReview',
                     'finishedManualState' => 'finished',
-                ),
+                ],
                 'choices_as_values' => true,
                 'expanded' => true,
                 'multiple' => false,
-            ))
-            ->add('autoCloseOpenedDropsWhenTimeIsUp', CheckboxType::class, array('required' => false))
-            ->add('notifyOnDrop', CheckboxType::class, array('required' => false))
+            ])
+            ->add('autoCloseOpenedDropsWhenTimeIsUp', CheckboxType::class, ['required' => false])
+            ->add('notifyOnDrop', CheckboxType::class, ['required' => false])
             /*
              *
              ->add('startAllowDrop', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
@@ -88,26 +93,21 @@ class DropzoneCommonType extends AbstractType
             ->add('startReview', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
             ->add('endReview', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
             */
-            ->add('startAllowDrop', 'datetimepicker', $defaultDateTimeOptions)
-            ->add('endAllowDrop', 'datetimepicker', $defaultDateTimeOptions)
-            ->add('startReview', 'datetimepicker', $defaultDateTimeOptions)
-            ->add('endReview', 'datetimepicker', $defaultDateTimeOptions);
-    }
-
-    public function getName()
-    {
-        return 'icap_dropzone_common_form';
+            ->add('startAllowDrop', DateTimePickerType::class, $defaultDateTimeOptions)
+            ->add('endAllowDrop', DateTimePickerType::class, $defaultDateTimeOptions)
+            ->add('startReview', DateTimePickerType::class, $defaultDateTimeOptions)
+            ->add('endReview', DateTimePickerType::class, $defaultDateTimeOptions);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'data_class' => 'Icap\DropzoneBundle\Entity\Dropzone',
                 'language' => 'en',
                 'translation_domain' => 'icap_dropzone',
                 'date_format' => DateType::HTML5_FORMAT,
-            )
+            ]
         );
     }
 }

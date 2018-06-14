@@ -4,7 +4,6 @@ namespace Icap\DropzoneBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -28,7 +27,7 @@ class TemporaryAccessResourceManager
 
     private function getUserKey(User $user)
     {
-        if ($user === null) {
+        if (null === $user) {
             return 'anonymous';
         } else {
             return $user->getId();
@@ -39,12 +38,12 @@ class TemporaryAccessResourceManager
     {
         $temporaryAccessArray = $this->container->get('request_stack')->getMasterRequest()->getSession()->get(self::RESOURCE_TEMPORARY_ACCESS_KEY);
 
-        if ($temporaryAccessArray == null || count($temporaryAccessArray) == 0) {
+        if (null === $temporaryAccessArray || 0 === count($temporaryAccessArray)) {
             return false;
         } else {
             $temporaryAccessIds = $temporaryAccessArray[$this->getUserKey($user)];
 
-            return $temporaryAccessIds !== null && count($temporaryAccessIds) > 0;
+            return null !== $temporaryAccessIds && count($temporaryAccessIds) > 0;
         }
     }
 
@@ -52,16 +51,16 @@ class TemporaryAccessResourceManager
     {
         $temporaryAccessArray = $this->container->get('request_stack')->getMasterRequest()->getSession()->get(self::RESOURCE_TEMPORARY_ACCESS_KEY);
 
-        if ($temporaryAccessArray == null || count($temporaryAccessArray) == 0) {
+        if (null === $temporaryAccessArray || 0 === count($temporaryAccessArray)) {
             return false;
         } else {
             $temporaryAccessIds = $temporaryAccessArray[$this->getUserKey($user)];
 
-            if ($temporaryAccessIds == null || count($temporaryAccessIds) == 0) {
+            if (null === $temporaryAccessIds || 0 === count($temporaryAccessIds)) {
                 return false;
             } else {
                 foreach ($temporaryAccessIds as $temporaryAccessId) {
-                    if ($temporaryAccessId == $resource->getId()) {
+                    if ($temporaryAccessId === $resource->getId()) {
                         return true;
                     }
                 }
@@ -75,26 +74,25 @@ class TemporaryAccessResourceManager
 
     public function addTemporaryAccess(ResourceNode $node, User $user = null)
     {
-        $collection = new ResourceCollection(array($node));
         $temporaryAccessArray = $this->container->get('request_stack')->getMasterRequest()->getSession()->get(self::RESOURCE_TEMPORARY_ACCESS_KEY);
 
-        if ($temporaryAccessArray === null) {
-            $temporaryAccessArray = array();
+        if (null === $temporaryAccessArray) {
+            $temporaryAccessArray = [];
         }
 
-        $temporaryAccessIds = array();
+        $temporaryAccessIds = [];
         if (isset($temporaryAccessArray[$this->getUserKey($user)])) {
             $temporaryAccessIds = $temporaryAccessArray[$this->getUserKey($user)];
         }
 
         $alreadyIn = false;
         foreach ($temporaryAccessIds as $temporaryAccessId) {
-            if ($temporaryAccessId == $node->getId()) {
+            if ($temporaryAccessId === $node->getId()) {
                 $alreadyIn = true;
                 break;
             }
         }
-        if ($alreadyIn == false) {
+        if (false === $alreadyIn) {
             $temporaryAccessIds[] = $node->getId();
             $temporaryAccessArray[$this->getUserKey($user)] = $temporaryAccessIds;
         }

@@ -8,6 +8,7 @@
 
 namespace Icap\DropzoneBundle\Form;
 
+use Claroline\CoreBundle\Form\Field\DatePickerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,7 +18,7 @@ class DropsDownloadBetweenDatesType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $defaultDateTimeOptions = array(
+        $defaultDateTimeOptions = [
             'required' => false,
             'read_only' => false,
             'component' => true,
@@ -25,26 +26,21 @@ class DropsDownloadBetweenDatesType extends AbstractType
             'language' => $options['language'],
             'format' => $options['date_format'],
             'mapped' => false,
-        );
+        ];
 
         $builder
-            ->add('drop_period_begin_date', 'datepicker', $defaultDateTimeOptions)
-            ->add('drop_period_end_date', 'datepicker', $defaultDateTimeOptions);
-    }
-
-    public function getName()
-    {
-        return 'icap_dropzone_date_download_between_date_form';
+            ->add('drop_period_begin_date', DatePickerType::class, $defaultDateTimeOptions)
+            ->add('drop_period_end_date', DatePickerType::class, $defaultDateTimeOptions);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'language' => 'en',
                 'translation_domain' => 'icap_dropzone',
                 'date_format' => DateType::HTML5_FORMAT,
-            )
+            ]
         );
     }
 }

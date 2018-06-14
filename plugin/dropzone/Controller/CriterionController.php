@@ -14,9 +14,9 @@ use Icap\DropzoneBundle\Event\Log\LogCriterionDeleteEvent;
 use Icap\DropzoneBundle\Event\Log\LogCriterionUpdateEvent;
 use Icap\DropzoneBundle\Form\CriterionDeleteType;
 use Icap\DropzoneBundle\Form\CriterionType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 
 class CriterionController extends DropzoneBaseController
@@ -36,7 +36,7 @@ class CriterionController extends DropzoneBaseController
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $criterion = new Criterion();
-        if ($criterionId != 0) {
+        if (0 !== $criterionId) {
             $criterion = $this
                 ->getDoctrine()
                 ->getManager()
@@ -46,30 +46,30 @@ class CriterionController extends DropzoneBaseController
             $criterion->setDropzone($dropzone);
         }
 
-        $form = $this->createForm(new CriterionType(), $criterion);
+        $form = $this->createForm(CriterionType::class, $criterion);
 
         if ($request->isXMLHttpRequest()) {
             return $this->render(
                 'IcapDropzoneBundle:criterion:edit_add_criterion_modal.html.twig',
-                array(
+                [
                     'workspace' => $dropzone->getResourceNode()->getWorkspace(),
                     '_resource' => $dropzone,
                     'dropzone' => $dropzone,
                     'form' => $form->createView(),
                     'criterion' => $criterion,
                     'page' => $page,
-                )
+                ]
             );
         }
 
-        return array(
+        return [
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
             'form' => $form->createView(),
             'criterion' => $criterion,
             'page' => $page,
-        );
+        ];
     }
 
     /**
@@ -89,7 +89,7 @@ class CriterionController extends DropzoneBaseController
 
         $edit = null;
         $criterion = new Criterion();
-        if ($criterionId != 0) {
+        if (0 !== $criterionId) {
             $criterion = $this
                 ->getDoctrine()
                 ->getManager()
@@ -101,7 +101,7 @@ class CriterionController extends DropzoneBaseController
             $edit = false;
         }
 
-        $form = $this->createForm(new CriterionType(), $criterion);
+        $form = $this->createForm(CriterionType::class, $criterion);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -121,7 +121,7 @@ class CriterionController extends DropzoneBaseController
             $em->flush();
 
             $event = null;
-            if ($edit === true) {
+            if (true === $edit) {
                 $event = new LogCriterionUpdateEvent($dropzone, $dropzoneChangeSet, $criterion, $criterionChangeSet);
             } else {
                 $event = new LogCriterionCreateEvent($dropzone, $dropzoneChangeSet, $criterion);
@@ -132,22 +132,22 @@ class CriterionController extends DropzoneBaseController
             return $this->redirect(
                 $this->generateUrl(
                     'icap_dropzone_edit_criteria_paginated',
-                    array(
+                    [
                         'resourceId' => $dropzone->getId(),
                         'page' => $page,
-                    )
+                    ]
                 )
             );
         }
 
-        return array(
+        return [
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
             'form' => $form->createView(),
             'criterion' => $criterion,
             'page' => $page,
-        );
+        ];
     }
 
     /**
@@ -164,7 +164,7 @@ class CriterionController extends DropzoneBaseController
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
-        $form = $this->createForm(new CriterionDeleteType(), $criterion);
+        $form = $this->createForm(CriterionDeleteType::class, $criterion);
 
         $nbCorrection = $this
             ->getDoctrine()
@@ -175,7 +175,7 @@ class CriterionController extends DropzoneBaseController
         if ($request->isXMLHttpRequest()) {
             return $this->render(
                 'IcapDropzoneBundle:criterion:edit_delete_criterion_modal.html.twig',
-                array(
+                [
                     'workspace' => $dropzone->getResourceNode()->getWorkspace(),
                     '_resource' => $dropzone,
                     'dropzone' => $dropzone,
@@ -184,11 +184,11 @@ class CriterionController extends DropzoneBaseController
                     'page' => $page,
                     'number' => $number,
                     'nbCorrection' => $nbCorrection,
-                )
+                ]
             );
         }
 
-        return array(
+        return [
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
@@ -197,7 +197,7 @@ class CriterionController extends DropzoneBaseController
             'page' => $page,
             'number' => $number,
             'nbCorrection' => $nbCorrection,
-        );
+        ];
     }
 
     /**
@@ -215,7 +215,7 @@ class CriterionController extends DropzoneBaseController
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
-        $form = $this->createForm(new CriterionDeleteType(), $criterion);
+        $form = $this->createForm(CriterionDeleteType::class, $criterion);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -229,31 +229,31 @@ class CriterionController extends DropzoneBaseController
             $event = new LogCriterionDeleteEvent($dropzone, $criterion);
             $this->dispatch($event);
 
-            if ($dropzone->hasCriteria() === false) {
+            if (false === $dropzone->hasCriteria()) {
                 $request->getSession()->getFlashBag()->add(
                     'warning',
-                    $this->get('translator')->trans('Warning your peer review offers no criteria on which to base correct copies', array(), 'icap_dropzone')
+                    $this->get('translator')->trans('Warning your peer review offers no criteria on which to base correct copies', [], 'icap_dropzone')
                 );
             }
 
             return $this->redirect(
                 $this->generateUrl(
                     'icap_dropzone_edit_criteria_paginated',
-                    array(
+                    [
                         'resourceId' => $dropzone->getId(),
                         'page' => $page,
-                    )
+                    ]
                 )
             );
         }
 
-        return array(
+        return [
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
             'criterion' => $criterion,
             'form' => $form->createView(),
             'page' => $page,
-        );
+        ];
     }
 }

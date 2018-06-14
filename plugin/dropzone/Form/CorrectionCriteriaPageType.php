@@ -3,6 +3,8 @@
 namespace Icap\DropzoneBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,43 +15,38 @@ class CorrectionCriteriaPageType extends AbstractType
         $criteria = $options['criteria'];
         $totalChoice = $options['totalChoice'];
 
-        $choices = array();
+        $choices = [];
         for ($i = 0; $i < $totalChoice; ++$i) {
             $choices[$i] = $i;
         }
 
         foreach ($criteria as $criterion) {
-            $params = array(
+            $params = [
                 'choices' => $choices,
                 'expanded' => true,
                 'multiple' => false,
                 'required' => true,
                 'label' => $criterion->getInstruction(),
-                'label_attr' => array('style' => 'font-weight: normal;'),
-            );
+                'label_attr' => ['style' => 'font-weight: normal;'],
+            ];
 
-            if ($options['edit'] === false) {
+            if (false === $options['edit']) {
                 $params['disabled'] = 'disabled';
             }
 
             $builder
-                ->add('goBack', HiddenType::class, array('mapped' => false))
+                ->add('goBack', HiddenType::class, ['mapped' => false])
                 ->add($criterion->getId(), ChoiceType::class, $params);
         }
     }
 
-    public function getName()
-    {
-        return 'icap_dropzone_correct_criteria_page_form';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'totalChoice' => 5,
-            'criteria' => array(),
+            'criteria' => [],
             'edit' => true,
             'translation_domain' => 'icap_dropzone',
-        ));
+        ]);
     }
 }

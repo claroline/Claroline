@@ -60,8 +60,8 @@ class DropzoneManager
             // getting decoded rights.
             $decodedRights = $this->maskManager->decodeMask($mask, $ressourceNode->getResourceType());
             // if this role is allowed to open and this role is not an Admin role
-            if (array_key_exists('open', $decodedRights) && $decodedRights['open'] === true
-                && $role->getName() !== 'ROLE_ADMIN'
+            if (array_key_exists('open', $decodedRights) && true === $decodedRights['open']
+                && 'ROLE_ADMIN' !== $role->getName()
             ) {
                 // the role has the 'open' right
                 array_push($test, $role->getName());
@@ -174,7 +174,7 @@ class DropzoneManager
             $allow_user_to_not_have_expected_corrections = $this->isPeerReviewEndedOrManualStateFinished($dropzone, $nbCorrection);
             /* --------------------- SPECIAL CASE  END ------------------------------*/
 
-            if (!$allow_user_to_not_have_expected_corrections && $drop !== null && !$drop->isUnlockedDrop()) {
+            if (!$allow_user_to_not_have_expected_corrections && null !== $drop && !$drop->isUnlockedDrop()) {
                 for ($i = 0; $i < $expectedCorrections; ++$i) {
                     array_push($states, 'correction n°%nb_correction%/%expected_correction%');
                 }
@@ -253,7 +253,7 @@ class DropzoneManager
     public function isPeerReviewEndedOrManualStateFinished(Dropzone $dropzone, $nbCorrection)
     {
         $specialCase = false;
-        if (($dropzone->getManualPlanning() && $dropzone->getManualState() === Dropzone::MANUAL_STATE_FINISHED) ||
+        if (($dropzone->getManualPlanning() && Dropzone::MANUAL_STATE_FINISHED === $dropzone->getManualState()) ||
             (!$dropzone->getManualPlanning() && $dropzone->getTimeRemaining($dropzone->getEndReview()) <= 0)
         ) {
             if ($dropzone->getExpectedTotalCorrection() > $nbCorrection) {
@@ -290,7 +290,7 @@ class DropzoneManager
     private function isDropzoneDropTimeIsUp(Dropzone $dropzone)
     {
         $dropDatePassed = false;
-        if ($dropzone->getAutoCloseOpenedDropsWhenTimeIsUp() && $dropzone->getManualPlanning() === false) {
+        if ($dropzone->getAutoCloseOpenedDropsWhenTimeIsUp() && false === $dropzone->getManualPlanning()) {
             $now = new \DateTime();
             $dropDatePassed = $now->getTimestamp() > $dropzone->getEndAllowDrop()->getTimeStamp();
         }
@@ -329,8 +329,8 @@ class DropzoneManager
                 //si date début & date de fin
                 // no date => get all completed drops
                 // if dates are not null , get only complete drop between the 2 dates.
-                if (($beginDate === null && $endDate === null) ||
-                    ($beginDate !== null && $endDate !== null &&
+                if ((null === $beginDate && null === $endDate) ||
+                    (null !== $beginDate && null !== $endDate &&
                         $this->isBetweenDates($beginDate, $endDate, $drop->getDropDate()))
                 ) {
                     // on récupère le dossier parent des documents.

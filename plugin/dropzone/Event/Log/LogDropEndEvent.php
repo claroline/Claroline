@@ -4,9 +4,9 @@ namespace Icap\DropzoneBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
+use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Dropzone;
-use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 
 class LogDropEndEvent extends AbstractLogResourceEvent implements NotifiableInterface
 {
@@ -24,20 +24,20 @@ class LogDropEndEvent extends AbstractLogResourceEvent implements NotifiableInte
         $this->dropzone = $dropzone;
         $this->role_manager = $roleManager;
 
-        $documentsDetails = array();
+        $documentsDetails = [];
         foreach ($drop->getDocuments() as $document) {
             $documentsDetails[] = $document->toArray();
         }
 
-        $details = array(
-            'dropzone' => array(
+        $details = [
+            'dropzone' => [
                 'id' => $dropzone->getId(),
-            ),
-            'drop' => array(
+            ],
+            'drop' => [
                 'id' => $drop->getId(),
                 'documents' => $documentsDetails,
-            ),
-        );
+            ],
+        ];
 
         parent::__construct($dropzone->getResourceNode(), $details);
     }
@@ -47,7 +47,7 @@ class LogDropEndEvent extends AbstractLogResourceEvent implements NotifiableInte
      */
     public static function getRestriction()
     {
-        return array(LogGenericEvent::DISPLAYED_WORKSPACE);
+        return [LogGenericEvent::DISPLAYED_WORKSPACE];
     }
 
     /**
@@ -78,7 +78,7 @@ class LogDropEndEvent extends AbstractLogResourceEvent implements NotifiableInte
 
         // to finaly have the users.
         $users = $role->getUsers();
-        $ids = array();
+        $ids = [];
         foreach ($users as $user) {
             array_push($ids, $user->getId());
         }
@@ -93,7 +93,7 @@ class LogDropEndEvent extends AbstractLogResourceEvent implements NotifiableInte
      */
     public function getExcludeUserIds()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -123,12 +123,12 @@ class LogDropEndEvent extends AbstractLogResourceEvent implements NotifiableInte
      */
     public function getNotificationDetails()
     {
-        $notificationDetails = array_merge($this->details, array());
-        $notificationDetails['resource'] = array(
+        $notificationDetails = array_merge($this->details, []);
+        $notificationDetails['resource'] = [
             'id' => $this->dropzone->getId(),
             'name' => $this->resource->getName(),
             'type' => $this->resource->getResourceType()->getName(),
-        );
+        ];
 
         return $notificationDetails;
     }
@@ -141,7 +141,7 @@ class LogDropEndEvent extends AbstractLogResourceEvent implements NotifiableInte
     public function isAllowedToNotify()
     {
         $allowed = false;
-        if ($this->dropzone != null && $this->dropzone->getNotifyOnDrop()) {
+        if (null !== $this->dropzone && $this->dropzone->getNotifyOnDrop()) {
             $allowed = true;
         }
 

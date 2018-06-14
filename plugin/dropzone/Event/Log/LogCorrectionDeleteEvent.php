@@ -23,27 +23,27 @@ class LogCorrectionDeleteEvent extends AbstractLogResourceEvent implements Poten
     {
         $this->correction = $correction;
 
-        $documentsDetails = array();
+        $documentsDetails = [];
         foreach ($drop->getDocuments() as $document) {
             $documentsDetails[] = $document->toArray();
         }
 
-        $details = array(
-            'dropzone' => array(
+        $details = [
+            'dropzone' => [
                 'id' => $dropzone->getId(),
-            ),
-            'drop' => array(
+            ],
+            'drop' => [
                 'id' => $drop->getId(),
                 'documents' => $documentsDetails,
-                'owner' => array(
+                'owner' => [
                     'id' => $drop->getUser()->getId(),
                     'lastName' => $drop->getUser()->getLastName(),
                     'firstName' => $drop->getUser()->getFirstName(),
                     'username' => $drop->getUser()->getUsername(),
-                ),
-            ),
+                ],
+            ],
             'correction' => $correction->toArray(true),
-        );
+        ];
 
         parent::__construct($dropzone->getResourceNode(), $details);
     }
@@ -53,7 +53,7 @@ class LogCorrectionDeleteEvent extends AbstractLogResourceEvent implements Poten
      */
     public static function getRestriction()
     {
-        return array(LogGenericEvent::DISPLAYED_WORKSPACE);
+        return [LogGenericEvent::DISPLAYED_WORKSPACE];
     }
 
     /**

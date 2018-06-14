@@ -3,11 +3,11 @@
 namespace Icap\DropzoneBundle\Library\Security\Voter;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Icap\DropzoneBundle\Manager\TemporaryAccessResourceManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * This voter is involved in access decisions for AbstractResource instances based one temporary access.

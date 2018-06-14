@@ -13,7 +13,7 @@ class GradeRepository extends EntityRepository
 {
     public function findByCriteriaAndCorrection($criteria, $correction)
     {
-        $criteriaIds = array();
+        $criteriaIds = [];
         foreach ($criteria as $criterion) {
             $criteriaIds[] = $criterion->getId();
         }

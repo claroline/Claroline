@@ -22,19 +22,19 @@ class DropRepository extends EntityRepository
 
         $dropIds = [];
         foreach ($result as $line) {
-            if ($line['valid'] === null) {
+            if (null === $line['valid']) {
                 $dropIds[$line['did']] = 'has no correction';
             }
         }
 
         foreach ($result as $line) {
-            if ($line['valid'] === false) {
+            if (false === $line['valid']) {
                 $dropIds[$line['did']] = 'has only invalid corrections';
             }
         }
 
         foreach ($result as $line) {
-            if ($line['valid'] === true) {
+            if (true === $line['valid']) {
                 if ($line['nb_corrections'] >= $dropzone->getExpectedTotalCorrection()) {
                     $dropIds[$line['did']] = 'must be removed';
                     unset($dropIds[$line['did']]);
@@ -106,7 +106,7 @@ class DropRepository extends EntityRepository
         $qb = $this->createQueryBuilder('drop')
             ->select('drop.id')
             ->andWhere('drop.dropzone = :dropzone')
-            ->andWhere('drop.user != :user')
+            ->andWhere('drop.user !== :user')
             ->andWhere('drop.finished = true')
             ->andWhere('drop.id IN (:dropIdNotCorrected)')
             ->setParameter('dropzone', $dropzone)
@@ -131,7 +131,7 @@ class DropRepository extends EntityRepository
     public function drawDropForCorrection(Dropzone $dropzone, $user)
     {
         $possibleIds = $this->getPossibleDropIdsForDrawing($dropzone, $user);
-        if (count($possibleIds) === 0) {
+        if (0 === count($possibleIds)) {
             return;
         }
 
@@ -382,7 +382,7 @@ class DropRepository extends EntityRepository
             ->setParameter('dropzone', $dropzone);
 
         $result = $query->getSingleScalarResult();
-        if ($result === null) {
+        if (null === $result) {
             return 0;
         } else {
             return $result;

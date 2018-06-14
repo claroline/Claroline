@@ -366,6 +366,7 @@
     "delete_users": "Supprimer des utilisateurs",
     "delete_users_confirm": "Êtes-vous sûr de vouloir supprimer ces utilisateurs [ %user_list% ] ?",
     "deprecated": "Obsolète",
+    "deprecated_resource_warning": "Attention ! Cette ressource est obsolète et sera supprimée dans une prochaine version.",
     "description": "Description",
     "desktop": "Bureau",
     "desktops": "Bureaux",
