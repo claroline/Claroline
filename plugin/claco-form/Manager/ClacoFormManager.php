@@ -506,9 +506,9 @@ class ClacoFormManager
         $removedCategories = [];
         $editedCategories = [];
         $addedCategories = [];
-        $clacoFormName = $entry->getClacoForm()->getResourceNode()->getName();
-        $clacoFormId = $entry->getClacoForm()->getId();
-        $url = $this->router->generate('claro_claco_form_open', ['clacoForm' => $clacoFormId], true).
+        $node = $entry->getClacoForm()->getResourceNode();
+        $clacoFormName = $node->getName();
+        $url = $this->router->generate('claro_resource_open_short', ['node' => $node->getId()], true).
             '#/entries/'.$entry->getUuid();
 
         foreach ($oldCategories as $category) {
@@ -588,9 +588,10 @@ class ClacoFormManager
     public function notifyPendingComment(Entry $entry, Comment $comment)
     {
         $clacoForm = $entry->getClacoForm();
+        $node = $clacoForm->getResourceNode();
 
         if ($clacoForm->getDisplayComments()) {
-            $url = $this->router->generate('claro_claco_form_open', ['clacoForm' => $clacoForm->getId()], true).
+            $url = $this->router->generate('claro_resource_open_short', ['node' => $node->getId()], true).
                 '#/entries/'.$entry->getUuid();
             $receivers = [];
             $categories = $entry->getCategories();
@@ -610,7 +611,7 @@ class ClacoFormManager
                     '] '.
                     $entry->getTitle().
                     ' - '.
-                    $clacoForm->getResourceNode()->getName();
+                    $node->getName();
                 $content = $comment->getContent().
                     '<br><br>'.
                     $this->translator->trans('link_to_entry', [], 'clacoform').
@@ -820,7 +821,8 @@ class ClacoFormManager
         $sendMessage = false;
         $receivers = [];
         $clacoForm = $entry->getClacoForm();
-        $url = $this->router->generate('claro_claco_form_open', ['clacoForm' => $clacoForm->getId()], true).
+        $node = $clacoForm->getResourceNode();
+        $url = $this->router->generate('claro_resource_open_short', ['node' => $node->getId()], true).
             '#/entries/'.$entry->getUuid();
 
         switch ($type) {
@@ -837,7 +839,7 @@ class ClacoFormManager
                         '] '.
                         $entry->getTitle().
                         ' - '.
-                        $clacoForm->getResourceNode()->getName();
+                        $node->getName();
                     $content = $this->translator->trans('link_to_entry', [], 'clacoform').
                         ' : <a href="'.$url.'">'.
                         $this->translator->trans('here', [], 'platform').
@@ -857,7 +859,7 @@ class ClacoFormManager
                         '] '.
                         $entry->getTitle().
                         ' - '.
-                        $clacoForm->getResourceNode()->getName();
+                        $node->getName();
                     $content = $this->translator->trans('entry_deletion_msg', ['%title%' => $entry->getTitle()], 'clacoform');
                 }
                 break;
@@ -882,7 +884,7 @@ class ClacoFormManager
                             '] '.
                             $entry->getTitle().
                             ' - '.
-                            $clacoForm->getResourceNode()->getName();
+                            $node->getName();
                         $content = $data.
                             '<br><br>'.
                             $this->translator->trans('link_to_entry', [], 'clacoform').

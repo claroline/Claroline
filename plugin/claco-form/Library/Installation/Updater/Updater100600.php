@@ -59,7 +59,7 @@ class Updater100600 extends Updater
             ++$index;
             $this->om->persist($clacoForm);
 
-            if ($index % 100 === 0) {
+            if (0 === $index % 100) {
                 $this->om->forceFlush();
             }
         }

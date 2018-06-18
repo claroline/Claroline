@@ -16,8 +16,6 @@ import {select} from '#/plugin/claco-form/resources/claco-form/selectors'
 import {actions} from '#/plugin/claco-form/resources/claco-form/editor/actions'
 import {CategoryFieldsValues} from '#/plugin/claco-form/resources/claco-form/editor/components/category-fields-values.jsx'
 
-const MODAL_CATEGORY_FORM = 'MODAL_CATEGORY_FORM'
-
 class CategoryFormModalComponent extends Component {
   constructor(props) {
     super(props)
@@ -290,6 +288,5 @@ const CategoryFormModal = connect(
 )(CategoryFormModalComponent)
 
 export {
-  MODAL_CATEGORY_FORM,
   CategoryFormModal
 }

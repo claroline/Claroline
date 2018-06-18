@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
+import {trans} from '#/main/core/translation'
 import {actions as formActions} from '#/main/core/data/form/actions'
 import {RoutedPageContent} from '#/main/core/layout/router'
 import {select as formSelect} from '#/main/core/data/form/selectors'
@@ -20,6 +21,15 @@ const Resource = props =>
         action: () => props.saveForm(props.text.id)
       }
     }}
+    customActions={[
+      {
+        type: 'link',
+        icon: 'fa fa-fw fa-home',
+        label: trans('home', {}, 'platform'),
+        target: '/',
+        exact: true
+      }
+    ]}
   >
     <RoutedPageContent
       headerSpacer={true}

@@ -37,7 +37,7 @@ class Updater100000 extends Updater
         $this->om->startFlushSuite();
 
         foreach ($clacoForms as $clacoForm) {
-            if ($clacoForm->getLockedFieldsFor() === 'user') {
+            if ('user' === $clacoForm->getLockedFieldsFor()) {
                 $clacoForm->setLockedFieldsFor('user');
                 $this->om->persist($clacoForm);
             }

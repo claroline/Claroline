@@ -14,8 +14,8 @@ import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 import {ClacoForm as ClacoFormType} from '#/plugin/claco-form/resources/claco-form/prop-types'
 import {constants} from '#/plugin/claco-form/resources/claco-form/constants'
 import {actions} from '#/plugin/claco-form/resources/claco-form/editor/actions'
-import {MODAL_CATEGORY_FORM} from '#/plugin/claco-form/resources/claco-form/editor/components/modals/category-form-modal.jsx'
-import {MODAL_KEYWORD_FORM} from '#/plugin/claco-form/resources/claco-form/editor/components/modals/keyword-form-modal.jsx'
+import {MODAL_CATEGORY_FORM} from '#/plugin/claco-form/modals/category'
+import {MODAL_KEYWORD_FORM} from '#/plugin/claco-form/modals/keyword'
 
 const generateDisplayList = (fields) => {
   const displayList = {

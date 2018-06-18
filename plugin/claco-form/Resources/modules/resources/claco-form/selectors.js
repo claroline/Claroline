@@ -88,22 +88,22 @@ const canManageCurrentEntry = createSelector(
 )
 
 const canEditCurrentEntry = createSelector(
-  resourceSelect.editable,
+  canAdministrate,
   params,
   isCurrentEntryOwner,
   canManageCurrentEntry,
-  (editable, params, isCurrentEntryOwner, canManageCurrentEntry) => {
-    return editable || (params['edition_enabled'] && isCurrentEntryOwner) || canManageCurrentEntry
+  (canAdministrate, params, isCurrentEntryOwner, canManageCurrentEntry) => {
+    return canAdministrate || (params['edition_enabled'] && isCurrentEntryOwner) || canManageCurrentEntry
   }
 )
 
 const canAddEntry = createSelector(
-  resourceSelect.editable,
+  canAdministrate,
   isAnon,
   params,
   myEntriesCount,
-  (editable, isAnon, params, myEntriesCount) => {
-    return editable || (
+  (canAdministrate, isAnon, params, myEntriesCount) => {
+    return canAdministrate || (
       params['creation_enabled'] &&
       !(isAnon && params['max_entries'] > 0) &&
       !(params['max_entries'] > 0 && myEntriesCount >= params['max_entries'])
@@ -112,13 +112,13 @@ const canAddEntry = createSelector(
 )
 
 const canOpenCurrentEntry = createSelector(
-  resourceSelect.editable,
+  canAdministrate,
   params,
   currentEntry,
   isCurrentEntryOwner,
   canManageCurrentEntry,
-  (editable, params, currentEntry, isCurrentEntryOwner, canManageCurrentEntry) => {
-    return editable || (
+  (canAdministrate, params, currentEntry, isCurrentEntryOwner, canManageCurrentEntry) => {
+    return canAdministrate || (
       currentEntry && (
         (params['search_enabled'] && currentEntry.status === 1) ||
         isCurrentEntryOwner ||

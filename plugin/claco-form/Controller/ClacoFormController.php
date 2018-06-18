@@ -23,13 +23,11 @@ use Claroline\ClacoFormBundle\Serializer\CommentSerializer;
 use Claroline\ClacoFormBundle\Serializer\EntrySerializer;
 use Claroline\ClacoFormBundle\Serializer\EntryUserSerializer;
 use Claroline\ClacoFormBundle\Serializer\FieldSerializer;
-use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Manager\Organization\LocationManager;
-use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\PdfGeneratorBundle\Manager\PdfManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -38,7 +36,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -55,13 +52,10 @@ class ClacoFormController extends Controller
     private $finder;
     private $locationManager;
     private $pdfManager;
-    private $platformConfigHandler;
     private $request;
-    private $roleManager;
     private $templating;
     private $translator;
 
-    private $roleSerializer;
     /** @var SerializerProvider */
     private $serializer;
     private $tokenStorage;
@@ -81,12 +75,9 @@ class ClacoFormController extends Controller
      *     "finder"                = @DI\Inject("claroline.api.finder"),
      *     "locationManager"       = @DI\Inject("claroline.manager.organization.location_manager"),
      *     "pdfManager"            = @DI\Inject("claroline.manager.pdf_manager"),
-     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
      *     "request"               = @DI\Inject("request_stack"),
-     *     "roleManager"           = @DI\Inject("claroline.manager.role_manager"),
      *     "templating"            = @DI\Inject("templating"),
      *     "translator"            = @DI\Inject("translator"),
-     *     "roleSerializer"        = @DI\Inject("claroline.serializer.role"),
      *     "serializer"            = @DI\Inject("claroline.api.serializer"),
      *     "tokenStorage"          = @DI\Inject("security.token_storage"),
      *     "userManager"           = @DI\Inject("claroline.manager.user_manager"),
@@ -105,12 +96,9 @@ class ClacoFormController extends Controller
         FinderProvider $finder,
         LocationManager $locationManager,
         PdfManager $pdfManager,
-        PlatformConfigurationHandler $platformConfigHandler,
         RequestStack $request,
-        RoleManager $roleManager,
         TwigEngine $templating,
         TranslatorInterface $translator,
-        RoleSerializer $roleSerializer,
         SerializerProvider $serializer,
         TokenStorageInterface $tokenStorage,
         UserManager $userManager,
@@ -127,12 +115,9 @@ class ClacoFormController extends Controller
         $this->finder = $finder;
         $this->locationManager = $locationManager;
         $this->pdfManager = $pdfManager;
-        $this->platformConfigHandler = $platformConfigHandler;
         $this->request = $request->getMasterRequest();
-        $this->roleManager = $roleManager;
         $this->templating = $templating;
         $this->translator = $translator;
-        $this->roleSerializer = $roleSerializer;
         $this->serializer = $serializer;
         $this->tokenStorage = $tokenStorage;
         $this->userManager = $userManager;
@@ -140,50 +125,6 @@ class ClacoFormController extends Controller
         $this->commentSerializer = $commentSerializer;
         $this->fieldSerializer = $fieldSerializer;
         $this->entryUserSerializer = $entryUserSerializer;
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/claco/form/{clacoForm}/open",
-     *     name="claro_claco_form_open",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Template()
-     */
-    public function clacoFormOpenAction(ClacoForm $clacoForm)
-    {
-        $this->clacoFormManager->checkRight($clacoForm, 'OPEN');
-        $user = $this->tokenStorage->getToken()->getUser();
-        $isAnon = 'anon.' === $user;
-        $myEntries = $isAnon ? [] : $this->clacoFormManager->getUserEntries($clacoForm, $user);
-        $canGeneratePdf = !$isAnon &&
-            $this->platformConfigHandler->hasParameter('knp_pdf_binary_path') &&
-            file_exists($this->platformConfigHandler->getParameter('knp_pdf_binary_path'));
-        $cascadeLevelMax = $this->platformConfigHandler->hasParameter('claco_form_cascade_select_level_max') ?
-            $this->platformConfigHandler->getParameter('claco_form_cascade_select_level_max') :
-            2;
-        $roles = [];
-        $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
-        $roleAnonymous = $this->roleManager->getRoleByName('ROLE_ANONYMOUS');
-        $workspaceRoles = $this->roleManager->getWorkspaceRoles($clacoForm->getResourceNode()->getWorkspace());
-        $roles[] = $this->roleSerializer->serialize($roleUser, [Options::SERIALIZE_MINIMAL]);
-        $roles[] = $this->roleSerializer->serialize($roleAnonymous, [Options::SERIALIZE_MINIMAL]);
-
-        foreach ($workspaceRoles as $workspaceRole) {
-            $roles[] = $this->roleSerializer->serialize($workspaceRole, [Options::SERIALIZE_MINIMAL]);
-        }
-        $currentUser = $this->tokenStorage->getToken()->getUser();
-        $myRoles = 'anon.' === $currentUser ? [$roleAnonymous->getName()] : $currentUser->getRoles();
-
-        return [
-            '_resource' => $clacoForm,
-            'clacoForm' => $clacoForm,
-            'canGeneratePdf' => $canGeneratePdf,
-            'cascadeLevelMax' => $cascadeLevelMax,
-            'myEntriesCount' => count($myEntries),
-            'roles' => $roles,
-            'myRoles' => $myRoles,
-        ];
     }
 
     /**

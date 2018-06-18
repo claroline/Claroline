@@ -68,7 +68,7 @@ class Updater110300 extends Updater
                     ++$index;
                     break;
             }
-            if (in_array($type, [FieldFacet::RADIO_TYPE, FieldFacet::SELECT_TYPE, FieldFacet::CHECKBOXES_TYPE]) && $index % 100 === 0) {
+            if (in_array($type, [FieldFacet::RADIO_TYPE, FieldFacet::SELECT_TYPE, FieldFacet::CHECKBOXES_TYPE]) && 0 === $index % 100) {
                 $this->om->forceFlush();
             }
         }

@@ -111,12 +111,8 @@ const clacoFormReducer = makeReducer({}, {
 const reducer = {
   clacoForm: clacoFormReducer,
   clacoFormForm: editorReducer,
-  canGeneratePdf: makeReducer({}, {}),
   entries: entriesReducer,
-  cascadeLevelMax: makeReducer({}, {}),
-  message: messageReducer,
-  roles: makeReducer({}, {}),
-  myRoles: makeReducer({}, {})
+  message: messageReducer
 }
 
 export {
