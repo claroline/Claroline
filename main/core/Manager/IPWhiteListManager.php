@@ -38,7 +38,7 @@ class IPWhiteListManager
 
     public function addIP($ip)
     {
-        $ips = Yaml::parse($this->ipFile);
+        $ips = Yaml::parseFile($this->ipFile);
 
         if (is_array($ips)) {
             if (!in_array($ip, $ips)) {
@@ -54,11 +54,11 @@ class IPWhiteListManager
 
     public function removeIP($ip)
     {
-        $ips = Yaml::parse($this->ipFile);
+        $ips = Yaml::parseFile($this->ipFile);
 
         if (is_array($ips)) {
             $key = array_search($ip, $ips);
-            if ($key !== null) {
+            if (null !== $key) {
                 unset($ips[$key]);
                 $yaml = Yaml::dump($ips);
                 file_put_contents($this->ipFile, $yaml);
@@ -68,14 +68,13 @@ class IPWhiteListManager
 
     public function IPExists($ip)
     {
-        return in_array($ip, Yaml::parse($this->ipFile));
+        return in_array($ip, Yaml::parseFile($this->ipFile));
     }
 
     public function isWhiteListed()
     {
         if (file_exists($this->ipFile)) {
-            $ips = Yaml::parse($this->ipFile);
-
+            $ips = Yaml::parseFile($this->ipFile);
             if (is_array($ips)) {
                 foreach ($ips as $ip) {
                     if (isset($_SERVER['REMOTE_ADDR']) && $ip === $_SERVER['REMOTE_ADDR']) {
@@ -86,7 +85,7 @@ class IPWhiteListManager
         }
 
         if (file_exists($this->rangeFile)) {
-            $ranges = Yaml::parse($this->rangeFile);
+            $ranges = Yaml::parseFile($this->rangeFile);
 
             if (is_array($ranges)) {
                 foreach ($ranges as $range) {
