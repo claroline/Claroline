@@ -10,7 +10,7 @@ import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {MODAL_ALERT} from '#/main/app/modals/alert'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {HtmlText} from '#/main/core/layout/components/html-text'
-import {Timer} from '#/main/core/layout/timer/components/timer'
+import {Timer} from '#/main/core/layout/gauge/components/timer'
 import {ProgressBar} from '#/main/core/layout/components/progress-bar'
 
 import {getDefinition, isQuestionType} from '#/plugin/exo/items/item-types'
@@ -124,14 +124,17 @@ class PlayerComponent extends Component {
           />
         }
         {this.props.isTimed && this.props.duration > 0 && this.props.paper.startDate &&
-          <Timer
-            totalTime={this.props.duration * 60}
-            startDate={this.props.paper.startDate}
-            onTimeOver={() => {
-              this.props.finish(this.props.quizId, this.props.paper, this.props.answers, this.props.showFeedback, false, this.props.history.push)
-              this.props.showTimeOverMessage()
-            }}
-          />
+          <div className="timer-container">
+            <Timer
+              totalTime={this.props.duration * 60}
+              startDate={this.props.paper.startDate}
+              type="user"
+              onTimeOver={() => {
+                this.props.finish(this.props.quizId, this.props.paper, this.props.answers, this.props.showFeedback, false, this.props.history.push)
+                this.props.showTimeOverMessage()
+              }}
+            />
+          </div>
         }
 
         {this.state.fetching &&

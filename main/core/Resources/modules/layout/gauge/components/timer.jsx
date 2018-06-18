@@ -1,14 +1,17 @@
 import React, {Component} from 'react'
+import moment from 'moment'
 
 import {PropTypes as T} from '#/main/core/scaffolding/prop-types'
 import {computeElapsedTime} from '#/main/core/scaffolding/date'
+
+import{CountGauge} from '#/main/core/layout/gauge/components/count-gauge'
+
 
 class Timer extends Component {
   constructor(props) {
     super(props)
     this.state = {
       remainingTime: props.totalTime,
-      formattedRemainingTime: this.formatTime(props.totalTime),
       timer: null
     }
     this.updateTimer = this.updateTimer.bind(this)
@@ -31,8 +34,7 @@ class Timer extends Component {
 
     if (this.state.remainingTime > 0) {
       this.setState({
-        remainingTime: remainingTime,
-        formattedRemainingTime: this.formatTime(remainingTime)
+        remainingTime: remainingTime
       })
     } else {
       if (this.props.onTimeOver) {
@@ -44,46 +46,23 @@ class Timer extends Component {
     }
   }
 
+
   formatTime(time) {
-    let remainder = time
-    const hours = Math.floor(remainder / 3600)
-    remainder = remainder % 3600
-    const minutes = Math.floor(remainder / 60)
-    const seconds = remainder % 60
-
-    let formattedHours = ''
-    let formattedMinutes = ''
-    let formattedSeconds = ''
-
-    if (hours > 0) {
-      formattedHours += `${hours}h`
-
-      if (minutes < 10 && minutes > 0) {
-        formattedMinutes += '0'
-      } else if (minutes === 0) {
-        formattedMinutes += '00m'
-      }
-      if (seconds < 10) {
-        formattedSeconds += '0'
-      }
-    }
-    if (minutes > 0) {
-      formattedMinutes += `${minutes}m`
-
-      if (seconds < 10 && hours === 0) {
-        formattedSeconds += '0'
-      }
-    }
-    formattedSeconds += `${seconds}s`
-
-    return formattedHours + formattedMinutes + formattedSeconds
+    const endTime = moment().hours(0).minutes(0).seconds(0).milliseconds(0)
+    return endTime.add(time, 'seconds').format('HH:mm:ss')
   }
 
   render() {
     return (
-      <div className="timer-component">
-        {this.state.formattedRemainingTime}
-      </div>
+      <CountGauge
+        className="timer-component"
+        value={this.state.remainingTime}
+        total={this.props.totalTime}
+        displayValue={() => this.formatTime(this.state.remainingTime)}
+        type={this.props.type}
+        width={70}
+        height={70}
+      />
     )
   }
 }
@@ -91,7 +70,8 @@ class Timer extends Component {
 Timer.propTypes = {
   totalTime: T.number.isRequired,
   startDate: T.string.isRequired,
-  onTimeOver: T.func
+  onTimeOver: T.func,
+  type: T.string
 }
 
 export {

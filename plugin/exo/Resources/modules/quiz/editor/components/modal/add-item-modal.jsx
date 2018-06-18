@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {trans} from '#/main/core/translation'
+import {registry} from '#/main/app/modals/registry'
 import {listItemMimeTypes, getDefinition} from './../../../../items/item-types'
 import {Icon as ItemIcon} from './../../../../items/components/icon.jsx'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
@@ -67,5 +68,7 @@ class AddItemModal extends Component {
 AddItemModal.propTypes = {
   handleSelect: T.func.isRequired
 }
+
+registry.add(MODAL_ADD_ITEM, AddItemModal)
 
 export {AddItemModal}
