@@ -15,6 +15,7 @@ import {ToggleableSet} from '#/main/core/layout/form/components/fieldset/togglea
 import {createFormDefinition} from '#/main/core/data/form/utils'
 import {DataFormSection as DataFormSectionTypes} from '#/main/core/data/form/prop-types'
 import {FormField} from '#/main/core/data/form/components/field'
+import {FormGroup} from '#/main/core/layout/form/components/group/form-group'
 
 const AdvancedSection = props =>
   <ToggleableSet
@@ -92,18 +93,32 @@ class Form extends Component {
     let rendered = []
 
     fields.map(field => {
-      rendered.push(
-        <FormField
-          {...field}
-          key={field.name}
-          value={field.calculated ? field.calculated(this.props.data) : get(this.props.data, field.name)}
-          disabled={this.props.disabled || (typeof field.disabled === 'function' ? field.disabled(this.props.data) : field.disabled)}
-          validating={this.props.validating}
-          error={get(this.props.errors, field.name)}
-          updateProp={this.props.updateProp}
-          setErrors={this.props.setErrors}
-        />
-      )
+      if (field.render) {
+        rendered.push(
+          <FormGroup
+            id={field.name}
+            key={field.name}
+            label={field.label}
+            hideLabel={field.hideLabel}
+            help={field.help}
+          >
+            {field.render(this.props.data)}
+          </FormGroup>
+        )
+      } else {
+        rendered.push(
+          <FormField
+            {...field}
+            key={field.name}
+            value={field.calculated ? field.calculated(this.props.data) : get(this.props.data, field.name)}
+            disabled={this.props.disabled || (typeof field.disabled === 'function' ? field.disabled(this.props.data) : field.disabled)}
+            validating={this.props.validating}
+            error={get(this.props.errors, field.name)}
+            updateProp={this.props.updateProp}
+            setErrors={this.props.setErrors}
+          />
+        )
+      }
 
       if (field.linked && 0 !== field.linked.length) {
         rendered.push(
@@ -148,10 +163,6 @@ class Form extends Component {
               <Heading level={hLevel} displayed={false}>
                 {primarySection.title}
               </Heading>
-
-              {React.createElement('h'+hLevel, {
-                className: 'sr-only'
-              }, primarySection.title)}
 
               {this.renderFields(primarySection.fields)}
 

@@ -8,6 +8,7 @@ import {trans} from '#/main/core/translation'
 import {FormContainer} from '#/main/core/data/form/containers/form'
 import {actions as formActions} from '#/main/core/data/form/actions'
 
+import {ResourceType} from '#/main/core/resource/components/type'
 import {constants} from '#/main/core/resource/constants'
 
 const ResourceFormComponent = (props) =>
@@ -22,6 +23,20 @@ const ResourceFormComponent = (props) =>
         primary: true,
         fields: [
           {
+            name: 'meta.type',
+            label: trans('type'),
+            type: 'string',
+            hideLabel: true,
+            render: (resourceNode) => {
+              const NodeType =
+                <ResourceType
+                  name={resourceNode.meta.type}
+                  mimeType={resourceNode.meta.mimeType}
+                />
+
+              return NodeType
+            }
+          }, {
             name: 'name',
             label: trans('name'),
             type: 'string',

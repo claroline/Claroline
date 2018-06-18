@@ -110,6 +110,12 @@
     }
 }
 
+.modal-content {
+    > .data-form + .data-form {
+        border-top: 1px solid @modal-header-border-color;
+    }
+}
+
 // customize tables
 .modal-content > .table,
 .modal-content > div > .table { // allows SPA containers

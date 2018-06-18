@@ -37,7 +37,7 @@ const Papers = props =>
           name: 'user',
           label: trans('user'),
           displayed: true,
-          renderer: (rowData) => rowData.user ? rowData.user.name : trans('anonymous')
+          render: (rowData) => rowData.user ? rowData.user.name : trans('anonymous')
         }, {
           name: 'number',
           label: '#',
@@ -63,7 +63,7 @@ const Papers = props =>
           displayed: true,
           filterable: false,
           sortable: false,
-          renderer: (rowData) => {
+          render: (rowData) => {
             if (rowData.startDate && rowData.endDate) {
               const duration = getTimeDiff(rowData['startDate'], rowData['endDate'])
 
@@ -83,7 +83,7 @@ const Papers = props =>
           displayed: true,
           filterable: false,
           sortable: false,
-          renderer: (rowData) => utils.showScore(props.admin, rowData.finished, paperSelect.showScoreAt(rowData), paperSelect.showCorrectionAt(rowData), paperSelect.correctionDate(rowData)) ?
+          render: (rowData) => utils.showScore(props.admin, rowData.finished, paperSelect.showScoreAt(rowData), paperSelect.showCorrectionAt(rowData), paperSelect.correctionDate(rowData)) ?
             rowData.score || 0 === rowData.score ?
               <ScoreBox size="sm" score={rowData.score} scoreMax={paperSelect.paperScoreMax(rowData)} /> :
               '-'

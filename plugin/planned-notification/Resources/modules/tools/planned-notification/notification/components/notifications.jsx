@@ -28,13 +28,13 @@ const NotificationsList = props =>
         alias: 'action',
         type: 'string',
         displayed: true,
-        renderer: (row) => trans(row.parameters.action, {}, 'planned_notification')
+        render: (row) => trans(row.parameters.action, {}, 'planned_notification')
       }, {
         name: 'roles',
         label: trans('roles'),
         type: 'string',
         displayed: true,
-        renderer: (row) => row.roles.map(r => r.translationKey).join(', ')
+        render: (row) => row.roles.map(r => r.translationKey).join(', ')
       }, {
         name: 'parameters.interval',
         label: trans('planned_interval', {}, 'planned_notification'),

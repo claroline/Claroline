@@ -17,17 +17,17 @@ use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\LoadFileEvent;
+use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\File\EncodeFileEvent;
-use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
+use Claroline\CoreBundle\Event\Resource\File\PlayFileEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
+use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Form\FileType;
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Claroline\CoreBundle\Library\Utilities\ZipArchive;
@@ -35,7 +35,6 @@ use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -89,25 +88,6 @@ class FileListener implements ContainerAwareInterface
         $this->httpKernel = $container->get('http_kernel');
         $this->filesDir = $container->getParameter('claroline.param.files_directory');
         $this->resourceEvalManager = $container->get('claroline.manager.resource_evaluation_manager');
-    }
-
-    /**
-     * @DI\Observe("create_form_file")
-     *
-     * @param CreateFormResourceEvent $event
-     */
-    public function onCreateForm(CreateFormResourceEvent $event)
-    {
-        $form = $this->container->get('form.factory')->create(new FileType(true), new File());
-        $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:resource:create_form.html.twig',
-            [
-                'form' => $form->createView(),
-                'resourceType' => 'file',
-            ]
-        );
-        $event->setResponseContent($content);
-        $event->stopPropagation();
     }
 
     /**
@@ -256,6 +236,7 @@ class FileListener implements ContainerAwareInterface
         $ds = DIRECTORY_SEPARATOR;
         $resource = $event->getResource();
 
+        /** @var PlayFileEvent $playEvent */
         $playEvent = $this->container->get('claroline.event.event_dispatcher')
             ->dispatch(
                 $this->generateEventName($resource->getResourceNode(), 'play_file_'),
@@ -306,31 +287,11 @@ class FileListener implements ContainerAwareInterface
     }
 
     /**
-     * @DI\Observe("export_scorm_file")
-     *
-     * @param ExportScormResourceEvent $event
-     */
-    public function onExportScorm(ExportScormResourceEvent $event)
-    {
-        $resource = $event->getResource();
-
-        // Forward event to the correct player
-        $this->container->get('event_dispatcher')
-            ->dispatch($this->generateEventName($resource->getResourceNode(), 'export_scorm_file_'), $event);
-
-        if (!$event->isPopulated()) {
-            // Event not caught, try the fallback event name
-            $this->container->get('event_dispatcher')
-                ->dispatch($this->generateEventName($resource->getResourceNode(), 'export_scorm_file_', true), $event);
-        }
-
-        $event->stopPropagation();
-    }
-
-    /**
      * @DI\Observe("update_file_file")
      *
      * @param CustomActionResourceEvent $event
+     *
+     * @throws NoHttpRequestException
      */
     public function onUpdateFile(CustomActionResourceEvent $event)
     {
@@ -443,7 +404,7 @@ class FileListener implements ContainerAwareInterface
 
         $archive = new ZipArchive();
 
-        if ($archive->open($archivePath) === true) {
+        if (true === $archive->open($archivePath)) {
             $archive->extractTo($extractPath);
             $archive->close();
             $this->om->startFlushSuite();
@@ -569,7 +530,9 @@ class FileListener implements ContainerAwareInterface
 
         if (!$isStorageLeft) {
             $this->resourceManager->addStorageExceededFormError(
-                $form, filesize($form->get('file')->getData()), $workspace
+                $form,
+                filesize($form->get('file')->getData()),
+                $workspace
             );
         } else {
             //check if there is enough space left
@@ -579,7 +542,7 @@ class FileListener implements ContainerAwareInterface
             $tmpFile = $form->get('file')->getData();
 
             //the tmpFile may require some encoding.
-            if ($event->getEncoding() !== 'none') {
+            if ('none' !== $event->getEncoding()) {
                 $tmpFile = $this->encodeFile($tmpFile, $event->getEncoding());
             }
 
@@ -593,7 +556,7 @@ class FileListener implements ContainerAwareInterface
                 mkdir($workspaceDir);
             }
 
-            if (pathinfo($fileName, PATHINFO_EXTENSION) === 'zip' && $form->get('uncompress')->getData()) {
+            if ('zip' === pathinfo($fileName, PATHINFO_EXTENSION) && $form->get('uncompress')->getData()) {
                 $roots = $this->unzip($tmpFile, $event->getParent(), $published);
                 $event->setResources($roots);
 

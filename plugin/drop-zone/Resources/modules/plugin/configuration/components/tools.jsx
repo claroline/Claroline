@@ -77,7 +77,7 @@ class Tools extends Component {
       label: trans('type', {}, 'platform'),
       type: 'number',
       displayed: true,
-      renderer: (rowData) => {
+      render: (rowData) => {
         let type = rowData.type
 
         switch (type) {
@@ -94,7 +94,7 @@ class Tools extends Component {
       label: trans('data', {}, 'dropzone'),
       type: 'string',
       displayed: true,
-      renderer: (rowData) => {
+      render: (rowData) => {
         let dataBox =
           <div>
             {Object.keys(rowData.data).map((k, idx) =>

@@ -22,7 +22,7 @@ registry.add('core', {
 
     // directory resource
     'add'      : () => { return import(/* webpackChunkName: "core-action-add" */       '#/main/core/resources/directory/actions/add') },
-    'import'   : () => { return import(/* webpackChunkName: "core-action-import" */    '#/main/core/resources/directory/actions/import') },
+    'import'   : () => { return import(/* webpackChunkName: "core-action-import" */    '#/main/core/resources/directory/actions/import') }
 
     // file resource
     //'download' : () => { return import(/* webpackChunkName: "resource-action-download" */       '#/main/core/resources/file/actions/download') }
@@ -30,6 +30,7 @@ registry.add('core', {
 
   resources: {
     'directory': () => { return import(/* webpackChunkName: "core-directory-resource" */ '#/main/core/resources/directory') },
+    'file'     : () => { return import(/* webpackChunkName: "core-file-resource" */      '#/main/core/resources/file') },
     'text'     : () => { return import(/* webpackChunkName: "core-text-resource" */      '#/main/core/resources/text') }
   },
 

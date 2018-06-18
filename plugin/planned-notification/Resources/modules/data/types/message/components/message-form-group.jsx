@@ -80,7 +80,7 @@ const MessageFormGroup = connect(
             label: trans('content'),
             displayed: true,
             primary: false,
-            renderer: (row) => {
+            render: (row) => {
               let contentRow =
                 <HtmlText>
                   {row.content}

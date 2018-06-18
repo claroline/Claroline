@@ -475,7 +475,7 @@ const EditorComponent = props =>
                 type: 'string',
                 label: trans('managers', {}, 'clacoform'),
                 displayed: true,
-                renderer: (rowData) => rowData.managers.map(m => m.firstName + ' ' + m.lastName).join(', ')
+                render: (rowData) => rowData.managers.map(m => m.firstName + ' ' + m.lastName).join(', ')
               }, {
                 name: 'details.notify_addition',
                 type: 'boolean',

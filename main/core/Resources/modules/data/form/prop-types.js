@@ -7,15 +7,6 @@ import {DataProperty} from '#/main/core/data/prop-types'
 
 const DataFormProperty = {
   propTypes: merge({}, DataProperty.propTypes, {
-    /**
-     * The calculated value for virtual properties.
-     *
-     * @param {object} row - The full row data.
-     *
-     * @type {*} - The computed value. Type depends on the data type.
-     */
-    calculated : T.func,
-
     // form configuration
     help: T.oneOfType([T.string, T.arrayOf(T.string)]),
     hideLabel: T.bool,

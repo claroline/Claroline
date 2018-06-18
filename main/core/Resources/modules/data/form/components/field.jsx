@@ -13,6 +13,7 @@ const FormField = props => {
   invariant(typeDef.components.form, `form component cannot be found for '${props.type}'`)
 
   if (props.readOnly) {
+    // TODO : maybe reuse the details component if any.
     return (
       <FormGroup
         id={props.name}

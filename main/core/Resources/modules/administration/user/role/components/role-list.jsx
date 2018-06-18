@@ -44,7 +44,7 @@ const RoleList = {
       label: trans('workspace'),
       displayed: true,
       filterable: false,
-      renderer: (rowData) => {
+      render: (rowData) => {
         let WorkspaceLink
 
         if (rowData.workspace) {

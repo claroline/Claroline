@@ -33,8 +33,8 @@ const DataCell = props => {
   }
 
   let cellRendering
-  if (props.column.renderer) {
-    cellRendering = props.column.renderer(props.rowData)
+  if (props.column.render) {
+    cellRendering = props.column.render(props.rowData)
   } else if (typeDef.components && typeDef.components.table) {
     // use custom component defined in the type definition
     cellRendering = React.createElement(typeDef.components.table, merge({data: cellData}, props.column.options || {}))

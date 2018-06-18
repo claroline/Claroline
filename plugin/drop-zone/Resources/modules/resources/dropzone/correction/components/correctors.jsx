@@ -47,7 +47,7 @@ const Correctors = props =>
             displayed: true,
             filterable: false,
             sortable: false,
-            renderer: (rowData) => {
+            render: (rowData) => {
               const key = getCorrectionKey(rowData, props.dropzone)
 
               return props.corrections && props.corrections[key] ? props.corrections[key].length : 0
@@ -58,7 +58,7 @@ const Correctors = props =>
             displayed: true,
             filterable: false,
             sortable: false,
-            renderer: (rowData) => {
+            render: (rowData) => {
               const nbExpectedCorrections = props.dropzone.parameters.expectedCorrectionTotal
               const key = getCorrectionKey(rowData, props.dropzone)
               const nbCorrections = props.corrections && props.corrections[key] ?
@@ -73,7 +73,7 @@ const Correctors = props =>
             displayed: true,
             filterable: false,
             sortable: false,
-            renderer: (rowData) => {
+            render: (rowData) => {
               const key = getCorrectionKey(rowData, props.dropzone)
 
               return props.corrections && props.corrections[key] ?

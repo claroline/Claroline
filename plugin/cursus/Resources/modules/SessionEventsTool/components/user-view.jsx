@@ -1,7 +1,6 @@
 import {connect} from 'react-redux'
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import moment from 'moment'
 
 import {trans, t} from '#/main/core/translation'
 import {actions as listActions} from '#/main/core/data/list/actions'
@@ -40,25 +39,29 @@ class UserView extends Component {
               name: 'name',
               type: 'string',
               label: t('name'),
-              renderer: (rowData) => <a href={`#event/${rowData.id}`}>{rowData.name}</a>
+              render: (rowData) => <a href={`#event/${rowData.id}`}>{rowData.name}</a>
             },
             {
               name: 'startDate',
               type: 'date',
               label: t('start_date'),
-              renderer: (rowData) => moment(rowData.startDate).format('DD/MM/YYYY HH:mm')
+              options: {
+                time: true
+              }
             },
             {
               name: 'endDate',
               type: 'date',
               label: t('end_date'),
-              renderer: (rowData) => moment(rowData.endDate).format('DD/MM/YYYY HH:mm')
+              options: {
+                time: true
+              }
             },
             {
               name: 'registration',
               type: 'none',
               label: t('registration'),
-              renderer: (rowData) => {
+              render: (rowData) => {
                 if (this.props.eventsUsers[rowData.id]) {
                   switch (this.props.eventsUsers[rowData.id].registrationStatus) {
                     case 0 :

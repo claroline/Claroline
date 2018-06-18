@@ -137,7 +137,7 @@ class EntriesComponent extends Component {
         type: 'date',
         filterable: false,
         displayed: this.isDisplayedField('date'),
-        renderer: (rowData) => this.canViewEntryMetadata(rowData) ? displayDate(rowData.creationDate) : '-'
+        render: (rowData) => this.canViewEntryMetadata(rowData) ? displayDate(rowData.creationDate) : '-'
       })
       columns.push({
         name: 'createdAfter',
@@ -158,7 +158,7 @@ class EntriesComponent extends Component {
         label: trans('user'),
         displayed: this.isDisplayedField('user'),
         filterable: this.isFilterableField('user'),
-        renderer: (rowData) => rowData.user && this.canViewEntryMetadata(rowData) ?
+        render: (rowData) => rowData.user && this.canViewEntryMetadata(rowData) ?
           `${rowData.user.firstName} ${rowData.user.lastName}` :
           '-'
       })
@@ -169,7 +169,7 @@ class EntriesComponent extends Component {
         label: trans('categories'),
         displayed: this.isDisplayedField('categories'),
         filterable: this.isFilterableField('categories'),
-        renderer: (rowData) => rowData.categories ? rowData.categories.map(c => c.name).join(', ') : ''
+        render: (rowData) => rowData.categories ? rowData.categories.map(c => c.name).join(', ') : ''
       })
     }
     if (this.props.displayKeywords) {
@@ -178,7 +178,7 @@ class EntriesComponent extends Component {
         label: trans('keywords', {}, 'clacoform'),
         displayed: this.isDisplayedField('keywords'),
         filterable: this.isFilterableField('keywords'),
-        renderer: (rowData) => rowData.keywords ? rowData.keywords.map(k => k.name).join(', ') : ''
+        render: (rowData) => rowData.keywords ? rowData.keywords.map(k => k.name).join(', ') : ''
       })
     }
     this.props.fields
@@ -191,7 +191,7 @@ class EntriesComponent extends Component {
             type: 'file',
             displayed: this.isDisplayedField(f.id),
             filterable: false,
-            renderer: (rowData) => {
+            render: (rowData) => {
               if (rowData.values && rowData.values[f.id] && rowData.values[f.id]['url'] && rowData.values[f.id]['name']) {
                 const link =
                   <a href={url(['claro_claco_form_field_value_file_download', {entry: rowData.id, field: f.id}])}>

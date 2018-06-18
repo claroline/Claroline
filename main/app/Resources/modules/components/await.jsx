@@ -25,14 +25,16 @@ class Await extends Component {
   render() {
     switch (this.state.status) {
       case 'pending':
-        return this.props.placeholder
+        return this.props.placeholder || null
 
       case 'success':
-        return this.props.children
+        return this.props.children || null
 
       case 'error':
         return this.props.error || null
     }
+
+    return null
   }
 }
 
@@ -53,7 +55,7 @@ Await.propTypes = {
    */
   placeholder: T.node,
   error: T.node,
-  children: T.node.isRequired
+  children: T.node
 }
 
 export {

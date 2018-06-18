@@ -33,7 +33,25 @@ const DataProperty = {
      *
      * @type {object}
      */
-    options: T.object
+    options: T.object,
+
+    /**
+     * The calculated value for virtual properties.
+     *
+     * @param {object} object - The full data object.
+     *
+     * @type {*} - The computed value. Type depends on the data type.
+     */
+    calculated : T.func,
+
+    /**
+     * A custom rendering function (it receives the whole data object as argument).
+     *
+     * @param {object} object
+     *
+     * @return {T.node}
+     */
+    render: T.func
   },
   defaultProps: {
     type: 'string',

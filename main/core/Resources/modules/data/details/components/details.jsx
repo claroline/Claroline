@@ -14,6 +14,7 @@ import {DataDetailsSection as DataDetailsSectionTypes} from '#/main/core/data/de
 import {createDetailsDefinition} from '#/main/core/data/details/utils'
 
 // todo there are big c/c from Form component but I don't know if we can do better
+// todo implement custom render() method in definition (like forms & tables)
 
 const DataDetailsField = props => {
   const typeDef = getTypeOrDefault(props.type)

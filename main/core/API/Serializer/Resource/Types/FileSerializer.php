@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Resource\Types;
 
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\Entity\Resource\File;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\RouterInterface;
@@ -12,6 +13,8 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class FileSerializer
 {
+    use SerializerTrait;
+
     /** @var RouterInterface */
     private $router;
 
@@ -51,5 +54,11 @@ class FileSerializer
                 'node' => $file->getResourceNode()->getId(),
             ]),
         ];
+    }
+
+    public function deserialize($data, File $file)
+    {
+        $this->sipe('size', 'setSize', $data, $file);
+        $this->sipe('hashName', 'setHashName', $data, $file);
     }
 }

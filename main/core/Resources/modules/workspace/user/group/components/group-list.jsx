@@ -41,7 +41,7 @@ const getGroupList = (workspace) => {
         label: trans('roles'),
         displayed: true,
         filterable: true,
-        renderer: (rowData) => getRoles(rowData)
+        render: (rowData) => getRoles(rowData)
       }
     ],
     card: GroupCard

@@ -15,8 +15,20 @@ export const RESOURCE_SET_PARENT = 'RESOURCE_SET_PARENT'
 // action creators
 export const actions = {}
 
+/**
+ * Sets the parent of the new resource.
+ *
+ * @param {object} parent - the parent of the new resource
+ */
 actions.setParent = makeActionCreator(RESOURCE_SET_PARENT, 'parent')
 
+/**
+ * Starts the creation of the selected resource type.
+ * It initializes the new resource node with the default & parent values.
+ *
+ * @param {object} parent       - the parent of the new resource
+ * @param {object} resourceType - the type of resource to create
+ */
 actions.startCreation = (parent, resourceType) => (dispatch) => {
   dispatch(actions.setParent(parent))
   dispatch(formActions.resetForm(selectors.FORM_NAME, {
@@ -36,6 +48,27 @@ actions.startCreation = (parent, resourceType) => (dispatch) => {
   }, true))
 }
 
+/**
+ * Shortcut to update the new node.
+ *
+ * @param {string} prop  - the name of the node's prop to update
+ * @param {*}      value - the new value for the node's prop
+ */
+actions.updateNode = (prop, value) => formActions.updateProp(selectors.FORM_NAME, `${selectors.FORM_NODE_PART}.${prop}`, value)
+
+/**
+ * Shortcut to update the new resource.
+ *
+ * @param {string} prop  - the name of the resource's prop to update
+ * @param {*}      value - the new value for the resource's prop
+ */
+actions.updateResource = (prop, value) => formActions.updateProp(selectors.FORM_NAME, `${selectors.FORM_RESOURCE_PART}.${prop}`, value)
+
+/**
+ * Saves the new resource.
+ *
+ * @param {object} parent - the parent of the new resource
+ */
 actions.create = (parent) => formActions.saveForm(selectors.FORM_NAME, ['claro_resource_action', {
   resourceType: parent.meta.type,
   action: 'add',

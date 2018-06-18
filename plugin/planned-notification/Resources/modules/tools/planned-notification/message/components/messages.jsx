@@ -39,7 +39,7 @@ const MessagesList = props =>
         label: trans('content'),
         type: 'string',
         displayed: true,
-        renderer: (row) => {
+        render: (row) => {
           let contentRow =
             <HtmlText>
               {row.content}

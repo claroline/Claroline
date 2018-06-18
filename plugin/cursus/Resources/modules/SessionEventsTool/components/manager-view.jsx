@@ -150,12 +150,12 @@ class ManagerView extends Component {
                 name: 'registrationType',
                 type: 'number',
                 label: t('registration'),
-                renderer: (rowData) => registrationTypes[rowData.registrationType]
+                render: (rowData) => registrationTypes[rowData.registrationType]
               }, {
                 name: 'eventSet',
                 type: 'string',
                 label: t('group'),
-                renderer: (rowData) => rowData.eventSet ?
+                render: (rowData) => rowData.eventSet ?
                   <a className="pointer-hand" onClick={() => this.showEventSetForm(rowData.eventSet)}>
                     {rowData.eventSet['name']}
                   </a> :

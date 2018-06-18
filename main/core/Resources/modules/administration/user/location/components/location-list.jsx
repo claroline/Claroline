@@ -27,7 +27,7 @@ const LocationList = {
       name: 'address',
       type: 'string',
       label: trans('address'),
-      renderer: (rowData) => getReadableAddress(rowData),
+      render: (rowData) => getReadableAddress(rowData),
       displayed: true
     }, {
       name: 'phone',
@@ -39,7 +39,7 @@ const LocationList = {
       type: 'string',
       label: trans('coordinates'),
       filterable: false,
-      renderer: (rowData) => getCoordinates(rowData)
+      render: (rowData) => getCoordinates(rowData)
     }
   ],
   card: LocationCard

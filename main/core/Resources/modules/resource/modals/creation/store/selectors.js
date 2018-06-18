@@ -3,7 +3,10 @@ import {createSelector} from 'reselect'
 import {select as formSelect} from '#/main/core/data/form/selectors'
 
 const STORE_NAME = 'resourceCreation'
-const FORM_NAME = `${STORE_NAME}.form`
+const FORM_NAME  = `${STORE_NAME}.form`
+
+const FORM_NODE_PART     = 'resourceNode'
+const FORM_RESOURCE_PART = 'resource'
 
 const store = (state) => state[STORE_NAME]
 
@@ -32,6 +35,8 @@ const saveEnabled = createSelector(
 export const selectors = {
   STORE_NAME,
   FORM_NAME,
+  FORM_NODE_PART,
+  FORM_RESOURCE_PART,
   parent,
   newNode,
   form,

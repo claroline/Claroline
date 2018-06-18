@@ -17,8 +17,8 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\Resource\MaskManager;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Doctrine\ORM\EntityManager;
@@ -122,7 +122,7 @@ class ResourceVoter implements VoterInterface
 
         if ($object instanceof ResourceCollection) {
             $errors = [];
-            if (strtolower($attributes[0]) === 'create') {
+            if ('create' === strtolower($attributes[0])) {
                 if ($object->getResources()[0]) {
                     //there should be one resource every time
                     //(you only create resource one at a time in a single directory
@@ -137,12 +137,12 @@ class ResourceVoter implements VoterInterface
                 } else {
                     return VoterInterface::ACCESS_GRANTED;
                 }
-            } elseif (strtolower($attributes[0]) === 'move') {
+            } elseif ('move' === strtolower($attributes[0])) {
                 $errors = array_merge(
                     $errors,
                     $this->checkMove($object->getAttribute('parent'), $object->getResources(), $token)
                 );
-            } elseif (strtolower($attributes[0]) === 'copy') {
+            } elseif ('copy' === strtolower($attributes[0])) {
                 $errors = array_merge(
                     $errors,
                     $this->checkCopy($object->getAttribute('parent'), $object->getResources(), $token)
@@ -154,7 +154,7 @@ class ResourceVoter implements VoterInterface
                 );
             }
 
-            if (count($errors) === 0) {
+            if (0 === count($errors)) {
                 return VoterInterface::ACCESS_GRANTED;
             }
 
@@ -169,7 +169,7 @@ class ResourceVoter implements VoterInterface
 
             $errors = $this->checkAction($attributes[0], [$object], $token);
 
-            return count($errors) === 0 && $object->isActive() ?
+            return 0 === count($errors) && $object->isActive() ?
                 VoterInterface::ACCESS_GRANTED :
                 VoterInterface::ACCESS_DENIED;
         }
@@ -266,7 +266,7 @@ class ResourceVoter implements VoterInterface
                 $decoder = $this->maskManager->getDecoder($type, $action);
                 // Test if user can administrate
                 $adminDecoder = $this->maskManager->getDecoder($type, 'administrate');
-                $canAdministrate = $adminDecoder ? (($mask & $adminDecoder->getValue()) !== 0) : false;
+                $canAdministrate = $adminDecoder ? (0 !== ($mask & $adminDecoder->getValue())) : false;
 
                 // If user can administrate OR resource is open then check action
                 if ($canAdministrate ||
@@ -280,7 +280,7 @@ class ResourceVoter implements VoterInterface
 
                     $grant = $decoder ? $mask & $decoder->getValue() : 0;
 
-                    if ($decoder && $grant === 0) {
+                    if ($decoder && 0 === $grant) {
                         $errors[] = $this->getRoleActionDeniedMessage($action, $node->getPathForDisplay());
                     }
                 } else {
@@ -418,7 +418,7 @@ class ResourceVoter implements VoterInterface
                 [
                     '%path%' => $path,
                     '%action%' => $action,
-                    ],
+                ],
                 'platform'
             );
     }
@@ -433,7 +433,7 @@ class ResourceVoter implements VoterInterface
     public function isUsurpatingWorkspaceRole(TokenInterface $token)
     {
         foreach ($token->getRoles() as $role) {
-            if ($role->getRole() === 'ROLE_USURPATE_WORKSPACE_ROLE') {
+            if ('ROLE_USURPATE_WORKSPACE_ROLE' === $role->getRole()) {
                 return true;
             }
         }
@@ -491,7 +491,7 @@ class ResourceVoter implements VoterInterface
             $allowBlock = [];
 
             foreach ($allowedParts as $key => $val) {
-                $allowBlock[] = ($val === $currentParts[$key] || $val === '*');
+                $allowBlock[] = ($val === $currentParts[$key] || '*' === $val);
             }
 
             if (!in_array(false, $allowBlock)) {

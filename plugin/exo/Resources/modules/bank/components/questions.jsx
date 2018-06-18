@@ -40,7 +40,7 @@ const QuestionsPage = props =>
             label: tex('type'),
             displayed: true,
             alias: 'mimeType',
-            renderer: (rowData) => {
+            render: (rowData) => {
               // variable is for eslint rule "Component definition is missing display name  react/display-name"
               const itemIcon = <ItemIcon name={getDefinition(rowData.type).name} />
 
@@ -61,7 +61,7 @@ const QuestionsPage = props =>
             name: 'content',
             label: tex('question'),
             type: 'html',
-            renderer: (rowData) => rowData.title || rowData.content.substr(0, 50),
+            render: (rowData) => rowData.title || rowData.content.substr(0, 50),
             displayed: true
           }, {
             name: 'meta.model',

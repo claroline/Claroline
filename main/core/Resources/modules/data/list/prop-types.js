@@ -22,24 +22,6 @@ const DataListProperty = {
     alias: T.string,
 
     /**
-     * The calculated value for virtual properties.
-     *
-     * @param {object} row - The full row data.
-     *
-     * @type {*} - The computed value. Type depends on the data type.
-     */
-    calculated : T.func, // only used in tables representation
-
-    /**
-     * Customizes how the property is rendered in `table` like representations.
-     *
-     * @param {object} row
-     *
-     * @return {T.node}
-     */
-    renderer: T.func, // only used in tables representation
-
-    /**
      * Defines if the property is displayed by default in `table` like representations.
      *
      * @type {bool}

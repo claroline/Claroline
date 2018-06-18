@@ -82,7 +82,7 @@ function getUserList(workspace) {
         label: trans('roles'),
         displayed: true,
         filterable: true,
-        renderer: (rowData) => getRoles(rowData, workspace)
+        render: (rowData) => getRoles(rowData, workspace)
       }, {
         name: 'groups',
         type: 'choice',
@@ -93,7 +93,7 @@ function getUserList(workspace) {
         label: trans('groups'),
         displayed: true,
         filterable: true,
-        renderer: (rowData) => getGroups(rowData, workspace)
+        render: (rowData) => getGroups(rowData, workspace)
       }
     ],
     card: UserCard
