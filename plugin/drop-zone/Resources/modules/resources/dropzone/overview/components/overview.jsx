@@ -61,7 +61,7 @@ const OverviewComponent = props =>
         icon: 'fa fa-fw fa-upload icon-with-text-right',
         label: trans(!props.myDrop ? 'start_evaluation' : (!props.myDrop.finished ? 'continue_evaluation' : 'show_evaluation'), {}, 'dropzone'),
         target: props.myDrop ? '/my/drop' : undefined,
-        callback: !props.myDrop ? () => props.startDrop(props.dropzone.id, props.dropzone.parameters.dropType, props.teams) : undefined,
+        callback: !props.myDrop ? () => props.startDrop(props.dropzone.id, props.dropzone.parameters.dropType, props.teams, props.history.push) : undefined,
         primary: !props.myDrop || !props.myDrop.finished,
         disabled: !props.dropEnabled,
         disabledMessages: props.dropDisabledMessages
@@ -112,7 +112,10 @@ OverviewComponent.propTypes = {
     id: T.number.isRequired,
     name: T.string.isRequired
   })),
-  startDrop: T.func.isRequired
+  startDrop: T.func.isRequired,
+  history: T.shape({
+    push: T.func.isRequired
+  }).isRequired
 }
 
 OverviewComponent.defaultProps = {
@@ -135,14 +138,14 @@ const Overview = connect(
     teams: select.teams(state)
   }),
   (dispatch) => ({
-    startDrop(dropzoneId, dropType, teams = []) {
+    startDrop(dropzoneId, dropType, teams = [], navigate) {
       switch (dropType) {
         case constants.DROP_TYPE_USER :
-          dispatch(actions.initializeMyDrop(dropzoneId))
+          dispatch(actions.initializeMyDrop(dropzoneId, navigate))
           break
         case constants.DROP_TYPE_TEAM :
           if (teams.length === 1) {
-            dispatch(actions.initializeMyDrop(dropzoneId, teams[0].id))
+            dispatch(actions.initializeMyDrop(dropzoneId, teams[0].id, navigate))
           } else {
             dispatch(
               modalActions.showModal(MODAL_SELECTION, {
@@ -152,7 +155,7 @@ const Overview = connect(
                   name: t.name,
                   icon: 'fa fa-users'
                 })),
-                handleSelect: (type) => dispatch(actions.initializeMyDrop(dropzoneId, type.type))
+                handleSelect: (type) => dispatch(actions.initializeMyDrop(dropzoneId, type.type, navigate))
               })
             )
           }

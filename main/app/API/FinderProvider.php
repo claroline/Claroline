@@ -82,6 +82,16 @@ class FinderProvider
     }
 
     /**
+     * Return the list of finders.
+     *
+     * @return mixed[];
+     */
+    public function all()
+    {
+        return $this->finders;
+    }
+
+    /**
      * Builds and fires the query for a given class. The result will be serialized afterwards.
      *
      * @param string $class
@@ -137,6 +147,9 @@ class FinderProvider
     public function fetch($class, array $filters = [], array $sortBy = null, $page = 0, $limit = -1, $count = false)
     {
         try {
+            //sorting is not required when we count stuff
+            $sortBy = $count ? null : $sortBy;
+
             /** @var QueryBuilder $qb */
             $qb = $this->om->createQueryBuilder();
 
@@ -156,7 +169,13 @@ class FinderProvider
 
             $query = $qb->getQuery();
 
-            return $count ? (int) $query->getSingleScalarResult() : $query->getResult();
+            if ($count) {
+                return (int) $query->getSingleScalarResult();
+            } else {
+                $results = $query->getResult();
+
+                return $results;
+            }
         } catch (FinderException $e) {
             $data = $this->om->getRepository($class)->findBy($filters, null, 0 < $limit ? $limit : null, $page);
 

@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\User;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
@@ -27,7 +26,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @ApiMeta(class="Claroline\CoreBundle\Entity\Organization\Organization")
  * @Route("/organization")
  */
 class OrganizationController extends AbstractCrudController
@@ -121,6 +119,11 @@ class OrganizationController extends AbstractCrudController
         $this->crud->patch($organization, 'administrator', Crud::COLLECTION_REMOVE, $users);
 
         return new JsonResponse($this->serializer->serialize($organization));
+    }
+
+    public function getClass()
+    {
+        return 'Claroline\CoreBundle\Entity\Organization\Organization';
     }
 
     /**

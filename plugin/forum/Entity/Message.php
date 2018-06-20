@@ -11,85 +11,55 @@
 
 namespace Claroline\ForumBundle\Entity;
 
+use Claroline\CoreBundle\Entity\AbstractMessage;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use Claroline\CoreBundle\Entity\User;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="claro_forum_message")
- * @ORM\Entity(repositoryClass="Claroline\ForumBundle\Repository\MessageRepository")
  */
-class Message
+class Message extends AbstractMessage
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @ORM\Column(name="content", type="text")
-     * @Assert\NotBlank()
-     */
-    protected $content;
-
-    /**
-     * @ORM\Column(name="created", type="datetime")
-     * @Gedmo\Timestampable(on="create")
-     */
-    protected $creationDate;
-
-    /**
-     * @ORM\Column(type="datetime")
-     * @Gedmo\Timestampable(on="update")
-     */
-    protected $updated;
-
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\ForumBundle\Entity\Subject",
-     *     inversedBy="messages"
+     *     inversedBy="messages",
+     *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(onDelete="CASCADE")
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      */
     protected $subject;
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     cascade={"persist"}
+     *     targetEntity="Claroline\ForumBundle\Entity\Message",
+     *     inversedBy="children",
      * )
-     * @ORM\JoinColumn(name="user_id")
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      */
-    protected $creator;
+    protected $parent;
 
     /**
-     * @ORM\Column(nullable=true)
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\ForumBundle\Entity\Message",
+     *     mappedBy="parent"
+     * )
      */
-    protected $author;
+    protected $children;
 
     /**
-     * Returns the resource id.
-     *
-     * @return int
+     * @ORM\Column(type="string")
      */
-    public function getId()
-    {
-        return $this->id;
-    }
+    protected $moderation = Forum::VALIDATE_NONE;
 
-    public function setContent($content)
-    {
-        $this->content = $content;
-    }
+    /**
+     * @ORM\Column(type="boolean")
+     * todo: renommer
+     */
+    protected $flagged = false;
 
-    public function getContent()
-    {
-        return $this->content;
-    }
+    //required because we use a "property_exists" somewhere in the crud and it doesn't work otherwise.
+    protected $uuid;
 
     public function setSubject(Subject $subject)
     {
@@ -98,51 +68,45 @@ class Message
 
     public function getSubject()
     {
+        if ($parent = $this->getParent()) {
+            return $parent->getSubject();
+        }
+
         return $this->subject;
     }
 
-    /**
-     * Sets the message creator.
-     *
-     * @param \Claroline\CoreBundle\Entity\User
-     */
-    public function setCreator(User $creator)
+    public function setModerated($moderated)
     {
-        $this->creator = $creator;
+        $this->moderation = $moderated;
     }
 
-    public function getCreator()
+    public function getModerated()
     {
-        return $this->creator;
+        return $this->moderation;
     }
 
-    public function getCreationDate()
+    public function setParent(self $parent = null)
     {
-        return $this->creationDate;
+        $this->parent = $parent;
     }
 
-    public function setCreationDate($date)
+    public function getParent()
     {
-        $this->creationDate = $date;
+        return $this->parent;
     }
 
-    public function setModificationDate($date)
+    public function getChildren()
     {
-        $this->updated = $date;
+        return $this->children;
     }
 
-    public function getModificationDate()
+    public function setFlagged($bool)
     {
-        return $this->updated;
+        $this->flagged = $bool;
     }
 
-    public function getAuthor()
+    public function isFlagged()
     {
-        return $this->author;
-    }
-
-    public function setAuthor($author)
-    {
-        $this->author = $author;
+        return $this->flagged;
     }
 }

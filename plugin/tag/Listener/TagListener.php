@@ -132,6 +132,7 @@ class TagListener
                 foreach ($objects as $object) {
                     $objectsIds[] = $object->getObjectId();
                 }
+
                 $taggedObjects = $this->tagManager->getObjectsByClassAndIds(
                     $class,
                     $objectsIds,

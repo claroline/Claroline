@@ -1,4 +1,4 @@
-import {url} from '#/main/app/api'
+import {url} from '#/main/app/api/router'
 
 import {API_REQUEST} from '#/main/app/api'
 import {actions as listActions} from '#/main/core/data/list/actions'
@@ -124,7 +124,7 @@ actions.deleteWorkspace = (user) => ({
   }
 })
 
-actions.merge = (id1, id2) => ({
+actions.merge = (id1, id2, navigate) => ({
   [API_REQUEST]: {
     url: ['apiv2_user_merge', {keep: id1, remove: id2}],
     request: {method: 'PUT'},

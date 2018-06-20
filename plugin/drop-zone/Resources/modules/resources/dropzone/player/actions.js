@@ -1,6 +1,5 @@
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
 import {API_REQUEST} from '#/main/app/api'
-import {navigate} from '#/main/app/router'
 
 import {select} from '#/plugin/drop-zone/resources/dropzone/selectors'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
@@ -22,7 +21,7 @@ actions.addDocuments = makeActionCreator(DOCUMENTS_ADD, 'documents')
 actions.updateDocument = makeActionCreator(DOCUMENT_UPDATE, 'document')
 actions.removeDocument = makeActionCreator(DOCUMENT_REMOVE, 'documentId')
 
-actions.initializeMyDrop = (dropzoneId, teamId = null) => ({
+actions.initializeMyDrop = (dropzoneId, teamId = null, navigate) => ({
   [API_REQUEST]: {
     url: ['claro_dropzone_drop_create', {id: dropzoneId, teamId: teamId}],
     request: {
@@ -109,7 +108,7 @@ actions.loadPeerDrop = makeActionCreator(PEER_DROP_LOAD, 'drop')
 actions.resetPeerDrop = makeActionCreator(PEER_DROP_RESET)
 actions.incPeerDrop = makeActionCreator(PEER_DROPS_INC)
 
-actions.submitCorrection = (correctionId) => ({
+actions.submitCorrection = (correctionId, navigate) => ({
   [API_REQUEST]: {
     url: ['claro_dropzone_correction_submit', {id: correctionId}],
     request: {

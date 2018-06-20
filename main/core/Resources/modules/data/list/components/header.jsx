@@ -155,7 +155,7 @@ ListActions.propTypes = {
  */
 const ListHeader = props =>
   <div className="list-header">
-    {props.filters &&
+    {props.filters && !props.filters.readOnly &&
       <ListSearch
         {...props.filters}
         disabled={props.disabled || props.filters.readOnly}

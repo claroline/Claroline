@@ -11,14 +11,12 @@
 
 namespace Claroline\AppBundle\Command;
 
-use Claroline\AppBundle\Routing\ApiRoute;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Helper\DescriptorHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Router;
 
 class DebugRouterCommand extends ContainerAwareCommand
@@ -38,20 +36,8 @@ class DebugRouterCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var Router */
-        $router = $this->getContainer()->get('router');
-        /** @var string */
         $class = $input->getArgument('class');
-        /** @var RouteCollection */
-        $collection = $router->getRouteCollection();
-        $describeCollection = new RouteCollection();
-
-        foreach ($collection->getIterator() as $key => $route) {
-            if ($route instanceof ApiRoute && $class === $route->getClass()) {
-                $describeCollection->add($key, $route);
-            }
-        }
-
+        $describeCollection = $this->getContainer()->get('claroline.api.routing.finder')->find($class);
         $io = new SymfonyStyle($input, $output);
         $helper = new DescriptorHelper();
         $helper->describe($io, $describeCollection, []);

@@ -14,4 +14,3 @@ export {
   MODAL_DATA_PICKER,
   MODAL_DATA_LIST
 }
-

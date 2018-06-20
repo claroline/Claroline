@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import merge from 'lodash/merge'
+import get from 'lodash/get'
 
 import {t} from '#/main/core/translation'
 import {displayDate} from '#/main/core/scaffolding/date'
@@ -9,6 +10,7 @@ import {displayDate} from '#/main/core/scaffolding/date'
 import {Action as ActionTypes} from '#/main/core/layout/action/prop-types'
 import {User as UserTypes} from '#/main/core/user/prop-types'
 
+import {UrlButton} from '#/main/app/button/components/url'
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
 import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action.jsx'
 
@@ -32,13 +34,16 @@ const UserMessage = props => {
       'user-message-right': 'right' === props.position
     })}>
       {'left' === props.position &&
-        <UserAvatar picture={props.user.picture} />
+        <UrlButton target={['claro_user_profile', {publicUrl: get(props.user, 'meta.publicUrl')}]}>
+          <UserAvatar picture={props.user && props.user.picture} alt={false} />
+        </UrlButton>
       }
 
       <div className="user-message">
         <div className="user-message-meta">
           <div className="user-message-info">
             {props.user && props.user.name ?
+
               props.user.name : t('unknown')
             }
 
@@ -70,7 +75,7 @@ const UserMessage = props => {
       </div>
 
       {'right' === props.position &&
-        <UserAvatar picture={props.user.picture} />
+        <UserAvatar picture={props.user && props.user.picture} alt={false} />
       }
     </div>
   )
@@ -132,7 +137,6 @@ UserMessage.propTypes = {
 }
 
 UserMessage.defaultProps = {
-  user: {},
   allowHtml: false,
   position: 'left',
   actions: []

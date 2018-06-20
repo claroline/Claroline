@@ -59,6 +59,17 @@ const selectedFull = createSelector(
   (data, selected) => data.filter(d => selected.indexOf(d.id) > -1)
 )
 
+const pages = createSelector(
+  [totalResults, pageSize],
+  (totalResults, pageSize) => {
+    if(-1 === pageSize) {
+      return 1
+    }
+
+    return Math.ceil(totalResults / pageSize)
+  }
+)
+
 export const select = {
   list,
   isFilterable,
@@ -74,6 +85,7 @@ export const select = {
   selected,
   currentPage,
   pageSize,
+  pages,
   queryString,
   selectedFull
 }

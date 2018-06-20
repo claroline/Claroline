@@ -254,6 +254,7 @@
     "create_users": "Create users",
     "create_widget_instance": "Create a widget",
     "create_workspace": "Create a workspace",
+    "created_at": "Created at",
     "created_by": "Created by %creator% on %creationDate%",
     "created_before": "Created before",
     "created_after": "Created after",

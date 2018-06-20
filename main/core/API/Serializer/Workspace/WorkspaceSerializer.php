@@ -122,7 +122,7 @@ class WorkspaceSerializer
                     'export' => $this->authorization->isGranted('EXPORT', $workspace),
                 ],
                 'meta' => $this->getMeta($workspace, $options),
-                'opening' => $this->getOpening($workspace),
+                'opening' => $this->getOpening($workspace, $options),
                 'display' => $this->getDisplay($workspace),
                 'restrictions' => $this->getRestrictions($workspace),
                 'registration' => $this->getRegistration($workspace),
@@ -181,7 +181,7 @@ class WorkspaceSerializer
         return $data;
     }
 
-    private function getOpening(Workspace $workspace)
+    private function getOpening(Workspace $workspace, array $options = [])
     {
         // todo implement
 
@@ -189,6 +189,14 @@ class WorkspaceSerializer
             'type' => 'tool',
             'target' => 'home',
         ];
+
+        if (!in_array(Options::NO_COUNT, $options)) {
+            //this query is very slow
+            $data['totalUsers'] = $this->workspaceManager->countUsers($workspace, true);
+            $data['totalResources'] = $this->workspaceManager->countResources($workspace);
+        }
+
+        return $data;
     }
 
     /**

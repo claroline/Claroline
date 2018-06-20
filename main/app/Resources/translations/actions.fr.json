@@ -1,6 +1,7 @@
 {
   "add": "Ajouter",
   "click_here": "Cliquez ici",
+  "comment": "Laisser un commentaire",
   "configure": "Configurer",
   "copy": "Copier",
   "create": "Créer",
@@ -23,6 +24,7 @@
   "publish": "Publier",
   "register": "Inscrire",
   "replace": "Remplacer",
+  "reply": "Répondre",
   "restart": "Recommencer",
   "save": "Sauvegarder",
   "select": "Sélectionner",

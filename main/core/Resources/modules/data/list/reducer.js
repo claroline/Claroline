@@ -9,6 +9,7 @@ import {
   LIST_FILTER_ADD,
   LIST_FILTER_REMOVE,
   LIST_SORT_UPDATE,
+  LIST_SORT_DIRECTION_UPDATE,
   LIST_RESET_SELECT,
   LIST_TOGGLE_SELECT,
   LIST_TOGGLE_SELECT_ALL,
@@ -123,7 +124,11 @@ const sortByReducer = makeInstanceReducer(defaultState.sortBy, {
       property: action.property,
       direction: direction
     }
-  }
+  },
+  [LIST_SORT_DIRECTION_UPDATE]: (state, action) => ({
+    property: state.property,
+    direction: action.direction
+  })
 })
 
 /**

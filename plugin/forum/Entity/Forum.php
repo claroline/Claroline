@@ -11,57 +11,192 @@
 
 namespace Claroline\ForumBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Entity()
  * @ORM\Table(name="claro_forum")
- * @ORM\Entity(repositoryClass="Claroline\ForumBundle\Repository\ForumRepository")
  */
 class Forum extends AbstractResource
 {
+    use UuidTrait;
+
+    const VALIDATE_NONE = 'NONE';
+    const VALIDATE_PRIOR_ONCE = 'PRIOR_ONCE';
+    const VALIDATE_PRIOR_ALL = 'PRIOR_ALL';
+
+    const DISPLAY_TABLE_SM = 'table-sm';
+    const DISPLAY_TABLE = 'table';
+    const DISPLAY_LIST_SM = 'list-sm';
+    const DISPLAY_LIST = 'list';
+    const DISPLAY_TILES = 'tiles';
+    const DISPLAY_TILES_SM = 'tiles-sm';
+
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\ForumBundle\Entity\Category",
+     *     targetEntity="Claroline\ForumBundle\Entity\Subject",
      *     mappedBy="forum"
      * )
      * @ORM\OrderBy({"id" = "ASC"})
      */
-    protected $categories;
+    protected $subjects;
 
     /**
-     * @ORM\Column(name="activate_notifications", type="boolean")
+     * @ORM\Column(type="string")
      */
-    protected $activateNotifications = false;
+    protected $validationMode = self::VALIDATE_NONE;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $maxComment = 10;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $displayMessages = 3;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $dataListOptions = self::DISPLAY_LIST;
+
+    /**
+     * @ORM\Column(type="datetime", nullable = true)
+     */
+    protected $lockDate = null;
+
+    /**
+     * @ORM\Column(name="show_overview", type="boolean", options={"default" = 1})
+     *
+     * @var bool
+     */
+    private $showOverview = true;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    protected $description;
 
     public function __construct()
     {
-        $this->categories = new ArrayCollection();
+        $this->subjects = new ArrayCollection();
+        $this->refreshUuid();
+        $this->validationMode = self::VALIDATE_NONE;
+        $this->dataListOptions = self::DISPLAY_LIST;
     }
 
-    public function getCategories()
+    public function getSubjects()
     {
-        return $this->categories;
+        return $this->subjects;
     }
 
-    public function addCategory(Category $category)
+    public function addSubject(Subject $subject)
     {
-        $this->categories->add($category);
+        $this->subjects->add($subject);
     }
 
-    public function removeCategory(Subject $category)
+    public function removeSubject(Subject $subject)
     {
-        $this->categories->removeElement($category);
+        $this->subjects->removeElement($subject);
     }
 
-    public function getActivateNotifications()
+    public function setValidationMode($mode)
     {
-        return $this->activateNotifications;
+        $this->validationMode = $mode;
     }
 
-    public function setActivateNotifications($boolean)
+    public function getValidationMode()
     {
-        $this->activateNotifications = $boolean;
+        return $this->validationMode;
+    }
+
+    public function setMaxComment($max)
+    {
+        $this->maxComment = $max;
+    }
+
+    public function getMaxComment()
+    {
+        return $this->maxComment;
+    }
+
+    public function setDataListOptions($options)
+    {
+        $this->dataListOptions = $options;
+    }
+
+    public function getDataListOptions()
+    {
+        return $this->dataListOptions;
+    }
+
+    public function setLockDate(\DateTime $date = null)
+    {
+        $this->lockDate = $date;
+    }
+
+    public function getLockDate()
+    {
+        return $this->lockDate;
+    }
+
+    public function setDisplayMessage($count)
+    {
+        $this->displayMessages = $count;
+    }
+
+    public function getDisplayMessages()
+    {
+        return $this->displayMessages;
+    }
+
+    /**
+     * Set show overview.
+     *
+     * @param bool $showOverview
+     */
+    public function setShowOverview($showOverview)
+    {
+        $this->showOverview = $showOverview;
+    }
+
+    /**
+     * Is overview shown ?
+     *
+     * @return bool
+     */
+    public function getShowOverview()
+    {
+        return $this->showOverview;
+    }
+
+    /**
+     * Get description.
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set description.
+     *
+     * @param string $description
+     *
+     * @return Path
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
     }
 }

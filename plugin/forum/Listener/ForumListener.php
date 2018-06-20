@@ -12,73 +12,34 @@
 namespace Claroline\ForumBundle\Listener;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\DeleteUserEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
+use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\ForumBundle\Entity\Forum;
-use Claroline\ForumBundle\Form\ForumType;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class ForumListener
 {
     use ContainerAwareTrait;
 
-    public function onCreateForm(CreateFormResourceEvent $event)
-    {
-        $form = $this->container->get('form.factory')->create(new ForumType(), new Forum());
-        $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:resource:create_form.html.twig',
-            [
-                'form' => $form->createView(),
-                'resourceType' => 'claroline_forum',
-            ]
-        );
-        $event->setResponseContent($content);
-        $event->stopPropagation();
-    }
-
-    public function onCreate(CreateResourceEvent $event)
-    {
-        $request = $this->container->get('request_stack')->getMasterRequest();
-        $form = $this->container->get('form.factory')->create(new ForumType(), new Forum());
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $forum = $form->getData();
-            $this->container->get('claroline.manager.forum_manager')->createCategory($forum, $forum->getName(), false);
-            $event->setResources([$forum]);
-            $event->stopPropagation();
-
-            return;
-        }
-
-        $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:resource:create_form.html.twig',
-            [
-                'form' => $form->createView(),
-                'resourceType' => 'claroline_forum',
-            ]
-        );
-        $event->setErrorFormContent($content);
-        $event->stopPropagation();
-    }
-
+    /**
+     * Opens the Forum resource.
+     *
+     * @param OpenResourceEvent $event
+     */
     public function onOpen(OpenResourceEvent $event)
     {
-        $requestStack = $this->container->get('request_stack');
-        $httpKernel = $this->container->get('http_kernel');
-        $request = $requestStack->getCurrentRequest();
-        $params = [];
-        $params['_controller'] = 'ClarolineForumBundle:Forum:open';
-        $params['forum'] = $event->getResource()->getId();
-        $subRequest = $request->duplicate([], null, $params);
-        $response = $httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        $event->setResponse($response);
+        $content = $this->container->get('templating')->render(
+            'ClarolineForumBundle:Forum:open.html.twig', [
+                '_resource' => $event->getResource(),
+                'forum' => $this->container->get('claroline.api.serializer')->serialize($event->getResource()),
+            ]
+        );
+
+        $event->setResponse(new Response($content));
         $event->stopPropagation();
     }
 

@@ -471,7 +471,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
             $qb->andWhere('user.id NOT IN (:userIds)')
                 ->setParameter('userIds', $this->findUserIdsInRoles($restrictionRoleNames));
         }
-        if ($organizations !== null) {
+        if (null !== $organizations) {
             $qb->join('user.userOrganizationReferences', 'orgaRef')
                 ->andWhere('orgaRef.organization IN (:organizations)')
                 ->setParameter('organizations', $organizations);
@@ -486,7 +486,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
         $qb = $this->createQueryBuilder('user')
             ->select('COUNT(user.id)')
             ->where('user.isRemoved = false');
-        if ($organizations !== null) {
+        if (null !== $organizations) {
             $qb->join('user.userOrganizationReferences', 'orgaRef')
                 ->andWhere('orgaRef.organization IN (:organizations)')
                 ->setParameter('organizations', $organizations);
@@ -527,7 +527,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
     {
         $orgasJoin = '';
         $orgasCondition = '';
-        if ($organizations !== null) {
+        if (null !== $organizations) {
             $orgasJoin = 'JOIN ws.organizations orgas';
             $orgasCondition = 'AND orgas IN (:organizations)';
         }
@@ -557,7 +557,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
 
         $query = $this->_em->createQuery($dql);
 
-        if ($organizations !== null) {
+        if (null !== $organizations) {
             $query->setParameter('organizations', $organizations);
         }
 
@@ -784,7 +784,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
     {
         $orgasJoin = '';
         $orgasCondition = '';
-        if ($organizations !== null) {
+        if (null !== $organizations) {
             $orgasJoin = 'JOIN ws.organizations orgas';
             $orgasCondition = 'AND orgas IN (:organizations)';
         }
@@ -801,7 +801,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
         ";
         $query = $this->_em->createQuery($dql);
 
-        if ($organizations !== null) {
+        if (null !== $organizations) {
             $query->setParameter('organizations', $organizations);
         }
 
@@ -1230,7 +1230,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
             $query = $this->_em->createQuery($dql);
             $query->setParameter('roles', $roles);
 
-            return (int) $query->getSingleScalarResult();
+            return $query->getSingleScalarResult();
         }
     }
 

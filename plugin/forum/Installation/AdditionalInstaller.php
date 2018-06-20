@@ -14,6 +14,12 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
             $updater020200->setLogger($this->logger);
             $updater020200->preUpdate();
         }
+
+        if (version_compare($currentVersion, '12.0.0', '<')) {
+            $updater120000 = new Updater\Updater120000($this->container);
+            $updater120000->setLogger($this->logger);
+            $updater120000->preUpdate();
+        }
     }
 
     public function postUpdate($currentVersion, $targetVersion)
@@ -40,6 +46,12 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
             $updater020300 = new Updater\Updater030100($this->container);
             $updater020300->setLogger($this->logger);
             $updater020300->postUpdate();
+        }
+
+        if (version_compare($currentVersion, '12.0.0', '<')) {
+            $updater120000 = new Updater\Updater120000($this->container);
+            $updater120000->setLogger($this->logger);
+            $updater120000->postUpdate();
         }
     }
 }

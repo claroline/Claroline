@@ -50,28 +50,23 @@ class SerializerProviderTest extends TransactionalTestCase
      */
     public function testSerializer($class)
     {
-        //login
-        if ($this->provider->hasSchema($class) && $this->provider->getSampleDirectory($class)) {
-            $iterator = new \DirectoryIterator($this->provider->getSampleDirectory($class).'/json/valid/create');
+        $iterator = new \DirectoryIterator($this->provider->getSampleDirectory($class).'/json/valid/create');
 
-            foreach ($iterator as $file) {
-                if ($file->isFile()) {
-                    $data = \file_get_contents($file->getPathName());
-                    //let's test the deserializer
-                    $object = $this->provider->deserialize($class, json_decode($data, true));
-                    //can we serialize it ?
-                    $data = $this->provider->serialize($object);
+        foreach ($iterator as $file) {
+            if ($file->isFile()) {
+                $originalData = \file_get_contents($file->getPathName());
+                //let's test the deserializer
+                $object = $this->provider->deserialize($class, json_decode($originalData, true));
+                //can we serialize it ?
+                $data = $this->provider->serialize($object);
 
-                    if ('Claroline\CoreBundle\Entity\User' === $class) {
-                        $data['plainPassword'] = '123';
-                    }
-                    //is the result... valid ?
-                    $errors = $this->validator->validate($class, $data, ValidatorProvider::UPDATE);
-                    $this->assertTrue(0 === count($errors), print_r(['data' => $data, 'errors' => $errors], true));
+                if ('Claroline\CoreBundle\Entity\User' === $class) {
+                    $data['plainPassword'] = '123';
                 }
+                //is the result... valid ?
+                $errors = $this->validator->validate($class, $data, ValidatorProvider::UPDATE);
+                $this->assertTrue(0 === count($errors));
             }
-        } else {
-            $this->markTestSkipped('No schema defined for class'.$class);
         }
     }
 
@@ -83,8 +78,14 @@ class SerializerProviderTest extends TransactionalTestCase
         parent::setUp();
         $provider = $this->client->getContainer()->get('claroline.api.serializer');
 
-        return array_map(function ($serializer) use ($provider) {
+        $classes = array_map(function ($serializer) use ($provider) {
             return [$provider->getSerializerHandledClass($serializer)];
         }, $provider->all());
+
+        $classes = array_filter($classes, function ($class) use ($provider) {
+            return $provider->hasSchema($class[0]) && $provider->getSampleDirectory($class[0]);
+        });
+
+        return $classes;
     }
 }

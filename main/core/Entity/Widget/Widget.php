@@ -29,7 +29,7 @@ class Widget
     use Id;
     use Uuid;
 
-    const CONTEXT_DESKTOP   = 'desktop';
+    const CONTEXT_DESKTOP = 'desktop';
     const CONTEXT_WORKSPACE = 'workspace';
 
     /**
@@ -45,7 +45,7 @@ class Widget
      * The plugin that have introduced the widget.
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @var Plugin
      */
@@ -92,7 +92,7 @@ class Widget
     /**
      * @ORM\Column(name="is_exportable", type="boolean")
      *
-     * @var boolean
+     * @var bool
      */
     private $exportable;
 
@@ -209,7 +209,7 @@ class Widget
         return $this->parent;
     }
 
-    public function setParent(Widget $widget = null)
+    public function setParent(self $widget = null)
     {
         $this->parent = $widget;
     }

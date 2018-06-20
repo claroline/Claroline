@@ -1,0 +1,98 @@
+.user-comment-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    max-width: 100%;
+    margin-bottom: 5px;
+    background-color: #eee;
+    padding: 10px 0 0 10px;
+
+    .user-avatar {
+        max-height: 50px;
+        font-size: 50px;
+    }
+}
+
+.user-comment-form-container {
+    .form-group {
+        padding-right: 15px;
+        margin: 15px;
+    }
+    .btn-save-container{
+      margin: 0 30px 10px 15px;
+    }
+
+}
+
+.user-comment-meta {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    color: #777;
+    font-size: @font-size-small;
+    margin: 0 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid @user-message-inner-border;
+
+    .user-comment-info {
+        flex: 1 0 auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+
+        .date {
+            padding: 0 10px;
+            font-weight: normal;
+            font-style: italic;
+        }
+    }
+
+    .user-comment-actions {
+        padding-left: 10px;
+        border-left: 1px solid @user-message-inner-border;
+        .btn {
+            padding: 0;
+            + .btn {
+                margin-left: 5px;
+            }
+        }
+    }
+}
+
+.user-comment {
+    position: relative;
+    flex: 1;
+    align-self: stretch;
+    background: @user-message-bg;
+    border-radius: @user-message-border-radius;
+    background-color: #eee;
+}
+
+.user-comment-content {
+    padding: 15px;
+}
+
+.comment-link-container{
+  display: flex;
+  justify-content: flex-end;
+
+  .comment-link {
+    padding: 0 0 0 10px;
+    border: 0;
+  }
+}
+
+
+// the margin-left of this container =>
+// 60px of the profile img + 30px between the profile img and the user-message
+// so that the button can have the widht of the userMessage
+.answer-comment-container {
+  margin: 10px 0 0 90px;
+
+  .comments-title {
+    justify-content: flex-end;
+  }
+}

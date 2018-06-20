@@ -11,18 +11,22 @@
 
 namespace Claroline\ForumBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\Common\Collections\ArrayCollection;
+use Claroline\CoreBundle\Entity\File\PublicFile;
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\ForumBundle\Repository\SubjectRepository")
+ * @ORM\Entity()
  * @ORM\Table(name="claro_forum_subject")
  */
 class Subject
 {
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -35,6 +39,12 @@ class Subject
      * @Assert\NotBlank()
      */
     protected $title;
+
+    /**
+     * @ORM\Column(name="content", type="text")
+     * @Assert\NotBlank()
+     */
+    protected $content;
 
     /**
      * @ORM\Column(name="created", type="datetime")
@@ -50,12 +60,12 @@ class Subject
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\ForumBundle\Entity\Category",
+     *     targetEntity="Claroline\ForumBundle\Entity\Forum",
      *     inversedBy="subjects"
      * )
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
-    protected $category;
+    protected $forum;
 
     /**
      * @ORM\OneToMany(
@@ -78,12 +88,17 @@ class Subject
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $isSticked = false;
+    protected $sticked = false;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $isClosed = false;
+    protected $closed = false;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $flagged = false;
 
     /**
      * @ORM\Column(nullable=true)
@@ -91,11 +106,29 @@ class Subject
     protected $author;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    protected $viewCount = 0;
+
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\File\PublicFile"
+     * )
+     * @ORM\JoinColumn(name="poster_id", referencedColumnName="id", onDelete="SET NULL")
+     *
+     * @var PublicFile
+     */
+    protected $poster;
+
+    /**
      * Constructor.
      */
     public function __construct()
     {
+        $this->refreshUuid();
         $this->messages = new ArrayCollection();
+        $this->creationDate = new \DateTime();
+        $this->updated = new \DateTime();
     }
 
     /**
@@ -118,15 +151,14 @@ class Subject
         $this->title = $title;
     }
 
-    public function setCategory(Category $category)
+    public function setForum(Forum $forum)
     {
-        $this->category = $category;
-        $category->addSubject($this);
+        $this->forum = $forum;
     }
 
-    public function getCategory()
+    public function getForum()
     {
-        return $this->category;
+        return $this->forum;
     }
 
     /**
@@ -154,14 +186,14 @@ class Subject
         return $this->messages;
     }
 
-    public function setIsSticked($boolean)
+    public function setSticked($boolean)
     {
-        $this->isSticked = $boolean;
+        $this->sticked = $boolean;
     }
 
     public function isSticked()
     {
-        return $this->isSticked;
+        return $this->sticked;
     }
 
     public function setCreationDate($date)
@@ -179,23 +211,67 @@ class Subject
         return $this->updated;
     }
 
-    public function setIsClosed($isClosed)
+    public function setClosed($isClosed)
     {
-        $this->isClosed = $isClosed;
+        $this->closed = $isClosed;
     }
 
     public function isClosed()
     {
-        return $this->isClosed;
+        return $this->closed;
+    }
+
+    public function setFlagged($bool)
+    {
+        $this->flagged = $bool;
+    }
+
+    public function isFlagged()
+    {
+        return $this->flagged;
     }
 
     public function getAuthor()
     {
+        if (!$this->author) {
+            return 'undefined';
+        }
+
         return $this->author;
     }
 
     public function setAuthor($author)
     {
         $this->author = $author;
+    }
+
+    public function getViewCount()
+    {
+        return $this->viewCount;
+    }
+
+    public function setViewCount($viewCount)
+    {
+        $this->viewCount = $viewCount;
+    }
+
+    public function setPoster(PublicFile $file)
+    {
+        $this->poster = $file;
+    }
+
+    public function getPoster()
+    {
+        return $this->poster;
+    }
+
+    public function setContent($content)
+    {
+        $this->content = $content;
+    }
+
+    public function getContent()
+    {
+        return $this->content;
     }
 }

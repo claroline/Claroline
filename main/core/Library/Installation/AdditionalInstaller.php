@@ -418,6 +418,10 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
         /** @var Role $role */
         $adminOrganization = $om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ADMIN_ORGANIZATION');
 
+        if (!$adminOrganization) {
+            $adminOrganization = $this->container->get('claroline.manager.role_manager')->createBaseRole('ROLE_ADMIN_ORGANIZATION', 'admin_organization');
+        }
+
         /** @var AdminTool $tool */
         $usermanagement = $om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findOneByName('user_management');
         $workspacemanagement = $om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findOneByName('workspace_management');

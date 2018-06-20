@@ -36,7 +36,7 @@ class UserMessageForm extends Component {
         'user-message-right': 'right' === this.props.position
       })}>
         {'left' === this.props.position &&
-          <UserAvatar picture={this.props.user.picture} />
+          <UserAvatar picture={this.props.user.picture} alt={false} />
         }
 
         <div className="user-message">
@@ -76,14 +76,17 @@ class UserMessageForm extends Component {
           <button
             className="btn btn-block btn-primary btn-save btn-emphasis"
             disabled={!this.state.pendingChanges || !this.state.content}
-            onClick={() => this.props.submit(this.state.content)}
+            onClick={() => {
+              this.props.submit(this.state.content)
+              this.setState({pendingChanges: false, content: ''})
+            }}
           >
             {this.props.submitLabel}
           </button>
         </div>
 
         {'right' === this.props.position &&
-          <UserAvatar picture={this.props.user.picture} />
+          <UserAvatar picture={this.props.user.picture} alt={false} />
         }
       </div>
     )

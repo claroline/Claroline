@@ -1,0 +1,55 @@
+.subject-info {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  margin-bottom: @component-margin-bottom;
+}
+
+.subject-poster {
+    border-radius: 8px;
+    margin-top: @line-height-computed - 4px;
+}
+
+.tag {
+  span,
+  a {
+    margin-right: .2em;
+  }
+}
+
+.posts {
+  list-style: none;
+  padding: 0;
+
+  .post{
+    margin-bottom: @component-margin-bottom;
+
+    h4 {
+      a {
+        font-size: @font-size-small;
+      }
+    }
+    .user-message-container{
+      margin-bottom: 0;
+    }
+  }
+}
+
+
+.messages-sort {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 10px; // same as list grid sort
+
+    .btn {
+        font-weight: bold;
+        border: none;
+        padding-top: 0;
+        padding-bottom: 0;
+
+        .fa {
+            margin-left: @icon-text-spacer;
+        }
+    }
+}

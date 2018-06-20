@@ -148,6 +148,7 @@ class UserSerializer
             'email' => $user->getEmail(),
             'administrativeCode' => $user->getAdministrativeCode(),
             'phone' => $user->getPhone(),
+            'meta' => $this->serializeMeta($user),
             'publicUrl' => $user->getPublicUrl(), // todo : merge with the one from meta (I do it to have it in minimal)
             'permissions' => $this->serializePermissions($user),
         ];

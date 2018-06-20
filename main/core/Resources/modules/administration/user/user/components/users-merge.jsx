@@ -151,7 +151,9 @@ UserCompare.propTypes = {
   index: T.number.isRequired,
   disabled: T.bool.isRequired,
   user: T.shape({
-    id: T.string.isRequired
+    id: T.string.isRequired,
+    picture: T.string,
+    username: T.string
   }).isRequired,
   merge: T.func.isRequired
 }
@@ -162,7 +164,7 @@ const UsersMergeForm = props => 0 !== props.selectedUsers.length ?
       <UserCompare
         index={0}
         user={props.selectedUsers[0]}
-        merge={() => props.mergeUsers(props.selectedUsers[0], props.selectedUsers[1])}
+        merge={() => props.mergeUsers(props.selectedUsers[0], props.selectedUsers[1], props.history.push)}
         disabled={props.selectedUsers[1].id === currentUser().id}
       />
     </div>
@@ -171,7 +173,7 @@ const UsersMergeForm = props => 0 !== props.selectedUsers.length ?
       <UserCompare
         index={1}
         user={props.selectedUsers[1]}
-        merge={() => props.mergeUsers(props.selectedUsers[1], props.selectedUsers[0])}
+        merge={() => props.mergeUsers(props.selectedUsers[1], props.selectedUsers[0], props.history.push)}
         disabled={props.selectedUsers[0].id === currentUser().id}
       />
     </div>
@@ -182,7 +184,10 @@ UsersMergeForm.propTypes = {
   selectedUsers: T.arrayOf(T.shape(
     UserTypes.propTypes
   )),
-  mergeUsers: T.func.isRequired
+  mergeUsers: T.func.isRequired,
+  history: T.shape({
+    push: T.func.isRequired
+  }).isRequired
 }
 
 const UsersMerge = connect(
@@ -190,8 +195,8 @@ const UsersMerge = connect(
     selectedUsers: state.users.compare.selected
   }),
   dispatch => ({
-    mergeUsers(userToKeep, userToRemove) {
-      dispatch(actions.merge(userToKeep.id, userToRemove.id))
+    mergeUsers(userToKeep, userToRemove, navigate) {
+      dispatch(actions.merge(userToKeep.id, userToRemove.id, navigate))
     }
   })
 )(UsersMergeForm)

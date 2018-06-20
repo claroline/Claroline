@@ -7,3 +7,10 @@ claro_forum_widget:
     resource: "@ClarolineForumBundle/Controller/WidgetController.php"
     type:     annotation
     prefix:   /
+
+claro_forum_api:
+    resource: "@ClarolineForumBundle/Controller/API"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

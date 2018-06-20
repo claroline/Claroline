@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\User;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
@@ -22,7 +21,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @ApiMeta(class="Claroline\CoreBundle\Entity\Role")
  * @Route("/role")
  */
 class RoleController extends AbstractCrudController
@@ -85,4 +83,9 @@ class RoleController extends AbstractCrudController
 
     use HasUsersTrait;
     use HasGroupsTrait;
+
+    public function getClass()
+    {
+        return 'Claroline\CoreBundle\Entity\Role';
+    }
 }

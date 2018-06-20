@@ -176,7 +176,6 @@ class SerializerProvider
         if (!in_array(Options::NO_FETCH, $options)) {
             //first find by uuid and id
             $object = $this->om->getObject($data, $class);
-
             //maybe move that chunk of code somewhere else
             //or remove it as it doens't do anyhting anymore I think
             if (!$object) {

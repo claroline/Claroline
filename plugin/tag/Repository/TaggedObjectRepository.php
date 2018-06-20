@@ -263,7 +263,7 @@ class TaggedObjectRepository extends EntityRepository
         $query->setParameter('objectClass', 'Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $query->setParameter('workspace', $workspace);
         $query->setParameter('active', true);
-        $userId = ($user === 'anon.') ? -1 : $user->getId();
+        $userId = ('anon.' === $user) ? -1 : $user->getId();
         $query->setParameter('userId', $userId);
         $currentDate = new \DateTime();
 
@@ -307,7 +307,7 @@ class TaggedObjectRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('objectClass', 'Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $query->setParameter('active', true);
-        $userId = ($user === 'anon.') ? -1 : $user->getId();
+        $userId = ('anon.' === $user) ? -1 : $user->getId();
         $query->setParameter('userId', $userId);
         $query->setParameter('roleNames', $roleNames);
         $currentDate = new \DateTime();
@@ -322,10 +322,11 @@ class TaggedObjectRepository extends EntityRepository
 
     public function findObjectsByClassAndIds($class, array $ids, $orderedBy = 'id', $order = 'ASC')
     {
+        $property = is_string($ids[0]) ? 'uuid' : 'id';
         $dql = "
             SELECT o
             FROM $class o
-            WHERE o.id IN (:ids)
+            WHERE o.{$property} IN (:ids)
             ORDER BY o.{$orderedBy} {$order}
         ";
         $query = $this->_em->createQuery($dql);

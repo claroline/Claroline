@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\User;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
@@ -23,7 +22,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * @ApiMeta(class="Claroline\CoreBundle\Entity\Organization\Location")
  * @Route("/location")
  */
 class LocationController extends AbstractCrudController
@@ -49,5 +47,10 @@ class LocationController extends AbstractCrudController
         return new JsonResponse(
             $this->serializer->get('Claroline\CoreBundle\Entity\Organization\Location')->serialize($location)
         );
+    }
+
+    public function getClass()
+    {
+        return 'Claroline\CoreBundle\Entity\Organization\Location';
     }
 }
