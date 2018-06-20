@@ -11,3 +11,10 @@ claro_agenda_workspace:
     resource: "@ClarolineAgendaBundle/Controller/WorkspaceAgendaController.php"
     prefix: workspaces
     type: annotation
+
+claro_forum_api:
+    resource: "@ClarolineAgendaBundle/Controller/API/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

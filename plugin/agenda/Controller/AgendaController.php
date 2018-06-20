@@ -13,16 +13,13 @@ namespace Claroline\AgendaBundle\Controller;
 
 use Claroline\AgendaBundle\Entity\Event;
 use Claroline\AgendaBundle\Manager\AgendaManager;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -132,7 +129,7 @@ class AgendaController extends Controller
             'user' => $user->getId(),
         ]);
 
-        if ($invitation && $invitation->getStatus() != $action) {
+        if ($invitation && $invitation->getStatus() !== $action) {
             $invitation->setStatus($action);
             $this->em->flush();
 
@@ -146,109 +143,6 @@ class AgendaController extends Controller
             'invitation' => $invitation,
             'already_done' => true,
         ];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/{event}/delete",
-     *     name="claro_agenda_delete_event",
-     *     options={"expose"=true}
-     * )
-     *
-     * @param Event $event
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function deleteAction(Event $event)
-    {
-        $this->checkPermission($event);
-        $removed = $this->agendaManager->deleteEvent($event);
-
-        return new JsonResponse($removed, 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/resize/event/{event}/day/{day}/minute/{minute}",
-     *     name="claro_workspace_agenda_resize",
-     *     options = {"expose"=true}
-     * )
-     */
-    public function resizeAction(Event $event, $day, $minute)
-    {
-        $this->checkPermission($event);
-        $data = $this->agendaManager->updateEndDate($event, $day, $minute);
-
-        return new JsonResponse($data, 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/move/event/{event}/day/{day}/minute/{minute}",
-     *     name="claro_workspace_agenda_move",
-     *     options = {"expose"=true}
-     * )
-     */
-    public function moveAction(Event $event, $day, $minute)
-    {
-        $this->checkPermission($event);
-        $data = $this->agendaManager->moveEvent($event, $day, $minute);
-
-        return new JsonResponse($data, 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/workspace/{workspace}/export",
-     *     name="claro_workspace_agenda_export"
-     * )
-     *
-     * @param Workspace $workspace
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function exportWorkspaceEventIcsAction(Workspace $workspace)
-    {
-        //if you can open the tool, you can export
-        if (!$this->authorization->isGranted('agenda_', $workspace)) {
-            throw new AccessDeniedException('The event cannot be updated');
-        }
-
-        return $this->exportEvent($workspace);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/desktop/export",
-     *     name="claro_desktop_agenda_export"
-     * )
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function exportDesktopEventIcsAction()
-    {
-        return $this->exportEvent();
-    }
-
-    private function exportEvent($workspace = null)
-    {
-        $file = $this->agendaManager->export();
-        $response = new StreamedResponse();
-
-        $response->setCallBack(
-            function () use ($file) {
-                readfile($file);
-            }
-        );
-
-        $name = $workspace ? $workspace->getName() : 'desktop';
-        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
-        $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.$name.'.ics');
-        $response->headers->set('Content-Type', ' text/calendar');
-        $response->headers->set('Connection', 'close');
-
-        return $response;
     }
 
     private function checkPermission(Event $event)
@@ -265,7 +159,7 @@ class AgendaController extends Controller
             return;
         }
 
-        if ($this->tokenStorage->getToken()->getUser() != $event->getUser()) {
+        if ($this->tokenStorage->getToken()->getUser() !== $event->getUser()) {
             throw new AccessDeniedException('You cannot edit the agenda');
         }
     }

@@ -11,12 +11,10 @@
 
 namespace Claroline\AgendaBundle\Controller;
 
-use Claroline\AgendaBundle\Entity\Event;
 use Claroline\AgendaBundle\Form\ImportAgendaType;
 use Claroline\AgendaBundle\Manager\AgendaManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\GenericDataEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -66,52 +64,6 @@ class WorkspaceAgendaController extends Controller
     }
 
     /**
-     * @EXT\Route(
-     *     "/{workspace}/show",
-     *     name="claro_workspace_agenda_show",
-     *     options = {"expose"=true}
-     * )
-     *
-     * @param Workspace $workspace
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function showAction(Workspace $workspace)
-    {
-        $this->agendaManager->checkOpenAccess($workspace);
-        $events = $this->agendaManager->displayEvents($workspace);
-        $options = [
-            'type' => 'workspace',
-            'workspace' => $workspace,
-        ];
-        $genericEvent = $this->eventDispatcher->dispatch('claroline_external_agenda_events', new GenericDataEvent($options));
-        $externalEvents = $genericEvent->getResponse();
-        $data = array_merge($events, $externalEvents);
-
-        return new JsonResponse($data, 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/workspace/{workspace}/import/modal/form",
-     *     name="claro_workspace_agenda_import_form",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Template("ClarolineAgendaBundle:tool:import_ics_modal_form.html.twig")
-     *
-     * @param Workspace $workspace
-     *
-     * @return array
-     */
-    public function importEventsModalForm(Workspace $workspace)
-    {
-        $this->agendaManager->checkEditAccess($workspace);
-        $form = $this->createForm(new ImportAgendaType());
-
-        return ['form' => $form->createView(), 'workspace' => $workspace];
-    }
-
-    /**
      * @EXT\Route("/workspace/{workspace}/import", name="claro_workspace_agenda_import")
      * @EXT\Template("ClarolineAgendaBundle:tool:import_ics_modal_form.html.twig")
      *
@@ -132,126 +84,5 @@ class WorkspaceAgendaController extends Controller
         }
 
         return ['form' => $form->createView(), 'workspace' => $workspace];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/{workspace}/add/event/form",
-     *     name="claro_workspace_agenda_add_event_form",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Template("ClarolineAgendaBundle:agenda:add_event_modal_form.html.twig")
-     *
-     * @param Workspace $workspace
-     *
-     * @return array
-     */
-    public function addEventModalFormAction(Workspace $workspace)
-    {
-        $this->agendaManager->checkEditAccess($workspace);
-        $formType = $this->get('claroline.form.agenda');
-        $form = $this->createForm($formType, new Event());
-
-        return [
-            'form' => $form->createView(),
-            'workspace' => $workspace,
-            'action' => $this->router->generate(
-                'claro_workspace_agenda_add_event', ['workspace' => $workspace->getId()]
-            ),
-        ];
-    }
-
-    /**
-     * @EXT\Route("/{workspace}/add", name="claro_workspace_agenda_add_event")
-     * @EXT\Method("POST")
-     * @EXT\Template("ClarolineAgendaBundle:agenda:add_event_modal_form.html.twig")
-     *
-     * @param Workspace $workspace
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function addEventAction(Workspace $workspace)
-    {
-        $this->agendaManager->checkEditAccess($workspace);
-        $formType = $this->get('claroline.form.agenda');
-        $form = $this->createForm($formType, new Event());
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $event = $form->getData();
-
-            $users = $form->get('users')->getData();
-
-            $data = $this->agendaManager->addEvent($event, $workspace, $users);
-
-            return new JsonResponse([$data], 200);
-        }
-
-        return [
-            'form' => $form->createView(),
-            'workspace' => $workspace,
-            'action' => $this->router->generate(
-                'claro_workspace_agenda_add_event', ['workspace' => $workspace->getId()]
-            ),
-        ];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/{event}/update/form",
-     *     name="claro_workspace_agenda_update_event_form",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Template("ClarolineAgendaBundle:agenda:update_event_modal_form.html.twig")
-     *
-     * @return array
-     */
-    public function updateEventModalFormAction(Event $event)
-    {
-        $this->agendaManager->checkEditAccess($event->getWorkspace());
-        $formType = $this->get('claroline.form.agenda');
-        $form = $this->createForm($formType, $event);
-
-        return [
-            'form' => $form->createView(),
-            'action' => $this->router->generate(
-                'claro_workspace_agenda_update', ['event' => $event->getId()]
-            ),
-            'event' => $event,
-        ];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/{event}/update",
-     *     name="claro_workspace_agenda_update"
-     * )
-     * @EXT\Method("POST")
-     * @EXT\Template("ClarolineAgendaBundle:agenda:update_event_modal_form.html.twig")
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function updateAction(Event $event)
-    {
-        $this->agendaManager->checkEditAccess($event->getWorkspace());
-        $formType = $this->get('claroline.form.agenda');
-        $form = $this->createForm($formType, $event);
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $users = $form->get('users')->getData();
-
-            $event = $this->agendaManager->updateEvent($event, $users);
-
-            return new JsonResponse($event, 200);
-        }
-
-        return [
-            'form' => $form->createView(),
-            'action' => $this->router->generate(
-                'claro_workspace_agenda_update', ['event' => $event->getId()]
-            ),
-            'event' => $event,
-        ];
     }
 }

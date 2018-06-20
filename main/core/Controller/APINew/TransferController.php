@@ -211,7 +211,7 @@ class TransferController extends AbstractCrudController
               ['file' => $file]
           );
 
-        $dispatcher->dispatch(strtolower('upload_file_'.$handler), 'UploadFile', [$object]);
+        $dispatcher->dispatch(strtolower('upload_file_'.$handler), 'File\UploadFile', [$object]);
 
         return $this->serializer->serialize($object);
     }

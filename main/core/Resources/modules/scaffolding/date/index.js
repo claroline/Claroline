@@ -11,7 +11,7 @@ moment.locale(getLocale())
  * @return {string}
  */
 function getApiFormat() {
-  return 'YYYY-MM-DD\\THH:mm:ss'
+  return 'YYYY-MM-DD[T]HH:mm:ss'
 }
 
 /**

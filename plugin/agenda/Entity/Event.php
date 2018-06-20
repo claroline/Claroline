@@ -11,12 +11,11 @@
 
 namespace Claroline\AgendaBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\AgendaBundle\Validator\Constraints\DateRange;
 use Claroline\CoreBundle\Entity\User;
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Claroline\AgendaBundle\Validator\Constraints\DateRange;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\AgendaBundle\Repository\EventRepository")
@@ -39,12 +38,12 @@ class Event
     private $title;
 
     /**
-     * @ORM\Column(name="start_date", type="integer", nullable=true)
+     * @ORM\Column(name="start_date", type="datetime", nullable=true)
      */
     private $start;
 
     /**
-     * @ORM\Column(name="end_date", type="integer", nullable=true)
+     * @ORM\Column(name="end_date", type="datetime", nullable=true)
      */
     private $end;
 
@@ -123,75 +122,22 @@ class Event
     //Returns a String for the DateTimePicker of the AgendaType
     public function getStart()
     {
-        return date('d/m/Y H:i', $this->start);
-    }
-
-    public function getStartInTimestamp()
-    {
         return $this->start;
-    }
-
-    public function getStartInDateTime()
-    {
-        return \Datetime::createFromFormat('U', $this->start);
     }
 
     public function setStart($start)
     {
-        if (is_string($start)) {
-            $dateFormat = $this->isAllDay() ? 'd/m/Y' : 'd/m/Y H:i';
-            $dateTime = \DateTime::createFromFormat($dateFormat, $start);
-            if (!$dateTime) {
-                $this->start = null;
-            } else {
-                $this->start = $dateTime->getTimestamp();
-            }
-        } elseif (is_int($start)) {
-            $this->start = $start;
-        } elseif ($start instanceof \DateTime) {
-            $this->start = $start->getTimestamp();
-        } else {
-            throw new \Exception('Date format is not supported');
-        }
-
-        return $this;
+        $this->start = $start;
     }
 
-    //Returns a String for the DateTimePicker of the AgendaType
     public function getEnd()
-    {
-        return date('d/m/Y H:i', $this->end);
-    }
-
-    public function getEndInTimestamp()
     {
         return $this->end;
     }
 
-    public function getEndInDateTime()
-    {
-        return \Datetime::createFromFormat('U', $this->end);
-    }
-
     public function setEnd($end)
     {
-        if (is_string($end)) {
-            $dateFormat = $this->isAllDay() ? 'd/m/Y' : 'd/m/Y H:i';
-            $dateTime = \DateTime::createFromFormat($dateFormat, $end);
-            if (!$dateTime) {
-                $this->end = null;
-            } else {
-                $this->end = $dateTime->getTimestamp();
-            }
-        } elseif (is_int($end)) {
-            $this->end = $end;
-        } elseif ($end instanceof \DateTime) {
-            $this->end = $end->getTimestamp();
-        } else {
-            throw new \Exception('Date format is not supported');
-        }
-
-        return $this;
+        $this->end = $end;
     }
 
     public function getDescription()
@@ -334,7 +280,7 @@ class Event
      *
      * @return Event
      */
-    public function addEventInvitation(\Claroline\AgendaBundle\Entity\EventInvitation $eventInvitation)
+    public function addEventInvitation(EventInvitation $eventInvitation)
     {
         $this->eventInvitations[] = $eventInvitation;
 
@@ -346,7 +292,7 @@ class Event
      *
      * @param \Claroline\AgendaBundle\Entity\EventInvitation $eventInvitation
      */
-    public function removeEventInvitation(\Claroline\AgendaBundle\Entity\EventInvitation $eventInvitation)
+    public function removeEventInvitation(EventInvitation $eventInvitation)
     {
         $this->eventInvitations->removeElement($eventInvitation);
     }
@@ -359,47 +305,5 @@ class Event
     public function getEventInvitations()
     {
         return $this->eventInvitations;
-    }
-
-    public function jsonSerialize(User $user = null)
-    {
-        $guests = [];
-        $invitation = null;
-        foreach ($this->getEventInvitations() as $eventInvitation) {
-            $guests[] = [
-                'user_name' => $eventInvitation->getUser()->getUserName(),
-                'status' => $eventInvitation->getStatus(),
-            ];
-
-            if ($eventInvitation->getUser() === $user) {
-                $invitation = $eventInvitation;
-            }
-        }
-
-        return [
-            'id' => $this->getId(),
-            'title' => $invitation && !is_null($invitation->getTitle()) ? $invitation->getTitle() : $this->getTitle(),
-            'start' => \Datetime::createFromFormat('U', $this->start)->format(\DateTime::ISO8601),
-            'end' => \Datetime::createFromFormat('U', $this->end)->format(\DateTime::ISO8601),
-            'color' => $this->getPriority(),
-            'allDay' => $this->isAllDay(),
-            'isTask' => $this->isTask(),
-            'isTaskDone' => $this->isTaskDone(),
-            'owner' => $this->getUser()->getUsername(),
-            'description' => $invitation && !is_null($invitation->getDescription()) ? $invitation->getDescription() : $this->getDescription(),
-            'workspace_id' => $this->getWorkspace() ? $this->getWorkspace()->getId() : null,
-            'workspace_name' => $this->getWorkspace() ? $this->getWorkspace()->getName() : null,
-            'className' => 'event_'.$this->getId(),
-            'isEditable' => $this->isEditable() !== false && !$invitation,
-            'durationEditable' => !$this->isTask() && $this->isEditable() !== false && !$invitation, // If it's a task, disable resizing
-            'invitations' => $guests,
-            'is_guest' => !is_null($invitation),
-            'event_invitation_status' => [
-                'ignore' => EventInvitation::IGNORE,
-                'join' => EventInvitation::JOIN,
-                'maybe' => EventInvitation::MAYBE,
-                'resign' => EventInvitation::RESIGN,
-            ], //We have to passed the status list of the eventInvitation for the popover render because twig.js doesn't have the constant function
-        ];
     }
 }

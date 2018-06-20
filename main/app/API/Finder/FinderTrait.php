@@ -17,14 +17,17 @@ trait FinderTrait
 {
     public function setDefaults(QueryBuilder $qb, $filterName, $filterValue)
     {
-        if (is_string($filterValue)) {
-            $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");
-            $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
-        } else {
+        if (is_bool($filterValue)) {
             $qb->andWhere("obj.{$filterName} = :{$filterName}");
             $qb->setParameter($filterName, $filterValue);
+        } else {
+            if (is_int($filterValue)) {
+                $qb->andWhere("obj.{$filterName} = :{$filterName}");
+                $qb->setParameter($filterName, $filterValue);
+            } else {
+                $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");
+                $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
+            }
         }
-
-        return $qb;
     }
 }

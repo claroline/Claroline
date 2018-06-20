@@ -5,7 +5,7 @@ import {MODAL_DATA_FORM, DataFormModal} from '#/main/core/data/form/modals/compo
 
 // make the modal available for use
 registry.add(MODAL_CONFIGURE_FIELD, ConfigureFieldModal)
-registry.add(MODAL_DATA_FORM, DataFormModal)
+registry.add('MODAL_DATA_FORM', DataFormModal)
 
 export {
   MODAL_CONFIGURE_FIELD,

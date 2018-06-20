@@ -74,43 +74,6 @@ class AgendaManager
         $this->container = $container;
     }
 
-    public function addEvent(Event $event, $workspace = null, array $users = [])
-    {
-        $event->setWorkspace($workspace);
-        $event->setUser($this->tokenStorage->getToken()->getUser());
-        $this->setEventDate($event);
-        $this->om->persist($event);
-        $this->om->flush();
-
-        $this->sendInvitation($event, $users);
-
-        return $event->jsonSerialize();
-    }
-
-    public function updateEvent(Event $event, array $users = [])
-    {
-        $this->setEventDate($event);
-        $this->om->flush();
-
-        $this->sendInvitation($event, $users);
-
-        return $event->jsonSerialize();
-    }
-
-    /**
-     * @param Event $event
-     *
-     * @return bool
-     */
-    public function deleteEvent(Event $event)
-    {
-        $removed = $event->jsonSerialize();
-        $this->om->remove($event);
-        $this->om->flush();
-
-        return $removed;
-    }
-
     public function sendInvitation(Event $event, array $users = [])
     {
         foreach ($users as $key => $user) {
@@ -187,8 +150,9 @@ class AgendaManager
     public function export($workspaceId = null)
     {
         $repo = $this->om->getRepository('ClarolineAgendaBundle:Event');
+        $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->find($workspaceId);
 
-        if (isset($workspaceId)) {
+        if ($workspace) {
             $listEvents = $repo->findByWorkspaceId($workspaceId, false);
         } else {
             $usr = $this->tokenStorage->getToken()->getUser();
@@ -198,7 +162,7 @@ class AgendaManager
         }
 
         $calendar = $this->writeCalendar($listEvents);
-        $fileName = $this->writeToICS($calendar, $workspaceId);
+        $fileName = $this->writeToICS($calendar, $workspace);
 
         return $fileName;
     }
@@ -209,9 +173,9 @@ class AgendaManager
      *
      * @return string $fileName path to the file in web/upload folder
      */
-    public function writeToICS($text, $workspaceId)
+    public function writeToICS($text, $workspace)
     {
-        $name = is_null($workspaceId) ? 'desktop' : $workspaceId->getName();
+        $name = is_null($workspace) ? 'desktop' : $workspace->getName();
         $fileName = $this->rootDir.'/../web/uploads/'.$name.'.ics';
         file_put_contents($fileName, $text);
 
@@ -226,11 +190,11 @@ class AgendaManager
      *
      * @return int number of events saved
      */
-    public function importEvents(UploadedFile $file, $workspace = null)
+    public function import($fileData, $workspace = null)
     {
-        $ical = new ICal($file->getPathname());
+        $ical = new ICal($fileData);
         $events = $ical->events();
-        $tabs = [];
+        $entities = [];
 
         foreach ($events as $event) {
             $e = new Event();
@@ -246,51 +210,10 @@ class AgendaManager
             $this->om->persist($e);
             //the flush is required to generate an id
             $this->om->flush();
-            $tabs[] = $e->jsonSerialize();
+            $entities[] = $e;
         }
 
-        return $tabs;
-    }
-
-    public function displayEvents(Workspace $workspace, $allDay = false)
-    {
-        $events = $this->om->getRepository('ClarolineAgendaBundle:Event')
-            ->findByWorkspaceId($workspace->getId());
-
-        return $this->convertEventsToArray($events);
-    }
-
-    public function updateEndDate(Event $event, $dayDelta = 0, $minDelta = 0)
-    {
-        $event->setEnd($event->getEndInTimestamp() + $this->toSeconds($dayDelta, $minDelta));
-        $this->om->flush();
-
-        return $event->jsonSerialize();
-    }
-
-    public function updateStartDate(Event $event, $dayDelta = 0, $minDelta = 0)
-    {
-        $event->setStart($event->getStartInTimestamp() + $this->toSeconds($dayDelta, $minDelta));
-        $this->om->flush();
-    }
-
-    public function moveEvent(Event $event, $dayDelta, $minuteDelta)
-    {
-        $this->updateStartDate($event, $dayDelta, $minuteDelta);
-        $this->updateEndDate($event, $dayDelta, $minuteDelta);
-
-        return $event->jsonSerialize();
-    }
-
-    public function convertEventsToArray(array $events)
-    {
-        $data = [];
-
-        foreach ($events as $event) {
-            $data[] = $event->jsonSerialize();
-        }
-
-        return $data;
+        return $entities;
     }
 
     public function convertInvitationsToArray(array $invitations)
@@ -304,56 +227,6 @@ class AgendaManager
         return $data;
     }
 
-    private function toSeconds($days = 0, $mins = 0)
-    {
-        return $days * 3600 * 24 + $mins * 60;
-    }
-
-    /**
-     * Set the event date.
-     * Only use this method for events created or updated through AgendaType.
-     *
-     * @param Event $event
-     */
-    private function setEventDate(Event $event)
-    {
-        if ($event->isAllDay()) {
-            // If it's a task we set the start date at the beginning of the day
-            if ($event->isTask()) {
-                $event->setStart(strtotime($event->getEndInDateTime()->format('Y-m-d').' 00:00:00'));
-            } else {
-                $event->setStart(strtotime($event->getStartInDateTime()->format('Y-m-d').' 00:00:00'));
-            }
-            $event->setEnd(strtotime($event->getEndInDateTime()->format('Y-m-d').' 24:00:00'));
-        } else {
-            // If it's a task, we subtract 30 min so that the event is not a simple line on the calendar
-            if ($event->isTask()) {
-                $event->setStart($event->getEndInTimestamp() - 30 * 60);
-            } else {
-                $event->setStart($event->getStartInTimestamp());
-            }
-            $event->setEnd($event->getEndInTimestamp());
-        }
-    }
-
-    public function sortEvents($listEvents)
-    {
-        usort(
-            $listEvents,
-            function ($a, $b) {
-                $aStartTimestamp = $a->getStartInTimestamp();
-                $bStartTimestamp = $b->getStartInTimestamp();
-                if ($aStartTimestamp === $bStartTimestamp) {
-                    return 0;
-                }
-
-                return $aStartTimestamp > $bStartTimestamp ? 1 : -1;
-            }
-        );
-
-        return $listEvents;
-    }
-
     /**
      * @param array $events
      *
@@ -365,7 +238,7 @@ class AgendaManager
         $tz = $date->getTimezone();
 
         return $this->container->get('templating')->render(
-            'ClarolineAgendaBundle:Tool:exportIcsCalendar.ics.twig',
+            'ClarolineAgendaBundle:tool:export_ics_calendar.ics.twig',
             [
                 'tzName' => $tz->getName(),
                 'events' => $events,
