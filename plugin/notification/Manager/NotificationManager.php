@@ -2,10 +2,10 @@
 
 namespace Icap\NotificationBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
 use Icap\NotificationBundle\Entity\FollowerResource;
 use Icap\NotificationBundle\Entity\Notification;
@@ -28,10 +28,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class NotificationManager
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    protected $em;
+    /** @var ObjectManager */
+    private $om;
     /**
      * @var \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface
      */
@@ -57,7 +55,7 @@ class NotificationManager
      * Constructor.
      *
      * @DI\InjectParams({
-     *      "em" = @DI\Inject("doctrine.orm.entity_manager"),
+     *      "om" = @DI\Inject("claroline.persistence.object_manager"),
      *      "tokenStorage" = @DI\Inject("security.token_storage"),
      *      "eventDispatcher" = @DI\Inject("event_dispatcher"),
      *      "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
@@ -66,18 +64,18 @@ class NotificationManager
      * })
      */
     public function __construct(
-        EntityManager $em,
+        ObjectManager $om,
         TokenStorageInterface $tokenStorage,
         EventDispatcherInterface $eventDispatcher,
         PlatformConfigurationHandler $configHandler,
         NotificationUserParametersManager $notificationParametersManager,
         NotificationPluginConfigurationManager $notificationPluginConfigurationManager
     ) {
-        $this->em = $em;
+        $this->om = $om;
         $this->tokenStorage = $tokenStorage;
         $this->eventDispatcher = $eventDispatcher;
         $this->platformName = $configHandler->getParameter('name');
-        if ($this->platformName === null || empty($this->platformName)) {
+        if (null === $this->platformName || empty($this->platformName)) {
             $this->platformName = 'Claroline';
         }
         $this->notificationParametersManager = $notificationParametersManager;
@@ -111,14 +109,14 @@ class NotificationManager
     {
         $lastPurgeDate = $config->getLastPurgeDate();
         $today = (new \DateTime())->setTime(0, 0, 0);
-        if ($lastPurgeDate === null || $today > $lastPurgeDate) {
+        if (null === $lastPurgeDate || $today > $lastPurgeDate) {
             $purgeBeforeDate = clone $today;
             $purgeBeforeDate->sub(new \DateInterval('P'.$config->getPurgeAfterDays().'D'));
             $this->getNotificationRepository()->deleteNotificationsBeforeDate($purgeBeforeDate);
 
             $config->setLastPurgeDate($today);
-            $this->em->persist($config);
-            $this->em->flush();
+            $this->om->persist($config);
+            $this->om->flush();
         }
     }
 
@@ -160,7 +158,7 @@ class NotificationManager
     protected function getUsersToNotifyForNotifiable(NotifiableInterface $notifiable)
     {
         $userIds = [];
-        if ($notifiable->getSendToFollowers() && $notifiable->getResource() !== null) {
+        if ($notifiable->getSendToFollowers() && null !== $notifiable->getResource()) {
             $userIds = $this->getFollowersByResourceIdAndClass(
                 $notifiable->getResource()->getId(),
                 $notifiable->getResource()->getClass()
@@ -210,7 +208,7 @@ class NotificationManager
                 $event = $this->eventDispatcher->dispatch($eventName, $event);
                 $views[$notificationView->getId().''] = $event->getResponseContent();
             }
-            if ($notificationView->getStatus() === false) {
+            if (false === $notificationView->getStatus()) {
                 array_push(
                     $unviewedNotificationIds,
                     $notificationView->getId()
@@ -223,11 +221,11 @@ class NotificationManager
     }
 
     /**
-     * @return EntityManager
+     * @return ObjectManager
      */
     public function getEntityManager()
     {
-        return $this->em;
+        return $this->om;
     }
 
     /**
@@ -297,7 +295,7 @@ class NotificationManager
 
         $doerId = null;
 
-        if ($doer === null) {
+        if (null === $doer) {
             $doer = $this->getLoggedUser();
         }
 
@@ -337,7 +335,7 @@ class NotificationManager
     {
         if (count($userIds) > 0) {
             foreach ($userIds as $userId) {
-                if ($userId !== null && $notification->getUserId() !== $userId) {
+                if (null !== $userId && $notification->getUserId() !== $userId) {
                     $notificationViewer = new NotificationViewer();
                     $notificationViewer->setNotification($notification);
                     $notificationViewer->setViewerId($userId);
@@ -364,7 +362,7 @@ class NotificationManager
         $notification = null;
         if (count($userIds) > 0) {
             $resourceId = null;
-            if ($notifiable->getResource() !== null) {
+            if (null !== $notifiable->getResource()) {
                 $resourceId = $notifiable->getResource()->getId();
             }
 
@@ -460,7 +458,7 @@ class NotificationManager
         $notificationUserParameters = $this
             ->notificationParametersManager
             ->getParametersByRssId($rssId);
-        if ($notificationUserParameters === null) {
+        if (null === $notificationUserParameters) {
             throw new NoResultException();
         }
 
@@ -494,6 +492,43 @@ class NotificationManager
 
     public function getTaggedUsersFromText($text)
     {
+    }
+
+    /**
+     * @param User           $user
+     * @param ResourceNode[] $resourceNodes
+     *
+     * @return array
+     */
+    public function toggleFollowResources(User $user, array $resourceNodes)
+    {
+        if (0 < count($resourceNodes)) {
+            $follower = $this->getFollowerResource($user->getId(), $resourceNodes[0]->getId(), $resourceNodes[0]->getClass());
+            $mode = empty($follower) ? 'create' : 'delete';
+
+            $this->om->startFlushSuite();
+
+            switch ($mode) {
+                case 'create':
+                    foreach ($resourceNodes as $resourceNode) {
+                        $userId = $user->getId();
+                        $resourceId = $resourceNode->getId();
+                        $resourceClass = $resourceNode->getClass();
+                        $follower = $this->getFollowerResource($userId, $resourceId, $resourceClass);
+
+                        if (empty($follower)) {
+                            $this->followResource($userId, $resourceId, $resourceClass);
+                        }
+                    }
+                    break;
+                case 'delete':
+                    foreach ($resourceNodes as $resourceNode) {
+                        $this->unfollowResource($user->getId(), $resourceNode->getId(), $resourceNode->getClass());
+                    }
+                    break;
+            }
+            $this->om->endFlushSuite();
+        }
     }
 
     /**

@@ -2,3 +2,11 @@ hevinci_favourite:
     resource: "@HeVinciFavouriteBundle/Controller/FavouriteController.php"
     type:     annotation
     prefix:   /
+
+# JSON API
+hevinci_favourite_api:
+    resource: "@HeVinciFavouriteBundle/Controller/API/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

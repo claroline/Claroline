@@ -5,6 +5,6 @@ import {registry} from '#/main/app/plugins/registry'
  */
 registry.add('tag', {
   actions: {
-    'tags': () => { return import(/* webpackChunkName: "tag-action-tags" */ '#/plugin/tag/resource/actions/tags') }
+    // 'tags': () => { return import(/* webpackChunkName: "tag-action-tags" */ '#/plugin/tag/resource/actions/tags') }
   }
 })

@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Controller\API\Resource;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\Resource\ResourceNodeManager;
@@ -19,8 +18,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * JSON API for resource node management.
  *
- * @EXT\Route("resources/{id}", options={"expose"=true})
- * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
+ * @EXT\Route(options={"expose"=true})
  */
 class ResourceNodeController
 {
@@ -44,7 +42,7 @@ class ResourceNodeController
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
-     * @param ObjectManager $om
+     * @param ObjectManager                 $om
      * @param SerializerProvider            $serializer
      * @param ResourceManager               $resourceManager
      * @param ResourceNodeManager           $resourceNodeManager
@@ -66,8 +64,9 @@ class ResourceNodeController
     /**
      * Updates a resource node properties.
      *
-     * @EXT\Route("", name="claro_resource_node_update")
+     * @EXT\Route("resources/{id}", name="claro_resource_node_update")
      * @EXT\Method("PUT")
+     * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
      *
      * @param ResourceNode $resourceNode
      * @param Request      $request
@@ -92,32 +91,26 @@ class ResourceNodeController
     public function updateRightsActions()
     {
         // TODO implement
-        /*$rights = $data['rights']['all']['permissions'];
-        foreach ($rights as $rolePerms) {
-            $role = $this->om->getRepository('ClarolineCoreBundle:Role')->find($rolePerms['role']['id']);
-            $this->rightsManager->editPerms($rolePerms['permissions'], $role, $resourceNode);
-        }*/
     }
 
     /**
      * Publishes a resource node.
      *
-     * @EXT\Route("/publish", name="claro_resource_node_publish")
+     * @EXT\Route("resources/selected/publish", name="claro_resource_node_publish")
      * @EXT\Method("PUT")
      *
-     * @todo to be merge with ResourceController::publishAction (works with ids)
-     *
-     * @param ResourceNode $resourceNode
+     * @param Request $request
      *
      * @return JsonResponse
      */
-    public function publishAction(ResourceNode $resourceNode)
+    public function publishAction(Request $request)
     {
-        $this->assertHasPermission('ADMINISTRATE', $resourceNode);
+        $nodes = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Resource\ResourceNode');
 
-        if (!$resourceNode->isPublished()) {
-            $this->resourceManager->setPublishedStatus([$resourceNode], true);
+        foreach ($nodes as $node) {
+            $this->assertHasPermission('ADMINISTRATE', $node);
         }
+        $this->resourceManager->setPublishedStatus($nodes, true);
 
         return new JsonResponse(null, 204);
     }
@@ -125,22 +118,21 @@ class ResourceNodeController
     /**
      * Unpublishes a resource node.
      *
-     * @EXT\Route("/unpublish", name="claro_resource_node_unpublish")
+     * @EXT\Route("resources/selected/unpublish", name="claro_resource_node_unpublish")
      * @EXT\Method("PUT")
      *
-     * @todo to be merge with ResourceController::unpublishAction (works with ids)
-     *
-     * @param ResourceNode $resourceNode
+     * @param Request $request
      *
      * @return JsonResponse
      */
-    public function unpublishAction(ResourceNode $resourceNode)
+    public function unpublishAction(Request $request)
     {
-        $this->assertHasPermission('ADMINISTRATE', $resourceNode);
+        $nodes = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Resource\ResourceNode');
 
-        if ($resourceNode->isPublished()) {
-            $this->resourceManager->setPublishedStatus([$resourceNode], false);
+        foreach ($nodes as $node) {
+            $this->assertHasPermission('ADMINISTRATE', $node);
         }
+        $this->resourceManager->setPublishedStatus($nodes, false);
 
         return new JsonResponse(null, 204);
     }
@@ -148,8 +140,9 @@ class ResourceNodeController
     /**
      * Exports a resource node in the Claroline export format.
      *
-     * @EXT\Route("/export", name="claro_resource_export")
+     * @EXT\Route("resources/{id}/export", name="claro_resource_export")
      * @EXT\Method("GET")
+     * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
      *
      * @param ResourceNode $resourceNode
      */
@@ -161,8 +154,9 @@ class ResourceNodeController
     /**
      * Deletes a resource node.
      *
-     * @EXT\Route("", name="claro_resource_delete")
+     * @EXT\Route("resources/{id}", name="claro_resource_delete")
      * @EXT\Method("DELETE")
+     * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
      *
      * @param ResourceNode $resourceNode
      *
@@ -182,8 +176,9 @@ class ResourceNodeController
      *
      * @todo for security, code should not be passed in the URL
      *
-     * @EXT\Route("/unlock/{code}", name="claro_resource_unlock")
+     * @EXT\Route("resources/{id}/unlock/{code}", name="claro_resource_unlock")
      * @EXT\Method("POST")
+     * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
      *
      * @param ResourceNode $resourceNode
      * @param mixed        $code
@@ -193,6 +188,18 @@ class ResourceNodeController
     public function unlock(ResourceNode $resourceNode, $code)
     {
         return new JsonResponse($this->resourceNodeManager->unlock($resourceNode, $code));
+    }
+
+    /**
+     * @param Request $request
+     * @param string  $class
+     */
+    private function decodeIdsString(Request $request, $class)
+    {
+        $ids = $request->query->get('ids');
+        $property = is_numeric($ids[0]) ? 'id' : 'uuid';
+
+        return $this->om->findList($class, $property, $ids);
     }
 
     private function assertHasPermission($permission, ResourceNode $resourceNode)

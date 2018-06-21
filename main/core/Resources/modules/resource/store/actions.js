@@ -52,7 +52,7 @@ actions.togglePublication = (resourceNode) => ({
     type: resourceNode.meta.published ? 'unpublish' : 'publish',
     url: [
       resourceNode.meta.published ? 'claro_resource_node_unpublish' : 'claro_resource_node_publish',
-      {id: resourceNode.id}
+      {ids: [resourceNode.id]}
     ],
     request: {
       method: 'PUT'

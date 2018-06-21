@@ -201,7 +201,6 @@ class ResourceManager
         $node = new ResourceNode();
         $node->setResourceType($resourceType);
         $node->setPublished($isPublished);
-        //$node->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
         $mimeType = (null === $resource->getMimeType()) ?
             'custom/'.$resourceType->getName() :
             $resource->getMimeType();
@@ -809,7 +808,7 @@ class ResourceManager
             //only warn for the roots
             $this->dispatcher->dispatch(
                 "publication_change_{$node->getResourceType()->getName()}",
-                'PublicationChange',
+                'Resource\PublicationChange',
                 [$this->getResourceFromNode($node)]
             );
 
@@ -1149,7 +1148,7 @@ class ResourceManager
      * Changes a node thumbnail.
      *
      * @param ResourceNode $node
-     * @param File        $file
+     * @param File         $file
      *
      * @return ResourceThumbnail
      *
@@ -1430,7 +1429,7 @@ class ResourceManager
     public function getById($id)
     {
         /** @var ResourceNode $resourceNode */
-        $resourceNode = $this->resourceNodeRepo->findOneBy(['id' => $id]);;
+        $resourceNode = $this->resourceNodeRepo->findOneBy(['id' => $id]);
 
         return $resourceNode;
     }

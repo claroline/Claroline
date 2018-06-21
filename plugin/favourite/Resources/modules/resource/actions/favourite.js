@@ -8,13 +8,9 @@ const action = (resourceNodes) => ({ // todo collection
   label: trans('add-favourite', {}, 'actions'),
   displayed: isAuthenticated(),
   request: {
-    url: ['claro_resource_action', {
-      resourceType: resourceNodes[0].meta.type,
-      action: 'favourite',
-      id: resourceNodes[0].id
-    }],
+    url: ['hevinci_favourite_toggle', {ids: resourceNodes.map(node => node.id)}],
     request: {
-      method: 'POST'
+      method: 'PUT'
     }
   }
 })

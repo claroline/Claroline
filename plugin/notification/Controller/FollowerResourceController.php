@@ -7,10 +7,12 @@
 
 namespace Icap\NotificationBundle\Controller;
 
+use Claroline\CoreBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class FollowerResourceController extends Controller
@@ -38,6 +40,22 @@ class FollowerResourceController extends Controller
             'resourceClass' => base64_encode($resourceClass),
             'userId' => $user->getId(),
         ];
+    }
+
+    /**
+     * @Route(
+     *     "/resource/notification/toggle/{resourceId}/{resourceClass}",
+     *     name="icap_notification_resource_toggle",
+     *     options={"expose"=true}
+     * )
+     * @ParamConverter("user", options={"authenticatedUser" = true})
+     */
+    public function resourceNotificationToggleAction($resourceId, $resourceClass, User $user)
+    {
+        $resourceClass = base64_decode($resourceClass);
+        $this->get('icap.notification.manager')->toggleFollowResource($user->getId(), $resourceId, $resourceClass);
+
+        return new JsonResponse(null);
     }
 
     /**

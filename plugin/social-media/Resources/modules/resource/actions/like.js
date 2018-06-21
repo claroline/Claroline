@@ -15,13 +15,10 @@ const action = (resourceNodes) => ({ // todo collection
     value: get(resourceNodes[0], 'social.likes') || 0
   },
   request: {
-    url: ['claro_resource_action', {
-      resourceType: resourceNodes[0].meta.type,
-      action: 'like',
-      id: resourceNodes[0].id
-    }],
+    url: ['icap_socialmedia_like', {}],
     request: {
-      method: 'PUT'
+      method: 'POST',
+      body: JSON.stringify({resourceId: resourceNodes[0].id})
     }
   }
 })

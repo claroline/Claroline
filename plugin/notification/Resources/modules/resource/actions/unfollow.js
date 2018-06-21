@@ -10,11 +10,7 @@ const action = (resourceNodes) => ({
   label: trans('unfollow', {}, 'actions'),
   displayed: isAuthenticated() && -1 !== resourceNodes.findIndex(node => !!get(node, 'notifications.enabled')),
   request: {
-    url: ['claro_resource_action', {  // todo collection
-      resourceType: resourceNodes[0].meta.type,
-      action: 'unfollow',
-      id: resourceNodes[0].id
-    }],
+    url: ['icap_notification_follower_resources_toggle', {ids: resourceNodes.map(node => node.id)}],
     request: {
       method: 'PUT'
     }
