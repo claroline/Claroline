@@ -10,7 +10,7 @@ class ContributionRepository extends EntityRepository
     /**
      * @param Section $section
      *
-     * @return array $contributions
+     * @return \Doctrine\ORM\Query
      */
     public function getSectionHistoryQuery(Section $section)
     {
@@ -41,18 +41,18 @@ class ContributionRepository extends EntityRepository
 
     /**
      * @param Section $section
-     * @param array   $ids
+     * @param array   $uuids
      *
      * @return array $contributions
      */
-    public function findyBySectionAndIds(Section $section, $ids)
+    public function findyBySectionAndUuids(Section $section, $uuids)
     {
         $queryBuilder = $this->createQueryBuilder('contribution');
         $queryBuilder
             ->orderBy('contribution.creationDate', 'ASC')
             ->andWhere('contribution.section = :section')
             ->setParameter('section', $section)
-            ->andWhere($queryBuilder->expr()->in('contribution.id', $ids));
+            ->andWhere($queryBuilder->expr()->in('contribution.uuid', $uuids));
 
         return $queryBuilder->getQuery()->getResult();
     }

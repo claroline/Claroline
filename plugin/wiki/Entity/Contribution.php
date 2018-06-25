@@ -2,10 +2,11 @@
 
 namespace Icap\WikiBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Icap\NotificationBundle\Entity\UserPickerContent;
 
 /**
@@ -16,6 +17,8 @@ use Icap\NotificationBundle\Entity\UserPickerContent;
  */
 class Contribution
 {
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -57,6 +60,11 @@ class Contribution
 
     protected $userPicker = null;
 
+    public function __construct()
+    {
+        $this->refreshUuid();
+    }
+
     /**
      * Get id.
      *
@@ -77,10 +85,14 @@ class Contribution
 
     /**
      * @param mixed $title
+     *
+     * @return $this
      */
     public function setTitle($title)
     {
-        return $this->title = $title;
+        $this->title = $title;
+
+        return $this;
     }
 
     /**
@@ -102,10 +114,14 @@ class Contribution
 
     /**
      * @param mixed $text
+     *
+     * @return $this
      */
     public function setText($text)
     {
-        return $this->text = $text;
+        $this->text = $text;
+
+        return $this;
     }
 
     /**
@@ -121,11 +137,15 @@ class Contribution
     /**
      * Returns the resource creation date.
      *
-     * @return \DateTime
+     * @param $creationDate
+     *
+     * @return $this
      */
     public function setCreationDate($creationDate)
     {
-        return $this->creationDate = $creationDate;
+        $this->creationDate = $creationDate;
+
+        return $this;
     }
 
     /**
@@ -157,9 +177,9 @@ class Contribution
      *
      * @param \Icap\WikiBundle\Entity\Section $section
      *
-     * @return contribution
+     * @return $this
      */
-    public function setSection(\Icap\WikiBundle\Entity\Section $section)
+    public function setSection(Section $section)
     {
         $this->section = $section;
 
@@ -201,7 +221,7 @@ class Contribution
      */
     public function createUserPicker(LifecycleEventArgs $event)
     {
-        if ($this->getText() != null) {
+        if (null !== $this->getText()) {
             $userPicker = new UserPickerContent($this->getText());
             $this->setUserPicker($userPicker);
             $this->setText($userPicker->getFinalText());

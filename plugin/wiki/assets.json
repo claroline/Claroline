@@ -1,7 +1,14 @@
 {
   "webpack": {
     "entry": {
-      "list": "wiki/app"
+      "resource": "resources/wiki/bootstrap"
+    }
+  },
+
+  "styles": {
+    "entry": {
+      "wiki-resource": "resources/wiki/index.less",
+      "wiki-resource-pdf": "resources/wiki/pdf.less"
     }
   }
 }

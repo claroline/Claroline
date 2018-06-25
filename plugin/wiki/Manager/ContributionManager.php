@@ -8,6 +8,7 @@ use Icap\HtmlDiff\HtmlDiff;
 use Icap\WikiBundle\Entity\Contribution;
 use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Repository\ContributionRepository;
+use Icap\WikiBundle\Serializer\ContributionSerializer;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -16,24 +17,33 @@ use JMS\DiExtraBundle\Annotation as DI;
 class ContributionManager
 {
     /** @var ObjectManager */
-    protected $om;
+    private $om;
 
-    /** @var \Icap\WikiBundle\Repository\ContributionRepository */
-    protected $contributionRepository;
+    /** @var ContributionRepository */
+    private $contributionRepository;
+
+    /** @var ContributionSerializer */
+    private $contributionSerializer;
 
     /**
      * @DI\InjectParams({
-     *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
-     *     "contributionRepository" = @DI\Inject("icap.wiki.contribution_repository")
+     *    "om"                      = @DI\Inject("claroline.persistence.object_manager"),
+     *    "contributionRepository"  = @DI\Inject("icap.wiki.contribution_repository"),
+     *    "contributionSerializer"  = @DI\Inject("claroline.serializer.wiki.section.contribution")
      * })
      *
      * @param ObjectManager          $om
      * @param ContributionRepository $contributionRepository
+     * @param ContributionSerializer $contributionSerializer
      */
-    public function __construct(ObjectManager $om, ContributionRepository $contributionRepository)
-    {
+    public function __construct(
+        ObjectManager $om,
+        ContributionRepository $contributionRepository,
+        ContributionSerializer $contributionSerializer
+    ) {
         $this->om = $om;
         $this->contributionRepository = $contributionRepository;
+        $this->contributionSerializer = $contributionSerializer;
     }
 
     /**
@@ -44,15 +54,30 @@ class ContributionManager
         return $this->contributionRepository;
     }
 
+    public function serializeContribution(Contribution $contribution)
+    {
+        return $this->contributionSerializer->serialize($contribution);
+    }
+
+    public function serializeContributions($contributions)
+    {
+        $serialized = [];
+        foreach ($contributions as $contribution) {
+            $serialized[] = $this->serializeContribution($contribution);
+        }
+
+        return $serialized;
+    }
+
     /**
      * @param Section $section
-     * @param array   $ids
+     * @param array   $uuids
      *
      * @return array $contributions
      */
-    public function compareContributions(Section $section, $ids)
+    public function compareContributions(Section $section, $uuids)
     {
-        $contributions = $this->contributionRepository->findyBySectionAndIds($section, $ids);
+        $contributions = $this->contributionRepository->findyBySectionAndUuids($section, $uuids);
         $titleDiff = new HtmlDiff($contributions[0]->getTitle(), $contributions[1]->getTitle(), false);
         $textDiff = new HtmlDiff($contributions[0]->getText(), $contributions[1]->getText(), true);
         $contribution = new Contribution();
@@ -60,19 +85,10 @@ class ContributionManager
         $contribution->setTitle($titleDiff->outputDiff()->toString());
         $contribution->setContributor($contributions[1]->getContributor());
         $contribution->setCreationDate($contributions[1]->getCreationDate());
+        $contribution->refreshUuid();
         $contributions[1] = $contribution;
 
         return $contributions;
-    }
-
-    public function getContributions(Section $section)
-    {
-        return $this->contributionRepository->findAllForSection($section);
-    }
-
-    public function getContribution(Contribution $contribution)
-    {
-        return $this->contributionRepository->findById($contribution->getId());
     }
 
     /**

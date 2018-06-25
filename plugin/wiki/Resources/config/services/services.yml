@@ -3,7 +3,6 @@ parameters:
     icap.wiki.section_repository.class:  Icap\WikiBundle\Repository\SectionRepository
     icap.wiki.contribution.class:            Icap\WikiBundle\Entity\Contribution
     icap.wiki.contribution_repository.class: Icap\WikiBundle\Repository\ContributionRepository
-    icap.wiki.common.functions.class : Icap\WikiBundle\Controller\CommonFunctions
 
 services:
     icap.wiki.section_repository:

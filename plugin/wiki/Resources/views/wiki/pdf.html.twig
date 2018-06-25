@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{ _resource.resourceNode.name ~ '.pdf' }}</title>
+    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-wiki-wiki-resource-pdf.css') }}" />
+</head>
+<body>
+    <div class="page-header">
+        <h1>{{ _resource.resourceNode.name }}</h1>
+    </div>
+    {% if tree is not empty and tree.activeContribution.text is not empty%}
+        <div>
+            {{ tree.activeContribution.text|raw }}
+        </div>
+    {% endif %}
+
+    {% if tree is not empty and tree.children is not empty %}
+        <div class="pdf-contents">
+            <div class="pdf-contents-inner well">
+                <div class="pdf-contents-title">
+                    {{ 'wiki_contents'|trans({},'icap_wiki') }}
+                </div>
+                {% include "IcapWikiBundle:wiki:pdf_contents.html.twig" with {'sections' : tree.children, 'isAdmin' : isAdmin, 'delimeter' : '.', 'rootId' : tree.id } %}
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="wiki-sections">
+            {% include "IcapWikiBundle:wiki:pdf_sections.html.twig" with {'sections' : tree.children, 'wikiId' : _resource.id, 'isAdmin' : isAdmin, 'wikiMode' : _resource.mode, 'user' : user } %}
+        </div>
+    {% endif %}
+</body>
+</html>

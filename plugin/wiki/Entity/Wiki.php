@@ -2,6 +2,7 @@
 
 namespace Icap\WikiBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,6 +14,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Wiki extends AbstractResource
 {
+    const OPEN_MODE = 0;
+    const MODERATE_MODE = 1;
+    const READ_ONLY_MODE = 2;
+
+    use UuidTrait;
+
     /**
      * @ORM\OneToOne(targetEntity="Icap\WikiBundle\Entity\Section", cascade={"all"})
      * @ORM\JoinColumn(name="root_id", referencedColumnName="id", onDelete="CASCADE")
@@ -34,15 +41,30 @@ class Wiki extends AbstractResource
      */
     protected $displaySectionNumbers = false;
 
+    /**
+     * @ORM\Column(type="boolean", name="display_contents", nullable=false, options={"default": true})
+     * Display or hide the section numbers in the wiki body
+     */
+    protected $displayContents = true;
+
     //Temporary variable used only by onCopy method of WikiListener
     private $wikiCreator;
 
+    public function __construct()
+    {
+        $this->refreshUuid();
+    }
+
     /**
      * @param mixed $root
+     *
+     * @return $this
      */
     public function setRoot($root)
     {
         $this->root = $root;
+
+        return $this;
     }
 
     /**
@@ -58,15 +80,19 @@ class Wiki extends AbstractResource
      */
     public function getMode()
     {
-        return ($this->mode !== null) ? $this->mode : 0;
+        return (null !== $this->mode) ? $this->mode : self::OPEN_MODE;
     }
 
     /**
      * @param int $mode
+     *
+     * @return $this
      */
     public function setMode($mode)
     {
-        return $this->mode = $mode;
+        $this->mode = $mode;
+
+        return $this;
     }
 
     /**
@@ -79,10 +105,34 @@ class Wiki extends AbstractResource
 
     /**
      * @param bool $displaySectionNumbers
+     *
+     * @return $this
      */
     public function setDisplaySectionNumbers($displaySectionNumbers)
     {
-        return $this->displaySectionNumbers = $displaySectionNumbers;
+        $this->displaySectionNumbers = $displaySectionNumbers;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDisplayContents()
+    {
+        return $this->displayContents;
+    }
+
+    /**
+     * @param mixed $displayContents
+     *
+     * @return $this
+     */
+    public function setDisplayContents($displayContents)
+    {
+        $this->displayContents = $displayContents;
+
+        return $this;
     }
 
     public function getPathArray()
@@ -104,7 +154,9 @@ class Wiki extends AbstractResource
 
     public function setWikiCreator($creator)
     {
-        return $this->wikiCreator = $creator;
+        $this->wikiCreator = $creator;
+
+        return $this;
     }
 
     public function getWikiCreator()
@@ -117,13 +169,13 @@ class Wiki extends AbstractResource
      */
     public function createRoot(LifecycleEventArgs $event)
     {
-        if ($this->getRoot() === null) {
+        if (null === $this->getRoot()) {
             $em = $event->getEntityManager();
             $rootSection = $this->getRoot();
-            if ($rootSection === null) {
+            if (null === $rootSection) {
                 $rootSection = new Section();
                 $rootSection->setWiki($this);
-                if ($this->getResourceNode() !== null) {
+                if (null !== $this->getResourceNode()) {
                     $rootSection->setAuthor($this->getResourceNode()->getCreator());
                 } else {
                     $rootSection->setAuthor($this->getWikiCreator());

@@ -1,0 +1,136 @@
+// Plugin vars
+@import "../../variables";
+
+.wiki-border(@property) {
+  @{property}: 1px solid @gray-lighter;
+}
+
+/* Wiki overview contents */
+.wiki-overview {
+  .wiki-contents-container {
+    .wiki-contents {
+      .wiki-border(border);
+      display: inline-block;
+      padding: @padding-base-vertical @padding-base-horizontal;
+      .wiki-contents-title {
+        font-weight: 700;
+      }
+      .ordering {
+        display: inline-block;
+        margin-right: 5px;
+      }
+      .title {
+        display: inline-block;
+        color: @link-color;
+        &:hover {
+          color: @link-hover-color;
+        }
+      }
+      .wiki-contents-section {
+        .wiki-contents-section {
+          margin-left: 1em;
+        }
+      }
+    }
+  }
+}
+/* End: Wiki overview contents */
+
+/* Wiki overview section */
+.wiki-overview {
+  .wiki-section {
+    margin: 30px 0;
+
+    &:not(.wiki-section-root) .wiki-section-title {
+      .wiki-border(border-bottom);
+      display: flex;
+      flex-flow: row wrap;
+      line-height: 30px;
+      padding-left: 10px;
+      span {
+        flex: 50;
+      }
+      .wiki-section-actions {
+        .wiki-border(border-left);
+        flex: auto;
+        font-size: @font-size-base;
+        .btn.btn-link {
+          padding: 2px;
+        }
+      }
+      .ordering, .title {
+        display: inline-block;
+      }
+      .ordering {
+        margin-right: 10px;
+      }
+    }
+
+    &.wiki-section-invisible {
+      .wiki-section-title {
+        background-color: @state-danger-bg;
+        .wiki-section-invisible-text {
+          display: inline-block;
+          font-size: 0.7em;
+          font-style: italic;
+          color: @gray-light;
+        }
+      }
+      & > .wiki-section-content > .wiki-section-title .wiki-section-title-text {
+          flex: auto;
+      }
+    }
+  }
+}
+/* End: Wiki overview section */
+
+/* Wiki section form */
+.wiki-section-form {
+  .wiki-section-form-buttons {
+    .btn {
+      margin-left: 20px;
+    }
+  }
+}
+/* End: Wiki overview section */
+
+/* Revision comparison */
+.wiki-version-compare {
+  .diff-html-changed, .diff-html-added, .diff-html-removed {
+    padding: 2px;
+    margin: 2px;
+    display: inline-block;
+  }
+
+  .diff-html-changed {
+    background-color: @state-warning-bg;
+    border: 1px solid @state-warning-border;
+  }
+
+  .diff-html-added {
+    background-color: @state-success-bg;
+    border: 1px solid @state-success-border;
+    text-decoration: none;
+  }
+  .diff-html-removed {
+    background-color: @state-danger-bg;
+    border: 1px solid @state-danger-border;
+  }
+
+  .diff-html-simple {
+    padding:0;
+    margin: 0 5px -2px 0;
+    display: inline-block;
+    min-width: 15px;
+    min-height: 15px;
+    line-height: 15px;
+    content: '\00a0'
+  }
+  .diff-html-legend {
+    background-color: @well-bg;
+    .wiki-border(border);
+    margin-top: 15px;
+    padding: 10px;
+  }
+}
+/* End: Revision comparison */

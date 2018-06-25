@@ -1,12 +1,12 @@
-icap_wiki:
-    resource: "@IcapWikiBundle/Controller/"
+# Resource
+icap_wiki_resource:
+    resource: "@IcapWikiBundle/Controller/Resource/WikiController.php"
     type:     annotation
-    prefix:   /
 
+# JSON API
 icap_wiki_api:
-    resource: "@IcapWikiBundle/Controller/API/ApiController.php"
-    type: rest
-    prefix: api
-    defaults: {_format: json}
+    resource: "@IcapWikiBundle/Controller/API/"
+    prefix: apiv2
+    type: api
     options:
         expose: true

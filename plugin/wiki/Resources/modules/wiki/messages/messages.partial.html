@@ -1,9 +1,0 @@
-<div class="alert-messages">
-    <uib-alert
-        data-ng-repeat="message in vm.messages"
-        type="{{ message.type }}"
-        close="vm.closeMessage($index)"
-        dismiss-on-timeout="{{ vm.dismissTimeOut }}">
-        {{message.msg}}
-    </uib-alert>
-</div>
