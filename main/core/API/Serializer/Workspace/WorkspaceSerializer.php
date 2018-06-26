@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -28,6 +29,9 @@ class WorkspaceSerializer
 
     /** @var AuthorizationCheckerInterface */
     private $authorization;
+
+    /** @var AuthorizationCheckerInterface */
+    private $tokenStorage;
 
     /** @var ObjectManager */
     private $om;
@@ -53,7 +57,8 @@ class WorkspaceSerializer
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
      *     "serializer"       = @DI\Inject("claroline.api.serializer"),
      *     "utilities"        = @DI\Inject("claroline.utilities.misc"),
-     *     "fileUt"           = @DI\Inject("claroline.utilities.file")
+     *     "fileUt"           = @DI\Inject("claroline.utilities.file"),
+     *     "tokenStorage"     = @DI\Inject("security.token_storage")
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
@@ -62,15 +67,18 @@ class WorkspaceSerializer
      * @param SerializerProvider            $serializer
      * @param ClaroUtilities                $utilities
      * @param FileUtilities                 $fileUt
+     * @param TokenStorageInterface         $tokenStorage
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
+        TokenStorageInterface $tokenStorage,
         ObjectManager $om,
         WorkspaceManager $workspaceManager,
         SerializerProvider $serializer,
         ClaroUtilities $utilities,
-        FileUtilities $fileUt)
-    {
+        FileUtilities $fileUt
+    ) {
+        $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
         $this->om = $om;
         $this->workspaceManager = $workspaceManager;
@@ -162,6 +170,8 @@ class WorkspaceSerializer
     private function getMeta(Workspace $workspace, array $options)
     {
         $data = [
+            'lang' => $workspace->getLang(),
+            'forceLang' => (bool) $workspace->getLang(),
             'slug' => $workspace->getSlug(),
             'model' => $workspace->isModel(),
             'personal' => $workspace->isPersonal(),
@@ -256,6 +266,7 @@ class WorkspaceSerializer
     {
         return [
             'validation' => $workspace->getRegistrationValidation(),
+            'waitingForRegistration' => $workspace->getSelfRegistration() ? $this->waitingForRegistration($workspace) : false,
             'selfRegistration' => $workspace->getSelfRegistration(),
             'selfUnregistration' => $workspace->getSelfUnregistration(),
             'defaultRole' => $workspace->getDefaultRole() ?
@@ -316,6 +327,7 @@ class WorkspaceSerializer
 
         $this->sipe('meta.model', 'setIsModel', $data, $workspace);
         $this->sipe('meta.description', 'setDescription', $data, $workspace);
+        $this->sipe('meta.lang', 'setLang', $data, $workspace);
 
         $this->sipe('notifications.enabled', 'setNotifications', $data, $workspace);
 
@@ -354,5 +366,17 @@ class WorkspaceSerializer
         }
 
         return $workspace;
+    }
+
+    private function waitingForRegistration(Workspace $workspace)
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if ('anon.' === $user) {
+            return false;
+        }
+
+        return (bool) $this->om->getRepository('Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue')
+          ->findBy(['workspace' => $workspace, 'user' => $user]);
     }
 }

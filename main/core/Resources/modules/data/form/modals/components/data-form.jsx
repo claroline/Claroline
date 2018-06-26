@@ -11,7 +11,7 @@ import {DataFormSection as DataFormSectionTypes} from '#/main/core/data/form/pro
 import {Form} from '#/main/core/data/form/components/form.jsx'
 import {cleanErrors} from '#/main/core/data/form/utils'
 
-//const MODAL_DATA_FORM = 'MODAL_DATA_FORM'
+const MODAL_DATA_FORM = 'MODAL_DATA_FORM'
 
 class DataFormModal extends Component {
   constructor(props) {
@@ -29,7 +29,7 @@ class DataFormModal extends Component {
     this.updateProp = this.updateProp.bind(this)
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.data !== this.props.data) {
       this.setState({
         data: cloneDeep(nextProps.data)
@@ -122,8 +122,6 @@ DataFormModal.defaultProps = {
   data: {},
   meta: false
 }
-
-const MODAL_DATA_FORM = 'MODAL_DATA_FORM'
 
 export {
   MODAL_DATA_FORM,

@@ -23,7 +23,6 @@ use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\TransferManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -38,7 +37,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class WorkspaceParametersController extends Controller
 {
     private $workspaceManager;
-    private $workspaceTagManager;
     private $tokenStorage;
     private $authorization;
     private $eventDispatcher;
@@ -54,7 +52,6 @@ class WorkspaceParametersController extends Controller
     /**
      * @DI\InjectParams({
      *     "workspaceManager"    = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "workspaceTagManager" = @DI\Inject("claroline.manager.workspace_tag_manager"),
      *     "authorization"       = @DI\Inject("security.authorization_checker"),
      *     "tokenStorage"        = @DI\Inject("security.token_storage"),
      *     "eventDispatcher"     = @DI\Inject("claroline.event.event_dispatcher"),
@@ -70,7 +67,6 @@ class WorkspaceParametersController extends Controller
      */
     public function __construct(
         WorkspaceManager $workspaceManager,
-        WorkspaceTagManager $workspaceTagManager,
         ResourceManager $resourceManager,
         TransferManager $transferManager,
         TokenStorageInterface $tokenStorage,
@@ -85,7 +81,7 @@ class WorkspaceParametersController extends Controller
         ToolManager $toolManager
     ) {
         $this->workspaceManager = $workspaceManager;
-        $this->workspaceTagManager = $workspaceTagManager;
+
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;

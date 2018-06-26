@@ -61,6 +61,22 @@ const WorkspaceFormComponent = (props) =>
             label: trans('personal'),
             type: 'boolean',
             disabled: true
+          }, {
+            name: 'meta.forceLang',
+            type: 'boolean',
+            label: trans('default_language'),
+            onChange: activated => {
+              if (!activated) {
+                // reset lang field
+                props.updateProp('meta.lang', null)
+              }
+            },
+            linked: [{
+              name: 'meta.lang',
+              label: trans('lang'),
+              type: 'locale',
+              displayed: (workspace) => workspace.meta.forceLang
+            }]
           }
         ]
       }, {

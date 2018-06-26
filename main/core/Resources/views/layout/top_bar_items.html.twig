@@ -81,7 +81,9 @@
                 {% endfor %}
                 <li role="presentation" class="divider"></li>
             {% endif %}
-            {{ topbar.item({'name':'my_workspaces', 'href':path('claro_workspace_by_user'), 'icon':'book'}) }}
+            {% if not has_role('ROLE_ANONYMOUS') %}
+              {{ topbar.item({'name':'my_workspaces', 'href':path('claro_workspace_by_user'), 'icon':'book'}) }}
+            {% endif %}
             {{ topbar.item({'name':'find_workspaces', 'href':path('claro_workspace_list'), 'icon':'book'}) }}
             {% if is_granted('ROLE_WS_CREATOR') %}
                 <li role="presentation" class="divider"></li>

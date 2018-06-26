@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Command\DatabaseIntegrity;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class WorkspaceToolIntegrityCheckerCommand extends ContainerAwareCommand
@@ -20,25 +21,31 @@ class WorkspaceToolIntegrityCheckerCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this->setName('claroline:workspace_tool:check')
-            ->setDescription('Checks the workspace tools integrity of the platform.');
+            ->setDescription('Checks the workspace tools integrity of the platform.')
+            ->addOption('all', 'a', InputOption::VALUE_NONE, 'All tools and workspace');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $query = $this->getContainer()->get('doctrine.orm.entity_manager')->createQuery(
-          '
-            SELECT w from Claroline\CoreBundle\Entity\Workspace\Workspace w
-            LEFT JOIN w.orderedTools ot
-            WHERE not exists (
-              SELECT ot2
-              FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot2
-              JOIN ot2.workspace w2
-              WHERE w2.id = w.id
-            )
-          '
-        );
+        if ($input->getOption('all')) {
+            $workspaces = $this->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Workspace\Workspace')
+              ->findBy(['personal' => false]);
+        } else {
+            $query = $this->getContainer()->get('doctrine.orm.entity_manager')->createQuery(
+              '
+                SELECT w from Claroline\CoreBundle\Entity\Workspace\Workspace w
+                LEFT JOIN w.orderedTools ot
+                WHERE not exists (
+                  SELECT ot2
+                  FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot2
+                  JOIN ot2.workspace w2
+                  WHERE w2.id = w.id
+                )
+              '
+            );
 
-        $workspaces = $query->getResult();
+            $workspaces = $query->getResult();
+        }
 
         foreach ($workspaces as $workspace) {
             $output->writeln('Restoring tools for '.$workspace->getName().'...');

@@ -5,6 +5,12 @@ import {connect} from 'react-redux'
 import {trans, transChoice} from '#/main/core/translation'
 
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
+import {MODAL_DATA_LIST} from '#/main/core/data/list/modals'
+import {MODAL_DATA_FORM} from '#/main/core/data/form/modals'
+
+import {UserList} from '#/main/core/administration/user/user/components/user-list.jsx'
+import {GroupList} from '#/main/core/administration/user/group/components/group-list.jsx'
+
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 
 import {DataListContainer} from '#/main/core/data/list/containers/data-list'
@@ -18,7 +24,7 @@ const WorkspacesList = props =>
   <DataListContainer
     name="workspaces.list"
     fetch={{
-      url: ['apiv2_workspace_list'],
+      url: ['apiv2_administrated_list'],
       autoload: true
     }}
     definition={WorkspaceList.definition}
@@ -40,6 +46,16 @@ const WorkspacesList = props =>
         icon: 'fa fa-fw fa-clone',
         label: trans('duplicate_model'),
         callback: () => props.copyWorkspaces(rows, true)
+      }, {
+        type: 'callback',
+        icon: 'fa fa-fw fa-user',
+        label: trans('register_users'),
+        callback: () => props.registerUsers(rows)
+      }, {
+        type: 'callback',
+        icon: 'fa fa-fw fa-users',
+        label: trans('register_groups'),
+        callback: () => props.registerGroups(rows)
       },
       // TODO / FIXME : Uses component delete option.
       // Not possible for the moment because it is not possible to display an alert message if the workspace contains not deletable resources.
@@ -58,7 +74,9 @@ const WorkspacesList = props =>
 
 WorkspacesList.propTypes = {
   copyWorkspaces: T.func.isRequired,
-  deleteWorkspaces: T.func.isRequired
+  deleteWorkspaces: T.func.isRequired,
+  registerUsers: T.func.isRequired,
+  registerGroups: T.func.isRequired
 }
 
 const Workspaces = connect(
@@ -83,6 +101,96 @@ const Workspaces = connect(
           question: transChoice('objects_delete_question', workspaces.length, {'count': workspaces.length}, 'platform'),
           dangerous: true,
           handleConfirm: () => dispatch(actions.deleteWorkspaces(workspaces))
+        })
+      )
+    },
+
+    registerUsers(workspaces) {
+      dispatch(
+        modalActions.showModal(MODAL_DATA_LIST, {
+          icon: 'fa fa-fw fa-user',
+          title: trans('register'),
+          confirmText: trans('register'),
+          name: 'selected.user',
+          definition: UserList.definition,
+          card: UserList.card,
+          fetch: {
+            url: ['apiv2_user_list_managed_organization'],
+            autoload: true
+          },
+          handleSelect: (users) => {
+            dispatch(modalActions.showModal(MODAL_DATA_FORM, {
+              title: trans('register'),
+              save: role => {
+                dispatch(actions.registerUsers(role.role, workspaces, users))
+              },
+              sections: [
+                {
+                  title: trans('roles'),
+                  primary: true,
+                  fields: [{
+                    name: 'role',
+                    type: 'choice',
+                    label: trans('role'),
+                    required: true,
+                    options: {
+                      multiple: false,
+                      condensed: false,
+                      choices: {
+                        'collaborator': trans('collaborator'),
+                        'manager': trans('manager')
+                      }
+                    }
+                  }]
+                }
+              ]
+            }))
+          }
+        })
+      )
+    },
+
+    registerGroups(workspaces) {
+      dispatch(
+        modalActions.showModal(MODAL_DATA_LIST, {
+          icon: 'fa fa-fw fa-users',
+          title: trans('register'),
+          confirmText: trans('register'),
+          name: 'selected.group',
+          definition: GroupList.definition,
+          card: GroupList.card,
+          fetch: {
+            url: ['apiv2_group_list_managed'],
+            autoload: true
+          },
+          handleSelect: (groups) => {
+            dispatch(modalActions.showModal(MODAL_DATA_FORM, {
+              title: trans('register'),
+              save: role => {
+                dispatch(actions.registerGroups(role.role, workspaces, groups))
+              },
+              sections: [
+                {
+                  title: trans('roles'),
+                  primary: true,
+                  fields: [{
+                    name: 'role',
+                    type: 'choice',
+                    label: trans('role'),
+                    required: true,
+                    options: {
+                      multiple: false,
+                      condensed: false,
+                      choices: {
+                        'collaborator': trans('collaborator'),
+                        'manager': trans('manager')
+                      }
+                    }
+                  }]
+                }
+              ]
+            }))
+          }
         })
       )
     }

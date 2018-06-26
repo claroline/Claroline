@@ -11,13 +11,12 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Event\Log\LogRoleUnsubscribeEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
@@ -25,7 +24,6 @@ use Claroline\CoreBundle\Form\ImportWorkspaceType;
 use Claroline\CoreBundle\Library\Logger\FileLogger;
 use Claroline\CoreBundle\Library\Security\TokenUpdater;
 use Claroline\CoreBundle\Library\Security\Utilities;
-use Claroline\CoreBundle\Manager\Exception\LastManagerDeleteException;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -33,7 +31,6 @@ use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WidgetManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Claroline\CoreBundle\Manager\WorkspaceUserQueueManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -52,7 +49,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Role\SwitchUserRole;
@@ -75,7 +71,6 @@ class WorkspaceController extends Controller
     private $roleManager;
     private $router;
     private $session;
-    private $tagManager;
     private $templateArchive;
     private $templating;
     private $tokenStorage;
@@ -87,6 +82,8 @@ class WorkspaceController extends Controller
     private $widgetManager;
     private $workspaceManager;
     private $workspaceUserQueueManager;
+    /** @var ParametersSerializer */
+    private $parametersSerializer;
 
     /**
      * @DI\InjectParams({
@@ -99,7 +96,6 @@ class WorkspaceController extends Controller
      *     "roleManager"               = @DI\Inject("claroline.manager.role_manager"),
      *     "router"                    = @DI\Inject("router"),
      *     "session"                   = @DI\Inject("session"),
-     *     "tagManager"                = @DI\Inject("claroline.manager.workspace_tag_manager"),
      *     "templateArchive"           = @DI\Inject("%claroline.param.default_template%"),
      *     "templating"                = @DI\Inject("templating"),
      *     "tokenStorage"              = @DI\Inject("security.token_storage"),
@@ -110,7 +106,8 @@ class WorkspaceController extends Controller
      *     "utils"                     = @DI\Inject("claroline.security.utilities"),
      *     "widgetManager"             = @DI\Inject("claroline.manager.widget_manager"),
      *     "workspaceManager"          = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "workspaceUserQueueManager" = @DI\Inject("claroline.manager.workspace_user_queue_manager")
+     *     "workspaceUserQueueManager" = @DI\Inject("claroline.manager.workspace_user_queue_manager"),
+     *     "parametersSerializer" = @DI\Inject("claroline.serializer.parameters"),
      * })
      */
     public function __construct(
@@ -123,7 +120,6 @@ class WorkspaceController extends Controller
         RoleManager $roleManager,
         UrlGeneratorInterface $router,
         SessionInterface $session,
-        WorkspaceTagManager $tagManager,
         $templateArchive,
         TwigEngine $templating,
         TokenStorageInterface $tokenStorage,
@@ -134,7 +130,8 @@ class WorkspaceController extends Controller
         Utilities $utils,
         WidgetManager $widgetManager,
         WorkspaceManager $workspaceManager,
-        WorkspaceUserQueueManager $workspaceUserQueueManager
+        WorkspaceUserQueueManager $workspaceUserQueueManager,
+        ParametersSerializer $parametersSerializer
     ) {
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
@@ -145,7 +142,6 @@ class WorkspaceController extends Controller
         $this->roleManager = $roleManager;
         $this->router = $router;
         $this->session = $session;
-        $this->tagManager = $tagManager;
         $this->templateArchive = $templateArchive;
         $this->templating = $templating;
         $this->tokenStorage = $tokenStorage;
@@ -157,63 +153,31 @@ class WorkspaceController extends Controller
         $this->widgetManager = $widgetManager;
         $this->workspaceManager = $workspaceManager;
         $this->workspaceUserQueueManager = $workspaceUserQueueManager;
+        $this->parametersSerializer = $parametersSerializer;
     }
 
     /**
      * @EXT\Route(
-     *     "/search/{search}",
-     *     name="claro_workspace_list",
-     *     defaults={"search"=""},
-     *     options={"expose"=true}
+     *     "/list",
+     *     name="claro_workspace_list"
      * )
-     * @EXT\Template()
-     *
-     * Renders the workspace list page with its claroline layout.
-     *
-     * @param $search
-     *
-     * @return Response
+     * @EXT\Template
      */
-    public function listAction($search = '')
+    public function listAction()
     {
-        return $this->tagManager->getDatasForWorkspaceList(false, $search);
+        return ['parameters' => $this->parametersSerializer->serialize()];
     }
 
     /**
      * @EXT\Route(
-     *     "/user",
-     *     name="claro_workspace_by_user",
-     *     options={"expose"=true}
+     *     "/list/currentuser",
+     *     name="claro_workspace_by_user"
      * )
-     *
-     * @EXT\Template()
-     *
-     * Renders the registered workspace list for a user.
-     *
-     * @return Response
+     * @EXT\Template
      */
-    public function listWorkspacesByUserAction()
+    public function listByUserAction()
     {
-        $this->assertIsGranted('ROLE_USER');
-        $token = $this->tokenStorage->getToken();
-        $user = $token->getUser();
-        $roles = $this->utils->getRoles($token);
-
-        $data = $this->tagManager->getDatasForWorkspaceListByUser($user, $roles);
-        $favouriteWorkspaces = $this->workspaceManager
-            ->getFavouriteWorkspacesByUser($user);
-        $favourites = [];
-
-        foreach ($data['workspaces'] as $workspace) {
-            if (isset($favouriteWorkspaces[$workspace->getId()])) {
-                $favourites[$workspace->getId()] = $workspace;
-            }
-        }
-
-        $data['user'] = $user;
-        $data['favourites'] = $favourites;
-
-        return $data;
+        return ['parameters' => $this->parametersSerializer->serialize()];
     }
 
     /**
@@ -249,63 +213,6 @@ class WorkspaceController extends Controller
         }
 
         return $response;
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/displayable/selfregistration/search/{search}",
-     *     name="claro_list_workspaces_with_self_registration",
-     *     defaults={"search"=""},
-     *     options={"expose"=true}
-     * )
-     *
-     * @EXT\Template()
-     *
-     * Renders the displayable workspace list.
-     *
-     * @param $search
-     *
-     * @return Response
-     */
-    public function listWorkspacesWithSelfRegistrationAction($search = '')
-    {
-        $this->assertIsGranted('ROLE_USER');
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        return $this->tagManager
-            ->getDatasForSelfRegistrationWorkspaceList($user, $search);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/displayable/selfunregistration/page/{page}",
-     *     name="claro_list_workspaces_with_self_unregistration",
-     *     defaults={"page"=1},
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter("currentUser", converter="current_user")
-     *
-     * @EXT\Template()
-     *
-     * Renders the displayable workspace list with self-unregistration.
-     *
-     * @param \Claroline\CoreBundle\Entity\User $currentUser
-     * @param int                               $page
-     *
-     * @return array
-     */
-    public function listWorkspacesWithSelfUnregistrationAction(User $currentUser, $page = 1)
-    {
-        $token = $this->tokenStorage->getToken();
-        $roles = $this->utils->getRoles($token);
-
-        $workspacesPager = $this->workspaceManager
-            ->getWorkspacesWithSelfUnregistrationByRoles($roles, $page);
-
-        return [
-            'user' => $currentUser,
-            'workspaces' => $workspacesPager,
-        ];
     }
 
     /**
@@ -447,9 +354,10 @@ class WorkspaceController extends Controller
      *
      * @return Response
      */
-    public function openToolAction($toolName, Workspace $workspace)
+    public function openToolAction($toolName, Workspace $workspace, Request $request)
     {
         $this->assertIsGranted($toolName, $workspace);
+        $this->forceWorkspaceLang($workspace, $request);
         $event = $this->eventDispatcher->dispatch('open_tool_workspace_'.$toolName, new DisplayToolEvent($workspace));
         $this->eventDispatcher->dispatch('log', new LogWorkspaceToolReadEvent($workspace, $toolName));
         $this->eventDispatcher->dispatch('log', new LogWorkspaceEnterEvent($workspace));
@@ -475,9 +383,10 @@ class WorkspaceController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function openAction(Workspace $workspace)
+    public function openAction(Workspace $workspace, Request $request)
     {
         $this->assertIsGranted('OPEN', $workspace);
+        $this->forceWorkspaceLang($workspace, $request);
         $options = $workspace->getOptions();
 
         if (!is_null($options)) {
@@ -486,18 +395,19 @@ class WorkspaceController extends Controller
             if (isset($details['use_workspace_opening_resource']) &&
                 $details['use_workspace_opening_resource'] &&
                 isset($details['workspace_opening_resource']) &&
-                !empty($details['workspace_opening_resource'])) {
+                !empty($details['workspace_opening_resource'])
+            ) {
                 $resourceNode = $this->resourceManager->getById($details['workspace_opening_resource']);
 
                 if (!is_null($resourceNode)) {
                     $this->session->set('isDesktop', false);
                     $route = $this->router->generate(
-                        'claro_resource_open',
-                        [
-                            'node' => $resourceNode->getId(),
-                            'resourceType' => $resourceNode->getResourceType()->getName(),
-                        ]
-                    );
+                                'claro_resource_open',
+                                [
+                                    'node' => $resourceNode->getId(),
+                                    'resourceType' => $resourceNode->getResourceType()->getName(),
+                                ]
+                            );
 
                     return new RedirectResponse($route);
                 }
@@ -546,162 +456,6 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @todo Security context verification
-     * @EXT\Route(
-     *     "/{workspace}/add/user/{user}",
-     *     name="claro_workspace_add_user",
-     *     options={"expose"=true},
-     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
-     * )
-     *
-     * Adds a user to a workspace.
-     *
-     * @param Workspace $workspace
-     * @param User      $user
-     *
-     * @return Response
-     */
-    public function addUserAction(Workspace $workspace, User $user)
-    {
-        $this->workspaceManager->addUserAction($workspace, $user);
-
-        return new JsonResponse($this->userManager->convertUsersToArray([$user]));
-    }
-
-    /**
-     * @todo Security context verification
-     * @EXT\Route(
-     *     "/{workspace}/add/user/{user}/queue",
-     *     name="claro_workspace_add_user_queue",
-     *     options={"expose"=true},
-     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
-     * )
-     *
-     * Adds a user to a workspace.
-     *
-     * @param Workspace $workspace
-     * @param User      $user
-     *
-     * @return Response
-     */
-    public function addUserQueueAction(Workspace $workspace, User $user)
-    {
-        $this->workspaceManager->addUserQueue($workspace, $user);
-
-        return new JsonResponse(['true']);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/{workspace}/registration/queue/remove",
-     *     name="claro_workspace_remove_user_from_queue",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter("user", converter="current_user")
-     *
-     * Removes user from Workspace registration queue.
-     *
-     * @param Workspace $workspace
-     * @param User      $user
-     *
-     * @return Response
-     */
-    public function removeUserFromQueueAction(Workspace $workspace, User $user)
-    {
-        $this->workspaceUserQueueManager
-            ->removeUserFromWorkspaceQueue($workspace, $user);
-
-        return new Response('success', 204);
-    }
-
-    /** @EXT\Route(
-     *     "/list/tag/{workspaceTagId}/page/{page}",
-     *     name="claro_workspace_list_pager",
-     *     defaults={"page"=1},
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter(
-     *      "workspaceTag",
-     *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *      options={"id" = "workspaceTagId", "strictId" = true},
-     *      converter="strict_id"
-     * )
-     *
-     * @EXT\Template()
-     *
-     * Renders the workspace list associate to a tag in a pager.
-     *
-     * @param \Claroline\CoreBundle\Entity\Workspace\WorkspaceTag $workspaceTag
-     * @param int                                                 $page
-     *
-     * @return array
-     */
-    public function workspaceListByTagPagerAction(WorkspaceTag $workspaceTag, $page = 1)
-    {
-        $relations = $this->tagManager->getPagerRelationByTag($workspaceTag, $page);
-
-        return [
-            'workspaceTagId' => $workspaceTag->getId(),
-            'relations' => $relations,
-        ];
-    }
-
-    /** @EXT\Route(
-     *     "/list/self_reg/tag/{workspaceTagId}/page/{page}",
-     *     name="claro_workspace_list_with_self_reg_pager",
-     *     defaults={"page"=1},
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter(
-     *      "workspaceTag",
-     *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *      options={"id" = "workspaceTagId", "strictId" = true},
-     *      converter="strict_id"
-     * )
-     *
-     * @EXT\Template()
-     *
-     * Renders the workspace list with self-registration associate to a tag in a pager.
-     *
-     * @param \Claroline\CoreBundle\Entity\Workspace\WorkspaceTag $workspaceTag
-     * @param int                                                 $page
-     *
-     * @return array
-     */
-    public function workspaceListWithSelfRegByTagPagerAction(
-        WorkspaceTag $workspaceTag,
-        $page = 1
-    ) {
-        $relations = $this->tagManager
-            ->getPagerRelationByTagForSelfReg($workspaceTag, $page);
-
-        return [
-            'workspaceTagId' => $workspaceTag->getId(),
-            'relations' => $relations,
-        ];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/list/workspaces/page/{page}",
-     *     name="claro_all_workspaces_list_pager",
-     *     defaults={"page"=1},
-     *     options={"expose"=true}
-     * )
-     * @EXT\Template()
-     *
-     * @param int $page
-     *
-     * @return array
-     */
-    public function workspaceCompleteListPagerAction($page = 1)
-    {
-        $workspaces = $this->tagManager->getPagerAllWorkspaces($page);
-
-        return ['workspaces' => $workspaces];
-    }
-
-    /**
      * @EXT\Route(
      *     "/list/non/personal/workspaces/page/{page}/max/{max}/search/{search}",
      *     name="claro_all_non_personal_workspaces_list_pager",
@@ -727,253 +481,6 @@ class WorkspaceController extends Controller
             'max' => $max,
             'search' => $search,
         ];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/list/personal/workspaces/page/{page}/max/{max}/search/{search}",
-     *     name="claro_all_personal_workspaces_list_pager",
-     *     defaults={"page"=1,"max"=20,"seach"=""},
-     *     options={"expose"=true}
-     * )
-     * @EXT\Template()
-     *
-     * @param int $page
-     *
-     * @return array
-     */
-    public function personalWorkspacesListPagerAction(
-        $page = 1,
-        $max = 20,
-        $search = ''
-    ) {
-        $personalWs = $this->workspaceManager
-            ->getDisplayablePersonalWorkspaces($page, $max, $search);
-
-        return [
-            'personalWs' => $personalWs,
-            'max' => $max,
-            'search' => $search,
-        ];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/list/workspaces/self_reg/page/{page}",
-     *     name="claro_all_workspaces_list_with_self_reg_pager",
-     *     defaults={"page"=1},
-     *     options={"expose"=true}
-     * )
-     *
-     * @EXT\Template()
-     *
-     * Renders the workspace list with self-registration in a pager.
-     *
-     * @param int $page
-     *
-     * @return array
-     */
-    public function workspaceCompleteListWithSelfRegPagerAction($page = 1)
-    {
-        $this->assertIsGranted('ROLE_USER');
-        $workspaces = $this->tagManager->getPagerAllWorkspacesWithSelfReg(
-            $this->tokenStorage->getToken()->getUser(),
-            $page
-        );
-
-        return ['workspaces' => $workspaces];
-    }
-
-    /**
-     * @todo Security context verification
-     * @EXT\Route(
-     *     "/{workspaceId}/remove/user/{userId}",
-     *     name="claro_workspace_delete_user",
-     *     options={"expose"=true},
-     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
-     * )
-     * @EXT\Method({"DELETE", "GET"})
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true},
-     *      converter="strict_id"
-     * )
-     * @EXT\ParamConverter(
-     *      "user",
-     *      class="ClarolineCoreBundle:User",
-     *      options={"id" = "userId", "strictId" = true},
-     *      converter="strict_id"
-     * )
-     *
-     * Removes an user from a workspace.
-     *
-     * @param Workspace                         $workspace
-     * @param \Claroline\CoreBundle\Entity\User $user
-     *
-     * @return Response
-     */
-    public function removeUserAction(Workspace $workspace, User $user)
-    {
-        try {
-            $roles = $this->roleManager->getRolesByWorkspace($workspace);
-            $this->roleManager->checkWorkspaceRoleEditionIsValid([$user], $workspace, $roles);
-
-            foreach ($roles as $role) {
-                if ($user->hasRole($role->getName())) {
-                    $this->roleManager->dissociateRole($user, $role);
-                    $this->eventDispatcher->dispatch('log', new LogRoleUnsubscribeEvent($role, $user));
-                }
-            }
-            $this->tagManager->deleteAllRelationsFromWorkspaceAndUser($workspace, $user);
-
-            $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-            $this->tokenStorage->setToken($token);
-
-            return new Response('success', 204);
-        } catch (LastManagerDeleteException $e) {
-            return new Response(
-                'cannot_delete_unique_manager',
-                200,
-                ['XXX-Claroline-delete-last-manager']
-            );
-        }
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/registration/list/tag/{workspaceTagId}/page/{page}",
-     *     name="claro_workspace_list_registration_pager",
-     *     defaults={"page"=1},
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter(
-     *      "workspaceTag",
-     *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *      options={"id" = "workspaceTagId", "strictId" = true},
-     *      converter="strict_id"
-     * )
-     *
-     * @EXT\Template()
-     *
-     * Renders the workspace list associate to a tag in a pager for registation.
-     *
-     * @param \Claroline\CoreBundle\Entity\Workspace\WorkspaceTag $workspaceTag
-     * @param int                                                 $page
-     *
-     * @return array
-     */
-    public function workspaceListByTagRegistrationPagerAction(WorkspaceTag $workspaceTag, $page = 1)
-    {
-        $relations = $this->tagManager->getPagerRelationByTag($workspaceTag, $page);
-
-        return [
-            'workspaceTagId' => $workspaceTag->getId(),
-            'relations' => $relations,
-        ];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/registration/list/workspaces/page/{page}",
-     *     name="claro_all_workspaces_list_registration_pager",
-     *     defaults={"page"=1},
-     *     options={"expose"=true}
-     * )
-     *
-     * @EXT\Template()
-     *
-     * Renders the workspace list in a pager for registration.
-     *
-     * @param int $page
-     *
-     * @return array
-     */
-    public function workspaceCompleteListRegistrationPagerAction($page = 1)
-    {
-        $workspaces = $this->tagManager->getPagerAllWorkspaces($page);
-
-        return ['workspaces' => $workspaces];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/registration/list/non/personal/workspaces/page/{page}/max/{max}/search/{search}",
-     *     name="claro_all_non_personal_workspaces_list_registration_pager",
-     *     defaults={"page"=1,"max"=20,"seach"=""},
-     *     options={"expose"=true}
-     * )
-     * @EXT\Template()
-     *
-     * @param int $page
-     *
-     * @return array
-     */
-    public function nonPersonalWorkspacesListRegistrationPagerAction(
-        $page = 1,
-        $max = 20,
-        $search = ''
-    ) {
-        $nonPersonalWs = $this->workspaceManager
-            ->getDisplayableNonPersonalWorkspaces($page, $max, $search);
-
-        return [
-            'nonPersonalWs' => $nonPersonalWs,
-            'max' => $max,
-            'search' => $search,
-        ];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/registration/list/personal/workspaces/page/{page}/max/{max}/search/{search}",
-     *     name="claro_all_personal_workspaces_list_registration_pager",
-     *     defaults={"page"=1,"max"=20,"seach"=""},
-     *     options={"expose"=true}
-     * )
-     * @EXT\Template()
-     *
-     * @param int $page
-     *
-     * @return array
-     */
-    public function personalWorkspacesListRegistrationPagerAction(
-        $page = 1,
-        $max = 20,
-        $search = ''
-    ) {
-        $personalWs = $this->workspaceManager
-            ->getDisplayablePersonalWorkspaces($page, $max, $search);
-
-        return [
-            'personalWs' => $personalWs,
-            'max' => $max,
-            'search' => $search,
-        ];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/registration/list/workspaces/search/{search}/page/{page}",
-     *     name="claro_workspaces_list_registration_pager_search",
-     *     defaults={"page"=1},
-     *     options={"expose"=true}
-     * )
-     *
-     * @EXT\Template()
-     *
-     * Renders the workspace list in a pager for registration.
-     *
-     * @param string $search
-     * @param int    $page
-     *
-     * @return array
-     */
-    public function workspaceSearchedListRegistrationPagerAction($search, $page = 1)
-    {
-        $pager = $this->workspaceManager->getDisplayableWorkspacesBySearchPager($search, $page);
-
-        return ['workspaces' => $pager, 'search' => $search];
     }
 
     /**
@@ -1337,6 +844,15 @@ class WorkspaceController extends Controller
             if ($object instanceof Workspace) {
                 $this->throwWorkspaceDeniedException($object);
             }
+        }
+    }
+
+    private function forceWorkspaceLang(Workspace $workspace, Request $request)
+    {
+        if ($workspace->getLang()) {
+            $request->setLocale($workspace->getLang());
+            //not sure if both lines are needed
+            $this->translator->setLocale($workspace->getLang());
         }
     }
 }

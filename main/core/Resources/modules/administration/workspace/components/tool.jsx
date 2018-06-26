@@ -4,6 +4,7 @@ import {trans} from '#/main/core/translation'
 import {TabbedPageContainer} from '#/main/core/layout/tabs'
 
 import {WorkspaceTab, WorkspaceTabActions} from '#/main/core/administration/workspace/workspace/components/workspace-tab.jsx'
+import {ParametersTab, ParametersTabActions} from '#/main/core/administration/workspace/parameters/components/parameters-tab.jsx'
 
 const Tool = () =>
   <TabbedPageContainer
@@ -19,6 +20,15 @@ const Tool = () =>
         path: '/workspaces',
         actions: WorkspaceTabActions,
         content: WorkspaceTab
+      }, {
+        icon: 'fa fa-cog',
+        title: trans('parameters'),
+        path: '/parameters',
+        onlyIcon: true,
+        //only for admin
+        displayed: true,
+        actions: ParametersTabActions,
+        content: ParametersTab
       }
     ]}
   />

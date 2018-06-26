@@ -13,7 +13,7 @@
                 'href': path('claro_workspace_list')
             },
             {
-                'name': 'all_public_workspaces'|trans({}, 'platform'),
+                'name': 'my_workspaces'|trans({}, 'platform'),
                 'href': ''
             }
         ])
@@ -21,7 +21,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="page-container workspaces-container" data-url="{{'apiv2_workspace_displayable_list' | json_encode | raw | escape}}" data-parameters="{{ parameters | json_encode | raw | escape }}"></div>
+    <div class="page-container workspaces-container" data-url="{{'apiv2_workspace_registered_list'| json_encode | raw | escape }}" data-parameters="{{ parameters | json_encode | raw | escape }}"></div>
 {% endblock %}
 
 {% block javascripts %}

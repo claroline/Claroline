@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Listener\Administration;
 
+use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
@@ -17,19 +18,25 @@ class WorkspaceListener
     /** @var TwigEngine */
     private $templating;
 
+    /** @var ParametersSerializer */
+    private $parametersSerializer;
+
     /**
      * WorkspaceListener constructor.
      *
      * @DI\InjectParams({
-     *     "templating" = @DI\Inject("templating")
+     *     "parametersSerializer" = @DI\Inject("claroline.serializer.parameters"),
+     *     "templating"           = @DI\Inject("templating")
      * })
      *
      * @param TwigEngine $templating
      */
     public function __construct(
-        TwigEngine $templating)
-    {
+        TwigEngine $templating,
+        ParametersSerializer $parametersSerializer
+    ) {
         $this->templating = $templating;
+        $this->parametersSerializer = $parametersSerializer;
     }
 
     /**
@@ -42,7 +49,8 @@ class WorkspaceListener
     public function onDisplayTool(OpenAdministrationToolEvent $event)
     {
         $content = $this->templating->render(
-            'ClarolineCoreBundle:administration:workspaces.html.twig'
+            'ClarolineCoreBundle:administration:workspaces.html.twig',
+            ['parameters' => $this->parametersSerializer->serialize()]
         );
 
         $event->setResponse(new Response($content));

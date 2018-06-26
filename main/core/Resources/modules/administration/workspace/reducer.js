@@ -27,7 +27,16 @@ const reducer = {
   }),
   managers: combineReducers({
     picker: makeListReducer('managers.picker')
-  })
+  }),
+  selected: combineReducers({
+    user: makeListReducer(
+      'selected.user'
+    ),
+    group: makeListReducer(
+      'selected.group'
+    )
+  }),
+  parameters: makeFormReducer('parameters')
 }
 
 export {

@@ -91,11 +91,6 @@ claro_workspace:
     prefix: workspaces
     type: annotation
 
-claro_workspace_tag:
-    resource: "@ClarolineCoreBundle/Controller/WorkspaceTagController.php"
-    prefix: workspaces
-    type: annotation
-
 claro_workspace_tool_properties:
     resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceParametersController.php"
     prefix: workspaces/tool/properties
@@ -181,11 +176,6 @@ claro_user:
 claro_admin_parameters:
     prefix: admin/parameters
     resource: "@ClarolineCoreBundle/Controller/Administration/ParametersController.php"
-    type: annotation
-
-claro_admin_workspace_registration:
-    prefix: admin/workspace/registration
-    resource: "@ClarolineCoreBundle/Controller/Administration/WorkspaceRegistrationController.php"
     type: annotation
 
 claro_admin_oauth:

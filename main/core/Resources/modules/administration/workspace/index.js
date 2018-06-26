@@ -1,6 +1,6 @@
 import {bootstrap} from '#/main/app/bootstrap'
 
-import {reducer} from '#/main/core/administration/workspace/workspace/reducer'
+import {reducer} from '#/main/core/administration/workspace/reducer'
 import {WorkspaceTool} from '#/main/core/administration/workspace/components/tool.jsx'
 
 import {registerType} from '#/main/core/data'
@@ -18,5 +18,17 @@ bootstrap(
   WorkspaceTool,
 
   // app store configuration
-  reducer
+  reducer,
+
+  // remap data-attributes set on the app DOM container
+  // todo load remaining through ajax
+  (initialData) => {
+
+    return {
+      parameters: {
+        data: initialData.parameters,
+        originalData: initialData.parameters
+      }
+    }
+  }
 )

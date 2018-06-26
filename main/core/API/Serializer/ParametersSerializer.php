@@ -152,6 +152,10 @@ class ParametersSerializer
                 'users_csv_by_full_name' => $parameters['workspace_users_csv_import_by_full_name'],
                 'send_mail_at_registration' => $parameters['send_mail_at_workspace_registration'],
                 'enable_rich_text_file_import' => $parameters['enable_rich_text_file_import'],
+                'list' => [
+                  'default_mode' => $parameters['workspace_list_default_mode'],
+                  'default_properties' => $parameters['workspace_list_default_properties'],
+                ],
             ],
             'internet' => [
                 'domain_name' => $parameters['domain_name'],
@@ -447,6 +451,8 @@ class ParametersSerializer
         $this->buildParameter('workspace.users_csv_by_full_name', 'workspace_users_csv_import_by_full_name', $parameters, $data);
         $this->buildParameter('workspace.send_mail_at_registration', 'send_mail_at_workspace_registration', $parameters, $data);
         $this->buildParameter('workspace.enable_rich_text_file_import', 'enable_rich_text_file_import', $parameters, $data);
+        $this->buildParameter('workspace.list.default_mode', 'workspace_list_default_mode', $parameters, $data);
+        $this->buildParameter('workspace.list.default_properties', 'workspace_list_default_properties', $parameters, $data);
     }
 
     public function deserializeInternet(array &$parameters, array $data)

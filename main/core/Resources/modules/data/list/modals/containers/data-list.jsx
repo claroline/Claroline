@@ -1,13 +1,16 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/core/translation'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 
 import {DataListContainer} from '#/main/core/data/list/containers/data-list'
 import {DataListProperty} from '#/main/core/data/list/prop-types'
+import {select} from '#/main/core/data/list/selectors'
+import {connect} from 'react-redux'
 
-const MODAL_DATA_LIST = 'MODAL_DATA_LISt'
+const MODAL_DATA_LIST = 'MODAL_DATA_LIST'
 
 const DataListModal = props =>
   <Modal
@@ -27,7 +30,7 @@ const DataListModal = props =>
       className="modal-btn btn btn-primary"
       onClick={() => {
         props.fadeModal()
-        props.handleSelect()}
+        props.handleSelect(props.selected)}
       }
     >
       {props.confirmText}
@@ -43,6 +46,8 @@ DataListModal.propTypes = {
   card: T.func, // It must be a react component.
   onlyId: T.bool,
   display: T.object,
+  selectors: T.array,
+  selected: T.array.isRequired,
 
   /**
    * Definition of the data properties.
@@ -62,7 +67,18 @@ DataListModal.defaultProps = {
   onlyId: true
 }
 
+function mapStateToProps(state) {
+  //find a way to do it properly
+  return {
+    selected: select.selected(get(state, state.modal.props.name))
+  }
+}
+
+const ConnectedDataListModal = connect(
+  mapStateToProps
+)(DataListModal)
+
 export {
   MODAL_DATA_LIST,
-  DataListModal
+  ConnectedDataListModal as DataListModal
 }

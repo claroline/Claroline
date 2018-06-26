@@ -56,21 +56,6 @@ class WorkspaceFinder implements FinderInterface
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
     {
-        if ('cli' !== php_sapi_name() && !$this->authChecker->isGranted('ROLE_ADMIN') && !$this->authChecker->isGranted('ROLE_ANONYMOUS')) {
-            /** @var User $currentUser */
-            $currentUser = $this->tokenStorage->getToken()->getUser();
-            $qb->leftJoin('obj.organizations', 'uo');
-            $qb->leftJoin('uo.administrators', 'ua');
-            $qb->leftJoin('obj.creator', 'creator');
-
-            $qb->andWhere($qb->expr()->orX(
-              $qb->expr()->eq('ua.id', ':userId'),
-              $qb->expr()->eq('creator.id', ':userId')
-            ));
-
-            $qb->setParameter('userId', $currentUser->getId());
-        }
-
         foreach ($searches as $filterName => $filterValue) {
             //remap some filters...
             if ('meta.personal' === $filterName) {
@@ -82,6 +67,34 @@ class WorkspaceFinder implements FinderInterface
             }
 
             switch ($filterName) {
+                case 'sameOrganization':
+                  $currentUser = $this->tokenStorage->getToken()->getUser();
+                  if ($currentUser instanceof User) {
+                      $qb->leftJoin('obj.organizations', 'uo');
+                      $qb->leftJoin('uo.users', 'ua');
+
+                      $qb->andWhere($qb->expr()->orX(
+                      $qb->expr()->eq('ua.id', ':userId')
+                    ));
+
+                      $qb->setParameter('userId', $currentUser->getId());
+                  }
+
+                  break;
+                case 'administrated':
+                  if ('cli' !== php_sapi_name() && !$this->authChecker->isGranted('ROLE_ADMIN') && !$this->authChecker->isGranted('ROLE_ANONYMOUS')) {
+                      /** @var User $currentUser */
+                      $currentUser = $this->tokenStorage->getToken()->getUser();
+                      $qb->leftJoin('obj.organizations', 'uo');
+                      $qb->leftJoin('uo.administrators', 'ua');
+                      $qb->leftJoin('obj.creator', 'creator');
+                      $qb->andWhere($qb->expr()->orX(
+                        $qb->expr()->eq('ua.id', ':userId'),
+                        $qb->expr()->eq('creator.id', ':userId')
+                      ));
+                      $qb->setParameter('userId', $currentUser->getId());
+                  }
+                  break;
                 case 'createdAfter':
                     $qb->andWhere("obj.created >= :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
@@ -102,7 +115,9 @@ class WorkspaceFinder implements FinderInterface
                       $qb->expr()->eq('ru.id', ':currentUserId'),
                       $qb->expr()->eq('ru.uuid', ':currentUserId')
                     ));
+                    $qb->andWhere('r.name != :roleUser');
                     $qb->setParameter('currentUserId', $filterValue);
+                    $qb->setParameter('roleUser', 'ROLE_USER');
                     break;
                     //use this whith the 'user' property
               case 'isManager':
@@ -123,5 +138,42 @@ class WorkspaceFinder implements FinderInterface
         }
 
         return $qb;
+    }
+
+    public function getFilters()
+    {
+        return [
+          'administrated' => [
+            'type' => 'boolean',
+            'description' => 'The the current user administrate the organization of the workspace',
+          ],
+
+          'sameOrganization' => [
+            'type' => 'boolean',
+            'description' => 'Workspace and current user share the same organization',
+          ],
+
+          'createdBefore' => [
+            'type' => 'date',
+            'description' => 'Workspace created after',
+          ],
+
+          'createdAfter' => [
+            'type' => 'date',
+            'description' => 'Workspace created before',
+          ],
+
+          'user' => [
+            'type' => 'integer',
+            'description' => 'The user id/uuid. Check if the user is registered',
+          ],
+
+          'isManager' => [
+            'type' => 'boolean',
+            'description' => 'Requires the user filter. Check if the user is the manager aswell',
+          ],
+
+          //random prop goes here
+        ];
     }
 }

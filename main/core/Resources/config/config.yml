@@ -138,9 +138,6 @@ plugin:
         - name: workspace_management
           class: book
 
-        - name: registration_to_workspace
-          class: book
-
         - name: desktop_and_home
           class: home
 
