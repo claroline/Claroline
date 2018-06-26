@@ -47,7 +47,7 @@ const CardHeader = props =>
                 {number(flag[2], true)}
                 <span className={flag[0]} />
               </span> :
-              <span className={classes('data-card-flag label label-default', flag[0])} />
+              <span className={classes('data-card-flag', flag[0])} />
             }
           </TooltipElement>
         )}
