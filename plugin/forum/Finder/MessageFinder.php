@@ -63,6 +63,11 @@ class MessageFinder implements FinderInterface
                 ));
                 $qb->setParameter($filterName, $filterValue);
                 break;
+              case 'creator':
+                $qb->leftJoin('obj.creator', 'creator');
+                $qb->andWhere("creator.username LIKE :{$filterName}");
+                $qb->setParameter($filterName, '%'.$filterValue.'%');
+                break;
               case 'createdAfter':
                 $qb->andWhere("obj.creationDate >= :{$filterName}");
                 $qb->setParameter($filterName, $filterValue);

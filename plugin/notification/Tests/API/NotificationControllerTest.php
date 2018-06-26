@@ -2,8 +2,8 @@
 
 namespace Icap\NotificationBundle\Tests\API;
 
-use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Library\Testing\Persister;
+use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 
 class NotificationControllerTest extends TransactionalTestCase
 {
@@ -20,7 +20,7 @@ class NotificationControllerTest extends TransactionalTestCase
     {
         $user = $this->createUser('user');
         $this->logIn($user);
-        $this->client->request('GET', '/icap_notification/api/notifications');
+        $this->client->request('GET', '/icap_notification/apiv2/notifications');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
@@ -31,7 +31,7 @@ class NotificationControllerTest extends TransactionalTestCase
     {
         $user = $this->createUser('user');
         $this->logIn($user);
-        $this->client->request('GET', '/icap_notification/api/notifications/read');
+        $this->client->request('GET', '/icap_notification/apiv2/notifications/read');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
