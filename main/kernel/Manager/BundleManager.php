@@ -18,6 +18,9 @@ use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
+/**
+ * The KernelBundle probably should do all of that.
+ */
 class BundleManager
 {
     use LoggableTrait;
@@ -51,10 +54,10 @@ class BundleManager
         $configProviderBundles = [];
         $nonAutoConfigurableBundles = [];
         $environment = $this->getEnvironment();
-        $updateMode = file_exists($this->kernel->getRootDir().'/config/.update');
+        $updateMode = 'console' === $environment;
 
         foreach ($entries as $bundleClass => $isActive) {
-            if (($isActive || $fetchAll || $updateMode) && $bundleClass !== 'Claroline\KernelBundle\ClarolineKernelBundle') {
+            if (($isActive || $fetchAll || $updateMode) && 'Claroline\KernelBundle\ClarolineKernelBundle' !== $bundleClass) {
                 if (class_exists($bundleClass)) {
                     $bundle = new $bundleClass($this->kernel);
 

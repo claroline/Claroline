@@ -243,7 +243,6 @@ class OperationExecutor
     public function execute(array $operations)
     {
         $this->log('Executing install/update operations...');
-
         $bundles = $this->getBundlesByFqcn();
 
         foreach ($operations as $operation) {
@@ -287,8 +286,7 @@ class OperationExecutor
     private function getBundlesByFqcn()
     {
         $byFqcn = [];
-
-        foreach ($this->kernel->getBundles() as $bundle) {
+        foreach ($this->kernel->getBundles(false, true) as $bundle) {
             $fqcn = $bundle->getNamespace() ?
                 $bundle->getNamespace().'\\'.$bundle->getName() :
                 $bundle->getName();

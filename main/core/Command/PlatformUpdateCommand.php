@@ -84,6 +84,8 @@ class PlatformUpdateCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        MaintenanceHandler::enableMaintenance();
+
         $output->writeln(
             sprintf('<comment>%s - Updating the platform...</comment>', date('H:i:s'))
         );

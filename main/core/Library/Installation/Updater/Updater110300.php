@@ -29,6 +29,7 @@ class Updater110300 extends Updater
 
     private function updateWorkspaceSlugs()
     {
+        return;
         $this->log('Initializing workspace slug...');
         $offset = 0;
         $i = 0;

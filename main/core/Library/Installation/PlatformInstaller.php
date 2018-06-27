@@ -105,6 +105,7 @@ class PlatformInstaller
         $bundles = $pluginManager->getInstalledBundles();
 
         $operations = $this->operationExecutor->buildOperationListForBundles($bundles, $from, $to);
+
         $this->operationExecutor->execute($operations);
     }
 
@@ -128,7 +129,7 @@ class PlatformInstaller
             $command->setContainer($this->container);
             $code = $command->run(new ArrayInput([]), $this->output ?: new NullOutput());
 
-            if ($code !== 0) {
+            if (0 !== $code) {
                 throw new \Exception(
                     'Database cannot be created : check that the parameters you provided '
                     .'are correct and/or that you have sufficient permissions.'

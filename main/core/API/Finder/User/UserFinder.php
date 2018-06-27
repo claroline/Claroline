@@ -17,6 +17,8 @@ use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -47,7 +49,8 @@ class UserFinder implements FinderInterface
      *     "authChecker"      = @DI\Inject("security.authorization_checker"),
      *     "tokenStorage"     = @DI\Inject("security.token_storage"),
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "om"               = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
+     *     "em"               = @DI\Inject("doctrine.orm.entity_manager")
      * })
      *
      * @param AuthorizationCheckerInterface $authChecker
@@ -59,12 +62,14 @@ class UserFinder implements FinderInterface
         AuthorizationCheckerInterface $authChecker,
         TokenStorageInterface $tokenStorage,
         WorkspaceManager $workspaceManager,
-        ObjectManager $om
+        ObjectManager $om,
+        $em
     ) {
         $this->authChecker = $authChecker;
         $this->tokenStorage = $tokenStorage;
         $this->workspaceManager = $workspaceManager;
         $this->om = $om;
+        $this->_em = $em;
     }
 
     public function getClass()
@@ -72,7 +77,7 @@ class UserFinder implements FinderInterface
         return 'Claroline\CoreBundle\Entity\User';
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
         if (isset($searches['contactable'])) {
             $qb = $this->getContactableUsers($qb);
@@ -157,25 +162,76 @@ class UserFinder implements FinderInterface
                     break;
                 //case 'contactable':
                 case 'workspace':
-                    $qb->leftJoin('obj.roles', 'wsuroles');
-                    $qb->leftJoin('wsuroles.workspace', 'rws');
-                    $qb->leftJoin('obj.groups', 'wsugrps');
-                    $qb->leftJoin('wsugrps.roles', 'guroles');
-                    $qb->leftJoin('guroles.workspace', 'grws');
-
-                    if (is_array($filterValue)) {
-                        $qb->andWhere($qb->expr()->orX(
-                            $qb->expr()->in('rws.uuid', ':workspaceId'),
-                            $qb->expr()->in('grws.uuid', ':workspaceId')
-                        ));
-                    } else {
-                        $qb->andWhere($qb->expr()->orX(
-                            $qb->expr()->eq('rws.uuid', ':workspaceId'),
-                            $qb->expr()->eq('grws.uuid', ':workspaceId')
-                        ));
+                    //this one is REALLY tricky for performance reasons.
+                    //we need to make a union but it's not supported by the querybuilder.
+                    //It's not supported at all by doctrine actually.
+                    //Let's return a query object with the correct sql.
+                    if (!is_array($filterValue)) {
+                        $filterValue = [$filterValue];
                     }
 
-                    $qb->setParameter('workspaceId', $filterValue);
+                    $byUserSearch = $byGroupSearch = $searches;
+                    $byUserSearch['_workspace_user'] = $filterValue;
+                    $byGroupSearch['_workspace_group'] = $filterValue;
+                    unset($byUserSearch['workspace']);
+                    unset($byGroupSearch['workspace']);
+                    $qbUser = $this->om->createQueryBuilder();
+                    $qbUser->select('DISTINCT obj')->from($this->getClass(), 'obj');
+                    $this->configureQueryBuilder($qbUser, $byUserSearch, $sortBy);
+                    //this is our first part of the union
+                    $sqlUser = $qbUser->getQuery()->getSql();
+                    $sqlUser = $this->removeAlias($sqlUser);
+                    $qbGroup = $this->om->createQueryBuilder();
+                    $qbGroup->select('DISTINCT obj')->from($this->getClass(), 'obj');
+                    $this->configureQueryBuilder($qbGroup, $byGroupSearch, $sortBy);
+                    //this is the second part of the union
+                    $sqlGroup = $qbGroup->getQuery()->getSql();
+                    $sqlGroup = $this->removeAlias($sqlGroup);
+                    $together = $sqlUser.' UNION '.$sqlGroup;
+                    //we might want to add a count somehere here
+                    //add limit & offset too
+
+                    if ($options['count']) {
+                        $together = "SELECT COUNT(*) as count FROM ($together) AS wathever";
+                        $rsm = new ResultSetMapping();
+                        $rsm->addScalarResult('count', 'count', 'integer');
+                        $query = $this->_em->createNativeQuery($together, $rsm);
+                    } else {
+                        //add page & limit
+                        if ($options['limit'] > -1) {
+                            $together .= ' LIMIT '.$options['limit'];
+                        }
+
+                        if ($options['limit'] > 0) {
+                            $offset = $options['limit'] * $options['page'];
+                            $together .= ' OFFSET  '.$offset;
+                        }
+
+                        $rsm = new ResultSetMappingBuilder($this->_em);
+                        $rsm->addRootEntityFromClassMetadata($this->getClass(), 'c0_');
+                        $query = $this->_em->createNativeQuery($together, $rsm);
+                    }
+
+                    return $query;
+                    break;
+                case '_workspace_user':
+                    $filterValue = array_map(function ($value) {
+                        return "'$value'";
+                    }, $filterValue);
+                    $string = join($filterValue, ',');
+                    $qb->leftJoin('obj.roles', 'wsuroles');
+                    $qb->leftJoin('wsuroles.workspace', 'rws');
+                    $qb->andWhere('rws.uuid IN ('.$string.')');
+                    break;
+                case '_workspace_group':
+                    $filterValue = array_map(function ($value) {
+                        return "'$value'";
+                    }, $filterValue);
+                    $string = join($filterValue, ',');
+                    $qb->leftJoin('obj.groups', 'grps');
+                    $qb->leftJoin('grps.roles', 'grpRole');
+                    $qb->leftJoin('grpRole.workspace', 'ws');
+                    $qb->andWhere('ws.uuid IN ('.$string.')');
                     break;
                 case 'blacklist':
                     $qb->andWhere("obj.uuid NOT IN (:{$filterName})");
@@ -245,5 +301,50 @@ class UserFinder implements FinderInterface
         $qb->setParameter('workspacesIds', $workspacesIds);
 
         return $qb;
+    }
+
+    //should be cleaner
+    private function removeAlias($sql)
+    {
+        $aliases = [
+          'AS id_0',
+          'AS first_name_1',
+          'AS last_name_2',
+          'AS username_3',
+          'AS password_4',
+          'AS locale_5',
+          'AS salt_6',
+          'AS phone_7',
+          'AS mail_8',
+          'AS administrative_code_9',
+          'AS creation_date_10',
+          'AS last_login_11',
+          'AS initialization_date_12',
+          'AS reset_password_13',
+          'AS hash_time_14',
+          'AS picture_15',
+          'AS description_16',
+          'AS hasAcceptedTerms_17',
+          'AS is_enabled_18',
+          'AS is_removed_19',
+          'AS is_mail_notified_20',
+          'AS is_mail_validated_21',
+          'AS hide_mail_warning_22',
+          'AS last_uri_23',
+          'AS public_url_24',
+          'AS has_tuned_public_url_25',
+          'AS expiration_date_26',
+          'AS authentication_27',
+          'AS email_validation_hash_28',
+          'AS uuid_29',
+          'AS workspace_id_30',
+          'AS options_id_31',
+        ];
+
+        foreach ($aliases as $alias) {
+            $sql = str_replace($alias, '', $sql);
+        }
+
+        return $sql;
     }
 }

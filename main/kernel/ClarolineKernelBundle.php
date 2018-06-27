@@ -12,23 +12,25 @@
 namespace Claroline\KernelBundle;
 
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
-use Claroline\KernelBundle\Kernel\SwitchKernel;
 use Claroline\KernelBundle\Manager\BundleManager;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
+//When doing a unique depot, we should move this to the AppKernel class
 class ClarolineKernelBundle extends Bundle
 {
     private $bundleManager;
     private $kernel;
 
-    public function __construct(SwitchKernel $kernel, $bundlesFile = null)
+    public function __construct($kernel, $bundlesFile = null)
     {
         $this->kernel = $kernel;
 
         if (!$bundlesFile) {
             $bundlesFile = $kernel->getRootDir().'/config/bundles.ini';
         }
+
+        $this->bundlesFile = $bundlesFile;
 
         BundleManager::initialize($kernel, $bundlesFile);
         $this->bundleManager = BundleManager::getInstance();
@@ -38,7 +40,8 @@ class ClarolineKernelBundle extends Bundle
     {
         $bundles = [];
 
-        foreach ($this->bundleManager->getActiveBundles('test' === $this->bundleManager->getEnvironment()) as $bundle) {
+        foreach ($this->bundleManager->getActiveBundles('test' === $this->kernel->getEnvironment()) as $bundle
+        ) {
             $bundles[] = $bundle[BundleManager::BUNDLE_INSTANCE];
         }
 

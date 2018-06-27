@@ -98,6 +98,8 @@ class Updater120000 extends Updater
             $messages = $this->container->get('claroline.api.finder')
               ->fetch('Claroline\ForumBundle\Entity\Message', ['forum' => $forum->getUuid()]);
 
+            $this->om->startFlushSuite();
+
             foreach ($messages as $message) {
                 $this->log('Build forum user for '.$message->getCreator()->getUsername());
 
@@ -107,6 +109,8 @@ class Updater120000 extends Updater
                     true
                 );
             }
+
+            $this->om->endFlushSuite();
         }
     }
 }
