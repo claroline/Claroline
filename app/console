@@ -15,7 +15,7 @@ use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Debug\Debug;
 
 $input = new ArgvInput();
-$env = $input->getParameterOption(['--env', '-e'], getenv('SYMFONY_ENV') ?: 'dev');
+$env = $input->getParameterOption(['--env', '-e'], getenv('SYMFONY_ENV') ?: 'console');
 $debug = '0' !== getenv('SYMFONY_DEBUG') && !$input->hasParameterOption(['--no-debug', '']) && 'prod' !== $env;
 
 if ($debug) {

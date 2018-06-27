@@ -1,16 +1,16 @@
 <?php
 
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Claroline\KernelBundle\Kernel\SwitchKernel;
 use Claroline\KernelBundle\ClarolineKernelBundle;
+use Symfony\Component\HttpKernel\Kernel;
 
-class AppKernel extends SwitchKernel
+class AppKernel extends Kernel
 {
     private $kernelBundle;
 
     public function __construct($environment, $debug)
-    {
-        parent::__construct($environment, $debug);
+    {	
+	parent::__construct($environment, $debug);
         $this->kernelBundle = new ClarolineKernelBundle($this);
     }
 
