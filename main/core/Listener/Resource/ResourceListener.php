@@ -2,13 +2,15 @@
 
 namespace Claroline\CoreBundle\Listener\Resource;
 
+use Claroline\AppBundle\API\Crud;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceNodeManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
@@ -17,9 +19,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
  */
 class ResourceListener
 {
-    /** @var TwigEngine */
-    private $templating;
-
     /** @var ResourceNodeManager */
     private $resourceNodeManager;
 
@@ -29,27 +28,32 @@ class ResourceListener
     /** @var ResourceLifecycleManager */
     private $resourceLifecycleManager;
 
+    /** @var Crud */
+    private $crud;
+
     /**
      * ResourceListener constructor.
      *
      * @DI\InjectParams({
-     *     "templating"          = @DI\Inject("templating"),
-     *     "resourceNodeManager" = @DI\Inject("claroline.manager.resource_node"),
-     *     "resourceManager"     = @DI\Inject("claroline.manager.resource_manager")
+     *     "resourceNodeManager"      = @DI\Inject("claroline.manager.resource_node"),
+     *     "resourceManager"          = @DI\Inject("claroline.manager.resource_manager"),
+     *     "resourceLifecycleManager" = @DI\Inject("claroline.manager.resource_lifecycle"),
+     *     "crud"                     = @DI\Inject("claroline.api.crud")
      * })
      *
-     * @param TwigEngine          $templating
      * @param ResourceNodeManager $resourceNodeManager
      * @param ResourceManager     $resourceManager
      */
     public function __construct(
-        TwigEngine $templating,
         ResourceNodeManager $resourceNodeManager,
-        ResourceManager $resourceManager)
-    {
-        $this->templating = $templating;
+        ResourceManager $resourceManager,
+        ResourceLifecycleManager $resourceLifecycleManager,
+        Crud $crud
+    ) {
         $this->resourceNodeManager = $resourceNodeManager;
         $this->resourceManager = $resourceManager;
+        $this->resourceLifecycleManager = $resourceLifecycleManager;
+        $this->crud = $crud;
     }
 
     /**
@@ -71,7 +75,7 @@ class ResourceListener
     public function onOpen(ResourceActionEvent $event)
     {
         // forward to the resource type
-        $this->resourceLifecycleManager->open($event->getResourceNode());
+        return $this->resourceLifecycleManager->open($event->getResourceNode());
     }
 
     /**
@@ -92,8 +96,9 @@ class ResourceListener
     public function onConfigure(ResourceActionEvent $event)
     {
         $data = $event->getData();
-
-        // todo deserialize data into the node
+        $this->crud->update(ResourceNode::class, $data);
+        $event->setResponse(new JsonResponse($data));
+        $event->stopPropagation();
     }
 
     /**
@@ -148,7 +153,7 @@ class ResourceListener
                 }
             }
 
-            if (count($toUnlock) === 0) {
+            if (0 === count($toUnlock)) {
                 return;
             }
 

@@ -43,7 +43,7 @@ class ResourceNodeValidator implements ValidatorInterface
     }
 
     /**
-     * @param array $data
+     * @param array  $data
      * @param string $mode
      *
      * @return array
@@ -58,12 +58,12 @@ class ResourceNodeValidator implements ValidatorInterface
         }
 
         // validates the resource type exists
-        if (!empty($data['meta']) && !empty($data['meta']['type'])) {
+        if ($data['meta'] && $data['meta']['type']) {
             $resourceType = $this->om
-                ->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
+                ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
                 ->findOneBy(['name' => $data['meta']['type']]);
 
-            if (empty($resourceType)) {
+            if (!$resourceType) {
                 $errors[] = [
                     'path' => 'meta/type',
                     'message' => sprintf('The type %s does not exist.', $data['meta']['type']),
