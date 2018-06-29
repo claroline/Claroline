@@ -1,16 +1,4 @@
-icap_bibliography:
-    resource: "@IcapBibliographyBundle/Controller/BookReferenceController.php"
-    type: annotation
-    prefix: /
-
-icap_wiki_api:
-    resource: "@IcapBibliographyBundle/Controller/ApiController.php"
-    type: rest
-    prefix: api
-    defaults: {_format: json}
-    options:
-        expose: true
-
+# JSON API
 icap_biblio_api:
     resource: "@IcapBibliographyBundle/Controller/API/"
     prefix: apiv2

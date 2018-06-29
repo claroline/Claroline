@@ -1,0 +1,95 @@
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
+import {connect} from 'react-redux'
+import {Row, Col} from 'react-bootstrap'
+
+import {trans} from '#/main/core/translation'
+import {select as formSelect} from '#/main/core/data/form/selectors'
+import {DataDetailsContainer} from '#/main/core/data/details/containers/details.jsx'
+
+const PlayerComponent = props =>
+  <Row>
+    {props.bookReference.cover &&
+    <Col md={3}>
+      <img
+        className={'img-responsive'}
+        src={props.bookReference.cover}
+        alt={trans('cover', {}, 'icap_bibliography')}
+        title={trans('cover', {}, 'icap_bibliography')}
+      />
+    </Col>
+    }
+    <Col md={props.bookReference.cover ? 9 : 12}>
+      <DataDetailsContainer
+        level={3}
+        name="bookReference"
+        sections={[
+          {
+            id: 'general',
+            title: trans('general'),
+            primary: true,
+            fields: [
+              {
+                name: 'author',
+                type: 'string',
+                label: trans('author', {}, 'icap_bibliography')
+              }, {
+                name: 'isbn',
+                type: 'string',
+                label: trans('isbn', {}, 'icap_bibliography')
+              }, {
+                name: 'abstract',
+                type: 'string',
+                label: trans('abstract', {}, 'icap_bibliography')
+              }
+            ]
+          },
+          {
+            id: 'details',
+            title: trans('details', {}, 'icap_bibliography'),
+            fields: [
+              {
+                name: 'publisher',
+                type: 'string',
+                label: trans('publisher', {}, 'icap_bibliography')
+              }, {
+                name: 'printer',
+                type: 'string',
+                label: trans('printer', {}, 'icap_bibliography')
+              }, {
+                name: 'publicationYear',
+                type: 'number',
+                label: trans('publication_year', {}, 'icap_bibliography')
+              }, {
+                name: 'language',
+                type: 'string',
+                label: trans('language', {}, 'icap_bibliography')
+              }, {
+                name: 'pages',
+                type: 'number',
+                label: trans('page_count', {}, 'icap_bibliography')
+              }, {
+                name: 'url',
+                type: 'url',
+                label: trans('url', {}, 'icap_bibliography')
+              }
+            ]
+          }
+        ]}
+      />
+    </Col>
+  </Row>
+
+PlayerComponent.propTypes = {
+  bookReference: T.object.isRequired
+}
+
+const Player = connect(
+  state => ({
+    bookReference: formSelect.data(formSelect.form(state, 'bookReference'))
+  })
+)(PlayerComponent)
+
+export {
+  Player
+}

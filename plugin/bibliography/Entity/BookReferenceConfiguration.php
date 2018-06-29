@@ -24,22 +24,22 @@ class BookReferenceConfiguration
      * @var string
      * @ORM\Column(name="api_key", type="string", nullable=true)
      */
-    protected $api_key;
+    protected $apiKey;
 
     /**
      * @return string
      */
     public function getApiKey()
     {
-        return $this->api_key;
+        return $this->apiKey;
     }
 
     /**
-     * @param string $api_key
+     * @param string $apiKey
      */
-    public function setApiKey($api_key)
+    public function setApiKey($apiKey)
     {
-        $this->api_key = $api_key;
+        $this->apiKey = $apiKey;
     }
 
     public function getId()

@@ -1,7 +1,7 @@
 import React from 'react'
 
-import {t, trans} from '#/main/core/translation'
-import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
+import {trans} from '#/main/core/translation'
+import {FormContainer} from '#/main/core/data/form/containers/form'
 
 const Editor = () =>
   <FormContainer
@@ -9,10 +9,15 @@ const Editor = () =>
     name="bookReference"
     sections={[
       {
-        title: t('general'),
+        title: trans('general'),
         primary: true,
         fields: [
           {
+            name: 'name',
+            type: 'string',
+            label: trans('name'),
+            required: true
+          }, {
             name: 'author',
             type: 'string',
             label: trans('author', {}, 'icap_bibliography'),

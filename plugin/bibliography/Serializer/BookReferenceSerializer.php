@@ -6,9 +6,9 @@
  * Time: 15:45.
  */
 
-namespace Icap\BibliographyBundle\API\Serializer;
+namespace Icap\BibliographyBundle\Serializer;
 
-use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Icap\BibliographyBundle\Entity\BookReference;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -18,19 +18,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class BookReferenceSerializer
 {
-    /**
-     * GroupSerializer constructor.
-     *
-     * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
-     * })
-     *
-     * @param SerializerProvider $serializer
-     */
-    public function __construct(SerializerProvider $serializer)
-    {
-        $this->serializer = $serializer;
-    }
+    use SerializerTrait;
 
     public function getClass()
     {
@@ -49,6 +37,7 @@ class BookReferenceSerializer
     {
         return [
             'id' => $bookReference->getId(),
+            'name' => $bookReference->getResourceNode()->getName(),
             'author' => $bookReference->getAuthor(),
             'abstract' => $bookReference->getAbstract(),
             'isbn' => $bookReference->getIsbn(),
@@ -73,34 +62,23 @@ class BookReferenceSerializer
      */
     public function deserialize($data, BookReference $bookReference = null, array $options = [])
     {
-        $data = json_decode(json_encode($data), true);
-
-        $bookReference->setAuthor($data['author']);
-        $bookReference->setIsbn($data['isbn']);
-        if (isset($data['abstract'])) {
-            $bookReference->setAbstract($data['abstract']);
+        if (empty($bookReference)) {
+            $bookReference = new BookReference();
+            $bookReference->refreshUuid();
         }
-        if (isset($data['publisher'])) {
-            $bookReference->setPublisher($data['publisher']);
+        if (!empty($data['name'])) {
+            $bookReference->getResourceNode()->setName($data['name']);
         }
-        if (isset($data['printer'])) {
-            $bookReference->setPrinter($data['printer']);
-        }
-        if (isset($data['publicationYear'])) {
-            $bookReference->setPublicationYear($data['publicationYear']);
-        }
-        if (isset($data['language'])) {
-            $bookReference->setLanguage($data['language']);
-        }
-        if (isset($data['pages'])) {
-            $bookReference->setPageCount($data['pages']);
-        }
-        if (isset($data['url'])) {
-            $bookReference->setUrl($data['url']);
-        }
-        if (isset($data['cover'])) {
-            $bookReference->setCoverUrl($data['cover']);
-        }
+        $this->sipe('author', 'setAuthor', $data, $bookReference);
+        $this->sipe('isbn', 'setIsbn', $data, $bookReference);
+        $this->sipe('abstract', 'setAbstract', $data, $bookReference);
+        $this->sipe('publisher', 'setPublisher', $data, $bookReference);
+        $this->sipe('printer', 'setPrinter', $data, $bookReference);
+        $this->sipe('publicationYear', 'setPublicationYear', $data, $bookReference);
+        $this->sipe('language', 'setLanguage', $data, $bookReference);
+        $this->sipe('pages', 'setPageCount', $data, $bookReference);
+        $this->sipe('url', 'setUrl', $data, $bookReference);
+        $this->sipe('cover', 'setCoverUrl', $data, $bookReference);
 
         return $bookReference;
     }

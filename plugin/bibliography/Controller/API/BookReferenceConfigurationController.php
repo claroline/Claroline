@@ -1,27 +1,21 @@
 <?php
-/*
- * This file is part of the Claroline Connect package.
- *
- * (c) Claroline Consortium <consortium@claroline.net>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
 namespace Icap\BibliographyBundle\Controller\API;
 
 use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @ApiMeta(
- *     class="Icap\BibliographyBundle\Entity\BookReference",
+ *     class="Icap\BibliographyBundle\Entity\BookReferenceConfiguration",
  *     ignore={"find", "deleteBulk", "doc", "list", "get", "exist", "create", "copyBulk"}
  * )
- * @Route("/book_reference")
+ * @Route("/book_reference_configuration")
+ * @Security("has_role('ROLE_ADMIN')")
  */
-class BookReferenceController extends AbstractCrudController
+class BookReferenceConfigurationController extends AbstractCrudController
 {
     /**
      * Get the name of the managed entity.
@@ -30,6 +24,6 @@ class BookReferenceController extends AbstractCrudController
      */
     public function getName()
     {
-        return 'bookReference';
+        return 'bookReferenceConfiguration';
     }
 }

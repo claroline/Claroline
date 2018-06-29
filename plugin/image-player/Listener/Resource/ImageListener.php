@@ -50,7 +50,7 @@ class ImageListener
     public function onOpen(PlayFileEvent $event)
     {
         $content = $this->container->get('templating')->render(
-            'ClarolineImagePlayerBundle:Image:open.html.twig', [
+            'ClarolineImagePlayerBundle:image:open.html.twig', [
                 '_resource' => $event->getResource(),
             ]
         );

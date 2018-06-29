@@ -54,8 +54,6 @@ class WikiListener
     /** @var ResourceEvaluationManager */
     private $evaluationManager;
 
-    private $exportPdfEnabled;
-
     /**
      * @DI\InjectParams({
      *     "formFactory"            = @DI\Inject("form.factory"),
@@ -65,8 +63,7 @@ class WikiListener
      *     "wikiManager"            = @DI\Inject("icap.wiki.manager"),
      *     "sectionManager"         = @DI\Inject("icap.wiki.section_manager"),
      *     "evaluationManager"      = @DI\Inject("claroline.manager.resource_evaluation_manager"),
-     *     "requestStack"           = @DI\Inject("request_stack"),
-     *     "platformConfigHandler"  = @DI\Inject("claroline.config.platform_config_handler")
+     *     "requestStack"           = @DI\Inject("request_stack")
      * })
      */
     public function __construct(

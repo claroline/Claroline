@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\BibliographyBundle\Controller;
+namespace Icap\BibliographyBundle\Controller\API;
 
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
@@ -124,7 +124,7 @@ class ApiController extends FOSRestController
         $info = curl_getinfo($curl);
         curl_close($curl);
 
-        if ($info['http_code'] !== 200) {
+        if (200 !== $info['http_code']) {
             throw new HttpException($info['http_code']);
         }
 

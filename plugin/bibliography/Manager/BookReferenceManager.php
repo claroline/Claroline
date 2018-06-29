@@ -6,8 +6,9 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Icap\BibliographyBundle\Entity\BookReference;
 use Icap\BibliographyBundle\Entity\BookReferenceConfiguration;
+use Icap\BibliographyBundle\Repository\BookReferenceConfigurationRepository;
+use Icap\BibliographyBundle\Repository\BookReferenceRepository;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("icap.bookReference.manager")
@@ -15,20 +16,19 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class BookReferenceManager
 {
     private $om;
-    protected $container;
+    /** @var BookReferenceConfigurationRepository */
     protected $configRepository;
+    /** @var BookReferenceRepository */
     protected $bookReferenceRepository;
 
     /**
      * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container"),
-     *     "om"        = @DI\Inject("claroline.persistence.object_manager"),
+     *     "om"        = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
-    public function __construct(ContainerInterface $container, ObjectManager $om)
+    public function __construct(ObjectManager $om)
     {
         $this->om = $om;
-        $this->container = $container;
         $this->configRepository = $this->om->getRepository('IcapBibliographyBundle:BookReferenceConfiguration');
         $this->bookReferenceRepository = $this->om->getRepository('IcapBibliographyBundle:BookReference');
     }
@@ -36,20 +36,18 @@ class BookReferenceManager
     public function updateConfiguration(BookReferenceConfiguration $config, $postData)
     {
         try {
-            $om = $this->container->get('claroline.persistence.object_manager');
             $config->setApiKey($postData['api_key']);
-            $om->persist($config);
-            $om->flush();
+            $this->om->persist($config);
+            $this->om->flush();
 
             return true;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
 
     public function getConfig()
     {
-        $config = $this->container->get('doctrine.orm.entity_manager');
         $config = $this->configRepository->findAll()[0];
 
         return $config;
@@ -89,6 +87,7 @@ class BookReferenceManager
 
     public function export(Workspace $workspace, array &$files, $object)
     {
+        /* @var BookReference $object */
         return [
             'author' => $object->getAuthor(),
             'description' => $object->getDescription(),
@@ -107,5 +106,10 @@ class BookReferenceManager
     public function bookExistsInWorkspace($isbn, $workspace)
     {
         return $this->bookReferenceRepository->findOneByIsbnAndByWorkspace($isbn, $workspace);
+    }
+
+    public function isApiConfigured()
+    {
+        return $this->configRepository->isApiConfigured();
     }
 }

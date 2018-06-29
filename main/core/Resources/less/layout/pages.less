@@ -200,6 +200,11 @@
     flex: 1 0 auto; // only specifying flex property here make the item fill the remaining space in its parent
     padding: 0 floor(@grid-gutter-width / 2);
     margin-bottom: 20px;
+
+    &.content-centered {
+        align-items: center;
+        justify-content: center;
+    }
 }
 
 .tabbed-page {
