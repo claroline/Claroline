@@ -2,6 +2,7 @@
 
 namespace Icap\BlogBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -26,6 +27,8 @@ use JMS\Serializer\Annotation\VirtualProperty;
  */
 class Post extends Statusable
 {
+    use UuidTrait;
+
     /**
      * @var int
      * @Expose
@@ -94,10 +97,18 @@ class Post extends Statusable
     protected $viewCounter = 0;
 
     /**
+     * @var bool
+     * @Expose
+     * @ORM\Column(type="boolean", name="pinned")
+     */
+    protected $pinned = false;
+
+    /**
      * @var Comment[]|ArrayCollection
      * @Expose
      * @Groups({"blog_list", "blog_post"})
      * @ORM\OneToMany(targetEntity="Comment", mappedBy="post", cascade={"all"})
+     * @ORM\OrderBy({"creationDate" = "DESC"})
      */
     protected $comments;
 
@@ -131,6 +142,7 @@ class Post extends Statusable
 
     public function __construct()
     {
+        $this->refreshUuid();
         $this->comments = new ArrayCollection();
         $this->tags = new ArrayCollection();
     }
@@ -564,7 +576,7 @@ class Post extends Statusable
      */
     public function getAbstract()
     {
-        return strlen($this->content) > 400 ? StringUtils::resumeHtml($this->content, 400).'...' : $this->content;
+        return strlen($this->content) > 400 ? StringUtils::resumeHtml($this->content, 400) : $this->content;
     }
 
     /**
@@ -577,5 +589,25 @@ class Post extends Statusable
     public function isAbstract()
     {
         return strlen($this->content) > 400;
+    }
+
+    /**
+     * @param bool $pinned
+     *
+     * @return Post
+     */
+    public function setPinned($pinned)
+    {
+        $this->pinned = $pinned;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPinned()
+    {
+        return $this->pinned;
     }
 }

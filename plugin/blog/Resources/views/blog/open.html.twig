@@ -1,0 +1,25 @@
+{% extends "ClarolineCoreBundle:Resource:layout.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    
+    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-blog-blog-resource.css') }}" />
+{% endblock %}
+
+{% block content %}
+   <div class="page-container blog-container"
+     data-blog="{{ _resource | api_serialize | json_encode | raw | escape }}"
+     data-resource-node="{{ _resource.resourceNode | api_serialize | json_encode | raw | escape }}"
+     data-authors="{{ authors | json_encode | raw | escape }}"
+     data-archives="{{ archives | json_encode | raw | escape }}"
+     data-tags="{{ tags | json_encode | raw | escape }}"
+     data-pdfEnabled="{{ config.getParameter('is_pdf_export_active') | json_encode | raw | escape }}"
+   >
+   </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript" src="{{ hotAsset('dist/claroline-distribution-plugin-blog-resource.js') }}" ></script>
+{% endblock javascripts %}

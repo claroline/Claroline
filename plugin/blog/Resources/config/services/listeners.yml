@@ -1,17 +1,4 @@
 services:
-    icap.listener.blog_listener:
-        class: Icap\BlogBundle\Listener\BlogListener
-        calls:
-            - [setContainer, ["@service_container"]]
-        tags:
-            - { name: kernel.event_listener, event: create_form_icap_blog,                       method: onCreateForm }
-            - { name: kernel.event_listener, event: create_icap_blog,                            method: onCreate }
-            - { name: kernel.event_listener, event: open_icap_blog,                              method: onOpen }
-            - { name: kernel.event_listener, event: delete_icap_blog,                            method: onDelete }
-            - { name: kernel.event_listener, event: copy_icap_blog,                              method: onCopy }
-            - { name: kernel.event_listener, event: configure_blog_icap_blog,                    method: onConfigure }
-            - { name: kernel.event_listener, event: generate_resource_user_evaluation_icap_blog, method: onGenerateResourceTracking }
-
     icap.listener.blog.log_listener:
         class: Icap\BlogBundle\Listener\LogListener
         calls:

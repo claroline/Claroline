@@ -3,25 +3,78 @@
 namespace Icap\BlogBundle\Listener;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
+use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Form\BlogType;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
+/**
+ * @DI\Service
+ */
 class BlogListener
 {
-    use ContainerAwareTrait;
+    /** @var FormFactory */
+    private $formFactory;
+    /** @var HttpKernelInterface */
+    private $httpKernel;
+    /** @var Request */
+    private $request;
+    /** @var TwigEngine */
+    private $templating;
+    /** @var ContainerInterface */
+    private $container;
 
     /**
+     * BlogListener constructor.
+     *
+     * @DI\InjectParams({
+     *     "formFactory"           = @DI\Inject("form.factory"),
+     *     "httpKernel"            = @DI\Inject("http_kernel"),
+     *     "requestStack"          = @DI\Inject("request_stack"),
+     *     "templating"            = @DI\Inject("templating"),
+     *     "container"             = @DI\Inject("service_container")
+     * })
+     *
+     * @param FormFactory         $formFactory
+     * @param HttpKernelInterface $httpKernel
+     * @param RequestStack        $requestStack
+     * @param TwigEngine          $templating
+     * @param ContainerInterface  $container
+     */
+    public function __construct(
+        FormFactory $formFactory,
+        HttpKernelInterface $httpKernel,
+        RequestStack $requestStack,
+        TwigEngine $templating,
+        ContainerInterface $container
+    ) {
+        $this->formFactory = $formFactory;
+        $this->httpKernel = $httpKernel;
+        $this->request = $requestStack->getCurrentRequest();
+        $this->templating = $templating;
+        $this->container = $container;
+    }
+
+    /**
+     * @DI\Observe("create_form_icap_blog")
+     *
      * @param CreateFormResourceEvent $event
      */
     public function onCreateForm(CreateFormResourceEvent $event)
@@ -39,6 +92,8 @@ class BlogListener
     }
 
     /**
+     * @DI\Observe("create_icap_blog")
+     *
      * @param CreateResourceEvent $event
      */
     public function onCreate(CreateResourceEvent $event)
@@ -66,21 +121,48 @@ class BlogListener
     }
 
     /**
+     * @DI\Observe("open_icap_blog")
+     *
      * @param OpenResourceEvent $event
      */
     public function onOpen(OpenResourceEvent $event)
     {
-        $route = $this->container
-            ->get('router')
-            ->generate(
-                'icap_blog_view',
-                ['blogId' => $event->getResource()->getId()]
+        /** @var Blog $blog */
+        $blog = $event->getResource();
+
+        $postManager = $this->container->get('icap.blog.manager.post');
+        $authorizationChecker = $this->container->get('security.authorization_checker');
+
+        $canEdit = $authorizationChecker->isGranted('EDIT', new ResourceCollection([$blog->getResourceNode()]));
+        $parameters['limit'] = -1;
+
+        $posts = $postManager->getPosts(
+            $blog->getId(),
+            $parameters,
+            !$canEdit,
+            !$blog->getOptions()->getDisplayFullPosts());
+
+        $postsData = [];
+        if (!empty($posts)) {
+            $postsData = $posts['data'];
+        }
+
+        $content = $this->container->get('templating')->render(
+            'IcapBlogBundle:blog:open.html.twig', [
+                '_resource' => $blog,
+                'authors' => $postManager->getAuthors($blog),
+                'archives' => $postManager->getArchives($blog),
+                'tags' => $postManager->getTags($blog, $postsData),
+                ]
             );
-        $event->setResponse(new RedirectResponse($route));
+
+        $event->setResponse(new Response($content));
         $event->stopPropagation();
     }
 
     /**
+     * @DI\Observe("delete_icap_blog")
+     *
      * @param DeleteResourceEvent $event
      */
     public function onDelete(DeleteResourceEvent $event)
@@ -117,6 +199,11 @@ class BlogListener
         $event->stopPropagation();
     }
 
+    /**
+     * @DI\Observe("copy_icap_blog")
+     *
+     * @param CopyResourceEvent $event
+     */
     public function onCopy(CopyResourceEvent $event)
     {
         $entityManager = $this->container->get('claroline.persistence.object_manager');
@@ -165,6 +252,8 @@ class BlogListener
     }
 
     /**
+     * @DI\Observe("configure_blog_icap_blog")
+     *
      * @param CustomActionResourceEvent $event
      */
     public function onConfigure(CustomActionResourceEvent $event)
@@ -180,6 +269,8 @@ class BlogListener
     }
 
     /**
+     * @DI\Observe("generate_resource_user_evaluation_icap_blog")
+     *
      * @param GenericDataEvent $event
      */
     public function onGenerateResourceTracking(GenericDataEvent $event)

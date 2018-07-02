@@ -10,6 +10,9 @@ plugin:
           actions:
             - name: post
 
+            - name: moderate
+              decoder: moderate
+
           activity_rules:
             - action: resource-read
             - action: resource-icap_blog-post_create

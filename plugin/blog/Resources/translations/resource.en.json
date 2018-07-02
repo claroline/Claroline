@@ -1,4 +1,6 @@
 {
     "configure_blog": "Configure",
-    "icap_blog": "Blog"
+    "icap_blog": "Blog",
+    "post": "Poster",
+    "moderate": "Modérer"
 }

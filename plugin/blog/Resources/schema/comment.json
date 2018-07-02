@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The comment's id"
+    },
+    "message": {
+      "type": "string",
+      "description": "The comment's content",
+      "minLength": 1
+    }
+  },
+  "required": ["id", "message"],
+  "claroIds": ["id"]
+}

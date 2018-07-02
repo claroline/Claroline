@@ -4,6 +4,7 @@ namespace Icap\BlogBundle\Repository;
 
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\QueryBuilder;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Post;
@@ -41,7 +42,7 @@ class PostRepository extends EntityRepository
     {
         $query = $this->getEntityManager()
             ->createQuery('
-                SELECT DISTINCT a.id, a.username, a.firstName, a.lastName
+                SELECT DISTINCT a.id
                 FROM IcapBlogBundle:Post p
                 JOIN p.author a
                 WHERE p.blog = :blogId
@@ -189,16 +190,23 @@ class PostRepository extends EntityRepository
      */
     public function findArchiveDatasByBlog(Blog $blog, $executeQuery = true)
     {
+        $rsm = new ResultSetMapping();
+        $rsm
+        ->addScalarResult('c', 'count')
+        ->addScalarResult('y', 'year')
+        ->addScalarResult('m', 'month');
+
         $query = $this->getEntityManager()
-            ->createQuery('
-                SELECT p
-                FROM IcapBlogBundle:Post p
-                WHERE p.blog = :blog
-                AND p.publicationDate <= :currentDate
+            ->createNativeQuery('
+                SELECT YEAR(p.publication_date) y, MONTH(p.publication_date) m, count(p.id) c
+                FROM icap__blog_post p
+                WHERE p.blog_id = :blog
+                AND p.publication_date <= :currentDate
                 AND p.status = :status
-                ORDER BY p.publicationDate DESC
-            ')
-            ->setParameter('blog', $blog)
+                GROUP BY y, m
+                ORDER BY p.publication_date DESC
+            ', $rsm)
+            ->setParameter('blog', $blog->getId())
             ->setParameter('currentDate', new \DateTime())
             ->setParameter('status', POST::STATUS_PUBLISHED)
         ;

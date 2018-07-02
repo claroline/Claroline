@@ -11,29 +11,39 @@ use Icap\BlogBundle\Entity\BlogOptions;
 use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Entity\Tag;
+use Icap\BlogBundle\Repository\BlogRepository;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @DI\Service("icap_blog.manager.blog")
  */
 class BlogManager
 {
-    /**
-     * @var ObjectManager
-     */
-    protected $objectManager;
+    private $objectManager;
+    private $uploadDir;
+    private $repo;
+    private $eventDispatcher;
 
     /**
      * @DI\InjectParams({
-     *      "objectManager" = @DI\Inject("claroline.persistence.object_manager"),
-     *      "uploadDir" = @DI\Inject("%icap.blog.banner_directory%")
+     *      "objectManager"  = @DI\Inject("claroline.persistence.object_manager"),
+     *      "uploadDir"      = @DI\Inject("%icap.blog.banner_directory%"),
+     *      "repo"           = @DI\Inject("icap.blog.blog_repository"),
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher")
+     *
      * })
      */
-    public function __construct(ObjectManager $objectManager, $uploadDir)
+    public function __construct(
+        ObjectManager $objectManager,
+        $uploadDir,
+        BlogRepository $repo,
+        EventDispatcherInterface $eventDispatcher)
     {
         $this->objectManager = $objectManager;
         $this->uploadDir = $uploadDir;
+        $this->repo = $repo;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -241,7 +251,7 @@ class BlogManager
      */
     protected function retrieveUser($email, User $owner)
     {
-        $user = $this->objectManager->getRepository('ClarolineCoreBundle:User')->findOneByEmail($email);
+        $user = $this->objectManager->getRepository('ClarolineCoreBundle:User')->findOneByMail($email);
 
         if (null === $user) {
             $user = $owner;
@@ -319,31 +329,19 @@ class BlogManager
         return;
     }
 
-    /**
-     * @param UploadedFile $file
-     * @param BlogOptions  $options
-     */
-    public function updateBanner(UploadedFile $file = null, BlogOptions $options)
+    public function getPanelInfos()
     {
-        $ds = DIRECTORY_SEPARATOR;
-
-        if (file_exists($this->uploadDir.$ds.$options->getBannerBackgroundImage()) || null === $file) {
-            @unlink($this->uploadDir.$ds.$options->getBannerBackgroundImage());
-        }
-
-        if ($file) {
-            $uniqid = uniqid();
-            $options->setBannerBackgroundImage($uniqid);
-            $file->move($this->uploadDir, $uniqid);
-        } else {
-            $options->setBannerBackgroundImage(null);
-        }
-
-        $this->objectManager->persist($options);
-        $this->objectManager->flush();
+        return [
+            'infobar',
+            'rss',
+            'tagcloud',
+            'redactor',
+            'calendar',
+            'archives',
+        ];
     }
 
-    public function getPanelInfos()
+    public function getOldPanelInfos()
     {
         return [
             'search',
@@ -356,7 +354,25 @@ class BlogManager
         ];
     }
 
-    public function updateOptions(Blog $blog, BlogOptions $options)
+    /* public function getPanels(Blog $blog)
+     {
+         $panelInfo = $this->getOldPanelInfos();
+         $mask = $blog->getOptions()->getListWidgetBlog();
+         $orderPanelsTable = [];
+
+         for ($maskPosition = 0, $entreTableau = 0; $maskPosition < strlen($mask); $maskPosition += 2, $entreTableau++) {
+             $componentName = $panelInfo[$mask[$maskPosition]];
+             $orderPanelsTable[] = [
+                 'componentName' => $componentName,
+                 'visibility' => (int) $mask[$maskPosition + 1],
+                 'id' => (int) $mask[$maskPosition],
+             ];
+         }
+
+         return $orderPanelsTable;
+     }*/
+
+    public function updateOptions(Blog $blog, BlogOptions $options, $infos)
     {
         $currentOptions = $blog->getOptions();
         $currentOptions->setAuthorizeComment($options->getAuthorizeComment());
@@ -375,10 +391,53 @@ class BlogManager
         $currentOptions->setListWidgetBlog($options->getListWidgetBlog());
         $currentOptions->setTagTopMode($options->isTagTopMode());
         $currentOptions->setMaxTag($options->getMaxTag());
+        $currentOptions->setCommentModerationMode($options->getCommentModerationMode());
+        $currentOptions->setDisplayFullPosts($options->getDisplayFullPosts());
+
+        $blog->setInfos($infos);
 
         $this->objectManager->persist($blog);
         $this->objectManager->flush();
 
         return $this->objectManager->getUnitOfWork();
+    }
+
+    public function getBlogBannerPath(BlogOptions $options)
+    {
+        if (null !== $options->getBannerBackgroundImage()) {
+            $bannerPath = $this->uploadDir.DIRECTORY_SEPARATOR.$options->getBannerBackgroundImage();
+            if (file_exists($bannerPath)) {
+                return $bannerPath;
+            }
+        }
+
+        return null;
+    }
+
+    public function getBlogBannerWebPath(BlogOptions $options)
+    {
+        return $options->getBannerBackgroundImage() ? $this->uploadDir.'/'.$options->getBannerBackgroundImage() : null;
+    }
+
+    /**
+     * Get blog by its ID or UUID.
+     *
+     * @param string $id
+     *
+     * @return Blog
+     */
+    public function getBlogByIdOrUuid($id)
+    {
+        if (preg_match('/^\d+$/', $id)) {
+            $blog = $this->repo->findOneBy([
+                'id' => $id,
+            ]);
+        } else {
+            $blog = $this->repo->findOneBy([
+                'uuid' => $id,
+            ]);
+        }
+
+        return $blog;
     }
 }

@@ -7,14 +7,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Icap\BlogBundle\Entity\WidgetBlog;
 use Icap\BlogBundle\Entity\WidgetBlogList;
 use Icap\BlogBundle\Entity\WidgetTagListBlog;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class WidgetController extends BaseController
+class WidgetController
 {
     /**
      * @return \Icap\BlogBundle\Manager\WidgetManager
@@ -53,9 +53,6 @@ class WidgetController extends BaseController
 
             $widgetListBlogs = $widgetBlogList->getWidgetListBlogs();
 
-            //On recupère la valeur du bouton radio en base
-            $widgetDisplayListBlogs = $widgetBlogList->getWidgetListBlogs();
-
             //Comparaison entre la valeur donnée en formulaire et celle en base
             foreach ($widgetListBlogs as $widgetListBlog) {
                 if ($originalWidgetListBlogs->contains($widgetListBlog)) {
@@ -80,10 +77,10 @@ class WidgetController extends BaseController
 
         return $this->render(
             'IcapBlogBundle:widget:listConfigure.html.twig',
-            array(
+            [
                 'form' => $form->createView(),
                 'widgetInstance' => $widgetInstance,
-            )
+            ]
         );
     }
 
@@ -123,10 +120,10 @@ class WidgetController extends BaseController
 
         return $this->render(
             'IcapBlogBundle:widget:blogConfigure.html.twig',
-            array(
+            [
                 'form' => $form->createView(),
                 'widgetInstance' => $widgetInstance,
-            )
+            ]
         );
     }
 
@@ -166,10 +163,10 @@ class WidgetController extends BaseController
 
         return $this->render(
             'IcapBlogBundle:widget:tagListBlogConfigure.html.twig',
-            array(
+            [
                 'form' => $form->createView(),
                 'widgetInstance' => $widgetInstance,
-            )
+            ]
         );
     }
 }

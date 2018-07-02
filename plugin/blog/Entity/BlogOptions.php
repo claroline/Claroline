@@ -2,6 +2,7 @@
 
 namespace Icap\BlogBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
@@ -16,6 +17,25 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class BlogOptions
 {
+    use UuidTrait;
+
+    const BANNER_NO_REPEAT = 'no-repeat';
+    const BANNER_REPEAT = 'no-repeat';
+    const BANNER_REPEAT_X = 'repeat-x';
+    const BANNER_REPEAT_Y = 'repeat-y';
+
+    const COMMENT_MODERATION_NONE = 0;
+    const COMMENT_MODERATION_PRIOR_ONCE = 1;
+    const COMMENT_MODERATION_ALL = 2;
+
+    /**
+     * BlogOptions constructor.
+     */
+    public function __construct()
+    {
+        $this->refreshUuid();
+    }
+
     /**
      * @var int
      *
@@ -68,11 +88,25 @@ class BlogOptions
     protected $autoPublishComment = false;
 
     /**
+     * @var int
+     * @Expose
+     * @ORM\Column(type="smallint", name="comment_moderation_mode")
+     */
+    protected $commentModerationMode = self::COMMENT_MODERATION_NONE;
+
+    /**
      * @var bool
      * @Expose
      * @ORM\Column(type="boolean", name="display_title")
      */
     protected $displayTitle = true;
+
+    /**
+     * @var bool
+     * @Expose
+     * @ORM\Column(type="boolean", name="display_full_posts")
+     */
+    protected $displayFullPosts = false;
 
     /**
      * @var bool
@@ -122,7 +156,7 @@ class BlogOptions
      * @Expose
      * @ORM\Column(type="string", name="banner_background_image_repeat")
      */
-    protected $bannerBackgroundImageRepeat = 'no-repeat';
+    protected $bannerBackgroundImageRepeat = self::BANNER_NO_REPEAT;
 
     /**
      * @var UploadedFile
@@ -240,6 +274,26 @@ class BlogOptions
     }
 
     /**
+     * @param bool $autoPublishPost
+     *
+     * @return BlogOptions
+     */
+    public function setAutoPublishPost($autoPublishPost)
+    {
+        $this->autoPublishPost = $autoPublishPost;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getAutoPublishPost()
+    {
+        return $this->autoPublishPost;
+    }
+
+    /**
      * @param bool $autoPublishComment
      *
      * @return BlogOptions
@@ -260,23 +314,23 @@ class BlogOptions
     }
 
     /**
-     * @param bool $autoPublishPost
-     *
-     * @return BlogOptions
+     * @return int
      */
-    public function setAutoPublishPost($autoPublishPost)
+    public function getCommentModerationMode()
     {
-        $this->autoPublishPost = $autoPublishPost;
-
-        return $this;
+        return $this->commentModerationMode;
     }
 
     /**
-     * @return bool
+     * @param int $commentModerationMode
+     *
+     * @return BlogOptions
      */
-    public function getAutoPublishPost()
+    public function setCommentModerationMode($commentModerationMode)
     {
-        return $this->autoPublishPost;
+        $this->commentModerationMode = $commentModerationMode;
+
+        return $this;
     }
 
     /**
@@ -317,6 +371,26 @@ class BlogOptions
     public function getDisplayTitle()
     {
         return $this->displayTitle;
+    }
+
+    /**
+     * @param bool $displayFullPosts
+     *
+     * @return BlogOptions
+     */
+    public function setDisplayFullPosts($displayFullPosts)
+    {
+        $this->displayFullPosts = $displayFullPosts;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getDisplayFullPosts()
+    {
+        return $this->displayFullPosts;
     }
 
     /**
