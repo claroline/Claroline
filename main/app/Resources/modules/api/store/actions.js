@@ -92,7 +92,7 @@ actions.uploadFile = (file, uploadUrl = ['apiv2_file_upload'], onSuccess = () =>
           'X-Requested-With': 'XMLHttpRequest'
         })
       },
-      success: (response) => onSuccess(response[0])
+      success: (response) => Array.isArray(response) ? onSuccess(response[0]) : onSuccess(response)
     }
   })
 }

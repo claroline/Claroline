@@ -1,0 +1,7 @@
+{
+  "webpack": {
+    "entry": {
+      "resource": "resources/web-resource/bootstrap"
+    }
+  }
+}

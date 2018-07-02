@@ -1,4 +1,5 @@
 {
     "claroline_web_resource": "Ressource web",
-    "not_a_zip": "Le fichier doit être une archive .zip contenant un fichier \"index.html\" ou \"index.htm\"."
+    "not_a_zip": "Le fichier doit être une archive .zip contenant un fichier \"index.html\" ou \"index.htm\".",
+    "has_to_be_a_zip": "Le fichier doit être une archive .zip contenant un fichier \"index.html\" ou \"index.htm\"."
 }

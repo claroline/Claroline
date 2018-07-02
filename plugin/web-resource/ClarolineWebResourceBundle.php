@@ -12,11 +12,17 @@
 namespace Claroline\WebResourceBundle;
 
 use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\WebResourceBundle\Installation\AdditionalInstaller;
 
 class ClarolineWebResourceBundle extends DistributionPluginBundle
 {
     public function hasMigrations()
     {
         return false;
+    }
+
+    public function getAdditionalInstaller()
+    {
+        return new AdditionalInstaller();
     }
 }
