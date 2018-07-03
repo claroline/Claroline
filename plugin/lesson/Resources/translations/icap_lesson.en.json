@@ -1,6 +1,6 @@
 {
     "Cancel": "Cancel",
-    "Chapter Creation": "Create chapter",
+    "chapter_creation": "Create chapter",
     "Chapter Edition": "Edit chapter",
     "Chapter Move": "Move chapter",
     "Chapter Suppression": "Delete chapter",
@@ -28,8 +28,7 @@
     "copy_prefix": "Copy -",
     "create_root": "Create chapter into lesson root",
     "create_subchapter_button": "Create a subchapter",
-    "delete_also_children": "Do you really want to delete its subchapters too ?",
-    "delete_also_children_more": "Otherwise they will be placed in the nearest parent chapter.",
+    "delete_also_children": "Do you really want to delete its subchapters too? Otherwise they will be placed in the nearest parent chapter.",
     "delete_chapter_button": "Delete chapter",
     "delete_warning": "Do you really want to delete this chapter?",
     "disable_move": "Disable drag and drop",
@@ -57,8 +56,18 @@
     "new_chapter": "New chapter",
     "new_subchapter": "New subchapter",
     "next": "Next chapter",
+    "parent_chapter": "Parent chapter",
     "previous": "Previous chapter",
     "reorganize": "Reorganize",
     "same_level": "At the same level",
-    "unsaved_changes": "You have unsaved changes. Are you sure you want to leave this page?"
+    "unsaved_changes": "You have unsaved changes. Are you sure you want to leave this page?",
+    "before": "Before",
+    "after": "After",
+    "first": "First",
+    "last": "Last",
+    "subchapter": "As sub-chapter",
+    "sibling": "At the same level",
+    "empty_lesson_message": "This lesson is empty. You can start by adding a new chapter.",
+    "move_chapter": "Move chapter",
+    "move_relation" : "Relation with parent chapter"
 }

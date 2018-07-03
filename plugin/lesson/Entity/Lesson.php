@@ -9,6 +9,7 @@
 
 namespace Icap\LessonBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
@@ -23,12 +24,19 @@ use JMS\Serializer\Annotation\Expose;
  */
 class Lesson extends AbstractResource
 {
+    use UuidTrait;
+
     /**
      * @ORM\OneToOne(targetEntity="Icap\LessonBundle\Entity\Chapter", cascade={"all"})
      * @ORM\JoinColumn(name="root_id", referencedColumnName="id", onDelete="CASCADE")
      * @Expose
      */
     private $root;
+
+    public function __construct()
+    {
+        $this->refreshUuid();
+    }
 
     /**
      * @param mixed $root
@@ -51,10 +59,10 @@ class Lesson extends AbstractResource
      */
     public function createRoot(LifecycleEventArgs $event)
     {
-        if ($this->getRoot() == null) {
+        if (null === $this->getRoot()) {
             $em = $event->getEntityManager();
             $rootLesson = $this->getRoot();
-            if ($rootLesson == null) {
+            if (null === $rootLesson) {
                 $rootLesson = new Chapter();
                 $rootLesson->setLesson($this);
                 $rootLesson->setTitle('root_'.$this->getId());

@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The uuid of the lesson"
+    },
+    "title": {
+      "type": "string",
+      "description": "The title of the lesson"
+    },
+    "firstChapterId": {
+      "type": "string",
+      "description": "The uuid of the first chapter in the lesson"
+    },
+    "firstChapterSlug": {
+      "type": "string",
+      "description": "The slug of the first chapter in the lesson"
+    }
+  },
+  "claroline": {
+    "ids":  ["id"]
+  }
+}

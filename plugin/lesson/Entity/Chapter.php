@@ -2,8 +2,9 @@
 
 namespace Icap\LessonBundle\Entity;
 
-use Gedmo\Mapping\Annotation as Gedmo;
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Icap\NotificationBundle\Entity\UserPickerContent;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
@@ -19,6 +20,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Chapter
 {
+    use UuidTrait;
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -84,6 +87,11 @@ class Chapter
     private $parent;
 
     protected $userPicker = null;
+
+    public function __construct()
+    {
+        $this->refreshUuid();
+    }
 
     /**
      * @param mixed $id
