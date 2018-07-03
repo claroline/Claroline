@@ -1,4 +1,3 @@
-- [ ] find a way to document custom prop `context: T.oneOf(['row', 'selection'])` on list actions.
 - [ ] implement better loader.
 - [ ] append list filters to URL.
 - [ ] add default filter select in search.

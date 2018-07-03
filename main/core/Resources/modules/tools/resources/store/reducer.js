@@ -1,12 +1,11 @@
-import {makeReducer} from '#/main/app/store/reducer'
-import {makeListReducer} from '#/main/core/data/list/reducer'
+import {makeResourceExplorerReducer} from '#/main/core/resource/explorer/store'
 
-import {DIRECTORY_CHANGE} from '#/main/core/tools/resources/store/actions'
+import {selectors} from '#/main/core/tools/resources/store/selectors'
 
-export const reducer = {
-  root: makeReducer(null),
-  current: makeReducer(null, {
-    [DIRECTORY_CHANGE]: (state, action) => action.directoryNode
-  }),
-  resources: makeListReducer('resources')
+const reducer = {
+  [selectors.STORE_NAME]: makeResourceExplorerReducer(selectors.STORE_NAME)
+}
+
+export {
+  reducer
 }

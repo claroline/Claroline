@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Controller\APINew\Resource;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -49,29 +50,26 @@ class ResourceNodeController extends AbstractCrudController
      * @param string  $class
      *
      * @return JsonResponse
+     *
+     * @todo do not return hidden resources to standard users
      */
-    public function listAction(Request $request, $parent, $class = 'Claroline\CoreBundle\Entity\Resource\ResourceNode')
+    public function listAction(Request $request, $parent, $class = ResourceNode::class)
     {
-        // limits the search to the current workspace
         $options = $request->query->all();
-        //$options['hiddenFilters']['hidden'] = false;
 
         if (!empty($parent)) {
             // grab directory content
             $parentNode = $this->om
-                ->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
+                ->getRepository(ResourceNode::class)
                 ->findOneBy(['uuid' => $parent]);
 
-            $options['hiddenFilters']['parent'] = !empty($parentNode) ? $parentNode->getId() : null;
+            $options['hiddenFilters']['parent'] = $parentNode ? $parentNode->getId() : null;
         } else {
             $options['hiddenFilters']['parent'] = null;
         }
 
         return new JsonResponse(
-            $this->finder->search(
-                'Claroline\CoreBundle\Entity\Resource\ResourceNode',
-                $options
-            )
+            $this->finder->search(ResourceNode::class, $options)
         );
     }
 
@@ -94,12 +92,9 @@ class ResourceNodeController extends AbstractCrudController
         // Limit the search to only the authorized resource types which can be displayed on the portal
         $options['hiddenFilters']['resourceType'] = $this->container->get('claroline.manager.portal_manager')->getPortalEnabledResourceTypes();
 
-        $result = $this->finder->search(
-            'Claroline\CoreBundle\Entity\Resource\ResourceNode',
-            $options
+        return new JsonResponse(
+            $this->finder->search(ResourceNode::class, $options)
         );
-
-        return new JsonResponse($result);
     }
 
     /**
@@ -108,6 +103,8 @@ class ResourceNodeController extends AbstractCrudController
      * @param Request $request
      *
      * @return JsonResponse
+     *
+     * @deprecated
      */
     public function resourcesPickerAction(Request $request)
     {
@@ -122,11 +119,8 @@ class ResourceNodeController extends AbstractCrudController
         $options['hiddenFilters']['resourceTypeBlacklist'] = ['directory', 'activity'];
         $options['hiddenFilters']['managerRole'] = $user->getRoles();
 
-        $result = $this->finder->search(
-            'Claroline\CoreBundle\Entity\Resource\ResourceNode',
-            $options
+        return new JsonResponse(
+            $this->finder->search(ResourceNode::class, $options)
         );
-
-        return new JsonResponse($result);
     }
 }

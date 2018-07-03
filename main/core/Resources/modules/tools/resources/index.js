@@ -10,6 +10,12 @@ export const App = () => ({
   component: ResourcesTool,
   store: reducer,
   initialData: initialData => Object.assign({}, initialData, {
-    current: initialData.root || null
+    context: initialData.context,
+    resourceManager: {
+      initialized: true,
+      root: initialData.root,
+      current: initialData.root || null,
+      directories: initialData.root ? [initialData.root] : []
+    }
   })
 })

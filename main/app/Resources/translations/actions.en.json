@@ -1,6 +1,7 @@
 {
   "add": "Add",
   "click_here": "Click here",
+  "collapse": "Collapse",
   "configure": "Configure",
   "copy": "Copy",
   "create": "Create",
@@ -8,6 +9,7 @@
   "edit": "Edit",
   "edit-rights": "Manage rights",
   "edit-tags": "Manage tags",
+  "expand": "Expand",
   "export": "Export",
   "delete": "Delete",
   "deselect": "Deselect",

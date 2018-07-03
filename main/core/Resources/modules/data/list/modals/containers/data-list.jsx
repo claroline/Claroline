@@ -62,20 +62,15 @@ DataListModal.propTypes = {
 
 DataListModal.defaultProps = {
   title: trans('objects_select_title'),
-  confirmText: trans('objects_select_confirm'),
+  confirmText: trans('select', {}, 'actions'),
   icon: 'fa fa-fw fa-hand-pointer-o',
   onlyId: true
 }
 
-function mapStateToProps(state) {
-  //find a way to do it properly
-  return {
-    selected: select.selected(get(state, state.modal.props.name))
-  }
-}
-
 const ConnectedDataListModal = connect(
-  mapStateToProps
+  (state) => ({
+    selected: select.selected(get(state, state.modal.props.name))
+  })
 )(DataListModal)
 
 export {

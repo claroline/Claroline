@@ -6,11 +6,12 @@ import {trans} from '#/main/core/translation'
 import {Page} from '#/main/app/page/components/page'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
-import {ResourceExplorer} from '#/main/core/resource/components/explorer'
+import {ResourceExplorer} from '#/main/core/resource/explorer/containers/explorer'
 import {getActions} from '#/main/core/resource/utils'
 import {hasPermission} from '#/main/core/resource/permissions'
 
-import {actions} from '#/main/core/tools/resources/store'
+import {selectors as explorerSelectors} from '#/main/core/resource/explorer/store'
+import {selectors} from '#/main/core/tools/resources/store'
 
 const Tool = props =>
   <Page
@@ -20,8 +21,7 @@ const Tool = props =>
     actions={props.current && props.getActions([props.current])}
   >
     <ResourceExplorer
-      root={props.root}
-      current={props.current}
+      name={selectors.STORE_NAME}
       primaryAction={(resourceNode) => ({
         type: 'url',
         label: trans('open', {}, 'actions'),
@@ -32,33 +32,23 @@ const Tool = props =>
         }]
       })}
       actions={(resourceNodes) => props.getActions(resourceNodes)}
-      changeDirectory={props.changeDirectory}
     />
   </Page>
 
 Tool.propTypes = {
-  root: T.shape(
-    ResourceNodeTypes.propTypes
-  ),
   current: T.shape(
     ResourceNodeTypes.propTypes
   ),
-  getActions: T.func.isRequired,
-  changeDirectory: T.func.isRequired
+  getActions: T.func.isRequired
 }
 
 const ResourcesTool = connect(
   state => ({
-    root: state.root,
-    current: state.current
+    current: explorerSelectors.current(explorerSelectors.explorer(state, selectors.STORE_NAME))
   }),
   dispatch => ({
     getActions(resourceNodes) {
       return getActions(resourceNodes, dispatch)
-    },
-
-    changeDirectory(directoryNode) {
-      dispatch(actions.changeDirectory(directoryNode))
     }
   })
 )(Tool)

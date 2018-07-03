@@ -11,6 +11,11 @@ const Summary = {
     pinned: T.bool,
     title: T.string,
     links: T.arrayOf(T.shape(merge({}, Action.propTypes, {
+      collapsed: T.bool,
+      // It forces the display of the collapse button even if children is empty
+      // It permits to dynamic load the children
+      collapsible: T.bool,
+      toggleCollapse: T.func,
       additional: T.arrayOf(T.shape(
         Action.propTypes
       )),

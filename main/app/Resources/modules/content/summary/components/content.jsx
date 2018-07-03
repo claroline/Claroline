@@ -1,9 +1,8 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import merge from 'lodash/merge'
 
-import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {Summary} from '#/main/app/content/summary/components/summary'
+import {Summary as SummaryTypes} from '#/main/app/content/summary/prop-types'
 
 const SummarizedContent = props =>
   <section className="summarized-content">
@@ -19,21 +18,9 @@ const SummarizedContent = props =>
   </section>
 
 SummarizedContent.propTypes = {
-  summary: T.shape({
-    displayed: T.bool.isRequired,
-    opened: T.bool,
-    pinned: T.bool,
-    title: T.string,
-    links: T.arrayOf(T.shape(merge({}, ActionTypes.propTypes, {
-      additional: T.arrayOf(T.shape(
-        ActionTypes.propTypes
-      )),
-      // TODO : find a way to document more nesting
-      children: T.arrayOf(T.shape(
-        ActionTypes.propTypes
-      ))
-    })))
-  }).isRequired,
+  summary: T.shape(
+    SummaryTypes.propTypes
+  ).isRequired,
   children: T.any.isRequired
 }
 

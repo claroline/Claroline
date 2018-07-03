@@ -1,6 +1,7 @@
 {
   "add": "Ajouter",
   "click_here": "Cliquez ici",
+  "collapse": "Replier",
   "comment": "Laisser un commentaire",
   "configure": "Configurer",
   "copy": "Copier",
@@ -9,6 +10,7 @@
   "edit": "Modifier",
   "edit-rights": "Gérer les droits",
   "edit-tags": "Gérer les tags",
+  "expand": "Déplier",
   "export": "Exporter",
   "delete": "Supprimer",
   "deselect": "Déselectionner",
