@@ -31,6 +31,7 @@ class DatabaseWriterTest extends MockeryTestCase
         parent::setUp();
 
         $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
+        $this->om->shouldReceive('getRepository')->andReturn($this->mock('Doctrine\ORM\EntityRepository'));
         $this->im = $this->mock('Claroline\CoreBundle\Manager\IconManager');
         $this->mm = $this->mock('Claroline\CoreBundle\Manager\Resource\MaskManager');
         $this->tm = $this->mock('Claroline\CoreBundle\Manager\ToolManager');
@@ -65,7 +66,7 @@ class DatabaseWriterTest extends MockeryTestCase
         $decoderRepo->shouldReceive('findOneBy')
             ->with(['name' => 'open', 'resourceType' => $resourceType])
             ->andReturn($decoder);
-        $this->em->shouldReceive('persist')->once();
+        $this->om->shouldReceive('persist')->once();
     }
 
     public function testPersistCustomActionIfDecodersAreUnknown()

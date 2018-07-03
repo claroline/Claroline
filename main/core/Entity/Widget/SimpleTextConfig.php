@@ -16,6 +16,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="claro_simple_text_widget_config")
+ *
+ * @deprecated
  */
 class SimpleTextConfig
 {

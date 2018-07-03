@@ -1,5 +1,9 @@
 {
-    "new_resource": "Nouvelle resource",
+    "add_resource": "Ajouter une ressource",
+    "new_resource": "Nouvelle ressource",
+    "new_resource_select": "1. Choisir le type de ressource à créer",
+    "new_resource_configure": "2. Configurer la ressource",
+    "new_resource_configure_rights": "3. Configurer les droits",
     "activity": "Activité",
     "close_redirect_desktop": "Bureau",
     "close_redirect_workspace": "Ouverture de l'espace d'activités",

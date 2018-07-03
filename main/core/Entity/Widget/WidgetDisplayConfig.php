@@ -35,6 +35,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  * )
  * @DoctrineAssert\UniqueEntity({"widgetInstance", "workspace"})
  * @DoctrineAssert\UniqueEntity({"widgetInstance", "user"})
+ *
+ * @deprecated
  */
 class WidgetDisplayConfig
 {

@@ -98,6 +98,7 @@ plugin:
           tags: [content]
           exportable: true
           actions:
+              # Downloads the underlying resource file
               - name: download
                 decoder: export
                 group: transfer
@@ -159,31 +160,6 @@ plugin:
           class: exchange
 
     widgets:
-        #- name: core_resource_logger
-        #      is_configurable: true
-        #      is_displayable_in_desktop: true
-        #      is_displayable_in_workspace: true
-        #- name: simple_text
-        #      is_configurable: true
-        #      is_displayable_in_desktop: true
-        #      is_displayable_in_workspace: true
-        #- name: my_workspaces
-        #      is_configurable: false
-        #      is_displayable_in_desktop: true
-        #      is_displayable_in_workspace: false
-        #- name: my_profile
-        #      is_configurable: false
-        #      is_displayable_in_desktop: true
-        #      is_displayable_in_workspace: false
-        #- name: resources_widget
-        #      is_configurable: true
-        #      is_displayable_in_desktop: true
-        #      is_displayable_in_workspace: true
-        #- name: resource_text
-        #      is_configurable: true
-        #      is_displayable_in_desktop: true
-        #      is_displayable_in_workspace: true
-
         - name: simple
           class: Claroline\CoreBundle\Entity\Widget\Type\SimpleWidget
           context: [workspace, desktop]
@@ -191,27 +167,33 @@ plugin:
 
         - name: list
           class: Claroline\CoreBundle\Entity\Widget\Type\ListWidget
-          abstract: true
+          sources: [list]
 
         - name: profile
           class: Claroline\CoreBundle\Entity\Widget\Type\ProfileWidget
           context: [workspace, desktop]
           tags: [users]
 
-        - name: resource-list
-          parent: list
+        - name: resource
+          class: Claroline\CoreBundle\Entity\Widget\Type\ResourceWidget
           context: [workspace, desktop]
           tags: [resources]
 
-        - name: user-list
-          parent: list
+    data_sources:
+        - name: resources
+          type: list
           context: [workspace, desktop]
-          tags: [users]
+          tags: [resources]
 
-        - name: workspace-list
-          parent: list
+        - name: workspaces
+          type: list
           context: [desktop]
           tags: [workspaces]
+
+        - name: users
+          type: list
+          context: [workspace, desktop]
+          tags: [users]
 
     tools:
         - name: home

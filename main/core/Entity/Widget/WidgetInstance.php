@@ -16,6 +16,8 @@ use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * WidgetInstance entity.
+ *
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WidgetInstanceRepository")
  * @ORM\Table(name="claro_widget_instance")
  */
@@ -27,11 +29,22 @@ class WidgetInstance
     /**
      * The name of the instance.
      *
-     * @ORM\Column(name="widget_name")
+     * @ORM\Column(name="widget_name", nullable=true)
      *
      * @var string
+     *
+     * @deprecated. moved on WidgetContainer. Kept for migration.
      */
     private $name;
+
+    /**
+     * The position of the instance inside its container.
+     *
+     * @ORM\Column(name="widget_position", type="integer")
+     *
+     * @var int
+     */
+    private $position = 0;
 
     /**
      * The widget which is rendered.
@@ -44,31 +57,14 @@ class WidgetInstance
     private $widget;
 
     /**
-     * The color of the text inside the widget.
+     * The parent container.
      *
-     * @ORM\Column(nullable=true)
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetContainer", inversedBy="instances")
+     * @ORM\JoinColumn(name="container_id", referencedColumnName="id")
      *
-     * @var string
+     * @var WidgetContainer
      */
-    private $color = null;
-
-    /**
-     * The type of the background (none, color, image).
-     *
-     * @ORM\Column()
-     *
-     * @var string
-     */
-    private $backgroundType = 'none';
-
-    /**
-     * The background data (either the color or the image url).
-     *
-     * @ORM\Column(nullable=true)
-     *
-     * @var string
-     */
-    private $background = null;
+    private $container;
 
     /**
      * Get name.
@@ -81,13 +77,23 @@ class WidgetInstance
     }
 
     /**
-     * Set name.
+     * Get position.
      *
-     * @param string $name
+     * @return int
      */
-    public function setName($name)
+    public function getPosition()
     {
-        $this->name = $name;
+        return $this->position;
+    }
+
+    /**
+     * Set position.
+     *
+     * @param int $position
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
     }
 
     /**
@@ -111,62 +117,22 @@ class WidgetInstance
     }
 
     /**
-     * Get color.
+     * Get widget container.
      *
-     * @return string
+     * @return WidgetContainer
      */
-    public function getColor()
+    public function getContainer()
     {
-        return $this->color;
+        return $this->container;
     }
 
     /**
-     * Set color.
+     * Set widget container.
      *
-     * @param string $color
+     * @param WidgetContainer $container
      */
-    public function setColor($color)
+    public function setContainer(WidgetContainer $container)
     {
-        $this->color = $color;
-    }
-
-    /**
-     * Get background type.
-     *
-     * @return string
-     */
-    public function getBackgroundType()
-    {
-        return $this->backgroundType;
-    }
-
-    /**
-     * Set background type.
-     *
-     * @param string $backgroundType
-     */
-    public function setBackgroundType($backgroundType)
-    {
-        $this->backgroundType = $backgroundType;
-    }
-
-    /**
-     * Get background.
-     *
-     * @return string
-     */
-    public function getBackground()
-    {
-        return $this->background;
-    }
-
-    /**
-     * Set background.
-     *
-     * @param string $background
-     */
-    public function setBackground($background)
-    {
-        $this->background = $background;
+        $this->container = $container;
     }
 }

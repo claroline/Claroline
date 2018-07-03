@@ -1,6 +1,11 @@
 import {makeReducer} from '#/main/core/scaffolding/reducer'
 
 import {SimpleWidget} from '#/main/core/widget/types/simple/components/widget'
+import {SimpleWidgetParameters} from '#/main/core/widget/types/simple/components/parameters'
+
+export const Parameters = () => ({
+  component: SimpleWidgetParameters
+})
 
 /**
  * Simple widget application.
@@ -13,7 +18,7 @@ import {SimpleWidget} from '#/main/core/widget/types/simple/components/widget'
 export const App = (context, parameters) => ({
   component: SimpleWidget,
   store: {
-    content: makeReducer(null, {}),
+    content: makeReducer(null, {})
   },
   initialData: () => ({ // function is for retro compatibility with bootstrap()
     content: parameters.content

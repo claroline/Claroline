@@ -1,5 +1,6 @@
 import get from 'lodash/get'
 
+import {number} from '#/main/app/intl'
 import {trans} from '#/main/core/translation'
 
 const action = (resourceNodes) => ({ // todo collection
@@ -11,7 +12,7 @@ const action = (resourceNodes) => ({ // todo collection
   subscript: 1 === resourceNodes.length && {
     type: 'label',
     status: 'default',
-    value: get(resourceNodes[0], 'meta.views')
+    value: number(get(resourceNodes[0], 'meta.views') || 0, true)
   },
   request: {
     type: 'publish',

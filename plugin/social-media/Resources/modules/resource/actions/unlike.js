@@ -1,5 +1,6 @@
 import get from 'lodash/get'
 
+import {number} from '#/main/app/intl'
 import {trans} from '#/main/core/translation'
 import {isAuthenticated} from '#/main/core/user/current'
 
@@ -12,7 +13,7 @@ const action = (resourceNodes) => ({ // todo collection
   subscript: 1 === resourceNodes.length && {
     type: 'label',
     status: 'primary',
-    value: get(resourceNodes[0], 'social.likes') || 0
+    value: number(get(resourceNodes[0], 'social.likes') || 0, true)
   },
   request: {
     url: ['icap_socialmedia_unlike', {}],

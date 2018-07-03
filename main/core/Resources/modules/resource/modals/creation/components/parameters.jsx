@@ -9,7 +9,6 @@ import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {ContentMeta} from '#/main/app/content/meta/components/meta'
 import {Await} from '#/main/app/components/await'
 
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {MODAL_RESOURCE_CREATION_RIGHTS} from '#/main/core/resource/modals/creation/components/rights'
 
 import {getResource} from '#/main/core/resources'
@@ -31,10 +30,10 @@ class ParametersModalComponent extends Component {
   render() {
     return (
       <Modal
-        {...omit(this.props, 'parent', 'newNode', 'saveEnabled', 'save', 'configureRights')}
+        {...omit(this.props, 'parent', 'newNode', 'saveEnabled', 'save')}
         icon="fa fa-fw fa-plus"
         title={trans('new_resource', {}, 'resource')}
-        subtitle="2. Configurer la ressource"
+        subtitle={trans('new_resource_configure', {}, 'resource')}
       >
         <ContentMeta meta={this.props.newNode.meta} />
 
@@ -53,10 +52,10 @@ class ParametersModalComponent extends Component {
 
         <Button
           className="modal-btn btn-link"
-          type="callback"
+          type="modal"
           label={trans('edit-rights', {}, 'actions')}
           disabled={!this.props.saveEnabled}
-          callback={this.props.configureRights}
+          modal={[MODAL_RESOURCE_CREATION_RIGHTS, {}]}
         />
 
         <Button
@@ -81,7 +80,6 @@ ParametersModalComponent.propTypes = {
   ).isRequired,
   saveEnabled: T.bool.isRequired,
   save: T.func.isRequired,
-  configureRights: T.func.isRequired,
   fadeModal: T.func.isRequired
 }
 
@@ -94,9 +92,6 @@ const ParametersModal = connect(
   (dispatch) => ({
     save(parent, close) {
       dispatch(actions.create(parent)).then(close)
-    },
-    configureRights() {
-      dispatch(modalActions.showModal(MODAL_RESOURCE_CREATION_RIGHTS, {}))
     }
   })
 )(ParametersModalComponent)

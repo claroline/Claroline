@@ -2,9 +2,6 @@
  * Widgets barrel.
  */
 
-/*@import "common";
-@import "simple-text";
-@import "slideshow";*/
 
 .widget-container {
     text-align: right;
@@ -12,16 +9,34 @@
 
 .widget {
     text-align: left;
-    background: white;
     padding: 15px 30px;
     margin-bottom: 20px;
 }
 
-/*.widgets-preview {
-    margin: 0;
-    list-style: none;
-}*/
+.widget-layout-preview {
+    display: block;
+    min-width: 100%;
+    margin-bottom: @component-margin-bottom;
 
-.widget-preview {
+    .widget-col-preview {
+        background: #f5f5f5;
+        border-radius: @border-radius-base;
+        height: 60px;
+        width: 100%;
+    }
+}
 
+button.widget-layout-preview {
+    &:hover {
+        .widget-col-preview {
+            background: @state-info-bg;
+        }
+    }
+
+    &:focus,
+    &:active {
+        .widget-col-preview {
+            background: @state-info-bg;
+        }
+    }
 }

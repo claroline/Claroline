@@ -12,16 +12,14 @@
 namespace Claroline\CoreBundle\Repository\Widget;
 
 use Doctrine\ORM\EntityRepository;
-use JMS\DiExtraBundle\Annotation as DI;
 
 class WidgetRepository extends EntityRepository
 {
     /**
      * Finds all available widgets in the platform.
-     *   - It only grabs widgets from enabled plugins.
-     *   - It also excludes abstract widgets (because they are not usable without implementation).
+     * It only grabs widgets from enabled plugins.
      *
-     * @param array $enabledPlugins
+     * @param array  $enabledPlugins
      * @param string $context
      *
      * @return array
@@ -31,7 +29,6 @@ class WidgetRepository extends EntityRepository
         return $this->createQueryBuilder('w')
             ->leftJoin('w.plugin', 'p')
             ->where('CONCAT(p.vendorName, p.bundleName) IN (:plugins)')
-            ->andWhere('w.abstract = 0')
             ->getQuery()
             ->setParameter('plugins', $enabledPlugins)
             ->getResult();

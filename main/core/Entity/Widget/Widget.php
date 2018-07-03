@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Widget;
 
+use Claroline\AppBundle\Entity\FromPlugin;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Plugin;
@@ -18,6 +19,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Widget entity.
+ *
+ * Describes a Widget provided by a plugin.
  *
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Widget\WidgetRepository")
  * @ORM\Table(name="claro_widget", uniqueConstraints={
@@ -28,6 +31,7 @@ class Widget
 {
     use Id;
     use Uuid;
+    use FromPlugin;
 
     const CONTEXT_DESKTOP = 'desktop';
     const CONTEXT_WORKSPACE = 'workspace';
@@ -61,21 +65,13 @@ class Widget
     private $class = null;
 
     /**
-     * Abstract widgets require to be implemented by another widget
-     * to be displayed.
+     * The list of DataSources accepted by the widget.
      *
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="json_array")
      *
-     * @var bool
+     * @var array
      */
-    private $abstract = false;
-
-    /**
-     * The abstract widget which is implemented if any.
-     *
-     * @var Widget
-     */
-    private $parent = null;
+    private $sources = [];
 
     /**
      * The rendering context of the widget (workspace, desktop).
@@ -154,21 +150,13 @@ class Widget
     }
 
     /**
-     * Get widget class or the one from the parent if any.
+     * Get widget class.
      *
      * @return string
      */
     public function getClass()
     {
-        if (!empty($this->class)) {
-            return $this->class;
-        }
-
-        if (!empty($this->parent)) {
-            return $this->parent->getClass();
-        }
-
-        return null;
+        return $this->class;
     }
 
     /**
@@ -182,36 +170,23 @@ class Widget
     }
 
     /**
-     * Is it an abstract widget ?
+     * Get sources.
      *
-     * @return bool
+     * @return array
      */
-    public function isAbstract()
+    public function getSources()
     {
-        return $this->abstract;
+        return $this->sources;
     }
 
     /**
-     * @param $abstract
-     */
-    public function setAbstract($abstract)
-    {
-        $this->abstract = $abstract;
-    }
-
-    /**
-     * Get parent.
+     * Set sources.
      *
-     * @return Widget
+     * @param array $sources
      */
-    public function getParent()
+    public function setSources(array $sources)
     {
-        return $this->parent;
-    }
-
-    public function setParent(self $widget = null)
-    {
-        $this->parent = $widget;
+        $this->sources = $sources;
     }
 
     /**
@@ -255,16 +230,12 @@ class Widget
     }
 
     /**
-     * Get widget tags and the one from its parent if any.
+     * Get tags.
      *
      * @return array
      */
     public function getTags()
     {
-        if (!empty($this->parent)) {
-            return array_merge($this->parent->getTags(), $this->tags);
-        }
-
         return $this->tags;
     }
 

@@ -68,25 +68,15 @@ class WidgetInstanceSerializer
 
         return [
             'id' => $widgetInstance->getUuid(),
-            'name' => $widgetInstance->getName(),
             'type' => $widget->getName(),
-            'display' => [
-                'color' => $widgetInstance->getColor(),
-                'backgroundType' => $widgetInstance->getBackgroundType(),
-                'background' => $widgetInstance->getBackground(),
-            ],
-            'parameters' => $parameters
+            'source' => null, // todo
+            'parameters' => $parameters,
         ];
     }
 
     public function deserialize($data, WidgetInstance $widgetInstance, array $options = [])
     {
         $this->sipe('id', 'setUuid', $data, $widgetInstance);
-        $this->sipe('name', 'setName', $data, $widgetInstance);
-
-        $this->sipe('display.color', 'setColor', $data, $widgetInstance);
-        $this->sipe('display.backgroundType', 'setBackgroundType', $data, $widgetInstance);
-        $this->sipe('display.background', 'setBackground', $data, $widgetInstance);
 
         /** @var Widget $widget */
         $widget = $this->om
@@ -108,7 +98,7 @@ class WidgetInstanceSerializer
                     $parametersClass = $widget->getClass();
 
                     /** @var AbstractWidget $typeParameters */
-                    $typeParameters = new $parametersClass;
+                    $typeParameters = new $parametersClass();
                 }
 
                 // deserializes custom config and link it to the instance

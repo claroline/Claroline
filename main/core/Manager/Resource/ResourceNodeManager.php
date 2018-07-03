@@ -2,88 +2,43 @@
 
 namespace Claroline\CoreBundle\Manager\Resource;
 
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @DI\Service("claroline.manager.resource_node")
  */
 class ResourceNodeManager
 {
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    private $authorization;
-
-    /**
-     * @var StrictDispatcher
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var ObjectManager
-     */
+    /** @var ObjectManager */
     private $om;
 
-    /**
-     * @var ResourceNodeSerializer
-     */
-    private $serializer;
-
-    /**
-     * @var RightsManager
-     */
-    private $rightsManager;
-
-    /**
-     * @var ResourceManager
-     */
+    /** @var ResourceManager */
     private $resourceManager;
 
     /**
      * ResourceNodeManager constructor.
      *
      * @DI\InjectParams({
-     *     "authorization"          = @DI\Inject("security.authorization_checker"),
-     *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
-     *     "eventDispatcher"        = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "resourceNodeSerializer" = @DI\Inject("claroline.serializer.resource_node"),
-     *     "rightsManager"          = @DI\Inject("claroline.manager.rights_manager"),
-     *     "resourceManager"        = @DI\Inject("claroline.manager.resource_manager"),
-     *     "session"                = @DI\Inject("session")
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "session"         = @DI\Inject("session")
      * })
      *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param StrictDispatcher              $eventDispatcher
-     * @param ObjectManager                 $om
-     * @param ResourceNodeSerializer        $resourceNodeSerializer
-     * @param RightsManager                 $rightsManager
-     * @param ResourceManager               $resourceManager
-     * @param SessionInterface              $session
+     * @param ObjectManager    $om
+     * @param ResourceManager  $resourceManager
+     * @param SessionInterface $session
      */
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        StrictDispatcher $eventDispatcher,
         ObjectManager $om,
-        ResourceNodeSerializer $resourceNodeSerializer,
-        RightsManager $rightsManager,
         ResourceManager $resourceManager,
         SessionInterface $session
     ) {
-        $this->authorization = $authorization;
-        $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
-        $this->serializer = $resourceNodeSerializer; // todo : load from the SerializerProvider
-        $this->rightsManager = $rightsManager;
         $this->resourceManager = $resourceManager;
         $this->session = $session;
     }
@@ -93,11 +48,11 @@ class ResourceNodeManager
         //if a code is defined
         if ($accessCode = $resourceNode->getAccessCode()) {
             if ($accessCode === $code) {
-                $this->session->set($resourceNode->getGuid(), true);
+                $this->session->set($resourceNode->getUuid(), true);
 
                 return true;
             } else {
-                $this->session->set($resourceNode->getGuid(), false);
+                $this->session->set($resourceNode->getUuid(), false);
 
                 return false;
             }
@@ -125,7 +80,7 @@ class ResourceNodeManager
     public function isUnlocked(ResourceNode $node)
     {
         if ($node->getAccessCode()) {
-            $access = $this->session->get($node->getGuid());
+            $access = $this->session->get($node->getUuid());
 
             return null !== $access ? $access : false;
         }

@@ -85,6 +85,7 @@
 // we use direct child selector to avoid break the display of
 // groups inside the body.
 .modal-content > .data-details .sections,
+.modal-content div > .data-form .form-sections, // spa wrapper
 .modal-content > .data-form .form-sections,
 .modal-content > .panel-group {
     margin: 0;
@@ -111,6 +112,7 @@
 }
 
 .modal-content {
+    div > .data-form + .data-form, // spa wrapper
     > .data-form + .data-form {
         border-top: 1px solid @modal-header-border-color;
     }
@@ -133,6 +135,7 @@
 }
 
 .modal-content > .data-details .primary-section,
+.modal-content div > .data-form .form-primary-section, // spa wrapper
 .modal-content > .data-form .form-primary-section {
     // removes panel styles
     box-shadow: none;

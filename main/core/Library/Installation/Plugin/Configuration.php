@@ -44,6 +44,7 @@ class Configuration implements ConfigurationInterface
         $pluginSection = $rootNode->children('plugin');
         $this->addGeneralSection($pluginSection);
         $this->addWidgetSection($pluginSection);
+        $this->addDataSourceSection($pluginSection);
         $this->addResourceSection($pluginSection);
         $this->addResourceActionSection($pluginSection);
         $this->addToolSection($pluginSection);
@@ -263,8 +264,9 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                         ->scalarNode('class')->defaultValue(null)->end()
-                        ->booleanNode('abstract')->defaultFalse()->end()
-                        ->scalarNode('parent')->defaultValue(null)->end()
+                        ->arrayNode('sources')
+                            ->prototype('scalar')->end()
+                        ->end()
                         ->booleanNode('exportable')->defaultFalse()->end()
                         ->arrayNode('context')
                             ->prototype('scalar')->end()
@@ -278,6 +280,27 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
         ->end()->end();
+    }
+
+    private function addDataSourceSection(NodeBuilder $pluginSection)
+    {
+        $pluginSection
+            ->arrayNode('data_sources')
+                ->prototype('array')
+                    ->children()
+                        ->scalarNode('name')->isRequired()->end()
+                        ->scalarNode('type')->isRequired()->end()
+                        ->arrayNode('context')
+                            ->prototype('scalar')->end()
+                            ->defaultValue(['desktop', 'workspace'])
+                        ->end()
+                        ->arrayNode('tags')
+                            ->prototype('scalar')->end()
+                            ->defaultValue([])
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
     }
 
     private function addToolSection(NodeBuilder $pluginSection)

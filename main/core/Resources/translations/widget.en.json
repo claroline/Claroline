@@ -1,10 +1,17 @@
 {
     "widget": "Widget",
     "add_widget": "Add a widget",
-    "edit_widget": "Edit widget",
     "add_widget_before": "Insert a widget",
+    "add_content": "Add a content",
     "widget_delete_confirm_title": "Delete widget",
     "widget_delete_confirm_message": "Are you sure you want to delete this widget ?",
+    "new_widget": "New widget",
+    "new_widget_select": "1. Choose the type of widget to add",
+    "new_widget_configure": "2. Configure the widget",
+    "new_content": "New content",
+    "new_content_select": "1. Choose the type of content to add",
+    "new_content_configure": "2. Configure the content",
+    "no_widget": "No widget have been added yet.",
 
     "simple": "Simple content",
     "list": "Data list",

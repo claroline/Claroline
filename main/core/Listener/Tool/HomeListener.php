@@ -74,7 +74,7 @@ class HomeListener
                 ],
                 'tabs' => [],
                 'widgets' => [
-                    [
+                    /*[
                         'id' => 'id1',
                         'type' => 'resource-list',
                         'name' => 'Choisissez votre module de formation',
@@ -85,7 +85,7 @@ class HomeListener
                             'sortable' => false,
                             'paginated' => false,
                         ],
-                    ],
+                    ],*/
                 ],
             ]
         );
@@ -115,7 +115,7 @@ class HomeListener
                 ],
                 'tabs' => [],
                 'widgets' => [
-                    [
+                    /*[
                         'id' => 'id1',
                         'type' => 'resource-list',
                         'name' => 'Choisissez votre module de formation',
@@ -126,7 +126,7 @@ class HomeListener
                             'sortable' => false,
                             'paginated' => false,
                         ],
-                    ],
+                    ],*/
                 ],
             ]
         );

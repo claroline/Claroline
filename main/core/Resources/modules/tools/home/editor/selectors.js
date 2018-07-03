@@ -2,7 +2,7 @@ import {createSelector} from 'reselect'
 
 import {select as formSelect} from '#/main/core/data/form/selectors'
 
-const editorData = (state) => formSelect.data(state, 'editor')
+const editorData = (state) => formSelect.data(formSelect.form(state, 'editor'))
 
 const tabs = createSelector(
   [editorData],

@@ -5,6 +5,10 @@ namespace Claroline\CoreBundle\Entity\Widget\Type;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * SimpleWidget.
+ *
+ * Permits to display a simple HTML content text.
+ *
  * @ORM\Entity()
  * @ORM\Table(name="claro_widget_simple")
  */

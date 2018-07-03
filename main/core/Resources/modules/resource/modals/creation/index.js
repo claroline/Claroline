@@ -1,9 +1,10 @@
 /**
  * Resource Creation modal.
  *
- * The creation is split into two modals :
+ * The creation is split into 3 modals :
  *   - A first one, where the user select the type to create
  *   - A second one, where the user can configure the resource
+ *   - A third one, where the user can configure rights
  *
  * NB. Only the first modal is public to be sure resource creation
  * always follow the same process

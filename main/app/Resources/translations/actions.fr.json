@@ -19,6 +19,8 @@
   "like": "J'aime",
   "merge": "Fusionner",
   "move": "Déplacer",
+  "move_bottom": "Déplacer vers le bas",
+  "move_top": "Déplacer vers le haut",
   "open": "Ouvrir",
   "paste": "Coller",
   "publish": "Publier",

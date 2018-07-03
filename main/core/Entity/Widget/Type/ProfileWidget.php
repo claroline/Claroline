@@ -6,6 +6,10 @@ use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * ProfileWidget.
+ *
+ * Permits to display the profile of the defined user.
+ *
  * @ORM\Entity()
  * @ORM\Table(name="claro_widget_profile")
  */

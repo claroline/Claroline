@@ -7,7 +7,6 @@ import {trans} from '#/main/core/translation'
 import {Button} from '#/main/app/action/components/button'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {MODAL_RESOURCE_CREATION_PARAMETERS} from '#/main/core/resource/modals/creation/components/parameters'
 
 import {actions, selectors} from '#/main/core/resource/modals/creation/store'
@@ -18,10 +17,10 @@ const MODAL_RESOURCE_CREATION_RIGHTS = 'MODAL_RESOURCE_CREATION_RIGHTS'
 
 const RightsModalComponent = props =>
   <Modal
-    {...omit(props, 'parent', 'saveEnabled', 'save', 'configure', 'updateRights')}
+    {...omit(props, 'parent', 'saveEnabled', 'save', 'updateRights')}
     icon="fa fa-fw fa-plus"
     title={trans('new_resource', {}, 'resource')}
-    subtitle="3. Configurer les droits"
+    subtitle={trans('new_resource_configure_rights', {}, 'resource')}
   >
     <ResourceRights
       resourceNode={props.newNode}
@@ -30,9 +29,9 @@ const RightsModalComponent = props =>
 
     <Button
       className="modal-btn btn-link"
-      type="callback"
+      type="modal"
       label={trans('configure', {}, 'actions')}
-      callback={props.configure}
+      modal={[MODAL_RESOURCE_CREATION_PARAMETERS, {}]}
     />
 
     <Button
@@ -55,7 +54,6 @@ RightsModalComponent.propTypes = {
   saveEnabled: T.bool.isRequired,
   save: T.func.isRequired,
   updateRights: T.func.isRequired,
-  configure: T.func.isRequired,
   fadeModal: T.func.isRequired
 }
 
@@ -71,9 +69,6 @@ const RightsModal = connect(
     },
     save(parent, close) {
       dispatch(actions.create(parent)).then(close)
-    },
-    configure() {
-      dispatch(modalActions.showModal(MODAL_RESOURCE_CREATION_PARAMETERS, {}))
     }
   })
 )(RightsModalComponent)

@@ -41,13 +41,18 @@ registry.add('core', {
     'list'         : () => { return import(/* webpackChunkName: "core-resource-list-widget" */ '#/main/core/widget/types/list') },
 
     // implementations
-    'simple'       : () => { return import(/* webpackChunkName: "core-simple-widget" */ '#/main/core/widget/types/simple') },
+    'simple'       : () => { return import(/* webpackChunkName: "core-simple-widget" */        '#/main/core/widget/types/simple') },
     'resource-list': () => { return import(/* webpackChunkName: "core-resource-list-widget" */ '#/main/core/widget/types/resource-list') },
-    'user-list'    : () => { return import(/* webpackChunkName: "core-user-list-preset" */ '#/main/core/widget/types/user-list') }
+    'user-list'    : () => { return import(/* webpackChunkName: "core-user-list-preset" */     '#/main/core/widget/types/user-list') }
   },
 
   data: {
+    types: {
 
+    },
+    sources: {
+
+    }
   },
 
   questions: {

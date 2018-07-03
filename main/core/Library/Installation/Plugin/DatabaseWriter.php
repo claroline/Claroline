@@ -15,6 +15,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Action\AdditionalAction;
 use Claroline\CoreBundle\Entity\Activity\ActivityRuleAction;
+use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
@@ -32,6 +33,7 @@ use Claroline\CoreBundle\Manager\IconSetManager;
 use Claroline\CoreBundle\Manager\Resource\MaskManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\ToolMaskDecoderManager;
+use Claroline\CoreBundle\Repository\PluginRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -59,6 +61,9 @@ class DatabaseWriter
     private $toolManager;
     private $toolMaskManager;
     private $iconSetManager;
+
+    /** @var PluginRepository */
+    private $pluginRepository;
 
     /**
      * Constructor.
@@ -102,6 +107,8 @@ class DatabaseWriter
         $this->toolManager = $toolManager;
         $this->toolMaskManager = $toolMaskManager;
         $this->iconSetManager = $iconSetManager;
+
+        $this->pluginRepository = $this->em->getRepository('ClarolineCoreBundle:Plugin');
     }
 
     /**
@@ -137,7 +144,7 @@ class DatabaseWriter
     public function update(PluginBundleInterface $pluginBundle, array $pluginConfiguration)
     {
         /** @var Plugin $plugin */
-        $plugin = $this->em->getRepository('ClarolineCoreBundle:Plugin')->findOneBy([
+        $plugin = $this->pluginRepository->findOneBy([
              'vendorName' => $pluginBundle->getVendorName(),
              'bundleName' => $pluginBundle->getBundleName(),
         ]);
@@ -166,7 +173,7 @@ class DatabaseWriter
      */
     public function delete($pluginFqcn)
     {
-        $plugin = $this->getPluginByFqcn($pluginFqcn);
+        $plugin = $this->pluginRepository->findOneByBundleFQCN($pluginFqcn);
         // code below is for "re-parenting" the resources which depend on one
         // of the resource types the plugin might have declared
 
@@ -195,25 +202,11 @@ class DatabaseWriter
      */
     public function isSaved(PluginBundleInterface $plugin)
     {
-        if (null !== $this->getPluginByFqcn(get_class($plugin))) {
+        if (null !== $this->pluginRepository->findOneByBundleFQCN(get_class($plugin))) {
             return true;
         }
 
         return false;
-    }
-
-    /**
-     * @param string $pluginFqcn
-     *
-     * @return Plugin
-     */
-    private function getPluginByFqcn($pluginFqcn)
-    {
-        $plugin = $this->em
-            ->getRepository('ClarolineCoreBundle:Plugin')
-            ->findOneByBundleFQCN($pluginFqcn);
-
-        return $plugin;
     }
 
     /**
@@ -233,6 +226,10 @@ class DatabaseWriter
 
         foreach ($processedConfiguration['widgets'] as $widget) {
             $this->createWidget($widget, $plugin);
+        }
+
+        foreach ($processedConfiguration['data_sources'] as $source) {
+            $this->createDataSource($source, $plugin);
         }
 
         foreach ($processedConfiguration['tools'] as $tool) {
@@ -271,6 +268,10 @@ class DatabaseWriter
             $this->updateWidget($widgetConfiguration, $plugin);
         }
 
+        foreach ($processedConfiguration['data_sources'] as $sourceConfiguration) {
+            $this->updateDataSource($sourceConfiguration, $plugin);
+        }
+
         // cleans deleted widgets
 
         /** @var Widget[] $installedWidgets */
@@ -304,10 +305,11 @@ class DatabaseWriter
             return $action['action'];
         }, $actions);
 
-        $toRemove = array_filter($installedActions, function ($action) use ($actionsName) {
+        $toRemove = array_filter($installedActions, function (AdditionalAction $action) use ($actionsName) {
             return !in_array($action->getAction(), $actionsName);
         });
 
+        /** @var AdditionalAction $action */
         foreach ($toRemove as $action) {
             $this->log('Removing action '.$action->getAction());
             $this->em->remove($action);
@@ -335,8 +337,8 @@ class DatabaseWriter
             $this->updateAdminTool($adminTool, $plugin);
         }
 
-        foreach ($processedConfiguration['additional_action'] as $action) {
-            $this->updateAdditionalAction($action);
+        foreach ($processedConfiguration['additional_action'] as $actionConfiguration) {
+            $this->updateAdditionalAction($actionConfiguration);
         }
     }
 
@@ -652,14 +654,6 @@ class DatabaseWriter
         $widget = new Widget();
         $widget->setPlugin($plugin);
 
-        if (!empty($widgetConfiguration['parent'])) {
-            $parent = $this->em
-                ->getRepository('ClarolineCoreBundle:Widget\Widget')
-                ->findOneBy(['name' => $widgetConfiguration['parent']]);
-
-            $widget->setParent($parent);
-        }
-
         $this->persistWidget($widgetConfiguration, $widget);
 
         return $widget;
@@ -675,14 +669,50 @@ class DatabaseWriter
     {
         $widget->setName($widgetConfiguration['name']);
         $widget->setContext(isset($widgetConfiguration['context']) ? $widgetConfiguration['context'] : []);
+        $widget->setSources(isset($widgetConfiguration['sources']) ? $widgetConfiguration['sources'] : []);
         $widget->setClass(isset($widgetConfiguration['class']) ? $widgetConfiguration['class'] : null);
-        $widget->setAbstract((bool) $widgetConfiguration['abstract']);
         $widget->setExportable($widgetConfiguration['exportable']);
-        $widget->setTags($widgetConfiguration['tags']);
+        $widget->setTags(isset($widgetConfiguration['tags']) ? $widgetConfiguration['tags'] : []);
 
         $this->em->persist($widget);
 
         return $widget;
+    }
+
+    private function createDataSource($sourceConfiguration, Plugin $plugin)
+    {
+        $source = new DataSource();
+        $source->setPlugin($plugin);
+
+        $this->persistDataSource($sourceConfiguration, $source);
+
+        return $source;
+    }
+
+    private function persistDataSource($sourceConfiguration, DataSource $source)
+    {
+        $source->setName($sourceConfiguration['name']);
+        $source->setType($sourceConfiguration['type']);
+        $source->setContext(isset($sourceConfiguration['context']) ? $sourceConfiguration['context'] : []);
+        $source->setTags(isset($sourceConfiguration['tags']) ? $sourceConfiguration['tags'] : []);
+
+        $this->em->persist($source);
+
+        return $source;
+    }
+
+    private function updateDataSource($sourceConfiguration, Plugin $plugin)
+    {
+        /** @var DataSource $source */
+        $source = $this->em
+            ->getRepository('ClarolineCoreBundle:DataSource')
+            ->findOneBy(['name' => $sourceConfiguration['name']]);
+
+        if (is_null($source)) {
+            return $this->createDataSource($sourceConfiguration, $plugin);
+        } else {
+            return $this->persistDataSource($sourceConfiguration, $source);
+        }
     }
 
     /**

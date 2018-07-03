@@ -18,6 +18,8 @@
   "like": "Like",
   "merge": "Merge",
   "move": "Move",
+  "move_bottom": "Move to bottom",
+  "move_top": "Move to top",
   "open": "Open",
   "paste": "Paste",
   "publish": "Publish",
