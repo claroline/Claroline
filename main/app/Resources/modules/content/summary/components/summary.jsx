@@ -113,7 +113,7 @@ class SummaryLink extends Component {
           <ul className="step-children">
             {this.props.children.map(child =>
               <SummaryLink
-                key={toKey(child)}
+                key={toKey(child.label)}
                 opened={this.props.opened}
                 {...child}
               />
