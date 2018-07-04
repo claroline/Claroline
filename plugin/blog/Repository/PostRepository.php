@@ -204,7 +204,7 @@ class PostRepository extends EntityRepository
                 AND p.publication_date <= :currentDate
                 AND p.status = :status
                 GROUP BY y, m
-                ORDER BY p.publication_date DESC
+                ORDER BY y, m DESC
             ', $rsm)
             ->setParameter('blog', $blog->getId())
             ->setParameter('currentDate', new \DateTime())

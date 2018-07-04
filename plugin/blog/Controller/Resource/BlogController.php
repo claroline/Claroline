@@ -153,7 +153,7 @@ class BlogController extends Controller
             }
         }
 
-        $content = $this->renderView('IcapBlogBundle:blog:pdf:view.pdf.twig',
+        $content = $this->renderView('IcapBlogBundle:blog/pdf:view.pdf.twig',
             [
                 '_resource' => $blog,
                 'posts' => $items,

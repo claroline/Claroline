@@ -40,6 +40,9 @@ const PostComponent = props =>
               blogId={props.blogId}
               post={props.post}
               canEdit={props.canEdit}
+              publishPost={props.publishPost}
+              pinPost={props.pinPost}
+              deletePost={props.deletePost}
             />
           </div>
           {'sm' !== props.size && props.post.content &&
