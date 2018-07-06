@@ -1,5 +1,8 @@
 import {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import isEqual from 'lodash/isEqual'
+
+import {makeCancelable} from '#/main/app/api'
 
 class Await extends Component {
   constructor(props) {
@@ -11,15 +14,34 @@ class Await extends Component {
   }
 
   componentDidMount() {
-    this.props.for
-      .then((results) => {
-        if (this.props.then) {
-          this.props.then(results)
-        }
+    this.load()
+  }
 
-        this.setState({status: 'success'})
-      })
-      .catch(() => this.setState({status: 'error'}))
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.for, this.props.for)) {
+      this.load()
+    }
+  }
+
+  load() {
+    if (!this.pending) {
+      this.pending = makeCancelable(
+        this.props.for
+          .then((results) => {
+            if (this.props.then) {
+              this.props.then(results)
+            }
+
+            this.setState({status: 'success'})
+          })
+          .catch(() => this.setState({status: 'error'}))
+      )
+
+      this.pending.promise.then(
+        () => this.pending = null,
+        () => this.pending = null
+      )
+    }
   }
 
   render() {

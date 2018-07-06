@@ -58,13 +58,14 @@ const PageHeader = props =>
       </div>
     }
 
-    {0 !== props.actions.length &&
+    {(0 !== props.actions.length || props.actions instanceof Promise) &&
       <Toolbar
         className="page-actions"
         tooltip="bottom"
         toolbar={props.toolbar}
         actions={props.actions}
         scope="object"
+        topbar={true}
       />
     }
   </header>

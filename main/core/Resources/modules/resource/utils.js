@@ -25,6 +25,7 @@ function loadActions(resourceNodes, actions, dispatch) {
   const implementedActions = actions.filter(action => undefined !== asyncActions[action.name])
 
   return Promise.all(
+    // boot actions applications
     Object.keys(asyncActions).map(action => asyncActions[action]())
   ).then((loadedActions) => {
     // generates action from loaded modules
