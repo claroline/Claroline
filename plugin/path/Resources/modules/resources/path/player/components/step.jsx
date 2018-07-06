@@ -114,7 +114,8 @@ const AVAILABLE_EMBEDDED_RESOURCES = [
   'claroline_dropzone',
   'ujm_exercise',
   'claroline_web_resource',
-  'claroline_forum'
+  'claroline_forum',
+  'claroline_scorm'
 ]
 
 const SecondaryResources = props =>

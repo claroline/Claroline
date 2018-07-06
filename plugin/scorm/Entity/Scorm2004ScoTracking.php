@@ -16,7 +16,7 @@ use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\ScormBundle\Repository\Scorm2004ScoTrackingRepository")
+ * @ORM\Entity
  * @ORM\Table(name="claro_scorm_2004_sco_tracking")
  */
 class Scorm2004ScoTracking
@@ -219,7 +219,7 @@ class Scorm2004ScoTracking
         $pattern = '/^P([0-9]+Y)?([0-9]+M)?([0-9]+D)?T([0-9]+H)?([0-9]+M)?([0-9]+S)?$/';
         $formattedTime = '';
 
-        if (!empty($this->totalTime) && $this->totalTime !== 'PT' && preg_match($pattern, $this->totalTime)) {
+        if (!empty($this->totalTime) && 'PT' !== $this->totalTime && preg_match($pattern, $this->totalTime)) {
             $interval = new \DateInterval($this->totalTime);
             $time = new \DateTime();
             $time->setTimestamp(0);

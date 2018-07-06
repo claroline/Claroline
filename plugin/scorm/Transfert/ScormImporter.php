@@ -112,7 +112,7 @@ class ScormImporter extends Importer implements ConfigurationInterface
         foreach ($array['data'] as $item) {
             $tmpFile = new UploadedFile($this->getRootPath().$ds.$item['scorm']['path'], $name, null, null, null, true);
 
-            return $this->container->get('claroline.manager.scorm_manager')->createScorm(
+            return $this->container->get('claroline.manager.scorm_manager')->createScormResource(
                 $tmpFile,
                 $name,
                 $item['scorm']['version']

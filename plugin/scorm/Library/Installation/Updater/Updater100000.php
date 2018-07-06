@@ -51,7 +51,7 @@ class Updater100000 extends Updater
 
                 $this->om->persist($entity);
 
-                if ($i % 300 === 0) {
+                if (0 === $i % 300) {
                     $this->log("Flushing [{$i}/{$totalObjects}]");
                     $this->om->flush();
                 }

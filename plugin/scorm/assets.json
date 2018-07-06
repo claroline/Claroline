@@ -1,13 +1,13 @@
 {
   "webpack": {
     "entry": {
-      "results": "Results/results"
+      "resource": "resources/scorm/bootstrap"
     }
   },
 
   "styles": {
     "entry": {
-      "scorm-resource": "resources/scorm.less"
+      "resource": "resources/scorm.less"
     }
   }
 }

@@ -16,7 +16,7 @@ use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\ScormBundle\Repository\Scorm12ScoTrackingRepository")
+ * @ORM\Entity
  * @ORM\Table(name="claro_scorm_12_sco_tracking")
  */
 class Scorm12ScoTracking

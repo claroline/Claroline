@@ -1207,7 +1207,7 @@ class DropzoneManager
     ) {
         $data = !empty($drop) ? $this->serializeDrop($drop) : null;
 
-        $this->resourceEvalManager->createResourceEvaluation(
+        return $this->resourceEvalManager->createResourceEvaluation(
             $dropzone->getResourceNode(),
             $user,
             new \DateTime(),

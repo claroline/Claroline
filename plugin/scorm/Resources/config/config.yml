@@ -13,3 +13,6 @@ plugin:
       tags: [content, evaluation]
       activity_rules:
         - action: resource-scorm_2004-sco_result
+
+    - name: claroline_scorm
+      class: Claroline\ScormBundle\Entity\Scorm

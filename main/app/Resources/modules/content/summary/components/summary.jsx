@@ -111,7 +111,7 @@ class SummaryLink extends Component {
                     'fa-caret-right': this.state.collapsed,
                     'fa-caret-down': !this.state.collapsed
                   })}
-                  label={trans(this.state.collapsed ? 'expand':'collapse', {}, 'actions')}
+                  label={trans(this.state.collapsed ? 'expand': 'collapse', {}, 'actions')}
                   callback={this.toggleCollapse.bind(this)}
                 />
               }

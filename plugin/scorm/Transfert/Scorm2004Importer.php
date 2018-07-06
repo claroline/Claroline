@@ -11,8 +11,8 @@
 
 namespace Claroline\ScormBundle\Transfert;
 
-use Symfony\Component\Config\Definition\ConfigurationInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
  * @DI\Service("claroline.tool.resources.scorm2004_importer")

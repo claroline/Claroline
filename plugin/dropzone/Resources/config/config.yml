@@ -1,10 +1,3 @@
 plugin:
     has_options: false
     icon: icap_eval_icon.png
-
-    resources:
-        - name: icap_dropzone
-          class: Icap\DropzoneBundle\Entity\Dropzone
-          is_visible: true
-          activity_rules:
-            - action: resource-icap_dropzone-drop_evaluate

@@ -134,6 +134,7 @@ class Scorm2004Sco
     {
         return $this->scormResource;
     }
+
     public function getScoParent()
     {
         return $this->scoParent;

@@ -13,9 +13,9 @@ namespace Claroline\ScormBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ScormType extends AbstractType
 {
@@ -24,23 +24,23 @@ class ScormType extends AbstractType
         $builder->add(
             'name',
             TextType::class,
-            array(
+            [
                 'required' => true,
                 'constraints' => new NotBlank(),
-                'attr' => array('autofocus' => true),
-            )
+                'attr' => ['autofocus' => true],
+            ]
         );
         $builder->add(
             FileType::class,
             FileType::class,
-            array(
+            [
                 'required' => true,
                 'mapped' => false,
-                'constraints' => array(
+                'constraints' => [
                     new NotBlank(),
                     new File(),
-                ),
-           )
+                ],
+           ]
         );
     }
 
@@ -51,6 +51,6 @@ class ScormType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'resource'));
+        $resolver->setDefaults(['translation_domain' => 'resource']);
     }
 }

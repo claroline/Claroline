@@ -116,10 +116,10 @@ abstract class AbstractScormManifest
         $resourceTemplate = 'scos'.DIRECTORY_SEPARATOR.'resource_'.$resource['node']->getId().'.html';
 
         $resourceXML = $resourcesXML->addChild('resource');
-        $resourceXML->addAttribute('identifier',      'resource_'.$resource['node']->getId());
-        $resourceXML->addAttribute('type',            'webcontent');
+        $resourceXML->addAttribute('identifier', 'resource_'.$resource['node']->getId());
+        $resourceXML->addAttribute('type', 'webcontent');
         $resourceXML->addAttribute('adlcp:scormType', 'sco');
-        $resourceXML->addAttribute('href',            $resourceTemplate);
+        $resourceXML->addAttribute('href', $resourceTemplate);
 
         // Add resource template
         $resourceXML

@@ -857,7 +857,7 @@ class ResourceManager
                 if (!$softDelete) {
                     $event = $this->dispatcher->dispatch(
                         "delete_{$node->getResourceType()->getName()}",
-                        'DeleteResource',
+                        'Resource\DeleteResource',
                         [$resource, $softDelete]
                     );
                     $eventSoftDelete = $event->isSoftDelete();

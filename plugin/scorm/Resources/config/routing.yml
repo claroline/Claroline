@@ -1,9 +1,8 @@
-claro_scorm_bundle:
-    resource: "@ClarolineScormBundle/Controller/"
-    type:     annotation
-    prefix:   /
+# JSON API
+claro_scorm_bundle_api:
+    resource: "@ClarolineScormBundle/Controller/API/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true
 
-claro_cursus_bundle_api_scorm:
-    resource: "@ClarolineScormBundle/Controller/API/ScormController.php"
-    type:     annotation
-    prefix:   /
