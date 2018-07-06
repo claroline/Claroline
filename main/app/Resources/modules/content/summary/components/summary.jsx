@@ -92,10 +92,10 @@ class SummaryLink extends Component {
             <div className="step-actions">
               {this.props.additional
                 .filter(action => undefined === action.displayed || action.displayed)
-                .map((action) =>
+                .map((action, index) =>
                   <Button
                     {...action}
-                    key={toKey(action.label)}
+                    key={toKey(action.label) + index}
                     tooltip="bottom"
                     className="btn-link btn-summary"
                   />
@@ -121,10 +121,10 @@ class SummaryLink extends Component {
 
         {!this.state.collapsed && this.props.children.length > 0 &&
           <ul className="step-children">
-            {this.props.children.map(child =>
+            {this.props.children.map((child, index) =>
               <SummaryLink
                 {...child}
-                key={toKey(child.label)}
+                key={toKey(child.label) + index}
                 opened={this.props.opened}
               />
             )}
@@ -189,10 +189,10 @@ class Summary extends Component {
 
         {0 !== this.props.links.length &&
           <ul className="summary">
-            {this.props.links.map(link =>
+            {this.props.links.map((link, index) =>
               <SummaryLink
                 {...link}
-                key={toKey(link.label)}
+                key={toKey(link.label) + index}
                 opened={this.state.opened}
               />
             )}
