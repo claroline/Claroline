@@ -247,6 +247,10 @@ class ResourceNodeSerializer
             $resourceNode->setMimeType($mimeType);
         }
 
+        if (isset($data['rights'])) {
+            $this->deserializeRights($data['rights'], $resourceNode);
+        }
+
         $this->sipe('meta.published', 'setPublished', $data, $resourceNode);
         $this->sipe('meta.description', 'setDescription', $data, $resourceNode);
         $this->sipe('meta.portal', 'setPublishedToPortal', $data, $resourceNode);
@@ -268,6 +272,18 @@ class ResourceNodeSerializer
 
             $resourceNode->setAccessibleFrom($dateRange[0]);
             $resourceNode->setAccessibleUntil($dateRange[1]);
+        }
+    }
+
+    public function deserializeRights($rights, ResourceNode $resourceNode)
+    {
+        //additional datas might be required later (recursive, creations)
+        foreach ($rights as $right) {
+            $this->rightsManager->editPerms(
+                $right['permissions'],
+                $right['name'],
+                $resourceNode
+            );
         }
     }
 }

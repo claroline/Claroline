@@ -25,7 +25,7 @@ plugin:
           decoder: administrate
           group: management
           scope: [object, collection]
-          api: [GET, POST]
+          api: [GET, POST, PUT]
 
         # Publishes one ore more resources
         - name: publish

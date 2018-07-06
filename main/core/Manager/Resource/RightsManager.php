@@ -129,7 +129,7 @@ class RightsManager
 
     /**
      * @param array|int    $permissions - the permission mask
-     * @param Role         $role
+     * @param Role|string  $role
      * @param ResourceNode $node
      * @param bool         $isRecursive
      * @param array        $creations
@@ -139,13 +139,18 @@ class RightsManager
      */
     public function editPerms(
         $permissions,
-        Role $role,
+        $role,
         ResourceNode $node,
         $isRecursive = false,
         $creations = [],
         $mergePerms = false
     ) {
         $this->log('Editing permissions...');
+
+        if (is_string($role)) {
+            $role = $this->roleRepo->findOneByName($role);
+        }
+
         $this->om->startFlushSuite();
 
         $arRights = $isRecursive ?
@@ -310,33 +315,6 @@ class RightsManager
         $rights->setMask($this->maskManager->encodeMask($permissions, $resourceType));
 
         return $rights;
-    }
-
-    /**
-     * Takes an array of Role.
-     * Parse each key of the $perms array
-     * and add the entry 'role' where it is needed.
-     * It's used when a workspace is imported.
-     *
-     * @param array $baseRoles
-     * @param array $perms
-     *
-     * @return array
-     */
-    public function addRolesToPermsArray(array $baseRoles, array $perms)
-    {
-        $initializedArray = [];
-
-        foreach ($perms as $roleBaseName => $data) {
-            foreach ($baseRoles as $baseRole) {
-                if ($this->roleManager->getRoleBaseName($baseRole->getName()) === $roleBaseName) {
-                    $data['role'] = $baseRole;
-                    $initializedArray[$roleBaseName] = $data;
-                }
-            }
-        }
-
-        return $initializedArray;
     }
 
     /**

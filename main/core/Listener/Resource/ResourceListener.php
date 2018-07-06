@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceNodeManager;
+use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -38,6 +39,7 @@ class ResourceListener
      *     "resourceNodeManager"      = @DI\Inject("claroline.manager.resource_node"),
      *     "resourceManager"          = @DI\Inject("claroline.manager.resource_manager"),
      *     "resourceLifecycleManager" = @DI\Inject("claroline.manager.resource_lifecycle"),
+     *     "resourceRightsManager"    = @DI\Inject("claroline.manager.rights_manager"),
      *     "crud"                     = @DI\Inject("claroline.api.crud")
      * })
      *
@@ -48,12 +50,29 @@ class ResourceListener
         ResourceNodeManager $resourceNodeManager,
         ResourceManager $resourceManager,
         ResourceLifecycleManager $resourceLifecycleManager,
+        RightsManager $resourceRightsManager,
         Crud $crud
     ) {
         $this->resourceNodeManager = $resourceNodeManager;
         $this->resourceManager = $resourceManager;
         $this->resourceLifecycleManager = $resourceLifecycleManager;
         $this->crud = $crud;
+        $this->resourceRightsManager = $resourceRightsManager;
+    }
+
+    /**
+     * @DI\Observe("resource.rights")
+     *
+     * @param ResourceActionEvent $event
+     */
+    public function onRights(ResourceActionEvent $event)
+    {
+        // forward to the resource type
+        $data = $event->getData();
+        $this->crud->update(ResourceNode::class, $data);
+        $this->resourceLifecycleManager->rights($event->getResourceNode(), $event->getData());
+
+        $event->setResponse(new JsonResponse($data));
     }
 
     /**

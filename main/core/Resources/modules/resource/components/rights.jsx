@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
+import cloneDeep from 'lodash/cloneDeep'
 import uniq from 'lodash/uniq'
 
 import Tab from 'react-bootstrap/lib/Tab'
@@ -201,12 +202,12 @@ const ResourceRights = props =>
       <AdvancedTab
         permissions={props.resourceNode.rights}
         updateRolePermissions={(roleName, permissions) => {
-          // todo fix
-          const newPermissions = merge({}, props.resourceNode.rights, {
-            [roleName]: merge({}, props.resourceNode.rights[roleName], permissions)
-          })
 
-          props.updateRights(newPermissions)
+          const newPerms = cloneDeep(props.resourceNode.rights)
+          const rights = newPerms.find(perm => perm.name === roleName)
+          rights.permissions = permissions
+
+          props.updateRights(newPerms)
         }}
       />
     </Tab>

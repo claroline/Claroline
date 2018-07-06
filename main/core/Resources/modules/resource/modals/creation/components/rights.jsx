@@ -65,7 +65,6 @@ const RightsModal = connect(
   }),
   (dispatch) => ({
     updateRights() {
-
     },
     save(parent, close) {
       dispatch(actions.create(parent)).then(close)

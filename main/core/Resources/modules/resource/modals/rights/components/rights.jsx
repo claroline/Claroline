@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import omit from 'lodash/omit'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans}  from '#/main/core/translation'
 import {Button} from '#/main/app/action/components/button'
@@ -11,21 +12,26 @@ import {actions as formActions} from '#/main/core/data/form/actions'
 import {select as formSelect} from '#/main/core/data/form/selectors'
 
 import {selectors} from '#/main/core/resource/modals/rights/store'
+
 import {ResourceRights} from '#/main/core/resource/components/rights'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 
-const RightsModalComponent = props =>
-  <Modal
-    {...omit(props, 'resourceNode', 'saveEnabled', 'save', 'updateRights', 'loadRights')}
+const RightsModalComponent = props => {
+  return (<Modal
+    {...omit(props, 'resourceNode', 'saveEnabled', 'save', 'updateRights', 'loadResourceNode', 'nodeForm')}
     icon="fa fa-fw fa-lock"
     title={trans('rights')}
     subtitle={props.resourceNode.name}
-    onEntering={() => props.loadRights(props.resourceNode)}
+    onEntering={() => {
+      props.loadResourceNode(props.resourceNode)
+    }}
   >
-    <ResourceRights
-      resourceNode={props.resourceNode}
-      updateRights={() => props.updateRights()}
-    />
+    {!isEmpty(props.nodeForm.id) &&
+      <ResourceRights
+        resourceNode={props.nodeForm}
+        updateRights={props.updateRights}
+      />
+    }
 
     <Button
       className="btn modal-btn"
@@ -34,33 +40,39 @@ const RightsModalComponent = props =>
       label={trans('save', {}, 'actions')}
       disabled={!props.saveEnabled}
       callback={() => {
-        props.save(props.resourceNode)
+        props.save(props.nodeForm)
         props.fadeModal()
       }}
     />
-  </Modal>
+  </Modal>)
+}
 
 RightsModalComponent.propTypes = {
   resourceNode: T.shape(
     ResourceNodeTypes.propTypes
   ).isRequired,
+  nodeForm: T.shape(
+    ResourceNodeTypes.propTypes
+  ).isRequired,
   saveEnabled: T.bool.isRequired,
   save: T.func.isRequired,
   updateRights: T.func.isRequired,
-  loadRights: T.func.isRequired,
+  loadResourceNode: T.func.isRequired,
   fadeModal: T.func.isRequired
 }
 
 const RightsModal = connect(
   (state) => ({
-    saveEnabled: formSelect.saveEnabled(formSelect.form(state, selectors.STORE_NAME))
+    saveEnabled: formSelect.saveEnabled(formSelect.form(state, selectors.STORE_NAME)),
+    nodeForm: formSelect.data(formSelect.form(state, selectors.STORE_NAME))
   }),
   (dispatch) => ({
-    updateRights() {
-
+    updateRights(perms) {
+      //dispatch(rightsAction.update(perms))
+      dispatch(formActions.updateProp(selectors.STORE_NAME, 'rights', perms))
     },
-    loadRights(resourceNode) {
-      dispatch(formActions.resetForm(selectors.STORE_NAME, resourceNode.rights))
+    loadResourceNode(resourceNode) {
+      dispatch(formActions.resetForm(selectors.STORE_NAME, resourceNode))
     },
     save(resourceNode) {
       dispatch(formActions.saveForm(selectors.STORE_NAME, ['claro_resource_action', {
