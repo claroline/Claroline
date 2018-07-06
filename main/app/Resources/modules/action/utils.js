@@ -50,6 +50,9 @@ function buildToolbar(toolbarConfig, actions = [], scope) {
 
   // checks if there is a `more` action to grab remaining actions
   let hasMore = false
+  // we only allow one primary action in the btn bar
+  // we don't limit it in the more menu
+  let hasPrimaryAction = false
 
   if (0 !== config.length) {
     toolbar = config.map(
@@ -75,6 +78,15 @@ function buildToolbar(toolbarConfig, actions = [], scope) {
             const pos = rest.findIndex(action => actionName === action.name)
             if (-1 !== pos) {
               const action = rest.splice(pos, 1)
+
+              if (action[0].primary) {
+                if (!hasPrimaryAction) {
+                  hasPrimaryAction = true
+                } else {
+                  // we only keep 1st primary action
+                  action[0].primary = false
+                }
+              }
 
               // return the definition of the action (nb. splice always return an array)
               return action[0]

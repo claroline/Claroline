@@ -9,7 +9,7 @@ import {reducer} from '#/main/core/tools/resources/store'
 export const App = () => ({
   component: ResourcesTool,
   store: reducer,
-  initialData: initialData => Object.assign({}, initialData, {
+  initialData: initialData => ({
     context: initialData.context,
     resourceManager: {
       initialized: true,
