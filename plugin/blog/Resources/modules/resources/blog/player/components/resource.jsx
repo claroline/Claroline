@@ -38,7 +38,7 @@ const Blog = props =>
       },{
         type: 'link',
         icon: 'fa fa-fw fa-plus',
-        displayed: props.canEdit || props.canModerate,
+        displayed: props.canEdit || props.canPost,
         label: trans('new_post', {}, 'icap_blog'),
         target: '/new',
         exact: true
@@ -47,7 +47,7 @@ const Blog = props =>
         type: 'link',
         icon: 'fa fa-fw fa-gavel',
         label: trans('moderation', {}, 'icap_blog'),
-        target: '/moderation'
+        target: '/moderation/posts'
       },{
         displayed : props.pdfEnabled && props.canExport,
         type: 'download',
@@ -68,8 +68,7 @@ const Blog = props =>
       <RoutedPageContent className="blog-page-content" routes={[
         {
           path: '/moderation',
-          component: Moderation,
-          exact: true
+          component: Moderation
         },{
           path: '/',
           component: Player

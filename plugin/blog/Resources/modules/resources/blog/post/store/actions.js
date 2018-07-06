@@ -23,7 +23,7 @@ actions.postReset = makeActionCreator(POST_RESET)
 actions.updatePostPublicationState = makeActionCreator(POST_UPDATE_PUBLICATION, 'post')
 
 actions.getPost = (blogId, postId) => (dispatch) => {
-  //dispatch(actions.postReset())
+  dispatch(actions.postReset())
   dispatch({[API_REQUEST]: {
     url:['apiv2_blog_post_get', {blogId, postId}],
     request: {

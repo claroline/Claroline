@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\MemberRepository")
  * @ORM\Table(name="icap__blog_member")
  */
 class Member
@@ -40,6 +41,7 @@ class Member
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Icap\BlogBundle\Entity\Blog",
+     *     inversedBy="members",
      *     cascade={"persist"}
      * )
      */
@@ -55,6 +57,14 @@ class Member
      */
     protected $banned = false;
 
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
     public function setUser(User $user)
     {
         $this->user = $user;
@@ -65,14 +75,14 @@ class Member
         return $this->user;
     }
 
-    public function setForum($forum)
+    public function setBlog($blog)
     {
-        $this->forum = $forum;
+        $this->blog = $blog;
     }
 
-    public function getForum()
+    public function getBlog()
     {
-        return $this->forum;
+        return $this->blog;
     }
 
     public function setTrusted($bool)

@@ -4,23 +4,18 @@ import {PropTypes as T} from 'prop-types'
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 import {constants as listConst} from '#/main/core/data/list/constants'
 import {trans} from '#/main/core/translation'
-import {actions} from '#/plugin/blog/resources/blog/post/store/actions'
 import {PostCard} from '#/plugin/blog/resources/blog/post/components/post.jsx'
 
 const PostsList = props =>
   <div>
     <DataListContainer
       name="posts"
-      icon={'fa fa-clock-o'}
       fetch={{
         url: ['apiv2_blog_post_list', {blogId: props.blogId}],
         autoload: true
       }}
       open={{
         action: (row) => `#/${row.slug}`
-      }}
-      delete={{
-        url: ['apiv2_hero_delete_bulk']
       }}
       definition={[
         {
@@ -82,11 +77,6 @@ const PostsContainer = connect(
   state => ({
     posts: state.posts.data,
     blogId: state.blog.data.id
-  }),
-  dispatch => ({
-    onClick: blogId => {
-      dispatch(actions.posts(blogId))
-    }
   })
 )(PostsList)
 

@@ -11,6 +11,8 @@ parameters:
     icap.blog.blog_repository.class:              Icap\BlogBundle\Repository\BlogRepository
     icap.blog.comment.class:                      Icap\BlogBundle\Entity\Comment
     icap.blog.comment_repository.class:           Icap\BlogBundle\Repository\CommentRepository
+    icap.blog.member.class:                       Icap\BlogBundle\Entity\Member
+    icap.blog.member_repository.class:            Icap\BlogBundle\Repository\MemberRepository
     icap.blog.widgetblog_repository.class:        Icap\BlogBundle\Repository\WidgetBlogRepository
     icap.blog.widgetblog.class:                   Icap\BlogBundle\Entity\WidgetBlog
     icap.blog.widgettaglistblog_repository.class: Icap\BlogBundle\Repository\WidgetTagListBlogRepository
@@ -42,6 +44,12 @@ services:
             factory: ["@doctrine.orm.entity_manager", getRepository]
             arguments:
                 - "%icap.blog.comment.class%"
+
+    icap.blog.member_repository:
+            class: "%icap.blog.member_repository.class%"
+            factory: ["@doctrine.orm.entity_manager", getRepository]
+            arguments:
+                - "%icap.blog.member.class%"
 
     icap.blog.manager.post:
         class: "%icap.blog.manager.post.class%"

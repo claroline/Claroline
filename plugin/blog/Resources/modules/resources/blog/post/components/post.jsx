@@ -26,7 +26,7 @@ const PostComponent = props =>
     {props.post.id &&
       <div>
         <div className="post-container">
-          <div className={classes('post-header', {'unpublished': !props.post.isPublished})}>
+          <div className={classes('post-header')}>
             <h2 className={'post-title'}>
               <a href={`#/${props.post.slug}`}>{props.post.title}</a>
             </h2>
@@ -66,15 +66,16 @@ const PostComponent = props =>
                 canEdit={props.canEdit} />
             </div>
           }
-          {props.full &&
+          {props.full && props.canComment &&
             <div className="post-content">
               <Comments
                 blogId={props.blogId}
                 postId={props.post.id}
                 canComment={props.canComment}
+                canAnonymousComment={props.canAnonymousComment}
                 showForm={props.showCommentForm}
                 opened={props.showComments}
-                comments={props.post.comments}
+                commentNumber={getCommentsNumber(props.canEdit, props.post.commentsNumber, props.post.commentsNumberUnpublished)}
               />
             </div>
           }
@@ -89,6 +90,7 @@ PostComponent.propTypes = {
   blogId: T.string.isRequired,
   size: T.string,
   canComment: T.bool,
+  canAnonymousComment:T.bool,
   displayViews: T.bool,
   orientation: T.string,
   showCommentForm: T.bool,
@@ -97,7 +99,8 @@ PostComponent.propTypes = {
   getPostsByAuthor: T.func.isRequired,
   publishPost: T.func.isRequired,
   pinPost: T.func.isRequired,
-  deletePost: T.func.isRequired
+  deletePost: T.func.isRequired,
+  commentNumber: T.number
 }
 
 const PostCard = props =>
@@ -132,6 +135,9 @@ const InfoBar = props =>
     {props.post.pinned &&
       <li><span className="label label-success">{trans('icap_blog_post_pinned', {}, 'icap_blog')}</span></li>
     }
+    {!props.post.isPublished &&
+    <li><span className="label label-danger">{props.post.status ? trans('unpublished_date', {}, 'icap_blog') : trans('unpublished', {}, 'icap_blog')}</span></li>
+    }
   </ul>
     
 InfoBar.propTypes = {
@@ -156,11 +162,11 @@ const ActionBar = props =>
     <Button
       id={`action-publish-${props.post.id}`}
       type="callback"
-      icon={props.post.isPublished ? 'fa fa-eye' : 'fa fa-eye-slash'}
+      icon={props.post.status ? 'fa fa-eye' : 'fa fa-eye-slash'}
       className="btn btn-link"
       tooltip="top"
-      label={props.post.isPublished ? trans('icap_blog_post_unpublish', {}, 'icap_blog') : trans('icap_blog_post_publish', {}, 'icap_blog')}
-      title={props.post.isPublished ? trans('icap_blog_post_unpublish', {}, 'icap_blog') : trans('icap_blog_post_publish', {}, 'icap_blog')}
+      label={props.post.status ? trans('icap_blog_post_unpublish', {}, 'icap_blog') : trans('icap_blog_post_publish', {}, 'icap_blog')}
+      title={props.post.status ? trans('icap_blog_post_unpublish', {}, 'icap_blog') : trans('icap_blog_post_publish', {}, 'icap_blog')}
       callback={() => props.publishPost(props.blogId, props.post.id)}
     />
     <Button
@@ -215,7 +221,7 @@ const Footer = props =>
       <li><span className="fa fa-comments"></span></li>
       <li>
         {getCommentsNumber(props.canEdit, props.post.commentsNumber, props.post.commentsNumberUnpublished) > 0
-          ? transChoice('comments_number', getCommentsNumber(props.canEdit, props.post.commentsNumber, props.post.commentsNumberUnpublished), 
+          ? transChoice('comments_number', getCommentsNumber(props.canEdit, props.post.commentsNumber, props.post.commentsNumberUnpublished),
             {'%count%': getCommentsNumber(props.canEdit, props.post.commentsNumber, props.post.commentsNumberUnpublished)}, 'icap_blog')
           : trans('no_comment', {}, 'icap_blog')}
         {props.canEdit && props.post.commentsNumberUnpublished 
@@ -226,19 +232,23 @@ const Footer = props =>
   </div>
         
 Footer.propTypes = {
+  commentNumber: T.number,
   canEdit:T.bool,
   canComment:T.bool,
+  canAnonymousComment:T.bool,
   displayViews:T.bool,
   getPostsByTag:T.func.isRequired,
   post: T.shape(PostType.propTypes)
 }    
 
 const PostCardContainer = connect(
-  state => ({
+  (state) => ({
     blogId: state.blog.data.id,
     canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
     canComment: state.blog.data.options.data.authorizeComment,
-    displayViews: state.blog.data.options.data.displayPostViewCounter
+    canAnonymousComment: state.blog.data.options.data.authorizeAnonymousComment,
+    displayViews: state.blog.data.options.data.displayPostViewCounter,
+    commentsLoaded: !state.comments.invalidated
   }),
   dispatch => ({
     publishPost: (blogId, postId) => {

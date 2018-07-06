@@ -4,6 +4,7 @@ namespace Icap\BlogBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Icap\BlogBundle\Entity\Blog;
+use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Entity\Statusable;
 
 class TagRepository extends EntityRepository
@@ -32,10 +33,24 @@ class TagRepository extends EntityRepository
             ->setParameter('postStatus', Statusable::STATUS_PUBLISHED)
         ;
 
-        if ($max != null) {
+        if (null !== $max) {
             $query->setMaxResults($max);
         }
 
         return $executeQuery ? $query->getResult() : $query;
+    }
+
+    /**
+     * @param Post $post
+     *
+     * @return array|\Doctrine\ORM\AbstractQuery
+     */
+    public function findByPost(Post $post)
+    {
+        return $this->createQueryBuilder('t')
+            ->innerJoin('t.posts', 'p')
+            ->where('p.id = :postId')
+            ->setParameter('postId', $post->getId())
+            ->getQuery()->getResult();
     }
 }

@@ -100,7 +100,7 @@ class BlogOptionsSerializer
             if (in_array($panelOldInfo[$i], $panelInfo)) {
                 $orderPanelsTable[] = [
                     'nameTemplate' => $panelOldInfo[$i],
-                    'visibility' => (int) $mask[$maskPosition + 1],
+                    'visibility' => (bool) $mask[$maskPosition + 1],
                     'id' => (int) $mask[$maskPosition],
                 ];
             }
@@ -113,7 +113,7 @@ class BlogOptionsSerializer
     {
         $mask = null;
         foreach ($orderPanelsTable as $row) {
-            $mask = $mask.$row['id'].$row['visibility'];
+            $mask = $mask.$row['id'].(int) ($row['visibility']);
         }
 
         return $mask;

@@ -118,6 +118,7 @@ class PostSerializer
             'commentsNumber' => $commentsNumber,
             'commentsNumberUnpublished' => $commentsNumberUnpublished,
             'isPublished' => $post->isPublished(),
+            'status' => $post->isPublished(false),
             'pinned' => $post->isPinned(),
         ];
     }
@@ -226,17 +227,6 @@ class PostSerializer
         return implode(', ', $event->getResponse());
     }
 
-    /* public function serializeTags(Post $post)
-     {
-         $event = new GenericDataEvent([
-             'class' => 'Icap\BlogBundle\Entity\Post',
-             'ids' => [$post->getUuid()],
-         ]);
-         $this->eventDispatcher->dispatch('claroline_retrieve_used_tags_by_class_and_ids', $event);
-
-         return $event->getResponse();
-     }*/
-
     /**
      * Deserializes Item tags.
      *
@@ -262,25 +252,4 @@ class PostSerializer
 
         $this->eventDispatcher->dispatch('claroline_tag_multiple_data', $event);
     }
-
-    /*
-     *
-     *     public function deserializeTags(Post $post, array $tags = [], array $options = [])
-    {
-        $event = new GenericDataEvent([
-            'tags' => $tags,
-            'data' => [
-                [
-                    'class' => 'Icap\BlogBundle\Entity\Post',
-                    'id' => $post->getUuid(),
-                    'name' => $post->getTitle(),
-                ],
-            ],
-            'replace' => true,
-        ]);
-
-        $this->eventDispatcher->dispatch('claroline_tag_multiple_data', $event);
-    }
-     *
-     * */
 }

@@ -501,18 +501,24 @@ class Post extends Statusable
     }
 
     /**
+     * @param bool $checkDate
+     *
      * @return bool
      * @Groups({"blog_list", "blog_post"})
      * @VirtualProperty
      */
-    public function isPublished()
+    public function isPublished($checkDate = true)
     {
         $isStatusPublished = parent::isPublished();
 
-        $currentTimestamp = time();
+        if ($checkDate) {
+            $currentTimestamp = time();
 
-        if ($isStatusPublished && (null !== $this->publicationDate && $currentTimestamp >= $this->publicationDate->getTimestamp())) {
-            return true;
+            if ($isStatusPublished && (null !== $this->publicationDate && $currentTimestamp >= $this->publicationDate->getTimestamp())) {
+                return true;
+            }
+        } else {
+            return $isStatusPublished;
         }
 
         return false;

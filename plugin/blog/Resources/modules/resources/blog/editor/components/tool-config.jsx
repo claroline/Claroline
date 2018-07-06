@@ -45,7 +45,7 @@ ToolConfigComponent.propTypes = {
   id: T.number.isRequired,
   index: T.number.isRequired,
   max: T.number.isRequired,
-  visibility: T.number,
+  visibility: T.bool,
   label: T.string.isRequired,
   templateName: T.string.isRequired,
   switchVisiblity: T.func.isRequired,

@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Manager\BlogManager;
+use Icap\BlogBundle\Manager\PostManager;
 use Icap\BlogBundle\Serializer\BlogOptionsSerializer;
 use Icap\BlogBundle\Serializer\BlogSerializer;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -14,7 +15,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @EXT\Route("blog/", options={"expose"=true})
+ * @EXT\Route("blog/{blogId}/", options={"expose"=true})
+ * @EXT\ParamConverter("blog", class="IcapBlogBundle:Blog", options={"mapping": {"blogId": "uuid"}})
  */
 class BlogController
 {
@@ -25,6 +27,7 @@ class BlogController
     private $blogSerializer;
     private $blogOptionsSerializer;
     private $blogManager;
+    private $postManager;
 
     /**
      * BlogController constructor.
@@ -33,24 +36,28 @@ class BlogController
      *     "finder"                = @DI\Inject("claroline.api.finder"),
      *     "blogSerializer"        = @DI\Inject("claroline.serializer.blog"),
      *     "blogOptionsSerializer" = @DI\Inject("claroline.serializer.blog.options"),
-     *     "blogManager"           = @DI\Inject("icap_blog.manager.blog")
+     *     "blogManager"           = @DI\Inject("icap_blog.manager.blog"),
+     *     "postManager"           = @DI\Inject("icap.blog.manager.post")
      * })
      *
      * @param FinderProvider        $finder
      * @param BlogSerializer        $blogSerializer
      * @param BlogOptionsSerializer $blogOptionsSerializer
      * @param BlogManager           $blogManager
+     * @param PostManager           $postManager
      */
     public function __construct(
         FinderProvider $finder,
         BlogSerializer $blogSerializer,
         BlogOptionsSerializer $blogOptionsSerializer,
-        BlogManager $blogManager
+        BlogManager $blogManager,
+        PostManager $postManager
       ) {
         $this->finder = $finder;
         $this->blogSerializer = $blogSerializer;
         $this->blogOptionsSerializer = $blogOptionsSerializer;
         $this->blogManager = $blogManager;
+        $this->postManager = $postManager;
     }
 
     /**
@@ -66,8 +73,7 @@ class BlogController
     /**
      * Get blog options.
      *
-     * @EXT\Route("options/{blogId}", name="apiv2_blog_options")
-     * @EXT\ParamConverter("blog", class="IcapBlogBundle:Blog", options={"mapping": {"blogId": "uuid"}})
+     * @EXT\Route("options", name="apiv2_blog_options")
      * @EXT\Method("GET")
      *
      * @param Blog $blog
@@ -84,8 +90,7 @@ class BlogController
     /**
      * Update blog options.
      *
-     * @EXT\Route("options/update/{blogId}", name="apiv2_blog_options_update")
-     * @EXT\ParamConverter("blog", class="IcapBlogBundle:Blog", options={"mapping": {"blogId": "uuid"}})
+     * @EXT\Route("options/update", name="apiv2_blog_options_update")
      * @EXT\Method("PUT")
      *
      * @param Blog $blog
@@ -98,9 +103,35 @@ class BlogController
         $data = json_decode($request->getContent(), true);
         $this->blogManager->updateOptions($blog, $this->blogOptionsSerializer->deserialize($data), $data['infos']);
 
-        // Options updated
-        //return new JsonResponse(null, 204);
-
         return new JsonResponse($this->blogOptionsSerializer->serialize($blog, $blog->getOptions()));
+    }
+
+    /**
+     * Get tag cloud, tags used in blog posts.
+     *
+     * @EXT\Route("tags", name="apiv2_blog_tags")
+     * @EXT\Method("GET")
+     */
+    public function getTagsAction(Blog $blog)
+    {
+        $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
+
+        $parameters['limit'] = -1;
+        $posts = $this->postManager->getPosts(
+            $blog->getId(),
+            $parameters,
+            $this->checkPermission('ADMINISTRATE', $blog->getResourceNode())
+            || $this->checkPermission('EDIT', $blog->getResourceNode())
+            || $this->checkPermission('MODERATE', $blog->getResourceNode())
+                ? PostManager::GET_ALL_POSTS
+                : PostManager::GET_PUBLISHED_POSTS,
+            true);
+
+        $postsData = [];
+        if (!empty($posts)) {
+            $postsData = $posts['data'];
+        }
+
+        return new JsonResponse($this->blogManager->getTags($blog, $postsData));
     }
 }

@@ -22,11 +22,17 @@ class PostFinder implements FinderInterface
     {
         foreach ($searches as $filterName => $filterValue) {
             if ('published' === $filterName) {
-                $qb
-                ->andWhere('obj.status = :status')
-                ->andWhere('obj.publicationDate <= :endOfDay')
-                ->setParameter('status', true)
-                ->setParameter('endOfDay', new \DateTime('tomorrow'));
+                if ($filterValue) {
+                    $qb
+                        ->andWhere('obj.status = :status')
+                        ->andWhere('obj.publicationDate <= :endOfDay')
+                        ->setParameter('status', true)
+                        ->setParameter('endOfDay', new \DateTime('tomorrow'));
+                } else {
+                    $qb
+                        ->andWhere('obj.status = :status')
+                        ->setParameter('status', false);
+                }
             } elseif ('authorName' === $filterName) {
                 $qb
                 ->innerJoin('obj.author', 'author')

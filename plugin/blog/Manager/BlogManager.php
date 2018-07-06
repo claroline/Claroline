@@ -5,6 +5,8 @@ namespace Icap\BlogBundle\Manager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\GenericDataEvent;
+use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\BlogOptions;
@@ -14,6 +16,7 @@ use Icap\BlogBundle\Entity\Tag;
 use Icap\BlogBundle\Repository\BlogRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @DI\Service("icap_blog.manager.blog")
@@ -24,13 +27,17 @@ class BlogManager
     private $uploadDir;
     private $repo;
     private $eventDispatcher;
+    private $postManager;
+    private $fileUtils;
 
     /**
      * @DI\InjectParams({
      *      "objectManager"  = @DI\Inject("claroline.persistence.object_manager"),
      *      "uploadDir"      = @DI\Inject("%icap.blog.banner_directory%"),
      *      "repo"           = @DI\Inject("icap.blog.blog_repository"),
-     *     "eventDispatcher" = @DI\Inject("event_dispatcher")
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
+     *     "postManager"     = @DI\Inject("icap.blog.manager.post"),
+     *     "fileUtils"       = @DI\Inject("claroline.utilities.file")
      *
      * })
      */
@@ -38,12 +45,16 @@ class BlogManager
         ObjectManager $objectManager,
         $uploadDir,
         BlogRepository $repo,
-        EventDispatcherInterface $eventDispatcher)
+        EventDispatcherInterface $eventDispatcher,
+        PostManager $postManager,
+        FileUtilities $fileUtils)
     {
         $this->objectManager = $objectManager;
         $this->uploadDir = $uploadDir;
         $this->repo = $repo;
         $this->eventDispatcher = $eventDispatcher;
+        $this->postManager = $postManager;
+        $this->fileUtils = $fileUtils;
     }
 
     /**
@@ -78,6 +89,8 @@ class BlogManager
             'banner_background_image_position' => $object->getOptions()->getBannerBackgroundImagePosition(),
             'banner_background_image_repeat' => $object->getOptions()->getBannerBackgroundImageRepeat(),
             'tag_cloud' => (null === $object->getOptions()->getTagCloud()) ? 0 : $object->getOptions()->getTagCloud(),
+            'comment_moderation_mode' => $object->getOptions()->getCommentModerationMode(),
+            'display_full_posts' => $object->getOptions()->getDisplayFullPosts(),
         ];
 
         $data['posts'] = [];
@@ -88,16 +101,14 @@ class BlogManager
             file_put_contents($postTemporaryPath, $post->getContent());
             $files[$postUid] = $postTemporaryPath;
 
-            $tags = [];
-
-            foreach ($post->getTags() as $tag) {
-                $tags[] = [
-                    'name' => $tag->getName(),
-                ];
-            }
+            $event = new GenericDataEvent([
+                'class' => 'Icap\BlogBundle\Entity\Post',
+                'ids' => [$post->getUuid()],
+            ]);
+            $this->eventDispatcher->dispatch('claroline_retrieve_used_tags_by_class_and_ids', $event);
+            $tags = $event->getResponse();
 
             $comments = [];
-
             foreach ($post->getComments() as $comment) {
                 $commentUid = uniqid().'.txt';
                 $commentTemporaryPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$commentUid;
@@ -107,6 +118,7 @@ class BlogManager
                 $comments[] = [
                     'message' => $commentUid,
                     'author' => $comment->getAuthor()->getEmail(),
+                    'reported' => $comment->getReported(),
                     'creation_date' => $comment->getCreationDate()->format('Y-m-d H:i:s'),
                     'update_date' => (null !== $comment->getUpdateDate()) ? $comment->getUpdateDate()->format('Y-m-d H:i:s') : null,
                     'publication_date' => (null !== $comment->getPublicationDate()) ? $comment->getPublicationDate()->format('Y-m-d H:i:s') : null,
@@ -119,6 +131,7 @@ class BlogManager
                 'content' => $postUid,
                 'author' => $post->getAuthor()->getEmail(),
                 'status' => $post->getStatus(),
+                'pinned' => $post->isPinned(),
                 'creation_date' => $post->getCreationDate()->format('Y-m-d H:i:s'),
                 'modification_date' => (null !== $post->getModificationDate()) ? $post->getModificationDate()->format('Y-m-d H:i:s') : null,
                 'publication_date' => (null !== $post->getPublicationDate()) ? $post->getPublicationDate()->format('Y-m-d H:i:s') : null,
@@ -167,6 +180,18 @@ class BlogManager
             ->setBannerBackgroundImageRepeat($optionsData['banner_background_image_repeat'])
             ->setTagCloud($optionsData['tag_cloud']);
 
+        if (isset($optionsData['display_full_posts'])) {
+            $blogOptions->setDisplayFullPosts($optionsData['display_full_posts']);
+        } else {
+            $blogOptions->setDisplayFullPosts(false);
+        }
+
+        if (isset($optionsData['comment_moderation_mode'])) {
+            $blogOptions->setCommentModerationMode($optionsData['comment_moderation_mode']);
+        } else {
+            $blogOptions->setCommentModerationMode(BlogOptions::COMMENT_MODERATION_ALL);
+        }
+
         $blog = new Blog();
         if (isset($blogDatas['infos_path']) && null !== $blogDatas['infos_path']) {
             $infos = file_get_contents(
@@ -177,32 +202,40 @@ class BlogManager
         $blog->setOptions($blogOptions);
         $this->objectManager->persist($blog);
         //flush, otherwise we dont have the website ID needed for building uploadPath for banner
-        $this->objectManager->forceFlush();
+        //$this->objectManager->forceFlush();
 
-        //Copy banner bg image to web folder
+        //Copy banner bg image to web folder, old system, for compatibility
         if (isset($optionsData['banner_background_image']) && null !== $optionsData['banner_background_image'] && !filter_var($optionsData['banner_background_image'], FILTER_VALIDATE_URL)) {
-            $this->createUploadFolder(DIRECTORY_SEPARATOR.$this->uploadDir);
-            $uniqid = uniqid();
-            copy(
-                $rootPath.DIRECTORY_SEPARATOR.$optionsData['banner_background_image'],
-                DIRECTORY_SEPARATOR.$this->uploadDir.DIRECTORY_SEPARATOR.$uniqid
-            );
-            $blogOptions->setBannerBackgroundImage($uniqid);
+            $bannerPath = $rootPath.DIRECTORY_SEPARATOR.$optionsData['banner_background_image'];
+            if (file_exists($bannerPath)) {
+                $publicFile = $this->fileUtils->createFile(new File($bannerPath));
+                $blog->getResourceNode()->setPoster($publicFile->getUrl());
+            }
         }
 
         $postsDatas = $blogDatas['posts'];
         $posts = new ArrayCollection();
 
         foreach ($postsDatas as $postsData) {
-            $post = new Post();
-
             $tagsDatas = $postsData['tags'];
-            $tags = new ArrayCollection();
-
+            $tags = [];
             foreach ($tagsDatas as $tagsData) {
-                $tag = $this->retrieveTag($tagsData['name']);
-                $tags->add($tag);
+                $tags[] = $tagsData['name'];
             }
+            $post = new Post();
+            //insert tags
+            $event = new GenericDataEvent([
+                'tags' => array_values($tags),
+                'data' => [
+                    [
+                        'class' => 'Icap\BlogBundle\Entity\Post',
+                        'id' => $post->getUuid(),
+                        'name' => $post->getTitle(),
+                    ],
+                ],
+                'replace' => true,
+            ]);
+            $this->eventDispatcher->dispatch('claroline_tag_multiple_data', $event);
 
             $commentsDatas = $postsData['comments'];
             $comments = new ArrayCollection();
@@ -217,6 +250,10 @@ class BlogManager
                     ->setPublicationDate(new \DateTime($postsData['publication_date']))
                     ->setStatus($commentsData['status'])
                 ;
+                if (isset($commentsData['reported'])) {
+                    $comment->setReported($commentsData['reported']);
+                }
+
                 $this->objectManager->persist($comment);
                 $comments->add($comment);
             }
@@ -230,10 +267,13 @@ class BlogManager
                 ->setCreationDate(new \DateTime($postsData['creation_date']))
                 ->setModificationDate(new \DateTime($postsData['modification_date']))
                 ->setPublicationDate(new \DateTime($postsData['publication_date']))
-                ->setTags($tags)
                 ->setComments($comments)
                 ->setStatus($postsData['status'])
             ;
+
+            if (isset($postsData['pinned'])) {
+                $post->setPinned($postsData['pinned']);
+            }
 
             $posts->add($post);
         }
@@ -251,7 +291,7 @@ class BlogManager
      */
     protected function retrieveUser($email, User $owner)
     {
-        $user = $this->objectManager->getRepository('ClarolineCoreBundle:User')->findOneByMail($email);
+        $user = $this->objectManager->getRepository('ClarolineCoreBundle:User')->findOneByEmail($email);
 
         if (null === $user) {
             $user = $owner;
@@ -396,7 +436,6 @@ class BlogManager
 
         $blog->setInfos($infos);
 
-        $this->objectManager->persist($blog);
         $this->objectManager->flush();
 
         return $this->objectManager->getUnitOfWork();
@@ -439,5 +478,39 @@ class BlogManager
         }
 
         return $blog;
+    }
+
+    /**
+     * Get tags used in the blog.
+     *
+     * @param Blog  $blog
+     * @param array $posts
+     *
+     * @return array
+     */
+    public function getTags($blog, array $postData = [])
+    {
+        //TODO tagBundle needs a mthod to get tags and their frequency
+        $availables = [];
+        foreach ($postData as $data) {
+            $tags = $this->postManager->getTags($data['id']);
+            $availables = array_merge($availables, $tags);
+        }
+
+        $tags = [];
+        foreach ($availables as $tag) {
+            if (!array_key_exists($tag, $tags)) {
+                $tags[$tag] = 0;
+            }
+            ++$tags[$tag];
+        }
+
+        //only keep max tag number, if defined
+        if ($blog->getOptions()->isTagTopMode() && $blog->getOptions()->getMaxTag() > 0) {
+            arsort($tags);
+            $tags = array_slice($tags, 0, $blog->getOptions()->getMaxTag());
+        }
+
+        return $tags;
     }
 }

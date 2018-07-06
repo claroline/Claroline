@@ -34,6 +34,13 @@ class Blog extends AbstractResource
     protected $posts;
 
     /**
+     * @var Member[]
+     *
+     * @ORM\OneToMany(targetEntity="Icap\BlogBundle\Entity\Member", mappedBy="blog", cascade={"all"})
+     */
+    protected $members;
+
+    /**
      * @var BlogOptions
      *
      * @ORM\OneToOne(targetEntity="BlogOptions", mappedBy="blog", cascade={"all"})
@@ -148,7 +155,7 @@ class Blog extends AbstractResource
      */
     public function isAutoPublishComment()
     {
-        return $this->getOptions()->getAutoPublishComment();
+        return BlogOptions::COMMENT_MODERATION_NONE === $this->getOptions()->getCommentModerationMode() ? true : false;
     }
 
     /**
