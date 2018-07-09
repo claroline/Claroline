@@ -571,7 +571,6 @@ class ScormManager
                 $newNode->setAccessibleFrom($node->getAccessibleFrom());
                 $newNode->setAccessibleUntil($node->getAccessibleUntil());
                 $newNode->setAuthor($node->getAuthor());
-                $newNode->setClass('Claroline\ScormBundle\Entity\Scorm');
                 $newNode->setClosable($node->getClosable());
                 $newNode->setCloseTarget($node->getCloseTarget());
                 $newNode->setCreationDate($node->getCreationDate());
@@ -773,7 +772,6 @@ class ScormManager
                 $newNode->setAccessibleFrom($node->getAccessibleFrom());
                 $newNode->setAccessibleUntil($node->getAccessibleUntil());
                 $newNode->setAuthor($node->getAuthor());
-                $newNode->setClass('Claroline\ScormBundle\Entity\Scorm');
                 $newNode->setClosable($node->getClosable());
                 $newNode->setCloseTarget($node->getCloseTarget());
                 $newNode->setCreationDate($node->getCreationDate());

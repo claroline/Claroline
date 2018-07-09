@@ -68,7 +68,6 @@ class Persister
         $node->setCreator($creator);
         $node->setResourceType($this->lessonType);
         $node->setWorkspace($creator->getPersonalWorkspace());
-        $node->setClass('Icap\LessonBundle\Entity\Lesson');
         $node->setGuid(time());
 
         $lesson->setResourceNode($node);

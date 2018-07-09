@@ -113,7 +113,6 @@ class DirectoryListener
             $resource = $this->serializer->deserialize($resourceClass, $data['resource'], $options);
         }
 
-        $resourceNode->setClass($resourceClass);
         $resource->setResourceNode($resourceNode);
 
         // maybe do it in the serializer (if it can be done without intermediate flush)

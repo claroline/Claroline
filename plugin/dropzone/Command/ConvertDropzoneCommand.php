@@ -96,7 +96,6 @@ class ConvertDropzoneCommand extends ContainerAwareCommand
                 $newNode->setAccessibleFrom($node->getAccessibleFrom());
                 $newNode->setAccessibleUntil($node->getAccessibleUntil());
                 $newNode->setAuthor($node->getAuthor());
-                $newNode->setClass('Claroline\DropZoneBundle\Entity\Dropzone');
                 $newNode->setClosable($node->getClosable());
                 $newNode->setCloseTarget($node->getCloseTarget());
                 $newNode->setCreationDate($node->getCreationDate());

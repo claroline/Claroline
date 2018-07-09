@@ -97,7 +97,6 @@ class Persister
         $node->setCreator($creator);
         $node->setResourceType($this->websiteType);
         $node->setWorkspace($creator->getPersonalWorkspace());
-        $node->setClass('Icap\WebsiteBundle\Entity\Website');
         $node->setGuid(time());
 
         $website->setResourceNode($node);

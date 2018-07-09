@@ -140,7 +140,6 @@ abstract class RepositoryTestCase extends TransactionalTestCase
         $node->setResourceType($this->defaults['activity_type']);
         $node->setWorkspace($this->defaults['workspace']);
         $node->setGuid($name);
-        $node->setClass('foo');
 
         $this->om->persist($node);
 

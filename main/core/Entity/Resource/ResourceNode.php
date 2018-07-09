@@ -218,13 +218,6 @@ class ResourceNode
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="class", length=256)
-     */
-    protected $class;
-
-    /**
-     * @var string
      */
     private $pathForCreationLog = '';
 
@@ -637,19 +630,7 @@ class ResourceNode
      */
     public function getClass()
     {
-        return $this->class;
-    }
-
-    /**
-     * Sets the resource class name.
-     *
-     * @param string $class
-     *
-     * @deprecated should be retrieved from resource type
-     */
-    public function setClass($class)
-    {
-        $this->class = $class;
+        return $this->resourceType->getClass();
     }
 
     /**

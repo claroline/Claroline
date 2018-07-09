@@ -221,7 +221,6 @@ class ResourceManager
 
         $node->setParent($parent);
         $node->setName($this->getUniqueName($node, $parent));
-        $node->setClass(get_class($resource));
 
         if ($parent) {
             $this->setLastIndex($parent, $node);
@@ -1478,7 +1477,6 @@ class ResourceManager
         $newParent->addChild($newNode);
         $newNode->setName($this->getUniqueName($node, $newParent, true));
         $newNode->setIcon($node->getIcon());
-        $newNode->setClass($node->getClass());
         $newNode->setMimeType($node->getMimeType());
         $newNode->setAccessibleFrom($node->getAccessibleFrom());
         $newNode->setAccessibleUntil($node->getAccessibleUntil());

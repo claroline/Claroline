@@ -293,7 +293,6 @@ class AbilityRepositoryTest extends RepositoryTestCase
 
         $node = new ResourceNode();
         $node->setName($name);
-        $node->setClass('FooClass');
         $node->setCreator($user);
         $node->setResourceType($type);
         $node->setWorkspace($workspace);
