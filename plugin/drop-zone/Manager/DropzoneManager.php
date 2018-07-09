@@ -1156,7 +1156,10 @@ class DropzoneManager
         if ($computeStatus) {
             $score = $drop->getScore();
             $scoreToPass = $dropzone->getScoreToPass();
-            $status = $score >= $scoreToPass ? AbstractResourceEvaluation::STATUS_PASSED : AbstractResourceEvaluation::STATUS_FAILED;
+            $scoreMax = $dropzone->getScoreMax();
+            $status = !empty($scoreMax) && (($score / $scoreMax) * 100) >= $scoreToPass ?
+                AbstractResourceEvaluation::STATUS_PASSED :
+                AbstractResourceEvaluation::STATUS_FAILED;
 
             foreach ($users as $user) {
                 $this->generateResourceEvaluation($dropzone, $user, $status, $score, $drop, true);

@@ -270,7 +270,94 @@ Signing.propTypes = {
   onChange: T.func.isRequired
 }
 
-class Correction extends Component {
+const Correction = props =>
+  <fieldset>
+    <FormGroup
+      id="quiz-showCorrectionAt"
+      label={tex('availability_of_correction')}
+    >
+      <select
+        id="quiz-showCorrectionAt"
+        value={props.parameters.showCorrectionAt}
+        className="form-control"
+        onChange={e => props.onChange('parameters.showCorrectionAt', e.target.value)}
+      >
+        {correctionModes.map(mode =>
+          <option key={mode[0]} value={mode[0]}>{tex(mode[1])}</option>
+        )}
+      </select>
+    </FormGroup>
+    {props.parameters.showCorrectionAt === SHOW_CORRECTION_AT_DATE &&
+      <div className="sub-fields">
+        <DateGroup
+          id="quiz-correctionDate"
+          label={tex('correction_date')}
+          value={props.parameters.correctionDate}
+          onChange={date => props.onChange('parameters.correctionDate', date)}
+          time={true}
+        />
+      </div>
+    }
+    <CheckGroup
+      id="quiz-show-feedback"
+      value={props.parameters.showFeedback}
+      label={tex('show_feedback')}
+      onChange={checked => props.onChange('parameters.showFeedback', checked)}
+    />
+    <CheckGroup
+      id="quiz-anonymizeAttempts"
+      value={props.parameters.anonymizeAttempts}
+      label={tex('anonymous')}
+      onChange={checked => props.onChange('parameters.anonymizeAttempts', checked)}
+    />
+
+    <CheckGroup
+      id="quiz-showFullCorrection"
+      value={props.parameters.showFullCorrection}
+      label={tex('maximal_correction')}
+      onChange={checked => props.onChange('parameters.showFullCorrection', checked)}
+    />
+
+    <ActivableSet
+      id="quiz-showStatistics"
+      label={tex('statistics')}
+      activated={props.parameters.showStatistics}
+      onChange={checked => props.onChange('parameters.showStatistics', checked)}
+    >
+      <FormGroup
+        id="quiz-allPapersStatistics"
+        label={tex('statistics_options')}
+      >
+        <select
+          id="quiz-allPapersStatistics"
+          value={props.parameters.allPapersStatistics}
+          className="form-control"
+          onChange={e => props.onChange('parameters.allPapersStatistics', e.target.value === 'true')}
+        >
+          {statisticsModes.map(mode =>
+            <option key={mode[0]} value={mode[0] === STATISTICS_ALL_PAPERS}>
+              {tex(mode[1])}
+            </option>
+          )}
+        </select>
+      </FormGroup>
+    </ActivableSet>
+  </fieldset>
+
+Correction.propTypes = {
+  parameters: T.shape({
+    showCorrectionAt: T.string.isRequired,
+    showFullCorrection: T.bool.isRequired,
+    showStatistics: T.bool.isRequired,
+    allPapersStatistics: T.bool.isRequired,
+    showFeedback: T.bool.isRequired,
+    anonymizeAttempts: T.bool.isRequired,
+    correctionDate: T.string
+  }).isRequired,
+  onChange: T.func.isRequired
+}
+
+class Notation extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -301,20 +388,20 @@ class Correction extends Component {
         />
 
         {this.state.totalScoreOnMode === TOTAL_SCORE_ON_CUSTOM &&
-          <div className="sub-fields">
-            <NumberGroup
-              id="quiz-total-score-on-value"
-              label={tex('quiz_total_score')}
-              min={1}
-              value={this.props.parameters.totalScoreOn || TOTAL_SCORE_ON_DEFAULT_VALUE}
-              onChange={totalScore => this.props.onChange('parameters.totalScoreOn', totalScore)}
-            />
-          </div>
+        <div className="sub-fields">
+          <NumberGroup
+            id="quiz-total-score-on-value"
+            label={trans('score_total')}
+            min={1}
+            value={this.props.parameters.totalScoreOn || TOTAL_SCORE_ON_DEFAULT_VALUE}
+            onChange={totalScore => this.props.onChange('parameters.totalScoreOn', totalScore)}
+          />
+        </div>
         }
 
         <NumberGroup
           id="quiz-success-score"
-          label={tex('quiz_success_score')}
+          label={trans('score_to_pass')}
           min={0}
           max={100}
           unit="%"
@@ -322,32 +409,6 @@ class Correction extends Component {
           onChange={successScore => this.props.onChange('parameters.successScore', successScore)}
         />
 
-        <FormGroup
-          id="quiz-showCorrectionAt"
-          label={tex('availability_of_correction')}
-        >
-          <select
-            id="quiz-showCorrectionAt"
-            value={this.props.parameters.showCorrectionAt}
-            className="form-control"
-            onChange={e => this.props.onChange('parameters.showCorrectionAt', e.target.value)}
-          >
-            {correctionModes.map(mode =>
-              <option key={mode[0]} value={mode[0]}>{tex(mode[1])}</option>
-            )}
-          </select>
-        </FormGroup>
-        {this.props.parameters.showCorrectionAt === SHOW_CORRECTION_AT_DATE &&
-          <div className="sub-fields">
-            <DateGroup
-              id="quiz-correctionDate"
-              label={tex('correction_date')}
-              value={this.props.parameters.correctionDate}
-              onChange={date => this.props.onChange('parameters.correctionDate', date)}
-              time={true}
-            />
-          </div>
-        }
         <FormGroup
           id="quiz-showScoreAt"
           label={tex('score_displaying')}
@@ -365,66 +426,14 @@ class Correction extends Component {
             )}
           </select>
         </FormGroup>
-
-        <CheckGroup
-          id="quiz-show-feedback"
-          value={this.props.parameters.showFeedback}
-          label={tex('show_feedback')}
-          onChange={checked => this.props.onChange('parameters.showFeedback', checked)}
-        />
-        <CheckGroup
-          id="quiz-anonymizeAttempts"
-          value={this.props.parameters.anonymizeAttempts}
-          label={tex('anonymous')}
-          onChange={checked => this.props.onChange('parameters.anonymizeAttempts', checked)}
-        />
-
-        <CheckGroup
-          id="quiz-showFullCorrection"
-          value={this.props.parameters.showFullCorrection}
-          label={tex('maximal_correction')}
-          onChange={checked => this.props.onChange('parameters.showFullCorrection', checked)}
-        />
-
-        <ActivableSet
-          id="quiz-showStatistics"
-          label={tex('statistics')}
-          activated={this.props.parameters.showStatistics}
-          onChange={checked => this.props.onChange('parameters.showStatistics', checked)}
-        >
-          <FormGroup
-            id="quiz-allPapersStatistics"
-            label={tex('statistics_options')}
-          >
-            <select
-              id="quiz-allPapersStatistics"
-              value={this.props.parameters.allPapersStatistics}
-              className="form-control"
-              onChange={e => this.props.onChange('parameters.allPapersStatistics', e.target.value === 'true')}
-            >
-              {statisticsModes.map(mode =>
-                <option key={mode[0]} value={mode[0] === STATISTICS_ALL_PAPERS}>
-                  {tex(mode[1])}
-                </option>
-              )}
-            </select>
-          </FormGroup>
-        </ActivableSet>
       </fieldset>
     )
   }
 }
 
-Correction.propTypes = {
+Notation.propTypes = {
   parameters: T.shape({
-    showCorrectionAt: T.string.isRequired,
     showScoreAt: T.string.isRequired,
-    showFullCorrection: T.bool.isRequired,
-    showStatistics: T.bool.isRequired,
-    allPapersStatistics: T.bool.isRequired,
-    showFeedback: T.bool.isRequired,
-    anonymizeAttempts: T.bool.isRequired,
-    correctionDate: T.string,
     totalScoreOn: T.number,
     successScore: T.number
   }).isRequired,
@@ -497,7 +506,8 @@ const QuizEditor = props =>
       {makePanel(Display, trans('display_parameters'), 'display_mode', props)}
       {makePanel(Picking, tex('step_picking'), 'step-picking', props, ['picking'])}
       {makePanel(Signing, tex('signing'), 'signing', props, ['duration', 'maxAttempts'])}
-      {makePanel(Correction, tex('correction'), 'correction', props)}
+      {makePanel(Correction, trans('correction'), 'correction', props)}
+      {makePanel(Notation, trans('notation'), 'notation', props)}
       {makePanel(Access, tex('access'), 'access', props)}
     </PanelGroup>
   </form>

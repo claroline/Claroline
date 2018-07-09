@@ -125,24 +125,31 @@ const EditorComponent = props =>
           ]
         }, {
           icon: 'fa fa-fw fa-check-square-o',
-          title: trans('correction', {}, 'dropzone'),
+          title: trans('correction'),
           fields: [
             {
-              name: 'parameters.scoreMax',
-              type: 'number',
-              label: trans('score_max', {}, 'dropzone'),
-              required: true,
-              options: {
-                min: 0
-              }
+              name: 'display.displayCorrectionsToLearners',
+              type: 'boolean',
+              label: trans('display_corrections_to_learners', {}, 'dropzone')
             }, {
-              name: 'parameters.scoreToPass',
-              type: 'number',
-              label: trans('score_to_pass', {}, 'dropzone'),
-              required: true,
-              options: {
-                min: 0
-              }
+              name: 'display.showFeedback',
+              type: 'boolean',
+              label: trans('display_notation_message_to_learners', {}, 'dropzone'),
+              linked: [
+                {
+                  name: 'display.successMessage',
+                  type: 'html',
+                  label: trans('success_message', {}, 'dropzone'),
+                  displayed: props.dropzone.display.showFeedback,
+                  required: true
+                }, {
+                  name: 'display.failMessage',
+                  type: 'html',
+                  label: trans('fail_message', {}, 'dropzone'),
+                  displayed: props.dropzone.display.showFeedback,
+                  required: true
+                }
+              ]
             }, {
               name: 'parameters.expectedCorrectionTotal',
               type: 'number',
@@ -200,36 +207,30 @@ const EditorComponent = props =>
             }
           ]
         }, {
-          icon: 'fa fa-fw fa-desktop',
-          title: trans('display_parameters'),
+          icon: 'fa fa-fw fa-graduation-cap',
+          title: trans('notation'),
           fields: [
             {
+              name: 'parameters.scoreMax',
+              type: 'number',
+              label: trans('score_total'),
+              required: true,
+              options: {
+                min: 0
+              }
+            }, {
+              name: 'parameters.scoreToPass',
+              type: 'number',
+              label: trans('score_to_pass'),
+              required: true,
+              options: {
+                min: 0,
+                unit: '%'
+              }
+            }, {
               name: 'display.showScore',
               type: 'boolean',
               label: trans('display_notation_to_learners', {}, 'dropzone')
-            }, {
-              name: 'display.showFeedback',
-              type: 'boolean',
-              label: trans('display_notation_message_to_learners', {}, 'dropzone'),
-              linked: [
-                {
-                  name: 'display.successMessage',
-                  type: 'html',
-                  label: trans('success_message', {}, 'dropzone'),
-                  displayed: props.dropzone.display.showFeedback,
-                  required: true
-                }, {
-                  name: 'display.failMessage',
-                  type: 'html',
-                  label: trans('fail_message', {}, 'dropzone'),
-                  displayed: props.dropzone.display.showFeedback,
-                  required: true
-                }
-              ]
-            }, {
-              name: 'display.displayCorrectionsToLearners',
-              type: 'boolean',
-              label: trans('display_corrections_to_learners', {}, 'dropzone')
             }
           ]
         }, {

@@ -192,7 +192,7 @@ class Exercise extends AbstractResource
      *
      * @var float
      */
-    private $totalScoreOn = 0;
+    private $totalScoreOn = 100;
 
     /**
      * Score to obtain to pass the exercise.
@@ -201,7 +201,7 @@ class Exercise extends AbstractResource
      *
      * @var float
      */
-    private $successScore;
+    private $successScore = 50;
 
     /**
      * @var string
