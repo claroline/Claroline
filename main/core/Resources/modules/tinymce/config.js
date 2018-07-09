@@ -4,10 +4,21 @@ import '#/main/core/tinymce/themes'
 
 import {locale} from '#/main/app/intl/locale'
 import {asset, param, theme} from '#/main/app/config'
+import {loadExternalPlugins} from '#/main/core/tinymce/plugins/external-plugins'
+
+// Load external tinymce plugins from other bundles
+const extPlugins = loadExternalPlugins()
+const extButtons = extPlugins.length > 0 ? ` | ${extPlugins.join(' ')}` : ''
 
 const config = {
   //TODO: this is for retro comp purpose
-  setup: (editor) => editor.on('change', () => editor.save()),
+  setup: (editor) => {
+    editor.on('change', () => editor.save())
+    editor.on('FullscreenStateChanged', (evt) => evt.state ?
+      editor.getContainer().parentNode.classList.add('editor-fullscreen') :
+      editor.getContainer().parentNode.classList.remove('editor-fullscreen')
+    )
+  },
   language: locale(),
   theme: 'modern',
   skin: false, // we provide it through theme system
@@ -19,9 +30,11 @@ const config = {
   statusbar: true,
   branding: false,
   resize: true,
+  
+  oninit: loadExternalPlugins,
 
   // enabled plugins
-  plugins: plugins,
+  plugins: plugins.concat(extPlugins),
 
   // plugin : autoresize
   autoresize_min_height: 160,
@@ -65,7 +78,7 @@ const config = {
   // toolbars & buttons
   insert_button_items: 'resource-picker file-upload link media image | anchor charmap inserttable insertdatetime',
   toolbar1: 'advanced-toolbar | insert | undo redo | formatselect | bold italic forecolor | fullscreen',
-  toolbar2: 'alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat preview code'
+  toolbar2: 'alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat preview code' + extButtons
 }
 
 export {

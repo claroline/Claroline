@@ -1,5 +1,8 @@
+{% import 'IcapWebsiteBundle:website:macros/common_macros.html.twig' as commonMacros %}
+
 <style type="text/css">
 html, body {
+    padding-top: 0px !important;
     background-color: {{ options.bgColor|raw }};
     background-image: url("{{ commonMacros.getImagePath(options.getBgImageForWeb())|raw }}");
     background-repeat: {{ options.bgRepeat|raw }};

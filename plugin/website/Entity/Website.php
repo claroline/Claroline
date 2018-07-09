@@ -8,6 +8,7 @@
 
 namespace Icap\WebsiteBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,6 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Website extends AbstractResource
 {
+    use UuidTrait;
     /**
      * @ORM\OneToOne(targetEntity="Icap\WebsiteBundle\Entity\WebsitePage")
      * @ORM\JoinColumn(name="root_id", referencedColumnName="id", onDelete="CASCADE")
@@ -43,6 +45,7 @@ class Website extends AbstractResource
     public function __construct($test = false)
     {
         $this->test = $test;
+        $this->refreshUuid();
     }
 
     /**
@@ -121,7 +124,7 @@ class Website extends AbstractResource
         $em = $event->getEntityManager();
         $rootPage = $this->getRoot();
         $options = $this->getOptions();
-        if ($rootPage === null) {
+        if (null === $rootPage) {
             $rootPage = new WebsitePage();
             $rootPage->setWebsite($this);
             $rootPage->setIsSection(true);
@@ -129,17 +132,17 @@ class Website extends AbstractResource
             $rootPage->setType(WebsitePageTypeEnum::ROOT_PAGE);
             $this->setRoot($rootPage);
         }
-        if ($rootPage->getId() === null) {
+        if (null === $rootPage->getId()) {
             $em->getRepository('IcapWebsiteBundle:WebsitePage')->persistAsFirstChild($rootPage);
         }
 
-        if ($options === null) {
+        if (null === $options) {
             $options = new WebsiteOptions();
             $options->setWebsite($this);
             $this->setOptions($options);
         }
 
-        if ($options->getId() === null) {
+        if (null === $options->getId()) {
             $em->persist($options);
         }
     }

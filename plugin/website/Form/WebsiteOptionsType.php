@@ -62,6 +62,7 @@ class WebsiteOptionsType extends AbstractType
             'translation_domain' => 'icap_website',
             'csrf_protection' => false,
             'intention' => 'update_website_options',
+            'allow_extra_fields' => 'true',
         ]);
     }
 }

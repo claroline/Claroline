@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -36,10 +35,10 @@ class TinyMceUploadModalType extends AbstractType
 
         $builder->add('name', HiddenType::class, ['data' => 'tmpname']);
         $builder->add(
-            FileType::class,
+            'file',
             HiddenType::class,
             [
-                'label' => FileType::class,
+                'label' => 'file',
                 'required' => true,
                 'mapped' => false,
                 'constraints' => [

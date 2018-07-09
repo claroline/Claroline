@@ -10,8 +10,8 @@ namespace Icap\WebsiteBundle\Controller;
 
 use Icap\WebsiteBundle\Entity\Website;
 use Icap\WebsiteBundle\Entity\WebsitePageTypeEnum;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class WebsiteController extends Controller
 {
@@ -43,31 +43,31 @@ class WebsiteController extends Controller
         $user = $this->getLoggedUser();
         $pageManager = $this->getWebsitePageManager();
 
-        $viewArray = array(
+        $viewArray = [
             '_resource' => $website,
             'workspace' => $website->getResourceNode()->getWorkspace(),
             'isAdmin' => $isAdmin,
             'user' => $user,
-            'pageTypes' => array(
+            'pageTypes' => [
                 'blank' => WebsitePageTypeEnum::BLANK_PAGE,
                 'resource' => WebsitePageTypeEnum::RESOURCE_PAGE,
                 'url' => WebsitePageTypeEnum::URL_PAGE,
-            ),
-        );
+            ],
+        ];
         if ($isAdmin) {
             $pages = $pageManager->getPageTree($website, $isAdmin, false);
             $website->setPages($pages);
             $resourceTypes = $this->get('claroline.manager.resource_manager')->getAllResourceTypes();
             $viewArray['resourceTypes'] = $resourceTypes;
 
-            return $this->render('IcapWebsiteBundle:Website:edit.html.twig', $viewArray);
+            return $this->render('IcapWebsiteBundle:website:edit.html.twig', $viewArray);
         } else {
             $pages = $pageManager->getPageTree($website, $isAdmin, true);
             $website->setPages($pages);
             $currentPage = $website->getHomePage();
-            if ($currentPage == null && !empty($pages) && !empty($pages[0]['children'])) {
+            if (null === $currentPage && !empty($pages) && !empty($pages[0]['children'])) {
                 $currentPage = $pages[0]['children'][0];
-                if (isset($currentPage) && $currentPage !== null) {
+                if (isset($currentPage) && null !== $currentPage) {
                     $currentPage = $pageManager->getPages($website, $currentPage['id'], $isAdmin, false)[0];
                 }
             }
@@ -75,6 +75,6 @@ class WebsiteController extends Controller
             $viewArray['currentPage'] = $currentPage;
         }
 
-        return $this->render('IcapWebsiteBundle:Website:view.html.twig', $viewArray);
+        return $this->render('IcapWebsiteBundle:website:view.html.twig', $viewArray);
     }
 }

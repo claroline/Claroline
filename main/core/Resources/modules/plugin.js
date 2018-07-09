@@ -57,5 +57,9 @@ registry.add('core', {
 
   questions: {
 
+  },
+  
+  tinymcePlugins: {
+  
   }
 })

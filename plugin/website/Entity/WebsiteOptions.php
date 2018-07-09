@@ -8,6 +8,7 @@
 
 namespace Icap\WebsiteBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -20,6 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class WebsiteOptions
 {
+    use UuidTrait;
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -356,6 +358,11 @@ class WebsiteOptions
      * @JMS\SerializedName("menuOrientation")
      */
     protected $menuOrientation = 'vertical';
+
+    public function __construct()
+    {
+        $this->refreshUuid();
+    }
 
     /**
      * @return mixed
@@ -954,7 +961,7 @@ class WebsiteOptions
      */
     public function getTotalWidth()
     {
-        if ($this->totalWidth === null) {
+        if (null === $this->totalWidth) {
             return 0;
         }
 
@@ -1086,40 +1093,40 @@ class WebsiteOptions
             'menu_orientation' => $this->menuOrientation,
         ];
 
-        if (isset($files) && $files !== null) {
+        if (isset($files) && null !== $files) {
             //Create bgImage file
-            if ($bgImageUid !== null && !filter_var($bgImageUid, FILTER_VALIDATE_URL)) {
+            if (null !== $bgImageUid && !filter_var($bgImageUid, FILTER_VALIDATE_URL)) {
                 copy($this->getAbsolutePath($webDir, 'bgImage'), $tmpFilePath.$bgImageUid);
                 $files[$bgImageUid] = $tmpFilePath.$bgImageUid;
             }
             //Create bannerBgImage file
-            if ($bannerBgImageUid !== null && !filter_var($bannerBgImageUid, FILTER_VALIDATE_URL)) {
+            if (null !== $bannerBgImageUid && !filter_var($bannerBgImageUid, FILTER_VALIDATE_URL)) {
                 copy($this->getAbsolutePath($webDir, 'bannerBgImage'), $tmpFilePath.$bannerBgImageUid);
                 $files[$bannerBgImageUid] = $tmpFilePath.$bannerBgImageUid;
             }
             //Create footerBgImage file
-            if ($footerBgImageUid !== null && !filter_var($footerBgImageUid, FILTER_VALIDATE_URL)) {
+            if (null !== $footerBgImageUid && !filter_var($footerBgImageUid, FILTER_VALIDATE_URL)) {
                 copy($this->getAbsolutePath($webDir, 'footerBgImage'), $tmpFilePath.$footerBgImageUid);
                 $files[$footerBgImageUid] = $tmpFilePath.$footerBgImageUid;
             }
 
             //Create file for csscode
             $cssCodeUid = null;
-            if ($this->cssCode !== null && !empty($this->cssCode)) {
+            if (null !== $this->cssCode && !empty($this->cssCode)) {
                 $cssCodeUid = uniqid('ws_css_').'.txt';
                 file_put_contents($tmpFilePath.$cssCodeUid, $this->cssCode);
                 $files[$cssCodeUid] = $tmpFilePath.$cssCodeUid;
             }
             //Create file for banner text
             $bannerTextUid = null;
-            if ($this->bannerText !== null && !empty($this->bannerText)) {
+            if (null !== $this->bannerText && !empty($this->bannerText)) {
                 $bannerTextUid = uniqid('ws_banner_').'.txt';
                 file_put_contents($tmpFilePath.$bannerTextUid, $this->bannerText);
                 $files[$bannerTextUid] = $tmpFilePath.$bannerTextUid;
             }
             //Create file for footer text
             $footerTextUid = null;
-            if ($this->footerText !== null && !empty($this->footerText)) {
+            if (null !== $this->footerText && !empty($this->footerText)) {
                 $footerTextUid = uniqid('ws_footer_').'.txt';
                 file_put_contents($tmpFilePath.$footerTextUid, $this->footerText);
                 $files[$footerTextUid] = $tmpFilePath.$footerTextUid;
@@ -1153,7 +1160,7 @@ class WebsiteOptions
         $this->analyticsAccountId = $optionsArray['analytics_account_id'];
         //Get content for css code
         $cssCode = null;
-        if (isset($optionsArray['css_code_path']) && $optionsArray['css_code_path'] !== null) {
+        if (isset($optionsArray['css_code_path']) && null !== $optionsArray['css_code_path']) {
             $cssCode = file_get_contents(
                 $rootPath.DIRECTORY_SEPARATOR.$optionsArray['css_code_path']
             );
@@ -1164,7 +1171,7 @@ class WebsiteOptions
         $this->bgColor = $optionsArray['bg_color'];
         $this->bgImage = $optionsArray['bg_image'];
         //Copy bg image to web folder
-        if ($this->bgImage !== null && !filter_var($this->bgImage, FILTER_VALIDATE_URL)) {
+        if (null !== $this->bgImage && !filter_var($this->bgImage, FILTER_VALIDATE_URL)) {
             copy(
                 $rootPath.DIRECTORY_SEPARATOR.$this->bgImage,
                 $uploadedDir.DIRECTORY_SEPARATOR.$this->bgImage
@@ -1176,7 +1183,7 @@ class WebsiteOptions
         $this->bannerBgColor = $optionsArray['banner_bg_color'];
         $this->bannerBgImage = $optionsArray['banner_bg_image'];
         //Copy banner bg image to web folder
-        if ($this->bannerBgImage !== null && !filter_var($this->bannerBgImage, FILTER_VALIDATE_URL)) {
+        if (null !== $this->bannerBgImage && !filter_var($this->bannerBgImage, FILTER_VALIDATE_URL)) {
             copy(
                 $rootPath.DIRECTORY_SEPARATOR.$this->bannerBgImage,
                 $uploadedDir.DIRECTORY_SEPARATOR.$this->bannerBgImage
@@ -1188,7 +1195,7 @@ class WebsiteOptions
         $this->bannerEnabled = $optionsArray['banner_enabled'];
         //Get content for banner text
         $bannerText = null;
-        if (isset($optionsArray['banner_text_path']) && $optionsArray['banner_text_path'] !== null) {
+        if (isset($optionsArray['banner_text_path']) && null !== $optionsArray['banner_text_path']) {
             $bannerText = file_get_contents(
                 $rootPath.DIRECTORY_SEPARATOR.$optionsArray['banner_text_path']
             );
@@ -1199,7 +1206,7 @@ class WebsiteOptions
         $this->footerBgColor = $optionsArray['footer_bg_color'];
         $this->footerBgImage = $optionsArray['footer_bg_image'];
         //Copy footer bg image to web folder
-        if ($this->footerBgImage !== null && !filter_var($this->footerBgImage, FILTER_VALIDATE_URL)) {
+        if (null !== $this->footerBgImage && !filter_var($this->footerBgImage, FILTER_VALIDATE_URL)) {
             copy(
                 $rootPath.DIRECTORY_SEPARATOR.$this->footerBgImage,
                 $uploadedDir.DIRECTORY_SEPARATOR.$this->footerBgImage
@@ -1211,7 +1218,7 @@ class WebsiteOptions
         $this->footerEnabled = $optionsArray['footer_enabled'];
         //Get content for footer text
         $footerText = null;
-        if (isset($optionsArray['footer_text_path']) && $optionsArray['footer_text_path'] !== null) {
+        if (isset($optionsArray['footer_text_path']) && null !== $optionsArray['footer_text_path']) {
             $footerText = file_get_contents(
                 $rootPath.DIRECTORY_SEPARATOR.$optionsArray['footer_text_path']
             );

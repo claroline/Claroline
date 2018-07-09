@@ -8,6 +8,7 @@
 
 namespace Icap\WebsiteBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
@@ -22,6 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class WebsitePage
 {
+    use UuidTrait;
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -160,6 +162,11 @@ class WebsitePage
      */
     protected $isHomepage = false;
 
+    public function __construct()
+    {
+        $this->refreshUuid();
+    }
+
     /**
      * @return mixed
      */
@@ -237,7 +244,7 @@ class WebsitePage
      */
     public function getTarget()
     {
-        if ($this->target === null) {
+        if (null === $this->target) {
             return 0;
         }
 
@@ -330,7 +337,7 @@ class WebsitePage
      */
     public function getResourceNodeId()
     {
-        if ($this->resourceNode !== null) {
+        if (null !== $this->resourceNode) {
             return $this->resourceNode->getId();
         } else {
             return;
@@ -470,7 +477,7 @@ class WebsitePage
      */
     public function getIsHomepage()
     {
-        if ($this->isHomepage === null) {
+        if (null === $this->isHomepage) {
             return false;
         } else {
             return $this->isHomepage;
@@ -487,7 +494,7 @@ class WebsitePage
 
     public function isRoot()
     {
-        return $this->level === 0;
+        return 0 === $this->level;
     }
 
     public function exportToArray(RouterInterface $router = null, &$files = null)
@@ -496,8 +503,8 @@ class WebsitePage
 
         $pageArray = [
             'id' => $this->id,
-            'parent_id' => ($this->parent !== null) ? $this->parent->getId() : null,
-            'is_root' => $this->level === 0,
+            'parent_id' => (null !== $this->parent) ? $this->parent->getId() : null,
+            'is_root' => 0 === $this->level,
             'visible' => $this->visible,
             'creation_date' => $this->creationDate,
             'title' => $this->title,
@@ -509,21 +516,21 @@ class WebsitePage
         ];
 
         //export
-        if (isset($files) && $files !== null) {
-            if ($this->type === WebsitePageTypeEnum::RESOURCE_PAGE) {
+        if (isset($files) && null !== $files) {
+            if (WebsitePageTypeEnum::RESOURCE_PAGE === $this->type) {
                 $pageArray['resource_node_id'] = $this->resourceNode->getId();
                 //also set URL as fallback if refereced resource is not found during import
                 $pageArray['url'] = $router->generate('claro_resource_open', [
                     'resourceType' => $this->resourceNodeType,
                     'node' => $this->resourceNode->getId(),
                 ], true);
-            } elseif ($this->type === WebsitePageTypeEnum::BLANK_PAGE) {
+            } elseif (WebsitePageTypeEnum::BLANK_PAGE === $this->type) {
                 $richTextUid = uniqid('ws_page_content_').'.txt';
                 file_put_contents($tmpFilePath.$richTextUid, $this->richText);
                 $files[$richTextUid] = $tmpFilePath.$richTextUid;
                 $pageArray['rich_text_path'] = $richTextUid;
             }
-        //copy
+            //copy
         } else {
             $pageArray['resource_node'] = $this->resourceNode;
             $pageArray['resource_node_type'] = $this->resourceNodeType;
@@ -542,7 +549,7 @@ class WebsitePage
         $this->isSection = $optionsArray['is_section'];
         $this->description = $optionsArray['description'];
         $this->isHomepage = $optionsArray['is_homepage'];
-        if ($this->type === WebsitePageTypeEnum::BLANK_PAGE) {
+        if (WebsitePageTypeEnum::BLANK_PAGE === $this->type) {
             if (isset($optionsArray['rich_text'])) {
                 $this->richText = $optionsArray['rich_text'];
             } elseif (isset($optionsArray['rich_text_path'])) {
@@ -550,7 +557,7 @@ class WebsitePage
                     $rootPath.DIRECTORY_SEPARATOR.$optionsArray['rich_text_path']
                 );
             }
-        } elseif ($this->type === WebsitePageTypeEnum::RESOURCE_PAGE) {
+        } elseif (WebsitePageTypeEnum::RESOURCE_PAGE === $this->type) {
             if (isset($optionsArray['resource_node'])) {
                 $this->resourceNode = $optionsArray['resource_node'];
                 $this->resourceNodeType = $this->resourceNode->getResourceType()->getName();
@@ -559,7 +566,7 @@ class WebsitePage
                 $this->url = $optionsArray['url'];
                 $this->type = WebsitePageTypeEnum::URL_PAGE;
             }
-        } elseif ($this->type === WebsitePageTypeEnum::URL_PAGE) {
+        } elseif (WebsitePageTypeEnum::URL_PAGE === $this->type) {
             $this->url = $optionsArray['url'];
             $this->target = 1;
         }

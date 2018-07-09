@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<title>Formula Editor</title>
+<head>
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/icapformulaplugin/css/formula-editor-icons.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/icapformulaplugin/css/formula-editor.css') }}">
+{% endblock %}
+</head>
+<body id="fm-editor-body">
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('packages/mathjax/MathJax.js?config=TeX-AMS-MML_SVG') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapformulaplugin/js/build/formula-all.min.js') }}"></script>
+    <script type="text/javascript">
+      window.onload = function () {
+        window.parameters = Url.get;
+        window.EditorObj = new Editor(window.actions, window.panels, parameters);
+        window.getData = function (callback) {
+          EditorObj.getEquationPng(callback);
+        };
+      }
+    </script>
+{% endblock %}
+</body>
+</html>

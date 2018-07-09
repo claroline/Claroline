@@ -75,6 +75,7 @@
     &.mce-i-date:before           { content: @fa-var-calendar-o; }
     &.mce-i-checkbox:before       { content: @fa-var-check-square-o; }
     &.mce-i-selected:before       { content: @fa-var-check; }
+    &.mce-i-percent:before        { content: @fa-var-percent; }
 
     /*.mce-i-visualblocks,
     .mce-i-ltr,
@@ -87,4 +88,14 @@
     .mce-i-visualchars {
         font-family: 'tinymce', Arial !important;
     }*/
+}
+
+// Full screen editor container
+.text-editor.editor-fullscreen{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    z-index: @zindex-fullscreen;
 }

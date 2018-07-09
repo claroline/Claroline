@@ -129,5 +129,5 @@
 {% block stylesheets %}
     {{ parent() }}
     {{ viewMacros.getStylesheets(options.menuOrientation) }}
-    {% include 'IcapWebsiteBundle:website:view/view.css.twig' with {'options': _resource.options, 'commonMacros': commonMacros} %}
+    {% include 'IcapWebsiteBundle:website:view/view.css.twig' with {'options': _resource.options} %}
 {% endblock %}
