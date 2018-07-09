@@ -2,15 +2,16 @@
 
 namespace Icap\BadgeBundle\Controller;
 
-use Icap\BadgeBundle\Event\BadgeCreateValidationLinkEvent;
+use Claroline\CoreBundle\Entity\User;
 use Icap\BadgeBundle\Entity\Badge;
 use Icap\BadgeBundle\Entity\BadgeClaim;
-use Claroline\CoreBundle\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Icap\BadgeBundle\Event\BadgeCreateValidationLinkEvent;
+use Icap\BadgeBundle\Form\Type\ClaimBadgeType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use  Symfony\Component\HttpFoundation\Request;
 
 /**
  * Controller of the badges.
@@ -28,7 +29,7 @@ class ProfileController extends Controller
     {
         $badgeClaim = new BadgeClaim();
         $badgeClaim->setUser($user);
-        $form = $this->createForm($this->get('icap_badge.form.claimBadge'), $badgeClaim);
+        $form = $this->createForm(ClaimBadgeType::class, $badgeClaim);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -38,7 +39,6 @@ class ProfileController extends Controller
                 $translator = $this->get('translator');
 
                 try {
-                    $entityManager = $this->getDoctrine()->getManager();
                     $badge = $form->get('badge')->getData();
 
                     if (null !== $badge) {
@@ -46,21 +46,21 @@ class ProfileController extends Controller
                         $badgeManager = $this->get('icap_badge.manager.badge');
                         $badgeManager->makeClaim($badge, $user);
 
-                        $flashBag->add('success', $translator->trans('badge_claim_success_message', array(), 'icap_badge'));
+                        $flashBag->add('success', $translator->trans('badge_claim_success_message', [], 'icap_badge'));
                     } else {
-                        $flashBag->add('warning', $translator->trans('badge_claim_nothing_selected_warning_message', array(), 'icap_badge'));
+                        $flashBag->add('warning', $translator->trans('badge_claim_nothing_selected_warning_message', [], 'icap_badge'));
                     }
                 } catch (\Exception $exception) {
-                    $flashBag->add('error', $translator->trans($exception->getMessage(), array(), 'icap_badge'));
+                    $flashBag->add('error', $translator->trans($exception->getMessage(), [], 'icap_badge'));
                 }
 
                 return $this->redirect($this->generateUrl('icap_badge_profile_view_badges'));
             }
         }
 
-        return array(
+        return [
             'form' => $form->createView(),
-        );
+        ];
     }
 
     /**
@@ -74,15 +74,14 @@ class ProfileController extends Controller
         /** @var \Claroline\CoreBundle\Rule\Validator $badgeRuleValidator */
         $badgeRuleValidator = $this->get('claroline.rule.validator');
         $validatedRules = $badgeRuleValidator->validate($badge, $user);
-        $validateLogsLink = array();
 
         if (0 < $validatedRules['validRules']) {
             foreach ($validatedRules['rules'] as $ruleIndex => $validatedRule) {
                 foreach ($validatedRule['logs'] as $logIndex => $validateLog) {
-                    $validatedRules['rules'][$ruleIndex]['logs'][$logIndex] = array(
+                    $validatedRules['rules'][$ruleIndex]['logs'][$logIndex] = [
                         'log' => $validateLog,
                         'url' => null,
-                    );
+                    ];
 
                     $validationLink = null;
                     $eventLogName = sprintf('badge-%s-generate_validation_link', $validateLog->getAction());
@@ -104,17 +103,17 @@ class ProfileController extends Controller
             }
         }
 
-        $userBadge = $this->getDoctrine()->getRepository('IcapBadgeBundle:UserBadge')->findOneBy(array('badge' => $badge, 'user' => $user));
+        $userBadge = $this->getDoctrine()->getRepository('IcapBadgeBundle:UserBadge')->findOneBy(['badge' => $badge, 'user' => $user]);
 
         if (null === $userBadge) {
             throw $this->createNotFoundException("User don't have this badge.");
         }
 
-        return array(
+        return [
             'userBadge' => $userBadge,
             'badge' => $badge,
             'validatedRules' => $validatedRules,
-        );
+        ];
     }
 
     /**
@@ -130,10 +129,10 @@ class ProfileController extends Controller
         $badgeClaims = $doctrine->getRepository('IcapBadgeBundle:BadgeClaim')->findByUser($user);
         $badgeCollections = $doctrine->getRepository('IcapBadgeBundle:BadgeCollection')->findByUser($user);
 
-        return array(
+        return [
             'userBadges' => $userBadges,
             'badgeClaims' => $badgeClaims,
             'badgeCollections' => $badgeCollections,
-        );
+        ];
     }
 }

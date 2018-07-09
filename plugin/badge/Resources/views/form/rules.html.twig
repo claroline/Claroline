@@ -119,8 +119,10 @@
     {% endspaceless %}
 {% endblock _badge_form_rules_widget %}
 
+
 {% block _badge_form_rules_widget_prototype %}
-    {{ _self._badge_form_rules_widget_prototype_row(prototype) }}
+    {% import _self as macros %}
+    {{ macros._badge_form_rules_widget_prototype_row(prototype) }} 
 {% endblock _badge_form_rules_widget_prototype %}
 
 {% macro _badge_form_rules_widget_prototype_row(rows) %}

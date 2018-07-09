@@ -22,7 +22,7 @@ namespace Claroline\CoreBundle\Twig;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Pagerfanta\PagerfantaInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyPath;
 use WhiteOctober\PagerfantaBundle\Twig\PagerfantaExtension as P;
@@ -33,7 +33,17 @@ use WhiteOctober\PagerfantaBundle\Twig\PagerfantaExtension as P;
  */
 class PagerfantaExtension extends P
 {
-    use ContainerAwareTrait;
+    /**
+     * @DI\InjectParams({
+     *     "container" = @DI\Inject("service_container")
+     * })
+     *
+     * @param ContainerInterface $container
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
 
     /**
      * Renders a pagerfanta.
@@ -77,7 +87,7 @@ class PagerfantaExtension extends P
         $routeParams = $options['routeParams'];
         $pagePropertyPath = new PropertyPath($options['pageParameter']);
         $routeGenerator = function ($page) use ($router, $routeName, $routeParams, $pagePropertyPath, $options) {
-            $propertyAccessor = PropertyAccess::getPropertyAccessor();
+            $propertyAccessor = PropertyAccess::createPropertyAccessor();
             $propertyAccessor->setValue($routeParams, $pagePropertyPath, $page);
 
             $url = $router->generate($routeName, $routeParams);

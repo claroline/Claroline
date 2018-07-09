@@ -2,12 +2,12 @@
 
 namespace Icap\BadgeBundle\Repository;
 
-use Icap\BadgeBundle\Entity\Badge;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Icap\BadgeBundle\Entity\Badge;
 
 class BadgeRepository extends EntityRepository
 {
@@ -147,32 +147,6 @@ class BadgeRepository extends EntityRepository
     }
 
     /**
-     * @param string $search
-     * @param string $data
-     *
-     * @return array
-     */
-    public function findByNameForAjax($search, $data)
-    {
-        $resultArray = array();
-        $locale = $data['locale'];
-        $userId = $data['userId'];
-
-        /** @var Badge[] $badges */
-        $badges = $this->findByNameLocaleAndUserId($search, $locale, $userId);
-
-        foreach ($badges as $badge) {
-            $resultArray[] = array(
-                'id' => $badge->getId(),
-                'text' => $badge->getName($locale),
-                'icon' => '<img src="/'.$badge->getWebPath().'" style="max-height:20px; max-width:20px;"/>',
-            );
-        }
-
-        return $resultArray;
-    }
-
-    /**
      * @param array $params
      *
      * @return ArrayCollection
@@ -180,7 +154,7 @@ class BadgeRepository extends EntityRepository
     public function extract($params)
     {
         $search = $params['search'];
-        if ($search !== null) {
+        if (null !== $search) {
             $query = $this->findByNameAndLocale($search, $params['extra']['locale'], false);
 
             return $query
@@ -189,7 +163,7 @@ class BadgeRepository extends EntityRepository
                 ->getResult();
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -279,7 +253,7 @@ class BadgeRepository extends EntityRepository
     public function filterByBlacklist(QueryBuilder $queryBuilder, $rootAlias, $blacklist)
     {
         if (0 < count($blacklist)) {
-            $blacklistedBadgeIds = array();
+            $blacklistedBadgeIds = [];
 
             foreach ($blacklist as $blacklistedId) {
                 $blacklistedBadgeIds[] = $blacklistedId;

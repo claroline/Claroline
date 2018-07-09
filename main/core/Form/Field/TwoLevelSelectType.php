@@ -28,11 +28,6 @@ class TwoLevelSelectType extends AbstractType
         return ChoiceType::class;
     }
 
-    public function getName()
-    {
-        return 'twolevelselect';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver

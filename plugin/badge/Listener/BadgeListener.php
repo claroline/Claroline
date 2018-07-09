@@ -4,14 +4,14 @@ namespace Icap\BadgeBundle\Listener;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Pager\PagerFactory;
-use Claroline\CoreBundle\Rule\Validator;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\LogCreateEvent;
+use Claroline\CoreBundle\Pager\PagerFactory;
+use Claroline\CoreBundle\Rule\Validator;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\EntityManager;
 use Icap\BadgeBundle\Entity\Badge;
 use Icap\BadgeBundle\Manager\BadgeManager;
-use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -178,7 +178,7 @@ class BadgeListener
         $userBadges = $this->badgeManager->getLoggedUserBadges();
         $content = $this->templateingEngine->render(
             'IcapBadgeBundle:Profile:myProfileWidgetBadges.html.twig',
-            array('userBadges' => $userBadges)
+            ['userBadges' => $userBadges]
         );
 
         $event->setContent($content);
@@ -203,7 +203,7 @@ class BadgeListener
         $mostAwardedBadges = $userBadgeRepository->findWorkspaceMostAwardedBadges($workspace);
         $countBadgesPerUser = $userBadgeRepository->countBadgesPerUser($workspace);
 
-        $parameters = array(
+        $parameters = [
             'badgePage' => 1,
             'claimPage' => 1,
             'userPage' => 1,
@@ -211,10 +211,10 @@ class BadgeListener
             'mostAwardedBadges' => $mostAwardedBadges,
             'badges_per_user' => $countBadgesPerUser,
             'add_link' => 'icap_badge_workspace_tool_badges_add',
-            'edit_link' => array(
+            'edit_link' => [
                 'url' => 'icap_badge_workspace_tool_badges_edit',
                 'suffix' => '#!edit',
-            ),
+            ],
             'delete_link' => 'icap_badge_workspace_tool_badges_delete',
             'view_link' => 'icap_badge_workspace_tool_badges_edit',
             'current_link' => 'icap_badge_workspace_tool_badges',
@@ -225,14 +225,14 @@ class BadgeListener
             'totalAwarding' => $userBadgeRepository->countAwardingByWorkspace($workspace),
             'totalBadgeAwarded' => $totalBadgeAwarded,
             'totalBadgeNotAwarded' => $totalBadges - $totalBadgeAwarded,
-            'route_parameters' => array(
+            'route_parameters' => [
                 'workspaceId' => $workspace->getId(),
-            ),
-        );
+            ],
+        ];
 
         return $this->templateingEngine->render(
             'IcapBadgeBundle:Tool:Workspace\list.html.twig',
-            array('workspace' => $workspace, 'parameters' => $parameters)
+            ['workspace' => $workspace, 'parameters' => $parameters]
         );
     }
 
@@ -247,10 +247,10 @@ class BadgeListener
 
         return $this->templateingEngine->render(
             'IcapBadgeBundle:Tool:MyWorkspace\toolList.html.twig',
-            array(
+            [
                 'workspace' => $workspace,
                 'user' => $user,
-            )
+            ]
         );
     }
 
@@ -267,12 +267,12 @@ class BadgeListener
         $badgeCollections = $this->doctrine->getRepository('IcapBadgeBundle:BadgeCollection')->findByUser($user);
 
         return $this->templateingEngine->render(
-            'IcapBadgeBundle:Profile:badges.html.twig',
-            array(
+            'IcapBadgeBundle:profile:badges.html.twig',
+            [
                 'userBadges' => $userBadges,
                 'badgeClaims' => $badgeClaims,
                 'badgeCollections' => $badgeCollections,
-            )
+            ]
         );
     }
 }

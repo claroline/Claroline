@@ -2,11 +2,18 @@
 
 namespace Icap\BadgeBundle\Form\Type;
 
+use Claroline\CoreBundle\Form\Field\ResourcePickerType;
+use Claroline\CoreBundle\Form\Field\TwoLevelSelectType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\EventManager;
 use Icap\BadgeBundle\Entity\BadgeRule;
+use Icap\BadgeBundle\Form\Field\BadgePickerType;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -16,6 +23,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("icap_badge.form.badge.rule")
+ * @DI\Tag("form.type")
  */
 class BadgeRuleType extends AbstractType
 {
@@ -55,80 +63,53 @@ class BadgeRuleType extends AbstractType
     {
         $actionChoices = $this->eventManager->getSortedEventsForFilter();
 
-        /** @var \Claroline\CoreBundle\Entity\User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        $locale = (null === $user->getLocale()) ? $this->platformConfigHandler->getParameter('locale_language') : $user->getLocale();
-
         $builder
             ->add(
                 'action',
-                'twolevelselect',
-                array(
+                TwoLevelSelectType::class,
+                [
                     'translation_domain' => 'log',
-                    'attr' => array('class' => 'input-sm'),
+                    'attr' => ['class' => 'input-sm'],
                     'choices' => $actionChoices,
                     'choices_as_values' => true,
-                )
+                ]
             )
             ->add('isUserReceiver', CheckboxType::class)
-            ->add('occurrence', IntegerType::class, array('attr' => array('class' => 'input-sm')))
+            ->add('occurrence', IntegerType::class, ['attr' => ['class' => 'input-sm']])
             ->add('result', TextType::class)
-            ->add('resource', 'resourcePicker', array(
-                    'required' => false,
-                )
-            )
+            ->add('resource', ResourcePickerType::class, ['required' => false])
             ->add(
                 'resultComparison',
                 ChoiceType::class,
-                array('choices' => BadgeRule::getResultComparisonTypes())
+                ['choices' => BadgeRule::getResultComparisonTypes()]
             );
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));
-    }
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
+            $form = $event->getForm();
 
-    public function onPreSetData(FormEvent $event)
-    {
-        $form = $event->getForm();
+            $blacklist = [];
 
-        $blacklist = array();
+            if (null !== $options['badgeId']) {
+                array_push($blacklist, $options['badgeId']);
+            }
 
-        if (null !== $this->badgeId) {
-            array_push($blacklist, $this->badgeId);
-        }
-
-        $form
-            ->add('badge', 'badgepicker', array(
-                'blacklist' => $blacklist,
-            )
-        );
-    }
-
-    /**
-     * @param int $badgeId
-     *
-     * @return BadgeRuleType
-     */
-    public function setBadgeId($badgeId)
-    {
-        $this->badgeId = $badgeId;
-
-        return $this;
-    }
-
-    public function getName()
-    {
-        return 'badge_rule_form';
+            $form
+                ->add('badge', BadgePickerType::class, [
+                    'blacklist' => $blacklist,
+                ]
+            );
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'data_class' => 'Icap\BadgeBundle\Entity\BadgeRule',
                 'translation_domain' => 'icap_badge',
                 'language' => 'en',
-            )
+                'badgeId' => null,
+            ]
         );
     }
 }

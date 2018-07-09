@@ -15,15 +15,15 @@ services:
     icap_badge.form.badge:
         class: Symfony\Component\Form\Form
         factory: ["@form.factory", createNamed]
-        arguments: ["badge_form", "badge_form"]
+        arguments: ["badge_form", "Icap\\BadgeBundle\\Form\\Type\\BadgeType"]
     icap_badge.form.badge.workspace:
         class: Symfony\Component\Form\Form
         factory: ["@form.factory", createNamed]
-        arguments: ["badge_form", "badge_form_workspace"]
+        arguments: ["badge_form", "Icap\\BadgeBundle\\Form\\Type\\Tool\\Workspace\\BadgeType"]
     icap_badge.widget.form.badge_usage:
         class: Symfony\Component\Form\Form
         factory: ["@form.factory", createNamed]
-        arguments: ["badge_usage_widget_form", "badge_usage_widget_config"]
+        arguments: ["badge_usage_widget_form", "Icap\\BadgeBundle\\Form\\Type\\Widget\\BadgeUsageConfigType"]
 
     # form handler
     icap_badge.form_handler.badge:

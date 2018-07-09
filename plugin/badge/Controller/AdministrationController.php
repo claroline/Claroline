@@ -117,17 +117,18 @@ class AdministrationController extends Controller
         /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
         $translator = $this->get('translator');
 
-        try {
-            if ($this->get('icap_badge.form_handler.badge')->handleAdd($badge)) {
-                $sessionFlashBag->add('success', $translator->trans('badge_add_success_message', [], 'icap_badge'));
-
-                return $this->redirect($this->generateUrl('icap_badge_admin_badges'));
-            }
-        } catch (\Exception $exception) {
-            $sessionFlashBag->add('error', $translator->trans('badge_add_error_message', [], 'icap_badge'));
+        //try {
+        if ($this->get('icap_badge.form_handler.badge')->handleAdd($badge)) {
+            $sessionFlashBag->add('success', $translator->trans('badge_add_success_message', [], 'icap_badge'));
 
             return $this->redirect($this->generateUrl('icap_badge_admin_badges'));
         }
+        /*
+        } catch (\Exception $exception) {
+        $sessionFlashBag->add('error', $translator->trans('badge_add_error_message', [], 'icap_badge'));
+
+        return $this->redirect($this->generateUrl('icap_badge_admin_badges'));
+        }*/
 
         return [
             'form' => $this->get('icap_badge.form.badge')->createView(),
@@ -161,7 +162,7 @@ class AdministrationController extends Controller
         $translator = $this->get('translator');
 
         try {
-            $unawardBadge = $request->query->get('unawardBadge') === 'true';
+            $unawardBadge = 'true' === $request->query->get('unawardBadge');
 
             if ($this->get('icap_badge.form_handler.badge')->handleEdit($badge, $this->badgeManager, $unawardBadge)) {
                 $sessionFlashBag->add('success', $translator->trans('badge_edit_success_message', [], 'icap_badge'));
@@ -406,7 +407,7 @@ class AdministrationController extends Controller
         $this->checkOpen();
 
         // Check rules for already awarded badges ?
-        $recalculateAlreadyAwarded = $request->query->get('recalculateAlreadyAwarded') === 'true';
+        $recalculateAlreadyAwarded = 'true' === $request->query->get('recalculateAlreadyAwarded');
 
         // Get Users
         $users = $recalculateAlreadyAwarded ?

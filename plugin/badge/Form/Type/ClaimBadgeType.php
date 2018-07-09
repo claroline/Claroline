@@ -3,15 +3,18 @@
 namespace Icap\BadgeBundle\Form\Type;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Icap\BadgeBundle\Repository\BadgeRepository;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("icap_badge.form.claimBadge")
+ * @DI\Tag("form.type")
  */
 class ClaimBadgeType extends AbstractType
 {
@@ -46,29 +49,48 @@ class ClaimBadgeType extends AbstractType
         $locale = (null === $user->getLocale()) ? $this->platformConfigHandler->getParameter('locale_language') : $user->getLocale();
 
         $builder
-            ->add('badge', 'zenstruck_ajax_entity', array(
-                'attr' => array('class' => 'fullwidth'),
-                'attr' => array('control_width' => 'col-md-3'),
-                'placeholder' => $this->translator->trans('badge_form_badge_selection', array(), 'icap_badge'),
+            ->add('badge', EntityType::class, [
+                'attr' => ['class' => 'fullwidth'],
+                'attr' => ['control_width' => 'col-md-3'],
+                'placeholder' => $this->translator->trans('badge_form_badge_selection', [], 'icap_badge'),
                 'class' => 'IcapBadgeBundle:Badge',
-                'use_controller' => true,
-                'repo_method' => sprintf('findByNameForAjax'),
-                'extra_data' => array('userId' => $user->getId(), 'locale' => $locale),
-            ));
-    }
+                'choice_label' => function ($badge) use ($locale) {
+                    return $badge->getTranslationForLocale($locale)->getName();
+                },
+                'query_builder' => function (BadgeRepository $er) use ($user, $locale) {
+                    $qb = $er->createQueryBuilder('b');
 
-    public function getName()
-    {
-        return 'badge_claim_form';
+                    $expr = $qb->expr()->andX(
+                        $qb->expr()->eq('t.locale', ':locale'),
+                        $qb->expr()->isNull('b.workspace')
+                      );
+
+                    $inExpr = $qb->expr()->in(
+                        'b.workspace',
+                        'SELECT w FROM ClarolineCoreBundle:Workspace\Workspace w
+                            JOIN w.roles r
+                            JOIN r.users u
+                            WHERE u.id = '.$user->getId()
+                    );
+
+                    return
+                      $qb->join('b.translations', 't')
+                        ->andWhere($qb->expr()->orX(
+                          $expr,
+                          $inExpr
+                      ))
+                      ->setParameter('locale', $locale);
+                },
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'data_class' => 'Icap\BadgeBundle\Entity\BadgeClaim',
                 'translation_domain' => 'icap_badge',
-            )
+            ]
         );
     }
 }

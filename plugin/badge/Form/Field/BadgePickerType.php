@@ -6,6 +6,7 @@ use Icap\BadgeBundle\Form\DataTransformer\BadgePickerTransformer;
 use Icap\BadgeBundle\Manager\BadgeManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
@@ -57,12 +58,12 @@ class BadgePickerType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'multiple' => false,
                 'mode' => BadgeManager::BADGE_PICKER_DEFAULT_MODE,
                 'workspace' => null,
-                'blacklist' => array(),
-            )
+                'blacklist' => [],
+            ]
         );
     }
 

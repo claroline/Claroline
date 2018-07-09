@@ -49,4 +49,9 @@ class IcapPortfolioBundle extends DistributionPluginBundle implements Configurat
     {
         return new AdditionalInstaller();
     }
+
+    public function isActiveByDefault()
+    {
+        return false;
+    }
 }

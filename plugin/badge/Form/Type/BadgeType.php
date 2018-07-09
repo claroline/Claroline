@@ -7,7 +7,12 @@ use Claroline\CoreBundle\Manager\LocaleManager;
 use Icap\BadgeBundle\Entity\Badge;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -15,6 +20,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @DI\FormType(alias="badge_form")
+ * @DI\Tag("form.type")
  */
 class BadgeType extends AbstractType
 {
@@ -29,14 +35,12 @@ class BadgeType extends AbstractType
 
     /**
      * @DI\InjectParams({
-     *     "badgeRuleType"         = @DI\Inject("icap_badge.form.badge.rule"),
      *     "localeManager"         = @DI\Inject("claroline.manager.locale_manager"),
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
-    public function __construct(BadgeRuleType $badgeRuleType, LocaleManager $localeManager, PlatformConfigurationHandler $platformConfigHandler)
+    public function __construct(LocaleManager $localeManager, PlatformConfigurationHandler $platformConfigHandler)
     {
-        $this->badgeRuleType = $badgeRuleType;
         $this->localeManager = $localeManager;
         $this->platformConfigHandler = $platformConfigHandler;
     }
@@ -45,7 +49,6 @@ class BadgeType extends AbstractType
     {
         $platformLanguage = $this->platformConfigHandler->getParameter('locale_language');
         $languages = array_values($this->localeManager->getAvailableLocales());
-        $sortedLanguages = array();
 
         usort($languages, function ($language1, $language2) use ($platformLanguage) {
             if ($language1 === $platformLanguage) {
@@ -57,28 +60,29 @@ class BadgeType extends AbstractType
             }
         });
 
-        $translationBuilder = $builder->create('translations', 'form', array('virtual' => true));
+        //initially, it was type 'form'
+        $translationBuilder = $builder->create('translations', CollectionType::class, ['inherit_data' => true]);
 
         foreach ($languages as $language) {
             $fieldName = sprintf('%sTranslation', $language);
-            $translationBuilder->add($fieldName, new BadgeTranslationType());
+            $translationBuilder->add($fieldName, BadgeTranslationType::class);
         }
 
         $builder
             ->add($translationBuilder)
-            ->add('automatic_award', CheckboxType::class, array('required' => false))
-            ->add(FileType::class, FileType::class, array('label' => 'badge_form_image'))
-            ->add('is_expiring', CheckboxType::class, array('required' => false))
-            ->add('expire_duration', IntegerType::class, array('attr' => array(
+            ->add('automatic_award', CheckboxType::class, ['required' => false])
+            ->add('file', FileType::class, ['label' => 'badge_form_image'])
+            ->add('is_expiring', CheckboxType::class, ['required' => false])
+            ->add('expire_duration', IntegerType::class, ['attr' => [
                       'class' => 'input-sm',
                       'min' => 1,
-                ),
-            ))
+                ],
+            ])
             ->add('expire_period', ChoiceType::class,
-                array(
+                [
                     'choices' => Badge::getExpirePeriodLabels(),
-                    'attr' => array('class' => 'input-sm'),
-                )
+                    'attr' => ['class' => 'input-sm'],
+                ]
             );
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
@@ -86,25 +90,23 @@ class BadgeType extends AbstractType
             $badge = $event->getData();
 
             if ($badge && null !== $badge) {
-                $this->badgeRuleType->setBadgeId($badge->getId());
-
                 $form = $event->getForm();
                 $form
-                    ->add(
-                        'rules',
-                        'collection',
-                        array(
-                            'type' => $this->badgeRuleType,
-                            'by_reference' => false,
-                            'attr' => array('class' => 'rule-collections'),
-                            'attr' => array('label_width' => 'col-md-3'),
-                            'prototype' => true,
-                            'allow_add' => true,
-                            'allow_delete' => true,
-                        )
-                    );
+                  ->add(
+                      'rules',
+                      CollectionType::class,
+                      [
+                          'entry_type' => BadgeRuleType::class,
+                          'entry_options' => ['badgeId' => $badge->getId()],
+                          'by_reference' => false,
+                          'attr' => ['class' => 'rule-collections'],
+                          'attr' => ['label_width' => 'col-md-3'],
+                          'prototype' => true,
+                          'allow_add' => true,
+                          'allow_delete' => true,
+                      ]
+                  );
             }
-
         });
     }
 
@@ -116,13 +118,13 @@ class BadgeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'data_class' => 'Icap\BadgeBundle\Entity\Badge',
                 'translation_domain' => 'icap_badge',
                 'language' => 'en',
                 'date_format' => DateType::HTML5_FORMAT,
                 'cascade_validation' => true,
-            )
+            ]
         );
     }
 }
