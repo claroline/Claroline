@@ -2,6 +2,51 @@
 @import "../../less/mixins";
 @import "../../less/themes/default/variables";
 
+.tool-nav {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 1rem 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0 1px 2px 0 #ddd;
+  border-radius: .3rem;
+  min-height: 2.8em;
+
+  .nav-tab {
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .nav-add-tab,
+  .nav-tab {
+    color: #000;
+    padding: .9em 1.2em;
+
+    &:hover {
+      cursor: pointer;
+      background: rgba(0,0,0,.03);
+      color: rgba(0,0,0,.95);
+    }
+
+    &-active {
+      background: #ebebeb;
+    }
+  }
+}
+
+.tab-edition-container {
+  display: flex;
+  order: 2;
+  .page-actions-group {
+    .page-actions-btn {
+      margin-left: .2em;
+    }
+  }
+}
+
 .home-container {
     /*.btn-add {
         padding: @padding-large-vertical @padding-large-horizontal;

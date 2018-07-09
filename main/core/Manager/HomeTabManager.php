@@ -141,6 +141,7 @@ class HomeTabManager
         $type = $workspace ? 'workspace' : 'user';
         $homeTab = new HomeTab();
         $homeTab->setName($name);
+        $homeTab->setLongTitle($name);
         $homeTab->setWorkspace($workspace);
         $homeTab->setType($type);
 

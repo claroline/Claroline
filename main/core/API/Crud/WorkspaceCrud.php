@@ -90,8 +90,7 @@ class WorkspaceCrud
         $options = $event->getOptions();
 
         $new = $event->getCopy();
-        $new->setName($workspace->getName());
-        $new->setCode($workspace->getCode());
+        $new->refreshUuid();
 
         $this->manager->copy($workspace, $new, in_array(Options::WORKSPACE_MODEL, $options));
     }

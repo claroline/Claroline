@@ -59,7 +59,7 @@ class WidgetInstance
     /**
      * The parent container.
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetContainer", inversedBy="instances")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetContainer", inversedBy="instances", cascade={"persist"})
      * @ORM\JoinColumn(name="container_id", referencedColumnName="id")
      *
      * @var WidgetContainer

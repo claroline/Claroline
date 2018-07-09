@@ -29,6 +29,7 @@ use Symfony\Component\Yaml\Yaml;
 
 /**
  * @DI\Service("claroline.manager.transfer_manager")
+ * @TODO broken class, must be refactored from json later
  */
 class TransferManager
 {

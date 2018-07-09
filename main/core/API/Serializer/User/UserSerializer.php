@@ -103,7 +103,7 @@ class UserSerializer
      */
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\User';
+        return User::class;
     }
 
     /**

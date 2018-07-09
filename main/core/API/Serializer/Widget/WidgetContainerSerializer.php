@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\API\Serializer\Widget;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Widget\WidgetContainer;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -19,30 +20,36 @@ class WidgetContainerSerializer
     /** @var SerializerProvider */
     private $serializer;
 
+    /** @var ObjectManager */
+    private $om;
+
     /**
      * WidgetContainerSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
+     *     "serializer" = @DI\Inject("claroline.api.serializer"),
+     *    "om"          = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param SerializerProvider $serializer
      */
     public function __construct(
-        SerializerProvider $serializer)
-    {
+        ObjectManager $om,
+        SerializerProvider $serializer
+    ) {
+        $this->om = $om;
         $this->serializer = $serializer;
     }
 
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Widget\WidgetContainer';
+        return WidgetContainer::class;
     }
 
-    public function serialize(WidgetContainer $widgetContainer, array $options = [])
+    public function serialize(WidgetContainer $widgetContainer, array $options = []): array
     {
         return [
-            'id' => $widgetContainer->getUuid(),
+            'id' => $this->getUuid($widgetContainer, $options),
             'name' => $widgetContainer->getName(),
             'display' => [
                 'layout' => $widgetContainer->getLayout(),
@@ -56,7 +63,7 @@ class WidgetContainerSerializer
         ];
     }
 
-    public function deserialize($data, WidgetContainer $widgetContainer, array $options)
+    public function deserialize($data, WidgetContainer $widgetContainer, array $options): WidgetContainer
     {
         $this->sipe('id', 'setUuid', $data, $widgetContainer);
         $this->sipe('name', 'setName', $data, $widgetContainer);
@@ -70,9 +77,12 @@ class WidgetContainerSerializer
         if (isset($data['contents'])) {
             foreach ($data['contents'] as $index => $content) {
                 /** @var WidgetInstance $widgetInstance */
-                $widgetInstance = $this->serializer->deserialize('Claroline\CoreBundle\Entity\Widget\WidgetInstance', $content, $options);
+                $widgetInstance = $this->serializer->deserialize(WidgetInstance::class, $content, $options);
                 $widgetInstance->setPosition($index);
                 $widgetContainer->addInstance($widgetInstance);
+
+                // We either do this or cascade persist ¯\_(ツ)_/¯
+                $this->om->persist($widgetInstance);
             }
         }
 

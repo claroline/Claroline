@@ -13,8 +13,6 @@ namespace Claroline\CoreBundle\Entity\Widget;
 
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WidgetHomeTabConfigRepository")
@@ -28,8 +26,6 @@ class WidgetHomeTabConfig
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_widget"})
-     * @SerializedName("id")
      */
     protected $id;
 
@@ -38,8 +34,6 @@ class WidgetHomeTabConfig
      *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstance"
      * )
      * @ORM\JoinColumn(name="widget_instance_id", onDelete="CASCADE", nullable=true)
-     * @Groups({"api_widget"})
-     * @SerializedName("widgetInstance")
      */
     protected $widgetInstance;
 
@@ -49,8 +43,6 @@ class WidgetHomeTabConfig
      *     inversedBy="widgetHomeTabConfigs"
      * )
      * @ORM\JoinColumn(name="home_tab_id", onDelete="CASCADE", nullable=false)
-     * @Groups({"api_widget"})
-     * @SerializedName("homeTab")
      */
     protected $homeTab;
 
@@ -72,29 +64,21 @@ class WidgetHomeTabConfig
 
     /**
      * @ORM\Column(name="widget_order", type="integer")
-     * @Groups({"api_widget"})
-     * @SerializedName("order")
      */
     protected $widgetOrder;
 
     /**
      * @ORM\Column()
-     * @Groups({"api_widget"})
-     * @SerializedName("type")
      */
     protected $type;
 
     /**
      * @ORM\Column(type="boolean", name="is_visible")
-     * @Groups({"api_widget"})
-     * @SerializedName("visible")
      */
     protected $visible = true;
 
     /**
      * @ORM\Column(type="boolean", name="is_locked")
-     * @Groups({"api_widget"})
-     * @SerializedName("locked")
      */
     protected $locked = false;
 

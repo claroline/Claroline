@@ -30,10 +30,6 @@
     {{ parent() ~ ' - ' ~ "home" | trans({}, "tools") | striptags | raw }}
 {% endblock %}
 
-{# Override breadcrumbs #}
-{% block breadcrumb %}
-    {{ breadcrumb }}
-{% endblock %}
 
 {# Content of the Page #}
 {% block content %}
@@ -42,7 +38,6 @@
         data-editable="{{ editable }}"
         data-context="{{ context | json_encode | raw | escape }}"
         data-tabs="{{ tabs | json_encode | raw | escape }}"
-        data-widgets="{{ widgets | json_encode | raw | escape }}"
     ></div>
 {% endblock %}
 

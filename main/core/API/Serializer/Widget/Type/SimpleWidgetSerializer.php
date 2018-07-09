@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Widget\Type;
 
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\Entity\Widget\Type\SimpleWidget;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -11,20 +12,23 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class SimpleWidgetSerializer
 {
+    use SerializerTrait;
+
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Widget\Type\SimpleWidget';
+        return SimpleWidget::class;
     }
 
-    public function serialize(SimpleWidget $widget, array $options = [])
+    public function serialize(SimpleWidget $widget, array $options = []): array
     {
         return [
             'content' => $widget->getContent(),
         ];
     }
 
-    public function deserialize($data, SimpleWidget $widget, array $options = [])
+    public function deserialize($data, SimpleWidget $widget, array $options = []): SimpleWidget
     {
+        $this->sipe('content', 'setContent', $data, $widget);
 
         return $widget;
     }

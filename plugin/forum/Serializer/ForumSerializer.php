@@ -40,7 +40,7 @@ class ForumSerializer
 
     public function getClass()
     {
-        return 'Claroline\ForumBundle\Entity\Forum';
+        return Forum::class;
     }
 
     /**

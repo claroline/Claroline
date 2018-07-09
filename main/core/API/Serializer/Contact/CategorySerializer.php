@@ -78,7 +78,7 @@ class CategorySerializer
 
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Contact\Category';
+        return Category::class;
     }
 
     private function addIfPropertyExists($prop, $setter, $data, Category $category)

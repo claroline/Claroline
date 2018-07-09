@@ -239,4 +239,12 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
 
         return false;
     }
+
+    /**
+     * Kinda like a shortcut.
+     */
+    public function isAdmin(TokenInterface $token)
+    {
+        return $this->isGranted('ROLE_ADMIN');
+    }
 }

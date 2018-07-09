@@ -39,10 +39,6 @@ class ApiListener
         $subjectCount = $this->manager->replaceSubjectUser($event->getRemoved(), $event->getKept());
         $event->addMessage("[ClarolineForumBundle] updated Subject count: $subjectCount");
 
-        // Replace user of Notification nodes
-        $notificationCount = $this->manager->replaceNotificationUser($event->getRemoved(), $event->getKept());
-        $event->addMessage("[ClarolineForumBundle] updated Notification count: $notificationCount");
-
         // Replace user of Message nodes
         $messageCount = $this->manager->replaceMessageUser($event->getRemoved(), $event->getKept());
         $event->addMessage("[ClarolineForumBundle] updated Message count: $messageCount");

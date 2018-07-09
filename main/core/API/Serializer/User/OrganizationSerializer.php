@@ -104,7 +104,7 @@ class OrganizationSerializer
 
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Organization\Organization';
+        return Organization::class;
     }
 
     /**

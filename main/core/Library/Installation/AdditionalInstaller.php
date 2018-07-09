@@ -61,11 +61,6 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
 
         $this->setLocale();
 
-        if (version_compare($currentVersion, '2.0', '<') && version_compare($targetVersion, '2.0', '>=')) {
-            $updater = new Updater\Updater020000($this->container);
-            $updater->setLogger($this->logger);
-            $updater->preUpdate();
-        }
         if (version_compare($currentVersion, '2.9.0', '<')) {
             $updater = new Updater\Updater020900($this->container);
             $updater->setLogger($this->logger);

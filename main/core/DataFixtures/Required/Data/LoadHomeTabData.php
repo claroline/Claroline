@@ -34,6 +34,7 @@ class LoadHomeTabData implements RequiredFixture
         $desktopHomeTab = new HomeTab();
         $desktopHomeTab->setType('admin_desktop');
         $desktopHomeTab->setName($infoName);
+        $desktopHomeTab->setLongTitle($infoName);
         $manager->persist($desktopHomeTab);
 
         $desktopHomeTabConfig = new HomeTabConfig();
@@ -47,6 +48,7 @@ class LoadHomeTabData implements RequiredFixture
         $workspaceHomeTab = new HomeTab();
         $workspaceHomeTab->setType('admin_workspace');
         $workspaceHomeTab->setName($infoName);
+        $desktopHomeTab->setLongTitle($infoName);
         $manager->persist($workspaceHomeTab);
 
         $workspaceHomeTabConfig = new HomeTabConfig();

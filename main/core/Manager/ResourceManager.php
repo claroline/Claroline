@@ -754,8 +754,8 @@ class ResourceManager
         /** @var CopyResourceEvent $event */
         $event = $this->dispatcher->dispatch(
             'copy_'.$node->getResourceType()->getName(),
-            'CopyResource',
-            [$resource, $parent, $newNode]
+            'Resource\\CopyResource',
+            [$resource, $newNode]
         );
 
         $copy = $event->getCopy();
@@ -1442,10 +1442,12 @@ class ResourceManager
      */
     public function getResourceFromNode(ResourceNode $node)
     {
-        /** @var AbstractResource $resource */
-        $resource = $this->om->getRepository($node->getClass())->findOneBy(['resourceNode' => $node]);
+        /* @var AbstractResource $resource */
+        if (class_exists($node->getClass())) {
+            $resource = $this->om->getRepository($node->getClass())->findOneBy(['resourceNode' => $node]);
 
-        return $resource;
+            return $resource;
+        }
     }
 
     /**

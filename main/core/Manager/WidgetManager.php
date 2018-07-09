@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\Widget\WidgetRepository;
-use Claroline\CoreBundle\Repository\WidgetDisplayConfigRepository;
 use Claroline\CoreBundle\Repository\WidgetInstanceRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -31,9 +30,6 @@ class WidgetManager
 
     /** @var WidgetInstanceRepository */
     private $widgetInstanceRepository;
-
-    /** @var WidgetDisplayConfigRepository */
-    private $widgetDisplayConfigRepository;
 
     /** @var PluginManager */
     private $pluginManager;
@@ -57,7 +53,6 @@ class WidgetManager
         $this->pluginManager = $pluginManager;
         $this->widgetRepository = $om->getRepository('ClarolineCoreBundle:Widget\Widget');
         $this->widgetInstanceRepository = $om->getRepository('ClarolineCoreBundle:Widget\WidgetInstance');
-        $this->widgetDisplayConfigRepository = $om->getRepository('ClarolineCoreBundle:Widget\WidgetDisplayConfig');
     }
 
     /**
@@ -74,22 +69,9 @@ class WidgetManager
         return $this->widgetRepository->findAllAvailable($enabledPlugins, $context);
     }
 
-    public function getWidgetDisplayConfigsByWorkspaceAndWidgetHTCs(
-        Workspace $workspace,
-        array $widgetHomeTabConfigs,
-        $executeQuery = true
-    ) {
-        return count($widgetHomeTabConfigs) > 0 ?
-        $this->widgetDisplayConfigRepository->findWidgetDisplayConfigsByWorkspaceAndWidgetHTCs(
-            $workspace,
-            $widgetHomeTabConfigs,
-            $executeQuery
-        ) :
-        [];
-    }
-
     /**
      * @param null $organizations
+     *
      * @return int
      */
     public function getNbWidgetInstances($organizations = null)
@@ -99,6 +81,7 @@ class WidgetManager
 
     /**
      * @param null $organizations
+     *
      * @return int
      */
     public function getNbWorkspaceWidgetInstances($organizations = null)
@@ -108,6 +91,7 @@ class WidgetManager
 
     /**
      * @param null $organizations
+     *
      * @return int
      */
     public function getNbDesktopWidgetInstances($organizations = null)
@@ -117,6 +101,7 @@ class WidgetManager
 
     /**
      * @param null $organizations
+     *
      * @return array
      */
     public function countWidgetsByType($organizations = null)

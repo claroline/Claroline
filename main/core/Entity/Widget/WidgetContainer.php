@@ -37,6 +37,8 @@ class WidgetContainer
      *   The layout has 2 columns, the first one is 2/3 width and the second is 1/3.
      *
      * @var array
+     *
+     * @ORM\Column(type="json_array", nullable=true)
      */
     private $layout = [];
 
@@ -201,6 +203,7 @@ class WidgetContainer
     {
         if (!$this->instances->contains($instance)) {
             $this->instances->add($instance);
+            $instance->setContainer($this);
         }
     }
 

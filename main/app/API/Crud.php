@@ -174,13 +174,19 @@ class Crud
      * Copy an entry `object` of `class`.
      *
      * @param object $object  - the entity to copy
-     * @param string $class   - the class of the entity to copy
      * @param array  $options - additional copy options
      */
-    public function copy($object, $class, array $options = [])
+    public function copy($object, array $options = [])
     {
         $this->checkPermission('COPY', $object, [], true);
-        $new = new $class();
+
+        $new = $this->serializer->deserialize(
+          get_class($object),
+          $this->serializer->serialize($object),
+          [Options::NO_FETCH]
+        );
+
+        $this->om->persist($new);
 
         //first event is the pre one
         if ($this->dispatch('copy', 'pre', [$object, $options, $new])) {
@@ -188,6 +194,8 @@ class Crud
             //we could use only one event afaik
             $this->dispatch('copy', 'post', [$object, $options, $new]);
         }
+
+        $this->om->flush();
 
         return $new;
     }
@@ -206,7 +214,7 @@ class Crud
 
         foreach ($data as $el) {
             //get the element
-            $copies[] = $this->copy($el, $class, $options);
+            $copies[] = $this->copy($el, $options);
         }
 
         $this->om->endFlushSuite();

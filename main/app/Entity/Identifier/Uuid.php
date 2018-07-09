@@ -42,6 +42,11 @@ trait Uuid
      */
     public function refreshUuid()
     {
-        $this->uuid = BaseUuid::uuid4()->toString();
+        $this->uuid = $this->generateUuid();
+    }
+
+    public function generateUuid(): string
+    {
+        return BaseUuid::uuid4()->toString();
     }
 }

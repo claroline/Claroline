@@ -13,10 +13,10 @@ class WidgetSerializer
 {
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Widget\Widget';
+        return Widget::class;
     }
 
-    public function serialize(Widget $widget)
+    public function serialize(Widget $widget): array
     {
         return [
             'id' => $widget->getUuid(),

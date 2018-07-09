@@ -52,7 +52,7 @@ class RoleSerializer
      */
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Role';
+        return Role::class;
     }
 
     /**

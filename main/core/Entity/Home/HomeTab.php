@@ -11,13 +11,14 @@
 
 namespace Claroline\CoreBundle\Entity\Home;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Entity
@@ -25,26 +26,27 @@ use JMS\Serializer\Annotation\SerializedName;
  */
 class HomeTab
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_home_tab"})
-     * @SerializedName("id")
-     */
-    protected $id;
+    use Id;
+    use Poster;
+    use Uuid;
+
+    const TYPE_WORKSPACE = 'workspace';
+    const TYPE_DESKTOP = 'desktop';
+    const TYPE_ADMIN_WORKSPACE = 'admin_workspace';
+    const TYPE_ADMIN_DESKTOP = 'admin_desktop';
 
     /**
      * @ORM\Column(nullable=false)
-     * @Groups({"api_home_tab"})
-     * @SerializedName("name")
      */
     protected $name;
 
     /**
+     * @ORM\Column(nullable=false, type="text")
+     */
+    protected $longTitle;
+
+    /**
      * @ORM\Column(nullable=false)
-     * @Groups({"api_home_tab"})
-     * @SerializedName("type")
      */
     protected $type;
 
@@ -73,6 +75,14 @@ class HomeTab
     protected $widgetHomeTabConfigs;
 
     /**
+     * @ORM\OneToMany(
+     *     targetEntity="HomeTabConfig",
+     *     mappedBy="homeTab"
+     * )
+     */
+    protected $homeTabConfigs;
+
+    /**
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Role"
      * )
@@ -82,25 +92,15 @@ class HomeTab
 
     /**
      * @ORM\Column(nullable=true)
-     * @Groups({"api_home_tab"})
-     * @SerializedName("icon")
      */
     protected $icon;
 
     public function __construct()
     {
+        $this->refreshUuid();
         $this->roles = new ArrayCollection();
         $this->widgetHomeTabConfigs = new ArrayCollection();
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
+        $this->homeTabConfigs = new ArrayCollection();
     }
 
     public function getName()
@@ -188,5 +188,15 @@ class HomeTab
     public function setIcon($icon)
     {
         $this->icon = $icon;
+    }
+
+    public function setLongTitle($title)
+    {
+        $this->longTitle = $title;
+    }
+
+    public function getLongTitle()
+    {
+        return $this->longTitle;
     }
 }

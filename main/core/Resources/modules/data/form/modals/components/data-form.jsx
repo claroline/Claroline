@@ -29,7 +29,7 @@ class DataFormModal extends Component {
     this.updateProp = this.updateProp.bind(this)
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.data !== this.props.data) {
       this.setState({
         data: cloneDeep(nextProps.data)

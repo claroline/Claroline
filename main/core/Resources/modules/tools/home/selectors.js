@@ -1,13 +1,26 @@
+import {createSelector} from 'reselect'
 
-const title = (state) => state.title
+const currentTabId = (state) => state.currentTabId
 const editable = (state) => state.editable
+const editing = (state) => state.editing
 const context = (state) => state.context
 const tabs = (state) => state.tabs
-const widgets = (state) => state.widgets
+
+const currentTab = createSelector(
+  [tabs, currentTabId],
+  (tabs, currentTabId) => tabs.find(tab => currentTabId === tab.id)
+)
+
+const widgets = createSelector(
+  [currentTab],
+  (currentTab) => currentTab.widgets
+)
 
 export const select = {
-  title,
+  currentTab,
+  currentTabId,
   editable,
+  editing,
   context,
   tabs,
   widgets

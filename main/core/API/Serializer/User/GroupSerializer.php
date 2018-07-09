@@ -36,7 +36,7 @@ class GroupSerializer
 
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Group';
+        return Group::class;
     }
 
     /**

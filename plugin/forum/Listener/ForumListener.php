@@ -53,7 +53,8 @@ class ForumListener
     public function onCopy(CopyResourceEvent $event)
     {
         $resource = $event->getResource();
-        $event->setCopy($this->container->get('claroline.manager.forum_manager')->copy($resource));
+        $new = $this->container->get('claroline.api.crud')->copy($resource);
+        $event->setCopy($new);
         $event->stopPropagation();
     }
 

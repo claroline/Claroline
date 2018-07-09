@@ -3,6 +3,7 @@
 namespace Claroline\AppBundle\API;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\BundleRecorder\Log\LoggableTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use JVal\Context;
 use JVal\Registry;
@@ -16,6 +17,8 @@ use JVal\Walker;
  */
 class SerializerProvider
 {
+    use LoggableTrait;
+
     /**
      * The list of registered serializers in the platform.
      *
@@ -102,6 +105,10 @@ class SerializerProvider
             $className = $this->getSerializerHandledClass($serializer);
 
             if ($object instanceof $className || $object === $className) {
+                if (method_exists($serializer, 'setLogger')) {
+                    $serializer->setLogger($this->logger);
+                }
+
                 return $serializer;
             }
         }

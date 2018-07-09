@@ -10,10 +10,7 @@ bootstrap(
   (initialData) => Object.assign({}, initialData, {
     editable: !!initialData.editable,
     editor: {
-      data: {
-        widgets: initialData.widgets,
-        tabs: initialData.tabs
-      }
+      data: initialData.tabs
     }
   })
 )

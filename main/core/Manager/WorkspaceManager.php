@@ -11,22 +11,19 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\NotPopulatedEventException;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
-use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Widget\WidgetDisplayConfig;
-use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
-use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceFavourite;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions;
@@ -1329,6 +1326,10 @@ class WorkspaceManager
     //used for cli copy debug tool
     public function copyFromCode(Workspace $workspace, $code)
     {
+        if ($this->logger) {
+            $this->container->get('claroline.api.serializer')->setLogger($this->logger);
+        }
+
         $newWorkspace = new Workspace();
         $newWorkspace->setCode($code);
         $newWorkspace->setName($code);
@@ -1423,6 +1424,9 @@ class WorkspaceManager
           $baseRoot,
             $resourceInfo
         );
+
+        //workspace needs to be flushed with the new implementation
+        $this->om->forceFlush();
         $this->duplicateOrderedTools($workspace, $newWorkspace, $resourceInfo);
         $this->om->endFlushSuite();
 
@@ -1661,128 +1665,19 @@ class WorkspaceManager
         &$tabInfos = []
     ) {
         $this->log('Duplicating home tabs...');
-        $this->om->startFlushSuite();
-        $homeTabConfigs = $this->homeTabManager
-            ->getHomeTabConfigsByWorkspaceAndHomeTabs($source, $homeTabs);
-        $order = 1;
-        $widgetCongigErrors = [];
-        $widgetDisplayConfigs = [];
-        $widgets = [];
-        $widgetManager = $this->container->get('claroline.manager.widget_manager');
+        $serializer = $this->container->get('claroline.api.serializer');
+        $crud = $this->container->get('claroline.api.crud');
+        $newTabs = [];
 
-        foreach ($homeTabConfigs as $homeTabConfig) {
-            $homeTab = $homeTabConfig->getHomeTab();
-            $widgetHomeTabConfigs = $homeTab->getWidgetHomeTabConfigs();
-            $wdcs = $widgetManager->getWidgetDisplayConfigsByWorkspaceAndWidgetHTCs(
-                $source,
-                $widgetHomeTabConfigs->toArray()
-            );
-            foreach ($wdcs as $wdc) {
-                $widgetInstanceId = $wdc->getWidgetInstance()->getId();
-                $widgetDisplayConfigs[$widgetInstanceId] = $wdc;
-            }
-            $newHomeTab = new HomeTab();
-            $workspaceRoles = $this->getArrayRolesByWorkspace($workspace);
-
-            //set the roles here. This may be buggy ?
-            foreach ($homeTab->getRoles() as $role) {
-                $key = $role->getTranslationKey();
-                if ($role->getWorkspace()) {
-                    if (
-                    isset($workspaceRoles[$key]) &&
-                    !empty($workspaceRoles[$key])
-                    ) {
-                        $usedRole = $workspace->getGuid() === $workspaceRoles[$key]->getWorkspace()->getGuid() ?
-                          $workspaceRoles[$key] : $role;
-                        $newHomeTab->addRole($usedRole);
-                    }
-                } else {
-                    $newHomeTab->addRole($role);
-                }
-            }
-
-            $newHomeTab->setType('workspace');
-            $newHomeTab->setWorkspace($workspace);
-            $newHomeTab->setName($homeTab->getName());
-            $this->om->persist($newHomeTab);
-            $tabsInfos[] = ['original' => $homeTab, 'copy' => $newHomeTab];
-            $newHomeTabConfig = new HomeTabConfig();
-            $newHomeTabConfig->setHomeTab($newHomeTab);
-            $newHomeTabConfig->setWorkspace($workspace);
-            $newHomeTabConfig->setType('workspace');
-            $newHomeTabConfig->setVisible($homeTabConfig->isVisible());
-            $newHomeTabConfig->setLocked($homeTabConfig->isLocked());
-            $newHomeTabConfig->setTabOrder($order);
-            $this->om->persist($newHomeTabConfig);
-            ++$order;
-            foreach ($widgetHomeTabConfigs as $widgetConfig) {
-                $widgetInstance = $widgetConfig->getWidgetInstance();
-                $widgetInstanceId = $widgetInstance->getId();
-                $widget = $widgetInstance->getWidget();
-                $newWidgetInstance = new WidgetInstance();
-                $newWidgetInstance->setIsAdmin(false);
-                $newWidgetInstance->setIsDesktop(false);
-                $newWidgetInstance->setWorkspace($workspace);
-                $newWidgetInstance->setWidget($widget);
-                $newWidgetInstance->setName($widgetInstance->getName());
-                $this->om->persist($newWidgetInstance);
-                $newWidgetConfig = new WidgetHomeTabConfig();
-                $newWidgetConfig->setType('workspace');
-                $newWidgetConfig->setWorkspace($workspace);
-                $newWidgetConfig->setHomeTab($newHomeTab);
-                $newWidgetConfig->setWidgetInstance($newWidgetInstance);
-                $newWidgetConfig->setVisible($widgetConfig->isVisible());
-                $newWidgetConfig->setLocked($widgetConfig->isLocked());
-                $newWidgetConfig->setWidgetOrder($widgetConfig->getWidgetOrder());
-                $this->om->persist($newWidgetConfig);
-                $newWidgetDisplayConfig = new WidgetDisplayConfig();
-                $newWidgetDisplayConfig->setWorkspace($workspace);
-                $newWidgetDisplayConfig->setWidgetInstance($newWidgetInstance);
-                if (isset($widgetDisplayConfigs[$widgetInstanceId])) {
-                    $newWidgetDisplayConfig->setColor(
-                        $widgetDisplayConfigs[$widgetInstanceId]->getColor()
-                    );
-                    $newWidgetDisplayConfig->setRow(
-                        $widgetDisplayConfigs[$widgetInstanceId]->getRow()
-                    );
-                    $newWidgetDisplayConfig->setColumn(
-                        $widgetDisplayConfigs[$widgetInstanceId]->getColumn()
-                    );
-                    $newWidgetDisplayConfig->setWidth(
-                        $widgetDisplayConfigs[$widgetInstanceId]->getWidth()
-                    );
-                    $newWidgetDisplayConfig->setHeight(
-                        $widgetDisplayConfigs[$widgetInstanceId]->getHeight()
-                    );
-                } else {
-                    $newWidgetDisplayConfig->setWidth($widget->getDefaultWidth());
-                    $newWidgetDisplayConfig->setHeight($widget->getDefaultHeight());
-                }
-                $widgets[] = ['widget' => $widget, 'original' => $widgetInstance, 'copy' => $newWidgetInstance];
-                $this->om->persist($newWidgetDisplayConfig);
-            }
-        }
-        $this->om->endFlushSuite();
-        $this->om->forceFlush();
-        foreach ($widgets as $widget) {
-            if ($widget['widget']->isConfigurable()) {
-                try {
-                    $this->dispatcher->dispatch(
-                        'copy_widget_config_'.$widget['widget']->getName(),
-                        'CopyWidgetConfiguration',
-                        [$widget['original'], $widget['copy'], $resourceInfos, $tabsInfos]
-                    );
-                } catch (NotPopulatedEventException $e) {
-                    $widgetCongigErrors[] = [
-                        'widgetName' => $widget['widget']->getName(),
-                        'widgetInstanceName' => $widget['original']->getName(),
-                        'error' => $e->getMessage(),
-                    ];
-                }
-            }
+        foreach ($homeTabs as $homeTab) {
+            $homeTabSerialized = $serializer->serialize($homeTab, [Options::REFRESH_UUID]);
+            $homeTabSerialized['workspace'] = $serializer->serialize($workspace, [Options::SERIALIZE_MINIMAL]);
+            $newTabs[] = $crud->create(HomeTab::class, $homeTabSerialized, [Options::NO_FETCH]);
+            //maybe not a good idea
+            $this->om->forceFlush();
         }
 
-        return $widgetCongigErrors;
+        return $newTabs;
     }
 
     /**
@@ -1880,22 +1775,22 @@ class WorkspaceManager
         if (!$workspace || $restore) {
             //don't log this or it'll crash everything during the platform installation
             //(some database tables aren't already created because they come from plugins)
-            $this->container->get('claroline.core_bundle.listener.log.log_listener')->disable();
-
-            if (!$workspace) {
-                $workspace = new Workspace();
-                $workspace->setName($name);
-                $workspace->setPersonal($isPersonal);
-                $workspace->setCode($name);
-                $workspace->setModel(true);
-                $workspace->setCreator($this->container->get('claroline.manager.user_manager')->getDefaultUser());
-                $templateName = $isPersonal ? 'claroline.param.personal_template' : 'claroline.param.default_template';
-                $template = new File($this->container->getParameter($templateName));
-                $this->container->get('claroline.manager.transfer_manager')->createWorkspace($workspace, $template, true);
-
-                $this->container->get('claroline.core_bundle.listener.log.log_listener')->setDefaults();
+            if ($workspace && $restore) {
+                $this->om->remove($workspace);
             }
 
+            $this->container->get('claroline.core_bundle.listener.log.log_listener')->disable();
+
+            $workspace = new Workspace();
+            $workspace->setName($name);
+            $workspace->setPersonal($isPersonal);
+            $workspace->setCode($name);
+            $workspace->setModel(true);
+            $workspace->setCreator($this->container->get('claroline.manager.user_manager')->getDefaultUser());
+            $templateName = $isPersonal ? 'claroline.param.personal_template' : 'claroline.param.default_template';
+            $template = new File($this->container->getParameter($templateName));
+            $this->container->get('claroline.manager.transfer_manager')->createWorkspace($workspace, $template, true);
+            $this->container->get('claroline.core_bundle.listener.log.log_listener')->setDefaults();
             $this->container->get('claroline.manager.tool_manager')->addMissingWorkspaceTools($workspace);
 
             if ($restore) {

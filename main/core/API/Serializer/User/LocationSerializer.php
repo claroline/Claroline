@@ -74,6 +74,6 @@ class LocationSerializer
      */
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Organization\Location';
+        return Location::class;
     }
 }

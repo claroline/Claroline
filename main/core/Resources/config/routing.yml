@@ -219,14 +219,6 @@ claro_admin_widget:
     resource: "@ClarolineCoreBundle/Controller/Administration/WidgetController.php"
     type: annotation
 
-claro_desktop_home_api:
-    resource: "@ClarolineCoreBundle/Controller/API/Desktop/DesktopHomeController.php"
-    type: annotation
-
-claro_workspace_home_api:
-    resource: "@ClarolineCoreBundle/Controller/API/Workspace/WorkspaceHomeController.php"
-    type: annotation
-
 claro_client:
     resource: "@ClarolineCoreBundle/Controller/API/Admin/ClientController.php"
     type: annotation
