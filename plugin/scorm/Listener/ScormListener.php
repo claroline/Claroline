@@ -13,8 +13,6 @@ namespace Claroline\ScormBundle\Listener;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
-use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
@@ -173,7 +171,10 @@ class ScormListener
                 $event->setFiles([$scormArchiveFile]);
             }
             if (file_exists($scormResourcesPath)) {
-                $this->deleteFiles($scormResourcesPath);
+                try {
+                    $this->deleteFiles($scormResourcesPath);
+                } catch (\Exception $e) {
+                }
             }
         }
         $this->om->remove($event->getResource());
@@ -222,100 +223,6 @@ class ScormListener
         $event->stopPropagation();
     }
 
-//    /**
-//     * @DI\Observe("generate_resource_user_evaluation_claroline_scorm")
-//     *
-//     * @param GenericDataEvent $event
-//     */
-//    public function onGenerateResourceTracking(GenericDataEvent $event)
-//    {
-//        $data = $event->getData();
-//        $node = $data['resourceNode'];
-//        $user = $data['user'];
-//        $startDate = $data['startDate'];
-//
-//        $logs = $this->resourceEvalManager->getLogsForResourceTracking(
-//            $node,
-//            $user,
-//            ['resource-read', 'resource-scorm-sco_result'],
-//            $startDate
-//        );
-//
-//        if (count($logs) > 0) {
-//            $this->om->startFlushSuite();
-//            $tracking = $this->resourceEvalManager->getResourceUserEvaluation($node, $user);
-//            $tracking->setDate($logs[0]->getDateLog());
-//            $nbAttempts = 0;
-//            $nbOpenings = 0;
-//            $status = AbstractResourceEvaluation::STATUS_UNKNOWN;
-//            $score = null;
-//            $scoreMin = null;
-//            $scoreMax = null;
-//            $totalTime = null;
-//            $statusValues = [
-//                'not attempted' => 0,
-//                'unknown' => 1,
-//                'browsed' => 2,
-//                'incomplete' => 3,
-//                'failed' => 4,
-//                'completed' => 5,
-//                'passed' => 6,
-//            ];
-//
-//            foreach ($logs as $log) {
-//                switch ($log->getAction()) {
-//                    case 'resource-read':
-//                        ++$nbOpenings;
-//                        break;
-//                    case 'resource-scorm_12-sco_result':
-//                        ++$nbAttempts;
-//                        $details = $log->getDetails();
-//
-//                        if (isset($details['bestScore']) && (empty($score) || $details['bestScore'] > $score)) {
-//                            $score = $details['bestScore'];
-//                            $scoreMin = isset($details['scoreMin']) ? $details['scoreMin'] : null;
-//                            $scoreMax = isset($details['scoreMax']) ? $details['scoreMax'] : null;
-//                        }
-//                        if (isset($details['totalTime']) && (empty($totalTime) || $details['totalTime'] > $totalTime)) {
-//                            $totalTime = $details['totalTime'];
-//                        }
-//                        if (isset($details['bestStatus']) && ($statusValues[$details['bestStatus']] > $statusValues[$status])) {
-//                            $status = $details['bestStatus'];
-//                        }
-//                        break;
-//                }
-//            }
-//            switch ($status) {
-//                case 'passed':
-//                case 'failed':
-//                case 'completed':
-//                case 'incomplete':
-//                    break;
-//                case 'not attempted':
-//                    $status = AbstractResourceEvaluation::STATUS_NOT_ATTEMPTED;
-//                    break;
-//                case 'browsed':
-//                    $status = AbstractResourceEvaluation::STATUS_OPENED;
-//                    break;
-//                default:
-//                    $status = AbstractResourceEvaluation::STATUS_UNKNOWN;
-//            }
-//            $tracking->setStatus($status);
-//            $tracking->setScore($score);
-//            $tracking->setScoreMin($scoreMin);
-//            $tracking->setScoreMax($scoreMax);
-//
-//            if ($totalTime) {
-//                $tracking->setDuration($totalTime / 100);
-//            }
-//            $tracking->setNbAttempts($nbAttempts);
-//            $tracking->setNbOpenings($nbOpenings);
-//            $this->om->persist($tracking);
-//            $this->om->endFlushSuite();
-//        }
-//        $event->stopPropagation();
-//    }
-
     /**
      * Deletes recursively a directory and its content.
      *
@@ -323,7 +230,7 @@ class ScormListener
      */
     private function deleteFiles($dirPath)
     {
-        foreach (glob($dirPath.'/*') as $content) {
+        foreach (glob($dirPath.DIRECTORY_SEPARATOR.'{*,.[!.]*,..?*}', GLOB_BRACE) as $content) {
             if (is_dir($content)) {
                 $this->deleteFiles($content);
             } else {

@@ -62,6 +62,7 @@ class ScormManager
     /** @var string */
     private $uploadDir;
 
+    private $resourceUserEvalRepo;
     private $scoTrackingRepo;
     private $scorm12ResourceRepo;
     private $scorm12ScoTrackingRepo;
@@ -124,6 +125,7 @@ class ScormManager
         $this->scoTrackingSerializer = $scoTrackingSerializer;
         $this->uploadDir = $uploadDir;
 
+        $this->resourceUserEvalRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceUserEvaluation');
         $this->scoTrackingRepo = $om->getRepository('ClarolineScormBundle:ScoTracking');
         $this->scorm12ResourceRepo = $om->getRepository('ClarolineScormBundle:Scorm12Resource');
         $this->scorm12ScoTrackingRepo = $om->getRepository('ClarolineScormBundle:Scorm12ScoTracking');
@@ -598,9 +600,9 @@ class ScormManager
                     $this->om->persist($newRights);
                 }
 
+                /* Updates shortcuts */
                 $shortcuts = $this->shortcutRepo->findBy(['target' => $node]);
 
-                /* Updates shortcuts */
                 foreach ($shortcuts as $shortcut) {
                     $shortcutNode = $shortcut->getResourceNode();
                     $shortcutNode->setMimeType('custom/claroline_scorm');
@@ -610,7 +612,16 @@ class ScormManager
                     $shortcut->setTarget($newNode);
                     $this->om->persist($shortcut);
                 }
+
                 $this->om->persist($newNode);
+
+                /* Updates ResourceUserEvaluation */
+                $evaluations = $this->resourceUserEvalRepo->findBy(['resourceNode' => $node]);
+
+                foreach ($evaluations as $evaluation) {
+                    $evaluation->setResourceNode($newNode);
+                    $this->om->persist($evaluation);
+                }
 
                 /* Copies Scorm resource */
                 $hashName = $scorm->getHashName();
@@ -791,9 +802,9 @@ class ScormManager
                     $this->om->persist($newRights);
                 }
 
+                /* Updates shortcuts */
                 $shortcuts = $this->shortcutRepo->findBy(['target' => $node]);
 
-                /* Updates shortcuts */
                 foreach ($shortcuts as $shortcut) {
                     $shortcutNode = $shortcut->getResourceNode();
                     $shortcutNode->setMimeType('custom/claroline_scorm');
@@ -803,7 +814,16 @@ class ScormManager
                     $shortcut->setTarget($newNode);
                     $this->om->persist($shortcut);
                 }
+
                 $this->om->persist($newNode);
+
+                /* Updates ResourceUserEvaluation */
+                $evaluations = $this->resourceUserEvalRepo->findBy(['resourceNode' => $node]);
+
+                foreach ($evaluations as $evaluation) {
+                    $evaluation->setResourceNode($newNode);
+                    $this->om->persist($evaluation);
+                }
 
                 /* Copies Scorm resource */
                 $hashName = $scorm->getHashName();

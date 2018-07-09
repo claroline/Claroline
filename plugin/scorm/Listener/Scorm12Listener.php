@@ -80,7 +80,7 @@ class Scorm12Listener
      */
     private function deleteFiles($dirPath)
     {
-        foreach (glob($dirPath.'/*') as $content) {
+        foreach (glob($dirPath.DIRECTORY_SEPARATOR.'{*,.[!.]*,..?*}', GLOB_BRACE) as $content) {
             if (is_dir($content)) {
                 $this->deleteFiles($content);
             } else {
