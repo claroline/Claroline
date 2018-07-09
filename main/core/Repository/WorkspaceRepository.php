@@ -144,7 +144,7 @@ class WorkspaceRepository extends EntityRepository
             ->select('COUNT(w.id)')
             ->andWhere('w.personal = :personal')
             ->setParameter('personal', false);
-        if ($organizations !== null) {
+        if (null !== $organizations) {
             $qb->join('w.organizations', 'orgas')
                 ->andWhere('orgas IN (:organizations)')
                 ->setParameter('organizations', $organizations);
@@ -411,7 +411,7 @@ class WorkspaceRepository extends EntityRepository
             ->groupBy('ws.id')
             ->orderBy('total', 'DESC');
 
-        if ($organizations !== null) {
+        if (null !== $organizations) {
             $qb->leftJoin('ws.organizations', 'orgas')
                 ->andWhere('orgas IN (:organizations)')
                 ->setParameter('organizations', $organizations);
@@ -724,20 +724,6 @@ class WorkspaceRepository extends EntityRepository
         $query->setParameter('codes', $codes);
 
         return $query->getResult();
-    }
-
-    public function countUsers($workspaceId)
-    {
-        $dql = '
-            SELECT count(w) FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-            JOIN w.roles r
-            JOIN r.users u
-            WHERE w.id = :workspaceId
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('workspaceId', $workspaceId);
-
-        return (int) $query->getSingleScalarResult();
     }
 
     /**

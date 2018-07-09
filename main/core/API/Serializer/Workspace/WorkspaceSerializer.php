@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Workspace;
 
+use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
@@ -48,6 +49,9 @@ class WorkspaceSerializer
     /** @var FileUtilities */
     private $fileUt;
 
+    /** @var FinderProvider */
+    private $finder;
+
     /**
      * WorkspaceSerializer constructor.
      *
@@ -58,7 +62,8 @@ class WorkspaceSerializer
      *     "serializer"       = @DI\Inject("claroline.api.serializer"),
      *     "utilities"        = @DI\Inject("claroline.utilities.misc"),
      *     "fileUt"           = @DI\Inject("claroline.utilities.file"),
-     *     "tokenStorage"     = @DI\Inject("security.token_storage")
+     *     "tokenStorage"     = @DI\Inject("security.token_storage"),
+     *     "finder"           = @DI\Inject("claroline.api.finder")
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
@@ -68,6 +73,7 @@ class WorkspaceSerializer
      * @param ClaroUtilities                $utilities
      * @param FileUtilities                 $fileUt
      * @param TokenStorageInterface         $tokenStorage
+     * @param FinderProvider                $finder
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -76,7 +82,8 @@ class WorkspaceSerializer
         WorkspaceManager $workspaceManager,
         SerializerProvider $serializer,
         ClaroUtilities $utilities,
-        FileUtilities $fileUt
+        FileUtilities $fileUt,
+        FinderProvider $finder
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
@@ -85,6 +92,7 @@ class WorkspaceSerializer
         $this->serializer = $serializer;
         $this->utilities = $utilities;
         $this->fileUt = $fileUt;
+        $this->finder = $finder;
     }
 
     /**
@@ -183,7 +191,14 @@ class WorkspaceSerializer
 
         if (!in_array(Options::NO_COUNT, $options)) {
             // this query is very slow
-            $data['totalUsers'] = $this->workspaceManager->countUsers($workspace, true);
+            $data['totalUsers'] = $this->finder->fetch(
+              User::class,
+              ['workspace' => $workspace->getUuid()],
+              null,
+              0,
+              -1,
+              true
+            );
             $data['totalResources'] = $this->workspaceManager->countResources($workspace);
             $data['usedStorage'] = $this->workspaceManager->getUsedStorage($workspace);
         }
@@ -199,14 +214,6 @@ class WorkspaceSerializer
             'type' => 'tool',
             'target' => 'home',
         ];
-
-        if (!in_array(Options::NO_COUNT, $options)) {
-            //this query is very slow
-            $data['totalUsers'] = $this->workspaceManager->countUsers($workspace, true);
-            $data['totalResources'] = $this->workspaceManager->countResources($workspace);
-        }
-
-        return $data;
     }
 
     /**

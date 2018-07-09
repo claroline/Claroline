@@ -836,17 +836,6 @@ class WorkspaceManager
         return $user;
     }
 
-    public function countUsers(Workspace $workspace, $includeGroups = false)
-    {
-        if ($includeGroups) {
-            $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
-
-            return $this->container->get('claroline.manager.user_manager')->countByRoles($wsRoles, true);
-        }
-
-        return $this->workspaceRepo->countUsers($workspace->getId());
-    }
-
     /**
      * Import a workspace list from a csv data.
      *

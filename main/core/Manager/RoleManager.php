@@ -819,7 +819,14 @@ class RoleManager
 
         if ($role->getWorkspace()) {
             $maxUsers = $role->getWorkspace()->getMaxUsers();
-            $countByWorkspace = $this->container->get('claroline.manager.workspace_manager')->countUsers($role->getWorkspace(), true);
+            $countByWorkspace = $this->container->get('claroline.api.finder')->fetch(
+              User::class,
+              ['workspace' => $role->getWorkspace()->getUuid()],
+              null,
+              0,
+              -1,
+              true
+            );
 
             if ($maxUsers <= $countByWorkspace) {
                 return false;
