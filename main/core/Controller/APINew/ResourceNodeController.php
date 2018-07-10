@@ -79,6 +79,7 @@ class ResourceNodeController extends AbstractCrudController
 
         $options['hiddenFilters']['active'] = true;
         $options['hiddenFilters']['resourceTypeBlacklist'] = ['directory', 'activity'];
+        $options['hiddenFilters']['resourceTypeEnabled'] = true;
         $options['hiddenFilters']['managerRole'] = $user->getRoles();
 
         $result = $this->finder->search(

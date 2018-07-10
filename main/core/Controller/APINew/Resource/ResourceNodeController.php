@@ -68,6 +68,7 @@ class ResourceNodeController extends AbstractCrudController
             $options['hiddenFilters']['parent'] = null;
         }
         $options['hiddenFilters']['active'] = true;
+        $options['hiddenFilters']['resourceTypeEnabled'] = true;
 
         return new JsonResponse(
             $this->finder->search(ResourceNode::class, $options)

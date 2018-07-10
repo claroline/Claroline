@@ -9,6 +9,7 @@
 namespace Icap\DropzoneBundle;
 
 use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Icap\DropzoneBundle\Library\Installation\AdditionalInstaller;
 
 class IcapDropzoneBundle extends DistributionPluginBundle
 {
@@ -23,5 +24,10 @@ class IcapDropzoneBundle extends DistributionPluginBundle
             'Claroline\\AgendaBundle\\ClarolineAgendaBundle',
             'Icap\\NotificationBundle\\IcapNotificationBundle',
         ];
+    }
+
+    public function getAdditionalInstaller()
+    {
+        return new AdditionalInstaller();
     }
 }

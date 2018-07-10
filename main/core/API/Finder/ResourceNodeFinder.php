@@ -77,6 +77,10 @@ class ResourceNodeFinder implements FinderInterface
                     }
                     $qb->setParameter($filterName, $filterValue);
                     break;
+                case 'resourceTypeEnabled':
+                    $qb->andWhere("ort.isEnabled = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
                 case 'workspace.name':
                     $qb->andWhere('UPPER(ow.name) LIKE :workspace');
                     $qb->setParameter('workspace', '%'.strtoupper($filterValue).'%');
