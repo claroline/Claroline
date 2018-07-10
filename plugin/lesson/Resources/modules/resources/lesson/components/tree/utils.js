@@ -6,11 +6,11 @@ import {trans} from '#/main/core/translation'
  *
  * @param tree
  */
-export const normalizeTree = (tree, lessonId, deleteFunction, canEdit) => {
+export const normalizeTree = (tree, lessonId, canEdit) => {
 
   const copy = cloneDeep(tree)
 
-  let elems = normalizeTreeNode(copy.children, lessonId, deleteFunction, canEdit)
+  let elems = normalizeTreeNode(copy.children, lessonId, canEdit)
   elems.push({
     label: trans('chapter_creation', {}, 'icap_lesson'),
     target: '/new',
@@ -25,11 +25,9 @@ export const normalizeTree = (tree, lessonId, deleteFunction, canEdit) => {
   }
 }
 
-const normalizeTreeNode = (node, lessonId, deleteFunction, canEdit) => {
+const normalizeTreeNode = (node, lessonId, canEdit) => {
 
   return node.map((elem) => {
-
-
 
     const element = {
       type: 'link',
@@ -44,17 +42,17 @@ const normalizeTreeNode = (node, lessonId, deleteFunction, canEdit) => {
           displayed: canEdit
         },
         {
-          type: 'callback',
-          icon: 'fa fa-trash',
-          label: trans('delete'),
-          callback: () => deleteFunction(lessonId, elem['slug'], elem['title']),
+          type: 'link',
+          target: `/${elem['slug']}/copy`,
+          label: trans('copy'),
+          icon: 'fa fa-copy',
           displayed: canEdit
         }
       ]
     }
 
     if (elem.children.length > 0) {
-      element.children = normalizeTreeNode(elem.children, lessonId, deleteFunction)
+      element.children = normalizeTreeNode(elem.children, lessonId, canEdit)
     }
 
     return element
@@ -68,7 +66,6 @@ export const buildParentChapterChoices = (tree, chapter) => {
   flattenedChapters[tree['slug']] = trans('Root', {}, 'icap_lesson')
 
   if (tree['children'] && Array.isArray(tree['children']) && tree['children'].length > 0) {
-
     flattenedChapters = Object.assign(flattenedChapters, buildFlattenedChapterChoices(tree['children'], chapterSlug))
   }
 
@@ -76,9 +73,10 @@ export const buildParentChapterChoices = (tree, chapter) => {
 }
 
 const buildFlattenedChapterChoices = (items, chapterSlug) => {
-  let flattenedChapters = {}
-  items.forEach(item => {
 
+  let flattenedChapters = {}
+
+  items.forEach(item => {
     if (item['slug'] !== chapterSlug) {
       flattenedChapters[item['slug']] = item['title']
       if (item['children'] && Array.isArray(item['children']) && item['children'].length > 0) {

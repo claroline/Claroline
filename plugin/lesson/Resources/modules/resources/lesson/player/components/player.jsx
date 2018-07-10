@@ -10,14 +10,12 @@ import {ResourcePageContainer} from '#/main/core/resource/containers/page'
 import {RoutedPageContent} from '#/main/core/layout/router'
 import {PageContent} from '#/main/core/layout/page/index'
 import {SummarizedContent} from '#/main/app/content/summary/components/content'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
 
 import {actions} from '#/plugin/lesson/resources/lesson/store/'
 import {constants} from '#/plugin/lesson/resources/lesson/constants'
 import {ChapterResource} from '#/plugin/lesson/resources/lesson/components/chapter'
 import {normalizeTree} from '#/plugin/lesson/resources/lesson/components/tree/utils'
 import {ChapterForm} from '#/plugin/lesson/resources/lesson/components/chapter-form'
-import {MODAL_LESSON_CHAPTER_DELETE} from '#/plugin/lesson/resources/lesson/player/modals/chapter'
 
 class PlayerComponent extends Component {
   constructor(props) {
@@ -67,7 +65,7 @@ class PlayerComponent extends Component {
               opened: true,
               pinned: true,
               title: trans('summary'),
-              links: normalizeTree(this.props.tree, this.props.lesson.id, this.props.deleteChapter, this.props.canEdit).children
+              links: normalizeTree(this.props.tree, this.props.lesson.id, this.props.canEdit).children
             }}
           >
             <RoutedPageContent className="lesson-page-content" routes={[
@@ -93,6 +91,12 @@ class PlayerComponent extends Component {
                 component: ChapterForm,
                 exact: true,
                 onEnter: params => this.props.editChapter(this.props.lesson.id, params.slug)
+              },
+              {
+                path: '/:slug/copy',
+                component: ChapterForm,
+                exact: true,
+                onEnter: params => this.props.copyChapter(this.props.lesson.id, params.slug)
               }
             ]}/>
           </SummarizedContent>
@@ -110,8 +114,8 @@ PlayerComponent.propTypes = {
   canExport: T.bool.isRequired,
   canEdit: T.bool.isRequired,
   tree: T.any.isRequired,
-  deleteChapter: T.func.isRequired,
   createChapter: T.func.isRequired,
+  copyChapter: T.func.isRequired,
   loadChapter: T.func.isRequired,
   editChapter: T.func.isRequired
 }
@@ -131,14 +135,11 @@ const Player = connect(
     editChapter: (lessonId, chapterSlug) => {
       dispatch(actions.editChapter(constants.CHAPTER_EDIT_FORM_NAME, lessonId, chapterSlug))
     },
+    copyChapter: (lessonId, chapterSlug) => {
+      dispatch(actions.copyChapter(constants.CHAPTER_EDIT_FORM_NAME, lessonId, chapterSlug))
+    },
     createChapter: (lessonId, parentChapterSlug = null) => {
       dispatch(actions.createChapter(constants.CHAPTER_EDIT_FORM_NAME, lessonId, parentChapterSlug))
-    },
-    deleteChapter: (lessonId, chapterSlug, chapterTitle) => {
-      dispatch(modalActions.showModal(MODAL_LESSON_CHAPTER_DELETE, {
-        deleteChapter: (deleteChildren) => dispatch(actions.deleteChapter(lessonId, chapterSlug, deleteChildren)),
-        chapterTitle: chapterTitle
-      }))
     },
     fetchChapterTree: lessonId => dispatch(actions.fetchChapterTree(lessonId))
   })

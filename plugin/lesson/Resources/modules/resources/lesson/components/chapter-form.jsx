@@ -9,7 +9,9 @@ import {Button} from '#/main/app/action/components/button'
 import {trans} from '#/main/core/translation'
 import {constants} from '#/plugin/lesson/resources/lesson/constants'
 import {buildParentChapterChoices} from '#/plugin/lesson/resources/lesson/components/tree/utils'
-import {actions as lessonAction} from '#/plugin/lesson/resources/lesson/store/'
+import {actions as lessonActions} from '#/plugin/lesson/resources/lesson/store/'
+import {MODAL_LESSON_CHAPTER_DELETE} from '#/plugin/lesson/resources/lesson/player/modals/chapter'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
 
 const ChapterFormComponent = props =>
   <FormContainer
@@ -50,7 +52,7 @@ const ChapterFormComponent = props =>
             type: 'choice',
             label: trans('move_relation', {}, 'icap_lesson'),
             required: false,
-            displayed: (props.isNew || props.chapterWillBeMoved) && !props.isRootSelected,
+            displayed: props.hasParentSlug && (props.isNew || props.chapterWillBeMoved) && !props.isRootSelected,
             disabled: false,
             options: {
               condensed: false,
@@ -66,7 +68,7 @@ const ChapterFormComponent = props =>
             type: 'choice',
             label: trans('options'),
             required: false,
-            displayed: (props.isNew ||props.chapterWillBeMoved) && props.isSubchapterSelected,
+            displayed: props.hasParentSlug && (props.isNew ||props.chapterWillBeMoved) && props.isSubchapterSelected,
             options: {
               condensed: false,
               multiple: false,
@@ -81,7 +83,7 @@ const ChapterFormComponent = props =>
             type: 'choice',
             label: trans('options'),
             required: false,
-            displayed: (props.isNew || props.chapterWillBeMoved) && !props.isSubchapterSelected,
+            displayed: props.hasParentSlug && (props.isNew || props.chapterWillBeMoved) && props.isSiblingSelected,
             options: {
               condensed: false,
               multiple: false,
@@ -106,6 +108,7 @@ const ChapterFormComponent = props =>
         disabled={!props.saveEnabled}
         primary={true}
         label={trans(props.isNew ? 'create' : 'save')}
+        icon="fa fa-save"
         type="callback"
         className="btn"
         callback={() => {
@@ -119,6 +122,15 @@ const ChapterFormComponent = props =>
         className="btn"
         callback={() => {props.cancel(props.history, props.chapter.slug || props.lesson.firstChapterSlug || '')}}
       />
+      {!props.isNew && <Button
+        label={trans('delete')}
+        title={trans('delete')}
+        dangerous={true}
+        icon="fa fa-trash"
+        type="callback"
+        className="btn float-right"
+        callback={() => {props.delete(props.lesson.id, props.chapter.slug, props.chapter.title, props.history)}}
+      />}
     </ButtonToolbar>
 
   </FormContainer>
@@ -131,9 +143,11 @@ const ChapterForm = withRouter(connect(
     mode: state.mode,
     saveEnabled: formSelect.saveEnabled(formSelect.form(state, constants.CHAPTER_EDIT_FORM_NAME)),
     isNew: formSelect.isNew(formSelect.form(state, constants.CHAPTER_EDIT_FORM_NAME)),
-    parentSlug: formSelect.data(formSelect.form(state, constants.CHAPTER_EDIT_FORM_NAME)).parentSlug,
+    parentSlug: formSelect.data(formSelect.form(state, constants.CHAPTER_EDIT_FORM_NAME)).parentSlug || null,
+    hasParentSlug: !!formSelect.data(formSelect.form(state, constants.CHAPTER_EDIT_FORM_NAME)).parentSlug,
     isRootSelected: formSelect.data(formSelect.form(state, constants.CHAPTER_EDIT_FORM_NAME)).parentSlug === state.tree.data.slug,
     isSubchapterSelected: formSelect.data(formSelect.form(state, constants.CHAPTER_EDIT_FORM_NAME)).position === 'subchapter',
+    isSiblingSelected: formSelect.data(formSelect.form(state, constants.CHAPTER_EDIT_FORM_NAME)).position === 'sibling',
     chapterWillBeMoved: !!formSelect.data(formSelect.form(state, constants.CHAPTER_EDIT_FORM_NAME)).move
   }),
   dispatch => ({
@@ -150,7 +164,15 @@ const ChapterForm = withRouter(connect(
       history.push('/' + slug)
     },
     positionChange: value => {
-      dispatch(lessonAction.positionChange(value))
+      dispatch(lessonActions.positionChange(value))
+    },
+    delete: (lessonId, chapterSlug, chapterTitle, history) => {
+      dispatch(modalActions.showModal(MODAL_LESSON_CHAPTER_DELETE, {
+        deleteChapter: (deleteChildren) => dispatch(lessonActions.deleteChapter(lessonId, chapterSlug, deleteChildren)).then((success) => {
+          history.push(success.slug ? '/' + success.slug : '/')
+        }),
+        chapterTitle: chapterTitle
+      }))
     }
   })
 )(ChapterFormComponent))

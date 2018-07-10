@@ -141,12 +141,13 @@ class ChapterManager
     public function updateChapter(lesson $lesson, Chapter $chapter, $data)
     {
         $oldParent = $chapter->getParent();
+        $newParent = $this->chapterRepository->findOneBySlug($data['parentSlug']);
 
         $this->chapterSerializer->deserialize($data, $chapter);
 
         // Should the chapter be moved ?
         if (isset($data['move'])) {
-            $this->insertChapterInPlace($chapter, $chapter->getParent(), $data);
+            $this->insertChapterInPlace($chapter, $newParent, $data);
             $this->dispatch(new LogChapterMoveEvent($chapter->getLesson(), $chapter, $oldParent, $chapter->getParent()));
         } else {
             $this->om->persist($chapter);
@@ -171,9 +172,13 @@ class ChapterManager
 
     private function insertChapterInPlace($chapter, $parent, $data)
     {
-        if (isset($data['order'])) {
-            if (isset($data['order']['subchapter'])) {
-                switch ($data['order']['subchapter']) {
+        $position = $data['position'];
+        $sibling = $data['order']['sibling'];
+        $subchapter = $data['order']['subchapter'];
+
+        switch ($position) {
+            case 'subchapter':
+                switch ($subchapter) {
                     case 'first':
                         $this->chapterRepository->persistAsFirstChildOf($chapter, $parent);
                         break;
@@ -182,21 +187,24 @@ class ChapterManager
                         $this->chapterRepository->persistAsLastChildOf($chapter, $parent);
                         break;
                 }
-            } elseif (isset($data['order']['sibling'])) {
-                switch ($data['order']['sibling']) {
+                break;
+            case 'sibling':
+            default:
+                switch ($sibling) {
                     case 'before':
-                        $this->chapterRepository->persistAsPreviousSiblingOf($chapter, $parent);
+                        $previousChapter = $this->chapterRepository->getPreviousSibling($parent);
+                        if ($previousChapter) {
+                            $this->chapterRepository->persistAsNextSiblingOf($chapter, $previousChapter);
+                        } else {
+                            $this->chapterRepository->persistAsFirstChildOf($chapter, $parent->getParent());
+                        }
                         break;
                     case 'after':
                     default:
                         $this->chapterRepository->persistAsNextSiblingOf($chapter, $parent);
                         break;
                 }
-            } else {
-                $this->insertChapter($chapter, $parent);
-            }
-        } else {
-            $this->insertChapter($chapter, $parent);
+                break;
         }
 
         $this->om->persist($chapter);

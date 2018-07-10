@@ -1,3 +1,5 @@
+import cloneDeep from 'lodash/cloneDeep'
+
 import {API_REQUEST} from '#/main/app/api'
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
 import {actions as formActions} from '#/main/core/data/form/actions'
@@ -16,13 +18,13 @@ actions.chapterLoad      = makeActionCreator(CHAPTER_LOAD, 'chapter')
 actions.chapterReset     = makeActionCreator(CHAPTER_RESET)
 actions.chapterCreate    = makeActionCreator(CHAPTER_CREATE)
 actions.chapterEdit      = makeActionCreator(CHAPTER_EDIT)
-actions.chapterDeleted   = makeActionCreator(CHAPTER_DELETED, 'chapterSlug', 'children')
+actions.chapterDeleted   = makeActionCreator(CHAPTER_DELETED, 'tree')
 actions.treeLoaded       = makeActionCreator(TREE_LOADED, 'tree')
 actions.positionSelected = makeActionCreator(POSITION_SELECTED, 'isRoot')
 
 actions.loadChapter = (lessonId, chapterSlug) => dispatch => {
   dispatch(actions.chapterReset())
-  dispatch({[API_REQUEST]: {
+  return dispatch({[API_REQUEST]: {
     url:['apiv2_lesson_chapter_get', {lessonId, chapterSlug}],
     success: (response, dispatch) => dispatch(actions.chapterLoad(response))
   }})
@@ -40,12 +42,27 @@ actions.editChapter = (formName, lessonId, chapterSlug) => dispatch => {
   }})
 }
 
+actions.copyChapter = (formName, lessonId, chapterSlug) => dispatch => {
+  dispatch(formActions.resetForm(formName, {}, true))
+  dispatch(actions.chapterEdit())
+  dispatch({[API_REQUEST]: {
+    url: ['apiv2_lesson_chapter_get', {lessonId, chapterSlug}],
+    success: (response, dispatch) => {
+      dispatch(formActions.resetForm(formName, response, true))
+      const data = cloneDeep(response)
+      data.parentSlug = ''
+      dispatch(actions.chapterLoad(data))
+    }
+  }})
+}
+
 actions.createChapter = formName => dispatch => {
+  dispatch(actions.chapterReset())
   dispatch(formActions.resetForm(formName, {}, true))
   dispatch(actions.chapterCreate())
 }
 
-actions.deleteChapter = (lessonId, chapterSlug, deleteChildren = false) => dispatch => {
+actions.deleteChapter = (lessonId, chapterSlug, deleteChildren = false) => dispatch =>
   dispatch({[API_REQUEST]: {
     url: ['apiv2_lesson_chapter_delete', {lessonId, chapterSlug}],
     request: {
@@ -59,10 +76,9 @@ actions.deleteChapter = (lessonId, chapterSlug, deleteChildren = false) => dispa
       })
     },
     success: (response, dispatch) => {
-      dispatch(actions.chapterDeleted(chapterSlug, deleteChildren))
+      dispatch(actions.chapterDeleted(response.tree))
     }
   }})
-}
 
 actions.fetchChapterTree = lessonId => dispatch => {
   dispatch({[API_REQUEST]: {

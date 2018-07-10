@@ -150,6 +150,9 @@ class ChapterController
      */
     public function deleteAction(Request $request, Lesson $lesson, Chapter $chapter)
     {
+        $previousChapter = $this->chapterRepository->getPreviousChapter($chapter);
+        $previousSlug = $previousChapter ? $previousChapter->getSlug() : null;
+
         $this->checkPermission('EDIT', $lesson->getResourceNode(), [], true);
 
         $payload = json_decode($request->getContent(), true);
@@ -157,7 +160,10 @@ class ChapterController
 
         $this->chapterManager->deleteChapter($lesson, $chapter, $deleteChildren);
 
-        return new JsonResponse(true);
+        return new JsonResponse([
+            'tree' => $this->chapterManager->serializeChapterTree($lesson),
+            'slug' => $previousSlug,
+        ]);
     }
 
     /**
