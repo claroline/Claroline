@@ -49,10 +49,23 @@ class Updater120000 extends Updater
             $new = $this->om->getRepository('ClarolineAgendaBundle:Event')->find($event['id']);
 
             if ($event['start_date']) {
-                $new->setStart(\DateTime::createFromFormat('U', $event['start_date']));
+                $start = \DateTime::createFromFormat('U', $event['start_date']);
+
+                //fallback
+                if (!$start) {
+                    $start = new \DateTime();
+                }
+
+                $new->setStart($start);
             }
 
             if ($event['end_date']) {
+                $end = \DateTime::createFromFormat('U', $event['end_date']);
+
+                if (!$end) {
+                    $end = new \DateTime();
+                }
+
                 $new->setEnd(\DateTime::createFromFormat('U', $event['end_date']));
             }
 

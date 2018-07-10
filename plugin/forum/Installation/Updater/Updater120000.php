@@ -3,6 +3,9 @@
 namespace Claroline\ForumBundle\Installation\Updater;
 
 use Claroline\CoreBundle\Event\GenericDataEvent;
+use Claroline\ForumBundle\Entity\Forum;
+use Claroline\ForumBundle\Entity\Message;
+use Claroline\ForumBundle\Entity\Subject;
 use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\DBAL\Connection;
 
@@ -48,19 +51,29 @@ class Updater120000 extends Updater
 
     private function restoreSubjectCategory(array $subject)
     {
-        $currentSubject = $this->om->getRepository('Claroline\ForumBundle\Entity\Subject')->find($subject['id']);
+        $currentSubject = $this->om->getRepository(Subject::class)->find($subject['id']);
+
+        $event = new GenericDataEvent([
+            'class' => Subject::class,
+            'ids' => [$currentSubject->getUuid()],
+        ]);
+        $this->container->get('event_dispatcher')->dispatch('claroline_retrieve_used_tags_by_class_and_ids', $event);
+
+        if (count($event->getResponse()) > 0) {
+            return;
+        }
 
         $sql = 'SELECT * FROM claro_forum_category where id =  '.$subject['category_id'];
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         $category = $stmt->fetch();
-        $forum = $this->om->getRepository('Claroline\ForumBundle\Entity\Forum')->find($category['forum_id']);
+        $forum = $this->om->getRepository(Forum::class)->find($category['forum_id']);
 
         $currentSubject->setForum($forum);
 
         if ('' === trim($currentSubject->getContent())) {
             //restore subject first message
-            $messages = $this->om->getRepository('Claroline\ForumBundle\Entity\Message')
+            $messages = $this->om->getRepository(Message::class)
               ->findBy(['subject' => $currentSubject], ['id' => 'ASC']);
 
             if (isset($messages[0])) {
@@ -91,14 +104,15 @@ class Updater120000 extends Updater
     {
         $this->log('Build forum users...');
         $forums = $this->om->getRepository('Claroline\ForumBundle\Entity\Forum')->findAll();
+        $i = 0;
+
+        $this->om->startFlushSuite();
 
         foreach ($forums as $forum) {
             $this->log('Build forum users for forum...'.$forum->getName());
 
             $messages = $this->container->get('claroline.api.finder')
               ->fetch('Claroline\ForumBundle\Entity\Message', ['forum' => $forum->getUuid()]);
-
-            $this->om->startFlushSuite();
 
             foreach ($messages as $message) {
                 $this->log('Build forum user for '.$message->getCreator()->getUsername());
@@ -110,7 +124,13 @@ class Updater120000 extends Updater
                 );
             }
 
-            $this->om->endFlushSuite();
+            ++$i;
+
+            if (0 === $i % 100) {
+                $this->om->forceFlush();
+            }
         }
+
+        $this->om->endFlushSuite();
     }
 }

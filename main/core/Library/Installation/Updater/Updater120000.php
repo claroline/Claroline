@@ -137,7 +137,9 @@ class Updater120000 extends Updater
         $i = 0;
 
         foreach ($tabs as $tab) {
-            $this->updateTabTitle($tab);
+            if (!$tab->getLongTitle() || !$tab->getName()) {
+                $this->updateTabTitle($tab);
+            }
 
             ++$i;
 
@@ -178,10 +180,16 @@ class Updater120000 extends Updater
     private function updateTabTitle(HomeTab $tab)
     {
         $this->log('Renaming tab '.$tab->getName().'...');
+
+        if ('' === trim(strip_tags($tab->getName()))) {
+            $tab->setName('Unknown');
+        }
+
         if (!$tab->getLongTitle()) {
             $tab->setLongTitle(strip_tags($tab->getName()));
         }
 
+        //maybe substr here
         $tab->setName(strip_tags($tab->getLongTitle()));
 
         $this->om->persist($tab);

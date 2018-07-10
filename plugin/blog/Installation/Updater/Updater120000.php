@@ -47,7 +47,7 @@ class Updater120000 extends Updater
             //get batch
             $blogs = $repo->findBy([], ['id' => 'ASC'], $batchSize, $batchSize * ($page - 1));
             foreach ($blogs as $blog) {
-                if (!empty($blog->getOptions()->getBannerBackgroundImage())) {
+                if ($blog->getOptions() && $blog->getOptions()->getBannerBackgroundImage()) {
                     $bannerPath = $uploadDir.DIRECTORY_SEPARATOR.$blog->getOptions()->getBannerBackgroundImage();
                     if (file_exists($bannerPath)) {
                         $publicFile = $fu->createFile(new File($bannerPath));
