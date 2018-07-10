@@ -191,7 +191,7 @@ class Updater120000 extends Updater
     {
         $tabs = $this->om->getRepository(HomeTab::class)->findBy(['type' => HomeTab::TYPE_ADMIN_DESKTOP]);
 
-        if (count(0 === $tabs)) {
+        if (0 === count($tabs)) {
             $this->log('Adding default admin desktop tab...');
 
             $desktopHomeTab = new HomeTab();
