@@ -182,7 +182,7 @@ class Updater120000 extends Updater
             $tab->setLongTitle(strip_tags($tab->getName()));
         }
 
-        $tab->setName(substr(strip_tags($tab->getLongTitle()), 0, 20));
+        $tab->setName(strip_tags($tab->getLongTitle()));
 
         $this->om->persist($tab);
     }

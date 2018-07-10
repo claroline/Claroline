@@ -105,10 +105,6 @@ class SerializerProvider
             $className = $this->getSerializerHandledClass($serializer);
 
             if ($object instanceof $className || $object === $className) {
-                if (method_exists($serializer, 'setLogger')) {
-                    $serializer->setLogger($this->logger);
-                }
-
                 return $serializer;
             }
         }
