@@ -102,6 +102,9 @@ class ResourceNodeSerializer
                     'code' => $resourceNode->getWorkspace()->getCode(),
                 ];
             }
+            if (!empty($resourceNode->getParent())) {
+                $serializedNode['parent'] = $this->serialize($resourceNode->getParent(), [Options::SERIALIZE_MINIMAL]);
+            }
 
             $serializedNode = array_merge($serializedNode, [
                 'poster' => $this->serializePoster($resourceNode),

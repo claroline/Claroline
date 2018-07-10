@@ -39,9 +39,9 @@ const ResourceExplorer = props => {
     >
       <DataListContainer
         name={`${props.name}.resources`}
-        primaryAction={props.primaryAction && ((resourceNode) => {
+        primaryAction={(resourceNode) => {
           if ('directory' !== resourceNode.meta.type) {
-            return props.primaryAction(resourceNode)
+            return props.primaryAction && props.primaryAction(resourceNode)
           } else {
             // do not open directory, just change the target of the explorer
             return {
@@ -50,7 +50,7 @@ const ResourceExplorer = props => {
               callback: () => props.changeDirectory(resourceNode)
             }
           }
-        })}
+        }}
         fetch={{
           url: ['apiv2_resource_list', {parent: get(props, 'current.id') || get(props, 'root.id') || null}],
           autoload: props.initialized

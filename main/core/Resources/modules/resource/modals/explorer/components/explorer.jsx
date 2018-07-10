@@ -9,8 +9,11 @@ import {Modal} from '#/main/app/overlay/modal/components/modal'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {ResourceExplorer} from '#/main/core/resource/explorer/containers/explorer'
-
-import {actions, selectors} from '#/main/core/resource/explorer/store'
+import {
+  actions,
+  selectors as explorerSelectors
+} from '#/main/core/resource/explorer/store'
+import {selectors} from '#/main/core/resource/modals/explorer/store'
 
 const ExplorerModalComponent = props =>
   <Modal
@@ -59,13 +62,13 @@ ExplorerModalComponent.defaultProps = {
 }
 
 const ExplorerModal = connect(
-  (state, ownProps) => ({
-    current: selectors.current(selectors.explorer(state, ownProps.name)),
-    selected: selectors.selected(selectors.explorer(state, ownProps.name))
+  (state) => ({
+    current: explorerSelectors.current(explorerSelectors.explorer(state, selectors.STORE_NAME)),
+    selected: explorerSelectors.selectedFull(explorerSelectors.explorer(state, selectors.STORE_NAME))
   }),
   (dispatch, ownProps) => ({
     initialize(root) {
-      dispatch(actions.initialize(ownProps.name, root))
+      dispatch(actions.initialize(selectors.STORE_NAME, root, ownProps.current))
     }
   })
 )(ExplorerModalComponent)

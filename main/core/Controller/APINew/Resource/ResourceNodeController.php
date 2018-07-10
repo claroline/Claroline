@@ -9,7 +9,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @EXT\Route("/resource")
@@ -93,33 +92,6 @@ class ResourceNodeController extends AbstractCrudController
 
         // Limit the search to only the authorized resource types which can be displayed on the portal
         $options['hiddenFilters']['resourceType'] = $this->container->get('claroline.manager.portal_manager')->getPortalEnabledResourceTypes();
-
-        return new JsonResponse(
-            $this->finder->search(ResourceNode::class, $options)
-        );
-    }
-
-    /**
-     * @EXT\Route("/picker", name="apiv2_resources_picker")
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     *
-     * @deprecated
-     */
-    public function resourcesPickerAction(Request $request)
-    {
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        if ('anon.' === $user) {
-            throw new AccessDeniedException();
-        }
-        $options = $request->query->all();
-
-        $options['hiddenFilters']['active'] = true;
-        $options['hiddenFilters']['resourceTypeBlacklist'] = ['directory', 'activity'];
-        $options['hiddenFilters']['managerRole'] = $user->getRoles();
 
         return new JsonResponse(
             $this->finder->search(ResourceNode::class, $options)

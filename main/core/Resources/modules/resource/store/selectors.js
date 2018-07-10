@@ -24,6 +24,11 @@ const resourceNode = createSelector(
   (resource) => resource.node
 )
 
+const parent = createSelector(
+  [resourceNode],
+  (resourceNode) => resourceNode.parent
+)
+
 const meta = createSelector(
   [resourceNode],
   (resourceNode) => resourceNode.meta
@@ -75,6 +80,7 @@ export const selectors = {
   resourceLifecycle,
   // node
   resourceNode,
+  parent,
   meta,
   published,
   // evaluation

@@ -9,6 +9,7 @@ const root = (explorerState) => explorerState.root
 const current = (explorerState) => explorerState.current
 const directories = (explorerState) => explorerState.directories
 const selected = (explorerState) => listSelectors.selected(listSelectors.list(explorerState, 'resources'))
+const selectedFull = (explorerState) => listSelectors.selectedFull(listSelectors.list(explorerState, 'resources'))
 
 const directory = (dirs, directoryId) => {
   for (let i = 0; i < dirs.length; i++) {
@@ -29,5 +30,6 @@ export const selectors = {
   current,
   directories,
   directory,
-  selected
+  selected,
+  selectedFull
 }

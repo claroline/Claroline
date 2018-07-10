@@ -2,14 +2,13 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {param} from '#/main/app/config'
 import {trans} from '#/main/core/translation'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
+import {MODAL_RESOURCE_EXPLORER} from '#/main/core/resource/modals/explorer'
 import {Routes} from '#/main/app/router'
-import {ResourceCard} from '#/main/core/resource/data/components/resource-card'
-import {constants as listConst} from '#/main/core/data/list/constants'
+import {selectors as resourceSelect} from '#/main/core/resource/store'
+import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 
 import {select as editorSelect} from '#/plugin/path/resources/path/editor/selectors'
 import {actions} from '#/plugin/path/resources/path/editor/actions'
@@ -93,9 +92,9 @@ const EditorComponent = props =>
                   numbering={getNumbering(props.path.display.numbering, props.path.steps, step)}
                   customNumbering={constants.NUMBERING_CUSTOM === props.path.display.numbering}
                   stepPath={getFormDataPart(step.id, props.path.steps)}
-                  pickPrimaryResource={stepId => props.pickResources(stepId, 'primary')}
+                  pickPrimaryResource={stepId => props.pickResources(stepId, 'primary', props.resourceParent)}
                   removePrimaryResource={props.removePrimaryResource}
-                  pickSecondaryResources={stepId => props.pickResources(stepId, 'secondary')}
+                  pickSecondaryResources={stepId => props.pickResources(stepId, 'secondary', props.resourceParent)}
                   removeSecondaryResource={props.removeSecondaryResource}
                   updateSecondaryResourceInheritance={props.updateSecondaryResourceInheritance}
                   removeInheritedResource={props.removeInheritedResource}
@@ -118,6 +117,7 @@ EditorComponent.propTypes = {
     StepTypes.propTypes
   )),
   copy: T.shape(StepTypes.propTypes),
+  resourceParent: T.shape(ResourceNodeTypes.propTypes),
   addStep: T.func.isRequired,
   removeStep: T.func.isRequired,
   pickResources: T.func.isRequired,
@@ -135,7 +135,8 @@ const Editor = connect(
   state => ({
     path: editorSelect.path(state),
     steps: flattenSteps(editorSelect.steps(state)),
-    copy: editorSelect.stepCopy(state)
+    copy: editorSelect.stepCopy(state),
+    resourceParent: resourceSelect.parent(state)
   }),
   dispatch => ({
     addStep(parentStep = null) {
@@ -158,70 +159,22 @@ const Editor = connect(
     pasteStep(parentStep = null) {
       dispatch(actions.paste(parentStep ? parentStep.id : null))
     },
-    pickResources(stepId, usage = 'primary') {
-      let icon
+    pickResources(stepId, usage = 'primary', current = null) {
       let title
       let callback
       if ('primary' === usage) {
-        icon = 'fa fa-fw fa-folder-open'
         title = trans('add_primary_resource', {}, 'path')
         callback = (selected) => dispatch(actions.updatePrimaryResource(stepId, selected[0]))
       } else if ('secondary' === usage) {
-        icon = 'fa fa-fw fa-folder-open-o'
         title = trans('add_secondary_resources', {}, 'path')
         callback = (selected) => dispatch(actions.addSecondaryResources(stepId, selected))
       }
-
-      dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
-        icon: icon,
+      dispatch(modalActions.showModal(MODAL_RESOURCE_EXPLORER, {
         title: title,
-        confirmText: trans('add', {}, 'actions'),
-        name: 'resourcesPicker',
-        onlyId: false,
-        fetch: {
-          url: ['apiv2_resources_picker'],
-          autoload: true
-        },
-        display: {
-          current: listConst.DISPLAY_TILES_SM,
-          available: Object.keys(listConst.DISPLAY_MODES)
-        },
-        definition: [
-          {
-            name: 'name',
-            type: 'string',
-            label: trans('name'),
-            displayed: true,
-            primary: true
-          }, {
-            name: 'meta.type',
-            alias: 'resourceType',
-            label: trans('type'),
-            displayed: true,
-            type: 'choice',
-            options: {
-              choices: param('resourceTypes').reduce(
-                (choices, rt) => Object.assign(choices, {[rt.name]: trans(rt.name, {}, 'resource')}),
-                {}
-              )
-            }
-          }, {
-            name: 'workspace.name',
-            type: 'string',
-            label: trans('workspace'),
-            displayed: true
-          }, {
-            name: 'meta.parent.name',
-            type: 'string',
-            label: trans('parent'),
-            displayed: true
-          }
-        ],
-        card: ResourceCard,
+        current: current,
         handleSelect: callback
       }))
     },
-
     removePrimaryResource(stepId) {
       dispatch(actions.updatePrimaryResource(stepId, null))
     },
