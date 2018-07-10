@@ -4,6 +4,7 @@ import $ from 'jquery'
 import tinymce from 'tinymce/tinymce'
 
 import {config} from '#/main/core/tinymce/config'
+import {loadExternalPlugins} from '#/main/core/tinymce/plugins/external-plugins'
 
 // makes tinymce available in the browser for retro-compatibility purposes
 window.tinymce = tinymce
@@ -48,6 +49,6 @@ $(document).ready(function () {
     subtree: true
   })
 
-  // Check if the element is currently in the DOM
-  check()
+  // Load external tinymce plugins and then Check if the element is currently in the DOM
+  loadExternalPlugins(check)
 })

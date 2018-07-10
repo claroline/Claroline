@@ -10,6 +10,9 @@
 </head>
 <body id="fm-editor-body">
 {% block javascripts %}
+    <script type="text/javascript">
+        window.assetPath = "{{ app.request.getBasePath() }}";
+    </script>
     <script type="text/javascript" src="{{ asset('packages/mathjax/MathJax.js?config=TeX-AMS-MML_SVG') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/icapformulaplugin/js/build/formula-all.min.js') }}"></script>
     <script type="text/javascript">

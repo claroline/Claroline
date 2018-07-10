@@ -4,10 +4,10 @@ import '#/main/core/tinymce/themes'
 
 import {locale} from '#/main/app/intl/locale'
 import {asset, param, theme} from '#/main/app/config'
-import {loadExternalPlugins} from '#/main/core/tinymce/plugins/external-plugins'
+import {getExternalPlugins} from '#/main/core/tinymce/plugins/external-plugins'
 
 // Load external tinymce plugins from other bundles
-const extPlugins = loadExternalPlugins()
+const extPlugins = getExternalPlugins()
 const extButtons = extPlugins.length > 0 ? ` | ${extPlugins.join(' ')}` : ''
 
 const config = {
@@ -31,8 +31,6 @@ const config = {
   branding: false,
   resize: true,
   
-  oninit: loadExternalPlugins,
-
   // enabled plugins
   plugins: plugins.concat(extPlugins),
 

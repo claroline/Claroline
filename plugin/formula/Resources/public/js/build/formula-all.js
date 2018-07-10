@@ -1562,9 +1562,9 @@
     this.buildActionsHash(actions);
     this.panels = panels;
     var editor = this;
-    DomUtils.loadJsFile("/bundles/icapformulaplugin/js/translations/" + this.lang + ".js", function () {
+    DomUtils.loadJsFile(window.assetPath + "/bundles/icapformulaplugin/js/translations/" + this.lang + ".js", function () {
       editor.init()
-    }, "/bundles/icapformulaplugin/js/translations/fr.js");
+    }, window.assetPath + "/bundles/icapformulaplugin/js/translations/fr.js");
   };
   Editor.__name__ = ["Editor"];
   Editor.prototype = {
