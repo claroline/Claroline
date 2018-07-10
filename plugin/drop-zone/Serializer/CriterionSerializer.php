@@ -52,6 +52,7 @@ class CriterionSerializer
     public function deserialize($class, $data)
     {
         $criterion = $this->criterionRepo->findOneBy(['uuid' => $data['id']]);
+
         if (empty($criterion)) {
             $criterion = new Criterion();
             $criterion->setUuid($data['id']);

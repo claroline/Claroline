@@ -3,6 +3,7 @@
 namespace Claroline\DropZoneBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\DropZoneBundle\Entity\Criterion;
 use Claroline\DropZoneBundle\Entity\Dropzone;
@@ -19,18 +20,24 @@ class DropzoneSerializer
     /** @var CriterionSerializer */
     private $criterionSerializer;
 
+    /** @var ObjectManager */
+    private $om;
+
     /**
      * DropzoneSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "criterionSerializer" = @DI\Inject("claroline.serializer.dropzone.criterion")
+     *     "criterionSerializer" = @DI\Inject("claroline.serializer.dropzone.criterion"),
+     *     "om"                  = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param CriterionSerializer $criterionSerializer
+     * @param ObjectManager       $om
      */
-    public function __construct(CriterionSerializer $criterionSerializer)
+    public function __construct(CriterionSerializer $criterionSerializer, ObjectManager $om)
     {
         $this->criterionSerializer = $criterionSerializer;
+        $this->om = $om;
     }
 
     /**
@@ -236,9 +243,20 @@ class DropzoneSerializer
 
     private function deserializeCriteria(Dropzone $dropzone, array $criteriaData)
     {
+        $oldCriteria = $dropzone->getCriteria();
+        $newCriteriaUuids = [];
+        $dropzone->emptyCriteria();
+
         foreach ($criteriaData as $criterionData) {
             $criterion = $this->criterionSerializer->deserialize('Claroline\DropZoneBundle\Entity\Criterion', $criterionData);
             $dropzone->addCriterion($criterion);
+            $newCriteriaUuids[] = $criterion->getUuid();
+        }
+        /* Removes previous fields that are not used anymore */
+        foreach ($oldCriteria as $criterion) {
+            if (!in_array($criterion->getUuid(), $newCriteriaUuids)) {
+                $this->om->remove($criterion);
+            }
         }
     }
 }

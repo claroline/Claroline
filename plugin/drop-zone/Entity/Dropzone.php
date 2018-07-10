@@ -604,6 +604,11 @@ class Dropzone extends AbstractResource
         return $this->criteria->toArray();
     }
 
+    public function emptyCriteria()
+    {
+        return $this->criteria->clear();
+    }
+
     public function addCriterion(Criterion $criterion)
     {
         if (!$this->criteria->contains($criterion)) {
