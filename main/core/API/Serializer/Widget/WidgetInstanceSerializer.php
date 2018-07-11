@@ -53,7 +53,7 @@ class WidgetInstanceSerializer
         $widget = $widgetInstance->getWidget();
 
         // retrieves the custom configuration of the widget if any
-        $parameters = [];
+        $parameters = new \stdClass();
 
         if ($widget->getClass()) {
             // loads configuration entity for the current instance

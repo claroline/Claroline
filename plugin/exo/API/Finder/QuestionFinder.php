@@ -11,7 +11,7 @@
 
 namespace UJM\ExoBundle\API\Finder;
 
-use Claroline\AppBundle\API\FinderInterface;
+use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  * @DI\Service("ujm_exo.api.finder.question")
  * @DI\Tag("claroline.finder")
  */
-class QuestionFinder implements FinderInterface
+class QuestionFinder extends AbstractFinder
 {
     /** @var TokenStorageInterface */
     private $tokenStorage;

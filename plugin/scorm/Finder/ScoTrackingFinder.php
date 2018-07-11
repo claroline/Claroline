@@ -11,7 +11,7 @@
 
 namespace Claroline\ScormBundle\Finder;
 
-use Claroline\AppBundle\API\FinderInterface;
+use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -21,7 +21,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  * @DI\Service("claroline.api.finder.scorm.sco.tracking")
  * @DI\Tag("claroline.finder")
  */
-class ScoTrackingFinder implements FinderInterface
+class ScoTrackingFinder extends AbstractFinder
 {
     public function getClass()
     {

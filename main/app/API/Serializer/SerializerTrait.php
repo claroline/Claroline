@@ -13,9 +13,12 @@ namespace Claroline\AppBundle\API\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Utils\ArrayUtils;
+use Claroline\BundleRecorder\Log\LoggableTrait;
 
 trait SerializerTrait
 {
+    use LoggableTrait;
+
     /** @var GenericSerializer */
     protected $genericSerializer;
 

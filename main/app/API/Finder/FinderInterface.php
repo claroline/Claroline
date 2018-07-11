@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\AppBundle\API;
+namespace Claroline\AppBundle\API\Finder;
 
 use Doctrine\ORM\QueryBuilder;
 

@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Finder;
 
-use Claroline\AppBundle\API\FinderInterface;
+use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -10,12 +10,8 @@ use JMS\DiExtraBundle\Annotation as DI;
  * @DI\Service("claroline.api.finder.log")
  * @DI\Tag("claroline.finder")
  */
-class LogFinder implements FinderInterface
+class LogFinder extends AbstractFinder
 {
-    public function __construct()
-    {
-    }
-
     /**
      * The queried object is already named "obj".
      *
@@ -95,7 +91,7 @@ class LogFinder implements FinderInterface
             }
         }
 
-        if (!empty($sortBy) && ($sortBy['property'] === 'doer.name' || $sortBy['property'] === 'actions')) {
+        if (!empty($sortBy) && ('doer.name' === $sortBy['property'] || 'actions' === $sortBy['property'])) {
             $direction = 1 === $sortBy['direction'] ? 'ASC' : 'DESC';
             switch ($sortBy['property']) {
                 case 'doer.name':
@@ -122,7 +118,7 @@ class LogFinder implements FinderInterface
 
     private function filterAction($action, QueryBuilder $qb)
     {
-        if ($action === 'all') {
+        if ('all' === $action) {
             return;
         }
 
@@ -134,18 +130,18 @@ class LogFinder implements FinderInterface
 
             return;
         }
-        if (count($actionChunks) === 2 && $actionChunks[1] === 'all') {
+        if (2 === count($actionChunks) && 'all' === $actionChunks[1]) {
             $qb
                 ->andWhere('obj.action LIKE :action')
                 ->setParameter('action', $actionChunks[0].'%');
 
             return;
         }
-        if ($actionChunks[0] === 'resource') {
+        if ('resource' === $actionChunks[0]) {
             $qb
                 ->andWhere('ort.name = :type')
                 ->setParameter('type', $actionChunks[1]);
-            if ($actionChunks[2] !== 'all') {
+            if ('all' !== $actionChunks[2]) {
                 $qb->andWhere('obj.action = :action')
                     ->setParameter('action', $actionChunks[2]);
             }

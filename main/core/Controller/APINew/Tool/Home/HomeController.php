@@ -37,11 +37,29 @@ class HomeController extends AbstractCrudController
     public function updateHomeAction(Request $request)
     {
         $tabs = $this->decodeRequest($request);
-        //here we assume we got the data properly
+        $ids = [];
 
         foreach ($tabs as $tab) {
             if (HomeTab::TYPE_ADMIN_DESKTOP !== $tab['type']) {
                 $this->crud->update(HomeTab::class, $tab);
+                if ($tab['user']) {
+                    $filters['user'] = $tab['user']['id'];
+                }
+
+                if ($tab['workspace']) {
+                    $filters['workspace'] = $tab['workspace']['uuid'];
+                }
+
+                $ids[] = $tab['id'];
+            }
+        }
+
+        //remove superfluous tabs
+        $installedTabs = $this->finder->fetch(HomeTab::class, $filters);
+
+        foreach ($installedTabs as $installedTab) {
+            if (!in_array($installedTab->getUuid(), $ids)) {
+                $this->crud->delete($installedTab);
             }
         }
 

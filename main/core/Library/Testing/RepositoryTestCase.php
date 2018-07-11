@@ -411,6 +411,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $homeTab = new HomeTab();
         $homeTab->setName($name);
         $homeTab->setType($type);
+        $homeTab->setLongTitle($name);
 
         self::create($name, $homeTab);
         self::$om->flush();
@@ -420,6 +421,7 @@ abstract class RepositoryTestCase extends WebTestCase
     {
         $homeTab = new HomeTab();
         $homeTab->setName($name);
+        $homeTab->setLongTitle($name);
         $homeTab->setType('desktop');
         $homeTab->setUser($user);
 
@@ -433,6 +435,7 @@ abstract class RepositoryTestCase extends WebTestCase
     ) {
         $homeTab = new HomeTab();
         $homeTab->setName($name);
+        $homeTab->setLongTitle($name);
         $homeTab->setType('workspace');
         $homeTab->setWorkspace($workspace);
 

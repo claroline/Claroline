@@ -11,7 +11,7 @@
 
 namespace Claroline\ClacoFormBundle\Finder;
 
-use Claroline\AppBundle\API\FinderInterface;
+use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Entry;
@@ -29,7 +29,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  * @DI\Service("claroline.api.finder.clacoform.entry")
  * @DI\Tag("claroline.finder")
  */
-class EntryFinder implements FinderInterface
+class EntryFinder extends AbstractFinder
 {
     /** @var AuthorizationCheckerInterface */
     private $authorization;
@@ -37,17 +37,11 @@ class EntryFinder implements FinderInterface
     /** @var LocationManager */
     private $locationManager;
 
-    /** @var ObjectManager */
-    private $om;
-
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
     /** @var TranslatorInterface */
     private $translator;
-
-    private $clacoFormRepo;
-    private $fieldRepo;
 
     private $usedJoin = [];
 
@@ -57,7 +51,6 @@ class EntryFinder implements FinderInterface
      * @DI\InjectParams({
      *     "authorization"   = @DI\Inject("security.authorization_checker"),
      *     "locationManager" = @DI\Inject("claroline.manager.organization.location_manager"),
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "translator"      = @DI\Inject("translator")
      * })
@@ -71,17 +64,13 @@ class EntryFinder implements FinderInterface
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         LocationManager $locationManager,
-        ObjectManager $om,
         TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator
     ) {
         $this->authorization = $authorization;
         $this->locationManager = $locationManager;
-        $this->om = $om;
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
-        $this->clacoFormRepo = $om->getRepository('ClarolineClacoFormBundle:ClacoForm');
-        $this->fieldRepo = $om->getRepository('ClarolineClacoFormBundle:Field');
     }
 
     public function getClass()
@@ -91,10 +80,13 @@ class EntryFinder implements FinderInterface
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
     {
+        $clacoFormRepo = $om->getRepository('ClarolineClacoFormBundle:ClacoForm');
+        $fieldRepo = $om->getRepository('ClarolineClacoFormBundle:Field');
+
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
         $isAnon = 'anon.' === $currentUser;
-        $clacoForm = $this->clacoFormRepo->findOneById($searches['clacoForm']);
+        $clacoForm = $clacoFormRepo->findOneById($searches['clacoForm']);
         $canEdit = $this->hasRight($clacoForm, 'EDIT');
         $isCategoryManager = !$isAnon && $this->isCategoryManager($clacoForm, $currentUser);
         $searchEnabled = $clacoForm->getSearchEnabled();
@@ -224,7 +216,7 @@ class EntryFinder implements FinderInterface
                     $this->usedJoin['keywords'] = true;
                     break;
                 default:
-                    $field = $this->fieldRepo->findOneBy(['clacoForm' => $clacoForm, 'uuid' => $filterName]);
+                    $field = $fieldRepo->findOneBy(['clacoForm' => $clacoForm, 'uuid' => $filterName]);
                     $this->filterField($qb, $filterName, $filterValue, $field);
             }
         }
@@ -253,7 +245,7 @@ class EntryFinder implements FinderInterface
                     $qb->orderBy('k.name', $sortByDirection);
                     break;
                 default:
-                    $field = $this->fieldRepo->findOneBy(['clacoForm' => $clacoForm, 'uuid' => $sortBy]);
+                    $field = $fieldRepo->findOneBy(['clacoForm' => $clacoForm, 'uuid' => $sortBy]);
                     $this->sortField($qb, $sortByProperty, $sortByDirection, $field);
             }
         }

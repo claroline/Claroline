@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\API\Finder\User;
 
-use Claroline\AppBundle\API\FinderInterface;
+use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -22,7 +22,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  * @DI\Service("claroline.api.finder.group")
  * @DI\Tag("claroline.finder")
  */
-class GroupFinder implements FinderInterface
+class GroupFinder extends AbstractFinder
 {
     /** @var AuthorizationCheckerInterface */
     private $authChecker;

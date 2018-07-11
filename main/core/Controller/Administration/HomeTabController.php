@@ -15,7 +15,6 @@ use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
-use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Event\Log\LogHomeTabAdminCreateEvent;
 use Claroline\CoreBundle\Event\Log\LogHomeTabAdminDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogHomeTabAdminEditEvent;
@@ -381,24 +380,6 @@ class HomeTabController extends Controller
      */
     public function getAdminWidgetsAction(HomeTab $homeTab)
     {
-        $widgets = [];
-        $configs = $this->homeTabManager->getAdminWidgetConfigs($homeTab);
-        $wdcs = $this->widgetManager->generateWidgetDisplayConfigsForAdmin($configs);
-
-        foreach ($configs as $config) {
-            $widgetDatas = [];
-            $widgetInstance = $config->getWidgetInstance();
-            $widget = $widgetInstance->getWidget();
-            $widgetInstanceId = $widgetInstance->getId();
-            $widgetDatas['config'] = $this->serializer->serialize($config, 'json', SerializationContext::create()->setGroups(['api_widget']));
-            $widgetDatas['display'] = $this->serializer->serialize($wdcs[$widgetInstanceId], 'json', SerializationContext::create()->setGroups(['api_widget']));
-            $widgetDatas['configurable'] = $widget->isConfigurable();
-            $event = $this->eventDispatcher->dispatch('widget_'.$widget->getName(), new DisplayWidgetEvent($widgetInstance));
-            $widgetDatas['content'] = $event->getContent();
-            $widgets[] = $widgetDatas;
-        }
-
-        return new JsonResponse($widgets, 200);
     }
 
     /**

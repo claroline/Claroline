@@ -6,13 +6,14 @@ const Tab = {
   propTypes: {
     id: T.string.isRequired,
     title: T.string.isRequired,
-    description: T.string,
+    longTitle: T.string,
+    centerTitle: T.bool.isRequired,
     icon: T.string,
     poster: T.shape({
       url: T.string
     }),
     position: T.number,
-    type: T.oneOf(['workspace', 'desktop']),
+    type: T.oneOf(['workspace', 'admin_desktop', 'desktop']),
     widgets: T.arrayOf(T.shape(
       Widget.propTypes
     ))
@@ -20,7 +21,8 @@ const Tab = {
   defaultProps: {
     icon: null,
     poster: null,
-    widgets: []
+    widgets: [],
+    centerTitle: false
   }
 }
 

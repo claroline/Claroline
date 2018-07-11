@@ -11,7 +11,7 @@
 
 namespace Claroline\DropZoneBundle\Finder;
 
-use Claroline\AppBundle\API\FinderInterface;
+use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -19,7 +19,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  * @DI\Service("claroline.api.finder.dropzone.drop")
  * @DI\Tag("claroline.finder")
  */
-class DropFinder implements FinderInterface
+class DropFinder extends AbstractFinder
 {
     public function getClass()
     {

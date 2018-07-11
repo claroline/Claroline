@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\API\Finder\Contact;
 
-use Claroline\AppBundle\API\FinderInterface;
+use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  * @DI\Service("claroline.api.finder.contact")
  * @DI\Tag("claroline.finder")
  */
-class ContactFinder implements FinderInterface
+class ContactFinder extends AbstractFinder
 {
     /** @var AuthorizationCheckerInterface */
     private $authorization;

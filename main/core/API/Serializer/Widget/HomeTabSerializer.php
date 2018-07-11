@@ -2,9 +2,11 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Widget;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Finder\Home\WidgetContainerFinder;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\User;
@@ -27,18 +29,21 @@ class HomeTabSerializer
      * ContactSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.api.serializer"),
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager")
+     *     "serializer"            = @DI\Inject("claroline.api.serializer"),
+     *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
+     *     "widgetContainerFinder" = @DI\Inject("claroline.api.finder.widget_container")
      * })
      *
      * @param SerializerProvider $serializer
      */
     public function __construct(
         SerializerProvider $serializer,
-        ObjectManager $om
+        ObjectManager $om,
+        WidgetContainerFinder $widgetContainerFinder
     ) {
         $this->serializer = $serializer;
         $this->om = $om;
+        $this->widgetContainerFinder = $widgetContainerFinder;
     }
 
     public function getClass()
@@ -68,10 +73,13 @@ class HomeTabSerializer
           'id' => $this->getUuid($homeTab, $options),
           'title' => $homeTab->getName(),
           'longTitle' => $homeTab->getLongTitle(),
+          'centerTitle' => $homeTab->isCenterTitle(),
           'poster' => $homeTab->getPoster(),
           'icon' => $homeTab->getIcon(),
           'type' => $homeTab->getType(),
           'position' => $homeTabConfig->getTabOrder(),
+          'user' => $homeTab->getUser() ? $this->serializer->serialize($homeTab->getUser(), [Options::SERIALIZE_MINIMAL]) : null,
+          'workspace' => $homeTab->getWorkspace() ? $this->serializer->serialize($homeTab->getWorkspace(), [Options::SERIALIZE_MINIMAL]) : null,
           'widgets' => array_map(function ($container) use ($options) {
               return $this->serializer->serialize($container, $options);
           }, $containers),
@@ -85,6 +93,7 @@ class HomeTabSerializer
         $this->sipe('id', 'setUuid', $data, $homeTab);
         $this->sipe('title', 'setName', $data, $homeTab);
         $this->sipe('longTitle', 'setLongTitle', $data, $homeTab);
+        $this->sipe('centerTitle', 'setCenterTitle', $data, $homeTab);
         $this->sipe('poster', 'setPoster', $data, $homeTab);
         $this->sipe('icon', 'setIcon', $data, $homeTab);
         $this->sipe('type', 'setType', $data, $homeTab);
@@ -121,9 +130,12 @@ class HomeTabSerializer
 
         // We either do this or cascade persist ¯\_(ツ)_/¯
         $this->om->persist($homeTabConfig);
+        $containerIds = [];
 
         foreach ($data['widgets'] as $widgetContainer) {
             $widgetContainer = $this->serializer->deserialize(WidgetContainer::class, $widgetContainer, $options);
+            $containerIds[] = $widgetContainer->getUuid();
+
             //ptet rajouter les instances ici ? je sais pas
             foreach ($widgetContainer->getInstances() as $key => $instance) {
                 $widgetHomeTabConfig = new WidgetHomeTabConfig();
@@ -136,6 +148,15 @@ class HomeTabSerializer
                 $widgetHomeTabConfig->setWidgetOrder($key);
                 $widgetHomeTabConfig->setWidgetInstance($instance);
                 $this->om->persist($widgetHomeTabConfig);
+            }
+        }
+
+        //readytoremove
+        $containers = $this->widgetContainerFinder->find(['homeTab' => $homeTab->getUuid()]);
+
+        foreach ($containers as $container) {
+            if (!in_array($container->getUuid(), $containerIds)) {
+                $this->om->remove($container);
             }
         }
 

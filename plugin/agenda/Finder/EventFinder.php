@@ -11,8 +11,8 @@
 
 namespace Claroline\AgendaBundle\Finder;
 
+use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\AppBundle\API\Finder\FinderTrait;
-use Claroline\AppBundle\API\FinderInterface;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -20,7 +20,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  * @DI\Service("claroline.api.finder.agenda")
  * @DI\Tag("claroline.finder")
  */
-class EventFinder implements FinderInterface
+class EventFinder extends AbstractFinder
 {
     use FinderTrait;
 

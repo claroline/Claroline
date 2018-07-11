@@ -31,7 +31,8 @@ class WidgetHomeTabConfig
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstance"
+     *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstance",
+     *     inversedBy="widgetHomeTabConfigs"
      * )
      * @ORM\JoinColumn(name="widget_instance_id", onDelete="CASCADE", nullable=true)
      */

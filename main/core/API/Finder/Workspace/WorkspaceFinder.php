@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\API\Finder\Workspace;
 
-use Claroline\AppBundle\API\FinderInterface;
+use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -22,7 +22,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  * @DI\Service("claroline.api.finder.workspace")
  * @DI\Tag("claroline.finder")
  */
-class WorkspaceFinder implements FinderInterface
+class WorkspaceFinder extends AbstractFinder
 {
     /** @var AuthorizationCheckerInterface */
     private $authChecker;

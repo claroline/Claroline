@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\API\Finder\User;
 
-use Claroline\AppBundle\API\FinderInterface;
+use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -19,7 +19,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  * @DI\Service("claroline.api.finder.theme")
  * @DI\Tag("claroline.finder")
  */
-class LocationFinder implements FinderInterface
+class LocationFinder extends AbstractFinder
 {
     public function getClass()
     {

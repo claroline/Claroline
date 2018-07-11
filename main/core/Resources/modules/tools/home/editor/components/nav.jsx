@@ -4,15 +4,13 @@ import merge from 'lodash/merge'
 
 import {NavLink} from '#/main/app/router'
 import {makeId} from '#/main/core/scaffolding/id'
-import {trans} from '#/main/core/translation'
 import {currentUser} from '#/main/core/user/current'
-import {ModalButton} from '#/main/app/button'
-import {MODAL_DATA_FORM} from '#/main/core/data/form/modals'
+import {Button} from '#/main/app/action/components/button'
 import {actions as formActions} from '#/main/core/data/form/actions'
 
 import {select as homeSelect} from '#/main/core/tools/home/selectors'
 import {select as editorSelect} from '#/main/core/tools/home/editor/selectors'
-import {tabFormSections} from '#/main/core/tools/home/utils'
+import {MODAL_TAB_CREATE} from '#/main/core/tools/home/editor/modals/creation'
 import {Tab as TabTypes} from '#/main/core/tools/home/prop-types'
 
 
@@ -25,15 +23,18 @@ const EditorNavComponent = props =>
         activeClassName="nav-tab-active"
         to={`/edit/tab/${tab.id}`}
       >
-
+        {tab.icon &&
+          <span className={`fa fa-fw fa-${tab.icon} icon-with-text-right`} />
+        }
         {tab.title}
       </NavLink>
     )}
-    <ModalButton
+    <Button
       className="nav-add-tab"
-      modal={[MODAL_DATA_FORM, {
-        title: trans('add_tab'),
-        sections: tabFormSections,
+      type="modal"
+      icon="fa fa-fw fa-plus"
+      label=""
+      modal={[MODAL_TAB_CREATE, {
         data: merge({}, TabTypes.defaultProps, {
           id: makeId(),
           position: props.tabs.length + 1,
@@ -41,11 +42,10 @@ const EditorNavComponent = props =>
           user: props.context.type === 'desktop' ? currentUser() : null,
           workspace: props.context.type === 'workspace' ? {uuid: props.context.data.uuid} : null
         }),
-        save: data => props.createTab(props.tabs.length, data)
+        create: data => props.createTab(props.tabs.length, data)
       }]}
     >
-      <span className="fa fa-plus" />
-    </ModalButton>
+    </Button>
   </nav>
 
 

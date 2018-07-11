@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\API\Finder\Workspace;
 
-use Claroline\AppBundle\API\FinderInterface;
+use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -19,7 +19,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  * @DI\Service("claroline.api.finder.pending")
  * @DI\Tag("claroline.finder")
  */
-class PendingRegistrationFinder implements FinderInterface
+class PendingRegistrationFinder extends AbstractFinder
 {
     public function getClass()
     {

@@ -46,6 +46,11 @@ class HomeTab
     protected $longTitle;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $centerTitle = false;
+
+    /**
      * @ORM\Column(nullable=false)
      */
     protected $type;
@@ -101,6 +106,7 @@ class HomeTab
         $this->roles = new ArrayCollection();
         $this->widgetHomeTabConfigs = new ArrayCollection();
         $this->homeTabConfigs = new ArrayCollection();
+        $this->centerTitle = false;
     }
 
     public function getName()
@@ -198,5 +204,15 @@ class HomeTab
     public function getLongTitle()
     {
         return $this->longTitle;
+    }
+
+    public function setCenterTitle($bool)
+    {
+        $this->centerTitle = $bool;
+    }
+
+    public function isCenterTitle()
+    {
+        return $this->centerTitle;
     }
 }

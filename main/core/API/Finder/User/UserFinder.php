@@ -11,12 +11,12 @@
 
 namespace Claroline\CoreBundle\API\Finder\User;
 
-use Claroline\AppBundle\API\FinderInterface;
-use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
@@ -28,7 +28,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  * @DI\Service("claroline.api.finder.user")
  * @DI\Tag("claroline.finder")
  */
-class UserFinder implements FinderInterface
+class UserFinder extends AbstractFinder
 {
     /** @var AuthorizationCheckerInterface */
     private $authChecker;
@@ -39,9 +39,6 @@ class UserFinder implements FinderInterface
     /** @var WorkspaceManager */
     private $workspaceManager;
 
-    /** @var ObjectManager */
-    private $om;
-
     /**
      * UserFinder constructor.
      *
@@ -49,26 +46,23 @@ class UserFinder implements FinderInterface
      *     "authChecker"      = @DI\Inject("security.authorization_checker"),
      *     "tokenStorage"     = @DI\Inject("security.token_storage"),
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
      *     "em"               = @DI\Inject("doctrine.orm.entity_manager")
      * })
      *
      * @param AuthorizationCheckerInterface $authChecker
      * @param TokenStorageInterface         $tokenStorage
      * @param WorkspaceManager              $workspaceManager
-     * @param ObjectManager                 $om
+     * @param EntityManager                 $em
      */
     public function __construct(
         AuthorizationCheckerInterface $authChecker,
         TokenStorageInterface $tokenStorage,
         WorkspaceManager $workspaceManager,
-        ObjectManager $om,
-        $em
+        EntityManager $em
     ) {
         $this->authChecker = $authChecker;
         $this->tokenStorage = $tokenStorage;
         $this->workspaceManager = $workspaceManager;
-        $this->om = $om;
         $this->_em = $em;
     }
 

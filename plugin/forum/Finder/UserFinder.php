@@ -11,8 +11,8 @@
 
 namespace Claroline\ForumBundle\Finder;
 
+use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\AppBundle\API\Finder\FinderTrait;
-use Claroline\AppBundle\API\FinderInterface;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -20,7 +20,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  * @DI\Service("claroline.api.finder.forum_user")
  * @DI\Tag("claroline.finder")
  */
-class UserFinder implements FinderInterface
+class UserFinder extends AbstractFinder
 {
     use FinderTrait;
 

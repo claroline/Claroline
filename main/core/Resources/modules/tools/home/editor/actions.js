@@ -1,20 +1,12 @@
-import {makeActionCreator} from '#/main/core/scaffolding/actions'
-import {API_REQUEST} from '#/main/core/api/actions'
+import {actions as formActions} from '#/main/core/data/form/actions'
 
-export const UPDATE_DELETED_TABS = 'UPDATE_DELETED_TABS'
+// action creators
 export const actions = {}
 
+actions.deleteTab = (currentTabIndex, tabs, push) => (dispatch) => {
 
-actions.updateDeletedTabs = makeActionCreator(UPDATE_DELETED_TABS, 'tabId')
-actions.deleteTab = (tabId, push) => ({
-  [API_REQUEST]: {
-    url: ['apiv2_home_tab_delete_bulk', {ids: [tabId]}],
-    request: {
-      method: 'DELETE'
-    },
-    success: (data, dispatch) => {
-      dispatch(actions.updateDeletedTabs(tabId))
-      push('/')
-    }
-  }
-})
+  const newTabs = tabs.slice(0)
+  newTabs.splice(currentTabIndex, 1)
+  dispatch(formActions.updateProp('editor', tabs, newTabs))
+  push('/edit')
+}

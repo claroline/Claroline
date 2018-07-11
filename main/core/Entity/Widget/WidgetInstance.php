@@ -67,6 +67,14 @@ class WidgetInstance
     private $container;
 
     /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig",
+     *     mappedBy="widgetInstance"
+     * )
+     */
+    protected $widgetHomeTabConfigs;
+
+    /**
      * Get name.
      *
      * @return string
