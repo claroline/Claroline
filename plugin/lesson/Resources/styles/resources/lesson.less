@@ -1,21 +1,37 @@
-.lesson-container .summary .summary-link {
-  a span.sr-only {
-    position: relative !important;
-    width: auto !important;
-    height: auto !important;
+.lesson-container {
+
+  .btn.float-right {
+    float: right;
   }
 
-  .step-actions span.sr-only {
-    position: absolute !important;
-    width: 1px !important;
-    height: 1px !important;
+  .summary .summary-link {
+    a span.sr-only {
+      position: relative !important;
+      width: auto !important;
+      height: auto !important;
+    }
+
+    .btn-summary {
+      float: left;
+    }
+
+    .step-actions span.sr-only {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+    }
   }
-}
 
-.lesson-container .btn.float-right {
-  float: right;
-}
+  .lesson-page-content {
+    .lesson-bottom-buttons {
+      .back-to-top {
+        text-align: center;
+      }
 
-.lesson-container .summary-link .btn-summary {
-  float: left;
+      .navigation {
+        border-top: 1px solid rgb(221, 221, 221);
+      }
+    }
+  }
+
 }
