@@ -1275,6 +1275,7 @@
     "tool_is_visible_and_can_be_opened": "L'outil est visible et peut être ouvert",
     "tool_parameters": "Paramètres des outils",
     "tool_roles_create_directory": "L'option \"Créer un répertoire\" vous permet de créer automatiquement un répertoire dédié aux utilisateurs de ce groupe.",
+    "tool_work_in_progress": "L'outil est en cours de refonte. Il sera disponible ultérieurement.",
     "tools": "Outils",
     "tools_rights_configuration": "Configuration des droits sur les outils",
     "top": "Top",

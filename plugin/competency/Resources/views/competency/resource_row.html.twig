@@ -30,7 +30,7 @@
     {% set isAbility = abilityCount > 0 %}
     {% for child in children %}
         {%
-            include 'HeVinciCompetencyBundle:Competency:resourceRow.html.twig'
+            include 'HeVinciCompetencyBundle:competency:resource_row.html.twig'
             with {
                 target: child,
                 isAbility: isAbility,

@@ -1,11 +1,11 @@
-{% extends 'HeVinciCompetencyBundle:Competency:frameworkLayout.html.twig' %}
+{% extends 'HeVinciCompetencyBundle:competency:framework_layout.html.twig' %}
 
 {% set activeTab = 'framework' %}
 
 {% block tabContent %}
     <ul class="framework">
         {%
-            include 'HeVinciCompetencyBundle:Competency:competencyItem.html.twig'
+            include 'HeVinciCompetencyBundle:competency:competency_item.html.twig'
             with {
                 competency: framework,
                 displayUntil: 1

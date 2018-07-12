@@ -1,4 +1,4 @@
-{% extends 'HeVinciCompetencyBundle:Competency:layout.html.twig' %}
+{% extends 'HeVinciCompetencyBundle:competency:layout.html.twig' %}
 
 {% block title %}
     {{ parent() ~ ' - ' ~ 'scales'|trans({}, 'competency') }}
@@ -29,7 +29,7 @@
         <tbody>
         {% for scale in scales %}
             {%
-                include 'HeVinciCompetencyBundle:Scale:row.html.twig'
+                include 'HeVinciCompetencyBundle:scale:row.html.twig'
                 with {
                     id: scale.id,
                     name: scale.name,

@@ -1,4 +1,4 @@
-{% extends 'HeVinciCompetencyBundle:Competency:frameworkLayout.html.twig' %}
+{% extends 'HeVinciCompetencyBundle:competency:framework_layout.html.twig' %}
 
 {% set activeTab = 'resources' %}
 
@@ -14,7 +14,7 @@
         </thead>
         <tbody>
             {%
-                include 'HeVinciCompetencyBundle:Competency:resourceRow.html.twig'
+                include 'HeVinciCompetencyBundle:competency:resource_row.html.twig'
                 with {
                     target: framework,
                     isAbility: false

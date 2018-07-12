@@ -1,4 +1,4 @@
-{% extends 'HeVinciCompetencyBundle:Competency:layout.html.twig' %}
+{% extends 'HeVinciCompetencyBundle:competency:layout.html.twig' %}
 
 {% trans_default_domain 'competency' %}
 
@@ -17,7 +17,7 @@
         <tbody>
             {% for framework in frameworks %}
                 {%
-                    include 'HeVinciCompetencyBundle:Competency:frameworkRow.html.twig'
+                    include 'HeVinciCompetencyBundle:competency:framework_row.html.twig'
                     with {
                         id: framework.getId(),
                         name: framework.getName(),

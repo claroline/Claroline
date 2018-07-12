@@ -1,4 +1,4 @@
-{% extends 'HeVinciCompetencyBundle:Objective:layout.html.twig' %}
+{% extends 'HeVinciCompetencyBundle:objective:layout.html.twig' %}
 
 {% trans_default_domain 'competency' %}
 
@@ -55,7 +55,7 @@
             <tbody>
                 {% for user in pager.currentPageResults() %}
                     {%
-                        include 'HeVinciCompetencyBundle:Objective:userObjectiveRow.html.twig'
+                        include 'HeVinciCompetencyBundle:objective:user_objective_row.html.twig'
                         with {
                             id: user.id,
                             firstName: user.firstName,

@@ -1,4 +1,4 @@
-{% extends 'HeVinciCompetencyBundle:Objective:layout.html.twig' %}
+{% extends 'HeVinciCompetencyBundle:objective:layout.html.twig' %}
 
 {% trans_default_domain 'competency' %}
 
@@ -25,7 +25,7 @@
         <tbody>
             {% for objective in objectives %}
                 {%
-                    include 'HeVinciCompetencyBundle:Objective:objectiveRow.html.twig'
+                    include 'HeVinciCompetencyBundle:objective:objective_row.html.twig'
                     with {
                         id: objective.id,
                         name: objective.name,

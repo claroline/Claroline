@@ -1,4 +1,4 @@
-{% extends 'ClarolineCoreBundle::Administration/layout.html.twig' %}
+{% extends 'ClarolineCoreBundle::administration/layout.html.twig' %}
 
 {% set competencyBreadcrumbs = [
         {
@@ -22,22 +22,27 @@
 {% endblock %}
 
 {% block section_content %}
-    <div class="panel-heading">
-        <div class="panel-title">
-            {% block panelTitle %}
-                {{ 'competencies'|trans({}, 'tools') }}
-            {% endblock %}
+    <div class="panel-body">
+        <div class="alert alert-warning">
+            {{ 'tool_work_in_progress'|trans({}, 'platform') }}
         </div>
     </div>
-    <div class="panel-body">
-        {% block panelBody %}
-            TODO
-        {% endblock %}
-    </div>
-    <div class="panel-footer">
-        {% block panelFooter %}{% endblock %}
-    </div>
-    {% block sectionRest %}{% endblock %}
+    {#<div class="panel-heading">#}
+        {#<div class="panel-title">#}
+            {#{% block panelTitle %}#}
+                {#{{ 'competencies'|trans({}, 'tools') }}#}
+            {#{% endblock %}#}
+        {#</div>#}
+    {#</div>#}
+    {#<div class="panel-body">#}
+        {#{% block panelBody %}#}
+            {#TODO#}
+        {#{% endblock %}#}
+    {#</div>#}
+    {#<div class="panel-footer">#}
+        {#{% block panelFooter %}{% endblock %}#}
+    {#</div>#}
+    {#{% block sectionRest %}{% endblock %}#}
 {% endblock %}
 
 {% block javascripts %}

@@ -1,4 +1,4 @@
-{% extends 'HeVinciCompetencyBundle:Objective:layout.html.twig' %}
+{% extends 'HeVinciCompetencyBundle:objective:layout.html.twig' %}
 
 {% trans_default_domain 'competency' %}
 
@@ -46,7 +46,7 @@
             </thead>
             <tbody>
                 {% for group in pager.currentPageResults() %}
-                    {% include 'HeVinciCompetencyBundle:Objective:groupObjectiveRow.html.twig' with group %}
+                    {% include 'HeVinciCompetencyBundle:objective:group_objective_row.html.twig' with group %}
                 {% endfor %}
             </tbody>
         </table>

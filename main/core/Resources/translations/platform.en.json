@@ -1254,6 +1254,7 @@
     "tool_is_visible_and_can_be_opened": "The tool is visible and can be opened",
     "tool_parameters": "Tool settings",
     "tool_roles_create_directory": "The \"Create a directory\" option allows you to automatically create a directory for that group.",
+    "tool_work_in_progress": "The tool is being refactored. It will available later.",
     "tools": "Tools",
     "tools_rights_configuration": "Tools rights configuration",
     "top": "Top",
