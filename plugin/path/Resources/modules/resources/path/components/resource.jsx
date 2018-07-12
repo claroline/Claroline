@@ -5,7 +5,6 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/core/translation'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
-import {select as formSelect} from '#/main/core/data/form/selectors'
 import {actions as formActions} from '#/main/core/data/form/actions'
 import {RoutedPageContent} from '#/main/core/layout/router'
 import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
@@ -17,13 +16,6 @@ import {Player} from '#/plugin/path/resources/path/player/components/player.jsx'
 
 const Resource = props =>
   <ResourcePageContainer
-    editor={{
-      path: '/edit',
-      save: {
-        disabled: !props.saveEnabled,
-        action: () => props.saveForm(props.path.id)
-      }
-    }}
     customActions={[
       {
         type: 'link',
@@ -46,7 +38,8 @@ const Resource = props =>
         {
           path: '/edit',
           component: Editor,
-          disabled: !props.editable
+          disabled: !props.editable,
+          onEnter: () => props.resetForm(props.path)
         }, {
           path: '/play',
           component: Player
@@ -72,19 +65,19 @@ const Resource = props =>
 Resource.propTypes = {
   path: T.object.isRequired,
   editable: T.bool.isRequired,
-  saveEnabled: T.bool.isRequired,
 
-  saveForm: T.func.isRequired
+  resetForm: T.func.isRequired
 }
 
 const PathResource = connect(
   (state) => ({
     path: select.path(state),
-    editable: hasPermission('edit', resourceSelect.resourceNode(state)),
-    saveEnabled: formSelect.saveEnabled(formSelect.form(state, 'pathForm'))
+    editable: hasPermission('edit', resourceSelect.resourceNode(state))
   }),
   (dispatch) => ({
-    saveForm: (pathId) => dispatch(formActions.saveForm('pathForm', ['apiv2_path_update', {id: pathId}]))
+    resetForm(data) {
+      dispatch(formActions.resetForm('pathForm', data, false))
+    }
   })
 )(Resource)
 

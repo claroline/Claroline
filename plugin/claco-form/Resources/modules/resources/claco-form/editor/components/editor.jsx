@@ -8,6 +8,7 @@ import {select as formSelect} from '#/main/core/data/form/selectors'
 import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {actions as formActions} from '#/main/core/data/form/actions'
 import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 
@@ -59,6 +60,16 @@ const EditorComponent = props =>
     <FormContainer
       level={3}
       name="clacoFormForm"
+      buttons={true}
+      save={{
+        type: 'callback',
+        callback: () => props.saveForm(props.clacoForm.id)
+      }}
+      cancel={{
+        type: 'link',
+        target: '/',
+        exact: true
+      }}
       sections={[
         {
           id: 'fields',
@@ -603,7 +614,8 @@ EditorComponent.propTypes = {
   roles: T.array,
   deleteCategories: T.func.isRequired,
   deleteKeywords: T.func.isRequired,
-  showModal: T.func.isRequired
+  showModal: T.func.isRequired,
+  saveForm: T.func.isRequired
 }
 
 const Editor = connect(
@@ -634,6 +646,9 @@ const Editor = connect(
     },
     showModal(type, props) {
       dispatch(modalActions.showModal(type, props))
+    },
+    saveForm(id) {
+      dispatch(formActions.saveForm('clacoFormForm', ['apiv2_clacoform_update', {id: id}]))
     }
   })
 )(EditorComponent)

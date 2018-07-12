@@ -7,6 +7,8 @@ import {actions as formActions} from '#/main/core/data/form/actions'
 import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
 
 import {constants} from '#/plugin/scorm/resources/scorm/constants'
+import {Scorm as ScormType} from '#/plugin/scorm/resources/scorm/prop-types'
+import {select} from '#/plugin/scorm/resources/scorm/selectors'
 
 const EditorComponent = props =>
   <section className="resource-section">
@@ -14,6 +16,16 @@ const EditorComponent = props =>
     <FormContainer
       level={3}
       name="scormForm"
+      buttons={true}
+      save={{
+        type: 'callback',
+        callback: () => props.saveForm(props.scorm.id)
+      }}
+      cancel={{
+        type: 'link',
+        target: '/',
+        exact: true
+      }}
       sections={[
         {
           id: 'display',
@@ -48,14 +60,21 @@ const EditorComponent = props =>
   </section>
 
 EditorComponent.propTypes = {
-  updateProp: T.func.isRequired
+  scorm: T.shape(ScormType.propTypes),
+  updateProp: T.func.isRequired,
+  saveForm: T.func.isRequired
 }
 
 const Editor = connect(
-  null,
+  (state) => ({
+    scorm: select.scorm(state)
+  }),
   (dispatch) => ({
     updateProp(propName, propValue) {
       dispatch(formActions.updateProp('scormForm', propName, propValue))
+    },
+    saveForm(id) {
+      dispatch(formActions.saveForm('scormForm', ['apiv2_scorm_update', {scorm: id}]))
     }
   })
 )(EditorComponent)

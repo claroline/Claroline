@@ -5,7 +5,6 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/core/translation'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
-import {select as formSelect} from '#/main/core/data/form/selectors'
 import {actions as formActions} from '#/main/core/data/form/actions'
 import {RoutedPageContent} from '#/main/core/layout/router'
 import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
@@ -26,14 +25,6 @@ import {PeerDrop} from '#/plugin/drop-zone/resources/dropzone/player/components/
 
 const Resource = props =>
   <ResourcePageContainer
-    editor={{
-      path: '/edit',
-      label: trans('configure', {}, 'platform'),
-      save: {
-        disabled: !props.saveEnabled,
-        action: () => props.saveForm(props.dropzone.id)
-      }
-    }}
     customActions={[
       {
         type: 'link',
@@ -71,7 +62,7 @@ const Resource = props =>
         }, {
           path: '/edit',
           component: Editor,
-          canEnter: () => props.canEdit,
+          disabled: !props.canEdit,
           onLeave: () => props.resetForm(),
           onEnter: () => props.resetForm(props.dropzone)
         }, {
@@ -111,11 +102,9 @@ const Resource = props =>
 Resource.propTypes = {
   canEdit: T.bool.isRequired,
   dropzone: T.object.isRequired,
-  saveEnabled: T.bool.isRequired,
   myDrop: T.object,
 
   resetForm: T.func.isRequired,
-  saveForm: T.func.isRequired,
   fetchDrop: T.func.isRequired,
   resetCurrentDrop: T.func.isRequired,
   fetchCorrections: T.func.isRequired,
@@ -127,12 +116,10 @@ const DropzoneResource = connect(
   (state) => ({
     canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
     dropzone: state.dropzone,
-    saveEnabled: formSelect.saveEnabled(formSelect.form(state, 'dropzoneForm')),
     myDrop: select.myDrop(state)
   }),
   (dispatch) => ({
     resetForm: (formData) => dispatch(formActions.resetForm('dropzoneForm', formData)),
-    saveForm: (dropzoneId) => dispatch(formActions.saveForm('dropzoneForm', ['claro_dropzone_update', {id: dropzoneId}])),
 
     fetchDrop: (dropId, type) => dispatch(correctionActions.fetchDrop(dropId, type)),
     resetCurrentDrop: () => dispatch(correctionActions.resetCurrentDrop()),

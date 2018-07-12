@@ -13,6 +13,16 @@ const ParametersForm = props =>
     name="pathForm"
     title={trans('parameters')}
     className="content-container"
+    buttons={true}
+    save={{
+      type: 'callback',
+      callback: () => props.saveForm()
+    }}
+    cancel={{
+      type: 'link',
+      target: '/',
+      exact: true
+    }}
     sections={[
       {
         icon: 'fa fa-fw fa-home',
@@ -76,7 +86,8 @@ ParametersForm.propTypes = {
       showSummary: T.bool.isRequired,
       manualProgressionAllowed: T.bool.isRequired
     })
-  }).isRequired
+  }).isRequired,
+  saveForm: T.func.isRequired
 }
 
 export {

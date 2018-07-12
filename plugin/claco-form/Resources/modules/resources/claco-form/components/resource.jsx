@@ -8,7 +8,6 @@ import {now} from '#/main/core/scaffolding/date'
 import {url} from '#/main/app/api'
 import {trans} from '#/main/core/translation'
 import {RoutedPageContent} from '#/main/core/layout/router/components/page'
-import {select as formSelect} from '#/main/core/data/form/selectors'
 import {actions as formActions} from '#/main/core/data/form/actions'
 import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
 
@@ -43,13 +42,6 @@ function getHome(type) {
 
 const Resource = props =>
   <ResourcePageContainer
-    editor={{
-      path: '/edit',
-      save: {
-        disabled: !props.saveEnabled,
-        action: () => props.saveForm(props.clacoForm.id)
-      }
-    }}
     customActions={[
       {
         type: 'link',
@@ -171,9 +163,7 @@ Resource.propTypes = {
   canAddEntry: T.bool.isRequired,
   canSearchEntry: T.bool.isRequired,
   defaultHome: T.string.isRequired,
-  saveEnabled: T.bool.isRequired,
   resetForm: T.func.isRequired,
-  saveForm: T.func.isRequired,
   openEntryForm: T.func.isRequired,
   resetEntryForm: T.func.isRequired,
   loadEntryUser: T.func.isRequired,
@@ -187,15 +177,11 @@ const ClacoFormResource = connect(
     canEdit: select.canAdministrate(state),
     canAddEntry: select.canAddEntry(state),
     canSearchEntry: select.canSearchEntry(state),
-    defaultHome: select.getParam(state, 'default_home'),
-    saveEnabled: formSelect.saveEnabled(formSelect.form(state, 'clacoFormForm'))
+    defaultHome: select.getParam(state, 'default_home')
   }),
   (dispatch) => ({
     resetForm(formData) {
       dispatch(formActions.resetForm('clacoFormForm', formData))
-    },
-    saveForm(id) {
-      dispatch(formActions.saveForm('clacoFormForm', ['apiv2_clacoform_update', {id: id}]))
     },
     openEntryForm(id, clacoFormId, fields = []) {
       const defaultValue = {

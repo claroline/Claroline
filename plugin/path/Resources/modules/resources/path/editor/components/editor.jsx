@@ -9,6 +9,7 @@ import {MODAL_RESOURCE_EXPLORER} from '#/main/core/resource/modals/explorer'
 import {Routes} from '#/main/app/router'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
+import {actions as formActions} from '#/main/core/data/form/actions'
 
 import {select as editorSelect} from '#/plugin/path/resources/path/editor/selectors'
 import {actions} from '#/plugin/path/resources/path/editor/actions'
@@ -63,7 +64,7 @@ const EditorComponent = props =>
           path: '/edit/parameters',
           exact: true,
           render: () => {
-            const Parameters = <ParametersForm path={props.path} />
+            const Parameters = <ParametersForm path={props.path} saveForm={() => props.saveForm(props.path.id)}/>
 
             return Parameters
           }
@@ -98,6 +99,7 @@ const EditorComponent = props =>
                   removeSecondaryResource={props.removeSecondaryResource}
                   updateSecondaryResourceInheritance={props.updateSecondaryResourceInheritance}
                   removeInheritedResource={props.removeInheritedResource}
+                  saveForm={() => props.saveForm(props.path.id)}
                 />
               </PathCurrent>
             )
@@ -126,7 +128,8 @@ EditorComponent.propTypes = {
   updateSecondaryResourceInheritance: T.func.isRequired,
   removeInheritedResource: T.func.isRequired,
   copyStep: T.func.isRequired,
-  pasteStep: T.func.isRequired
+  pasteStep: T.func.isRequired,
+  saveForm: T.func.isRequired
 }
 
 // todo merge resources pickers
@@ -189,7 +192,8 @@ const Editor = connect(
     },
     removeInheritedResource(stepId, id) {
       dispatch(actions.removeInheritedResources(stepId, [id]))
-    }
+    },
+    saveForm: (pathId) => dispatch(formActions.saveForm('pathForm', ['apiv2_path_update', {id: pathId}]))
   })
 )(EditorComponent)
 

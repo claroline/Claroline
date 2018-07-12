@@ -76,7 +76,7 @@ class ClacoFormSerializer
             'id' => $clacoForm->getUuid(),
             'autoId' => $clacoForm->getId(),
             'template' => $clacoForm->getTemplate(),
-            'details' => $clacoForm->getDetails(),
+            'details' => $clacoForm->getDetails() ? $clacoForm->getDetails() : new \stdClass(),
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {

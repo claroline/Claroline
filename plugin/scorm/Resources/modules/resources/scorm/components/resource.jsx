@@ -4,7 +4,6 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {select as formSelect} from '#/main/core/data/form/selectors'
 import {actions as formActions} from '#/main/core/data/form/actions'
 import {hasPermission} from '#/main/core/resource/permissions'
 import {RoutedPageContent} from '#/main/core/layout/router/components/page'
@@ -18,13 +17,6 @@ import {Results} from '#/plugin/scorm/resources/scorm/player/components/results'
 
 const Resource = props =>
   <ResourcePageContainer
-    editor={{
-      path: '/edit',
-      save: {
-        disabled: !props.saveEnabled,
-        action: () => props.saveForm(props.scorm.id)
-      }
-    }}
     customActions={[
       {
         type: 'link',
@@ -71,23 +63,17 @@ const Resource = props =>
 Resource.propTypes = {
   scorm: T.shape(ScormType.propTypes),
   editable: T.bool.isRequired,
-  saveEnabled: T.bool.isRequired,
-  resetForm: T.func.isRequired,
-  saveForm: T.func.isRequired
+  resetForm: T.func.isRequired
 }
 
 const ScormResource = connect(
   (state) => ({
     scorm: select.scorm(state),
-    editable: hasPermission('edit', resourceSelect.resourceNode(state)),
-    saveEnabled: formSelect.saveEnabled(formSelect.form(state, 'scormForm'))
+    editable: hasPermission('edit', resourceSelect.resourceNode(state))
   }),
   (dispatch) => ({
     resetForm(formData) {
       dispatch(formActions.resetForm('scormForm', formData))
-    },
-    saveForm(id) {
-      dispatch(formActions.saveForm('scormForm', ['apiv2_scorm_update', {scorm: id}]))
     }
   })
 )(Resource)

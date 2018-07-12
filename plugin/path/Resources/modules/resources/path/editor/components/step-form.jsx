@@ -130,6 +130,16 @@ const StepForm = props =>
     displayLevel={2}
     name="pathForm"
     dataPart={props.stepPath}
+    buttons={true}
+    save={{
+      type: 'callback',
+      callback: () => props.saveForm()
+    }}
+    cancel={{
+      type: 'link',
+      target: '/',
+      exact: true
+    }}
     sections={[
       {
         title: trans('information'),
@@ -228,7 +238,8 @@ implementPropTypes(StepForm, StepTypes, {
   pickSecondaryResources: T.func.isRequired,
   removeSecondaryResource: T.func.isRequired,
   updateSecondaryResourceInheritance: T.func.isRequired,
-  removeInheritedResource: T.func.isRequired
+  removeInheritedResource: T.func.isRequired,
+  saveForm: T.func.isRequired
 }, {
   customNumbering: false
 })

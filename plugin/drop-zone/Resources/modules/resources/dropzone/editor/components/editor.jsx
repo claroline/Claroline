@@ -16,6 +16,16 @@ const EditorComponent = props =>
     <FormContainer
       level={3}
       name="dropzoneForm"
+      buttons={true}
+      save={{
+        type: 'callback',
+        callback: () => props.saveForm(props.dropzone.id)
+      }}
+      cancel={{
+        type: 'link',
+        target: '/',
+        exact: true
+      }}
       sections={[
         {
           title: trans('general', {}, 'platform'),
@@ -250,7 +260,8 @@ const EditorComponent = props =>
 
 EditorComponent.propTypes = {
   dropzone: T.shape(DropzoneType.propTypes),
-  updateProp: T.func.isRequired
+  updateProp: T.func.isRequired,
+  saveForm: T.func.isRequired
 }
 
 const Editor = connect(
@@ -260,6 +271,9 @@ const Editor = connect(
   dispatch => ({
     updateProp(propName, propValue) {
       dispatch(formActions.updateProp('dropzoneForm', propName, propValue))
+    },
+    saveForm(dropzoneId) {
+      dispatch(formActions.saveForm('dropzoneForm', ['claro_dropzone_update', {id: dropzoneId}]))
     }
   })
 )(EditorComponent)
