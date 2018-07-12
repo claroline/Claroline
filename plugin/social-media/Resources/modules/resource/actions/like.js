@@ -10,11 +10,11 @@ const action = (resourceNodes) => ({ // todo collection
   icon: 'fa fa-fw fa-thumbs-o-up',
   label: trans('like', {}, 'actions'),
   displayed: isAuthenticated(),
-  subscript: 1 === resourceNodes.length && {
+  subscript: 1 === resourceNodes.length ? {
     type: 'label',
     status: 'primary',
     value: number(get(resourceNodes[0], 'social.likes') || 0, true)
-  },
+  } : undefined,
   request: {
     url: ['icap_socialmedia_like', {}],
     request: {

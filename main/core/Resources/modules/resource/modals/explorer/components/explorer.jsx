@@ -14,16 +14,16 @@ import {
   actions,
   selectors as explorerSelectors
 } from '#/main/core/resource/explorer/store'
-import {selectors} from '#/main/core/resource/explorer/store'
+import {selectors} from '#/main/core/resource/modals/explorer/store'
 
 const ExplorerModalComponent = props => {
   const selectAction = props.selectAction(props.selected)
 
   return (
     <Modal
-      {...omit(props, 'current', 'primaryAction', 'actions', 'confirmText', 'selected', 'selectAction')}
-      subtitle={props.current && props.current.name}
-      onEntering={() => props.initialize(props.root, props.current)}
+      {...omit(props, 'current', 'currentDirectory', 'primaryAction', 'actions', 'confirmText', 'selected', 'selectAction', 'initialize', 'filters')}
+      subtitle={props.currentDirectory && props.currentDirectory.name}
+      onEntering={() => props.initialize(props.root, props.current, props.filters)}
       bsSize="lg"
     >
       <ResourceExplorer
@@ -48,6 +48,9 @@ ExplorerModalComponent.propTypes = {
   root: T.shape(
     ResourceNodeTypes.propTypes
   ),
+  currentDirectory: T.shape(
+    ResourceNodeTypes.propTypes
+  ),
   current: T.shape(
     ResourceNodeTypes.propTypes
   ),
@@ -56,6 +59,7 @@ ExplorerModalComponent.propTypes = {
   selectAction: T.func.isRequired, // action generator for the select button
   confirmText: T.string, // todo : deprecated. kept for retro compatibility. Use the selectAction label instead
   selected: T.array.isRequired,
+  filters: T.array,
   initialize: T.func.isRequired,
   fadeModal: T.func.isRequired
 }
@@ -63,17 +67,19 @@ ExplorerModalComponent.propTypes = {
 ExplorerModalComponent.defaultProps = {
   icon: 'fa fa-fw fa-folder',
   title: trans('resource_explorer', {}, 'resource'),
-  confirmText: trans('select', {}, 'actions')
+  confirmText: trans('select', {}, 'actions'),
+  filters: [],
+  current: null
 }
 
 const ExplorerModal = connect(
   (state) => ({
-    current: explorerSelectors.current(explorerSelectors.explorer(state, selectors.STORE_NAME)),
+    currentDirectory: explorerSelectors.current(explorerSelectors.explorer(state, selectors.STORE_NAME)),
     selected: explorerSelectors.selectedFull(explorerSelectors.explorer(state, selectors.STORE_NAME))
   }),
   (dispatch) => ({
-    initialize(root, current) {
-      dispatch(actions.initialize(selectors.STORE_NAME, root, current))
+    initialize(root, current, filters) {
+      dispatch(actions.initialize(selectors.STORE_NAME, root, current, filters))
     }
   })
 )(ExplorerModalComponent)

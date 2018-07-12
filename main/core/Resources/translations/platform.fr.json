@@ -1143,6 +1143,7 @@
     "select_contacts_title": "Sélectionnez les destinataires",
     "select_groups_for_registration_to_workspace": "Choisissez les groupes à inscrire",
     "select_roles_to_assign": "Sélectionnez les rôles à attribuer",
+    "select_target_directory": "Sélectionnez le répertoire de destination",
     "select_users_for_registration_to_workspace": "Choisissez les utilisateurs à inscrire",
     "select_users_to_add_to_your_contacts": "Sélectionnez des utilisateurs à ajouter à vos contacts",
     "select_workspace_to_link": "Choisissez un espace d'activités à lier",

@@ -449,7 +449,7 @@ class ResourceNode
      *
      * @deprecated
      */
-    public function setIcon(ResourceIcon $icon)
+    public function setIcon(ResourceIcon $icon = null)
     {
         $this->icon = $icon;
     }

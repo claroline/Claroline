@@ -11,20 +11,25 @@
 
 namespace Claroline\ScormBundle\Repository;
 
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
 
 class ScormRepository extends EntityRepository
 {
-    public function getNbScormWithHashName($hashName)
+    public function findNbScormWithSameSource($hashName, Workspace $workspace)
     {
         $dql = '
             SELECT COUNT(s.id)
             FROM Claroline\ScormBundle\Entity\Scorm s
+            JOIN s.resourceNode r
+            JOIN r.workspace w
             WHERE s.hashName = :hashName
+            AND w = :workspace
         ';
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('hashName', $hashName);
+        $query->setParameter('workspace', $workspace);
 
         return $query->getSingleScalarResult();
     }

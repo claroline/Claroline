@@ -172,7 +172,10 @@ const Editor = connect(
       dispatch(modalActions.showModal(MODAL_RESOURCE_EXPLORER, {
         title: title,
         current: current,
-        handleSelect: callback
+        selectAction: (selected) => ({
+          type: 'callback',
+          callback: () => callback(selected)
+        })
       }))
     },
     removePrimaryResource(stepId) {

@@ -1,6 +1,7 @@
 import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 import uniq from 'lodash/uniq'
+import uniqBy from 'lodash/uniqBy'
 
 import {param} from '#/main/app/config'
 import {getApps} from '#/main/app/plugins'
@@ -70,7 +71,7 @@ function getActions(resourceNodes, withDefault = false) {
           && !!resourceNodes.find(resourceNode => hasPermission(action.permission, resourceNode))
         )
 
-      return accumulator.concat(typeActions)
+      return uniqBy(accumulator.concat(typeActions), 'name')
     }, [])
 
   return loadActions(resourceNodes, collectionActions)

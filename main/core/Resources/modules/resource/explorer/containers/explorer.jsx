@@ -57,9 +57,7 @@ const ResourceExplorer = connect(
   }),
   (dispatch, ownProps) => ({
     changeDirectory(directory) {
-      dispatch(actions.changeDirectory(ownProps.name, directory))
-      // mark directory has opened
-      dispatch(actions.toggleDirectoryOpen(ownProps.name, directory, true))
+      dispatch(actions.openDirectory(ownProps.name, directory))
     },
     toggleDirectoryOpen(directory, opened) {
       dispatch(actions.toggleDirectoryOpen(ownProps.name, directory, opened))

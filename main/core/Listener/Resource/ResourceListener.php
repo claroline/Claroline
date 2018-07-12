@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\Crud;
+use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Exception\ResourceAccessException;
@@ -14,6 +15,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @DI\Service()
@@ -29,8 +31,17 @@ class ResourceListener
     /** @var ResourceLifecycleManager */
     private $resourceLifecycleManager;
 
+    /** @var RightsManager */
+    private $resourceRightsManager;
+
     /** @var Crud */
     private $crud;
+
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
+    /** @var ResourceNodeSerializer */
+    private $resourceNodeSerializer;
 
     /**
      * ResourceListener constructor.
@@ -40,24 +51,35 @@ class ResourceListener
      *     "resourceManager"          = @DI\Inject("claroline.manager.resource_manager"),
      *     "resourceLifecycleManager" = @DI\Inject("claroline.manager.resource_lifecycle"),
      *     "resourceRightsManager"    = @DI\Inject("claroline.manager.rights_manager"),
-     *     "crud"                     = @DI\Inject("claroline.api.crud")
+     *     "crud"                     = @DI\Inject("claroline.api.crud"),
+     *     "tokenStorage"             = @DI\Inject("security.token_storage"),
+     *     "resourceSerializer"       = @DI\Inject("claroline.serializer.resource_node")
      * })
      *
-     * @param ResourceNodeManager $resourceNodeManager
-     * @param ResourceManager     $resourceManager
+     * @param ResourceNodeManager      $resourceNodeManager
+     * @param ResourceManager          $resourceManager
+     * @param ResourceLifecycleManager $resourceLifecycleManager
+     * @param RightsManager            $resourceRightsManager
+     * @param Crud                     $crud
+     * @param TokenStorageInterface    $tokenStorage
+     * @param ResourceNodeSerializer   $resourceSerializer
      */
     public function __construct(
         ResourceNodeManager $resourceNodeManager,
         ResourceManager $resourceManager,
         ResourceLifecycleManager $resourceLifecycleManager,
         RightsManager $resourceRightsManager,
-        Crud $crud
+        Crud $crud,
+        TokenStorageInterface $tokenStorage,
+        ResourceNodeSerializer $resourceSerializer
     ) {
         $this->resourceNodeManager = $resourceNodeManager;
         $this->resourceManager = $resourceManager;
         $this->resourceLifecycleManager = $resourceLifecycleManager;
-        $this->crud = $crud;
         $this->resourceRightsManager = $resourceRightsManager;
+        $this->crud = $crud;
+        $this->tokenStorage = $tokenStorage;
+        $this->resourceNodeSerializer = $resourceSerializer;
     }
 
     /**
@@ -148,6 +170,53 @@ class ResourceListener
     public function onDelete(ResourceActionEvent $event)
     {
         $this->resourceLifecycleManager->delete($event->getResourceNode());
+    }
+
+    /**
+     * @DI\Observe("resource.copy")
+     *
+     * @param ResourceActionEvent $event
+     */
+    public function onCopy(ResourceActionEvent $event)
+    {
+        $resourceNode = $event->getResourceNode();
+        $data = $event->getData();
+        $parent = isset($data['destination']['autoId']) && isset($data['destination']['meta']['type']) && 'directory' === $data['destination']['meta']['type'] ?
+            $this->resourceManager->getById($data['destination']['autoId']) :
+            null;
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if (!empty($parent) && 'anon.' !== $user) {
+            $newResource = $this->resourceManager->copy($resourceNode, $parent, $user);
+            $event->setResponse(
+                new JsonResponse($this->resourceNodeSerializer->serialize($newResource->getResourceNode()), 200)
+            );
+        } else {
+            $event->setResponse(new JsonResponse(null, 500));
+        }
+    }
+
+    /**
+     * @DI\Observe("resource.move")
+     *
+     * @param ResourceActionEvent $event
+     */
+    public function onMove(ResourceActionEvent $event)
+    {
+        $resourceNode = $event->getResourceNode();
+        $data = $event->getData();
+        $parent = isset($data['destination']['autoId']) && isset($data['destination']['meta']['type']) && 'directory' === $data['destination']['meta']['type'] ?
+            $this->resourceManager->getById($data['destination']['autoId']) :
+            null;
+
+        if (!empty($parent)) {
+            $movedResource = $this->resourceManager->move($resourceNode, $parent);
+            $event->setResponse(
+                new JsonResponse($this->resourceNodeSerializer->serialize($movedResource), 200)
+            );
+        } else {
+            $event->setResponse(new JsonResponse(null, 500));
+        }
     }
 
     /**

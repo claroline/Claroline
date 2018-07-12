@@ -10,11 +10,11 @@ const action = (resourceNodes) => ({ // todo collection
   icon: 'fa fa-fw fa-flip-vertical fa-thumbs-o-up',
   label: trans('unlike', {}, 'actions'),
   displayed: isAuthenticated() && false, // todo find the correct way to display it
-  subscript: 1 === resourceNodes.length && {
+  subscript: 1 === resourceNodes.length ? {
     type: 'label',
     status: 'primary',
     value: number(get(resourceNodes[0], 'social.likes') || 0, true)
-  },
+  } : undefined,
   request: {
     url: ['icap_socialmedia_unlike', {}],
     request: {

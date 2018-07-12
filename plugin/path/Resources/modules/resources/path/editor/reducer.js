@@ -4,7 +4,6 @@ import {trans} from '#/main/core/translation'
 import {makeId} from '#/main/core/scaffolding/id'
 import {makeReducer} from '#/main/core/scaffolding/reducer'
 import {makeFormReducer} from '#/main/core/data/form/reducer'
-import {makeListReducer} from '#/main/core/data/list/reducer'
 
 import {
   getStepPath,
@@ -238,8 +237,7 @@ const reducer = {
         return copy
       }
     })
-  }),
-  resourcesPicker: makeListReducer('resourcesPicker')
+  })
 }
 
 export {

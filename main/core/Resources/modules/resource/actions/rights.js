@@ -40,11 +40,11 @@ const action = (resourceNodes) => {
     modal: [MODAL_RESOURCE_RIGHTS, {
       resourceNode: 1 === resourceNodes.length && resourceNodes[0]
     }],
-    subscript: customRules && {
+    subscript: customRules ? {
       type: 'text',
       status: 'danger',
       value: (<span className="fa fa-asterisk" />)
-    }
+    } : undefined
   }
 }
 

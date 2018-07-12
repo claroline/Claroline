@@ -1,5 +1,6 @@
 import {API_REQUEST, url} from '#/main/app/api'
 import {makeInstanceActionCreator} from '#/main/app/store/actions'
+import {actions as listActions} from '#/main/core/data/list/actions'
 
 // actions
 export const EXPLORER_INITIALIZE = 'EXPLORER_INITIALIZE'
@@ -10,11 +11,29 @@ export const DIRECTORIES_LOAD = 'DIRECTORIES_LOAD'
 // actions creators
 export const actions = {}
 
-actions.initialize = (explorerName, root = null, current = null) => ({
-  type: EXPLORER_INITIALIZE+'/'+explorerName,
-  root: root,
-  current: current || root
-})
+actions.initialize = (explorerName, root = null, current = null, filters = []) => (dispatch) => {
+  dispatch({
+    type: EXPLORER_INITIALIZE+'/'+explorerName,
+    root: root,
+    current: current || root
+  })
+
+  if (filters && filters.length > 0) {
+    filters.forEach(f => {
+      const property = Object.keys(f)[0]
+      dispatch(listActions.addFilter(explorerName+'.resources', property, f[property]))
+    })
+  }
+}
+
+actions.openDirectory = (explorerName, directory) => (dispatch) => {
+  // clear current selection
+  dispatch(listActions.resetSelect(explorerName+'.resources'))
+
+  dispatch(actions.changeDirectory(explorerName, directory))
+  // mark directory has opened
+  dispatch(actions.toggleDirectoryOpen(explorerName, directory, true))
+}
 
 actions.changeDirectory = makeInstanceActionCreator(DIRECTORY_CHANGE, 'directory')
 actions.setDirectoryOpen = makeInstanceActionCreator(DIRECTORY_TOGGLE_OPEN, 'directory', 'opened')

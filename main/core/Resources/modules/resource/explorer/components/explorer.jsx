@@ -78,6 +78,12 @@ const ResourceExplorer = props => {
             type: 'date',
             alias: 'modificationDate',
             displayed: true
+          }, {
+            name: 'resourceType',
+            label: trans('type'),
+            type: 'string',
+            displayable: false,
+            filterable: true
           }
         ]}
         actions={props.actions}

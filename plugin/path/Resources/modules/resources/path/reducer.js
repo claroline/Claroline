@@ -31,7 +31,6 @@ const reducer = {
     [STEP_DISABLE_NAVIGATION]: () => false
   }),
   pathForm: editorReducer.pathForm,
-  resourcesPicker: editorReducer.resourcesPicker,
   path: makeReducer({}, {
     // replaces path data after success updates
     [FORM_SUBMIT_SUCCESS+'/pathForm']: (state, action) => action.updatedData,

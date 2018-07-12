@@ -24,6 +24,7 @@ use Claroline\ScormBundle\Entity\Scorm;
 use Claroline\ScormBundle\Manager\ScormManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -34,6 +35,8 @@ class ScormListener
 {
     /** @var string */
     private $filesDir;
+    /** @var Filesystem */
+    private $fileSystem;
     /** @var ObjectManager */
     private $om;
     /** @var ResourceEvaluationManager */
@@ -56,6 +59,7 @@ class ScormListener
     /**
      * @DI\InjectParams({
      *     "filesDir"            = @DI\Inject("%claroline.param.files_directory%"),
+     *     "fileSystem"          = @DI\Inject("filesystem"),
      *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
      *     "resourceEvalManager" = @DI\Inject("claroline.manager.resource_evaluation_manager"),
      *     "scormManager"        = @DI\Inject("claroline.manager.scorm_manager"),
@@ -66,6 +70,7 @@ class ScormListener
      * })
      *
      * @param string                    $filesDir
+     * @param Filesystem                $fileSystem
      * @param ObjectManager             $om
      * @param ScormManager              $scormManager
      * @param SerializerProvider        $serializer
@@ -76,6 +81,7 @@ class ScormListener
      */
     public function __construct(
         $filesDir,
+        Filesystem $fileSystem,
         ObjectManager $om,
         ResourceEvaluationManager $resourceEvalManager,
         ScormManager $scormManager,
@@ -85,6 +91,7 @@ class ScormListener
         $uploadDir
     ) {
         $this->filesDir = $filesDir;
+        $this->fileSystem = $fileSystem;
         $this->om = $om;
         $this->resourceEvalManager = $resourceEvalManager;
         $this->scormManager = $scormManager;
@@ -92,8 +99,6 @@ class ScormListener
         $this->templating = $templating;
         $this->tokenStorage = $tokenStorage;
         $this->uploadDir = $uploadDir;
-
-        $this->scormResourcesPath = $uploadDir.DIRECTORY_SEPARATOR.'scorm'.DIRECTORY_SEPARATOR;
 
         $this->scoTrackingRepo = $om->getRepository('ClarolineScormBundle:ScoTracking');
     }
@@ -161,12 +166,13 @@ class ScormListener
         $scorm = $event->getResource();
         $workspace = $scorm->getResourceNode()->getWorkspace();
         $hashName = $scorm->getHashName();
-        $scormArchiveFile = $this->filesDir.$ds.'scorm'.$ds.$workspace->getUuid().$ds.$hashName;
-        $scormResourcesPath = $this->scormResourcesPath.$hashName;
 
-        $nbScorm = (int) ($this->scormResourceRepo->getNbScormWithHashName($hashName));
+        $nbScorm = (int) ($this->scormResourceRepo->findNbScormWithSameSource($hashName, $workspace));
 
         if (1 === $nbScorm) {
+            $scormArchiveFile = $this->filesDir.$ds.'scorm'.$ds.$workspace->getUuid().$ds.$hashName;
+            $scormResourcesPath = $this->uploadDir.$ds.'scorm'.$ds.$workspace->getUuid().$ds.$hashName;
+
             if (file_exists($scormArchiveFile)) {
                 $event->setFiles([$scormArchiveFile]);
             }
@@ -189,8 +195,11 @@ class ScormListener
     public function onCopy(CopyResourceEvent $event)
     {
         $resource = $event->getResource();
+        $workspace = $resource->getResourceNode()->getWorkspace();
+        $newWorkspace = $event->getCopiedNode()->getWorkspace();
         $copy = new Scorm();
-        $copy->setHashName($resource->getHashName());
+        $hashName = $resource->getHashName();
+        $copy->setHashName($hashName);
         $copy->setName($resource->getName());
         $copy->setVersion($resource->getVersion());
         $copy->setRatio($resource->getRatio());
@@ -201,6 +210,22 @@ class ScormListener
         foreach ($scos as $sco) {
             if (is_null($sco->getScoParent())) {
                 $this->copySco($sco, $copy);
+            }
+        }
+        if ($workspace->getId() !== $newWorkspace->getId()) {
+            $ds = DIRECTORY_SEPARATOR;
+            /* Copies archive file & unzipped files */
+            if ($this->fileSystem->exists($this->filesDir.$ds.'scorm'.$ds.$workspace->getUuid().$ds.$hashName)) {
+                $this->fileSystem->copy(
+                    $this->filesDir.$ds.'scorm'.$ds.$workspace->getUuid().$ds.$hashName,
+                    $this->filesDir.$ds.'scorm'.$ds.$newWorkspace->getUuid().$ds.$hashName
+                );
+            }
+            if ($this->fileSystem->exists($this->uploadDir.$ds.'scorm'.$ds.$workspace->getUuid().$ds.$hashName)) {
+                $this->fileSystem->mirror(
+                    $this->uploadDir.$ds.'scorm'.$ds.$workspace->getUuid().$ds.$hashName,
+                    $this->uploadDir.$ds.'scorm'.$ds.$newWorkspace->getUuid().$ds.$hashName
+                );
             }
         }
 
