@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 
 import {trans} from '#/main/core/translation'
 import {asset} from '#/main/core/scaffolding/asset'
@@ -14,6 +15,9 @@ import {UserMicro} from '#/main/core/user/components/micro'
 const ResourceCard = props =>
   <DataCard
     {...props}
+    className={classes({
+      'data-card-muted': !props.data.meta.published
+    })}
     id={props.data.id}
     poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
     icon={<ResourceIcon className="icon" mimeType={props.data.meta.mimeType} />}

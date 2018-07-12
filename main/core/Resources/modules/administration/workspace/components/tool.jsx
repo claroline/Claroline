@@ -3,8 +3,8 @@ import React from 'react'
 import {trans} from '#/main/core/translation'
 import {TabbedPageContainer} from '#/main/core/layout/tabs'
 
-import {WorkspaceTab, WorkspaceTabActions} from '#/main/core/administration/workspace/workspace/components/workspace-tab.jsx'
-import {ParametersTab, ParametersTabActions} from '#/main/core/administration/workspace/parameters/components/parameters-tab.jsx'
+import {WorkspaceTab, WorkspaceTabActions} from '#/main/core/administration/workspace/workspace/components/workspace-tab'
+import {ParametersTab} from '#/main/core/administration/workspace/parameters/components/parameters-tab'
 
 const Tool = () =>
   <TabbedPageContainer
@@ -27,7 +27,6 @@ const Tool = () =>
         onlyIcon: true,
         //only for admin
         displayed: true,
-        actions: ParametersTabActions,
         content: ParametersTab
       }
     ]}

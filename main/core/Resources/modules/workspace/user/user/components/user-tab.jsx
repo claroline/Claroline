@@ -9,10 +9,9 @@ import {currentUser} from '#/main/core/user/current'
 import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {PageActions, PageAction} from '#/main/core/layout/page'
-import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
 
-import {User}    from '#/main/core/administration/user/user/components/user.jsx'
-import {Users}   from '#/main/core/workspace/user/user/components/users.jsx'
+import {User}    from '#/main/core/administration/user/user/components/user'
+import {Users}   from '#/main/core/workspace/user/user/components/users'
 
 import {actions} from '#/main/core/workspace/user/user/actions'
 import {ADMIN, getPermissionLevel} from  '#/main/core/workspace/user/restrictions'
@@ -20,32 +19,10 @@ import {select}  from '#/main/core/workspace/user/selectors'
 import {getModalDefinition} from '#/main/core/workspace/user/role/modal'
 
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
-import {UserList} from '#/main/core/administration/user/user/components/user-list.jsx'
+import {UserList} from '#/main/core/administration/user/user/components/user-list'
 
 const UserTabActionsComponent = props =>
   <PageActions>
-    {getPermissionLevel(currentUser(), props.workspace) === ADMIN &&
-      <FormPageActionsContainer
-        formName="users.current"
-        target={(user, isNew) => isNew ?
-          ['apiv2_user_create'] :
-          ['apiv2_user_update', {id: user.id}]
-        }
-        opened={!!matchPath(props.location.pathname, {path: '/users/form'})}
-        open={{
-          type: 'link',
-          label: trans('create_user'),
-          target: '/users/form',
-          primary: false
-        }}
-        cancel={{
-          type: 'link',
-          target: '/users',
-          exact: true
-        }}
-      />
-    }
-
     {!matchPath(props.location.pathname, {path: '/users/form'}) &&
       <PageAction
         id="add-role"
@@ -54,6 +31,15 @@ const UserTabActionsComponent = props =>
         icon="fa fa-plus"
         callback={() => props.register(props.workspace)}
         primary={true}
+      />
+    }
+
+    {getPermissionLevel(currentUser(), props.workspace) === ADMIN &&
+      <PageAction
+        type="link"
+        icon="fa fa-pencil"
+        label={trans('create_user')}
+        target={trans('create_user')}
       />
     }
   </PageActions>

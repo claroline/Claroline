@@ -15,7 +15,7 @@ import {BlogOptions} from '#/plugin/blog/resources/blog/editor/components/blog-o
 import {actions as editorActions} from '#/plugin/blog/resources/blog/editor/store'
 import {actions as postActions} from '#/plugin/blog/resources/blog/post/store'
 import {actions} from '#/plugin/blog/resources/blog/store'
-import {constants} from '#/plugin/blog/resources/blog/constants.js'
+import {constants} from '#/plugin/blog/resources/blog/constants'
 import {hasPermission} from '#/main/core/resource/permissions'
 
 const PlayerComponent = props =>

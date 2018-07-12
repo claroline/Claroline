@@ -2,46 +2,24 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {t} from '#/main/core/translation'
-import {matchPath, Routes, withRouter} from '#/main/app/router'
+import {trans} from '#/main/core/translation'
+import {Routes} from '#/main/app/router'
+import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions'
 
-import {PageActions} from '#/main/core/layout/page/components/page-actions.jsx'
-import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
-
-import {Role}    from '#/main/core/administration/user/role/components/role.jsx'
-import {Roles}   from '#/main/core/administration/user/role/components/roles.jsx'
+import {Role}    from '#/main/core/administration/user/role/components/role'
+import {Roles}   from '#/main/core/administration/user/role/components/roles'
 import {actions} from '#/main/core/administration/user/role/actions'
 
-const RoleTabActionsComponent = props =>
+const RoleTabActions = () =>
   <PageActions>
-    <FormPageActionsContainer
-      formName="roles.current"
-      target={(role, isNew) => isNew ?
-        ['apiv2_role_create'] :
-        ['apiv2_role_update', {id: role.id}]
-      }
-      opened={!!matchPath(props.location.pathname, {path: '/roles/form'})}
-      open={{
-        type: 'link',
-        icon: 'fa fa-plus',
-        label: t('add_role'),
-        target: '/roles/form'
-      }}
-      cancel={{
-        type: 'link',
-        target: '/roles',
-        exact: true
-      }}
+    <PageAction
+      type="link"
+      icon="fa fa-plus"
+      label={trans('add_role')}
+      target="/roles/form"
+      primary={true}
     />
   </PageActions>
-
-RoleTabActionsComponent.propTypes = {
-  location: T.shape({
-    pathname: T.string
-  }).isRequired
-}
-
-const RoleTabActions = withRouter(RoleTabActionsComponent)
 
 const RoleTabComponent = props =>
   <Routes

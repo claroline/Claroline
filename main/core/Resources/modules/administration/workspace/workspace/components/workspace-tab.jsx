@@ -2,46 +2,24 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {t} from '#/main/core/translation'
-import {matchPath, Routes, withRouter} from '#/main/app/router'
+import {trans} from '#/main/core/translation'
+import {Routes} from '#/main/app/router'
+import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions'
 
-import {PageActions} from '#/main/core/layout/page/components/page-actions.jsx'
-import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
-
-import {Workspace}  from '#/main/core/administration/workspace/workspace/components/workspace.jsx'
-import {Workspaces} from '#/main/core/administration/workspace/workspace/components/workspaces.jsx'
+import {Workspace}  from '#/main/core/administration/workspace/workspace/components/workspace'
+import {Workspaces} from '#/main/core/administration/workspace/workspace/components/workspaces'
 import {actions}    from '#/main/core/administration/workspace/workspace/actions'
 
-const WorkspaceTabActionsComponent = props =>
+const WorkspaceTabActions = () =>
   <PageActions>
-    <FormPageActionsContainer
-      formName="workspaces.current"
-      target={(workspace, isNew) => isNew ?
-        ['apiv2_workspace_create'] :
-        ['apiv2_workspace_update', {id: workspace.id}]
-      }
-      opened={!!matchPath(props.location.pathname, {path: '/workspaces/form'})}
-      open={{
-        type: 'link',
-        icon: 'fa fa-plus',
-        label: t('add_workspace'),
-        target: '/workspaces/form'
-      }}
-      cancel={{
-        type: 'link',
-        target: '/workspaces',
-        exact: true
-      }}
+    <PageAction
+      type="link"
+      icon="fa fa-plus"
+      label={trans('add_workspace')}
+      target="/workspaces/form"
+      primary={true}
     />
   </PageActions>
-
-WorkspaceTabActionsComponent.propTypes = {
-  location: T.shape({
-    pathname: T.string
-  }).isRequired
-}
-
-const WorkspaceTabActions = withRouter(WorkspaceTabActionsComponent)
 
 const WorkspaceTabComponent = props =>
   <Routes

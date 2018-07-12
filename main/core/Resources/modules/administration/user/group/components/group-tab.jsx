@@ -2,41 +2,24 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {t} from '#/main/core/translation'
-import {matchPath, Routes, withRouter} from '#/main/app/router'
+import {trans} from '#/main/core/translation'
+import {Routes} from '#/main/app/router'
+import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions'
 
-import {PageActions} from '#/main/core/layout/page/components/page-actions.jsx'
-import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
-
-import {Group}   from '#/main/core/administration/user/group/components/group.jsx'
-import {Groups}  from '#/main/core/administration/user/group/components/groups.jsx'
+import {Group}   from '#/main/core/administration/user/group/components/group'
+import {Groups}  from '#/main/core/administration/user/group/components/groups'
 import {actions} from '#/main/core/administration/user/group/actions'
 
-const GroupTabActionsComponent = props =>
+const GroupTabActions = () =>
   <PageActions>
-    <FormPageActionsContainer
-      formName="groups.current"
-      target={(group, isNew) => isNew ?
-        ['apiv2_group_create'] :
-        ['apiv2_group_update', {id: group.id}]
-      }
-      opened={!!matchPath(props.location.pathname, {path: '/groups/form'})}
-      open={{
-        type: 'link',
-        icon: 'fa fa-plus',
-        label: t('add_group'),
-        target: '/groups/form'
-      }}
-      cancel={{
-        type: 'link',
-        target: '/groups',
-        exact: true
-      }}
+    <PageAction
+      type="link"
+      icon="fa fa-plus"
+      label={trans('add_group')}
+      target="/groups/form"
+      primary={true}
     />
   </PageActions>
-
-
-const GroupTabActions = withRouter(GroupTabActionsComponent)
 
 const GroupTabComponent = props =>
   <Routes

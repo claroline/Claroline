@@ -3,9 +3,9 @@ import React from 'react'
 import {trans} from '#/main/core/translation'
 import {TabbedPageContainer} from '#/main/core/layout/tabs'
 
-import {Contacts} from '#/main/core/user/contact/components/contacts.jsx'
-import {VisibleUsers} from '#/main/core/user/contact/components/visible-users.jsx'
-import {Parameters, ParametersActions} from '#/main/core/user/contact/components/parameters.jsx'
+import {Contacts} from '#/main/core/user/contact/components/contacts'
+import {VisibleUsers} from '#/main/core/user/contact/components/visible-users'
+import {Parameters} from '#/main/core/user/contact/components/parameters'
 
 const Tool = () =>
   <TabbedPageContainer
@@ -27,7 +27,6 @@ const Tool = () =>
         title: trans('parameters'),
         path: '/parameters',
         onlyIcon: true,
-        actions: ParametersActions,
         content: Parameters
       }
     ]}

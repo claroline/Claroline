@@ -2,11 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {t} from '#/main/core/translation'
-
-import {PageActions} from '#/main/core/layout/page/components/page-actions.jsx'
-import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
-
+import {trans} from '#/main/core/translation'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 
@@ -17,15 +13,6 @@ import {ProfileFacet} from '#/main/core/administration/user/profile/components/f
 import {actions} from '#/main/core/administration/user/profile/actions'
 import {select} from '#/main/core/administration/user/profile/selectors'
 
-const ProfileTabActions = () =>
-  <PageActions>
-    <FormPageActionsContainer
-      formName={select.formName}
-      opened={true}
-      target={['apiv2_profile_update']}
-    />
-  </PageActions>
-
 const ProfileTabComponent = props =>
   <div className="row user-profile">
     <div className="user-profile-aside col-md-3">
@@ -35,7 +22,7 @@ const ProfileTabComponent = props =>
         actions={[
           {
             icon: 'fa fa-fw fa-trash-o',
-            label: t('delete'),
+            label: trans('delete'),
             displayed: (facet) => !facet.meta || !facet.meta.main,
             action: (facet) => props.removeFacet(facet.id),
             dangerous: true
@@ -49,7 +36,7 @@ const ProfileTabComponent = props =>
         onClick={props.addFacet}
       >
         <span className="fa fa-fw fa-plus" />
-        {t('profile_facet_add')}
+        {trans('profile_facet_add')}
       </button>
     </div>
 
@@ -88,8 +75,8 @@ const ProfileTab = connect(
       dispatch(
         modalActions.showModal(MODAL_CONFIRM, {
           icon: 'fa fa-fw fa-trash-o',
-          title: t('profile_remove_facet'),
-          question: t('profile_remove_facet_question'),
+          title: trans('profile_remove_facet'),
+          question: trans('profile_remove_facet_question'),
           dangerous: true,
           handleConfirm: () => dispatch(actions.removeFacet(id))
         })
@@ -99,6 +86,5 @@ const ProfileTab = connect(
 )(ProfileTabComponent)
 
 export {
-  ProfileTabActions,
   ProfileTab
 }

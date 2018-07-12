@@ -106,18 +106,6 @@ PrimaryResource.propTypes = {
   height: T.number
 }
 
-// temp
-// todo : replace by a better code later if we keep iFrame compatibility
-const AVAILABLE_EMBEDDED_RESOURCES = [
-  'text',
-  'innova_path',
-  'claroline_dropzone',
-  'ujm_exercise',
-  'claroline_web_resource',
-  'claroline_forum',
-  'claroline_scorm'
-]
-
 const SecondaryResources = props =>
   <div className={classes('step-secondary-resources', props.className)}>
     <h4 className="h3 h-first">En complément...</h4>
@@ -185,7 +173,7 @@ const Step = props =>
             </div>
           }
 
-          {props.primaryResource && (-1 !== AVAILABLE_EMBEDDED_RESOURCES.indexOf(props.primaryResource.meta.type)) &&
+          {props.primaryResource && (-1 !== constants.AVAILABLE_EMBEDDED_RESOURCES.indexOf(props.primaryResource.meta.type)) &&
             <EmbeddedResource
               className="step-primary-resource"
               resourceNode={props.primaryResource}
@@ -196,7 +184,7 @@ const Step = props =>
             />
           }
 
-          {props.primaryResource && (-1 === AVAILABLE_EMBEDDED_RESOURCES.indexOf(props.primaryResource.meta.type)) &&
+          {props.primaryResource && (-1 === constants.AVAILABLE_EMBEDDED_RESOURCES.indexOf(props.primaryResource.meta.type)) &&
             <PrimaryResource id={props.primaryResource.autoId} type={props.primaryResource.meta.type} height={props.display.height} />
           }
         </div>

@@ -2,47 +2,25 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {t} from '#/main/core/translation'
-import {matchPath, Routes, withRouter} from '#/main/app/router'
-
-import {PageActions} from '#/main/core/layout/page/components/page-actions.jsx'
-import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
+import {trans} from '#/main/core/translation'
+import {Routes} from '#/main/app/router'
+import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions'
 
 import {User}       from '#/main/core/administration/user/user/components/user.jsx'
 import {Users}      from '#/main/core/administration/user/user/components/users.jsx'
-import {UsersMerge} from '#/main/core/administration/user/user/components/users-merge.jsx'
+import {UsersMerge} from '#/main/core/administration/user/user/components/users-merge'
 import {actions}    from '#/main/core/administration/user/user/actions'
 
-const UserTabActionsComponent = props =>
-  !matchPath(props.location.pathname, {path: '/users/merge/:id1/:id2'}) && <PageActions>
-    <FormPageActionsContainer
-      formName="users.current"
-      target={(user, isNew) => isNew ?
-        ['apiv2_user_create'] :
-        ['apiv2_user_update', {id: user.id}]
-      }
-      opened={!!matchPath(props.location.pathname, {path: '/users/form'})}
-      open={{
-        type: 'link',
-        icon: 'fa fa-plus',
-        label: t('add_user'),
-        target: '/users/form'
-      }}
-      cancel={{
-        type: 'link',
-        target: '/users',
-        exact: true
-      }}
+const UserTabActions = () =>
+  <PageActions>
+    <PageAction
+      type="link"
+      icon="fa fa-plus"
+      label={trans('add_user')}
+      target="/users/form"
+      primary={true}
     />
   </PageActions>
-
-UserTabActionsComponent.propTypes = {
-  location: T.shape({
-    pathname: T.string
-  }).isRequired
-}
-
-const UserTabActions = withRouter(UserTabActionsComponent)
 
 const UserTabComponent = props =>
   <Routes

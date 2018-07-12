@@ -12,7 +12,7 @@ import {Moderation} from '#/plugin/blog/resources/blog/moderation/components/mod
 import {Player} from '#/plugin/blog/resources/blog/player/components/player.jsx'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {actions as toolbarActions} from '#/plugin/blog/resources/blog/toolbar/store'
-import {constants} from '#/plugin/blog/resources/blog/constants.js'
+import {constants} from '#/plugin/blog/resources/blog/constants'
 import {hasPermission} from '#/main/core/resource/permissions'
 
 const Blog = props =>
@@ -35,7 +35,7 @@ const Blog = props =>
         label: trans('show_overview'),
         target: '/',
         exact: true
-      },{
+      }, {
         type: 'link',
         icon: 'fa fa-fw fa-plus',
         displayed: props.canEdit || props.canPost,

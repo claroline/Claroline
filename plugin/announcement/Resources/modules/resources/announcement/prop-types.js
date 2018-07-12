@@ -10,9 +10,8 @@ const Announcement = {
       notificationDate: T.string
     }).isRequired,
     restrictions: T.shape({
-      visible: T.bool.isRequired,
-      visibleFrom: T.string,
-      visibleUntil: T.string
+      hidden: T.bool.isRequired,
+      dates: T.arrayOf(T.string)
     }).isRequired,
     roles: T.array
   },
@@ -25,9 +24,8 @@ const Announcement = {
       notificationDate: null
     },
     restrictions: {
-      visible: true,
-      visibleFrom: null,
-      visibleUntil: null
+      hidden: false,
+      dates: []
     },
     roles: []
   }

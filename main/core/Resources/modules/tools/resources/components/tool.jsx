@@ -7,7 +7,7 @@ import {Page} from '#/main/app/page/components/page'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {ResourceExplorer} from '#/main/core/resource/explorer/containers/explorer'
-import {getActions} from '#/main/core/resource/utils'
+import {getActions, getToolbar} from '#/main/core/resource/utils'
 import {hasPermission} from '#/main/core/resource/permissions'
 
 import {selectors as explorerSelectors} from '#/main/core/resource/explorer/store'
@@ -17,12 +17,12 @@ const Tool = props =>
   <Page
     title={trans('resources', {}, 'tools')}
     subtitle={props.current && props.current.name}
-    toolbar="add | edit rights publish unpublish | more"
+    toolbar={getToolbar('add')}
     actions={props.current && props.getActions([props.current])}
   >
     <ResourceExplorer
       name={selectors.STORE_NAME}
-      primaryAction={(resourceNode) => ({
+      primaryAction={(resourceNode) => ({ // todo : use resource default action
         type: 'url',
         label: trans('open', {}, 'actions'),
         disabled: !hasPermission('open', resourceNode),

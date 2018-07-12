@@ -21,6 +21,16 @@ const GroupForm = props =>
   <FormContainer
     level={3}
     name="groups.current"
+    buttons={true}
+    target={(group, isNew) => isNew ?
+      ['apiv2_group_create'] :
+      ['apiv2_group_update', {id: group.id}]
+    }
+    cancel={{
+      type: 'link',
+      target: '/groups',
+      exact: true
+    }}
     sections={[
       {
         title: t('general'),

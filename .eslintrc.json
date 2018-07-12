@@ -19,6 +19,11 @@
       "experimentalObjectRestSpread": true
     }
   },
+  "settings": {
+    "react": {
+      "version": "15.6"
+    }
+  },
   "rules": {
     "indent": [
       "error",

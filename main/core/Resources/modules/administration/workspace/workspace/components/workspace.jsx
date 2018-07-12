@@ -27,7 +27,19 @@ const WorkspaceComponent = (props) =>
       />
     }
 
-    <WorkspaceForm name="workspaces.current">
+    <WorkspaceForm
+      name="workspaces.current"
+      buttons={true}
+      target={(workspace, isNew) => isNew ?
+        ['apiv2_workspace_create'] :
+        ['apiv2_workspace_update', {id: workspace.id}]
+      }
+      cancel={{
+        type: 'link',
+        target: '/workspaces',
+        exact: true
+      }}
+    >
       <FormSections level={3}>
         <FormSection
           className="embedded-list-section"
@@ -104,7 +116,7 @@ WorkspaceComponent.propTypes = {
 
 WorkspaceComponent.defaultProps = {
   managerRole: {},
-  workspace: WorkspaceTypes.defaultProps,
+  workspace: WorkspaceTypes.defaultProps
 }
 
 const Workspace = connect(

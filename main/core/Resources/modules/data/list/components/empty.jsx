@@ -6,7 +6,7 @@ import {t} from '#/main/core/translation'
 const ListEmpty = props =>
   <div className="list-empty">
     <div className="list-empty-info">
-      <span className="list-empty-icon fa fa-frown-o" />
+      <span className="list-empty-icon fa fa-refresh" />
 
       <div className="list-empty-content">
         {t(props.hasFilters ? 'list_search_no_results' : 'list_no_results')}

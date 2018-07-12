@@ -62,22 +62,22 @@ const ResourceExplorer = props => {
             displayed: true,
             primary: true
           }, {
+            name: 'meta.published',
+            type: 'boolean',
+            label: trans('published'),
+            displayed: true
+          }, {
             name: 'meta.created',
             label: trans('creation_date'),
             type: 'date',
             alias: 'creationDate',
-            displayed: true,
-            filterable: false
+            displayed: true
           }, {
-            name: 'createdAfter',
-            label: trans('created_after'),
+            name: 'meta.updated',
+            label: trans('modification_date'),
             type: 'date',
-            displayable: false
-          }, {
-            name: 'createdBefore',
-            label: trans('created_before'),
-            type: 'date',
-            displayable: false
+            alias: 'modificationDate',
+            displayed: true
           }
         ]}
         actions={props.actions}

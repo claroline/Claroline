@@ -2,7 +2,7 @@
 
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'themes_management' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'data_transfer' | trans({}, 'tools') | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{ macros.breadcrumbs([
@@ -19,7 +19,7 @@
 
 {% block content %}
     <div
-        class="page-container import-container"
+        class="page-container transfer-container"
         data-explanation="{{ explanation | json_encode | raw | escape }}"
     >
     </div>

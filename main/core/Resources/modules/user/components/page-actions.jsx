@@ -2,8 +2,6 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
-import {withRouter, matchPath} from '#/main/app/router'
-
 import {isAuthenticated, currentUser} from '#/main/core/user/current'
 import {hasPermission} from '#/main/core/user/permissions'
 
@@ -14,36 +12,8 @@ import {
   PageAction,
   MoreAction
 } from '#/main/core/layout/page'
-import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
 
 import {User as UserTypes} from '#/main/core/user/prop-types'
-
-const EditGroupActionsComponent = props =>
-  <PageGroupActions>
-    <FormPageActionsContainer
-      formName="user"
-      opened={!!matchPath(props.location.pathname, {path: '/edit'})}
-      target={(user) => ['apiv2_user_update', {id: user.id}]}
-      open={{
-        type: 'link',
-        label: trans('edit_profile'),
-        target: '/edit'
-      }}
-      cancel={{
-        type: 'link',
-        target: '/show',
-        exact: true
-      }}
-    />
-  </PageGroupActions>
-
-EditGroupActionsComponent.propTypes = {
-  location: T.shape({
-    pathname: T.string
-  }).isRequired
-}
-
-const EditGroupActions = withRouter(EditGroupActionsComponent)
 
 const UserPageActions = props => {
   const isOwner = isAuthenticated() && currentUser().id === props.user.id
@@ -100,7 +70,15 @@ const UserPageActions = props => {
   return (
     <PageActions>
       {hasPermission('edit', props.user) &&
-        <EditGroupActions />
+        <PageGroupActions>
+          <PageAction
+            type="link"
+            icon="fa fa-pencil"
+            label={trans('edit', {}, 'actions')}
+            target="/edit"
+            primary={true}
+          />
+        </PageGroupActions>
       }
 
       {hasPermission('contact', props.user) &&

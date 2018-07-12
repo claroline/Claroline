@@ -23,6 +23,13 @@ const ProfileFacetComponent = props => {
     <FormContainer
       name="user"
       title={props.facet.title}
+      target={['apiv2_user_update', {id: props.user.id}]}
+      buttons={true}
+      cancel={{
+        type: 'link',
+        target: '/show',
+        exact: true
+      }}
       sections={sections}
     />
   )

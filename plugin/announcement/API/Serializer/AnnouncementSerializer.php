@@ -7,6 +7,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -74,9 +75,11 @@ class AnnouncementSerializer
                 'notificationDate' => !empty($announce->getTask()) ? $announce->getTask()->getScheduledDate()->format('Y-m-d\TH:i:s') : null,
             ],
             'restrictions' => [
-                'visible' => $announce->isVisible(),
-                'visibleFrom' => $announce->getVisibleFrom() ? $announce->getVisibleFrom()->format('Y-m-d\TH:i:s') : null,
-                'visibleUntil' => $announce->getVisibleUntil() ? $announce->getVisibleUntil()->format('Y-m-d\TH:i:s') : null,
+                'hidden' => !$announce->isVisible(),
+                'dates' => DateRangeNormalizer::normalize(
+                    $announce->getVisibleFrom(),
+                    $announce->getVisibleUntil()
+                ),
             ],
             'roles' => array_map(function (Role $role) {
                 return $role->getUuid();
@@ -107,19 +110,14 @@ class AnnouncementSerializer
         }
 
         // calculate visibility restrictions
-        $announce->setVisible($data['restrictions']['visible']);
+        $announce->setVisible(!$data['restrictions']['hidden']);
 
-        $visibleFrom = null;
-        if (!empty($data['restrictions']['visibleFrom'])) {
-            $visibleFrom = \DateTime::createFromFormat('Y-m-d\TH:i:s', $data['restrictions']['visibleFrom']);
-        }
-        $announce->setVisibleFrom($visibleFrom);
+        if (isset($data['restrictions']['dates'])) {
+            $dateRange = DateRangeNormalizer::denormalize($data['restrictions']['dates']);
 
-        $visibleUntil = null;
-        if (!empty($data['restrictions']['visibleUntil'])) {
-            $visibleUntil = \DateTime::createFromFormat('Y-m-d\TH:i:s', $data['restrictions']['visibleUntil']);
+            $announce->setVisibleFrom($dateRange[0]);
+            $announce->setVisibleUntil($dateRange[1]);
         }
-        $announce->setVisibleUntil($visibleUntil);
 
         // calculate publication date
         if (!$announce->isVisible()) {

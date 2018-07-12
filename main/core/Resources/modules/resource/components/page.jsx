@@ -1,13 +1,16 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 
-import {PageContainer, PageHeader} from '#/main/core/layout/page'
-
+import {trans} from '#/main/core/translation'
+import {Page} from '#/main/app/page/components/page'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
-import {ResourcePageActions} from '#/main/core/resource/components/page-actions'
-import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
-import {UserProgression} from '#/main/core/resource/components/user-progression'
+
 import {UserEvaluation as UserEvaluationTypes} from '#/main/core/resource/prop-types'
+import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
+import {getActions, getToolbar} from '#/main/core/resource/utils'
+
+import {UserProgression} from '#/main/core/resource/components/user-progression'
 
 class ResourcePage extends Component {
   constructor(props) {
@@ -17,19 +20,6 @@ class ResourcePage extends Component {
     this.state = {
       fullscreen: !this.props.embedded && this.props.resourceNode.display.fullscreen
     }
-
-    this.toggleFullscreen = this.toggleFullscreen.bind(this)
-
-    /*{
-     name: 'fullscreen',
-     type: 'callback',
-     icon: classes('fa fa-fw', {
-     'fa-expand': !this.state.fullscreen,
-     'fa-compress': this.state.fullscreen
-     }),
-     label: trans(this.state.fullscreen ? 'fullscreen_off' : 'fullscreen_on'),
-     callback: this.toggleFullscreen
-     }*/
   }
 
   toggleFullscreen() {
@@ -38,38 +28,36 @@ class ResourcePage extends Component {
 
   render() {
     return (
-      <PageContainer
+      <Page
         embedded={this.props.embedded}
         fullscreen={this.state.fullscreen}
-      >
-        {!this.props.embedded &&
-          <PageHeader
-            title={this.props.resourceNode.name}
-            poster={this.props.resourceNode.poster ? this.props.resourceNode.poster.url : undefined}
-          >
-            {this.props.resourceNode.display.showIcon && this.props.userEvaluation &&
-              <UserProgression
-                userEvaluation={this.props.userEvaluation}
-                width={70}
-                height={70}
-              />
-            }
-
-            <ResourcePageActions
-              resourceNode={this.props.resourceNode}
-              editor={this.props.editor}
-              customActions={this.props.customActions}
-              fullscreen={this.state.fullscreen}
-              toggleFullscreen={this.toggleFullscreen}
-              togglePublication={this.props.togglePublication}
-              updateNode={this.props.updateNode}
-              toggleNotifications={this.props.toggleNotifications}
-            />
-          </PageHeader>
+        title={this.props.resourceNode.name}
+        poster={this.props.resourceNode.poster ? this.props.resourceNode.poster.url : undefined}
+        icon={this.props.resourceNode.display.showIcon && this.props.userEvaluation &&
+          <UserProgression
+            userEvaluation={this.props.userEvaluation}
+            width={70}
+            height={70}
+          />
         }
-
+        toolbar={getToolbar(this.props.primaryAction, true)}
+        actions={getActions([this.props.resourceNode]).then((actions) => {
+          return [].concat(this.props.customActions || [], actions, [
+            {
+              name: 'fullscreen',
+              type: 'callback',
+              icon: classes('fa fa-fw', {
+                'fa-expand': !this.state.fullscreen,
+                'fa-compress': this.state.fullscreen
+              }),
+              label: trans(this.state.fullscreen ? 'fullscreen_off' : 'fullscreen_on'),
+              callback: this.toggleFullscreen.bind(this)
+            }
+          ])
+        })}
+      >
         {this.props.children}
-      </PageContainer>
+      </Page>
     )
   }
 }
@@ -89,34 +77,16 @@ ResourcePage.propTypes = {
     UserEvaluationTypes.propTypes
   ),
 
+  // the name of the primary action of the resource (if we want to override the default one)
+  primaryAction: T.string,
+
   customActions: T.arrayOf(T.shape(
     ActionTypes.propTypes
   )),
 
-  /**
-   * If provided, this permits to manage the resource editor in the header (aka. open, save actions).
-   */
-  editor: T.shape({
-    icon: T.string,
-    label: T.string,
-    opened: T.bool,
-    open: T.oneOfType([T.func, T.string]),
-    path: T.string,
-    save: T.shape({
-      disabled: T.bool.isRequired,
-      action: T.oneOfType([T.string, T.func]).isRequired
-    }).isRequired
-  }),
-
-  togglePublication: T.func.isRequired,
-  updateNode: T.func.isRequired,
-
   // todo : reuse Page propTypes
   embedded: T.bool,
-  children: T.node.isRequired,
-
-  // resource notification
-  toggleNotifications: T.func
+  children: T.node.isRequired
 }
 
 export {

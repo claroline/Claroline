@@ -20,6 +20,16 @@ const OrganizationForm = props =>
   <FormContainer
     level={3}
     name="organizations.current"
+    buttons={true}
+    target={(organization, isNew) => isNew ?
+      ['apiv2_organization_create'] :
+      ['apiv2_organization_update', {id: organization.id}]
+    }
+    cancel={{
+      type: 'link',
+      target: '/organizations',
+      exact: true
+    }}
     sections={[
       {
         title: trans('general'),

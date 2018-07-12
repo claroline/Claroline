@@ -9,11 +9,10 @@ import {currentUser} from '#/main/core/user/current'
 import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {PageActions, PageAction} from '#/main/core/layout/page'
-import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
 
-import {GroupList} from '#/main/core/administration/user/group/components/group-list.jsx'
-import {Group}     from '#/main/core/administration/user/group/components/group.jsx'
-import {Groups}    from '#/main/core/workspace/user/group/components/groups.jsx'
+import {GroupList} from '#/main/core/administration/user/group/components/group-list'
+import {Group}     from '#/main/core/administration/user/group/components/group'
+import {Groups}    from '#/main/core/workspace/user/group/components/groups'
 import {actions}   from '#/main/core/workspace/user/group/actions'
 import {select}    from '#/main/core/workspace/user/selectors'
 
@@ -22,36 +21,22 @@ import {getModalDefinition} from '#/main/core/workspace/user/role/modal'
 
 const GroupTabActionsComponent = props =>
   <PageActions>
-    {getPermissionLevel(currentUser(), props.workspace) === ADMIN &&
-      <FormPageActionsContainer
-        formName="groups.current"
-        target={(user, isNew) => isNew ?
-          ['apiv2_group_create'] :
-          ['apiv2_group_update', {id: user.id}]
-        }
-        opened={!!matchPath(props.location.pathname, {path: '/groups/form'})}
-        open={{
-          type: 'link',
-          label: trans('create_group'),
-          target: '/groups/form',
-          primary: false
-        }}
-        cancel={{
-          type: 'link',
-          target: '/groups',
-          exact: true
-        }}
+    {!matchPath(props.location.pathname, {path: '/groups/form'}) &&
+      <PageAction
+        type="callback"
+        icon="fa fa-plus"
+        label={trans('register_groups')}
+        callback={() => props.register(props.workspace)}
+        primary={true}
       />
     }
 
-    {!matchPath(props.location.pathname, {path: '/groups/form'}) &&
+    {getPermissionLevel(currentUser(), props.workspace) === ADMIN &&
       <PageAction
-        id="add-role"
-        type="callback"
-        label={trans('register_groups')}
-        icon="fa fa-plus"
-        callback={() => props.register(props.workspace)}
-        primary={true}
+        type="link"
+        icon="fa fa-pencil"
+        label={trans('create_group')}
+        target="/groups/form"
       />
     }
   </PageActions>

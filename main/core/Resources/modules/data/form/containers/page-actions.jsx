@@ -12,7 +12,7 @@ const FormPageActionsContainer = connect(
     new: select.isNew(select.form(state, ownProps.formName)),
     data: select.data(select.form(state, ownProps.formName)),
     saveEnabled: select.saveEnabled(select.form(state, ownProps.formName)),
-    pendingChanges: select.saveEnabled(select.form(state, ownProps.formName))
+    pendingChanges: select.pendingChanges(select.form(state, ownProps.formName))
   }),
   (dispatch, ownProps) => ({
     save(targetUrl) {

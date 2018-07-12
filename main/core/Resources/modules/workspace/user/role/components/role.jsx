@@ -21,6 +21,16 @@ const RoleForm = props =>
   <FormContainer
     level={3}
     name="roles.current"
+    buttons={true}
+    target={(role, isNew) => isNew ?
+      ['apiv2_role_create'] :
+      ['apiv2_role_update', {id: role.id}]
+    }
+    cancel={{
+      type: 'link',
+      target: '/roles',
+      exact: true
+    }}
     sections={[
       {
         title: trans('general'),

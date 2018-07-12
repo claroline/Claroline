@@ -183,6 +183,34 @@ form .global-error {
 
 
 // -
+// Buttons
+// ---
+
+.form-toolbar {
+    position: fixed;
+    display: block;
+    z-index: @zindex-flying-alerts;
+    right: 45px;
+    bottom: 30px;
+
+    .btn {
+        width: 72px;
+        height: 72px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 28px;
+        border-radius: 50%;
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+
+        + .btn {
+            margin-left: 5px;
+        }
+    }
+}
+
+
+// -
 // Utilities
 // ---
 

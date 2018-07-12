@@ -1,15 +1,16 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {t} from '#/main/core/translation'
 import {displayDate} from '#/main/core/scaffolding/date'
-import {User as UserTypes} from '#/main/core/user/prop-types'
 
-import {UserMicro} from '#/main/core/user/components/micro.jsx'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
-import {TooltipLink} from '#/main/core/layout/button/components/tooltip-link.jsx'
-import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
+import {UserMicro} from '#/main/core/user/components/micro'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
+import {TooltipLink} from '#/main/core/layout/button/components/tooltip-link'
+import {HtmlText} from '#/main/core/layout/components/html-text'
+
+import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'
 
 const AnnouncePost = props =>
   <div className={classes('announce-post panel panel-default', {
@@ -86,29 +87,15 @@ const AnnouncePost = props =>
     </div>
   </div>
 
-AnnouncePost.propTypes = {
-  id: T.string.isRequired,
+implementPropTypes(AnnouncePost, AnnouncementTypes, {
   active: T.bool,
-  title: T.string,
-  content: T.string.isRequired,
-  meta: T.shape({
-    created: T.string.isRequired,
-    creator: T.shape(UserTypes.propTypes).isRequired,
-    author: T.string,
-    publishedAt: T.string
-  }).isRequired,
-  restrictions: T.shape({
-    visible: T.bool.isRequired
-  }).isRequired,
   deletable: T.bool.isRequired,
   editable: T.bool.isRequired,
   sendPost: T.func.isRequired,
   removePost: T.func.isRequired
-}
-
-AnnouncePost.defaultProps = {
+}, {
   active: false
-}
+})
 
 export {
   AnnouncePost

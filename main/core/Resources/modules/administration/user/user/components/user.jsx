@@ -6,22 +6,32 @@ import {t} from '#/main/core/translation'
 
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
-import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
-import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
+import {FormContainer} from '#/main/core/data/form/containers/form'
+import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
 import {actions as formActions} from '#/main/core/data/form/actions'
 import {select as formSelect} from '#/main/core/data/form/selectors'
-import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
+import {DataListContainer} from '#/main/core/data/list/containers/data-list'
 
 import {actions} from '#/main/core/administration/user/user/actions'
 
-import {OrganizationList} from '#/main/core/administration/user/organization/components/organization-list.jsx'
-import {GroupList} from '#/main/core/administration/user/group/components/group-list.jsx'
-import {RoleList} from '#/main/core/administration/user/role/components/role-list.jsx'
+import {OrganizationList} from '#/main/core/administration/user/organization/components/organization-list'
+import {GroupList} from '#/main/core/administration/user/group/components/group-list'
+import {RoleList} from '#/main/core/administration/user/role/components/role-list'
 
 const UserForm = props =>
   <FormContainer
     level={3}
     name="users.current"
+    buttons={true}
+    target={(user, isNew) => isNew ?
+      ['apiv2_user_create'] :
+      ['apiv2_user_update', {id: user.id}]
+    }
+    cancel={{
+      type: 'link',
+      target: '/users',
+      exact: true
+    }}
     sections={[
       {
         title: t('general'),

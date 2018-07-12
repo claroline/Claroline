@@ -8,9 +8,8 @@ import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {DataDetails} from '#/main/core/data/details/components/details'
 import {ContentMeta} from '#/main/app/content/meta/components/meta'
 
+import {ResourceType} from '#/main/core/resource/components/type'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
-
-// todo implement
 
 const AboutModal = props =>
   <Modal
@@ -23,10 +22,6 @@ const AboutModal = props =>
       meta={props.resourceNode.meta}
     />
 
-    <div className="modal-body">
-      TODO some metrics about the resource ?
-    </div>
-
     <DataDetails
       data={props.resourceNode}
       sections={[
@@ -35,6 +30,20 @@ const AboutModal = props =>
           primary: true,
           fields: [
             {
+              name: 'meta.type',
+              label: trans('type'),
+              type: 'string',
+              hideLabel: true,
+              render: (resourceNode) => {
+                const NodeType =
+                  <ResourceType
+                    name={resourceNode.meta.type}
+                    mimeType={resourceNode.meta.mimeType}
+                  />
+
+                return NodeType
+              }
+            }, {
               name: 'url',
               type: 'url',
               label: trans('url', {}, 'data'),

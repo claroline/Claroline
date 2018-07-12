@@ -5,11 +5,18 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/core/translation'
 import {select as formSelect} from '#/main/core/data/form/selectors'
 import {Text as TextTypes} from '#/main/core/resources/text/prop-types'
-import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
+import {FormContainer} from '#/main/core/data/form/containers/form'
 
-const EditorComponent = () =>
+const EditorComponent = (props) =>
   <FormContainer
     name="textForm"
+    target={['apiv2_resource_text_update', {id: props.text.id}]}
+    buttons={true}
+    cancel={{
+      type: 'link',
+      target: '/',
+      exact: true
+    }}
     sections={[
       {
         title: trans('general', {}, 'platform'),
@@ -31,7 +38,9 @@ const EditorComponent = () =>
   />
 
 EditorComponent.propTypes = {
-  text: T.shape(TextTypes.propTypes).isRequired
+  text: T.shape(
+    TextTypes.propTypes
+  ).isRequired
 }
 
 const Editor = connect(

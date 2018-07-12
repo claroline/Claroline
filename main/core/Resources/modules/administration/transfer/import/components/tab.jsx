@@ -1,15 +1,17 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {select} from '#/main/core/administration/transfer/selector'
-import {actions} from '#/main/core/administration/transfer/actions'
-import {actions as logActions} from '#/main/core/administration/transfer/components/log/actions'
-import has from 'lodash/has'
-import {trans} from '#/main/core/translation'
-import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
-import {Routes} from '#/main/app/router'
-import {withRouter} from '#/main/app/router'
 import classes from 'classnames'
-import {Logs} from '#/main/core/administration/transfer/components/log/components/logs.jsx'
+import has from 'lodash/has'
+
+import {trans} from '#/main/core/translation'
+import {FormContainer} from '#/main/core/data/form/containers/form'
+import {Routes, withRouter} from '#/main/app/router'
+import {Heading} from '#/main/core/layout/components/heading'
+
+import {Logs} from '#/main/core/administration/transfer/log/components/logs'
+import {select} from '#/main/core/administration/transfer/selectors'
+import {actions} from '#/main/core/administration/transfer/actions'
+import {actions as logActions} from '#/main/core/administration/transfer/log/actions'
 
 const Tabs = props =>
   <ul className="nav nav-pills nav-stacked">
@@ -52,20 +54,61 @@ const Fields = props => {
   )
 }
 
-const RoutedExplain = props => {
-  const entity = props.match.params.entity
-  const action = props.match.params.action
-  const choices = {}
-  choices['none'] = ''
-  Object.keys(props.explanation[entity]).reduce((o, key) => Object.assign(o, {[entity + '_' + key]: trans(key, {}, 'transfer')}), choices)
+class RoutedExplain extends Component {
+  constructor(props) {
+    super(props)
+    this.currentLogId = this.generateLogId()
+  }
 
-  return (
-    <div>
-      <h3>{trans(entity)}</h3>
+  generateLogId() {
+    const log = Math.random().toString(36).substring(7)
+    this.currentLogId = log
+
+    return log
+  }
+
+  getLogId() {
+    return this.currentLogId
+  }
+
+  render() {
+    const props = this.props
+
+    const entity = props.match.params.entity
+    const action = props.match.params.action
+    const choices = {}
+    choices['none'] = ''
+    Object.keys(props.explanation[entity]).reduce((o, key) => Object.assign(o, {[entity + '_' + key]: trans(key, {}, 'transfer')}), choices)
+
+    return (
       <div>
         <FormContainer
-          level={3}
+          level={2}
           name="import"
+          title={trans(entity)}
+          target={['apiv2_transfer_start', {log: this.getLogId()}]}
+          buttons={true}
+          save={{
+            type: 'callback',
+            icon: 'fa fa-fw fa-upload',
+            label: trans('import', {}, 'actions'),
+            callback: () => {
+              const logName = this.getLogId()
+              const refresher = setInterval(() => {
+                this.props.loadLog(logName)
+                if (this.props.logs && this.props.logs.total !== undefined && this.props.logs.processed === this.props.logs.total) {
+                  clearInterval(refresher)
+                }
+              }, 2000)
+
+              this.generateLogId()
+            }
+          }}
+          cancel={{
+            type: 'link',
+            target: '/import',
+            exact: true
+          }}
           sections={[
             {
               title: trans('general'),
@@ -97,19 +140,18 @@ const RoutedExplain = props => {
             }
           ]}
         />
-      </div>
 
-      <Logs/>
+        <Logs/>
 
-      {props.explanation[entity][action] &&
+        {props.explanation[entity][action] &&
         <div>
-          <div> {trans('import_headers')} </div>
+          <Heading level={3}>{trans('import_headers')}</Heading>
           <Fields {...props.explanation[entity][action]} />
         </div>
-
-      }
-    </div>
-  )
+        }
+      </div>
+    )
+  }
 }
 
 const ConnectedExplain = withRouter(connect(
@@ -123,33 +165,23 @@ const ConnectedExplain = withRouter(connect(
   })
 )(RoutedExplain))
 
-class Import extends Component
-{
-  constructor(props) {
-    super(props)
-  }
+const Import = props =>
+  <div className="user-profile row">
+    <div className="col-md-3">
+      <Tabs {...props} />
+    </div>
 
-  render() {
-    return (
-      <div className="user-profile container row">
-        <div className="col-md-3">
-          <Tabs {...this.props}></Tabs>
-        </div>
-
-        <div className="col-md-9">
-          <Routes
-            routes={[{
-              path: '/import/:entity/:action',
-              exact: true,
-              component: ConnectedExplain,
-              onEnter: (params) => this.props.openForm(params)
-            }]}
-          />
-        </div>
-      </div>
-    )
-  }
-}
+    <div className="col-md-9">
+      <Routes
+        routes={[{
+          path: '/import/:entity/:action',
+          exact: true,
+          component: ConnectedExplain,
+          onEnter: (params) => props.openForm(params)
+        }]}
+      />
+    </div>
+  </div>
 
 const ConnectedImport = connect(
   state => ({explanation: select.explanation(state)}),

@@ -15,7 +15,6 @@ import {Editor} from '#/main/core/tools/home/editor/components/editor'
 import {Player} from '#/main/core/tools/home/player/components/player'
 
 const ToolActionsComponent = props =>
-
   <PageActions>
     <FormPageActionsContainer
       formName="editor"
@@ -98,7 +97,6 @@ const HomeTool = connect(
     resetForm(tabs){
       dispatch(formActions.resetForm('editor', tabs))
     }
-
   })
 )(Tool)
 

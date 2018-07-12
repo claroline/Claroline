@@ -2,6 +2,8 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
+import merge from 'lodash/merge'
 
 import {trans} from '#/main/core/translation'
 import {toKey} from '#/main/core/scaffolding/text/utils'
@@ -16,6 +18,7 @@ import {createFormDefinition} from '#/main/core/data/form/utils'
 import {DataFormSection as DataFormSectionTypes} from '#/main/core/data/form/prop-types'
 import {FormField} from '#/main/core/data/form/components/field'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group'
+import {FormActions} from '#/main/core/data/form/components/actions'
 
 const AdvancedSection = props =>
   <ToggleableSet
@@ -198,6 +201,15 @@ class Form extends Component {
         }
 
         {this.props.children}
+
+        {(this.props.save || this.props.cancel) &&
+          <FormActions
+            save={this.props.save ? merge({}, this.props.save, {
+              disabled: this.props.disabled || this.props.save.disabled || !(this.props.pendingChanges && (!this.props.validating || isEmpty(this.props.errors)))
+            }) : undefined}
+            cancel={this.props.cancel}
+          />
+        }
       </FormWrapper>
     )
   }
@@ -225,7 +237,25 @@ Form.propTypes = {
   className: T.string,
   disabled: T.bool,
   children: T.node,
-  meta: T.bool
+  meta: T.bool,
+
+  /**
+   * The save action of the form (if provided, form toolbar will be displayed).
+   */
+  save: T.shape({
+    type: T.string.isRequired,
+    disabled: T.bool
+    // todo find a way to document custom action type props
+  }),
+
+  /**
+   * The cancel action of the form (if provided, form toolbar will be displayed).
+   */
+  cancel: T.shape({
+    type: T.string.isRequired,
+    disabled: T.bool
+    // todo find a way to document custom action type props
+  })
 }
 
 Form.defaultProps = {

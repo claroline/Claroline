@@ -3,63 +3,37 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {matchPath, withRouter} from '#/main/app/router'
 import {
   PageActions,
+  PageAction,
   PageHeader
 } from '#/main/core/layout/page'
 import {
   RoutedPageContainer,
   RoutedPageContent
 } from '#/main/core/layout/router'
-import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
 
-import {ScheduledTasks} from '#/main/core/administration/scheduled-task/components/scheduled-tasks.jsx'
-import {ScheduledTask}  from '#/main/core/administration/scheduled-task/components/scheduled-task.jsx'
+import {ScheduledTasks} from '#/main/core/administration/scheduled-task/components/scheduled-tasks'
+import {ScheduledTask}  from '#/main/core/administration/scheduled-task/components/scheduled-task'
 import {actions}        from '#/main/core/administration/scheduled-task/actions'
 import {select}         from '#/main/core/administration/scheduled-task/selectors'
-
-const ToolActions = props =>
-  <PageActions>
-    <FormPageActionsContainer
-      formName="task"
-      target={(task, isNew) => isNew ?
-        ['apiv2_scheduledtask_create'] :
-        ['apiv2_scheduledtask_update', {id: task.id}]
-      }
-      opened={!!matchPath(props.location.pathname, {path: '/form'})}
-      open={{
-        type: 'link',
-        icon: 'fa fa-plus',
-        disabled: !props.isCronConfigured,
-        label: trans('add_scheduled_task'),
-        target: '/form'
-      }}
-      cancel={{
-        type: 'link',
-        target: '/',
-        exact: true
-      }}
-    />
-  </PageActions>
-
-ToolActions.propTypes = {
-  location: T.shape({
-    pathname: T.string
-  }).isRequired,
-  isCronConfigured: T.bool.isRequired
-}
-
-const ToolPageActions = withRouter(ToolActions)
 
 const Tool = props =>
   <RoutedPageContainer>
     <PageHeader
       title={trans('tasks_scheduling', {}, 'tools')}
     >
-      <ToolPageActions
-        isCronConfigured={props.isCronConfigured}
-      />
+      <PageActions>
+        <PageAction
+          type="link"
+          icon="fa fa-plus"
+          label={trans('add_scheduled_task')}
+          disabled={!props.isCronConfigured}
+          target="/form"
+          exact={true}
+          primary={true}
+        />
+      </PageActions>
     </PageHeader>
 
     <RoutedPageContent

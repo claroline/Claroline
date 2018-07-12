@@ -2,6 +2,8 @@
  * Data card.
  */
 
+// todo : create mixin for color variants
+
 .data-card {
     display: flex;
     position: relative; // constrain actions toolbar
@@ -43,17 +45,35 @@
 .data-card-clickable {
     &:hover {
         //z-index: 2;
+        border-color: @data-card-active-border;
         color: @data-card-active-color;
         background-color: @data-card-active-bg;
         .box-shadow(@data-card-active-box-shadow);
 
         .data-card-header {
             background: @data-card-active-header-bg;
+            border-color: @data-card-active-inner-border;
         }
 
         .data-card-content {
             color: @data-card-active-color;
         }
+    }
+}
+
+.data-card-muted {
+    border-color: @data-card-muted-border;
+    color: @data-card-muted-color;
+    background-color: @data-card-muted-bg;
+    .box-shadow(@data-card-muted-box-shadow);
+
+    .data-card-header {
+        background: @data-card-muted-header-bg;
+        border-color: @data-card-muted-inner-border;
+    }
+
+    .data-card-content {
+        color: @data-card-muted-color;
     }
 }
 
@@ -68,6 +88,7 @@
     position: relative; // constrain flags
     text-align: center;
     background: @data-card-header-bg;
+    border-color: @data-card-inner-border;
 
     .border-radius(@data-card-border-radius @data-card-border-radius 0 0);
 }
@@ -239,7 +260,8 @@
     flex-direction: column;
 
     .data-card-header {
-        border-bottom: 1px solid @data-card-inner-border;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
     }
 
     &.data-card-poster {
@@ -264,7 +286,8 @@
 
     .data-card-header {
         min-width: 40%;
-        border-right: 1px solid @data-card-inner-border;
+        border-right-width: 1px;
+        border-right-style: solid;
     }
 
     .data-card-content {

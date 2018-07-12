@@ -135,7 +135,9 @@
     button,
     .btn-add,
     .btn-summary {
+        font-size: @path-summary-font; // required to override default button size
         color: @path-summary-link-color;
+        padding: 10px 0;
 
         &:hover {
             color: @path-summary-link-hover-color;
@@ -148,13 +150,10 @@
         }
     }
 
-    .btn-add,
-    button,
-    a {
+    a,
+    .btn-add {
         border: none;
         flex: 1;
-        font-size: @path-summary-font; // required to override default button size
-        padding: 10px 0;
         display: flex;
         align-items: center;
     }

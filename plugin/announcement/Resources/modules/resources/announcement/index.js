@@ -1,23 +1,19 @@
-import {bootstrap} from '#/main/app/bootstrap'
+import {AnnouncementResource} from '#/plugin/announcement/resources/announcement/components/resource'
+import {reducer} from '#/plugin/announcement/resources/announcement/reducer'
 
-import {reducer} from './reducer'
-import {AnnouncementResource} from './components/resource.jsx'
-
-// mount the react application
-bootstrap(
-  // app DOM container (also holds initial app data as data attributes)
-  '.announcement-container',
-
-  // app main component
-  AnnouncementResource,
-
-  // app store configuration
-  reducer,
-
-  (initialData) => Object.assign({}, initialData, {
+/**
+ * Announcement resource application.
+ *
+ * @constructor
+ */
+export const App = () => ({
+  component: AnnouncementResource,
+  store: reducer,
+  styles: 'claroline-distribution-plugin-announcement-announcement-resource',
+  initialData: (initialData) => Object.assign({}, initialData, {
     resource: {
       node: initialData.resourceNode,
       evaluation: initialData.evaluation
     }
   })
-)
+})

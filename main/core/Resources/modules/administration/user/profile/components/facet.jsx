@@ -77,6 +77,8 @@ const ProfileFacetComponent = props =>
     name="profile"
     className="profile-facet"
     dataPart={`[${props.index}]`}
+    buttons={true}
+    target={['apiv2_profile_update']}
     sections={[
       {
         icon: 'fa fa-fw fa-cog',

@@ -18,6 +18,17 @@ const NotificationForm = props =>
   <FormContainer
     level={3}
     name="notifications.current"
+    disabled={!props.canEdit}
+    buttons={true}
+    target={(notification, isNew) => isNew ?
+      ['apiv2_plannednotification_create'] :
+      ['apiv2_plannednotification_update', {id: notification.id}]
+    }
+    cancel={{
+      type: 'link',
+      target: '/notifications',
+      exact: true
+    }}
     sections={[
       {
         id: 'general',
@@ -28,7 +39,6 @@ const NotificationForm = props =>
             name: 'parameters.action',
             type: 'choice',
             label: trans('action'),
-            disabled: !props.canEdit,
             required: true,
             options: {
               noEmpty: true,
@@ -40,7 +50,6 @@ const NotificationForm = props =>
                 name: 'roles',
                 label: trans('roles'),
                 type: 'workspace_roles',
-                disabled: !props.canEdit,
                 required: false,
                 displayed: -1 < [WORKSPACE_REGISTRATION_USER, WORKSPACE_REGISTRATION_GROUP].indexOf(props.notification.parameters.action)
               }
@@ -49,13 +58,11 @@ const NotificationForm = props =>
             name: 'message',
             type: 'message',
             label: trans('message'),
-            disabled: !props.canEdit,
             required: true
           }, {
             name: 'parameters.interval',
             type: 'number',
             label: trans('planned_interval', {}, 'planned_notification'),
-            disabled: !props.canEdit,
             help: trans('planned_interval_infos', {}, 'planned_notification'),
             options: {
               min: 0,
@@ -66,13 +73,11 @@ const NotificationForm = props =>
             name: 'parameters.byMail',
             type: 'boolean',
             label: trans('send_a_mail', {}, 'planned_notification'),
-            disabled: !props.canEdit,
             required: true
           }, {
             name: 'parameters.byMessage',
             type: 'boolean',
             label: trans('send_a_message', {}, 'planned_notification'),
-            disabled: !props.canEdit,
             required: true
           }
         ]

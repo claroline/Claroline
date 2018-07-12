@@ -48,6 +48,7 @@ const EditorComponent = props =>
               type="callback"
               label={trans('delete')}
               icon="fa fa-fw fa-trash-o"
+              dangerous={true}
               confirm={{
                 title: trans('home_tab_delete_confirm_title'),
                 message: trans('home_tab_delete_confirm_message')

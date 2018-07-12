@@ -22,15 +22,6 @@ import {ListBulkActions} from '#/main/core/data/list/components/actions'
 
 const DataGridItem = props =>
   <li className="data-grid-item-container">
-    {props.onSelect &&
-      <input
-        type="checkbox"
-        className="data-grid-item-select"
-        checked={props.selected}
-        onChange={props.onSelect}
-      />
-    }
-
     {React.createElement(props.card, {
       className: classes({selected: props.selected}),
       size: props.size,
@@ -39,6 +30,15 @@ const DataGridItem = props =>
       primaryAction: props.primaryAction,
       actions: props.actions
     })}
+
+    {props.onSelect &&
+      <input
+        type="checkbox"
+        className="data-grid-item-select"
+        checked={props.selected}
+        onChange={props.onSelect}
+      />
+    }
   </li>
 
 DataGridItem.propTypes = {

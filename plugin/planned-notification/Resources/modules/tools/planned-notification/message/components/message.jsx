@@ -13,6 +13,17 @@ const MessageForm = props =>
   <FormContainer
     level={3}
     name="messages.current"
+    disabled={!props.canEdit}
+    buttons={true}
+    target={(message, isNew) => isNew ?
+      ['apiv2_plannednotificationmessage_create'] :
+      ['apiv2_plannednotificationmessage_update', {id: message.id}]
+    }
+    cancel={{
+      type: 'link',
+      target: '/messages',
+      exact: true
+    }}
     sections={[
       {
         id: 'general',
@@ -23,13 +34,11 @@ const MessageForm = props =>
             name: 'title',
             type: 'string',
             label: trans('title'),
-            disabled: !props.canEdit,
             required: true
           }, {
             name: 'content',
             type: 'html',
             label: trans('content'),
-            disabled: !props.canEdit,
             required: true
           }
         ]

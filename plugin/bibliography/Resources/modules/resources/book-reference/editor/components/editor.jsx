@@ -1,12 +1,22 @@
 import React from 'react'
+import {connect} from 'react-redux'
+import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
 import {FormContainer} from '#/main/core/data/form/containers/form'
+import {select as formSelectors} from '#/main/core/data/form/selectors'
 
-const Editor = () =>
+const EditorComponent = (props) =>
   <FormContainer
     level={3}
     name="bookReference"
+    target={['apiv2_book_reference_update', {id: props.id}]}
+    buttons={true}
+    cancel={{
+      type: 'link',
+      target: '/',
+      exact: true
+    }}
     sections={[
       {
         title: trans('general'),
@@ -78,6 +88,16 @@ const Editor = () =>
       }
     ]}
   />
+
+EditorComponent.propTypes = {
+  id: T.string.isRequired
+}
+
+const Editor = connect(
+  (state) => ({
+    id: formSelectors.data(formSelectors.form(state, 'bookReference')).id
+  })
+)(EditorComponent)
 
 export {
   Editor

@@ -1,34 +1,27 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+import merge from 'lodash/merge'
 
 import {trans} from '#/main/core/translation'
+import {makeId} from '#/main/core/scaffolding/id'
 
 import {RoutedPageContent} from '#/main/core/layout/router'
-import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
+import {ResourcePageContainer} from '#/main/core/resource/containers/page'
+import {actions as formActions} from '#/main/core/data/form/actions'
 
-import {Announces} from './announces.jsx'
-import {Announce} from './announce.jsx'
-import {AnnounceForm} from './announce-form.jsx'
-import {SendForm} from './send-form.jsx'
+import {Announces} from '#/plugin/announcement/resources/announcement/components/announces'
+import {Announce} from '#/plugin/announcement/resources/announcement/components/announce'
+import {AnnounceForm} from '#/plugin/announcement/resources/announcement/components/announce-form'
+import {AnnounceSend} from '#/plugin/announcement/resources/announcement/components/announce-send'
 
-import {Announcement as AnnouncementTypes} from './../prop-types'
-import {select} from './../selectors.js'
-import {actions} from './../actions.js'
+import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'
+import {select} from '#/plugin/announcement/resources/announcement/selectors'
+import {actions} from '#/plugin/announcement/resources/announcement/actions'
 
 const Resource = props =>
   <ResourcePageContainer
-    editor={{
-      path: '/add',
-      icon: 'fa fa-plus',
-      label: trans('add_announce', {}, 'announcement'),
-      save: {
-        disabled: !props.formPendingChanges || (props.formValidating && !props.formValid),
-        action: () => {
-          props.save(props.aggregateId, props.formData)
-        }
-      }
-    }}
+    primaryAction="create-announce"
     customActions={[
       {
         type: 'link',
@@ -46,12 +39,11 @@ const Resource = props =>
           component: Announces
         }, {
           path: '/add',
+          exact: true,
           component: AnnounceForm,
-          onEnter: () => {
-            props.openForm(AnnouncementTypes.defaultProps)
-            props.initFormDefaultRoles(props.roles.map(r => r.id))
-          },
-          onLeave: props.resetForm
+          onEnter: () => props.resetForm(merge({}, AnnouncementTypes.defaultProps, {
+            id: makeId()
+          }), true)
         }, {
           path: '/:id',
           component: Announce,
@@ -61,13 +53,14 @@ const Resource = props =>
         }, {
           path: '/:id/edit',
           component: AnnounceForm,
-          onEnter: (params) => props.openForm(props.posts.find(post => post.id === params.id)),
-          onLeave: props.resetForm
+          onEnter: (params) => props.resetForm(props.posts.find(post => post.id === params.id))
         }, {
           path: '/:id/send',
-          component: SendForm,
-          onEnter: (params) => props.openForm(props.posts.find(post => post.id === params.id)),
-          onLeave: () => props.resetForm
+          component: AnnounceSend,
+          onEnter: (params) => {
+            props.resetForm(props.posts.find(post => post.id === params.id))
+            props.initFormDefaultRoles(props.roles.map(r => r.id))
+          }
         }
       ]}
     />
@@ -78,20 +71,11 @@ Resource.propTypes = {
   posts: T.arrayOf(
     T.shape(AnnouncementTypes.propTypes)
   ).isRequired,
-
-  openDetail: T.func.isRequired,
-  resetDetail: T.func.isRequired,
-
-  formData: T.object,
-  formPendingChanges: T.bool.isRequired,
-  formValidating: T.bool.isRequired,
-  formValid: T.bool.isRequired,
   roles: T.arrayOf(T.shape({
     id: T.string.isRequired
   })),
-
-  save: T.func.isRequired,
-  openForm: T.func.isRequired,
+  openDetail: T.func.isRequired,
+  resetDetail: T.func.isRequired,
   resetForm: T.func.isRequired,
   initFormDefaultRoles: T.func.isRequired
 }
@@ -100,10 +84,6 @@ const AnnouncementResource = connect(
   state => ({
     aggregateId: select.aggregateId(state),
     posts: select.posts(state),
-    formPendingChanges: select.formHasPendingChanges(state),
-    formData: select.formData(state),
-    formValid: select.formValid(state),
-    formValidating: select.formValidating(state),
     roles: select.workspaceRoles(state)
   }),
   dispatch => ({
@@ -113,20 +93,11 @@ const AnnouncementResource = connect(
     resetDetail() {
       dispatch(actions.resetDetail())
     },
-    openForm(announce) {
-      dispatch(actions.openForm(announce))
-    },
-    resetForm() {
-      dispatch(actions.resetForm())
-    },
-    validate() {
-      dispatch(actions.validateForm())
-    },
-    save(aggregateId, announce) {
-      dispatch(actions.saveAnnounce(aggregateId, announce))
+    resetForm(data, isNew) {
+      dispatch(formActions.resetForm('announcementForm', data, isNew))
     },
     initFormDefaultRoles(roleIds) {
-      dispatch(actions.updateForm('roles', roleIds))
+      dispatch(formActions.updateProp('announcementForm', 'roles', roleIds))
     }
   })
 )(Resource)

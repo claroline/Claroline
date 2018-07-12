@@ -15,66 +15,59 @@ import {Overview} from '#/plugin/path/resources/path/overview/components/overvie
 import {Editor} from '#/plugin/path/resources/path/editor/components/editor.jsx'
 import {Player} from '#/plugin/path/resources/path/player/components/player.jsx'
 
-const Resource = props => {
-  const redirect = []
-  const routes = [
-    {
+const Resource = props =>
+  <ResourcePageContainer
+    editor={{
       path: '/edit',
-      component: Editor,
-      disabled: !props.editable
-    }, {
-      path: '/play',
-      component: Player
-    }, {
-      path: '/',
-      exact: true,
-      component: Overview,
-      disabled: !props.path.display.showOverview
-    }
-  ]
-
-  if (!props.path.display.showOverview) {
-    // redirect to player
-    redirect.push({
-      from: '/',
-      to: '/play',
-      exact: true
-    })
-  }
-
-  return (
-    <ResourcePageContainer
-      editor={{
-        path: '/edit',
-        save: {
-          disabled: !props.saveEnabled,
-          action: () => props.saveForm(props.path.id)
-        }
-      }}
-      customActions={[
+      save: {
+        disabled: !props.saveEnabled,
+        action: () => props.saveForm(props.path.id)
+      }
+    }}
+    customActions={[
+      {
+        type: 'link',
+        icon: 'fa fa-fw fa-home',
+        label: trans('show_overview'),
+        displayed: props.path.display.showOverview,
+        target: '/',
+        exact: true
+      }, {
+        type: 'link',
+        icon: 'fa fa-fw fa-play',
+        label: trans('start', {}, 'actions'),
+        target: '/play'
+      }
+    ]}
+  >
+    <RoutedPageContent
+      headerSpacer={false}
+      routes={[
         {
-          type: 'link',
-          icon: 'fa fa-fw fa-home',
-          label: trans('show_overview'),
-          displayed: props.path.display.showOverview,
-          target: '/',
-          exact: true
+          path: '/edit',
+          component: Editor,
+          disabled: !props.editable
         }, {
-          type: 'link',
-          icon: 'fa fa-fw fa-play',
-          label: trans('start', {}, 'actions'),
-          target: '/play'
+          path: '/play',
+          component: Player
+        }, {
+          path: '/',
+          exact: true,
+          component: Overview,
+          disabled: !props.path.display.showOverview
         }
       ]}
-    >
-      <RoutedPageContent
-        headerSpacer={false}
-        redirect={redirect}
-        routes={routes}
-      />
-    </ResourcePageContainer>
-  )
-}
+      redirect={[
+        // redirect to player when no overview
+        {
+          disabled: props.path.display.showOverview,
+          from: '/',
+          to: '/play',
+          exact: true
+        }
+      ]}
+    />
+  </ResourcePageContainer>
 
 Resource.propTypes = {
   path: T.object.isRequired,

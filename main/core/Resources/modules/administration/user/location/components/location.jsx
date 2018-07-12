@@ -21,6 +21,16 @@ const LocationForm = props =>
   <FormContainer
     level={3}
     name="locations.current"
+    buttons={true}
+    target={(location, isNew) => isNew ?
+      ['apiv2_location_create'] :
+      ['apiv2_location_update', {id: location.id}]
+    }
+    cancel={{
+      type: 'link',
+      target: '/locations',
+      exact: true
+    }}
     sections={[
       {
         title: t('general'),

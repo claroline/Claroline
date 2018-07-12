@@ -3,46 +3,25 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {matchPath, Routes, withRouter} from '#/main/app/router'
+import {Routes} from '#/main/app/router'
 
-import {PageActions} from '#/main/core/layout/page/components/page-actions.jsx'
-import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
+import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions'
 
-import {Organization}  from '#/main/core/administration/user/organization/components/organization.jsx'
-import {Organizations} from '#/main/core/administration/user/organization/components/organizations.jsx'
+import {Organization}  from '#/main/core/administration/user/organization/components/organization'
+import {Organizations} from '#/main/core/administration/user/organization/components/organizations'
 import {actions}       from '#/main/core/administration/user/organization/actions'
 import {select}        from '#/main/core/administration/user/organization/selectors'
 
-const OrganizationTabActionsComponent = props =>
+const OrganizationTabActions = () =>
   <PageActions>
-    <FormPageActionsContainer
-      formName="organizations.current"
-      target={(organization, isNew) => isNew ?
-        ['apiv2_organization_create'] :
-        ['apiv2_organization_update', {id: organization.id}]
-      }
-      opened={!!matchPath(props.location.pathname, {path: '/organizations/form'})}
-      open={{
-        type: 'link',
-        icon: 'fa fa-plus',
-        label: trans('add_organization'),
-        target: '/organizations/form'
-      }}
-      cancel={{
-        type: 'link',
-        target: '/organizations',
-        exact: true
-      }}
+    <PageAction
+      type="link"
+      icon="fa fa-plus"
+      label={trans('add_organization')}
+      target="/organizations/form"
+      primary={true}
     />
   </PageActions>
-
-OrganizationTabActionsComponent.propTypes = {
-  location: T.shape({
-    pathname: T.string
-  }).isRequired
-}
-
-const OrganizationTabActions = withRouter(OrganizationTabActionsComponent)
 
 const OrganizationTabComponent = props =>
   <Routes

@@ -9,7 +9,7 @@ import {TabbedPageContainer} from '#/main/core/layout/tabs'
 import {UserTab, UserTabActions} from '#/main/core/workspace/user/user/components/user-tab.jsx'
 import {GroupTab, GroupTabActions} from '#/main/core/workspace/user/group/components/group-tab.jsx'
 import {RoleTab, RoleTabActions} from '#/main/core/workspace/user/role/components/role-tab.jsx'
-import {ParametersTab, ParametersTabActions} from '#/main/core/workspace/user/parameters/components/parameters-tab.jsx'
+import {ParametersTab} from '#/main/core/workspace/user/parameters/components/parameters-tab'
 import {PendingTab} from '#/main/core/workspace/user/pending/components/pending-tab.jsx'
 
 import {select}  from '#/main/core/workspace/user/selectors'
@@ -61,7 +61,6 @@ const Tool = (props) => {
           onlyIcon: true,
           path: '/parameters',
           content: ParametersTab,
-          actions: ParametersTabActions,
           displayed: permLevel !== READ_ONLY
         }
       ]}
