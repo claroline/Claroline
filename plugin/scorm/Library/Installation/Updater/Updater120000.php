@@ -34,19 +34,24 @@ class Updater120000 extends Updater
 
     private function deactivateOldResourceTypes()
     {
-        $this->log('Deactivating Scorm 1.2 & Scorm 2004...');
-
         $resourceTypeRepo = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
-
         $scorm12Type = $resourceTypeRepo->findOneBy(['name' => 'claroline_scorm_12']);
-        $scorm12Type->setEnabled(false);
-        $this->om->persist($scorm12Type);
-
         $scorm2004Type = $resourceTypeRepo->findOneBy(['name' => 'claroline_scorm_2004']);
-        $scorm2004Type->setEnabled(false);
-        $this->om->persist($scorm2004Type);
 
-        $this->om->flush();
-        $this->log('Scorm 1.2 & Scorm 2004 are deactivated.');
+        if (!empty($scorm12Type) || !empty($scorm2004Type)) {
+            $this->log('Deactivating Scorm 1.2 & Scorm 2004...');
+
+            if (!empty($scorm12Type)) {
+                $scorm12Type->setEnabled(false);
+                $this->om->persist($scorm12Type);
+            }
+            if (!empty($scorm2004Type)) {
+                $scorm2004Type->setEnabled(false);
+                $this->om->persist($scorm2004Type);
+            }
+
+            $this->om->flush();
+            $this->log('Scorm 1.2 & Scorm 2004 are deactivated.');
+        }
     }
 }

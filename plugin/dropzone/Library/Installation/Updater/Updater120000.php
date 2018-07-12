@@ -34,15 +34,17 @@ class Updater120000 extends Updater
 
     private function deactivateResourceType()
     {
-        $this->log('Deactivating old Dropzone resources...');
-
         $resourceTypeRepo = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
-
         $dropzoneType = $resourceTypeRepo->findOneBy(['name' => 'icap_dropzone']);
-        $dropzoneType->setEnabled(false);
-        $this->om->persist($dropzoneType);
 
-        $this->om->flush();
-        $this->log('Old Dropzone is deactivated.');
+        if (!empty($dropzoneType)) {
+            $this->log('Deactivating old Dropzone resources...');
+
+            $dropzoneType->setEnabled(false);
+            $this->om->persist($dropzoneType);
+
+            $this->om->flush();
+            $this->log('Old Dropzone is deactivated.');
+        }
     }
 }
