@@ -110,6 +110,7 @@ class CommentSerializer
             'authorName' => null !== $comment->getAuthor() ? $comment->getAuthor()->getFullName() : null,
             'authorPicture' => null !== $comment->getAuthor() ? $comment->getAuthor()->getPicture() : null,
             'isPublished' => $comment->isPublished(),
+            'reported' => $comment->getReported(),
         ];
     }
 
@@ -147,6 +148,10 @@ class CommentSerializer
 
         if (isset($data['updateDate'])) {
             $comment->setUpdateDate(DateNormalizer::denormalize($data['updateDate']));
+        }
+
+        if (isset($data['reported'])) {
+            $comment->setReported($data['reported']);
         }
 
         if ($user) {

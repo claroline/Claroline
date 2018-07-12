@@ -32,18 +32,7 @@ const reducer = {
     [POST_UPDATE_PUBLICATION]: (state, action) => action.post,
     [POST_RESET]: () => ({})
   }),
-  post_edit: makeFormReducer('post_edit'/*, {}, {
-    data: makeReducer({}, {
-      [FORM_UPDATE_PROP+'/post_edit']: (state, action) => {
-        const data = cloneDeep(state)
-        var array = action.propValue.split(",").map(item => item.trim())
-        if(action.propName === 'tags'){
-          console.log(array)
-        }
-        return data
-      }
-    })
-  }*/)
+  post_edit: makeFormReducer('post_edit')
 }
 
 export {

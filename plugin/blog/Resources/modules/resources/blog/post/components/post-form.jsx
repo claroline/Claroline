@@ -37,7 +37,10 @@ const PostFormComponent = props =>
                 type: 'date',
                 help: trans('icap_blog_post_form_publicationDate_help', {}, 'icap_blog'),
                 label: trans('icap_blog_post_form_publicationDate', {}, 'icap_blog'),
-                required: true
+                required: true,
+                options: {
+                  time: false
+                }
               },{
                 name: 'content',
                 type: 'html',

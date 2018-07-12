@@ -17,7 +17,7 @@
         {% if item.url %}
             <item>
                 {% if item.title %}
-                    <title>{{ item.title }}</title>
+                    <title>{{ item.title | raw | escape }}</title>
                 {% endif %}
                 <link>{{ item.url }}</link>
                 {% if item.intro %}
@@ -27,7 +27,7 @@
                     <pubDate>{{ item.date }}</pubDate>
                 {% endif %}
                 {% if item.author %}
-                    <dc:creator>{{ item.author }}</dc:creator>
+                    <creator>{{ item.author }}</creator>
                 {% endif %}
                 <guid>{{ item.url }}</guid>
             </item>

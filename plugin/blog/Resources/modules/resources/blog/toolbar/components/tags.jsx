@@ -5,6 +5,9 @@ import {trans} from '#/main/core/translation'
 import {TagCloud} from '#/main/app/content/meta/components/tag-cloud'
 import {actions as listActions} from '#/main/core/data/list/actions'
 import {actions as postActions} from '#/plugin/blog/resources/blog/post/store/actions'
+import {select} from '#/plugin/blog/resources/blog/selectors.js'
+import {constants} from '#/plugin/blog/resources/blog/constants.js'
+import {cleanTag} from '#/plugin/blog/resources/blog/utils.js'
 import isEmpty from 'lodash/isEmpty'
 import {withRouter} from '#/main/app/router'
 
@@ -21,7 +24,7 @@ const TagsComponent = props =>
           maxSize={22}
           onClick={(tag) => {
             props.goHome(props.history)
-            props.searchByTag(tag)
+            props.searchByTag(cleanTag(props.tagMode, tag))
           }}
         />)
         : (
@@ -33,7 +36,8 @@ const TagsComponent = props =>
 
 TagsComponent.propTypes = {
   searchByTag: T.func.isRequired,
-  tags: T.oneOfType([T.object, T.array]),
+  tags: T.object,
+  tagMode: T.string,
   history: T.object,
   goHome: T.func.isRequired,
   maxSize: T.number
@@ -41,7 +45,8 @@ TagsComponent.propTypes = {
 
 const Tags = withRouter(connect(
   state => ({
-    tags: state.blog.data.tags,
+    tags: state.blog.data.options.data.tagCloud === constants.TAGCLOUD_TYPE_CLASSIC_NUM ? select.displayTagsFrequency(state) : state.blog.data.tags,
+    tagMode: state.blog.data.options.data.tagCloud,
     maxSize: state.blog.data.options.data.maxTag
   }),
   dispatch => ({

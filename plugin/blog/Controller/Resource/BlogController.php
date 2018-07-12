@@ -106,7 +106,16 @@ class BlogController extends Controller
         ];
 
         /** @var \Icap\BlogBundle\Entity\Post[] $posts */
-        $posts = $this->postManager->getPosts($blog->getId(), [], true, true);
+        $posts = $this->postManager->getPosts(
+            $blog->getId(),
+            [],
+            $this->checkPermission('ADMINISTRATE', $blog->getResourceNode())
+            || $this->checkPermission('EDIT', $blog->getResourceNode())
+            || $this->checkPermission('MODERATE', $blog->getResourceNode())
+                ? PostManager::GET_ALL_POSTS
+                : PostManager::GET_PUBLISHED_POSTS,
+            false
+        );
 
         $items = [];
         if (isset($posts)) {
@@ -121,7 +130,7 @@ class BlogController extends Controller
             }
         }
 
-        return new Response($this->renderView('IcapBlogBundle::rss.html.twig', [
+        return new Response($this->renderView('IcapBlogBundle:blog/rss:rss.html.twig', [
             'feed' => $feed,
             'items' => $items,
         ]), 200, [
@@ -140,7 +149,15 @@ class BlogController extends Controller
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
 
         /** @var \Icap\BlogBundle\Entity\Post[] $posts */
-        $posts = $this->postManager->getPosts($blog->getId(), [], true, false);
+        $posts = $this->postManager->getPosts(
+            $blog->getId(),
+            [],
+            $this->checkPermission('ADMINISTRATE', $blog->getResourceNode())
+            || $this->checkPermission('EDIT', $blog->getResourceNode())
+            || $this->checkPermission('MODERATE', $blog->getResourceNode())
+                ? PostManager::GET_ALL_POSTS
+                : PostManager::GET_PUBLISHED_POSTS,
+            false);
         $items = [];
         if (isset($posts)) {
             foreach ($posts['data'] as $post) {

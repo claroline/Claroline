@@ -20,7 +20,7 @@ const CommentComponent = (props) =>
     {!isEmpty(props.showEditCommentForm) && props.showEditCommentForm === props.comment.id ?
       <UserMessageForm
         key={`comment-${props.comment.id}`}
-        user={props.comment.author}
+        user={props.comment.author ? props.comment.author : undefined}
         content={props.comment.message}
         allowHtml={true}
         submitLabel={t('add_comment')}

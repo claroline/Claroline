@@ -29,8 +29,8 @@ const PAGE_SIZE = {
 
 const TAGCLOUD_TYPE = {
   [TAGCLOUD_TYPE_CLASSIC]: trans('classic', {}, 'icap_blog'),
-  [TAGCLOUD_TYPE_3D]: trans('3d', {}, 'icap_blog'),
-  [TAGCLOUD_TYPE_CLASSIC_NUM]: trans('advanced', {}, 'icap_blog')
+  [TAGCLOUD_TYPE_CLASSIC_NUM]: trans('advanced', {}, 'icap_blog'),
+  [TAGCLOUD_TYPE_3D]: trans('3D', {}, 'icap_blog')
 }
 
 const COMMENT_MODERATION_MODE = {
@@ -49,6 +49,7 @@ const MODES = {
 export const constants = {
   PAGE_SIZE,
   TAGCLOUD_TYPE,
+  TAGCLOUD_TYPE_CLASSIC_NUM,
   COMMENT_MODERATION_MODE,
   MODES,
   LIST_POSTS,

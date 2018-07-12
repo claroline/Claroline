@@ -1,5 +1,6 @@
 import {makeReducer} from '#/main/core/scaffolding/reducer'
 import cloneDeep from 'lodash/cloneDeep'
+import isEmpty from 'lodash/isEmpty'
 import difference from 'lodash/difference'
 import {
   ADD_TAGS,
@@ -20,21 +21,26 @@ const reducer = {
       const tags = cloneDeep(state)
       //remove old tags
       for (let tag of toRemove) {
-        if(tags[tag]){
-          tags[tag]--
-          if(tags[tag] <= 0){
-            delete tags[tag]
+        if(!isEmpty(tag)){
+          if(tags[tag]){
+            tags[tag]--
+            if(tags[tag] <= 0){
+              delete tags[tag]
+            }
           }
         }
       }
       //add new tags
       for (let tag of toAdd) {
-        if(tags[tag]){
-          tags[tag]++
-        }else{
-          tags[tag] = 1
+        if(!isEmpty(tag)){
+          if(tags[tag]){
+            tags[tag]++
+          }else{
+            tags[tag] = 1
+          }
         }
       }
+
       return tags
     }
   }),

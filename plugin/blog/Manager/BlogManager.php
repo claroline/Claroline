@@ -490,20 +490,19 @@ class BlogManager
      */
     public function getTags($blog, array $postData = [])
     {
-        //TODO tagBundle needs a mthod to get tags and their frequency
-        $availables = [];
-        foreach ($postData as $data) {
-            $tags = $this->postManager->getTags($data['id']);
-            $availables = array_merge($availables, $tags);
-        }
+        $postUuids = array_column($postData, 'id');
 
-        $tags = [];
-        foreach ($availables as $tag) {
-            if (!array_key_exists($tag, $tags)) {
-                $tags[$tag] = 0;
-            }
-            ++$tags[$tag];
-        }
+        $event = new GenericDataEvent([
+            'class' => 'Icap\BlogBundle\Entity\Post',
+            'ids' => $postUuids,
+            'frequency' => true,
+        ]);
+
+        $this->eventDispatcher->dispatch(
+            'claroline_retrieve_used_tags_by_class_and_ids',
+            $event
+        );
+        $tags = $event->getResponse();
 
         //only keep max tag number, if defined
         if ($blog->getOptions()->isTagTopMode() && $blog->getOptions()->getMaxTag() > 0) {
@@ -511,6 +510,6 @@ class BlogManager
             $tags = array_slice($tags, 0, $blog->getOptions()->getMaxTag());
         }
 
-        return $tags;
+        return (object) $tags;
     }
 }

@@ -4,10 +4,23 @@ import {PropTypes as T} from 'prop-types'
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 import {constants as listConst} from '#/main/core/data/list/constants'
 import {trans} from '#/main/core/translation'
+import {Button} from '#/main/app/action/components/button'
 import {PostCard} from '#/plugin/blog/resources/blog/post/components/post.jsx'
+import {hasPermission} from '#/main/core/resource/permissions'
+import isEmpty from 'lodash/isEmpty'
+import {selectors as resourceSelect} from '#/main/core/resource/store'
 
 const PostsList = props =>
-  <div>
+  <div className={'posts-list'}>
+    {(props.canEdit || props.canPost) &&
+      <Button
+        icon={'fa fa-fw fa-plus'}
+        label={trans('new_post', {}, 'icap_blog')}
+        type="link"
+        className="btn blog-primary-button"
+        target={'/new'}
+      />
+    }
     <DataListContainer
       name="posts"
       fetch={{
@@ -66,17 +79,41 @@ const PostsList = props =>
         current: listConst.DISPLAY_LIST
       }}
     />
+    {!isEmpty(props.posts) &&
+      <Button
+        icon={'fa fa-4x fa-arrow-circle-up'}
+        label={trans('go-up', {}, 'icap_blog')}
+        type="callback"
+        tooltip="bottom"
+        callback={() => props.goUp()}
+        className="btn-link button-go-to-top pull-right"
+        target={'/new'}
+      />
+    }
   </div>
 
 PostsList.propTypes ={
+  goUp: T.func.isRequired,
   blogId: T.string.isRequired,
-  posts: T.array
+  posts: T.array,
+  canEdit: T.bool,
+  canPost: T.bool
 }
 
 const PostsContainer = connect(
   state => ({
     posts: state.posts.data,
-    blogId: state.blog.data.id
+    blogId: state.blog.data.id,
+    canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
+    canPost: hasPermission('post', resourceSelect.resourceNode(state))
+  }),
+  () => ({
+    goUp: () => {
+      let node = document.getElementById('blog-top-page')
+      if (node) {
+        node.scrollIntoView({block: 'end', behavior: 'smooth', inline: 'center'})
+      }
+    }
   })
 )(PostsList)
 

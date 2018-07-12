@@ -40,6 +40,7 @@ const PostComponent = props =>
               blogId={props.blogId}
               post={props.post}
               canEdit={props.canEdit}
+              canModerate={props.canModerate}
               publishPost={props.publishPost}
               pinPost={props.pinPost}
               deletePost={props.deletePost}
@@ -52,7 +53,7 @@ const PostComponent = props =>
                 <div>
                   ...
                   <div className="read_more">
-                    <a href={`#/${props.post.slug}`}>{trans('read_more', {}, 'icap_blog')}</a> <span className="fa fa-long-arrow-right"></span>
+                    <a href={`#/${props.post.slug}`}>{trans('read_more', {}, 'icap_blog')}</a> <span className="fa fa-lg fa-arrow-circle-right"></span>
                   </div>
                 </div>
               }
@@ -90,6 +91,7 @@ PostComponent.propTypes = {
   blogId: T.string.isRequired,
   size: T.string,
   canComment: T.bool,
+  canModerate: T.bool,
   canAnonymousComment:T.bool,
   displayViews: T.bool,
   orientation: T.string,
@@ -125,10 +127,10 @@ const InfoBar = props =>
         <UrlButton target={['claro_user_profile', {publicUrl: get(props.post.author, 'meta.publicUrl')}]}>
           <UserAvatar className="user-picture" picture={props.post.author ? props.post.author.picture : undefined} alt={true} />
         </UrlButton>
-        <a className="user-name">{props.post.author.firstName} {props.post.author.lastName}</a>
+        <a className="user-name" href='#'>{props.post.author.firstName} {props.post.author.lastName}</a>
       </span>
     </li>
-    <li><span className="fa fa-calendar"></span> {displayDate(props.post.publicationDate, false, true)} </li>
+    <li><span className="fa fa-calendar"></span> {displayDate(props.post.publicationDate, false, false)} </li>
     {props.displayViews &&
       <li><span className="fa fa-eye"></span> {transChoice('display_views', props.post.viewCounter, {'%count%': props.post.viewCounter}, 'platform')}</li> 
     }
@@ -149,51 +151,61 @@ InfoBar.propTypes = {
 
 const ActionBar = props =>
   <ButtonToolbar className="post-actions">
-    <Button
-      id={`action-edit-${props.post.id}`}
-      type="link"
-      icon="fa fa-pencil"
-      className="btn btn-link"
-      tooltip="top"
-      label={trans('edit_post_short', {}, 'icap_blog')}
-      title={trans('edit_post_short', {}, 'icap_blog')}
-      target={`/${props.post.slug}/edit`}
-    />
-    <Button
-      id={`action-publish-${props.post.id}`}
-      type="callback"
-      icon={props.post.status ? 'fa fa-eye' : 'fa fa-eye-slash'}
-      className="btn btn-link"
-      tooltip="top"
-      label={props.post.status ? trans('icap_blog_post_unpublish', {}, 'icap_blog') : trans('icap_blog_post_publish', {}, 'icap_blog')}
-      title={props.post.status ? trans('icap_blog_post_unpublish', {}, 'icap_blog') : trans('icap_blog_post_publish', {}, 'icap_blog')}
-      callback={() => props.publishPost(props.blogId, props.post.id)}
-    />
-    <Button
-      id={`action-pin-${props.post.id}`}
-      type="callback"
-      icon={props.post.pinned ? 'fa fa-thumb-tack' : 'fa fa-thumb-tack fa-rotate-90'}
-      className="btn btn-link"
-      tooltip="top"
-      label={props.post.pinned ? trans('icap_blog_post_unpin', {}, 'icap_blog') : trans('icap_blog_post_pin', {}, 'icap_blog')}
-      title={props.post.pinned ? trans('icap_blog_post_unpin', {}, 'icap_blog') : trans('icap_blog_post_pin', {}, 'icap_blog')}
-      callback={() => props.pinPost(props.blogId, props.post.id)}
-    />
-    <Button
-      id={`action-delete-${props.post.id}`}
-      type="callback"
-      icon="fa fa-trash"
-      className="btn btn-link"
-      tooltip="top"
-      label={trans('delete', {}, 'platform')}
-      title={trans('delete', {}, 'platform')}
-      dangerous={true}
-      callback={() => props.deletePost(props.blogId, props.post.id, props.post.title)}
-    />
+    {props.canEdit &&
+      <Button
+        id={`action-edit-${props.post.id}`}
+        type="link"
+        icon="fa fa-pencil"
+        className="btn btn-link post-button"
+        tooltip="top"
+        label={trans('edit_post_short', {}, 'icap_blog')}
+        title={trans('edit_post_short', {}, 'icap_blog')}
+        target={`/${props.post.slug}/edit`}
+      />
+    }
+    {(props.canEdit || props.canModerate) &&
+      <Button
+        id={`action-publish-${props.post.id}`}
+        type="callback"
+        icon={props.post.status ? 'fa fa-eye' : 'fa fa-eye-slash'}
+        className="btn btn-link post-button"
+        tooltip="top"
+        label={props.post.status ? trans('icap_blog_post_unpublish', {}, 'icap_blog') : trans('icap_blog_post_publish', {}, 'icap_blog')}
+        title={props.post.status ? trans('icap_blog_post_unpublish', {}, 'icap_blog') : trans('icap_blog_post_publish', {}, 'icap_blog')}
+        callback={() => props.publishPost(props.blogId, props.post.id)}
+      />
+    }
+    {(props.canEdit) &&
+      <Button
+        id={`action-pin-${props.post.id}`}
+        type="callback"
+        icon={props.post.pinned ? 'fa fa-thumb-tack' : 'fa fa-thumb-tack fa-rotate-90'}
+        className="btn btn-link post-button"
+        tooltip="top"
+        label={props.post.pinned ? trans('icap_blog_post_unpin', {}, 'icap_blog') : trans('icap_blog_post_pin', {}, 'icap_blog')}
+        title={props.post.pinned ? trans('icap_blog_post_unpin', {}, 'icap_blog') : trans('icap_blog_post_pin', {}, 'icap_blog')}
+        callback={() => props.pinPost(props.blogId, props.post.id)}
+      />
+    }
+    {props.canEdit &&
+      <Button
+        id={`action-delete-${props.post.id}`}
+        type="callback"
+        icon="fa fa-trash"
+        className="btn btn-link post-button"
+        tooltip="top"
+        label={trans('delete', {}, 'platform')}
+        title={trans('delete', {}, 'platform')}
+        dangerous={true}
+        callback={() => props.deletePost(props.blogId, props.post.id, props.post.title)}
+      />
+    }
+
   </ButtonToolbar>
 
 ActionBar.propTypes = {
   canEdit:T.bool,
+  canModerate:T.bool,
   post: T.shape(PostType.propTypes),
   blogId: T.string.isRequired,
   publishPost: T.func.isRequired,
@@ -234,6 +246,7 @@ const Footer = props =>
 Footer.propTypes = {
   commentNumber: T.number,
   canEdit:T.bool,
+  canModerate:T.bool,
   canComment:T.bool,
   canAnonymousComment:T.bool,
   displayViews:T.bool,
@@ -245,6 +258,7 @@ const PostCardContainer = connect(
   (state) => ({
     blogId: state.blog.data.id,
     canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
+    canModerate: hasPermission('moderate', resourceSelect.resourceNode(state)),
     canComment: state.blog.data.options.data.authorizeComment,
     canAnonymousComment: state.blog.data.options.data.authorizeAnonymousComment,
     displayViews: state.blog.data.options.data.displayPostViewCounter,

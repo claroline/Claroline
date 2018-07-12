@@ -47,7 +47,7 @@ class Updater120000 extends Updater
             //get batch
             $blogs = $repo->findBy([], ['id' => 'ASC'], $batchSize, $batchSize * ($page - 1));
             foreach ($blogs as $blog) {
-                if ($blog->getOptions() && $blog->getOptions()->getBannerBackgroundImage()) {
+                if ($blog->getOptions() && !empty($blog->getOptions()->getBannerBackgroundImage()) && empty($blog->getResourceNode()->getPoster())) {
                     $bannerPath = $uploadDir.DIRECTORY_SEPARATOR.$blog->getOptions()->getBannerBackgroundImage();
                     if (file_exists($bannerPath)) {
                         $publicFile = $fu->createFile(new File($bannerPath));
@@ -68,7 +68,8 @@ class Updater120000 extends Updater
     private function migrateTags()
     {
         //check if table still exists beforehand
-        if ($this->conn->getSchemaManager()->tablesExist(['icap__blog_post_tag'])) {
+        if ($this->conn->getSchemaManager()->tablesExist(['icap__blog_post_tag'])
+            && $this->conn->getSchemaManager()->tablesExist(['icap__blog_tag'])) {
             $this->log('Transfer blog tags to tagBundle');
             $om = $this->container->get('claroline.persistence.object_manager');
             $serializer = $this->container->get('claroline.serializer.blog.post');

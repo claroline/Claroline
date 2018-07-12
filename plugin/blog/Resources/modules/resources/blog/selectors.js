@@ -13,6 +13,19 @@ const countTags = createSelector(
   }, {})
 )
 
+const displayTagsFrequency = createSelector(
+  [blog],
+  (blog) => {
+    let obj = {}
+    Object.keys(blog.data.tags).map(function (keyName) {
+      let value = blog.data.tags[keyName]
+      obj[keyName + '(' + value + ')'] = value
+    })
+
+    return obj
+  }
+)
+
 export const select = {
-  countTags
+  countTags, displayTagsFrequency
 }

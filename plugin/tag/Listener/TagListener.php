@@ -403,11 +403,25 @@ class TagListener
                 50,
                 $data['ids']
             );
-            foreach ($taggedObjects as $taggedObject) {
-                $tag = $taggedObject->getTag();
-                $tags[$tag->getId()] = $tag->getName();
+            if (isset($data['frequency']) && $data['frequency']) {
+                //array [tagname => frequency]
+                foreach ($taggedObjects as $taggedObject) {
+                    $tag = $taggedObject->getTag();
+                    if (!array_key_exists($tag->getName(), $tags)) {
+                        $tags[$tag->getName()] = 0;
+                    }
+                    ++$tags[$tag->getName()];
+                }
+            } else {
+                //array [tagname]
+                foreach ($taggedObjects as $taggedObject) {
+                    $tag = $taggedObject->getTag();
+                    $tags[$tag->getId()] = $taggedObject->getTag()->getName();
+                }
+                $tags = array_values($tags);
             }
         }
-        $event->setResponse(array_values($tags));
+
+        $event->setResponse($tags);
     }
 }

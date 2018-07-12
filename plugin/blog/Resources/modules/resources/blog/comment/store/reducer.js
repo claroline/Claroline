@@ -1,5 +1,7 @@
 import {makeReducer} from '#/main/core/scaffolding/reducer'
 import {makeListReducer} from '#/main/core/data/list/reducer'
+import isEmpty from 'lodash/isEmpty'
+import cloneDeep from 'lodash/cloneDeep'
 import {
   SHOW_COMMENTS, 
   SHOW_COMMENT_FORM,
@@ -30,12 +32,32 @@ const reducer = {
     }
   }, {
     data: makeReducer(false, {
-      [POST_RESET]: () => ([])
+      [POST_RESET]: () => ([]),
+      [UPDATE_POST_COMMENT]: (state, action) => {
+        if(!isEmpty(state)){
+          const data = cloneDeep(state)
+          const commentIndex = data.findIndex(e => e.id === action.comment.id)
+          data[commentIndex] = action.comment
+          return data
+        }
+        return {}
+      },
+      [CREATE_POST_COMMENT]: (state, action) => {
+        const data = cloneDeep(state)
+        data.unshift(action.comment)
+        return data
+      },
+      [DELETE_POST_COMMENT]: (state, action) => {
+        if(!isEmpty(state)){
+          const data = cloneDeep(state)
+          const commentIndex = data.findIndex(e => e.id === action.commentId)
+          data.splice(commentIndex, 1)
+          return data
+        }
+        return {}
+      }
     }),
     invalidated: makeReducer(false, {
-      [CREATE_POST_COMMENT]: () => true,
-      [UPDATE_POST_COMMENT]: () => true,
-      [DELETE_POST_COMMENT]: () => true,
       [POST_LOAD]: () => true,
       [POST_RESET]: () => true
     })

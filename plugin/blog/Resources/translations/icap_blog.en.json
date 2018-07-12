@@ -1,5 +1,5 @@
 {
-    "3D": "3D sphere <span>(* Not compatible with IE<9)</span>",
+    "3D": "3D sphere",
     "Post": "Post",
     "add_comment": "Add a comment:",
     "add_new_post": "Add new post",
@@ -41,6 +41,7 @@
     "edit_post_short": "Edit",
     "error_404": "The requested page doesn't exist.",
     "expand_year": "Expand this year",
+    "go-up": "Up",
     "icap_blog_banner_form_banner_activate": "Activate the banner ?",
     "icap_blog_banner_form_banner_background_color": "Background colour",
     "icap_blog_banner_form_banner_background_image": "Background image",
@@ -93,6 +94,7 @@
     "icap_blog_post_form_content": "Content",
     "icap_blog_post_form_creationDate": "Creation date",
     "icap_blog_post_form_publicationDate": "Publishing date",
+    "icap_blog_post_form_moderation_help": "Managers and moderators are not subject to moderation",
     "icap_blog_post_form_publicationDate_help": "A published post will be visible from this date",
     "icap_blog_post_form_publicationDateTo": "Published before",
     "icap_blog_post_form_publicationDateFrom": "Published after",

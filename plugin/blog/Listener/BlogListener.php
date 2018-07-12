@@ -231,6 +231,7 @@ class BlogListener
                 ->setContent($post->getContent())
                 ->setAuthor($post->getAuthor())
                 ->setStatus($post->getStatus())
+                ->setPinned($post->isPinned())
                 ->setBlog($newBlog)
             ;
 

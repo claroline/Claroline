@@ -4,10 +4,12 @@ import {PropTypes as T} from 'prop-types'
 import {currentUser} from '#/main/core/user/current'
 import {UserMessageForm} from '#/main/core/user/message/components/user-message-form.jsx'
 import {t, trans} from '#/main/core/translation'
+import isEmpty from 'lodash/isEmpty'
 import {CommentCard} from '#/plugin/blog/resources/blog/comment/components/comment.jsx'
 import {actions as commentActions} from '#/plugin/blog/resources/blog/comment/store'
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 import {constants as listConst} from '#/main/core/data/list/constants'
+import {Button} from '#/main/app/action/components/button'
 
 const authenticatedUser = currentUser()
 
@@ -58,24 +60,6 @@ const CommentsComponent = props =>
       {props.opened  &&
         <section className="comments-section">
           <h4>{trans('all_comments', {}, 'icap_blog')}</h4>
-          {/*props.comments.map((comment, commentIndex) =>
-            !isEmpty(props.showEditCommentForm) && props.showEditCommentForm === comment.id ?
-              <UserMessageForm
-                key={`comment-${commentIndex}`}
-                user={comment.author}
-                content={comment.message}
-                allowHtml={true}
-                submitLabel={t('add_comment')}
-                submit={(commentContent) => props.editComment(props.blogId, props.postId, comment.id, commentContent)}
-                cancel={() => props.switchEditCommentFormDisplay('')}
-              /> :
-              <Comment
-                key={commentIndex}
-                comment={comment}
-                postId={props.postId}
-              />
-          )*/}
-
           <DataListContainer
             name="comments"
             fetch={{
@@ -109,6 +93,17 @@ const CommentsComponent = props =>
               current: listConst.DISPLAY_LIST
             }}
           />
+          {!isEmpty(props.comments) &&
+            <Button
+              icon={'fa fa-4x fa-arrow-circle-up'}
+              label={trans('go-up', {}, 'icap_blog')}
+              type="callback"
+              tooltip="bottom"
+              callback={() => props.goUp()}
+              className="btn-link button-go-to-top pull-right"
+              target={'/new'}
+            />
+          }
         </section>
       }
     </section>
@@ -117,6 +112,7 @@ const CommentsComponent = props =>
 CommentsComponent.propTypes = {
   switchCommentFormDisplay: T.func.isRequired,
   switchCommentsDisplay: T.func.isRequired,
+  goUp: T.func.isRequired,
   switchEditCommentFormDisplay: T.func.isRequired,
   submitComment: T.func.isRequired,
   blogId: T.string.isRequired,
@@ -136,7 +132,8 @@ const Comments = connect(
     user: state.user,
     opened: state.showComments,
     showForm: state.showCommentForm,
-    showEditCommentForm: state.showEditCommentForm
+    showEditCommentForm: state.showEditCommentForm,
+    comments: state.comments.data
   }),
   dispatch => ({
     switchCommentsDisplay: (val) => {
@@ -150,6 +147,12 @@ const Comments = connect(
     },
     switchEditCommentFormDisplay: (val) => {
       dispatch(commentActions.showEditCommentForm(val))
+    },
+    goUp: () => {
+      let node = document.getElementById('blog-top-page')
+      if (node) {
+        node.scrollIntoView({block: 'end', behavior: 'smooth', inline: 'center'})
+      }
     }
   })
 )(CommentsComponent) 

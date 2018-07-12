@@ -1,7 +1,8 @@
 import {API_REQUEST} from '#/main/app/api'
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
 import {constants} from '#/plugin/blog/resources/blog/constants.js'
-import {now} from '#/main/core/scaffolding/date'
+import {getApiFormat} from '#/main/core/scaffolding/date'
+import moment from 'moment'
 import {actions as formActions} from '#/main/core/data/form/actions'
 import {actions as blogActions} from '#/plugin/blog/resources/blog/store/actions'
 
@@ -53,7 +54,7 @@ actions.editPost = (formName, blogId, postId) => (dispatch) => {
 }
 
 actions.createPost = (formName) => (dispatch) => {
-  dispatch(formActions.resetForm(formName, {publicationDate: now()}, true))
+  dispatch(formActions.resetForm(formName, {publicationDate: moment().utc().local().format(getApiFormat())}, true))
   dispatch(blogActions.switchMode(constants.CREATE_POST))
 }
 

@@ -65,6 +65,7 @@ const Blog = props =>
     ]}
   >
     <PageContent>
+      <div id={'blog-top-page'}></div>
       <RoutedPageContent className="blog-page-content" routes={[
         {
           path: '/moderation',
