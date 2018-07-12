@@ -174,7 +174,7 @@ class UpdateRichTextCommand extends ContainerAwareCommand
             'Claroline\CoreBundle\Entity\Resource\Activity' => ['description'],
             'Innova\PathBundle\Entity\Path\Path' => ['description'],
             'Innova\PathBundle\Entity\Step' => ['description'],
-            'Claroline\CoreBundle\Entity\Widget\SimpleTextConfig' => ['content'],
+            'Claroline\CoreBundle\Entity\Widget\Type\SimpleWidget' => ['content'],
             'UJM\ExoBundle\Entity\Exercise' => ['endMessage'],
             'UJM\ExoBundle\Entity\Item\Item' => ['content'],
             'Claroline\ForumBundle\Entity\Message' => ['content'],

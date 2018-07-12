@@ -28,7 +28,6 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
 
     public function preUpdate($currentVersion, $targetVersion)
     {
-        $this->updateRolesAdmin();
         $dataWebDir = $this->container->getParameter('claroline.param.data_web_dir');
         $fileSystem = $this->container->get('filesystem');
         $publicFilesDir = $this->container->getParameter('claroline.param.public_files_directory');
@@ -397,6 +396,8 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
         if (!$om->getRepository(Workspace::class)->findOneBy(['code' => 'default_workspace', 'personal' => true, 'model' => true])) {
             $this->container->get('claroline.manager.workspace_manager')->getDefaultModel(true, true);
         }
+
+	$this->updateRolesAdmin();
     }
 
     private function setLocale()
