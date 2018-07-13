@@ -5,14 +5,13 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/core/translation'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
-import {actions as formActions} from '#/main/core/data/form/actions'
 import {RoutedPageContent} from '#/main/core/layout/router'
-import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
+import {ResourcePageContainer} from '#/main/core/resource/containers/page'
 
 import {select} from '#/plugin/path/resources/path/selectors'
-import {Overview} from '#/plugin/path/resources/path/overview/components/overview.jsx'
-import {Editor} from '#/plugin/path/resources/path/editor/components/editor.jsx'
-import {Player} from '#/plugin/path/resources/path/player/components/player.jsx'
+import {Overview} from '#/plugin/path/resources/path/overview/components/overview'
+import {Editor} from '#/plugin/path/resources/path/editor/components/editor'
+import {Player} from '#/plugin/path/resources/path/player/components/player'
 
 const Resource = props =>
   <ResourcePageContainer
@@ -38,8 +37,7 @@ const Resource = props =>
         {
           path: '/edit',
           component: Editor,
-          disabled: !props.editable,
-          onEnter: () => props.resetForm(props.path)
+          disabled: !props.editable
         }, {
           path: '/play',
           component: Player
@@ -73,11 +71,6 @@ const PathResource = connect(
   (state) => ({
     path: select.path(state),
     editable: hasPermission('edit', resourceSelect.resourceNode(state))
-  }),
-  (dispatch) => ({
-    resetForm(data) {
-      dispatch(formActions.resetForm('pathForm', data, false))
-    }
   })
 )(Resource)
 
