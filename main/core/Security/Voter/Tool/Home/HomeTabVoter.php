@@ -36,7 +36,7 @@ class HomeTabVoter extends AbstractVoter
 
     public function check(TokenInterface $token, HomeTab $object)
     {
-        if (HomeTab::TYPE_ADMIN_DESKTOP === $object->getType() && !$this->isAdmin()) {
+        if (HomeTab::TYPE_ADMIN_DESKTOP === $object->getType() && !$this->isAdmin($token)) {
             return VoterInterface::ACCESS_DENIED;
         } else {
             if (HomeTab::TYPE_DESKTOP === $object->getType()) {
