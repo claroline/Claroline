@@ -20,6 +20,7 @@ export const App = () => ({
       pinned: initialData.path.display.openSummary
     },
     pathForm: {
+      originalData: initialData.path,
       data: initialData.path
     }
   })
