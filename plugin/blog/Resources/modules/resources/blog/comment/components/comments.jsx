@@ -10,6 +10,9 @@ import {actions as commentActions} from '#/plugin/blog/resources/blog/comment/st
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 import {constants as listConst} from '#/main/core/data/list/constants'
 import {Button} from '#/main/app/action/components/button'
+import {hasPermission} from '#/main/core/resource/permissions'
+import {constants} from '#/plugin/blog/resources/blog/constants'
+import {selectors as resourceSelect} from '#/main/core/resource/store'
 
 const authenticatedUser = currentUser()
 
@@ -52,6 +55,12 @@ const CommentsComponent = props =>
                 submit={(comment) => props.submitComment(props.blogId, props.postId, comment)}
                 cancel={() => props.switchCommentFormDisplay(false)}
               />
+              {!props.canModerate && !props.canEdit && props.isModerated &&
+                <span className="help-block">
+                  <span className="fa fa-fw fa-info-circle"></span>
+                  {trans('icap_blog_comment_form_moderation_help', {}, 'icap_blog')}
+                </span>
+              }
             </div>
           }
           <hr/>
@@ -122,18 +131,24 @@ CommentsComponent.propTypes = {
   canAnonymousComment: T.bool,
   showComments: T.bool,
   opened: T.bool,
+  isModerated: T.bool,
   showForm: T.bool,
   comments: T.array,
-  commentNumber: T.number
+  commentNumber: T.number,
+  canEdit: T.bool,
+  canModerate: T.bool
 }
         
 const Comments = connect(
   state => ({
     user: state.user,
     opened: state.showComments,
+    isModerated: state.blog.data.options.data.commentModerationMode !== constants.COMMENT_MODERATION_MODE_NONE,
     showForm: state.showCommentForm,
     showEditCommentForm: state.showEditCommentForm,
-    comments: state.comments.data
+    comments: state.comments.data,
+    canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
+    canModerate: hasPermission('moderate', resourceSelect.resourceNode(state))
   }),
   dispatch => ({
     switchCommentsDisplay: (val) => {

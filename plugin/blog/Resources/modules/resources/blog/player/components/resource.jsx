@@ -6,28 +6,15 @@ import {RoutedPageContent} from '#/main/core/layout/router'
 import {PageContent} from '#/main/core/layout/page/index'
 import {trans} from '#/main/core/translation'
 import {select as formSelect} from '#/main/core/data/form/selectors'
-import {actions as formActions} from '#/main/core/data/form/actions'
 import {url} from '#/main/app/api'
 import {Moderation} from '#/plugin/blog/resources/blog/moderation/components/moderation.jsx'
 import {Player} from '#/plugin/blog/resources/blog/player/components/player.jsx'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {actions as toolbarActions} from '#/plugin/blog/resources/blog/toolbar/store'
-import {constants} from '#/plugin/blog/resources/blog/constants'
 import {hasPermission} from '#/main/core/resource/permissions'
 
 const Blog = props =>
   <ResourcePageContainer
-    editor={{
-      icon: 'fa fa-pencil',
-      label: trans('configure_blog', {}, 'icap_blog'),
-      path: '/edit',
-      save: {
-        disabled: !props.saveEnabled,
-        action: () => {
-          props.saveOptions(props.blogId)
-        }
-      }
-    }}
+    primaryAction="post"
     customActions={[
       {
         type: 'link',
@@ -64,9 +51,9 @@ const Blog = props =>
       }
     ]}
   >
-    <PageContent>
+    <PageContent className={'blog-container'}>
       <div id={'blog-top-page'}></div>
-      <RoutedPageContent className="blog-page-content" routes={[
+      <RoutedPageContent className={'blog-page'}routes={[
         {
           path: '/moderation',
           component: Moderation
@@ -82,7 +69,6 @@ Blog.propTypes = {
   blogId: T.string.isRequired,
   saveEnabled: T.bool.isRequired,
   pdfEnabled: T.bool.isRequired,
-  saveOptions: T.func.isRequired,
   canEdit: T.bool,
   canPost: T.bool,
   canModerate: T.bool,
@@ -98,14 +84,6 @@ const BlogContainer = connect(
     canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
     canPost: hasPermission('post', resourceSelect.resourceNode(state)),
     canModerate: hasPermission('moderate', resourceSelect.resourceNode(state))
-  }),
-  dispatch => ({
-    saveOptions: (blogId) => {
-      dispatch(
-        formActions.saveForm(constants.OPTIONS_EDIT_FORM_NAME, ['apiv2_blog_options_update', {blogId: blogId}])
-      ).then(
-        () => dispatch(toolbarActions.getTags(blogId)))
-    }
   })
 )(Blog)
       

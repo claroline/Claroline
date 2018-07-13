@@ -12,15 +12,6 @@ import {selectors as resourceSelect} from '#/main/core/resource/store'
 
 const PostsList = props =>
   <div className={'posts-list'}>
-    {(props.canEdit || props.canPost) &&
-      <Button
-        icon={'fa fa-fw fa-plus'}
-        label={trans('new_post', {}, 'icap_blog')}
-        type="link"
-        className="btn blog-primary-button"
-        target={'/new'}
-      />
-    }
     <DataListContainer
       name="posts"
       fetch={{

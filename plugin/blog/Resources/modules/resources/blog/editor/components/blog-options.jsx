@@ -12,6 +12,7 @@ import {ToolManager} from '#/plugin/blog/resources/blog/editor/components/tool-m
 import {constants} from '#/plugin/blog/resources/blog/constants.js'
 import {FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
 import {withRouter} from '#/main/app/router'
+import {actions as toolbarActions} from '#/plugin/blog/resources/blog/toolbar/store'
 
 const BlogOptionsComponent = props =>
   <section className="resource-section">
@@ -139,6 +140,16 @@ const BlogOptionsComponent = props =>
         </FormSection>
         <ButtonToolbar>
           <Button
+            disabled={!props.saveEnabled}
+            primary={true}
+            label={trans('save')}
+            type="callback"
+            className="btn"
+            callback={() => {
+              props.saveOptions(props.blogId, props.tagOptionsChanged)
+            }}
+          />
+          <Button
             label={trans('icap_blog_options_form_init', {}, 'icap_blog')}
             type="callback"
             className="btn"
@@ -153,17 +164,23 @@ const BlogOptionsComponent = props =>
     
 BlogOptionsComponent.propTypes = {
   options: T.shape(BlogOptionsType.propTypes),
-  cancel: T.func.isRequired,
   mode: T.string,
   history: T.shape({}),
-  saveEnabled: T.bool.isRequired
+  blogId: T.string,
+  cancel: T.func.isRequired,
+  saveEnabled: T.bool.isRequired,
+  tagOptionsChanged: T.bool.isRequired,
+  saveOptions: T.func.isRequired
 }
 
 const BlogOptions = withRouter(connect(
   state => ({
+    blogId: state.blog.data.id,
     options: formSelect.data(formSelect.form(state, constants.OPTIONS_EDIT_FORM_NAME)),
     mode: state.mode,
-    saveEnabled: formSelect.saveEnabled(formSelect.form(state, constants.OPTIONS_EDIT_FORM_NAME))
+    saveEnabled: formSelect.saveEnabled(formSelect.form(state, constants.OPTIONS_EDIT_FORM_NAME)),
+    tagOptionsChanged:formSelect.data(formSelect.form(state, constants.OPTIONS_EDIT_FORM_NAME)).tagTopMode !== formSelect.originalData(formSelect.form(state, constants.OPTIONS_EDIT_FORM_NAME)).tagTopMode
+    || formSelect.data(formSelect.form(state, constants.OPTIONS_EDIT_FORM_NAME)).maxTag !== formSelect.originalData(formSelect.form(state, constants.OPTIONS_EDIT_FORM_NAME)).maxTag
   }), 
   dispatch => ({
     cancel: (history) => {
@@ -171,6 +188,17 @@ const BlogOptions = withRouter(connect(
         formActions.cancelChanges(constants.OPTIONS_EDIT_FORM_NAME)
       )
       history.push('/')
+    },
+    saveOptions: (blogId, tagOptionsChanged) => {
+      dispatch(
+        formActions.saveForm(constants.OPTIONS_EDIT_FORM_NAME, ['apiv2_blog_options_update', {blogId: blogId}])
+      ).then(
+        () => {
+          //if tag options changed
+          if(tagOptionsChanged){
+            dispatch(toolbarActions.getTags(blogId))
+          }
+        })
     }
   })
 )(BlogOptionsComponent))

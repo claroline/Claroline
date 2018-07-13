@@ -3,6 +3,7 @@
 namespace Icap\BlogBundle\Listener;
 
 use Claroline\CoreBundle\Event\User\MergeUsersEvent;
+use Icap\BlogBundle\Manager\BlogManager;
 use Icap\BlogBundle\Manager\CommentManager;
 use Icap\BlogBundle\Manager\PostManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -20,19 +21,25 @@ class ApiListener
     /** @var PostManager */
     private $postManager;
 
+    /** @var BlogManager */
+    private $blogManager;
+
     /**
      * @DI\InjectParams({
      *     "commentManager" = @DI\Inject("icap.blog.manager.comment"),
-     *     "postManager"    = @DI\Inject("icap.blog.manager.post")
+     *     "postManager"    = @DI\Inject("icap.blog.manager.post"),
+     *     "blogManager"    = @DI\Inject("icap_blog.manager.blog")
      * })
      *
      * @param CommentManager $commentManager
      * @param PostManager    $postManager
+     * @param BlogManager    $blogManager
      */
-    public function __construct(CommentManager $commentManager, PostManager $postManager)
+    public function __construct(CommentManager $commentManager, PostManager $postManager, BlogManager $blogManager)
     {
         $this->commentManager = $commentManager;
         $this->postManager = $postManager;
+        $this->blogManager = $blogManager;
     }
 
     /**
@@ -49,5 +56,8 @@ class ApiListener
         // Replace user of Post nodes
         $postCount = $this->postManager->replacePostAuthor($event->getRemoved(), $event->getKept());
         $event->addMessage("[IcapBlogBundle] updated Post count: $postCount");
+
+        // Replace user of Blog members
+        $this->blogManager->replaceMemberAuthor($event->getRemoved(), $event->getKept());
     }
 }

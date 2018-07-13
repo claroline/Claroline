@@ -14,6 +14,7 @@ use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Entity\Tag;
 use Icap\BlogBundle\Repository\BlogRepository;
+use Icap\BlogBundle\Repository\MemberRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\File;
@@ -26,15 +27,17 @@ class BlogManager
     private $objectManager;
     private $uploadDir;
     private $repo;
+    private $memberRepo;
     private $eventDispatcher;
     private $postManager;
     private $fileUtils;
 
     /**
      * @DI\InjectParams({
-     *      "objectManager"  = @DI\Inject("claroline.persistence.object_manager"),
-     *      "uploadDir"      = @DI\Inject("%icap.blog.banner_directory%"),
-     *      "repo"           = @DI\Inject("icap.blog.blog_repository"),
+     *     "objectManager"   = @DI\Inject("claroline.persistence.object_manager"),
+     *     "uploadDir"       = @DI\Inject("%icap.blog.banner_directory%"),
+     *     "repo"            = @DI\Inject("icap.blog.blog_repository"),
+     *     "memberRepo"      = @DI\Inject("icap.blog.member_repository"),
      *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
      *     "postManager"     = @DI\Inject("icap.blog.manager.post"),
      *     "fileUtils"       = @DI\Inject("claroline.utilities.file")
@@ -45,6 +48,7 @@ class BlogManager
         ObjectManager $objectManager,
         $uploadDir,
         BlogRepository $repo,
+        MemberRepository $memberRepo,
         EventDispatcherInterface $eventDispatcher,
         PostManager $postManager,
         FileUtilities $fileUtils)
@@ -52,6 +56,7 @@ class BlogManager
         $this->objectManager = $objectManager;
         $this->uploadDir = $uploadDir;
         $this->repo = $repo;
+        $this->memberRepo = $memberRepo;
         $this->eventDispatcher = $eventDispatcher;
         $this->postManager = $postManager;
         $this->fileUtils = $fileUtils;
@@ -394,24 +399,6 @@ class BlogManager
         ];
     }
 
-    /* public function getPanels(Blog $blog)
-     {
-         $panelInfo = $this->getOldPanelInfos();
-         $mask = $blog->getOptions()->getListWidgetBlog();
-         $orderPanelsTable = [];
-
-         for ($maskPosition = 0, $entreTableau = 0; $maskPosition < strlen($mask); $maskPosition += 2, $entreTableau++) {
-             $componentName = $panelInfo[$mask[$maskPosition]];
-             $orderPanelsTable[] = [
-                 'componentName' => $componentName,
-                 'visibility' => (int) $mask[$maskPosition + 1],
-                 'id' => (int) $mask[$maskPosition],
-             ];
-         }
-
-         return $orderPanelsTable;
-     }*/
-
     public function updateOptions(Blog $blog, BlogOptions $options, $infos)
     {
         $currentOptions = $blog->getOptions();
@@ -511,5 +498,40 @@ class BlogManager
         }
 
         return (object) $tags;
+    }
+
+    /**
+     * Find all member for a given user and the replace him by another.
+     *
+     * @param User $from
+     * @param User $to
+     */
+    public function replaceMemberAuthor(User $from, User $to)
+    {
+        $fromIsMember = false;
+        $froms = $this->memberRepo->findByUser($from);
+        if (count($froms) > 0) {
+            $fromIsMember = true;
+        }
+
+        $toIsMember = false;
+        $tos = $this->memberRepo->findByUser($to);
+        if (count($tos) > 0) {
+            $toIsMember = true;
+        }
+
+        if ($toIsMember && $fromIsMember) {
+            //user kept already have its member entry, delete the old one
+            foreach ($froms as $member) {
+                $this->objectManager->remove($member);
+            }
+            $this->objectManager->flush();
+        } elseif (!$toIsMember && $fromIsMember) {
+            //update entry for kept user
+            foreach ($froms as $member) {
+                $member->setUser($to);
+            }
+            $this->objectManager->flush();
+        }
     }
 }

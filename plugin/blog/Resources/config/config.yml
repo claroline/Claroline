@@ -9,6 +9,7 @@ plugin:
           exportable: false
           actions:
             - name: post
+              decoder: post
 
             - name: moderate
               decoder: moderate

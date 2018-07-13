@@ -79,6 +79,7 @@
     "icap_blog_post_add_error": "An error occured while adding post",
     "icap_blog_post_add_success": "Post added successfully",
     "icap_blog_post_comment_form_message": "Comment",
+    "icap_blog_comment_form_moderation_help": "Your comment will be subject to moderation before publication",
     "icap_blog_post_comment_need_authentication": "<a href=\"%connection_url%\" title=\"Connection\">Log in</a> to comment this post.",
     "icap_blog_post_comment_need_validation_before_publishing": "Your comment will need to be validated by an administrator before being published.",
     "icap_blog_comment_report": "Report this comment",

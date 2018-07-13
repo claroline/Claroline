@@ -21,8 +21,8 @@ import {hasPermission} from '#/main/core/resource/permissions'
 const PlayerComponent = props =>
   <Grid key="blog-grid" className="blog-page">
     <Row className="show-grid">
-      <Col xs={12} md={9} className="blog-content">
-        <RoutedPageContent className="blog-page-content"
+      <Col xs={12} md={9} className={'posts-list'}>
+        <RoutedPageContent
           routes={[
             {
               path: '/author/:authorId',
