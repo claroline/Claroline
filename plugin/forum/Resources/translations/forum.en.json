@@ -2,6 +2,7 @@
     "activate_global_notifications": "Activate email notifications",
     "answer_message": "Reply",
     "author": "Author",
+    "banned_user_warning": "You have been banned. You are not allowed to post messages anymore.",
     "category": "Category",
     "category_form_name": "Category",
     "disable_global_notifications": "Disable email notifications",

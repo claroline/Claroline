@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/core/translation'
 import {FormContainer} from '#/main/core/data/form/containers/form'
 import {select as formSelect} from '#/main/core/data/form/selectors'
+import {actions as formActions} from '#/main/core/data/form/actions'
 
 import {Forum as ForumType} from '#/plugin/forum/resources/forum/prop-types'
 import {constants} from '#/plugin/forum/resources/forum/constants'
@@ -16,6 +17,16 @@ const EditorComponent = (props) =>
     name="forumForm"
     title={trans('parameters')}
     className="content-container"
+    buttons={true}
+    save={{
+      type: 'callback',
+      callback: () => props.saveForm(props.forumForm.id)
+    }}
+    cancel={{
+      type: 'link',
+      target: '/',
+      exact: true
+    }}
     sections={[
       {
         icon: 'fa fa-fw fa-home',
@@ -96,12 +107,18 @@ const EditorComponent = (props) =>
   />
 
 EditorComponent.propTypes = {
-  forumForm: T.shape(ForumType.propTypes).isRequired
+  forumForm: T.shape(ForumType.propTypes).isRequired,
+  saveForm: T.func.isRequired
 }
 
 const Editor = connect(
   (state) => ({
     forumForm: formSelect.data(formSelect.form(state, 'forumForm'))
+  }),
+  (dispatch) => ({
+    saveForm(forumId) {
+      dispatch(formActions.saveForm('forumForm', ['apiv2_forum_update', {id: forumId}]))
+    }
   })
 )(EditorComponent)
 

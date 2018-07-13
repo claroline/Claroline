@@ -5,12 +5,11 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/core/translation'
 import {selectors as resourceSelect} from '#/main/core/resource/store/selectors'
 import {hasPermission} from '#/main/core/resource/permissions'
-
-import {select as formSelect} from '#/main/core/data/form/selectors'
 import {actions as formActions} from '#/main/core/data/form/actions'
 import {RoutedPageContent} from '#/main/core/layout/router'
 import {ResourcePageContainer} from '#/main/core/resource/containers/page'
 import {currentUser} from '#/main/core/user/current'
+
 import {Forum as ForumType} from '#/plugin/forum/resources/forum/prop-types'
 import {select} from '#/plugin/forum/resources/forum/selectors'
 import {actions} from '#/plugin/forum/resources/forum/actions'
@@ -25,7 +24,8 @@ const Resource = props => {
     {
       path: '/edit',
       component: Editor,
-      disabled: !props.editable
+      disabled: !props.editable,
+      onEnter: () => props.resetForm(props.forum)
     }, {
       path: '/',
       exact: true,
@@ -51,13 +51,7 @@ const Resource = props => {
 
   return (
     <ResourcePageContainer
-      editor={{
-        path: '/edit',
-        save: {
-          disabled: !props.saveEnabled,
-          action: () => props.saveForm(props.forum.id)
-        }
-      }}
+      primaryAction="post"
       customActions={[
         {
           type: 'link',
@@ -71,13 +65,6 @@ const Resource = props => {
           icon: 'fa fa-fw fa-list-ul',
           label: trans('see_subjects', {}, 'forum'),
           target: '/subjects',
-          exact: true
-        }, {
-          type: 'link',
-          icon: 'fa fa-fw fa-plus',
-          label: trans('create_subject', {}, 'forum'),
-          displayed: !props.bannedUser,
-          target: '/subjects/form',
           exact: true
         }, {
           type: 'callback',
@@ -122,27 +109,20 @@ const Resource = props => {
 Resource.propTypes = {
   forum: T.shape(ForumType.propTypes).isRequired,
   editable: T.bool.isRequired,
-  saveEnabled: T.bool.isRequired,
-  saveForm: T.func.isRequired,
   loadLastMessages: T.func.isRequired,
-  bannedUser: T.bool.isRequired,
   moderator: T.bool.isRequired,
   notify: T.func.isRequired,
-  stopNotify: T.func.isRequired
+  stopNotify: T.func.isRequired,
+  resetForm: T.func.isRequired
 }
 
 const ForumResource = connect(
   (state) => ({
     forum: select.forum(state),
     editable: hasPermission('edit', resourceSelect.resourceNode(state)),
-    saveEnabled: formSelect.saveEnabled(formSelect.form(state, 'forumForm')),
-    bannedUser: select.bannedUser(state),
     moderator: select.moderator(state)
   }),
   (dispatch) => ({
-    saveForm(forumId) {
-      dispatch(formActions.saveForm('forumForm', ['apiv2_forum_update', {id: forumId}]))
-    },
     loadLastMessages(forum) {
       dispatch(actions.fetchLastMessages(forum))
     },
@@ -151,6 +131,9 @@ const ForumResource = connect(
     },
     stopNotify(forum, user) {
       dispatch(actions.stopNotify(forum, user))
+    },
+    resetForm(formData) {
+      dispatch(formActions.resetForm('forumForm', formData))
     }
   })
 )(Resource)

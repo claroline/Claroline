@@ -5,6 +5,7 @@
     "all_message_moderated": "Modérer tous les messages",
     "all_message_moderated_explenation": " Tous les messages devront êtres validés par un modérateur avant d'être publiés dans le forum",
     "author": "Auteur",
+    "banned_user_warning": "Vous avez été banni. Vous n'avez plus le droit de poster des messages.",
     "block_user": "Bloquer l'utilisateur",
     "close_subject": "Fermer le sujet",
     "closed_subject": "Fermé",

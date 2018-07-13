@@ -62,9 +62,7 @@ const Resource = props =>
 
 Resource.propTypes = {
   path: T.object.isRequired,
-  editable: T.bool.isRequired,
-
-  resetForm: T.func.isRequired
+  editable: T.bool.isRequired
 }
 
 const PathResource = connect(
