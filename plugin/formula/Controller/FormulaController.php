@@ -2,27 +2,10 @@
 
 namespace Icap\FormulaPluginBundle\Controller;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 class FormulaController
 {
-    private $profiler;
-
-    /**
-     * FormulaController constructor.
-     *
-     * @DI\InjectParams({
-     *     "profiler" = @DI\Inject("profiler")
-     * })
-     *
-     * @param $profiler
-     */
-    public function __construct($profiler)
-    {
-        $this->profiler = $profiler;
-    }
-
     /**
      * @EXT\Route(
      *     "/index",
@@ -35,8 +18,6 @@ class FormulaController
      */
     public function indexAction()
     {
-        $this->profiler->disable();
-
         return [];
     }
 }
