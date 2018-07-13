@@ -16,14 +16,14 @@ import {selectors} from '#/main/core/resource/modals/rights/store'
 import {ResourceRights} from '#/main/core/resource/components/rights'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 
-const RightsModalComponent = props => {
-  return (<Modal
-    {...omit(props, 'resourceNode', 'saveEnabled', 'save', 'updateRights', 'loadResourceNode', 'nodeForm')}
+const RightsModalComponent = props =>
+  <Modal
+    {...omit(props, 'resourceNode', 'saveEnabled', 'save', 'updateRights', 'loadNode', 'updateNode', 'nodeForm')}
     icon="fa fa-fw fa-lock"
     title={trans('rights')}
     subtitle={props.resourceNode.name}
     onEntering={() => {
-      props.loadResourceNode(props.resourceNode)
+      props.loadNode(props.resourceNode)
     }}
   >
     {!isEmpty(props.nodeForm.id) &&
@@ -40,12 +40,11 @@ const RightsModalComponent = props => {
       label={trans('save', {}, 'actions')}
       disabled={!props.saveEnabled}
       callback={() => {
-        props.save(props.nodeForm)
+        props.save(props.nodeForm, props.updateNode)
         props.fadeModal()
       }}
     />
-  </Modal>)
-}
+  </Modal>
 
 RightsModalComponent.propTypes = {
   resourceNode: T.shape(
@@ -57,7 +56,8 @@ RightsModalComponent.propTypes = {
   saveEnabled: T.bool.isRequired,
   save: T.func.isRequired,
   updateRights: T.func.isRequired,
-  loadResourceNode: T.func.isRequired,
+  loadNode: T.func.isRequired,
+  updateNode: T.func.isRequired,
   fadeModal: T.func.isRequired
 }
 
@@ -68,18 +68,17 @@ const RightsModal = connect(
   }),
   (dispatch) => ({
     updateRights(perms) {
-      //dispatch(rightsAction.update(perms))
       dispatch(formActions.updateProp(selectors.STORE_NAME, 'rights', perms))
     },
     loadResourceNode(resourceNode) {
       dispatch(formActions.resetForm(selectors.STORE_NAME, resourceNode))
     },
-    save(resourceNode) {
+    save(resourceNode, update) {
       dispatch(formActions.saveForm(selectors.STORE_NAME, ['claro_resource_action', {
         resourceType: resourceNode.meta.type,
         action: 'rights',
         id: resourceNode.id
-      }]))
+      }])).then((response) => update(response))
     }
   })
 )(RightsModalComponent)

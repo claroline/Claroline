@@ -1,7 +1,7 @@
 import {connect} from 'react-redux'
 
 // the store to use
-import {selectors} from '#/main/core/resource/store'
+import {actions, selectors} from '#/main/core/resource/store'
 
 // the component to connect
 import {ResourcePage} from '#/main/core/resource/components/page'
@@ -17,6 +17,11 @@ const ResourcePageContainer = connect(
     embedded: selectors.embedded(state),
     resourceNode: selectors.resourceNode(state),
     userEvaluation: selectors.resourceEvaluation(state)
+  }),
+  (dispatch) => ({
+    updateNode(resourceNode) {
+      dispatch(actions.updateNode(resourceNode))
+    }
   })
 )(ResourcePage)
 

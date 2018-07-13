@@ -16,7 +16,7 @@ import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types
 
 const ParametersModalComponent = props =>
   <Modal
-    {...omit(props, 'resourceNode', 'saveEnabled', 'loadNode', 'save')}
+    {...omit(props, 'resourceNode', 'saveEnabled', 'loadNode', 'updateNode', 'save')}
     icon="fa fa-fw fa-cog"
     title={trans('parameters')}
     subtitle={props.resourceNode.name}
@@ -31,7 +31,7 @@ const ParametersModalComponent = props =>
       label={trans('save', {}, 'actions')}
       disabled={!props.saveEnabled}
       callback={() => {
-        props.save(props.resourceNode)
+        props.save(props.resourceNode, props.updateNode)
         props.fadeModal()
       }}
     />
@@ -44,6 +44,7 @@ ParametersModalComponent.propTypes = {
   saveEnabled: T.bool.isRequired,
   save: T.func.isRequired,
   loadNode: T.func.isRequired,
+  updateNode: T.func.isRequired,
   fadeModal: T.func.isRequired
 }
 
@@ -56,12 +57,12 @@ const ParametersModal = connect(
       dispatch(formActions.resetForm(selectors.STORE_NAME, resourceNode))
     },
 
-    save(resourceNode) {
+    save(resourceNode, update) {
       dispatch(formActions.saveForm(selectors.STORE_NAME, ['claro_resource_action', {
         resourceType: resourceNode.meta.type,
         action: 'configure',
         id: resourceNode.id
-      }]))
+      }])).then((response) => update(response))
     }
   })
 )(ParametersModalComponent)

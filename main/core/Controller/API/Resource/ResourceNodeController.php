@@ -107,12 +107,15 @@ class ResourceNodeController
     {
         $nodes = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Resource\ResourceNode');
 
+        // todo : just skip the ones without rights
         foreach ($nodes as $node) {
             $this->assertHasPermission('ADMINISTRATE', $node);
         }
         $this->resourceManager->setPublishedStatus($nodes, true);
 
-        return new JsonResponse(null, 204);
+        return new JsonResponse(array_map(function (ResourceNode $resourceNode) {
+            return $this->serializer->serialize($resourceNode);
+        }, $nodes));
     }
 
     /**
@@ -129,12 +132,15 @@ class ResourceNodeController
     {
         $nodes = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Resource\ResourceNode');
 
+        // todo : just skip the ones without rights
         foreach ($nodes as $node) {
             $this->assertHasPermission('ADMINISTRATE', $node);
         }
         $this->resourceManager->setPublishedStatus($nodes, false);
 
-        return new JsonResponse(null, 204);
+        return new JsonResponse(array_map(function (ResourceNode $resourceNode) {
+            return $this->serializer->serialize($resourceNode);
+        }, $nodes));
     }
 
     /**

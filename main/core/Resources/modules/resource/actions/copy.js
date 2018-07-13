@@ -1,7 +1,7 @@
 import {trans} from '#/main/core/translation'
 import {MODAL_RESOURCE_EXPLORER} from '#/main/core/resource/modals/explorer'
 
-const action = (resourceNodes) => ({
+const action = (resourceNodes, refreshNodes) => ({ // todo collection
   name: 'copy',
   type: 'modal',
   icon: 'fa fa-fw fa-clone',
@@ -16,7 +16,8 @@ const action = (resourceNodes) => ({
         request: {
           method: 'POST',
           body: JSON.stringify({destination: selected[0]})
-        }
+        },
+        success: (response) => refreshNodes([selected[0], response])
       }
     }),
     filters: [{resourceType: 'directory'}]

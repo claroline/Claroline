@@ -26,6 +26,10 @@ actions.initialize = (explorerName, root = null, current = null, filters = []) =
   }
 }
 
+actions.refresh = (explorerName) => (dispatch) => {
+
+}
+
 actions.openDirectory = (explorerName, directory) => (dispatch) => {
   // clear current selection
   dispatch(listActions.resetSelect(explorerName+'.resources'))

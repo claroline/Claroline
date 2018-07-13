@@ -10,7 +10,7 @@ import {ResourceExplorer} from '#/main/core/resource/explorer/containers/explore
 import {getActions, getToolbar} from '#/main/core/resource/utils'
 import {hasPermission} from '#/main/core/resource/permissions'
 
-import {selectors as explorerSelectors} from '#/main/core/resource/explorer/store'
+import {actions as explorerActions, selectors as explorerSelectors} from '#/main/core/resource/explorer/store'
 import {selectors} from '#/main/core/tools/resources/store'
 
 const Tool = props =>
@@ -18,7 +18,7 @@ const Tool = props =>
     title={trans('resources', {}, 'tools')}
     subtitle={props.current && props.current.name}
     toolbar={getToolbar('add')}
-    actions={props.current && props.getActions([props.current])}
+    actions={props.current && props.getActions([props.current], props.refresh)}
   >
     <ResourceExplorer
       name={selectors.STORE_NAME}
@@ -39,6 +39,7 @@ Tool.propTypes = {
   current: T.shape(
     ResourceNodeTypes.propTypes
   ),
+  refresh: T.func.isRequired,
   getActions: T.func.isRequired
 }
 
@@ -49,6 +50,9 @@ const ResourcesTool = connect(
   dispatch => ({
     getActions(resourceNodes) {
       return getActions(resourceNodes, dispatch)
+    },
+    refresh() {
+      dispatch(explorerActions.refresh(selectors.STORE_NAME))
     }
   })
 )(Tool)

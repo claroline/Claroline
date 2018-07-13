@@ -4,6 +4,7 @@ namespace Icap\NotificationBundle\Controller\API;
 
 use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Icap\NotificationBundle\Manager\NotificationManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -17,6 +18,8 @@ use Symfony\Component\HttpFoundation\Request;
  *     ignore={"create", "update", "deleteBulk", "exist", "list", "copyBulk", "schema", "find", "get"}
  * )
  * @EXT\Route("/notificationfollower")
+ *
+ * @todo rewrite using the new resource action system
  */
 class FollowerResourceController extends AbstractCrudController
 {
@@ -24,7 +27,7 @@ class FollowerResourceController extends AbstractCrudController
 
     /**
      * @DI\InjectParams({
-     *     "manager" = @DI\Inject("icap.notification.manager")
+     *     "manager"    = @DI\Inject("icap.notification.manager")
      * })
      *
      * @param NotificationManager $manager
@@ -56,6 +59,8 @@ class FollowerResourceController extends AbstractCrudController
         $nodes = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $this->manager->toggleFollowResources($user, $nodes);
 
-        return new JsonResponse(null, 204);
+        return new JsonResponse(array_map(function (ResourceNode $resourceNode) {
+            return $this->serializer->serialize($resourceNode);
+        }, $nodes), 204);
     }
 }

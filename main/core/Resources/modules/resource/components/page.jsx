@@ -41,7 +41,7 @@ class ResourcePage extends Component {
           />
         }
         toolbar={getToolbar(this.props.primaryAction, true)}
-        actions={getActions([this.props.resourceNode]).then((actions) => {
+        actions={getActions([this.props.resourceNode], (resourceNodes) => this.props.updateNode(resourceNodes[0])).then((actions) => {
           return [].concat(this.props.customActions || [], actions, [
             {
               name: 'fullscreen',
@@ -69,6 +69,7 @@ ResourcePage.propTypes = {
   resourceNode: T.shape(
     ResourceNodeTypes.propTypes
   ).isRequired,
+  updateNode: T.func.isRequired,
 
   /**
    * The current user evaluation.

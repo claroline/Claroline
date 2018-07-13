@@ -11,8 +11,10 @@
 
 namespace Icap\SocialmediaBundle\Controller;
 
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\User;
 use Icap\SocialmediaBundle\Entity\LikeAction;
+use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -20,8 +22,27 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @todo rewrite using the new resource action system
+ */
 class LikeActionController extends Controller
 {
+    /** @var SerializerProvider */
+    private $serializer;
+
+    /**
+     * LikeActionController constructor.
+     *
+     * @DI\InjectParams({
+     *     "serializer" = @DI\Inject("claroline.api.serializer")
+     * })
+     *
+     * @param SerializerProvider $serializer
+     */
+    public function __construct(SerializerProvider $serializer)
+    {
+        $this->serializer = $serializer;
+    }
     /**
      * @Route("/like/form/{resourceId}", name = "icap_socialmedia_like_form")
      * @ParamConverter("user", options={"authenticatedUser" = true})
@@ -51,7 +72,7 @@ class LikeActionController extends Controller
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param User                                      $user
      *
-     * @return bool
+     * @return JsonResponse
      */
     public function likeAction(Request $request, User $user)
     {
@@ -59,9 +80,10 @@ class LikeActionController extends Controller
         $like->setUser($user);
         $like = $this->getLikeActionManager()->createLike($request, $like);
         $this->dispatchLikeEvent($like);
-        $jsonResponse = new JsonResponse(true);
 
-        return $jsonResponse;
+        return new JsonResponse(
+            $this->serializer->serialize($like->getResource())
+        );
     }
 
     /**
@@ -71,7 +93,7 @@ class LikeActionController extends Controller
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param User                                      $user
      *
-     * @return bool
+     * @return JsonResponse
      */
     public function unlikeAction(Request $request, User $user)
     {
@@ -80,9 +102,10 @@ class LikeActionController extends Controller
         if (null !== $like) {
             $likeActionManager->removeLike($like);
         }
-        $jsonResponse = new JsonResponse(true);
 
-        return $jsonResponse;
+        return new JsonResponse(
+            $this->serializer->serialize($like->getResource())
+        );
     }
 
     /**

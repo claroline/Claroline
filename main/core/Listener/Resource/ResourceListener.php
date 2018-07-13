@@ -94,7 +94,9 @@ class ResourceListener
         $this->crud->update(ResourceNode::class, $data);
         $this->resourceLifecycleManager->rights($event->getResourceNode(), $event->getData());
 
-        $event->setResponse(new JsonResponse($data));
+        $event->setResponse(new JsonResponse(
+            $this->resourceNodeSerializer->serialize($event->getResourceNode())
+        ));
     }
 
     /**
@@ -116,7 +118,7 @@ class ResourceListener
     public function onOpen(ResourceActionEvent $event)
     {
         // forward to the resource type
-        return $this->resourceLifecycleManager->open($event->getResourceNode());
+        $this->resourceLifecycleManager->open($event->getResourceNode());
     }
 
     /**
@@ -189,7 +191,7 @@ class ResourceListener
         if (!empty($parent) && 'anon.' !== $user) {
             $newResource = $this->resourceManager->copy($resourceNode, $parent, $user);
             $event->setResponse(
-                new JsonResponse($this->resourceNodeSerializer->serialize($newResource->getResourceNode()), 200)
+                new JsonResponse($this->resourceNodeSerializer->serialize($newResource->getResourceNode()))
             );
         } else {
             $event->setResponse(new JsonResponse(null, 500));

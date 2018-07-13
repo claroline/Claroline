@@ -790,6 +790,8 @@ class ResourceManager
      * @param ResourceNode[] $nodes
      * @param bool           $arePublished
      * @param bool           $isRecursive
+     *
+     * @return ResourceNode[]
      */
     public function setPublishedStatus(array $nodes, $arePublished, $isRecursive = false)
     {
@@ -819,6 +821,8 @@ class ResourceManager
         }
 
         $this->om->endFlushSuite();
+
+        return $nodes;
     }
 
     /**

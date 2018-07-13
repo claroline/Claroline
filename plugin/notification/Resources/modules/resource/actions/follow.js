@@ -3,7 +3,7 @@ import get from 'lodash/get'
 import {trans} from '#/main/core/translation'
 import {isAuthenticated} from '#/main/core/user/current'
 
-const action = (resourceNodes) => ({
+const action = (resourceNodes, refreshNodes) => ({
   name: 'follow',
   type: 'async',
   icon: 'fa fa-fw fa-bell-o',
@@ -13,7 +13,8 @@ const action = (resourceNodes) => ({
     url: ['icap_notification_follower_resources_toggle', {ids: resourceNodes.map(node => node.id)}],
     request: {
       method: 'PUT'
-    }
+    },
+    success: (response) => refreshNodes(response)
   }
 })
 

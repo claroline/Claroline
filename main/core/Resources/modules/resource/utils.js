@@ -24,10 +24,11 @@ function getType(resourceNode) {
  *
  * @param {Array} resourceNodes
  * @param {Array} actions
+ * @param {func}  refreshNodes
  *
  * @return {Promise}
  */
-function loadActions(resourceNodes, actions) {
+function loadActions(resourceNodes, actions, refreshNodes) {
   // get all actions declared
   const asyncActions = getApps('actions')
 
@@ -41,7 +42,7 @@ function loadActions(resourceNodes, actions) {
     // generates action from loaded modules
     const realActions = {}
     loadedActions.map(actionModule => {
-      const generated = actionModule.action(resourceNodes)
+      const generated = actionModule.action(resourceNodes, refreshNodes)
       realActions[generated.name] = generated
     })
 
@@ -56,9 +57,10 @@ function loadActions(resourceNodes, actions) {
  * Gets the list of available actions for a resource.
  *
  * @param {Array}   resourceNodes - the current resource node
+ * @param {func}    refreshNodes  - a function that permits to tell the context the action have modified the nodes.
  * @param {boolean} withDefault   - include the default action (most of the time, it's not useful to get it)
  */
-function getActions(resourceNodes, withDefault = false) {
+function getActions(resourceNodes, refreshNodes, withDefault = false) {
   const resourceTypes = uniq(resourceNodes.map(resourceNode => resourceNode.meta.type))
 
   const collectionActions = resourceTypes
@@ -74,15 +76,15 @@ function getActions(resourceNodes, withDefault = false) {
       return uniqBy(accumulator.concat(typeActions), 'name')
     }, [])
 
-  return loadActions(resourceNodes, collectionActions)
+  return loadActions(resourceNodes, collectionActions, refreshNodes)
 }
 
-function getDefaultAction(resourceNode) {
+function getDefaultAction(resourceNode, refreshNodes) {
   const defaultAction = getType(resourceNode).actions
     .find(action => action.default)
 
   if (hasPermission(defaultAction.permission, resourceNode)) {
-    return loadActions([resourceNode], [defaultAction])
+    return loadActions([resourceNode], [defaultAction], refreshNodes)
       .then(loadActions => loadActions[0] || null)
   }
 
