@@ -21,7 +21,7 @@ const sortedTabs = createSelector(
   (tabs) => tabs.sort((a,b) => a.position - b.position)
 )
 
-export const select = {
+export const selectors = {
   currentTab,
   currentTabId,
   editable,

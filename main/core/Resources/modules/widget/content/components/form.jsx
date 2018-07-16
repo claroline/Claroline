@@ -64,7 +64,9 @@ class WidgetContentFormComponent extends Component {
             }
           }}
         >
-          {this.state.customForm && React.createElement(this.state.customForm.component)}
+          {this.state.customForm && React.createElement(this.state.customForm.component, {
+            name: this.props.name
+          })}
         </Await>
       </div>
     )

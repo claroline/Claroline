@@ -45,6 +45,7 @@ const Widget = props =>
     <div className="row">
       {times(props.widget.display.layout.length, col =>
         <WidgetCol
+          key={col}
           size={(12 / sum(props.widget.display.layout)) * props.widget.display.layout[col]}
           context={props.context}
           content={props.widget.contents[col]}

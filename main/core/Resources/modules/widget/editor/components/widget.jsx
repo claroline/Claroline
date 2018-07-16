@@ -16,9 +16,24 @@ import {
 import {computeStyles} from '#/main/core/widget/utils'
 import {WidgetContent} from '#/main/core/widget/content/components/content'
 import {MODAL_WIDGET_CONTENT} from '#/main/core/widget/content/modals/creation'
+import {MODAL_CONTENT_PARAMETERS} from '#/main/core/widget/content/modals/parameters'
 
 const WidgetCol = props =>
   <div className={`widget-col col-md-${props.size}`}>
+    {props.content &&
+      <div className="widget-col-configure" >
+        <Button
+          className="btn btn-link text-movie-subtitles"
+          type="modal"
+          icon="fa fa-fw fa-pencil"
+          label={trans('modify_content', {}, 'widget')}
+          modal={[MODAL_CONTENT_PARAMETERS, {
+            content: props.content,
+            save: props.updateContent
+          }]}
+        />
+      </div>
+    }
     {props.content &&
       <WidgetContent
         {...props.content}
@@ -45,7 +60,8 @@ WidgetCol.propTypes = {
   content: T.shape(
     WidgetInstanceTypes.propTypes
   ),
-  addContent: T.func.isRequired
+  addContent: T.func.isRequired,
+  updateContent: T.func.isRequired
 }
 
 const WidgetEditor = props =>
@@ -71,12 +87,21 @@ const WidgetEditor = props =>
             key={col}
             size={(12 / sum(props.widget.display.layout)) * props.widget.display.layout[col]}
             context={props.context}
+            widget={props.widget}
             content={props.widget.contents[col]}
             addContent={(content) => {
               const widget = cloneDeep(props.widget)
 
               widget.contents[col] = content
 
+              props.update(widget)
+            }}
+            updateContent={(newContent) => {
+              // copy array
+              const widget = cloneDeep(props.widget)
+              // replace modified widget
+              widget.contents[col] = newContent
+              // propagate change
               props.update(widget)
             }}
           />

@@ -36,7 +36,7 @@ class HomeController extends AbstractCrudController
      */
     public function updateHomeAction(Request $request)
     {
-        $tabs = $this->decodeRequest($request);
+        $tabs = $this->decodeRequest($request)['tabs'];
         $ids = [];
 
         foreach ($tabs as $tab) {
@@ -63,7 +63,7 @@ class HomeController extends AbstractCrudController
             }
         }
 
-        return new JsonResponse($tabs);
+        return new JsonResponse($this->decodeRequest($request));
     }
 
     /** @return string */

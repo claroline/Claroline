@@ -15,7 +15,7 @@ const MODAL_WIDGET_CREATION_PARAMETERS = 'MODAL_WIDGET_CREATION_PARAMETERS'
 
 const ParametersModalComponent = props =>
   <Modal
-    {...omit(props, 'widget', 'saveEnabled', 'create')}
+    {...omit(props, 'widget', 'saveEnabled', 'create', 'dispatch')}
     icon="fa fa-fw fa-plus"
     title={trans('new_widget', {}, 'widget')}
     subtitle={trans('new_widget_configure', {}, 'widget')}

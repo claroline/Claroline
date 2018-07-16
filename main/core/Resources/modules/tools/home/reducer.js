@@ -12,7 +12,7 @@ const reducer = {
     [CURRENT_TAB]: (state, action) => action.tab
   }),
   tabs: makeReducer([], {
-    [FORM_SUBMIT_SUCCESS+'/editor']: (state, action) => action.updatedData
+    [FORM_SUBMIT_SUCCESS+'/editor']: (state, action) => action.updatedData.tabs
   }),
   editor: editorReducer
 }

@@ -2,12 +2,11 @@ import React from 'react'
 
 import {trans} from '#/main/core/translation'
 import {FormContainer} from '#/main/core/data/form/containers/form'
-import {selectors} from '#/main/core/widget/content/modals/creation/store'
 
-const SimpleWidgetParameters = () =>
+const SimpleWidgetParameters = (props) =>
   <FormContainer
     level={5}
-    name={selectors.FORM_NAME}
+    name={props.name}
     sections={[
       {
         title: trans('general'),

@@ -9,10 +9,9 @@ import {PageHeader, PageContent} from '#/main/core/layout/page'
 import {ToolPageContainer} from '#/main/core/tool/containers/page'
 
 import {Tab as TabTypes} from '#/main/core/tools/home/prop-types'
-import {select} from '#/main/core/tools/home/selectors'
+import {selectors} from '#/main/core/tools/home/selectors'
 import {PlayerNav} from '#/main/core/tools/home/player/components/nav'
-import {ToolActions} from '#/main/core/tools/home/components/tool'
-
+import {ToolActions} from '#/main/core/tools/home/components/tool-actions'
 
 const PlayerComponent = props =>
   <ToolPageContainer>
@@ -51,11 +50,11 @@ PlayerComponent.propTypes = {
 
 const Player = connect(
   (state) => ({
-    context: select.context(state),
-    editable: select.editable(state),
-    sortedTabs: select.sortedTabs(state),
-    currentTab: select.currentTab(state),
-    widgets: select.widgets(state)
+    context: selectors.context(state),
+    editable: selectors.editable(state),
+    sortedTabs: selectors.sortedTabs(state),
+    currentTab: selectors.currentTab(state),
+    widgets: selectors.widgets(state)
   })
 )(PlayerComponent)
 

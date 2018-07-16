@@ -1,18 +1,18 @@
 import {createSelector} from 'reselect'
 
 import {select as formSelectors} from '#/main/core/data/form/selectors'
-import {select as homeSelectors} from '#/main/core/tools/home/selectors'
+import {selectors as homeSelectors} from '#/main/core/tools/home/selectors'
 
-const editorData = (state) => formSelectors.data(formSelectors.form(state, 'editor'))
+const editorTabs = (state) => formSelectors.data(formSelectors.form(state, 'editor')).tabs
 
 const currentTabIndex = createSelector(
-  [editorData, homeSelectors.currentTabId],
-  (editorData, currentTabId) => editorData.findIndex(tab => currentTabId === tab.id)
+  [editorTabs, homeSelectors.currentTabId],
+  (editorTabs, currentTabId) => editorTabs.findIndex(tab => currentTabId === tab.id)
 )
 
 const currentTab = createSelector(
-  [editorData, currentTabIndex],
-  (editorData, currentTabIndex) => editorData[currentTabIndex]
+  [editorTabs, currentTabIndex],
+  (editorTabs, currentTabIndex) => editorTabs[currentTabIndex]
 )
 
 const widgets = createSelector(
@@ -20,16 +20,16 @@ const widgets = createSelector(
   (currentTab) => currentTab.widgets
 )
 
-const sortedTabs = createSelector(
-  [editorData],
-  (editorData) => editorData.sort((a,b) => a.position - b.position)
-)
+// const sortedEditorTabs = createSelector(
+//   [editorTabs],
+//   (editorTabs) => editorTabs.sort((a,b) => a.position - b.position)
+// )
 
 
-export const select = {
+export const selectors = {
+  editorTabs,
   currentTab,
-  editorData,
   currentTabIndex,
-  sortedTabs,
+  // sortedEditorTabs,
   widgets
 }
