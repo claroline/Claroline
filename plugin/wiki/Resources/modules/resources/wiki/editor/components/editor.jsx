@@ -12,7 +12,14 @@ import {WIKI_MODES, WIKI_MODE_CHOICES} from '#/plugin/wiki/resources/wiki/consta
 const EditorComponent = props =>
   <FormContainer
     level={2}
-    title={trans('configuration', {}, 'actions')}
+    buttons={true}
+    target={() => ['apiv2_wiki_update_options', {id: props.wiki.id}]}
+    cancel={{
+      type: 'link',
+      target: '/',
+      exact: true
+    }}
+    title={trans('configure', {}, 'platform')}
     name="wikiForm"
     sections={[
       {
