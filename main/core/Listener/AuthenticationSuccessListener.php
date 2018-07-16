@@ -279,7 +279,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             && !$this->isImpersonated()
             && ($content = $this->termsOfService->getTermsOfService(false))
         ) {
-            if (($termsOfService = $event->getRequest()->get('accept_terms_of_service_form'))
+            if (($termsOfService = $event->getRequest()->get('terms_of_service'))
                 && isset($termsOfService['terms_of_service'])
             ) {
                 $user->setAcceptedTerms(true);
@@ -288,7 +288,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             } else {
                 $form = $this->formFactory->create(TermsOfServiceType::class, $content);
                 $response = $this->templating->render(
-                    'ClarolineCoreBundle:Authentication:termsOfService.html.twig',
+                    'ClarolineCoreBundle:authentication:terms_of_service.html.twig',
                     ['form' => $form->createView()]
                 );
 

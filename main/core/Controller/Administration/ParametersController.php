@@ -623,7 +623,7 @@ class ParametersController extends Controller
 
         if ($form->isValid()) {
             $areTermsEnabled = $form->get('active')->getData();
-            $terms = $this->request->get('terms_of_service_form')['termsOfService'];
+            $terms = $this->request->get('terms_of_service')['termsOfService'];
 
             if ($areTermsEnabled && $this->termsOfService->areTermsEmpty($terms)) {
                 $error = $this->translator->trans('terms_enabled_but_empty', [], 'platform');
