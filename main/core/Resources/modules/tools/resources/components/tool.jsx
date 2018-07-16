@@ -18,10 +18,10 @@ const Tool = props =>
     title={trans('resources', {}, 'tools')}
     subtitle={props.current && props.current.name}
     toolbar={getToolbar('add')}
-    actions={props.current && props.getActions([props.current], {
-      add: (resourceNodes) => props.refresh(),
-      update: (resourceNodes) => props.refresh(),
-      delete: (resourceNodes) => props.refresh()
+    actions={props.current && getActions([props.current], {
+      add: props.addNodes,
+      update: props.updateNodes,
+      delete: props.deleteNodes
     })}
   >
     <ResourceExplorer
@@ -35,7 +35,11 @@ const Tool = props =>
           resourceType: resourceNode.meta.type
         }]
       })}
-      actions={(resourceNodes) => props.getActions(resourceNodes, props.refresh)}
+      actions={(resourceNodes) => getActions(resourceNodes, {
+        add: props.addNodes,
+        update: props.updateNodes,
+        delete: props.deleteNodes
+      })}
     />
   </Page>
 
@@ -43,8 +47,9 @@ Tool.propTypes = {
   current: T.shape(
     ResourceNodeTypes.propTypes
   ),
-  refresh: T.func.isRequired,
-  getActions: T.func.isRequired
+  addNodes: T.func.isRequired,
+  updateNodes: T.func.isRequired,
+  deleteNodes: T.func.isRequired
 }
 
 const ResourcesTool = connect(
@@ -52,11 +57,16 @@ const ResourcesTool = connect(
     current: explorerSelectors.current(explorerSelectors.explorer(state, selectors.STORE_NAME))
   }),
   dispatch => ({
-    getActions(resourceNodes) {
-      return getActions(resourceNodes, dispatch)
+    addNodes(resourceNodes) {
+      dispatch(explorerActions.addNodes(selectors.STORE_NAME, resourceNodes))
     },
-    refresh() {
-      dispatch(explorerActions.refresh(selectors.STORE_NAME))
+
+    updateNodes(resourceNodes) {
+      dispatch(explorerActions.updateNodes(selectors.STORE_NAME, resourceNodes))
+    },
+
+    deleteNodes(resourceNodes) {
+      dispatch(explorerActions.deleteNodes(selectors.STORE_NAME, resourceNodes))
     }
   })
 )(Tool)

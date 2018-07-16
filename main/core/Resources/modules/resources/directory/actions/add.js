@@ -9,10 +9,7 @@ const action = (resourceNodes, nodesRefresher) => ({
   primary: true,
   modal: [MODAL_RESOURCE_CREATION, {
     parent: resourceNodes[0],
-    add: (newNode) => {
-      nodesRefresher.update([resourceNodes[0]])
-      nodesRefresher.add([newNode])
-    }
+    add: (newNode) => nodesRefresher.add([newNode])
   }]
 })
 

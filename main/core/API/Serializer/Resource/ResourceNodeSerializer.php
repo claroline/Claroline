@@ -114,7 +114,7 @@ class ResourceNodeSerializer
         $parent = $resourceNode->getParent();
 
         if (!empty($parent)) {
-            $serializedNode['parent'] = [
+            $serializedNode['parent'] = [ // todo : must be available in MINIMAL mode
                 'id' => $parent->getUuid(),
                 'autoId' => $parent->getId(),
                 'name' => $parent->getName(),

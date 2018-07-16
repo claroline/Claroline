@@ -9,7 +9,8 @@ import {
   EXPLORER_SET_ROOT,
   EXPLORER_SET_CURRENT,
   DIRECTORY_TOGGLE_OPEN,
-  DIRECTORIES_LOAD
+  DIRECTORIES_LOAD,
+  DIRECTORY_UPDATE
 } from '#/main/core/resource/explorer/store/actions'
 
 import {selectors} from '#/main/core/resource/explorer/store/selectors'
@@ -17,22 +18,21 @@ import {selectors} from '#/main/core/resource/explorer/store/selectors'
 /**
  * Replaces a directory data inside the directories tree.
  *
- * @param {Array} directories - the directory tree
- * @param {object} oldDir - the directory to update
- * @param {object} newDir - the new directory data
+ * @param {Array}  directories - the directory tree
+ * @param {object} newDir      - the new directory data
  *
  * @return {Array} - the updated directories tree
  */
-function updateDirectory(directories, oldDir, newDir) {
+function replaceDirectory(directories, newDir) {
   for (let i = 0; i < directories.length; i++) {
-    if (directories[i].id === oldDir.id) {
+    if (directories[i].id === newDir.id) {
       const updatedDirs = cloneDeep(directories)
       updatedDirs[i] = newDir
 
       return updatedDirs
     } else if (directories[i].children) {
       const updatedDirs = cloneDeep(directories)
-      updatedDirs[i].children = updateDirectory(directories[i].children, oldDir, newDir)
+      updatedDirs[i].children = replaceDirectory(directories[i].children, newDir)
 
       return updatedDirs
     }
@@ -73,15 +73,19 @@ const directoriesReducer = makeInstanceReducer([], {
     updatedParent._loaded = true
     updatedParent.children = action.directories
 
-    return updateDirectory(state, action.parent, updatedParent)
+    return replaceDirectory(state, updatedParent)
   },
   [DIRECTORY_TOGGLE_OPEN]: (state, action) => {
-    const updatedDirectory = cloneDeep(selectors.directory(state, action.directory.id))
+    const updatedDirectory = cloneDeep(selectors.directory(state, action.directoryId))
 
     updatedDirectory._opened = action.opened
 
-    return updateDirectory(state, action.directory, updatedDirectory)
-  }
+    return replaceDirectory(state, updatedDirectory)
+  },
+  [DIRECTORY_UPDATE]: (state, action) => replaceDirectory(state, merge(
+    // we merge with previous state to keep loaded children if any
+    {}, selectors.directory(state, action.updatedDirectory.id), action.updatedDirectory
+  ))
 })
 
 /**

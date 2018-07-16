@@ -125,7 +125,7 @@ class LikeActionManager
 
         if (null !== $request) {
             $resourceId = $request->get('resourceId');
-            if (null == $resourceId) {
+            if (empty($resourceId)) {
                 $resourceId = $request->get('resource');
             }
             if (null !== $resourceId) {
