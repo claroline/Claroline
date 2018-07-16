@@ -19,6 +19,7 @@ class Embedded extends Component {
     super(props)
 
     this.state = {}
+    this.mountNode
   }
 
   load() {
@@ -48,7 +49,7 @@ class Embedded extends Component {
     // the app have changed, we need to reload it
     if (prevProps.name !== this.props.name || !isEqual(prevProps.parameters, this.props.parameters)) {
       // we need to destroy the old one before
-      unmount(`.${this.props.name}-container`)
+      unmount(this.mountNode)
 
       // load new app
       this.load()
@@ -57,13 +58,13 @@ class Embedded extends Component {
 
   componentWillUnmount() {
     // remove embedded app when component is removed
-    unmount(`.${this.props.name}-container`)
+    unmount(this.mountNode)
   }
 
   render() {
     return (
       <sections className="embedded-app">
-        <div className={`${this.props.name}-container`} />
+        <div className={`${this.props.name}-container`} ref={element => this.mountNode = element} />
 
         {this.state.styles && 0 !== this.state.styles.length &&
           <link rel="stylesheet" type="text/css" href={theme(this.state.styles)} />
