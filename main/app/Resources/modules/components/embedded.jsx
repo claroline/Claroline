@@ -1,14 +1,16 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import invariant from 'invariant'
+import isEqual from 'lodash/isEqual'
 
 import {bootstrap} from '#/main/app/bootstrap'
+import {unmount} from '#/main/app/mount'
 import {theme} from '#/main/app/config'
 
 /**
  * Mounts an entire React application (components + store) inside another.
  *
- * For instance it's not possible for the 2 apps to communicate.
+ * For now it's not possible for the 2 apps to communicate.
  *
  * @todo add loading
  */
@@ -19,7 +21,7 @@ class Embedded extends Component {
     this.state = {}
   }
 
-  componentDidMount() {
+  load() {
     this.props.load()
       .then(module => {
         // generate the application
@@ -36,6 +38,26 @@ class Embedded extends Component {
         // and make it complicated to debug but I don't find another way to do it.
         invariant(false, `An error occurred while loading the EmbeddedApp : ${error}`)
       })
+  }
+
+  componentDidMount() {
+    this.load()
+  }
+
+  componentDidUpdate(prevProps) {
+    // the app have changed, we need to reload it
+    if (prevProps.name !== this.props.name || !isEqual(prevProps.parameters, this.props.parameters)) {
+      // we need to destroy the old one before
+      unmount(`.${this.props.name}-container`)
+
+      // load new app
+      this.load()
+    }
+  }
+
+  componentWillUnmount() {
+    // remove embedded app when component is removed
+    unmount(`.${this.props.name}-container`)
   }
 
   render() {
