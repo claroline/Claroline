@@ -10,7 +10,7 @@ import {MODAL_USER_PASSWORD} from '#/main/core/user/modals/password'
 import {actions as userActions} from '#/main/core/user/actions'
 
 import {actions} from '#/main/core/administration/user/user/actions'
-import {UserList} from '#/main/core/administration/user/user/components/user-list'
+import {UserList, getUserListDefinition} from '#/main/core/administration/user/user/components/user-list'
 
 // todo : restore custom actions the same way resource actions are implemented
 
@@ -90,7 +90,7 @@ const UsersList = props =>
         dangerous: true
       }
     ]}
-    definition={UserList.definition}
+    definition={getUserListDefinition({platformRoles: props.platformRoles})}
     card={UserList.card}
   />
 
@@ -99,11 +99,18 @@ UsersList.propTypes = {
   disable: T.func.isRequired,
   createWorkspace: T.func.isRequired,
   deleteWorkspace: T.func.isRequired,
-  updatePassword: T.func.isRequired
+  updatePassword: T.func.isRequired,
+  platformRoles: T.array.isRequired
+}
+
+UsersList.defaultProps = {
+  platformRoles: []
 }
 
 const Users = connect(
-  null,
+  state => ({
+    platformRoles: state.platformRoles
+  }),
   dispatch => ({
     enable(user) {
       dispatch(actions.enable(user))

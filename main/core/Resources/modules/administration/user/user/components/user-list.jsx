@@ -60,15 +60,41 @@ const UserList = {
         time: true
       }
     }, {
-      name: 'roles',
-      type: 'choice',
-      displayed: false,
-      label: trans('roles')
+      name: 'group_name',
+      label: trans('group'),
+      type: 'string',
+      displayed: false
     }
   ],
   card: UserCard
 }
 
+const getUserListDefinition = (searchData) => {
+  const def = UserList.definition
+
+  if (searchData.platformRoles) {
+    const platformChoices = {}
+    searchData.platformRoles.forEach(role => {
+      platformChoices[role.id] = role.translationKey
+    })
+
+    def.push({
+      name: 'role',
+      label: trans('role'),
+      type: 'choice',
+      displayed: false,
+      options: {
+        choices: platformChoices
+      }
+    })
+  }
+
+  //  console.log(def)
+
+  return def
+}
+
 export {
-  UserList
+  UserList,
+  getUserListDefinition
 }

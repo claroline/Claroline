@@ -100,6 +100,11 @@ class UserFinder extends AbstractFinder
                     $qb->andWhere('g.uuid IN (:groupIds)');
                     $qb->setParameter('groupIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
+                case 'group_name':
+                    $qb->leftJoin('obj.groups', 'g');
+                    $qb->andWhere('UPPER(g.name) LIKE :groupName');
+                    $qb->setParameter('groupName', '%'.strtoupper($filterValue).'%');
+                    break;
                 case 'scheduledtask':
                     $qb->leftJoin('obj.scheduledTasks', 'st');
                     $qb->andWhere('st.id IN (:scheduledTasks)');
