@@ -4,7 +4,7 @@ import {number} from '#/main/app/intl'
 import {trans} from '#/main/core/translation'
 import {isAuthenticated} from '#/main/core/user/current'
 
-const action = (resourceNodes, refreshNodes) => ({ // todo collection
+const action = (resourceNodes, nodesRefresher) => ({ // todo collection
   name: 'unlike',
   type: 'async',
   icon: 'fa fa-fw fa-flip-vertical fa-thumbs-o-up',
@@ -16,12 +16,12 @@ const action = (resourceNodes, refreshNodes) => ({ // todo collection
     value: number(get(resourceNodes[0], 'social.likes') || 0, true)
   } : undefined,
   request: {
-    url: ['icap_socialmedia_unlike', {}],
+    url: ['icap_socialmedia_unlike'],
     request: {
       method: 'POST',
       body: JSON.stringify({resourceId: resourceNodes[0].id})
     },
-    success: (response) => refreshNodes([response])
+    success: (response) => nodesRefresher.update([response])
   }
 })
 

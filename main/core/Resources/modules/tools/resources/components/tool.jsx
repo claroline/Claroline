@@ -18,7 +18,11 @@ const Tool = props =>
     title={trans('resources', {}, 'tools')}
     subtitle={props.current && props.current.name}
     toolbar={getToolbar('add')}
-    actions={props.current && props.getActions([props.current], props.refresh)}
+    actions={props.current && props.getActions([props.current], {
+      add: (resourceNodes) => props.refresh(),
+      update: (resourceNodes) => props.refresh(),
+      delete: (resourceNodes) => props.refresh()
+    })}
   >
     <ResourceExplorer
       name={selectors.STORE_NAME}
@@ -31,7 +35,7 @@ const Tool = props =>
           resourceType: resourceNode.meta.type
         }]
       })}
-      actions={(resourceNodes) => props.getActions(resourceNodes)}
+      actions={(resourceNodes) => props.getActions(resourceNodes, props.refresh)}
     />
   </Page>
 

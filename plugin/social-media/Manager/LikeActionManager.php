@@ -5,7 +5,6 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
  * Date: 4/22/15
  */
 
@@ -65,7 +64,7 @@ class LikeActionManager
      *
      * @return null|LikeAction
      */
-    public function getLikeBy(User $user, Request $request = null, $criteria = array())
+    public function getLikeBy(User $user, Request $request = null, $criteria = [])
     {
         $criteria = $this->getCriteriaFromRequest($request, $user, $criteria);
 
@@ -78,7 +77,7 @@ class LikeActionManager
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function getLikesForPagination(Request $request = null, $criteria = array())
+    public function getLikesForPagination(Request $request = null, $criteria = [])
     {
         $criteria = $this->getCriteriaFromRequest($request, null, $criteria);
 
@@ -95,7 +94,7 @@ class LikeActionManager
     public function createLike(Request $request, LikeAction $like)
     {
         $resourceId = $request->get('resourceId');
-        if ($resourceId === null) {
+        if (null === $resourceId) {
             $url = $request->get('url');
             $title = $request->get('title');
             $like->setUrl($url);
@@ -118,18 +117,18 @@ class LikeActionManager
         $this->em->flush();
     }
 
-    private function getCriteriaFromRequest(Request $request = null, User $user = null, $criteria = array())
+    private function getCriteriaFromRequest(Request $request = null, User $user = null, $criteria = [])
     {
-        if ($user !== null) {
+        if (null !== $user) {
             $criteria['user'] = $user;
         }
 
-        if ($request !== null) {
+        if (null !== $request) {
             $resourceId = $request->get('resourceId');
-            if ($resourceId == null) {
+            if (null == $resourceId) {
                 $resourceId = $request->get('resource');
             }
-            if ($resourceId !== null) {
+            if (null !== $resourceId) {
                 $criteria['resource'] = $resourceId;
             } else {
                 $url = $request->get('url');

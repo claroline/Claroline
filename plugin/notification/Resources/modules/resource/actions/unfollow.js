@@ -3,7 +3,7 @@ import get from 'lodash/get'
 import {trans} from '#/main/core/translation'
 import {isAuthenticated} from '#/main/core/user/current'
 
-const action = (resourceNodes, refreshNodes) => ({
+const action = (resourceNodes, nodesRefresher) => ({
   name: 'unfollow',
   type: 'async',
   icon: 'fa fa-fw fa-bell-o-slash',
@@ -14,7 +14,7 @@ const action = (resourceNodes, refreshNodes) => ({
     request: {
       method: 'PUT'
     },
-    success: (response) => refreshNodes(response)
+    success: (response) => nodesRefresher.update(response)
   }
 })
 

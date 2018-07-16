@@ -17,7 +17,7 @@ const MODAL_RESOURCE_CREATION_RIGHTS = 'MODAL_RESOURCE_CREATION_RIGHTS'
 
 const RightsModalComponent = props =>
   <Modal
-    {...omit(props, 'parent', 'saveEnabled', 'save', 'updateRights')}
+    {...omit(props, 'parent', 'saveEnabled', 'save', 'updateRights', 'add')}
     icon="fa fa-fw fa-plus"
     title={trans('new_resource', {}, 'resource')}
     subtitle={trans('new_resource_configure_rights', {}, 'resource')}
@@ -31,7 +31,9 @@ const RightsModalComponent = props =>
       className="modal-btn btn-link"
       type="modal"
       label={trans('configure', {}, 'actions')}
-      modal={[MODAL_RESOURCE_CREATION_PARAMETERS, {}]}
+      modal={[MODAL_RESOURCE_CREATION_PARAMETERS, {
+        add: props.add
+      }]}
     />
 
     <Button
@@ -40,7 +42,10 @@ const RightsModalComponent = props =>
       primary={true}
       label={trans('create', {}, 'actions')}
       disabled={!props.saveEnabled}
-      callback={() => props.save(props.parent, props.fadeModal)}
+      callback={() => props.save(props.parent, () => {
+        props.add(this.props.newNode)
+        props.fadeModal()
+      })}
     />
   </Modal>
 
@@ -53,6 +58,7 @@ RightsModalComponent.propTypes = {
   ).isRequired,
   saveEnabled: T.bool.isRequired,
   save: T.func.isRequired,
+  add: T.func.isRequired,
   updateRights: T.func.isRequired,
   fadeModal: T.func.isRequired
 }

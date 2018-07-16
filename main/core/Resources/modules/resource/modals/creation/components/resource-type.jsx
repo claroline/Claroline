@@ -16,7 +16,7 @@ import {actions} from '#/main/core/resource/modals/creation/store'
 
 const ResourceTypeModalComponent = props =>
   <SelectionModal
-    {...omit(props, 'parent', 'configure')}
+    {...omit(props, 'parent', 'add', 'configure')}
     icon="fa fa-fw fa-plus"
     title={trans('new_resource', {}, 'resource')}
     subtitle={trans('new_resource_select', {}, 'resource')}
@@ -33,24 +33,27 @@ const ResourceTypeModalComponent = props =>
         tags: tags.map(tag => trans(tag))
       })
     })}
-    handleSelect={(resourceType) => props.configure(props.parent, resourceType)}
+    handleSelect={(resourceType) => props.configure(props.parent, resourceType, props.add)}
   />
 
 ResourceTypeModalComponent.propTypes = {
   parent: T.shape(
     ResourceNodeTypes.propTypes
   ).isRequired,
-  configure: T.func.isRequired
+  configure: T.func.isRequired,
+  add: T.func.isRequired
 }
 
 const ResourceTypeModal = connect(
   null,
   (dispatch) => ({
-    configure(parent, resourceType) {
+    configure(parent, resourceType, addCallback) {
       dispatch(actions.startCreation(parent, resourceType))
 
       // display the second creation modal
-      dispatch(modalActions.showModal(MODAL_RESOURCE_CREATION_PARAMETERS, {}))
+      dispatch(modalActions.showModal(MODAL_RESOURCE_CREATION_PARAMETERS, {
+        add: addCallback
+      }))
     }
   })
 )(ResourceTypeModalComponent)

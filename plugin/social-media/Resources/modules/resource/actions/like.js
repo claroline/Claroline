@@ -4,7 +4,7 @@ import {number} from '#/main/app/intl'
 import {trans} from '#/main/core/translation'
 import {isAuthenticated} from '#/main/core/user/current'
 
-const action = (resourceNodes, refreshNodes) => ({ // todo collection
+const action = (resourceNodes, nodesRefresher) => ({ // todo collection
   name: 'like',
   type: 'async',
   icon: 'fa fa-fw fa-thumbs-o-up',
@@ -21,7 +21,7 @@ const action = (resourceNodes, refreshNodes) => ({ // todo collection
       method: 'POST',
       body: JSON.stringify({resourceId: resourceNodes[0].id})
     },
-    success: (response) => refreshNodes([response])
+    success: (response) => nodesRefresher.update([response])
   }
 })
 

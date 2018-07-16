@@ -24,14 +24,14 @@
     "resource_not_published": "Resource is not published",
     "resource_published": "Resource is published",
     "resource_rights_admin": "Only managers",
-    "resource_rights_admin_tip": "This resource is accessible by managers only. (click to edit access rights)",
+    "resource_rights_admin_tip": "This resource is accessible by managers only.",
     "resource_rights_all": "Everyone",
-    "resource_rights_all_tip": "This resource is accessible by everyone. (click to edit access rights)",
+    "resource_rights_all_tip": "This resource is accessible by everyone.",
     "resource_rights_custom_help": "This resource has custom rules that needs to be managed in 'Advanced' tab.",
     "resource_rights_user": "Platform users",
-    "resource_rights_user_tip": "This resource is accessible by platform users. (click to edit access rights)",
+    "resource_rights_user_tip": "This resource is accessible by platform users.",
     "resource_rights_workspace": "Workspace users",
-    "resource_rights_workspace_tip": "This resource is accessible by workspace users. (click to edit access rights)",
+    "resource_rights_workspace_tip": "This resource is accessible by workspace users.",
     "text": "Text",
     "video": "Video",
     "resource_overview": "Resource overview",
@@ -39,5 +39,7 @@
     "resource_overview_info": "Information",
     "resource_overview_progression": "My progression",
     "resource_showIcon": "Display the resource icon in the header",
-    "resource_showIcon_help": "For evaluative resources, icon is replaced by a progression gauge."
+    "resource_showIcon_help": "For evaluative resources, icon is replaced by a progression gauge.",
+    "resource_likes": "{0} This resource has never been liked. | {1} This resource has been liked by one user. | ]1,Inf[ This resource has been liked by %count% users.",
+    "resource_views": "{0} This resource has never been viewed. | {1} This resource has been viewed once. | ]1,Inf[ This resource has been viewed %count% times."
 }

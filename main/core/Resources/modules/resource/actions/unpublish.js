@@ -3,7 +3,7 @@ import get from 'lodash/get'
 import {number} from '#/main/app/intl'
 import {trans} from '#/main/core/translation'
 
-const action = (resourceNodes, refreshNodes) => ({ // todo collection
+const action = (resourceNodes, nodesRefresher) => ({ // todo collection
   name: 'unpublish',
   type: 'async',
   icon: 'fa fa-fw fa-eye-slash',
@@ -20,7 +20,7 @@ const action = (resourceNodes, refreshNodes) => ({ // todo collection
     request: {
       method: 'PUT'
     },
-    success: (response) => refreshNodes(response)
+    success: (response) => nodesRefresher.update(response)
   }
 })
 

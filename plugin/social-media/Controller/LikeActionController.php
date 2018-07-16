@@ -43,6 +43,7 @@ class LikeActionController extends Controller
     {
         $this->serializer = $serializer;
     }
+
     /**
      * @Route("/like/form/{resourceId}", name = "icap_socialmedia_like_form")
      * @ParamConverter("user", options={"authenticatedUser" = true})

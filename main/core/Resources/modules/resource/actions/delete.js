@@ -1,6 +1,6 @@
 import {trans} from '#/main/core/translation'
 
-const action = (resourceNodes) => ({ // todo collection
+const action = (resourceNodes, nodesRefresher) => ({ // todo collection
   name: 'delete',
   type: 'async',
   icon: 'fa fa-fw fa-trash-o',
@@ -18,7 +18,8 @@ const action = (resourceNodes) => ({ // todo collection
     }],
     request: {
       method: 'DELETE'
-    }
+    },
+    success: () => nodesRefresher.delete(resourceNodes[0])
   }
 })
 

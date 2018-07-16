@@ -1,5 +1,7 @@
 import cloneDeep from 'lodash/cloneDeep'
 
+// TODO : merge with permissions.js
+
 // TODO : this 3 methods should be moved in a `role` module
 const roleAnonymous = () => 'ROLE_ANONYMOUS'
 const roleUser = () => 'ROLE_USER'

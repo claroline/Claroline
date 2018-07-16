@@ -70,7 +70,7 @@ const RightsModal = connect(
     updateRights(perms) {
       dispatch(formActions.updateProp(selectors.STORE_NAME, 'rights', perms))
     },
-    loadResourceNode(resourceNode) {
+    loadNode(resourceNode) {
       dispatch(formActions.resetForm(selectors.STORE_NAME, resourceNode))
     },
     save(resourceNode, update) {

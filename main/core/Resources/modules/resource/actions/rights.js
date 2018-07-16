@@ -6,7 +6,7 @@ import {trans} from '#/main/core/translation'
 import {getSimpleAccessRule, hasCustomRules} from '#/main/core/resource/rights'
 import {MODAL_RESOURCE_RIGHTS} from '#/main/core/resource/modals/rights'
 
-const action = (resourceNodes, refreshNodes) => { // todo collection
+const action = (resourceNodes, nodesRefresher) => { // todo collection
   // computes simplified version of node rights
   let icon = 'fa-lock'
   let customRules = false
@@ -37,7 +37,7 @@ const action = (resourceNodes, refreshNodes) => { // todo collection
     label: trans('edit-rights', {}, 'actions'),
     modal: [MODAL_RESOURCE_RIGHTS, {
       resourceNode: 1 === resourceNodes.length && resourceNodes[0],
-      updateNode: (resourceNode) => refreshNodes([resourceNode])
+      updateNode: (resourceNode) => nodesRefresher.update([resourceNode])
     }],
     subscript: customRules ? {
       type: 'text',

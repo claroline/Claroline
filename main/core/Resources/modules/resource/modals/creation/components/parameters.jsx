@@ -30,7 +30,7 @@ class ParametersModalComponent extends Component {
   render() {
     return (
       <Modal
-        {...omit(this.props, 'parent', 'newNode', 'saveEnabled', 'save')}
+        {...omit(this.props, 'parent', 'newNode', 'saveEnabled', 'save', 'add')}
         icon="fa fa-fw fa-plus"
         title={trans('new_resource', {}, 'resource')}
         subtitle={trans('new_resource_configure', {}, 'resource')}
@@ -64,7 +64,10 @@ class ParametersModalComponent extends Component {
           primary={true}
           label={trans('create', {}, 'actions')}
           disabled={!this.props.saveEnabled}
-          callback={() => this.props.save(this.props.parent, this.props.fadeModal)}
+          callback={() => this.props.save(this.props.parent, () => {
+            this.props.add(this.props.newNode)
+            this.props.fadeModal()
+          })}
         />
       </Modal>
     )
@@ -80,6 +83,7 @@ ParametersModalComponent.propTypes = {
   ).isRequired,
   saveEnabled: T.bool.isRequired,
   save: T.func.isRequired,
+  add: T.func.isRequired,
   fadeModal: T.func.isRequired
 }
 

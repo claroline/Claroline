@@ -3,20 +3,22 @@ import {makeInstanceActionCreator} from '#/main/app/store/actions'
 import {actions as listActions} from '#/main/core/data/list/actions'
 
 // actions
-export const EXPLORER_INITIALIZE = 'EXPLORER_INITIALIZE'
-export const DIRECTORY_CHANGE = 'DIRECTORY_CHANGE'
+export const EXPLORER_SET_ROOT = 'EXPLORER_SET_ROOT'
+export const EXPLORER_SET_CURRENT = 'EXPLORER_SET_CURRENT'
+export const EXPLORER_SET_INITIALIZED = 'EXPLORER_SET_INITIALIZED'
 export const DIRECTORY_TOGGLE_OPEN = 'DIRECTORY_TOGGLE_OPEN'
 export const DIRECTORIES_LOAD = 'DIRECTORIES_LOAD'
 
 // actions creators
 export const actions = {}
 
+actions.setRoot = makeInstanceActionCreator(EXPLORER_SET_ROOT, 'root')
+actions.setCurrent = makeInstanceActionCreator(EXPLORER_SET_CURRENT, 'current')
+actions.setInitialized = makeInstanceActionCreator(EXPLORER_SET_INITIALIZED, 'initialized')
+
 actions.initialize = (explorerName, root = null, current = null, filters = []) => (dispatch) => {
-  dispatch({
-    type: EXPLORER_INITIALIZE+'/'+explorerName,
-    root: root,
-    current: current || root
-  })
+  dispatch(actions.setRoot(explorerName, root))
+  dispatch(actions.setCurrent(explorerName, current || root))
 
   if (filters && filters.length > 0) {
     filters.forEach(f => {
@@ -24,22 +26,27 @@ actions.initialize = (explorerName, root = null, current = null, filters = []) =
       dispatch(listActions.addFilter(explorerName+'.resources', property, f[property]))
     })
   }
+
+  dispatch(actions.setInitialized(explorerName, true))
 }
 
-actions.refresh = (explorerName) => (dispatch) => {
+actions.refresh = (explorerName, updatedNodes) => (dispatch) => {
+  // refresh current directory list
+  dispatch(listActions.invalidateData(explorerName+'.resources'))
 
+  // update current if needed
+
+  // update root if needed
+
+  // refresh summary
 }
 
 actions.openDirectory = (explorerName, directory) => (dispatch) => {
-  // clear current selection
-  dispatch(listActions.resetSelect(explorerName+'.resources'))
-
-  dispatch(actions.changeDirectory(explorerName, directory))
+  dispatch(actions.setCurrent(explorerName, directory))
   // mark directory has opened
   dispatch(actions.toggleDirectoryOpen(explorerName, directory, true))
 }
 
-actions.changeDirectory = makeInstanceActionCreator(DIRECTORY_CHANGE, 'directory')
 actions.setDirectoryOpen = makeInstanceActionCreator(DIRECTORY_TOGGLE_OPEN, 'directory', 'opened')
 
 actions.loadDirectories = makeInstanceActionCreator(DIRECTORIES_LOAD, 'parent', 'directories')

@@ -1,18 +1,28 @@
 import cloneDeep from 'lodash/cloneDeep'
 import merge from 'lodash/merge'
 
-import {makeInstanceReducer, combineReducers} from '#/main/app/store/reducer'
+import {makeReducer, makeInstanceReducer, combineReducers} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/core/data/list/reducer'
 
 import {
-  EXPLORER_INITIALIZE,
-  DIRECTORY_CHANGE,
+  EXPLORER_SET_INITIALIZED,
+  EXPLORER_SET_ROOT,
+  EXPLORER_SET_CURRENT,
   DIRECTORY_TOGGLE_OPEN,
   DIRECTORIES_LOAD
 } from '#/main/core/resource/explorer/store/actions'
 
 import {selectors} from '#/main/core/resource/explorer/store/selectors'
 
+/**
+ * Replaces a directory data inside the directories tree.
+ *
+ * @param {Array} directories - the directory tree
+ * @param {object} oldDir - the directory to update
+ * @param {object} newDir - the new directory data
+ *
+ * @return {Array} - the updated directories tree
+ */
 function updateDirectory(directories, oldDir, newDir) {
   for (let i = 0; i < directories.length; i++) {
     if (directories[i].id === oldDir.id) {
@@ -39,20 +49,19 @@ const defaultState = {
 }
 
 const initializedReducer = makeInstanceReducer(defaultState.initialized, {
-  [EXPLORER_INITIALIZE]: () => true
+  [EXPLORER_SET_INITIALIZED]: (state, action) => action.initialized
 })
 
 const rootReducer = makeInstanceReducer(defaultState.root, {
-  [EXPLORER_INITIALIZE]: (state, action) => action.root
+  [EXPLORER_SET_ROOT]: (state, action) => action.root
 })
 
 const currentReducer = makeInstanceReducer(null, {
-  [EXPLORER_INITIALIZE]: (state, action) => action.current,
-  [DIRECTORY_CHANGE]: (state, action) => action.directory
+  [EXPLORER_SET_CURRENT]: (state, action) => action.current
 })
 
 const directoriesReducer = makeInstanceReducer([], {
-  [EXPLORER_INITIALIZE]: (state, action) => action.root ? [action.root] : [],
+  [EXPLORER_SET_ROOT]: (state, action) => action.root ? [action.root] : [],
   [DIRECTORIES_LOAD]: (state, action) => {
     if (!action.parent) {
       return action.directories
@@ -113,7 +122,14 @@ function makeResourceExplorerReducer(explorerName, initialState = {}) {
     /**
      * The list of resources for the current directory.
      */
-    resources: makeListReducer(`${explorerName}.resources`)
+    resources: makeListReducer(`${explorerName}.resources`, {}, {
+      invalidated: makeReducer(false, {
+        [`${EXPLORER_SET_CURRENT}/${explorerName}`]: () => true
+      }),
+      selected: makeReducer([], {
+        [`${EXPLORER_SET_CURRENT}/${explorerName}`]: () => []
+      })
+    })
   })
 }
 

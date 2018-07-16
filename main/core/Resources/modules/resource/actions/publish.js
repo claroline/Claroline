@@ -3,7 +3,7 @@ import get from 'lodash/get'
 import {number} from '#/main/app/intl'
 import {trans} from '#/main/core/translation'
 
-const action = (resourceNodes, refreshNodes) => ({
+const action = (resourceNodes, nodesRefresher) => ({
   name: 'publish',
   type: 'async',
   icon: 'fa fa-fw fa-eye',
@@ -20,7 +20,7 @@ const action = (resourceNodes, refreshNodes) => ({
     request: {
       method: 'PUT'
     },
-    success: (response) => refreshNodes(response)
+    success: (response) => nodesRefresher.update(response)
   }
 })
 

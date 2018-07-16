@@ -1,7 +1,7 @@
 import {trans} from '#/main/core/translation'
 import {MODAL_RESOURCE_EXPLORER} from '#/main/core/resource/modals/explorer'
 
-const action = (resourceNodes, refreshNodes) => ({
+const action = (resourceNodes, nodesRefresher) => ({ // todo : collection
   name: 'move',
   type: 'modal',
   icon: 'fa fa-fw fa-arrows',
@@ -17,7 +17,7 @@ const action = (resourceNodes, refreshNodes) => ({
           method: 'PUT',
           body: JSON.stringify({destination: selected[0]})
         },
-        success: (response) => refreshNodes([selected[0], response])
+        success: (response) => nodesRefresher.update([selected[0], response])
       }
     }),
     filters: [{resourceType: 'directory'}]

@@ -24,14 +24,14 @@
     "resource_not_published": "La ressource n'est pas publiée",
     "resource_published": "La ressource est publiée",
     "resource_rights_admin": "Uniquement les gestionnaires",
-    "resource_rights_admin_tip": "Cette ressource est uniquement accessible aux gestionnaires. (cliquez pour modifier les droits)",
+    "resource_rights_admin_tip": "Cette ressource est uniquement accessible aux gestionnaires.",
     "resource_rights_all": "Tout le monde",
-    "resource_rights_all_tip": "Cette ressource est accessible à tout le monde. (cliquez pour modifier les droits)",
+    "resource_rights_all_tip": "Cette ressource est accessible à tout le monde.",
     "resource_rights_custom_help": "Cette ressource a des droits personnalisés qui doivent être gérés dans l'onglet 'Avancé'.",
     "resource_rights_user": "Utilisateurs de la plateforme",
-    "resource_rights_user_tip": "Cette ressource est accessible aux utilisateurs de la plateforme. (cliquez pour modifier les droits)",
+    "resource_rights_user_tip": "Cette ressource est accessible aux utilisateurs de la plateforme.",
     "resource_rights_workspace": "Utilisateurs de l'espace",
-    "resource_rights_workspace_tip": "Cette ressource est accessible aux utilisateurs de l'espace. (cliquez pour modifier les droits)",
+    "resource_rights_workspace_tip": "Cette ressource est accessible aux utilisateurs de l'espace.",
     "text": "Texte",
     "video": "Vidéo",
     "resource_overview": "Vue d'ensemble de la ressource",
@@ -39,5 +39,7 @@
     "resource_overview_info": "Informations",
     "resource_overview_progression": "Ma progression",
     "resource_showIcon": "Afficher l'icône de la ressource dans l'entête",
-    "resource_showIcon_help": "Pour les ressources évaluatives, l'icône est remplacée par une jauge de progression."
+    "resource_showIcon_help": "Pour les ressources évaluatives, l'icône est remplacée par une jauge de progression.",
+    "resource_likes": "{0} Cette ressource n'est aimée par aucun utilisateur. | {1} Cette ressource est aimée par un utilisateur. | ]1,Inf[ Cette ressource est aimée par %count% utilisateurs.",
+    "resource_views": "{0} Cette ressource n'a jamais été vue. | [1,Inf[ Cette resource a été vue %count% fois."
 }
