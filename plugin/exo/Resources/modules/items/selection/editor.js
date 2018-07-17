@@ -1,6 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 
-import {makeActionCreator} from '#/main/core/scaffolding/actions'
+import {makeActionCreator} from '#/main/app/store/actions'
 import {tex} from '#/main/core/translation'
 import {notBlank} from '#/main/core/validation'
 

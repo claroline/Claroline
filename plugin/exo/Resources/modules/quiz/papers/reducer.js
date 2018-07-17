@@ -1,6 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 
-import {combineReducers, makeReducer} from '#/main/core/scaffolding/reducer'
+import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/core/data/list/reducer'
 
 import {update} from '#/plugin/exo/utils/utils'

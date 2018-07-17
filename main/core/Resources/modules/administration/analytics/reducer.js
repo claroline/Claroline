@@ -1,4 +1,4 @@
-import {makeReducer, combineReducers} from '#/main/core/scaffolding/reducer'
+import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/core/data/list/reducer'
 import {
   LOAD_OVERVIEW,

@@ -1,4 +1,4 @@
-import {makeReducer} from '#/main/core/scaffolding/reducer'
+import {makeReducer} from '#/main/app/store/reducer'
 import {FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
 
 // app reducers

@@ -14,8 +14,8 @@ import {TabForm} from '#/main/core/tools/home/editor/components/tab'
 const ParametersModalComponent = props =>
   <Modal
     {...omit(props, 'tab', 'saveEnabled', 'save', 'loadTab', 'currentTabData')}
-    icon="fa fa-fw fa-pencil"
-    title={trans('configure', {}, 'actions')}
+    icon="fa fa-fw fa-cog"
+    title={trans('parameters')}
     subtitle={props.currentTabData.title}
     onEntering={() => props.loadTab(props.currentTabData)}
   >

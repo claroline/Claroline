@@ -13,14 +13,16 @@ const FormGroup = props =>
     'has-error': props.error && !props.warnOnly,
     'has-warning': props.error && props.warnOnly
   })}>
-    <label
-      className={classes('control-label', {'sr-only': props.hideLabel})}
-      htmlFor={props.id}
-    >
-      {props.label}
+    {props.label &&
+      <label
+        className={classes('control-label', {'sr-only': props.hideLabel})}
+        htmlFor={props.id}
+      >
+        {props.label}
 
-      {props.optional && <small>({t('optional')})</small>}
-    </label>
+        {props.optional && <small>({t('optional')})</small>}
+      </label>
+    }
 
     {props.children}
 

@@ -1,4 +1,4 @@
-import {makeReducer, combineReducers} from '#/main/core/scaffolding/reducer'
+import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 import {makeFormReducer} from '#/main/core/data/form/reducer'
 import {AGENDA_UPDATE_FILTER_TYPE, AGENDA_UPDATE_FILTER_WORKSPACE} from '#/plugin/agenda/actions'
 

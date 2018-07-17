@@ -106,14 +106,14 @@ actions.updateNodes = (explorerName, updatedNodes) => (dispatch, getState) => {
   const current = selectors.current(explorerState)
   const updatedCurrent = updatedNodes.find(node => current.id === node.id)
   if (updatedCurrent) {
-    dispatch(actions.setCurrent(updatedCurrent))
+    dispatch(actions.setCurrent(explorerName, updatedCurrent))
   }
 
   // check if root has been updated
   const root = selectors.root(explorerState)
   const updatedRoot = updatedNodes.find(node => root.id === node.id)
   if (updatedRoot) {
-    dispatch(actions.setRoot(updatedRoot))
+    dispatch(actions.setRoot(explorerName, updatedRoot))
   }
 
   // reset list if new nodes are updated in the current directory
@@ -136,7 +136,7 @@ actions.deleteNodes = (explorerName, deletedNodes) => (dispatch, getState) => {
   // change current directory if it is deleted
   const current = selectors.current(explorerState)
   if (-1 !== deletedNodes.findIndex(node => node.is === current.id)) {
-    dispatch(actions.setCurrent(selectors.directory(selectors.directories(explorerState), current.parent.id)))
+    dispatch(actions.setCurrent(explorerName, selectors.directory(selectors.directories(explorerState), current.parent.id)))
   } else {
     // reset list if nodes are deleted from the current directory
     dispatch(actions.invalidateCurrentResources(explorerName, deletedNodes))
@@ -173,7 +173,10 @@ actions.invalidateCurrentResources = (explorerName, updatedNodes) => (dispatch, 
   const explorerState = selectors.explorer(getState(), explorerName)
   const current = selectors.current(explorerState)
 
-  if (-1 !== updatedNodes.findIndex(node => current.id === node.parent.id)) {
+  if (current && -1 !== updatedNodes.findIndex(node => node.parent && current.id === node.parent.id)) {
+    // we are inside a directory and one of the child have changed
+    dispatch(listActions.invalidateData(explorerName+'.resources'))
+  } else if (-1 !== updatedNodes.findIndex(node => !!node.parent)) {
     dispatch(listActions.invalidateData(explorerName+'.resources'))
   }
 }

@@ -1,4 +1,4 @@
-import {makeActionCreator} from '#/main/core/scaffolding/actions'
+import {makeActionCreator} from '#/main/app/store/actions'
 
 import {selectors} from '#/main/core/resource/store/selectors'
 

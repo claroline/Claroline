@@ -49,14 +49,12 @@ const TabFormComponent = props =>
               type: 'number',
               label: trans('position'),
               onChange: (newPosition) => props.changePosition(props.editorTabs, props.currentTab, newPosition)
-            },
-            {
+            }, {
               name: 'icon',
               type: 'string',
               label: trans('icon'),
               help: trans('icon_tab_help')
-            },
-            {
+            }, {
               name: 'poster',
               label: trans('poster'),
               type: 'file',

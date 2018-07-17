@@ -1,6 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 
-import {makeActionCreator} from '#/main/core/scaffolding/actions'
+import {makeActionCreator} from '#/main/app/store/actions'
 import {notBlank, number, chain} from '#/main/core/validation'
 import {tex} from '#/main/core/translation'
 
@@ -63,12 +63,12 @@ function decorate(question) {
 
 function getAssociationsWithItemData(item){
   return item.solutions.associations.map(
-      association => {
-        const questionItem = item.items.find(el => el.id === association.itemId)
-        const data = questionItem !== undefined ? questionItem.data : ''
-        association._itemData = data
-        return association
-      }
+    association => {
+      const questionItem = item.items.find(el => el.id === association.itemId)
+      const data = questionItem !== undefined ? questionItem.data : ''
+      association._itemData = data
+      return association
+    }
   )
 }
 

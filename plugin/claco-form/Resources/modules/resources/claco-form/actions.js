@@ -1,4 +1,4 @@
-import {makeActionCreator} from '#/main/core/scaffolding/actions'
+import {makeActionCreator} from '#/main/app/store/actions'
 
 export const MESSAGE_RESET = 'MESSAGE_RESET'
 export const MESSAGE_UPDATE = 'MESSAGE_UPDATE'

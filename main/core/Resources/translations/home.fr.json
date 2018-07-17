@@ -42,5 +42,7 @@
     "unpublish_link": "Cliquez ici pour modifier les paramètres.",
     "unpublish_page": "Cette page web n'est pas publiée!",
     "weeks_ago": "Il y a %count% semaine|Il y a %count% semaines",
-    "years_ago": "Il y a %count% an|Il y a %count% ans"
+    "years_ago": "Il y a %count% an|Il y a %count% ans",
+    "add_tab": "Ajouter un onglet",
+    "new_tab": "Nouvel onglet"
 }

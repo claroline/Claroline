@@ -1,4 +1,4 @@
-import {makeActionCreator} from '#/main/core/scaffolding/actions'
+import {makeActionCreator} from '#/main/app/store/actions'
 
 export const STEP_ADD = 'STEP_ADD'
 export const STEP_REMOVE = 'STEP_REMOVE'

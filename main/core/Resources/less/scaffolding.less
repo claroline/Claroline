@@ -4,8 +4,6 @@
 // Moves the app scroll bar after the fixed header
 html.claroline-app-container {
     height: 100%;
-    /*overflow-y: hidden;*/
-    /*padding-top: @top-bar-height;*/
 }
 
 body {
@@ -24,7 +22,6 @@ body {
 }
 
 .app-toolbar {
-    //z-index: 1;
     + .app-content {
         margin-left: @toolbar-size;
     }
@@ -32,7 +29,6 @@ body {
 
 .app-content {
     position: relative;
-    //z-index: 2;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -51,7 +47,8 @@ body {
 
         max-width: @app-max-width;
         width: 100%;
-        margin: 0 auto;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .breadcrumb { // temp : should be moved inside page-container

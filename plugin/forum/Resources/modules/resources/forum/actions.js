@@ -1,6 +1,5 @@
-import {makeActionCreator} from '#/main/core/scaffolding/actions'
-import {API_REQUEST} from '#/main/core/api/actions'
-import {url} from '#/main/app/api'
+import {makeActionCreator} from '#/main/app/store/actions'
+import {API_REQUEST, url} from '#/main/app/api'
 import {actions as listActions} from '#/main/core/data/list/actions'
 
 export const LAST_MESSAGES_LOAD = 'LAST_MESSAGES_LOAD'

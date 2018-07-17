@@ -1,4 +1,4 @@
-import {makeActionCreator} from '#/main/core/scaffolding/actions'
+import {makeActionCreator} from '#/main/app/store/actions'
 import {actions as formActions} from '#/main/core/data/form/actions'
 import {constants} from '#/plugin/blog/resources/blog/constants.js'
 import {actions as blogActions} from '#/plugin/blog/resources/blog/store/actions'

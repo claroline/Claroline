@@ -1,4 +1,4 @@
-import {makeReducer} from '#/main/core/scaffolding/reducer'
+import {makeReducer} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/core/data/list/reducer'
 
 import {update} from '#/plugin/exo/utils/utils'

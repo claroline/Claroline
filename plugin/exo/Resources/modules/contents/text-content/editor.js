@@ -1,6 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 
-import {makeActionCreator} from '#/main/core/scaffolding/actions'
+import {makeActionCreator} from '#/main/app/store/actions'
 import {notBlank, setIfError} from '#/main/core/validation'
 
 import {TextContent as component} from './editor.jsx'

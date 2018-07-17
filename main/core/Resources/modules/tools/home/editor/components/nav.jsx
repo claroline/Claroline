@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import merge from 'lodash/merge'
 
-import {NavLink} from '#/main/app/router'
+import {trans} from '#/main/core/translation'
 import {makeId} from '#/main/core/scaffolding/id'
 import {currentUser} from '#/main/core/user/current'
 import {Button} from '#/main/app/action/components/button'
@@ -10,28 +10,26 @@ import {Button} from '#/main/app/action/components/button'
 import {MODAL_TAB_CREATE} from '#/main/core/tools/home/editor/modals/creation'
 import {Tab as TabTypes} from '#/main/core/tools/home/prop-types'
 
-
 const EditorNav = props =>
   <nav className="tool-nav">
     {props.tabs.map((tab, tabIndex) =>
-      <NavLink
-        className="nav-tab"
-        exact={true}
+      <Button
         key={tabIndex}
-        activeClassName="nav-tab-active"
-        to={`/edit/tab/${tab.id}`}
-      >
-        {tab.icon &&
-          <span className={`fa fa-fw fa-${tab.icon} icon-with-text-right`} />
-        }
-        {tab.title}
-      </NavLink>
+        type="link"
+        className="nav-tab"
+        icon={tab.icon ? `fa fa-fw fa-${tab.icon}` : undefined}
+        label={tab.title}
+        target={`/edit/tab/${tab.id}`}
+        exact={true}
+      />
     )}
+
     <Button
       className="nav-add-tab"
       type="modal"
       icon="fa fa-fw fa-plus"
-      label=""
+      label={trans('add_tab', {}, 'home')}
+      tooltip="bottom"
       modal={[MODAL_TAB_CREATE, {
         data: merge({}, TabTypes.defaultProps, {
           id: makeId(),
@@ -42,8 +40,7 @@ const EditorNav = props =>
         }),
         create: data => props.create(data)
       }]}
-    >
-    </Button>
+    />
   </nav>
 
 EditorNav.propTypes = {

@@ -9,7 +9,7 @@ import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 
 import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
-import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
+import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
 
 import {ProfileFacet as ProfileFacetTypes} from '#/main/core/user/profile/prop-types'
 import {actions} from '#/main/core/administration/user/profile/actions'
@@ -126,7 +126,7 @@ const ProfileFacetComponent = props =>
     <div className="text-center">
       <button
         type="button"
-        className="add-section btn btn-primary"
+        className="btn btn-primary btn-block btn-emphasis"
         onClick={() => props.addSection(props.facet.id)}
       >
         {t('profile_facet_section_add')}

@@ -1,6 +1,6 @@
 import invariant from 'invariant'
 
-import {makeActionCreator} from '#/main/core/scaffolding/actions'
+import {makeActionCreator} from '#/main/app/store/actions'
 import {selectors} from './selectors'
 import {API_REQUEST} from '#/main/app/api'
 

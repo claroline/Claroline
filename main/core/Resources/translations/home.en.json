@@ -42,5 +42,7 @@
     "unpublish_link": "Click here in order to change the settings.",
     "unpublish_page": "This web page is unpublished!",
     "weeks_ago": "%count% week ago|%count% weeks ago",
-    "years_ago": "%count% year ago|%count% years ago"
+    "years_ago": "%count% year ago|%count% years ago",
+    "add_tab": "Add a tab",
+    "new_tab": "New tab"
 }

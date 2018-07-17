@@ -1,6 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 
-import {makeReducer} from '#/main/core/scaffolding/reducer'
+import {makeReducer} from '#/main/app/store/reducer'
 
 import {
   RESOURCE_TYPE_ADD,

@@ -1,4 +1,4 @@
-import {makeActionCreator} from '#/main/core/scaffolding/actions'
+import {makeActionCreator} from '#/main/app/store/actions'
 
 export const ITEM_UPDATE_TAGS = 'ITEM_UPDATE_TAGS'
 export const actions = {}

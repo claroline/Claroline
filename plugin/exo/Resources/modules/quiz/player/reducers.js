@@ -1,4 +1,4 @@
-import {makeReducer} from '#/main/core/scaffolding/reducer'
+import {makeReducer} from '#/main/app/store/reducer'
 import {getApiFormat} from '#/main/core/scaffolding/date'
 
 import {update, makeId} from './../../utils/utils'

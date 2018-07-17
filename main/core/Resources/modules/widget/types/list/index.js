@@ -1,6 +1,6 @@
 import merge from 'lodash/merge'
 
-import {makeReducer} from '#/main/core/scaffolding/reducer'
+import {makeReducer} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/core/data/list/reducer'
 
 import {ListWidget} from '#/main/core/widget/types/list/components/widget'

@@ -15,7 +15,7 @@ const CreateTabModalComponent = props =>
   <Modal
     {...omit(props,  'tab', 'saveEnabled', 'create', 'loadData', 'data')}
     icon="fa fa-fw fa-plus"
-    title={trans('add_tab')}
+    title={trans('new_tab', {}, 'home')}
     onEntering={() => props.loadData(props.data)}
   >
     <TabForm level={5} name={selectors.STORE_NAME} />

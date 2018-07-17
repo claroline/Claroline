@@ -1,4 +1,4 @@
-import {makeReducer} from '#/main/core/scaffolding/reducer'
+import {makeReducer} from '#/main/app/store/reducer'
 
 import {SimpleWidget} from '#/main/core/widget/types/simple/components/widget'
 import {SimpleWidgetParameters} from '#/main/core/widget/types/simple/components/parameters'

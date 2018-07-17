@@ -1,4 +1,4 @@
-import {makeReducer, combineReducers} from '#/main/core/scaffolding/reducer'
+import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 import {FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
 import {LIST_FILTER_ADD, LIST_FILTER_REMOVE} from '#/main/core/data/list/actions'
 import {reducer as editorReducer} from '#/plugin/blog/resources/blog/editor/store'

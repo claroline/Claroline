@@ -1,4 +1,4 @@
-import {makeReducer} from '#/main/core/scaffolding/reducer'
+import {makeReducer} from '#/main/app/store/reducer'
 import {makeFormReducer} from '#/main/core/data/form/reducer'
 import cloneDeep from 'lodash/cloneDeep'
 import find from 'lodash/find'

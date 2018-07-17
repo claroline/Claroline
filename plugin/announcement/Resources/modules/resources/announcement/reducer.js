@@ -2,7 +2,7 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import {makeListReducer} from '#/main/core/data/list/reducer'
 import {makeFormReducer} from '#/main/core/data/form/reducer'
-import {combineReducers, makeReducer} from '#/main/core/scaffolding/reducer'
+import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 
 import {
   ANNOUNCE_DETAIL_OPEN,

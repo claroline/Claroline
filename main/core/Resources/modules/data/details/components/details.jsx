@@ -14,7 +14,6 @@ import {DataDetailsSection as DataDetailsSectionTypes} from '#/main/core/data/de
 import {createDetailsDefinition} from '#/main/core/data/details/utils'
 
 // todo there are big c/c from Form component but I don't know if we can do better
-// todo implement custom render() method in definition (like forms & tables)
 
 const DataDetailsField = props => {
   const typeDef = getTypeOrDefault(props.type)
@@ -52,21 +51,27 @@ DataDetailsField.propTypes = {
 const DataDetailsGroup = props => {
   const typeDef = getTypeOrDefault(props.type)
 
-  return (typeDef.meta && typeDef.meta.noLabel) ?
-    <DataDetailsField
-      {...props}
-      className="form-group"
-    /> :
+  return (props.render ?
     <FormGroup
       id={props.name}
       label={props.label}
       hideLabel={props.hideLabel}
       help={props.help}
     >
+      {props.render(props.data)}
+    </FormGroup> :
+    <FormGroup
+      id={props.name}
+      label={typeDef.meta && typeDef.meta.noLabel ? props.label : undefined}
+      hideLabel={props.hideLabel}
+      help={props.help}
+    >
       <DataDetailsField
         {...props}
+        value={props.calculated ? props.calculated(props.data) : get(props.data, props.name)}
       />
     </FormGroup>
+  )
 }
 
 DataDetailsGroup.propTypes = {
@@ -76,7 +81,10 @@ DataDetailsGroup.propTypes = {
   label: T.string.isRequired,
   hideLabel: T.bool,
   options: T.object,
-  help: T.oneOfType([T.string, T.arrayOf(T.string)])
+  help: T.oneOfType([T.string, T.arrayOf(T.string)]),
+  data: T.object.isRequired, // the whole data object
+  calculated: T.func,
+  render: T.func
 }
 
 const DataDetails = props => {
@@ -111,7 +119,7 @@ const DataDetails = props => {
               <DataDetailsGroup
                 {...field}
                 key={field.name}
-                value={field.calculated ? field.calculated(props.data) : get(props.data, field.name)}
+                data={props.data}
               />
             )}
           </div>
@@ -134,7 +142,7 @@ const DataDetails = props => {
                 <DataDetailsGroup
                   {...field}
                   key={field.name}
-                  value={field.calculated ? field.calculated(props.data) : get(props.data, field.name)}
+                  data={props.data}
                 />
               )}
             </Section>

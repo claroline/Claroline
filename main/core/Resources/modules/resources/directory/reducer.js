@@ -1,6 +1,4 @@
-/*import {makeReducer} from '#/main/core/scaffolding/reducer'*/
-/*import {FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'*/
-/*import {reducer as editorReducer} from '#/main/core/resources/text/editor/reducer'*/
+/*import {makeReducer} from '#/main/app/store/reducer'*/
 
 const reducer = {
   /*textForm: editorReducer.textForm,

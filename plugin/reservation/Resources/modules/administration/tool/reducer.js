@@ -1,4 +1,4 @@
-import {makeReducer} from '#/main/core/scaffolding/reducer'
+import {makeReducer} from '#/main/app/store/reducer'
 
 import {reducer as resourceReducer} from '#/plugin/reservation/administration/resource/reducer'
 import {reducer as resourceTypeReducer} from '#/plugin/reservation/administration/resource-type/reducer'

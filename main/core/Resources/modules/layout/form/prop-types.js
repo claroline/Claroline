@@ -28,7 +28,7 @@ const FormGroup = {
   propTypes: {
     id: T.string.isRequired,
     className: T.string,
-    label: T.string.isRequired,
+    label: T.string,
     hideLabel: T.bool,
     help: T.oneOfType([T.string, T.arrayOf(T.string)]),
     warnOnly: T.bool,

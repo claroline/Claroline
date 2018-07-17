@@ -2,7 +2,7 @@ import invariant from 'invariant'
 import forOwn from 'lodash/forOwn'
 import times from 'lodash/times'
 
-import {makeActionCreator} from '#/main/core/scaffolding/actions'
+import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {tex} from '#/main/core/translation'

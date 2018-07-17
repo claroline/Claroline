@@ -1,6 +1,6 @@
 import {makeListReducer} from '#/main/core/data/list/reducer'
-import {combineReducers} from '#/main/core/scaffolding/reducer'
-import {makeReducer} from '#/main/core/scaffolding/reducer'
+import {combineReducers} from '#/main/app/store/reducer'
+import {makeReducer} from '#/main/app/store/reducer'
 
 import {reducer as parametersReducer} from '#/main/core/administration/user/parameters/reducer'
 import {reducer as usersReducer} from '#/main/core/administration/user/user/reducer'

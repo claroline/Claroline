@@ -5,8 +5,7 @@ import {connect} from 'react-redux'
 import {WidgetContainer as WidgetContainerTypes} from '#/main/core/widget/prop-types'
 import {WidgetGrid} from '#/main/core/widget/player/components/grid'
 import {trans} from '#/main/core/translation'
-import {PageHeader, PageContent} from '#/main/core/layout/page'
-import {ToolPageContainer} from '#/main/core/tool/containers/page'
+import {PageContainer, PageHeader, PageContent, PageActions} from '#/main/core/layout/page'
 
 import {Tab as TabTypes} from '#/main/core/tools/home/prop-types'
 import {selectors} from '#/main/core/tools/home/selectors'
@@ -14,7 +13,7 @@ import {PlayerNav} from '#/main/core/tools/home/player/components/nav'
 import {ToolActions} from '#/main/core/tools/home/components/tool-actions'
 
 const PlayerComponent = props =>
-  <ToolPageContainer>
+  <PageContainer>
     {1 < props.sortedTabs.length &&
       <PlayerNav
         tabs={props.sortedTabs}
@@ -25,16 +24,19 @@ const PlayerComponent = props =>
       title={props.currentTab ? props.currentTab.longTitle : ('desktop' === props.context.type ? trans('desktop') : props.context.data.name)}
     >
       {props.editable &&
+        <PageActions>
           <ToolActions />
+        </PageActions>
       }
     </PageHeader>
+
     <PageContent>
       <WidgetGrid
         context={props.context}
         widgets={props.widgets}
       />
     </PageContent>
-  </ToolPageContainer>
+  </PageContainer>
 
 PlayerComponent.propTypes = {
   context: T.object.isRequired,

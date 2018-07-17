@@ -1,4 +1,4 @@
-import {makeReducer} from '#/main/core/scaffolding/reducer'
+import {makeReducer} from '#/main/app/store/reducer'
 
 import {reducers as editorReducers} from '#/plugin/exo/quiz/editor/reducers'
 import {reducers as playerReducers} from '#/plugin/exo/quiz/player/reducers'

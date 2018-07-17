@@ -1,5 +1,5 @@
 import {url} from '#/main/app/api'
-import {makeInstanceActionCreator} from '#/main/core/scaffolding/actions'
+import {makeInstanceActionCreator} from '#/main/app/store/actions'
 
 import {API_REQUEST} from '#/main/app/api'
 import {select as listSelect} from '#/main/core/data/list/selectors'

@@ -1,5 +1,5 @@
 import {API_REQUEST} from '#/main/app/api'
-import {makeActionCreator} from '#/main/core/scaffolding/actions'
+import {makeActionCreator} from '#/main/app/store/actions'
 
 export const SHOW_COMMENTS = ' SHOW_COMMENTS'
 export const SHOW_COMMENT_FORM = ' SHOW_COMMENT_FORM'

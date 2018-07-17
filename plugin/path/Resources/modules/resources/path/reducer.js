@@ -1,6 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 
-import {makeReducer, combineReducers} from '#/main/core/scaffolding/reducer'
+import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 
 import {FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
 

@@ -2,7 +2,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import zipObject from 'lodash/zipObject'
 import set from 'lodash/set'
 
-import {makeActionCreator} from '#/main/core/scaffolding/actions'
+import {makeActionCreator} from '#/main/app/store/actions'
 import {tex, trans} from '#/main/core/translation'
 import {notBlank} from '#/main/core/validation'
 

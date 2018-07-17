@@ -1,7 +1,7 @@
 import cloneDeep from 'lodash/cloneDeep'
 
 import {tex} from '#/main/core/translation'
-import {makeActionCreator} from '#/main/core/scaffolding/actions'
+import {makeActionCreator} from '#/main/app/store/actions'
 
 import {makeId} from '../../../utils/utils'
 import {utils} from '../utils/utils'

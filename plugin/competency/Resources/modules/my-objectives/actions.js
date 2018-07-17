@@ -1,4 +1,4 @@
-import {makeActionCreator} from '#/main/core/scaffolding/actions'
+import {makeActionCreator} from '#/main/app/store/actions'
 import {url} from '#/main/app/api'
 import {API_REQUEST} from '#/main/app/api'
 import {trans} from '#/main/core/translation'

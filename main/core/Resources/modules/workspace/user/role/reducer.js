@@ -1,4 +1,4 @@
-import {combineReducers, makeReducer} from '#/main/core/scaffolding/reducer'
+import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 
 import {makeListReducer} from '#/main/core/data/list/reducer'
 import {makeFormReducer} from '#/main/core/data/form/reducer'

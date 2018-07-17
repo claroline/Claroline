@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars, no-global-assign */
-
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {Provider} from 'react-redux'
@@ -8,10 +6,12 @@ import isEmpty from 'lodash/isEmpty'
 // todo : find where I must put it
 // (I put it here for now because it's the root of all apps)
 import {asset} from '#/main/app/config'
+
+/* eslint-disable no-undef, no-unused-vars, no-global-assign */
 __webpack_public_path__ = asset('dist/')
+/* eslint-enable no-undef, no-unused-vars, no-global-assign */
 
 import {createStore} from '#/main/app/store'
-import {combineReducers} from '#/main/core/scaffolding/reducer'
 
 /**
  * Mounts a new React/Redux app into the DOM.

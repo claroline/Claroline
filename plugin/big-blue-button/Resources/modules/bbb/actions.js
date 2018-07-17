@@ -3,7 +3,7 @@ import shajs from 'sha.js'
 
 import {trans, t} from '#/main/core/translation'
 import {isValidDate} from '#/main/core/scaffolding/date'
-import {makeActionCreator} from '#/main/core/scaffolding/actions'
+import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
 
 export const BBB_URL_UPDATE = 'BBB_URL_UPDATE'

@@ -3,14 +3,14 @@ import difference from 'lodash/difference'
 import merge from 'lodash/merge'
 import set from 'lodash/set'
 
-import {makeInstanceReducer, combineReducers, reduceReducers} from '#/main/core/scaffolding/reducer'
+import {makeInstanceReducer, combineReducers, reduceReducers} from '#/main/app/store/reducer'
 import {cleanErrors} from '#/main/core/data/form/utils'
 
 import {
   FORM_RESET,
   FORM_SET_ERRORS,
   FORM_SUBMIT,
-  FORM_UPDATE_PROP
+  FORM_UPDATE
 } from './actions'
 
 const defaultState = {
@@ -33,12 +33,12 @@ const newReducer = makeInstanceReducer(defaultState.new, {
 const validatingReducer = makeInstanceReducer(defaultState.validating, {
   [FORM_RESET]: () => defaultState.validating,
   [FORM_SUBMIT]: () => true,
-  [FORM_UPDATE_PROP]: () => false
+  [FORM_UPDATE]: () => false
 })
 
 const pendingChangesReducer = makeInstanceReducer(defaultState.pendingChanges, {
   [FORM_RESET]: () => defaultState.pendingChanges,
-  [FORM_UPDATE_PROP]: () => true
+  [FORM_UPDATE]: () => true
 })
 
 /**
@@ -65,13 +65,16 @@ const errorsReducer = makeInstanceReducer(defaultState.errors, {
  */
 const dataReducer = makeInstanceReducer(defaultState.data, {
   [FORM_RESET]: (state, action) => action.data || {},
-  [FORM_UPDATE_PROP]: (state, action) => {
-    const newState = cloneDeep(state)
+  [FORM_UPDATE]: (state, action) => {
+    if (action.path) {
+      // update correct property
+      const newState = cloneDeep(state)
+      set(newState, action.path, action.value)
 
-    // update correct property
-    set(newState, action.propName, action.propValue)
+      return newState
+    }
 
-    return newState
+    return action.value
   }
 })
 
