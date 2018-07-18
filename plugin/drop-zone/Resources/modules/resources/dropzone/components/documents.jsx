@@ -73,7 +73,7 @@ const DocumentRow = props =>
       }
 
       {props.document.type === constants.DOCUMENT_TYPE_RESOURCE &&
-        <a href={url(['claro_resource_open_short', {node: props.document.data.actualId}])}>
+        <a href={url(['claro_resource_open_short', {node: props.document.data.autoId}])}>
           {props.document.data.name}
         </a>
       }

@@ -88,33 +88,38 @@ class ResourceNodeSerializer
         $serializedNode = [
             'id' => $resourceNode->getUuid(),
             'autoId' => $resourceNode->getId(), // TODO : remove me
-            'actualId' => $resourceNode->getId(), // TODO : remove me
             'name' => $resourceNode->getName(),
             'thumbnail' => $resourceNode->getThumbnail() ? $resourceNode->getThumbnail()->getRelativeUrl() : null,
+            'meta' => $this->serializeMeta($resourceNode, $options),
             'permissions' => $this->rightsManager->getCurrentPermissionArray($resourceNode),
+
+            // TODO : it should not be available in minimal mode
+            // for now I need it to compute simple access rights (for display)
+            // we should compute simple access here to avoid exposing this big object
+            'rights' => $this->rightsManager->getRights($resourceNode),
         ];
 
-        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
-            if (!empty($resourceNode->getWorkspace())) {
-                $serializedNode['workspace'] = [ // TODO : use workspace serializer with minimal option
-                    'id' => $resourceNode->getWorkspace()->getUuid(),
-                    'name' => $resourceNode->getWorkspace()->getName(),
-                    'code' => $resourceNode->getWorkspace()->getCode(),
-                ];
-            }
+        // TODO : it should not (I think) be available in minimal mode
+        // for now I need it to compute rights
+        if (!empty($resourceNode->getWorkspace())) {
+            $serializedNode['workspace'] = [ // TODO : use workspace serializer with minimal option
+                'id' => $resourceNode->getWorkspace()->getUuid(),
+                'name' => $resourceNode->getWorkspace()->getName(),
+                'code' => $resourceNode->getWorkspace()->getCode(),
+            ];
+        }
 
+        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serializedNode = array_merge($serializedNode, [
                 'poster' => $this->serializePoster($resourceNode),
-                'meta' => $this->serializeMeta($resourceNode),
                 'display' => $this->serializeDisplay($resourceNode),
                 'restrictions' => $this->serializeRestrictions($resourceNode),
-                'rights' => $this->rightsManager->getRights($resourceNode),
             ]);
         }
-        $parent = $resourceNode->getParent();
 
+        $parent = $resourceNode->getParent();
         if (!empty($parent)) {
-            $serializedNode['parent'] = [ // todo : must be available in MINIMAL mode
+            $serializedNode['parent'] = [
                 'id' => $parent->getUuid(),
                 'autoId' => $parent->getId(),
                 'name' => $parent->getName(),
@@ -182,22 +187,29 @@ class ResourceNodeSerializer
         return null;
     }
 
-    private function serializeMeta(ResourceNode $resourceNode)
+    private function serializeMeta(ResourceNode $resourceNode, array $options)
     {
-        return [
-            'type' => $resourceNode->getResourceType()->getName(), // todo : must be available in MINIMAL mode
-            'mimeType' => $resourceNode->getMimeType(), // todo : must be available in MINIMAL mode
+        $meta = [
+            'type' => $resourceNode->getResourceType()->getName(),
+            'mimeType' => $resourceNode->getMimeType(),
             'description' => $resourceNode->getDescription(),
+            'creator' => $resourceNode->getCreator() ? $this->userSerializer->serialize($resourceNode->getCreator()) : null,
             'created' => DateNormalizer::normalize($resourceNode->getCreationDate()),
             'updated' => DateNormalizer::normalize($resourceNode->getModificationDate()),
-            'license' => $resourceNode->getLicense(),
-            'authors' => $resourceNode->getAuthor(),
             'published' => $resourceNode->isPublished(),
-            'portal' => $resourceNode->isPublishedToPortal(),
-            'isManager' => $this->rightsManager->isManager($resourceNode), // todo : data about current user should not be here (should be in `rights` section)
-            'creator' => $resourceNode->getCreator() ? $this->userSerializer->serialize($resourceNode->getCreator()) : null,
             'views' => $resourceNode->getViewsCount(),
         ];
+
+        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+            $meta = array_merge($meta, [
+                'authors' => $resourceNode->getAuthor(),
+                'license' => $resourceNode->getLicense(),
+                'portal' => $resourceNode->isPublishedToPortal(),
+                'isManager' => $this->rightsManager->isManager($resourceNode), // todo : data about current user should not be here (should be in `rights` section)
+            ]);
+        }
+
+        return $meta;
     }
 
     private function serializeDisplay(ResourceNode $resourceNode)
@@ -286,7 +298,7 @@ class ResourceNodeSerializer
 
     public function deserializeRights($rights, ResourceNode $resourceNode)
     {
-        //additional datas might be required later (recursive, creations)
+        // additional data might be required later (recursive, creations)
         foreach ($rights as $right) {
             $this->rightsManager->editPerms(
                 $right['permissions'],
