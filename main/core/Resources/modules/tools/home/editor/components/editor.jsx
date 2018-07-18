@@ -29,7 +29,7 @@ const EditorComponent = props =>
     <EditorNav
       tabs={props.editorTabs}
       context={props.context}
-      create={(data) => props.createTab(props.editorTabs.length, data)}
+      create={(data) => props.createTab(props.editorTabs, data)}
     />
 
     <PageHeader
@@ -44,7 +44,7 @@ const EditorComponent = props =>
             icon="fa fa-fw fa-cog"
             modal={[MODAL_TAB_PARAMETERS, {
               currentTabData: props.currentTab,
-              save: (data) => props.updateTab(props.currentTabIndex, data)
+              save: (formData) => props.updateTab(props.editorTabs, formData, props.currentTab, props.currentTabIndex )
             }]}
           />
 
@@ -113,11 +113,19 @@ const Editor = connect(
     update(currentTabIndex, widgets) {
       dispatch(formActions.updateProp('editor', `tabs[${currentTabIndex}].widgets`, widgets))
     },
-    createTab(tabIndex, tab){
-      dispatch(formActions.updateProp('editor', `tabs[${tabIndex}]`, tab))
+    createTab(editorTabs, tab){
+      if(tab.position !== editorTabs.length + 1) {
+        dispatch(EditorActions.createTab(editorTabs, tab))
+      } else {
+        dispatch(formActions.updateProp('editor', `tabs[${editorTabs.length}]`, tab))
+      }
     },
-    updateTab(currentTabIndex, tab) {
-      dispatch(formActions.updateProp('editor', `tabs[${currentTabIndex}]`, tab))
+    updateTab(editorTabs, tab, currentTab, currentTabIndex) {
+      if(tab.position !== currentTab.position) {
+        dispatch(EditorActions.updateTab(editorTabs, tab, currentTab))
+      } else {
+        dispatch(formActions.updateProp('editor', `tabs[${currentTabIndex}]`, tab))
+      }
     },
     deleteTab(currentTabIndex, editorTabs, push) {
       dispatch(EditorActions.deleteTab(currentTabIndex, editorTabs, push))
