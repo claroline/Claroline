@@ -12,7 +12,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 abstract class AbstractCrudController extends AbstractApiController
 {
@@ -75,17 +74,23 @@ abstract class AbstractCrudController extends AbstractApiController
         $query = $request->query->all();
         $data = $this->finder->fetch($class, $query['filters'], [], 0, 2);
 
+        $options = $this->options['get'];
+
+        if (isset($query['options'])) {
+            $options = $query['options'];
+        }
+
         switch (count($data)) {
             case 0:
-                return $this->sendResponse('No object found', 404);
+                return new JsonResponse('No object found', 404);
                 break;
             case 1:
-                return $this->sendResponse(
-                    $this->serializer->serialize($data[0], $this->options['get'])
+                return new JsonResponse(
+                    $this->serializer->serialize($data[0], $options)
                 );
                 break;
             default:
-                return $this->sendResponse('Multiple results, use "list" instead', 400);
+                return new JsonResponse('Multiple results, use "list" instead', 400);
         }
     }
 
@@ -100,7 +105,7 @@ abstract class AbstractCrudController extends AbstractApiController
      */
     public function schemaAction($class)
     {
-        return $this->sendResponse($this->serializer->getSchema($class));
+        return new JsonResponse($this->serializer->getSchema($class));
     }
 
     /**
@@ -114,21 +119,28 @@ abstract class AbstractCrudController extends AbstractApiController
      *     }
      * )
      *
+     * @param Request    $request
      * @param string|int $id
      * @param string     $class
-     * @param string     $env
      *
      * @return JsonResponse
      */
-    public function getAction($id, $class)
+    public function getAction(Request $request, $id, $class)
     {
+        $query = $request->query->all();
         $object = $this->find($class, $id);
 
+        $options = $this->options['get'];
+
+        if (isset($query['options'])) {
+            $options = $query['options'];
+        }
+
         return $object ?
-            $this->sendResponse(
-                $this->serializer->serialize($object, $this->options['get'])
+            new JsonResponse(
+                $this->serializer->serialize($object, $options)
             ) :
-            $this->sendResponse("No object found for id {$id} of class {$class}", 404);
+            new JsonResponse("No object found for id {$id} of class {$class}", 404);
     }
 
     /**
@@ -146,7 +158,7 @@ abstract class AbstractCrudController extends AbstractApiController
     {
         $objects = $this->om->getRepository($class)->findBy([$field => $value]);
 
-        return $this->sendResponse(count($objects) > 0);
+        return new JsonResponse(count($objects) > 0);
     }
 
     /**
@@ -168,13 +180,18 @@ abstract class AbstractCrudController extends AbstractApiController
     public function listAction(Request $request, $class)
     {
         $query = $request->query->all();
+        $options = $this->options['list'];
+
+        if (isset($query['options'])) {
+            $options = $query['options'];
+        }
         $hiddenFilters = isset($query['hiddenFilters']) ? $query['hiddenFilters'] : [];
         $query['hiddenFilters'] = array_merge($hiddenFilters, $this->getDefaultHiddenFilters());
 
-        return $this->sendResponse($this->finder->search(
+        return new JsonResponse($this->finder->search(
             $class,
             $query,
-            $this->options['list']
+            $options
         ));
     }
 
@@ -193,18 +210,25 @@ abstract class AbstractCrudController extends AbstractApiController
      */
     public function createAction(Request $request, $class)
     {
+        $query = $request->query->all();
+        $options = $this->options['create'];
+
+        if (isset($query['options'])) {
+            $options = $query['options'];
+        }
+
         $object = $this->crud->create(
             $class,
             $this->decodeRequest($request),
-            $this->options['create']
+            $options
         );
 
         if (is_array($object)) {
-            return $this->sendResponse($object, 400);
+            return new JsonResponse($object, 400);
         }
 
-        return $this->sendResponse(
-            $this->serializer->serialize($object, $this->options['get']),
+        return new JsonResponse(
+            $this->serializer->serialize($object, $options),
             201
         );
     }
@@ -231,24 +255,31 @@ abstract class AbstractCrudController extends AbstractApiController
      */
     public function updateAction($id, Request $request, $class)
     {
+        $query = $request->query->all();
         $data = $this->decodeRequest($request);
 
         if (!isset($data['id'])) {
             $data['id'] = $id;
         }
 
+        $options = $this->options['update'];
+
+        if (isset($query['options'])) {
+            $options = $query['options'];
+        }
+
         $object = $this->crud->update(
             $class,
             $data,
-            $this->options['update']
+            $options
         );
 
         if (is_array($object)) {
-            return $this->sendResponse($object, 400);
+            return new JsonResponse($object, 400);
         }
 
-        return $this->sendResponse(
-            $this->serializer->serialize($object, $this->options['get'])
+        return new JsonResponse(
+            $this->serializer->serialize($object, $options)
         );
     }
 
@@ -267,12 +298,18 @@ abstract class AbstractCrudController extends AbstractApiController
      */
     public function deleteBulkAction(Request $request, $class)
     {
+        $options = $this->options['deleteBulk'];
+
+        if (isset($query['options'])) {
+            $options = $query['options'];
+        }
+
         $this->crud->deleteBulk(
             $this->decodeIdsString($request, $class),
-            $this->options['deleteBulk']
+            $options
         );
 
-        return $this->sendResponse(null, 204);
+        return new JsonResponse(null, 204);
     }
 
     /**
@@ -291,16 +328,20 @@ abstract class AbstractCrudController extends AbstractApiController
     public function copyBulkAction(Request $request, $class)
     {
         $serializer = $this->serializer;
-        $options = $this->options;
+        $options = $this->options['copyBulk'];
+
+        if (isset($query['options'])) {
+            $options = $query['options'];
+        }
 
         $copies = $this->crud->copyBulk(
             $class,
             $this->decodeIdsString($request, $class),
-            $this->options['copyBulk']
+            $options
         );
 
-        return $this->sendResponse(array_map(function ($copy) use ($serializer, $options) {
-            return $serializer->serialize($copy, $options['get']);
+        return new JsonResponse(array_map(function ($copy) use ($serializer, $options) {
+            return $serializer->serialize($copy, $this->options['get']);
         }, $copies), 200);
     }
 
@@ -355,19 +396,6 @@ abstract class AbstractCrudController extends AbstractApiController
                 ['uuid' => $id] :
                 ['id' => $id]
         );
-    }
-
-    private function sendResponse($data, $code = 200)
-    {
-        $request = $this->container->get('request_stack')->getMasterRequest();
-        $debug = $request->query->get('debug');
-
-        if (!$debug) {
-            return new JsonResponse($data, $code);
-        }
-
-        //this is for debug purpose
-        return new Response('<body>'.json_encode($data).'</body>', $code);
     }
 
     /**

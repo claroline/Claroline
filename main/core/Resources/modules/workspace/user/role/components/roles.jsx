@@ -13,7 +13,7 @@ const RolesList = props =>
   <DataListContainer
     name="roles.list"
     fetch={{
-      url: ['apiv2_workspace_list_roles', {id: props.workspace.uuid}],
+      url: ['apiv2_workspace_management_roles_list', {id: props.workspace.uuid}],
       autoload: true
     }}
     primaryAction={RoleList.open}

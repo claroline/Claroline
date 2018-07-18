@@ -8,7 +8,11 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
+use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
+use Claroline\CoreBundle\Entity\Tool\ToolRights;
+use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -25,8 +29,17 @@ class RoleSerializer
     /** @var ObjectManager */
     private $om;
 
+    /** @var OrderedToolRepository */
+    private $orderedToolRepo;
+
+    /** @var ToolRightsRepository */
+    private $toolRightsRepo;
+
     /** @var UserRepository */
     private $userRepo;
+
+    /** @var WorkspaceRepository */
+    private $workspaceRepo;
 
     /**
      * RoleSerializer constructor.
@@ -44,7 +57,10 @@ class RoleSerializer
         $this->serializer = $serializer;
         $this->om = $om;
 
+        $this->orderedToolRepo = $this->om->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
+        $this->toolRightsRepo = $this->om->getRepository('ClarolineCoreBundle:Tool\ToolRights');
         $this->userRepo = $this->om->getRepository('ClarolineCoreBundle:User');
+        $this->workspaceRepo = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace');
     }
 
     /**
@@ -101,6 +117,21 @@ class RoleSerializer
             }
 
             $serialized['adminTools'] = $adminTools;
+
+            // TODO: Fix option for workspace uuid. For the moment the uuid of the workspace is prefixed with `workspace_id_`.
+            if (in_array(Options::SERIALIZE_ROLE_TOOLS_RIGHTS, $options)) {
+                $workspaceId = null;
+
+                foreach ($options as $option) {
+                    if ('workspace_id_' === substr($option, 0, 13)) {
+                        $workspaceId = substr($option, 13);
+                        break;
+                    }
+                }
+                if ($workspaceId) {
+                    $serialized['tools'] = $this->serializeTools($role, $workspaceId);
+                }
+            }
         }
 
         return $serialized;
@@ -147,42 +178,77 @@ class RoleSerializer
     }
 
     /**
+     * Serialize role tools rights.
+     *
+     * @param Role   $role
+     * @param string $workspaceId
+     *
+     * @return array
+     */
+    private function serializeTools(Role $role, $workspaceId)
+    {
+        $tools = [];
+        $workspace = $this->workspaceRepo->findOneBy(['uuid' => $workspaceId]);
+
+        if (!empty($workspace)) {
+            $orderedTools = $this->orderedToolRepo->findBy(['workspace' => $workspace]);
+
+            foreach ($orderedTools as $orderedTool) {
+                $toolRights = $this->toolRightsRepo->findOneBy(['role' => $role, 'orderedTool' => $orderedTool]);
+                $mask = !empty($toolRights) ? $toolRights->getMask() : 0;
+                $toolName = $orderedTool->getTool()->getName();
+                $tools[$toolName] = [];
+
+                foreach (ToolMaskDecoder::$defaultActions as $action) {
+                    $actionValue = ToolMaskDecoder::$defaultValues[$action];
+                    $tools[$toolName][$action] = $mask & $actionValue ? true : false;
+                }
+            }
+        }
+
+        return count($tools) > 0 ? $tools : new \stdClass();
+    }
+
+    /**
      * Deserializes data into a Role entity.
      *
      * @param \stdClass $data
      * @param Role      $role
+     * @param array     $options
      *
      * @return Role
      */
-    public function deserialize($data, Role $role)
+    public function deserialize($data, Role $role, array $options = [])
     {
         // TODO : set readOnly based on role type
-        $this->sipe('name', 'setName', $data, $role);
+        if (!$role->isReadOnly()) {
+            $this->sipe('name', 'setName', $data, $role);
 
-        if (isset($data['translationKey'])) {
-            $role->setTranslationKey($data['translationKey']);
-            //this is if it's not a workspace and we send the translationKey role
-            if (null === $role->getName() && !isset($data['workspace'])) {
-                $role->setName('ROLE_'.str_replace(' ', '_', strtoupper($data['translationKey'])));
+            if (isset($data['translationKey'])) {
+                $role->setTranslationKey($data['translationKey']);
+                //this is if it's not a workspace and we send the translationKey role
+                if (null === $role->getName() && !isset($data['workspace'])) {
+                    $role->setName('ROLE_'.str_replace(' ', '_', strtoupper($data['translationKey'])));
+                }
             }
-        }
 
-        $this->sipe('meta.personalWorkspaceCreationEnabled', 'setPersonalWorkspaceCreationEnabled', $data, $role);
-        $this->sipe('restrictions.maxUsers', 'setMaxUsers', $data, $role);
-        $this->sipe('type', 'setType', $data, $role);
+            $this->sipe('meta.personalWorkspaceCreationEnabled', 'setPersonalWorkspaceCreationEnabled', $data, $role);
+            $this->sipe('restrictions.maxUsers', 'setMaxUsers', $data, $role);
+            $this->sipe('type', 'setType', $data, $role);
 
-        // we should test role type before trying to set the workspace
-        if (!empty($data['workspace']) && !empty($data['workspace']['uuid'])) {
-            if (isset($data['workspace']['uuid'])) {
-                $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')
-                    ->findOneBy(['uuid' => $data['workspace']['uuid']]);
+            // we should test role type before trying to set the workspace
+            if (!empty($data['workspace']) && !empty($data['workspace']['uuid'])) {
+                if (isset($data['workspace']['uuid'])) {
+                    $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')
+                        ->findOneBy(['uuid' => $data['workspace']['uuid']]);
 
-                if ($workspace) {
-                    $role->setWorkspace($workspace);
+                    if ($workspace) {
+                        $role->setWorkspace($workspace);
 
-                    //this is if it's a workspace and we send the translationKey role
-                    if (isset($data['translationKey']) && (null === $role->getName())) {
-                        $role->setName('ROLE_WS_'.str_replace(' ', '_', strtoupper($data['translationKey'])).'_'.$workspace->getUuid());
+                        //this is if it's a workspace and we send the translationKey role
+                        if (isset($data['translationKey']) && (null === $role->getName())) {
+                            $role->setName('ROLE_WS_'.str_replace(' ', '_', strtoupper($data['translationKey'])).'_'.$workspace->getUuid());
+                        }
                     }
                 }
             }
@@ -199,6 +265,51 @@ class RoleSerializer
                     $adminTool->addRole($role);
                 } else {
                     $adminTool->removeRole($role);
+                }
+            }
+        }
+
+        // sets rights for workspace tools
+        if (isset($data['tools']) && in_array(Options::SERIALIZE_ROLE_TOOLS_RIGHTS, $options)) {
+            foreach ($data['tools'] as $toolName => $toolData) {
+                $tool = $this->om->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneBy(['name' => $toolName]);
+
+                if ($tool) {
+                    // TODO: Fix option for workspace uuid. For the moment the uuid of the workspace is prefixed with `workspace_id_`.
+                    $workspaceId = null;
+
+                    foreach ($options as $option) {
+                        if ('workspace_id_' === substr($option, 0, 13)) {
+                            $workspaceId = substr($option, 13);
+                            break;
+                        }
+                    }
+                    if ($workspaceId) {
+                        $orderedTool = $this->om
+                            ->getRepository('ClarolineCoreBundle:Tool\OrderedTool')
+                            ->findOneBy(['tool' => $tool, 'workspace' => $workspaceId]);
+
+                        if ($orderedTool) {
+                            $rights = $this->om
+                                ->getRepository('ClarolineCoreBundle:Tool\ToolRights')
+                                ->findOneBy(['orderedTool' => $orderedTool, 'role' => $role]);
+
+                            if (empty($rights)) {
+                                $rights = new ToolRights();
+                                $rights->setRole($role);
+                                $rights->setOrderedTool($orderedTool);
+                            }
+                            $mask = 0;
+
+                            foreach (ToolMaskDecoder::$defaultActions as $action) {
+                                if (isset($toolData[$action]) && $toolData[$action]) {
+                                    $mask += ToolMaskDecoder::$defaultValues[$action];
+                                }
+                            }
+                            $rights->setMask($mask);
+                            $this->om->persist($rights);
+                        }
+                    }
                 }
             }
         }

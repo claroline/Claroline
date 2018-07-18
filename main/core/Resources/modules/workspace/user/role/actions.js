@@ -7,7 +7,7 @@ actions.open = (formName, id = null, defaultValue) => (dispatch) => {
   if (id) {
     dispatch({
       [API_REQUEST]: {
-        url: ['apiv2_role_get', {id}],
+        url: ['apiv2_role_get', {id, options: ['serialize_role_tools_rights', `workspace_id_${defaultValue.workspace.uuid}`]}],
         success: (response, dispatch) => {
           dispatch(formActions.resetForm(formName, response, false))
         }

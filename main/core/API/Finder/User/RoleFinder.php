@@ -104,19 +104,23 @@ class RoleFinder extends AbstractFinder
                         $qb->setParameter('currentUserId', $this->tokenStorage->getToken()->getUser()->getId());
                     }
                     break;
-              default:
-                if (is_bool($filterValue)) {
-                    $qb->andWhere("obj.{$filterName} = :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue);
-                } else {
-                    if (is_int($filterValue)) {
+                case 'roleNames':
+                    $qb->orWhere('obj.name IN (:roleNames)');
+                    $qb->setParameter('roleNames', is_array($filterValue) ? $filterValue : [$filterValue]);
+                    break;
+                default:
+                    if (is_bool($filterValue)) {
                         $qb->andWhere("obj.{$filterName} = :{$filterName}");
                         $qb->setParameter($filterName, $filterValue);
                     } else {
-                        $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");
-                        $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
+                        if (is_int($filterValue)) {
+                            $qb->andWhere("obj.{$filterName} = :{$filterName}");
+                            $qb->setParameter($filterName, $filterValue);
+                        } else {
+                            $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");
+                            $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
+                        }
                     }
-                }
             }
         }
 

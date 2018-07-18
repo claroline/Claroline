@@ -463,6 +463,32 @@ class WorkspaceController extends AbstractCrudController
         return new JsonResponse($this->serializer->serialize($workspace));
     }
 
+    /**
+     * @Route(
+     *    "/{id}/management/roles",
+     *    name="apiv2_workspace_management_roles_list"
+     * )
+     * @Method("GET")
+     * @ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
+     *
+     * @param Request   $request
+     * @param Workspace $workspace
+     *
+     * @return JsonResponse
+     */
+    public function rolesListAction(Request $request, Workspace $workspace)
+    {
+        return new JsonResponse(
+            $this->finder->search('Claroline\CoreBundle\Entity\Role', array_merge(
+                $request->query->all(),
+                ['hiddenFilters' => [
+                    'workspace' => [$workspace->getUuid()],
+                    'roleNames' => ['ROLE_ANONYMOUS', 'ROLE_USER'],
+                ]]
+            ))
+        );
+    }
+
     public function getOptions()
     {
         return [
