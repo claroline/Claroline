@@ -17,7 +17,7 @@ const action = (resourceNodes, nodesRefresher) => ({ // todo collection
           method: 'POST',
           body: JSON.stringify({destination: selected[0]})
         },
-        success: (response) => nodesRefresher.add(response)
+        success: (response) => nodesRefresher.add([response])
       }
     }),
     filters: [{resourceType: 'directory'}]
