@@ -68,33 +68,40 @@ class WorkspaceFinder extends AbstractFinder
 
             switch ($filterName) {
                 case 'sameOrganization':
-                  $currentUser = $this->tokenStorage->getToken()->getUser();
-                  if ($currentUser instanceof User) {
-                      $qb->leftJoin('obj.organizations', 'uo');
-                      $qb->leftJoin('uo.users', 'ua');
+                    $currentUser = $this->tokenStorage->getToken()->getUser();
 
-                      $qb->andWhere($qb->expr()->orX(
-                      $qb->expr()->eq('ua.id', ':userId')
-                    ));
+                    if ($currentUser instanceof User) {
+                        $qb->leftJoin('obj.organizations', 'uo');
+                        $qb->leftJoin('uo.users', 'ua');
 
-                      $qb->setParameter('userId', $currentUser->getId());
-                  }
+                        $qb->andWhere($qb->expr()->orX(
+                            $qb->expr()->eq('ua.id', ':userId')
+                        ));
 
-                  break;
+                        $qb->setParameter('userId', $currentUser->getId());
+                    }
+
+                    break;
                 case 'administrated':
-                  if ('cli' !== php_sapi_name() && !$this->authChecker->isGranted('ROLE_ADMIN') && !$this->authChecker->isGranted('ROLE_ANONYMOUS')) {
-                      /** @var User $currentUser */
-                      $currentUser = $this->tokenStorage->getToken()->getUser();
-                      $qb->leftJoin('obj.organizations', 'uo');
-                      $qb->leftJoin('uo.administrators', 'ua');
-                      $qb->leftJoin('obj.creator', 'creator');
-                      $qb->andWhere($qb->expr()->orX(
-                        $qb->expr()->eq('ua.id', ':userId'),
-                        $qb->expr()->eq('creator.id', ':userId')
-                      ));
-                      $qb->setParameter('userId', $currentUser->getId());
-                  }
-                  break;
+                    if ('cli' !== php_sapi_name() && !$this->authChecker->isGranted('ROLE_ADMIN') && !$this->authChecker->isGranted('ROLE_ANONYMOUS')) {
+                        /** @var User $currentUser */
+                        $currentUser = $this->tokenStorage->getToken()->getUser();
+                        $qb->leftJoin('obj.organizations', 'uo');
+                        $qb->leftJoin('uo.administrators', 'ua');
+                        $qb->leftJoin('obj.creator', 'creator');
+                        $qb->leftJoin('obj.roles', 'r');
+                        $qb->leftJoin('r.users', 'ru');
+                        $qb->andWhere($qb->expr()->orX(
+                            $qb->expr()->eq('ua.id', ':userId'),
+                            $qb->expr()->eq('creator.id', ':userId'),
+                            $qb->expr()->andX(
+                                $qb->expr()->eq('r.name', "CONCAT('ROLE_WS_MANAGER_', obj.uuid)"),
+                                $qb->expr()->eq('ru.id', ':userId')
+                            )
+                        ));
+                        $qb->setParameter('userId', $currentUser->getId());
+                    }
+                    break;
                 case 'createdAfter':
                     $qb->andWhere("obj.created >= :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
@@ -112,20 +119,20 @@ class WorkspaceFinder extends AbstractFinder
                     $qb->leftJoin('obj.roles', 'r');
                     $qb->leftJoin('r.users', 'ru');
                     $qb->andWhere($qb->expr()->orX(
-                      $qb->expr()->eq('ru.id', ':currentUserId'),
-                      $qb->expr()->eq('ru.uuid', ':currentUserId')
+                        $qb->expr()->eq('ru.id', ':currentUserId'),
+                        $qb->expr()->eq('ru.uuid', ':currentUserId')
                     ));
                     $qb->andWhere('r.name != :roleUser');
                     $qb->setParameter('currentUserId', $filterValue);
                     $qb->setParameter('roleUser', 'ROLE_USER');
                     break;
                     //use this whith the 'user' property
-              case 'isManager':
-                  if ($filterValue) {
-                      $qb->andWhere('r.name like :ROLE_WS_MANAGER');
-                      $qb->setParameter('ROLE_WS_MANAGER', 'ROLE_WS_MANAGER%');
-                  }
-                  break;
+                case 'isManager':
+                    if ($filterValue) {
+                        $qb->andWhere('r.name like :ROLE_WS_MANAGER');
+                        $qb->setParameter('ROLE_WS_MANAGER', 'ROLE_WS_MANAGER%');
+                    }
+                    break;
                 default:
                     if (is_string($filterValue)) {
                         $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");
@@ -143,37 +150,37 @@ class WorkspaceFinder extends AbstractFinder
     public function getFilters()
     {
         return [
-          'administrated' => [
-            'type' => 'boolean',
-            'description' => 'The the current user administrate the organization of the workspace',
-          ],
+            'administrated' => [
+                'type' => 'boolean',
+                'description' => 'The the current user administrate the organization of the workspace',
+            ],
 
-          'sameOrganization' => [
-            'type' => 'boolean',
-            'description' => 'Workspace and current user share the same organization',
-          ],
+            'sameOrganization' => [
+                'type' => 'boolean',
+                'description' => 'Workspace and current user share the same organization',
+            ],
 
-          'createdBefore' => [
-            'type' => 'date',
-            'description' => 'Workspace created after',
-          ],
+            'createdBefore' => [
+                'type' => 'date',
+                'description' => 'Workspace created after',
+            ],
 
-          'createdAfter' => [
-            'type' => 'date',
-            'description' => 'Workspace created before',
-          ],
+            'createdAfter' => [
+                'type' => 'date',
+                'description' => 'Workspace created before',
+            ],
 
-          'user' => [
-            'type' => 'integer',
-            'description' => 'The user id/uuid. Check if the user is registered',
-          ],
+            'user' => [
+                'type' => 'integer',
+                'description' => 'The user id/uuid. Check if the user is registered',
+            ],
 
-          'isManager' => [
-            'type' => 'boolean',
-            'description' => 'Requires the user filter. Check if the user is the manager aswell',
-          ],
+            'isManager' => [
+                'type' => 'boolean',
+                'description' => 'Requires the user filter. Check if the user is the manager aswell',
+            ],
 
-          //random prop goes here
+            //random prop goes here
         ];
     }
 }
