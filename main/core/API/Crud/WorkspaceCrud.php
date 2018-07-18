@@ -68,7 +68,7 @@ class WorkspaceCrud
         $user = $this->tokenStorage->getToken()->getUser();
 
         $model = $workspace->getWorkspaceModel() ? $workspace->getWorkspaceModel() : $this->manager->getDefaultModel();
-        $workspace = $this->manager->copy($model, $workspace, false);
+        $workspace = $this->manager->copy($model, $workspace, $workspace->isModel());
 
         if ($user instanceof User) {
             $workspace->setCreator($user);

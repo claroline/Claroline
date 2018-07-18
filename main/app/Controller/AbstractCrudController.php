@@ -298,6 +298,7 @@ abstract class AbstractCrudController extends AbstractApiController
      */
     public function deleteBulkAction(Request $request, $class)
     {
+        $query = $request->query->all();
         $options = $this->options['deleteBulk'];
 
         if (isset($query['options'])) {
@@ -327,6 +328,7 @@ abstract class AbstractCrudController extends AbstractApiController
      */
     public function copyBulkAction(Request $request, $class)
     {
+        $query = $request->query->all();
         $serializer = $this->serializer;
         $options = $this->options['copyBulk'];
 

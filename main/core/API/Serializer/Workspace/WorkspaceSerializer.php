@@ -332,7 +332,7 @@ class WorkspaceSerializer
         $this->sipe('code', 'setCode', $data, $workspace);
         $this->sipe('name', 'setName', $data, $workspace);
 
-        $this->sipe('meta.model', 'setIsModel', $data, $workspace);
+        $this->sipe('meta.model', 'setModel', $data, $workspace);
         $this->sipe('meta.description', 'setDescription', $data, $workspace);
         $this->sipe('meta.lang', 'setLang', $data, $workspace);
 
