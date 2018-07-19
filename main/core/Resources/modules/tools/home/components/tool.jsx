@@ -11,7 +11,6 @@ import {actions} from '#/main/core/tools/home/actions'
 import {Editor} from '#/main/core/tools/home/editor/components/editor'
 import {Player} from '#/main/core/tools/home/player/components/player'
 
-
 const Tool = props =>
   <Router>
     <Routes
@@ -35,7 +34,6 @@ const Tool = props =>
     />
   </Router>
 
-
 Tool.propTypes = {
   context: T.shape({
     type: T.oneOf(['workspace', 'desktop']),
@@ -58,7 +56,6 @@ const HomeTool = connect(
   (state) => ({
     editable: selectors.editable(state),
     sortedTabs: selectors.sortedTabs(state),
-    // sortedEditorTabs: editorSelectors.sortedEditorTabs(state),
     currentTab: selectors.currentTab(state)
   }),
   (dispatch) => ({

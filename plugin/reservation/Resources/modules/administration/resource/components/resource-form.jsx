@@ -71,6 +71,16 @@ const Resource = props =>
   <FormContainer
     level={2}
     name="resourceForm"
+    buttons={true}
+    target={(resource, isNew) => isNew ?
+      ['apiv2_reservationresource_create'] :
+      ['apiv2_reservationresource_update', {id: resource.id}]
+    }
+    cancel={{
+      type: 'link',
+      target: '/',
+      exact: true
+    }}
     sections={[
       {
         title: trans('general', {}, 'platform'),

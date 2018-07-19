@@ -18,12 +18,17 @@ use JMS\DiExtraBundle\Annotation as DI;
 /**
  * @DI\Service("claroline.serializer.home_tab")
  * @DI\Tag("claroline.serializer")
+ *
+ * @todo simplify relationships (there are lots of duplicates)
+ * @todo simplify serialized structure
  */
 class HomeTabSerializer
 {
     use SerializerTrait;
 
     private $serializer;
+    private $om;
+    private $widgetContainerFinder;
 
     /**
      * ContactSerializer constructor.
@@ -34,7 +39,9 @@ class HomeTabSerializer
      *     "widgetContainerFinder" = @DI\Inject("claroline.api.finder.widget_container")
      * })
      *
-     * @param SerializerProvider $serializer
+     * @param SerializerProvider    $serializer
+     * @param ObjectManager         $om
+     * @param WidgetContainerFinder $widgetContainerFinder
      */
     public function __construct(
         SerializerProvider $serializer,
@@ -69,23 +76,21 @@ class HomeTabSerializer
         $homeTabConfig = $this->om->getRepository(HomeTabConfig::class)
           ->findOneBy(['homeTab' => $homeTab]);
 
-        $data = [
-          'id' => $this->getUuid($homeTab, $options),
-          'title' => $homeTab->getName(),
-          'longTitle' => $homeTab->getLongTitle(),
-          'centerTitle' => $homeTab->isCenterTitle(),
-          'poster' => $homeTab->getPoster(),
-          'icon' => $homeTab->getIcon(),
-          'type' => $homeTab->getType(),
-          'position' => $homeTabConfig->getTabOrder(),
-          'user' => $homeTab->getUser() ? $this->serializer->serialize($homeTab->getUser(), [Options::SERIALIZE_MINIMAL]) : null,
-          'workspace' => $homeTab->getWorkspace() ? $this->serializer->serialize($homeTab->getWorkspace(), [Options::SERIALIZE_MINIMAL]) : null,
-          'widgets' => array_map(function ($container) use ($options) {
-              return $this->serializer->serialize($container, $options);
-          }, $containers),
+        return [
+            'id' => $this->getUuid($homeTab, $options),
+            'title' => $homeTab->getName(),
+            'longTitle' => $homeTab->getLongTitle(),
+            'centerTitle' => $homeTab->isCenterTitle(),
+            'poster' => $homeTab->getPoster(),
+            'icon' => $homeTab->getIcon(),
+            'type' => $homeTab->getType(),
+            'position' => $homeTabConfig->getTabOrder(),
+            'user' => $homeTab->getUser() ? $this->serializer->serialize($homeTab->getUser(), [Options::SERIALIZE_MINIMAL]) : null,
+            'workspace' => $homeTab->getWorkspace() ? $this->serializer->serialize($homeTab->getWorkspace(), [Options::SERIALIZE_MINIMAL]) : null,
+            'widgets' => array_map(function ($container) use ($options) {
+                return $this->serializer->serialize($container, $options);
+            }, $containers),
         ];
-
-        return $data;
     }
 
     public function deserialize(array $data, HomeTab $homeTab, array $options = []): HomeTab

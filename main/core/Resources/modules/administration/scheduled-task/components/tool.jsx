@@ -4,12 +4,12 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
 import {
+  PageContainer,
   PageActions,
   PageAction,
   PageHeader
 } from '#/main/core/layout/page'
 import {
-  RoutedPageContainer,
   RoutedPageContent
 } from '#/main/core/layout/router'
 
@@ -19,7 +19,7 @@ import {actions}        from '#/main/core/administration/scheduled-task/actions'
 import {select}         from '#/main/core/administration/scheduled-task/selectors'
 
 const Tool = props =>
-  <RoutedPageContainer>
+  <PageContainer>
     <PageHeader
       title={trans('tasks_scheduling', {}, 'tools')}
     >
@@ -49,7 +49,7 @@ const Tool = props =>
         }
       ]}
     />
-  </RoutedPageContainer>
+  </PageContainer>
 
 Tool.propTypes = {
   isCronConfigured: T.bool.isRequired,

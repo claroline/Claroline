@@ -45,6 +45,10 @@ class ResourceController
         $this->actionManager = $actionManager;
     }
 
+    public function showAction(ResourceNode $resourceNode)
+    {
+    }
+
     /**
      * Executes an action on one resource.
      *
@@ -59,7 +63,7 @@ class ResourceController
      *
      * @throws NotFoundHttpException
      */
-    public function objectAction($action, ResourceNode $resourceNode, Request $request)
+    public function executeAction($action, ResourceNode $resourceNode, Request $request)
     {
         // check the requested action exists
         if (!$this->actionManager->support($resourceNode, $action, $request->getMethod())) {
@@ -83,7 +87,7 @@ class ResourceController
         return $this->actionManager->execute($resourceNode, $action, $parameters, $content);
     }
 
-    public function collectionAction(Request $request)
+    public function executeCollectionAction(Request $request)
     {
     }
 

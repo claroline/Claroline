@@ -101,11 +101,6 @@ claro_workspace_tool_tools_properties:
     prefix: workspaces/tool/properties
     type: annotation
 
-claro_workspace_tool_home:
-    resource: "@ClarolineCoreBundle/Controller/Tool/HomeController.php"
-    prefix: workspaces/tool/home
-    type: annotation
-
 claro_admin:
     resource: "@ClarolineCoreBundle/Controller/AdministrationController.php"
     prefix: admin

@@ -6,36 +6,18 @@ import {actions as formActions} from '#/main/core/data/form/actions'
 // action creators
 export const actions = {}
 
-actions.deleteTab = (currentTabIndex, editorTabs, push) => (dispatch) => {
-  const newTabs = editorTabs.slice(0)
-  const tabs = newTabs.splice(currentTabIndex, 1)
-  // updating tabs positions
-    .sort((a,b) => a.position - b.position)
-    .map((tab, index) => merge({}, tab, {
-      position: index + 1
-    }))
-  dispatch(formActions.updateProp('editor', 'tabs', tabs))
-  push('/edit')
-}
+actions.deleteTab = (tabs, tabToDelete) => (dispatch) => {
+  const tabIndex = tabs.findIndex(tab => tab.id === tabToDelete.id)
 
-actions.updateTab = (editorTabs, updatedTab, oldTab) => (dispatch) => {
+  // creates a copy of the tabs list
+  const newTabs = tabs.slice(0)
 
-  let newTabs = cloneDeep(editorTabs)
+  // removes the tab to delete
+  newTabs.splice(tabIndex, 1)
 
-  const oldTabIndex = editorTabs.findIndex(tab => oldTab.id === tab.id)
-  newTabs.splice(oldTabIndex, 1)
-
-  // if moving to the right
-  if(updatedTab.position > oldTab.position) {
-    newTabs = newTabs
-      .sort((a,b) => a.position - b.position)
-      .map((tab, index) => merge({}, tab, {
-        position: index + 1
-      }))
-  }
-
-  dispatch(formActions.updateProp('editor', 'tabs', [updatedTab]
-    .concat(newTabs)
+  // inject updated data into the form
+  dispatch(formActions.update('editor', newTabs
+    // recalculate tabs positions
     .sort((a,b) => a.position - b.position)
     .map((tab, index) => merge({}, tab, {
       position: index + 1
@@ -43,9 +25,26 @@ actions.updateTab = (editorTabs, updatedTab, oldTab) => (dispatch) => {
   ))
 }
 
-actions.createTab = (editorTabs, formTab) => (dispatch) => dispatch(formActions.updateProp('editor', 'tabs', [formTab]
-  .concat(editorTabs)
-  .sort((a,b) => a.position - b.position)
-  .map((tab, index) => merge({}, tab, {
-    position: index + 1
-  })) ))
+actions.moveTab = (tabs, tabToMove, newPosition) => (dispatch) => {
+  let newTabs = cloneDeep(tabs)
+
+  const tabIndex = tabs.findIndex(tab => tab.id === tabToMove.id)
+  newTabs.splice(tabIndex, 1)
+
+  // if moving to the right
+  if (tabToMove.position < newPosition) {
+    newTabs = newTabs
+      .sort((a,b) => a.position - b.position)
+      .map((tab, index) => merge({}, tab, {
+        position: index + 1
+      }))
+  }
+
+  dispatch(formActions.update('editor', [merge({}, tabToMove, {position: newPosition})]
+    .concat(newTabs)
+    .sort((a,b) => a.position - b.position)
+    .map((tab, index) => merge({}, tab, {
+      position: index + 1
+    }))
+  ))
+}

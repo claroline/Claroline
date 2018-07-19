@@ -44,10 +44,10 @@ class HomeListener
      *
      * @DI\InjectParams({
      *     "authorization" = @DI\Inject("security.authorization_checker"),
-     *     "tokenStorage" = @DI\Inject("security.token_storage"),
-     *     "templating"   = @DI\Inject("templating"),
-     *     "finder"       = @DI\Inject("claroline.api.finder"),
-     *     "serializer"   = @DI\Inject("claroline.api.serializer")
+     *     "tokenStorage"  = @DI\Inject("security.token_storage"),
+     *     "templating"    = @DI\Inject("templating"),
+     *     "finder"        = @DI\Inject("claroline.api.finder"),
+     *     "serializer"    = @DI\Inject("claroline.api.serializer")
      * })
      *
      * @param TokenStorageInterface         $tokenStorage

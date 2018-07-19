@@ -2,23 +2,23 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
+import {trans} from '#/main/core/translation'
+import {PageContainer, PageHeader, PageContent, PageActions, PageAction} from '#/main/core/layout/page'
+
 import {WidgetContainer as WidgetContainerTypes} from '#/main/core/widget/prop-types'
 import {WidgetGrid} from '#/main/core/widget/player/components/grid'
-import {trans} from '#/main/core/translation'
-import {PageContainer, PageHeader, PageContent, PageActions} from '#/main/core/layout/page'
-
 import {Tab as TabTypes} from '#/main/core/tools/home/prop-types'
 import {selectors} from '#/main/core/tools/home/selectors'
-import {PlayerNav} from '#/main/core/tools/home/player/components/nav'
-import {ToolActions} from '#/main/core/tools/home/components/tool-actions'
+import {Tabs} from '#/main/core/tools/home/components/tabs'
 
 const PlayerComponent = props =>
   <PageContainer>
     {1 < props.sortedTabs.length &&
-      <PlayerNav
+      <Tabs
         tabs={props.sortedTabs}
       />
     }
+
     <PageHeader
       // TODO change to h1
       className={props.currentTab.centerTitle ? 'center-page-title' : ''}
@@ -26,7 +26,13 @@ const PlayerComponent = props =>
     >
       {props.editable &&
         <PageActions>
-          <ToolActions />
+          <PageAction
+            type="link"
+            label={trans('configure', {}, 'actions')}
+            icon="fa fa-fw fa-cog"
+            target="/edit"
+            primary={true}
+          />
         </PageActions>
       }
     </PageHeader>

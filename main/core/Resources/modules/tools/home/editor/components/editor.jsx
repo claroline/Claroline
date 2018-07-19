@@ -1,9 +1,12 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+import merge from 'lodash/merge'
 
 import {trans} from '#/main/core/translation'
-import {actions as formActions} from '#/main/core/data/form/actions'
+import {makeId} from '#/main/core/scaffolding/id'
+import {withRouter} from '#/main/app/router'
+import {currentUser} from '#/main/core/user/current'
 import {
   PageContainer,
   PageHeader,
@@ -12,24 +15,23 @@ import {
   PageAction,
   PageGroupActions
 } from '#/main/core/layout/page'
+import {FormContainer} from '#/main/core/data/form/containers/form'
+import {actions as formActions} from '#/main/core/data/form/actions'
 import {WidgetGridEditor} from '#/main/core/widget/editor/components/grid'
 import {WidgetContainer as WidgetContainerTypes} from '#/main/core/widget/prop-types'
 
-import {ToolActions} from '#/main/core/tools/home/components/tool-actions'
 import {Tab as TabTypes} from '#/main/core/tools/home/prop-types'
 import {selectors} from '#/main/core/tools/home/selectors'
-import {actions as editorActions} from '#/main/core/tools/home/editor/actions'
-import {actions} from '#/main/core/tools/home/actions'
 import {selectors as editorSelectors} from '#/main/core/tools/home/editor/selectors'
-import {MODAL_TAB_PARAMETERS} from '#/main/core/tools/home/editor/modals/parameters'
-import {EditorNav} from '#/main/core/tools/home/editor/components/nav'
+import {actions as editorActions} from '#/main/core/tools/home/editor/actions'
+import {Tabs} from '#/main/core/tools/home/components/tabs'
 
 const EditorComponent = props =>
   <PageContainer>
-    <EditorNav
-      tabs={props.editorTabs}
-      context={props.context}
-      create={(data) => props.createTab(props.editorTabs, data)}
+    <Tabs
+      prefix="/edit"
+      tabs={props.tabs}
+      create={() => props.createTab(props.context, props.tabs.length, props.history.push)}
     />
 
     <PageHeader
@@ -37,18 +39,8 @@ const EditorComponent = props =>
       title={props.currentTab ? props.currentTab.longTitle : ('desktop' === props.context.type ? trans('desktop') : props.context.data.name)}
     >
       <PageActions>
-        <PageGroupActions>
-          <PageAction
-            type="modal"
-            label={trans('configure', {}, 'actions')}
-            icon="fa fa-fw fa-cog"
-            modal={[MODAL_TAB_PARAMETERS, {
-              currentTabData: props.currentTab,
-              save: (formData) => props.updateTab(props.editorTabs, formData, props.currentTab, props.currentTabIndex )
-            }]}
-          />
-
-          {1 < props.editorTabs.length &&
+        {1 < props.tabs.length &&
+          <PageGroupActions>
             <PageAction
               type="callback"
               label={trans('delete')}
@@ -58,80 +50,165 @@ const EditorComponent = props =>
                 title: trans('home_tab_delete_confirm_title'),
                 message: trans('home_tab_delete_confirm_message')
               }}
-              callback={() => props.deleteTab(props.currentTabIndex, props.editorTabs, props.history.push)}
+              callback={() => props.deleteTab(props.tabs, props.currentTab, props.history.push)}
             />
-          }
-        </PageGroupActions>
+          </PageGroupActions>
+        }
 
-        <ToolActions />
+        <PageGroupActions>
+          <PageAction
+            type="link"
+            label={trans('configure', {}, 'actions')}
+            icon="fa fa-fw fa-cog"
+            target="/edit"
+            primary={true}
+          />
+        </PageGroupActions>
       </PageActions>
     </PageHeader>
 
     <PageContent>
-      <WidgetGridEditor
-        context={props.context}
-        widgets={props.widgets}
-        update={(widgets) => props.update(props.currentTabIndex, widgets)}
-      />
+      <FormContainer
+        name="editor"
+        dataPart={`[${props.currentTabIndex}]`}
+        buttons={true}
+        target={['apiv2_home_update', {
+          context: props.context.type,
+          contextId: props.context.data ? props.context.data.uuid : currentUser().id
+        }]}
+        cancel={{
+          type: 'link',
+          target: '/',
+          exact: true
+        }}
+        sections={[
+          {
+            icon: 'fa fa-fw fa-plus',
+            title: trans('general'),
+            primary: true,
+            fields: [
+              {
+                name: 'title',
+                type: 'string',
+                label: trans('menu_title'),
+                help: trans('menu_title_help'),
+                options: {
+                  maxLength: 20
+                },
+                required: true
+              }, {
+                name: 'longTitle',
+                type: 'string',
+                label: trans('title'),
+                required: true,
+                linked :[
+                  {
+                    name: 'centerTitle',
+                    type: 'boolean',
+                    label: trans('center_title')
+                  }
+                ]
+              }
+            ]
+          }, {
+            icon: 'fa fa-fw fa-desktop',
+            title: trans('display_parameters'),
+            fields: [
+              {
+                name: 'position',
+                type: 'number',
+                label: trans('position'),
+                options : {
+                  min : 1,
+                  max : props.tabs.length + 1
+                },
+                required: true,
+                onChange: (newPosition) => props.moveTab(props.tabs, props.currentTab, newPosition)
+              }, {
+                name: 'icon',
+                type: 'string',
+                label: trans('icon'),
+                help: trans('icon_tab_help')
+              }, {
+                name: 'poster',
+                label: trans('poster'),
+                type: 'file',
+                options: {
+                  ratio: '3:1'
+                }
+              }
+            ]
+          }
+        ]}
+      >
+        <WidgetGridEditor
+          context={props.context}
+          widgets={props.widgets}
+          update={(widgets) => props.updateWidgets(props.currentTabIndex, widgets)}
+        />
+      </FormContainer>
     </PageContent>
   </PageContainer>
 
 
 EditorComponent.propTypes = {
   context: T.object.isRequired,
+  tabs: T.arrayOf(T.shape(
+    TabTypes.propTypes
+  )),
+  currentTab: T.shape(TabTypes.propTypes),
+  currentTabIndex: T.number.isRequired,
   widgets: T.arrayOf(T.shape(
     WidgetContainerTypes.propTypes
   )).isRequired,
-  update: T.func.isRequired,
-  editorTabs: T.arrayOf(T.shape(
-    TabTypes.propTypes
-  )),
-  setCurrentTab: T.func.isRequired,
-  currentTab: T.shape(TabTypes.propTypes),
-  editable: T.bool.isRequired,
-  history: T.object.isRequired,
-  createTab: T.func,
-  deleteTab: T.func,
-  updateTab: T.func,
-  currentTabIndex: T.number.isRequired
+  history: T.shape({
+    push: T.func.isRequired
+  }).isRequired,
+  createTab: T.func.isRequired,
+  updateWidgets: T.func.isRequired,
+  deleteTab: T.func.isRequired,
+  moveTab: T.func.isRequired
 }
 
-
-const Editor = connect(
+const Editor = withRouter(connect(
   state => ({
     context: selectors.context(state),
-    editorTabs: editorSelectors.editorTabs(state),
+    tabs: editorSelectors.editorTabs(state),
     widgets: editorSelectors.widgets(state),
     currentTabIndex: editorSelectors.currentTabIndex(state),
-    currentTab: editorSelectors.currentTab(state),
-    editable: selectors.editable(state)
+    currentTab: editorSelectors.currentTab(state)
   }),
   dispatch => ({
-    setCurrentTab(tab){
-      dispatch(actions.setCurrentTab(tab))
+    createTab(context, position, navigate){
+      const newTabId = makeId()
+
+      dispatch(formActions.updateProp('editor', `[${position}]`, merge({}, TabTypes.defaultProps, {
+        id: newTabId,
+        title: trans('tab'),
+        longTitle: trans('tab'),
+        position: position + 1,
+        type: context.type,
+        user: context.type === 'desktop' ? currentUser() : null,
+        workspace: context.type === 'workspace' ? {uuid: context.data.uuid} : null
+      })))
+
+      // open new tab
+      navigate(`/edit/tab/${newTabId}`)
     },
-    update(currentTabIndex, widgets) {
-      dispatch(formActions.updateProp('editor', `tabs[${currentTabIndex}].widgets`, widgets))
+    moveTab(tabs, currentTab, newPosition) {
+      dispatch(editorActions.moveTab(tabs, currentTab, newPosition))
     },
-    createTab(editorTabs, tab){
-      if(tab.position !== editorTabs.length + 1) {
-        dispatch(editorActions.createTab(editorTabs, tab))
-      } else {
-        dispatch(formActions.updateProp('editor', `tabs[${editorTabs.length}]`, tab))
-      }
+    deleteTab(tabs, currentTab, navigate) {
+      dispatch(editorActions.deleteTab(tabs, currentTab))
+
+      // redirect
+      navigate('/edit')
     },
-    updateTab(editorTabs, tab, currentTab, currentTabIndex) {
-      if(tab.position !== currentTab.position) {
-        dispatch(editorActions.updateTab(editorTabs, tab, currentTab))
-      } else {
-        dispatch(formActions.updateProp('editor', `tabs[${currentTabIndex}]`, tab))
-      }
-    },
-    deleteTab(currentTabIndex, editorTabs, push) {
-      dispatch(editorActions.deleteTab(currentTabIndex, editorTabs, push))
+    updateWidgets(currentTabIndex, widgets) {
+      dispatch(formActions.updateProp('editor', `[${currentTabIndex}].widgets`, widgets))
     }
   })
-)(EditorComponent)
+)(EditorComponent))
 
 export {
   Editor

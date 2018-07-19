@@ -9,13 +9,13 @@ import {
   withRouter
 } from '#/main/app/router'
 import {
+  PageContainer,
   PageActions,
   MoreAction,
   PageAction,
   PageHeader
 } from '#/main/core/layout/page'
 import {
-  RoutedPageContainer,
   RoutedPageContent
 } from '#/main/core/layout/router'
 
@@ -93,7 +93,7 @@ Actions.propTypes = {
 const ToolActions = withRouter(Actions)
 
 const Tool = (props) =>
-  <RoutedPageContainer>
+  <PageContainer>
     <PageHeader title={trans('logs', {}, 'tools')}>
       <ToolActions
         resourceId={props.resourceId}
@@ -119,7 +119,7 @@ const Tool = (props) =>
         }
       ]}
     />
-  </RoutedPageContainer>
+  </PageContainer>
 
 Tool.propTypes = {
   resourceId: T.number.isRequired,
