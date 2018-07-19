@@ -71,7 +71,14 @@ class WidgetContainerSerializer
         $this->sipe('display.layout', 'setLayout', $data, $widgetContainer);
         $this->sipe('display.color', 'setColor', $data, $widgetContainer);
         $this->sipe('display.backgroundType', 'setBackgroundType', $data, $widgetContainer);
-        $this->sipe('display.background', 'setBackground', $data, $widgetContainer);
+
+        $display = $data['display'];
+
+        if (isset($display['background']) && isset($display['background']['url'])) {
+            $this->sipe('display.background.url', 'setBackground', $data, $widgetContainer);
+        } else {
+            $this->sipe('display.background', 'setBackground', $data, $widgetContainer);
+        }
 
         // todo deserialize instances
         if (isset($data['contents'])) {

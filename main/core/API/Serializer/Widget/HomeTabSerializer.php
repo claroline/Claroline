@@ -94,7 +94,7 @@ class HomeTabSerializer
         $this->sipe('title', 'setName', $data, $homeTab);
         $this->sipe('longTitle', 'setLongTitle', $data, $homeTab);
         $this->sipe('centerTitle', 'setCenterTitle', $data, $homeTab);
-        $this->sipe('poster', 'setPoster', $data, $homeTab);
+        $this->sipe('poster.url', 'setPoster', $data, $homeTab);
         $this->sipe('icon', 'setIcon', $data, $homeTab);
         $this->sipe('type', 'setType', $data, $homeTab);
 

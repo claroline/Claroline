@@ -61,8 +61,8 @@ class ContentTypeModalComponent extends Component {
       <Modal
         {...omit(this.props, 'context', 'availableTypes', 'fetchContents', 'configure', 'add')}
         icon="fa fa-fw fa-plus"
-        title={trans('new_content', {}, 'widget')}
-        subtitle={trans('new_content_select', {}, 'widget')}
+        title={trans('new_widget', {}, 'widget')}
+        subtitle={trans('new_widget_select', {}, 'widget')}
         onEntering={() => {
           if (0 === this.props.availableTypes.length) {
             this.props.fetchContents(this.props.context)

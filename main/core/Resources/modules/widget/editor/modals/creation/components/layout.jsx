@@ -53,8 +53,8 @@ const LayoutModalComponent = props =>
   <Modal
     {...omit(props, 'selectLayout', 'create')}
     icon="fa fa-fw fa-plus"
-    title={trans('new_widget', {}, 'widget')}
-    subtitle={trans('new_widget_select', {}, 'widget')}
+    title={trans('new_section')}
+    subtitle={trans('new_section_select', {}, 'widget')}
   >
     <div className="modal-body">
       <h5>1 colonne</h5>

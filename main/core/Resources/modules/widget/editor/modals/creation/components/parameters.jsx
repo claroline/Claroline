@@ -17,8 +17,8 @@ const ParametersModalComponent = props =>
   <Modal
     {...omit(props, 'widget', 'saveEnabled', 'create', 'dispatch')}
     icon="fa fa-fw fa-plus"
-    title={trans('new_widget', {}, 'widget')}
-    subtitle={trans('new_widget_configure', {}, 'widget')}
+    title={trans('new_section')}
+    subtitle={trans('new_section_configure', {}, 'widget')}
   >
     <WidgetForm level={5} name={selectors.STORE_NAME} />
 

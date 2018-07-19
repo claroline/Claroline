@@ -43,7 +43,10 @@ const WidgetContainer = {
       ).isRequired,
       color: T.string,
       backgroundType: T.oneOf(['none', 'color', 'image']),
-      background: T.string // either the color or the image url
+      background: T.oneOfType([
+        T.string,
+        T.object
+      ]) // either the color or the image (object)
     }),
     contents: T.arrayOf(T.shape(
       WidgetInstance.propTypes

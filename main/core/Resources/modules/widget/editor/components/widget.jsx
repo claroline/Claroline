@@ -26,7 +26,7 @@ const WidgetCol = props =>
           className="btn btn-link text-movie-subtitles"
           type="modal"
           icon="fa fa-fw fa-pencil"
-          label={trans('modify_content', {}, 'widget')}
+          label={trans('modify_widget', {}, 'widget')}
           modal={[MODAL_CONTENT_PARAMETERS, {
             content: props.content,
             save: props.updateContent
@@ -45,7 +45,7 @@ const WidgetCol = props =>
       <Button
         className="btn btn-block btn-emphasis"
         type="modal"
-        label={trans('add_content', {}, 'widget')}
+        label={trans('add_widget', {}, 'widget')}
         modal={[MODAL_WIDGET_CONTENT, {
           context: props.context,
           add: props.addContent

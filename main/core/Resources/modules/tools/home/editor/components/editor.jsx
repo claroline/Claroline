@@ -18,7 +18,7 @@ import {WidgetContainer as WidgetContainerTypes} from '#/main/core/widget/prop-t
 import {ToolActions} from '#/main/core/tools/home/components/tool-actions'
 import {Tab as TabTypes} from '#/main/core/tools/home/prop-types'
 import {selectors} from '#/main/core/tools/home/selectors'
-import {actions as EditorActions} from '#/main/core/tools/home/editor/actions'
+import {actions as editorActions} from '#/main/core/tools/home/editor/actions'
 import {actions} from '#/main/core/tools/home/actions'
 import {selectors as editorSelectors} from '#/main/core/tools/home/editor/selectors'
 import {MODAL_TAB_PARAMETERS} from '#/main/core/tools/home/editor/modals/parameters'
@@ -115,20 +115,20 @@ const Editor = connect(
     },
     createTab(editorTabs, tab){
       if(tab.position !== editorTabs.length + 1) {
-        dispatch(EditorActions.createTab(editorTabs, tab))
+        dispatch(editorActions.createTab(editorTabs, tab))
       } else {
         dispatch(formActions.updateProp('editor', `tabs[${editorTabs.length}]`, tab))
       }
     },
     updateTab(editorTabs, tab, currentTab, currentTabIndex) {
       if(tab.position !== currentTab.position) {
-        dispatch(EditorActions.updateTab(editorTabs, tab, currentTab))
+        dispatch(editorActions.updateTab(editorTabs, tab, currentTab))
       } else {
         dispatch(formActions.updateProp('editor', `tabs[${currentTabIndex}]`, tab))
       }
     },
     deleteTab(currentTabIndex, editorTabs, push) {
-      dispatch(EditorActions.deleteTab(currentTabIndex, editorTabs, push))
+      dispatch(editorActions.deleteTab(currentTabIndex, editorTabs, push))
     }
   })
 )(EditorComponent)

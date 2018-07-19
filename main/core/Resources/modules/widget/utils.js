@@ -1,4 +1,7 @@
 import get from 'lodash/get'
+import isObject from 'lodash/isObject'
+
+import {asset} from '#/main/core/scaffolding/asset'
 
 function computeStyles(widget) {
   const styles = {}
@@ -16,7 +19,11 @@ function computeStyles(widget) {
       styles.background = display.background
       break
     case 'image':
-      styles.background = `url(${display.background})`
+      if (isObject(display.background)){
+        styles.background = `url(${asset(display.background.url)}) center center no-repeat`
+      } else {
+        styles.background = `url(${asset(display.background)}) center center no-repeat`
+      }
       break
   }
 

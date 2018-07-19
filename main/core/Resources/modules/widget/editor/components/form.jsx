@@ -26,7 +26,7 @@ const WidgetForm = props =>
             render: (widget) => {
               const layout = get(widget, 'display.layout') || [1]
 
-              return (
+              const LayoutPreview = 
                 <div className="widget-layout-preview">
                   <div className="row">
                     {times(layout.length, col =>
@@ -36,7 +36,8 @@ const WidgetForm = props =>
                     )}
                   </div>
                 </div>
-              )
+              
+              return LayoutPreview
             }
           }, {
             name: 'name',
@@ -73,7 +74,7 @@ const WidgetForm = props =>
                 label: trans('backgroundImage'),
                 type: 'image',
                 required: true,
-                displayed: (widget) => widget.display && 'image' === widget.display.backgroundType,
+                displayed: (widget) => widget.display && 'image' === widget.display.backgroundType
               }, {
                 name: 'display.background',
                 label: trans('backgroundColor'),

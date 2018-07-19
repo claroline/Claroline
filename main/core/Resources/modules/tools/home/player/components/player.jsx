@@ -20,6 +20,7 @@ const PlayerComponent = props =>
       />
     }
     <PageHeader
+      // TODO change to h1
       className={props.currentTab.centerTitle ? 'center-page-title' : ''}
       title={props.currentTab ? props.currentTab.longTitle : ('desktop' === props.context.type ? trans('desktop') : props.context.data.name)}
     >
