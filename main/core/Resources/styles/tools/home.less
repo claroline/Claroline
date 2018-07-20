@@ -6,6 +6,7 @@
   text-align: center;
 }
 
+
 .tool-nav {
   display: flex;
   flex-direction: row;
@@ -16,7 +17,7 @@
   background: @panel-body-padding;
   border: 1px solid @panel-default-border;
 
-  border-radius: @border-radius-base;
+
   .box-shadow(@box-shadow-base);
 
   .nav-tab {
@@ -28,14 +29,19 @@
   .nav-tab {
     color: @text-color;
     padding: @padding-large-vertical @padding-large-horizontal;
+    background-color: #fafafa;
+
 
     &:hover {
-      background: rgba(0,0,0,.03);
+      background: #f2f2f2;
       color: rgba(0,0,0,.95);
     }
 
     &.active {
       background: #ebebeb;
+    }
+    &.default {
+      background-color: #fafafa;
     }
   }
 }

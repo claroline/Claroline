@@ -44,7 +44,7 @@ implementPropTypes(Page, PageTypes, {
  * Title of the current page.
  */
 const PageTitle = props =>
-  <h1 className="page-title">
+  <h1 className={classes('page-title', `page-title-${props.alignTitle}`)}>
     {props.title}
     {props.subtitle &&
       <small>{props.subtitle}</small>
@@ -63,7 +63,12 @@ PageTitle.propTypes = {
    * Mostly used when the current page has sub-sections
    * example : in quizzes, we have edit/play/papers/etc. sections
    */
-  subtitle: T.string
+  subtitle: T.string,
+
+  /**
+   * The title will be align.
+   */
+  alignTitle: T.string
 }
 
 /**
@@ -89,6 +94,7 @@ const PageHeader = props => {
       <PageTitle
         title={props.title}
         subtitle={props.subtitle}
+        alignTitle={props.alignTitle}
       />
 
       {props.children}
@@ -111,6 +117,8 @@ PageHeader.propTypes = {
   subtitle: T.string,
 
   poster: T.string,
+
+  alignTitle: T.string,
 
   /**
    * Additional classes to add to the header tag.

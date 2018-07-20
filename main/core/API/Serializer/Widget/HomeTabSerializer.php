@@ -76,12 +76,23 @@ class HomeTabSerializer
         $homeTabConfig = $this->om->getRepository(HomeTabConfig::class)
           ->findOneBy(['homeTab' => $homeTab]);
 
+        $poster = null;
+        if ($homeTab->getPoster()) {
+            $file = $this->om
+                ->getRepository('Claroline\CoreBundle\Entity\File\PublicFile')
+                ->findOneBy(['url' => $homeTab->getPoster()]);
+
+            if ($file) {
+                $poster = $this->serializer->serialize($file);
+            }
+        }
+
         return [
             'id' => $this->getUuid($homeTab, $options),
             'title' => $homeTab->getName(),
             'longTitle' => $homeTab->getLongTitle(),
             'centerTitle' => $homeTab->isCenterTitle(),
-            'poster' => $homeTab->getPoster(),
+            'poster' => $poster,
             'icon' => $homeTab->getIcon(),
             'type' => $homeTab->getType(),
             'position' => $homeTabConfig->getTabOrder(),

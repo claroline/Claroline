@@ -23,6 +23,7 @@ const PlayerComponent = props =>
       // TODO change to h1
       className={props.currentTab.centerTitle ? 'center-page-title' : ''}
       title={props.currentTab ? props.currentTab.longTitle : ('desktop' === props.context.type ? trans('desktop') : props.context.data.name)}
+      poster={props.currentTab.poster ? props.currentTab.poster.url: undefined}
     >
       {props.editable &&
         <PageActions>

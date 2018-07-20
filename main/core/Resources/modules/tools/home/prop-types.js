@@ -9,9 +9,10 @@ const Tab = {
     longTitle: T.string,
     centerTitle: T.bool.isRequired,
     icon: T.string,
-    poster: T.shape({
-      url: T.string
-    }),
+    poster: T.oneOfType([
+      T.string,
+      T.object
+    ]),
     position: T.number,
     type: T.oneOf(['workspace', 'admin_desktop', 'desktop']),
     widgets: T.arrayOf(T.shape(
