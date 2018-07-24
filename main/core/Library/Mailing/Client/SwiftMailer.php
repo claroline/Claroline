@@ -6,6 +6,9 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Mailing\Message;
 use Claroline\CoreBundle\Library\Mailing\Validator;
 use JMS\DiExtraBundle\Annotation as DI;
+use Swift_Attachment;
+use Swift_Message;
+use Swift_SendmailTransport;
 use Swift_SmtpTransport;
 use Swift_TransportException;
 
@@ -91,7 +94,7 @@ class SwiftMailer implements MailClientInterface
 
     public function send(Message $message)
     {
-        $swiftMessage = \Swift_Message::newInstance()
+        $swiftMessage = (new Swift_Message())
           ->setSubject($message->getAttribute('subject'))
           ->setFrom($message->getAttribute('from'))
           ->setReplyTo($message->getAttribute('reply_to'))
@@ -101,7 +104,7 @@ class SwiftMailer implements MailClientInterface
 
         foreach ($message->getAttribute('attachments') as $attachment) {
             $swiftMessage->attach(
-              \Swift_Attachment::fromPath(
+              Swift_Attachment::fromPath(
                   $attachment['path'],
                   $attachment['content_type']
               )
@@ -162,7 +165,7 @@ class SwiftMailer implements MailClientInterface
     {
         try {
             //allow to configure this
-            $transport = new \Swift_SendmailTransport('/usr/sbin/sendmail -bs');
+            $transport = new Swift_SendmailTransport('/usr/sbin/sendmail -bs');
             $transport->start();
         } catch (Swift_TransportException $ex) {
             return static::UNABLE_TO_START_SENDMAIL;

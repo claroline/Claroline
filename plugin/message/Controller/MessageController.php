@@ -300,7 +300,7 @@ class MessageController
      * @EXT\Route(
      *     "/show/{message}",
      *     name="claro_message_show",
-     *     defaults={"message"=0},
+     *     defaults={"message"=null},
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
@@ -357,8 +357,9 @@ class MessageController
             $ancestors = [];
         }
         $form = $this->formFactory->create(
-            new MessageType($sendString, $object),
-            new Message()
+            MessageType::class,
+            new Message(),
+            ['username' => $sendString, 'object' => $object]
         );
 
         return [
