@@ -6,6 +6,13 @@ services:
         autoconfigure: false #default should be true now
         public: true #default should be false now
 
+    captcha.form_type_extension:
+      class: Claroline\CoreBundle\Form\Extension\CaptchaExtension
+      tags:
+          - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
+      arguments:
+          - container: "@service_container"
+
     # array injection with annotations is not supported
     claroline.plugin.validator:
         class: Claroline\CoreBundle\Library\Installation\Plugin\Validator

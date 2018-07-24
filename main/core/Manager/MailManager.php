@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Event\App\RefreshCacheEvent;
 use Claroline\AppBundle\Manager\CacheManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\AppBundle\Event\App\RefreshCacheEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Mailing\Mailer;
 use Claroline\CoreBundle\Library\Mailing\Message;
@@ -84,7 +84,7 @@ class MailManager
         $subject = $this->translator->trans('resetting_your_password', [], 'platform');
 
         $body = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Mail:forgotPassword.html.twig',
+            'ClarolineCoreBundle:mail:forgot_password.html.twig',
             ['user' => $user, 'link' => $link]
         );
 
@@ -178,7 +178,7 @@ class MailManager
      */
     public function send($subject, $body, array $users, $from = null, array $extra = [], $force = false, $replyToMail = null)
     {
-        if (count($users) === 0 && (!isset($extra['to']) || count($extra['to']) === 0)) {
+        if (0 === count($users) && (!isset($extra['to']) || 0 === count($extra['to']))) {
             //obviously, if we're not going to send anything to anyone, it's better to stop
             return false;
         }
@@ -190,7 +190,7 @@ class MailManager
             $fromEmail = $this->ch->hasParameter('mailer_sender_from') && $this->ch->getParameter('mailer_sender_from') && !is_null($from) && !is_null($replyToMail) ?
                 $from->getEmail() :
                 $this->getMailerFrom();
-            $locale = count($users) === 1 ? $users[0]->getLocale() : $this->ch->getParameter('locale_language');
+            $locale = 1 === count($users) ? $users[0]->getLocale() : $this->ch->getParameter('locale_language');
 
             if (!$locale) {
                 $locale = $this->ch->getParameter('locale_language');
@@ -231,7 +231,7 @@ class MailManager
             $message->from($fromEmail);
             $message->body($body);
 
-            ($from !== null && filter_var($from->getEmail(), FILTER_VALIDATE_EMAIL)) ?
+            (null !== $from && filter_var($from->getEmail(), FILTER_VALIDATE_EMAIL)) ?
                 $message->replyTo($from->getEmail()) :
                 $message->replyTo($replyToMail);
 
@@ -299,7 +299,7 @@ class MailManager
         ];
 
         if (is_array($this->mailer->test($data))) {
-            $test = count($this->mailer->test($data)) === 0 ? true : false;
+            $test = 0 === count($this->mailer->test($data)) ? true : false;
         } else {
             $test = is_null($test);
         }
@@ -318,7 +318,7 @@ class MailManager
             }
         }
 
-        if ($this->ch->getParameter('domain_name') && trim($this->ch->getParameter('domain_name')) !== '') {
+        if ($this->ch->getParameter('domain_name') && '' !== trim($this->ch->getParameter('domain_name'))) {
             return 'noreply@'.$this->ch->getParameter('domain_name');
         }
 

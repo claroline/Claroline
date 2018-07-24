@@ -11,8 +11,7 @@
 
 namespace Claroline\CoreBundle\Form\Extension;
 
-use CaptchaBundle\Type\CaptchaType;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Gregwar\CaptchaBundle\Type\CaptchaType;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -23,9 +22,9 @@ class CaptchaExtension extends AbstractTypeExtension
 {
     private $container;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct($data)
     {
-        $this->container = $container;
+        $this->container = $data['container'];
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -40,7 +39,7 @@ class CaptchaExtension extends AbstractTypeExtension
         if ($ch->getParameter('form_captcha')) {
             $securityToken = $this->container->get('security.token_storage')->getToken();
 
-            if (null !== $securityToken && 'anhttp://symfony.com/doc/current/reference/forms/types.html#base-fieldson.' === $securityToken->getUser()) {
+            if (null !== $securityToken && 'anon.' === $securityToken->getUser()) {
                 $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
                     $form = $event->getForm();
                     $data = $event->getData();
