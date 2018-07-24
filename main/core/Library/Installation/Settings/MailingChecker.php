@@ -54,7 +54,7 @@ class MailingChecker
         }
 
         try {
-            Swift_SmtpTransport::newInstance()
+            (new Swift_SmtpTransport())
                 ->setHost($this->settings->getTransportOption('host'))
                 ->setUsername($this->settings->getTransportOption('username'))
                 ->setPassword($this->settings->getTransportOption('password'))
@@ -73,7 +73,7 @@ class MailingChecker
     {
         try {
             //allow to configure this
-            $transport = new \Swift_SendmailTransport('/usr/sbin/sendmail -bs');
+            $transport = new Swift_SendmailTransport('/usr/sbin/sendmail -bs');
             $transport->setUsername($this->settings->getTransportOption('username'))
             ->setPassword($this->settings->getTransportOption('password'))
             ->setAuthMode('login')

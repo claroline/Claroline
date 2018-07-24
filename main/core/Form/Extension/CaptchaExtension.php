@@ -11,11 +11,13 @@
 
 namespace Claroline\CoreBundle\Form\Extension;
 
-use Symfony\Component\Form\AbstractTypeExtension;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormEvent;
+use CaptchaBundle\Type\CaptchaType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 class CaptchaExtension extends AbstractTypeExtension
 {
@@ -28,7 +30,7 @@ class CaptchaExtension extends AbstractTypeExtension
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if (array_key_exists('no_captcha', $options) && $options['no_captcha'] === true) {
+        if (array_key_exists('no_captcha', $options) && true === $options['no_captcha']) {
             return;
         }
 
@@ -38,13 +40,13 @@ class CaptchaExtension extends AbstractTypeExtension
         if ($ch->getParameter('form_captcha')) {
             $securityToken = $this->container->get('security.token_storage')->getToken();
 
-            if (null !== $securityToken && $securityToken->getUser() === 'anon.') {
+            if (null !== $securityToken && 'anhttp://symfony.com/doc/current/reference/forms/types.html#base-fieldson.' === $securityToken->getUser()) {
                 $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
                     $form = $event->getForm();
                     $data = $event->getData();
 
                     if ($form->isRoot() && $form->getConfig()->getOption('compound')) {
-                        $form->add('captcha', 'captcha', array('label' => 'Captcha'));
+                        $form->add('captcha', CaptchaType::class, ['label' => 'Captcha']);
                     }
 
                     $event->setData($data);
@@ -58,6 +60,6 @@ class CaptchaExtension extends AbstractTypeExtension
      */
     public function getExtendedType()
     {
-        return 'form';
+        return FormType::class;
     }
 }

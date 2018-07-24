@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Form\Extension;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -33,7 +34,7 @@ class HoneypotExtension extends AbstractTypeExtension
         if ($ch->getParameter('form_honeypot')) {
             $securityToken = $this->container->get('security.token_storage')->getToken();
 
-            if (null !== $securityToken && $securityToken->getUser() === 'anon.') {
+            if (null !== $securityToken && 'anon.' === $securityToken->getUser()) {
                 $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
                     $form = $event->getForm();
                     $data = $event->getData();
@@ -53,6 +54,6 @@ class HoneypotExtension extends AbstractTypeExtension
      */
     public function getExtendedType()
     {
-        return 'form';
+        return FormType::class;
     }
 }

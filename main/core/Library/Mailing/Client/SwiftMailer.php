@@ -135,7 +135,7 @@ class SwiftMailer implements MailClientInterface
         }
 
         try {
-            Swift_SmtpTransport::newInstance()
+            (new Swift_SmtpTransport())
             ->setHost($data['host'])
             ->setUsername($data['username'])
             ->setPassword($data['password'])
@@ -151,7 +151,7 @@ class SwiftMailer implements MailClientInterface
     private function testGmail(array $data)
     {
         try {
-            Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
+            (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
             ->setUsername($data['username'])
             ->setPassword($data['password'])
             ->setAuthMode('login')
