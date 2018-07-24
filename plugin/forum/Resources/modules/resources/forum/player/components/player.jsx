@@ -31,7 +31,7 @@ const PlayerComponent = (props) =>
         },
         onLeave: () => {
           props.closeSubjectForm()
-          if(props.editingSubject){
+          if (props.editingSubject){
             props.stopSubjectEdition()
           }
         }
@@ -43,7 +43,7 @@ const PlayerComponent = (props) =>
           props.openSubject(params.id)
         },
         onLeave: () => {
-          if(props.showSubjectForm){
+          if (props.showSubjectForm){
             props.closeSubjectForm()
           }
         }

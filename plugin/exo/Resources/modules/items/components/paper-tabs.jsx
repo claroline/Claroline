@@ -17,7 +17,7 @@ export class PaperTabs extends Component {
   }
 
   handleSelect(key) {
-    if(this.props.onTabChange) {
+    if (this.props.onTabChange) {
       this.props.onTabChange(key)
     }
   }

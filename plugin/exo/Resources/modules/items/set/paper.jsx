@@ -33,41 +33,41 @@ export const SetPaper = props => {
                     </div>
                     <div className="set-body">
                       <ul>
-                      { props.answer && props.answer.length > 0 && utils.getSetItems(set.id, props.answer).map(answer =>
-                        <li key={`your-answer-assocation-${answer.itemId}-${answer.setId}`}>
-                          { utils.answerInSolutions(answer, props.item.solutions.associations) ?
-                            <div className={classes(
+                        { props.answer && props.answer.length > 0 && utils.getSetItems(set.id, props.answer).map(answer =>
+                          <li key={`your-answer-assocation-${answer.itemId}-${answer.setId}`}>
+                            { utils.answerInSolutions(answer, props.item.solutions.associations) ?
+                              <div className={classes(
                                 'association',
                                 {'correct-answer': utils.isValidAnswer(answer, props.item.solutions.associations)},
                                 {'incorrect-answer': !utils.isValidAnswer(answer, props.item.solutions.associations)}
                               )}>
-                              <WarningIcon valid={utils.isValidAnswer(answer, props.item.solutions.associations)}/>
-                              <div className="association-data" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(answer.itemId, props.item.items)}} />
-                              <Feedback
-                                id={`ass-${answer.itemId}-${answer.setId}-feedback`}
-                                feedback={utils.getAnswerSolutionFeedback(answer, props.item.solutions.associations)}
-                              />
-                              {props.showScore &&
+                                <WarningIcon valid={utils.isValidAnswer(answer, props.item.solutions.associations)}/>
+                                <div className="association-data" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(answer.itemId, props.item.items)}} />
+                                <Feedback
+                                  id={`ass-${answer.itemId}-${answer.setId}-feedback`}
+                                  feedback={utils.getAnswerSolutionFeedback(answer, props.item.solutions.associations)}
+                                />
+                                {props.showScore &&
                                 <SolutionScore score={utils.getAnswerSolutionScore(answer, props.item.solutions.associations)}/>
-                              }
-                            </div>
-                            :
-                            <div className="association bg-danger text-danger">
-                              <WarningIcon valid={false}/>
-                              <div className="association-data" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(answer.itemId, props.item.items)}} />
-                              {utils.getAnswerOddFeedback(answer, props.item.solutions.odd) !== '' &&
+                                }
+                              </div>
+                              :
+                              <div className="association bg-danger text-danger">
+                                <WarningIcon valid={false}/>
+                                <div className="association-data" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(answer.itemId, props.item.items)}} />
+                                {utils.getAnswerOddFeedback(answer, props.item.solutions.odd) !== '' &&
                                 <Feedback
                                   id={`ass-${answer.itemId}-${answer.setId}-feedback`}
                                   feedback={utils.getAnswerOddFeedback(answer, props.item.solutions.odd)}
                                 />
-                              }
-                              {props.showScore && utils.getAnswerOddScore(answer, props.item.solutions.odd) !== '' &&
+                                }
+                                {props.showScore && utils.getAnswerOddScore(answer, props.item.solutions.odd) !== '' &&
                                 <SolutionScore score={utils.getAnswerOddScore(answer, props.item.solutions.odd)}/>
-                              }
-                            </div>
-                          }
-                        </li>
-                      )}
+                                }
+                              </div>
+                            }
+                          </li>
+                        )}
                       </ul>
                     </div>
                   </div>
@@ -86,8 +86,8 @@ export const SetPaper = props => {
                   <div className="item">
                     <div className="item-content" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(item.itemId, props.item.items)}} />
                     <Feedback
-                        id={`odd-${item.itemId}-feedback`}
-                        feedback={item.feedback}
+                      id={`odd-${item.itemId}-feedback`}
+                      feedback={item.feedback}
                     />
                     {props.showScore &&
                       <SolutionScore score={item.score}/>
@@ -107,23 +107,23 @@ export const SetPaper = props => {
                     </div>
                     <div className="set-body">
                       <ul>
-                      { utils.getSetItems(set.id, props.item.solutions.associations).map(ass =>
-                        <li key={`expected-association-${ass.itemId}-${ass.setId}`}>
-                          <div className={classes(
+                        { utils.getSetItems(set.id, props.item.solutions.associations).map(ass =>
+                          <li key={`expected-association-${ass.itemId}-${ass.setId}`}>
+                            <div className={classes(
                               'association',
                               {'selected-answer': ass.score > 0}
                             )}>
-                            <div className="association-data" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(ass.itemId, props.item.items)}} />
-                            <Feedback
-                                  id={`ass-${ass.itemId}-${ass.setId}-feedback`}
-                                  feedback={ass.feedback}
+                              <div className="association-data" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(ass.itemId, props.item.items)}} />
+                              <Feedback
+                                id={`ass-${ass.itemId}-${ass.setId}-feedback`}
+                                feedback={ass.feedback}
                               />
-                            {props.showScore &&
+                              {props.showScore &&
                               <SolutionScore score={ass.score}/>
-                            }
-                          </div>
-                        </li>
-                      )}
+                              }
+                            </div>
+                          </li>
+                        )}
                       </ul>
                     </div>
                   </div>
@@ -179,9 +179,9 @@ export const SetPaper = props => {
                           {utils.getSetItems(set.id, props.item.solutions.associations).map(ass =>
                             <li key={`stats-expected-association-${ass.itemId}-${ass.setId}`}>
                               <div className={classes(
-                                  'association',
-                                  {'selected-answer': ass.score > 0}
-                                )}>
+                                'association',
+                                {'selected-answer': ass.score > 0}
+                              )}>
                                 <div className="association-data" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(ass.itemId, props.item.items)}} />
 
                                 <AnswerStats stats={{
@@ -195,17 +195,17 @@ export const SetPaper = props => {
                           )}
                           {props.item.items.map((item) => has(props, ['stats', 'sets', set.id, item.id]) &&
                             !utils.isItemInSet(item.id, set.id, props.item.solutions) ?
-                              <li key={`stats-unexpected-association-${set.id}-${item.id}`}>
-                                <div className="association stats-answer">
-                                  <div className="association-data" dangerouslySetInnerHTML={{__html: item.data}} />
+                            <li key={`stats-unexpected-association-${set.id}-${item.id}`}>
+                              <div className="association stats-answer">
+                                <div className="association-data" dangerouslySetInnerHTML={{__html: item.data}} />
 
-                                  <AnswerStats stats={{
-                                    value: props.stats.sets[set.id][item.id],
-                                    total: props.stats.total
-                                  }} />
-                                </div>
-                              </li> :
-                              ''
+                                <AnswerStats stats={{
+                                  value: props.stats.sets[set.id][item.id],
+                                  total: props.stats.total
+                                }} />
+                              </div>
+                            </li> :
+                            ''
                           )}
                         </ul>
                       </div>

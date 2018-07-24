@@ -195,7 +195,7 @@ const BlogOptions = withRouter(connect(
       ).then(
         () => {
           //if tag options changed
-          if(tagOptionsChanged){
+          if (tagOptionsChanged){
             dispatch(toolbarActions.getTags(blogId))
           }
         })

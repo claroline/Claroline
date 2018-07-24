@@ -52,7 +52,7 @@ class SubjectComponent extends Component {
 
   createMessage(subjectId, content) {
     this.props.createMessage(subjectId, content, this.props.forum.moderation)
-    if(this.props.forum.moderation === 'PRIOR_ALL' ||
+    if (this.props.forum.moderation === 'PRIOR_ALL' ||
     this.props.forum.moderation === 'PRIOR_ONCE' ) {
       this.props.showModal(MODAL_ALERT, {
         title: trans('moderated_posts', {}, 'forum'),

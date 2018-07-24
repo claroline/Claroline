@@ -2,6 +2,8 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import merge from 'lodash/merge'
+import isEmpty from 'lodash/isEmpty'
+
 
 
 import {trans} from '#/main/core/translation'
@@ -90,26 +92,11 @@ const EditorComponent = props =>
             primary: true,
             fields: [
               {
-                name: 'title',
-                type: 'string',
-                label: trans('menu_title'),
-                help: trans('menu_title_help'),
-                options: {
-                  maxLength: 20
-                },
-                required: true
-              }, {
                 name: 'longTitle',
                 type: 'string',
                 label: trans('title'),
                 required: true,
-                linked :[
-                  {
-                    name: 'centerTitle',
-                    type: 'boolean',
-                    label: trans('center_title')
-                  }
-                ]
+                onChange: (title) => props.updateTitle(props.currentTabIndex, 'title', title.substring(0, 20))
               }
             ]
           }, {
@@ -117,6 +104,10 @@ const EditorComponent = props =>
             title: trans('display_parameters'),
             fields: [
               {
+                name: 'centerTitle',
+                type: 'boolean',
+                label: trans('center_title')
+              }, {
                 name: 'position',
                 type: 'number',
                 label: trans('position'),
@@ -127,16 +118,60 @@ const EditorComponent = props =>
                 required: true,
                 onChange: (newPosition) => props.moveTab(props.tabs, props.currentTab, newPosition)
               }, {
+                name: 'title',
+                type: 'string',
+                label: trans('menu_title'),
+                help: trans('menu_title_help'),
+                options: {
+                  maxLength: 20
+                },
+                onChange: (value) => {
+                  if (isEmpty(value) && 0 === props.currentTab.icon.length) {
+                    props.setErrors({
+                      [props.currentTabIndex]: {title: 'Ce champ ne peux pas être vide si l\'onglet n\'a pas d\'icône'}
+                    })
+                  }
+                }
+              }, {
                 name: 'icon',
                 type: 'string',
                 label: trans('icon'),
-                help: trans('icon_tab_help')
+                help: trans('icon_tab_help'),
+                onChange: (icon) => {
+                  if (0 === icon.length && 0 === props.currentTab.title.length) {
+                    props.setErrors({
+                      [props.currentTabIndex]: {icon: 'Ce champ ne peux pas être vide si l\'onglet n\'a pas de titre.'}
+                    })
+                  }
+                }
               }, {
                 name: 'poster',
                 label: trans('poster'),
                 type: 'file',
                 options: {
                   ratio: '3:1'
+                }
+              }
+            ]
+          }, {
+            icon: 'fa fa-fw fa-key',
+            title: trans('access_restrictions'),
+            displayed: props.context.type === 'workspace',
+            fields: [
+              {
+                name: 'roles',
+                label: trans('role'),
+                help: trans('home_tab_roles_explanation'),
+                type: 'choice',
+                options:{
+                  multiple : true,
+                  choices: {
+                    0: 'Anonyme',
+                    1: 'Utilisateur',
+                    2: 'Collaborateur',
+                    3: 'Gestionnaire',
+                    4: 'Rôle 1'
+                  }
                 }
               }
             ]
@@ -168,6 +203,8 @@ EditorComponent.propTypes = {
   }).isRequired,
   createTab: T.func.isRequired,
   updateWidgets: T.func.isRequired,
+  updateTitle: T.func.isRequired,
+  setErrors: T.func.isRequired,
   deleteTab: T.func.isRequired,
   moveTab: T.func.isRequired
 }
@@ -181,6 +218,12 @@ const Editor = withRouter(connect(
     currentTab: editorSelectors.currentTab(state)
   }),
   dispatch => ({
+    updateTitle(currentTabIndex, field, value) {
+      dispatch(formActions.updateProp('editor', `[${currentTabIndex}].${field}`, value))
+    },
+    setErrors(errors) {
+      dispatch(formActions.setErrors('editor', errors))
+    },
     createTab(context, position, navigate){
       const newTabId = makeId()
 

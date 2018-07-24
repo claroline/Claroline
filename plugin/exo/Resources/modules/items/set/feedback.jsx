@@ -21,35 +21,35 @@ export const SetFeedback = props =>
               </div>
               <div className="set-body">
                 <ul>
-                { props.answer && props.answer.length > 0 && utils.getSetItems(set.id, props.answer).map(answer =>
-                  <li key={`your-answer-assocation-${answer.itemId}-${answer.setId}`}>
-                    { utils.answerInSolutions(answer, props.item.solutions.associations) ?
-                      <div className={classes(
+                  { props.answer && props.answer.length > 0 && utils.getSetItems(set.id, props.answer).map(answer =>
+                    <li key={`your-answer-assocation-${answer.itemId}-${answer.setId}`}>
+                      { utils.answerInSolutions(answer, props.item.solutions.associations) ?
+                        <div className={classes(
                           'association',
                           {'correct-answer': utils.isValidAnswer(answer, props.item.solutions.associations)},
                           {'incorrect-answer': !utils.isValidAnswer(answer, props.item.solutions.associations)}
                         )}>
-                        <WarningIcon valid={utils.isValidAnswer(answer, props.item.solutions.associations)}/>
-                        <div className="association-data" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(answer.itemId, props.item.items)}} />
-                        <Feedback
-                              id={`ass-${answer.itemId}-${answer.setId}-feedback`}
-                              feedback={utils.getAnswerSolutionFeedback(answer, props.item.solutions.associations)}
+                          <WarningIcon valid={utils.isValidAnswer(answer, props.item.solutions.associations)}/>
+                          <div className="association-data" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(answer.itemId, props.item.items)}} />
+                          <Feedback
+                            id={`ass-${answer.itemId}-${answer.setId}-feedback`}
+                            feedback={utils.getAnswerSolutionFeedback(answer, props.item.solutions.associations)}
                           />
-                      </div>
-                      :
-                      <div className="association bg-danger text-danger">
-                        <WarningIcon valid={false}/>
-                        <div className="association-data" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(answer.itemId, props.item.items)}} />
-                        {utils.getAnswerOddFeedback(answer, props.item.solutions.odd) !== '' &&
+                        </div>
+                        :
+                        <div className="association bg-danger text-danger">
+                          <WarningIcon valid={false}/>
+                          <div className="association-data" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(answer.itemId, props.item.items)}} />
+                          {utils.getAnswerOddFeedback(answer, props.item.solutions.odd) !== '' &&
                           <Feedback
                             id={`ass-${answer.itemId}-${answer.setId}-feedback`}
                             feedback={utils.getAnswerOddFeedback(answer, props.item.solutions.odd)}
                           />
-                        }
-                      </div>
-                    }
-                  </li>
-                )}
+                          }
+                        </div>
+                      }
+                    </li>
+                  )}
                 </ul>
               </div>
             </div>

@@ -11,13 +11,13 @@ import {SetItemDragPreview} from './set-item-drag-preview.jsx'
 
 let DropBox = props => {
   return props.connectDropTarget (
-     <div className={classes(
-       'set-drop-placeholder',
-       {'hover': props.isOver}
-     )}>
-       {tex('set_drop_item')}
-     </div>
-   )
+    <div className={classes(
+      'set-drop-placeholder',
+      {'hover': props.isOver}
+    )}>
+      {tex('set_drop_item')}
+    </div>
+  )
 }
 
 DropBox.propTypes = {
@@ -54,11 +54,11 @@ const Set = props =>
     <div className="set-heading" dangerouslySetInnerHTML={{__html: props.set.data}} />
 
     <ul>
-    {props.associations.map(ass =>
-      <li key={`${ass.itemId}-${ass.setId}`}>
-        <Association handleItemRemove={props.onAssociationItemRemove} association={ass} />
-      </li>
-    )}
+      {props.associations.map(ass =>
+        <li key={`${ass.itemId}-${ass.setId}`}>
+          <Association handleItemRemove={props.onAssociationItemRemove} association={ass} />
+        </li>
+      )}
     </ul>
 
     <DropBox object={props.set} onDrop={props.onDrop} />
@@ -133,13 +133,13 @@ Item = makeDraggable(
 )
 
 const ItemList = props =>
-    <ul>
-      { props.items.map((item) =>
-        <li key={item.id}>
-          <Item item={item}/>
-        </li>
-      )}
-    </ul>
+  <ul>
+    { props.items.map((item) =>
+      <li key={item.id}>
+        <Item item={item}/>
+      </li>
+    )}
+  </ul>
 
 
 ItemList.propTypes = {
@@ -153,22 +153,22 @@ class SetPlayer extends Component {
 
   handleAssociationItemRemove(setId, itemId) {
     this.props.onChange(
-       this.props.answer.filter(answer => answer.setId !== setId || answer.itemId !== itemId)
+      this.props.answer.filter(answer => answer.setId !== setId || answer.itemId !== itemId)
     )
   }
 
-    /**
+  /**
      * handle item drop
      * @var {source} dropped item (item)
      * @var {target} target item (set)
      */
   handleAssociationItemDrop(source, target) {
 
-    if(undefined === this.props.answer.find(el => el.setId === target.object.id && el.itemId === source.item.id)){
+    if (undefined === this.props.answer.find(el => el.setId === target.object.id && el.itemId === source.item.id)){
       // do something to add to solution
       this.props.onChange(
-          [{itemId: source.item.id, setId: target.object.id, _itemData: source.item.data}].concat(this.props.answer)
-       )
+        [{itemId: source.item.id, setId: target.object.id, _itemData: source.item.data}].concat(this.props.answer)
+      )
     }
   }
 

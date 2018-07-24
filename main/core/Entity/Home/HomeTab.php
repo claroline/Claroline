@@ -36,7 +36,7 @@ class HomeTab
     const TYPE_ADMIN_DESKTOP = 'admin_desktop';
 
     /**
-     * @ORM\Column(nullable=false)
+     * @ORM\Column(nullable=true)
      */
     protected $name;
 

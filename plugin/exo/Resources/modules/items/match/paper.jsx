@@ -116,7 +116,7 @@ export class MatchPaper extends Component
     const positions = getPopoverPosition(connectionClass, this.props.item.id)
 
     const solution = this.props.item.solutions.find(solution => solution.firstId === firstId && solution.secondId === secondId)
-    if(this.state.showPopover) {
+    if (this.state.showPopover) {
       this.setState({
         showPopover: false,
         top: 0,
@@ -173,7 +173,7 @@ export class MatchPaper extends Component
           <Nav bsStyle="tabs">
             {this.props.showYours &&
               <NavItem eventKey="first" onSelect={() => this.handleSelect('first')}>
-                  <span className="fa fa-fw fa-user"></span> {tex('your_answer')}
+                <span className="fa fa-fw fa-user"></span> {tex('your_answer')}
               </NavItem>
             }
             {this.props.showExpected &&
@@ -196,15 +196,15 @@ export class MatchPaper extends Component
                 <div id={`match-question-paper-${this.props.item.id}-first`} className="match-items row">
                   <div className="item-col col-md-5 col-sm-5 col-xs-5">
                     <ul>
-                    {this.props.item.firstSet.map((item) =>
-                      <li key={'first_source_' + item.id}>
-                        <MatchItem
-                          item={item}
-                          type="source"
-                          selectedTab={this.state.key}
-                        />
-                      </li>
-                    )}
+                      {this.props.item.firstSet.map((item) =>
+                        <li key={'first_source_' + item.id}>
+                          <MatchItem
+                            item={item}
+                            type="source"
+                            selectedTab={this.state.key}
+                          />
+                        </li>
+                      )}
                     </ul>
                   </div>
                   <div className="divide-col col-md-2 col-sm-2 col-xs-2" id={`popover-container-${this.props.item.id}`}>
@@ -214,19 +214,19 @@ export class MatchPaper extends Component
                           solution={this.state.current}
                           showScore={this.props.showScore}
                         />
-                      }
+                    }
                   </div>
                   <div className="item-col col-md-5 col-sm-5 col-xs-5">
                     <ul>
-                    {this.props.item.secondSet.map((item) =>
-                      <li key={'first_target_' + item.id}>
-                        <MatchItem
-                          item={item}
-                          type="target"
-                          selectedTab={this.state.key}
-                        />
-                      </li>
-                    )}
+                      {this.props.item.secondSet.map((item) =>
+                        <li key={'first_target_' + item.id}>
+                          <MatchItem
+                            item={item}
+                            type="target"
+                            selectedTab={this.state.key}
+                          />
+                        </li>
+                      )}
                     </ul>
                   </div>
                 </div>
@@ -240,15 +240,15 @@ export class MatchPaper extends Component
                   <div id={`match-question-paper-${this.props.item.id}-second`} className="match-items row">
                     <div className="item-col col-md-5 col-sm-5 col-xs-5">
                       <ul>
-                      {this.props.item.firstSet.map((item) =>
-                        <li key={'second_source_' + item.id}>
-                          <MatchItem
-                            item={item}
-                            type="source"
-                            selectedTab={this.state.key}
-                          />
-                        </li>
-                      )}
+                        {this.props.item.firstSet.map((item) =>
+                          <li key={'second_source_' + item.id}>
+                            <MatchItem
+                              item={item}
+                              type="source"
+                              selectedTab={this.state.key}
+                            />
+                          </li>
+                        )}
                       </ul>
                     </div>
 
@@ -256,15 +256,15 @@ export class MatchPaper extends Component
 
                     <div className="item-col col-md-5 col-sm-5 col-xs-5">
                       <ul>
-                      {this.props.item.secondSet.map((item) =>
-                        <li key={'second_target_' + item.id}>
-                          <MatchItem
-                            item={item}
-                            type="target"
-                            selectedTab={this.state.key}
-                          />
-                        </li>
-                      )}
+                        {this.props.item.secondSet.map((item) =>
+                          <li key={'second_target_' + item.id}>
+                            <MatchItem
+                              item={item}
+                              type="target"
+                              selectedTab={this.state.key}
+                            />
+                          </li>
+                        )}
                       </ul>
                     </div>
 

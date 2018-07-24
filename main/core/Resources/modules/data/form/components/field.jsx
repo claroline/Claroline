@@ -37,12 +37,11 @@ const FormField = props => {
       value: props.value,
       onChange: (value) => {
         props.updateProp(props.name, value) // todo : maybe disable for calculated value
+        props.setErrors(validateProp(props, value))
 
         if (props.onChange) {
           props.onChange(value)
         }
-
-        props.setErrors(validateProp(props, value))
       }
     }))
   }

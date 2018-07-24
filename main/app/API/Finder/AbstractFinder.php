@@ -64,6 +64,19 @@ abstract class AbstractFinder implements FinderInterface
         return $count ? (int) $query->getSingleScalarResult() : $query->getResult();
     }
 
+    public function findOneBy(array $filters = [])
+    {
+        $data = $this->find($filters);
+
+        if (count($data) > 1) {
+            throw new \Exception('Multiple results found ('.count($data).')');
+        } elseif (0 === count($data)) {
+            return null;
+        }
+
+        return $data[0];
+    }
+
     /**
      * @param QueryBuilder $qb
      * @param array|null   $sortBy

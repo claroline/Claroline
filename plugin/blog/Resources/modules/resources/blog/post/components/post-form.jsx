@@ -110,11 +110,11 @@ const PostForm = withRouter(connect(
     saveEnabled: formSelect.saveEnabled(formSelect.form(state, 'post_edit'))
   }), dispatch => ({
     save: (blogId, mode, postId, history, originalTags) => {
-      if(mode === constants.CREATE_POST){
+      if (mode === constants.CREATE_POST){
         dispatch(
           formActions.saveForm(constants.POST_EDIT_FORM_NAME, ['apiv2_blog_post_new', {blogId: blogId}])
         ).then((response) => {
-          if(response && !isEmpty(response.tags)){
+          if (response && !isEmpty(response.tags)){
             //update tag list
             dispatch(toolbarActions.addTags('', response.tags))
           }
@@ -122,11 +122,11 @@ const PostForm = withRouter(connect(
           dispatch(toolbarActions.addAuthor(loggedUser, response.tags))
           history.push('/')
         })
-      }else if(mode === constants.EDIT_POST && postId !== null){
+      }else if (mode === constants.EDIT_POST && postId !== null){
         dispatch(
           formActions.saveForm(constants.POST_EDIT_FORM_NAME, ['apiv2_blog_post_update', {blogId: blogId, postId: postId}])
         ).then((response) => {
-          if(response && originalTags !== response.tags){
+          if (response && originalTags !== response.tags){
             //update tag list
             dispatch(toolbarActions.addTags(originalTags, response.tags))
           }

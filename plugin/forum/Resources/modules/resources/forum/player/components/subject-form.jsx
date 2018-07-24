@@ -164,7 +164,7 @@ const SubjectForm = withRouter(connect(
   }),
   (dispatch, ownProps) => ({
     saveForm(forumId, editingSubject, subjectId) {
-      if(editingSubject) {
+      if (editingSubject) {
         dispatch(formActions.saveForm('subjects.form', ['apiv2_forum_subject_update', {id: subjectId}])).then(() => {
           ownProps.history.push(`/subjects/show/${subjectId}`)
         })

@@ -16,7 +16,7 @@ class GridCell extends Component {
     const answers = cloneDeep(this.props.answers)
     const answer = answers.find(answer => answer.cellId === this.props.cell.id)
     // add new
-    if(undefined === answer){
+    if (undefined === answer){
       answers.push({cellId:this.props.cell.id, text: value})
     } else { // update
       answer.text = value
@@ -52,12 +52,12 @@ class GridCell extends Component {
                 {this.props.cell.choices.map((choice, index) => {
                   {return choice !== this.getTextValue() &&
                      <li
-                      key={`choice-${index}`}
-                      onClick={() => this.props.onChange(
-                        this.setTextAnswer(choice)
-                      )}>
-                      <a style={{color:this.props.cell.color}}>{choice}</a>
-                    </li>
+                       key={`choice-${index}`}
+                       onClick={() => this.props.onChange(
+                         this.setTextAnswer(choice)
+                       )}>
+                       <a style={{color:this.props.cell.color}}>{choice}</a>
+                     </li>
                   }
                 })}
               </ul>

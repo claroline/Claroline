@@ -31,7 +31,7 @@ class MessageCommentsComponent extends Component {
 
   toggleComments() {
     this.setState({opened: !this.state.opened})
-    if(this.state.showNewCommentForm && this.state.opened === true) {
+    if (this.state.showNewCommentForm && this.state.opened === true) {
       this.setState({showNewCommentForm: null})
     }
   }
@@ -44,7 +44,7 @@ class MessageCommentsComponent extends Component {
   createNewComment(messageId, comment) {
     this.props.createComment(messageId, comment, this.props.forum.moderation)
     this.setState({showNewCommentForm: null})
-    if(this.props.forum.moderation === 'PRIOR_ALL' ||
+    if (this.props.forum.moderation === 'PRIOR_ALL' ||
     this.props.forum.moderation === 'PRIOR_ONCE' ) {
       this.props.showModal(MODAL_ALERT, {
         title: trans('moderated_posts', {}, 'forum'),

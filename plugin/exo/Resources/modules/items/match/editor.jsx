@@ -77,27 +77,27 @@ class MatchLinkPopover extends Component {
             </div>
           </div>
         }>
-          <div className="association">
-            <input
-              className="form-control association-score"
-              onChange={
-                e => this.props.onChange(
-                  actions.updateSolution(this.props.solution.firstId, this.props.solution.secondId, 'score', e.target.value)
-                )
-              }
-              type="number"
-              value={this.props.solution.score}
-             />
-             <TooltipButton
-               id={`solution-${this.props.solution.firstId}-${this.props.solution.secondId}-feedback-toggle`}
-               className="btn-link-default"
-               title={tex('feedback_association_created')}
-               onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-             >
-               <span className="fa fa-fw fa-comments-o" />
-             </TooltipButton>
-          </div>
-          {this.state.showFeedback &&
+        <div className="association">
+          <input
+            className="form-control association-score"
+            onChange={
+              e => this.props.onChange(
+                actions.updateSolution(this.props.solution.firstId, this.props.solution.secondId, 'score', e.target.value)
+              )
+            }
+            type="number"
+            value={this.props.solution.score}
+          />
+          <TooltipButton
+            id={`solution-${this.props.solution.firstId}-${this.props.solution.secondId}-feedback-toggle`}
+            className="btn-link-default"
+            title={tex('feedback_association_created')}
+            onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
+          >
+            <span className="fa fa-fw fa-comments-o" />
+          </TooltipButton>
+        </div>
+        {this.state.showFeedback &&
             <div className="feedback-container">
               <Textarea
                 id={`solution-${this.props.solution.firstId}-${this.props.solution.secondId}-feedback`}
@@ -107,7 +107,7 @@ class MatchLinkPopover extends Component {
                 )}
               />
             </div>
-          }
+        }
       </Popover>
     )
   }
@@ -353,7 +353,7 @@ class Match extends Component {
       const firstId = conn.sourceId.replace('source_', '')
       const secondId = conn.targetId.replace('target_', '')
       const solution = this.props.item.solutions.find(solution => solution.firstId === firstId && solution.secondId === secondId)
-      if(undefined !== solution && solution.score <= 0){
+      if (undefined !== solution && solution.score <= 0){
         type = 'unexpected'
       }
       conn.setType(type)
@@ -363,7 +363,7 @@ class Match extends Component {
   // click outside the popover but inside the question items row will close the popover
   handlePopoverFocusOut(event){
     const elem = event.target.closest('#popover-place-holder-' + this.props.item.id)
-    if(null === elem){
+    if (null === elem){
       this.closePopover()
     }
   }
@@ -376,7 +376,7 @@ class Match extends Component {
    */
   componentDidUpdate(prevProps){
     const repaint = (prevProps.item.firstSet.length > this.props.item.firstSet.length || prevProps.item.secondSet.length > this.props.item.secondSet.length) || get(this.props.item, '_touched')
-    if(repaint) {
+    if (repaint) {
       this.jsPlumbInstance.repaintEverything()
     }
   }
@@ -405,7 +405,7 @@ class Match extends Component {
             type="number"
             min="0"
             onChange={e => this.props.onChange(
-               actions.updateProperty('penalty', e.target.value)
+              actions.updateProperty('penalty', e.target.value)
             )}
           />
         </div>
@@ -446,17 +446,17 @@ class Match extends Component {
         >
           <div className="item-col col-md-5 col-sm-5 col-xs-5">
             <ul>
-            {this.props.item.firstSet.map((item) =>
-              <li key={'source_' + item.id}>
-                <MatchItem
-                  onChange={this.props.onChange}
-                  onMount={(type, id) => this.itemDidMount(type, id)}
-                  onUnmount={(isLeftSet, id, elemId) => this.itemWillUnmount(isLeftSet, id, elemId)}
-                  item={item}
-                  type="source"
-                />
-              </li>
-            )}
+              {this.props.item.firstSet.map((item) =>
+                <li key={'source_' + item.id}>
+                  <MatchItem
+                    onChange={this.props.onChange}
+                    onMount={(type, id) => this.itemDidMount(type, id)}
+                    onUnmount={(isLeftSet, id, elemId) => this.itemWillUnmount(isLeftSet, id, elemId)}
+                    item={item}
+                    type="source"
+                  />
+                </li>
+              )}
             </ul>
             <div className="footer">
               <button
@@ -479,7 +479,7 @@ class Match extends Component {
                   solution={this.props.item.solutions[this.state.current]}
                   onChange={this.props.onChange}
                 />
-              }
+            }
           </div>
 
           <div className="item-col col-md-5 col-sm-5 col-xs-5">

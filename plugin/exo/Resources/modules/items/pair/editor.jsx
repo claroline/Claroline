@@ -190,7 +190,7 @@ class PairList extends Component {
   onItemDrop(source, target){
     // target.object is the pair and the position where the item has been dropped  (0 / 1) and the solution index
     // source.item is the object that has been dropped
-    if(utils.canAddSolution(this.props.solutions, target.object, source.item)) {
+    if (utils.canAddSolution(this.props.solutions, target.object, source.item)) {
       this.props.onChange(actions.dropPairItem(target.object, source.item))
     }
   }

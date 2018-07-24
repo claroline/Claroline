@@ -169,7 +169,7 @@ class SetList extends Component {
    */
   onItemDrop(source, target){
     // add solution (check the item is not already inside before adding it)
-    if(undefined === this.props.solutions.associations.find(el => el.setId === target.object.id && el.itemId === source.item.id)){
+    if (undefined === this.props.solutions.associations.find(el => el.setId === target.object.id && el.itemId === source.item.id)){
       this.props.onChange(actions.addAssociation(target.object.id, source.item.id, source.item.data))
     }
   }
@@ -236,7 +236,7 @@ let Item = props => {
           title={t('delete')}
           disabled={!props.item._deletable}
           onClick={() => props.onChange(
-             actions.removeItem(props.item.id, false)
+            actions.removeItem(props.item.id, false)
           )}
         >
           <span className="fa fa-fw fa-trash-o" />
@@ -444,7 +444,7 @@ class SetForm extends Component {
             type="number"
             min="0"
             onChange={e => this.props.onChange(
-               actions.updateProperty('penalty', e.target.value)
+              actions.updateProperty('penalty', e.target.value)
             )}
           />
         </div>
@@ -460,7 +460,7 @@ class SetForm extends Component {
                 actions.updateProperty('random', e.target.checked)
               )}
             />
-          {tex('set_shuffle_labels_and_proposals')}
+            {tex('set_shuffle_labels_and_proposals')}
           </label>
         </div>
 
