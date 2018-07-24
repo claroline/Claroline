@@ -1701,5 +1701,7 @@
     "community": "Communauté",
     "management": "Gestion",
     "transfer": "Transfert",
-    "unzip_file": "Décompresser le fichier"
+    "unzip_file": "Décompresser le fichier",
+    "group_password_reset": "Réinitialiser le mot de passe des utilisateurs",
+    "send_password_reset": "Voulez vous réinitialiser les mots de passe des utilisateurs des groupes suivant: %groups%"
 }

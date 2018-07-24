@@ -15,6 +15,7 @@ use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -85,12 +86,45 @@ class GroupController extends AbstractCrudController
         ));
     }
 
+    /**
+     * @Route(
+     *    "/password/reset",
+     *    name="apiv2_group_initialize_password"
+     * )
+     * @Method("POST")
+     *
+     * @param Workspace $workspace
+     *
+     * @return JsonResponse
+     */
+    public function resetPasswordAction(Request $request)
+    {
+        $groups = $this->decodeIdsString($request, Group::class);
+        $this->om->startFlushSuite();
+        $i = 0;
+
+        foreach ($groups as $group) {
+            foreach ($group->getUsers() as $user) {
+                $this->container->get('claroline.manager.user_manager')->sendResetPassword($user);
+                ++$i;
+
+                if (0 === $i % 200) {
+                    $this->om->forceFlush();
+                }
+            }
+        }
+
+        $this->om->endFlushSuite();
+
+        return new JsonResponse();
+    }
+
     use HasUsersTrait;
     use HasRolesTrait;
     use HasOrganizationsTrait;
 
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Group';
+        return Group::class;
     }
 }

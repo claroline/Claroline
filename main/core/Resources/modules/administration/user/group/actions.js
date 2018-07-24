@@ -59,3 +59,12 @@ actions.addOrganizations = (id, organizations) => ({
     }
   }
 })
+
+actions.updatePassword = (groups) => ({
+  [API_REQUEST]: {
+    url: url(['apiv2_group_initialize_password'], {ids: groups}),
+    request: {
+      method: 'POST'
+    }
+  }
+})

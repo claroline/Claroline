@@ -1764,4 +1764,14 @@ class UserManager
 
         return count($roles);
     }
+
+    public function sendResetPassword(User $user)
+    {
+        $user->setHashTime(time());
+        $password = sha1(rand(1000, 10000).$user->getUsername().$user->getSalt());
+        $user->setResetPasswordHash($password);
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
+        $this->mailManager->sendForgotPassword($user);
+    }
 }
