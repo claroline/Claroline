@@ -52,8 +52,7 @@ class ScormListener
     /** @var string */
     private $uploadDir;
 
-    private $scormResourcesPath;
-
+    private $scormResourceRepo;
     private $scoTrackingRepo;
 
     /**
@@ -100,6 +99,7 @@ class ScormListener
         $this->tokenStorage = $tokenStorage;
         $this->uploadDir = $uploadDir;
 
+        $this->scormResourceRepo = $om->getRepository('ClarolineScormBundle:Scorm');
         $this->scoTrackingRepo = $om->getRepository('ClarolineScormBundle:ScoTracking');
     }
 

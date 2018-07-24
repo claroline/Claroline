@@ -19,7 +19,7 @@ const action = (resourceNodes, nodesRefresher) => ({ // todo collection
     request: {
       method: 'DELETE'
     },
-    success: () => nodesRefresher.delete(resourceNodes[0])
+    success: () => nodesRefresher.delete(resourceNodes)
   }
 })
 

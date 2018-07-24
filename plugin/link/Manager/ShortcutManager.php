@@ -42,7 +42,7 @@ class ShortcutManager
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
-        $this->repository = $this->om->getRepository('ClarolineLinkBundle:Shortcut');
+        $this->repository = $this->om->getRepository('ClarolineLinkBundle:Resource\Shortcut');
     }
 
     /**
