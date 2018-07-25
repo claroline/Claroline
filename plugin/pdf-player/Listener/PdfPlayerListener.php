@@ -22,17 +22,14 @@ class PdfPlayerListener
 
     public function onOpenPdf(PlayFileEvent $event)
     {
-        $canDownload = $this->container->get('security.authorization_checker')->isGranted('EXPORT', $event->getResource()->getResourceNode());
-
         $path = $this->container->getParameter('claroline.param.files_directory')
             .DIRECTORY_SEPARATOR
             .$event->getResource()->getHashName();
         $content = $this->container->get('templating')->render(
-            'ClarolinePdfPlayerBundle::pdf.html.twig',
+            'ClarolinePdfPlayerBundle::open.html.twig',
             [
                 'path' => $path,
-                'pdf' => $event->getResource(),
-                'canDownload' => $canDownload,
+                'workspace' => $event->getResource()->getResourceNode()->getWorkspace(),
                 '_resource' => $event->getResource(),
             ]
         );
