@@ -4,8 +4,6 @@ import {connect} from 'react-redux'
 import merge from 'lodash/merge'
 import isEmpty from 'lodash/isEmpty'
 
-
-
 import {trans} from '#/main/core/translation'
 import {makeId} from '#/main/core/scaffolding/id'
 import {withRouter} from '#/main/app/router'
@@ -165,13 +163,11 @@ const EditorComponent = props =>
                 type: 'choice',
                 options:{
                   multiple : true,
-                  choices: {
-                    0: 'Anonyme',
-                    1: 'Utilisateur',
-                    2: 'Collaborateur',
-                    3: 'Gestionnaire',
-                    4: 'Rôle 1'
-                  }
+                  choices: props.context.data.roles.reduce((acc, role) => {
+                    acc[role.id] = role.translationKey
+
+                    return acc
+                  }, {})
                 }
               }
             ]

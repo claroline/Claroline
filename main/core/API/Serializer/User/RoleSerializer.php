@@ -292,7 +292,7 @@ class RoleSerializer
                     }
                     if ($workspaceId) {
                         $orderedTool = $this->orderedToolFinder
-                          ->findOneBy(['tool' => $tool->getName(), 'workspace' => $workspaceId]);
+                          ->findOneBy(['tool' => $toolName, 'workspace' => $workspaceId]);
 
                         if ($orderedTool) {
                             $toolRights = $this->om

@@ -33,7 +33,6 @@ class OrderedToolFinder extends AbstractFinder
                 case 'workspace':
                     $qb->leftJoin('obj.workspace', 'ws');
                     $qb->andWhere($qb->expr()->orX(
-                        $qb->expr()->eq('ws.id', ':workspace'),
                         $qb->expr()->eq('ws.uuid', ':workspace')
                     ));
                     $qb->setParameter('workspace', $filterValue);

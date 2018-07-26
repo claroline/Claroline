@@ -495,8 +495,7 @@ class RoleRepository extends EntityRepository
         $dql = '
             SELECT r
             FROM Claroline\CoreBundle\Entity\Role r
-            WHERE r.workspace = :workspace
-            AND (
+            WHERE
                 r.name = :managerRoleName
                 OR EXISTS (
                     SELECT ot
@@ -506,7 +505,6 @@ class RoleRepository extends EntityRepository
                     WHERE ot.workspace = :workspace
                     AND otrr = r
                     AND BIT_AND(otr.mask, :openValue) = :openValue
-                )
             )
         ';
 

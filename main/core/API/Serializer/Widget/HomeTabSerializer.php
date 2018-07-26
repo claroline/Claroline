@@ -9,6 +9,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Finder\Home\WidgetContainerFinder;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetContainer;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
@@ -96,6 +97,9 @@ class HomeTabSerializer
             'icon' => $homeTab->getIcon(),
             'type' => $homeTab->getType(),
             'position' => $homeTabConfig->getTabOrder(),
+            'roles' => array_map(function ($role) {
+                return $role->getUuid();
+            }, $homeTab->getRoles()),
             'user' => $homeTab->getUser() ? $this->serializer->serialize($homeTab->getUser(), [Options::SERIALIZE_MINIMAL]) : null,
             'workspace' => $homeTab->getWorkspace() ? $this->serializer->serialize($homeTab->getWorkspace(), [Options::SERIALIZE_MINIMAL]) : null,
             'widgets' => array_map(function ($container) use ($options) {
@@ -113,6 +117,22 @@ class HomeTabSerializer
         $this->sipe('poster.url', 'setPoster', $data, $homeTab);
         $this->sipe('icon', 'setIcon', $data, $homeTab);
         $this->sipe('type', 'setType', $data, $homeTab);
+
+        if (isset($data['roles'])) {
+            foreach ($data['roles'] as $roleUuid) {
+                $role = $this->om->getRepository(Role::class)
+              ->findOneBy(['uuid' => $roleUuid]);
+                $homeTab->addRole($role);
+            }
+
+            $existingRoles = $homeTab->getRoles();
+            foreach ($existingRoles as $role) {
+                if (!in_array($role->getUuid(), $data['roles'])) {
+                    // the role no longer exist we can remove it
+                    $homeTab->removeRole($role);
+                }
+            }
+        }
 
         $homeTabConfig = $this->om->getRepository(HomeTabConfig::class)
             ->findOneBy(['homeTab' => $homeTab]);

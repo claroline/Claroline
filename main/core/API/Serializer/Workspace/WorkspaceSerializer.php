@@ -134,7 +134,7 @@ class WorkspaceSerializer
                 'permissions' => [ // TODO it should be available in list mode too, but will decrease perfs, should be tested
                     'open' => $this->authorization->isGranted('OPEN', $workspace),
                     'delete' => $this->authorization->isGranted('DELETE', $workspace),
-                    'administrate' => $this->authorization->isGranted('ADMINISTRATE', $workspace),
+                    'administrate' => $this->authorization->isGranted('EDIT', $workspace),
                     'export' => $this->authorization->isGranted('EXPORT', $workspace),
                 ],
                 'meta' => $this->getMeta($workspace, $options),
