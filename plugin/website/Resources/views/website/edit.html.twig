@@ -21,7 +21,7 @@
                         <li class="{{ option }}-options" ng-class="{'active':optionWindow=='{{ option }}'}"><a href="#/{{ option }}"><span class="icon-bg"></span><span class="option-text"><i class="fa {{ icon }}"></i> <span class="visible-md-inline visible-lg-inline">{{ option|trans({}, 'icap_website') }}</span></span></a></li>
                     {% endfor %}
                     <li class="pull-right"><a target="_blank" class="btn btn-default view-website-btn" href="{{ path('icap_website_force_view', {'websiteId': _resource.id}) }}"><i class="fa fa-eye"></i> <span class="visible-md-inline visible-lg-inline"> {{ 'view_website'|trans({}, 'icap_website') }}</span></a></li>
-                    <li class="pull-right" data-ng-hide="optionWindow=='structure'"><button class="btn btn-primary save-options-btn" data-ng-click="vm.options.save()"><i class="fa fa-floppy-o"></i> <span class="visible-md-inline visible-lg-inline"> {{ 'save_all_options'|trans({}, 'icap_website') }}</span></button></li>
+                    <li class="pull-right" data-ng-hide="optionWindow=='structure'"><button class="btn btn-primary save-options-btn" data-ng-click="vm.options.save()"><i class="fa fa-save"></i> <span class="visible-md-inline visible-lg-inline"> {{ 'save_all_options'|trans({}, 'icap_website') }}</span></button></li>
                 </ul>
                 <div class="admin-tabs">
                     {% include 'IcapWebsiteBundle:website:edit/general_options.html.twig' %}

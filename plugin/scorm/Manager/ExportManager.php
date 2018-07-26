@@ -269,7 +269,11 @@ class ExportManager
     {
         $assets = [
             'bootstrap.css' => 'themes/claroline/bootstrap.css',
-            'font-awesome.css' => 'packages/font-awesome/css/font-awesome.min.css',
+            'fontawesome' => 'packages/@fortawesome/fontawesome-free/css/fontawesome.css',
+            'v4-shims' => 'packages/@fortawesome/fontawesome-free/css/v4-shims.css',
+            'solid' => 'packages/@fortawesome/fontawesome-free/css/solid.css',
+            'regular' => 'packages/@fortawesome/fontawesome-free/css/regular.css',
+            'brands' => 'packages/@fortawesome/fontawesome-free/css/brands.css',
             'claroline-reset.css' => 'vendor/clarolinescorm/claroline-reset.css',
             'jquery.min.js' => 'packages/jquery/dist/jquery.min.js',
             'jquery-ui.min.js' => 'packages/jquery-ui-dist/jquery-ui.min.js',
@@ -308,7 +312,7 @@ class ExportManager
         }
 
         // Add FontAwesome font files
-        $fontDir = $this->webPath.DIRECTORY_SEPARATOR.'packages/font-awesome/fonts';
+        $fontDir = $this->webPath.DIRECTORY_SEPARATOR.'packages/@fortawesome/fontawesome-free/webfonts';
         $files = scandir($fontDir);
         foreach ($files as $file) {
             $filePath = $fontDir.DIRECTORY_SEPARATOR.$file;

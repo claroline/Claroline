@@ -333,7 +333,7 @@ class Theme extends Component {
               <PageAction
                 type="link"
                 label={trans('save_theme', {}, 'theme')}
-                icon="fa fa-floppy-o"
+                icon="fa fa-save"
                 primary={true}
                 disabled={!this.state.pendingChanges || (this.state.validating && !isEmpty(this.state.errors))}
                 target="/"

@@ -163,12 +163,12 @@ class SubjectComponent extends Component {
                 displayed: get(this.props.subject, 'meta.sticky', false) && this.props.moderator,
                 action: () => this.props.unStickSubject(this.props.subject)
               }, {
-                icon: 'fa fa-fw fa-times-circle-o',
+                icon: 'fa fa-fw fa-times-circle',
                 label: trans('close_subject', {}, 'forum'),
                 displayed: !(get(this.props.subject, 'meta.closed', true)) && (get(this.props.subject, 'meta.creator.id', false) === authenticatedUser.id || this.props.moderator),
                 action: () => this.props.closeSubject(this.props.subject)
               }, {
-                icon: 'fa fa-fw fa-check-circle-o',
+                icon: 'fa fa-fw fa-check-circle',
                 label: trans('open_subject', {}, 'forum'),
                 displayed: (get(this.props.subject, 'meta.closed', false)) && (get(this.props.subject, 'meta.creator.id', false) === authenticatedUser.id || this.props.moderator),
                 action: () => this.props.unCloseSubject(this.props.subject)

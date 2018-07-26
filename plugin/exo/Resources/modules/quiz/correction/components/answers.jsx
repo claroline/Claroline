@@ -89,7 +89,7 @@ let Answers = props =>
           disabled={!props.saveEnabled}
           onClick={() => props.saveEnabled && props.saveCorrection(props.question.id)}
         >
-          <span className="fa fa-fw fa-floppy-o"/>
+          <span className="fa fa-fw fa-save"/>
           {t('save')}
         </button>
       }

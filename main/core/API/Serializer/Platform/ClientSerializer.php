@@ -135,7 +135,7 @@ class ClientSerializer
                 'path' => $request->getBasePath(),
             ],
             'theme' => [
-                'name' => $this->config->getParameter('theme'),
+                'name' => strtolower($this->config->getParameter('theme')),
                 'icons' => array_map(function (ResourceIconItemFilename $icon) {
                     return [
                         'mimeTypes' => $icon->getMimeTypes(),

@@ -19,7 +19,7 @@ const UserCard = props =>
     subtitle={props.data.firstName + ' ' + props.data.lastName}
     flags={[
       props.data.meta.personalWorkspace && ['fa fa-book', trans('has_personal_workspace')],
-      !props.data.restrictions.disabled && ['fa fa-check-circle-o', trans('user_enabled')] // todo also checks accessibility dates
+      !props.data.restrictions.disabled && ['fa fa-check-circle', trans('user_enabled')] // todo also checks accessibility dates
     ].filter(flag => !!flag)}
     contentText={props.data.meta.description}
     footer={props.data.meta.lastLogin &&

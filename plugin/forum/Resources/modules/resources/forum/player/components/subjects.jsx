@@ -165,13 +165,13 @@ const SubjectsList = props =>
           context: 'row'
         }, {
           type: 'callback',
-          icon: 'fa fa-fw fa-times-circle-o',
+          icon: 'fa fa-fw fa-times-circle',
           label: trans('close_subject', {}, 'forum'),
           callback: () => props.closeSubject(rows[0]),
           displayed: !rows[0].meta.closed && (rows[0].meta.creator.id === authenticatedUser.id || props.moderator)
         }, {
           type: 'callback',
-          icon: 'fa fa-fw fa-check-circle-o',
+          icon: 'fa fa-fw fa-check-circle',
           label: trans('open_subject', {}, 'forum'),
           callback: () => props.unCloseSubject(rows[0]),
           displayed: rows[0].meta.closed && (rows[0].meta.creator.id === authenticatedUser.id || props.moderator)

@@ -35,7 +35,7 @@ const ConfigurationFormComponent = props =>
         callback={() => props.saveForm(props.id)}
         disabled={!props.saveEnabled}
         label={trans('save')}
-        icon={'fa fa-floppy-o'}
+        icon={'fa fa-save'}
         primary={true}
       />
     </div>

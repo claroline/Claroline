@@ -53,14 +53,14 @@ const UsersList = props =>
         scope: ['object']
       }, {
         type: 'callback',
-        icon: 'fa fa-fw fa-check-circle-o',
+        icon: 'fa fa-fw fa-check-circle',
         label: trans('enable_user'),
         scope: ['object'], // todo should be a selection action too
         displayed: rows[0].restrictions.disabled,
         callback: () => props.enable(rows[0])
       }, {
         type: 'callback',
-        icon: 'fa fa-fw fa-times-circle-o',
+        icon: 'fa fa-fw fa-times-circle',
         label: trans('disable_user'),
         scope: ['object'], // todo should be a selection action too
         displayed: !rows[0].restrictions.disabled,

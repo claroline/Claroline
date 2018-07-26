@@ -9,7 +9,11 @@
 
         {% block stylesheets %}
             <link rel="stylesheet" media="screen" href="../commons/bootstrap.css" />
-            <link rel="stylesheet" media="screen" href="../commons/font-awesome.css" />
+            <link rel='stylesheet' type='text/css' href='{{ asset('packages/@fortawesome/fontawesome-free/css/v4-shims.css') }}'/>
+            <link rel='stylesheet' type='text/css' href='{{ asset('packages/@fortawesome/fontawesome-free/css/fontawesome.css') }}'/>
+            <link rel='stylesheet' type='text/css' href='{{ asset('packages/@fortawesome/fontawesome-free/css/solid.css') }}'/>
+            <link rel='stylesheet' type='text/css' href='{{ asset('packages/@fortawesome/fontawesome-free/css/regular.css') }}'/>
+            <link rel='stylesheet' type='text/css' href='{{ asset('packages/@fortawesome/fontawesome-free/css/brands.css') }}'/>
             <link rel="stylesheet" media="screen" href="../commons/video-js.min.css" />
 
             {% stylesheets debug=false filter='less, cssmin' output='vendor/clarolinescorm/claroline-reset.css'

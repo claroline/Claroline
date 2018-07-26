@@ -8,7 +8,7 @@ import {Button} from '#/main/app/action/components/button'
 const FormActions = props =>
   <div className={classes('form-toolbar', props.className)}>
     <Button
-      icon="fa fa-fw fa-floppy-o"
+      icon="fa fa-fw fa-save"
       label={trans('save', {}, 'actions')}
       {...props.save}
       className="btn"

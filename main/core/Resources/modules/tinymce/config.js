@@ -30,7 +30,7 @@ const config = {
   statusbar: true,
   branding: false,
   resize: true,
-  
+
   // enabled plugins
   plugins: plugins.concat(extPlugins),
 

@@ -31,13 +31,13 @@ const ACTIONS = {
     icon: 'fa fa-recycle'
   },
   [ACTION_SAVE]: {
-    icon: 'fa fa-floppy-o'
+    icon: 'fa fa-save'
   },
   [ACTION_CREATE]: {
-    icon: 'fa fa-floppy-o'
+    icon: 'fa fa-save'
   },
   [ACTION_UPDATE]: {
-    icon: 'fa fa-floppy-o'
+    icon: 'fa fa-save'
   },
   [ACTION_DELETE]: {
     icon: 'fa fa-trash-o',
