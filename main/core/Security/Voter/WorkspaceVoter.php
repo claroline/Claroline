@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Security\Voter;
 use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Security\Token\ViewAsToken;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -27,7 +28,7 @@ class WorkspaceVoter extends AbstractVoter
 {
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
-        if ($object->getCreator() === $token->getUser() || $this->isWorkspaceManaged($token, $object)) {
+        if ($this->isWorkspaceManaged($token, $object)) {
             return VoterInterface::ACCESS_GRANTED;
         }
 
@@ -36,7 +37,7 @@ class WorkspaceVoter extends AbstractVoter
         //crud actions
         switch ($attributes[0]) {
             case self::VIEW:   return $this->checkView($token, $object);
-            case self::CREATE: return $this->checkCreation();
+            case self::CREATE: return $this->checkCreation($token);
             case self::EDIT:   return $this->checkEdit($token, $object);
             case self::DELETE: return $this->checkDelete($token, $object);
             case self::PATCH:  return $this->checkPatch($token, $object, $collection);
@@ -105,7 +106,7 @@ class WorkspaceVoter extends AbstractVoter
      * and it should be checked here.
      *
      * @param TokenInterface   $token
-     * @param User             $user
+     * @param Workspace        $workspace
      * @param ObjectCollection $collection
      *
      * @return int
@@ -132,23 +133,32 @@ class WorkspaceVoter extends AbstractVoter
             return false;
         }
 
-        //if we're amongst the administrators of the organizations
-        $adminOrganizations = $token->getUser()->getAdministratedOrganizations();
-        $workspaceOrganizations = $workspace->getOrganizations();
+        if (!$this->isUsurper($token)) {
+            if ($workspace->getCreator() === $token->getUser()) {
+                return true;
+            }
 
-        foreach ($adminOrganizations as $adminOrganization) {
-            foreach ($workspaceOrganizations as $workspaceOrganization) {
-                if ($workspaceOrganization === $adminOrganization) {
-                    return true;
+            //if we're amongst the administrators of the organizations
+            $adminOrganizations = $token->getUser()->getAdministratedOrganizations();
+            $workspaceOrganizations = $workspace->getOrganizations();
+
+            foreach ($adminOrganizations as $adminOrganization) {
+                foreach ($workspaceOrganizations as $workspaceOrganization) {
+                    if ($workspaceOrganization === $adminOrganization) {
+                        return true;
+                    }
                 }
             }
         }
 
         //or we have the role_manager
         $managerRole = $workspace->getManagerRole();
-
-        if ($managerRole && $token->getUser()->hasRole($managerRole->getName())) {
-            return true;
+        if ($managerRole) {
+            foreach ($token->getRoles() as $role) {
+                if ($managerRole->getName() === $role->getRole()) {
+                    return true;
+                }
+            }
         }
 
         return false;
@@ -174,5 +184,10 @@ class WorkspaceVoter extends AbstractVoter
         }
 
         return false;
+    }
+
+    protected function isUsurper(TokenInterface $token)
+    {
+        return $token instanceof ViewAsToken;
     }
 }
