@@ -96,11 +96,11 @@ function apiToDateObject(apiDate) {
 
 /**
  * Gets API now value.
- *
+ * @param {boolean} local
  * @return {string}
  */
-function now() {
-  return moment().utc().format(getApiFormat())
+function now(local = true) {
+  return local ? moment().utc().local().format(getApiFormat()) : moment().utc().format(getApiFormat())
 }
 
 function computeElapsedTime(startDate) {
