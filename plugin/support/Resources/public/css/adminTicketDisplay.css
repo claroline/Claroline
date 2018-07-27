@@ -1,9 +1,0 @@
-#informations-heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-#ticket-edition-btn {
-    position: static;
-}
