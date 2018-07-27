@@ -26,7 +26,8 @@ const Correctors = props =>
         }}
         primaryAction={(row) => ({
           type: 'link',
-          target: `/corrector/${row.id}`
+          target: `/corrector/${row.id}`,
+          label: trans('corrector', {}, 'dropzone')
         })}
         definition={[
           {
@@ -34,7 +35,8 @@ const Correctors = props =>
             label: trans('user', {}, 'platform'),
             displayed: props.dropzone.parameters.dropType === constants.DROP_TYPE_USER,
             displayable: props.dropzone.parameters.dropType === constants.DROP_TYPE_USER,
-            primary: true
+            primary: true,
+            render: (rowData) => rowData.user ? `${rowData.user.firstName} ${rowData.user.lastName}` : trans('unknown')
           }, {
             name: 'teamName',
             label: trans('team', {}, 'team'),

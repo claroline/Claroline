@@ -37,13 +37,18 @@ actions.initializeMyDrop = (dropzoneId, teamId = null, navigate) => ({
 actions.saveDocument = (dropId, documentType, documentData) => {
   const formData = new FormData()
   formData.append('dropData', documentData)
-
+  formData.append('fileName', 'test')
+  formData.append('sourceType', 'uploadedfile')
   return {
     [API_REQUEST]: {
       url: ['claro_dropzone_documents_add', {id: dropId, type: documentType}],
       request: {
         method: 'POST',
-        body: formData
+        body: formData,
+        headers: new Headers({
+          //no Content type for automatic detection of boundaries.
+          'X-Requested-With': 'XMLHttpRequest'
+        })
       },
       success: (data, dispatch) => dispatch(actions.addDocuments(data))
     }

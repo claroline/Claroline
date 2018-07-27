@@ -73,6 +73,18 @@ const DROP_TYPES = {
   [DROP_TYPE_TEAM]: trans('drop_type_team', {}, 'dropzone')
 }
 
+
+// user drop status
+const DROP_NOT_ATTEMPTED  = 'drop_not_attempted'
+const DROP_IN_PROGRESS    = 'drop_in_progress'
+const DROP_COMPLETED      = 'drop_completed'
+
+const DROP_STATUS = {
+  [DROP_NOT_ATTEMPTED]: trans('evaluation_status_not_attempted', {}, 'dropzone'),
+  [DROP_IN_PROGRESS]: trans('evaluation_status_opened', {}, 'dropzone'),
+  [DROP_COMPLETED]: trans('evaluation_status_completed', {}, 'dropzone')
+}
+
 export const constants = {
   REVIEW_TYPE_MANAGER,
   REVIEW_TYPE_PEER,
@@ -94,5 +106,9 @@ export const constants = {
   DOCUMENT_TYPE_TEXT,
   DOCUMENT_TYPE_URL,
   DOCUMENT_TYPE_RESOURCE,
-  DOCUMENT_TYPES
+  DOCUMENT_TYPES,
+  DROP_NOT_ATTEMPTED,
+  DROP_IN_PROGRESS,
+  DROP_COMPLETED,
+  DROP_STATUS
 }

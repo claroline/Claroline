@@ -1,0 +1,2 @@
+<a href="{{ path('claro_dropzone_detail_drop', {'dropzoneId' : notification.details.dropzone.id, 'dropId': notification.details.drop.id}) }}"
+   target="_blank">{{ notification.actionKey|trans({'%dropzone%' : notification.details.resource.name}, 'notification') }}</a>

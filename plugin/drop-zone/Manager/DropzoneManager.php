@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\DropZoneBundle\Entity\Correction;
 use Claroline\DropZoneBundle\Entity\Criterion;
 use Claroline\DropZoneBundle\Entity\Document;
@@ -25,6 +26,19 @@ use Claroline\DropZoneBundle\Entity\Drop;
 use Claroline\DropZoneBundle\Entity\Dropzone;
 use Claroline\DropZoneBundle\Entity\DropzoneTool;
 use Claroline\DropZoneBundle\Entity\DropzoneToolDocument;
+use Claroline\DropZoneBundle\Event\Log\LogCorrectionDeleteEvent;
+use Claroline\DropZoneBundle\Event\Log\LogCorrectionEndEvent;
+use Claroline\DropZoneBundle\Event\Log\LogCorrectionReportEvent;
+use Claroline\DropZoneBundle\Event\Log\LogCorrectionStartEvent;
+use Claroline\DropZoneBundle\Event\Log\LogCorrectionUpdateEvent;
+use Claroline\DropZoneBundle\Event\Log\LogCorrectionValidationChangeEvent;
+use Claroline\DropZoneBundle\Event\Log\LogDocumentCreateEvent;
+use Claroline\DropZoneBundle\Event\Log\LogDocumentDeleteEvent;
+use Claroline\DropZoneBundle\Event\Log\LogDropEndEvent;
+use Claroline\DropZoneBundle\Event\Log\LogDropEvaluateEvent;
+use Claroline\DropZoneBundle\Event\Log\LogDropGradeAvailableEvent;
+use Claroline\DropZoneBundle\Event\Log\LogDropStartEvent;
+use Claroline\DropZoneBundle\Event\Log\LogDropzoneConfigureEvent;
 use Claroline\DropZoneBundle\Repository\CorrectionRepository;
 use Claroline\DropZoneBundle\Repository\DocumentRepository;
 use Claroline\DropZoneBundle\Repository\PlannedNotificationRepository;
@@ -36,6 +50,7 @@ use Claroline\DropZoneBundle\Serializer\DropzoneToolSerializer;
 use Claroline\TeamBundle\Entity\Team;
 use JMS\DiExtraBundle\Annotation as DI;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -89,6 +104,12 @@ class DropzoneManager
     /** @var DocumentRepository */
     private $documentRepo;
 
+    /** @var EventDispatcherInterface */
+    protected $eventDispatcher;
+    /** @var RoleManager */
+    protected $roleManager;
+    private $resourceNodeRepo;
+
     /**
      * DropzoneManager constructor.
      *
@@ -104,7 +125,9 @@ class DropzoneManager
      *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
      *     "resourceEvalManager"    = @DI\Inject("claroline.manager.resource_evaluation_manager"),
      *     "archiveDir"             = @DI\Inject("%claroline.param.platform_generated_archive_path%"),
-     *     "configHandler"          = @DI\Inject("claroline.config.platform_config_handler")
+     *     "configHandler"          = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "eventDispatcher"        = @DI\Inject("event_dispatcher"),
+     *     "roleManager"            = @DI\Inject("claroline.manager.role_manager")
      * })
      *
      * @param Crud                         $crud
@@ -119,6 +142,8 @@ class DropzoneManager
      * @param ResourceEvaluationManager    $resourceEvalManager
      * @param string                       $archiveDir
      * @param PlatformConfigurationHandler $configHandler
+     * @param EventDispatcherInterface     $eventDispatcher
+     * @param RoleManager                  $roleManager
      */
     public function __construct(
         Crud $crud,
@@ -132,7 +157,9 @@ class DropzoneManager
         ObjectManager $om,
         ResourceEvaluationManager $resourceEvalManager,
         $archiveDir,
-        PlatformConfigurationHandler $configHandler
+        PlatformConfigurationHandler $configHandler,
+        EventDispatcherInterface $eventDispatcher,
+        RoleManager $roleManager
     ) {
         $this->crud = $crud;
         $this->dropzoneSerializer = $dropzoneSerializer;
@@ -146,12 +173,15 @@ class DropzoneManager
         $this->resourceEvalManager = $resourceEvalManager;
         $this->archiveDir = $archiveDir;
         $this->configHandler = $configHandler;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->roleManager = $roleManager;
 
         $this->dropRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Drop');
         $this->correctionRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Correction');
         $this->dropzoneToolRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\DropzoneTool');
         $this->dropzoneToolDocumentRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\DropzoneToolDocument');
         $this->documentRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Document');
+        $this->resourceNodeRepo = $om->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceNode');
     }
 
     /**
@@ -226,6 +256,12 @@ class DropzoneManager
     {
         $this->crud->update('Claroline\DropZoneBundle\Entity\Dropzone', $data);
 
+        $uow = $this->om->getUnitOfWork();
+        $uow->computeChangeSets();
+        $changeSet = $uow->getEntityChangeSet($dropzone);
+
+        $this->eventDispatcher->dispatch('log', new LogDropzoneConfigureEvent($dropzone, $changeSet));
+
         return $dropzone;
     }
 
@@ -294,6 +330,8 @@ class DropzoneManager
             $this->om->persist($drop);
             $this->generateResourceEvaluation($dropzone, $user, AbstractResourceEvaluation::STATUS_INCOMPLETE);
             $this->om->endFlushSuite();
+
+            $this->eventDispatcher->dispatch('log', new LogDropStartEvent($dropzone, $drop));
         }
 
         return $drop;
@@ -329,6 +367,8 @@ class DropzoneManager
                 }
                 $this->om->persist($drop);
                 $this->om->endFlushSuite();
+
+                $this->eventDispatcher->dispatch('log', new LogDropStartEvent($dropzone, $drop));
             } elseif (!$drop->hasUser($user)) {
                 $this->om->startFlushSuite();
                 $drop->addUser($user);
@@ -420,9 +460,17 @@ class DropzoneManager
         $document->setUser($user);
         $document->setDropDate(new \DateTime());
         $document->setType($documentType);
-        $document->setData($documentData);
+        if (Document::DOCUMENT_TYPE_RESOURCE === $document->getType()) {
+            $resourceNode = $this->resourceNodeRepo->findOneBy(['uuid' => $documentData]);
+            $document->setData($resourceNode);
+        } else {
+            $document->setData($documentData);
+        }
+
         $this->om->persist($document);
         $this->om->flush();
+
+        $this->eventDispatcher->dispatch('log', new LogDocumentCreateEvent($drop->getDropzone(), $drop, $document));
 
         return $document;
     }
@@ -439,6 +487,7 @@ class DropzoneManager
     public function createFilesDocuments(Drop $drop, User $user, array $files)
     {
         $documents = [];
+        $documentEntities = [];
         $currentDate = new \DateTime();
         $dropzone = $drop->getDropzone();
         $this->om->startFlushSuite();
@@ -452,9 +501,15 @@ class DropzoneManager
             $data = $this->registerUplodadedFile($dropzone, $file);
             $document->setFile($data);
             $this->om->persist($document);
+            $documentEntities[] = $document;
             $documents[] = $this->serializeDocument($document);
         }
         $this->om->endFlushSuite();
+
+        //tracking for each document, after flush
+        foreach ($documentEntities as $entity) {
+            $this->eventDispatcher->dispatch('log', new LogDocumentCreateEvent($drop->getDropzone(), $drop, $entity));
+        }
 
         return $documents;
     }
@@ -475,6 +530,8 @@ class DropzoneManager
         }
         $this->om->remove($document);
         $this->om->flush();
+
+        $this->eventDispatcher->dispatch('log', new LogDocumentDeleteEvent($document->getDrop()->getDropzone(), $document->getDrop(), $document));
     }
 
     /**
@@ -498,6 +555,8 @@ class DropzoneManager
         $this->checkCompletion($drop->getDropzone(), $users, $drop);
 
         $this->om->endFlushSuite();
+
+        $this->eventDispatcher->dispatch('log', new LogDropEndEvent($drop->getDropzone(), $drop, $this->roleManager));
     }
 
     /**
@@ -636,6 +695,7 @@ class DropzoneManager
         $isNew = empty($existingCorrection);
         $correction = $this->correctionSerializer->deserialize('Claroline\DropZoneBundle\Entity\Correction', $data);
         $correction->setUser($user);
+        $dropzone = $correction->getDrop()->getDropzone();
 
         if (!$isNew) {
             $correction->setLastEditionDate(new \DateTime());
@@ -643,6 +703,12 @@ class DropzoneManager
         $correction = $this->computeCorrectionScore($correction);
         $this->om->persist($correction);
         $this->om->endFlushSuite();
+
+        if ($isNew) {
+            $this->eventDispatcher->dispatch('log', new LogCorrectionStartEvent($dropzone, $correction->getDrop(), $correction));
+        } else {
+            $this->eventDispatcher->dispatch('log', new LogCorrectionUpdateEvent($dropzone, $correction->getDrop(), $correction));
+        }
 
         return $correction;
     }
@@ -680,8 +746,10 @@ class DropzoneManager
                 }
                 break;
         }
-        $this->checkCompletion($drop->getDropzone(), $users);
+        $this->eventDispatcher->dispatch('log', new LogCorrectionEndEvent($dropzone, $correction->getDrop(), $correction));
+
         $this->checkSuccess($drop);
+        $this->checkCompletion($drop->getDropzone(), $users, $drop);
 
         $this->om->endFlushSuite();
 
@@ -706,6 +774,8 @@ class DropzoneManager
 
         $this->om->endFlushSuite();
 
+        $this->eventDispatcher->dispatch('log', new LogCorrectionValidationChangeEvent($correction->getDrop()->getDropzone(), $correction->getDrop(), $correction));
+
         return $correction;
     }
 
@@ -725,6 +795,8 @@ class DropzoneManager
         $this->checkSuccess($drop);
 
         $this->om->endFlushSuite();
+
+        $this->eventDispatcher->dispatch('log', new LogCorrectionDeleteEvent($correction->getDrop()->getDropzone(), $drop, $correction));
     }
 
     /**
@@ -741,6 +813,8 @@ class DropzoneManager
         $correction->setCorrectionDeniedComment($comment);
         $this->om->persist($correction);
         $this->om->flush();
+
+        $this->eventDispatcher->dispatch('log', new LogCorrectionReportEvent($correction->getDrop()->getDropzone(), $correction->getDrop(), $correction, $this->roleManager));
 
         return $correction;
     }
@@ -1119,8 +1193,10 @@ class DropzoneManager
                 if (!empty($userEval) && !in_array($userEval->getStatus(), $fixedStatusList)) {
                     $this->generateResourceEvaluation($dropzone, $user, AbstractResourceEvaluation::STATUS_COMPLETED);
                 }
+                //TODO user whose score is available must be notified by LogDropGradeAvailableEvent, when he has done his corrections AND his drop has been corrected
             }
         }
+
         $this->om->endFlushSuite();
     }
 
@@ -1164,6 +1240,10 @@ class DropzoneManager
             foreach ($users as $user) {
                 $this->generateResourceEvaluation($dropzone, $user, $status, $score, $drop, true);
             }
+
+            $this->eventDispatcher->dispatch('log', new LogDropEvaluateEvent($dropzone, $drop, $drop->getScore()));
+
+            //TODO user whose score is available must be notified by LogDropGradeAvailableEvent, when he has done his corrections AND his drop has been corrected
         }
 
         $this->om->endFlushSuite();

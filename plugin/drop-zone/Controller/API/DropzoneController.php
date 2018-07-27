@@ -20,10 +20,12 @@ use Claroline\DropZoneBundle\Entity\Document;
 use Claroline\DropZoneBundle\Entity\Drop;
 use Claroline\DropZoneBundle\Entity\Dropzone;
 use Claroline\DropZoneBundle\Entity\DropzoneTool;
+use Claroline\DropZoneBundle\Event\Log\LogDocumentOpenEvent;
 use Claroline\DropZoneBundle\Manager\DropzoneManager;
 use Claroline\TeamBundle\Entity\Team;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -42,26 +44,32 @@ class DropzoneController
     /** @var DropzoneManager */
     private $manager;
 
+    /** @var EventDispatcherInterface */
+    protected $eventDispatcher;
+
     private $filesDir;
 
     /**
      * DropzoneController constructor.
      *
      * @DI\InjectParams({
-     *     "finder"   = @DI\Inject("claroline.api.finder"),
-     *     "manager"  = @DI\Inject("claroline.manager.dropzone_manager"),
-     *     "filesDir" = @DI\Inject("%claroline.param.files_directory%")
+     *     "finder"           = @DI\Inject("claroline.api.finder"),
+     *     "manager"          = @DI\Inject("claroline.manager.dropzone_manager"),
+     *     "filesDir"         = @DI\Inject("%claroline.param.files_directory%"),
+     *     "eventDispatcher"  = @DI\Inject("event_dispatcher")
      * })
      *
-     * @param FinderProvider  $finder
-     * @param DropzoneManager $manager
-     * @param string          $filesDir
+     * @param FinderProvider           $finder
+     * @param DropzoneManager          $manager
+     * @param string                   $filesDir
+     * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(FinderProvider $finder, DropzoneManager $manager, $filesDir)
+    public function __construct(FinderProvider $finder, DropzoneManager $manager, $filesDir, EventDispatcherInterface  $eventDispatcher)
     {
         $this->finder = $finder;
         $this->manager = $manager;
         $this->filesDir = $filesDir;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -413,6 +421,8 @@ class DropzoneController
         $response->headers->set('Content-Disposition', 'attachment; filename='.$data['name']);
         $response->headers->set('Content-Type', $data['mimeType']);
         $response->headers->set('Connection', 'close');
+
+        $this->eventDispatcher->dispatch('log', new LogDocumentOpenEvent($document->getDrop()->getDropzone(), $document->getDrop(), $document));
 
         return $response->send();
     }

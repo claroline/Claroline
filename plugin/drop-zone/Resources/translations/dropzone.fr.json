@@ -12,6 +12,7 @@
     "compilatio_configuration": "Configuration de Compilatio",
     "complete_my_copy": "Compléter ma copie",
     "correct_a_copy": "Corriger une copie",
+    "correct_the_copy": "Corriger la copie",
     "correction": "Correction & Notation",
     "correction_denial_label": "Autoriser les apprenants à signaler une correction qu'ils trouvent injuste",
     "correction_from": "Correction de «%name%»",
@@ -91,7 +92,7 @@
     "review_disabled_corrections_done": "Vos corrections ont été faites.",
     "review_disabled_drop_not_finished": "Votre copie n'est pas terminée.",
     "review_disabled_finished": "La période d'évaluation est terminée.",
-    "review_disabled_not_active": "L'évalutaion n'est pas activée.",
+    "review_disabled_not_active": "L'évaluation n'est pas activée.",
     "review_disabled_not_started": "La période d'évaluation n'a pas encore commencé.",
     "review_disabled_user_required": "Un utilisateur est requis.",
     "rich_text_online_edition": "Texte libre (rédaction en ligne)",
@@ -144,5 +145,8 @@
     "show_evaluation": "Voir mon évaluation",
     "continue_evaluation": "Continuer mon évaluation",
     "submit_my_drop": "Soumettre ma participation",
-    "submit_my_drop_confirm": "Êtes-vous sûr de vouloir soumettre votre participation ? Cette action est définitive et plus aucune modification ne sera possible."
+    "submit_my_drop_confirm": "Êtes-vous sûr de vouloir soumettre votre participation ? Cette action est définitive et plus aucune modification ne sera possible.",
+    "evaluation_status_not_attempted": "Vous n'avez pas commencé l'évaluation",
+    "evaluation_status_opened": "Vous avez commencé l'évaluation" ,
+    "evaluation_status_completed": "Vous avez terminé l'évaluation"
 }

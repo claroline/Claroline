@@ -241,7 +241,6 @@ class DropController
         $dropzone = $drop->getDropzone();
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
         $this->checkDropEdition($drop, $user);
-        $dropData = null;
         $documents = [];
 
         try {
@@ -254,8 +253,8 @@ class DropController
                     case Document::DOCUMENT_TYPE_TEXT:
                     case Document::DOCUMENT_TYPE_URL:
                     case Document::DOCUMENT_TYPE_RESOURCE:
-                        $dropData = $request->request->get('dropData', false);
-                        $document = $this->manager->createDocument($drop, $user, $type, $dropData);
+                        $uuid = $request->request->get('dropData', false);
+                        $document = $this->manager->createDocument($drop, $user, $type, $uuid);
                         $documents[] = $this->manager->serializeDocument($document);
                         break;
                 }

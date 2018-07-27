@@ -39,7 +39,7 @@ const Timeline = props =>
     >
       <span>
         {trans('dropzone_start', {}, 'dropzone')} : {props.planning.type === constants.PLANNING_TYPE_AUTO && props.planning.drop && props.planning.drop.length > 0 ?
-          <b>{displayDate(props.planning.drop[0])}</b> :
+          <div><b>{displayDate(props.planning.drop[0], false, true)}</b></div> :
           <b>-</b>
         }
       </span>
@@ -76,7 +76,7 @@ const Timeline = props =>
     >
       <span>
         {trans('dropzone_end', {}, 'dropzone')} : {props.planning.type === constants.PLANNING_TYPE_AUTO && props.planning.drop && props.planning.drop.length > 1 ?
-          <b>{displayDate(props.planning.drop[1])}</b> :
+          <div><b>{displayDate(props.planning.drop[1], false, true)}</b></div> :
           <b>-</b>
         }
       </span>

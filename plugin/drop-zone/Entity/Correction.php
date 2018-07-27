@@ -154,7 +154,7 @@ class Correction
      * @ORM\OneToMany(
      *     targetEntity="Claroline\DropZoneBundle\Entity\Grade",
      *     mappedBy="correction",
-     *     cascade={"persist"}
+     *     cascade={"persist", "remove"}
      * )
      *
      * @var Grade
@@ -473,5 +473,36 @@ class Correction
     public function emptyGrades()
     {
         $this->grades->clear();
+    }
+
+    /**
+     * @param bool $hydrateUser
+     *
+     * @return array
+     */
+    public function toArray($hydrateUser)
+    {
+        $json = [
+            'id' => $this->getId(),
+            'editable' => $this->isEditable(),
+        ];
+
+        if (true === $this->isFinished()) {
+            $json['valid'] = $this->isValid();
+            $json['score'] = $this->getScore();
+            $json['comment'] = $this->getComment();
+            $json['reportedComment'] = $this->getReportedComment();
+        }
+
+        if (true === $hydrateUser) {
+            $json['user'] = [
+                'id' => $this->getUser()->getId(),
+                'lastName' => $this->getUser()->getLastName(),
+                'firstName' => $this->getUser()->getFirstName(),
+                'username' => $this->getUser()->getUsername(),
+            ];
+        }
+
+        return $json;
     }
 }

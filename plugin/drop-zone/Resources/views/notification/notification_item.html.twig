@@ -1,0 +1,27 @@
+{% extends 'IcapNotificationBundle:Templates:notification.html.twig' %}
+{% set avatarUrlPrefix = asset('uploads/pictures/') %}
+
+{% block notificationText %}
+    {% if notification.userId is not empty and notification.details.doer is defined and constant('Claroline\\DropZoneBundle\\Event\\Log\\LogDropGradeAvailableEvent::ACTION') != notification.actionKey %}
+        <a href="{{ path('claro_user_profile_id', {'user' : notification.userId}) }}"><strong>{{ notification.details.doer.firstName ~ ' ' ~ notification.details.doer.lastName }}</strong></a>
+    {% else %}
+        <strong>{{ systemName }}</strong>
+    {% endif %}
+    {% if constant('Claroline\\DropZoneBundle\\Event\\Log\\LogDropReportEvent::ACTION') == notification.actionKey %}
+        {#    DROP REPORT  #}
+        {% include 'ClarolineDropZoneBundle:Notification:notification_drop_report.html.twig' %}
+    {% elseif constant('Claroline\\DropZoneBundle\\Event\\Log\\LogCorrectionReportEvent::ACTION') == notification.actionKey %}
+        {#    CORRECTION  REPORT  #}
+        {% include 'ClarolineDropZoneBundle:Notification:notification_correction_report.html.twig' %}
+    {% elseif constant('Claroline\\DropZoneBundle\\Event\\Log\\LogDropGradeAvailableEvent::ACTION') == notification.actionKey %}
+        {#    DROP GRADE AVAILABLE  #}
+        {% include 'ClarolineDropZoneBundle:Notification:notification_drop_grade_available.html.twig' %}
+    {% elseif constant('Claroline\\DropZoneBundle\\Event\\Log\\LogDropzoneManualStateChangedEvent::ACTION') == notification.actionKey %}
+        {#    MANUAL STATE CHANGED  #}
+        {% include 'ClarolineDropZoneBundle:Notification:notification_dropzone_manual_state_changed.html.twig' %}
+    {% elseif constant('Claroline\\DropZoneBundle\\Event\\Log\\LogDropEndEvent::ACTION') == notification.actionKey %}
+        {#    DROP END  #}
+        {% include 'ClarolineDropZoneBundle:Notification:notification_drop_end.html.twig' %}
+
+    {% endif %}
+{% endblock %}

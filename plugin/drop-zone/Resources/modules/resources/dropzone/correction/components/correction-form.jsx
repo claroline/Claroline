@@ -145,7 +145,7 @@ export class CorrectionForm extends Component {
             <button
               className="btn btn-default"
               type="button"
-              onClick={() => this.props.cancelCorrection()}
+              onClick={() => this.props.cancelCorrection(this.props.navigate)}
             >
               {trans('cancel', {}, 'platform')}
             </button>
@@ -158,7 +158,7 @@ export class CorrectionForm extends Component {
                   this.props.dropzone.parameters.commentInCorrectionForced &&
                   !this.state.correction.comment)
                 }
-                onClick={() => this.props.submitCorrection(this.props.correction.id)}
+                onClick={() => this.props.submitCorrection(this.props.correction.id, this.props.navigate)}
               >
                 {trans('submit_correction', {}, 'dropzone')}
               </button>
@@ -187,7 +187,8 @@ CorrectionForm.propTypes = {
   showSubmitButton: T.bool.isRequired,
   saveCorrection: T.func.isRequired,
   submitCorrection: T.func.isRequired,
-  cancelCorrection: T.func.isRequired
+  cancelCorrection: T.func.isRequired,
+  navigate: T.func.isRequired
 }
 
 CorrectionForm.defaultProps = {

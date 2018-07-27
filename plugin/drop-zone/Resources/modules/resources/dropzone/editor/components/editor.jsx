@@ -95,13 +95,19 @@ const EditorComponent = props =>
                   type: 'date-range',
                   label: trans('drop_range', {}, 'dropzone'),
                   displayed: constants.PLANNING_TYPE_MANUAL !== props.dropzone.planning.type,
-                  required: true
+                  required: true,
+                  options: {
+                    time: true
+                  }
                 }, {
                   name: 'planning.review',
                   type: 'date-range',
                   label: trans('review_range', {}, 'dropzone'),
                   displayed: constants.PLANNING_TYPE_MANUAL !== props.dropzone.planning.type && constants.REVIEW_TYPE_PEER === props.dropzone.parameters.reviewType,
-                  required: true
+                  required: true,
+                  options: {
+                    time: true
+                  }
                 }
               ]
             }

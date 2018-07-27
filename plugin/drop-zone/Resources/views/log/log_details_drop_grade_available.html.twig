@@ -1,0 +1,32 @@
+{% if log.details.drop is defined and log.details.drop.owner is defined %}
+    <h4>
+        {{ ('log_owner_drop')|trans({}, 'log') }}
+    </h4>
+    {% include 'ClarolineDropZoneBundle:Log:log_details_user.html.twig' with {'user': log.details.drop.owner} %}
+{% endif %}
+{% if log.details.dropId is defined %}  
+    <div class='list-group'>
+        <div class='list-group-item'>
+            {% if log.details.dropGrade is defined %}
+                <dl class="dl-horizontal">
+                    <dt>{{ 'Grade'|trans({},'dropzone') }}</dt>
+                    <dd>{{ log.details.dropGrade }}/20 - <a
+                                href="{{ path('claro_dropzone_detail_drop', {'dropzoneId' : log.details.dropzoneId, 'dropId' : log.details.dropId}) }}"
+                                target="_blank">
+                            {{ 'See copy'|trans({},'dropzone') }}
+                        </a></dd>
+                </dl>
+            {% else %}
+                <dl class="dl-horizontal">
+                    <dd>
+                        <a href="{{ path('claro_dropzone_detail_drop', {'dropzoneId' : log.details.dropzoneId, 'dropId' : log.details.dropId}) }}"
+                           target="_blank">
+                            {{ 'See copy'|trans({},'dropzone') }}
+                        </a>
+                    </dd>
+                </dl>
+
+            {% endif %}
+        </div>
+    </div>
+{% endif %}

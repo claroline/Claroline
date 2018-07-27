@@ -1,0 +1,36 @@
+{% extends 'ClarolineCoreBundle:Log:view_details.html.twig' %}
+
+{% block logDetailsContext %}
+    {{ parent() }}
+    {% if constant('Claroline\\DropZoneBundle\\Event\\Log\\LogDropzoneConfigureEvent::ACTION') == log.action %}
+        {% include 'ClarolineDropZoneBundle:Log:log_details_dropzone.html.twig' %}
+    {% elseif constant('Claroline\\DropZoneBundle\\Event\\Log\\LogDropEndEvent::ACTION') == log.action %}
+        {% include 'ClarolineDropZoneBundle:Log:log_details_drop_end.html.twig' %}
+    {% elseif constant('Claroline\\DropZoneBundle\\Event\\Log\\LogDocumentCreateEvent::ACTION') == log.action %}
+        {% include 'ClarolineDropZoneBundle:Log:log_details_document_create.html.twig' %}
+    {% elseif constant('Claroline\\DropZoneBundle\\Event\\Log\\LogDocumentDeleteEvent::ACTION') == log.action %}
+        {% include 'ClarolineDropZoneBundle:Log:log_details_document_delete.html.twig' %}
+    {% elseif constant('Claroline\\DropZoneBundle\\Event\\Log\\LogDocumentOpenEvent::ACTION') == log.action %}
+        {% include 'ClarolineDropZoneBundle:Log:log_details_document_open.html.twig' %}
+    {% elseif constant('Claroline\\DropZoneBundle\\Event\\Log\\LogCorrectionStartEvent::ACTION') == log.action %}
+        {% include 'ClarolineDropZoneBundle:Log:log_details_correction_start.html.twig' %}
+    {% elseif constant('Claroline\\DropZoneBundle\\Event\\Log\\LogCorrectionEndEvent::ACTION') == log.action %}
+        {% include 'ClarolineDropZoneBundle:Log:log_details_correction_end.html.twig' %}
+    {% elseif constant('Claroline\\DropZoneBundle\\Event\\Log\\LogCorrectionUpdateEvent::ACTION') == log.action %}
+        {% include 'ClarolineDropZoneBundle:Log:log_details_correction_update.html.twig' %}
+    {% elseif constant('Claroline\\DropZoneBundle\\Event\\Log\\LogCorrectionDeleteEvent::ACTION') == log.action %}
+        {% include 'ClarolineDropZoneBundle:Log:log_details_correction_delete.html.twig' %}
+    {% elseif constant('Claroline\\DropZoneBundle\\Event\\Log\\LogCorrectionValidationChangeEvent::ACTION') == log.action %}
+        {% include 'ClarolineDropZoneBundle:Log:log_details_correction_validation_change.html.twig' %}
+    {% elseif constant('Claroline\\DropZoneBundle\\Event\\Log\\LogDropEvaluateEvent::ACTION') == log.action %}
+        {% include 'ClarolineDropZoneBundle:Log:log_details_drop_evaluate.html.twig' %}
+    {% elseif constant('Claroline\\DropZoneBundle\\Event\\Log\\LogDropReportEvent::ACTION') == log.action %}
+         {% include  'ClarolineDropZoneBundle:Log:log_details_drop_report.html.twig' %}
+    {% elseif constant('Claroline\\DropZoneBundle\\Event\\Log\\LogCorrectionReportEvent::ACTION') == log.action %}
+         {% include  'ClarolineDropZoneBundle:Log:log_details_correction_report.html.twig' %}
+    {% elseif constant('Claroline\\DropZoneBundle\\Event\\Log\\LogDropGradeAvailableEvent::ACTION') == log.action %}
+         {% include  'ClarolineDropZoneBundle:Log:log_details_drop_grade_available.html.twig' %}
+    {% elseif constant('Claroline\\DropZoneBundle\\Event\\Log\\LogDropzoneManualStateChangedEvent::ACTION') == log.action %}
+        {% include  'ClarolineDropZoneBundle:Log:log_details_dropzone_manualState.html.twig' %}
+    {% endif %}
+{% endblock %}

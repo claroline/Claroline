@@ -55,12 +55,13 @@ class PeerDrop extends Component {
           {...this.props}
         />
         <CorrectionForm
+          navigate={this.props.history.push}
           correction={generateCorrectionGrades(this.getCorrection(), this.props.dropzone)}
           dropzone={this.props.dropzone}
           saveCorrection={this.saveCorrection}
           showSubmitButton={true}
-          submitCorrection={this.props.submitCorrection(this.props.history.push)}
-          cancelCorrection={this.cancelCorrection(this.props.history.push)}
+          submitCorrection={this.props.submitCorrection}
+          cancelCorrection={this.cancelCorrection}
         />
       </div> :
       <div className="alert alert-warning">
@@ -96,7 +97,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     saveCorrection: (correction) => dispatch(correctionActions.saveCorrection(correction)),
-    submitCorrection: (correctionId, navigate) => dispatch(actions.submitCorrection(correctionId, navigate))
+    submitCorrection: (correctionId, navigate) => dispatch(actions.submitCorrection(correctionId, navigate)).then(() => {
+      navigate('/')
+    })
   }
 }
 

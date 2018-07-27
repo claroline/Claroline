@@ -13,7 +13,7 @@ import {actions} from '#/plugin/drop-zone/resources/dropzone/correction/actions'
 // TODO : restore list grid display
 
 const DropsList = props =>
-  <section className="resource-section">
+  <section className="resource-section drop-list">
     <h2>{trans('corrections_management', {}, 'dropzone')}</h2>
 
     <DataListContainer
@@ -24,7 +24,8 @@ const DropsList = props =>
       }}
       primaryAction={(row) => ({
         type: 'link',
-        target: `/drop/${row.id}`
+        target: `/drop/${row.id}`,
+        label: trans('correct_a_copy', {}, 'dropzone')
       })}
       definition={[
         {
@@ -54,6 +55,16 @@ const DropsList = props =>
           label: trans('submitted', {}, 'dropzone'),
           type: 'boolean'
         }, {
+          name: 'unlockedDrop',
+          label: trans('unlocked', {}, 'dropzone'),
+          type: 'boolean',
+          displayed: true
+        }, {
+          name: 'autoClosedDrop',
+          label: trans('incomplete', {}, 'platform'),
+          type: 'boolean',
+          displayed: true
+        }, {
           name: 'evaluated',
           label: trans('evaluated', {}, 'dropzone'),
           type: 'boolean',
@@ -67,16 +78,6 @@ const DropsList = props =>
           filterable: false,
           sortable: false
         }, {
-          name: 'unlockedDrop',
-          label: trans('unlocked', {}, 'dropzone'),
-          type: 'boolean',
-          displayed: true
-        }, {
-          name: 'autoClosedDrop',
-          label: trans('incomplete', {}, 'platform'),
-          type: 'boolean',
-          displayed: true
-        }, {
           name: 'score',
           label: trans('score', {}, 'platform'),
           type: 'score',
@@ -87,6 +88,13 @@ const DropsList = props =>
         }
       ]}
       actions={(rows) => [
+        {
+          type: 'link',
+          icon: 'fa fa-fw fa-pencil',
+          label: trans('correct_the_copy', {}, 'dropzone'),
+          target: `/drop/${rows[0].id}`,
+          scope: ['object']
+        },
         {
           type: 'callback',
           icon: 'fa fa-fw fa-unlock',
@@ -99,7 +107,7 @@ const DropsList = props =>
           icon: 'fa fa-fw fa-undo',
           label: trans('cancel_drop_submission', {}, 'dropzone'),
           displayed: rows[0].finished,
-          callback: (rows) => props.cancelDrop(rows[0].id),
+          callback: () => props.cancelDrop(rows[0].id),
           scope: ['object'] // todo should be selection action too
         }, {
           type: 'callback',

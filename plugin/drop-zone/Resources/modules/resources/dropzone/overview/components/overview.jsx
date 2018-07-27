@@ -23,10 +23,8 @@ const OverviewComponent = props =>
       <span className="empty-text">{trans('no_instruction', {}, 'dropzone')}</span>
     }
     progression={{
-      status: props.userEvaluation ? props.userEvaluation.status : undefined,
-      statusTexts: {
-        opened: 'Vous n\'avez jamais soumis de travaux.'
-      },
+      status: props.dropStatus,
+      statusTexts: constants.DROP_STATUS,
       score: {
         displayed: props.dropzone.display.showScore,
         current: props.myDrop ? props.myDrop.score : null,
@@ -105,7 +103,7 @@ OverviewComponent.propTypes = {
     Object.keys(constants.PLANNING_STATES.all)
   ).isRequired,
   userEvaluation: T.shape({
-    status: T.string.isRequired
+    status: T.string
   }),
   errorMessage: T.string,
   teams: T.arrayOf(T.shape({
@@ -115,7 +113,8 @@ OverviewComponent.propTypes = {
   startDrop: T.func.isRequired,
   history: T.shape({
     push: T.func.isRequired
-  }).isRequired
+  }).isRequired,
+  dropStatus: T.string
 }
 
 OverviewComponent.defaultProps = {
@@ -135,13 +134,14 @@ const Overview = connect(
     currentState: select.currentState(state),
     userEvaluation: select.userEvaluation(state),
     errorMessage: select.errorMessage(state),
-    teams: select.teams(state)
+    teams: select.teams(state),
+    dropStatus: select.getMyDropStatus(state)
   }),
   (dispatch) => ({
     startDrop(dropzoneId, dropType, teams = [], navigate) {
       switch (dropType) {
         case constants.DROP_TYPE_USER :
-          dispatch(actions.initializeMyDrop(dropzoneId, navigate))
+          dispatch(actions.initializeMyDrop(dropzoneId, null, navigate))
           break
         case constants.DROP_TYPE_TEAM :
           if (teams.length === 1) {

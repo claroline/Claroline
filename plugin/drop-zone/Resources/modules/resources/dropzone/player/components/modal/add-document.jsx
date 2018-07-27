@@ -4,6 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {registry} from '#/main/app/modals/registry'
 import {trans} from '#/main/core/translation'
 import {DataFormModal} from '#/main/core/data/form/modals/components/data-form.jsx'
+import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 
@@ -51,7 +52,7 @@ class AddDocumentModal extends Component {
                 name: 'data',
                 type: this.state.type,
                 label: trans('document'),
-                displayed: null !== this.state.type,
+                displayed: null !== this.state.type && constants.DOCUMENT_TYPE_RESOURCE !== this.state.type,
                 required: true,
                 options: {
                   autoUpload: false
@@ -60,13 +61,31 @@ class AddDocumentModal extends Component {
             ]
           }
         ]}
-      />
+      >
+        { null !== this.state.type && constants.DOCUMENT_TYPE_RESOURCE === this.state.type &&
+          <EmptyPlaceholder
+            size="lg"
+            icon="fa fa-folder"
+            title={''}
+          >
+            <button
+              type="button"
+              className="btn btn-primary btn-emphasis"
+              onClick={() => this.props.pickResource(this.state)}
+            >
+              <span className="fa fa-fw fa-plus icon-with-text-right"/>
+              {trans('add_resource')}
+            </button>
+          </EmptyPlaceholder>
+        }
+      </DataFormModal>
     )
   }
 }
 
 AddDocumentModal.propTypes = {
   save: T.func.isRequired,
+  pickResource: T.func.isRequired,
   allowedDocuments: T.arrayOf(
     T.oneOf(Object.keys(constants.DOCUMENT_TYPES))
   ).isRequired

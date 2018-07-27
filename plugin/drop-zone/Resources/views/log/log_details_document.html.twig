@@ -1,0 +1,12 @@
+<dl class="dl-horizontal">
+    <dt>{{ (document.type~'_type')|trans({}, 'dropzone') }}</dt>
+    {% if document.url is not null %}
+        <dd><a href="{{ document.url }}">{{ document.url }}</a> </dd>
+    {% elseif document.resourceNode is defined and document.resourceNode is not null %}
+        <dd><a href="{{ path('claro_resource_open', {'resourceType': document.resourceNode.type, 'action': 'open', 'node': document.resourceNode.id})}}">{{ document.resourceNode.name }}</a></dd>
+    {% elseif document.file is defined and document.file is not null %}
+        <dd><a href="{{ path('claro_dropzone_document_download', {'document': document.id}) }}">{{ document.file.name }}</a></dd>
+    {% else %}
+        <dd>{{ 'Unrecognized type'|trans({}, 'dropzone') }}</dd>
+    {% endif %}
+</dl>

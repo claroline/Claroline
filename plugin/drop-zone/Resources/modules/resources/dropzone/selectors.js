@@ -101,23 +101,32 @@ const currentState = createSelector(
     } else {
       // auto planning, calculate state from date ranges
       const currentDate = now()
-
       if (currentDate >= dropzone.planning.drop[0]) {
-        if (currentDate > dropzone.planning.drop[1] && currentDate > dropzone.planning.review[1]) {
-          currentState = constants.STATE_FINISHED
-        } else if (currentDate > dropzone.planning.drop[1] && currentDate < dropzone.planning.review[0]) {
-          currentState = constants.STATE_WAITING_FOR_PEER_REVIEW
-        } else {
-          if (dropzone.planning.drop[0] <= currentDate && currentDate <= dropzone.planning.drop[1]) {
+        if (constants.REVIEW_TYPE_MANAGER === dropzone.parameters.reviewType) {
+          //manager review mode
+          //finished if end deposit date is reached
+          if (currentDate > dropzone.planning.drop[1]) {
+            currentState = constants.STATE_FINISHED
+          } else if(currentDate <= dropzone.planning.drop[1]){
             currentState = constants.STATE_ALLOW_DROP
           }
-          if (dropzone.planning.review[0] <= currentDate && currentDate <= dropzone.planning.review[1]) {
-            currentState = constants.STATE_PEER_REVIEW
+        } else if(constants.REVIEW_TYPE_PEER === dropzone.parameters.reviewType){
+          //peer review mode
+          //finished if end deposit date and review end date are reached
+          if(currentDate > dropzone.planning.drop[1] ) {
+            if (currentDate < dropzone.planning.review[0]) {
+              currentState = constants.STATE_WAITING_FOR_PEER_REVIEW
+            } else if (currentDate >= dropzone.planning.review[0] && currentDate <= dropzone.planning.review[1]) {
+              currentState = constants.STATE_PEER_REVIEW
+            } else {
+              currentState = constants.STATE_FINISHED
+            }
+          } else{
+            currentState = constants.STATE_ALLOW_DROP
           }
         }
       }
     }
-
     return currentState
   }
 )
@@ -233,6 +242,16 @@ const peerReviewDisabledMessages = createSelector(
   }
 )
 
+const getMyDropStatus = createSelector(
+  [myDrop],
+  (myDrop) => {
+    if(myDrop){
+      return myDrop.finished ? constants.DROP_COMPLETED : constants.DROP_IN_PROGRESS
+    }
+    return constants.DROP_NOT_ATTEMPTED
+  }
+)
+
 export const select = {
   user,
   userEvaluation,
@@ -255,5 +274,6 @@ export const select = {
   myTeamId,
   errorMessage,
   dropDisabledMessages,
-  peerReviewDisabledMessages
+  peerReviewDisabledMessages,
+  getMyDropStatus
 }

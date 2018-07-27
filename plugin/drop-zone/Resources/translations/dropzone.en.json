@@ -12,6 +12,7 @@
     "compilatio_configuration": "Compilatio configuration",
     "complete_my_copy": "Complete my copy",
     "correct_a_copy": "Correct a copy",
+    "correct_the_copy": "Correct this copy",
     "correction": "Correction & Rating",
     "correction_denial_label": "Allow the learners to report a correction they perceive to be unfair.",
     "correction_from": "Correction from «%name%»",
@@ -145,5 +146,8 @@
     "show_evaluation": "Show my evaluation",
     "continue_evaluation": "Continue my evaluation",
     "submit_my_drop": "Submit my participation",
-    "submit_my_drop_confirm": "Are you sure you want to submit your participation? This action is final and no further modifications will be possible."
+    "submit_my_drop_confirm": "Are you sure you want to submit your participation? This action is final and no further modifications will be possible.",
+    "evaluation_status_not_attempted": "You haven't started the evaluation yet",
+    "evaluation_status_opened": "Evaluation pending" ,
+    "evaluation_status_completed": "You completed the evaluation"
 }

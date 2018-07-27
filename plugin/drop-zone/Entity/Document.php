@@ -342,4 +342,28 @@ class Document
     {
         $this->toolDocuments->clear();
     }
+
+    /**
+     * @return mixed
+     */
+    public function toArray()
+    {
+        $json = [
+            'id' => $this->getUuid(),
+            'type' => $this->getType(),
+            'url' => $this->getUrl(),
+        ];
+        if (null !== $this->getResource()) {
+            $json['resourceNode'] = [
+                'id' => $this->getResource()->getUuid(),
+                'name' => $this->getResource()->getName(),
+                'type' => $this->getResource()->getResourceType()->getName(),
+            ];
+        }
+        if (null !== $this->getFile()) {
+            $json['file'] = $this->getFile();
+        }
+
+        return $json;
+    }
 }
