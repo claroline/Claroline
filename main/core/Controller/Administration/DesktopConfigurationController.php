@@ -16,8 +16,8 @@ use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\SecurityExtraBundle\Annotation as SEC;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -25,6 +25,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * @DI\Tag("security.secure_service")
  * @SEC\PreAuthorize("canOpenAdminTool('desktop_and_home')")
+ * @TODO clean deleted methods
  */
 class DesktopConfigurationController extends Controller
 {
@@ -59,7 +60,7 @@ class DesktopConfigurationController extends Controller
      */
     public function adminDesktopConfigMenuAction()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -85,11 +86,11 @@ class DesktopConfigurationController extends Controller
         $orderedTools = $this->toolManager
             ->getConfigurableDesktopOrderedToolsByTypeForAdmin($menuType);
 
-        return array(
+        return [
             'tools' => $tools,
             'orderedTools' => $orderedTools,
             'type' => $menuType,
-        );
+        ];
     }
 
     /**
@@ -172,19 +173,19 @@ class DesktopConfigurationController extends Controller
      */
     public function adminDesktopHomeLockManagementAction()
     {
-        $roles = array();
-        $options = array();
+        $roles = [];
+        $options = [];
         $platformRoles = $this->roleManager->getAllPlatformRoles();
 
         foreach ($platformRoles as $role) {
-            if ($role->getName() !== 'ROLE_ADMIN') {
+            if ('ROLE_ADMIN' !== $role->getName()) {
                 $roles[] = $role;
                 $roleOptions = $this->roleManager->getRoleOptions($role);
                 $options[$role->getId()] = $roleOptions->getDetails();
             }
         }
 
-        return array('roles' => $roles, 'options' => $options);
+        return ['roles' => $roles, 'options' => $options];
     }
 
     /**
@@ -201,7 +202,7 @@ class DesktopConfigurationController extends Controller
     {
         $roleOptions = $this->roleManager->getRoleOptions($role);
         $details = $roleOptions->getDetails();
-        $details['home_lock'] = ($locked === '1');
+        $details['home_lock'] = ('1' === $locked);
         $roleOptions->setDetails($details);
         $this->roleManager->persistRoleOptions($roleOptions);
 

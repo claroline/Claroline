@@ -80,6 +80,15 @@ class WidgetContainer
     private $instances;
 
     /**
+     * The position of the instance inside its container.
+     *
+     * @ORM\Column(name="position", type="integer", nullable=true)
+     *
+     * @var int
+     */
+    private $position = 0;
+
+    /**
      * WidgetContainer constructor.
      */
     public function __construct()
@@ -217,5 +226,25 @@ class WidgetContainer
         if ($this->instances->contains($instance)) {
             $this->instances->removeElement($instance);
         }
+    }
+
+    /**
+     * Get position.
+     *
+     * @return int
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * Set position.
+     *
+     * @param int $position
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
     }
 }
