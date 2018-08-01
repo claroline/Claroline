@@ -1,29 +1,78 @@
-import React from 'react'
+import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {url} from '#/main/app/api'
-
-import {FormContainer} from '#/main/core/data/form/containers/form'
 import {actions as formActions} from '#/main/core/data/form/actions'
+
+import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
+import {FormContainer} from '#/main/core/data/form/containers/form'
 import {select as formSelect} from '#/main/core/data/form/selectors'
+import {actions} from '#/main/core/workspace/creation/store/actions'
+import {actions as logActions} from '#/main/core/workspace/creation/components/log/actions'
+import {Logs} from '#/main/core/workspace/creation/components/log/components/logs.jsx'
+import {withRouter} from '#/main/app/router'
 
-// easy selection for restrictions
-const restrictByDates   = (workspace) => workspace.restrictions.enableDates        || (workspace.restrictions.dates && 0 !== workspace.restrictions.dates.length)
-const restrictUsers     = (workspace) => workspace.restrictions.enableMaxUsers     || 0 === workspace.restrictions.maxUsers || !!workspace.restrictions.maxUsers
-const restrictResources = (workspace) => workspace.restrictions.enableMaxResources || 0 === workspace.restrictions.maxResources || !!workspace.restrictions.maxResources
-const restrictStorage   = (workspace) => workspace.restrictions.enableMaxStorage   || !!workspace.restrictions.maxStorage
+class WorkspaceComponent extends Component
+{
+  constructor(props) {
+    super(props)
 
-// TODO : finish implementation (open resource / open tool)
-// TODO : add tools
+    this.state = {
+      refresh: false
+    }
+  }
 
-const WorkspaceFormComponent = (props) => {
-  return(
-    <div>
+  refreshLog() {
+    const props = this.props
+
+    if (this.state.refresh) {
+      if (!props.logData.end) {
+        let loader = setInterval(() => {
+
+          clearInterval(loader)
+
+          props.loadLog(props.workspace.code)
+        }, 1500)
+      } else {
+        props.history.push('/workspaces')
+      }
+
+    }
+  }
+
+  componentDidUpdate()
+  {
+    this.refreshLog()
+  }
+
+  render() {
+    const props = this.props
+    const modelChoices = {}
+    let defaultModel = null
+
+    props.models.data.forEach(model => {
+      modelChoices[model.uuid] = model.code
+      if (model.code === 'default_workspace') {
+        defaultModel = model.code
+      }
+    })
+
+    return (
       <FormContainer
-        {...props}
-        meta={true}
+        level={3}
+        name="workspaces.current"
+        buttons={true}
+        save={{
+          type: 'callback',
+          icon: 'fa fa-fw fa-upload',
+          label: trans('save', {}, 'actions'),
+          callback: () => {
+            props.save(props.workspace)
+            this.refreshLog()
+            this.setState({refresh: true})
+          }
+        }}
         sections={[
           {
             title: trans('general'),
@@ -39,6 +88,16 @@ const WorkspaceFormComponent = (props) => {
                 type: 'string',
                 label: trans('code'),
                 required: true
+              }, {
+                name: 'model',
+                type: 'choice',
+                label: trans('model'),
+                required: true,
+                options: {
+                  condensed: true,
+                  choices: modelChoices
+                },
+                value: defaultModel
               }
             ]
           }, {
@@ -56,12 +115,7 @@ const WorkspaceFormComponent = (props) => {
                 name: 'meta.model',
                 label: trans('model'),
                 type: 'boolean',
-                disabled: !props.new
-              }, {
-                name: 'meta.personal',
-                label: trans('personal'),
-                type: 'boolean',
-                disabled: true
+                disabled: false
               }, {
                 name: 'meta.forceLang',
                 type: 'boolean',
@@ -86,6 +140,7 @@ const WorkspaceFormComponent = (props) => {
             fields: [
               {
                 name: 'opening.type',
+
                 type: 'choice',
                 label: trans('type'),
                 required: true,
@@ -134,7 +189,8 @@ const WorkspaceFormComponent = (props) => {
                 type: 'boolean',
                 label: trans('showBreadcrumbs')
               }, {
-                name: 'display.showTools',
+                name: 'display.showTools'
+                ,
                 type: 'boolean',
                 label: trans('showTools')
               }
@@ -142,35 +198,26 @@ const WorkspaceFormComponent = (props) => {
           }, {
             icon: 'fa fa-fw fa-user-plus',
             title: trans('registration'),
-            fields: [
-              {
-                name: 'registration.url',
-                type: 'url',
-                label: trans('registration_url'),
-                calculated: (workspace) => url(['claro_workspace_subscription_url_generate', {slug: workspace.meta ? workspace.meta.slug : ''}, true]),
-                required: true,
-                disabled: true,
-                displayed: !props.new
-              }, {
-                name: 'registration.selfRegistration',
-                type: 'boolean',
-                label: trans('activate_self_registration'),
-                help: trans('self_registration_workspace_help'),
-                linked: [
-                  {
-                    name: 'registration.validation',
-                    type: 'boolean',
-                    label: trans('validate_registration'),
-                    help: trans('validate_registration_help'),
-                    displayed: (workspace) => workspace.registration && workspace.registration.selfRegistration
-                  }
-                ]
-              }, {
-                name: 'registration.selfUnregistration',
-                type: 'boolean',
-                label: trans('activate_self_unregistration'),
-                help: trans('self_unregistration_workspace_help')
-              }
+            fields: [ {
+              name: 'registration.selfRegistration',
+              type: 'boolean',
+              label: trans('activate_self_registration'),
+              help: trans('self_registration_workspace_help'),
+              linked: [
+                {
+                  name: 'registration.validation',
+                  type: 'boolean',
+                  label: trans('validate_registration'),
+                  help: trans('validate_registration_help'),
+                  displayed: (workspace) => workspace.registration && workspace.registration.selfRegistration
+                }
+              ]
+            }, {
+              name: 'registration.selfUnregistration',
+              type: 'boolean',
+              label: trans('activate_self_unregistration'),
+              help: trans('self_unregistration_workspace_help')
+            }
             ]
           }, {
             icon: 'fa fa-fw fa-key',
@@ -185,7 +232,6 @@ const WorkspaceFormComponent = (props) => {
                 name: 'restrictions.enableDates',
                 label: trans('restrict_by_dates'),
                 type: 'boolean',
-                calculated: restrictByDates,
                 onChange: activated => {
                   if (!activated) {
                     props.updateProp('restrictions.dates', [])
@@ -196,7 +242,6 @@ const WorkspaceFormComponent = (props) => {
                     name: 'restrictions.dates',
                     type: 'date-range',
                     label: trans('access_dates'),
-                    displayed: restrictByDates,
                     required: true,
                     options: {
                       time: true
@@ -207,7 +252,6 @@ const WorkspaceFormComponent = (props) => {
                 name: 'restrictions.enableMaxUsers',
                 type: 'boolean',
                 label: trans('restrict_max_users'),
-                calculated: restrictUsers,
                 onChange: activated => {
                   if (!activated) {
                   // reset max users field
@@ -219,7 +263,6 @@ const WorkspaceFormComponent = (props) => {
                     name: 'restrictions.maxUsers',
                     type: 'number',
                     label: trans('maxUsers'),
-                    displayed: restrictUsers,
                     required: true,
                     options: {
                       min: 0
@@ -230,7 +273,6 @@ const WorkspaceFormComponent = (props) => {
                 name: 'restrictions.enableMaxResources',
                 type: 'boolean',
                 label: trans('restrict_max_resources'),
-                calculated: restrictResources,
                 onChange: activated => {
                   if (!activated) {
                   // reset max users field
@@ -242,7 +284,6 @@ const WorkspaceFormComponent = (props) => {
                     name: 'restrictions.maxResources',
                     type: 'number',
                     label: trans('max_amount_resources'),
-                    displayed: restrictResources,
                     required: true,
                     options: {
                       min: 0
@@ -253,7 +294,6 @@ const WorkspaceFormComponent = (props) => {
                 name: 'restrictions.enableMaxStorage',
                 type: 'boolean',
                 label: trans('restrict_max_storage'),
-                calculated: restrictStorage,
                 onChange: activated => {
                   if (!activated) {
                   // reset max users field
@@ -265,7 +305,7 @@ const WorkspaceFormComponent = (props) => {
                     name: 'restrictions.maxStorage',
                     type: 'storage',
                     label: trans('max_storage_size'),
-                    displayed: restrictStorage,
+                    displayed: true,
                     required: true,
                     options: {
                       min: 0
@@ -287,30 +327,50 @@ const WorkspaceFormComponent = (props) => {
           }
         ]}
       >
-        {props.children}
+        <Logs/>
       </FormContainer>
-    </div>
-  )
+    )}
+
 }
 
-WorkspaceFormComponent.propTypes = {
-  children: T.any,
-  // from redux
-  new: T.bool.isRequired,
-  updateProp: T.func.isRequired
+WorkspaceComponent.propTypes = {
+  loadLog: T.func,
+  history: T.object,
+  updateProp: T.func,
+  save: T.func,
+  workspace: T.shape(
+    WorkspaceTypes.propTypes
+  ).isRequired,
+  models: T.array.isRequired,
+  logData: T.object
 }
 
-const WorkspaceForm = connect(
-  (state, ownProps) => ({
-    new: formSelect.isNew(formSelect.form(state, ownProps.name))
-  }),
+WorkspaceComponent.defaultProps = {
+  workspace: WorkspaceTypes.defaultProps
+}
+
+const ConnectedForm = withRouter(connect(
+  state => {
+    return {
+      models: state.models,
+      workspace: formSelect.data(formSelect.form(state, 'workspaces.current')),
+      logData: state.workspaces.creation.log //always {} for some reason
+      //logData: state
+    }
+  },
   (dispatch, ownProps) =>({
     updateProp(propName, propValue) {
       dispatch(formActions.updateProp(ownProps.name, propName, propValue))
+    },
+    loadLog(filename) {
+      dispatch(logActions.load(filename))
+    },
+    save(workspace) {
+      dispatch(actions.save(workspace))
     }
   })
-)(WorkspaceFormComponent)
+)(WorkspaceComponent))
 
 export {
-  WorkspaceForm
+  ConnectedForm as WorkspaceForm
 }

@@ -54,7 +54,8 @@ const Workspace = {
       personal: false,
       usedStorage: 0,
       totalUsers: 0,
-      totalResources: 0
+      totalResources: 0,
+      forceLang: false
     },
     roles: [],
     opening: {

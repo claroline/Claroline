@@ -1411,7 +1411,7 @@ class WorkspaceManager
           $this->getArrayRolesByWorkspace($newWorkspace),
           $user,
           $baseRoot,
-            $resourceInfo
+          $resourceInfo
         );
 
         //workspace needs to be flushed with the new implementation
@@ -1465,7 +1465,7 @@ class WorkspaceManager
         array $workspaceRoles,
         User $user,
         ResourceNode $rootNode,
-        &$resourceInfos
+        &$resourceInfos = []
     ) {
         $ids = [];
         $resourceNodes = array_filter($resourceNodes, function ($node) use ($ids) {
@@ -1646,11 +1646,11 @@ class WorkspaceManager
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param array                                            $homeTabs
      */
-    private function duplicateHomeTabs(
+    public function duplicateHomeTabs(
         Workspace $source,
         Workspace $workspace,
         array $homeTabs,
-        &$resourceInfos,
+        &$resourceInfos = [],
         &$tabInfos = []
     ) {
         $this->log('Duplicating home tabs...');
@@ -1682,6 +1682,7 @@ class WorkspaceManager
         $this->log('Duplicating roles...');
         $guid = $workspace->getGuid();
         $roles = $source->getRoles();
+
         foreach ($roles as $role) {
             $unusedRolePartName = '_'.$role->getWorkspace()->getGuid();
             $roleName = str_replace($unusedRolePartName, '', $role->getName());

@@ -97,7 +97,7 @@ class TransferProvider
 
         $schema = $executor->getSchema();
         //use the translator here
-        $jsonLogger->log('Building objects from data...');
+        $jsonLogger->info('Building objects from data...');
 
         if (array_key_exists('$root', $schema)) {
             $jsonSchema = $this->serializer->getSchema($schema['$root']);
@@ -125,7 +125,7 @@ class TransferProvider
         $i = 0;
         $this->om->startFlushSuite();
         $total = count($data);
-        $jsonLogger->log('Executing operations...');
+        $jsonLogger->info('Executing operations...');
 
         $jsonLogger->set('total', $total);
         $jsonLogger->set('processed', 0);
@@ -143,12 +143,12 @@ class TransferProvider
             try {
                 $successData = [];
                 $loaded[] = $executor->execute($data, $successData);
-                $jsonLogger->log("Operation {$i}/{$total} is a success");
+                $jsonLogger->info("Operation {$i}/{$total} is a success");
                 $jsonLogger->increment('success');
                 $loggedSuccess = array_merge_recursive($loggedSuccess, $successData);
                 $jsonLogger->set('data.success', $loggedSuccess);
             } catch (\Exception $e) {
-                $jsonLogger->log("Operation {$i}/{$total} failed");
+                $jsonLogger->info("Operation {$i}/{$total} failed");
                 $jsonLogger->increment('error');
 
                 if ($e instanceof InvalidDataException) {
@@ -180,7 +180,7 @@ class TransferProvider
 
                     $loaded = [];
                 } catch (\Exception $e) {
-                    $jsonLogger->log($e->getMessage());
+                    $jsonLogger->info($e->getMessage());
                 }
             }
 

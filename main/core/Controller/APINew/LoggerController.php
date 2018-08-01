@@ -22,7 +22,7 @@ class LoggerController
 {
     /**
      * @DI\InjectParams({
-     *     "logDir"     = @DI\Inject("%claroline.param.import_log_dir%")
+     *     "logDir" = @DI\Inject("%claroline.param.log_dir%")
      * })
      */
     public function __construct($logDir)
@@ -31,13 +31,15 @@ class LoggerController
     }
 
     /**
-     * @EXT\Route("/{name}", name="apiv2_logger_get")
+     * @EXT\Route("/{subdir}/{name}", name="apiv2_logger_get")
      * @EXT\Method("GET")
+     *
+     * @todo update import log
      *
      * @return Response
      */
-    public function getAction($name)
+    public function getAction($subdir, $name)
     {
-        return new Response(file_get_contents($this->logDir.'/'.$name.'.json'));
+        return new Response(file_get_contents($this->logDir.$subdir.DIRECTORY_SEPARATOR.$name.'.json'));
     }
 }

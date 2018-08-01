@@ -10,6 +10,8 @@ parameters:
     claroline.param.vendor_directory: "%kernel.root_dir%/../vendor"
     claroline.param.claroline_log: "%kernel.root_dir%/logs/claroline_debug.log"
     claroline.param.import_log_dir: "%kernel.root_dir%/logs/transfer"
+    claroline.param.log_dir: "%kernel.root_dir%/logs/"
+    claroline.param.workspace_log_dir: "%kernel.root_dir%/logs/workspace"
     claroline.param.root_directory: "%kernel.root_dir%/.."
     claroline.param.web_directory: "%claroline.param.root_directory%/web"
     claroline.param.web_js_directory: "%claroline.param.web_directory%/js"

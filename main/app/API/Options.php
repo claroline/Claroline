@@ -47,6 +47,7 @@ final class Options
 
     //do something better with these options
 
+    const LIGHT_COPY = 'light_copy';
     const NO_LOG = 'no_log';
     const SOFT_DELETE = 'soft_delete';
     const THROW_VALIDATION_EXCEPTION = 'throw_validation_exception';
@@ -67,6 +68,9 @@ final class Options
     //for workspace
     const WORKSPACE_MODEL = 'workspace_model';
     const WORKSPACE_FETCH_GROUPS = 'workspace_fetch_groups';
+    const WORKSPACE_FETCH_ORDERED_TOOLS = 'workspace_fetch_ordered_tools';
+    const WORKSPACE_FETCH_HOME = 'workspace_fetch_home';
+    const WORKSPACE_FETCH_RESOURCES = 'workspace_fetch_resources';
 
     //for role
     const SERIALIZE_COUNT_USER = 'serialize_count_user';

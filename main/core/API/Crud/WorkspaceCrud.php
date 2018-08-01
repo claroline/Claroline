@@ -65,15 +65,23 @@ class WorkspaceCrud
         $this->om->startFlushSuite();
 
         $workspace = $this->manager->createWorkspace($event->getObject());
+        $options = $event->getOptions();
         $user = $this->tokenStorage->getToken()->getUser();
-
-        $model = $workspace->getWorkspaceModel() ? $workspace->getWorkspaceModel() : $this->manager->getDefaultModel();
-        $workspace = $this->manager->copy($model, $workspace, $workspace->isModel());
 
         if ($user instanceof User) {
             $workspace->setCreator($user);
             $workspace->addOrganization($user->getMainOrganization());
         }
+
+        if (in_array(Options::LIGHT_COPY, $options)) {
+            $this->om->endFlushSuite();
+
+            return $workspace;
+        }
+
+        $model = $workspace->getWorkspaceModel() ? $workspace->getWorkspaceModel() : $this->manager->getDefaultModel();
+        $workspace = $this->manager->copy($model, $workspace, false);
+
         $this->om->endFlushSuite();
 
         return $workspace;

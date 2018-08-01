@@ -28,7 +28,8 @@ bootstrap(
       parameters: {
         data: initialData.parameters,
         originalData: initialData.parameters
-      }
+      },
+      models: initialData.models
     }
   }
 )

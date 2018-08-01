@@ -126,6 +126,12 @@ class ResourceNodeSerializer
             ];
         }
 
+        if (in_array(Options::IS_RECURSIVE, $options)) {
+            $serializedNode['children'] = array_map(function (ResourceNode $node) {
+                return $this->serialize($node);
+            }, $resourceNode->getChildren()->toArray());
+        }
+
         return $this->decorate($resourceNode, $serializedNode, $options);
     }
 

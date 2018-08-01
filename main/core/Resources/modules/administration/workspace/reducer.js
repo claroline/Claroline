@@ -4,8 +4,11 @@ import {makeListReducer} from '#/main/core/data/list/reducer'
 import {makeFormReducer} from '#/main/core/data/form/reducer'
 import {FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
 
+import {reducer as creationReducer} from '#/main/core/workspace/creation/store'
+
 const reducer = {
   workspaces: combineReducers({
+    creation: creationReducer,
     picker: makeListReducer('workspaces.picker'),
     list: makeListReducer('workspaces.list', {
       filters: [
@@ -36,7 +39,8 @@ const reducer = {
       'selected.group'
     )
   }),
-  parameters: makeFormReducer('parameters')
+  parameters: makeFormReducer('parameters'),
+  models: makeReducer()
 }
 
 export {

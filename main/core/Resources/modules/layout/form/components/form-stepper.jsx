@@ -2,6 +2,8 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
+import {Button as ButtonTypes} from '#/main/app/button/prop-types'
+import {Button} from '#/main/app/action'
 import {t} from '#/main/core/translation'
 import {Redirect as RedirectTypes} from '#/main/app/router/prop-types'
 import {Router, Routes, NavLink, withRouter} from '#/main/app/router'
@@ -50,7 +52,7 @@ FormStepperNav.propTypes = {
  */
 const FormStepperFooter = props =>
   <div className="form-stepper-footer">
-    {props.nextStep &&
+    {props.nextStep && !props.action &&
       <a
         className="btn btn-next btn-link"
         href={`#${props.nextStep}`}
@@ -58,6 +60,12 @@ const FormStepperFooter = props =>
         {t('form_next_step')}
         <span className="fa fa-angle-double-right" />
       </a>
+    }
+
+    {props.action &&
+      <Button className="btn btn-next btn-link"
+        {...props.action}
+      />
     }
 
     <button
@@ -74,6 +82,8 @@ const FormStepperFooter = props =>
 
 FormStepperFooter.propTypes = {
   nextStep: T.string,
+  //find a much better definition
+  action: T.shape(ButtonTypes.propTypes),
   submit: T.shape({
     icon: T.string,
     label: T.string,
@@ -97,9 +107,11 @@ const FormStepperComponent = withRouter(props => {
       <Routes
         routes={props.steps}
         redirect={props.redirect}
+        blockingSteps={props.blockingSteps}
       />
 
       <FormStepperFooter
+        action={props.steps[activeIndex].action}
         nextStep={props.steps[activeIndex+1] ? props.steps[activeIndex+1].path : undefined}
         submit={props.submit}
       />
@@ -116,7 +128,8 @@ FormStepperComponent.propTypes = {
     component: T.any.isRequired, // todo find better typing
     exact: T.bool,
     onEnter: T.func,
-    onLeave: T.func
+    onLeave: T.func,
+    action:  T.shape(ButtonTypes.propTypes)
   })).isRequired,
   redirect: T.arrayOf(T.shape(
     RedirectTypes.propTypes
@@ -142,7 +155,8 @@ FormStepper.propTypes = {
     component: T.any.isRequired, // todo find better typing
     exact: T.bool,
     onEnter: T.func,
-    onLeave: T.func
+    onLeave: T.func,
+    action:  T.shape(ButtonTypes.propTypes)
   })).isRequired,
   redirect: T.arrayOf(T.shape(
     RedirectTypes.propTypes

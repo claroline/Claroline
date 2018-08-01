@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -40,6 +41,9 @@ class WorkspaceSerializer
     /** @var WorkspaceManager */
     private $workspaceManager;
 
+    /** @var ResourceManager */
+    private $resourceManager;
+
     /** @var SerializerProvider */
     private $serializer;
 
@@ -59,6 +63,7 @@ class WorkspaceSerializer
      *     "authorization"    = @DI\Inject("security.authorization_checker"),
      *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "resourceManager"  = @DI\Inject("claroline.manager.resource_manager"),
      *     "serializer"       = @DI\Inject("claroline.api.serializer"),
      *     "utilities"        = @DI\Inject("claroline.utilities.misc"),
      *     "fileUt"           = @DI\Inject("claroline.utilities.file"),
@@ -69,6 +74,7 @@ class WorkspaceSerializer
      * @param AuthorizationCheckerInterface $authorization
      * @param ObjectManager                 $om
      * @param WorkspaceManager              $workspaceManager
+     * @param ResourceManager               $resourceManager
      * @param SerializerProvider            $serializer
      * @param ClaroUtilities                $utilities
      * @param FileUtilities                 $fileUt
@@ -80,6 +86,7 @@ class WorkspaceSerializer
         TokenStorageInterface $tokenStorage,
         ObjectManager $om,
         WorkspaceManager $workspaceManager,
+        ResourceManager $resourceManager,
         SerializerProvider $serializer,
         ClaroUtilities $utilities,
         FileUtilities $fileUt,
@@ -89,6 +96,7 @@ class WorkspaceSerializer
         $this->authorization = $authorization;
         $this->om = $om;
         $this->workspaceManager = $workspaceManager;
+        $this->resourceManager = $resourceManager;
         $this->serializer = $serializer;
         $this->utilities = $utilities;
         $this->fileUt = $fileUt;
@@ -164,6 +172,27 @@ class WorkspaceSerializer
             $serialized['groups'] = array_map(function (Group $group) {
                 return $this->serializer->serialize($group, [Options::SERIALIZE_MINIMAL, Options::NO_COUNT]);
             }, $groups);
+        }
+
+        if (in_array(Options::WORKSPACE_FETCH_RESOURCES, $options)) {
+            $root = $this->resourceManager->getWorkspaceRoot($workspace);
+            $resources = $this->serializer->serialize($root, [Options::IS_RECURSIVE, Options::SERIALIZE_MINIMAL]);
+            $serialized['resources'] = $resources;
+        }
+
+        if (in_array(Options::WORKSPACE_FETCH_HOME, $options)) {
+            $tabs = $this->finder->search(
+              'Claroline\CoreBundle\Entity\Home\HomeTab',
+              ['filters' => ['workspace' => $workspace->getUuid()]]
+            );
+
+            $serialized['tabs'] = $tabs['data'];
+        }
+
+        if (in_array(Options::WORKSPACE_FETCH_ORDERED_TOOLS, $options)) {
+            $serialized['orderedTools'] = array_map(function ($orderedTool) {
+                return $this->serializer->serialize($orderedTool);
+            }, $workspace->getOrderedTools()->toArray());
         }
 
         return $serialized;

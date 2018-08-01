@@ -16,7 +16,11 @@
 {% endblock %}
 
 {% block content %}
-    <div class="page-container workspaces-container" data-parameters="{{ parameters | json_encode | raw | escape }}"></div>
+    <div class="page-container workspaces-container"
+      data-parameters="{{ parameters | json_encode | raw | escape }}"
+      data-models="{{ models | json_encode | raw | escape }}"
+    >
+    </div>
 {% endblock %}
 
 {% block javascripts %}
