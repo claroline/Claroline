@@ -21,6 +21,7 @@ class DataSource
 
     const CONTEXT_DESKTOP = 'desktop';
     const CONTEXT_WORKSPACE = 'workspace';
+    const CONTEXT_ADMINISTRATION = 'administration';
 
     /**
      * The name of the source.
@@ -50,6 +51,7 @@ class DataSource
     private $context = [
         self::CONTEXT_DESKTOP,
         self::CONTEXT_WORKSPACE,
+        self::CONTEXT_ADMINISTRATION,
     ];
 
     /**

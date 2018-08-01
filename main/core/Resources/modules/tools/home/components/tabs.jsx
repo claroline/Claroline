@@ -1,23 +1,30 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 
 import {trans} from '#/main/core/translation'
 import {Button} from '#/main/app/action/components/button'
+import {LinkButton} from '#/main/app/button/components/link'
 
 import {Tab as TabTypes} from '#/main/core/tools/home/prop-types'
 
 const Tabs = props =>
   <nav className="tool-nav">
     {props.tabs.map((tab) =>
-      <Button
+      <LinkButton
         key={tab.id}
-        type="link"
         className="nav-tab"
-        icon={tab.icon ? `fa fa-fw fa-${tab.icon}` : undefined}
-        label={tab.title}
         target={`${props.prefix}/tab/${tab.id}`}
         exact={true}
-      />
+      >
+        {tab.icon &&
+        <span className={classes('fa fa-fw', `fa-${tab.icon}`, tab.title && 'icon-with-text-right')} />
+        }
+        {tab.title}
+        {tab.locked &&
+          <span className="fa fa-fw fa-lock icon-with-text-left" />
+        }
+      </LinkButton>
     )}
 
     {props.create &&

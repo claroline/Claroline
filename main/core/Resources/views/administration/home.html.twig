@@ -20,12 +20,27 @@
     }}
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-main-core-home-tool.css') }}" />
+{% endblock %}
+
 {% block content %}
-    <div class="page-container home-container"></div>
+    <div
+      class="page-container desktop-container"
+      data-editable="{{ editable }}"
+      data-context="{{ context | json_encode | raw | escape }}"
+      data-tabs="{{ tabs | json_encode | raw | escape }}"
+    ></div>
 {% endblock %}
 
 {% block javascripts %}
+
     {{ parent() }}
 
-    <script src="{{ hotAsset('dist/claroline-distribution-main-core-admin-home-tool.js') }}"></script>
+    {# Translations #}
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'home' }) }}"></script>
+
+    <script src="{{ hotAsset('dist/claroline-distribution-main-core-admin-desktop-tool.js') }}"></script>
 {% endblock %}

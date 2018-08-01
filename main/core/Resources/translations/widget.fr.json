@@ -3,6 +3,8 @@
     "add_widget": "Ajouter un widget",
     "cancel_move_widget": "Annuler le déplacement",
     "insert_widget": "Déposer le widget",
+    "lock_tab": "Vérouiller l'onglet",
+    "lock_tab_help": "Un onglet vérouillé ne pourra être ni édité ni supprimé par l'utilisateur.",
     "modify_widget": "Modifier le widget",
     "move_widget": "Déplacer le widget",
     "new_section_select": "1. Choisir le style de section à ajouter",
