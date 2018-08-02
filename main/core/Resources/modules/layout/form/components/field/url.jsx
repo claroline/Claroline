@@ -7,6 +7,7 @@ import {copy} from '#/main/app/clipboard'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
 import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 const Url = props =>
   <div className="input-group">
@@ -23,7 +24,7 @@ const Url = props =>
     <span className="input-group-btn">
       <Button
         id={`clipboard-${props.id}`}
-        type="callback"
+        type={CALLBACK_BUTTON}
         tooltip="left"
         label={trans('clipboard_copy')}
         className="btn"

@@ -6,6 +6,7 @@ import {trans} from '#/main/core/translation'
 import {Routes} from '#/main/app/router'
 
 import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {Organization}  from '#/main/core/administration/user/organization/components/organization'
 import {Organizations} from '#/main/core/administration/user/organization/components/organizations'
@@ -15,7 +16,7 @@ import {select}        from '#/main/core/administration/user/organization/select
 const OrganizationTabActions = () =>
   <PageActions>
     <PageAction
-      type="link"
+      type={LINK_BUTTON}
       icon="fa fa-plus"
       label={trans('add_organization')}
       target="/organizations/form"

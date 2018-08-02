@@ -1,4 +1,4 @@
-import {makeFormReducer} from '#/main/core/data/form/reducer'
+import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 
 import {selectors} from '#/main/core/widget/content/modals/parameters/store/selectors'
 

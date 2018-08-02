@@ -4,8 +4,8 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
 import {Await} from '#/main/app/components/await'
-import {FormContainer} from '#/main/core/data/form/containers/form'
-import {select as formSelectors} from '#/main/core/data/form/selectors'
+import {FormData} from '#/main/app/content/form/containers/data'
+import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
 
 import {getWidget} from '#/main/core/widget/types'
 import {WidgetInstance as WidgetInstanceTypes} from '#/main/core/widget/content/prop-types'
@@ -22,7 +22,7 @@ class WidgetContentFormComponent extends Component {
   render() {
     return (
       <div>
-        <FormContainer
+        <FormData
           level={this.props.level}
           name={this.props.name}
           sections={[

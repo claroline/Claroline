@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
-import {LinkButton} from '#/main/app/button/components/link'
+import {LinkButton} from '#/main/app/buttons/link/components/button'
 import {ProgressBar} from '#/main/core/layout/components/progress-bar'
 
 import {Step as StepTypes} from '#/plugin/path/resources/path/prop-types'

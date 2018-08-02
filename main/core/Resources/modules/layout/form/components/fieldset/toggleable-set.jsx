@@ -3,6 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import Collapse from 'react-bootstrap/lib/Collapse'
 
+import {trans} from '#/main/core/translation'
+
 /**
  * Renders a toggleable fieldset.
  */
@@ -51,17 +53,22 @@ ToggleableSet.propTypes = {
   /**
    * Toggle button text when the section is hidden.
    */
-  showText: T.string.isRequired,
+  showText: T.string,
 
   /**
    * Toggle button text when the section is shown.
    */
-  hideText: T.string.isRequired,
+  hideText: T.string,
 
   /**
    * Sub-section content.
    */
   children: T.node.isRequired
+}
+
+ToggleableSet.defaultProps = {
+  showText: trans('show_advanced_options'),
+  hideText: trans('hide_advanced_options')
 }
 
 export {

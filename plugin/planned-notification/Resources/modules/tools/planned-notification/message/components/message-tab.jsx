@@ -6,6 +6,7 @@ import {makeId} from '#/main/core/scaffolding/id'
 import {trans} from '#/main/core/translation'
 import {Routes} from '#/main/app/router'
 import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {select} from '#/plugin/planned-notification/tools/planned-notification/selectors'
 import {actions} from '#/plugin/planned-notification/tools/planned-notification/message/actions'
@@ -15,7 +16,7 @@ import {Message} from '#/plugin/planned-notification/tools/planned-notification/
 const MessageTabActions = () =>
   <PageActions>
     <PageAction
-      type="link"
+      type={LINK_BUTTON}
       icon="fa fa-plus"
       label={trans('create_new_message', {}, 'planned_notification')}
       target="/messages/form"

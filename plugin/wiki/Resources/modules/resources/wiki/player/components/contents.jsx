@@ -1,7 +1,10 @@
 import React, {Component} from 'react'
 import {trans} from '#/main/core/translation'
 import {PropTypes as T} from 'prop-types'
-import {Button} from '#/main/app/action'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
+
+// todo : replace by stateless component
 
 class ContentSection extends Component {
   constructor(props) {
@@ -26,7 +29,7 @@ class ContentSection extends Component {
           }
           <Button
             className="title"
-            type="callback"
+            type={CALLBACK_BUTTON}
             callback={this.goToSection}
             label={this.props.section.activeContribution.title}
           />

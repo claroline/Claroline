@@ -2,6 +2,7 @@ import React from 'react'
 
 import {trans} from '#/main/core/translation'
 import {Button} from '#/main/app/action/components/button'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {UserMessage} from '#/main/core/user/message/components/user-message'
 
 const LastMessages = (props) =>
@@ -13,7 +14,7 @@ const LastMessages = (props) =>
           <h4>{message.subject.title}
             <Button
               label={trans('see_subject', {}, 'forum')}
-              type="link"
+              type={LINK_BUTTON}
               target={'/subjects/show/'+message.subject.id}
               className="btn-link"
               primary={true}

@@ -12,6 +12,8 @@ import {actions} from '#/plugin/path/resources/path/actions'
 import {select} from '#/plugin/path/resources/path/selectors'
 import {Step as StepTypes} from '#/plugin/path/resources/path/prop-types'
 
+// TODO : reuse app summary
+
 const SummaryHeader = props =>
   <header className="summary-header">
     <h3 className="h2 summary-title">

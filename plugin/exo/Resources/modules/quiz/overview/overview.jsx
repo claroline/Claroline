@@ -3,10 +3,11 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans, tex} from '#/main/core/translation'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
 import {UserEvaluation as UserEvaluationType} from '#/main/core/resource/prop-types'
-import {ResourceOverview} from '#/main/core/resource/components/overview.jsx'
+import {ResourceOverview} from '#/main/core/resource/components/overview'
 
 import {select} from '#/plugin/exo/quiz/selectors'
 import {correctionModes, markModes, SHOW_CORRECTION_AT_DATE, SHOW_SCORE_AT_NEVER} from '#/plugin/exo/quiz/enums'
@@ -91,7 +92,7 @@ const OverviewComponent = props =>
     }}
     actions={[
       {
-        type: 'link',
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-play icon-with-text-right',
         label: tex('exercise_start'),
         target: '/play',

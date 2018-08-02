@@ -7,8 +7,8 @@ import {t} from '#/main/core/translation'
 
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
-
-import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {FormData} from '#/main/app/content/form/containers/data'
 import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
 
 import {ProfileFacet as ProfileFacetTypes} from '#/main/core/user/profile/prop-types'
@@ -24,7 +24,7 @@ const FacetSection = props =>
     className="embedded-form-section"
     actions={[
       {
-        type: 'callback',
+        type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-trash-o',
         label: t('delete'),
         callback: props.remove,
@@ -32,7 +32,7 @@ const FacetSection = props =>
       }
     ]}
   >
-    <FormContainer
+    <FormData
       embedded={true}
       level={3}
       name="profile"
@@ -72,7 +72,7 @@ FacetSection.propTypes = {
 }
 
 const ProfileFacetComponent = props =>
-  <FormContainer
+  <FormData
     level={2}
     name="profile"
     className="profile-facet"
@@ -132,7 +132,7 @@ const ProfileFacetComponent = props =>
         {t('profile_facet_section_add')}
       </button>
     </div>
-  </FormContainer>
+  </FormData>
 
 ProfileFacetComponent.propTypes = {
   index: T.number.isRequired,

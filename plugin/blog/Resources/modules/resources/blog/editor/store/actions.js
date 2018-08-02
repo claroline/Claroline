@@ -1,5 +1,5 @@
 import {makeActionCreator} from '#/main/app/store/actions'
-import {actions as formActions} from '#/main/core/data/form/actions'
+import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {constants} from '#/plugin/blog/resources/blog/constants.js'
 import {actions as blogActions} from '#/plugin/blog/resources/blog/store/actions'
 import {API_REQUEST} from '#/main/app/api'

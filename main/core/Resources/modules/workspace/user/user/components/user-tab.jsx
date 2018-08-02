@@ -6,9 +6,10 @@ import {trans} from '#/main/core/translation'
 import {matchPath, Routes, withRouter} from '#/main/app/router'
 import {currentUser} from '#/main/core/user/current'
 
-import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
+import {MODAL_DATA_LIST} from '#/main/app/modals/list'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {PageActions, PageAction} from '#/main/core/layout/page'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
 import {User}    from '#/main/core/administration/user/user/components/user'
 import {Users}   from '#/main/core/workspace/user/user/components/users'
@@ -25,8 +26,7 @@ const UserTabActionsComponent = props =>
   <PageActions>
     {!matchPath(props.location.pathname, {path: '/users/form'}) &&
       <PageAction
-        id="add-role"
-        type="callback"
+        type={CALLBACK_BUTTON}
         label={trans('register_users')}
         icon="fa fa-plus"
         callback={() => props.register(props.workspace)}
@@ -36,7 +36,7 @@ const UserTabActionsComponent = props =>
 
     {getPermissionLevel(currentUser(), props.workspace) === ADMIN &&
       <PageAction
-        type="link"
+        type={LINK_BUTTON}
         icon="fa fa-pencil"
         label={trans('create_user')}
         target={trans('create_user')}
@@ -58,7 +58,7 @@ const UserTabActions = withRouter(connect(
   }),
   dispatch => ({
     register(workspace) {
-      dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
+      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-user',
         title: trans('register_users'),
         subtitle: trans('workspace_register_select_users'),
@@ -71,7 +71,7 @@ const UserTabActions = withRouter(connect(
           autoload: true
         },
         handleSelect: (users) => {
-          dispatch(modalActions.showModal(MODAL_DATA_PICKER, getModalDefinition(
+          dispatch(modalActions.showModal(MODAL_DATA_LIST, getModalDefinition(
             'fa fa-fw fa-user',
             trans('register_users'),
             workspace,

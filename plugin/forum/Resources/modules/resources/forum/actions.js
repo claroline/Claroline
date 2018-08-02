@@ -1,6 +1,6 @@
 import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST, url} from '#/main/app/api'
-import {actions as listActions} from '#/main/core/data/list/actions'
+import {actions as listActions} from '#/main/app/content/list/store'
 
 export const LAST_MESSAGES_LOAD = 'LAST_MESSAGES_LOAD'
 export const USER_NOTIFIED = 'USER_NOTIFIED'

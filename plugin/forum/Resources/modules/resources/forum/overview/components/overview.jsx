@@ -6,9 +6,10 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/core/translation'
 import {number} from '#/main/app/intl'
 import {Button} from '#/main/app/action/components/button'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {CountGauge} from '#/main/core/layout/gauge/components/count-gauge'
 import {HtmlText} from '#/main/core/layout/components/html-text'
-import {actions as listActions} from '#/main/core/data/list/actions'
+import {actions as listActions} from '#/main/app/content/list/store'
 import {TagCloud} from '#/main/app/content/meta/components/tag-cloud'
 
 import {Forum as ForumType} from '#/plugin/forum/resources/forum/prop-types'
@@ -38,7 +39,7 @@ const OverviewComponent = props =>
             <h3 className="sr-only">{trans('resource_overview_actions', {}, 'resource')}</h3>
             <Button
               label={trans('see_subjects', {}, 'forum')}
-              type="link"
+              type={LINK_BUTTON}
               target="/subjects"
               className="btn btn-block"
               primary={true}
@@ -46,7 +47,7 @@ const OverviewComponent = props =>
             {!props.bannedUser &&
               <Button
                 label={trans('create_subject', {}, 'forum')}
-                type="link"
+                type={LINK_BUTTON}
                 target="/subjects/form"
                 className="btn btn-block"
               />

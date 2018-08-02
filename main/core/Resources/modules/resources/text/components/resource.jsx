@@ -3,9 +3,10 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {actions as formActions} from '#/main/core/data/form/actions'
+import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {RoutedPageContent} from '#/main/core/layout/router'
 import {Text as TextTypes} from '#/main/core/resources/text/prop-types'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {ResourcePageContainer} from '#/main/core/resource/containers/page'
 import {Player} from '#/main/core/resources/text/player/components/player'
@@ -15,7 +16,7 @@ const Resource = props =>
   <ResourcePageContainer
     customActions={[
       {
-        type: 'link',
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-home',
         label: trans('home'),
         target: '/',

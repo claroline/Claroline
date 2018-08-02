@@ -1,5 +1,0 @@
-- [ ] implement better loader.
-- [ ] append list filters to URL.
-- [ ] add default filter select in search.
-- [ ] finish DataTree
-- [ ] add the possibility to override list translations

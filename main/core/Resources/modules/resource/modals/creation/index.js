@@ -16,15 +16,16 @@ import {registry} from '#/main/app/modals/registry'
 import {ResourceTypeModal} from '#/main/core/resource/modals/creation/components/resource-type'
 
 // internal modals
-import {ParametersModal, MODAL_RESOURCE_CREATION_PARAMETERS} from '#/main/core/resource/modals/creation/components/parameters'
-import {RightsModal, MODAL_RESOURCE_CREATION_RIGHTS} from '#/main/core/resource/modals/creation/components/rights'
+import {constants} from '#/main/core/resource/modals/creation/constants'
+import {ParametersModal} from '#/main/core/resource/modals/creation/components/parameters'
+import {RightsModal} from '#/main/core/resource/modals/creation/components/rights'
 
 const MODAL_RESOURCE_CREATION = 'MODAL_RESOURCE_CREATION'
 
 // make the modal available for use
 registry.add(MODAL_RESOURCE_CREATION, ResourceTypeModal)
-registry.add(MODAL_RESOURCE_CREATION_PARAMETERS, ParametersModal)
-registry.add(MODAL_RESOURCE_CREATION_RIGHTS, RightsModal)
+registry.add(constants.MODAL_RESOURCE_CREATION_INTERNAL_PARAMETERS, ParametersModal)
+registry.add(constants.MODAL_RESOURCE_CREATION_INTERNAL_RIGHTS, RightsModal)
 
 export {
   MODAL_RESOURCE_CREATION

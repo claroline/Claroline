@@ -5,8 +5,8 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/core/translation'
 import {url} from '#/main/app/api'
 
-import {FormContainer} from '#/main/core/data/form/containers/form'
-import {select as formSelect} from '#/main/core/data/form/selectors'
+import {FormData} from '#/main/app/content/form/containers/data'
+import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 
 import {constants} from '#/main/core/administration/user/parameters/constants'
 
@@ -17,7 +17,7 @@ const Parameters = (props) => {
   })
 
   return (
-    <FormContainer
+    <FormData
       level={3}
       name="parameters"
       target={['apiv2_user_parameters_update']}

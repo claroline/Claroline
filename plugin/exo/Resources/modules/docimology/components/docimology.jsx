@@ -11,6 +11,7 @@ import {
   PageActions,
   PageAction
 } from '#/main/core/layout/page/index'
+import {URL_BUTTON} from '#/main/app/buttons'
 
 import {BarChart} from '#/main/core/layout/chart/bar/components/bar-chart.jsx'
 import {PieChart} from '#/main/core/layout/chart/pie/components/pie-chart.jsx'
@@ -271,7 +272,7 @@ const Docimology = props =>
       <PageActions>
         <PageAction
           id="back-to-exercise"
-          type="url"
+          type={URL_BUTTON}
           label={tex('back_to_the_quiz')}
           icon="fa fa-fw fa-sign-out"
           target={url(['claro_resource_open', {node: props.resourceNode.autoId, resourceType: props.resourceNode.meta.type}])}

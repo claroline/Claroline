@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {DataListContainer} from '#/main/core/data/list/containers/data-list'
+import {ListData} from '#/main/app/content/list/containers/data'
 import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box.jsx'
 
 import {Scorm as ScormType, Sco as ScoType} from '#/plugin/scorm/resources/scorm/prop-types'
@@ -12,7 +12,7 @@ import {select} from '#/plugin/scorm/resources/scorm/selectors'
 import {flattenScos} from '#/plugin/scorm/resources/scorm/utils'
 
 const ResultsComponent = props =>
-  <DataListContainer
+  <ListData
     name="results"
     fetch={{
       url: ['apiv2_scormscotracking_list', {scorm: props.scorm.id}],
@@ -48,9 +48,16 @@ const ResultsComponent = props =>
         type: 'number',
         label: trans('best_score'),
         displayed: true,
-        render: (rowData) => (rowData.scoreRaw || 0 === rowData.scoreRaw) && (rowData.scoreMax || 0 === rowData.scoreMax) ?
-          <ScoreBox size="sm" score={rowData.scoreRaw} scoreMax={rowData.scoreMax} /> :
-          rowData.scoreRaw
+        render: (rowData) => {
+          let Score
+          if ((rowData.scoreRaw || 0 === rowData.scoreRaw) && (rowData.scoreMax || 0 === rowData.scoreMax)) {
+            Score = <ScoreBox size="sm" score={rowData.scoreRaw} scoreMax={rowData.scoreMax} />
+          } else {
+            Score = rowData.scoreRaw
+          }
+
+          return Score
+        }
       }, {
         name: 'lessonStatus',
         type: 'string',
@@ -92,7 +99,6 @@ const ResultsComponent = props =>
         }
       }
     ]}
-    actions={() => []}
   />
 
 ResultsComponent.propTypes = {

@@ -1,7 +1,7 @@
 import {makeActionCreator} from '#/main/app/store/actions'
-import {actions as listActions} from '#/main/core/data/list/actions'
-
 import {API_REQUEST} from '#/main/app/api'
+
+import {actions as listActions} from '#/main/app/content/list/store'
 
 export const QUESTIONS_SHARE = 'QUESTIONS_SHARE'
 

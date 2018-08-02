@@ -2,15 +2,17 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
-import {FormContainer} from '#/main/core/data/form/containers/form'
+import {LINK_BUTTON} from '#/main/app/buttons'
+
+import {FormData} from '#/main/app/content/form/containers/data'
 
 const DirectoryEditor = (props) =>
-  <FormContainer
+  <FormData
     name="directoryForm"
     target={['apiv2_resource_directory_update', {id: props.directory.id}]}
     buttons={true}
     cancel={{
-      type: 'link',
+      type: LINK_BUTTON,
       target: '/',
       exact: true
     }}

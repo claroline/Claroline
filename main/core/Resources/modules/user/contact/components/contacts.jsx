@@ -5,9 +5,10 @@ import omit from 'lodash/omit'
 
 import {trans} from '#/main/core/translation'
 import {url} from '#/main/app/api'
-import {DataListContainer} from '#/main/core/data/list/containers/data-list'
+import {URL_BUTTON} from '#/main/app/buttons'
+import {ListData} from '#/main/app/content/list/containers/data'
 import {UserCard} from '#/main/core/user/data/components/user-card'
-import {constants as listConst} from '#/main/core/data/list/constants'
+import {constants as listConst} from '#/main/app/content/list/constants'
 
 import {select} from '#/main/core/user/contact/selectors'
 import {OptionsType} from '#/main/core/user/contact/prop-types'
@@ -23,7 +24,7 @@ ContactCard.propTypes = {
 }
 
 const ContactsComponent = props =>
-  <DataListContainer
+  <ListData
     name="contacts"
     display={{
       current: listConst.DISPLAY_TILES_SM,
@@ -34,7 +35,7 @@ const ContactsComponent = props =>
       autoload: true
     }}
     primaryAction={(row) => ({
-      type: 'url',
+      type: URL_BUTTON,
       target: ['claro_user_profile', {publicUrl: row.data.meta.publicUrl}]
     })}
     delete={{
@@ -42,7 +43,7 @@ const ContactsComponent = props =>
     }}
     actions={(rows) => [
       {
-        type: 'url',
+        type: URL_BUTTON,
         icon: 'fa fa-fw fa-paper-plane-o',
         label: trans('send_message'),
         target: url(['claro_message_show', {message: 0}], {userIds: rows.map(user => user.data.autoId)})

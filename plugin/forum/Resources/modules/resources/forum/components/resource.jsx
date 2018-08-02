@@ -5,10 +5,11 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/core/translation'
 import {selectors as resourceSelect} from '#/main/core/resource/store/selectors'
 import {hasPermission} from '#/main/core/resource/permissions'
-import {actions as formActions} from '#/main/core/data/form/actions'
+import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {RoutedPageContent} from '#/main/core/layout/router'
 import {ResourcePageContainer} from '#/main/core/resource/containers/page'
 import {currentUser} from '#/main/core/user/current'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
 import {Forum as ForumType} from '#/plugin/forum/resources/forum/prop-types'
 import {select} from '#/plugin/forum/resources/forum/selectors'
@@ -54,32 +55,32 @@ const Resource = props => {
       primaryAction="post"
       customActions={[
         {
-          type: 'link',
+          type: LINK_BUTTON,
           icon: 'fa fa-fw fa-home',
           label: trans('show_overview'),
           displayed: props.forum.display.showOverview,
           target: '/',
           exact: true
         }, {
-          type: 'link',
+          type: LINK_BUTTON,
           icon: 'fa fa-fw fa-list-ul',
           label: trans('see_subjects', {}, 'forum'),
           target: '/subjects',
           exact: true
         }, {
-          type: 'callback',
+          type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-envelope',
           label: trans('receive_notifications', {}, 'forum'),
           displayed: !props.forum.meta.notified,
           callback: () => props.notify(props.forum, currentUser())
         },{
-          type: 'callback',
+          type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-envelope-o',
           label: trans('stop_receive_notifications', {}, 'forum'),
           displayed: props.forum.meta.notified,
           callback: () => props.stopNotify(props.forum, currentUser())
         }, {
-          type: 'link',
+          type: LINK_BUTTON,
           icon: 'fa fa-fw fa-gavel',
           label: trans('moderated_posts', {}, 'forum'),
           group: trans('moderation', {}, 'forum'),
@@ -87,7 +88,7 @@ const Resource = props => {
           target: '/moderation/blocked',
           exact: true
         }, {
-          type: 'link',
+          type: LINK_BUTTON,
           icon: 'fa fa-fw fa-flag',
           label: trans('flagged_messages_subjects', {}, 'forum'),
           group: trans('moderation', {}, 'forum'),

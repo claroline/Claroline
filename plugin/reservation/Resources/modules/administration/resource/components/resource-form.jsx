@@ -3,18 +3,19 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {select as formSelect} from '#/main/core/data/form/selectors'
+import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
-import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
-import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
+import {MODAL_DATA_LIST} from '#/main/app/modals/list'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {FormData} from '#/main/app/content/form/containers/data'
 import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
-import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
+import {ListData} from '#/main/app/content/list/containers/data.jsx'
 import {OrganizationList} from '#/main/core/administration/user/organization/components/organization-list'
 import {RoleList} from '#/main/core/administration/user/role/components/role-list'
 
 import {actions} from '#/plugin/reservation/administration/resource/actions'
 
-const ResourceRigths = props =>
+const ResourceRights = props =>
   <ul className="list-group">
     {props.resourceRights.map(rr =>
       <li
@@ -56,7 +57,7 @@ const ResourceRigths = props =>
     )}
   </ul>
 
-ResourceRigths.propTypes = {
+ResourceRights.propTypes = {
   resourceRights: T.arrayOf(T.shape({
     id: T.string.isRequired,
     mask: T.number.isRequired,
@@ -68,7 +69,7 @@ ResourceRigths.propTypes = {
 }
 
 const Resource = props =>
-  <FormContainer
+  <FormData
     level={2}
     name="resourceForm"
     buttons={true}
@@ -77,7 +78,7 @@ const Resource = props =>
       ['apiv2_reservationresource_update', {id: resource.id}]
     }
     cancel={{
-      type: 'link',
+      type: LINK_BUTTON,
       target: '/',
       exact: true
     }}
@@ -132,14 +133,14 @@ const Resource = props =>
         disabled={props.new}
         actions={[
           {
-            type: 'callback',
+            type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_organizations', {}, 'platform'),
             callback: () => props.pickOrganizations(props.resource.id)
           }
         ]}
       >
-        <DataListContainer
+        <ListData
           name="resourceForm.organizations"
           open={OrganizationList.open}
           fetch={{
@@ -160,7 +161,7 @@ const Resource = props =>
         disabled={props.new}
         actions={[
           {
-            type: 'callback',
+            type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_roles', {}, 'platform'),
             callback: () => props.pickRoles(props.resource.id, props.resource.resourceRights ? props.resource.resourceRights : [])
@@ -168,7 +169,7 @@ const Resource = props =>
         ]}
       >
         {props.resource.resourceRights && props.resource.resourceRights.length > 0 ?
-          <ResourceRigths
+          <ResourceRights
             resourceRights={props.resource.resourceRights ? props.resource.resourceRights : []}
             onChange={props.editResourceRights}
           /> :
@@ -193,7 +194,7 @@ const Resource = props =>
         </div>
       </FormSection>
     </FormSections>
-  </FormContainer>
+  </FormData>
 
 Resource.propTypes = {
   new: T.bool.isRequired,
@@ -221,7 +222,7 @@ const ResourceForm = connect(
       dispatch(actions.editResourceRights(rights, value))
     },
     pickOrganizations(resourceId) {
-      dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
+      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-building',
         title: trans('add_organizations', {}, 'platform'),
         confirmText: trans('add', {}, 'platform'),
@@ -236,7 +237,7 @@ const ResourceForm = connect(
       }))
     },
     pickRoles(resourceId, resourceRights) {
-      dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
+      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-id-badge',
         title: trans('add_roles', {}, 'platform'),
         confirmText: trans('add', {}, 'platform'),

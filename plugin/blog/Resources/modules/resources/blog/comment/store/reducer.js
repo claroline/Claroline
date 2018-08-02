@@ -1,5 +1,5 @@
 import {makeReducer} from '#/main/app/store/reducer'
-import {makeListReducer} from '#/main/core/data/list/reducer'
+import {makeListReducer} from '#/main/app/content/list/store'
 import isEmpty from 'lodash/isEmpty'
 import cloneDeep from 'lodash/cloneDeep'
 import {

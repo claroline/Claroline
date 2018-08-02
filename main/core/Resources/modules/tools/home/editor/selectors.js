@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect'
 
-import {select as formSelectors} from '#/main/core/data/form/selectors'
+import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
 import {selectors as homeSelectors} from '#/main/core/tools/home/selectors'
 
 const editorTabs = (state) => formSelectors.data(formSelectors.form(state, 'editor'))

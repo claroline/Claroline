@@ -1,7 +1,7 @@
 import {makeReducer} from '#/main/app/store/reducer'
-import {makeFormReducer} from '#/main/core/data/form/reducer'
-import {makeListReducer} from '#/main/core/data/list/reducer'
-import {FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
+import {makeFormReducer} from '#/main/app/content/form/store/reducer'
+import {makeListReducer} from '#/main/app/content/list/store'
+import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 import {
   INIT_DATALIST,
   POST_LOAD, 

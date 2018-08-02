@@ -1,13 +1,43 @@
 import React from 'react'
 import classes from 'classnames'
+import invariant from 'invariant'
 import omit from 'lodash/omit'
 
-import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {toKey} from '#/main/core/scaffolding/text/utils'
+import {registry as buttonRegistry} from '#/main/app/buttons/registry'
 import {TooltipElement} from '#/main/core/layout/components/tooltip-element'
-import {GenericButton} from '#/main/app/button/components/generic'
 
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
+
+const ButtonComponent = props => {
+  const button = buttonRegistry.get(props.type)
+
+  invariant(undefined !== button, `You have requested a non existent button "${props.type}".`)
+
+  return React.createElement(button, Object.assign(
+    omit(props, 'type', 'icon', 'label', 'subscript', 'hideLabel'),
+    {
+      id: props.id || (typeof props.label === 'string' && toKey(props.label)),
+      confirm: props.confirm ? Object.assign({}, props.confirm, {
+        // append some defaults from action spec
+        icon: props.icon,
+        title: props.confirm.title || props.label,
+        button: props.confirm.button || props.label
+      }) : undefined
+    }
+  ), [
+    props.icon &&
+      <span key="button-icon" className={classes('action-icon', props.icon)} aria-hidden={true} />,
+    props.hideLabel ? <span key="button-label" className="sr-only">{props.label}</span> : props.label,
+    props.subscript &&
+      <span key="button-subscript" className={classes('action-subscript', `${props.subscript.type} ${props.subscript.type}-${props.subscript.status || 'primary'}`)}>{props.subscript.value}</span>
+  ])
+}
+
+implementPropTypes(ButtonComponent, ActionTypes, {
+  hideLabel: T.bool
+})
 
 /**
  * Renders the correct button component for an action.
@@ -22,47 +52,14 @@ const Button = props => props.tooltip ?
     tip={props.label}
     disabled={props.disabled}
   >
-    <GenericButton
-      {...omit(props, 'tooltip', 'group', 'icon', 'label', 'subscript', 'context', 'scope')}
-      id={props.id || toKey(props.label)}
-      confirm={props.confirm ? Object.assign({}, props.confirm, {
-        // append some defaults from action spec
-        icon: props.icon,
-        title: props.confirm.title || props.label,
-        button: props.confirm.button || props.label
-      }) : undefined}
-    >
-      {props.icon &&
-        <span className={classes('action-icon', props.icon)} aria-hidden={true} />
-      }
-
-      <span className="sr-only">{props.label}</span>
-
-      {props.subscript &&
-        <span className={classes('action-subscript', `${props.subscript.type} ${props.subscript.type}-${props.subscript.status || 'primary'}`)}>{props.subscript.value}</span>
-      }
-    </GenericButton>
+    <ButtonComponent
+      {...omit(props, 'tooltip', 'group', 'context', 'scope')}
+      hideLabel={true}
+    />
   </TooltipElement> :
-  <GenericButton
-    {...omit(props, 'tooltip', 'group', 'icon', 'label', 'subscript', 'context', 'scope')}
-    id={props.id || toKey(props.label)}
-    confirm={props.confirm ? Object.assign({}, props.confirm, {
-      // append some defaults from action spec
-      icon: props.icon,
-      title: props.confirm.title || props.label,
-      button: props.confirm.button || props.label
-    }) : undefined}
-  >
-    {props.icon &&
-      <span className={classes('action-icon icon-with-text-right', props.icon)} aria-hidden={true} />
-    }
-
-    {props.label}
-
-    {props.subscript &&
-    <span className={classes('action-subscript', `${props.subscript.type} ${props.subscript.type}-${props.subscript.status || 'primary'}`)}>{props.subscript.value}</span>
-    }
-  </GenericButton>
+  <ButtonComponent
+    {...omit(props, 'tooltip', 'group', 'context', 'scope')}
+  />
 
 implementPropTypes(Button, ActionTypes, {
   /**

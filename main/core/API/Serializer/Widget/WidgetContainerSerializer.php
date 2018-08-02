@@ -31,6 +31,7 @@ class WidgetContainerSerializer
      *    "om"          = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
+     * @param ObjectManager      $om
      * @param SerializerProvider $serializer
      */
     public function __construct(

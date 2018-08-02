@@ -3,7 +3,8 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
-import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {ListData} from '#/main/app/content/list/containers/data'
 
 import {DropzoneType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {select} from '#/plugin/drop-zone/resources/dropzone/selectors'
@@ -18,14 +19,14 @@ const Correctors = props =>
     <h2>{trans('correctors_list', {}, 'dropzone')}</h2>
     {!props.corrections ?
       <span className="fa fa-fw fa-circle-o-notch fa-spin" /> :
-      <DataListContainer
+      <ListData
         name="drops"
         fetch={{
           url: ['claro_dropzone_drops_search', {id: props.dropzone.id}],
           autoload: true
         }}
         primaryAction={(row) => ({
-          type: 'link',
+          type: LINK_BUTTON,
           target: `/corrector/${row.id}`,
           label: trans('corrector', {}, 'dropzone')
         })}
@@ -92,13 +93,13 @@ const Correctors = props =>
         filterColumns={true}
         actions={(rows) => [
           {
-            type: 'link',
+            type: LINK_BUTTON,
             icon: 'fa fa-fw fa-eye',
             label: trans('open', {}, 'platform'),
             target: `/corrector/${rows[0].id}`,
             scope: ['object']
           }, {
-            type: 'callback',
+            type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-unlock',
             label: trans('unlock_corrector', {}, 'dropzone'),
             callback: () => props.unlockUser(rows[0].id),

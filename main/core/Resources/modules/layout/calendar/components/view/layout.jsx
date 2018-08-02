@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {CallbackButton} from '#/main/app/button/components/callback'
+import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 
 import {getNextView} from '#/main/core/layout/calendar/utils'
 

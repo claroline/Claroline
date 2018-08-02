@@ -18,7 +18,7 @@ const Workspace = {
     }).isRequired,
     opening: T.shape({
       type: T.oneOf(['resource', 'tool']),
-      target: T.string
+      target: T.oneOfType([T.string, T.shape(ResourceNode.propTypes)])
     }),
     display: T.shape({
       showBreadcrumbs: T.bool,

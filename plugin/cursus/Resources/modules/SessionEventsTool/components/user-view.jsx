@@ -3,9 +3,11 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans, t} from '#/main/core/translation'
-import {actions as listActions} from '#/main/core/data/list/actions'
-import {select as listSelect} from '#/main/core/data/list/selectors'
-import {DataList} from '#/main/core/data/list/components/data-list.jsx'
+import {
+  actions as listActions,
+  select as listSelect
+} from '#/main/app/content/list/store'
+import {ListData} from '#/main/app/content/list/components/data'
 import {withModal} from '#/main/app/overlay/modal'
 
 import {MODAL_EVENT_SET_REGISTRATION} from '#/plugin/cursus/SessionEventsTool/components/event-set-registration-modal'
@@ -31,7 +33,7 @@ class UserView extends Component {
   render() {
     if (this.props.session) {
       return (
-        <DataList
+        <ListData
           data={this.props.events}
           totalResults={this.props.total}
           definition={[

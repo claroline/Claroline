@@ -16,7 +16,7 @@ import {Calendar} from '#/plugin/agenda/components/calendar.jsx'
 import {FilterBar} from '#/plugin/agenda/components/filter-bar.jsx'
 import {MODAL_EVENT} from '#/plugin/agenda/components/modal'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {MODAL_DATA_FORM} from '#/main/core/data/form/modals'
+import {MODAL_DATA_FORM} from '#/main/app/modals/form'
 import {url} from '#/main/app/api/router'
 
 function arrayTrans(key) {

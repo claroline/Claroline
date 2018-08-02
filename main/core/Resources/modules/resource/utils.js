@@ -13,6 +13,8 @@ import {hasPermission} from '#/main/core/resource/permissions'
  * Get the type implemented by a resource node.
  *
  * @param {object} resourceNode
+ *
+ * @return {object}
  */
 function getType(resourceNode) {
   return param('resourceTypes')
@@ -26,7 +28,7 @@ function getType(resourceNode) {
  * @param {Array}  actions
  * @param {object} nodesRefresher - an object containing methods to update the node context.
  *
- * @return {Promise}
+ * @return {Promise.<Array>}
  */
 function loadActions(resourceNodes, actions, nodesRefresher) {
   // adds default refresher actions
@@ -66,6 +68,8 @@ function loadActions(resourceNodes, actions, nodesRefresher) {
  * @param {Array}   resourceNodes  - the current resource node
  * @param {object}  nodesRefresher - an object containing methods to update the node context.
  * @param {boolean} withDefault    - include the default action (most of the time, it's not useful to get it)
+ *
+ * @return {Promise.<Array>}
  */
 function getActions(resourceNodes, nodesRefresher, withDefault = false) {
   const resourceTypes = uniq(resourceNodes.map(resourceNode => resourceNode.meta.type))
@@ -86,6 +90,14 @@ function getActions(resourceNodes, nodesRefresher, withDefault = false) {
   return loadActions(resourceNodes, collectionActions, nodesRefresher)
 }
 
+/**
+ * Gets the default action of a resource.
+ *
+ * @param {object} resourceNode
+ * @param {object} nodesRefresher
+ *
+ * @return {Promise.<Array>}
+ */
 function getDefaultAction(resourceNode, nodesRefresher) {
   const defaultAction = getType(resourceNode).actions
     .find(action => action.default)

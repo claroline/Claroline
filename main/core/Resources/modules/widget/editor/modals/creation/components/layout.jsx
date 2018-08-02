@@ -7,7 +7,7 @@ import sum from 'lodash/sum'
 import times from 'lodash/times'
 
 import {trans} from '#/main/core/translation'
-import {CallbackButton} from '#/main/app/button/components/callback'
+import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 

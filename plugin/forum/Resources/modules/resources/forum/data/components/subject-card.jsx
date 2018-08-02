@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {trans, transChoice} from '#/main/core/translation'
-import {getPlainText} from '#/main/core/data/types/html/utils'
+import {getPlainText} from '#/main/app/data/html/utils'
 import {asset} from '#/main/core/scaffolding/asset'
 import {DataCard} from '#/main/core/data/components/data-card'
 import {UserAvatar} from '#/main/core/user/components/avatar'

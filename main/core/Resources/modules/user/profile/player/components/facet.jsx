@@ -3,8 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import cloneDeep from 'lodash/cloneDeep'
 
-import {select as detailsSelect} from '#/main/core/data/details/selectors'
-import {DataDetailsContainer} from '#/main/core/data/details/containers/details.jsx'
+import {selectors as detailsSelect} from '#/main/app/content/details/store'
+import {DetailsData} from '#/main/app/content/details/containers/data'
 
 import {ProfileFacet as ProfileFacetTypes} from '#/main/core/user/profile/prop-types'
 import {select} from '#/main/core/user/profile/selectors'
@@ -18,7 +18,7 @@ const ProfileFacetComponent = props => {
   }
 
   return (
-    <DataDetailsContainer
+    <DetailsData
       name="user"
       title={props.facet.title}
       sections={sections}

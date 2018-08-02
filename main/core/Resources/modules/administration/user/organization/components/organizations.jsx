@@ -1,13 +1,13 @@
 import React from 'react'
 
 import {trans} from '#/main/core/translation'
-import {DataTreeContainer} from '#/main/core/data/list/containers/data-tree.jsx'
-import {OrganizationList} from '#/main/core/administration/user/organization/components/organization-list.jsx'
+import {TreeData} from '#/main/app/content/tree/containers/data'
+import {OrganizationList} from '#/main/core/administration/user/organization/components/organization-list'
 
 // TODO : upgrade to DataCard format
 
 const Organizations = () =>
-  <DataTreeContainer
+  <TreeData
     name="organizations.list"
     primaryAction={OrganizationList.open}
     fetch={{

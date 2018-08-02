@@ -1,3 +1,5 @@
+import get from 'lodash/get'
+
 import {registry} from '#/main/app/plugins/registry'
 
 /**
@@ -7,7 +9,7 @@ import {registry} from '#/main/app/plugins/registry'
 function getApps(type) {
   const plugins = registry.all()
 
-  return Object.keys(plugins).reduce((acc, current) => Object.assign({}, acc, plugins[current][type] || {}), {})
+  return Object.keys(plugins).reduce((acc, current) => Object.assign({}, acc, get(plugins[current], type) || {}), {})
 }
 
 /**

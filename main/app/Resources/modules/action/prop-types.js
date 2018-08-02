@@ -17,16 +17,7 @@ const Action = {
      */
     id: T.string,
     name: T.string,
-    type: T.oneOf([
-      'async',
-      'callback',
-      'download',
-      'email',
-      'link',
-      'menu',
-      'modal',
-      'url'
-    ]).isRequired,
+    type: T.string.isRequired,
     icon: T.string,
     subscript: T.shape({
       type: T.oneOf(['text', 'label']),
@@ -39,7 +30,7 @@ const Action = {
      *
      * @type {string}
      */
-    label: T.string.isRequired,
+    label: T.node.isRequired,
     group: T.string,
 
     /**
@@ -145,114 +136,8 @@ const Toolbar = {
   }
 }
 
-// TODO : use specific action types
-
-const AsyncAction = {
-  propTypes: {
-    target: T.oneOfType([
-      T.string, // standard URL string
-      T.array // symfony route array
-    ]).isRequired,
-    before: T.func,
-    success: T.func,
-    error: T.func
-  },
-  defaultProps: {}
-}
-
-const CallbackAction = {
-  propTypes: {
-    callback: T.func.isRequired
-  },
-  defaultProps: {}
-}
-
-const DownloadAction = {
-  propTypes: {
-    file: T.shape({
-
-    }).isRequired
-  },
-  defaultProps: {}
-}
-
-const EmailAction = {
-  propTypes: {
-    email: T.string.isRequired
-  },
-  defaultProps: {}
-}
-
-const LinkAction = {
-  propTypes: {
-    target: T.string.isRequired,
-    exact: T.bool
-  },
-  defaultProps: {
-    exact: false
-  }
-}
-
-const MenuAction = {
-  propTypes: {
-    menu: T.shape({
-      label: T.string,
-      position: T.oneOf(['top', 'bottom']),
-      align: T.oneOf(['left', 'right']),
-      items: T.arrayOf(T.shape(
-        Action.propTypes
-      )).isRequired
-    }).isRequired
-  },
-  defaultProps: {
-    position: 'bottom',
-    align: 'left'
-  }
-}
-
-const ModalAction = {
-  propTypes: {
-    modal: T.arrayOf([
-      T.string, // the name of the modal
-      T.object // the props of the modal
-    ]).isRequired
-  },
-  defaultProps: {}
-}
-
-const PopoverAction = {
-  propTypes: {
-    popover: T.shape({
-      className: T.string,
-      label: T.string,
-      position: T.oneOf(['top', 'bottom', 'left', 'right']),
-      content: T.node.isRequired
-    }).isRequired
-  }
-}
-
-const UrlAction = {
-  propTypes: {
-    target: T.arrayOf([
-      T.string, // the name of the modal
-      T.object // the props of the modal
-    ]).isRequired
-  },
-  defaultProps: {}
-}
-
 export {
   Action,
   PromisedAction,
-  Toolbar,
-
-  AsyncAction,
-  CallbackAction,
-  DownloadAction,
-  EmailAction,
-  LinkAction,
-  MenuAction,
-  ModalAction,
-  PopoverAction,
-  UrlAction
+  Toolbar
 }

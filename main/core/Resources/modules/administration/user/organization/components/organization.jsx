@@ -4,20 +4,21 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
 
-import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
-import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
-import {select as formSelect} from '#/main/core/data/form/selectors'
-import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
+import {FormData} from '#/main/app/content/form/containers/data'
+import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
+import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
+import {ListData} from '#/main/app/content/list/containers/data'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
-import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
+import {MODAL_DATA_LIST} from '#/main/app/modals/list'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
 import {actions} from '#/main/core/administration/user/organization/actions'
-import {GroupList} from '#/main/core/administration/user/group/components/group-list.jsx'
-import {UserList} from '#/main/core/administration/user/user/components/user-list.jsx'
-import {WorkspaceList} from '#/main/core/administration/workspace/workspace/components/workspace-list.jsx'
+import {GroupList} from '#/main/core/administration/user/group/components/group-list'
+import {UserList} from '#/main/core/administration/user/user/components/user-list'
+import {WorkspaceList} from '#/main/core/administration/workspace/workspace/components/workspace-list'
 
 const OrganizationForm = props =>
-  <FormContainer
+  <FormData
     level={3}
     name="organizations.current"
     buttons={true}
@@ -26,7 +27,7 @@ const OrganizationForm = props =>
       ['apiv2_organization_update', {id: organization.id}]
     }
     cancel={{
-      type: 'link',
+      type: LINK_BUTTON,
       target: '/organizations',
       exact: true
     }}
@@ -88,14 +89,14 @@ const OrganizationForm = props =>
         disabled={props.new}
         actions={[
           {
-            type: 'callback',
+            type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_workspace'),
             callback: () => props.pickWorkspaces(props.organization.id)
           }
         ]}
       >
-        <DataListContainer
+        <ListData
           name="organizations.current.workspaces"
           fetch={{
             url: ['apiv2_organization_list_workspaces', {id: props.organization.id}],
@@ -117,14 +118,14 @@ const OrganizationForm = props =>
         disabled={props.new}
         actions={[
           {
-            type: 'callback',
+            type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_user'),
             callback: () => props.pickUsers(props.organization.id)
           }
         ]}
       >
-        <DataListContainer
+        <ListData
           name="organizations.current.users"
           fetch={{
             url: ['apiv2_organization_list_users', {id: props.organization.id}],
@@ -146,14 +147,14 @@ const OrganizationForm = props =>
         disabled={props.new}
         actions={[
           {
-            type: 'callback',
+            type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_group'),
             callback: () => props.pickGroups(props.organization.id)
           }
         ]}
       >
-        <DataListContainer
+        <ListData
           name="organizations.current.groups"
           fetch={{
             url: ['apiv2_organization_list_groups', {id: props.organization.id}],
@@ -175,14 +176,14 @@ const OrganizationForm = props =>
         disabled={props.new}
         actions={[
           {
-            type: 'callback',
+            type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_managers'),
             callback: () => props.pickManagers(props.organization.id)
           }
         ]}
       >
-        <DataListContainer
+        <ListData
           name="organizations.current.managers"
           fetch={{
             url: ['apiv2_organization_list_managers', {id: props.organization.id}],
@@ -197,7 +198,7 @@ const OrganizationForm = props =>
         />
       </FormSection>
     </FormSections>
-  </FormContainer>
+  </FormData>
 
 OrganizationForm.propTypes = {
   new: T.bool.isRequired,
@@ -217,7 +218,7 @@ const Organization = connect(
   }),
   dispatch => ({
     pickUsers(organizationId) {
-      dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
+      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-user',
         title: trans('add_users'),
         confirmText: trans('add'),
@@ -232,7 +233,7 @@ const Organization = connect(
       }))
     },
     pickManagers(organizationId) {
-      dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
+      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-user',
         title: trans('add_managers'),
         confirmText: trans('add'),
@@ -247,7 +248,7 @@ const Organization = connect(
       }))
     },
     pickGroups(organizationId) {
-      dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
+      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-users',
         title: trans('add_groups'),
         confirmText: trans('add'),
@@ -262,7 +263,7 @@ const Organization = connect(
       }))
     },
     pickWorkspaces(organizationId) {
-      dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
+      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-books',
         title: trans('add_workspaces'),
         confirmText: trans('add'),

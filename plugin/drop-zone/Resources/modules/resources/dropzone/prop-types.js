@@ -1,6 +1,6 @@
 import {PropTypes as T} from 'prop-types'
 
-import {Criterion} from '#/plugin/drop-zone/data/types/criteria/prop-types'
+import {Criterion} from '#/plugin/drop-zone/data/criteria/prop-types'
 
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 

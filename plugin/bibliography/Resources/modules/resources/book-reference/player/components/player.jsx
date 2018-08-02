@@ -4,8 +4,8 @@ import {connect} from 'react-redux'
 import {Row, Col} from 'react-bootstrap'
 
 import {trans} from '#/main/core/translation'
-import {select as formSelect} from '#/main/core/data/form/selectors'
-import {DataDetailsContainer} from '#/main/core/data/details/containers/details.jsx'
+import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
+import {DetailsData} from '#/main/app/content/details/containers/data'
 
 const PlayerComponent = props =>
   <Row>
@@ -20,7 +20,7 @@ const PlayerComponent = props =>
     </Col>
     }
     <Col md={props.bookReference.cover ? 9 : 12}>
-      <DataDetailsContainer
+      <DetailsData
         level={3}
         name="bookReference"
         sections={[

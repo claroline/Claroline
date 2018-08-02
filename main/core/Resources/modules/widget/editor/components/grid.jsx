@@ -4,6 +4,7 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import {trans} from '#/main/core/translation'
 import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 
 import {WidgetEditor} from '#/main/core/widget/editor/components/widget'
@@ -70,7 +71,7 @@ class WidgetGridEditor extends Component {
             }}
             actions={[
               {
-                type: 'modal',
+                type: MODAL_BUTTON,
                 icon: 'fa fa-fw fa-plus',
                 label: trans('add_section_before'),
                 modal: [MODAL_WIDGET_CREATION, {
@@ -85,7 +86,7 @@ class WidgetGridEditor extends Component {
                   }
                 }]
               }, {
-                type: 'callback',
+                type: CALLBACK_BUTTON,
                 icon: 'fa fa-fw fa-arrow-up',
                 label: trans('move_top', {}, 'actions'),
                 disabled: 0 === index,
@@ -102,7 +103,7 @@ class WidgetGridEditor extends Component {
                   this.props.update(widgets)
                 }
               }, {
-                type: 'callback',
+                type: CALLBACK_BUTTON,
                 icon: 'fa fa-fw fa-arrow-down',
                 label: trans('move_bottom', {}, 'actions'),
                 disabled: this.props.widgets.length - 1 === index,
@@ -119,7 +120,7 @@ class WidgetGridEditor extends Component {
                   this.props.update(widgets)
                 }
               }, {
-                type: 'modal',
+                type: MODAL_BUTTON,
                 icon: 'fa fa-fw fa-cog',
                 label: trans('configure', {}, 'actions'),
                 modal: [MODAL_WIDGET_PARAMETERS, {
@@ -134,7 +135,7 @@ class WidgetGridEditor extends Component {
                   }
                 }]
               }, {
-                type: 'callback',
+                type: CALLBACK_BUTTON,
                 icon: 'fa fa-fw fa-trash-o',
                 label: trans('delete', {}, 'actions'),
                 dangerous: true,
@@ -162,7 +163,7 @@ class WidgetGridEditor extends Component {
 
         <Button
           className="btn btn-block btn-emphasis"
-          type="modal"
+          type={MODAL_BUTTON}
           label={trans('add_section')}
           modal={[MODAL_WIDGET_CREATION, {
             create: (widget) => this.props.update(

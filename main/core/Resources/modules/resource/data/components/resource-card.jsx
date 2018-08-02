@@ -43,7 +43,7 @@ const ResourceCard = props => {
   return (
     <DataCard
       {...props}
-      className={classes({
+      className={classes(props.className, {
         'data-card-muted': !props.data.meta.published
       })}
       id={props.data.id}
@@ -75,6 +75,7 @@ const ResourceCard = props => {
 }
 
 ResourceCard.propTypes = {
+  className: T.string,
   data: T.shape(
     ResourceNodeTypes.propTypes
   ).isRequired

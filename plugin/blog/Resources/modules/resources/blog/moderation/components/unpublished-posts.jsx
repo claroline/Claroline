@@ -2,12 +2,12 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import {trans} from '#/main/core/translation'
-import {constants as listConst} from '#/main/core/data/list/constants'
-import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
-import {PostCard} from '#/plugin/blog/resources/blog/post/components/post.jsx'
+import {constants as listConst} from '#/main/app/content/list/constants'
+import {ListData} from '#/main/app/content/list/containers/data'
+import {PostCard} from '#/plugin/blog/resources/blog/post/components/post'
 
 const UnpublishedPostsComponent = (props) =>
-  <DataListContainer
+  <ListData
     name="moderationPosts"
     fetch={{
       url: ['apiv2_blog_post_list_unpublished', {blogId: props.blogId}],

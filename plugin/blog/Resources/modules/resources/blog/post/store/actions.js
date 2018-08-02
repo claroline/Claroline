@@ -3,7 +3,7 @@ import {makeActionCreator} from '#/main/app/store/actions'
 import {constants} from '#/plugin/blog/resources/blog/constants.js'
 import {getApiFormat} from '#/main/core/scaffolding/date'
 import moment from 'moment'
-import {actions as formActions} from '#/main/core/data/form/actions'
+import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {actions as blogActions} from '#/plugin/blog/resources/blog/store/actions'
 
 export const POSTS_LOAD = 'POSTS_LOAD'

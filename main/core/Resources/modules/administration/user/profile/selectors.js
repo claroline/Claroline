@@ -1,5 +1,5 @@
 import {createSelector} from 'reselect'
-import {select as formSelect} from '#/main/core/data/form/selectors'
+import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 
 const formName = 'profile'
 const form =  state => formSelect.form(state, formName)

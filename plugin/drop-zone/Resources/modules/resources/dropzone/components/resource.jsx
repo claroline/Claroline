@@ -5,9 +5,10 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/core/translation'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
-import {actions as formActions} from '#/main/core/data/form/actions'
+import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {RoutedPageContent} from '#/main/core/layout/router'
-import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
+import {ResourcePageContainer} from '#/main/core/resource/containers/page'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {select} from '#/plugin/drop-zone/resources/dropzone/selectors'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
@@ -27,24 +28,24 @@ const Resource = props =>
   <ResourcePageContainer
     customActions={[
       {
-        type: 'link',
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-home',
         label: trans('show_overview'),
         target: '/'
       }, {
-        type: 'link',
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-upload',
         label: trans('show_evaluation', {}, 'dropzone'),
         target: '/my/drop',
         displayed: !!props.myDrop
       }, {
-        type: 'link',
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-list',
         label: trans('show_drops', {}, 'dropzone'),
         target: '/drops',
         displayed: props.canEdit
       }, {
-        type: 'link',
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-users',
         label: trans('correctors', {}, 'dropzone'),
         target: '/correctors',

@@ -12,6 +12,7 @@ import {
 import {
   RoutedPageContent
 } from '#/main/core/layout/router'
+import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {actions} from '#/plugin/reservation/administration/resource/actions'
 import {Resources} from '#/plugin/reservation/administration/resource/components/resources'
@@ -25,8 +26,7 @@ const Tool = props =>
     >
       <PageActions>
         <PageAction
-          id="resources-types-list"
-          type="link"
+          type={LINK_BUTTON}
           icon="fa fa-plus"
           label={trans('add_resource', {}, 'reservation')}
           target="/form"
@@ -34,8 +34,7 @@ const Tool = props =>
 
         {props.isAdmin &&
           <PageAction
-            id="resources-types-list"
-            type="modal"
+            type={MODAL_BUTTON}
             icon="fa fa-bars"
             label={trans('resource_types', {}, 'reservation')}
             modal={[MODAL_RESOURCE_TYPES, {}]}

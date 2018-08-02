@@ -2,14 +2,15 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {DataListContainer} from '#/main/core/data/list/containers/data-list'
 import {trans} from '#/main/core/translation'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {ListData} from '#/main/app/content/list/containers/data'
 import {actions} from '#/plugin/wiki/resources/wiki/deleted/store/actions'
 
 const DeletedSectionsComponent = props =>
   <section className="wiki-deleted-sections-list">
     <h2>{trans('deleted_sections', {}, 'icap_wiki')}</h2>
-    <DataListContainer
+    <ListData
       name="deletedSections"
       fetch={{
         url: ['apiv2_wiki_section_deleted_list', {wikiId: props.wiki.id}],
@@ -54,14 +55,14 @@ const DeletedSectionsComponent = props =>
       ]}
       actions={rows => [
         {
-          type: 'callback',
+          type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-undo',
           label: trans('restore_section', {}, 'icap_wiki'),
           callback: () => props.restoreSections(props.wiki.id, rows.map(item => item.id)),
           scope: ['object', 'collection'],
           displayed: true
         }, {
-          type: 'callback',
+          type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-trash-o',
           dangerous: true,
           label: trans('remove_section', {}, 'icap_wiki'),

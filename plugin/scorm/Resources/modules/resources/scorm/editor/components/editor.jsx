@@ -3,8 +3,9 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {actions as formActions} from '#/main/core/data/form/actions'
-import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {actions as formActions} from '#/main/app/content/form/store/actions'
+import {FormData} from '#/main/app/content/form/containers/data'
 
 import {constants} from '#/plugin/scorm/resources/scorm/constants'
 import {Scorm as ScormType} from '#/plugin/scorm/resources/scorm/prop-types'
@@ -13,16 +14,16 @@ import {select} from '#/plugin/scorm/resources/scorm/selectors'
 const EditorComponent = props =>
   <section className="resource-section">
     <h2>{trans('configuration')}</h2>
-    <FormContainer
+    <FormData
       level={3}
       name="scormForm"
       buttons={true}
       save={{
-        type: 'callback',
+        type: CALLBACK_BUTTON,
         callback: () => props.saveForm(props.scorm.id)
       }}
       cancel={{
-        type: 'link',
+        type: LINK_BUTTON,
         target: '/',
         exact: true
       }}

@@ -1,10 +1,10 @@
 import React from 'react'
-// import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {DataListContainer} from '#/main/core/data/list/containers/data-list'
-import {constants as listConst} from '#/main/core/data/list/constants'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {ListData} from '#/main/app/content/list/containers/data'
+import {constants as listConst} from '#/main/app/content/list/constants'
 
 import {select} from '#/plugin/forum/resources/forum/selectors'
 import {actions} from '#/plugin/forum/resources/forum/actions'
@@ -13,7 +13,7 @@ import {MessageCard} from '#/plugin/forum/resources/forum/data/components/messag
 const BlockedMessagesComponent = (props) =>
   <div>
     <h2>{trans('moderated_posts', {}, 'forum')}</h2>
-    <DataListContainer
+    <ListData
       name="moderation.blockedMessages"
       fetch={{
         url: ['apiv2_forum_message_blocked_list', {forum: props.forum.id}],
@@ -55,7 +55,7 @@ const BlockedMessagesComponent = (props) =>
       ]}
       actions={(rows) => [
         {
-          type: 'link',
+          type: LINK_BUTTON,
           icon: 'fa fa-fw fa-eye',
           label: trans('see_subject', {}, 'forum'),
           target: '/subjects/show/'+rows[0].subject.id,
@@ -64,19 +64,19 @@ const BlockedMessagesComponent = (props) =>
         // if moderation all => validateMessage
         // if moderation once => validateUser
         {
-          type: 'callback',
+          type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-check',
           label: trans('validate_message', {}, 'forum'),
           displayed: props.forum.moderation === 'PRIOR_ALL',
           callback: () => props.validateMessage(rows[0], rows[0].subject.id)
         }, {
-          type: 'callback',
+          type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-check',
           label: trans('validate_user', {}, 'forum'),
           displayed: props.forum.moderation === 'PRIOR_ONCE',
           callback: () => props.unLockUser(rows[0].meta.creator.id, props.forum.id)
         }, {
-          type: 'callback',
+          type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-times',
           label: trans('block_user', {}, 'forum'),
           displayed: props.forum.moderation === 'PRIOR_ONCE',

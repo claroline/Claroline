@@ -35,6 +35,7 @@ Encore
     options.compress = false
     options.beautify = false
   })
+  .addPlugin(plugins.circularDependencies())
   .addPlugin(plugins.assetsInfoFile())
   .addPlugin(plugins.distributionShortcut())
   .addPlugin(plugins.scaffoldingDllReference())

@@ -1,10 +1,10 @@
 
 import {makeReducer} from '#/main/app/store/reducer'
-import {makeFormReducer} from '#/main/core/data/form/reducer'
-import {makeListReducer} from '#/main/core/data/list/reducer'
+import {makeFormReducer} from '#/main/app/content/form/store/reducer'
+import {makeListReducer} from '#/main/app/content/list/store'
 import {url} from '#/main/app/api'
-import {FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
-import {LIST_TOGGLE_SELECT, LIST_TOGGLE_SELECT_ALL} from '#/main/core/data/list/actions'
+import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
+import {LIST_TOGGLE_SELECT, LIST_TOGGLE_SELECT_ALL} from '#/main/app/content/list/store/actions'
 import cloneDeep from 'lodash/cloneDeep'
 
 const getCollaboratorRole = (workspace) => workspace.roles.find(role => role.name.indexOf('COLLABORATOR') > -1)

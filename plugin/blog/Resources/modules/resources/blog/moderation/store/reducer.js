@@ -1,4 +1,4 @@
-import {makeListReducer} from '#/main/core/data/list/reducer'
+import {makeListReducer} from '#/main/app/content/list/store'
 import {makeReducer} from '#/main/app/store/reducer'
 import {
   UPDATE_POST_COMMENT,

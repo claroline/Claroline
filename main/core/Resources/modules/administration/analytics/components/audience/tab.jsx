@@ -5,17 +5,16 @@ import {Grid, Row, Col} from 'react-bootstrap'
 import {merge} from 'lodash'
 
 import {trans} from '#/main/core/translation'
-import {LineChart} from '#/main/core/layout/chart/line/components/line-chart.jsx'
+import {LineChart} from '#/main/core/layout/chart/line/components/line-chart'
 import {actions} from '#/main/core/administration/analytics/actions'
 import {DashboardCard} from '#/main/core/layout/dashboard/index'
-import {Form} from '#/main/core/data/form/components/form.jsx'
-import {CallbackButton} from '#/main/app/button/components/callback'
+import {FormData} from '#/main/app/content/form/components/data'
+import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 
 const FilterForm = (props) =>
-  <Form
+  <FormData
     level={3}
     data={props.data}
-    errors={{}}
     title={trans('show')}
     pendingChanges={false}
     validating={false}
@@ -53,7 +52,7 @@ const FilterForm = (props) =>
     >
       {trans('show_actions')}
     </CallbackButton>
-  </Form>
+  </FormData>
 
 FilterForm.propTypes = {
   'updateProp': T.func.isRequired,

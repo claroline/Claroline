@@ -1,6 +1,6 @@
 import {makeReducer} from '#/main/app/store/reducer'
 
-import {FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
+import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 
 import {reducer as pendingReducer} from '#/main/core/workspace/user/pending/reducer'
 import {reducer as usersReducer} from '#/main/core/workspace/user/user/reducer'

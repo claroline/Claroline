@@ -1,10 +1,10 @@
 import cloneDeep from 'lodash/cloneDeep'
 
-import {url} from '#/main/app/api'
 import {makeActionCreator} from '#/main/app/store/actions'
-import {API_REQUEST} from '#/main/app/api'
-import {actions as formActions} from '#/main/core/data/form/actions'
-import {actions as listActions} from '#/main/core/data/list/actions'
+import {API_REQUEST, url} from '#/main/app/api'
+
+import {actions as formActions} from '#/main/app/content/form/store'
+import {actions as listActions} from '#/main/app/content/list/store'
 
 const ENTRIES_UPDATE = 'ENTRIES_UPDATE'
 const ENTRY_CREATED = 'ENTRY_CREATED'

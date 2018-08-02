@@ -7,6 +7,7 @@ import {toKey} from '#/main/core/scaffolding/text/utils'
 
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {Summary as SummaryTypes} from '#/main/app/content/summary/prop-types'
 
@@ -21,7 +22,7 @@ const SummaryHeader = props =>
     <div className="summary-controls">
       {props.opened &&
         <Button
-          type="callback"
+          type={CALLBACK_BUTTON}
           tooltip={props.opened ? 'bottom':'right'}
           className={classes('btn-link summary-control hidden-xs hidden-sm', {
             active: props.pinned

@@ -3,11 +3,11 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {FormContainer} from '#/main/core/data/form/containers/form'
-import {select as formSelect} from '#/main/core/data/form/selectors'
+import {FormData} from '#/main/app/content/form/containers/data'
+import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 
 import {WorkspaceList} from '#/main/core/workspace/list/components/workspace-list'
-import {constants} from '#/main/core/data/list/constants'
+import {constants} from '#/main/app/content/list/constants'
 
 const Parameters = () => {
   const choices = {}
@@ -17,7 +17,7 @@ const Parameters = () => {
   })
 
   return (
-    <FormContainer
+    <FormData
       level={3}
       name="parameters"
       buttons={true}

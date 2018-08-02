@@ -1,6 +1,6 @@
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
-import {makeFormReducer} from '#/main/core/data/form/reducer'
-import {FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
+import {makeFormReducer} from '#/main/app/content/form/store/reducer'
+import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 
 import {
   UPDATE_CURRENT_EDIT_SECTION,

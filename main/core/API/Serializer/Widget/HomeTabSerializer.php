@@ -121,7 +121,7 @@ class HomeTabSerializer
         if (isset($data['roles'])) {
             foreach ($data['roles'] as $roleUuid) {
                 $role = $this->om->getRepository(Role::class)
-              ->findOneBy(['uuid' => $roleUuid]);
+                    ->findOneBy(['uuid' => $roleUuid]);
                 $homeTab->addRole($role);
             }
 

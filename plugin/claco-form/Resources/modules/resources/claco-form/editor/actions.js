@@ -1,7 +1,7 @@
 import {makeActionCreator} from '#/main/app/store/actions'
-import {API_REQUEST} from '#/main/app/api'
-import {url} from '#/main/app/api'
-import {actions as listActions} from '#/main/core/data/list/actions'
+import {API_REQUEST, url} from '#/main/app/api'
+
+import {actions as listActions} from '#/main/app/content/list/store'
 
 const RESOURCE_PROPERTY_UPDATE = 'RESOURCE_PROPERTY_UPDATE'
 const RESOURCE_PARAMS_PROPERTY_UPDATE = 'RESOURCE_PARAMS_PROPERTY_UPDATE'

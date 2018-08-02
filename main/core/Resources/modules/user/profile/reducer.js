@@ -1,5 +1,5 @@
 import {makeReducer} from '#/main/app/store/reducer'
-import {makeFormReducer} from '#/main/core/data/form/reducer'
+import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 
 import {
   PROFILE_FACET_OPEN

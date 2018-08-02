@@ -5,11 +5,11 @@ import cloneDeep from 'lodash/cloneDeep'
 import classes from 'classnames'
 
 import {trans} from '#/main/core/translation'
-import {actions as listActions} from '#/main/core/data/list/actions'
+import {actions as listActions} from '#/main/app/content/list/store'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
-import {TextGroup}  from '#/main/core/layout/form/components/group/text-group.jsx'
+import {TextGroup}  from '#/main/core/layout/form/components/group/text-group'
 
 import {actions} from '#/plugin/reservation/administration/resource-type/actions'
 

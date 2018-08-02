@@ -3,15 +3,16 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {FormContainer} from '#/main/core/data/form/containers/form'
-import {select as formSelect} from '#/main/core/data/form/selectors'
-import {actions as formActions} from '#/main/core/data/form/actions'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {FormData} from '#/main/app/content/form/containers/data'
+import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
+import {actions as formActions} from '#/main/app/content/form/store/actions'
 
 import {Forum as ForumType} from '#/plugin/forum/resources/forum/prop-types'
 import {constants} from '#/plugin/forum/resources/forum/constants'
 
 const EditorComponent = (props) =>
-  <FormContainer
+  <FormData
     level={3}
     displayLevel={2}
     name="forumForm"
@@ -19,11 +20,11 @@ const EditorComponent = (props) =>
     className="content-container"
     buttons={true}
     save={{
-      type: 'callback',
+      type: CALLBACK_BUTTON,
       callback: () => props.saveForm(props.forumForm.id)
     }}
     cancel={{
-      type: 'link',
+      type: LINK_BUTTON,
       target: '/',
       exact: true
     }}

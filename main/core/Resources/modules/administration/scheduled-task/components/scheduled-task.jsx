@@ -3,19 +3,20 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {FormContainer} from '#/main/core/data/form/containers/form'
-import {select as formSelect} from '#/main/core/data/form/selectors'
-import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
+import {FormData} from '#/main/app/content/form/containers/data'
+import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
+import {MODAL_DATA_LIST} from '#/main/app/modals/list'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
 import {constants} from '#/main/core/administration/scheduled-task/constants'
 import {actions} from '#/main/core/administration/scheduled-task/actions'
 import {UserList} from '#/main/core/administration/user/user/components/user-list'
-import {DataListContainer} from '#/main/core/data/list/containers/data-list'
+import {ListData} from '#/main/app/content/list/containers/data'
 import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
 
 const ScheduledTaskForm = props =>
-  <FormContainer
+  <FormData
     level={2}
     name="task"
     target={(task, isNew) => isNew ?
@@ -24,7 +25,7 @@ const ScheduledTaskForm = props =>
     }
     buttons={true}
     cancel={{
-      type: 'link',
+      type: LINK_BUTTON,
       target: '/',
       exact: true
     }}
@@ -86,14 +87,14 @@ const ScheduledTaskForm = props =>
         disabled={props.new}
         actions={[
           {
-            type: 'callback',
+            type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('add_users'),
             callback: () => props.pickUsers(props.task.id)
           }
         ]}
       >
-        <DataListContainer
+        <ListData
           name="task.users"
           fetch={{
             url: ['apiv2_scheduledtask_list_users', {id: props.task.id}],
@@ -108,7 +109,7 @@ const ScheduledTaskForm = props =>
         />
       </FormSection>
     </FormSections>
-  </FormContainer>
+  </FormData>
 
 ScheduledTaskForm.propTypes = {
   new: T.bool.isRequired,
@@ -125,7 +126,7 @@ const ScheduledTask = connect(
   }),
   dispatch =>({
     pickUsers(taskId) {
-      dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
+      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-user',
         title: trans('add_users'),
         confirmText: trans('add'),

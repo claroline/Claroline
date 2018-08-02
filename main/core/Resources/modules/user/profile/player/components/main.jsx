@@ -1,14 +1,14 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {UserDetails} from '#/main/core/user/components/details.jsx'
+import {UserDetails} from '#/main/core/user/components/details'
 
 import {connectProfile} from '#/main/core/user/profile/connect'
-import {ProfileNav} from '#/main/core/user/profile/components/nav.jsx'
-import {ProfileFacets} from '#/main/core/user/profile/components/facets.jsx'
+import {ProfileNav} from '#/main/core/user/profile/components/nav'
+import {ProfileFacets} from '#/main/core/user/profile/components/facets'
 
-import {select} from '#/main/core/data/details/selectors'
-import {ProfileFacet} from '#/main/core/user/profile/player/components/facet.jsx'
+import {selectors} from '#/main/app/content/details/store'
+import {ProfileFacet} from '#/main/core/user/profile/player/components/facet'
 
 const ProfileShowComponent = props =>
   <div className="user-profile row">
@@ -43,7 +43,7 @@ ProfileShowComponent.propTypes = {
 
 const ProfileShow = connectProfile(
   state => ({
-    user: select.data(select.details(state, 'user'))
+    user: selectors.data(selectors.details(state, 'user'))
   })
 )(ProfileShowComponent)
 

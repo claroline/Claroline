@@ -1,10 +1,11 @@
 import {trans} from '#/main/core/translation'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {UserCard} from '#/main/core/user/data/components/user-card'
 
 const UserList = {
   open: (row) => ({
-    type: 'link',
+    type: LINK_BUTTON,
     target: `/users/form/${row.id}`,
     label: trans('edit', {}, 'actions')
   }),

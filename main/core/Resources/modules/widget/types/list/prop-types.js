@@ -1,6 +1,6 @@
 import {PropTypes as T} from 'prop-types'
 
-import {constants as listConstants} from '#/main/core/data/list/constants'
+import {constants as listConstants} from '#/main/app/content/list/constants'
 
 const ListWidgetParameters = {
   propTypes: {
@@ -9,7 +9,7 @@ const ListWidgetParameters = {
     paginated: T.bool,
     pageSize: T.number,
     defaultFilters: T.array,
-    availableColumns: T.array,
+    availableColumns: T.array
   },
   defaultProps: {
     filterable: listConstants.DEFAULT_FEATURES.filterable,

@@ -4,12 +4,12 @@ import get from 'lodash/get'
 import classes from 'classnames'
 
 import {t, tex} from '#/main/core/translation'
-import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
-import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
-import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
-import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
-import {RadiosGroup} from '#/main/core/layout/form/components/group/radios-group.jsx'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
+import {ErrorBlock} from '#/main/core/layout/form/components/error-block'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea'
+import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
+import {FormGroup} from '#/main/core/layout/form/components/group/form-group'
+import {RadiosGroup} from '#/main/core/layout/form/components/group/radios-group'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
 
 import {
   SCORE_SUM,
@@ -20,7 +20,7 @@ import {
   NUMBERING_NUMERIC
 } from '#/plugin/exo/quiz/enums'
 import {QCM_MULTIPLE, QCM_SINGLE, actions} from '#/plugin/exo/items/choice/editor'
-import {ScoreRulesGroup} from '#/plugin/exo/data/types/score-rules/components/form-group.jsx'
+import {ScoreRulesGroup} from '#/plugin/exo/data/score-rules/components/form-group'
 
 class ChoiceItem extends Component {
   constructor(props) {

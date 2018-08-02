@@ -2,13 +2,13 @@ import React from 'react'
 
 import {trans} from '#/main/core/translation'
 
-import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
+import {FormData} from '#/main/app/content/form/containers/data'
 
 /**
  * @constructor
  */
 const Organization = () =>
-  <FormContainer
+  <FormData
     level={2}
     name="user"
     sections={[

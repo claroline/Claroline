@@ -1,10 +1,11 @@
 import {trans} from '#/main/core/translation'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {GroupCard} from '#/main/core/user/data/components/group-card'
 
 const GroupList = {
   open: (row) => ({
-    type: 'link',
+    type: LINK_BUTTON,
     target: `/groups/form/${row.id}`,
     label: trans('edit', {}, 'actions')
   }),

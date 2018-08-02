@@ -1,9 +1,10 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
-import {select} from '#/main/core/data/list/selectors'
-import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
-import {constants as listConst} from '#/main/core/data/list/constants'
+
+import {select} from '#/main/app/content/list/store'
+import {ListData} from '#/main/app/content/list/containers/data'
+import {constants as listConst} from '#/main/app/content/list/constants'
 import {trans} from '#/main/core/translation'
 
 const topTypes = {
@@ -219,7 +220,7 @@ class Tab extends Component {
   
   render() {
     return (
-      <DataListContainer
+      <ListData
         name="topActions"
         fetch={{
           url: ['apiv2_admin_tool_analytics_top_actions'],

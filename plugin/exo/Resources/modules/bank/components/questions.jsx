@@ -3,9 +3,10 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {t, tex, trans, transChoice} from '#/main/core/translation'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {MODAL_SHARE} from '#/plugin/exo/bank/components/modal/share.jsx'
+import {MODAL_SHARE} from '#/plugin/exo/bank/components/modal/share'
 
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {actions} from '#/plugin/exo/bank/actions'
@@ -16,7 +17,7 @@ import {
   PageContent
 } from '#/main/core/layout/page'
 
-import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
+import {ListData} from '#/main/app/content/list/containers/data'
 
 import {getDefinition, listItemNames} from '#/plugin/exo/items/item-types'
 import {Icon as ItemIcon} from '#/plugin/exo/items/components/icon.jsx'
@@ -28,7 +29,7 @@ const QuestionsPage = props =>
     <PageHeader title={tex('questions_bank')} />
 
     <PageContent>
-      <DataListContainer
+      <ListData
         name="questions"
         fetch={{
           url: ['question_list'],
@@ -102,12 +103,12 @@ const QuestionsPage = props =>
             action: (rows) => props.duplicateQuestions(rows, true)
           },*/ {
             // TODO : checks if the current user has the rights to share to enable the action
-            type: 'callback',
+            type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-share',
             label: tex('question_share'),
             callback: () => props.shareQuestions(rows)
           }, {
-            type: 'callback',
+            type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-trash-o',
             label: t('delete'),
             callback: () => props.removeQuestions(rows),

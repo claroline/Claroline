@@ -5,6 +5,7 @@ import {trans} from '#/main/core/translation'
 
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON, MENU_BUTTON} from '#/main/app/buttons'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
 /**
@@ -36,7 +37,7 @@ implementPropTypes(PageAction, ActionTypes, {
 const FullScreenAction = props =>
   <PageAction
     id={props.id}
-    type="callback"
+    type={CALLBACK_BUTTON}
     label={trans(props.fullscreen ? 'fullscreen_off' : 'fullscreen_on')}
     icon={classes('fa', {
       'fa-expand': !props.fullscreen,
@@ -58,7 +59,7 @@ FullScreenAction.defaultProps = {
 const MoreAction = props =>
   <PageAction
     id={props.id}
-    type="menu"
+    type={MENU_BUTTON}
     icon="fa fa-ellipsis-v"
     label={trans('show-more-actions', {}, 'actions')}
     menu={{

@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {Button as ButtonTypes} from '#/main/app/button/prop-types'
+import {Button as ButtonTypes} from '#/main/app/buttons/prop-types'
 import {Button} from '#/main/app/action'
 import {t} from '#/main/core/translation'
 import {Redirect as RedirectTypes} from '#/main/app/router/prop-types'

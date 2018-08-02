@@ -1,11 +1,12 @@
 import {trans} from '#/main/core/translation'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {locationTypes} from '#/main/core/administration/user/location/constants'
 import {LocationCard} from '#/main/core/user/data/components/location-card'
 
 const LocationList = {
   open: (row) => ({
-    type: 'link',
+    type: LINK_BUTTON,
     target: `/locations/form/${row.id}`,
     label: trans('edit', {}, 'actions')
   }),

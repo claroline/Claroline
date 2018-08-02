@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 
 import {tex} from '#/main/core/translation'
 import {Button} from '#/main/app/action/components/button'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
@@ -38,7 +39,7 @@ const AttemptEnd = props => {
 
           {props.endNavigation && showCorrection &&
             <Button
-              type="link"
+              type={LINK_BUTTON}
               className="btn btn-start btn-lg btn-block btn-primary"
               icon="fa fa-fw fa-play"
               label={tex('view_paper')}
@@ -48,7 +49,7 @@ const AttemptEnd = props => {
 
           {props.endNavigation &&
             <Button
-              type="link"
+              type={LINK_BUTTON}
               className="btn btn-start btn-lg btn-block btn-primary"
               icon="fa fa-fw fa-play"
               label={tex('exercise_restart')}

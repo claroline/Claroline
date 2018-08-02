@@ -9,10 +9,11 @@ import {trans, transChoice} from '#/main/core/translation'
 import {displayDate} from '#/main/core/scaffolding/date'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
-import {DataListContainer} from '#/main/core/data/list/containers/data-list'
+import {ListData} from '#/main/app/content/list/containers/data'
 import {DataCard} from '#/main/core/data/components/data-card'
-import {constants as listConstants} from '#/main/core/data/list/constants'
+import {constants as listConstants} from '#/main/app/content/list/constants'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
 import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
@@ -246,7 +247,7 @@ class EntriesComponent extends Component {
 
   generateActions(rows) {
     const dataListActions = [{
-      type: 'link',
+      type: LINK_BUTTON,
       icon: 'fa fa-fw fa-eye',
       label: trans('view_entry', {}, 'clacoform'),
       target: `/entries/${rows[0].id}`,
@@ -256,14 +257,14 @@ class EntriesComponent extends Component {
     if (this.props.canGeneratePdf) {
       // todo : both actions must be merged
       dataListActions.push({
-        type: 'callback',
+        type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-print',
         label: trans('print_entry', {}, 'clacoform'),
         callback: () => this.props.downloadEntryPdf(rows[0].id),
         scope: ['object']
       })
       dataListActions.push({
-        type: 'callback',
+        type: CALLBACK_BUTTON,
         icon: 'fa fa-w fa-print',
         label: trans('print_selected_entries', {}, 'clacoform'),
         callback: () => this.props.downloadEntriesPdf(rows),
@@ -271,7 +272,7 @@ class EntriesComponent extends Component {
       })
     }
     dataListActions.push({
-      type: 'link',
+      type: LINK_BUTTON,
       icon: 'fa fa-fw fa-pencil',
       label: trans('edit'),
       target: `/entry/form/${rows[0].id}`,
@@ -279,7 +280,7 @@ class EntriesComponent extends Component {
       scope: ['object']
     })
     dataListActions.push({
-      type: 'callback',
+      type: CALLBACK_BUTTON,
       icon: 'fa fa-fw fa-eye',
       label: trans('publish'),
       callback: () => this.props.switchEntriesStatus(rows, constants.ENTRY_STATUS_PUBLISHED),
@@ -287,7 +288,7 @@ class EntriesComponent extends Component {
         rows.filter(e => e.status === constants.ENTRY_STATUS_PUBLISHED).length !== rows.length
     })
     dataListActions.push({
-      type: 'callback',
+      type: CALLBACK_BUTTON,
       icon: 'fa fa-fw fa-eye-slash',
       label: trans('unpublish'),
       callback: () => this.props.switchEntriesStatus(rows, constants.ENTRY_STATUS_UNPUBLISHED),
@@ -297,14 +298,14 @@ class EntriesComponent extends Component {
 
     if (this.props.canAdministrate) {
       dataListActions.push({
-        type: 'callback',
+        type: CALLBACK_BUTTON,
         icon: 'fa fa-w fa-lock',
         label: trans('lock'),
         callback: () => this.props.switchEntriesLock(rows, true),
         displayed: rows.filter(e => e.locked).length !== rows.length
       })
       dataListActions.push({
-        type: 'callback',
+        type: CALLBACK_BUTTON,
         icon: 'fa fa-w fa-unlock',
         label: trans('unlock'),
         callback: () => this.props.switchEntriesLock(rows, false),
@@ -312,7 +313,7 @@ class EntriesComponent extends Component {
       })
     }
     dataListActions.push({
-      type: 'callback',
+      type: CALLBACK_BUTTON,
       icon: 'fa fa-w fa-trash-o',
       label: trans('delete'),
       callback: () => this.deleteEntries(rows),
@@ -435,14 +436,14 @@ class EntriesComponent extends Component {
     return (
       <div>
         <h2>{trans('entries_list', {}, 'clacoform')}</h2>
-        <DataListContainer
+        <ListData
           display={{
             current: this.props.defaultDisplayMode || listConstants.DISPLAY_TABLE,
             available: Object.keys(listConstants.DISPLAY_MODES)
           }}
           name="entries.list"
           primaryAction={(row) => ({
-            type: 'link',
+            type: LINK_BUTTON,
             label: trans('open'),
             target: `/entries/${row.id}`
           })}

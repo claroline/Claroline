@@ -1,4 +1,4 @@
-import {makeListReducer} from '#/main/core/data/list/reducer'
+import {makeListReducer} from '#/main/app/content/list/store'
 import {combineReducers} from '#/main/app/store/reducer'
 import {makeReducer} from '#/main/app/store/reducer'
 

@@ -6,7 +6,7 @@ import {trans} from '#/main/core/translation'
 import {copy} from '#/main/app/clipboard'
 import {PageContent} from '#/main/core/layout/page'
 import {ResourcePageContainer} from '#/main/core/resource/containers/page'
-
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
 
@@ -16,7 +16,7 @@ const ImageComponent = props =>
   <ResourcePageContainer
     customActions={[
       {
-        type: 'callback',
+        type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-clipboard',
         label: trans('copy_permalink_to_clipboard'),
         callback: () => copy(props.url)

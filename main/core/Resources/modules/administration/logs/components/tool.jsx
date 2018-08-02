@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/core/translation'
-import {select} from '#/main/core/data/list/selectors'
+import {select} from '#/main/app/content/list/store'
 import {url} from '#/main/app/api'
 import {
   matchPath,
@@ -18,6 +18,7 @@ import {
 import {
   RoutedPageContent
 } from '#/main/core/layout/router'
+import {LINK_BUTTON, DOWNLOAD_BUTTON} from '#/main/app/buttons'
 
 // app pages
 import {Logs} from '#/main/core/administration/logs/components/log-list.jsx'
@@ -30,13 +31,12 @@ const Actions = (props) => {
   if (matchPath(props.location.pathname, {path: '/', exact: true})) {
     moreActions = moreActions.concat([
       {
-        type: 'link',
+        type: LINK_BUTTON,
         target: '/users',
         label: trans('user_tracking', {}, 'log'),
         icon: 'fa fa-users'
-      },
-      {
-        type: 'download',
+      }, {
+        type: DOWNLOAD_BUTTON,
         file: {
           url: url(['apiv2_admin_tool_logs_list_csv']) + props.logsQuery
         },
@@ -49,14 +49,13 @@ const Actions = (props) => {
   if (matchPath(props.location.pathname, {path: '/users', exact: true})) {
     moreActions = moreActions.concat([
       {
-        type: 'link',
+        type: LINK_BUTTON,
         target: '/',
         exact: true,
         label: trans('list', {}, 'platform'),
         icon: 'fa fa-list'
-      },
-      {
-        type: 'download',
+      }, {
+        type: DOWNLOAD_BUTTON,
         file: {
           url: url(['apiv2_admin_tool_logs_list_users_csv']) + props.usersQuery
         },
@@ -72,14 +71,15 @@ const Actions = (props) => {
         <PageAction
           id={'back-to-list'}
           label={trans('back')}
-          title={trans('back')}
           icon={'fa fa-share fa-flip-horizontal'}
-          type={'link'}
+          type={LINK_BUTTON}
           target={'/'}
           exact={true}
         />
       }
-      {moreActions.length > 0 && <MoreAction actions = {moreActions}/>}
+      {moreActions.length > 0 &&
+        <MoreAction actions={moreActions} />
+      }
     </PageActions>
   )
 }

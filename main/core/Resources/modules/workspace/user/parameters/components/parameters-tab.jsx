@@ -6,9 +6,9 @@ import get from 'lodash/get'
 import {url} from '#/main/app/api'
 import {trans} from '#/main/core/translation'
 
-import {FormContainer} from '#/main/core/data/form/containers/form'
-import {actions as formActions} from '#/main/core/data/form/actions'
-import {select as formSelect} from '#/main/core/data/form/selectors'
+import {FormData} from '#/main/app/content/form/containers/data'
+import {actions as formActions} from '#/main/app/content/form/store/actions'
+import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 
@@ -27,7 +27,7 @@ const Parameters = props => {
   })
 
   return (
-    <FormContainer
+    <FormData
       level={3}
       name="parameters"
       buttons={true}

@@ -1,8 +1,8 @@
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 
-import {makeListReducer} from '#/main/core/data/list/reducer'
-import {makeFormReducer} from '#/main/core/data/form/reducer'
-import {FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
+import {makeListReducer} from '#/main/app/content/list/store'
+import {makeFormReducer} from '#/main/app/content/form/store/reducer'
+import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 
 import {reducer as creationReducer} from '#/main/core/workspace/creation/store'
 
@@ -32,14 +32,11 @@ const reducer = {
     picker: makeListReducer('managers.picker')
   }),
   selected: combineReducers({
-    user: makeListReducer(
-      'selected.user'
-    ),
-    group: makeListReducer(
-      'selected.group'
-    )
+    user: makeListReducer('selected.user'),
+    group: makeListReducer('selected.group')
   }),
   parameters: makeFormReducer('parameters'),
+  tools: makeReducer([], {}),
   models: makeReducer()
 }
 

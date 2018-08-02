@@ -4,10 +4,10 @@ import moment from 'moment'
 import times from 'lodash/times'
 
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
-import {CallbackButton} from '#/main/app/button/components/callback'
+import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 
 import {CalendarView as CalendarViewTypes} from '#/main/core/layout/calendar/prop-types'
-import {CalendarLayout} from '#/main/core/layout/calendar/components/view/layout.jsx'
+import {CalendarLayout} from '#/main/core/layout/calendar/components/view/layout'
 import {constants} from '#/main/core/layout/calendar/constants'
 
 const Day = props =>

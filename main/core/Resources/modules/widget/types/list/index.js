@@ -1,7 +1,7 @@
 import merge from 'lodash/merge'
 
 import {makeReducer} from '#/main/app/store/reducer'
-import {makeListReducer} from '#/main/core/data/list/reducer'
+import {makeListReducer} from '#/main/app/content/list/store'
 
 import {ListWidget} from '#/main/core/widget/types/list/components/widget'
 import {WIDGET_UPDATE_CONFIG} from '#/main/core/widget/types/list/actions'

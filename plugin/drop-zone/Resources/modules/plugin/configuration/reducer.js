@@ -2,7 +2,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import set from 'lodash/set'
 
 import {makeReducer} from '#/main/app/store/reducer'
-import {makeListReducer} from '#/main/core/data/list/reducer'
+import {makeListReducer} from '#/main/app/content/list/store'
 
 import {validate} from '#/plugin/drop-zone/plugin/configuration/validator'
 

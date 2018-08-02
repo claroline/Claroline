@@ -1,5 +1,5 @@
 import {makeReducer} from '#/main/app/store/reducer'
-import {makeListReducer} from '#/main/core/data/list/reducer'
+import {makeListReducer} from '#/main/app/content/list/store'
 
 const reducer = {
   workspaces: makeListReducer('workspaces', {}),

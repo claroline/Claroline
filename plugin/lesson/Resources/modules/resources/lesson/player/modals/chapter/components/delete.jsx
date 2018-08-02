@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 import {trans} from '#/main/core/translation'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
-import {Form} from '#/main/core/data/form/components/form.jsx'
+import {FormData} from '#/main/app/content/form/components/data'
 
 class ChapterDeleteModal extends Component {
   constructor(props) {
@@ -40,7 +40,7 @@ class ChapterDeleteModal extends Component {
         icon="fa fa-fw fa-trash-o"
         title={trans('delete_warning', {}, 'icap_lesson')}
       >
-        <Form
+        <FormData
           level={5}
           data={this.state.data}
           setErrors={() => {}}

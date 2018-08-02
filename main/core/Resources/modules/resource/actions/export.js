@@ -1,8 +1,9 @@
 import {trans} from '#/main/core/translation'
+import {ASYNC_BUTTON} from '#/main/app/buttons'
 
 const action = (resourceNodes) => ({ // todo collection
   name: 'export',
-  type: 'async',
+  type: ASYNC_BUTTON,
   icon: 'fa fa-fw fa-download',
   label: trans('export', {}, 'actions'),
   request: {

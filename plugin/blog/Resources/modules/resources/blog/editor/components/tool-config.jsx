@@ -2,6 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup'
 import {actions as optionsActions} from '#/plugin/blog/resources/blog/editor/store'
 
@@ -9,7 +10,7 @@ const ToolConfigComponent = props =>
   <li className="clearfix">
     <ButtonGroup className="order-widgets">
       <Button
-        type="callback"
+        type={CALLBACK_BUTTON}
         label=""
         className="btn btn-link widget-ordering-button"
         icon="fa fa-fw fa-2x fa-caret-up"
@@ -19,7 +20,7 @@ const ToolConfigComponent = props =>
         disabled={props.index <= 0}
       />
       <Button
-        type="callback"
+        type={CALLBACK_BUTTON}
         className="btn btn-link widget-ordering-button"
         label=""
         icon="fa fa-fw fa-2x fa-caret-down"
@@ -29,7 +30,7 @@ const ToolConfigComponent = props =>
         disabled={props.index >= props.max}
       />
       <Button
-        type="callback"
+        type={CALLBACK_BUTTON}
         className="btn btn-link widget-ordering-button"
         label=""
         icon={props.visibility ? 'fa fa-fw fa-eye fa-lg' : 'fa fa-fw fa-eye-slash fa-lg'}

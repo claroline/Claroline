@@ -3,9 +3,9 @@ import moment from 'moment'
 import padStart from 'lodash/padStart'
 
 import {trans} from '#/main/core/translation'
-import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {isValidDate, getApiFormat} from '#/main/core/scaffolding/date'
-import {CallbackButton} from '#/main/app/button/components/callback'
+import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 
 import {Calendar as CalendarTypes} from '#/main/core/layout/calendar/prop-types'
 import {constants} from '#/main/core/layout/calendar/constants'

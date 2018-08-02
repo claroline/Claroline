@@ -1,4 +1,4 @@
-import {select as formSelectors} from '#/main/core/data/form/selectors'
+import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
 
 const STORE_NAME = 'widgetCreation'
 

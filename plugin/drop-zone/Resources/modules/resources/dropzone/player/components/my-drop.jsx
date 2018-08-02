@@ -7,6 +7,7 @@ import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
 import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar'
 
 import {DropzoneType, DropType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
@@ -101,16 +102,16 @@ const MyDropComponent = props =>
     <div className="text-right">
       <ButtonToolbar className={'pull-right'}>
         <Button
+          type={CALLBACK_BUTTON}
           icon={'fa fa-fw fa-plus icon-with-text-right'}
           label= {trans('add_document', {}, 'dropzone')}
-          type="callback"
           className="btn btn-default"
           callback={() => props.addDocument(props.myDrop.id, props.dropzone.parameters.documents)}
         />
         <Button
+          type={CALLBACK_BUTTON}
           icon={'fa fa-fw fa-upload icon-with-text-right'}
           label= {trans('submit_my_drop', {}, 'dropzone')}
-          type="callback"
           className="btn primary"
           disabled={!props.myDrop.documents || 0 === props.myDrop.documents.length}
           callback={() => props.submit(props.myDrop.id)}

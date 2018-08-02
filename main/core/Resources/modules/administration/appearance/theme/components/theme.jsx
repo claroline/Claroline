@@ -25,6 +25,7 @@ import {
   PageAction,
   MoreAction
 } from '#/main/core/layout/page/index'
+import {LINK_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
 
 /*import {HelpBlock}    from '#/main/core/layout/form/components/help-block.jsx'*/
 //import {FormSection, FormSections} from '#/main/core/layout/form/components/form-sections.jsx'
@@ -331,7 +332,7 @@ class Theme extends Component {
           <PageActions>
             <PageGroupActions>
               <PageAction
-                type="link"
+                type={LINK_BUTTON}
                 label={trans('save_theme', {}, 'theme')}
                 icon="fa fa-save"
                 primary={true}
@@ -342,7 +343,7 @@ class Theme extends Component {
 
             <PageGroupActions>
               <PageAction
-                type="link"
+                type={LINK_BUTTON}
                 label={trans('themes_list', {}, 'theme')}
                 icon="fa fa-list"
                 target="/"
@@ -351,13 +352,15 @@ class Theme extends Component {
               <MoreAction
                 actions={[
                   {
+                    type: CALLBACK_BUTTON,
                     icon: 'fa fa-fw fa-refresh',
                     label: trans('rebuild_theme', {}, 'theme'),
-                    action: () => this.props.rebuildTheme(this.props.theme)
+                    callback: () => this.props.rebuildTheme(this.props.theme)
                   }, {
+                    type: CALLBACK_BUTTON,
                     icon: 'fa fa-fw fa-trash',
                     label: trans('delete_theme', {}, 'theme'),
-                    action: () => this.props.removeTheme(this.props.theme),
+                    callback: () => this.props.removeTheme(this.props.theme),
                     dangerous: true
                   }
                 ]}

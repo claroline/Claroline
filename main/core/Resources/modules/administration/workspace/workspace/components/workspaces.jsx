@@ -3,25 +3,26 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans, transChoice} from '#/main/core/translation'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {MODAL_DATA_LIST} from '#/main/core/data/list/modals'
-import {MODAL_DATA_FORM} from '#/main/core/data/form/modals'
+import {MODAL_DATA_LIST} from '#/main/app/modals/list'
+import {MODAL_DATA_FORM} from '#/main/app/modals/form'
 
-import {UserList} from '#/main/core/administration/user/user/components/user-list.jsx'
-import {GroupList} from '#/main/core/administration/user/group/components/group-list.jsx'
+import {UserList} from '#/main/core/administration/user/user/components/user-list'
+import {GroupList} from '#/main/core/administration/user/group/components/group-list'
 
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 
-import {DataListContainer} from '#/main/core/data/list/containers/data-list'
+import {ListData} from '#/main/app/content/list/containers/data'
 
 import {actions} from '#/main/core/administration/workspace/workspace/actions'
-import {WorkspaceList} from '#/main/core/administration/workspace/workspace/components/workspace-list.jsx'
+import {WorkspaceList} from '#/main/core/administration/workspace/workspace/components/workspace-list'
 
 // todo : restore custom actions the same way resource actions are implemented
 
 const WorkspacesList = props =>
-  <DataListContainer
+  <ListData
     name="workspaces.list"
     fetch={{
       url: ['apiv2_administrated_list'],
@@ -32,27 +33,27 @@ const WorkspacesList = props =>
     primaryAction={WorkspaceList.open}
     actions={(rows) => [
       {
-        type: 'link',
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-cog',
         label: trans('configure', {}, 'actions'),
         target: `/workspaces/form/${rows[0].uuid}`
       }, {
-        type: 'callback',
+        type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-copy',
         label: trans('duplicate'),
         callback: () => props.copyWorkspaces(rows, false)
       }, {
-        type: 'callback',
+        type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-clone',
         label: trans('duplicate_model'),
         callback: () => props.copyWorkspaces(rows, true)
       }, {
-        type: 'callback',
+        type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-user',
         label: trans('register_users'),
         callback: () => props.registerUsers(rows)
       }, {
-        type: 'callback',
+        type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-users',
         label: trans('register_groups'),
         callback: () => props.registerGroups(rows)
@@ -60,7 +61,7 @@ const WorkspacesList = props =>
       // TODO / FIXME : Uses component delete option.
       // Not possible for the moment because it is not possible to display an alert message if the workspace contains not deletable resources.
       {
-        type: 'callback',
+        type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-trash-o',
         label: trans('delete'),
         dangerous: true,

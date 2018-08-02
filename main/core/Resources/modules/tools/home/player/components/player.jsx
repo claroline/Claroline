@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
 import {PageContainer, PageHeader, PageContent, PageActions, PageAction} from '#/main/core/layout/page'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {WidgetContainer as WidgetContainerTypes} from '#/main/core/widget/prop-types'
 import {WidgetGrid} from '#/main/core/widget/player/components/grid'
@@ -28,7 +29,7 @@ const PlayerComponent = props =>
       {props.editable &&
         <PageActions>
           <PageAction
-            type="link"
+            type={LINK_BUTTON}
             label={trans('configure', {}, 'actions')}
             icon="fa fa-fw fa-cog"
             target="/edit"

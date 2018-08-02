@@ -1,21 +1,25 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+
 import {trans} from '#/main/core/translation'
-import {constants as listConst} from '#/main/core/data/list/constants'
-import {CommentModerationCard} from '#/plugin/blog/resources/blog/comment/components/comment-moderation.jsx'
-import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
+import {LINK_BUTTON} from '#/main/app/buttons'
+import {ListData} from '#/main/app/content/list/containers/data'
+import {constants as listConst} from '#/main/app/content/list/constants'
+
+import {CommentModerationCard} from '#/plugin/blog/resources/blog/comment/components/comment-moderation'
 
 const UnpublishedCommentsComponent = (props) =>
-  <DataListContainer
+  <ListData
     name="moderationComments"
     fetch={{
       url: ['apiv2_blog_comment_unpublished', {blogId: props.blogId}],
       autoload: true
     }}
-    open={{
-      action: (row) => `#/${row.slug}`
-    }}
+    open={(row) => ({
+      type: LINK_BUTTON,
+      target: `/${row.slug}`
+    })}
     definition={[
       {
         name: 'creationDate',
@@ -34,7 +38,6 @@ const UnpublishedCommentsComponent = (props) =>
         type: 'string'
       }
     ]}
-    selection={{}}
     card={CommentModerationCard}
     display={{
       available : [listConst.DISPLAY_LIST],

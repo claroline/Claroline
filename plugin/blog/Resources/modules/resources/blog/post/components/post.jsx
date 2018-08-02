@@ -1,25 +1,30 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import classes from 'classnames'
-import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
+
+// TODO : remove me
+import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar'
+
 import {trans, transChoice} from '#/main/core/translation'
 import {displayDate} from '#/main/core/scaffolding/date'
-import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
+import {UserAvatar} from '#/main/core/user/components/avatar'
 import {hasPermission} from '#/main/core/resource/permissions'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {actions as listActions} from '#/main/core/data/list/actions'
-import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
-import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {UrlButton} from '#/main/app/button/components/url'
+import {actions as listActions} from '#/main/app/content/list/store'
+import {HtmlText} from '#/main/core/layout/components/html-text'
+import {UrlButton} from '#/main/app/buttons/url/components/button'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+
 import {PostType} from '#/plugin/blog/resources/blog/post/components/prop-types'
 import {actions as postActions} from '#/plugin/blog/resources/blog/post/store'
 import {Comments} from '#/plugin/blog/resources/blog/comment/components/comments'
-import {getCommentsNumber, splitArray} from '#/plugin/blog/resources/blog/utils.js'
-import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar'
+import {getCommentsNumber, splitArray} from '#/plugin/blog/resources/blog/utils'
 
 const PostComponent = props =>
   <div className='data-card-blog'>
@@ -154,7 +159,7 @@ const ActionBar = props =>
     {props.canEdit &&
       <Button
         id={`action-edit-${props.post.id}`}
-        type="link"
+        type={LINK_BUTTON}
         icon="fa fa-pencil"
         className="btn btn-link post-button"
         tooltip="top"
@@ -166,7 +171,7 @@ const ActionBar = props =>
     {(props.canEdit || props.canModerate) &&
       <Button
         id={`action-publish-${props.post.id}`}
-        type="callback"
+        type={CALLBACK_BUTTON}
         icon={props.post.status ? 'fa fa-eye' : 'fa fa-eye-slash'}
         className="btn btn-link post-button"
         tooltip="top"
@@ -178,7 +183,7 @@ const ActionBar = props =>
     {(props.canEdit) &&
       <Button
         id={`action-pin-${props.post.id}`}
-        type="callback"
+        type={CALLBACK_BUTTON}
         icon={props.post.pinned ? 'fa fa-thumb-tack' : 'fa fa-thumb-tack fa-rotate-90'}
         className="btn btn-link post-button"
         tooltip="top"
@@ -190,7 +195,7 @@ const ActionBar = props =>
     {props.canEdit &&
       <Button
         id={`action-delete-${props.post.id}`}
-        type="callback"
+        type={CALLBACK_BUTTON}
         icon="fa fa-trash"
         className="btn btn-link post-button"
         tooltip="top"

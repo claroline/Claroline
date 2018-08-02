@@ -3,16 +3,16 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-
-import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {ListData} from '#/main/app/content/list/containers/data'
 
 import {actions as pendingActions} from '#/main/core/workspace/user/pending/actions'
-import {UserList} from '#/main/core/administration/user/user/components/user-list.jsx'
+import {UserList} from '#/main/core/administration/user/user/components/user-list'
 
 import {select} from '#/main/core/workspace/user/selectors'
 
 const PendingList = props =>
-  <DataListContainer
+  <ListData
     name="pending.list"
     fetch={{
       url: ['apiv2_workspace_list_pending', {id: props.workspace.uuid}],
@@ -20,7 +20,7 @@ const PendingList = props =>
     }}
     primaryAction={UserList.open}
     actions={(rows) => [{
-      type: 'callback',
+      type: CALLBACK_BUTTON,
       icon: 'fa fa-fw fa-check',
       label: trans('validate'),
       callback: () => {
@@ -31,7 +31,7 @@ const PendingList = props =>
         message: trans('workspace_user_register_validation_message', {users: rows.map(user => user.username).join(',')})
       }
     }, {
-      type: 'callback',
+      type: CALLBACK_BUTTON,
       icon: 'fa fa-fw fa-ban',
       label: trans('remove'),
       callback: () => props.remove(rows, props.workspace),

@@ -1,13 +1,16 @@
 import React from 'react'
-import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
-import {actions as listActions} from '#/main/core/data/list/actions'
-import {actions as postActions} from '#/plugin/blog/resources/blog/post/store'
-import {Section, Sections} from '#/main/core/layout/components/sections.jsx'
-import moment from 'moment'
-import {getApiFormat} from '#/main/core/scaffolding/date'
+import {connect} from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
+
+// todo : use claroline abstraction instead
+import moment from 'moment'
+
+import {getApiFormat} from '#/main/core/scaffolding/date'
 import {trans} from '#/main/core/translation'
+import {actions as listActions} from '#/main/app/content/list/store'
+import {actions as postActions} from '#/plugin/blog/resources/blog/post/store'
+import {Section, Sections} from '#/main/core/layout/components/sections'
 
 const ArchivesComponent = props =>
   <div key='redactors' className="panel panel-default">

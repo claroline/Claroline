@@ -1,4 +1,4 @@
-import {param} from '#/main/app/config'
+import {param} from '#/main/app/config/parameters'
 import trim from 'lodash/trim'
 
 /**

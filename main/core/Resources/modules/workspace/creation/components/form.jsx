@@ -3,15 +3,19 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {actions as formActions} from '#/main/core/data/form/actions'
+import {withRouter} from '#/main/app/router'
+import {
+  actions as formActions,
+  selectors as formSelect
+} from '#/main/app/content/form/store'
 
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
-import {FormContainer} from '#/main/core/data/form/containers/form'
-import {select as formSelect} from '#/main/core/data/form/selectors'
+import {FormData} from '#/main/app/content/form/containers/data'
+
 import {actions} from '#/main/core/workspace/creation/store/actions'
 import {actions as logActions} from '#/main/core/workspace/creation/components/log/actions'
-import {Logs} from '#/main/core/workspace/creation/components/log/components/logs.jsx'
-import {withRouter} from '#/main/app/router'
+import {Logs} from '#/main/core/workspace/creation/components/log/components/logs'
+
 
 class WorkspaceComponent extends Component
 {
@@ -59,7 +63,7 @@ class WorkspaceComponent extends Component
     })
 
     return (
-      <FormContainer
+      <FormData
         level={3}
         name="workspaces.current"
         buttons={true}
@@ -328,7 +332,7 @@ class WorkspaceComponent extends Component
         ]}
       >
         <Logs/>
-      </FormContainer>
+      </FormData>
     )}
 
 }

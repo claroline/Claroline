@@ -1,6 +1,6 @@
 import {API_REQUEST, url} from '#/main/app/api'
 import {makeInstanceActionCreator} from '#/main/app/store/actions'
-import {actions as listActions} from '#/main/core/data/list/actions'
+import {actions as listActions} from '#/main/app/content/list/store'
 
 import {selectors} from '#/main/core/resource/explorer/store/selectors'
 

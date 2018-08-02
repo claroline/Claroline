@@ -5,14 +5,14 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/core/translation'
 
-import {FormContainer} from '#/main/core/data/form/containers/form'
-import {actions as formActions} from '#/main/core/data/form/actions'
+import {FormData} from '#/main/app/content/form/containers/data'
+import {actions as formActions} from '#/main/app/content/form/store/actions'
 
 import {ResourceType} from '#/main/core/resource/components/type'
 import {constants} from '#/main/core/resource/constants'
 
 const ResourceFormComponent = (props) =>
-  <FormContainer
+  <FormData
     level={props.level}
     name={props.name}
     dataPart={props.dataPart}
@@ -199,7 +199,7 @@ const ResourceFormComponent = (props) =>
     ]}
   >
     {props.children}
-  </FormContainer>
+  </FormData>
 
 ResourceFormComponent.propTypes = {
   level: T.number,

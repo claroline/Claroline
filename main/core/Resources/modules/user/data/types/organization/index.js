@@ -1,15 +1,13 @@
-import {OrganizationGroup} from '#/main/core/user/data/types/organization/components/form-group.jsx'
+import {OrganizationGroup} from '#/main/core/user/data/types/organization/components/form-group'
 
-const ORGANIZATION_TYPE = 'organization'
+import {trans} from '#/main/core/translation'
 
-import {t} from '#/main/core/translation'
-
-const organizationDefinition = {
+const dataType = {
+  name: 'organization',
   meta: {
-    type: ORGANIZATION_TYPE,
     creatable: false,
-    label: t('organization'),
-    description: t('organization_desc')
+    label: trans('organization'),
+    description: trans('organization_desc')
   },
   render: (raw) => raw ? raw.name : null,
   components: {
@@ -18,6 +16,5 @@ const organizationDefinition = {
 }
 
 export {
-  ORGANIZATION_TYPE,
-  organizationDefinition
+  dataType
 }

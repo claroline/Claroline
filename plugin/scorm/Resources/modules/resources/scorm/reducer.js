@@ -1,8 +1,8 @@
 import cloneDeep from 'lodash/cloneDeep'
 
 import {makeReducer} from '#/main/app/store/reducer'
-import {makeListReducer} from '#/main/core/data/list/reducer'
-import {FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
+import {makeListReducer} from '#/main/app/content/list/store'
+import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 
 import {TRACKING_UPDATE} from '#/plugin/scorm/resources/scorm/player/actions'
 import {reducer as editorReducer} from '#/plugin/scorm/resources/scorm/editor/reducer'

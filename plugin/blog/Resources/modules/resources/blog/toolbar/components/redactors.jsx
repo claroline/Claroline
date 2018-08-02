@@ -1,13 +1,15 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
-import {trans} from '#/main/core/translation'
-import {actions as listActions} from '#/main/core/data/list/actions'
-import {actions as postActions} from '#/plugin/blog/resources/blog/post/store/actions'
-import {UrlButton} from '#/main/app/button/components/url'
-import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
 import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
+
+import {trans} from '#/main/core/translation'
+import {UrlButton} from '#/main/app/buttons/url/components/button'
+import {actions as listActions} from '#/main/app/content/list/store'
+import {UserAvatar} from '#/main/core/user/components/avatar'
+
+import {actions as postActions} from '#/plugin/blog/resources/blog/post/store/actions'
 
 const RedactorsComponent = props =>
   <div key='redactors' className="panel panel-default">

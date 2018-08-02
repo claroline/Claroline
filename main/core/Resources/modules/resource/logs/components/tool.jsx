@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/core/translation'
-import {select} from '#/main/core/data/list/selectors'
+import {select} from '#/main/app/content/list/store'
 import {url} from '#/main/app/api'
 import {
   matchPath,
@@ -24,19 +24,20 @@ import {Logs} from '#/main/core/resource/logs/components/log-list.jsx'
 import {UserLogs} from '#/main/core/resource/logs/components/user-list.jsx'
 import {LogDetails} from '#/main/core/layout/logs'
 import {actions as logActions} from  '#/main/core/layout/logs/actions'
+import {DOWNLOAD_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
 const Actions = (props) => {
   let moreActions = []
   if (matchPath(props.location.pathname, {path: '/', exact: true})) {
     moreActions = moreActions.concat([
       {
-        type: 'link',
+        type: LINK_BUTTON,
         target: '/users',
         label: trans('user_tracking', {}, 'log'),
         icon: 'fa fa-users'
       },
       {
-        type: 'download',
+        type: DOWNLOAD_BUTTON,
         file: {
           url: url(['apiv2_resource_logs_list_csv', {'resourceId': props.resourceId}]) + props.logsQuery
         },
@@ -49,14 +50,14 @@ const Actions = (props) => {
   if (matchPath(props.location.pathname, {path: '/users', exact: true})) {
     moreActions = moreActions.concat([
       {
-        type: 'link',
+        type: LINK_BUTTON,
         target: '/',
         exact: true,
         label: trans('list', {}, 'platform'),
         icon: 'fa fa-list'
       },
       {
-        type: 'download',
+        type: DOWNLOAD_BUTTON,
         file: {
           url: url(['apiv2_resource_logs_list_users_csv', {'resourceId': props.resourceId}]) + props.usersQuery
         },
@@ -74,7 +75,7 @@ const Actions = (props) => {
           label={trans('back')}
           title={trans('back')}
           icon={'fa fa-share fa-flip-horizontal'}
-          type={'link'}
+          type={LINK_BUTTON}
           target={'/'}
           exact={true}
         />

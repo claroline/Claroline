@@ -1,4 +1,4 @@
-import {makeListReducer} from '#/main/core/data/list/reducer'
+import {makeListReducer} from '#/main/app/content/list/store'
 
 const reducer = {
   portal: makeListReducer('portal', {}, {}, {

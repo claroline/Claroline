@@ -5,7 +5,7 @@ import omit from 'lodash/omit'
 import {url} from '#/main/app/api'
 import {trans} from '#/main/core/translation'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
-import {DataDetails} from '#/main/core/data/details/components/details'
+import {DetailsData} from '#/main/app/content/details/components/data'
 import {ContentMeta} from '#/main/app/content/meta/components/meta'
 
 import {ResourceType} from '#/main/core/resource/components/type'
@@ -22,7 +22,7 @@ const AboutModal = props =>
       meta={props.resourceNode.meta}
     />
 
-    <DataDetails
+    <DetailsData
       data={props.resourceNode}
       sections={[
         {

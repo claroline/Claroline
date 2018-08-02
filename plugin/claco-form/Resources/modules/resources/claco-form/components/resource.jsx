@@ -8,8 +8,9 @@ import {now} from '#/main/core/scaffolding/date'
 import {url} from '#/main/app/api'
 import {trans} from '#/main/core/translation'
 import {RoutedPageContent} from '#/main/core/layout/router/components/page'
-import {actions as formActions} from '#/main/core/data/form/actions'
+import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
+import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 
 import {actions as entryActions} from '#/plugin/claco-form/resources/claco-form/player/entry/actions'
 import {select} from '#/plugin/claco-form/resources/claco-form/selectors'
@@ -44,32 +45,32 @@ const Resource = props =>
   <ResourcePageContainer
     customActions={[
       {
-        type: 'link',
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-home',
         label: trans('main_menu', {}, 'clacoform'),
         target: '/menu'
       }, {
-        type: 'link',
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-plus',
         label: trans('add_entry', {}, 'clacoform'),
         displayed: props.canAddEntry,
         target: '/entry/form',
         exact: true
       }, {
-        type: 'link',
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-search',
         label: trans('entries_list', {}, 'clacoform'),
         displayed: props.canSearchEntry,
         target: '/entries',
         exact: true
       }, {
-        type: 'link',
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-file-text-o',
         label: trans('template_management', {}, 'clacoform'),
         displayed: props.canEdit,
         target: '/template'
       }, {
-        type: 'url',
+        type: URL_BUTTON,
         icon: 'fa fa-fw fa-upload',
         label: trans('export_all_entries', {}, 'clacoform'),
         displayed: props.canEdit,
@@ -79,7 +80,6 @@ const Resource = props =>
   >
     <RoutedPageContent
       headerSpacer={false}
-      redirect={[]}
       routes={[
         {
           path: '/',

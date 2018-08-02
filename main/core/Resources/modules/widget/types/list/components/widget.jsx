@@ -2,11 +2,11 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {DataListProperty as DataListPropertyTypes} from '#/main/core/data/list/prop-types'
-import {DataListContainer} from '#/main/core/data/list/containers/data-list'
+import {DataListProperty as DataListPropertyTypes} from '#/main/app/content/list/prop-types'
+import {ListData} from '#/main/app/content/list/containers/data'
 
 const ListWidgetComponent = props =>
-  <DataListContainer
+  <ListData
     name="list"
     title={props.title}
     level={3}

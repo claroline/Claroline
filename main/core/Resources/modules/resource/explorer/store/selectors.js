@@ -1,6 +1,6 @@
 import get from 'lodash/get'
 
-import {select as listSelectors} from '#/main/core/data/list/selectors'
+import {select as listSelectors} from '#/main/app/content/list/store'
 
 const explorer = (state, name) => get(state, name)
 

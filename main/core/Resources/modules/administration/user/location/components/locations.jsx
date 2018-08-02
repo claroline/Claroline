@@ -3,10 +3,11 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {t} from '#/main/core/translation'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
-import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
+import {ListData} from '#/main/app/content/list/containers/data'
 import {actions} from '#/main/core/administration/user/location/actions'
-import {LocationList} from '#/main/core/administration/user/location/components/location-list.jsx'
+import {LocationList} from '#/main/core/administration/user/location/components/location-list'
 
 /**
  * Locations list.
@@ -15,7 +16,7 @@ import {LocationList} from '#/main/core/administration/user/location/components/
  * @constructor
  */
 const LocationsList = props =>
-  <DataListContainer
+  <ListData
     name="locations.list"
     fetch={{
       url: ['apiv2_location_list'],
@@ -27,7 +28,7 @@ const LocationsList = props =>
       url: ['apiv2_location_delete_bulk']
     }}
     actions={(rows) => [{
-      type: 'callback',
+      type: CALLBACK_BUTTON,
       icon: 'fa fa-fw fa-map-marker',
       label: t('geolocate'),
       callback: () => props.geolocate(rows[0]),

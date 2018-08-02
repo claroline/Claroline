@@ -1,10 +1,11 @@
 import React from 'react'
-import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
-import {actions as listActions} from '#/main/core/data/list/actions'
-import {actions as postActions} from '#/plugin/blog/resources/blog/post/store'
-import {Calendar} from '#/main/core/layout/calendar/components/calendar.jsx'
+import {connect} from 'react-redux'
+
 import {trans} from '#/main/core/translation'
+import {actions as listActions} from '#/main/app/content/list/store'
+import {actions as postActions} from '#/plugin/blog/resources/blog/post/store'
+import {Calendar} from '#/main/core/layout/calendar/components/calendar'
 
 const BlogCalendarComponent = props =>
   <div key='redactors' className="panel panel-default">

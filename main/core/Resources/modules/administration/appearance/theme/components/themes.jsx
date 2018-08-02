@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 
 import {trans, transChoice} from '#/main/core/translation'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {DataCard} from '#/main/core/data/components/data-card'
 
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
@@ -17,14 +18,14 @@ import {
   PageContent
 } from '#/main/core/layout/page'
 
-import {DataListContainer} from '#/main/core/data/list/containers/data-list'
+import {ListData} from '#/main/app/content/list/containers/data'
 
 const ThemesPage = props =>
   <PageContainer id="theme-management">
     <PageHeader title={trans('themes_management')} />
 
     <PageContent>
-      <DataListContainer
+      <ListData
         name="themes"
         fetch={{
           url: ['apiv2_theme_list']
@@ -45,17 +46,17 @@ const ThemesPage = props =>
         ]}
 
         primaryAction={(row) => ({
-          type: 'link',
+          type: LINK_BUTTON,
           target: `/${row.id}`
         })}
         actions={(rows) => [
           {
-            type: 'callback',
+            type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-refresh',
             label: trans('rebuild_theme', {}, 'theme'),
             callback: () => props.rebuildThemes(rows)
           }, {
-            type: 'callback',
+            type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-trash-o',
             label: trans('delete', {}, 'actions'),
             disabled: !rows.find(row => row.meta.custom), // at least one theme should be deletable

@@ -6,6 +6,7 @@ import {makeId} from '#/main/core/scaffolding/id'
 import {trans} from '#/main/core/translation'
 import {Routes} from '#/main/app/router'
 import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {select} from '#/plugin/planned-notification/tools/planned-notification/selectors'
 import {WORKSPACE_REGISTRATION_USER} from '#/plugin/planned-notification/tools/planned-notification/constants'
@@ -16,7 +17,7 @@ import {Notification} from '#/plugin/planned-notification/tools/planned-notifica
 const NotificationTabActions = () =>
   <PageActions>
     <PageAction
-      type="link"
+      type={LINK_BUTTON}
       icon="fa fa-plus"
       label={trans('create_planned_notification', {}, 'planned_notification')}
       target="/notifications/form"

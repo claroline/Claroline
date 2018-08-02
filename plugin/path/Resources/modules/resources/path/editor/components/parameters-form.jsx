@@ -2,12 +2,13 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
-import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {FormData} from '#/main/app/content/form/containers/data'
 
 import {constants} from '#/plugin/path/resources/path/constants'
 
 const ParametersForm = props =>
-  <FormContainer
+  <FormData
     level={3}
     displayLevel={2}
     name="pathForm"
@@ -15,11 +16,11 @@ const ParametersForm = props =>
     className="content-container"
     buttons={true}
     save={{
-      type: 'callback',
+      type: CALLBACK_BUTTON,
       callback: () => props.saveForm()
     }}
     cancel={{
-      type: 'link',
+      type: LINK_BUTTON,
       target: '/',
       exact: true
     }}

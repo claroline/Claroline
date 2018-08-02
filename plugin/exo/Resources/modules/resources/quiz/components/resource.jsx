@@ -8,6 +8,7 @@ import {RoutedPageContent} from '#/main/core/layout/router/components/page'
 import {ResourcePageContainer} from '#/main/core/resource/containers/page'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
+import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 
 import {CustomDragLayer} from '#/plugin/exo/utils/custom-drag-layer'
 import {TYPE_QUIZ} from '#/plugin/exo/quiz/enums'
@@ -39,25 +40,25 @@ const Resource = props =>
     }}
     customActions={[
       {
-        type: 'link',
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-home',
         label: trans('show_overview'),
         displayed: props.hasOverview,
         target: '/',
         exact: true
       }, {
-        type: 'link',
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-play',
         label: trans('pass_quiz', {}, 'quiz'),
         target: '/play'
       }, {
-        type: 'link',
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-play',
         label: trans('exercise_try', {}, 'quiz'),
         displayed: props.editable,
         target: '/test'
       }, {
-        type: 'link',
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-list',
         label: trans('results_list', {}, 'quiz'),
         disabled: !props.hasPapers,
@@ -65,27 +66,27 @@ const Resource = props =>
         target: '/papers',
         exact: true
       }, {
-        type: 'url',
+        type: URL_BUTTON,
         icon: 'fa fa-fw fa-table',
         label: trans('export_csv_results', {}, 'quiz'),
         disabled: !props.hasPapers,
         displayed: props.papersAdmin,
         target: ['exercise_papers_export', {exerciseId: props.quizId}]
       }, {
-        type: 'link',
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-check-square-o',
         label: trans('manual_correction', {}, 'quiz'),
         disabled: !props.hasPapers,
         displayed: props.papersAdmin,
         target: '/correction/questions'
       }, {
-        type: 'link',
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-bar-chart',
         label: trans('statistics', {}, 'quiz'),
         displayed: props.papersAdmin,
         target: '/statistics'
       }, {
-        type: 'url',
+        type: URL_BUTTON,
         icon: 'fa fa-fw fa-pie-chart',
         label: trans('docimology', {}, 'quiz'),
         displayed: props.docimologyAdmin,

@@ -10,6 +10,7 @@ import {ResourcePageContainer} from '#/main/core/resource/containers/page'
 import {RoutedPageContent} from '#/main/core/layout/router'
 import {PageContent} from '#/main/core/layout/page/index'
 import {SummarizedContent} from '#/main/app/content/summary/components/content'
+import {LINK_BUTTON, DOWNLOAD_BUTTON} from '#/main/app/buttons'
 
 import {actions} from '#/plugin/lesson/resources/lesson/store/'
 import {constants} from '#/plugin/lesson/resources/lesson/constants'
@@ -41,14 +42,14 @@ class PlayerComponent extends Component {
       <ResourcePageContainer
         customActions={[
           {
-            type: 'link',
+            type: LINK_BUTTON,
             icon: 'fa fa-home',
             label: trans('show_overview'),
             target: '/',
             exact: true
           },
           {
-            type: 'download',
+            type: DOWNLOAD_BUTTON,
             icon: 'fa fa-fw fa-file-pdf-o',
             displayed: this.props.canExport,
             label: trans('pdf_export'),

@@ -1,10 +1,12 @@
 import {t} from '#/main/core/translation'
+import {URL_BUTTON} from '#/main/app/buttons'
 
 import {WorkspaceCard} from '#/main/core/workspace/data/components/workspace-card'
 
 const WorkspaceList = {
   open: (row) => ({
-    type: 'url',
+    label: t('open'),
+    type: URL_BUTTON,
     target: ['claro_workspace_open', {workspaceId: row.id}]
   }),
   definition: [

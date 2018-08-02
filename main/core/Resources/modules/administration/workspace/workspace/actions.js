@@ -1,8 +1,8 @@
 import {url} from '#/main/app/api'
 import {API_REQUEST} from '#/main/app/api'
 
-import {actions as listActions} from '#/main/core/data/list/actions'
-import {actions as formActions} from '#/main/core/data/form/actions'
+import {actions as listActions} from '#/main/app/content/list/store'
+import {actions as formActions} from '#/main/app/content/form/store'
 import {actions as alertActions} from '#/main/app/overlay/alert/store'
 import {constants as alertConstants} from '#/main/app/overlay/alert/constants'
 import {constants as actionConstants} from '#/main/app/action/constants'

@@ -2,13 +2,14 @@ import React from 'react'
 import classes from 'classnames'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 import {displayDate} from '#/main/core/scaffolding/date'
 
-import {UserMicro} from '#/main/core/user/components/micro'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
-import {TooltipLink} from '#/main/core/layout/button/components/tooltip-link'
 import {HtmlText} from '#/main/core/layout/components/html-text'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+
+import {UserMicro} from '#/main/core/user/components/micro'
 
 import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'
 
@@ -30,53 +31,59 @@ const AnnouncePost = props =>
 
           <div className="date">
             {props.meta.publishedAt ?
-              t('published_at', {date: displayDate(props.meta.publishedAt, true, true)}) : t('not_published')
+              trans('published_at', {date: displayDate(props.meta.publishedAt, true, true)}) : trans('not_published')
             }
           </div>
         </div>
 
         <div className="announce-actions">
           {!props.active &&
-            <TooltipLink
+            <Button
               id={`${props.id}-show`}
-              title={t('show')}
-              className="btn-link-default"
+              className="btn-link"
+              type={LINK_BUTTON}
+              icon="fa fa-fw fa-expand"
+              label={trans('show')}
+              tooltip="top"
               target={`#/${props.id}`}
-            >
-              <span className="fa fa-fw fa-expand" />
-            </TooltipLink>
-          }
-          {props.editable &&
-            <TooltipLink
-              id={`${props.id}-send`}
-              title={t('send_mail')}
-              target={`#/${props.id}/send`}
-              className="btn-link-default"
-            >
-              <span className="fa fa-fw fa-at"/>
-            </TooltipLink>
+            />
           }
 
           {props.editable &&
-            <TooltipLink
+            <Button
+              id={`${props.id}-send`}
+              className="btn-link"
+              type={LINK_BUTTON}
+              icon="fa fa-fw fa-at"
+              label={trans('send_mail')}
+              tooltip="top"
+              target={`#/${props.id}/send`}
+            />
+          }
+
+          {props.editable &&
+            <Button
               id={`${props.id}-edit`}
-              title={t('edit')}
+              className="btn-link"
+              type={LINK_BUTTON}
+              icon="fa fa-fw fa-pencil"
+              label={trans('edit')}
+              tooltip="top"
               target={`#/${props.id}/edit`}
-              className="btn-link-default"
-            >
-              <span className="fa fa-fw fa-pencil"/>
-            </TooltipLink>
+            />
           }
 
           {props.deletable &&
-            <TooltipButton
+            <Button
               id={`${props.id}-delete`}
-              title={t('delete')}
-              onClick={props.removePost}
-              className="btn-link-danger"
-            >
-              <span className="fa fa-fw fa-trash-o" />
-            </TooltipButton>
+              className="btn-link"
+              type={CALLBACK_BUTTON}
+              icon="fa fa-fw fa-trash-o"
+              label={trans('delete')}
+              tooltip="top"
+              callback={props.removePost}
+              dangerous={true}
+            />
           }
         </div>
       </div>

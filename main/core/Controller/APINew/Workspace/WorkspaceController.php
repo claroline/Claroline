@@ -420,8 +420,7 @@ class WorkspaceController extends AbstractCrudController
     {
         return new JsonResponse($this->finder->search(
             'Claroline\CoreBundle\Entity\Workspace\Workspace',
-            array_merge($request->query->all(), ['hiddenFilters' => ['administrated' => true]]),
-            [Options::SERIALIZE_MINIMAL]
+            array_merge($request->query->all(), ['hiddenFilters' => ['administrated' => true]])
         ));
     }
 

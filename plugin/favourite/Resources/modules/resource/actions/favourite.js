@@ -1,9 +1,10 @@
 import {trans} from '#/main/core/translation'
+import {ASYNC_BUTTON} from '#/main/app/buttons'
 import {isAuthenticated} from '#/main/core/user/current'
 
 const action = (resourceNodes) => ({ // todo collection
   name: 'favourite',
-  type: 'async',
+  type: ASYNC_BUTTON,
   icon: 'fa fa-fw fa-star-o',
   label: trans('add-favourite', {}, 'actions'),
   displayed: isAuthenticated(),

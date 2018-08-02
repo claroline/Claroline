@@ -4,10 +4,11 @@ import {connect} from 'react-redux'
 import {withRouter} from '#/main/app/router'
 
 import {trans} from '#/main/core/translation'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {hasPermission} from '#/main/core/resource/permissions'
 import {currentUser} from '#/main/core/user/current'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {DataListContainer} from '#/main/core/data/list/containers/data-list'
+import {ListData} from '#/main/app/content/list/containers/data'
 import {actions} from '#/plugin/wiki/resources/wiki/history/store'
 
 const loggedUser = currentUser()
@@ -15,7 +16,7 @@ const loggedUser = currentUser()
 const HistoryComponent = props =>
   <section className="wiki-section-history">
     <h2>{(props.section.activeContribution.title ? (props.section.activeContribution.title + ': ') : '') + trans('revision_history', {}, 'icap_wiki')}</h2>
-    <DataListContainer
+    <ListData
       name="history.contributions"
       fetch={{
         url: ['apiv2_wiki_section_contribution_history', {sectionId: props.section.id}],
@@ -23,7 +24,7 @@ const HistoryComponent = props =>
       }}
       primaryAction={(row) => ({
         label: trans('view', {}, 'platform'),
-        type: 'link',
+        type: LINK_BUTTON,
         target: `/contribution/${props.section.id}/${row.id}`
       })}
       definition={[
@@ -57,7 +58,7 @@ const HistoryComponent = props =>
       ]}
       actions={rows => [
         {
-          type: 'callback',
+          type: CALLBACK_BUTTON,
           label: trans('set_active_contribution', {}, 'icap_wiki'),
           callback: () => props.setActiveContribution(props.section.id, rows[0].id),
           scope: ['object'],
@@ -67,7 +68,7 @@ const HistoryComponent = props =>
             (props.mode !== '2' && loggedUser !== null && props.section.meta.creator !== null && props.section.meta.creator.id === loggedUser.id)
           )
         }, {
-          type: 'link',
+          type: LINK_BUTTON,
           icon: 'fa fa-fw fa-arrows-h',
           target: rows.length === 2 ? `/contribution/compare/${props.section.id}/${rows[0].id}/${rows[1].id}` : '',
           label: trans('compare_versions', {}, 'icap_wiki'),

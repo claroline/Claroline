@@ -1,7 +1,7 @@
 import cloneDeep from 'lodash/cloneDeep'
 
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
-import {makeListReducer} from '#/main/core/data/list/reducer'
+import {makeListReducer} from '#/main/app/content/list/store'
 
 import {update} from '#/plugin/exo/utils/utils'
 import {PAPERS_INIT, PAPER_CURRENT, PAPER_ADD} from '#/plugin/exo/quiz/papers/actions'

@@ -1,4 +1,5 @@
 import {trans} from '#/main/core/translation'
+import {URL_BUTTON} from '#/main/app/buttons'
 
 import {UserCard} from '#/main/core/user/data/components/user-card'
 
@@ -33,7 +34,7 @@ function getWorkspaceGroups(workspace) {
 function getUserList(workspace) {
   return {
     open: (row) => ({
-      type: 'url',
+      type: URL_BUTTON,
       target: ['claro_user_profile', {publicUrl: row.meta.publicUrl}]
     }),
     definition: [

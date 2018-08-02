@@ -7,6 +7,7 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/core/translation'
 import {url} from '#/main/app/api'
 import {Toolbar} from '#/main/app/overlay/toolbar/components/toolbar'
+import {ASYNC_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 import {hasPermission} from '#/main/core/workspace/permissions'
@@ -23,7 +24,7 @@ const WorkspaceToolbarComponent = props =>
     tools={props.tools.slice(1)}
     actions={[
       {
-        type: 'modal',
+        type: MODAL_BUTTON,
         icon: 'fa fa-info',
         label: trans('show-info', {}, 'actions'),
         displayed: hasPermission('open', props.workspace),
@@ -31,7 +32,7 @@ const WorkspaceToolbarComponent = props =>
           workspace: props.workspace
         }]
       }, {
-        type: 'modal',
+        type: MODAL_BUTTON,
         icon: 'fa fa-cog',
         label: trans('configure', {}, 'actions'),
         displayed: hasPermission('administrate', props.workspace),
@@ -39,7 +40,7 @@ const WorkspaceToolbarComponent = props =>
           workspace: props.workspace
         }]
       }, {
-        type: 'modal',
+        type: MODAL_BUTTON,
         icon: 'fa fa-user-secret',
         label: trans('view-as', {}, 'actions'),
         displayed: hasPermission('administrate', props.workspace),
@@ -47,13 +48,13 @@ const WorkspaceToolbarComponent = props =>
           workspace: props.workspace
         }]
       }, {
-        type: 'url',
+        type: URL_BUTTON,
         icon: 'fa fa-download',
         label: trans('export', {}, 'actions'),
         displayed: hasPermission('export', props.workspace),
         target: ['claro_workspace_export', {workspace: props.workspace.id}]
       }, {
-        type: 'async',
+        type: ASYNC_BUTTON,
         icon: 'fa fa-trash-o',
         label: trans('delete', {}, 'actions'),
         displayed: hasPermission('delete', props.workspace),

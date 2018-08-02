@@ -2,12 +2,12 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
-import {DataFormModal} from '#/main/core/data/form/modals/components/data-form.jsx'
+import {FormDataModal} from '#/main/app/modals/form/components/data'
 
 const MODAL_CONTACTS_OPTIONS_FORM = 'MODAL_CONTACTS_OPTIONS_FORM'
 
 const ContactsOptionsFormModal = props =>
-  <DataFormModal
+  <FormDataModal
     {...props}
     icon="fa fa-fw fa-cog"
     title={trans('configuration')}

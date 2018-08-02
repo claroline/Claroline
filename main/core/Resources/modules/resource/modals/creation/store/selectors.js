@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect'
 
-import {select as formSelect} from '#/main/core/data/form/selectors'
+import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 
 const STORE_NAME = 'resourceCreation'
 const FORM_NAME  = `${STORE_NAME}.form`

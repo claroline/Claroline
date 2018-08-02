@@ -4,21 +4,22 @@ import {connect} from 'react-redux'
 
 import {t} from '#/main/core/translation'
 
-import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
-import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
-import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
-import {select as formSelect} from '#/main/core/data/form/selectors'
+import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
+import {FormData} from '#/main/app/content/form/containers/data'
+import {ListData} from '#/main/app/content/list/containers/data'
+import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
-import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
+import {MODAL_DATA_LIST} from '#/main/app/modals/list'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {actions} from '#/main/core/administration/user/location/actions'
-import {OrganizationList} from '#/main/core/administration/user/organization/components/organization-list.jsx'
-import {UserList} from '#/main/core/administration/user/user/components/user-list.jsx'
-import {GroupList} from '#/main/core/administration/user/group/components/group-list.jsx'
+import {OrganizationList} from '#/main/core/administration/user/organization/components/organization-list'
+import {UserList} from '#/main/core/administration/user/user/components/user-list'
+import {GroupList} from '#/main/core/administration/user/group/components/group-list'
 
 import {locationTypes} from '#/main/core/administration/user/location/constants'
 
 const LocationForm = props =>
-  <FormContainer
+  <FormData
     level={3}
     name="locations.current"
     buttons={true}
@@ -27,7 +28,7 @@ const LocationForm = props =>
       ['apiv2_location_update', {id: location.id}]
     }
     cancel={{
-      type: 'link',
+      type: LINK_BUTTON,
       target: '/locations',
       exact: true
     }}
@@ -71,14 +72,14 @@ const LocationForm = props =>
         disabled={props.new}
         actions={[
           {
-            type: 'callback',
+            type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: t('add_user'),
             callback: () => props.pickUsers(props.location.id)
           }
         ]}
       >
-        <DataListContainer
+        <ListData
           name="locations.current.users"
           fetch={{
             url: ['apiv2_location_list_users', {id: props.location.id}],
@@ -100,14 +101,14 @@ const LocationForm = props =>
         disabled={props.new}
         actions={[
           {
-            type: 'callback',
+            type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: t('add_group'),
             callback: () => props.pickGroups(props.location.id)
           }
         ]}
       >
-        <DataListContainer
+        <ListData
           name="locations.current.groups"
           fetch={{
             url: ['apiv2_location_list_groups', {id: props.location.id}],
@@ -129,14 +130,14 @@ const LocationForm = props =>
         disabled={props.new}
         actions={[
           {
-            type: 'callback',
+            type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: t('add_organizations'),
             callback: () => props.pickOrganizations(props.location.id)
           }
         ]}
       >
-        <DataListContainer
+        <ListData
           name="locations.current.organizations"
           fetch={{
             url: ['apiv2_location_list_organizations', {id: props.location.id}],
@@ -151,7 +152,7 @@ const LocationForm = props =>
         />
       </FormSection>
     </FormSections>
-  </FormContainer>
+  </FormData>
 
 LocationForm.propTypes = {
   new: T.bool.isRequired,
@@ -170,7 +171,7 @@ const Location = connect(
   }),
   dispatch =>({
     pickUsers(locationId) {
-      dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
+      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-user',
         title: t('add_users'),
         confirmText: t('add'),
@@ -185,7 +186,7 @@ const Location = connect(
       }))
     },
     pickGroups(locationId) {
-      dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
+      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-users',
         title: t('add_groups'),
         confirmText: t('add'),
@@ -200,7 +201,7 @@ const Location = connect(
       }))
     },
     pickOrganizations(locationId) {
-      dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
+      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-buildings',
         title: t('add_organizations'),
         confirmText: t('add'),

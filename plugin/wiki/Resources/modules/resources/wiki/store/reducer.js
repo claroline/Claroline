@@ -1,5 +1,5 @@
 import {makeReducer} from '#/main/app/store/reducer'
-import {FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
+import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 
 // app reducers
 import {reducer as editorReducer} from '#/plugin/wiki/resources/wiki/editor/store'

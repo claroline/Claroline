@@ -3,9 +3,10 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
-import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
-import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
+import {MODAL_DATA_LIST} from '#/main/app/modals/list'
+import {ListData} from '#/main/app/content/list/containers/data.jsx'
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
 import {UserList} from '#/main/core/administration/user/user/components/user-list.jsx'
 
@@ -13,10 +14,10 @@ import {select} from '#/plugin/planned-notification/tools/planned-notification/s
 import {actions} from '#/plugin/planned-notification/tools/planned-notification/message/actions'
 
 const MessagesList = props =>
-  <DataListContainer
+  <ListData
     name="messages.list"
     primaryAction={(row) => ({
-      type: 'link',
+      type: LINK_BUTTON,
       label: trans('open'),
       target: `/messages/form/${row.id}`
     })}
@@ -51,7 +52,7 @@ const MessagesList = props =>
     ]}
     actions={(rows) => [
       {
-        type: 'callback',
+        type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-envelope-o',
         label: trans('send'),
         callback: () => props.pickUsers(rows)
@@ -74,7 +75,7 @@ const Messages = connect(
   }),
   dispatch => ({
     pickUsers(messages) {
-      dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
+      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-user',
         title: trans('add_users'),
         confirmText: trans('add'),

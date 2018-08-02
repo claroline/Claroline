@@ -8,7 +8,7 @@ import {trans, transChoice} from '#/main/core/translation'
 import {currentUser} from '#/main/core/user/current'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {MODAL_ALERT} from '#/main/app/modals/alert'
-import {actions as listActions} from '#/main/core/data/list/actions'
+import {actions as listActions} from '#/main/app/content/list/store'
 import {withModal} from '#/main/app/overlay/modal/withModal'
 
 import {Subject as SubjectType} from '#/plugin/forum/resources/forum/player/prop-types'

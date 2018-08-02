@@ -1,19 +1,17 @@
 import React from 'react'
 import {trans} from '#/main/core/translation'
 import {PropTypes as T} from 'prop-types'
-import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
-import {constants as listConst} from '#/main/core/data/list/constants'
-import {UserActionCard} from '#/main/core/layout/logs/components/user-action-card.jsx'
+import {ListData} from '#/main/app/content/list/containers/data'
+import {constants as listConst} from '#/main/app/content/list/constants'
+import {UserActionCard} from '#/main/core/layout/logs/components/user-action-card'
 
 const UserLogList = props =>
-  <DataListContainer
+  <ListData
     name="userActions"
     fetch={{
       url: props.listUrl,
       autoload: true
     }}
-    open={false}
-    delete={false}
     definition={[
       {
         name: 'doer.name',

@@ -1,8 +1,8 @@
 import cloneDeep from 'lodash/cloneDeep'
 
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
-import {makeFormReducer} from '#/main/core/data/form/reducer'
-import {FORM_SUBMIT_SUCCESS, FORM_RESET} from '#/main/core/data/form/actions'
+import {makeFormReducer} from '#/main/app/content/form/store/reducer'
+import {FORM_SUBMIT_SUCCESS, FORM_RESET} from '#/main/app/content/form/store/actions'
 import {
   SUMMARY_PIN_TOGGLE,
   SUMMARY_OPEN_TOGGLE

@@ -7,7 +7,7 @@ import {trans} from '#/main/core/translation'
 
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {SelectionModal} from '#/main/app/modals/selection/components/selection'
-import {MODAL_RESOURCE_CREATION_PARAMETERS} from '#/main/core/resource/modals/creation/components/parameters'
+import {constants} from '#/main/core/resource/modals/creation/constants'
 
 import {getType} from '#/main/core/resource/utils'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
@@ -51,7 +51,7 @@ const ResourceTypeModal = connect(
       dispatch(actions.startCreation(parent, resourceType))
 
       // display the second creation modal
-      dispatch(modalActions.showModal(MODAL_RESOURCE_CREATION_PARAMETERS, {
+      dispatch(modalActions.showModal(constants.MODAL_RESOURCE_CREATION_INTERNAL_PARAMETERS, {
         add: addCallback
       }))
     }

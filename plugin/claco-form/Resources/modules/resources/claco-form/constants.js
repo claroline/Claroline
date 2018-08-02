@@ -1,5 +1,5 @@
 import {trans} from '#/main/core/translation'
-import {constants as listConstants} from '#/main/core/data/list/constants'
+import {constants as listConstants} from '#/main/app/content/list/constants'
 
 const FILE_TYPES = {
   'audio/*': trans('audio', {}, 'clacoform'),

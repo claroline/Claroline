@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {ResourceOverview} from '#/main/core/resource/components/overview'
 import {selectors as resourceSelectors} from '#/main/core/resource/store/selectors'
 import {UserEvaluation as UserEvaluationTypes} from '#/main/core/resource/prop-types'
@@ -24,7 +25,7 @@ const OverviewComponent = props =>
     }}
     actions={[
       { // TODO : implement continue and restart
-        type: 'link',
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-play icon-with-text-right',
         label: trans('start_path', {}, 'path'),
         target: '/play',

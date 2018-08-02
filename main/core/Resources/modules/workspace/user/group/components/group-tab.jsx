@@ -6,9 +6,10 @@ import {trans} from '#/main/core/translation'
 import {matchPath, Routes, withRouter} from '#/main/app/router'
 import {currentUser} from '#/main/core/user/current'
 
-import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
+import {MODAL_DATA_LIST} from '#/main/app/modals/list'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {PageActions, PageAction} from '#/main/core/layout/page'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
 import {GroupList} from '#/main/core/administration/user/group/components/group-list'
 import {Group}     from '#/main/core/administration/user/group/components/group'
@@ -23,7 +24,7 @@ const GroupTabActionsComponent = props =>
   <PageActions>
     {!matchPath(props.location.pathname, {path: '/groups/form'}) &&
       <PageAction
-        type="callback"
+        type={CALLBACK_BUTTON}
         icon="fa fa-plus"
         label={trans('register_groups')}
         callback={() => props.register(props.workspace)}
@@ -33,7 +34,7 @@ const GroupTabActionsComponent = props =>
 
     {getPermissionLevel(currentUser(), props.workspace) === ADMIN &&
       <PageAction
-        type="link"
+        type={LINK_BUTTON}
         icon="fa fa-pencil"
         label={trans('create_group')}
         target="/groups/form"
@@ -55,7 +56,7 @@ const ConnectedActions = connect(
   }),
   dispatch => ({
     register(workspace) {
-      dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
+      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-users',
         title: trans('register_groups'),
         subtitle: trans('workspace_register_select_groups'),
@@ -68,7 +69,7 @@ const ConnectedActions = connect(
           autoload: true
         },
         handleSelect: (groups) => {
-          dispatch(modalActions.showModal(MODAL_DATA_PICKER, getModalDefinition(
+          dispatch(modalActions.showModal(MODAL_DATA_LIST, getModalDefinition(
             'fa fa-fw fa-users',
             trans('register_groups'),
             workspace,

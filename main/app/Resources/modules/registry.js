@@ -1,10 +1,9 @@
 import invariant from 'invariant'
 import merge from 'lodash/merge'
 
-const events = {}
 const registries = {}
 
-const supportedEvents = ['get', 'add', 'remove']
+const supportedEvents = ['add', 'remove']
 
 /**
  * Declares a new registry.
@@ -18,12 +17,18 @@ function declareRegistry(registryName) {
   invariant(!registries[registryName],        `Registry ${registryName} is already declared.`)
 
   // initialize registry
-  events[registryName] = {}
-  registries[registryName] = {}
+  const registry = { // declare var to simplify references in implementation
+    events: {},
+    setDefaults: (entry) => entry,
+    validate: () => true,
+    entries: {}
+  }
+
+  registries[registryName] = registry
 
   function fireEvent(event, entry) {
-    if (events[registryName][event]) {
-      events[registryName][event].map(callback => {
+    if (registry.events[event]) {
+      registry.events[event].map(callback => {
         callback(entry)
       })
     }
@@ -43,11 +48,16 @@ function declareRegistry(registryName) {
     add(entryName, entry) {
       invariant(typeof entryName === 'string', log(`Entry name must be a string. "${entryName}" provided.`))
 
+      // add default values
+      const defaultedEntry = registry.setDefaults(entry)
+
+      registry.validate(entry)
+
       // register new entry
-      registries[registryName][entryName] = entry
+      registry.entries[entryName] = defaultedEntry
 
       // dispatch event
-      fireEvent('add', entry)
+      fireEvent('add', defaultedEntry)
 
       return this
     },
@@ -58,10 +68,11 @@ function declareRegistry(registryName) {
      * @param {string} entryName - the name of the entry to remove
      */
     remove(entryName) {
-      if (registries[registryName][entryName]) {
-        const entry = merge({}, registries[registryName][entryName])
+      if (registry.entries[entryName]) {
+        // keep a copy of the deleted empty for event
+        const entry = merge({}, registry.entries[entryName])
 
-        delete registries[registryName][entryName]
+        delete registry.entries[entryName]
 
         // dispatch event
         fireEvent('remove', entry)
@@ -79,11 +90,9 @@ function declareRegistry(registryName) {
      * @return {*} - the entry definition
      */
     get(entryName) {
-      invariant(registries[registryName][entryName], log(`Entry "${entryName}" is not registered.`))
+      invariant(registry.entries[entryName], log(`Entry "${entryName}" is not registered.`))
 
-      fireEvent('get', registries[registryName][entryName])
-
-      return registries[registryName][entryName] || null
+      return registry.entries[entryName] || null
     },
 
     /**
@@ -92,7 +101,17 @@ function declareRegistry(registryName) {
      * @return {object}
      */
     all() {
-      return registries[registryName]
+      return registry.entries
+    },
+
+    filter(filterCallback) {
+      return Object
+        .keys(registry.entries)
+        .filter((entryName) => filterCallback(registry.entries[entryName]))
+        // recreate object with found entries
+        .reduce((foundEntries, entryName) => Object.assign(foundEntries, {
+          [entryName]: registry.entries[entryName]
+        }, {}))
     },
 
     /**
@@ -105,11 +124,11 @@ function declareRegistry(registryName) {
       invariant(-1 !== supportedEvents.indexOf(event), log(`Event "${event}" is not supported.`))
       invariant(typeof callback === 'function', log(`Event "${event}" callback must be a function.`))
 
-      if (!events[registryName][event]) {
-        events[registryName][event] = []
+      if (!registry.events[event]) {
+        registry.events[event] = []
       }
 
-      events[registryName][event].push(callback)
+      registry.events[event].push(callback)
 
       return this
     },
@@ -121,12 +140,38 @@ function declareRegistry(registryName) {
      * @param {function} callback
      */
     off(event, callback) {
-      if (events[registryName][event]) {
-        const pos = events[registryName][event].indexOf(callback)
+      if (registry.events[event]) {
+        const pos = registry.events[event].indexOf(callback)
         if (-1 !== pos) {
-          events[registryName][event].splice(pos, 1)
+          registry.events[event].splice(pos, 1)
         }
       }
+
+      return this
+    },
+
+    /**
+     * Registers a function that will add default values before an entry is added.
+     *
+     * NB. The callback receives the entry as param and MUST return the defaulted entry.
+     *
+     * @param {function} setDefaultsCallback
+     */
+    setDefaults(setDefaultsCallback) {
+      registry.setDefaults = setDefaultsCallback
+
+      return this
+    },
+
+    /**
+     * Registers a function that will validate an entry when it is added.
+     *
+     * NB. The callback receives the entry as param.
+     *
+     * @param {function} validationCallback
+     */
+    validate(validationCallback) {
+      registry.validate = validationCallback
 
       return this
     }

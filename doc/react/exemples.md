@@ -25,7 +25,7 @@ const roleReducer = combineReducers({
 ```
 
 ```
-  dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
+  dispatch(modalActions.showModal(MODAL_DATA_LIST, {
     icon: 'fa fa-fw fa-buildings',
     title: trans('add_roles'),
     confirmText: trans('add'),

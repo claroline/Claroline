@@ -6,9 +6,10 @@ import {trans} from '#/main/core/translation'
 import {currentUser} from '#/main/core/user/current'
 
 import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Sections, Section} from '#/main/core/layout/components/sections'
-import {DataDetails} from '#/main/core/data/details/components/details'
-import {DataListContainer} from '#/main/core/data/list/containers/data-list'
+import {DetailsData} from '#/main/app/content/details/components/data'
+import {ListData} from '#/main/app/content/list/containers/data'
 
 import {User as UserTypes} from '#/main/core/user/prop-types'
 import {UserAvatar} from '#/main/core/user/components/avatar'
@@ -29,7 +30,7 @@ const UserCompare = props =>
       <h3 className="panel-title">{props.user.username}</h3>
     </div>
 
-    <DataDetails
+    <DetailsData
       data={props.user}
       sections={[
         {
@@ -87,7 +88,7 @@ const UserCompare = props =>
           icon="fa fa-fw fa-users"
           title={trans('groups')}
         >
-          <DataListContainer
+          <ListData
             name={`users.compare.groupsUser${props.index}`}
             fetch={{
               url: ['apiv2_user_list_groups', {id: props.user.id}],
@@ -103,7 +104,7 @@ const UserCompare = props =>
           icon="fa fa-fw fa-building"
           title={trans('organizations')}
         >
-          <DataListContainer
+          <ListData
             name={`users.compare.organizationsUser${props.index}`}
             fetch={{
               url: ['apiv2_user_list_organizations', {id: props.user.id}],
@@ -119,7 +120,7 @@ const UserCompare = props =>
           icon="fa fa-fw fa-id-badge"
           title={trans('roles')}
         >
-          <DataListContainer
+          <ListData
             name={`users.compare.rolesUser${props.index}`}
             fetch={{
               url: ['apiv2_user_list_roles', {id: props.user.id}],
@@ -130,11 +131,11 @@ const UserCompare = props =>
           />
         </Section>
       </Sections>
-    </DataDetails>
+    </DetailsData>
 
     <Button
       className="panel-btn btn"
-      type="callback"
+      type={CALLBACK_BUTTON}
       primary={true}
       label={trans('keep_user')}
       callback={props.merge}

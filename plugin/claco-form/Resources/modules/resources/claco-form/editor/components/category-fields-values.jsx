@@ -1,20 +1,20 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
 
 import {makeId} from '#/main/core/scaffolding/id'
 import {trans} from '#/main/core/translation'
-import {getCreatableTypes} from '#/main/core/data'
-import {FormField} from '#/main/core/data/form/components/field.jsx'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
+import {FormProp} from '#/main/app/content/form/components/prop'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
 
 import {
   Field as FieldType,
   FieldChoiceCategory as FieldChoiceCategoryType
 } from '#/plugin/claco-form/resources/claco-form/prop-types'
 
+// TODO : find a way to reuse standard `fields` type
+
 const FieldPreview = props =>
-  <FormField
+  <FormProp
     {...props}
     value={props.value}
     updateProp={(prop, value) => props.onChange(value)}
@@ -97,10 +97,6 @@ class CategoryFieldsValues extends Component {
           <ul>
             {this.props.value.map((fieldChoiceCategory, index) =>
               <li key={index} className="field-item">
-                <span className={classes('field-item-icon',
-                  getCreatableTypes()[Object.keys(getCreatableTypes()).find(type => fieldChoiceCategory.field.type === type)].meta.icon
-                )} />
-
                 <FieldPreview
                   {...this.formatField(fieldChoiceCategory)}
                   value={fieldChoiceCategory.value}
@@ -140,7 +136,7 @@ class CategoryFieldsValues extends Component {
         }
 
         {this.state.showFieldSelector &&
-          <FormField
+          <FormProp
             id="category-field-select"
             type="choice"
             name="category-field-select"

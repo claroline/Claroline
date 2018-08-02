@@ -5,23 +5,24 @@ import classes from 'classnames'
 
 import {t, trans} from '#/main/core/translation'
 
-import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
-import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
-import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
-import {Checkbox} from '#/main/core/layout/form/components/field/checkbox.jsx'
-import {select as formSelect} from '#/main/core/data/form/selectors'
-import {actions as formActions} from '#/main/core/data/form/actions'
+import {FormData} from '#/main/app/content/form/containers/data'
+import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
+import {ListData} from '#/main/app/content/list/containers/data'
+import {Checkbox} from '#/main/core/layout/form/components/field/checkbox'
+import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
+import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
-import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
+import {MODAL_DATA_LIST} from '#/main/app/modals/list'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
 import {enumRole, PLATFORM_ROLE} from '#/main/core/user/role/constants'
 import {Role as RoleTypes} from '#/main/core/user/prop-types'
 import {actions} from '#/main/core/administration/user/role/actions'
-import {GroupList} from '#/main/core/administration/user/group/components/group-list.jsx'
-import {UserList} from '#/main/core/administration/user/user/components/user-list.jsx'
+import {GroupList} from '#/main/core/administration/user/group/components/group-list'
+import {UserList} from '#/main/core/administration/user/user/components/user-list'
 
 const RoleForm = props =>
-  <FormContainer
+  <FormData
     level={3}
     name="roles.current"
     buttons={true}
@@ -30,7 +31,7 @@ const RoleForm = props =>
       ['apiv2_role_update', {id: role.id}]
     }
     cancel={{
-      type: 'link',
+      type: LINK_BUTTON,
       target: '/roles',
       exact: true
     }}
@@ -133,7 +134,7 @@ const RoleForm = props =>
         disabled={props.new}
         actions={[
           {
-            type: 'callback',
+            type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: t('add_user'),
             callback: () => props.pickUsers(props.role.id),
@@ -141,7 +142,7 @@ const RoleForm = props =>
           }
         ]}
       >
-        <DataListContainer
+        <ListData
           name="roles.current.users"
           fetch={{
             url: ['apiv2_role_list_users', {id: props.role.id}],
@@ -163,14 +164,14 @@ const RoleForm = props =>
         disabled={props.new}
         actions={[
           {
-            type: 'callback',
+            type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: t('add_group'),
             callback: () => props.pickGroups(props.role.id)
           }
         ]}
       >
-        <DataListContainer
+        <ListData
           name="roles.current.groups"
           fetch={{
             url: ['apiv2_role_list_groups', {id: props.role.id}],
@@ -185,7 +186,7 @@ const RoleForm = props =>
         />
       </FormSection>
     </FormSections>
-  </FormContainer>
+  </FormData>
 
 RoleForm.propTypes = {
   new: T.bool.isRequired,
@@ -207,7 +208,7 @@ const Role = connect(
       dispatch(formActions.updateProp('roles.current', propName, propValue))
     },
     pickUsers(roleId) {
-      dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
+      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-user',
         title: t('add_users'),
         confirmText: t('add'),
@@ -222,7 +223,7 @@ const Role = connect(
       }))
     },
     pickGroups(roleId){
-      dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
+      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-users',
         title: t('add_groups'),
         confirmText: t('add'),

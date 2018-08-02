@@ -6,8 +6,9 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/core/translation'
 import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
-import {actions as formActions} from '#/main/core/data/form/actions'
+import {actions as formActions} from '#/main/app/content/form/store/actions'
 
 import {WidgetContentForm} from '#/main/core/widget/content/components/form'
 import {selectors} from '#/main/core/widget/content/modals/parameters/store'
@@ -26,7 +27,7 @@ const ParametersModalComponent = props =>
 
     <Button
       className="modal-btn btn"
-      type="callback"
+      type={CALLBACK_BUTTON}
       primary={true}
       disabled={!props.saveEnabled}
       label={trans('save', {}, 'actions')}

@@ -1,6 +1,7 @@
 import React from 'react'
 
 import {trans} from '#/main/core/translation'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {enumRole} from '#/main/core/user/role/constants'
 import {RoleCard} from '#/main/core/user/data/components/role-card'
@@ -9,7 +10,7 @@ import {url} from '#/main/app/api'
 
 const RoleList = {
   open: (row) => ({
-    type: 'link',
+    type: LINK_BUTTON,
     target: `/roles/form/${row.id}`,
     label: trans('edit', {}, 'actions')
   }),

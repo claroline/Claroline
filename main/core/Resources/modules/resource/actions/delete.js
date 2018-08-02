@@ -1,8 +1,9 @@
 import {trans} from '#/main/core/translation'
+import {ASYNC_BUTTON} from '#/main/app/buttons'
 
 const action = (resourceNodes, nodesRefresher) => ({ // todo collection
   name: 'delete',
-  type: 'async',
+  type: ASYNC_BUTTON,
   icon: 'fa fa-fw fa-trash-o',
   label: trans('delete', {}, 'actions'),
   dangerous: true,

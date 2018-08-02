@@ -3,16 +3,17 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
-import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
+import {ListData} from '#/main/app/content/list/containers/data'
 import {actions} from '#/main/core/workspace/user/group/actions'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {select} from '#/main/core/workspace/user/selectors'
-import {getGroupList} from '#/main/core/workspace/user/group/components/group-list.jsx'
+import {getGroupList} from '#/main/core/workspace/user/group/components/group-list'
 
 const GroupsList = props =>
-  <DataListContainer
+  <ListData
     name="groups.list"
     open={getGroupList(props.workspace).open}
     fetch={{
@@ -21,7 +22,7 @@ const GroupsList = props =>
     }}
     actions={(rows) => [
       {
-        type: 'callback',
+        type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-trash-o',
         label: trans('unregister'),
         callback: () => props.unregister(rows, props.workspace),

@@ -1,7 +1,10 @@
-const webpack = require('webpack')
+/* global process */
 
+const webpack = require('webpack')
 const paths = require('./paths')
+
 const AssetsPlugin = require('assets-webpack-plugin')
+const CircularDependencyPlugin = require('circular-dependency-plugin')
 
 /**
  * Adds a custom resolver that will try to convert internal webpack requests for
@@ -95,26 +98,34 @@ const rethrowCompilationErrors = () => {
  * Builds a independent bundle for frequently requested modules (might require
  * minChunks adjustments).
  */
-const commonsChunk = () => {
-  return new webpack.optimize.CommonsChunkPlugin({
-    name: 'commons',
-    filename: 'commons.js',
-    minChunks: 5
-  })
-}
+const commonsChunk = () => new webpack.optimize.CommonsChunkPlugin({
+  name: 'commons',
+  filename: 'commons.js',
+  minChunks: 5
+})
 
 /**
  * Outputs information about generated assets in a dedicated file
  * ("webpack-assets.json" by default). This is useful to retrieve assets names
  * when a hash has been used for cache busting.
  */
-const assetsInfoFile = filename => {
-  return new AssetsPlugin({
-    fullPath: false,
-    prettyPrint: true,
-    filename: filename || 'webpack-assets.json'
-  })
-}
+const assetsInfoFile = filename => new AssetsPlugin({
+  fullPath: false,
+  prettyPrint: true,
+  filename: filename || 'webpack-assets.json'
+})
+
+const circularDependencies = () => new CircularDependencyPlugin({
+  // exclude detection of files based on a RegExp
+  exclude: /node_modules/,
+  failOnError: false,
+  // allow import cycles that include an asynchronous import,
+  // e.g. via import(/* webpackMode: "weak" */ './file.js')
+  // (I don't know if we need it)
+  allowAsyncCycles: false,
+  // set the current working directory for displaying module paths
+  cwd: process.cwd(),
+})
 
 module.exports = {
   distributionShortcut,
@@ -125,5 +136,6 @@ module.exports = {
   assetsInfoFile,
   reactDllReference,
   angularDllReference,
-  scaffoldingDllReference
+  scaffoldingDllReference,
+  circularDependencies
 }

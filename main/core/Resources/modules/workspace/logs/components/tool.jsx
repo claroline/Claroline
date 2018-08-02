@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/core/translation'
-import {select} from '#/main/core/data/list/selectors'
+import {select} from '#/main/app/content/list/store'
 import {url} from '#/main/app/api'
 import {
   matchPath,

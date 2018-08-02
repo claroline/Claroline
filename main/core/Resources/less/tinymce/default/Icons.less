@@ -1,108 +1,84 @@
-/* Icons */
-
-// TODO : just replace it with FontAwesome integration
-// original tinyMCE icons don't work anyway and are overriden elsewhere
-
-@font-face {
-  font-family: 'tinymce';
-  src:url('fonts/tinymce.eot');
-  src:url('fonts/tinymce.eot?#iefix') format('embedded-opentype'),
-    url('fonts/tinymce.woff') format('woff'),
-    url('fonts/tinymce.ttf') format('truetype'),
-    url('fonts/tinymce.svg#tinymce') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'tinymce-small';
-  src:url('fonts/tinymce-small.eot');
-  src:url('fonts/tinymce-small.eot?#iefix') format('embedded-opentype'),
-    url('fonts/tinymce-small.woff') format('woff'),
-    url('fonts/tinymce-small.ttf') format('truetype'),
-    url('fonts/tinymce-small.svg#tinymce') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
+/*
+ * Icons
+ *
+ * Uses platform FontAwesome library.
+ */
 
 .@{prefix}-ico {
-  font-family: 'tinymce', Arial;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  font-size: @icon-size;
-  line-height: @icon-size;
-  speak: none;
-  vertical-align: text-top;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  .fa-icon;
+  .fas;
 
-  display: inline-block;
-  background: transparent center center;
-  background-size: cover;
-  width: @icon-box;
+  speak: none;
+  text-shadow: none !important;
+  vertical-align: middle;
   height: @icon-box;
   color: @btn-text;
+  background: transparent center center;
+  background-size: cover;
+
+  // mimic fa-fw
+  text-align: center;
+  width: (20em / 16);
 }
 
 .@{prefix}-btn-small .@{prefix}-ico {
-  font-family: 'tinymce-small', Arial;
+  font-size: @icon-size * .75;
 }
 
-.@{prefix}-i-save:before                 { content: "\e000"; }
-.@{prefix}-i-newdocument:before          { content: "\e001"; }
+.@{prefix}-i-save:before                 { content: @fa-var-save; }
+.@{prefix}-i-newdocument:before          { content: @fa-var-plus; }
 .@{prefix}-i-fullpage:before             { content: "\e002"; }
-.@{prefix}-i-alignleft:before            { content: "\e003"; }
-.@{prefix}-i-aligncenter:before          { content: "\e004"; }
-.@{prefix}-i-alignright:before           { content: "\e005"; }
-.@{prefix}-i-alignjustify:before         { content: "\e006"; }
-.@{prefix}-i-alignnone:before            { content: "\e003"; }
-.@{prefix}-i-cut:before                  { content: "\e007"; }
-.@{prefix}-i-paste:before                { content: "\e008"; }
-.@{prefix}-i-searchreplace:before        { content: "\e009"; }
-.@{prefix}-i-bullist:before              { content: "\e00a"; }
-.@{prefix}-i-numlist:before              { content: "\e00b"; }
-.@{prefix}-i-indent:before               { content: "\e00c"; }
-.@{prefix}-i-outdent:before              { content: "\e00d"; }
-.@{prefix}-i-blockquote:before           { content: "\e00e"; }
-.@{prefix}-i-undo:before                 { content: "\e00f"; }
-.@{prefix}-i-redo:before                 { content: "\e010"; }
-.@{prefix}-i-link:before                 { content: "\e011"; }
-.@{prefix}-i-unlink:before               { content: "\e012"; }
-.@{prefix}-i-anchor:before               { content: "\e013"; }
-.@{prefix}-i-image:before                { content: "\e014"; }
-.@{prefix}-i-media:before                { content: "\e015"; }
-.@{prefix}-i-help:before                 { content: "\e016"; }
-.@{prefix}-i-code:before                 { content: "\e017"; }
-.@{prefix}-i-insertdatetime:before       { content: "\e018"; }
-.@{prefix}-i-preview:before              { content: "\e019"; }
-.@{prefix}-i-forecolor:before            { content: "\e01a"; }
-.@{prefix}-i-backcolor:before            { content: "\e01a"; }
-.@{prefix}-i-table:before                { content: "\e01b"; }
-.@{prefix}-i-hr:before                   { content: "\e01c"; }
-.@{prefix}-i-removeformat:before         { content: "\e01d"; }
-.@{prefix}-i-subscript:before            { content: "\e01e"; }
-.@{prefix}-i-superscript:before          { content: "\e01f"; }
-.@{prefix}-i-charmap:before              { content: "\e020"; }
-.@{prefix}-i-emoticons:before            { content: "\e021"; }
-.@{prefix}-i-print:before                { content: "\e022"; }
-.@{prefix}-i-fullscreen:before           { content: "\e023"; }
-.@{prefix}-i-spellchecker:before         { content: "\e024"; }
+.@{prefix}-i-alignleft:before            { content: @fa-var-align-left; }
+.@{prefix}-i-aligncenter:before          { content: @fa-var-align-center; }
+.@{prefix}-i-alignright:before           { content: @fa-var-align-right; }
+.@{prefix}-i-alignjustify:before         { content: @fa-var-align-justify; }
+.@{prefix}-i-alignnone:before            { content: @fa-var-align-justify; } // todo : find better
+.@{prefix}-i-cut:before                  { content: @fa-var-cut; }
+.@{prefix}-i-paste:before                { content: @fa-var-clipboard; }
+.@{prefix}-i-searchreplace:before        { content: @fa-var-search; }
+.@{prefix}-i-bullist:before              { content: @fa-var-list-ul; }
+.@{prefix}-i-numlist:before              { content: @fa-var-list-ol; }
+.@{prefix}-i-indent:before               { content: @fa-var-indent; }
+.@{prefix}-i-outdent:before              { content: @fa-var-outdent; }
+.@{prefix}-i-blockquote:before           { content: @fa-var-quote-left; }
+.@{prefix}-i-undo:before                 { content: @fa-var-undo; }
+.@{prefix}-i-redo:before                 { content: @fa-var-redo; }
+.@{prefix}-i-link:before                 { content: @fa-var-link; }
+.@{prefix}-i-unlink:before               { content: @fa-var-unlink; }
+.@{prefix}-i-anchor:before               { content: @fa-var-anchor; }
+.@{prefix}-i-image:before                { content: @fa-var-image; }
+.@{prefix}-i-media:before                { content: @fa-var-film; }
+.@{prefix}-i-help:before                 { content: @fa-var-question-circle; }
+.@{prefix}-i-code:before                 { content: @fa-var-code; }
+.@{prefix}-i-insertdatetime:before       { content: @fa-var-calendar; }
+.@{prefix}-i-preview:before              { content: @fa-var-eye; }
+.@{prefix}-i-forecolor:before            { content: @fa-var-font; }
+.@{prefix}-i-backcolor:before            { content: @fa-var-font; }
+.@{prefix}-i-table:before                { content: @fa-var-table; }
+.@{prefix}-i-hr:before                   { content: @fa-var-window-minimize; }
+.@{prefix}-i-removeformat:before         { content: @fa-var-eraser; }
+.@{prefix}-i-subscript:before            { content: @fa-var-subscript; }
+.@{prefix}-i-superscript:before          { content: @fa-var-superscript; }
+.@{prefix}-i-charmap:before              { content: @fa-var-euro-sign; }
+.@{prefix}-i-emoticons:before            { content: @fa-var-smile; }
+.@{prefix}-i-print:before                { content: @fa-var-print; }
+.@{prefix}-i-fullscreen:before           { content: @fa-var-expand; }
+.@{prefix}-i-spellchecker:before         { content: @fa-var-sort-alpha-down; } // todo : find better
 .@{prefix}-i-nonbreaking:before          { content: "\e025"; }
-.@{prefix}-i-template:before             { content: "\e026"; }
+.@{prefix}-i-template:before             { content: @fa-var-list-alt; } // todo : find better
 .@{prefix}-i-pagebreak:before            { content: "\e027"; }
 .@{prefix}-i-restoredraft:before         { content: "\e028"; }
-.@{prefix}-i-bold:before                 { content: "\e02a"; }
-.@{prefix}-i-italic:before               { content: "\e02b"; }
-.@{prefix}-i-underline:before            { content: "\e02c"; }
-.@{prefix}-i-strikethrough:before        { content: "\e02d"; }
-.@{prefix}-i-visualchars:before          { content: "\e02e"; }
-.@{prefix}-i-visualblocks:before         { content: "\e02e"; }
+.@{prefix}-i-bold:before                 { content: @fa-var-bold; }
+.@{prefix}-i-italic:before               { content: @fa-var-italic; }
+.@{prefix}-i-underline:before            { content: @fa-var-underline; }
+.@{prefix}-i-strikethrough:before        { content: @fa-var-strikethrough; }
+.@{prefix}-i-visualchars:before          { content: @fa-var-i-cursor; }
+.@{prefix}-i-visualblocks:before         { content: @fa-var-paragraph; }
 .@{prefix}-i-ltr:before                  { content: "\e02f"; }
 .@{prefix}-i-rtl:before                  { content: "\e030"; }
-.@{prefix}-i-copy:before                 { content: "\e031"; }
-.@{prefix}-i-browse:before               { content: "\e034"; }
-.@{prefix}-i-pastetext:before            { content: "\e035"; }
+.@{prefix}-i-copy:before                 { content: @fa-var-copy; }
+.@{prefix}-i-browse:before               { content: @fa-var-search; }
+.@{prefix}-i-pastetext:before            { content: @fa-var-clipboard; }
 .@{prefix}-i-rotateleft:before           { content: "\eaa8"; }
 .@{prefix}-i-rotateright:before          { content: "\eaa9"; }
 .@{prefix}-i-crop:before                 { content: "\ee78"; }
@@ -112,18 +88,18 @@
 .@{prefix}-i-fliph:before                { content: "\eaac"; }
 .@{prefix}-i-zoomin:before               { content: "\eb35"; }
 .@{prefix}-i-zoomout:before              { content: "\eb36"; }
-.@{prefix}-i-sun:before                  { content: "\eccc"; }
-.@{prefix}-i-moon:before                 { content: "\eccd"; }
-.@{prefix}-i-arrowleft:before            { content: "\edc0"; }
-.@{prefix}-i-arrowright:before           { content: "\e93c"; }
+.@{prefix}-i-sun:before                  { content: @fa-var-sun; }
+.@{prefix}-i-moon:before                 { content: @fa-var-moon; }
+.@{prefix}-i-arrowleft:before            { content: @fa-var-arrow-left; }
+.@{prefix}-i-arrowright:before           { content: @fa-var-arrow-right; }
 .@{prefix}-i-drop:before                 { content: "\e935"; }
-.@{prefix}-i-contrast:before             { content: "\ecd4"; }
+.@{prefix}-i-contrast:before             { content: @fa-var-adjust; }
 .@{prefix}-i-sharpen:before              { content: "\eba7"; }
-.@{prefix}-i-resize2:before              { content: "\edf9"; }
+.@{prefix}-i-resize2:before              { content: @fa-var-expand-arrows-alt; }
 .@{prefix}-i-orientation:before          { content: "\e601"; }
 .@{prefix}-i-invert:before               { content: "\e602"; }
 .@{prefix}-i-gamma:before                { content: "\e600"; }
-.@{prefix}-i-remove:before               { content: "\ed6a"; }
+.@{prefix}-i-remove:before               { content: @fa-var-trash-alt; }
 .@{prefix}-i-tablerowprops:before        { content: "\e604"; }
 .@{prefix}-i-tablecellprops:before       { content: "\e605"; }
 .@{prefix}-i-table2:before               { content: "\e606"; }
@@ -138,43 +114,47 @@
 .@{prefix}-i-tabletopheader:before       { content: "\e62b"; }
 .@{prefix}-i-tabledeleterow:before       { content: "\e800"; }
 .@{prefix}-i-tabledeletecol:before       { content: "\e801"; }
-.@{prefix}-i-codesample:before           { content: "\e603"; }
-.@{prefix}-i-fill:before                 { content: "\e902"; }
+.@{prefix}-i-codesample:before           { content: @fa-var-code; }
+.@{prefix}-i-fill:before                 { content: @fa-var-fill; }
 .@{prefix}-i-borderwidth:before          { content: "\e903"; }
 .@{prefix}-i-line:before                 { content: "\e904"; }
 .@{prefix}-i-count:before                { content: "\e905"; }
-.@{prefix}-i-translate:before            { content: "\e907"; }
+.@{prefix}-i-translate:before            { content: @fa-var-language; }
 .@{prefix}-i-drag:before                 { content: "\e908"; }
-.@{prefix}-i-home:before                 { content: "\e90b"; }
-.@{prefix}-i-upload:before               { content: "\e914"; }
+.@{prefix}-i-home:before                 { content: @fa-var-home; }
+.@{prefix}-i-upload:before               { content: @fa-var-upload; }
 .@{prefix}-i-bubble:before               { content: "\e91c"; }
-.@{prefix}-i-user:before                 { content: "\e91d"; }
-.@{prefix}-i-lock:before                 { content: "\e926"; }
-.@{prefix}-i-unlock:before               { content: "\e927"; }
-.@{prefix}-i-settings:before             { content: "\e928"; }
-.@{prefix}-i-remove2:before              { content: "\e92a"; }
+.@{prefix}-i-user:before                 { content: @fa-var-user; }
+.@{prefix}-i-lock:before                 { content: @fa-var-lock; }
+.@{prefix}-i-unlock:before               { content: @fa-var-unlock; }
+.@{prefix}-i-settings:before             { content: @fa-var-cog; }
+.@{prefix}-i-remove2:before              { content: @fa-var-trash; }
 .@{prefix}-i-menu:before                 { content: "\e92d"; }
 .@{prefix}-i-warning:before              { content: "\e930"; }
-.@{prefix}-i-question:before             { content: "\e931"; }
-.@{prefix}-i-pluscircle:before           { content: "\e932"; }
-.@{prefix}-i-info:before                 { content: "\e933"; }
+.@{prefix}-i-question:before             { content: @fa-var-question; }
+.@{prefix}-i-pluscircle:before           { content: @fa-var-plus-circle; }
+.@{prefix}-i-info:before                 { content: @fa-var-info; }
 .@{prefix}-i-notice:before               { content: "\e934"; }
-.@{prefix}-i-arrowup:before              { content: "\e93b"; }
-.@{prefix}-i-arrowdown:before            { content: "\e93d"; }
-.@{prefix}-i-arrowup2:before             { content: "\e93f"; }
-.@{prefix}-i-arrowdown2:before           { content: "\e940"; }
+.@{prefix}-i-arrowup:before              { content: @fa-var-arrow-up; }
+.@{prefix}-i-arrowdown:before            { content: @fa-var-arrow-down; }
+.@{prefix}-i-arrowup2:before             { content: @fa-var-arrow-circle-up; }
+.@{prefix}-i-arrowdown2:before           { content: @fa-var-arrow-circle-down; }
 .@{prefix}-i-menu2:before                { content: "\e941"; }
 .@{prefix}-i-newtab:before               { content: "\e961"; }
 .@{prefix}-i-a11y:before                 { content: "\e900"; }
-.@{prefix}-i-plus:before                 { content: "\e93a"; }
-.@{prefix}-i-insert:before               { content: "\e93a"; }
-.@{prefix}-i-minus:before                { content: "\e939"; }
-.@{prefix}-i-books:before                { content: "\e911"; }
-.@{prefix}-i-reload:before               { content: "\e906"; }
+.@{prefix}-i-plus:before                 { content: @fa-var-plus; }
+.@{prefix}-i-insert:before               { content: @fa-var-plus; }
+.@{prefix}-i-minus:before                { content: @fa-var-minus; }
+.@{prefix}-i-books:before                { content: @fa-var-book; }
+.@{prefix}-i-reload:before               { content: @fa-var-sync; }
 .@{prefix}-i-toc:before                  { content: "\e901"; }
-.@{prefix}-i-checkmark:before            { content: "\e033"; }
-.@{prefix}-i-checkbox:before,
-.@{prefix}-i-selected:before             { content: "\e033"; }
+.@{prefix}-i-checkmark:before            { content: @fa-var-check; }
+.@{prefix}-i-checkbox:before             { content: @fa-var-check-square; }
+.@{prefix}-i-selected:before             { content: @fa-var-check; }
+
+.@{prefix}-i-inserttime:before           { content: @fa-var-clock; }
+.@{prefix}-i-date:before                 { content: @fa-var-calendar; }
+.@{prefix}-i-percent:before              { content: @fa-var-percent; }
 
 // we don't have the correct icon in FontAwesome (no corner resize icon)
 // so we just draw a small triangle in CSS

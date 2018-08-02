@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
-import {GroupList} from '#/main/core/administration/user/group/components/group-list.jsx'
+import {ListData} from '#/main/app/content/list/containers/data'
+import {GroupList} from '#/main/core/administration/user/group/components/group-list'
 import {connect} from 'react-redux'
 import {actions} from '#/main/core/administration/user/group/actions'
 
@@ -11,7 +11,7 @@ import {trans} from '#/main/core/translation'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 
 const GroupsList = props =>
-  <DataListContainer
+  <ListData
     name="groups.list"
     fetch={{
       url: ['apiv2_group_list_managed'],

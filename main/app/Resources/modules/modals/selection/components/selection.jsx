@@ -5,7 +5,7 @@ import omit from 'lodash/omit'
 import uniq from 'lodash/uniq'
 
 import {trans} from '#/main/core/translation'
-import {CallbackButton} from '#/main/app/button/components/callback'
+import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 
 const GroupTabs = props =>

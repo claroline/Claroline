@@ -12,6 +12,13 @@ import {
   PageAction,
   MoreAction
 } from '#/main/core/layout/page'
+import {
+  ASYNC_BUTTON,
+  CALLBACK_BUTTON,
+  LINK_BUTTON,
+  MODAL_BUTTON,
+  URL_BUTTON
+} from '#/main/app/buttons'
 
 import {User as UserTypes} from '#/main/core/user/prop-types'
 
@@ -20,7 +27,7 @@ const UserPageActions = props => {
 
   const moreActions = [].concat(props.customActions, [
     {
-      type: 'modal',
+      type: MODAL_BUTTON,
       icon: 'fa fa-fw fa-lock',
       label: trans('change_password'),
       group: trans('user_management'),
@@ -29,7 +36,7 @@ const UserPageActions = props => {
         changePassword: (password) => props.updatePassword(props.user, password)
       }]
     }, {
-      type: 'modal',
+      type: MODAL_BUTTON,
       icon: 'fa fa-fw fa-link',
       label: trans('change_profile_public_url'),
       group: trans('user_management'),
@@ -40,14 +47,14 @@ const UserPageActions = props => {
         changeUrl: (publicUrl) => props.updatePublicUrl(props.user, publicUrl)
       }]
     }, {
-      type: 'url',
+      type: URL_BUTTON,
       icon: 'fa fa-fw fa-line-chart',
       label: trans('show_tracking'),
       group: trans('user_management'),
       displayed: hasPermission('administrate', props.user),
       target: ['claro_user_tracking', {publicUrl: props.user.meta.publicUrl}]
     }, {
-      type: 'async',
+      type: ASYNC_BUTTON,
       icon: 'fa fa-fw fa-trash-o',
       label: trans('delete', {}, 'actions'),
       displayed: hasPermission('delete', props.user),
@@ -72,7 +79,7 @@ const UserPageActions = props => {
       {hasPermission('edit', props.user) &&
         <PageGroupActions>
           <PageAction
-            type="link"
+            type={LINK_BUTTON}
             icon="fa fa-pencil"
             label={trans('edit', {}, 'actions')}
             target="/edit"
@@ -85,7 +92,7 @@ const UserPageActions = props => {
         <PageGroupActions>
           <PageAction
             id="send-message"
-            type="modal"
+            type={MODAL_BUTTON}
             label={trans('send_message')}
             icon="fa fa-paper-plane-o"
             modal={[MODAL_USER_MESSAGE, {
@@ -94,7 +101,7 @@ const UserPageActions = props => {
           />
           <PageAction
             id="add-contact"
-            type="callback"
+            type={CALLBACK_BUTTON}
             label={trans('add_contact')}
             icon="fa fa-address-book-o"
             action={() => true}

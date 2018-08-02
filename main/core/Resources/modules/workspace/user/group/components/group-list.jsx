@@ -1,5 +1,5 @@
-
 import {trans} from '#/main/core/translation'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {GroupCard} from '#/main/core/user/data/components/group-card'
 
@@ -20,7 +20,7 @@ function getWorkspaceRoles(workspace) {
 const getGroupList = (workspace) => {
   return {
     open: (row) => ({
-      type: 'link',
+      type: LINK_BUTTON,
       target: `/groups/form/${row.id}`
     }),
     definition: [

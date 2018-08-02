@@ -2,7 +2,7 @@ import React from 'react'
 
 import {t} from '#/main/core/translation'
 
-import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
+import {FormData} from '#/main/app/content/form/containers/data'
 
 /**
  * Registration Form : Required section.
@@ -11,7 +11,7 @@ import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
  * @constructor
  */
 const Required = () =>
-  <FormContainer
+  <FormData
     level={2}
     name="user"
     sections={[

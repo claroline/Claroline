@@ -5,7 +5,7 @@ import classes from 'classnames'
 
 import {currentUser} from '#/main/core/user/current'
 import {trans} from '#/main/core/translation'
-import {select as formSelect} from '#/main/core/data/form/selectors'
+import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {UserMessage} from '#/main/core/user/message/components/user-message.jsx'

@@ -1,10 +1,11 @@
 import {trans} from '#/main/core/translation'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {RoleCard} from '#/main/core/user/data/components/role-card'
 
 const RoleList = {
   open: (row) => ({
-    type: 'link',
+    type: LINK_BUTTON,
     target: `/roles/form/${row.id}`
   }),
   definition: [

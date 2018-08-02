@@ -1,9 +1,11 @@
 import {makeActionCreator} from '#/main/app/store/actions'
-import {url} from '#/main/app/api'
-import {API_REQUEST} from '#/main/app/api'
-import {actions as listActions} from '#/main/core/data/list/actions'
-import {select as listSelect} from '#/main/core/data/list/selectors'
+
+import {API_REQUEST, url} from '#/main/app/api'
 import {trans} from '#/main/core/translation'
+import {
+  actions as listActions,
+  select as listSelect
+} from '#/main/app/content/list/store'
 
 export const SESSION_EVENTS_LOAD = 'SESSION_EVENTS_LOAD'
 export const SESSION_EVENT_LOAD = 'SESSION_EVENT_LOAD'

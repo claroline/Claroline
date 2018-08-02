@@ -235,14 +235,31 @@ class WorkspaceSerializer
         return $data;
     }
 
-    private function getOpening(Workspace $workspace, array $options = [])
+    private function getOpening(Workspace $workspace)
     {
-        // todo implement
-
-        return [
+        $details = $this->workspaceManager->getWorkspaceOptions($workspace)->getDetails();
+        $openingData = [
             'type' => 'tool',
             'target' => 'home',
         ];
+
+        if ($details && isset($details['opening_type'])) {
+            $openingData['type'] = $details['opening_type'];
+        }
+        if ($details && isset($details['opening_target'])) {
+            $openingData['target'] = $details['opening_target'];
+        }
+        if ('resource' === $openingData['type'] && isset($details['workspace_opening_resource']) && $details['workspace_opening_resource']) {
+            $resource = $this->om
+                ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceNode')
+                ->findOneBy(['id' => $details['workspace_opening_resource']]);
+
+            if (!empty($resource)) {
+                $openingData['target'] = $this->serializer->serialize($resource);
+            }
+        }
+
+        return $openingData;
     }
 
     /**
@@ -390,15 +407,39 @@ class WorkspaceSerializer
             }
         }
 
-        if (isset($data['display'])) {
+        if (isset($data['display']) || isset($data['opening'])) {
             $workspaceOptions = $this->workspaceManager->getWorkspaceOptions($workspace);
-            $workspaceOptions->setDetails([
-                'background_color' => !empty($data['display']['color']) ? $data['display']['color'] : null,
-                'hide_tools_menu' => isset($data['display']['showTools']) ? !$data['display']['showTools'] : true,
-                'hide_breadcrumb' => isset($data['display']['showBreadcrumbs']) ? !$data['display']['showBreadcrumbs'] : true,
-                'use_workspace_opening_resource' => !empty($data['display']['openResource']),
-                'workspace_opening_resource' => !empty($data['display']['openResource']) ? !empty($data['display']['openResource']['autoId']) : null,
-            ]);
+            $details = $workspaceOptions->getDetails();
+
+            if (empty($details)) {
+                $details = [];
+            }
+            if (isset($data['display'])) {
+                $details['background_color'] = !empty($data['display']['color']) ? $data['display']['color'] : null;
+                $details['hide_tools_menu'] = isset($data['display']['showTools']) ? !$data['display']['showTools'] : true;
+                $details['hide_breadcrumb'] = isset($data['display']['showBreadcrumbs']) ? !$data['display']['showBreadcrumbs'] : true;
+                $details['use_workspace_opening_resource'] = !empty($data['display']['openResource']);
+                $details['workspace_opening_resource'] = !empty($data['display']['openResource']) && !empty($data['display']['openResource']['autoId']) ?
+                    $data['display']['openResource']['autoId'] :
+                    null;
+            }
+            if (isset($data['opening'])) {
+                $details['opening_type'] = isset($data['opening']['type']) && isset($data['opening']['target']) && !empty($data['opening']['target']) ?
+                    $data['opening']['type'] :
+                    'tool';
+                $details['opening_target'] = isset($data['opening']['target']) && !empty($data['opening']['target']) ?
+                    $data['opening']['target'] :
+                    'home';
+
+                if ('resource' === $data['opening']['type'] && isset($data['opening']['target']['autoId'])) {
+                    $details['workspace_opening_resource'] = $data['opening']['target']['autoId'];
+                    $details['use_workspace_opening_resource'] = true;
+                } else {
+                    $details['workspace_opening_resource'] = null;
+                    $details['use_workspace_opening_resource'] = false;
+                }
+            }
+            $workspaceOptions->setDetails($details);
         }
 
         return $workspace;

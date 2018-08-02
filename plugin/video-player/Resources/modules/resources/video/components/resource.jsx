@@ -9,6 +9,7 @@ import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
 import {RoutedPageContent} from '#/main/core/layout/router'
 import {ResourcePageContainer} from '#/main/core/resource/containers/page'
+import {CALLBACK_BUTTON, DOWNLOAD_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {Player} from '#/plugin/video-player/resources/video/player/components/player'
 import {MODAL_VIDEO_SUBTITLES} from '#/plugin/video-player/resources/video/editor/components/modal/subtitles'
@@ -17,13 +18,13 @@ const Resource = props =>
   <ResourcePageContainer
     customActions={[
       {
-        type: 'modal',
+        type: MODAL_BUTTON,
         icon: 'fa fa-fw fa-list',
         label: trans('subtitles'),
         displayed: props.canEdit,
         modal: [MODAL_VIDEO_SUBTITLES]
-      },{
-        type: 'download',
+      },{ // todo should be a resource action
+        type: DOWNLOAD_BUTTON,
         icon: 'fa fa-fw fa-download',
         label: trans('download'),
         displayed: props.canDownload,
@@ -31,7 +32,7 @@ const Resource = props =>
           url: url(['claro_resource_download'], {ids: [props.resource.autoId]})
         }
       }, {
-        type: 'callback',
+        type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-clipboard',
         label: trans('copy_permalink_to_clipboard'),
         callback: () => copy(props.url)

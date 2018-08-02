@@ -5,12 +5,13 @@ import {connect} from 'react-redux'
 import {t} from '#/main/core/translation'
 
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
-import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
-import {FormContainer} from '#/main/core/data/form/containers/form'
+import {MODAL_DATA_LIST} from '#/main/app/modals/list'
+import {FormData} from '#/main/app/content/form/containers/data'
 import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
-import {actions as formActions} from '#/main/core/data/form/actions'
-import {select as formSelect} from '#/main/core/data/form/selectors'
-import {DataListContainer} from '#/main/core/data/list/containers/data-list'
+import {actions as formActions} from '#/main/app/content/form/store/actions'
+import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
+import {ListData} from '#/main/app/content/list/containers/data'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
 import {actions} from '#/main/core/administration/user/user/actions'
 
@@ -19,7 +20,7 @@ import {GroupList} from '#/main/core/administration/user/group/components/group-
 import {RoleList} from '#/main/core/administration/user/role/components/role-list'
 
 const UserForm = props =>
-  <FormContainer
+  <FormData
     level={3}
     name="users.current"
     buttons={true}
@@ -28,7 +29,7 @@ const UserForm = props =>
       ['apiv2_user_update', {id: user.id}]
     }
     cancel={{
-      type: 'link',
+      type: LINK_BUTTON,
       target: '/users',
       exact: true
     }}
@@ -152,14 +153,14 @@ const UserForm = props =>
         disabled={props.new}
         actions={[
           {
-            type: 'callback',
+            type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: t('add_groups'),
             callback: () => props.pickGroups(props.user.id)
           }
         ]}
       >
-        <DataListContainer
+        <ListData
           name="users.current.groups"
           fetch={{
             url: ['apiv2_user_list_groups', {id: props.user.id}],
@@ -181,14 +182,14 @@ const UserForm = props =>
         disabled={props.new}
         actions={[
           {
-            type: 'callback',
+            type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: t('add_organizations'),
             callback: () => props.pickOrganizations(props.user.id)
           }
         ]}
       >
-        <DataListContainer
+        <ListData
           name="users.current.organizations"
           fetch={{
             url: ['apiv2_user_list_organizations', {id: props.user.id}],
@@ -210,14 +211,14 @@ const UserForm = props =>
         disabled={props.new}
         actions={[
           {
-            type: 'callback',
+            type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: t('add_roles'),
             callback: () => props.pickRoles(props.user.id)
           }
         ]}
       >
-        <DataListContainer
+        <ListData
           name="users.current.roles"
           fetch={{
             url: ['apiv2_user_list_roles', {id: props.user.id}],
@@ -232,7 +233,7 @@ const UserForm = props =>
         />
       </FormSection>
     </FormSections>
-  </FormContainer>
+  </FormData>
 
 UserForm.propTypes = {
   new: T.bool.isRequired,
@@ -258,7 +259,7 @@ const User = connect(
       dispatch(formActions.updateProp('users.current', propName, propValue))
     },
     pickGroups(userId) {
-      dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
+      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-users',
         title: t('add_groups'),
         name: 'groups.picker',
@@ -272,7 +273,7 @@ const User = connect(
       }))
     },
     pickOrganizations(userId) {
-      dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
+      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-building',
         title: t('add_organizations'),
         confirmText: t('add'),
@@ -287,7 +288,7 @@ const User = connect(
       }))
     },
     pickRoles(userId) {
-      dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
+      dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-id-badge',
         title: t('add_roles'),
         name: 'roles.picker',

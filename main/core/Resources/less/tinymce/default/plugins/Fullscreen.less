@@ -18,3 +18,13 @@
 
     .@{prefix}-i-fullscreen:before { content: @fa-var-compress; }
 }
+
+// Full screen editor container
+.text-editor.editor-fullscreen{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    z-index: @zindex-fullscreen;
+}

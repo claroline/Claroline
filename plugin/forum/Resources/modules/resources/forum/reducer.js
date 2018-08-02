@@ -8,7 +8,7 @@ import {reducer as playerReducer} from '#/plugin/forum/resources/forum/player/re
 import {reducer as moderationReducer} from '#/plugin/forum/resources/forum/moderation/reducer'
 import {reducer as overviewReducer} from '#/plugin/forum/resources/forum/overview/reducer'
 
-import {FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
+import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 import {USER_NOTIFIED, USER_NOT_NOTIFIED} from '#/plugin/forum/resources/forum/actions'
 const reducer = {
   forum: makeReducer({}, {

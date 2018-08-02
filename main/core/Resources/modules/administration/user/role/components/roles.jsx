@@ -1,10 +1,10 @@
 import React from 'react'
 
-import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
-import {RoleList} from '#/main/core/administration/user/role/components/role-list.jsx'
+import {ListData} from '#/main/app/content/list/containers/data'
+import {RoleList} from '#/main/core/administration/user/role/components/role-list'
 
 const Roles = () =>
-  <DataListContainer
+  <ListData
     name="roles.list"
     fetch={{
       url: ['apiv2_role_list'],

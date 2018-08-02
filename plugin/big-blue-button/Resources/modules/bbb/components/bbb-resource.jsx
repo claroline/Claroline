@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/core/translation'
 import {RoutedPageContent} from '#/main/core/layout/router'
 import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
 import {actions} from '../actions'
 import {BBBContent} from './bbb-content.jsx'
@@ -47,7 +48,7 @@ function customActions(props) {
   const actions = []
 
   actions.push({
-    type: 'link',
+    type: LINK_BUTTON,
     icon: 'fa fa-fw fa-home',
     label: trans('claroline_big_blue_button', {}, 'resource'),
     target: '/'
@@ -55,7 +56,7 @@ function customActions(props) {
 
   if (props.canEdit) {
     actions.push({
-      type: 'callback',
+      type: CALLBACK_BUTTON,
       icon: 'fa fa-fw fa-stop-circle',
       label: trans('bbb_end', {}, 'bbb'),
       callback: props.endBBB

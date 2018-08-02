@@ -1,5 +1,5 @@
 import {makeActionCreator} from '#/main/app/store/actions'
-import {actions as formActions} from '#/main/core/data/form/actions'
+import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {API_REQUEST} from '#/main/app/api'
 
 export const UPDATE_CURRENT_EDIT_SECTION = 'UPDATE_CURRENT_EDIT_SECTION'

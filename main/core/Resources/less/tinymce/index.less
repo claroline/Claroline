@@ -1,84 +1,17 @@
-@import "default/Skin";
-@import "default/Content"; // TODO : find a way to also have Inline styles
+/**
+ * TinyMCE styles.
+ */
 
+// import custom claroline skin
+@import "default/Skin";
+
+// import default editor styles
+// TODO : find a way to also have Inline styles
+@import "default/Content";
+
+// import custom plugins styles
 @import "default/plugins/AdvancedToolbar";
 @import "default/plugins/FileUpload";
 @import "default/plugins/Fullscreen";
 @import "default/plugins/Mentions";
 @import "default/plugins/ResourcePicker";
-
-// make some overrides for Claroline Integration
-// mimic FontAwesome icons
-.mce-ico {
-    .fa-icon;
-    .fas;
-
-    text-shadow: none !important;
-    vertical-align: middle;
-    // mimic fa-fw
-    text-align: center;
-    width: (20em / 16);
-
-    &.mce-i-remove:before         { content: @fa-var-times; }
-    &.mce-i-insert:before         { content: @fa-var-plus; }
-    &.mce-i-save:before           { content: @fa-var-save; }
-    &.mce-i-newdocument:before    { content: @fa-var-plus; }
-    &.mce-i-alignleft:before      { content: @fa-var-align-left; }
-    &.mce-i-aligncenter:before    { content: @fa-var-align-center; }
-    &.mce-i-alignright:before     { content: @fa-var-align-right; }
-    &.mce-i-alignjustify:before   { content: @fa-var-align-justify; }
-    &.mce-i-cut:before            { content: @fa-var-cut; }
-    &.mce-i-searchreplace:before  { content: @fa-var-search; }
-    &.mce-i-bullist:before        { content: @fa-var-list-ul; }
-    &.mce-i-numlist:before        { content: @fa-var-list-ol; }
-    &.mce-i-indent:before         { content: @fa-var-indent; }
-    &.mce-i-outdent:before        { content: @fa-var-outdent; }
-    &.mce-i-blockquote:before     { content: @fa-var-quote-left; }
-    &.mce-i-undo:before           { content: @fa-var-undo; }
-    &.mce-i-redo:before           { content: @fa-var-redo; }
-    &.mce-i-link:before           { content: @fa-var-link; }
-    &.mce-i-unlink:before         { content: @fa-var-unlink; }
-    &.mce-i-anchor:before         { content: @fa-var-anchor; }
-    &.mce-i-image:before          { content: @fa-var-image; }
-    &.mce-i-media:before          { content: @fa-var-film; }
-    &.mce-i-help:before           { content: @fa-var-question-circle; }
-    &.mce-i-code:before           { content: @fa-var-code; }
-    &.mce-i-preview:before        { content: @fa-var-eye; }
-    &.mce-i-forecolor:before      { content: @fa-var-font; }
-    &.mce-i-backcolor:before      { content: @fa-var-font; }
-    &.mce-i-table:before          { content: @fa-var-table; }
-    &.mce-i-hr:before             { content: @fa-var-minus; }
-    &.mce-i-removeformat:before   { content: @fa-var-eraser; }
-    &.mce-i-subscript:before      { content: @fa-var-subscript; }
-    &.mce-i-superscript:before    { content: @fa-var-superscript; }
-    &.mce-i-charmap:before        { content: @fa-var-euro-sign; }
-    &.mce-i-emoticons:before      { content: @fa-var-smile; }
-    &.mce-i-print:before          { content: @fa-var-print; }
-    &.mce-i-fullscreen:before     { content: @fa-var-expand; }
-    &.mce-i-spellchecker:before   { content: @fa-var-sort-alpha-down; } // todo : find better
-    &.mce-i-template:before       { content: @fa-var-list-alt; } // todo : find better
-    &.mce-i-bold:before           { content: @fa-var-bold; }
-    &.mce-i-italic:before         { content: @fa-var-italic; }
-    &.mce-i-underline:before      { content: @fa-var-underline; }
-    &.mce-i-strikethrough:before  { content: @fa-var-strikethrough; }
-    &.mce-i-copy:before           { content: @fa-var-copy; }
-    &.mce-i-browse:before         { content: @fa-var-search; }
-
-    &.mce-i-paste:before          { content: @fa-var-clipboard; }
-    &.mce-i-pastetext:before      { content: @fa-var-clipboard; }
-    &.mce-i-inserttime:before     { content: @fa-var-clock; }
-    &.mce-i-date:before           { content: @fa-var-calendar; }
-    &.mce-i-checkbox:before       { content: @fa-var-check-square; }
-    &.mce-i-selected:before       { content: @fa-var-check; }
-    &.mce-i-percent:before        { content: @fa-var-percent; }
-}
-
-// Full screen editor container
-.text-editor.editor-fullscreen{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: auto;
-    z-index: @zindex-fullscreen;
-}

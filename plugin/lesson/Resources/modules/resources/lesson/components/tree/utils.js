@@ -1,6 +1,8 @@
 import cloneDeep from 'lodash/cloneDeep'
 import {trans} from '#/main/core/translation'
 
+import {LINK_BUTTON} from '#/main/app/buttons'
+
 /**
  * Transforme l'arbre du cours provenant de l'API pour que le composant Summary puisse l'utiliser
  *
@@ -15,7 +17,7 @@ export const normalizeTree = (tree, lessonId, canEdit) => {
     label: trans('chapter_creation', {}, 'icap_lesson'),
     target: '/new',
     icon: 'fa fa-fw fa-plus',
-    type: 'link'
+    type: LINK_BUTTON
   })
 
   return {
@@ -30,19 +32,19 @@ const normalizeTreeNode = (node, lessonId, canEdit) => {
   return node.map((elem) => {
 
     const element = {
-      type: 'link',
+      type: LINK_BUTTON,
       target: `/${elem['slug']}`,
       label: elem['title'],
       additional: [
         {
-          type: 'link',
+          type: LINK_BUTTON,
           target: `/${elem['slug']}/edit`,
           label: trans('edit_chapter_button', {}, 'icap_lesson'),
           icon: 'fa fa-pencil',
           displayed: canEdit
         },
         {
-          type: 'link',
+          type: LINK_BUTTON,
           target: `/${elem['slug']}/copy`,
           label: trans('copy'),
           icon: 'fa fa-copy',

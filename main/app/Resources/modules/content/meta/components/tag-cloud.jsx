@@ -3,8 +3,9 @@ import {PropTypes as T} from 'prop-types'
 import shuffle from 'lodash/shuffle'
 import {scaleLinear} from 'd3-scale'
 
-import {CallbackButton} from '#/main/app/button/components/callback'
+import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 
+// TODO : move in a tag module
 
 // tags is an object with keys=tag and values=count
 const TagCloud = props => {

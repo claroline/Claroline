@@ -10,9 +10,11 @@ import {displayDate} from '#/main/core/scaffolding/date'
 import {Action as ActionTypes} from '#/main/core/layout/action/prop-types'
 import {User as UserTypes} from '#/main/core/user/prop-types'
 
-import {UrlButton} from '#/main/app/button/components/url'
-import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
-import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action.jsx'
+import {UrlButton} from '#/main/app/buttons/url/components/button'
+import {HtmlText} from '#/main/core/layout/components/html-text'
+
+// TODO : replace me with Button from main/app/action
+import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action'
 
 import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
 

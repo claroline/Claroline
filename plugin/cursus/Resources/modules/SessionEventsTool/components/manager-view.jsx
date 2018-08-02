@@ -4,9 +4,11 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans, t} from '#/main/core/translation'
 
-import {actions as listActions} from '#/main/core/data/list/actions'
-import {select as listSelect} from '#/main/core/data/list/selectors'
-import {DataList} from '#/main/core/data/list/components/data-list'
+import {
+  actions as listActions,
+  select as listSelect
+} from '#/main/app/content/list/store'
+import {ListData} from '#/main/app/content/list/components/data'
 
 import {withModal} from '#/main/app/overlay/modal'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
@@ -112,7 +114,7 @@ class ManagerView extends Component {
     if (this.props.session) {
       return (
         <div>
-          <DataList
+          <ListData
             data={this.props.events}
             totalResults={this.props.total}
             primaryAction={(row) => ({

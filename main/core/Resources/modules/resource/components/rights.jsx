@@ -10,7 +10,7 @@ import Tab from 'react-bootstrap/lib/Tab'
 import Tabs from 'react-bootstrap/lib/Tabs'
 
 import {trans}  from '#/main/core/translation'
-import {PopoverButton} from '#/main/app/button/components/popover'
+import {PopoverButton} from '#/main/app/buttons/popover/components/button'
 
 import {
   getSimpleAccessRule,

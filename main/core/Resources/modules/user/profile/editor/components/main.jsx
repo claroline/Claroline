@@ -6,7 +6,7 @@ import {connectProfile} from '#/main/core/user/profile/connect'
 import {ProfileNav} from '#/main/core/user/profile/components/nav.jsx'
 import {ProfileFacets} from '#/main/core/user/profile/components/facets.jsx'
 
-import {select} from '#/main/core/data/form/selectors'
+import {selectors as select} from '#/main/app/content/form/store/selectors'
 import {ProfileFacet} from '#/main/core/user/profile/editor/components/facet.jsx'
 
 const ProfileEditComponent = props =>

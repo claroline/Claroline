@@ -6,10 +6,11 @@ import {trans} from '#/main/core/translation'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
 import {url} from '#/main/app/api'
-import {select as formSelect} from '#/main/core/data/form/selectors'
-import {actions as formActions} from '#/main/core/data/form/actions'
+import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
+import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {ResourcePageContainer} from '#/main/core/resource/containers/page'
 import {RoutedPageContent} from '#/main/core/layout/router'
+import {DOWNLOAD_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
 import {Editor} from '#/plugin/wiki/resources/wiki/editor/components/editor'
 import {Player} from '#/plugin/wiki/resources/wiki/player/components/player'
@@ -28,14 +29,14 @@ const Resource = props =>
     }}
     customActions={[
       {
-        type: 'link',
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-home',
         label: trans('show_overview'),
         target: '/',
         primary: false
       },
       {
-        type: 'download',
+        type: DOWNLOAD_BUTTON,
         icon: 'fa fa-fw fa-file-pdf-o',
         displayed: props.canExport,
         label: trans('pdf_export'),
@@ -44,7 +45,7 @@ const Resource = props =>
         }
       },
       {
-        type: 'link',
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-trash-o',
         displayed: props.canEdit,
         label: trans('deleted_sections', {}, 'icap_wiki'),

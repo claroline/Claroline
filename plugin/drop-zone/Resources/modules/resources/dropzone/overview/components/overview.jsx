@@ -6,16 +6,16 @@ import {trans} from '#/main/core/translation'
 import {displayDate} from '#/main/core/scaffolding/date'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {MODAL_SELECTION} from '#/main/app/modals/selection'
-
-import {ResourceOverview} from '#/main/core/resource/components/overview.jsx'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {ResourceOverview} from '#/main/core/resource/components/overview'
 
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 import {select} from '#/plugin/drop-zone/resources/dropzone/selectors'
 import {actions} from '#/plugin/drop-zone/resources/dropzone/player/actions'
 import {DropzoneType, DropType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 
-import {Parameters} from '#/plugin/drop-zone/resources/dropzone/overview/components/parameters.jsx'
-import {Timeline} from '#/plugin/drop-zone/resources/dropzone/overview/components/timeline.jsx'
+import {Parameters} from '#/plugin/drop-zone/resources/dropzone/overview/components/parameters'
+import {Timeline} from '#/plugin/drop-zone/resources/dropzone/overview/components/timeline'
 
 const OverviewComponent = props =>
   <ResourceOverview
@@ -55,7 +55,7 @@ const OverviewComponent = props =>
     actions={[
       // todo add show Drop
       {
-        type: !props.myDrop ? 'callback' : 'link',
+        type: !props.myDrop ? CALLBACK_BUTTON : LINK_BUTTON,
         icon: 'fa fa-fw fa-upload icon-with-text-right',
         label: trans(!props.myDrop ? 'start_evaluation' : (!props.myDrop.finished ? 'continue_evaluation' : 'show_evaluation'), {}, 'dropzone'),
         target: props.myDrop ? '/my/drop' : undefined,
@@ -64,7 +64,7 @@ const OverviewComponent = props =>
         disabled: !props.dropEnabled,
         disabledMessages: props.dropDisabledMessages
       }, {
-        type: 'link',
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-check-square-o icon-with-text-right',
         label: trans('correct_a_copy', {}, 'dropzone'),
         target: '/peer/drop',

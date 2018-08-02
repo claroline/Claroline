@@ -1,6 +1,7 @@
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/core/translation'
+import {MENU_BUTTON} from '#/main/app/buttons'
 
 const GROUP_SEPARATOR  = '|'
 const ACTION_SEPARATOR = ' '
@@ -67,7 +68,7 @@ function buildToolbar(toolbarConfig, actions = [], scope) {
             // we will fill menu later or remove the button of there is no remaining action
             return {
               name: 'more',
-              type: 'menu',
+              type: MENU_BUTTON,
               icon: 'fa fa-fw fa-ellipsis-v',
               label: trans('show-more-actions', {}, 'actions'),
               menu: {

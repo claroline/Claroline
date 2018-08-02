@@ -4,7 +4,8 @@ import classes from 'classnames'
 
 import {trans} from '#/main/core/translation'
 import {Button} from '#/main/app/action/components/button'
-import {LinkButton} from '#/main/app/button/components/link'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {LinkButton} from '#/main/app/buttons/link/components/button'
 
 import {Tab as TabTypes} from '#/main/core/tools/home/prop-types'
 
@@ -30,7 +31,7 @@ const Tabs = props =>
     {props.create &&
       <Button
         className="nav-add-tab"
-        type="callback"
+        type={CALLBACK_BUTTON}
         icon="fa fa-fw fa-plus"
         label={trans('add_tab', {}, 'home')}
         tooltip="bottom"

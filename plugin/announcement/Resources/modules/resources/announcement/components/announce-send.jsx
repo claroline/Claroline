@@ -4,26 +4,27 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
 import {withRouter} from '#/main/app/router'
-import {FormContainer} from '#/main/core/data/form/containers/form'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {FormData} from '#/main/app/content/form/containers/data'
 import {UserList} from '#/main/core/administration/user/user/components/user-list'
 
-import {MODAL_DATA_LIST} from '#/main/core/data/list/modals'
+import {MODAL_DATA_LIST} from '#/main/app/modals/list'
 
-import {select as formSelectors} from '#/main/core/data/form/selectors'
+import {selectors as formSelectors} from '#/main/app/content/form/store'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
-import {actions as listActions} from '#/main/core/data/list/actions'
+import {actions as listActions} from '#/main/app/content/list/store'
 
 import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'
 import {select} from '#/plugin/announcement/resources/announcement/selectors'
 import {actions} from '#/plugin/announcement/resources/announcement/actions'
 
 const AnnounceSendComponent = props =>
-  <FormContainer
+  <FormData
     name="announcementForm"
     level={2}
     buttons={true}
     save={{
-      type: 'callback',
+      type: CALLBACK_BUTTON,
       icon: 'fa fa-fw fa-paper-plane-o',
       label: trans('send', {}, 'actions'),
       disabled: props.announcement.meta.notifyUsers !== 0,
@@ -33,7 +34,7 @@ const AnnounceSendComponent = props =>
       }
     }}
     cancel={{
-      type: 'link',
+      type: LINK_BUTTON,
       target: '/',
       exact: true
     }}

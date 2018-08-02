@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
+import {FormData} from '#/main/app/content/form/containers/data'
 
 import {ProfileFacet as ProfileFacetTypes} from '#/main/core/user/profile/prop-types'
 
@@ -14,7 +14,7 @@ import {ProfileFacet as ProfileFacetTypes} from '#/main/core/user/profile/prop-t
  */
 const Facet = props =>
   <div className="profile-facet">
-    <FormContainer
+    <FormData
       name="user"
       sections={props.facet.sections}
     />

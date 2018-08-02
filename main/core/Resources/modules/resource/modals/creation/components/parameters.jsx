@@ -5,18 +5,17 @@ import omit from 'lodash/omit'
 
 import {trans} from '#/main/core/translation'
 import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {ContentMeta} from '#/main/app/content/meta/components/meta'
 import {Await} from '#/main/app/components/await'
 
-import {MODAL_RESOURCE_CREATION_RIGHTS} from '#/main/core/resource/modals/creation/components/rights'
+import {constants} from '#/main/core/resource/modals/creation/constants'
 
 import {getResource} from '#/main/core/resources'
 import {actions, selectors} from '#/main/core/resource/modals/creation/store'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {ResourceForm} from '#/main/core/resource/components/form'
-
-const MODAL_RESOURCE_CREATION_PARAMETERS = 'MODAL_RESOURCE_CREATION_PARAMETERS'
 
 class ParametersModalComponent extends Component {
   constructor(props) {
@@ -52,15 +51,15 @@ class ParametersModalComponent extends Component {
 
         <Button
           className="modal-btn btn-link"
-          type="modal"
+          type={MODAL_BUTTON}
           label={trans('edit-rights', {}, 'actions')}
           disabled={!this.props.saveEnabled}
-          modal={[MODAL_RESOURCE_CREATION_RIGHTS, {}]}
+          modal={[constants.MODAL_RESOURCE_CREATION_INTERNAL_RIGHTS, {}]}
         />
 
         <Button
           className="modal-btn btn"
-          type="callback"
+          type={CALLBACK_BUTTON}
           primary={true}
           label={trans('create', {}, 'actions')}
           disabled={!this.props.saveEnabled}
@@ -101,6 +100,5 @@ const ParametersModal = connect(
 )(ParametersModalComponent)
 
 export {
-  MODAL_RESOURCE_CREATION_PARAMETERS,
   ParametersModal
 }

@@ -1,16 +1,16 @@
 import React from 'react'
 
 import {trans} from '#/main/core/translation'
-import {constants as listConst} from '#/main/core/data/list/constants'
+import {constants as listConst} from '#/main/app/content/list/constants'
 
-import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
+import {ListData} from '#/main/app/content/list/containers/data.jsx'
 import {WorkspaceList} from '#/main/core/administration/workspace/workspace/components/workspace-list.jsx'
 
 /**
  * @constructor
  */
 const Workspace = () =>
-  <DataListContainer
+  <ListData
     name="workspaces"
     primaryAction={WorkspaceList.open}
     fetch={{

@@ -8,15 +8,15 @@ import {url} from '#/main/app/api'
 import {displayDate} from '#/main/core/scaffolding/date'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
-import {select as formSelect} from '#/main/core/data/form/selectors'
+import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
-import {TooltipLink} from '#/main/core/layout/button/components/tooltip-link.jsx'
-import {UserMicro} from '#/main/core/user/components/micro.jsx'
-import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
+import {UserMicro} from '#/main/core/user/components/micro'
+import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
-import {DataDetailsContainer} from '#/main/core/data/details/containers/details.jsx'
+import {DetailsData} from '#/main/app/content/details/containers/data'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
 import {
   Field as FieldType,
@@ -26,29 +26,30 @@ import {
 import {getCountry} from '#/plugin/claco-form/resources/claco-form/utils'
 import {select} from '#/plugin/claco-form/resources/claco-form/selectors'
 import {actions} from '#/plugin/claco-form/resources/claco-form/player/entry/actions'
-import {EntryComments} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entry-comments.jsx'
-import {EntryMenu} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entry-menu.jsx'
+import {EntryComments} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entry-comments'
+import {EntryMenu} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entry-menu'
 
 const EntryActions = props =>
   <div className="entry-actions">
     <div className="btn-group margin-right-sm" role="group">
-      <TooltipButton
+      <Button
         id="tooltip-button-notifications"
-        className="btn-link-default"
-        title={props.notificationsEnabled ?
+        className="btn-link"
+        type={CALLBACK_BUTTON}
+        icon={`fa fa-w fa-${props.notificationsEnabled ? 'bell-slash-o' : 'bell-o'}`}
+        label={props.notificationsEnabled ?
           trans('deactivate_notifications', {}, 'clacoform') :
           trans('activate_notifications', {}, 'clacoform')
         }
-        onClick={() => props.updateNotification({
+        tooltip="top"
+        callback={() => props.updateNotification({
           notifyEdition: !props.notificationsEnabled,
           notifyComment: !props.notificationsEnabled
         })}
-      >
-        <span className={`fa fa-w fa-${props.notificationsEnabled ? 'bell-slash-o' : 'bell-o'}`} />
-      </TooltipButton>
+      />
 
       {props.displayComments &&
-        <button type="button" className="btn btn-link-default dropdown-toggle" data-toggle="dropdown">
+        <button type="button" className="btn btn-link dropdown-toggle" data-toggle="dropdown">
           <span className="fa fa-caret-down" />
         </button>
       }
@@ -76,91 +77,100 @@ const EntryActions = props =>
     </div>
 
     {props.canAdministrate &&
-      <TooltipButton
+      <Button
         id="tooltip-button-owner"
-        className="btn-link-default"
-        title={trans('change_entry_owner', {}, 'clacoform')}
-        onClick={props.changeOwner}
-      >
-        <span className="fa fa-fw fa-user" />
-      </TooltipButton>
+        className="btn-link"
+        type={CALLBACK_BUTTON}
+        icon="fa fa-fw fa-user"
+        label={trans('change_entry_owner', {}, 'clacoform')}
+        tooltip="top"
+        callback={props.changeOwner}
+      />
     }
 
     {props.canGeneratePdf &&
-      <TooltipButton
+      <Button
         id="tooltip-button-print"
-        className="btn-link-default"
-        title={trans('print_entry', {}, 'clacoform')}
-        onClick={props.downloadPdf}
-      >
-        <span className="fa fa-fw fa-print" />
-      </TooltipButton>
+        className="btn-link"
+        type={CALLBACK_BUTTON}
+        icon="fa fa-fw fa-print"
+        label={trans('print_entry', {}, 'clacoform')}
+        tooltip="top"
+        callback={props.downloadPdf}
+      />
     }
 
     {props.canShare &&
-      <TooltipButton
+      <Button
         id="tooltip-button-share"
-        className="btn-link-default"
-        title={trans('share_entry', {}, 'clacoform')}
-        onClick={props.share}
-      >
-        <span className="fa fa-fw fa-share-alt" />
-      </TooltipButton>
+        className="btn-link"
+        type={CALLBACK_BUTTON}
+        icon="fa fa-fw fa-share-alt"
+        label={trans('share_entry', {}, 'clacoform')}
+        tooltip="top"
+        callback={props.share}
+      />
     }
 
     {!props.locked && props.canEdit &&
-      <TooltipLink
+      <Button
         id="entry-edit"
-        className="btn-link-default"
-        title={trans('edit')}
+        className="btn-link"
+        type={LINK_BUTTON}
+        icon="fa fa-fw fa-pencil"
+        label={trans('edit')}
+        tooltip="top"
         target={`#/entry/form/${props.entryId}`}
-      >
-        <span className="fa fa-fw fa-pencil" />
-      </TooltipLink>
+      />
     }
 
     {!props.locked && props.canManage &&
-      <TooltipButton
+      <Button
         id="tooltip-button-status"
-        className="btn-link-default"
-        title={props.status === 1 ? trans('unpublish') : trans('publish')}
-        onClick={props.toggleStatus}
-      >
-        <span className={`fa fa-fw fa-${props.status === 1 ? 'eye-slash' : 'eye'}`} />
-      </TooltipButton>
+        className="btn-link"
+        type={CALLBACK_BUTTON}
+        icon={`fa fa-fw fa-${props.status === 1 ? 'eye-slash' : 'eye'}`}
+        label={props.status === 1 ? trans('unpublish') : trans('publish')}
+        tooltip="top"
+        callback={props.toggleStatus}
+      />
     }
 
     {!props.locked && props.canAdministrate &&
-      <TooltipButton
+      <Button
         id="tooltip-button-lock"
-        className="btn-link-default"
-        title={trans('lock_entry', {}, 'clacoform')}
-        onClick={props.toggleLock}
-      >
-        <span className="fa fa-fw fa-lock" />
-      </TooltipButton>
+        className="btn-link"
+        type={CALLBACK_BUTTON}
+        icon="fa fa-fw fa-lock"
+        label={trans('lock_entry', {}, 'clacoform')}
+        tooltip="top"
+        callback={props.toggleLock}
+      />
     }
 
     {props.locked && props.canAdministrate &&
-      <TooltipButton
+      <Button
         id="tooltip-button-lock"
-        className="btn-link-default"
-        title={trans('unlock_entry', {}, 'clacoform')}
-        onClick={props.toggleLock}
-      >
-        <span className="fa fa-fw fa-unlock" />
-      </TooltipButton>
+        className="btn-link"
+        type={CALLBACK_BUTTON}
+        icon="fa fa-fw fa-unlock"
+        label={trans('unlock_entry', {}, 'clacoform')}
+        tooltip="top"
+        callback={props.toggleLock}
+      />
     }
 
     {!props.locked && props.canManage &&
-      <TooltipButton
+      <Button
         id="entry-delete"
-        className="btn-link-danger"
-        title={trans('delete')}
-        onClick={props.delete}
-      >
-        <span className="fa fa-fw fa-trash-o" />
-      </TooltipButton>
+        className="btn-link"
+        type={CALLBACK_BUTTON}
+        icon="fa fa-fw fa-trash-o"
+        label={trans('delete')}
+        tooltip="top"
+        callback={props.delete}
+        dangerous={true}
+      />
     }
   </div>
 
@@ -435,7 +445,7 @@ class EntryComponent extends Component {
                 <HtmlText>
                   {this.generateTemplate()}
                 </HtmlText> :
-                <DataDetailsContainer
+                <DetailsData
                   name="entries.current"
                   sections={this.getSections(this.props.fields, this.props.titleLabel)}
                 />

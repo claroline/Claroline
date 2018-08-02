@@ -8,7 +8,7 @@ import {UserPageContainer} from '#/main/core/user/containers/page'
 import {User as UserTypes} from '#/main/core/user/prop-types'
 
 import {currentUser} from '#/main/core/user/current'
-import {select} from '#/main/core/data/details/selectors'
+import {selectors} from '#/main/app/content/details/store'
 import {select as profileSelect} from '#/main/core/user/profile/selectors'
 import {ProfileEdit} from '#/main/core/user/profile/editor/components/main'
 import {ProfileShow} from '#/main/core/user/profile/player/components/main'
@@ -46,7 +46,7 @@ ProfileComponent.propTypes = {
 
 const Profile = connect(
   state => ({
-    user: select.data(select.details(state, 'user')),
+    user: selectors.data(selectors.details(state, 'user')),
     parameters: profileSelect.parameters(state)
   }),
   null

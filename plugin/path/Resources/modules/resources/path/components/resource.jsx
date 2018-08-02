@@ -7,6 +7,7 @@ import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
 import {RoutedPageContent} from '#/main/core/layout/router'
 import {ResourcePageContainer} from '#/main/core/resource/containers/page'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {select} from '#/plugin/path/resources/path/selectors'
 import {Overview} from '#/plugin/path/resources/path/overview/components/overview'
@@ -17,14 +18,14 @@ const Resource = props =>
   <ResourcePageContainer
     customActions={[
       {
-        type: 'link',
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-home',
         label: trans('show_overview'),
         displayed: props.path.display.showOverview,
         target: '/',
         exact: true
       }, {
-        type: 'link',
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-play',
         label: trans('start', {}, 'actions'),
         target: '/play'

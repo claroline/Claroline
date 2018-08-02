@@ -6,6 +6,8 @@ import {trans} from '#/main/core/translation'
 import {UserMicro} from '#/main/core/user/components/micro'
 import {displayDate} from '#/main/core/scaffolding/date'
 
+// todo : move in content base components
+
 // todo use in announces
 // todo use in claco-form
 

@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/core/translation'
 import {Routes} from '#/main/app/router'
 import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {select}  from '#/main/core/workspace/user/selectors'
 import {Role}    from '#/main/core/workspace/user/role/components/role'
@@ -14,7 +15,7 @@ import {actions} from '#/main/core/workspace/user/role/actions'
 const RoleTabActions = () =>
   <PageActions>
     <PageAction
-      type="link"
+      type={LINK_BUTTON}
       icon="fa fa-plus"
       label={trans('add_role')}
       target="/roles/form"

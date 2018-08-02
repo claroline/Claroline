@@ -2,17 +2,16 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {select as formSelect} from '#/main/core/data/form/selectors'
-import {actions as formActions} from '#/main/core/data/form/actions'
 import {trans} from '#/main/core/translation'
-import {FormContainer} from '#/main/core/data/form/containers/form'
-import {Button} from '#/main/app/action'
-
+import {FormData} from '#/main/app/content/form/containers/data'
+import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 
 const ConfigurationFormComponent = props =>
-  <FormContainer
+  <FormData
     level={3}
     name="bookReferenceConfiguration"
+    buttons={true}
+    target={['apiv2_book_reference_configuration_update', {id: props.id}]}
     sections={[
       {
         title: trans('general'),
@@ -28,18 +27,7 @@ const ConfigurationFormComponent = props =>
       }
     ]}
   >
-    <div className="book-referenc-configuration-buttons">
-      <Button
-        className="btn"
-        type="callback"
-        callback={() => props.saveForm(props.id)}
-        disabled={!props.saveEnabled}
-        label={trans('save')}
-        icon={'fa fa-save'}
-        primary={true}
-      />
-    </div>
-  </FormContainer>
+  </FormData>
 
 ConfigurationFormComponent.propTypes = {
   id: T.oneOfType([T.number, T.string]).isRequired,
@@ -49,15 +37,7 @@ ConfigurationFormComponent.propTypes = {
 
 const ConfigurationForm = connect(
   state => ({
-    id: formSelect.data(formSelect.form(state, 'bookReferenceConfiguration')).id,
-    saveEnabled: formSelect.saveEnabled(formSelect.form(state, 'bookReferenceConfiguration'))
-  }),
-  dispatch => ({
-    saveForm(id) {
-      dispatch(
-        formActions.saveForm('bookReferenceConfiguration', ['apiv2_book_reference_configuration_update', {id}])
-      )
-    }
+    id: formSelect.data(formSelect.form(state, 'bookReferenceConfiguration')).id
   })
 )(ConfigurationFormComponent)
 

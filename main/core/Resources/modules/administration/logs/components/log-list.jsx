@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
-import {select} from '#/main/core/data/list/selectors'
+import {select} from '#/main/app/content/list/store'
 import {LogList} from '#/main/core/layout/logs'
 import {actions as logActions} from  '#/main/core/layout/logs/actions'
 

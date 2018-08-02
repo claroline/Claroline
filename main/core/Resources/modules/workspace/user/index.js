@@ -1,11 +1,7 @@
 import {bootstrap} from '#/main/app/bootstrap'
 
-import {registerUserTypes} from '#/main/core/user/data'
-
 import {reducer} from '#/main/core/workspace/user/reducer'
-import {UserTool} from '#/main/core/workspace/user/components/tool.jsx'
-
-registerUserTypes()
+import {UserTool} from '#/main/core/workspace/user/components/tool'
 
 // mount the react application
 bootstrap(

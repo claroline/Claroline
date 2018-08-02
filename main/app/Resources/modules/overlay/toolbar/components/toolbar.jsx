@@ -4,13 +4,14 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import times from 'lodash/times'
 
-// TODO : remove me when toolbar bars will be mounted in the main app
+// TODO : remove us when toolbar bars will be mounted in the main app
 import {ModalOverlay} from '#/main/app/overlay/modal/containers/overlay'
 import {AlertOverlay} from '#/main/app/overlay/alert/containers/overlay'
 
 import {trans} from '#/main/core/translation'
 import {toKey} from '#/main/core/scaffolding/text/utils'
 import {Button} from '#/main/app/action/components/button'
+import {MENU_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
 // todo : force the display of active tool when collapsed
@@ -18,7 +19,7 @@ import {Action as ActionTypes} from '#/main/app/action/prop-types'
 const ToolLink = props =>
   <Button
     className="tool-link"
-    type="url"
+    type={URL_BUTTON}
     icon={`fa fa-fw fa-${props.icon}`}
     label={trans(props.name, {}, 'tools')}
     tooltip="right"
@@ -37,7 +38,7 @@ const MoreTools = props =>
   <Button
     id="toolbar-more-tools"
     className="tool-link"
-    type="menu"
+    type={MENU_BUTTON}
     icon="fa fa-wrench"
     label={trans('show-more-tools', {}, 'actions')}
     tooltip="right"

@@ -1,4 +1,4 @@
-import {makeFormReducer} from '#/main/core/data/form/reducer'
+import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 
 const reducer = {
   bookReference: makeFormReducer('bookReference')

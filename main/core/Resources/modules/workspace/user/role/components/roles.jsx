@@ -2,15 +2,15 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
+import {ListData} from '#/main/app/content/list/containers/data'
 
 import {select} from '#/main/core/workspace/user/selectors'
-import {RoleList} from '#/main/core/workspace/user/role/components/role-list.jsx'
+import {RoleList} from '#/main/core/workspace/user/role/components/role-list'
 
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 
 const RolesList = props =>
-  <DataListContainer
+  <ListData
     name="roles.list"
     fetch={{
       url: ['apiv2_workspace_management_roles_list', {id: props.workspace.uuid}],

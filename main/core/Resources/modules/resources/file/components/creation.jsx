@@ -3,11 +3,11 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {FormContainer} from '#/main/core/data/form/containers/form'
+import {FormData} from '#/main/app/content/form/containers/data'
 import {actions, selectors} from '#/main/core/resource/modals/creation/store'
 
 const FileForm = props =>
-  <FormContainer
+  <FormData
     level={5}
     name={selectors.FORM_NAME}
     sections={[

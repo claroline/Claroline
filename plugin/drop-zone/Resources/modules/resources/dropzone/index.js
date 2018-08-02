@@ -1,9 +1,6 @@
 import {reducer} from '#/plugin/drop-zone/resources/dropzone/reducer'
 
-import {registerDropzoneTypes} from '#/plugin/drop-zone/data/types'
 import {DropzoneResource} from '#/plugin/drop-zone/resources/dropzone/components/resource'
-
-registerDropzoneTypes()
 
 /**
  * Dropzone resource application.

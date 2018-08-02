@@ -12,6 +12,7 @@ import {
 import {
   RoutedPageContent
 } from '#/main/core/layout/router'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {ScheduledTasks} from '#/main/core/administration/scheduled-task/components/scheduled-tasks'
 import {ScheduledTask}  from '#/main/core/administration/scheduled-task/components/scheduled-task'
@@ -25,7 +26,7 @@ const Tool = props =>
     >
       <PageActions>
         <PageAction
-          type="link"
+          type={LINK_BUTTON}
           icon="fa fa-plus"
           label={trans('add_scheduled_task')}
           disabled={!props.isCronConfigured}

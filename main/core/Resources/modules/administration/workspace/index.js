@@ -1,13 +1,7 @@
 import {bootstrap} from '#/main/app/bootstrap'
 
 import {reducer} from '#/main/core/administration/workspace/reducer'
-import {WorkspaceTool} from '#/main/core/administration/workspace/components/tool.jsx'
-
-import {registerType} from '#/main/core/data'
-
-import {MODEL_TYPE, modelDefinition} from '#/main/core/workspace/data/types/model'
-
-registerType(MODEL_TYPE, modelDefinition)
+import {WorkspaceTool} from '#/main/core/administration/workspace/components/tool'
 
 // mount the react application
 bootstrap(
@@ -29,6 +23,7 @@ bootstrap(
         data: initialData.parameters,
         originalData: initialData.parameters
       },
+      tools: initialData.tools,
       models: initialData.models
     }
   }
