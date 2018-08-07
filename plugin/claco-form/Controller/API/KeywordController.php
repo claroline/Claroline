@@ -33,7 +33,7 @@ class KeywordController extends AbstractCrudController
     protected $finder;
 
     /**
-     * MessageController constructor.
+     * KeywordController constructor.
      *
      * @DI\InjectParams({
      *     "finder" = @DI\Inject("claroline.api.finder")

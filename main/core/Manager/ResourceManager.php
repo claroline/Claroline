@@ -382,34 +382,33 @@ class ResourceManager
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      * @param array                                              $rights
+     * @param bool                                               $withDefault
      */
-    public function createRights(
-        ResourceNode $node,
-        array $rights = []
-    ) {
+    public function createRights(ResourceNode $node, array $rights = [], $withDefault = true)
+    {
         foreach ($rights as $data) {
             $resourceTypes = $this->checkResourceTypes($data['create']);
             $this->rightsManager->create($data, $data['role'], $node, false, $resourceTypes);
         }
-
-        if (!array_key_exists('ROLE_ANONYMOUS', $rights)) {
-            $this->rightsManager->create(
-                0,
-                $this->roleRepo->findOneBy(['name' => 'ROLE_ANONYMOUS']),
-                $node,
-                false,
-                []
-            );
-        }
-
-        if (!array_key_exists('ROLE_USER', $rights)) {
-            $this->rightsManager->create(
-                0,
-                $this->roleRepo->findOneBy(['name' => 'ROLE_USER']),
-                $node,
-                false,
-                []
-            );
+        if ($withDefault) {
+            if (!array_key_exists('ROLE_ANONYMOUS', $rights)) {
+                $this->rightsManager->create(
+                    0,
+                    $this->roleRepo->findOneBy(['name' => 'ROLE_ANONYMOUS']),
+                    $node,
+                    false,
+                    []
+                );
+            }
+            if (!array_key_exists('ROLE_USER', $rights)) {
+                $this->rightsManager->create(
+                    0,
+                    $this->roleRepo->findOneBy(['name' => 'ROLE_USER']),
+                    $node,
+                    false,
+                    []
+                );
+            }
         }
     }
 

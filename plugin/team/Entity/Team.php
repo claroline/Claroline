@@ -11,13 +11,13 @@
 
 namespace Claroline\TeamBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="claro_team")
@@ -25,6 +25,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Team
 {
+    use UuidTrait;
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -34,7 +36,6 @@ class Team
 
     /**
      * @ORM\Column()
-     * @Assert\NotBlank()
      */
     protected $name;
 
@@ -91,12 +92,12 @@ class Team
     /**
      * @ORM\Column(name="self_registration", type="boolean")
      */
-    protected $selfRegistration;
+    protected $selfRegistration = false;
 
     /**
      * @ORM\Column(name="self_unregistration", type="boolean")
      */
-    protected $selfUnregistration;
+    protected $selfUnregistration = false;
 
     /**
      * @ORM\OneToOne(
@@ -109,13 +110,19 @@ class Team
     /**
      * @ORM\Column(name="is_public", type="boolean")
      */
-    protected $isPublic;
+    protected $isPublic = false;
+
+    /**
+     * @ORM\Column(name="dir_deletable", type="boolean", options={"default" = 0})
+     */
+    protected $dirDeletable = false;
 
     /**
      * Class constructor.
      */
     public function __construct()
     {
+        $this->refreshUuid();
         $this->users = new ArrayCollection();
     }
 
@@ -124,74 +131,14 @@ class Team
         return $this->id;
     }
 
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    public function getWorkspace()
-    {
-        return $this->workspace;
-    }
-
-    public function getRole()
-    {
-        return $this->role;
-    }
-
-    public function getUsers()
-    {
-        return $this->users->toArray();
-    }
-
-    public function getUsersArrayCollection()
-    {
-        return $this->users;
-    }
-
-    public function getTeamManager()
-    {
-        return $this->teamManager;
-    }
-
-    public function getTeamManagerRole()
-    {
-        return $this->teamManagerRole;
-    }
-
-    public function getMaxUsers()
-    {
-        return $this->maxUsers;
-    }
-
-    public function getSelfRegistration()
-    {
-        return $this->selfRegistration;
-    }
-
-    public function getSelfUnregistration()
-    {
-        return $this->selfUnregistration;
-    }
-
-    public function getDirectory()
-    {
-        return $this->directory;
-    }
-
-    public function getIsPublic()
-    {
-        return $this->isPublic;
-    }
-
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    public function getName()
+    {
+        return $this->name;
     }
 
     public function setName($name)
@@ -199,9 +146,19 @@ class Team
         $this->name = $name;
     }
 
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
     public function setDescription($description)
     {
         $this->description = $description;
+    }
+
+    public function getWorkspace()
+    {
+        return $this->workspace;
     }
 
     public function setWorkspace(Workspace $workspace)
@@ -209,52 +166,27 @@ class Team
         $this->workspace = $workspace;
     }
 
-    public function setRole(Role $role)
+    public function getRole()
+    {
+        return $this->role;
+    }
+
+    public function setRole(Role $role = null)
     {
         $this->role = $role;
     }
 
-    public function setTeamManager(User $teamManager = null)
+    public function getUsers()
     {
-        $this->teamManager = $teamManager;
-    }
-
-    public function setTeamManagerRole(Role $teamManagerRole)
-    {
-        $this->teamManagerRole = $teamManagerRole;
-    }
-
-    public function setMaxUsers($maxUsers)
-    {
-        $this->maxUsers = $maxUsers;
-    }
-
-    public function setSelfRegistration($selfRegistration)
-    {
-        $this->selfRegistration = $selfRegistration;
-    }
-
-    public function setSelfUnregistration($selfUnregistration)
-    {
-        $this->selfUnregistration = $selfUnregistration;
-    }
-
-    public function setDirectory(Directory $directory)
-    {
-        $this->directory = $directory;
-    }
-
-    public function setIsPublic($isPublic)
-    {
-        $this->isPublic = $isPublic;
+        return $this->users;
     }
 
     /**
      * Adds an user to team.
      *
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param User $user
      *
-     * @return \Claroline\TeamBundle\Entity\Team
+     * @return Team
      */
     public function addUser(User $user)
     {
@@ -268,9 +200,9 @@ class Team
     /**
      * Removes an user to team.
      *
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param User $user
      *
-     * @return \Claroline\TeamBundle\Entity\Team
+     * @return Team
      */
     public function removeUser(User $user)
     {
@@ -279,5 +211,85 @@ class Team
         }
 
         return $this;
+    }
+
+    public function getTeamManager()
+    {
+        return $this->teamManager;
+    }
+
+    public function setTeamManager(User $teamManager = null)
+    {
+        $this->teamManager = $teamManager;
+    }
+
+    public function getTeamManagerRole()
+    {
+        return $this->teamManagerRole;
+    }
+
+    public function setTeamManagerRole(Role $teamManagerRole = null)
+    {
+        $this->teamManagerRole = $teamManagerRole;
+    }
+
+    public function getMaxUsers()
+    {
+        return $this->maxUsers;
+    }
+
+    public function setMaxUsers($maxUsers)
+    {
+        $this->maxUsers = $maxUsers;
+    }
+
+    public function isSelfRegistration()
+    {
+        return $this->selfRegistration;
+    }
+
+    public function setSelfRegistration($selfRegistration)
+    {
+        $this->selfRegistration = $selfRegistration;
+    }
+
+    public function isSelfUnregistration()
+    {
+        return $this->selfUnregistration;
+    }
+
+    public function setSelfUnregistration($selfUnregistration)
+    {
+        $this->selfUnregistration = $selfUnregistration;
+    }
+
+    public function getDirectory()
+    {
+        return $this->directory;
+    }
+
+    public function setDirectory(Directory $directory = null)
+    {
+        $this->directory = $directory;
+    }
+
+    public function isPublic()
+    {
+        return $this->isPublic;
+    }
+
+    public function setIsPublic($isPublic)
+    {
+        $this->isPublic = $isPublic;
+    }
+
+    public function isDirDeletable()
+    {
+        return $this->dirDeletable;
+    }
+
+    public function setDirDeletable($dirDeletable)
+    {
+        $this->dirDeletable = $dirDeletable;
     }
 }

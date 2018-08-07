@@ -80,8 +80,8 @@ class EntryFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
     {
-        $clacoFormRepo = $om->getRepository('ClarolineClacoFormBundle:ClacoForm');
-        $fieldRepo = $om->getRepository('ClarolineClacoFormBundle:Field');
+        $clacoFormRepo = $this->om->getRepository('ClarolineClacoFormBundle:ClacoForm');
+        $fieldRepo = $this->om->getRepository('ClarolineClacoFormBundle:Field');
 
         $currentUser = $this->tokenStorage->getToken()->getUser();
 

@@ -103,7 +103,7 @@ const AdvancedTab = props => {
         <tr>
           <th scope="col">{trans('role')}</th>
           {allPerms.map(permission =>
-            ('create' !== permission || !isEmpty(props.permissions['ROLE_USER'].permissions[permission])) &&
+            ('create' !== permission || !isEmpty(props.permissions.find(p => 'ROLE_USER' === p.name).permissions[permission])) &&
             <th key={`${permission}-header`} scope="col">
               <div className="permission-name-container">
                 <span className="permission-name">{trans(permission, {}, 'actions')}</span>

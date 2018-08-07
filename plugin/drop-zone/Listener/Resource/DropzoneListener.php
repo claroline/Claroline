@@ -227,9 +227,14 @@ class DropzoneListener
 
         $resourceNode = $dropzone->getResourceNode();
 
+        $serializedTeams = [];
         $teams = !empty($user) ?
-            $this->teamManager->getSearializedTeamsByUserAndWorkspace($user, $resourceNode->getWorkspace()) :
+            $this->teamManager->getTeamsByUserAndWorkspace($user, $resourceNode->getWorkspace()) :
             [];
+
+        foreach ($teams as $team) {
+            $serializedTeams[] = $this->serializer->serialize($team);
+        }
         $myDrop = null;
         $finishedPeerDrops = [];
         $errorMessage = null;
@@ -252,7 +257,7 @@ class DropzoneListener
                 $drops = [];
                 $teamsIds = array_map(function ($team) {
                     return $team['id'];
-                }, $teams);
+                }, $serializedTeams);
 
                 /* Fetches team drops associated to user */
                 $teamDrops = !empty($user) ? $this->dropzoneManager->getTeamDrops($dropzone, $user) : [];
@@ -295,7 +300,7 @@ class DropzoneListener
             'nbCorrections' => count($finishedPeerDrops),
             'tools' => $serializedTools,
             'evaluation' => $this->serializer->serialize($userEvaluation),
-            'teams' => $teams,
+            'teams' => $serializedTeams,
             'errorMessage' => $errorMessage,
         ];
     }

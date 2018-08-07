@@ -1,0 +1,7 @@
+{
+  "webpack": {
+    "entry": {
+      "tool": "tools/team/bootstrap"
+    }
+  }
+}

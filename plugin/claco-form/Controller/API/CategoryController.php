@@ -33,7 +33,7 @@ class CategoryController extends AbstractCrudController
     protected $finder;
 
     /**
-     * MessageController constructor.
+     * CategoryController constructor.
      *
      * @DI\InjectParams({
      *     "finder" = @DI\Inject("claroline.api.finder")

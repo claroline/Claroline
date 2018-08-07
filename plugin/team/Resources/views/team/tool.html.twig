@@ -1,0 +1,39 @@
+{% extends "ClarolineCoreBundle:workspace:layout.html.twig" %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ "team" | trans({}, "team") | striptags | raw }}
+{% endblock %}
+
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'team' | trans({}, 'team'),
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
+{% block content %}
+    <div
+      class="page-container team-container"
+      data-workspace="{{ workspace | api_serialize | json_encode | raw | escape }}"
+      data-team-params="{{ teamParams | api_serialize | json_encode | raw | escape }}"
+      data-can-edit="{{ canEdit | json_encode | raw | escape }}"
+      data-my-teams="{{ myTeams | json_encode | raw | escape }}"
+      data-resource-types="{{ resourceTypes | json_encode | raw | escape }}"
+    >
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ hotAsset('dist/claroline-distribution-plugin-team-tool.js') }}"></script>
+{% endblock %}
