@@ -3,6 +3,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import {makeListReducer} from '#/main/app/content/list/store'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
+import {LIST_FILTER_ADD} from '#/main/app/content/list/store/actions'
 
 import {
   ANNOUNCE_DETAIL_OPEN,
@@ -12,7 +13,7 @@ import {
   ANNOUNCE_CHANGE,
   ANNOUNCES_SORT_TOGGLE,
   ANNOUNCES_PAGE_CHANGE
-} from './actions'
+} from '#/plugin/announcement/resources/announcement/actions'
 
 /**
  * Manages announcement posts sort (posts can only be ordered by date).
@@ -82,7 +83,8 @@ const reducer = {
   selected: combineReducers({
     list: makeListReducer('selected.list', {}, {
       invalidated: makeReducer(false, {
-        ['MODAL_HIDE']: () => true // todo : find better
+        ['MODAL_HIDE']: () => true, // todo : find better
+        [LIST_FILTER_ADD+'/selected.list']: () => true
       })
     }, {
       selectable: false,

@@ -45,7 +45,7 @@ const AnnouncePost = props =>
               icon="fa fa-fw fa-expand"
               label={trans('show')}
               tooltip="top"
-              target={`#/${props.id}`}
+              target={`${props.id}`}
             />
           }
 
@@ -57,7 +57,7 @@ const AnnouncePost = props =>
               icon="fa fa-fw fa-at"
               label={trans('send_mail')}
               tooltip="top"
-              target={`#/${props.id}/send`}
+              target={`${props.id}/send`}
             />
           }
 
@@ -69,7 +69,7 @@ const AnnouncePost = props =>
               icon="fa fa-fw fa-pencil"
               label={trans('edit')}
               tooltip="top"
-              target={`#/${props.id}/edit`}
+              target={`${props.id}/edit`}
             />
           }
 
