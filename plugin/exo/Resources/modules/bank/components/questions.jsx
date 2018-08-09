@@ -2,23 +2,21 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {t, tex, trans, transChoice} from '#/main/core/translation'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
-
-import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {MODAL_SHARE} from '#/plugin/exo/bank/components/modal/share'
-
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
-import {actions} from '#/plugin/exo/bank/actions'
+import {ListData} from '#/main/app/content/list/containers/data'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
+import {getPlainText} from '#/main/app/data/html/utils'
 
+import {t, tex, trans, transChoice} from '#/main/core/translation'
 import {
   PageContainer,
   PageHeader,
   PageContent
 } from '#/main/core/layout/page'
 
-import {ListData} from '#/main/app/content/list/containers/data'
-
+import {actions} from '#/plugin/exo/bank/actions'
+import {MODAL_SHARE} from '#/plugin/exo/bank/components/modal/share'
 import {getDefinition, listItemNames} from '#/plugin/exo/items/item-types'
 import {Icon as ItemIcon} from '#/plugin/exo/items/components/icon.jsx'
 
@@ -62,7 +60,15 @@ const QuestionsPage = props =>
             name: 'content',
             label: tex('question'),
             type: 'html',
-            render: (rowData) => rowData.title || rowData.content.substr(0, 50),
+            render: (rowData) => {
+              if (rowData.title) {
+                return rowData.title
+              } else {
+                const content = getPlainText(rowData.content)
+
+                return 50 < content.length ? `${content.substr(0, 50)}...` : content
+              }
+            },
             displayed: true
           }, {
             name: 'meta.model',
