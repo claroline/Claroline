@@ -28,44 +28,49 @@
             </h1>
         </div>
         <div class="panel-body">
-            <div class="col-md-12 list_badges">
-                <a href="{{ path('icap_badge_claim_badge') }}" class="btn btn-primary btn-md" role="button"><span class="fa fa-plus"></span>{{ 'claim_badge'|trans({}, 'icap_badge') }}</a>
-                <ul class="list-inline my_badges badge_list" id="badge_list" data-action-url="{{ path('icap_badge_user_badge_edit') }}">
-
-                    {% for userBadge in userBadges %}
-                        {% set badge = userBadge.badge %}
-
-                        {% set vars ={
-                        'link': 'icap_badge_profile_view_badge',
-                        'route_params': {},
-                        'hasAside': true,
-                        'isExpired': userBadge.isExpired,
-                        'isShared': userBadge.isIsShared,
-                        'badgeLoadingState': '<span class="fa fa-spinner fa-pulse"></span>',
-                        'badgeSharedState': '<span class="fa fa-eye publish_badge"></span> ' ~ 'badge-shared'|trans({}, 'icap_badge'),
-                        'bagdePrivateState': '<span class="fa fa-eye-slash publish_badge"></span> ' ~ 'badge-private'|trans({}, 'icap_badge'),
-                        'badgeId': userBadge.id,
-                        'dataImage': '<img class="badge_image_mini" src="' ~ asset(badge.webPath) ~ '" alt="' ~ badge.name ~ '" />'
-                        } %}
-                        {% include 'IcapBadgeBundle:template:list_badges_shared.html.twig' with vars %}
-
-
-                    {% else %}
-                        <li>{{ 'no_badges'|trans({}, 'icap_badge') }}</li>
-                    {% endfor %}
-                </ul>
+            <div class="alert alert-warning">
+                {{ 'tool_work_in_progress'|trans({}, 'platform') }}
             </div>
         </div>
+        {#<div class="panel-body">#}
+            {#<div class="col-md-12 list_badges">#}
+                {#<a href="{{ path('icap_badge_claim_badge') }}" class="btn btn-primary btn-md" role="button"><span class="fa fa-plus"></span>{{ 'claim_badge'|trans({}, 'icap_badge') }}</a>#}
+                {#<ul class="list-inline my_badges badge_list" id="badge_list" data-action-url="{{ path('icap_badge_user_badge_edit') }}">#}
+
+                    {#{% for userBadge in userBadges %}#}
+                        {#{% set badge = userBadge.badge %}#}
+
+                        {#{% set vars ={#}
+                        {#'link': 'icap_badge_profile_view_badge',#}
+                        {#'route_params': {},#}
+                        {#'hasAside': true,#}
+                        {#'isExpired': userBadge.isExpired,#}
+                        {#'isShared': userBadge.isIsShared,#}
+                        {#'badgeLoadingState': '<span class="fa fa-spinner fa-pulse"></span>',#}
+                        {#'badgeSharedState': '<span class="fa fa-eye publish_badge"></span> ' ~ 'badge-shared'|trans({}, 'icap_badge'),#}
+                        {#'bagdePrivateState': '<span class="fa fa-eye-slash publish_badge"></span> ' ~ 'badge-private'|trans({}, 'icap_badge'),#}
+                        {#'badgeId': userBadge.id,#}
+                        {#'dataImage': '<img class="badge_image_mini" src="' ~ asset(badge.webPath) ~ '" alt="' ~ badge.name ~ '" />'#}
+                        {#} %}#}
+                        {#{% include 'IcapBadgeBundle:template:list_badges_shared.html.twig' with vars %}#}
+
+
+                    {#{% else %}#}
+                        {#<li>{{ 'no_badges'|trans({}, 'icap_badge') }}</li>#}
+                    {#{% endfor %}#}
+                {#</ul>#}
+            {#</div>#}
+        {#</div>#}
     </div>
 {% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_badge' }) }}"></script>
-    <script type="text/javascript" src='{{ asset('packages/jquery-ui/ui/minified/effect.min.js') }}'></script>
-    <script type="text/javascript" src='{{ asset('packages/jquery-ui/ui/minified/effect-highlight.min.js') }}'></script>
-    <script type="text/javascript" src='{{ asset('packages/jquery-ui/ui/minified/droppable.min.js') }}'></script>
-    <script type="text/javascript" src='{{ asset('packages/jquery-ui/ui/minified/draggable.min.js') }}'></script>
-    <script type="text/javascript" src='{{ asset('packages/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
-    <script type="text/javascript" src='{{ asset('bundles/icapbadge/js/profile.js') }}'></script>
-{% endblock %}
+{#{% block javascripts %}#}
+    {#{{ parent() }}#}
+    {#<script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_badge' }) }}"></script>#}
+    {#<script type="text/javascript" src='{{ asset('packages/jquery-ui/ui/minified/effect.min.js') }}'></script>#}
+    {#<script type="text/javascript" src='{{ asset('packages/jquery-ui/ui/minified/effect-highlight.min.js') }}'></script>#}
+    {#<script type="text/javascript" src='{{ asset('packages/jquery-ui/ui/minified/droppable.min.js') }}'></script>#}
+    {#<script type="text/javascript" src='{{ asset('packages/jquery-ui/ui/minified/draggable.min.js') }}'></script>#}
+    {#<script type="text/javascript" src='{{ asset('packages/confirm-bootstrap/confirm-bootstrap.js') }}'></script>#}
+    {#<script type="text/javascript" src='{{ asset('bundles/icapbadge/js/profile.js') }}'></script>#}
+{#{% endblock %}#}

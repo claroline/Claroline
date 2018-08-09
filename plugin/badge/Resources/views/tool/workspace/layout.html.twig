@@ -17,10 +17,15 @@
             {% block section_title %}{% endblock %}
         </h3>
     </div>
-
-    {{ macros.flashBox() }}
-
-    <div class="panel-body badge_body">
-        {% block section_body %}{% endblock %}
+    <div class="panel-body">
+        <div class="alert alert-warning">
+            {{ 'tool_work_in_progress'|trans({}, 'platform') }}
+        </div>
     </div>
+
+    {#{{ macros.flashBox() }}#}
+
+    {#<div class="panel-body badge_body">#}
+        {#{% block section_body %}{% endblock %}#}
+    {#</div>#}
 {% endblock %}

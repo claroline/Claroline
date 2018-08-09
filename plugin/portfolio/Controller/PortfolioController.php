@@ -28,7 +28,14 @@ class PortfolioController extends Controller
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function indexAction(Request $request, User $loggedUser, $page, $guidedPage, $portfolioSlug)
+    public function indexAction($page, $guidedPage, $portfolioSlug)
+    {
+        $this->checkPortfolioToolAccess();
+
+        return [];
+    }
+
+    public function oldIndexAction(Request $request, User $loggedUser, $page, $guidedPage, $portfolioSlug)
     {
         $this->checkPortfolioToolAccess();
 

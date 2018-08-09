@@ -177,7 +177,7 @@ class BadgeListener
     {
         $userBadges = $this->badgeManager->getLoggedUserBadges();
         $content = $this->templateingEngine->render(
-            'IcapBadgeBundle:Profile:myProfileWidgetBadges.html.twig',
+            'IcapBadgeBundle:profile:my_profile_widget_badges.html.twig',
             ['userBadges' => $userBadges]
         );
 
@@ -231,7 +231,7 @@ class BadgeListener
         ];
 
         return $this->templateingEngine->render(
-            'IcapBadgeBundle:Tool:Workspace\list.html.twig',
+            'IcapBadgeBundle:tool:workspace\list.html.twig',
             ['workspace' => $workspace, 'parameters' => $parameters]
         );
     }
@@ -246,7 +246,7 @@ class BadgeListener
         $user = $this->tokenStorage->getToken()->getUser();
 
         return $this->templateingEngine->render(
-            'IcapBadgeBundle:Tool:MyWorkspace\toolList.html.twig',
+            'IcapBadgeBundle:tool:my_workspace\tool_list.html.twig',
             [
                 'workspace' => $workspace,
                 'user' => $user,
