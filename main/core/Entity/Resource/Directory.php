@@ -11,28 +11,41 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Claroline\AppBundle\Entity\Parameters\ListParameters;
+use Claroline\AppBundle\Entity\Parameters\SummaryParameters;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * This entity is only an AbstractResource sub-type, with no additional attributes.
- *
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\DirectoryRepository")
  * @ORM\Table(name="claro_directory")
  */
 class Directory extends AbstractResource
 {
-    /**
-     * @ORM\Column(name="is_upload_destination", type="boolean")
-     */
-    protected $isUploadDestination = false;
+    use SummaryParameters;
+    use ListParameters;
 
-    public function setIsUploadDestination($boolean)
+    /**
+     * Is the directory the default upload destination (for tinyMCE and some other things).
+     *
+     * @ORM\Column(name="is_upload_destination", type="boolean")
+     *
+     * @var bool
+     */
+    private $uploadDestination = false;
+
+    /**
+     * @param bool $uploadDestination
+     */
+    public function setUploadDestination($uploadDestination)
     {
-        $this->isUploadDestination = $boolean;
+        $this->uploadDestination = $uploadDestination;
     }
 
+    /**
+     * @return bool
+     */
     public function isUploadDestination()
     {
-        return $this->isUploadDestination;
+        return $this->uploadDestination;
     }
 }

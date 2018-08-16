@@ -9,7 +9,6 @@ import thunk from 'redux-thunk'
 import merge from 'lodash/merge'
 
 import {combineReducers} from '#/main/app/store/reducer'
-import {registry} from '#/main/app/store/registry'
 
 import {apiMiddleware} from '#/main/app/api/store/middleware'
 
@@ -35,7 +34,7 @@ if (process.env.NODE_ENV !== 'production') { // todo : retrieve current env else
  */
 function createStore(reducers, initialState = {}, customEnhancers = []) {
   // preserve initial state for not-yet-loaded reducers
-  const combine = (reducers) => {
+  const createReducer = (reducers) => {
     const reducerNames = Object.keys(reducers)
     Object.keys(initialState).forEach(item => {
       if (reducerNames.indexOf(item) === -1) {
@@ -54,7 +53,7 @@ function createStore(reducers, initialState = {}, customEnhancers = []) {
   }
 
   const store = baseCreate(
-    combine(merge({}, reducers, registry.all())),
+    createReducer(reducers),
     initialState,
     compose(
       applyMiddleware(...middleware),
@@ -62,12 +61,16 @@ function createStore(reducers, initialState = {}, customEnhancers = []) {
     )
   )
 
-  // replace the store's reducer whenever a new reducer is registered.
-  registry.on('add', () => {
+  // support for dynamic reducer loading
+  store.asyncReducers = {}
+  store.injectReducer = (key, reducer) => {
+    store.asyncReducers[key] = reducer
     store.replaceReducer(
-      combine(merge({}, reducers, registry.all()))
+      createReducer(merge({}, reducers, store.asyncReducers))
     )
-  })
+
+    return store
+  }
 
   return store
 }

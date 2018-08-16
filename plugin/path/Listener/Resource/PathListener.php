@@ -6,27 +6,21 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
-use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Form\ResourceNameType;
-use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
+use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use Innova\PathBundle\Entity\InheritedResource;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\SecondaryResource;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Manager\UserProgressionManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Form\FormInterface;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Used to integrate Path to Claroline resource manager.
@@ -35,13 +29,23 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class PathListener
 {
-    private $container;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
+    /** @var TwigEngine */
+    private $templating;
+
+    /** @var TranslatorInterface */
+    private $translator;
 
     /* @var ObjectManager */
     private $om;
 
     /** @var SerializerProvider */
     private $serializer;
+
+    /** @var ResourceManager */
+    private $resourceManager;
 
     /** @var UserProgressionManager */
     private $userProgressionManager;
@@ -50,23 +54,45 @@ class PathListener
      * PathListener constructor.
      *
      * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container")
+     *     "tokenStorage"           = @DI\Inject("security.token_storage"),
+     *     "templating"             = @DI\Inject("templating"),
+     *     "translator"             = @DI\Inject("translator"),
+     *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
+     *     "serializer"             = @DI\Inject("claroline.api.serializer"),
+     *     "resourceManager"        = @DI\Inject("claroline.manager.resource_manager"),
+     *     "userProgressionManager" = @DI\Inject("innova_path.manager.user_progression")
      * })
      *
-     * @param ContainerInterface $container
+     * @param TokenStorageInterface  $tokenStorage
+     * @param TwigEngine             $templating
+     * @param TranslatorInterface    $translator
+     * @param ObjectManager          $om
+     * @param SerializerProvider     $serializer
+     * @param ResourceManager        $resourceManager
+     * @param UserProgressionManager $userProgressionManager
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(
+        TokenStorageInterface $tokenStorage,
+        TwigEngine $templating,
+        TranslatorInterface $translator,
+        ObjectManager $om,
+        SerializerProvider $serializer,
+        ResourceManager $resourceManager,
+        UserProgressionManager $userProgressionManager)
     {
-        $this->container = $container;
-        $this->om = $container->get('claroline.persistence.object_manager');
-        $this->serializer = $container->get('claroline.api.serializer');
-        $this->userProgressionManager = $container->get('innova_path.manager.user_progression');
+        $this->tokenStorage = $tokenStorage;
+        $this->templating = $templating;
+        $this->translator = $translator;
+        $this->om = $om;
+        $this->serializer = $serializer;
+        $this->resourceManager = $resourceManager;
+        $this->userProgressionManager = $userProgressionManager;
     }
 
     /**
      * Loads the Path resource.
      *
-     * @DI\Observe("load_innova_path")
+     * @DI\Observe("resource.innova_path.load")
      *
      * @param LoadResourceEvent $event
      */
@@ -75,9 +101,11 @@ class PathListener
         /** @var Path $path */
         $path = $event->getResource();
 
-        $event->setAdditionalData([
+        $event->setData([
             'path' => $this->serializer->serialize($path),
-            'evaluation' => $this->userProgressionManager->getUpdatedResourceUserEvaluation($path)
+            'userEvaluation' => $this->serializer->serialize(
+                $this->userProgressionManager->getUpdatedResourceUserEvaluation($path)
+            ),
         ]);
         $event->stopPropagation();
     }
@@ -94,74 +122,17 @@ class PathListener
         /** @var Path $path */
         $path = $event->getResource();
 
-        $content = $this->container->get('templating')->render(
+        $content = $this->templating->render(
             'InnovaPathBundle:path:open.html.twig', [
                 '_resource' => $path,
                 'path' => $this->serializer->serialize($path),
-                'evaluation' => $this->userProgressionManager->getUpdatedResourceUserEvaluation($path),
+                'userEvaluation' => $this->serializer->serialize(
+                    $this->userProgressionManager->getUpdatedResourceUserEvaluation($path)
+                ),
             ]
         );
 
         $event->setResponse(new Response($content));
-        $event->stopPropagation();
-    }
-
-    /**
-     * Fired when the form to create a new ResourceNode is displayed.
-     *
-     * @DI\Observe("create_form_innova_path")
-     *
-     * @param CreateFormResourceEvent $event
-     */
-    public function onCreateForm(CreateFormResourceEvent $event)
-    {
-        /** @var FormInterface $form */
-        $form = $this->container->get('form.factory')->create(new ResourceNameType(true), new Path());
-
-        $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:resource:create_form.html.twig', [
-                'form' => $form->createView(),
-                'resourceType' => 'innova_path',
-            ]
-        );
-
-        $event->setResponseContent($content);
-        $event->stopPropagation();
-    }
-
-    /**
-     * Fired when a new ResourceNode of type Path is opened.
-     *
-     * @DI\Observe("create_innova_path")
-     *
-     * @param CreateResourceEvent $event
-     */
-    public function onCreate(CreateResourceEvent $event)
-    {
-        /** @var FormInterface $form */
-        $form = $this->container->get('form.factory')->create(new ResourceNameType(true), new Path());
-
-        // Try to process the form data
-        $form->handleRequest($this->container->get('request_stack')->getMasterRequest());
-        if ($form->isValid()) {
-            $event->setPublished(
-                $form->get('published')->getData()
-            );
-
-            $event->setResources(
-                [$form->getData()]
-            );
-        } else {
-            $content = $this->container->get('templating')->render(
-                'ClarolineCoreBundle:resource:create_form.html.twig', [
-                    'form' => $form->createView(),
-                    'resourceType' => 'innova_path',
-                ]
-            );
-
-            $event->setErrorFormContent($content);
-        }
-
         $event->stopPropagation();
     }
 
@@ -192,7 +163,9 @@ class PathListener
         $this->om->startFlushSuite();
 
         $parent = $event->getParent();
-        $pathToCopy = $this->getPathFromEvent($event->getResource());
+
+        /** @var Path $pathToCopy */
+        $pathToCopy = $event->getResource();
         $pathNodes = [];
         $nodesCopy = [];
 
@@ -234,123 +207,6 @@ class PathListener
     }
 
     /**
-     * @DI\Observe("export_scorm_innova_path")
-     *
-     * @param \Claroline\ScormBundle\Event\ExportScormResourceEvent $event
-     */
-    public function onExportScorm(ExportScormResourceEvent $event)
-    {
-        /** @var Path $path */
-        $path = $event->getResource();
-
-        // Add embed resources
-        // Decode the path structure to grab embed resources ans generate resource URL
-        // We export them before rendering the template to have the correct structure in twig/angular
-        $structure = json_decode($path->getStructure());
-
-        if (!empty($structure->description)) {
-            $parsed = $this->container->get('claroline.scorm.rich_text_exporter')->parse($structure->description);
-            $structure->description = $parsed['text'];
-
-            foreach ($parsed['resources'] as $resource) {
-                $event->addEmbedResource($resource);
-            }
-        }
-
-        if (!empty($structure->steps)) {
-            foreach ($structure->steps as $step) {
-                $this->exportStepResources($event, $step);
-            }
-        }
-
-        $template = $this->container->get('templating')->render(
-            'InnovaPathBundle:Scorm:export.html.twig', [
-                '_resource' => $path,
-                'structure' => json_encode($structure),
-            ]
-        );
-
-        // Set export template
-        $event->setTemplate($template);
-
-        // Set translations
-        $event->addTranslationDomain('path');
-
-        // Add template required files
-        $webpack = $this->container->get('claroline.extension.webpack');
-        $event->addAsset('tinymce.jquery.min.js', 'bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js');
-        $event->addAsset('jquery.tinymce.min.js', 'bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js');
-        $event->addAsset('claroline-distribution-plugin-path-player.js', $webpack->hotAsset('dist/claroline-distribution-plugin-path-player.js', true));
-        $event->addAsset('claroline-home.js', 'bundles/clarolinecore/js/home/home.js');
-        $event->addAsset('claroline-common.js', 'bundles/clarolinecore/js/common.js');
-        $event->addAsset('claroline-tinymce.js', $webpack->hotAsset('dist/claroline-distribution-main-core-tinymce.js', true));
-
-        $event->addAsset('wizards.js', 'vendor/innovapath/wizards.js');
-        $event->addAsset('wizards.css', 'vendor/innovapath/wizards.css');
-
-        $event->stopPropagation();
-    }
-
-    private function exportStepResources(ExportScormResourceEvent $event, \stdClass $step)
-    {
-        if (!empty($step->description)) {
-            $parsed = $this->container->get('claroline.scorm.rich_text_exporter')->parse($step->description);
-            $step->description = $parsed['text'];
-            foreach ($parsed['resources'] as $resource) {
-                $event->addEmbedResource($resource);
-            }
-        }
-
-        if (!empty($step->primaryResource)) {
-            foreach ($step->primaryResource as $primary) {
-                $resource = $this->getResource($primary->resourceId);
-                $event->addEmbedResource($resource);
-                // Generate resource URL
-                $primary->url = '../scos/resource_'.$primary->resourceId.'.html';
-            }
-        }
-
-        if (!empty($step->resources)) {
-            foreach ($step->resources as $secondary) {
-                $resource = $this->getResource($secondary->resourceId);
-                $event->addEmbedResource($resource);
-                // Generate resource URL
-                $secondary->url = '../scos/resource_'.$secondary->resourceId.'.html';
-            }
-        }
-
-        if (!empty($step->children)) {
-            foreach ($step->children as $child) {
-                $this->exportStepResources($event, $child);
-            }
-        }
-    }
-
-    private function getResource($nodeId)
-    {
-        $node = $this->container->get('claroline.manager.resource_manager')->getById($nodeId);
-        $resource = $this->container->get('claroline.manager.resource_manager')->getResourceFromNode($node);
-
-        return $resource;
-    }
-
-    /**
-     * @param AbstractResource $convoyedResource
-     *
-     * @return Path
-     */
-    private function getPathFromEvent(AbstractResource $convoyedResource)
-    {
-        if ($convoyedResource instanceof ResourceShortcut) {
-            return $this->container->get('resource_manager')->getResourceFromShortcut($convoyedResource->getResourceNode());
-        } elseif ($convoyedResource instanceof Path) {
-            return $convoyedResource;
-        }
-
-        return null;
-    }
-
-    /**
      * Store in given array all resource nodes present in step.
      *
      * @param Step  $step
@@ -376,31 +232,27 @@ class PathListener
     /**
      * Create directory to store copies of resources.
      *
-     * @param ResourceNode $dest
+     * @param ResourceNode $destination
      * @param string       $pathName
      *
      * @return AbstractResource
      */
-    private function createResourcesCopyDirectory(ResourceNode $dest, $pathName)
+    private function createResourcesCopyDirectory(ResourceNode $destination, $pathName)
     {
         // Get current User
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
-        /** @var ResourceManager $manager */
-        $manager = $this->container->get('claroline.manager.resource_manager');
-        $translator = $this->container->get('translator');
-
-        $resourcesDir = $manager->createResource(
+        $resourcesDir = $this->resourceManager->createResource(
             'Claroline\CoreBundle\Entity\Resource\Directory',
-            $pathName.' ('.$translator->trans('resources', [], 'platform').')'
+            $pathName.' ('.$this->translator->trans('resources', [], 'platform').')'
         );
 
-        return $manager->create(
+        return $this->resourceManager->create(
             $resourcesDir,
-            $dest->getResourceType(),
+            $destination->getResourceType(),
             $user,
-            $dest->getWorkspace(),
-            $dest
+            $destination->getWorkspace(),
+            $destination
         );
     }
 
@@ -414,16 +266,12 @@ class PathListener
      */
     private function copyResources(array $resources, ResourceNode $newParent)
     {
-        $resourcesCopy = [];
-
         // Get current User
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
-        /** @var ResourceManager $manager */
-        $manager = $this->container->get('claroline.manager.resource_manager');
-
+        $resourcesCopy = [];
         foreach ($resources as $resourceNode) {
-            $copy = $manager->copy($resourceNode, $newParent, $user);
+            $copy = $this->resourceManager->copy($resourceNode, $newParent, $user);
             $resourcesCopy[$resourceNode->getGuid()] = $copy->getResourceNode();
         }
 

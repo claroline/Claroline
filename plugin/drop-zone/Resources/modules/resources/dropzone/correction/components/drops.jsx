@@ -7,7 +7,7 @@ import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 
 import {DropzoneType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
-import {select} from '#/plugin/drop-zone/resources/dropzone/selectors'
+import {select} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 import {actions} from '#/plugin/drop-zone/resources/dropzone/correction/actions'
 
@@ -18,7 +18,7 @@ const DropsList = props =>
     <h2>{trans('corrections_management', {}, 'dropzone')}</h2>
 
     <ListData
-      name="drops"
+      name={`${select.STORE_NAME}.drops`}
       fetch={{
         url: ['claro_dropzone_drops_search', {id: props.dropzone.id}],
         autoload: true

@@ -24,8 +24,8 @@ class AdminToolAccessEvaluator
      *     "em"            = @DI\Inject("doctrine.orm.entity_manager")
      * })
      *
-     * @param SecurityContextInterface $context
-     * @param EntityManagerInterface   $em
+     * @param AuthorizationCheckerInterface $authorization
+     * @param EntityManagerInterface        $em
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,

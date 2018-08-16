@@ -15,43 +15,31 @@ use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
 use Claroline\AnnouncementBundle\Manager\AnnouncementManager;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
-use Claroline\CoreBundle\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
-use Claroline\CoreBundle\Form\ResourceNameType;
-use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Ramsey\Uuid\Uuid;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\Form\FormFactory;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * @DI\Service()
  */
 class AnnouncementListener
 {
-    /** @var FormFactory */
-    private $formFactory;
-    /** @var HttpKernelInterface */
-    private $httpKernel;
     /** @var ObjectManager */
     private $om;
-    /** @var Request */
-    private $request;
     /** @var TwigEngine */
     private $templating;
     /** @var AnnouncementManager */
     private $manager;
-    /** @var RoleSerializer */
-    private $roleSerializer;
+    /** @var SerializerProvider */
+    private $serializer;
     /** @var Crud */
     private $crud;
 
@@ -59,113 +47,52 @@ class AnnouncementListener
      * AnnouncementListener constructor.
      *
      * @DI\InjectParams({
-     *     "formFactory"    = @DI\Inject("form.factory"),
-     *     "httpKernel"     = @DI\Inject("http_kernel"),
-     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "requestStack"   = @DI\Inject("request_stack"),
-     *     "templating"     = @DI\Inject("templating"),
-     *     "manager"        = @DI\Inject("claroline.manager.announcement_manager"),
-     *     "roleSerializer" = @DI\Inject("claroline.serializer.role"),
-     *     "crud"            = @DI\Inject("claroline.api.crud")
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
+     *     "templating" = @DI\Inject("templating"),
+     *     "manager"    = @DI\Inject("claroline.manager.announcement_manager"),
+     *     "serializer" = @DI\Inject("claroline.api.serializer"),
+     *     "crud"       = @DI\Inject("claroline.api.crud")
      * })
      *
-     * @param FormFactory         $formFactory
-     * @param HttpKernelInterface $httpKernel
      * @param ObjectManager       $om
-     * @param RequestStack        $requestStack
      * @param TwigEngine          $templating
      * @param AnnouncementManager $manager
-     * @param RoleSerializer      $roleSerializer,
+     * @param SerializerProvider  $serializer
      * @param Crud                $crud
      */
     public function __construct(
-        FormFactory $formFactory,
-        HttpKernelInterface $httpKernel,
         ObjectManager $om,
-        RequestStack $requestStack,
         TwigEngine $templating,
         AnnouncementManager $manager,
-        RoleSerializer $roleSerializer,
+        SerializerProvider $serializer,
         Crud $crud
     ) {
-        $this->formFactory = $formFactory;
-        $this->httpKernel = $httpKernel;
         $this->om = $om;
-        $this->request = $requestStack->getCurrentRequest();
         $this->templating = $templating;
         $this->manager = $manager;
-        $this->roleSerializer = $roleSerializer;
+        $this->serializer = $serializer;
         $this->crud = $crud;
     }
 
     /**
-     * @DI\Observe("create_form_claroline_announcement_aggregate")
+     * Loads an Announcement resource.
      *
-     * @param CreateFormResourceEvent $event
+     * @DI\Observe("resource.claroline_announcement_aggregate.load")
+     *
+     * @param LoadResourceEvent $event
      */
-    public function onCreateForm(CreateFormResourceEvent $event)
+    public function load(LoadResourceEvent $event)
     {
-        $form = $this->formFactory->create(new ResourceNameType(), new AnnouncementAggregate());
-        $content = $this->templating->render(
-            'ClarolineCoreBundle:resource:create_form.html.twig', [
-                'form' => $form->createView(),
-                'resourceType' => 'claroline_announcement_aggregate',
-            ]
-        );
-        $event->setResponseContent($content);
-        $event->stopPropagation();
-    }
+        $resource = $event->getResource();
+        $workspace = $resource->getResourceNode()->getWorkspace();
 
-    /**
-     * @DI\Observe("create_claroline_announcement_aggregate")
-     *
-     * @param CreateResourceEvent $event
-     *
-     * @throws NoHttpRequestException
-     */
-    public function onCreate(CreateResourceEvent $event)
-    {
-        if (!$this->request) {
-            throw new NoHttpRequestException();
-        }
+        $event->setData([
+            'announcement' => $this->serializer->serialize($resource),
+            'workspaceRoles' => array_map(function (Role $role) {
+                return $this->serializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
+            }, $workspace->getRoles()->toArray()),
+        ]);
 
-        $form = $this->formFactory->create(new ResourceNameType(), new AnnouncementAggregate());
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $announcementAggregate = $form->getData();
-            $event->setResources([$announcementAggregate]);
-            $event->stopPropagation();
-
-            return;
-        }
-
-        $content = $this->templating->render(
-            'ClarolineCoreBundle:resource:create_form.html.twig', [
-                'form' => $form->createView(),
-                'resourceType' => 'claroline_announcement_aggregate',
-            ]
-        );
-        $event->setErrorFormContent($content);
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("delete_claroline_announcement_aggregate")
-     *
-     * @param DeleteResourceEvent $event
-     */
-    public function onDelete(DeleteResourceEvent $event)
-    {
-        /** @var AnnouncementAggregate $aggregate */
-        $aggregate = $event->getResource();
-        $announcements = $aggregate->getAnnouncements();
-
-        if ($announcements) {
-            foreach ($announcements as $announcement) {
-                $this->manager->delete($announcement, false);
-            }
-        }
         $event->stopPropagation();
     }
 
@@ -174,20 +101,18 @@ class AnnouncementListener
      *
      * @param OpenResourceEvent $event
      */
-    public function onOpen(OpenResourceEvent $event)
+    public function open(OpenResourceEvent $event)
     {
         $resource = $event->getResource();
-        $serializedRoles = [];
-        $roles = $resource->getResourceNode()->getWorkspace()->getRoles()->toArray();
-
-        foreach ($roles as $role) {
-            $serializedRoles[] = $this->roleSerializer->serialize($role);
-        }
+        $workspace = $resource->getResourceNode()->getWorkspace();
 
         $content = $this->templating->render(
             'ClarolineAnnouncementBundle:announcement:open.html.twig', [
                 '_resource' => $resource,
-                'roles' => $serializedRoles,
+                'announcement' => $this->serializer->serialize($resource),
+                'roles' => array_map(function (Role $role) {
+                    return $this->serializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
+                }, $workspace->getRoles()->toArray()),
             ]
         );
 
@@ -200,7 +125,7 @@ class AnnouncementListener
      *
      * @param CopyResourceEvent $event
      */
-    public function onCopy(CopyResourceEvent $event)
+    public function copy(CopyResourceEvent $event)
     {
         /** @var AnnouncementAggregate $aggregate */
         $aggregate = $event->getResource();
@@ -223,6 +148,16 @@ class AnnouncementListener
         $this->om->endFlushSuite();
 
         $event->setCopy($copy);
+        $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("delete_claroline_announcement_aggregate")
+     *
+     * @param DeleteResourceEvent $event
+     */
+    public function delete(DeleteResourceEvent $event)
+    {
         $event->stopPropagation();
     }
 }

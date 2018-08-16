@@ -120,6 +120,7 @@ const DataListSearch = {
   propTypes: {
     current: T.arrayOf(T.shape({
       property: T.string.isRequired,
+      locked: T.bool,
       value: T.any
     })).isRequired,
     addFilter: T.func.isRequired,

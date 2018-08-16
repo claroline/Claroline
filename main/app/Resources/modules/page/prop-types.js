@@ -9,6 +9,8 @@ import {Action, PromisedAction} from '#/main/app/action/prop-types'
  */
 const Page = {
   propTypes: {
+    className: T.string,
+
     /**
      * The title of the page.
      *
@@ -84,12 +86,15 @@ const Page = {
      */
     sections: T.arrayOf(T.shape({
 
-    }))
+    })),
+
+    styles: T.arrayOf(T.string)
   },
   defaultProps: {
     embedded: false,
     fullscreen: false,
-    actions: []
+    actions: [],
+    styles: []
   }
 }
 

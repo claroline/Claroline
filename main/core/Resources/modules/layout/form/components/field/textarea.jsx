@@ -130,6 +130,8 @@ ContentEditable.defaultProps = {
   disabled: false
 }
 
+// todo : create a standalone component
+// todo : allow to add custom CSS
 export class Tinymce extends Component {
   constructor(props) {
     super(props)

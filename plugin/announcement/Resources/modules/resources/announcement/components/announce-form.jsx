@@ -10,8 +10,7 @@ import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
 
 import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'
-import {actions} from '#/plugin/announcement/resources/announcement/actions'
-import {select} from '#/plugin/announcement/resources/announcement/selectors'
+import {actions, selectors} from '#/plugin/announcement/resources/announcement/store'
 
 const restrictByDates = (announcement) => announcement.restrictions.enableDates || (announcement.restrictions.dates && 0 !== announcement.restrictions.dates.length)
 
@@ -123,7 +122,7 @@ const AnnounceForm = connect(
   (state) => ({
     new: formSelectors.isNew(formSelectors.form(state, 'announcementForm')),
     announcement: formSelectors.data(formSelectors.form(state, 'announcementForm')),
-    aggregateId: select.aggregateId(state)
+    aggregateId: selectors.aggregateId(state)
   }),
   (dispatch) => ({
     addAnnounce(announcement) {

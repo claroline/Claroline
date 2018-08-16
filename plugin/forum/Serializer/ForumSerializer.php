@@ -103,9 +103,9 @@ class ForumSerializer
               'lastMessagesCount' => $forum->getDisplayMessages(),
             ],
             'restrictions' => [
-              'lockDate' => $forum->getLockDate() ? $forum->getLockDate()->format('Y-m-d\TH:i:s') : null,
-              'banned' => $banned,
-              'moderator' => $this->checkPermission('EDIT', $forum->getResourceNode()),
+              'lockDate' => $forum->getLockDate() ? $forum->getLockDate()->format('Y-m-d\TH:i:s') : null, // TODO : use DateNormalizer
+              'banned' => $banned, // TODO : data about current user should not be here
+              'moderator' => $this->checkPermission('EDIT', $forum->getResourceNode()), // TODO : data about current user should not be here
             ],
             'meta' => [
               'users' => $finder->fetch('Claroline\ForumBundle\Entity\Validation\User', ['forum' => $forum->getUuid()], null, 0, 0, true),
@@ -113,7 +113,7 @@ class ForumSerializer
               'messages' => $finder->fetch('Claroline\ForumBundle\Entity\Message', ['forum' => $forum->getUuid(), 'moderation' => Forum::VALIDATE_NONE], null, 0, 0, true),
               'myMessages' => !is_string($currentUser) ?
                   $finder->fetch('Claroline\ForumBundle\Entity\Message', ['forum' => $forum->getUuid(), 'creator' => $currentUser->getUsername()], null, 0, 0, true) :
-                  0,
+                  0, // TODO : data about current user should not be here
               'tags' => $this->getTags($forum),
               'notified' => $forumUser->isNotified(),
             ],

@@ -1,13 +1,14 @@
 import cloneDeep from 'lodash/cloneDeep'
 
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
+
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
+import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 import {FORM_SUBMIT_SUCCESS, FORM_RESET} from '#/main/app/content/form/store/actions'
+
 import {
   SUMMARY_PIN_TOGGLE,
-  SUMMARY_OPEN_TOGGLE
-} from '#/plugin/path/resources/path/actions'
-import {
+  SUMMARY_OPEN_TOGGLE,
   CHAPTER_LOAD,
   CHAPTER_RESET,
   TREE_LOADED,
@@ -32,7 +33,7 @@ const formDefault = {
   }
 }
 
-const reducer = {
+const reducer = combineReducers({
   summary: combineReducers({
     pinned: makeReducer(false, {
       [SUMMARY_PIN_TOGGLE]: (state) => !state
@@ -41,8 +42,11 @@ const reducer = {
       [SUMMARY_OPEN_TOGGLE]: (state) => !state
     })
   }),
-  lesson: makeReducer({}, {}),
+  lesson: makeReducer({}, {
+    [RESOURCE_LOAD]: (state, action) => action.resourceData.lesson
+  }),
   chapter: makeReducer({}, {
+    [RESOURCE_LOAD]: (state, action) => action.resourceData.chapter,
     [CHAPTER_LOAD]: (state, action) => action.chapter,
     [CHAPTER_RESET]: () => ({}),
     [CHAPTER_DELETED]: () => null
@@ -56,7 +60,7 @@ const reducer = {
         data.position = action.isRoot ? 'subchapter' : data.position
         return data
       },
-      [FORM_RESET + '/chapter_form']: () => ({
+      [FORM_RESET + '/resource.chapter_form']: () => ({
         position: 'subchapter',
         order: {
           sibling: 'before',
@@ -65,18 +69,21 @@ const reducer = {
       })
     })
   }),
-  exportPdfEnabled: makeReducer(false, {}),
+  exportPdfEnabled: makeReducer(false, {
+    [RESOURCE_LOAD]: (state, action) => action.resourceData.exportPdfEnabled
+  }),
   tree: combineReducers({
     invalidated: makeReducer(false, {
       [TREE_LOADED]: () => false,
-      [FORM_SUBMIT_SUCCESS + '/chapter_form']: () => true
+      [FORM_SUBMIT_SUCCESS + '/resource.chapter_form']: () => true
     }),
     data: makeReducer({}, {
+      [RESOURCE_LOAD]: (state, action) => action.resourceData.tree,
       [TREE_LOADED]: (state, action) => action.tree,
       [CHAPTER_DELETED]: (state, action) => action.tree
     })
   })
-}
+})
 
 export {
   reducer

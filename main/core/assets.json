@@ -22,15 +22,14 @@
       "contacts-tool": "user/contact",
       "resources-tool": "tools/resources/bootstrap",
       "workspace-user-management": "workspace/user",
-      "text-resource": "resources/text/bootstrap",
-      "directory-resource": "resources/directory/bootstrap",
       "administration-toolbar": "administration/toolbar",
       "workspace-toolbar": "workspace/toolbar",
       "workspace-logs": "workspace/logs",
       "workspace-analytics": "workspace/analytics",
       "resource-logs": "resource/logs",
       "tools-admin-logs": "administration/logs",
-      "tools-admin-analytics": "administration/analytics"
+      "tools-admin-analytics": "administration/analytics",
+      "resource": "resource/bootstrap"
     }
   },
 

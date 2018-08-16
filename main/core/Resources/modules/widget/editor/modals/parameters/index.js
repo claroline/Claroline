@@ -6,7 +6,7 @@
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {ParametersModal} from '#/main/core/widget/editor/modals/parameters/components/parameters'
+import {ParametersModal} from '#/main/core/widget/editor/modals/parameters/containers/modal'
 
 const MODAL_WIDGET_PARAMETERS = 'MODAL_WIDGET_PARAMETERS'
 

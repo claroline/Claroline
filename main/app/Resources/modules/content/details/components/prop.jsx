@@ -59,7 +59,7 @@ class DetailsProp extends Component {
         {this.state.definition &&
           <FormGroup
             id={this.props.name}
-            label={this.state.definition.meta && this.state.definition.meta.noLabel ? this.props.label : undefined}
+            label={this.state.definition.meta && !this.state.definition.meta.noLabel ? this.props.label : undefined}
             hideLabel={this.props.hideLabel}
             help={this.props.help}
           >

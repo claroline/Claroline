@@ -1,5 +1,6 @@
-const CHAPTER_EDIT_FORM_NAME = 'chapter_form'
-const CHAPTER_EDIT = 'chapter_edit'
+// todo : should be moved in selectors
+const CHAPTER_EDIT_FORM_NAME = 'resource.chapter_form'
+const CHAPTER_EDIT = 'resource.chapter_edit'
 
 const CREATE_CHAPTER = 'create'
 const EDIT_CHAPTER = 'edit'

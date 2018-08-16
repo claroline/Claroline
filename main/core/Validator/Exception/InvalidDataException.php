@@ -9,7 +9,7 @@ class InvalidDataException extends \Exception
 {
     private $errors;
 
-    public function __construct($message, array $errors)
+    public function __construct($message, array $errors = [])
     {
         $this->errors = $errors;
 

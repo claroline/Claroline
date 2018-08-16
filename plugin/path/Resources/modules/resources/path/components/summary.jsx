@@ -8,8 +8,7 @@ import {NavLink} from '#/main/app/router'
 import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action.jsx'
 import {Action as ActionTypes} from '#/main/core/layout/action/prop-types'
 
-import {actions} from '#/plugin/path/resources/path/actions'
-import {select} from '#/plugin/path/resources/path/selectors'
+import {actions, selectors} from '#/plugin/path/resources/path/store'
 import {Step as StepTypes} from '#/plugin/path/resources/path/prop-types'
 
 // TODO : reuse app summary
@@ -220,8 +219,8 @@ Summary.defaultProps = {
 
 const PathSummary = connect(
   state => ({
-    opened: select.summaryOpened(state),
-    pinned: select.summaryPinned(state)
+    opened: selectors.summaryOpened(state),
+    pinned: selectors.summaryPinned(state)
   }),
   dispatch => ({
     toggleOpen() {

@@ -2,17 +2,18 @@
 
 namespace Icap\LessonBundle\Listener\Resource;
 
-use Claroline\CoreBundle\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Event\CreateResourceEvent;
+use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Icap\LessonBundle\Entity\Lesson;
-use Icap\LessonBundle\Form\LessonType;
 use Icap\LessonBundle\Manager\ChapterManager;
 use Icap\LessonBundle\Repository\ChapterRepository;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -20,10 +21,14 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class LessonListener
 {
-    private $container;
+    /** @var EngineInterface */
+    private $templating;
 
     /* @var ObjectManager */
     private $om;
+
+    /** @var PlatformConfigurationHandler */
+    private $config;
 
     /** @var SerializerProvider */
     private $serializer;
@@ -38,67 +43,55 @@ class LessonListener
      * LessonListener constructor.
      *
      * @DI\InjectParams({
-     *     "container"      = @DI\Inject("service_container"),
+     *     "templating"     = @DI\Inject("templating"),
+     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
+     *     "config"                 = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "serializer"     = @DI\Inject("claroline.api.serializer"),
      *     "chapterManager" = @DI\Inject("icap.lesson.manager.chapter")
      * })
      *
-     * @param ContainerInterface $container
-     * @param ChapterManager     $chapterManager
+     * @param EngineInterface              $templating
+     * @param ObjectManager                $om
+     * @param PlatformConfigurationHandler $config
+     * @param SerializerProvider           $serializer
+     * @param ChapterManager               $chapterManager
      */
     public function __construct(
-        ContainerInterface $container,
+        EngineInterface $templating,
+        ObjectManager $om,
+        PlatformConfigurationHandler $config,
+        SerializerProvider $serializer,
         ChapterManager $chapterManager
     ) {
-        $this->container = $container;
-        $this->om = $container->get('claroline.persistence.object_manager');
-        $this->serializer = $container->get('claroline.api.serializer');
-        $this->chapterRepository = $this->container->get('doctrine.orm.entity_manager')->getRepository('IcapLessonBundle:Chapter');
+        $this->templating = $templating;
+        $this->om = $om;
+        $this->config = $config;
+        $this->serializer = $serializer;
         $this->chapterManager = $chapterManager;
+
+        $this->chapterRepository = $this->om->getRepository('IcapLessonBundle:Chapter');
     }
 
     /**
-     * @DI\Observe("create_form_icap_lesson")
+     * Loads a lesson.
      *
-     * @param CreateFormResourceEvent $event
-     */
-    public function onCreateForm(CreateFormResourceEvent $event)
-    {
-        $form = $this->container->get('form.factory')->create(new LessonType(), new Lesson());
-        $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:resource:create_form.html.twig',
-            [
-                'form' => $form->createView(),
-                'resourceType' => 'icap_lesson',
-            ]
-        );
-
-        $event->setResponseContent($content);
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("create_icap_lesson")
+     * @DI\Observe("resource.icap_lesson.load")
      *
-     * @param CreateResourceEvent $event
+     * @param LoadResourceEvent $event
      */
-    public function onCreate(CreateResourceEvent $event)
+    public function onLoad(LoadResourceEvent $event)
     {
-        $request = $this->container->get('request_stack')->getMasterRequest();
-        $form = $this->container->get('form.factory')->create(new LessonType(), new Lesson());
-        $form->handleRequest($request);
-        if ($form->isValid()) {
-            $lesson = $form->getData();
-            $event->setResources([$lesson]);
-        } else {
-            $content = $this->container->get('templating')->render(
-                'ClarolineCoreBundle:Resource:create_form.html.twig',
-                [
-                    'form' => $form->createView(),
-                    'resourceType' => 'icap_lesson',
-                ]
-            );
-            $event->setErrorFormContent($content);
-        }
+        /** @var Lesson $lesson */
+        $lesson = $event->getResource();
+        $firstChapter = $this->chapterRepository->getFirstChapter($lesson);
+
+        $event->setData([
+            'exportPdfEnabled' => $this->config->getParameter('is_pdf_export_active'),
+            'lesson' => $this->serializer->serialize($lesson),
+            'tree' => $this->chapterManager->serializeChapterTree($lesson),
+            'chapter' => $firstChapter ? $this->serializer->serialize($firstChapter) : null,
+        ]);
+
         $event->stopPropagation();
     }
 
@@ -109,10 +102,10 @@ class LessonListener
      */
     public function onOpen(OpenResourceEvent $event)
     {
-        /** @var Path $path */
+        /** @var Lesson $lesson */
         $lesson = $event->getResource();
 
-        $content = $this->container->get('templating')->render(
+        $content = $this->templating->render(
             'IcapLessonBundle:lesson:open.html.twig', [
                 '_resource' => $lesson,
                 'chapter' => $this->chapterRepository->getFirstChapter($lesson),
@@ -132,17 +125,16 @@ class LessonListener
      */
     public function onCopy(CopyResourceEvent $event)
     {
-        $entityManager = $this->container->get('doctrine.orm.entity_manager');
+        /** @var Lesson $lesson */
         $lesson = $event->getResource();
 
         $newLesson = new Lesson();
         $newLesson->setName($lesson->getResourceNode()->getName());
-        $entityManager->persist($newLesson);
-        $entityManager->flush($newLesson);
 
-        //$chapterRepository = $entityManager->getRepository('IcapLessonBundle:Chapter');
-        $chapter_manager = $this->container->get('icap.lesson.manager.chapter');
-        $chapter_manager->copyRoot($lesson->getRoot(), $newLesson->getRoot());
+        $this->om->persist($newLesson);
+        $this->om->flush();
+
+        $this->chapterManager->copyRoot($lesson->getRoot(), $newLesson->getRoot());
 
         $event->setCopy($newLesson);
         $event->stopPropagation();
@@ -155,10 +147,6 @@ class LessonListener
      */
     public function onDelete(DeleteResourceEvent $event)
     {
-        $om = $this->container->get('claroline.persistence.object_manager');
-        $lesson = $event->getResource();
-        $om->remove($lesson);
-        $om->flush();
         $event->stopPropagation();
     }
 }

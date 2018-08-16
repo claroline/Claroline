@@ -1,7 +1,7 @@
 import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
 
-import {select} from '#/plugin/drop-zone/resources/dropzone/selectors'
+import {select} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 
 export const MY_DROP_LOAD = 'MY_DROP_LOAD'

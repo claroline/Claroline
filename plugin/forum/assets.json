@@ -1,10 +1,4 @@
 {
-  "webpack": {
-    "entry": {
-      "forum-resource": "resources/forum/bootstrap"
-    }
-  },
-
   "styles": {
     "entry": {
       "forum-resource": "resources/forum/index.less"

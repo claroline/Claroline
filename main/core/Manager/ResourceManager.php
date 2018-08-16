@@ -23,6 +23,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
@@ -42,7 +43,6 @@ use Claroline\CoreBundle\Repository\RoleRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use JMS\DiExtraBundle\Annotation as DI;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
@@ -54,6 +54,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("claroline.manager.resource_manager")
+ *
+ * @todo clean me
  */
 class ResourceManager
 {
@@ -750,6 +752,7 @@ class ResourceManager
         }
         $newNode = $this->copyNode($node, $parent, $user, $withRights, $rights, $index);
 
+        // todo : reuse lifecycle
         /** @var CopyResourceEvent $event */
         $event = $this->dispatcher->dispatch(
             'copy_'.$node->getResourceType()->getName(),
@@ -945,6 +948,19 @@ class ResourceManager
         if (!$softDelete && $resourceNode->getParent()) {
             $this->reorder($resourceNode->getParent());
         }
+    }
+
+    /**
+     * Restores a soft deleted resource node.
+     *
+     * @param ResourceNode $resourceNode
+     */
+    public function restore(ResourceNode $resourceNode)
+    {
+        $resourceNode->setActive(true);
+
+        $this->om->persist($resourceNode);
+        $this->om->flush();
     }
 
     /**
@@ -1528,6 +1544,11 @@ class ResourceManager
         return in_array($managerRoleName, $this->secut->getRoles($token)) ? true : false;
     }
 
+    /**
+     * @param ResourceNode $node
+     *
+     * @deprecated
+     */
     public function resetIcon(ResourceNode $node)
     {
         $this->om->startFlushSuite();
@@ -1594,9 +1615,11 @@ class ResourceManager
         $node->setWorkspace($workspace);
         $this->om->persist($node);
 
-        if ('directory' === $node->getResourceType()->getName()) {
+        if (!empty($node->getChildren())) {
+            // recursively load all children
             $children = $this->resourceNodeRepo->getChildren($node);
 
+            /** @var ResourceNode $child */
             foreach ($children as $child) {
                 $child->setWorkspace($workspace);
                 $this->om->persist($child);
@@ -1712,14 +1735,15 @@ class ResourceManager
         $directory = new Directory();
         $dirName = $this->translator->trans('my_public_documents', [], 'platform');
         $directory->setName($dirName);
-        $directory->setIsUploadDestination(true);
+        $directory->setUploadDestination(true);
         $parent = $this->getNodeScheduledForInsert($workspace, $workspace->getName());
         if (!$parent) {
             $parent = $this->resourceNodeRepo->findOneBy(['workspace' => $workspace->getId(), 'parent' => $parent]);
         }
         $role = $this->roleManager->getRoleByName('ROLE_ANONYMOUS');
 
-        return $this->create(
+        /** @var Directory $publicDir */
+        $publicDir = $this->create(
             $directory,
             $this->getResourceTypeByName('directory'),
             $workspace->getCreator(),
@@ -1729,6 +1753,8 @@ class ResourceManager
             ['ROLE_ANONYMOUS' => ['open' => true, 'export' => true, 'create' => [], 'role' => $role]],
             true
         );
+
+        return $publicDir;
     }
 
     /**
@@ -1781,6 +1807,16 @@ class ResourceManager
         return $lastIndex;
     }
 
+    /**
+     * @param ResourceNode $node
+     * @param bool         $throwException
+     *
+     * @return ResourceNode|null
+     *
+     * @throws \Exception
+     *
+     * @deprecated
+     */
     public function getRealTarget(ResourceNode $node, $throwException = true)
     {
         if ('Claroline\CoreBundle\Entity\Resource\ResourceShortcut' === $node->getClass()) {
@@ -1835,6 +1871,11 @@ class ResourceManager
         $this->om->flush();
     }
 
+    /**
+     * @param $file
+     *
+     * @deprecated use new import/export system
+     */
     public function importDirectoriesFromCsv($file)
     {
         $data = file_get_contents($file);
@@ -1874,21 +1915,18 @@ class ResourceManager
         $this->om->endFlushSuite();
     }
 
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-
-    public function getLogger()
-    {
-        return $this->logger;
-    }
-
     public function getResourcesByIds(array $roles, $user, array $ids)
     {
         return count($ids) > 0 ? $this->resourceNodeRepo->findResourcesByIds($roles, $user, $ids) : [];
     }
 
+    /**
+     * @param ResourceNode $node
+     *
+     * @return AbstractResource
+     *
+     * @deprecated
+     */
     public function getResourceFromShortcut(ResourceNode $node)
     {
         $target = $this->getRealTarget($node);
@@ -1911,7 +1949,10 @@ class ResourceManager
      */
     public function replaceCreator(User $from, User $to)
     {
-        $nodes = $this->resourceNodeRepo->findByCreator($from);
+        /** @var ResourceNode[] $nodes */
+        $nodes = $this->resourceNodeRepo->findBy([
+            'creator' => $from,
+        ]);
 
         if (count($nodes) > 0) {
             foreach ($nodes as $node) {
@@ -1922,5 +1963,34 @@ class ResourceManager
         }
 
         return count($nodes);
+    }
+
+    public function addView(ResourceNode $node)
+    {
+        $node->addView();
+        $this->om->persist($node);
+        $this->om->flush();
+
+        return $node;
+    }
+
+    public function load(ResourceNode $resourceNode)
+    {
+        // maybe use a specific log ?
+        $this->dispatcher->dispatch('log', 'Log\LogResourceRead', [$resourceNode]);
+
+        /** @var LoadResourceEvent $event */
+        $event = $this->dispatcher->dispatch(
+            'resource.load',
+            LoadResourceEvent::class,
+            [$this->getResourceFromNode($resourceNode)]
+        );
+
+        return $event->getData();
+    }
+
+    public function isManager(ResourceNode $resourceNode)
+    {
+        return $this->rightsManager->isManager($resourceNode);
     }
 }

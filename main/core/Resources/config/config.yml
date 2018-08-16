@@ -49,13 +49,22 @@ plugin:
           api: [GET]
           recursive: true
 
-        # Deletes a one or more resources
+        # Deletes one or more resources
         - name: delete
           decoder: delete
           group: management
           scope: [object, collection] # The action can be executed on multiple resources at once.
           api: [DELETE]
           recursive: true
+
+        # Restores one or more soft deleted resources
+        - name: restore
+          decoder: delete
+          group: management
+          scope: [object, collection] # The action can be executed on multiple resources at once.
+          api: [POST]
+          recursive: true
+
 
         # Changes common resources info (the one from the node) for one or more resources
         - name: configure

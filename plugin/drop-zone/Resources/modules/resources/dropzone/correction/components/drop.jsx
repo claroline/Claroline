@@ -6,12 +6,12 @@ import {trans} from '#/main/core/translation'
 import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
 
 import {DropzoneType, DropType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
-import {select} from '#/plugin/drop-zone/resources/dropzone/selectors'
+import {select} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 import {actions} from '#/plugin/drop-zone/resources/dropzone/correction/actions'
-import {Documents} from '#/plugin/drop-zone/resources/dropzone/components/documents.jsx'
-import {CorrectionCreation} from '#/plugin/drop-zone/resources/dropzone/correction/components/correction-creation.jsx'
-import {CorrectionRow} from '#/plugin/drop-zone/resources/dropzone/correction/components/correction-row.jsx'
+import {Documents} from '#/plugin/drop-zone/resources/dropzone/components/documents'
+import {CorrectionCreation} from '#/plugin/drop-zone/resources/dropzone/correction/components/correction-creation'
+import {CorrectionRow} from '#/plugin/drop-zone/resources/dropzone/correction/components/correction-row'
 
 const Corrections = props =>
   <FormSections>

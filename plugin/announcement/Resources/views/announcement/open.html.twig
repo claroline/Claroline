@@ -13,7 +13,7 @@
     {# The react UI will be attached to this element #}
     <div
         class="page-container announcement-container"
-        data-announcement="{{ _resource | api_serialize | json_encode | raw | escape }}"
+        data-announcement="{{ announcement | json_encode | raw | escape }}"
         data-resource-node="{{ _resource.resourceNode | api_serialize | json_encode | raw | escape }}"
         data-workspace-roles="{{ roles | json_encode | raw | escape }}"
     >

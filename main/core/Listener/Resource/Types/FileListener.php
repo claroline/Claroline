@@ -91,37 +91,11 @@ class FileListener implements ContainerAwareInterface
     }
 
     /**
-     * @DI\Observe("create_file")
-     *
-     * @param CreateResourceEvent $event
-     */
-    public function onCreate(CreateResourceEvent $event)
-    {
-        $request = $this->container->get('request_stack')->getMasterRequest();
-        $form = $this->container->get('form.factory')->create(new FileType(true), new File());
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $this->handleFileCreation($form, $event);
-        }
-
-        $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:resource:create_form.html.twig',
-            [
-                'form' => $form->createView(),
-                'resourceType' => $event->getResourceType(),
-            ]
-        );
-        $event->setErrorFormContent($content);
-        $event->stopPropagation();
-    }
-
-    /**
      * @DI\Observe("create_api_file")
      *
      * @param CreateResourceEvent $event
      *
-     * @todo merge with onCreate
+     * @todo remove me
      */
     public function onApiCreate(CreateResourceEvent $event)
     {
@@ -185,7 +159,7 @@ class FileListener implements ContainerAwareInterface
     }
 
     /**
-     * @DI\Observe("load_file")
+     * @DI\Observe("resource.file.load")
      *
      * @param LoadResourceEvent $event
      */
@@ -220,7 +194,7 @@ class FileListener implements ContainerAwareInterface
             }
         }
 
-        $event->setAdditionalData(array_merge([
+        $event->setData(array_merge([
             // common file data
             'file' => $this->container->get('claroline.serializer.file')->serialize($resource),
         ], $additionalFileData));

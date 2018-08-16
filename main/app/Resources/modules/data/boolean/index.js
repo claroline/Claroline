@@ -14,7 +14,7 @@ const dataType = {
     icon: 'fa fa-fw fa-check-square-o',
     label: trans('boolean'),
     description: trans('boolean_desc'),
-    noLabel: true // todo : implement
+    noLabel: true
   },
   parse: (display) => parseBool(display),
   render: (raw) => translateBool(raw),

@@ -9,10 +9,9 @@ import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
 
-import {actions} from '#/plugin/announcement/resources/announcement/actions'
-import {select} from '#/plugin/announcement/resources/announcement/selectors'
+import {actions, selectors} from '#/plugin/announcement/resources/announcement/store'
 import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'
-import {AnnouncePost} from '#/plugin/announcement/resources/announcement/components/announce-post.jsx'
+import {AnnouncePost} from '#/plugin/announcement/resources/announcement/components/announce-post'
 
 const AnnounceDetail = props =>
   <AnnouncePost
@@ -37,8 +36,8 @@ AnnounceDetail.propTypes = {
 
 const Announce = connect(
   state => ({
-    aggregateId: select.aggregateId(state),
-    announcement: select.detail(state),
+    aggregateId: selectors.aggregateId(state),
+    announcement: selectors.detail(state),
     editable: hasPermission('edit', resourceSelect.resourceNode(state)),
     deletable: hasPermission('delete', resourceSelect.resourceNode(state))
   }),

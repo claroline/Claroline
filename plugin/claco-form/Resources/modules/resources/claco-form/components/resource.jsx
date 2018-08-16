@@ -9,18 +9,18 @@ import {url} from '#/main/app/api'
 import {trans} from '#/main/core/translation'
 import {RoutedPageContent} from '#/main/core/layout/router/components/page'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
-import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
+import {ResourcePage} from '#/main/core/resource/containers/page'
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 
 import {actions as entryActions} from '#/plugin/claco-form/resources/claco-form/player/entry/actions'
 import {select} from '#/plugin/claco-form/resources/claco-form/selectors'
 import {ClacoForm as ClacoFormType} from '#/plugin/claco-form/resources/claco-form/prop-types'
-import {ClacoFormMainMenu} from '#/plugin/claco-form/resources/claco-form/player/components/claco-form-main-menu.jsx'
-import {Editor} from '#/plugin/claco-form/resources/claco-form/editor/components/editor.jsx'
-import {TemplateForm} from '#/plugin/claco-form/resources/claco-form/editor/template/components/template-form.jsx'
-import {Entries} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entries.jsx'
-import {EntryForm} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entry-form.jsx'
-import {Entry} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entry.jsx'
+import {ClacoFormMainMenu} from '#/plugin/claco-form/resources/claco-form/player/components/claco-form-main-menu'
+import {Editor} from '#/plugin/claco-form/resources/claco-form/editor/components/editor'
+import {TemplateForm} from '#/plugin/claco-form/resources/claco-form/editor/template/components/template-form'
+import {Entries} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entries'
+import {EntryForm} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entry-form'
+import {Entry} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entry'
 
 const authenticatedUser = currentUser()
 
@@ -42,7 +42,7 @@ function getHome(type) {
 }
 
 const Resource = props =>
-  <ResourcePageContainer
+  <ResourcePage
     customActions={[
       {
         type: LINK_BUTTON,
@@ -155,7 +155,7 @@ const Resource = props =>
         }
       ]}
     />
-  </ResourcePageContainer>
+  </ResourcePage>
 
 Resource.propTypes = {
   clacoForm: T.shape(ClacoFormType.propTypes).isRequired,

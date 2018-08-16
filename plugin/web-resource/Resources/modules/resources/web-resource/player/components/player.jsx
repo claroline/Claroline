@@ -1,18 +1,20 @@
 import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {asset} from '#/main/core/scaffolding/asset'
-import {selectors as resourceSelector} from '#/main/core/resource/store'
 
-import {select} from '#/plugin/web-resource/resources/web-resource/selectors'
+import {selectors} from '#/plugin/web-resource/resources/web-resource/store'
 
 class PlayerComponent extends Component {
   constructor(props) {
     super(props)
-    this.checkHeight = this.checkHeight.bind(this)
+
     this.state = {
       height: 0
     }
+
+    this.checkHeight = this.checkHeight.bind(this)
   }
 
   checkHeight() {
@@ -33,17 +35,20 @@ class PlayerComponent extends Component {
         ref={el => this.iframe = el}
         onLoad={this.handleResize()}
         height={this.state.height}
-        src={asset(`uploads/webresource/${this.props.workspaceId}/${this.props.path}`)}
+        src={asset(this.props.path)}
         allowFullScreen={true}
       />
     )
   }
 }
 
+PlayerComponent.propTypes = {
+  path: T.string.isRequired
+}
+
 const Player = connect(
   state => ({
-    path: select.path(state),
-    workspaceId: resourceSelector.resourceNode(state).workspace.id
+    path: selectors.path(state)
   })
 )(PlayerComponent)
 

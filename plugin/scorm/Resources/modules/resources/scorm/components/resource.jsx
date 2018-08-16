@@ -7,7 +7,7 @@ import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {hasPermission} from '#/main/core/resource/permissions'
 import {RoutedPageContent} from '#/main/core/layout/router/components/page'
-import {ResourcePageContainer} from '#/main/core/resource/containers/page'
+import {ResourcePage} from '#/main/core/resource/containers/page'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {Scorm as ScormType} from '#/plugin/scorm/resources/scorm/prop-types'
@@ -17,7 +17,7 @@ import {Editor} from '#/plugin/scorm/resources/scorm/editor/components/editor'
 import {Results} from '#/plugin/scorm/resources/scorm/player/components/results'
 
 const Resource = props =>
-  <ResourcePageContainer
+  <ResourcePage
     customActions={[
       {
         type: LINK_BUTTON,
@@ -59,7 +59,7 @@ const Resource = props =>
         }
       ]}
     />
-  </ResourcePageContainer>
+  </ResourcePage>
 
 Resource.propTypes = {
   scorm: T.shape(ScormType.propTypes),

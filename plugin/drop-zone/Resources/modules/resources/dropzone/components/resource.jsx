@@ -1,31 +1,26 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
+import get from 'lodash/get'
 
 import {trans} from '#/main/core/translation'
-import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {hasPermission} from '#/main/core/resource/permissions'
-import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {RoutedPageContent} from '#/main/core/layout/router'
-import {ResourcePageContainer} from '#/main/core/resource/containers/page'
+import {ResourcePage} from '#/main/core/resource/containers/page'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
-import {select} from '#/plugin/drop-zone/resources/dropzone/selectors'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
-import {actions as playerActions} from '#/plugin/drop-zone/resources/dropzone/player/actions'
-import {actions as correctionActions} from '#/plugin/drop-zone/resources/dropzone/correction/actions'
 
-import {Overview} from '#/plugin/drop-zone/resources/dropzone/overview/components/overview.jsx'
-import {Editor} from '#/plugin/drop-zone/resources/dropzone/editor/components/editor.jsx'
-import {MyDrop} from '#/plugin/drop-zone/resources/dropzone/player/components/my-drop.jsx'
-import {Drops} from '#/plugin/drop-zone/resources/dropzone/correction/components/drops.jsx'
-import {Correctors} from '#/plugin/drop-zone/resources/dropzone/correction/components/correctors.jsx'
-import {Corrector} from '#/plugin/drop-zone/resources/dropzone/correction/components/corrector.jsx'
-import {Drop} from '#/plugin/drop-zone/resources/dropzone/correction/components/drop.jsx'
-import {PeerDrop} from '#/plugin/drop-zone/resources/dropzone/player/components/peer-drop.jsx'
+import {Overview} from '#/plugin/drop-zone/resources/dropzone/overview/components/overview'
+import {Editor} from '#/plugin/drop-zone/resources/dropzone/editor/components/editor'
+import {MyDrop} from '#/plugin/drop-zone/resources/dropzone/player/components/my-drop'
+import {Drops} from '#/plugin/drop-zone/resources/dropzone/correction/components/drops'
+import {Correctors} from '#/plugin/drop-zone/resources/dropzone/correction/components/correctors'
+import {Corrector} from '#/plugin/drop-zone/resources/dropzone/correction/components/corrector'
+import {Drop} from '#/plugin/drop-zone/resources/dropzone/correction/components/drop'
+import {PeerDrop} from '#/plugin/drop-zone/resources/dropzone/player/components/peer-drop'
 
-const Resource = props =>
-  <ResourcePageContainer
+const DropzoneResource = props =>
+  <ResourcePage
+    styles={['claroline-distribution-plugin-drop-zone-dropzone-resource']}
     customActions={[
       {
         type: LINK_BUTTON,
@@ -49,7 +44,7 @@ const Resource = props =>
         icon: 'fa fa-fw fa-users',
         label: trans('correctors', {}, 'dropzone'),
         target: '/correctors',
-        displayed: props.canEdit && constants.REVIEW_TYPE_PEER === props.dropzone.parameters.reviewType
+        displayed: props.canEdit && constants.REVIEW_TYPE_PEER === get(props.dropzone, 'parameters.reviewType')
       }
     ]}
   >
@@ -98,9 +93,9 @@ const Resource = props =>
         }
       ]}
     />
-  </ResourcePageContainer>
+  </ResourcePage>
 
-Resource.propTypes = {
+DropzoneResource.propTypes = {
   canEdit: T.bool.isRequired,
   dropzone: T.object.isRequired,
   myDrop: T.object,
@@ -112,23 +107,6 @@ Resource.propTypes = {
   resetCorrectorDrop: T.func.isRequired,
   fetchPeerDrop: T.func.isRequired
 }
-
-const DropzoneResource = connect(
-  (state) => ({
-    canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
-    dropzone: state.dropzone,
-    myDrop: select.myDrop(state)
-  }),
-  (dispatch) => ({
-    resetForm: (formData) => dispatch(formActions.resetForm('dropzoneForm', formData)),
-
-    fetchDrop: (dropId, type) => dispatch(correctionActions.fetchDrop(dropId, type)),
-    resetCurrentDrop: () => dispatch(correctionActions.resetCurrentDrop()),
-    fetchCorrections: (dropzoneId) => dispatch(correctionActions.fetchCorrections(dropzoneId)),
-    resetCorrectorDrop: () => dispatch(correctionActions.resetCorrectorDrop()),
-    fetchPeerDrop: () => dispatch(playerActions.fetchPeerDrop())
-  })
-)(Resource)
 
 export {
   DropzoneResource

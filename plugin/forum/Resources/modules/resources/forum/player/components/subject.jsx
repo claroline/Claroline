@@ -21,8 +21,8 @@ import {
 import {selectors as formSelect} from '#/main/app/content/form/store'
 
 import {Subject as SubjectType} from '#/plugin/forum/resources/forum/player/prop-types'
-import {select} from '#/plugin/forum/resources/forum/selectors'
-import {actions} from '#/plugin/forum/resources/forum/player/actions'
+import {select} from '#/plugin/forum/resources/forum/store/selectors'
+import {actions} from '#/plugin/forum/resources/forum/player/store/actions'
 import {MessageComments} from '#/plugin/forum/resources/forum/player/components/message-comments'
 import {SubjectForm} from '#/plugin/forum/resources/forum/player/components/subject-form'
 import {MessagesSort} from '#/plugin/forum/resources/forum/player/components/messages-sort'
@@ -107,6 +107,7 @@ class SubjectComponent extends Component {
             className="btn-link"
             primary={true}
           />
+
           <div>
             {(!this.props.showSubjectForm && !this.props.editingSubject) &&
               <h3 className="h2">
@@ -140,9 +141,11 @@ class SubjectComponent extends Component {
             }
           </div>
         </header>
+
         {this.props.showSubjectForm &&
           <SubjectForm />
         }
+
         {!this.props.showSubjectForm &&
           <UserMessage
             user={get(this.props.subject, 'meta.creator')}
@@ -323,17 +326,17 @@ const Subject =  withRouter(withModal(connect(
   state => ({
     forum: select.forum(state),
     subject: select.subject(state),
-    subjectForm: formSelect.data(formSelect.form(state, 'subjects.form')),
+    subjectForm: formSelect.data(formSelect.form(state, `${select.STORE_NAME}.subjects.form`)),
     editingSubject: select.editingSubject(state),
-    sortOrder: listSelect.sortBy(listSelect.list(state, 'subjects.messages')).direction,
+    sortOrder: listSelect.sortBy(listSelect.list(state, `${select.STORE_NAME}.subjects.messages`)).direction,
     showSubjectForm: select.showSubjectForm(state),
     messages: select.visibleMessages(state),
     moderatedMessages: select.moderatedMessages(state),
-    totalResults: listSelect.totalResults(listSelect.list(state, 'subjects.messages')),
-    invalidated: listSelect.invalidated(listSelect.list(state, 'subjects.messages')),
-    loaded: listSelect.loaded(listSelect.list(state, 'subjects.messages')),
-    pages: listSelect.pages(listSelect.list(state, 'subjects.messages')),
-    currentPage: listSelect.currentPage(listSelect.list(state, 'subjects.messages')),
+    totalResults: listSelect.totalResults(listSelect.list(state, `${select.STORE_NAME}.subjects.messages`)),
+    invalidated: listSelect.invalidated(listSelect.list(state, `${select.STORE_NAME}.subjects.messages`)),
+    loaded: listSelect.loaded(listSelect.list(state, `${select.STORE_NAME}.subjects.messages`)),
+    pages: listSelect.pages(listSelect.list(state, `${select.STORE_NAME}.subjects.messages`)),
+    currentPage: listSelect.currentPage(listSelect.list(state, `${select.STORE_NAME}.subjects.messages`)),
     bannedUser: select.bannedUser(state),
     moderator: select.moderator(state)
   }),
@@ -345,18 +348,18 @@ const Subject =  withRouter(withModal(connect(
       dispatch(actions.deleteSubject(id, push))
     },
     deleteMessage(id) {
-      dispatch(listActions.deleteData('subjects.messages', ['apiv2_forum_message_delete_bulk'], [{id: id}]))
+      dispatch(listActions.deleteData(`${select.STORE_NAME}.subjects.messages`, ['apiv2_forum_message_delete_bulk'], [{id: id}]))
     },
     reload(id) {
-      dispatch(listActions.fetchData('subjects.messages', ['claroline_forum_api_subject_getmessages', {id}]))
+      dispatch(listActions.fetchData(`${select.STORE_NAME}.subjects.messages`, ['claroline_forum_api_subject_getmessages', {id}]))
     },
     toggleSort(sortOrder) {
-      dispatch(listActions.updateSortDirection('subjects.messages', -sortOrder))
-      dispatch(listActions.invalidateData('subjects.messages'))
+      dispatch(listActions.updateSortDirection(`${select.STORE_NAME}.subjects.messages`, -sortOrder))
+      dispatch(listActions.invalidateData(`${select.STORE_NAME}.subjects.messages`))
     },
     changePage(page) {
-      dispatch(listActions.changePage('subjects.messages', page))
-      dispatch(listActions.invalidateData('subjects.messages'))
+      dispatch(listActions.changePage(`${select.STORE_NAME}.subjects.messages`, page))
+      dispatch(listActions.invalidateData(`${select.STORE_NAME}.subjects.messages`))
     },
     subjectEdition() {
       dispatch(actions.subjectEdition())

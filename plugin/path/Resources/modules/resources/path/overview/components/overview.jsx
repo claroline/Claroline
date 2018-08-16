@@ -9,7 +9,7 @@ import {selectors as resourceSelectors} from '#/main/core/resource/store/selecto
 import {UserEvaluation as UserEvaluationTypes} from '#/main/core/resource/prop-types'
 
 import {Summary} from '#/plugin/path/resources/path/overview/components/summary'
-import {select} from '#/plugin/path/resources/path/selectors'
+import {selectors} from '#/plugin/path/resources/path/store'
 import {Path as PathTypes} from '#/plugin/path/resources/path/prop-types'
 
 const OverviewComponent = props =>
@@ -61,8 +61,8 @@ OverviewComponent.defaultProps = {
 
 const Overview = connect(
   (state) => ({
-    path: select.path(state),
-    empty: select.empty(state),
+    path: selectors.path(state),
+    empty: selectors.empty(state),
     evaluation: resourceSelectors.resourceEvaluation(state)
   })
 )(OverviewComponent)

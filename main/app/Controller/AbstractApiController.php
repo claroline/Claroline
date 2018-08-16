@@ -7,6 +7,9 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @todo remove the ContainerAware use. It's not always required so let's implementation choose if it want it or not
+ */
 abstract class AbstractApiController implements ContainerAwareInterface
 {
     use ContainerAwareTrait;

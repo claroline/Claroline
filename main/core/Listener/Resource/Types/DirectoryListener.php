@@ -25,6 +25,7 @@ use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -47,6 +48,9 @@ class DirectoryListener
     /** @var SerializerProvider */
     private $serializer;
 
+    /** @var ResourceManager */
+    private $resourceManager;
+
     /** @var RightsManager */
     private $rightsManager;
 
@@ -54,17 +58,19 @@ class DirectoryListener
      * DirectoryListener constructor.
      *
      * @DI\InjectParams({
-     *     "tokenStorage"  = @DI\Inject("security.token_storage"),
-     *     "templating"    = @DI\Inject("templating"),
-     *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer"    = @DI\Inject("claroline.api.serializer"),
-     *     "rightsManager" = @DI\Inject("claroline.manager.rights_manager")
+     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
+     *     "templating"      = @DI\Inject("templating"),
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "serializer"      = @DI\Inject("claroline.api.serializer"),
+     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager")
      * })
      *
      * @param TokenStorageInterface $tokenStorage
      * @param TwigEngine            $templating
      * @param ObjectManager         $om
      * @param SerializerProvider    $serializer
+     * @param ResourceManager       $resourceManager
      * @param RightsManager         $rightsManager
      */
     public function __construct(
@@ -72,17 +78,19 @@ class DirectoryListener
         TwigEngine $templating,
         ObjectManager $om,
         SerializerProvider $serializer,
+        ResourceManager $resourceManager,
         RightsManager $rightsManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->templating = $templating;
         $this->om = $om;
         $this->serializer = $serializer;
+        $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
     }
 
     /**
-     * Creates a new resource inside a directory.
+     * Adds a new resource inside a directory.
      *
      * @DI\Observe("resource.directory.add")
      *
@@ -144,6 +152,8 @@ class DirectoryListener
     }
 
     /**
+     * Creates a new directory.
+     *
      * @DI\Observe("resource.directory.create")
      *
      * @param CreateResourceEvent $event
@@ -156,13 +166,18 @@ class DirectoryListener
     /**
      * Loads a directory.
      *
-     * @DI\Observe("load_directory")
+     * @DI\Observe("resource.directory.load")
      *
      * @param LoadResourceEvent $event
      */
     public function onLoad(LoadResourceEvent $event)
     {
-        $event->setAdditionalData([
+        $workspace = $event->getResourceNode()->getWorkspace();
+
+        $event->setData([
+            'root' => $workspace ? $this->serializer->serialize(
+                $this->resourceManager->getWorkspaceRoot($workspace)
+            ) : null,
             'directory' => $this->serializer->serialize($event->getResource()),
         ]);
 
@@ -181,7 +196,7 @@ class DirectoryListener
         $directory = $event->getResource();
 
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Directory:index.html.twig', [
+            'ClarolineCoreBundle:directory:index.html.twig', [
                 'directory' => $directory,
                 '_resource' => $directory,
             ]
@@ -215,6 +230,9 @@ class DirectoryListener
     public function onCopy(CopyResourceEvent $event)
     {
         $resourceCopy = new Directory();
+
+        // TODO : implement
+
         $event->setCopy($resourceCopy);
     }
 }

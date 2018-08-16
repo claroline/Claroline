@@ -1,7 +1,6 @@
 {
   "webpack": {
     "entry": {
-      "lesson": "resources/lesson/bootstrap"
     }
   },
 

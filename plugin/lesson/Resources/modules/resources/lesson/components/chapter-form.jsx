@@ -12,10 +12,12 @@ import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/core/translation'
 import {constants} from '#/plugin/lesson/resources/lesson/constants'
-import {buildParentChapterChoices} from '#/plugin/lesson/resources/lesson/components/tree/utils'
-import {actions as lessonActions} from '#/plugin/lesson/resources/lesson/store/'
-import {MODAL_LESSON_CHAPTER_DELETE} from '#/plugin/lesson/resources/lesson/player/modals/chapter'
+import {buildParentChapterChoices} from '#/plugin/lesson/resources/lesson/utils'
+import {actions as lessonActions} from '#/plugin/lesson/resources/lesson/store'
+import {MODAL_LESSON_CHAPTER_DELETE} from '#/plugin/lesson/resources/lesson/modals/chapter'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
+
+import {selectors} from '#/plugin/lesson/resources/lesson/store'
 
 // todo : use standard form buttons
 
@@ -143,10 +145,10 @@ const ChapterFormComponent = props =>
 
 const ChapterForm = withRouter(connect(
   state => ({
-    lesson: state.lesson,
-    chapter: state.chapter,
-    tree: state.tree.data,
-    mode: state.mode,
+    lesson: selectors.lesson(state),
+    chapter: selectors.chapter(state),
+    tree: selectors.treeData(state),
+    mode: selectors.mode(state),
     saveEnabled: formSelect.saveEnabled(formSelect.form(state, constants.CHAPTER_EDIT_FORM_NAME)),
     isNew: formSelect.isNew(formSelect.form(state, constants.CHAPTER_EDIT_FORM_NAME)),
     parentSlug: formSelect.data(formSelect.form(state, constants.CHAPTER_EDIT_FORM_NAME)).parentSlug || null,

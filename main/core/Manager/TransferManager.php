@@ -330,7 +330,7 @@ class TransferManager
 
         $dir = new Directory();
         $dir->setName($workspace->getName());
-        $dir->setIsUploadDestination(true);
+        $dir->setUploadDestination(true);
 
         $root = $this->container->get('claroline.manager.resource_manager')->create(
             $dir,

@@ -17,11 +17,15 @@ const action = (resourceNodes, nodesRefresher) => ({ // todo collection
   } : undefined,
   request: {
     type: 'unpublish',
-    url: ['claro_resource_node_unpublish', {ids: resourceNodes.map(node => node.id)}],
+    url: ['claro_resource_action', {
+      type: resourceNodes[0].meta.type,
+      action: 'unpublish',
+      id: resourceNodes[0].id
+    }],
     request: {
       method: 'PUT'
     },
-    success: (response) => nodesRefresher.update(response)
+    success: (response) => nodesRefresher.update([response])
   }
 })
 

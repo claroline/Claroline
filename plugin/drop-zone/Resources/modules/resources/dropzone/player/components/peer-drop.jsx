@@ -5,17 +5,18 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/core/translation'
 
 import {DropzoneType, DropType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
-import {select} from '#/plugin/drop-zone/resources/dropzone/selectors'
+import {select} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 import {generateCorrectionGrades} from '#/plugin/drop-zone/resources/dropzone/utils'
 import {actions} from '#/plugin/drop-zone/resources/dropzone/player/actions'
 import {actions as correctionActions} from '#/plugin/drop-zone/resources/dropzone/correction/actions'
-import {Documents} from '#/plugin/drop-zone/resources/dropzone/components/documents.jsx'
-import {CorrectionForm} from '#/plugin/drop-zone/resources/dropzone/correction/components/correction-form.jsx'
+import {Documents} from '#/plugin/drop-zone/resources/dropzone/components/documents'
+import {CorrectionForm} from '#/plugin/drop-zone/resources/dropzone/correction/components/correction-form'
 
 class PeerDrop extends Component {
   constructor(props) {
     super(props)
+
     this.saveCorrection = this.saveCorrection.bind(this)
     this.cancelCorrection = this.cancelCorrection.bind(this)
   }

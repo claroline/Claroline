@@ -1,0 +1,126 @@
+import {createSelector} from 'reselect'
+
+const STORE_NAME = 'resource'
+
+const resource = (state) => state[STORE_NAME]
+
+const forum = createSelector(
+  [resource],
+  (resource) => resource.forum
+)
+
+const subjects = createSelector(
+  [resource],
+  (resource) => resource.subjects
+)
+
+const messages = createSelector(
+  [subjects],
+  (subjects) => subjects.messages
+)
+
+const currentPage = createSelector(
+  [messages],
+  (messages) => messages.currentPage
+)
+const totalResults = createSelector(
+  [messages],
+  (messages) => messages.totalResults
+)
+const sortOrder = createSelector(
+  [messages],
+  (messages) => messages.sortOrder
+)
+
+const lastMessages = createSelector(
+  [resource],
+  (resource) => resource.lastMessages
+)
+
+const restrictions = createSelector(
+  [forum],
+  (forum) => forum.restrictions
+)
+const meta = createSelector(
+  [forum],
+  (forum) => forum.meta
+)
+
+const bannedUser = createSelector(
+  [restrictions],
+  (restrictions) => restrictions.bannedUser
+)
+const moderator = createSelector(
+  [restrictions],
+  (restrictions) => restrictions.moderator
+)
+
+const myMessages = createSelector(
+  [meta],
+  (meta) => meta.myMessages
+)
+
+const subject = createSelector(
+  [subjects],
+  (subjects) => subjects.current
+)
+
+const editingSubject = createSelector(
+  [subjects],
+  (subjects) => subjects.form.editingSubject
+)
+const closedSubject = createSelector(
+  [subject],
+  (subject) => subject.meta.closed
+)
+const showSubjectForm = createSelector(
+  [subjects],
+  (subjects) => subjects.form.showSubjectForm
+)
+
+const forumId = createSelector(
+  [forum],
+  (forum) => forum.id
+)
+
+const visibleMessages = createSelector(
+  [messages],
+  (messages) => messages.data.filter(message => 'NONE' === message.meta.moderation)
+)
+const moderatedMessages = createSelector(
+  [messages],
+  (messages) => messages.data.filter(message => 'NONE' !== message.meta.moderation)
+)
+
+const tagsCount = createSelector(
+  [forum],
+  (forum) => forum.meta.tags.reduce((obj, tag) => {
+    if (!obj[tag]) {
+      obj[tag] = 0
+    }
+    obj[tag]++
+    return obj
+  }, {})
+)
+
+export const select = {
+  STORE_NAME,
+  resource,
+  forum,
+  subject,
+  messages,
+  totalResults,
+  forumId,
+  currentPage,
+  sortOrder,
+  bannedUser,
+  moderator,
+  showSubjectForm,
+  editingSubject,
+  closedSubject,
+  visibleMessages,
+  moderatedMessages,
+  tagsCount,
+  lastMessages,
+  myMessages
+}

@@ -1,5 +1,8 @@
 import cloneDeep from 'lodash/cloneDeep'
+
 import {makeReducer} from '#/main/app/store/reducer'
+
+import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
 import {
   MY_DROP_LOAD,
@@ -17,9 +20,8 @@ import {
 } from '#/plugin/drop-zone/resources/dropzone/correction/actions'
 
 const myDropReducer = makeReducer({}, {
-  [MY_DROP_LOAD]: (state, action) => {
-    return action.drop
-  },
+  [RESOURCE_LOAD]: (state, action) => action.resourceData.myDrop,
+  [MY_DROP_LOAD]: (state, action) => action.drop,
   [MY_DROP_UPDATE]: (state, action) => {
     return Object.assign({}, state, {[action.property]: action.value})
   },
@@ -71,6 +73,7 @@ const myDropReducer = makeReducer({}, {
 })
 
 const nbCorrectionsReducer = makeReducer({}, {
+  [RESOURCE_LOAD]: (state, action) => action.resourceData.nbCorrections,
   [PEER_DROPS_INC]: (state) => {
     return state + 1
   }

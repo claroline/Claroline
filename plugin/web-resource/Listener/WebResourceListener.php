@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
-use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use Claroline\WebResourceBundle\Manager\WebResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -70,7 +69,7 @@ class WebResourceListener
      *
      * @param \Claroline\CoreBundle\Event\CreateResourceEvent|\Claroline\CoreBundle\Event\Resource\OpenResourceEvent $event
      */
-    public function onOpenWebResource(OpenResourceEvent $event)
+    public function onOpen(OpenResourceEvent $event)
     {
         $hash = $event->getResource()->getHashName();
         $workspace = $event->getResource()->getResourceNode()->getWorkspace();
@@ -79,7 +78,7 @@ class WebResourceListener
             'ClarolineWebResourceBundle:web-resource:open.html.twig',
             [
                 'workspace' => $workspace,
-                'path' => $hash.DIRECTORY_SEPARATOR.$this->webResourceManager->guessRootFileFromUnzipped($zipPath.$hash),
+                'path' => $zipPath.$hash.DIRECTORY_SEPARATOR.$this->webResourceManager->guessRootFileFromUnzipped($zipPath.$hash),
                 '_resource' => $event->getResource(),
             ]
         );
@@ -89,45 +88,18 @@ class WebResourceListener
     }
 
     /**
-     * @DI\Observe("load_claroline_web_resource")
+     * @DI\Observe("resource.claroline_web_resource.load")
      *
      * @param LoadResourceEvent $event
      */
-    public function onLoadWebResource(LoadResourceEvent $event)
+    public function onLoad(LoadResourceEvent $event)
     {
         $hash = $event->getResource()->getHashName();
         $workspace = $event->getResource()->getResourceNode()->getWorkspace();
         $zipPath = $this->container->getParameter('claroline.param.uploads_directory').DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR;
-        $event->setAdditionalData([
-              'path' => $hash.DIRECTORY_SEPARATOR.$this->webResourceManager->guessRootFileFromUnzipped($zipPath.$hash),
-            ]);
-
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("export_scorm_claroline_web_resource")
-     *
-     * @param ExportScormResourceEvent $event
-     */
-    public function onExportScorm(ExportScormResourceEvent $event)
-    {
-        $resource = $event->getResource();
-        $hash = $resource->getHashName();
-        $filename = 'file_'.$resource->getResourceNode()->getId();
-
-        $template = $this->container->get('templating')->render(
-            'ClarolineWebResourceBundle:Scorm:export.html.twig',
-            [
-                'path' => $filename.'/'.$this->guessRootFileFromUnzipped($this->zipPath.$hash),
-                '_resource' => $event->getResource(),
-            ]
-        );
-
-        // Set export template
-        $event->setTemplate($template);
-
-        $event->addFile($filename, $this->zipPath.$hash, true);
+        $event->setData([
+          'path' => $zipPath.$hash.DIRECTORY_SEPARATOR.$this->webResourceManager->guessRootFileFromUnzipped($zipPath.$hash),
+        ]);
 
         $event->stopPropagation();
     }

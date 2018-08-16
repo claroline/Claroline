@@ -36,7 +36,7 @@ EmptyPlaceholder.propTypes = {
   title: T.string.isRequired,
   help: T.string,
   size: T.oneOf(['sm', 'lg']),
-  children: T.element
+  children: T.node
 }
 
 EmptyPlaceholder.defaultProps = {

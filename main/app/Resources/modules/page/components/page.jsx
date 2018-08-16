@@ -2,6 +2,7 @@ import React from 'react'
 import classes from 'classnames'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
+import {theme} from '#/main/app/config'
 
 import {Router} from '#/main/app/router'
 import {ModalOverlay} from '#/main/app/overlay/modal/containers/overlay'
@@ -32,8 +33,9 @@ PageWrapper.propTypes = {
  */
 const Page = props =>
   <PageWrapper
+    styles={props.styles}
     embedded={props.embedded}
-    className={classes(props.size, {
+    className={classes(props.className, props.size, {
       fullscreen: props.fullscreen,
       main: !props.embedded,
       embedded: props.embedded
@@ -55,6 +57,10 @@ const Page = props =>
     </div>
 
     <ModalOverlay />
+
+    {props.styles.map(styleName =>
+      <link key={styleName} rel="stylesheet" type="text/css" href={theme(styleName)} />
+    )}
   </PageWrapper>
 
 

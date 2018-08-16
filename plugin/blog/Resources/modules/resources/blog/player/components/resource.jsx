@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
 import {url} from '#/main/app/api'
-import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
+import {ResourcePage} from '#/main/core/resource/containers/page'
 import {RoutedPageContent} from '#/main/core/layout/router'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
@@ -15,7 +15,7 @@ import {Moderation} from '#/plugin/blog/resources/blog/moderation/components/mod
 import {Player} from '#/plugin/blog/resources/blog/player/components/player'
 
 const Blog = props =>
-  <ResourcePageContainer
+  <ResourcePage
     primaryAction="post"
     customActions={[
       {
@@ -62,7 +62,7 @@ const Blog = props =>
         component: Player
       }
     ]}/>
-  </ResourcePageContainer>
+  </ResourcePage>
 
 Blog.propTypes = {
   blogId: T.string.isRequired,

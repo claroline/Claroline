@@ -4,8 +4,6 @@ namespace UJM\ExoBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
@@ -17,13 +15,11 @@ use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactory;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Form\Type\ExerciseType;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Manager\DocimologyManager;
 use UJM\ExoBundle\Manager\ExerciseManager;
@@ -117,69 +113,9 @@ class ExerciseListener
     }
 
     /**
-     * Displays a form to create an Exercise resource.
-     *
-     * @DI\Observe("create_form_ujm_exercise")
-     *
-     * @param CreateFormResourceEvent $event
-     */
-    public function onCreateForm(CreateFormResourceEvent $event)
-    {
-        /** @var FormInterface $form */
-        $form = $this->formFactory->create(new ExerciseType());
-
-        $content = $this->templating->render(
-            'ClarolineCoreBundle:resource:create_form.html.twig', [
-                'resourceType' => 'ujm_exercise',
-                'form' => $form->createView(),
-            ]
-        );
-
-        $event->setResponseContent($content);
-        $event->stopPropagation();
-    }
-
-    /**
-     * Creates a new Exercise resource.
-     *
-     * @DI\Observe("create_ujm_exercise")
-     *
-     * @param CreateResourceEvent $event
-     */
-    public function onCreate(CreateResourceEvent $event)
-    {
-        /** @var FormInterface $form */
-        $form = $this->formFactory->create(new ExerciseType());
-        $request = $this->request->getMasterRequest();
-
-        $form->handleRequest($request);
-        if ($form->isValid()) {
-            $exercise = $form->getData();
-            $published = (bool) $form->get('published')->getData();
-            $exercise->setPublishedOnce($published);
-            $event->setPublished($published);
-
-            $this->om->persist($exercise);
-
-            $event->setResources([$exercise]);
-        } else {
-            $content = $this->templating->render(
-                'ClarolineCoreBundle:resource:create_form.html.twig', [
-                    'resourceType' => 'ujm_exercise',
-                    'form' => $form->createView(),
-                ]
-            );
-
-            $event->setErrorFormContent($content);
-        }
-
-        $event->stopPropagation();
-    }
-
-    /**
      * Loads the Exercise resource.
      *
-     * @DI\Observe("load_ujm_exercise")
+     * @DI\Observe("resource.ujm_exercise.load")
      *
      * @param LoadResourceEvent $event
      */
@@ -191,12 +127,12 @@ class ExerciseListener
 
         $canEdit = $this->authorization->isGranted('EDIT', new ResourceCollection([$exercise->getResourceNode()]));
 
-        $event->setAdditionalData([
+        $event->setData([
             'quiz' => $this->exerciseManager->serialize(
                 $exercise,
                 $canEdit ? [Transfer::INCLUDE_SOLUTIONS, Transfer::INCLUDE_METRICS] : [Transfer::INCLUDE_METRICS]
             ),
-            'evaluation' => 'anon.' === $user ?
+            'userEvaluation' => 'anon.' === $user ?
                 null :
                 $this->serializer->serialize(
                     $this->resourceEvalManager->getResourceUserEvaluation($exercise->getResourceNode(), $user)
@@ -229,7 +165,7 @@ class ExerciseListener
                 ),
                 'userEvaluation' => 'anon.' === $user ?
                     null :
-                    $this->resourceEvalManager->getResourceUserEvaluation($exercise->getResourceNode(), $user)
+                    $this->resourceEvalManager->getResourceUserEvaluation($exercise->getResourceNode(), $user),
             ]
         );
 

@@ -4,14 +4,14 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-
-import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
-import {Text as TextTypes} from '#/main/core/resources/text/prop-types'
 import {FormData} from '#/main/app/content/form/containers/data'
+
+import {selectors} from '#/main/core/resources/text/editor/store'
+import {Text as TextTypes} from '#/main/core/resources/text/prop-types'
 
 const EditorComponent = (props) =>
   <FormData
-    name="textForm"
+    name={selectors.FORM_NAME}
     target={['apiv2_resource_text_update', {id: props.text.id}]}
     buttons={true}
     cancel={{
@@ -47,7 +47,7 @@ EditorComponent.propTypes = {
 
 const Editor = connect(
   state => ({
-    text: formSelect.data(formSelect.form(state, 'textForm'))
+    text: selectors.text(state)
   })
 )(EditorComponent)
 

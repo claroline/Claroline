@@ -13,7 +13,7 @@ import {actions as listActions} from '#/main/app/content/list/store'
 import {TagCloud} from '#/main/app/content/meta/components/tag-cloud'
 
 import {Forum as ForumType} from '#/plugin/forum/resources/forum/prop-types'
-import {select} from '#/plugin/forum/resources/forum/selectors'
+import {select} from '#/plugin/forum/resources/forum/store/selectors'
 import {LastMessages} from '#/plugin/forum/resources/forum/overview/components/last-messages'
 import {ForumInfo} from '#/plugin/forum/resources/forum/overview/components/forum-info'
 
@@ -119,8 +119,8 @@ const Overview = connect(
   }),
   dispatch =>({
     goToList(tag) {
-      dispatch(listActions.addFilter('subjects.list', 'tags', tag))
-      dispatch(listActions.invalidateData('subjects.list'))
+      dispatch(listActions.addFilter(`${select.STORE_NAME}.subjects.list`, 'tags', tag))
+      dispatch(listActions.invalidateData(`${select.STORE_NAME}.subjects.list`))
     }
   })
 )(OverviewComponent)

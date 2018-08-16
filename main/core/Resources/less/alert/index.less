@@ -1,0 +1,23 @@
+
+@import "block";
+@import "flying";
+
+// these are kept for old ui, it will be removed later
+.alert-fixed {
+    width: 94%;
+    position: fixed;
+    z-index: 10000; /* @todo: somehow find a "good" z-index */
+    top: 65px;
+    left: 3%;
+    text-align: center;
+}
+
+.alert-claroline-danger {
+    .alert-fixed;
+    top: 35px;
+}
+
+.alert-email-confirm {
+    .alert-fixed;
+    top: 35px;
+}

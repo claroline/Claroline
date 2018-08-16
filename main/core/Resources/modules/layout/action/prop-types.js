@@ -1,9 +1,14 @@
 import {PropTypes as T} from 'prop-types'
 
+// TODO : remove me
+
 /**
  * Definition af an UI action.
  *
  * @type {object}
+ *
+ * @deprecated this is the old action format, the new one is located in #/main/app/action and
+ * is slightly different.
  */
 const Action = {
   propTypes: {

@@ -92,7 +92,7 @@ class ResourceNodeSerializer
             'thumbnail' => $resourceNode->getThumbnail() ? $resourceNode->getThumbnail()->getRelativeUrl() : null,
             'meta' => $this->serializeMeta($resourceNode, $options),
             'permissions' => $this->rightsManager->getCurrentPermissionArray($resourceNode),
-
+            'poster' => $this->serializePoster($resourceNode),
             // TODO : it should not be available in minimal mode
             // for now I need it to compute simple access rights (for display)
             // we should compute simple access here to avoid exposing this big object
@@ -111,7 +111,6 @@ class ResourceNodeSerializer
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serializedNode = array_merge($serializedNode, [
-                'poster' => $this->serializePoster($resourceNode),
                 'display' => $this->serializeDisplay($resourceNode),
                 'restrictions' => $this->serializeRestrictions($resourceNode),
             ]);
@@ -203,6 +202,7 @@ class ResourceNodeSerializer
             'created' => DateNormalizer::normalize($resourceNode->getCreationDate()),
             'updated' => DateNormalizer::normalize($resourceNode->getModificationDate()),
             'published' => $resourceNode->isPublished(),
+            'active' => $resourceNode->isActive(),
             'views' => $resourceNode->getViewsCount(),
         ];
 
@@ -211,7 +211,6 @@ class ResourceNodeSerializer
                 'authors' => $resourceNode->getAuthor(),
                 'license' => $resourceNode->getLicense(),
                 'portal' => $resourceNode->isPublishedToPortal(),
-                'isManager' => $this->rightsManager->isManager($resourceNode), // todo : data about current user should not be here (should be in `rights` section)
             ]);
         }
 

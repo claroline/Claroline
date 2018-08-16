@@ -1,5 +1,6 @@
 {
   "add": "Ajouter",
+  "administrate": "Administrer",
   "cancel": "Annuler",
   "click_here": "Cliquez ici",
   "collapse": "Replier",
@@ -31,6 +32,7 @@
   "replace": "Remplacer",
   "reply": "Répondre",
   "restart": "Recommencer",
+  "restore": "Restaurer",
   "save": "Sauvegarder",
   "select": "Sélectionner",
   "send": "Envoyer",

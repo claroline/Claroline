@@ -3,26 +3,17 @@ import isEmpty from 'lodash/isEmpty'
 
 import {constants} from '#/main/core/resource/constants'
 
-const STORE_NAME = 'resource'
+const embedded = (state) => state.embedded
 
-const resource = (state) => state[STORE_NAME]
+const managed = (state) => state.managed
 
-const embedded = createSelector(
-  [resource],
-  (resource) => resource.embedded
-)
+const loaded = (state) => state.loaded
 
 // lifecycle selectors
-const resourceLifecycle = createSelector(
-  [resource],
-  (resource) => resource.lifecycle
-)
+const resourceLifecycle = (state) => state.lifecycle
 
 // node selectors
-const resourceNode = createSelector(
-  [resource],
-  (resource) => resource.node
-)
+const resourceNode = (state) => state.resourceNode
 
 const parent = createSelector(
   [resourceNode],
@@ -39,11 +30,16 @@ const published = createSelector(
   (meta) => meta.published
 )
 
-// evaluation selectors
-const resourceEvaluation = createSelector(
-  [resource],
-  (resource) => resource.evaluation
+const resourceType = createSelector(
+  [meta],
+  (meta) => meta.type
 )
+
+// access restrictions selectors
+const accessErrors = (state) => !state.accessErrors.dismissed && !isEmpty(state.accessErrors.details) ? state.accessErrors.details : {}
+
+// evaluation selectors
+const resourceEvaluation = (state) => state.userEvaluation
 
 const evaluationStatus = createSelector(
   [resourceEvaluation],
@@ -73,16 +69,19 @@ const isSuccessful = createSelector(
 )
 
 export const selectors = {
-  STORE_NAME,
-  resource,
   embedded,
+  managed,
+  loaded,
   // lifecycle
   resourceLifecycle,
+  // access restrictions
+  accessErrors,
   // node
   resourceNode,
   parent,
   meta,
   published,
+  resourceType,
   // evaluation
   resourceEvaluation,
   hasEvaluation,

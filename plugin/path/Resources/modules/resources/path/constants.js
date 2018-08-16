@@ -13,7 +13,7 @@ const AVAILABLE_EMBEDDED_RESOURCES = [
   'innova_path',
   'icap_bibliography',
   'icap_blog',
-  'icap_website',
+  'icap_lesson',
   'icap_wiki',
   'text',
   'ujm_exercise'

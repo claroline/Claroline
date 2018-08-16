@@ -6,15 +6,15 @@ import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'
 
-import {select} from '#/plugin/forum/resources/forum/selectors'
-import {actions} from '#/plugin/forum/resources/forum/actions'
+import {select} from '#/plugin/forum/resources/forum/store/selectors'
+import {actions} from '#/plugin/forum/resources/forum/store/actions'
 import {MessageCard} from '#/plugin/forum/resources/forum/data/components/message-card'
 
 const BlockedMessagesComponent = (props) =>
   <div>
     <h2>{trans('moderated_posts', {}, 'forum')}</h2>
     <ListData
-      name="moderation.blockedMessages"
+      name={`${select.STORE_NAME}.moderation.blockedMessages`}
       fetch={{
         url: ['apiv2_forum_message_blocked_list', {forum: props.forum.id}],
         autoload: true

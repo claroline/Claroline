@@ -1,10 +1,4 @@
 {
-  "webpack": {
-    "entry": {
-      "announcement-resource": "resources/announcement/bootstrap"
-    }
-  },
-
   "styles": {
     "entry": {
       "announcement-resource": "resources/announcement.less"

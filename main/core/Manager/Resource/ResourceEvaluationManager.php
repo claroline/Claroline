@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Manager\Resource;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -247,6 +248,14 @@ class ResourceEvaluationManager
         $this->persistResourceUserEvaluation($rue);
     }
 
+    /**
+     * @param ResourceNode   $node
+     * @param User           $user
+     * @param array          $actions
+     * @param \DateTime|null $startDate
+     *
+     * @return Log[]
+     */
     public function getLogsForResourceTracking(ResourceNode $node, User $user, array $actions, \DateTime $startDate = null)
     {
         return $this->logRepo->findLogsForResourceTracking($node, $user, $actions, $startDate);

@@ -4,21 +4,23 @@ import {connect} from 'react-redux'
 import {Row, Col} from 'react-bootstrap'
 
 import {trans} from '#/main/core/translation'
-import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {DetailsData} from '#/main/app/content/details/containers/data'
+
+import {selectors} from '#/plugin/bibliography/resources/book-reference/store'
 
 const PlayerComponent = props =>
   <Row>
     {props.bookReference.cover &&
-    <Col md={3}>
-      <img
-        className={'img-responsive'}
-        src={props.bookReference.cover}
-        alt={trans('cover', {}, 'icap_bibliography')}
-        title={trans('cover', {}, 'icap_bibliography')}
-      />
-    </Col>
+      <Col md={3}>
+        <img
+          className={'img-responsive'}
+          src={props.bookReference.cover}
+          alt={trans('cover', {}, 'icap_bibliography')}
+          title={trans('cover', {}, 'icap_bibliography')}
+        />
+      </Col>
     }
+
     <Col md={props.bookReference.cover ? 9 : 12}>
       <DetailsData
         level={3}
@@ -86,7 +88,7 @@ PlayerComponent.propTypes = {
 
 const Player = connect(
   state => ({
-    bookReference: formSelect.data(formSelect.form(state, 'bookReference'))
+    bookReference: selectors.bookReferenceOriginal(state)
   })
 )(PlayerComponent)
 

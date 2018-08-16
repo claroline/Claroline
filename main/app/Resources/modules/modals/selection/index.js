@@ -5,7 +5,7 @@
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {SelectionModal} from '#/main/app/modals/selection/components/selection'
+import {SelectionModal} from '#/main/app/modals/selection/components/modal'
 
 const MODAL_SELECTION = 'MODAL_SELECTION'
 

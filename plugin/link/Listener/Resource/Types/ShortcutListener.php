@@ -49,7 +49,7 @@ class ShortcutListener
      * Loads a shortcut.
      * It forwards the event to the target of the shortcut.
      *
-     * @DI\Observe("load_resource_shortcut")
+     * @DI\Observe("resource.shortcut.load")
      *
      * @param LoadResourceEvent $event
      */
@@ -114,12 +114,6 @@ class ShortcutListener
      */
     public function copy(CopyResourceEvent $event)
     {
-        /* @var Shortcut $shortcut */
-        /*$shortcut = $event->getResource();
-
-        $copy = new ResourceShortcut();
-        $copy->setTarget($shortcut->getTarget());
-
-        $event->setCopy($copy);*/
+        // TODO : implement
     }
 }

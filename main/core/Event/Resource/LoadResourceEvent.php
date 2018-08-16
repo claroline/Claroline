@@ -67,13 +67,13 @@ class LoadResourceEvent extends Event implements MandatoryEventInterface, DataCo
      *
      * @param array $data
      */
-    public function setAdditionalData(array $data)
+    public function setData(array $data)
     {
         $this->data = $data;
         $this->isPopulated = true;
     }
 
-    public function getAdditionalData()
+    public function getData()
     {
         return $this->data;
     }

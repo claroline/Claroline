@@ -3,12 +3,10 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {hasPermission} from '#/main/core/resource/permissions'
 import {url} from '#/main/app/api'
-import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
-import {actions as formActions} from '#/main/app/content/form/store/actions'
-import {ResourcePageContainer} from '#/main/core/resource/containers/page'
+
+import {actions as formActions} from '#/main/app/content/form/store'
+import {ResourcePage} from '#/main/core/resource/containers/page'
 import {RoutedPageContent} from '#/main/core/layout/router'
 import {DOWNLOAD_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
@@ -19,14 +17,11 @@ import {VersionDetail} from '#/plugin/wiki/resources/wiki/history/components/ver
 import {VersionCompare} from '#/plugin/wiki/resources/wiki/history/components/version-compare'
 import {DeletedSections} from '#/plugin/wiki/resources/wiki/deleted/components/deleted-sections'
 import {actions as historyActions} from '#/plugin/wiki/resources/wiki/history/store'
+import {selectors} from '#/plugin/wiki/resources/wiki/store'
 
 const Resource = props =>
-  <ResourcePageContainer
+  <ResourcePage
     primaryAction="create-section"
-    editor={{
-      path: '/edit',
-      label: trans('configure', {}, 'platform')
-    }}
     customActions={[
       {
         type: LINK_BUTTON,
@@ -93,13 +88,12 @@ const Resource = props =>
         }
       ]}
     />
-  </ResourcePageContainer>
+  </ResourcePage>
 
 Resource.propTypes = {
   canEdit: T.bool.isRequired,
   canExport: T.bool.isRequired,
   wiki: T.object.isRequired,
-  saveEnabled: T.bool.isRequired,
   resetForm: T.func.isRequired,
   setCurrentHistorySection: T.func.isRequired,
   setCurrentHistoryVersion: T.func.isRequired,
@@ -108,10 +102,9 @@ Resource.propTypes = {
 
 const WikiResource = connect(
   (state) => ({
-    canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
-    canExport: hasPermission('export', resourceSelect.resourceNode(state)) && state.exportPdfEnabled,
-    wiki: state.wiki,
-    saveEnabled: formSelect.saveEnabled(formSelect.form(state, 'wikiForm'))
+    wiki: selectors.wiki(state),
+    canEdit: selectors.canEdit(state),
+    canExport: selectors.canExport(state)
   }),
   (dispatch) => ({
     resetForm: (formData) => dispatch(formActions.resetForm('wikiForm', formData)),

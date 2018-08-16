@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
 import {RoutedPageContent} from '#/main/core/layout/router'
-import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
+import {ResourcePage} from '#/main/core/resource/containers/page'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
 import {actions} from '../actions'
@@ -12,7 +12,7 @@ import {BBBContent} from './bbb-content.jsx'
 import {BBBConfig} from './bbb-config.jsx'
 
 const BBBResource = props =>
-  <ResourcePageContainer
+  <ResourcePage
     editor={{
       path: '/edit',
       save: {
@@ -34,7 +34,7 @@ const BBBResource = props =>
         }
       ]}
     />
-  </ResourcePageContainer>
+  </ResourcePage>
 
 BBBResource.propTypes = {
   location: T.shape({

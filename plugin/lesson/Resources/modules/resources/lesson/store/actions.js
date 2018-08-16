@@ -4,6 +4,9 @@ import {API_REQUEST} from '#/main/app/api'
 import {makeActionCreator} from '#/main/app/store/actions'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 
+export const SUMMARY_PIN_TOGGLE  = 'SUMMARY_PIN_TOGGLE'
+export const SUMMARY_OPEN_TOGGLE = 'SUMMARY_OPEN_TOGGLE'
+
 export const CHAPTER_LOAD      = 'CHAPTER_LOAD'
 export const CHAPTER_RESET     = 'CHAPTER_RESET'
 export const CHAPTER_CREATE    = 'CHAPTER_CREATE'

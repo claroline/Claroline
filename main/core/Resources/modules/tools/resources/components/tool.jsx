@@ -4,11 +4,11 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
 import {Page} from '#/main/app/page/components/page'
+import {URL_BUTTON} from '#/main/app/buttons'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {ResourceExplorer} from '#/main/core/resource/explorer/containers/explorer'
 import {getActions, getToolbar} from '#/main/core/resource/utils'
-import {hasPermission} from '#/main/core/resource/permissions'
 
 import {actions as explorerActions, selectors as explorerSelectors} from '#/main/core/resource/explorer/store'
 import {selectors} from '#/main/core/tools/resources/store'
@@ -27,12 +27,12 @@ const Tool = props =>
     <ResourceExplorer
       name={selectors.STORE_NAME}
       primaryAction={(resourceNode) => ({ // todo : use resource default action
-        type: 'url',
+        type: URL_BUTTON,
         label: trans('open', {}, 'actions'),
-        disabled: !hasPermission('open', resourceNode),
-        target: [ 'claro_resource_open', {
-          node: resourceNode.autoId,
-          resourceType: resourceNode.meta.type
+        //disabled: !hasPermission('open', resourceNode),
+        target: [ 'claro_resource_show', {
+          type: resourceNode.meta.type,
+          id: resourceNode.id
         }]
       })}
       actions={(resourceNodes) => getActions(resourceNodes, {

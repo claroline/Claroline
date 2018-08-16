@@ -2,14 +2,14 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
+import {ResourcePage} from '#/main/core/resource/containers/page.jsx'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {getPlainText} from '#/main/app/data/html/utils'
 
 const Resource = props =>
-  <ResourcePageContainer>
+  <ResourcePage>
     <HtmlText>{props.isHtml ? props.content : getPlainText(props.content)}</HtmlText>
-  </ResourcePageContainer>
+  </ResourcePage>
 
 Resource.propTypes = {
   content: T.string.isRequired,

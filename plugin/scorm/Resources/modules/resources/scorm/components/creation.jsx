@@ -6,6 +6,8 @@ import {trans} from '#/main/core/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {actions, selectors} from '#/main/core/resource/modals/creation/store'
 
+// TODO : should reuse the standard file resource creation
+
 const ScormForm = props =>
   <FormData
     level={5}

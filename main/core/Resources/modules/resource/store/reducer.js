@@ -3,17 +3,40 @@ import merge from 'lodash/merge'
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 
 import {
+  RESOURCE_LOAD,
   RESOURCE_UPDATE_NODE,
-  USER_EVALUATION_UPDATE
+  USER_EVALUATION_UPDATE,
+  RESOURCE_RESTRICTIONS_DISMISS,
+  RESOURCE_RESTRICTIONS_ERROR
 } from '#/main/core/resource/store/actions'
 
-const reducer = combineReducers({
+const reducer = {
+  loaded: makeReducer(false, {
+    [RESOURCE_LOAD]: () => true
+  }),
+
+  accessErrors: combineReducers({
+    dismissed: makeReducer(false, {
+      [RESOURCE_RESTRICTIONS_DISMISS]: () => true
+    }),
+    details: makeReducer({}, {
+      [RESOURCE_LOAD]: (state, action) => action.resourceData.accessErrors || {},
+      [RESOURCE_RESTRICTIONS_ERROR]: (state, action) => action.errors
+    })
+  }),
+
   embedded: makeReducer(false), // this can not be changed at runtime
+
+  managed: makeReducer(false, {
+    [RESOURCE_LOAD]: (state, action) => action.resourceData.managed || false
+  }),
 
   /**
    * Manages the ResourceNode of the resource.
    */
-  node: makeReducer({}, {
+  resourceNode: makeReducer({}, {
+    [RESOURCE_LOAD]: (state, action) => action.resourceData.resourceNode,
+
     /**
      * Updates the ResourceNode data.
      *
@@ -26,12 +49,13 @@ const reducer = combineReducers({
   /**
    * Manages current user's evaluation for the resource.
    */
-  evaluation: makeReducer(null, {
+  userEvaluation: makeReducer(null, {
+    [RESOURCE_LOAD]: (state, action) => action.resourceData.userEvaluation,
     [USER_EVALUATION_UPDATE]: (state, action) => action.userEvaluation
   }),
 
   lifecycle: makeReducer({})
-})
+}
 
 
 export {

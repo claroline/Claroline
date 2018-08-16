@@ -1,3 +1,5 @@
+import get from 'lodash/get'
+
 import {trans} from '#/main/core/translation'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 
@@ -6,6 +8,7 @@ const action = (resourceNodes, nodesRefresher) => ({ // todo collection
   type: ASYNC_BUTTON,
   icon: 'fa fa-fw fa-trash-o',
   label: trans('delete', {}, 'actions'),
+  displayed: -1 !== resourceNodes.findIndex(node => get(node, 'meta.active')),
   dangerous: true,
   confirm: {
     title: trans('resources_delete_confirm'),
@@ -13,7 +16,7 @@ const action = (resourceNodes, nodesRefresher) => ({ // todo collection
   },
   request: {
     url: ['claro_resource_action', {
-      resourceType: resourceNodes[0].meta.type,
+      type: resourceNodes[0].meta.type,
       action: 'delete',
       id: resourceNodes[0].id
     }],

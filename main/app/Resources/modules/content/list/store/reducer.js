@@ -86,7 +86,8 @@ const filtersReducer = makeInstanceReducer(defaultState.filters, {
     } else {
       newFilters.push({
         property: action.property,
-        value: action.value
+        value: action.value,
+        locked: action.locked
       })
     }
 

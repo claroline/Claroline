@@ -1,9 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-
 import {trans} from '#/main/core/translation'
-
 
 const MessagesSort = props =>
   <div>
@@ -18,7 +16,9 @@ const MessagesSort = props =>
         {trans(1 === props.sortOrder ? 'from_older_to_newer':'from_newer_to_older', {}, 'forum')}
       </button>
     </div>
+
     {props.children}
+
     {1 < props.pages &&
       <nav className="text-right">
         <div className="pagination-condensed btn-group">
@@ -59,7 +59,6 @@ MessagesSort.propTypes = {
   messages: T.arrayOf(T.shape({})),
   totalResults: T.number.isRequired
 }
-
 
 export {
   MessagesSort

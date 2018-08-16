@@ -8,6 +8,7 @@ import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
+import {select} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 import {DropzoneType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 
@@ -16,7 +17,7 @@ const EditorComponent = props =>
     <h2>{trans('configuration', {}, 'platform')}</h2>
     <FormData
       level={3}
-      name="dropzoneForm"
+      name={`${select.STORE_NAME}.dropzoneForm`}
       buttons={true}
       save={{
         type: CALLBACK_BUTTON,
@@ -273,14 +274,14 @@ EditorComponent.propTypes = {
 
 const Editor = connect(
   state => ({
-    dropzone: formSelect.data(formSelect.form(state, 'dropzoneForm'))
+    dropzone: formSelect.data(formSelect.form(state, `${select.STORE_NAME}.dropzoneForm`))
   }),
   dispatch => ({
     updateProp(propName, propValue) {
-      dispatch(formActions.updateProp('dropzoneForm', propName, propValue))
+      dispatch(formActions.updateProp(`${select.STORE_NAME}.dropzoneForm`, propName, propValue))
     },
     saveForm(dropzoneId) {
-      dispatch(formActions.saveForm('dropzoneForm', ['claro_dropzone_update', {id: dropzoneId}]))
+      dispatch(formActions.saveForm(`${select.STORE_NAME}.dropzoneForm`, ['claro_dropzone_update', {id: dropzoneId}]))
     }
   })
 )(EditorComponent)

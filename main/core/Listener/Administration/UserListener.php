@@ -8,7 +8,7 @@ use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use Claroline\CoreBundle\Event\User\MergeUsersEvent;
-use Claroline\CoreBundle\Manager\Resource\ResourceNodeManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
@@ -34,8 +34,8 @@ class UserListener
     /** @var ProfileSerializer */
     private $profileSerializer;
 
-    /** @var ResourceNodeManager */
-    private $resourceNodeManager;
+    /** @var ResourceManager */
+    private $resourceManager;
 
     /** @var UserManager */
     private $userManager;
@@ -48,7 +48,7 @@ class UserListener
      *     "finder"               = @DI\Inject("claroline.api.finder"),
      *     "parametersSerializer" = @DI\Inject("claroline.serializer.parameters"),
      *     "profileSerializer"    = @DI\Inject("claroline.serializer.profile"),
-     *     "resourceNodeManager"  = @DI\Inject("claroline.manager.resource_node"),
+     *     "resourceManager"      = @DI\Inject("claroline.manager.resource_manager"),
      *     "userManager"          = @DI\Inject("claroline.manager.user_manager")
      * })
      *
@@ -56,7 +56,7 @@ class UserListener
      * @param FinderProvider       $finder
      * @param ParametersSerializer $parametersSerializer
      * @param ProfileSerializer    $profileSerializer
-     * @param ResourceNodeManager  $resourceNodeManager
+     * @param ResourceManager      $resourceManager
      * @param UserManager          $userManager
      */
     public function __construct(
@@ -64,14 +64,14 @@ class UserListener
         FinderProvider $finder,
         ParametersSerializer $parametersSerializer,
         ProfileSerializer $profileSerializer,
-        ResourceNodeManager $resourceNodeManager,
+        ResourceManager $resourceManager,
         UserManager $userManager
     ) {
         $this->templating = $templating;
         $this->finder = $finder;
         $this->parametersSerializer = $parametersSerializer;
         $this->profileSerializer = $profileSerializer;
-        $this->resourceNodeManager = $resourceNodeManager;
+        $this->resourceManager = $resourceManager;
         $this->userManager = $userManager;
     }
 
@@ -107,7 +107,7 @@ class UserListener
     public function onMergeUsers(MergeUsersEvent $event)
     {
         // Replace creator of resource nodes
-        $resourcesCount = $this->resourceNodeManager->replaceCreator($event->getRemoved(), $event->getKept());
+        $resourcesCount = $this->resourceManager->replaceCreator($event->getRemoved(), $event->getKept());
         $event->addMessage("[CoreBundle] updated resources count: $resourcesCount");
 
         // Merge all roles onto user to keep

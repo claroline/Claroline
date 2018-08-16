@@ -21,59 +21,67 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
+/**
+ * @EXT\Route("/admin", options={"expose"=true})
+ */
 class AdministrationController extends Controller
 {
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
+
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
     /** @var StrictDispatcher */
     private $eventDispatcher;
 
     /** @var ToolManager */
     private $toolManager;
 
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
     /**
      * AdministrationController constructor.
      *
      * @DI\InjectParams({
-     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
-     *     "tokenStorage"    = @DI\Inject("security.token_storage")
+     *     "authorization"    = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"     = @DI\Inject("security.token_storage"),
+     *     "eventDispatcher"  = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "toolManager"      = @DI\Inject("claroline.manager.tool_manager")
      * })
      *
-     * @param StrictDispatcher      $eventDispatcher
-     * @param ToolManager           $toolManager
-     * @param TokenStorageInterface $tokenStorage
+     * @param AuthorizationCheckerInterface $authorization
+     * @param TokenStorageInterface         $tokenStorage
+     * @param StrictDispatcher              $eventDispatcher
+     * @param ToolManager                   $toolManager
      */
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
+        TokenStorageInterface $tokenStorage,
         StrictDispatcher $eventDispatcher,
-        ToolManager $toolManager,
-        TokenStorageInterface $tokenStorage
+        ToolManager $toolManager
     ) {
+        $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
         $this->toolManager = $toolManager;
         $this->tokenStorage = $tokenStorage;
     }
 
     /**
-     * @EXT\Route(
-     *     "/index",
-     *     name="claro_admin_index"
-     * )
+     * Opens the administration index.
      *
-     * Displays the administration section index.
+     * @EXT\Route("/", name="claro_admin_index")
      *
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @throws AccessDeniedException
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function indexAction()
     {
         $tools = $this->toolManager->getAdminToolsByRoles($this->tokenStorage->getToken()->getRoles());
 
-        if (count($tools) === 0) {
+        if (0 === count($tools)) {
             throw new AccessDeniedException();
         }
 
@@ -81,18 +89,22 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @EXT\Route(
-     *    "/open/{toolName}",
-     *    name="claro_admin_open_tool",
-     *    options = {"expose"=true}
-     * )
+     * Opens an administration tool.
+     *
+     * @EXT\Route("/open/{toolName}", name="claro_admin_open_tool")
      *
      * @param $toolName
      *
+     * @throws AccessDeniedException
+     *
      * @return Response
      */
-    public function openAdministrationToolAction($toolName)
+    public function openToolAction($toolName)
     {
+        if (!$this->authorization->isGranted($toolName)) {
+            throw new AccessDeniedException();
+        }
+
         /** @var OpenAdministrationToolEvent $event */
         $event = $this->eventDispatcher->dispatch(
             'administration_tool_'.$toolName,
@@ -128,7 +140,7 @@ class AdministrationController extends Controller
                 return [
                     'icon' => $tool->getClass(),
                     'name' => $tool->getName(),
-                    'open' => ['claro_admin_open_tool', ['toolName' => $tool->getName()]]
+                    'open' => ['claro_admin_open_tool', ['toolName' => $tool->getName()]],
                 ];
             }, $tools),
         ];

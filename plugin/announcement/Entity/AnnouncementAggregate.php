@@ -29,7 +29,8 @@ class AnnouncementAggregate extends AbstractResource
      *
      * @ORM\OneToMany(
      *     targetEntity="Claroline\AnnouncementBundle\Entity\Announcement",
-     *     mappedBy="aggregate"
+     *     mappedBy="aggregate",
+     *     cascade={"persist", "remove"}
      * )
      *
      * @var ArrayCollection|Announcement[]

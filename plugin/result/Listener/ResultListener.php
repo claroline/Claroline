@@ -11,14 +11,10 @@
 
 namespace Claroline\ResultBundle\Listener;
 
-use Claroline\CoreBundle\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Form\Handler\FormHandler;
-use Claroline\ResultBundle\Entity\Result;
-use Claroline\ResultBundle\Form\ResultType;
 use Claroline\ResultBundle\Manager\ResultManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,35 +70,6 @@ class ResultListener
     public function setRequest(Request $request)
     {
         $this->request = $request;
-    }
-
-    /**
-     * @DI\Observe("create_form_claroline_result")
-     *
-     * @param CreateFormResourceEvent $event
-     */
-    public function onCreateForm(CreateFormResourceEvent $event)
-    {
-        $view = $this->formHandler->getView(ResultType::class);
-        $event->setResponseContent($this->manager->getResultFormContent($view));
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("create_claroline_result")
-     *
-     * @param CreateResourceEvent $event
-     */
-    public function onCreate(CreateResourceEvent $event)
-    {
-        if ($this->formHandler->isValid(ResultType::class, $this->request, new Result())) {
-            $event->setResources([$this->manager->create($this->formHandler->getData())]);
-        } else {
-            $view = $this->formHandler->getView();
-            $event->setErrorFormContent($this->manager->getResultFormContent($view));
-        }
-
-        $event->stopPropagation();
     }
 
     /**

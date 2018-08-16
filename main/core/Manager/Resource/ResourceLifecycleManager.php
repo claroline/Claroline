@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
+use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Event\Resource\PublicationChangeEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceEvaluationEvent;
@@ -48,6 +49,14 @@ class ResourceLifecycleManager
 
     public function load(ResourceNode $resourceNode)
     {
+        /** @var LoadResourceEvent $event */
+        $event = $this->dispatcher->dispatch(
+            static::eventName('load', $resourceNode),
+            LoadResourceEvent::class,
+            [$this->getResourceFromNode($resourceNode)]
+        );
+
+        return $event;
     }
 
     public function create(ResourceNode $resourceNode)
@@ -63,7 +72,7 @@ class ResourceLifecycleManager
         /** @var OpenResourceEvent $event */
         $event = $this->dispatcher->dispatch(
             static::eventName('open', $resourceNode),
-            CopyResourceEvent::class,
+            OpenResourceEvent::class,
             [$this->getResourceFromNode($resourceNode)]
         );
 
@@ -72,7 +81,9 @@ class ResourceLifecycleManager
 
     public function edit(ResourceNode $resourceNode)
     {
-        /** @var OpenResourceEvent $event */
+        // fixme : wrong event
+
+        /** @var CopyResourceEvent $event */
         $event = $this->dispatcher->dispatch(
             static::eventName('edit', $resourceNode),
             CopyResourceEvent::class,
@@ -161,7 +172,7 @@ class ResourceLifecycleManager
      */
     private static function eventName($prefix, ResourceNode $resourceNode)
     {
-        return 'resource.'.$prefix.'.'.$resourceNode->getResourceType()->getName();
+        return 'resource.'.$resourceNode->getResourceType()->getName().'.'.$prefix;
     }
 
     /**
@@ -174,7 +185,9 @@ class ResourceLifecycleManager
     private function getResourceFromNode(ResourceNode $resourceNode)
     {
         /** @var AbstractResource $resource */
-        $resource = $this->om->getRepository($resourceNode->getClass())->findOneBy(['resourceNode' => $resourceNode]);
+        $resource = $this->om
+            ->getRepository($resourceNode->getClass())
+            ->findOneBy(['resourceNode' => $resourceNode]);
 
         return $resource;
     }

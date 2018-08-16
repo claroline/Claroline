@@ -25,7 +25,7 @@ use Claroline\CoreBundle\Event\Log\LogWorkspaceRoleDeleteEvent;
 use Claroline\CoreBundle\Event\LogCreateEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
-use Claroline\CoreBundle\Manager\Resource\ResourceNodeManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -40,7 +40,7 @@ class LogListener
     private $container;
     private $roleManager;
     private $ch;
-    private $resourceNodeManager;
+    private $resourceManager;
     private $resourceEvalManager;
 
     /**
@@ -50,7 +50,7 @@ class LogListener
      *     "container"           = @DI\Inject("service_container"),
      *     "roleManager"         = @DI\Inject("claroline.manager.role_manager"),
      *     "ch"                  = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "resourceNodeManager" = @DI\Inject("claroline.manager.resource_node"),
+     *     "resourceManager"     = @DI\Inject("claroline.manager.resource_manager"),
      *     "resourceEvalManager" = @DI\Inject("claroline.manager.resource_evaluation_manager")
      * })
      */
@@ -60,7 +60,7 @@ class LogListener
         $container,
         RoleManager $roleManager,
         PlatformConfigurationHandler $ch,
-        ResourceNodeManager $resourceNodeManager,
+        ResourceManager $resourceManager,
         ResourceEvaluationManager $resourceEvalManager
     ) {
         $this->om = $om;
@@ -69,7 +69,7 @@ class LogListener
         $this->roleManager = $roleManager;
         $this->ch = $ch;
         $this->enabledLog = $this->ch->getParameter('platform_log_enabled');
-        $this->resourceNodeManager = $resourceNodeManager;
+        $this->resourceManager = $resourceManager;
         $this->resourceEvalManager = $resourceEvalManager;
     }
 
@@ -302,7 +302,7 @@ class LogListener
             // Increment view count if viewer is not creator of the resource
             if (is_null($user) || is_string($user) || $user !== $event->getResource()->getCreator()) {
                 // TODO : add me in an event on the resource 'open'
-                $this->resourceNodeManager->addView($event->getResource());
+                $this->resourceManager->addView($event->getResource());
             }
             if ($logCreated && !empty($user) && 'anon.' !== $user && 'directory' !== $event->getResource()->getResourceType()->getName()) {
                 $this->resourceEvalManager->updateResourceUserEvaluationData(

@@ -1,16 +1,23 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/core/translation'
 import {Page} from '#/main/app/page/components/page'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
-import {UserEvaluation as UserEvaluationTypes} from '#/main/core/resource/prop-types'
-import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
+import {
+  ResourceNode as ResourceNodeTypes,
+  UserEvaluation as UserEvaluationTypes
+} from '#/main/core/resource/prop-types'
 import {getActions, getToolbar} from '#/main/core/resource/utils'
 
+import {ResourceRestrictions} from '#/main/core/resource/components/restrictions'
 import {UserProgression} from '#/main/core/resource/components/user-progression'
+
+// todo : manage fullscreen through store
 
 class ResourcePage extends Component {
   constructor(props) {
@@ -18,7 +25,19 @@ class ResourcePage extends Component {
 
     // open resource in fullscreen if configured
     this.state = {
-      fullscreen: !this.props.embedded && this.props.resourceNode.display.fullscreen
+      fullscreen: !this.props.embedded && get(this.props.resourceNode, 'display.fullscreen')
+    }
+  }
+
+  componentDidMount() {
+    this.props.loadResource(this.props.resourceNode)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // the resource has changed
+    if (this.props.resourceNode.id !== nextProps.resourceNode.id) {
+      // load the new one
+      this.props.loadResource(nextProps.resourceNode)
     }
   }
 
@@ -29,11 +48,13 @@ class ResourcePage extends Component {
   render() {
     return (
       <Page
+        className={classes('resource-page', `${this.props.resourceNode.meta.type}-page`)}
+        styles={this.props.styles}
         embedded={this.props.embedded}
         fullscreen={this.state.fullscreen}
         title={this.props.resourceNode.name}
         poster={this.props.resourceNode.poster ? this.props.resourceNode.poster.url : undefined}
-        icon={this.props.resourceNode.display.showIcon && this.props.userEvaluation &&
+        icon={get(this.props.resourceNode, 'display.showIcon') && this.props.userEvaluation &&
           <UserProgression
             userEvaluation={this.props.userEvaluation}
             width={70}
@@ -73,20 +94,39 @@ class ResourcePage extends Component {
           ])
         })}
       >
-        {this.props.children}
+        {this.props.loaded && !isEmpty(this.props.accessErrors) &&
+          <ResourceRestrictions
+            errors={this.props.accessErrors}
+            dismiss={this.props.dismissRestrictions}
+            managed={this.props.managed}
+          />
+        }
+
+        {this.props.loaded && isEmpty(this.props.accessErrors) &&
+          this.props.children
+        }
       </Page>
     )
   }
 }
 
 ResourcePage.propTypes = {
+  loaded: T.bool.isRequired,
+  embedded: T.bool,
+  managed: T.bool.isRequired,
+
   /**
    * The current resource node.
    */
   resourceNode: T.shape(
     ResourceNodeTypes.propTypes
   ).isRequired,
+
+  accessErrors: T.object,
+
   updateNode: T.func.isRequired,
+  loadResource: T.func.isRequired,
+  dismissRestrictions: T.func.isRequired,
 
   /**
    * The current user evaluation.
@@ -101,9 +141,7 @@ ResourcePage.propTypes = {
   customActions: T.arrayOf(T.shape(
     ActionTypes.propTypes
   )),
-
-  // todo : reuse Page propTypes
-  embedded: T.bool,
+  styles: T.arrayOf(T.string),
   children: T.node.isRequired
 }
 

@@ -10,8 +10,7 @@ import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder.jsx'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
 
-import {actions} from '#/plugin/announcement/resources/announcement/actions'
-import {select} from '#/plugin/announcement/resources/announcement/selectors'
+import {actions, selectors} from '#/plugin/announcement/resources/announcement/store'
 
 import {AnnouncePost} from './announce-post.jsx'
 
@@ -43,7 +42,7 @@ const AnnouncesList = props =>
     {0 === props.posts.length &&
       <EmptyPlaceholder
         size="lg"
-        icon="fa fa-frown-o"
+        icon="fa fa-bullhorn"
         title={trans('no_announcement', {}, 'announcement')}
       />
     }
@@ -95,11 +94,11 @@ AnnouncesList.propTypes = {
 
 const Announces = connect(
   state => ({
-    sortOrder: select.sortOrder(state),
-    currentPage: select.currentPage(state),
-    pages: select.pages(state),
-    aggregateId: select.aggregateId(state),
-    posts: select.visibleSortedPosts(state),
+    sortOrder: selectors.sortOrder(state),
+    currentPage: selectors.currentPage(state),
+    pages: selectors.pages(state),
+    aggregateId: selectors.aggregateId(state),
+    posts: selectors.visibleSortedPosts(state),
     editable: hasPermission('edit', resourceSelect.resourceNode(state)),
     deletable: hasPermission('delete', resourceSelect.resourceNode(state))
   }),

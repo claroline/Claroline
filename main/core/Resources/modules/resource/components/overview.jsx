@@ -7,11 +7,11 @@ import omit from 'lodash/omit'
 import {trans} from '#/main/core/translation'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {constants} from '#/main/core/resource/constants'
-import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
+import {HtmlText} from '#/main/core/layout/components/html-text'
 import {Button} from '#/main/app/action/components/button'
 import {Alert} from '#/main/app/alert/components/alert'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
-import {ScoreGauge} from '#/main/core/layout/evaluation/components/score-gauge.jsx'
+import {ScoreGauge} from '#/main/core/layout/evaluation/components/score-gauge'
 
 const UserProgression = props =>
   <section className="user-progression">

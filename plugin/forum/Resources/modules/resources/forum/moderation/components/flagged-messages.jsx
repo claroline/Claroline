@@ -7,13 +7,13 @@ import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'
 import {actions as listActions} from '#/main/app/content/list/store'
 
-import {actions} from '#/plugin/forum/resources/forum/player/actions'
-import {select} from '#/plugin/forum/resources/forum/selectors'
+import {actions} from '#/plugin/forum/resources/forum/player/store/actions'
+import {select} from '#/plugin/forum/resources/forum/store/selectors'
 import {MessageCard} from '#/plugin/forum/resources/forum/data/components/message-card'
 
 const FlaggedMessagesComponent = (props) =>
   <ListData
-    name="moderation.flaggedMessages"
+    name={`${select.STORE_NAME}.moderation.flaggedMessages`}
     fetch={{
       url: ['apiv2_forum_message_flagged_list', {forum: props.forum.id}],
       autoload: true
@@ -80,7 +80,7 @@ const FlaggedMessages = connect(
   dispatch => ({
     unFlag(message, subjectId) {
       dispatch(actions.unFlag(message, subjectId))
-      dispatch(listActions.invalidateData('moderation.flaggedMessages'))
+      dispatch(listActions.invalidateData(`${select.STORE_NAME}.moderation.flaggedMessages`))
     }
   })
 )(FlaggedMessagesComponent)

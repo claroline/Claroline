@@ -6,12 +6,13 @@ import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {constants} from '#/plugin/path/resources/path/constants'
+import {selectors} from '#/plugin/path/resources/path/editor/store'
 
 const ParametersForm = props =>
   <FormData
     level={3}
     displayLevel={2}
-    name="pathForm"
+    name={selectors.FORM_NAME}
     title={trans('parameters')}
     className="content-container"
     buttons={true}

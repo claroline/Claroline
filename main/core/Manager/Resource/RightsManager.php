@@ -697,6 +697,18 @@ class RightsManager
         $this->om->endFlushSuite();
     }
 
+    /**
+     * Checks if the current user is a manager of a resource.
+     *
+     * A user is a manager of a resource if :
+     *   - It is the creator of the resource
+     *   - It is the manager of the parent workspace
+     *   - It is a platform admin
+     *
+     * @param ResourceNode $resourceNode
+     *
+     * @return bool
+     */
     public function isManager(ResourceNode $resourceNode)
     {
         $token = $this->tokenStorage->getToken();
@@ -734,7 +746,7 @@ class RightsManager
     //maybe use that one in the voter later because it's going to be usefull
     public function getCurrentPermissionArray(ResourceNode $resourceNode)
     {
-        $currentRoles = $this->container->get('security.token_storage')->getToken()->getRoles();
+        $currentRoles = $this->tokenStorage->getToken()->getRoles();
 
         $roleNames = array_map(function (RoleInterface $roleName) {
             return $roleName->getRole();

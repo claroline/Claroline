@@ -1,0 +1,6 @@
+
+const reducer = {}
+
+export {
+  reducer
+}

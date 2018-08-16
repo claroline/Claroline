@@ -303,7 +303,6 @@ class ResourceNode
         $this->rights = new ArrayCollection();
         $this->children = new ArrayCollection();
         $this->logs = new ArrayCollection();
-        $this->fields = new ArrayCollection();
     }
 
     public function isHidden()

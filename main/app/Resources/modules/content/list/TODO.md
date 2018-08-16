@@ -1,7 +1,6 @@
 - [ ] implement better loader.
 - [ ] append list filters to URL.
 - [ ] add default filter select in search.
-- [ ] finish TreeData
 - [ ] add the possibility to override list translations
 - [ ] move grid inside another module
 - [ ] move table inside another module

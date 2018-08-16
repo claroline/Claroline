@@ -1,7 +1,7 @@
 import cloneDeep from 'lodash/cloneDeep'
 import merge from 'lodash/merge'
 
-import {makeReducer, makeInstanceReducer, combineReducers} from '#/main/app/store/reducer'
+import {makeReducer, makeInstanceReducer, combineReducers, reduceReducers} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
 
 import {
@@ -93,36 +93,14 @@ const directoriesReducer = makeInstanceReducer([], {
  *
  * @param {string} explorerName - the name of the explorer.
  * @param {object} initialState - the initial state of the explorer instance.
+ * @param {object} customReducer - an object containing custom reducer.
  *
  * @return {function}
  */
-function makeResourceExplorerReducer(explorerName, initialState = {}) {
+function makeResourceExplorerReducer(explorerName, initialState = {}, customReducer = {}) {
   const explorerState = merge({}, defaultState, initialState)
 
-  return combineReducers({
-    initialized: initializedReducer(explorerName, explorerState.initialized),
-
-    /**
-     * The root of the explorer instance.
-     *
-     * The user will not be able to go higher in the directory structure
-     * (most of the times it's used to store the WS root).
-     */
-    root: rootReducer(explorerName, explorerState.root),
-
-    /**
-     * The current displayed directory.
-     */
-    current: currentReducer(explorerName, explorerState.current),
-
-    /**
-     * The list of available directories.
-     *
-     * Each level is loaded on demand when the user uses directories nav,
-     * so you can not assert this contains the full directories list.
-     */
-    directories: directoriesReducer(explorerName, explorerState.directories),
-
+  const reducer = {
     /**
      * The list of resources for the current directory.
      */
@@ -131,7 +109,39 @@ function makeResourceExplorerReducer(explorerName, initialState = {}) {
         [`${EXPLORER_SET_CURRENT}/${explorerName}`]: () => true
       })
     })
-  })
+  }
+
+  reducer.initialized = customReducer.initialized ?
+    reduceReducers(initializedReducer(explorerName, explorerState.initialized), customReducer.initialized) : initializedReducer(explorerName, explorerState.initialized)
+
+  /**
+   * The root of the explorer instance.
+   *
+   * The user will not be able to go higher in the directory structure
+   * (most of the times it's used to store the WS root).
+   */
+  reducer.root = customReducer.root ?
+    reduceReducers(rootReducer(explorerName, explorerState.root), customReducer.root) :
+    rootReducer(explorerName, explorerState.root)
+
+  /**
+   * The current displayed directory.
+   */
+  reducer.current = customReducer.current ?
+    reduceReducers(currentReducer(explorerName, explorerState.current), customReducer.current) :
+    currentReducer(explorerName, explorerState.current)
+
+  /**
+   * The list of available directories.
+   *
+   * Each level is loaded on demand when the user uses directories nav,
+   * so you can not assert this contains the full directories list.
+   */
+  reducer.directories = customReducer.directories ?
+    reduceReducers(directoriesReducer(explorerName, explorerState.directories), customReducer.directories) :
+    directoriesReducer(explorerName, explorerState.directories)
+
+  return combineReducers(reducer)
 }
 
 export {

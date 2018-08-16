@@ -2,6 +2,7 @@
 
 namespace Innova\PathBundle\Entity\Path;
 
+use Claroline\AppBundle\Entity\Parameters\SummaryParameters;
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -19,6 +20,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Path extends AbstractResource
 {
     use UuidTrait;
+
+    use SummaryParameters;
 
     /**
      * Name of the path (only for forms).
@@ -46,15 +49,6 @@ class Path extends AbstractResource
      * @ORM\Column(name="breadcrumbs", type="boolean")
      */
     protected $breadcrumbs = true;
-
-    /**
-     * Is the summary displayed when open the Player ?
-     *
-     * @var bool
-     *
-     * @ORM\Column(name="summary_displayed", type="boolean")
-     */
-    protected $summaryDisplayed = true;
 
     /**
      * Steps linked to the path.
@@ -120,15 +114,6 @@ class Path extends AbstractResource
      * @var bool
      */
     private $showOverview = true;
-
-    /**
-     * Show summary.
-     *
-     * @ORM\Column(name="show_summary", type="boolean", options={"default" = 1})
-     *
-     * @var bool
-     */
-    private $showSummary = true;
 
     /**
      * Class constructor.
@@ -219,30 +204,6 @@ class Path extends AbstractResource
     public function isModified()
     {
         return $this->modified;
-    }
-
-    /**
-     * Set summary displayed.
-     *
-     * @param bool $displayed
-     *
-     * @return Path
-     */
-    public function setSummaryDisplayed($displayed)
-    {
-        $this->summaryDisplayed = $displayed;
-
-        return $this;
-    }
-
-    /**
-     * Is summary displayed when open Player ?
-     *
-     * @return bool
-     */
-    public function isSummaryDisplayed()
-    {
-        return $this->summaryDisplayed;
     }
 
     /**
@@ -454,7 +415,6 @@ class Path extends AbstractResource
             'name' => $this->getName(),
             'description' => $this->getDescription(),
             'breadcrumbs' => $this->breadcrumbs,
-            'summaryDisplayed' => $this->summaryDisplayed,
             'completeBlockingCondition' => $this->completeBlockingCondition,
             'manualProgressionAllowed' => $this->manualProgressionAllowed,
             'steps' => [],
@@ -483,25 +443,5 @@ class Path extends AbstractResource
     public function getShowOverview()
     {
         return $this->showOverview;
-    }
-
-    /**
-     * Set show summary.
-     *
-     * @param bool $showSummary
-     */
-    public function setShowSummary($showSummary)
-    {
-        $this->showSummary = $showSummary;
-    }
-
-    /**
-     * Is summary shown ?
-     *
-     * @return bool
-     */
-    public function getShowSummary()
-    {
-        return $this->showSummary;
     }
 }

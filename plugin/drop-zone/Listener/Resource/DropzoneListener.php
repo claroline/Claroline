@@ -13,13 +13,10 @@ namespace Claroline\DropZoneBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
-use Claroline\CoreBundle\Form\ResourceNameType;
 use Claroline\DropZoneBundle\Entity\Dropzone;
 use Claroline\DropZoneBundle\Manager\DropzoneManager;
 use Claroline\TeamBundle\Manager\TeamManager;
@@ -104,55 +101,7 @@ class DropzoneListener
     }
 
     /**
-     * @DI\Observe("create_form_claroline_dropzone")
-     *
-     * @param CreateFormResourceEvent $event
-     */
-    public function onCreationForm(CreateFormResourceEvent $event)
-    {
-        $form = $this->formFactory->create(new ResourceNameType(true), new Dropzone());
-        $content = $this->templating->render(
-            'ClarolineCoreBundle:resource:create_form.html.twig',
-            [
-                'form' => $form->createView(),
-                'resourceType' => 'claroline_dropzone',
-            ]
-        );
-        $event->setResponseContent($content);
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("create_claroline_dropzone")
-     *
-     * @param CreateResourceEvent $event
-     */
-    public function onCreate(CreateResourceEvent $event)
-    {
-        $form = $this->formFactory->create(new ResourceNameType(true), new Dropzone());
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $published = $form->get('published')->getData();
-            $event->setPublished($published);
-            $dropzone = $form->getData();
-            $event->setResources([$dropzone]);
-            $event->stopPropagation();
-        } else {
-            $content = $this->templating->render(
-                'ClarolineCoreBundle:resource:create_form.html.twig',
-                [
-                    'form' => $form->createView(),
-                    'resourceType' => 'claroline_dropzone',
-                ]
-            );
-            $event->setErrorFormContent($content);
-            $event->stopPropagation();
-        }
-    }
-
-    /**
-     * @DI\Observe("load_claroline_dropzone")
+     * @DI\Observe("resource.claroline_dropzone.load")
      *
      * @param LoadResourceEvent $event
      */
@@ -161,7 +110,7 @@ class DropzoneListener
         /** @var Dropzone $dropzone */
         $dropzone = $event->getResource();
 
-        $event->setAdditionalData(
+        $event->setData(
             $this->getDropzoneData($dropzone)
         );
         $event->stopPropagation();
@@ -218,6 +167,7 @@ class DropzoneListener
         $event->stopPropagation();
     }
 
+    // todo : move me elsewhere (in a manager for ex)
     private function getDropzoneData(Dropzone $dropzone)
     {
         $user = $this->tokenStorage->getToken()->getUser();
@@ -295,11 +245,10 @@ class DropzoneListener
 
         return [
             'dropzone' => $this->serializer->serialize($dropzone),
-            'user' => $this->serializer->serialize($user),
             'myDrop' => !empty($myDrop) ? $this->serializer->serialize($myDrop) : null,
             'nbCorrections' => count($finishedPeerDrops),
             'tools' => $serializedTools,
-            'evaluation' => $this->serializer->serialize($userEvaluation),
+            'userEvaluation' => $this->serializer->serialize($userEvaluation),
             'teams' => $serializedTeams,
             'errorMessage' => $errorMessage,
         ];

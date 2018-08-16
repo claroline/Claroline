@@ -12,29 +12,36 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Manager\LocaleManager;
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\InjectParams;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * @TODO doc
+ * @EXT\Route("/locale", options={"expose" = true})
  */
 class LocaleController
 {
+    /** @var LocaleManager */
     private $localeManager;
+    /** @var TokenStorageInterface */
     private $tokenStorage;
 
     /**
-     * @InjectParams({
-     *     "localeManager"   = @Inject("claroline.manager.locale_manager"),
-     *     "tokenStorage"    = @Inject("security.token_storage")
+     * LocaleController constructor.
+     *
+     * @DI\InjectParams({
+     *     "localeManager" = @DI\Inject("claroline.manager.locale_manager"),
+     *     "tokenStorage"  = @DI\Inject("security.token_storage")
      * })
+     *
+     * @param LocaleManager         $localeManager
+     * @param TokenStorageInterface $tokenStorage
      */
-    public function __construct(LocaleManager $localeManager, TokenStorageInterface $tokenStorage)
+    public function __construct(
+        LocaleManager $localeManager,
+        TokenStorageInterface $tokenStorage)
     {
         $this->localeManager = $localeManager;
         $this->tokenStorage = $tokenStorage;
@@ -43,32 +50,34 @@ class LocaleController
     /**
      * Select a language.
      *
-     * @Route("/locale/select", name="claroline_locale_select", options = {"expose" = true})
+     * @EXT\Route("/select", name="claroline_locale_select")
+     * @EXT\Template("ClarolineCoreBundle:locale:select.html.twig")
      *
-     * @Template("ClarolineCoreBundle:locale:select.html.twig")
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return array
      */
-    public function selectLangAction()
+    public function selectAction()
     {
-        return array('locales' => $this->localeManager->getAvailableLocales());
+        return [
+            'locales' => $this->localeManager->getAvailableLocales(),
+        ];
     }
 
     /**
      * Change locale.
      *
-     * @Route("/locale/change/{locale}", name="claroline_locale_change", options = {"expose" = true})
+     * @EXT\Route("/change/{locale}", name="claroline_locale_change", options = {"expose" = true})
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param $locale
+     * @param Request $request
+     * @param string  $locale
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function changeLocale(Request $request, $locale)
+    public function changeAction(Request $request, $locale)
     {
-        if (($token = $this->tokenStorage->getToken()) && $token->getUser() !== 'anon.') {
+        if (($token = $this->tokenStorage->getToken()) && 'anon.' !== $token->getUser()) {
             $this->localeManager->setUserLocale($locale);
         }
+
         $request->getSession()->set('_locale', $locale);
 
         return new Response('Locale changed to '.$locale, 200);

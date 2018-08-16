@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import {DragNDropContext} from '#/main/app/overlay/dnd'
 import {trans} from '#/main/core/translation'
 import {RoutedPageContent} from '#/main/core/layout/router/components/page'
-import {ResourcePageContainer} from '#/main/core/resource/containers/page'
+import {ResourcePage} from '#/main/core/resource/containers/page'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
@@ -29,15 +29,10 @@ import {Questions}  from '#/plugin/exo/quiz/correction/components/questions'
 import {Answers}    from '#/plugin/exo/quiz/correction/components/answers'
 import {Statistics} from '#/plugin/exo/quiz/statistics/components/statistics'
 
+// todo : restore editor buttons
+
 const Resource = props =>
-  <ResourcePageContainer
-    editor={{
-      path: '/edit',
-      save: {
-        disabled: !props.saveEnabled,
-        action: props.save
-      }
-    }}
+  <ResourcePage
     customActions={[
       {
         type: LINK_BUTTON,
@@ -169,7 +164,7 @@ const Resource = props =>
     <CustomDragLayer
       key="drag-layer"
     />
-  </ResourcePageContainer>
+  </ResourcePage>
 
 Resource.propTypes = {
   quizId: T.string.isRequired,
@@ -200,13 +195,9 @@ const QuizResource = DragNDropContext(
       hasOverview: select.hasOverview(state),
       papersAdmin: select.papersAdmin(state),
       docimologyAdmin: select.docimologyAdmin(state),
-      registeredUser: select.registered(),
-      saveEnabled: select.saveEnabled(state)
+      registeredUser: select.registered()
     }),
     (dispatch) => ({
-      save() {
-        dispatch(editorActions.save())
-      },
       edit(quizId) {
         dispatch(editorActions.selectObject(quizId, TYPE_QUIZ))
       },

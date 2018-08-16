@@ -2,23 +2,15 @@
 
 namespace Icap\BibliographyBundle\Listener\Resource;
 
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
-use Claroline\CoreBundle\Security\PermissionCheckerTrait;
-use Claroline\LinkBundle\Entity\Resource\Shortcut;
 use Icap\BibliographyBundle\Entity\BookReference;
-use Icap\BibliographyBundle\Form\BookReferenceType;
-use Icap\BibliographyBundle\Manager\BookReferenceManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
@@ -26,99 +18,51 @@ use Symfony\Component\Templating\EngineInterface;
  */
 class BibliographyListener
 {
-    use PermissionCheckerTrait;
-
-    /** @var null|\Symfony\Component\HttpFoundation\Request */
-    private $request;
-
-    /** @var FormFactoryInterface */
-    private $formFactory;
-
     /** @var EngineInterface */
     private $templating;
-
-    /** @var null|\Claroline\CoreBundle\Entity\User */
-    private $user;
 
     /** @var ObjectManager */
     private $om;
 
-    /** @var BookReferenceManager */
-    protected $bookReferenceManager;
+    /** @var SerializerProvider */
+    private $serializer;
 
     /**
+     * BibliographyListener constructor.
+     *
      * @DI\InjectParams({
-     *     "formFactory"                = @DI\Inject("form.factory"),
-     *     "templating"                 = @DI\Inject("templating"),
-     *     "tokenStorage"               = @DI\Inject("security.token_storage"),
-     *     "objectManager"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "requestStack"               = @DI\Inject("request_stack"),
-     *     "bookReferenceManager"       = @DI\Inject("icap.bookReference.manager")
+     *     "templating"           = @DI\Inject("templating"),
+     *     "objectManager"        = @DI\Inject("claroline.persistence.object_manager"),
+     *     "serializer"           = @DI\Inject("claroline.api.serializer")
      * })
      *
-     * @param FormFactoryInterface  $formFactory
-     * @param EngineInterface       $templating
-     * @param TokenStorageInterface $tokenStorage
-     * @param ObjectManager         $objectManager
-     * @param RequestStack          $requestStack
-     * @param BookReferenceManager  $bookReferenceManager
+     * @param EngineInterface    $templating
+     * @param ObjectManager      $objectManager
+     * @param SerializerProvider $serializer
      */
     public function __construct(
-        FormFactoryInterface $formFactory,
         EngineInterface $templating,
-        TokenStorageInterface $tokenStorage,
         ObjectManager $objectManager,
-        RequestStack $requestStack,
-        BookReferenceManager $bookReferenceManager
+        SerializerProvider $serializer
     ) {
-        $this->formFactory = $formFactory;
         $this->templating = $templating;
-        $this->tokenStorage = $tokenStorage;
+        $this->serializer = $serializer;
         $this->om = $objectManager;
-        $this->request = $requestStack->getCurrentRequest();
-        $this->bookReferenceManager = $bookReferenceManager;
     }
 
     /**
-     * @DI\Observe("create_icap_bibliography")
+     * Loads a Bibliography resource.
      *
-     * @param CreateResourceEvent $event
+     * @DI\Observe("resource.icap_bibliography.load")
+     *
+     * @param LoadResourceEvent $event
      */
-    public function onCreate(CreateResourceEvent $event)
+    public function load(LoadResourceEvent $event)
     {
-        $form = $this->formFactory->create(new BookReferenceType(), new BookReference());
-        $form->handleRequest($this->request);
+        $event->setData([
+            'bookReference' => $this->serializer->serialize($event->getResource()),
+        ]);
 
-        if ($form->isValid()) {
-            /** @var BookReference $bookResource */
-            $bookResource = $form->getData();
-
-            $bookReferenceInWorkspace = $this->bookReferenceManager->bookExistsInWorkspace($bookResource->getIsbn(), $event->getParent()->getWorkspace());
-
-            if (null !== $bookReferenceInWorkspace) {
-                // Book already exists, create a link instead of a new resource
-
-                $resourceShortcut = new Shortcut();
-                $resourceShortcut->setTarget($bookReferenceInWorkspace->getResourceNode());
-                $resourceShortcut->setName($bookReferenceInWorkspace->getResourceNode()->getName());
-
-                $event->setResourceType('shortcut');
-                $event->setParent($bookReferenceInWorkspace->getResourceNode());
-                $event->setResources([$resourceShortcut]);
-            } else {
-                // Create book as a new resource
-                $event->setResources([$bookResource]);
-            }
-        } else {
-            $content = $this->templating->render(
-                'ClarolineCoreBundle:resource:create_form.html.twig',
-                [
-                    'form' => $form->createView(),
-                    'resourceType' => 'icap_bibliography',
-                ]
-            );
-            $event->setErrorFormContent($content);
-        }
         $event->stopPropagation();
     }
 
@@ -130,7 +74,6 @@ class BibliographyListener
     public function onOpen(OpenResourceEvent $event)
     {
         $bookReference = $event->getResource();
-        $this->checkPermission('OPEN', $bookReference->getResourceNode(), [], true);
         $content = $this->templating->render(
             'IcapBibliographyBundle:book_reference:open.html.twig',
             [
@@ -138,6 +81,7 @@ class BibliographyListener
             ]
         );
         $response = new Response($content);
+
         $event->setResponse($response);
         $event->stopPropagation();
     }
@@ -179,31 +123,6 @@ class BibliographyListener
      */
     public function onDelete(DeleteResourceEvent $event)
     {
-        $this->om->remove($event->getResource());
-        $this->om->flush();
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("plugin_options_bibliographybundle")
-     *
-     * @param PluginOptionsEvent $event
-     */
-    public function onConfig(PluginOptionsEvent $event)
-    {
-        // If user is not platform admin, deny access
-        if (!$this->tokenStorage->getToken()->getUser()->hasRole('ROLE_ADMIN')) {
-            throw new AccessDeniedHttpException('Only platform administrators can configure plugins');
-        }
-
-        $content = $this->templating->render(
-            'IcapBibliographyBundle:configuration:open.html.twig',
-            [
-                'configuration' => $this->bookReferenceManager->getConfig(),
-            ]
-        );
-        $response = new Response($content);
-        $event->setResponse($response);
         $event->stopPropagation();
     }
 }

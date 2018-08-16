@@ -10,6 +10,7 @@ import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 import {ResourceCard} from '#/main/core/resource/data/components/resource-card'
 
 import {Step as StepTypes} from '#/plugin/path/resources/path/prop-types'
+import {selectors} from '#/plugin/path/resources/path/editor/store'
 
 const PrimaryResourceSection = props =>
   <div className="step-primary-resource">
@@ -129,7 +130,7 @@ const StepForm = props =>
   <FormData
     level={3}
     displayLevel={2}
-    name="pathForm"
+    name={selectors.FORM_NAME}
     dataPart={props.stepPath}
     buttons={true}
     save={{

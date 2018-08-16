@@ -1,10 +1,7 @@
 import React from 'react'
-// import {PropTypes as T} from 'prop-types'
-// import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
 import {NavLink} from '#/main/app/router'
-
 
 const FlaggedPostsNav = () =>
   <div>
@@ -15,6 +12,7 @@ const FlaggedPostsNav = () =>
       >
         {trans('flagged_subjects', {}, 'forum')}
       </NavLink>
+
       <NavLink
         to='/moderation/flagged/messages'
         className="lateral-link"
@@ -23,9 +21,6 @@ const FlaggedPostsNav = () =>
       </NavLink>
     </nav>
   </div>
-
-
-
 
 export {
   FlaggedPostsNav

@@ -1,15 +1,7 @@
 {
-  "webpack": {
-    "entry": {
-      "resource": "resources/path/bootstrap"
-    }
-  },
-
   "styles": {
     "entry": {
-      "path-resource": "resources/path/index.less",
-      "path-slideshow-widget": "widgets/path-slideshow.less",
-      "path-progression-widget": "widgets/path-progression.less"
+      "path-resource": "resources/path/index.less"
     }
   }
 }

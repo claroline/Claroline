@@ -83,6 +83,15 @@ class ResourceActionManager
         $this->repository = $this->om->getRepository('ClarolineCoreBundle:Resource\MenuAction');
     }
 
+    /**
+     * Checks if the resource node supports an action.
+     *
+     * @param ResourceNode $resourceNode
+     * @param string       $actionName
+     * @param string       $method
+     *
+     * @return bool
+     */
     public function support(ResourceNode $resourceNode, string $actionName, string $method): bool
     {
         $action = $this->get($resourceNode, $actionName);
@@ -192,7 +201,10 @@ class ResourceActionManager
         return 'resource.'.$actionName;
     }
 
-    private function load()
+    /**
+     * Loads all resource actions enabled in the platform.
+     */
+    private function load(): void
     {
         // preload the list of actions available for all resource types
         // it will avoid having to load it for each node

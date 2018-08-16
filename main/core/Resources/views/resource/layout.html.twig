@@ -1,12 +1,48 @@
-{% if isDesktop() %}
+{% if resourceNode.workspace is not defined %}
     {# Resource is displayed in Desktop #}
     {% set layout = "ClarolineCoreBundle:desktop:layout.html.twig" %}
 {% else %}
     {# Resource is displayed in Workspace #}
+    {% set workspace = resourceNode.workspace %}
     {% set layout = "ClarolineCoreBundle:workspace:layout.html.twig" %}
 {% endif %}
 
 {% extends layout %}
+
+{% block title %}
+    {% spaceless %}
+        {% if resourceNode.workspace is defined %}
+            {{ resourceNode.workspace.name }} -
+        {% endif %}
+
+        {{ resourceNode.name | striptags | raw }}
+    {% endspaceless %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {# Create resource breadcrumb #}
+    {% if not has_role('ROLE_ANONYMOUS') %}
+        <ul class="breadcrumb">
+            {% if workspace is defined and workspace != null %}
+                <li>
+                    {# we're finding wich is the workspace we want to display here #}
+                    <a href="{{ path('claro_workspace_open_tool', {toolName: 'home', workspaceId: workspace.id }) }}">
+                        {{ workspace.name ~ ' (' ~ workspace.code ~ ') ' }}
+                    </a>
+                </li>
+
+                {{ render(controller("ClarolineCoreBundle:ResourceOld:renderBreadcrumbs", {
+                    'node': resourceNode,
+                    '_breadcrumbs': app.request.query.get('_breadcrumbs', {})
+                })) }}
+            {% endif %}
+
+            {% block resourceBreadcrumb %}
+                <li class="active">{{ resourceNode.name }}</li>
+            {% endblock %}
+        </ul>
+    {% endif %}
+{% endblock %}
 
 {% block content %}
 

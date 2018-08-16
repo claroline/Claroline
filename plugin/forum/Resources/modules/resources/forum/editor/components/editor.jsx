@@ -10,12 +10,13 @@ import {actions as formActions} from '#/main/app/content/form/store/actions'
 
 import {Forum as ForumType} from '#/plugin/forum/resources/forum/prop-types'
 import {constants} from '#/plugin/forum/resources/forum/constants'
+import {selectors} from '#/plugin/forum/resources/forum/editor/store'
 
 const EditorComponent = (props) =>
   <FormData
     level={3}
     displayLevel={2}
-    name="forumForm"
+    name={selectors.FORM_NAME}
     title={trans('parameters')}
     className="content-container"
     buttons={true}
@@ -114,11 +115,11 @@ EditorComponent.propTypes = {
 
 const Editor = connect(
   (state) => ({
-    forumForm: formSelect.data(formSelect.form(state, 'forumForm'))
+    forumForm: formSelect.data(formSelect.form(state, selectors.FORM_NAME))
   }),
   (dispatch) => ({
     saveForm(forumId) {
-      dispatch(formActions.saveForm('forumForm', ['apiv2_forum_update', {id: forumId}]))
+      dispatch(formActions.saveForm(selectors.FORM_NAME, ['apiv2_forum_update', {id: forumId}]))
     }
   })
 )(EditorComponent)

@@ -7,7 +7,7 @@
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {ExplorerModal} from '#/main/core/resource/modals/explorer/components/explorer'
+import {ExplorerModal} from '#/main/core/resource/modals/explorer/containers/modal'
 
 const MODAL_RESOURCE_EXPLORER = 'MODAL_RESOURCE_EXPLORER'
 

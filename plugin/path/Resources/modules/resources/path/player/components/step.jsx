@@ -10,7 +10,7 @@ import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-t
 import {DropdownButton, MenuItem} from '#/main/core/layout/components/dropdown'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {ResourceCard} from '#/main/core/resource/data/components/resource-card'
-import {EmbeddedResource} from '#/main/core/resource/components/embedded'
+import {ResourceEmbedded} from '#/main/core/resource/components/embedded'
 
 import {Step as StepTypes} from '#/plugin/path/resources/path/prop-types'
 import {constants} from '#/plugin/path/resources/path/constants'
@@ -174,7 +174,7 @@ const Step = props =>
           }
 
           {props.primaryResource && (-1 !== constants.AVAILABLE_EMBEDDED_RESOURCES.indexOf(props.primaryResource.meta.type)) &&
-            <EmbeddedResource
+            <ResourceEmbedded
               className="step-primary-resource"
               resourceNode={props.primaryResource}
               lifecycle={{

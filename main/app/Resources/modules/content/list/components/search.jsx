@@ -16,6 +16,7 @@ class CurrentFilter extends Component {
 
     this.state = {definition: null}
   }
+
   render() {
     return (
       <Await
@@ -31,10 +32,12 @@ class CurrentFilter extends Component {
             <span className="search-filter-value">
               {this.state.definition.render(this.props.value, this.props.options)}
 
-              <button type="button" className="btn btn-link" onClick={this.props.remove}>
-                  <span className="fa fa-times" />
+              {!this.props.locked &&
+                <button type="button" className="btn btn-link" onClick={this.props.remove}>
+                  <span className="fa fa-times"/>
                   <span className="sr-only">{t('list_remove_filter')}</span>
                 </button>
+              }
             </span>
           </div>
         }
@@ -48,11 +51,13 @@ CurrentFilter.propTypes = {
   label: T.string.isRequired,
   options: T.object,
   value: T.any,
+  locked: T.bool,
   remove: T.func.isRequired
 }
 
 CurrentFilter.defaultProps = {
-  options: {}
+  options: {},
+  locked: false
 }
 
 const AvailableFilterActive = props =>
@@ -138,6 +143,11 @@ AvailableFilterContent.propTypes = {
   options: T.object,
   definition: T.shape({
     // DataType
+    parse: T.func.isRequired,
+    validate: T.func.isRequired,
+    components: T.shape({
+      search: T.node
+    })
   }).isRequired
 }
 
@@ -259,6 +269,7 @@ class ListSearch extends Component {
                 label={propDef.label}
                 options={propDef.options}
                 value={activeFilter.value}
+                locked={activeFilter.locked}
                 remove={() => this.props.removeFilter(activeFilter)}
               />
             )
@@ -299,7 +310,8 @@ ListSearch.propTypes = {
   })).isRequired,
   current: T.arrayOf(T.shape({
     property: T.string.isRequired,
-    value: T.any
+    value: T.any,
+    locked: T.bool
   })).isRequired,
   addFilter: T.func.isRequired,
   removeFilter: T.func.isRequired

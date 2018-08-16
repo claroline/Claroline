@@ -1,19 +1,5 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
-{% if _resource is defined %}
-    {# we're finding wich is the workspace we want to display here #}
-    {% set node = app.session.get('current_resource_node') %}
-    {% if node is not null %}
-        {% set workspace = node.getWorkspace() %}
-    {% elseif _resource.getResourceNode() is defined %}
-        {% set node = _resource.getResourceNode() %}
-        {% set workspace = node.getWorkspace() %}
-    {% else %}
-        {% set node = _resource %}
-        {% set workspace = node.getWorkspace() %}
-    {% endif %}
-{% endif %}
-
 {# Checks if we need to hide the breadcrumb #}
 {% if workspace is defined and
     workspace is not null and
@@ -36,42 +22,7 @@
 {% endblock %}
 
 {% block title %}
-    {% spaceless %}
-        {% if node is defined %}
-            {% if node.getWorkspace() is defined %}
-                {{ node.getWorkspace.getName() }} -
-            {% endif %}
-
-            {{node.getName() | striptags | raw }}
-        {% elseif workspace is defined %}
-            {{ workspace.getName() }}
-        {% endif %}
-    {% endspaceless %}
-{% endblock %}
-
-{% block breadcrumb %}
-    {# Create resource breadcrumb #}
-    {% if _resource is defined and not has_role('ROLE_ANONYMOUS') %}
-        <ul class="breadcrumb">
-            {% if workspace is defined and workspace != null %}
-                <li>
-                    {# we're finding wich is the workspace we want to display here #}
-                    <a href="{{ path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': workspace.getId() }) }}">
-                        {{ workspace.getName() ~ ' (' ~ workspace.getCode() ~ ') ' }}
-                    </a>
-                </li>
-
-                {{ render(controller("ClarolineCoreBundle:ResourceOld:renderBreadcrumbs", {
-                    'node': node,
-                    '_breadcrumbs': app.request.query.get('_breadcrumbs', {})
-                })) }}
-            {% endif %}
-
-            {% block resourceBreadcrumb %}
-                <li class="active">{{ node.getName() }}</li>
-            {% endblock %}
-        </ul>
-    {% endif %}
+    {{ workspace.name }}
 {% endblock %}
 
 {% block leftbar %}

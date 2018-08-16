@@ -22,7 +22,7 @@ class ResourceActionEvent extends ResourceEvent
     /**
      * The data passed to the action (eg. new data).
      *
-     * NB. Data depends on the requested action, so we can not validate it.
+     * NB. Data depend on the requested action, so we can not validate it.
      * This is the duty of the attached listener to check it gets what it wants.
      *
      * @var array

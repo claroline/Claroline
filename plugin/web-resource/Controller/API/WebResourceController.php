@@ -64,7 +64,6 @@ class WebResourceController extends AbstractCrudController
     public function uploadFile(Workspace $workspace, Request $request)
     {
         $files = $request->files->all();
-        $data = [];
         $error = null;
 
         foreach ($files as $file) {

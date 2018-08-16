@@ -12,8 +12,8 @@ import {actions as listActions} from '#/main/app/content/list/store'
 import {withModal} from '#/main/app/overlay/modal/withModal'
 
 import {Subject as SubjectType} from '#/plugin/forum/resources/forum/player/prop-types'
-import {select} from '#/plugin/forum/resources/forum/selectors'
-import {actions} from '#/plugin/forum/resources/forum/player/actions'
+import {select} from '#/plugin/forum/resources/forum/store/selectors'
+import {actions} from '#/plugin/forum/resources/forum/player/store/actions'
 import {CommentForm, Comment} from '#/plugin/forum/resources/forum/player/components/comments'
 
 const authenticatedUser = currentUser()
@@ -175,8 +175,8 @@ MessageCommentsComponent.propTypes = {
   deleteComment: T.func.isRequired,
   createComment: T.func.isRequired,
   showModal: T.func,
-  bannedUser: T.bool.isRrequired,
-  moderator: T.bool.isRrequired
+  bannedUser: T.bool.isRequired,
+  moderator: T.bool.isRequired
 }
 
 const MessageComments =  withModal(connect(
@@ -207,7 +207,6 @@ const MessageComments =  withModal(connect(
     }
   })
 )(MessageCommentsComponent))
-
 
 export {
   MessageComments

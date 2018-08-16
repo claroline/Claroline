@@ -12,8 +12,6 @@
 namespace Claroline\ResultBundle\Listener;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
@@ -37,20 +35,6 @@ class ResultListenerTest extends TransactionalTestCase
         $this->listener = $container->get('claroline.result.result_listener');
         $this->om = $container->get('claroline.persistence.object_manager');
         $this->persist = new Persister($this->om, $container);
-    }
-
-    public function testOnCreateForm()
-    {
-        $event = new CreateFormResourceEvent();
-        $this->listener->setRequest(new Request());
-        $this->listener->onCreateForm($event);
-        $this->assertNotEmpty($event->getResponseContent());
-    }
-
-    public function testOnCreate()
-    {
-        $this->listener->setRequest(new Request());
-        $this->listener->onCreate(new CreateResourceEvent());
     }
 
     public function testOnOpen()

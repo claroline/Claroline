@@ -12,8 +12,7 @@ import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {actions as listActions} from '#/main/app/content/list/store'
 
 import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'
-import {select} from '#/plugin/announcement/resources/announcement/selectors'
-import {actions} from '#/plugin/announcement/resources/announcement/actions'
+import {actions, selectors} from '#/plugin/announcement/resources/announcement/store'
 import {MODAL_ANNOUNCEMENT_SENDING_CONFIRM} from '#/plugin/announcement/resources/announcement/modals'
 
 const AnnounceSendComponent = props =>
@@ -98,8 +97,8 @@ const RoutedAnnounceSend = withRouter(AnnounceSendComponent)
 const AnnounceSend = connect(
   (state) => ({
     announcement: formSelectors.data(formSelectors.form(state, 'announcementForm')),
-    aggregateId: select.aggregateId(state),
-    workspaceRoles: select.workspaceRoles(state)
+    aggregateId: selectors.aggregateId(state),
+    workspaceRoles: selectors.workspaceRoles(state)
   }),
   (dispatch) => ({
     send(aggregateId, announce) {

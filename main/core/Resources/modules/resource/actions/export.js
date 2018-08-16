@@ -8,7 +8,7 @@ const action = (resourceNodes) => ({ // todo collection
   label: trans('export', {}, 'actions'),
   request: {
     url: ['claro_resource_action', {
-      resourceType: resourceNodes[0].meta.type,
+      type: resourceNodes[0].meta.type,
       action: 'export',
       id: resourceNodes[0].id
     }]

@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/core/translation'
 import {copy} from '#/main/app/clipboard'
 import {PageContent} from '#/main/core/layout/page'
-import {ResourcePageContainer} from '#/main/core/resource/containers/page'
+import {ResourcePage} from '#/main/core/resource/containers/page'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
@@ -13,7 +13,7 @@ import {hasPermission} from '#/main/core/resource/permissions'
 import {select} from '#/plugin/image-player/resources/image/selectors'
 
 const ImageComponent = props =>
-  <ResourcePageContainer
+  <ResourcePage
     customActions={[
       {
         type: CALLBACK_BUTTON,
@@ -35,7 +35,7 @@ const ImageComponent = props =>
         }}
       />
     </PageContent>
-  </ResourcePageContainer>
+  </ResourcePage>
 
 ImageComponent.propTypes = {
   url: T.string.isRequired,

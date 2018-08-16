@@ -1,5 +1,5 @@
-import {DirectoryResource} from '#/main/core/resources/directory/components/resource'
-import {reducer} from '#/main/core/resources/text/reducer'
+
+import {DirectoryResource} from '#/main/core/resources/directory/containers/resource'
 
 /**
  * Directory resource application.
@@ -7,12 +7,5 @@ import {reducer} from '#/main/core/resources/text/reducer'
  * @constructor
  */
 export const App = () => ({
-  component: DirectoryResource,
-  store: reducer,
-  initialData: (initialData) => Object.assign({}, initialData, {
-    resource: {
-      node: initialData.resourceNode,
-      evaluation: initialData.evaluation
-    }
-  })
+  component: DirectoryResource
 })

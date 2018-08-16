@@ -94,7 +94,7 @@ class PathSerializer
                 'description' => $path->getDescription(),
                 'showOverview' => $path->getShowOverview(),
                 'showSummary' => $path->getShowSummary(),
-                'openSummary' => $path->isSummaryDisplayed(),
+                'openSummary' => $path->getOpenSummary(),
                 'numbering' => $path->getNumbering() ? $path->getNumbering() : 'none',
                 'manualProgressionAllowed' => $path->isManualProgressionAllowed(),
             ],
@@ -207,7 +207,7 @@ class PathSerializer
     private function serializeUserProgression(Step $step)
     {
         $user = $this->tokenStorage->getToken()->getUser();
-        $userProgression = $user !== 'anon.' ?
+        $userProgression = 'anon.' !== $user ?
             $this->userProgressionRepo->findOneBy(['step' => $step, 'user' => $user]) :
             null;
         $data = [

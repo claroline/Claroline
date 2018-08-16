@@ -5,8 +5,8 @@ import {PropTypes as T} from 'prop-types'
 import {Routes} from '#/main/app/router'
 import {actions as listActions} from '#/main/app/content/list/store'
 
-import {actions} from '#/plugin/forum/resources/forum/player/actions'
-import {select} from '#/plugin/forum/resources/forum/selectors'
+import {actions} from '#/plugin/forum/resources/forum/player/store/actions'
+import {select} from '#/plugin/forum/resources/forum/store/selectors'
 import {Subject} from '#/plugin/forum/resources/forum/player/components/subject'
 import {Subjects} from '#/plugin/forum/resources/forum/player/components/subjects'
 
@@ -82,10 +82,10 @@ const Player = connect(
       dispatch(actions.stopSubjectEdition())
     },
     loadSubjectList() {
-      dispatch(listActions.invalidateData('subjects.list'))
+      dispatch(listActions.invalidateData(`${select.STORE_NAME}.subjects.list`))
     },
     invalidateMessagesList() {
-      dispatch(listActions.invalidateData('subjects.messages'))
+      dispatch(listActions.invalidateData(`${select.STORE_NAME}.subjects.messages`))
     }
   })
 )(PlayerComponent)
