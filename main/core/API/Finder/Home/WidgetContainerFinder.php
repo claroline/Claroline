@@ -35,9 +35,7 @@ class WidgetContainerFinder extends AbstractFinder
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'homeTab':
-                  $qb->leftJoin('obj.instances', 'i');
-                  $qb->leftJoin('i.widgetHomeTabConfigs', 'c');
-                  $qb->leftJoin('c.homeTab', 't');
+                  $qb->leftJoin('obj.homeTab', 't');
                   $qb->andWhere('t.uuid = :homeTab');
                   $qb->setParameter('homeTab', $filterValue);
             }

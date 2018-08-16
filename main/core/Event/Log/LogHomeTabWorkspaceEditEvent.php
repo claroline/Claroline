@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Event\Log;
 
-use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
+use Claroline\CoreBundle\Entity\Tab\HomeTabConfig;
 
 class LogHomeTabWorkspaceEditEvent extends LogGenericEvent
 {

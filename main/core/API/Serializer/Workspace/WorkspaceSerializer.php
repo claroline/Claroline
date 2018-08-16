@@ -182,7 +182,7 @@ class WorkspaceSerializer
 
         if (in_array(Options::WORKSPACE_FETCH_HOME, $options)) {
             $tabs = $this->finder->search(
-              'Claroline\CoreBundle\Entity\Home\HomeTab',
+              'Claroline\CoreBundle\Entity\Tab\HomeTab',
               ['filters' => ['workspace' => $workspace->getUuid()]]
             );
 

@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Security\Voter\Tool\Home;
 
-use Claroline\CoreBundle\Entity\Home\HomeTab;
+use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

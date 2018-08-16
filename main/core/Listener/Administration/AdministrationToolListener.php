@@ -73,18 +73,6 @@ class AdministrationToolListener
         ], $event);
     }
 
-    /**
-     * @DI\Observe("administration_tool_widgets_management")
-     *
-     * @param OpenAdministrationToolEvent $event
-     */
-    public function onOpenWidgetsManagement(OpenAdministrationToolEvent $event)
-    {
-        $this->redirect([
-            '_controller' => 'ClarolineCoreBundle:Administration/Widget:widgetsManagement',
-        ], $event);
-    }
-
     protected function redirect($params, OpenAdministrationToolEvent $event)
     {
         $subRequest = $this->request->duplicate([], null, $params);

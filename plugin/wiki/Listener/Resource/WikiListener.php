@@ -78,7 +78,7 @@ class WikiListener
     ) {
         $this->formFactory = $formFactory;
         $this->templating = $templating;
-        $this->user = $tokenStorage->getToken()->getUser();
+        $this->tokenStorage = $tokenStorage;
         $this->om = $objectManager;
         $this->wikiManager = $wikiManager;
         $this->sectionManager = $sectionManager;
@@ -142,7 +142,7 @@ class WikiListener
         $wiki = $event->getResource();
         $this->checkPermission('OPEN', $resourceNode, [], true);
         $isAdmin = $this->checkPermission('EDIT', $resourceNode);
-        $sectionTree = $this->sectionManager->getSerializedSectionTree($wiki, $this->user, $isAdmin);
+        $sectionTree = $this->sectionManager->getSerializedSectionTree($wiki, $this->tokenStorage->getToken()->getUser(), $isAdmin);
         $content = $this->templating->render(
             'IcapWikiBundle:wiki:open.html.twig',
             [
@@ -174,7 +174,7 @@ class WikiListener
     public function onCopy(CopyResourceEvent $event)
     {
         $wiki = $event->getResource();
-        $newWiki = $this->wikiManager->copyWiki($wiki, $this->user);
+        $newWiki = $this->wikiManager->copyWiki($wiki, $this->tokenStorage->getToken()->getUser());
         $event->setCopy($newWiki);
         $event->stopPropagation();
     }

@@ -11,8 +11,6 @@
 
 namespace Claroline\CoreBundle\Library\Testing;
 
-use Claroline\CoreBundle\Entity\Home\HomeTab;
-use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
@@ -28,13 +26,9 @@ use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Widget\Widget;
-use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
-use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
-use Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy;
 use Claroline\MessageBundle\Entity\Message;
 use Claroline\MessageBundle\Entity\UserMessage;
 use Gedmo\Timestampable\TimestampableListener;
@@ -387,215 +381,6 @@ abstract class RepositoryTestCase extends WebTestCase
         $tagRelation->setWorkspace($workspace);
 
         self::$om->persist($tagRelation);
-        self::$om->flush();
-    }
-
-    protected static function createWorkspaceTagHierarchy(
-        WorkspaceTag $parent,
-        WorkspaceTag $child,
-        $level,
-        User $user = null
-    ) {
-        $tagHierarchy = new WorkspaceTagHierarchy();
-        $tagHierarchy->setParent($parent);
-        $tagHierarchy->setTag($child);
-        $tagHierarchy->setLevel($level);
-        $tagHierarchy->setUser($user);
-
-        self::$om->persist($tagHierarchy);
-        self::$om->flush();
-    }
-
-    protected static function createAdminHomeTab($name, $type)
-    {
-        $homeTab = new HomeTab();
-        $homeTab->setName($name);
-        $homeTab->setType($type);
-        $homeTab->setLongTitle($name);
-
-        self::create($name, $homeTab);
-        self::$om->flush();
-    }
-
-    protected static function createDesktopHomeTab($name, User $user)
-    {
-        $homeTab = new HomeTab();
-        $homeTab->setName($name);
-        $homeTab->setLongTitle($name);
-        $homeTab->setType('desktop');
-        $homeTab->setUser($user);
-
-        self::create($name, $homeTab);
-        self::$om->flush();
-    }
-
-    protected static function createWorkspaceHomeTab(
-        $name,
-        Workspace $workspace
-    ) {
-        $homeTab = new HomeTab();
-        $homeTab->setName($name);
-        $homeTab->setLongTitle($name);
-        $homeTab->setType('workspace');
-        $homeTab->setWorkspace($workspace);
-
-        self::create($name, $homeTab);
-        self::$om->flush();
-    }
-
-    protected static function createAdminHomeTabConfig(
-        $name,
-        HomeTab $homeTab,
-        $type,
-        $visible,
-        $locked,
-        $tabOrder
-    ) {
-        $homeTabConfig = new HomeTabConfig();
-        $homeTabConfig->setHomeTab($homeTab);
-        $homeTabConfig->setType($type);
-        $homeTabConfig->setVisible($visible);
-        $homeTabConfig->setLocked($locked);
-        $homeTabConfig->setTabOrder($tabOrder);
-
-        self::create($name, $homeTabConfig);
-        self::$om->flush();
-    }
-
-    protected static function createDesktopHomeTabConfig(
-        $name,
-        HomeTab $homeTab,
-        User $user,
-        $type,
-        $visible,
-        $locked,
-        $tabOrder
-    ) {
-        $homeTabConfig = new HomeTabConfig();
-        $homeTabConfig->setHomeTab($homeTab);
-        $homeTabConfig->setUser($user);
-        $homeTabConfig->setType($type);
-        $homeTabConfig->setVisible($visible);
-        $homeTabConfig->setLocked($locked);
-        $homeTabConfig->setTabOrder($tabOrder);
-
-        self::create($name, $homeTabConfig);
-        self::$om->flush();
-    }
-
-    protected static function createWorkspaceHomeTabConfig(
-        $name,
-        HomeTab $homeTab,
-        Workspace $workspace,
-        $type,
-        $visible,
-        $locked,
-        $tabOrder
-    ) {
-        $homeTabConfig = new HomeTabConfig();
-        $homeTabConfig->setHomeTab($homeTab);
-        $homeTabConfig->setWorkspace($workspace);
-        $homeTabConfig->setType($type);
-        $homeTabConfig->setVisible($visible);
-        $homeTabConfig->setLocked($locked);
-        $homeTabConfig->setTabOrder($tabOrder);
-
-        self::create($name, $homeTabConfig);
-        self::$om->flush();
-    }
-
-    protected static function createAdminWidgetHomeTabConfig(
-        $name,
-        Widget $widget,
-        HomeTab $homeTab,
-        $visible,
-        $locked,
-        $widgetOrder
-    ) {
-        $widgetHomeTabConfig = new WidgetHomeTabConfig();
-        $widgetHomeTabConfig->setWidget($widget);
-        $widgetHomeTabConfig->setHomeTab($homeTab);
-        $widgetHomeTabConfig->setType('admin');
-        $widgetHomeTabConfig->setVisible($visible);
-        $widgetHomeTabConfig->setLocked($locked);
-        $widgetHomeTabConfig->setWidgetOrder($widgetOrder);
-
-        self::create($name, $widgetHomeTabConfig);
-        self::$om->flush();
-    }
-
-    protected static function createDesktopWidgetHomeTabConfig(
-        $name,
-        Widget $widget,
-        HomeTab $homeTab,
-        User $user,
-        $type,
-        $visible,
-        $locked,
-        $widgetOrder
-    ) {
-        $widgetHomeTabConfig = new WidgetHomeTabConfig();
-        $widgetHomeTabConfig->setWidget($widget);
-        $widgetHomeTabConfig->setHomeTab($homeTab);
-        $widgetHomeTabConfig->setUser($user);
-        $widgetHomeTabConfig->setType($type);
-        $widgetHomeTabConfig->setVisible($visible);
-        $widgetHomeTabConfig->setLocked($locked);
-        $widgetHomeTabConfig->setWidgetOrder($widgetOrder);
-
-        self::create($name, $widgetHomeTabConfig);
-        self::$om->flush();
-    }
-
-    protected static function createWorkspaceWidgetHomeTabConfig(
-        $name,
-        Widget $widget,
-        HomeTab $homeTab,
-        Workspace $workspace,
-        $visible,
-        $locked,
-        $widgetOrder
-    ) {
-        $widgetHomeTabConfig = new WidgetHomeTabConfig();
-        $widgetHomeTabConfig->setWidget($widget);
-        $widgetHomeTabConfig->setHomeTab($homeTab);
-        $widgetHomeTabConfig->setWorkspace($workspace);
-        $widgetHomeTabConfig->setType('workspace');
-        $widgetHomeTabConfig->setVisible($visible);
-        $widgetHomeTabConfig->setLocked($locked);
-        $widgetHomeTabConfig->setWidgetOrder($widgetOrder);
-
-        self::create($name, $widgetHomeTabConfig);
-        self::$om->flush();
-    }
-
-    protected static function createWidget($name, $configurable, $exportable, $icon)
-    {
-        $widget = new Widget();
-        $widget->setName($name);
-        $widget->setConfigurable($configurable);
-        $widget->setExportable($exportable);
-        $widget->setIcon($icon);
-
-        self::create($name, $widget);
-        self::$om->flush();
-    }
-
-    protected static function createWidgetInstance(
-        Widget $widget,
-        Workspace $workspace,
-        $name,
-        $isAdmin,
-        $isDesktop
-    ) {
-        $instance = new WidgetInstance();
-        $instance->setIsAdmin($isAdmin);
-        $instance->setIsDesktop($isDesktop);
-        $instance->setName($name);
-        $instance->setWorkspace($workspace);
-        $instance->setWidget($widget);
-
-        self::$om->persist($instance);
         self::$om->flush();
     }
 

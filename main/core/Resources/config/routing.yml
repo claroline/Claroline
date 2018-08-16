@@ -106,16 +106,6 @@ claro_admin:
     prefix: admin
     type: annotation
 
-claro_admin_desktop_configuration:
-    resource: "@ClarolineCoreBundle/Controller/Administration/DesktopConfigurationController.php"
-    prefix: admin
-    type: annotation
-
-claro_admin_home_tab:
-    resource: "@ClarolineCoreBundle/Controller/Administration/HomeTabController.php"
-    prefix: admin
-    type: annotation
-
 claro_admin_portal_config:
     resource: "@ClarolineCoreBundle/Controller/Administration/PortalConfigurationController.php"
     prefix: admin/portal
@@ -163,11 +153,6 @@ claro_file:
     type: annotation
     prefix: file
 
-claro_user:
-    resource: "@ClarolineCoreBundle/Controller/UserController.php"
-    type: annotation
-    prefix: user
-
 claro_admin_parameters:
     prefix: admin/parameters
     resource: "@ClarolineCoreBundle/Controller/Administration/ParametersController.php"
@@ -207,11 +192,6 @@ claro_plugin_api:
 claro_portal:
     resource: "@ClarolineCoreBundle/Controller/PortalController.php"
     prefix: portal
-    type: annotation
-
-claro_admin_widget:
-    prefix: admin/widget
-    resource: "@ClarolineCoreBundle/Controller/Administration/WidgetController.php"
     type: annotation
 
 claro_client:

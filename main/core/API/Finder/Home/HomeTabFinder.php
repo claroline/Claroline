@@ -13,7 +13,9 @@ namespace Claroline\CoreBundle\API\Finder\Home;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\AppBundle\API\Finder\FinderTrait;
-use Claroline\CoreBundle\Entity\Home\HomeTab;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Tab\HomeTab;
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -25,9 +27,23 @@ class HomeTabFinder extends AbstractFinder
 {
     use FinderTrait;
 
+    /**
+     * HomeTabFinder constructor.
+     *
+     * @DI\InjectParams({
+     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     * })
+     *
+     * @param EntityManager $em
+     */
+    public function __construct(ObjectManager $om)
+    {
+        $this->om = $om;
+    }
+
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Home\HomeTab';
+        return HomeTab::class;
     }
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
@@ -35,14 +51,58 @@ class HomeTabFinder extends AbstractFinder
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'user':
+                    $roles = $this->om->find(User::class, $filterValue)->getRoles();
+
+                    $qb->leftJoin('obj.homeTabConfigs', 'config');
                     $qb->leftJoin('obj.user', 'u');
-                    $qb->andWhere($qb->expr()->orX(
+
+                    $expr = [];
+
+                    if (!in_array('ROLE_ADMIN', $roles)) {
+                        $subQuery =
+                          "
+                            SELECT tab from Claroline\CoreBundle\Entity\Tab\HomeTab tab
+                            JOIN tab.homeTabConfigs htc
+                            JOIN htc.roles role
+                            JOIN role.users user
+
+                            WHERE (user.uuid = :userId OR user.id = :userId)
+                            AND tab.type = :adminDesktop
+                            AND htc.locked = true
+                          ";
+
+                        $subQuery2 =
+                          "
+                            SELECT tab2 from Claroline\CoreBundle\Entity\Tab\HomeTab tab2
+                            JOIN tab2.homeTabConfigs htc2
+                            LEFT JOIN htc2.roles role2
+                            WHERE role2.id IS NULL
+                            AND tab2.type = :adminDesktop
+                            AND htc2.locked = true
+                          ";
+
+                        $expr[] = $qb->expr()->orX(
+                            $qb->expr()->in('obj', $subQuery),
+                            $qb->expr()->in('obj', $subQuery2)
+                        );
+
+                        $qb->setParameter('adminDesktop', HomeTab::TYPE_ADMIN_DESKTOP);
+                    } else {
+                        $expr[] = $qb->expr()->orX(
+                          $qb->expr()->eq('obj.type', ':adminDesktop'),
+                          $qb->expr()->eq('config.locked', true)
+                        );
+                        $qb->setParameter('adminDesktop', HomeTab::TYPE_ADMIN_DESKTOP);
+                    }
+
+                    $expr[] = $qb->expr()->orX(
                       $qb->expr()->eq('u.id', ':userId'),
                       $qb->expr()->eq('u.uuid', ':userId')
-                    ));
-                    $qb->orWhere('obj.type = :desktopType');
+                    );
+
+                    $qb->andWhere($qb->expr()->orX(...$expr));
+
                     $qb->setParameter('userId', $filterValue);
-                    $qb->setParameter('desktopType', HomeTab::TYPE_ADMIN_DESKTOP);
                     break;
                 case 'workspace':
                     $qb->leftJoin('obj.workspace', 'w');

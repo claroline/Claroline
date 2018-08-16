@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Widget\WidgetContainer;
+use Claroline\CoreBundle\Entity\Widget\WidgetContainerConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -49,42 +50,50 @@ class WidgetContainerSerializer
 
     public function serialize(WidgetContainer $widgetContainer, array $options = []): array
     {
+        $widgetContainerConfig = $widgetContainer->getWidgetContainerConfigs()[0];
+
         $contents = [];
-        $arraySize = count($widgetContainer->getLayout());
+        $arraySize = count($widgetContainerConfig->getLayout());
+
         for ($i = 0; $i < $arraySize; ++$i) {
             $contents[$i] = null;
         }
 
         foreach ($widgetContainer->getInstances() as $widgetInstance) {
-            $contents[$widgetInstance->getPosition()] = $this->serializer->serialize($widgetInstance, $options);
+            $config = $widgetInstance->getWidgetInstanceConfigs()[0];
+
+            if ($config) {
+                $contents[$config->getPosition()] = $this->serializer->serialize($widgetInstance, $options);
+            }
         }
 
         return [
             'id' => $this->getUuid($widgetContainer, $options),
-            'name' => $widgetContainer->getName(),
-            'display' => $this->serializeDisplay($widgetContainer),
+            'name' => $widgetContainerConfig->getName(),
+            'display' => $this->serializeDisplay($widgetContainerConfig),
             'contents' => $contents,
         ];
     }
 
-    public function serializeDisplay(WidgetContainer $widgetContainer)
+    public function serializeDisplay(WidgetContainerConfig $widgetContainerConfig)
     {
         $display = [
-          'layout' => $widgetContainer->getLayout(),
-          'color' => $widgetContainer->getColor(),
-          'backgroundType' => $widgetContainer->getBackgroundType(),
-          'background' => $widgetContainer->getBackground(),
-      ];
-        if ('image' === $widgetContainer->getBackgroundType() && $widgetContainer->getBackground()) {
+            'layout' => $widgetContainerConfig->getLayout(),
+            'color' => $widgetContainerConfig->getColor(),
+            'backgroundType' => $widgetContainerConfig->getBackgroundType(),
+            'background' => $widgetContainerConfig->getBackground(),
+        ];
+
+        if ('image' === $widgetContainerConfig->getBackgroundType() && $widgetContainerConfig->getBackground()) {
             $file = $this->om
               ->getRepository('Claroline\CoreBundle\Entity\File\PublicFile')
-              ->findOneBy(['url' => $widgetContainer->getBackground()]);
+              ->findOneBy(['url' => $widgetContainerConfig->getBackground()]);
 
             if ($file) {
                 $display['background'] = $this->serializer->serialize($file);
             }
         } else {
-            $display['background'] = $widgetContainer->getBackground();
+            $display['background'] = $widgetContainerConfig->getBackground();
         }
 
         return $display;
@@ -92,19 +101,29 @@ class WidgetContainerSerializer
 
     public function deserialize($data, WidgetContainer $widgetContainer, array $options): WidgetContainer
     {
-        $this->sipe('id', 'setUuid', $data, $widgetContainer);
-        $this->sipe('name', 'setName', $data, $widgetContainer);
+        $widgetContainerConfig = $this->om->getRepository(WidgetContainerConfig::class)
+          ->findOneBy(['widgetContainer' => $widgetContainer]);
 
-        $this->sipe('display.layout', 'setLayout', $data, $widgetContainer);
-        $this->sipe('display.color', 'setColor', $data, $widgetContainer);
-        $this->sipe('display.backgroundType', 'setBackgroundType', $data, $widgetContainer);
+        if (!$widgetContainerConfig) {
+            $widgetContainerConfig = new WidgetContainerConfig();
+            $widgetContainerConfig->setWidgetContainer($widgetContainer);
+            $this->om->persist($widgetContainerConfig);
+            $this->om->persist($widgetContainer);
+        }
+
+        $this->sipe('id', 'setUuid', $data, $widgetContainer);
+        $this->sipe('name', 'setName', $data, $widgetContainerConfig);
+
+        $this->sipe('display.layout', 'setLayout', $data, $widgetContainerConfig);
+        $this->sipe('display.color', 'setColor', $data, $widgetContainerConfig);
+        $this->sipe('display.backgroundType', 'setBackgroundType', $data, $widgetContainerConfig);
 
         $display = $data['display'];
 
         if (isset($display['background']) && isset($display['background']['url'])) {
-            $this->sipe('display.background.url', 'setBackground', $data, $widgetContainer);
+            $this->sipe('display.background.url', 'setBackground', $data, $widgetContainerConfig);
         } else {
-            $this->sipe('display.background', 'setBackground', $data, $widgetContainer);
+            $this->sipe('display.background', 'setBackground', $data, $widgetContainerConfig);
         }
 
         if (isset($data['contents'])) {
@@ -112,17 +131,23 @@ class WidgetContainerSerializer
                 if ($content) {
                     /** @var WidgetInstance $widgetInstance */
                     $widgetInstance = $this->serializer->deserialize(WidgetInstance::class, $content, $options);
-                    $widgetInstance->setPosition($index);
-                    $widgetContainer->addInstance($widgetInstance);
+                    $widgetInstanceConfig = $widgetInstance->getWidgetInstanceConfigs()[0];
+                    $widgetInstanceConfig->setPosition($index);
+                    $widgetInstance->setContainer($widgetContainer);
 
                     // We either do this or cascade persist ¯\_(ツ)_/¯
                     $this->om->persist($widgetInstance);
+                    $this->om->persist($widgetInstanceConfig);
                 }
             }
         }
 
-        // todo : remove superfluous
+        // todo : remove superfluous (or maybe not it looks ok as is)
 
         return $widgetContainer;
+    }
+
+    public function getConfig(WidgetContainer $container, array $options)
+    {
     }
 }

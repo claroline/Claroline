@@ -76,7 +76,7 @@ class CsvHomeTextWidgetValidator extends ConstraintValidator
                 $this->context->addViolation($msg);
             }
 
-            $tab = $this->om->getRepository('ClarolineCoreBundle:Home\HomeTab')->findBy(['workspace' => $workspace, 'name' => $tabName]);
+            $tab = $this->om->getRepository('ClarolineCoreBundle:Tab\HomeTab')->findBy(['workspace' => $workspace, 'name' => $tabName]);
 
             if (!$tab) {
                 $msg = $this->translator->trans(

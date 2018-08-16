@@ -3,8 +3,8 @@
 namespace Claroline\CoreBundle\Listener\Administration;
 
 use Claroline\AppBundle\API\FinderProvider;
-use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -51,12 +51,14 @@ class HomeListener
     public function onDisplayTool(OpenAdministrationToolEvent $event)
     {
         $tabs = $this->finder->search(
-          'Claroline\CoreBundle\Entity\Home\HomeTab',
+          HomeTab::class,
           ['filters' => ['type' => HomeTab::TYPE_ADMIN_DESKTOP]]
         );
+
         $roles = $this->finder->search('Claroline\CoreBundle\Entity\Role',
           ['filters' => ['type' => Role::PLATFORM_ROLE]]
         );
+
         $content = $this->templating->render(
             'ClarolineCoreBundle:administration:home.html.twig', [
                 'editable' => true,

@@ -52,20 +52,6 @@ class WorkspaceRepositoryTest extends RepositoryTestCase
         $this->assertEquals(2, count($workspaces));
     }
 
-    public function testFindNonPersonal()
-    {
-        $workspaces = self::$repo->findNonPersonal(self::get('john'));
-        $this->assertEquals(4, count($workspaces));
-        $this->assertEquals(self::get('ws_2'), $workspaces[0]);
-    }
-
-    public function testFindByAnonymous()
-    {
-        $workspaces = self::$repo->findByAnonymous();
-        $this->assertEquals(1, count($workspaces));
-        $this->assertEquals(self::get('ws_1'), $workspaces[0]);
-    }
-
     public function testCount()
     {
         $this->assertEquals(5, self::$repo->count());
@@ -75,26 +61,6 @@ class WorkspaceRepositoryTest extends RepositoryTestCase
     {
         $workspaces = self::$repo->findByRoles(['ROLE_2', 'ROLE_ANONYMOUS']);
         $this->assertEquals(2, count($workspaces));
-    }
-
-    public function testFindIdsByUserAndRoleNames()
-    {
-        $ids = self::$repo->findIdsByUserAndRoleNames(self::get('john'), ['ROLE']);
-        $this->assertEquals(2, count($ids));
-        $this->assertEquals(self::get('ws_1')->getId(), $ids[0]['id']);
-        $this->assertEquals(self::get('ws_2')->getId(), $ids[1]['id']);
-        $ids = self::$repo->findIdsByUserAndRoleNames(self::get('john'), ['ROLE_BIS']);
-        $this->assertEquals(0, count($ids));
-    }
-
-    public function testFindByUserAndRoleNames()
-    {
-        $workspaces = self::$repo->findByUserAndRoleNames(self::get('john'), ['ROLE']);
-        $this->assertEquals(2, count($workspaces));
-        $this->assertEquals(self::get('ws_1'), $workspaces[0]);
-        $this->assertEquals(self::get('ws_2'), $workspaces[1]);
-        $workspaces = self::$repo->findIdsByUserAndRoleNames(self::get('john'), ['ROLE_BIS']);
-        $this->assertEquals(0, count($workspaces));
     }
 
     public function testFindByUserAndRoleNamesNotIn()
@@ -139,14 +105,6 @@ class WorkspaceRepositoryTest extends RepositoryTestCase
         $this->assertEquals(self::get('ws_3'), $workspaces[0]);
         $this->assertEquals(self::get('ws_4'), $workspaces[1]);
         $this->assertEquals(self::get('ws_5'), $workspaces[2]);
-    }
-
-    public function testFindWorkspacesWithSelfRegistration()
-    {
-        $workspaces = self::$repo->findWorkspacesWithSelfRegistration(self::get('john'));
-        $this->assertEquals(2, count($workspaces));
-        $this->assertEquals(self::get('ws_3'), $workspaces[0]);
-        $this->assertEquals(self::get('ws_5'), $workspaces[1]);
     }
 
     public function testFindDisplayableWorkspacesBySearch()

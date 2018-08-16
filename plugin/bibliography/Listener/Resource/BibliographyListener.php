@@ -3,25 +3,21 @@
 namespace Icap\BibliographyBundle\Listener\Resource;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\PluginOptionsEvent;
+use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
-use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\LinkBundle\Entity\Resource\Shortcut;
 use Icap\BibliographyBundle\Entity\BookReference;
 use Icap\BibliographyBundle\Form\BookReferenceType;
 use Icap\BibliographyBundle\Manager\BookReferenceManager;
-use Icap\BibliographyBundle\Repository\BookReferenceConfigurationRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Templating\EngineInterface;
 
@@ -60,12 +56,12 @@ class BibliographyListener
      *     "bookReferenceManager"       = @DI\Inject("icap.bookReference.manager")
      * })
      *
-     * @param FormFactoryInterface $formFactory
-     * @param EngineInterface $templating
+     * @param FormFactoryInterface  $formFactory
+     * @param EngineInterface       $templating
      * @param TokenStorageInterface $tokenStorage
-     * @param ObjectManager $objectManager
-     * @param RequestStack $requestStack
-     * @param BookReferenceManager $bookReferenceManager
+     * @param ObjectManager         $objectManager
+     * @param RequestStack          $requestStack
+     * @param BookReferenceManager  $bookReferenceManager
      */
     public function __construct(
         FormFactoryInterface $formFactory,
@@ -77,7 +73,7 @@ class BibliographyListener
     ) {
         $this->formFactory = $formFactory;
         $this->templating = $templating;
-        $this->user = $tokenStorage->getToken()->getUser();
+        $this->tokenStorage = $tokenStorage;
         $this->om = $objectManager;
         $this->request = $requestStack->getCurrentRequest();
         $this->bookReferenceManager = $bookReferenceManager;
@@ -196,14 +192,14 @@ class BibliographyListener
     public function onConfig(PluginOptionsEvent $event)
     {
         // If user is not platform admin, deny access
-        if (!$this->user->hasRole('ROLE_ADMIN')) {
-            throw new AccessDeniedHttpException("Only platform administrators can configure plugins");
+        if (!$this->tokenStorage->getToken()->getUser()->hasRole('ROLE_ADMIN')) {
+            throw new AccessDeniedHttpException('Only platform administrators can configure plugins');
         }
 
         $content = $this->templating->render(
             'IcapBibliographyBundle:configuration:open.html.twig',
             [
-                'configuration' => $this->bookReferenceManager->getConfig()
+                'configuration' => $this->bookReferenceManager->getConfig(),
             ]
         );
         $response = new Response($content);

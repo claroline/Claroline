@@ -14,81 +14,9 @@ namespace Claroline\CoreBundle\Repository;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class WidgetInstanceRepository extends EntityRepository implements ContainerAwareInterface
+class WidgetInstanceRepository extends EntityRepository
 {
-    private $container;
-
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
-    public function findAdminDesktopWidgetInstance(array $excludedWidgetInstances)
-    {
-        return $this->buildBaseQuery($excludedWidgetInstances)
-            ->where('wdc.isAdmin = true')
-            ->where('wdc.isDesktop = true')
-            ->getQuery()
-            ->getResult();
-    }
-
-    public function findAdminWorkspaceWidgetInstance(array $excludedWidgetInstances)
-    {
-        return $this->buildBaseQuery($excludedWidgetInstances)
-            ->where('wdc.isAdmin = true')
-            ->where('wdc.isDesktop = false')
-            ->getQuery()
-            ->getResult();
-    }
-
-    public function findDesktopWidgetInstance(User $user, array $excludedWidgetInstances)
-    {
-        return $this->buildBaseQuery($excludedWidgetInstances)
-            ->where('wdc.user = :user')
-            ->where('wdc.isAdmin = false')
-            ->where('wdc.isDesktop = true')
-            ->setParameter('user', $user)
-            ->getQuery()
-            ->getResult();
-    }
-
-    public function findWorkspaceWidgetInstance(Workspace $workspace, array $excludedWidgetInstances)
-    {
-        return $this->buildBaseQuery($excludedWidgetInstances)
-            ->where('wdc.workspace = :workspace')
-            ->where('wdc.isAdmin = false')
-            ->where('wdc.isDesktop = false')
-            ->setParameter('workspace', $workspace)
-            ->getQuery()
-            ->getResult();
-    }
-
-    private function buildBaseQuery(array $excludedWidgetInstances)
-    {
-        $bundles = $this->container
-            ->get('claroline.manager.plugin_manager')
-            ->getEnabled(true);
-
-        $qb = $this->createQueryBuilder('wdc');
-
-        return $qb
-            ->select('wdc')
-            ->join('wdc.widget', 'widget')
-            ->leftJoin('widget.plugin', 'plugin')
-            ->where('wdc NOT IN (:excludedWidgetInstances)')
-            ->andWhere($qb->expr()->orX(
-                'CONCAT(plugin.vendorName, plugin.bundleName) IN (:bundles)',
-                'widget.plugin IS NULL'
-            ))
-            ->setParameters([
-                'excludedWidgetInstances' => $excludedWidgetInstances,
-                'bundles' => $bundles,
-            ]);
-    }
-
     /**
      * @param string $filter
      *
@@ -110,7 +38,7 @@ class WidgetInstanceRepository extends EntityRepository implements ContainerAwar
                 break;
         }
 
-        if ($organizations !== null) {
+        if (null !== $organizations) {
             $qb->leftJoin('widget.user', 'user')
                 ->leftJoin('user.userOrganizationReferences', 'orgaRef')
                 ->leftJoin('widget.workspace', 'ws')
@@ -135,7 +63,7 @@ class WidgetInstanceRepository extends EntityRepository implements ContainerAwar
             ->groupBy('w.id')
             ->orderBy('total', 'DESC');
 
-        if ($organizations !== null) {
+        if (null !== $organizations) {
             $qb->leftJoin('wi.user', 'user')
                 ->leftJoin('user.userOrganizationReferences', 'orgaRef')
                 ->leftJoin('wi.workspace', 'ws')

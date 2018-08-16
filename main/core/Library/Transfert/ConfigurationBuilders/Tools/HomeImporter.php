@@ -12,13 +12,7 @@
 namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Home\HomeTab;
-use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 //TODO FIXME ! NOT GONNA WORK ANYMORE
-use Claroline\CoreBundle\Entity\Widget\WidgetDisplayConfig;
-use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
-use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -131,129 +125,12 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
 
     public function import(array $array, $workspace)
     {
-        $homeTabOrder = 1;
-
-        foreach ($array['data'] as $tab) {
-            $homeTab = new HomeTab();
-            $homeTab->setName($tab['tab']['name']);
-            $homeTab->setWorkspace($this->getWorkspace());
-            $homeTab->setType('workspace');
-            $this->om->persist($homeTab);
-            $homeTabConfig = new HomeTabConfig();
-            $homeTabConfig->setHomeTab($homeTab);
-            $homeTabConfig->setType('workspace');
-            $homeTabConfig->setWorkspace($this->getWorkspace());
-            $homeTabConfig->setLocked(false);
-            $homeTabConfig->setVisible(true);
-            $homeTabConfig->setTabOrder($homeTabOrder);
-            $this->om->persist($homeTabConfig);
-            $this->container->get('claroline.manager.home_tab_manager')->insertHomeTabConfig($homeTabConfig);
-            $widgetOrder = 1;
-
-            foreach ($tab['tab']['widgets'] as $widget) {
-                $widgetType = $this->om->getRepository('ClarolineCoreBundle:Widget\Widget')
-                    ->findOneByName($widget['widget']['type']);
-                $widgetInstance = new WidgetInstance();
-                $name = $widget['widget']['name'] ? $widget['widget']['name'] : uniqid();
-                $widgetInstance->setName($name);
-                $widgetInstance->setWidget($widgetType);
-                $widgetInstance->setWorkspace($this->getWorkspace());
-                $widgetInstance->setIsAdmin(false);
-                $widgetInstance->setIsDesktop(false);
-                $this->om->persist($widgetInstance);
-                $widgetConfig = new WidgetDisplayConfig();
-
-                if ($widget['widget']['row']) {
-                    $widgetConfig->setRow($widget['widget']['row']);
-                }
-                if ($widget['widget']['column']) {
-                    $widgetConfig->setColumn($widget['widget']['column']);
-                }
-                if ($widget['widget']['width']) {
-                    $widgetConfig->setWidth($widget['widget']['width']);
-                }
-                if ($widget['widget']['height']) {
-                    $widgetConfig->setHeight($widget['widget']['height']);
-                }
-                if ($widget['widget']['color']) {
-                    $widgetConfig->setColor($widget['widget']['color']);
-                }
-                $widgetConfig->setWorkspace($workspace);
-                $widgetConfig->setWidgetInstance($widgetInstance);
-                $this->om->persist($widgetConfig);
-
-                $widgetHomeTabConfig = new WidgetHomeTabConfig();
-                $widgetHomeTabConfig->setWidgetInstance($widgetInstance);
-                $widgetHomeTabConfig->setHomeTab($homeTab);
-                $widgetHomeTabConfig->setWorkspace($this->getWorkspace());
-                $widgetHomeTabConfig->setType('workspace');
-                $widgetHomeTabConfig->setVisible(true);
-                $widgetHomeTabConfig->setLocked(false);
-                $widgetHomeTabConfig->setWidgetOrder($widgetOrder);
-                $this->om->persist($widgetHomeTabConfig);
-
-                $importer = $this->getImporterByName($widget['widget']['type']);
-
-                if (isset($widget['widget']['data']) && $importer) {
-                    $widgetdata = $widget['widget']['data'];
-                    $importer->import($widgetdata, $widgetInstance);
-                }
-
-                ++$widgetOrder;
-            }
-
-            ++$homeTabOrder;
-        }
+        //not gonna work
     }
 
     public function export($workspace, array &$files, $object)
     {
-        $homeTabs = $this->container->get('claroline.manager.home_tab_manager')
-            ->getWorkspaceHomeTabConfigsByWorkspace($workspace);
-        $tabs = [];
-
-        foreach ($homeTabs as $homeTab) {
-            $widgets = [];
-            $widgetConfigs = $this->container->get('claroline.manager.home_tab_manager')
-                ->getWidgetConfigsByWorkspace($homeTab->getHomeTab(), $workspace);
-
-            foreach ($widgetConfigs as $widgetConfig) {
-                $data = [];
-                $importer = $this->getImporterByName($widgetConfig->getWidgetInstance()->getWidget()->getName());
-
-                if ($importer) {
-                    $data = $importer->export($workspace, $files, $widgetConfig->getWidgetInstance());
-                }
-
-                $widgetDisplayConfigs = $this->container->get('claroline.manager.widget_manager')->getWidgetDisplayConfigsByWorkspaceAndWidgets(
-                    $workspace,
-                    [$widgetConfig->getWidgetInstance()]
-                );
-
-                $widgetDisplayConfig = isset($widgetDisplayConfigs[0]) ? $widgetDisplayConfigs[0] : null;
-
-                //export the widget content here
-                $widgetData = ['widget' => [
-                    'name' => $widgetConfig->getWidgetInstance()->getName(),
-                    'type' => $widgetConfig->getWidgetInstance()->getWidget()->getName(),
-                    'data' => $data,
-                    'row' => $widgetDisplayConfig ? $widgetDisplayConfig->getRow() : null,
-                    'column' => $widgetDisplayConfig ? $widgetDisplayConfig->getColumn() : null,
-                    'width' => $widgetDisplayConfig ? $widgetDisplayConfig->getWidth() : null,
-                    'height' => $widgetDisplayConfig ? $widgetDisplayConfig->getHeight() : null,
-                    'color' => $widgetDisplayConfig ? $widgetDisplayConfig->getColor() : null,
-                ]];
-
-                $widgets[] = $widgetData;
-            }
-
-            $tabs[] = ['tab' => [
-                'name' => $homeTab->getHomeTab()->getName(),
-                'widgets' => $widgets,
-            ]];
-        }
-
-        return $tabs;
+        return [];
     }
 
     public function format($data)

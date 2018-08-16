@@ -171,6 +171,14 @@ class Role extends BaseRole
      */
     protected $profileProperties;
 
+    /**
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Tab\HomeTabConfig",
+     *     mappedBy="roles"
+     * )
+     */
+    protected $homeTabConfigs;
+
     public function __construct()
     {
         $this->refreshUuid();
@@ -181,6 +189,7 @@ class Role extends BaseRole
         $this->pwsToolConfig = new ArrayCollection();
         $this->profileProperties = new ArrayCollection();
         $this->adminTools = new ArrayCollection();
+        $this->homeTabConfigs = new ArrayCollection();
     }
 
     public function getId()

@@ -121,7 +121,11 @@ class OperationExecutor
             if (array_key_exists('bundles', $extra)) {
                 //this is only valid for installable bundles
                 $bundles = array_filter($extra['bundles'], function ($var) {
-                    return in_array('Claroline\InstallationBundle\Bundle\InstallableInterface', class_implements($var)) ? true : false;
+                    try {
+                        return in_array('Claroline\InstallationBundle\Bundle\InstallableInterface', class_implements($var)) ? true : false;
+                    } catch (\Exception $e) {
+                        $this->log($var.' not found.', LogLevel::ERROR);
+                    }
                 });
 
                 foreach ($bundles as $bundle) {

@@ -1,6 +1,8 @@
 import {API_REQUEST} from '#/main/app/api'
 import {makeActionCreator} from '#/main/app/store/actions'
 
+import {url} from '#/main/app/api'
+
 export const LOAD_MODEL = 'LOAD_MODEL'
 export const LOAD_CURRENT = 'LOAD_CURRENT'
 
@@ -28,6 +30,9 @@ actions.save = (workspace) => ({
     request: {
       body: JSON.stringify(workspace),
       method: 'POST'
+    },
+    success: (response) => {
+      window.location = url('claro_workspace_open', {workspaceId: response.id})
     }
   }
 })

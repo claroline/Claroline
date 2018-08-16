@@ -18,5 +18,8 @@
     "profile": "User profile",
     "resource-list": "Resources list",
     "user-list": "Users list",
-    "workspace-list": "Workspaces list"
+    "workspace-list": "Workspaces list",
+
+    "lock_tab": "Lock tab",
+    "lock_tab_help": "A locked tab will be visible in the desktop and will not be editable nor removable by the user."
 }

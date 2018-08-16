@@ -40,68 +40,6 @@ class WorkspaceRepository extends EntityRepository
     }
 
     /**
-     * Returns the workspaces which are not a user's personal workspace.
-     *
-     * @return Workspace[]
-     */
-    public function findNonPersonal()
-    {
-        return $this->_em
-            ->createQuery('
-                SELECT w FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-                WHERE w.id NOT IN (
-                    SELECT pws.id FROM Claroline\CoreBundle\Entity\User user
-                    JOIN user.personalWorkspace pws
-                )
-                ORDER BY w.id
-            ')
-            ->getResult();
-    }
-
-    /**
-     * Returns the workspaces which are not a user's personal workspace.
-     *
-     * @return Workspace[]
-     */
-    public function findNonPersonalWorkspaces()
-    {
-        return $this->_em
-            ->createQuery('
-                SELECT w
-                FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-                WHERE w.personal = false
-                ORDER BY w.id
-            ')
-            ->getResult();
-    }
-
-    /**
-     * Returns the workspaces whose at least one tool is accessible to anonymous users.
-     *
-     * @param int $orderedToolType
-     *
-     * @return Workspace[]
-     */
-    public function findByAnonymous($orderedToolType = 0)
-    {
-        return $this->_em
-            ->createQuery("
-                SELECT DISTINCT w
-                FROM Claroline\\CoreBundle\\Entity\\Workspace\\Workspace w
-                INNER JOIN w.orderedTools ot
-                INNER JOIN ot.rights otr
-                INNER JOIN otr.role r
-                WHERE r.name = 'ROLE_ANONYMOUS'
-                AND ot.type = :type
-                AND BIT_AND(otr.mask, :openValue) = :openValue
-            ")
-            ->setParameter('openValue', ToolMaskDecoder::$defaultValues['open'])
-            ->setParameter('type', $orderedToolType)
-            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
-            ->getResult();
-    }
-
-    /**
      * Counts the workspaces.
      *
      * @return int
@@ -174,32 +112,6 @@ class WorkspaceRepository extends EntityRepository
     }
 
     /**
-     * Returns the workspaces whose at least one tool is accessible to one of the given roles.
-     *
-     * @param string   $search
-     * @param string[] $roles
-     *
-     * @return array[Workspace]
-     */
-    public function findBySearchAndRoles($search, array $roles)
-    {
-        return $this->_em
-            ->createQuery('
-                SELECT DISTINCT w FROM Claroline\\CoreBundle\\Entity\\Workspace\\Workspace w
-                JOIN w.roles r
-                WHERE r.name in (:roles)
-                AND (
-                    UPPER(w.name) LIKE :search
-                    OR UPPER(w.code) LIKE :search
-                )
-                ORDER BY w.name
-            ')
-            ->setParameter('roles', $roles)
-            ->setParameter('search', '%'.strtoupper($search).'%')
-            ->getResult();
-    }
-
-    /**
      * Finds which workspaces can be opened by one of the given roles,
      * in a given set of workspaces. If a tool name is passed in, the
      * check will be limited to that tool, otherwise workspaces with
@@ -259,49 +171,6 @@ class WorkspaceRepository extends EntityRepository
         }
 
         return $query->getResult();
-    }
-
-    /**
-     * Returns the workspaces whose at least one tool is accessible to one of the given roles.
-     *
-     * @param string[] $roleNames
-     * @param int      $orderedToolType
-     *
-     * @return Workspace[]
-     */
-    public function findByRoleNames(array $roleNames, $orderedToolType = 0)
-    {
-        return $this->_em
-            ->createQuery('
-                SELECT DISTINCT w
-                FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-                JOIN w.orderedTools ot
-                JOIN ot.rights otr
-                JOIN otr.role r
-                WHERE r.name IN (:roleNames)
-                AND ot.type = :type
-                AND BIT_AND(otr.mask, :openValue) = :openValue
-                ORDER BY w.name
-            ')
-            ->setParameter('roleNames', $roleNames)
-            ->setParameter('openValue', ToolMaskDecoder::$defaultValues['open'])
-            ->setParameter('type', $orderedToolType)
-            ->getResult();
-    }
-
-    /**
-     * Returns the ids of the workspaces a user is member of, filtered by a set of roles
-     * the user must have in those workspaces. Role names are actually prefixes of the
-     * target role (e.g. 'ROLE_WS_COLLABORATOR' instead of 'ROLE_WS_COLLABORATOR_123').
-     *
-     * @param User     $user
-     * @param string[] $roleNames
-     *
-     * @return array
-     */
-    public function findIdsByUserAndRoleNames(User $user, array $roleNames)
-    {
-        return $this->doFindByUserAndRoleNames($user, $roleNames, true);
     }
 
     /**
@@ -455,6 +324,7 @@ class WorkspaceRepository extends EntityRepository
 
     /**
      * Returns the workspaces which are marked as displayable.
+     * used by claro_all_workspaces_list_pager_for_resource_rights.
      *
      * @return Workspace[]
      */
@@ -467,71 +337,6 @@ class WorkspaceRepository extends EntityRepository
             ORDER BY w.name
         ';
         $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
-    }
-
-    /**
-     * Returns the workspaces which are visible for an authenticated user and allow
-     * self-registration (user's workspaces are excluded).
-     *
-     * @param User $user
-     *
-     * @return Workspace[]
-     */
-    public function findWorkspacesWithSelfRegistration(User $user)
-    {
-        $dql = '
-            SELECT w
-            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-            WHERE w.displayable = true
-            AND w.selfRegistration = true
-            AND w.id NOT IN (
-                SELECT w2.id FROM Claroline\CoreBundle\Entity\Workspace\Workspace w2
-                JOIN w2.roles r
-                JOIN r.users u
-                WHERE u.id = :userId
-            )
-            ORDER BY w.name
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('userId', $user->getId());
-
-        return $query->getResult();
-    }
-
-    /**
-     * Returns the workspaces which are visible for an authenticated user and allow
-     * self-registration (user's workspaces are excluded).
-     *
-     * @param User   $user
-     * @param string $search
-     *
-     * @return Workspace[]
-     */
-    public function findWorkspacesWithSelfRegistrationBySearch(User $user, $search)
-    {
-        $dql = '
-            SELECT w
-            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-            WHERE w.displayable = true
-            AND w.selfRegistration = true
-            AND (
-                UPPER(w.name) LIKE :search
-                OR UPPER(w.code) LIKE :search
-            )
-            AND w.id NOT IN (
-                SELECT w2.id FROM Claroline\CoreBundle\Entity\Workspace\Workspace w2
-                JOIN w2.roles r
-                JOIN r.users u
-                WHERE u.id = :userId
-            )
-            ORDER BY w.name
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('userId', $user->getId());
-        $search = strtoupper($search);
-        $query->setParameter('search', "%{$search}%");
 
         return $query->getResult();
     }
@@ -564,76 +369,9 @@ class WorkspaceRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findWorkspacesWithSelfUnregistrationByRoles(array $roles)
-    {
-        $dql = '
-            SELECT DISTINCT w FROM Claroline\\CoreBundle\\Entity\\Workspace\\Workspace w
-            JOIN w.roles r
-            WHERE w.selfUnregistration = true
-            AND r.name IN (:roles)
-            ORDER BY w.name
-        ';
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('roles', $roles);
-
-        return $query->getResult();
-    }
-
     /**
-     * Returns the workspaces which are visible and are not in the given list.
-     *
-     * @param array $excludedWorkspaces
-     *
-     * @return Workspace[]
+     *  Used By claro_workspace_update_favourite.
      */
-    public function findDisplayableWorkspacesWithout(array $excludedWorkspaces)
-    {
-        $dql = '
-            SELECT w
-            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-            WHERE w.displayable = true
-            AND w NOT IN (:excludedWorkspaces)
-            ORDER BY w.name
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('excludedWorkspaces', $excludedWorkspaces);
-
-        return $query->getResult();
-    }
-
-    /**
-     * Returns the workspaces which are visible, are not in the given list
-     * and whose name or code contains $search param.
-     *
-     * @param array  $excludedWorkspaces
-     * @param string $search
-     *
-     * @return Workspace[]
-     */
-    public function findDisplayableWorkspacesWithoutBySearch(
-        array $excludedWorkspaces,
-        $search
-    ) {
-        $dql = '
-            SELECT w
-            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-            WHERE w.displayable = true
-            AND (
-                UPPER(w.name) LIKE :search
-                OR UPPER(w.code) LIKE :search
-            )
-            AND w NOT IN (:excludedWorkspaces)
-            ORDER BY w.name
-        ';
-        $upperSearch = strtoupper($search);
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('search', "%{$upperSearch}%");
-        $query->setParameter('excludedWorkspaces', $excludedWorkspaces);
-
-        return $query->getResult();
-    }
-
     public function findWorkspaceByWorkspaceAndRoles(
         Workspace $workspace,
         array $roles,
@@ -687,6 +425,9 @@ class WorkspaceRepository extends EntityRepository
         return $executeQuery ? $query->getResult() : $query;
     }
 
+    /**
+     * Eventually used by the message bundle.
+     */
     public function findWorkspacesByManager(User $user, $executeQuery = true)
     {
         $roles = $user->getRoles();
@@ -722,124 +463,6 @@ class WorkspaceRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('codes', $codes);
-
-        return $query->getResult();
-    }
-
-    /**
-     * Returns the workspaces which are marked as displayable and are not someone's
-     * personal workspace.
-     *
-     * @return Workspace[]
-     */
-    public function findDisplayableNonPersonalWorkspaces()
-    {
-        $dql = '
-            SELECT w
-            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-            WHERE w.displayable = true
-            AND NOT EXISTS (
-                SELECT u
-                FROM Claroline\CoreBundle\Entity\User u
-                JOIN u.personalWorkspace pw
-                WHERE pw = w
-            )
-            ORDER BY w.name
-        ';
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
-    }
-
-    /**
-     * Returns the workspaces which are marked as displayable and are not someone's
-     * personal workspace and where name or code contains $search param.
-     *
-     * @param string $search
-     *
-     * @return Workspace[]
-     */
-    public function findDisplayableNonPersonalWorkspacesBySearch($search)
-    {
-        $dql = '
-            SELECT w
-            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-            WHERE w.displayable = true
-            AND (
-                UPPER(w.name) LIKE :search
-                OR UPPER(w.code) LIKE :search
-            )
-            AND NOT EXISTS (
-                SELECT u
-                FROM Claroline\CoreBundle\Entity\User u
-                JOIN u.personalWorkspace pw
-                WHERE pw = w
-            )
-            ORDER BY w.name
-        ';
-
-        $search = strtoupper($search);
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('search', "%{$search}%");
-
-        return $query->getResult();
-    }
-
-    /**
-     * Returns the workspaces which are marked as displayable and are someone's
-     * personal workspace.
-     *
-     * @return Workspace[]
-     */
-    public function findDisplayablePersonalWorkspaces()
-    {
-        $dql = '
-            SELECT w
-            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-            WHERE w.displayable = true
-            AND EXISTS (
-                SELECT u
-                FROM Claroline\CoreBundle\Entity\User u
-                JOIN u.personalWorkspace pw
-                WHERE pw = w
-            )
-            ORDER BY w.name
-        ';
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
-    }
-
-    /**
-     * Returns the workspaces which are marked as displayable and are someone's
-     * personal workspace and where name or code contains $search param.
-     *
-     * @param string $search
-     *
-     * @return Workspace[]
-     */
-    public function findDisplayablePersonalWorkspacesBySearch($search)
-    {
-        $dql = '
-            SELECT w
-            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-            WHERE w.displayable = true
-            AND (
-                UPPER(w.name) LIKE :search
-                OR UPPER(w.code) LIKE :search
-            )
-            AND EXISTS (
-                SELECT u
-                FROM Claroline\CoreBundle\Entity\User u
-                JOIN u.personalWorkspace pw
-                WHERE pw = w
-            )
-            ORDER BY w.name
-        ';
-
-        $search = strtoupper($search);
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('search', "%{$search}%");
 
         return $query->getResult();
     }
@@ -882,6 +505,7 @@ class WorkspaceRepository extends EntityRepository
 
     /**
      * Returns all non-personal workspaces which name or code contains $search param.
+     * used by the old user picker (12.x).
      *
      * @param string $search
      * @param string $orderedBy
@@ -1078,6 +702,7 @@ class WorkspaceRepository extends EntityRepository
         return $query->getResult();
     }
 
+    //replace by the finders (it already has page & offset)
     public function findAllPaginated($offset = null, $limit = null)
     {
         $qb = $this

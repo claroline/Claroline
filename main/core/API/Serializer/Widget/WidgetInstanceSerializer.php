@@ -8,6 +8,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Widget\Type\AbstractWidget;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstanceConfig;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -45,7 +46,7 @@ class WidgetInstanceSerializer
 
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Widget\WidgetInstance';
+        return WidgetInstance::class;
     }
 
     public function serialize(WidgetInstance $widgetInstance, array $options = []): array
@@ -77,7 +78,17 @@ class WidgetInstanceSerializer
 
     public function deserialize($data, WidgetInstance $widgetInstance, array $options = []): WidgetInstance
     {
+        $widgetInstanceConfig = $widgetInstance->getWidgetInstanceConfigs()[0];
+
+        if (!$widgetInstanceConfig) {
+            $widgetInstanceConfig = new WidgetInstanceConfig();
+            $widgetInstanceConfig->setWidgetInstance($widgetInstance);
+        }
+
         $this->sipe('id', 'setUuid', $data, $widgetInstance);
+        $this->sipe('type', 'setType', $data, $widgetInstanceConfig);
+
+        $this->om->persist($widgetInstanceConfig);
 
         /** @var Widget $widget */
         $widget = $this->om

@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Entity\Widget;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -25,26 +26,6 @@ class WidgetInstance
 {
     use Id;
     use Uuid;
-
-    /**
-     * The name of the instance.
-     *
-     * @ORM\Column(name="widget_name", nullable=true)
-     *
-     * @var string
-     *
-     * @deprecated. moved on WidgetContainer. Kept for migration.
-     */
-    private $name;
-
-    /**
-     * The position of the instance inside its container.
-     *
-     * @ORM\Column(name="widget_position", type="integer")
-     *
-     * @var int
-     */
-    private $position = 0;
 
     /**
      * The widget which is rendered.
@@ -60,7 +41,7 @@ class WidgetInstance
      * The parent container.
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetContainer", inversedBy="instances", cascade={"persist"})
-     * @ORM\JoinColumn(name="container_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="container_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      *
      * @var WidgetContainer
      */
@@ -68,40 +49,20 @@ class WidgetInstance
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig",
+     *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstanceConfig",
      *     mappedBy="widgetInstance"
      * )
      */
-    protected $widgetHomeTabConfigs;
+    protected $widgetInstanceConfigs;
 
     /**
-     * Get name.
-     *
-     * @return string
+     * WidgetContainer constructor.
      */
-    public function getName()
+    public function __construct()
     {
-        return $this->name;
-    }
+        $this->refreshUuid();
 
-    /**
-     * Get position.
-     *
-     * @return int
-     */
-    public function getPosition()
-    {
-        return $this->position;
-    }
-
-    /**
-     * Set position.
-     *
-     * @param int $position
-     */
-    public function setPosition($position)
-    {
-        $this->position = $position;
+        $this->widgetInstanceConfigs = new ArrayCollection();
     }
 
     /**
@@ -142,5 +103,22 @@ class WidgetInstance
     public function setContainer(WidgetContainer $container)
     {
         $this->container = $container;
+    }
+
+    /**
+     * Set widget container.
+     *
+     * @param WidgetContainer $container
+     */
+    public function getWidgetInstanceConfigs()
+    {
+        return $this->widgetInstanceConfigs;
+    }
+
+    public function addWidgetInstanceConfig(WidgetInstanceConfig $config)
+    {
+        if (!$this->widgetInstanceConfigs->contains($config)) {
+            $this->widgetInstanceConfigs->add($config);
+        }
     }
 }

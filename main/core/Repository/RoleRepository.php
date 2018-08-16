@@ -239,34 +239,6 @@ class RoleRepository extends EntityRepository
         return $query->getResult();
     }
 
-    /**
-     * @todo check and document this method
-     */
-    public function findByWorkspaceCodeTag($workspaceCode)
-    {
-        $upperSearch = strtoupper($workspaceCode);
-
-        $dql = "
-            SELECT DISTINCT r FROM Claroline\CoreBundle\Entity\Role r
-            JOIN r.workspace ws
-            LEFT JOIN Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
-            WITH rwt.workspace = ws
-            LEFT JOIN Claroline\CoreBundle\Entity\Workspace\WorkspaceTag wt
-            WITH rwt.tag = wt AND wt.user IS NULL
-            LEFT JOIN Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy wth
-            WITH wth.tag = wt AND wth.user IS NULL
-            LEFT JOIN wth.parent p
-            WHERE ws.displayable = true AND (UPPER(ws.code) LIKE :code
-            OR UPPER(wt.name) LIKE :code
-            OR UPPER(p.name) LIKE :code)
-        ";
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('code', '%'.$upperSearch.'%');
-
-        return $query->getResult();
-    }
-
     private function findBaseWorkspaceRole($roleType, Workspace $workspace)
     {
         $dql = "

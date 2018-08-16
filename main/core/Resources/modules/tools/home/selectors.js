@@ -28,8 +28,12 @@ const sortedTabs = createSelector(
 )
 
 const visibleTabs = createSelector(
-  [sortedTabs],
-  (sortedTabs) => {
+  [sortedTabs, context],
+  (sortedTabs, context) => {
+    if (context.type === 'administration') {
+      return sortedTabs
+    }
+
     const userRoles = authenticatedUser.roles.map(role => role.id)
 
     return sortedTabs

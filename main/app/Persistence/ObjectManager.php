@@ -291,7 +291,7 @@ class ObjectManager extends ObjectManagerDecorator
         $dql = "SELECT COUNT(object) FROM {$class} object";
         $query = $this->wrapped->createQuery($dql);
 
-        return $query->getSingleScalarResult();
+        return (int) $query->getSingleScalarResult();
     }
 
     private function assertIsSupported($isSupportedFlag, $method)
@@ -365,6 +365,19 @@ class ObjectManager extends ObjectManagerDecorator
         }
 
         $this->flush();
+    }
+
+    /**
+     * @param string     $class
+     * @param string|int $id
+     */
+    public function find($class, $id)
+    {
+        return $this->wrapped->getRepository($class)->findOneBy(
+            !is_numeric($id) && property_exists($class, 'uuid') ?
+                ['uuid' => $id] :
+                ['id' => $id]
+        );
     }
 
     /**

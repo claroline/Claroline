@@ -19,6 +19,8 @@ const PlayerComponent = props =>
       <Tabs
         tabs={props.context.type === 'workspace' || props.context.type === 'administration' ?
           props.visibleTabs : props.sortedTabs}
+          
+        context={props.context}
       />
     }
     <PageHeader

@@ -51,7 +51,8 @@ const WorkspaceToolbarComponent = props =>
         type: URL_BUTTON,
         icon: 'fa fa-download',
         label: trans('export', {}, 'actions'),
-        displayed: hasPermission('export', props.workspace),
+        //displayed: hasPermission('export', props.workspace),
+        displayed: false, //currently broken
         target: ['claro_workspace_export', {workspace: props.workspace.id}]
       }, {
         type: ASYNC_BUTTON,

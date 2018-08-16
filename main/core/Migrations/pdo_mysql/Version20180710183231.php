@@ -17,7 +17,7 @@ class Version20180710183231 extends AbstractMigration
         $this->addSql('
             ALTER TABLE claro_home_tab
             ADD centerTitle TINYINT(1) NOT NULL,
-            CHANGE longTitle longTitle LONGTEXT NOT NULL
+            CHANGE longTitle longTitle LONGTEXT
         ');
         $this->addSql('
             ALTER TABLE claro_widget_instance

@@ -15,7 +15,8 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\AbstractApiController;
-use Claroline\CoreBundle\Entity\Home\HomeTab;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -32,6 +33,8 @@ class HomeController extends AbstractApiController
     private $crud;
     /** @var SerializerProvider */
     private $serializer;
+    /** @var ObjectManager */
+    private $om;
 
     /**
      * HomeController constructor.
@@ -39,7 +42,8 @@ class HomeController extends AbstractApiController
      * @DI\InjectParams({
      *     "finder"     = @DI\Inject("claroline.api.finder"),
      *     "crud"       = @DI\Inject("claroline.api.crud"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
+     *     "serializer" = @DI\Inject("claroline.api.serializer"),
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param FinderProvider     $finder
@@ -49,11 +53,13 @@ class HomeController extends AbstractApiController
     public function __construct(
         FinderProvider $finder,
         Crud $crud,
-        SerializerProvider $serializer)
-    {
+        SerializerProvider $serializer,
+        ObjectManager $om
+    ) {
         $this->finder = $finder;
         $this->crud = $crud;
         $this->serializer = $serializer;
+        $this->om = $om;
     }
 
     /**
@@ -79,19 +85,34 @@ class HomeController extends AbstractApiController
         $updated = [];
         foreach ($tabs as $tab) {
             // do not update tabs set by the administration tool
-            if (HomeTab::TYPE_ADMIN_DESKTOP !== $tab['type']) {
-                $updated[] = $this->crud->update(HomeTab::class, $tab);
+
+            if (HomeTab::TYPE_ADMIN_DESKTOP === $context) {
+                $updated[] = $this->crud->update(HomeTab::class, $tab, [$context]);
                 $ids[] = $tab['id']; // will be used to determine deleted tabs
+            } else {
+                if (HomeTab::TYPE_ADMIN_DESKTOP !== $tab['type']) {
+                    $updated[] = $this->crud->update(HomeTab::class, $tab, [$context]);
+                    $ids[] = $tab['id']; // will be used to determine deleted tabs
+                } else {
+                    $updated[] = $this->om->getObject($tab, HomeTab::class);
+                }
             }
         }
 
         // retrieve existing tabs for the context to remove deleted ones
-        /** @var HomeTab[] $installedTabs */
-        $installedTabs = $this->finder->fetch(HomeTab::class, 'desktop' === $context ? [
-            'user' => $contextId,
-        ] : [
-            $context => $contextId,
-        ]);
+        /* @var HomeTab[] $installedTabs */
+        if ('administration' === $context) {
+            $installedTabs = $this->finder->fetch(HomeTab::class, ['type' => HomeTab::TYPE_ADMIN_DESKTOP]);
+        } else {
+            $installedTabs = $this->finder->fetch(HomeTab::class, 'desktop' === $context ? [
+                'user' => $contextId,
+            ] : [
+                $context => $contextId,
+            ]);
+            $installedTabs = array_filter($installedTabs, function (HomeTab $tab) {
+                return HomeTab::TYPE_ADMIN_DESKTOP !== $tab->getType();
+            });
+        }
 
         foreach ($installedTabs as $installedTab) {
             if (!in_array($installedTab->getUuid(), $ids)) {
@@ -99,6 +120,7 @@ class HomeController extends AbstractApiController
                 $this->crud->delete($installedTab);
             }
         }
+        //for some reason doesn't serialize the widgets content yet the first time
 
         return new JsonResponse(array_map(function (HomeTab $tab) {
             return $this->serializer->serialize($tab);

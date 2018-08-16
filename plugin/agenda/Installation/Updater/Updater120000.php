@@ -31,8 +31,11 @@ class Updater120000 extends Updater
         try {
             $this->log('backing up the events...');
             $this->conn->query('CREATE TABLE claro_event_old  AS (SELECT * FROM claro_event)');
+            $this->conn->query('UPDATE `claro_event` SET `start_date` = NULL, `end_date` = NULL');
         } catch (\Exception $e) {
-            $this->log('Coulnt backup forum subjects');
+            $this->log('Couldnt backup the events');
+
+            $this->conn->query('UPDATE `claro_event` SET `start_date` = NULL, `end_date` = NULL');
         }
     }
 

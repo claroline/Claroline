@@ -150,9 +150,6 @@ plugin:
         - name: platform_analytics
           class: pie-chart
 
-        - name: widgets_management
-          class: list-alt
-
         - name: tasks_scheduling
           class: clock-o
 

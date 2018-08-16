@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
@@ -20,25 +21,17 @@ use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
-use Claroline\CoreBundle\Form\ImportWorkspaceType;
-use Claroline\CoreBundle\Library\Logger\FileLogger;
 use Claroline\CoreBundle\Library\Security\TokenUpdater;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
-use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Manager\WidgetManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Claroline\CoreBundle\Manager\WorkspaceUserQueueManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -64,24 +57,19 @@ class WorkspaceController extends Controller
 {
     private $authorization;
     private $eventDispatcher;
-    private $formFactory;
     private $homeTabManager;
     private $request;
     private $resourceManager;
     private $roleManager;
     private $router;
     private $session;
-    private $templateArchive;
-    private $templating;
     private $tokenStorage;
     private $tokenUpdater;
     private $toolManager;
     private $translator;
-    private $userManager;
     private $utils;
-    private $widgetManager;
     private $workspaceManager;
-    private $workspaceUserQueueManager;
+    private $om;
     /** @var ParametersSerializer */
     private $parametersSerializer;
 
@@ -89,71 +77,55 @@ class WorkspaceController extends Controller
      * @DI\InjectParams({
      *     "authorization"             = @DI\Inject("security.authorization_checker"),
      *     "eventDispatcher"           = @DI\Inject("event_dispatcher"),
-     *     "formFactory"               = @DI\Inject("form.factory"),
      *     "homeTabManager"            = @DI\Inject("claroline.manager.home_tab_manager"),
      *     "request"                   = @DI\Inject("request_stack"),
      *     "resourceManager"           = @DI\Inject("claroline.manager.resource_manager"),
      *     "roleManager"               = @DI\Inject("claroline.manager.role_manager"),
      *     "router"                    = @DI\Inject("router"),
      *     "session"                   = @DI\Inject("session"),
-     *     "templateArchive"           = @DI\Inject("%claroline.param.default_template%"),
-     *     "templating"                = @DI\Inject("templating"),
      *     "tokenStorage"              = @DI\Inject("security.token_storage"),
      *     "tokenUpdater"              = @DI\Inject("claroline.security.token_updater"),
      *     "toolManager"               = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"                = @DI\Inject("translator"),
-     *     "userManager"               = @DI\Inject("claroline.manager.user_manager"),
      *     "utils"                     = @DI\Inject("claroline.security.utilities"),
-     *     "widgetManager"             = @DI\Inject("claroline.manager.widget_manager"),
      *     "workspaceManager"          = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "workspaceUserQueueManager" = @DI\Inject("claroline.manager.workspace_user_queue_manager"),
-     *     "parametersSerializer" = @DI\Inject("claroline.serializer.parameters"),
+     *     "parametersSerializer"      = @DI\Inject("claroline.serializer.parameters"),
+     *     "om"                        = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         EventDispatcherInterface $eventDispatcher,
-        FormFactory $formFactory,
         HomeTabManager $homeTabManager,
         RequestStack $request,
         ResourceManager $resourceManager,
         RoleManager $roleManager,
         UrlGeneratorInterface $router,
         SessionInterface $session,
-        $templateArchive,
-        TwigEngine $templating,
         TokenStorageInterface $tokenStorage,
         TokenUpdater $tokenUpdater,
         ToolManager $toolManager,
         TranslatorInterface $translator,
-        UserManager $userManager,
         Utilities $utils,
-        WidgetManager $widgetManager,
         WorkspaceManager $workspaceManager,
-        WorkspaceUserQueueManager $workspaceUserQueueManager,
-        ParametersSerializer $parametersSerializer
+        ParametersSerializer $parametersSerializer,
+        ObjectManager $om
     ) {
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
-        $this->formFactory = $formFactory;
         $this->homeTabManager = $homeTabManager;
-        $this->request = $request->getMasterRequest();
         $this->resourceManager = $resourceManager;
         $this->roleManager = $roleManager;
         $this->router = $router;
         $this->session = $session;
-        $this->templateArchive = $templateArchive;
-        $this->templating = $templating;
         $this->tokenStorage = $tokenStorage;
         $this->tokenUpdater = $tokenUpdater;
         $this->toolManager = $toolManager;
         $this->translator = $translator;
-        $this->userManager = $userManager;
         $this->utils = $utils;
-        $this->widgetManager = $widgetManager;
         $this->workspaceManager = $workspaceManager;
-        $this->workspaceUserQueueManager = $workspaceUserQueueManager;
         $this->parametersSerializer = $parametersSerializer;
+        $this->om = $om;
     }
 
     /**
@@ -321,13 +293,13 @@ class WorkspaceController extends Controller
 
         return [
             'current' => $current,
-            'tools' => array_map(function (OrderedTool $orderedTool) use ($workspace) { // todo : create a serializer
+            'tools' => array_values(array_map(function (OrderedTool $orderedTool) use ($workspace) { // todo : create a serializer
                 return [
                     'icon' => $orderedTool->getTool()->getClass(),
                     'name' => $orderedTool->getTool()->getName(),
                     'open' => ['claro_workspace_open_tool', ['workspaceId' => $workspace->getId(), 'toolName' => $orderedTool->getTool()->getName()]],
                 ];
-            }, $orderedTools),
+            }, $orderedTools)),
             'workspace' => $workspace,
             'hideToolsMenu' => $hideToolsMenu,
         ];
@@ -375,7 +347,6 @@ class WorkspaceController extends Controller
      *     name="claro_workspace_open",
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("workspace",  options={"mapping": {"workspaceId": "id"}})
      *
      * @param Workspace $workspace
      *
@@ -383,8 +354,10 @@ class WorkspaceController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function openAction(Workspace $workspace, Request $request)
+    public function openAction($workspaceId, Request $request)
     {
+        //getObject allows to find by id or uuid. Id doint both
+        $workspace = $this->om->getObject(['id' => $workspaceId], Workspace::class);
         $this->assertIsGranted('OPEN', $workspace);
         $this->forceWorkspaceLang($workspace, $request);
         $options = $workspace->getOptions();
@@ -427,77 +400,6 @@ class WorkspaceController extends Controller
         );
 
         return new RedirectResponse($route);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/search/role/code/{code}",
-     *     name="claro_resource_find_role_by_code",
-     *     options={"expose"=true}
-     * )
-     *
-     * @todo check if it's still used and use finder if yes.
-     */
-    public function findRoleByWorkspaceCodeAction($code)
-    {
-        $roles = $this->roleManager->getRolesBySearchOnWorkspaceAndTag($code);
-        $arWorkspace = [];
-
-        foreach ($roles as $role) {
-            $arWorkspace[$role->getWorkspace()->getCode()][$role->getName()] = [
-                'name' => $role->getName(),
-                'translation_key' => $role->getTranslationKey(),
-                'id' => $role->getId(),
-                'workspace' => $role->getWorkspace()->getName(),
-            ];
-        }
-
-        return new JsonResponse($arWorkspace);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/list/non/personal/workspaces/page/{page}/max/{max}/search/{search}",
-     *     name="claro_all_non_personal_workspaces_list_pager",
-     *     defaults={"page"=1,"max"=20,"seach"=""},
-     *     options={"expose"=true}
-     * )
-     * @EXT\Template()
-     *
-     * @param int $page
-     *
-     * @return array
-     */
-    public function nonPersonalWorkspacesListPagerAction(
-        $page = 1,
-        $max = 20,
-        $search = ''
-    ) {
-        $nonPersonalWs = $this->workspaceManager
-            ->getDisplayableNonPersonalWorkspaces($page, $max, $search);
-
-        return [
-            'nonPersonalWs' => $nonPersonalWs,
-            'max' => $max,
-            'search' => $search,
-        ];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/{workspace}/open/tool/home/tab/{tabId}",
-     *     name="claro_display_workspace_home_tab",
-     *     options = {"expose"=true}
-     * )
-     *
-     * Displays the workspace home tab.
-     *
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param int                                              $tabId
-     */
-    public function displayWorkspaceHomeTabAction(Workspace $workspace, $tabId)
-    {
-        return $this->redirectToRoute('claro_workspace_home_display', ['workspace' => $workspace->getId(), 'tabId' => $tabId]);
     }
 
     /**
@@ -625,141 +527,6 @@ class WorkspaceController extends Controller
         $response->headers->set('Connection', 'close');
 
         return $response->send();
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/import/form",
-     *     name="claro_workspace_import_form",
-     * )
-     * @EXT\Template()
-     *
-     * @param int $page
-     *
-     * @return array
-     */
-    public function importFormAction()
-    {
-        $this->assertIsGranted('ROLE_WS_CREATOR');
-        $form = $this->container->get('form.factory')->create(ImportWorkspaceType::class);
-
-        return ['form' => $form->createView()];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/import/submit",
-     *     name="claro_workspace_import",
-     * )
-     * @EXT\Template()
-     *
-     * @param int $page
-     *
-     * @return array
-     */
-    public function importAction()
-    {
-        $this->assertIsGranted('ROLE_WS_CREATOR');
-        $form = $this->container->get('form.factory')->create(ImportWorkspaceType::class, new Workspace());
-        $form->handleRequest($this->request);
-        $modelLog = $this->container->getParameter('kernel.root_dir').'/logs/models.log';
-        $logger = FileLogger::get($modelLog);
-        $this->workspaceManager->setLogger($logger);
-
-        if ($form->isValid()) {
-            $urlImport = false;
-            if ($form->get('workspace')->getData()) {
-                $file = $form->get('workspace')->getData();
-                $template = new File($file);
-            } elseif ($form->get('fileUrl')->getData() && filter_var($form->get('fileUrl')->getData(), FILTER_VALIDATE_URL)) {
-                $urlImport = true;
-                $url = $form->get('fileUrl')->getData();
-                $template = $this->importFromUrl($url);
-                if (null === $template) {
-                    $msg = $this->translator->trans(
-                        'invalid_host',
-                        ['%url%' => $url],
-                        'platform'
-                    );
-                    $this->session->getFlashBag()->add('error', $msg);
-                }
-            }
-
-            if (null !== $template) {
-                $workspace = $form->getData();
-                $workspace->setCreator($this->tokenStorage->getToken()->getUser());
-                $this->workspaceManager->create($workspace, $template);
-                //delete manually created tmp if url import
-                if ($urlImport) {
-                    $fs = new FileSystem();
-                    $fs->remove($template);
-                }
-                $this->tokenUpdater->update($this->tokenStorage->getToken());
-
-                $route = $this->router->generate('claro_workspace_by_user');
-                $msg = $this->get('translator')->trans(
-                    'successfull_workspace_creation',
-                    ['%name%' => $form->get('name')->getData()],
-                    'platform'
-                );
-                $this->session->getFlashBag()->add('success', $msg);
-
-                return new RedirectResponse($route);
-            }
-        }
-
-        return new Response(
-            $this->templating->render(
-                'ClarolineCoreBundle:workspace:import_form.html.twig',
-                ['form' => $form->createView()]
-            )
-        );
-    }
-
-    private function importFromUrl($url)
-    {
-        $template = null;
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-        curl_setopt($ch, CURLOPT_NOBODY, true);
-        curl_exec($ch);
-
-        //check if url is a valid provider
-        $retcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        if (200 === $retcode || 201 === $retcode) {
-            $import_sub_folder = 'import'.DIRECTORY_SEPARATOR;
-            $import_folder_path = $this->container->get('claroline.config.platform_config_handler')->getParameter('tmp_dir').DIRECTORY_SEPARATOR.$import_sub_folder;
-            $fs = new FileSystem();
-            if (!$fs->exists($import_folder_path)) {
-                $fs->mkdir($import_folder_path);
-            }
-
-            //REST URI hash used as unique file identifier for temporary template
-            $filepath = $import_folder_path.md5($url).'.zip';
-
-            //if already exists resume using it, no need to upload it again
-            if (file_exists($filepath)) {
-                return new File($filepath);
-            } else {
-                $fileWriter = fopen($filepath, 'w+');
-                curl_setopt($ch, CURLOPT_NOBODY, false);
-                curl_setopt($ch, CURLOPT_FILE, $fileWriter);
-                curl_setopt($ch, CURLOPT_TIMEOUT, 900);
-                curl_exec($ch);
-
-                if (!curl_errno($ch)) {
-                    $template = new File($filepath);
-                }
-                fclose($fileWriter);
-            }
-        }
-        curl_close($ch);
-
-        return $template;
     }
 
     /**
