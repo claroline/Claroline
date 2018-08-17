@@ -2,14 +2,15 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
+import {SummarizedContent} from '#/main/app/content/summary/components/content'
+
 import {trans} from '#/main/core/translation'
 import {asset} from '#/main/core/scaffolding/asset'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {SummarizedContent} from '#/main/app/content/summary/components/content'
 
 import {Scorm as ScormType, Sco as ScoType} from '#/plugin/scorm/resources/scorm/prop-types'
 import {actions} from '#/plugin/scorm/resources/scorm/player/actions'
-import {select} from '#/plugin/scorm/resources/scorm/selectors'
+import {selectors} from '#/plugin/scorm/resources/scorm/store'
 import {flattenScos, getFirstOpenableSco, generateSummary} from '#/plugin/scorm/resources/scorm/utils'
 
 class PlayerComponent extends Component {
@@ -89,9 +90,9 @@ PlayerComponent.propTypes = {
 
 const Player = connect(
   state => ({
-    scorm: select.scorm(state),
-    trackings: select.trackings(state),
-    scos: flattenScos(select.scos(state)),
+    scorm: selectors.scorm(state),
+    trackings: selectors.trackings(state),
+    scos: flattenScos(selectors.scos(state)),
     workspaceUuid: resourceSelect.resourceNode(state).workspace.id
   }),
   dispatch => ({

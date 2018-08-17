@@ -1,23 +1,19 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {actions as formActions} from '#/main/app/content/form/store/actions'
-import {hasPermission} from '#/main/core/resource/permissions'
 import {RoutedPageContent} from '#/main/core/layout/router/components/page'
 import {ResourcePage} from '#/main/core/resource/containers/page'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {Scorm as ScormType} from '#/plugin/scorm/resources/scorm/prop-types'
-import {select} from '#/plugin/scorm/resources/scorm/selectors'
 import {Player} from '#/plugin/scorm/resources/scorm/player/components/player'
 import {Editor} from '#/plugin/scorm/resources/scorm/editor/components/editor'
 import {Results} from '#/plugin/scorm/resources/scorm/player/components/results'
 
-const Resource = props =>
+const ScormResource = props =>
   <ResourcePage
+    styles={['claroline-distribution-plugin-scorm-resource']}
     customActions={[
       {
         type: LINK_BUTTON,
@@ -61,23 +57,11 @@ const Resource = props =>
     />
   </ResourcePage>
 
-Resource.propTypes = {
+ScormResource.propTypes = {
   scorm: T.shape(ScormType.propTypes),
   editable: T.bool.isRequired,
   resetForm: T.func.isRequired
 }
-
-const ScormResource = connect(
-  (state) => ({
-    scorm: select.scorm(state),
-    editable: hasPermission('edit', resourceSelect.resourceNode(state))
-  }),
-  (dispatch) => ({
-    resetForm(formData) {
-      dispatch(formActions.resetForm('scormForm', formData))
-    }
-  })
-)(Resource)
 
 export {
   ScormResource
