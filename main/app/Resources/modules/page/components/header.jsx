@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import isEmpty from 'lodash/isEmpty'
 
 import {asset} from '#/main/core/scaffolding/asset'
 
@@ -58,7 +59,7 @@ const PageHeader = props =>
       </div>
     }
 
-    {(0 !== props.actions.length || props.actions instanceof Promise) &&
+    {(!isEmpty(props.actions) || props.actions instanceof Promise) &&
       <Toolbar
         className="page-actions"
         tooltip="bottom"
