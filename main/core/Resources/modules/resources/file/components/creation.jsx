@@ -9,7 +9,8 @@ import {actions, selectors} from '#/main/core/resource/modals/creation/store'
 const FileForm = props =>
   <FormData
     level={5}
-    name={selectors.FORM_NAME}
+    name={selectors.STORE_NAME}
+    dataPart={selectors.FORM_RESOURCE_PART}
     sections={[
       {
         title: trans('general'),
@@ -38,7 +39,9 @@ FileForm.propTypes = {
 }
 
 const FileCreation = connect(
-  null,
+  (state) => ({
+    newNode: selectors.newNode(state)
+  }),
   (dispatch) => ({
     update(newNode, file) {
       // update resource props

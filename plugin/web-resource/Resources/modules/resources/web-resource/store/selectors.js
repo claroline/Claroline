@@ -9,7 +9,7 @@ const path = createSelector(
   (resource) => resource.path
 )
 
-export const select = {
+export const selectors = {
   STORE_NAME,
   resource,
   path
