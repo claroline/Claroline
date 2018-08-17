@@ -1,8 +1,16 @@
 import cloneDeep from 'lodash/cloneDeep'
 
-import {makeReducer} from '#/main/app/store/reducer'
+import {combineReducers, makeReducer} from '#/main/app/store/reducer'
+
 import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 
+import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
+
+import {selectors} from '#/plugin/claco-form/resources/claco-form/store/selectors'
+import {
+  MESSAGE_RESET,
+  MESSAGE_UPDATE
+} from '#/plugin/claco-form/resources/claco-form/store/actions'
 import {
   RESOURCE_PROPERTY_UPDATE,
   RESOURCE_PARAMS_PROPERTY_UPDATE,
@@ -12,13 +20,9 @@ import {
   KEYWORD_ADD,
   KEYWORD_UPDATE,
   KEYWORDS_REMOVE
-} from '#/plugin/claco-form/resources/claco-form/editor/actions'
-import {
-  MESSAGE_RESET,
-  MESSAGE_UPDATE
-} from '#/plugin/claco-form/resources/claco-form/actions'
-import {reducer as editorReducer} from '#/plugin/claco-form/resources/claco-form/editor/reducer'
-import {reducer as entriesReducer} from '#/plugin/claco-form/resources/claco-form/player/entry/reducer'
+} from '#/plugin/claco-form/resources/claco-form/editor/store/actions'
+import {reducer as editorReducer} from '#/plugin/claco-form/resources/claco-form/editor/store'
+import {reducer as entriesReducer} from '#/plugin/claco-form/resources/claco-form/player/entry/store'
 
 const messageReducer = makeReducer({}, {
   [MESSAGE_RESET]: () => {
@@ -36,8 +40,9 @@ const messageReducer = makeReducer({}, {
 })
 
 const clacoFormReducer = makeReducer({}, {
+  [RESOURCE_LOAD]: (state, action) => action.resourceData.clacoForm || state,
   // replaces clacoForm data after success updates
-  [FORM_SUBMIT_SUCCESS+'/clacoFormForm']: (state, action) => action.updatedData,
+  [FORM_SUBMIT_SUCCESS+'/'+selectors.STORE_NAME+'.clacoFormForm']: (state, action) => action.updatedData,
   [RESOURCE_PROPERTY_UPDATE]: (state, action) => {
     const newState = cloneDeep(state)
     newState[action.property] = action.value
@@ -108,12 +113,24 @@ const clacoFormReducer = makeReducer({}, {
   }
 })
 
-const reducer = {
+const reducer = combineReducers({
   clacoForm: clacoFormReducer,
   clacoFormForm: editorReducer,
   entries: entriesReducer,
-  message: messageReducer
-}
+  message: messageReducer,
+  canGeneratePdf: makeReducer({}, {
+    [RESOURCE_LOAD]: (state, action) => action.resourceData.canGeneratePdf || state,
+  }),
+  cascadeLevelMax: makeReducer({}, {
+    [RESOURCE_LOAD]: (state, action) => action.resourceData.cascadeLevelMax || state,
+  }),
+  roles: makeReducer({}, {
+    [RESOURCE_LOAD]: (state, action) => action.resourceData.roles || state,
+  }),
+  myRoles: makeReducer({}, {
+    [RESOURCE_LOAD]: (state, action) => action.resourceData.myRoles || state,
+  })
+})
 
 export {
   reducer

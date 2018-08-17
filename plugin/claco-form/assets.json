@@ -1,10 +1,4 @@
 {
-  "webpack": {
-    "entry": {
-      "resource": "resources/claco-form/bootstrap"
-    }
-  },
-
   "styles": {
     "entry": {
       "resource": "resources/claco-form.less"

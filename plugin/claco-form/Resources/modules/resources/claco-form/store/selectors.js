@@ -6,21 +6,86 @@ import {hasPermission} from '#/main/core/resource/permissions'
 
 const authenticatedUser = currentUser()
 
-const clacoForm = state => state.clacoForm
+const STORE_NAME = 'resource'
+
+const resource = (state) => state[STORE_NAME]
+
+const clacoForm = createSelector(
+  [resource],
+  (resource) => resource.clacoForm
+)
+
 const isAnon = () => authenticatedUser === null
-const params = state => state.clacoForm.details
-const fields = state => state.clacoForm.fields
-const visibleFields = state => state.clacoForm.fields.filter(f => !f.restrictions.hidden)
-const template = state => state.clacoForm.template
-const useTemplate = state => state.clacoForm.details['use_template']
-const getParam = (state, property) => state.clacoForm.details[property]
-const currentEntry = state => state.entries.current.data
-const myEntriesCount = state => state.entries.myEntriesCount
-const categories = state => state.clacoForm.categories
-const keywords = state => state.clacoForm.keywords
-const myRoles = state => state.myRoles
-const entryUser = state => state.entries.entryUser
-const usedCountries = state => state.entries.countries
+
+const params = createSelector(
+  [clacoForm],
+  (clacoForm) => clacoForm.details
+)
+
+const fields = createSelector(
+  [clacoForm],
+  (clacoForm) => clacoForm.fields
+)
+
+const visibleFields = createSelector(
+  [fields],
+  (fields) => fields.filter(f => !f.restrictions.hidden)
+)
+
+const template = createSelector(
+  [clacoForm],
+  (clacoForm) => clacoForm.template
+)
+
+const useTemplate = createSelector(
+  [clacoForm],
+  (clacoForm) => clacoForm.details['use_template']
+)
+
+const entries = createSelector(
+  [resource],
+  (resource) => resource.entries
+)
+
+const currentEntry = createSelector(
+  [entries],
+  (entries) => entries.current.data
+)
+
+const myEntriesCount = createSelector(
+  [entries],
+  (entries) => entries.myEntriesCount
+)
+
+const categories = createSelector(
+  [clacoForm],
+  (clacoForm) => clacoForm.categories
+)
+
+const keywords = createSelector(
+  [clacoForm],
+  (clacoForm) => clacoForm.keywords
+)
+
+const roles = createSelector(
+  [resource],
+  (resource) => resource.roles
+)
+
+const myRoles = createSelector(
+  [resource],
+  (resource) => resource.myRoles
+)
+
+const entryUser = createSelector(
+  [entries],
+  (entries) => entries.entryUser
+)
+
+const usedCountries = createSelector(
+  [entries],
+  (entries) => entries.countries
+)
 
 const canAdministrate = createSelector(
   resourceSelect.resourceNode,
@@ -165,15 +230,28 @@ const canViewComments = createSelector(
   }
 )
 
-export const select = {
+const canGeneratePdf = createSelector(
+  [resource],
+  (resource) => resource.canGeneratePdf
+)
+
+const message = createSelector(
+  [resource],
+  (resource) => resource.message
+)
+
+export const selectors = {
+  STORE_NAME,
+  resource,
   clacoForm,
   isAnon,
+  params,
   canSearchEntry,
   fields,
   visibleFields,
   template,
   useTemplate,
-  getParam,
+  entries,
   isCurrentEntryOwner,
   isCurrentEntryManager,
   canManageCurrentEntry,
@@ -186,6 +264,10 @@ export const select = {
   canViewComments,
   categories,
   keywords,
+  roles,
+  myRoles,
   entryUser,
-  usedCountries
+  usedCountries,
+  canGeneratePdf,
+  message
 }

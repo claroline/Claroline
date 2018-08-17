@@ -4,10 +4,11 @@ import {PropTypes as T} from 'prop-types'
 
 import {withRouter} from '#/main/app/router'
 import {url} from '#/main/app/api'
-import {trans} from '#/main/core/translation'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 
-import {select} from '#/plugin/claco-form/resources/claco-form/selectors'
+import {trans} from '#/main/core/translation'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
+
+import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
 
 class EntryMenuComponent extends Component {
   goToRandomEntry() {
@@ -73,10 +74,10 @@ EntryMenuComponent.propTypes = {
 
 const EntryMenu = withRouter(connect(
   (state) => ({
-    clacoFormId: select.clacoForm(state).id,
-    canSearchEntry: select.canSearchEntry(state),
-    randomEnabled: select.getParam(state, 'random_enabled'),
-    canAddEntry: select.canAddEntry(state)
+    clacoFormId: selectors.clacoForm(state).id,
+    canSearchEntry: selectors.canSearchEntry(state),
+    randomEnabled: selectors.params(state).random_enabled,
+    canAddEntry: selectors.canAddEntry(state)
   })
 )(EntryMenuComponent))
 

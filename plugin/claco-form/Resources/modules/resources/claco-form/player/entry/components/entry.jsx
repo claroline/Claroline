@@ -2,21 +2,22 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
-import {withRouter} from '#/main/app/router'
-import {trans} from '#/main/core/translation'
 import {url} from '#/main/app/api'
-import {displayDate} from '#/main/core/scaffolding/date'
-import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {hasPermission} from '#/main/core/resource/permissions'
+import {withRouter} from '#/main/app/router'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {UserMicro} from '#/main/core/user/components/micro'
-import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
-import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
 import {DetailsData} from '#/main/app/content/details/containers/data'
 import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+
+import {selectors as resourceSelect} from '#/main/core/resource/store'
+import {hasPermission} from '#/main/core/resource/permissions'
+import {trans} from '#/main/core/translation'
+import {displayDate} from '#/main/core/scaffolding/date'
+import {UserMicro} from '#/main/core/user/components/micro'
+import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
+import {HtmlText} from '#/main/core/layout/components/html-text'
 
 import {
   Field as FieldType,
@@ -24,8 +25,8 @@ import {
   EntryUser as EntryUserType
 } from '#/plugin/claco-form/resources/claco-form/prop-types'
 import {getCountry} from '#/plugin/claco-form/resources/claco-form/utils'
-import {select} from '#/plugin/claco-form/resources/claco-form/selectors'
-import {actions} from '#/plugin/claco-form/resources/claco-form/player/entry/actions'
+import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
+import {actions} from '#/plugin/claco-form/resources/claco-form/player/entry/store'
 import {EntryComments} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entry-comments'
 import {EntryMenu} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entry-menu'
 
@@ -446,7 +447,7 @@ class EntryComponent extends Component {
                   {this.generateTemplate()}
                 </HtmlText> :
                 <DetailsData
-                  name="entries.current"
+                  name={selectors.STORE_NAME+'.entries.current'}
                   sections={this.getSections(this.props.fields, this.props.titleLabel)}
                 />
               }
@@ -544,33 +545,33 @@ EntryComponent.propTypes = {
 
 const Entry = withRouter(connect(
   (state, ownProps) => ({
-    clacoFormId: select.clacoForm(state).id,
+    clacoFormId: selectors.clacoForm(state).id,
     entryId: ownProps.match.params.id,
-    entry: formSelect.data(formSelect.form(state, 'entries.current')),
-    entryUser: select.entryUser(state),
+    entry: formSelect.data(formSelect.form(state, selectors.STORE_NAME+'.entries.current')),
+    entryUser: selectors.entryUser(state),
 
     canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
-    canEditEntry: select.canEditCurrentEntry(state),
-    canViewEntry: select.canOpenCurrentEntry(state),
-    canAdministrate: select.canAdministrate(state),
-    canGeneratePdf: state.canGeneratePdf,
-    canComment: select.canComment(state),
-    canViewComments: select.canViewComments(state),
-    fields: select.visibleFields(state),
-    displayMetadata: select.getParam(state, 'display_metadata'),
-    displayKeywords: select.getParam(state, 'display_keywords'),
-    displayCategories: select.getParam(state, 'display_categories'),
-    displayComments: select.getParam(state, 'display_comments'),
-    openComments: select.getParam(state, 'open_comments'),
-    commentsEnabled: select.getParam(state, 'comments_enabled'),
-    anonymousCommentsEnabled: select.getParam(state, 'anonymous_comments_enabled'),
-    menuPosition: select.getParam(state, 'menu_position'),
-    isOwner: select.isCurrentEntryOwner(state),
-    isManager: select.isCurrentEntryManager(state),
-    randomEnabled: select.getParam(state, 'random_enabled'),
-    useTemplate: select.getParam(state, 'use_template'),
-    template: select.template(state),
-    titleLabel: select.getParam(state, 'title_field_label')
+    canEditEntry: selectors.canEditCurrentEntry(state),
+    canViewEntry: selectors.canOpenCurrentEntry(state),
+    canAdministrate: selectors.canAdministrate(state),
+    canGeneratePdf: selectors.canGeneratePdf(state),
+    canComment: selectors.canComment(state),
+    canViewComments: selectors.canViewComments(state),
+    fields: selectors.visibleFields(state),
+    displayMetadata: selectors.params(state).display_metadata,
+    displayKeywords: selectors.params(state).display_keywords,
+    displayCategories: selectors.params(state).display_categories,
+    displayComments: selectors.params(state).display_comments,
+    openComments: selectors.params(state).open_comments,
+    commentsEnabled: selectors.params(state).comments_enabled,
+    anonymousCommentsEnabled: selectors.params(state).anonymous_comments_enabled,
+    menuPosition: selectors.params(state).menu_position,
+    isOwner: selectors.isCurrentEntryOwner(state),
+    isManager: selectors.isCurrentEntryManager(state),
+    randomEnabled: selectors.params(state).random_enabled,
+    useTemplate: selectors.params(state).use_template,
+    template: selectors.template(state),
+    titleLabel: selectors.params(state).title_field_label
   }),
   (dispatch, ownProps) => ({
     deleteEntry(entry) {

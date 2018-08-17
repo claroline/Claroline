@@ -3,15 +3,14 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
-import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
-import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea'
+import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
 
-import {select} from '#/plugin/claco-form/resources/claco-form/selectors'
+import {selectors, actions as clacoFormActions} from '#/plugin/claco-form/resources/claco-form/store'
 import {Field as FieldType} from '#/plugin/claco-form/resources/claco-form/prop-types'
 import {generateFieldKey} from '#/plugin/claco-form/resources/claco-form/utils'
-import {actions as clacoFormActions} from '#/plugin/claco-form/resources/claco-form/actions'
 import {actions} from '#/plugin/claco-form/resources/claco-form/editor/template/actions'
-import {Message} from '#/plugin/claco-form/resources/claco-form/components/message.jsx'
+import {Message} from '#/plugin/claco-form/resources/claco-form/components/message'
 
 class TemplateFormComponent extends Component {
   constructor(props) {
@@ -184,9 +183,9 @@ TemplateFormComponent.propTypes = {
 
 const TemplateForm = connect(
   (state) => ({
-    template: select.template(state),
-    fields: select.fields(state).filter(f => f.type !== 11),
-    useTemplate: select.useTemplate(state)
+    template: selectors.template(state),
+    fields: selectors.fields(state).filter(f => f.type !== 11),
+    useTemplate: selectors.useTemplate(state)
   }),
   (dispatch) => ({
     saveTemplate(template, useTemplate) {

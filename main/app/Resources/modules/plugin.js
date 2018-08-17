@@ -19,6 +19,7 @@ registry.add('app', {
       'email'       : () => { return import(/* webpackChunkName: "app-data-email" */        '#/main/app/data/email') },
       'enum'        : () => { return import(/* webpackChunkName: "app-data-enum" */         '#/main/app/data/enum') },
       'enum-plus'   : () => { return import(/* webpackChunkName: "app-data-enum-plus" */    '#/main/app/data/enum-plus') },
+      'fields'      : () => { return import(/* webpackChunkName: "app-data-fields" */       '#/main/app/data/fields') },
       'file'        : () => { return import(/* webpackChunkName: "app-data-file" */         '#/main/app/data/file') },
       'html'        : () => { return import(/* webpackChunkName: "app-data-html" */         '#/main/app/data/html') },
       'image'       : () => { return import(/* webpackChunkName: "app-data-image" */        '#/main/app/data/image') },

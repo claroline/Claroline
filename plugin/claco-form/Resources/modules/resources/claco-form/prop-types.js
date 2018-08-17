@@ -124,7 +124,10 @@ const ClacoForm = {
       default_display_mode: T.string,
       display_title: T.string,
       display_subtitle: T.string,
-      display_content: T.string
+      display_content: T.string,
+      title_field_label: T.string,
+      search_restricted: T.bool,
+      search_restricted_columns: T.array
     }).isRequired,
     template: T.string,
     categories: T.arrayOf(T.shape(Category.propTypes)),

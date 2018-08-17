@@ -12,8 +12,8 @@ const SelectionModal = props =>
     <GridSelection
       items={props.items}
       handleSelect={(type) => {
-        props.handleSelect(type)
         props.fadeModal()
+        props.handleSelect(type)
       }}
     />
   </Modal>

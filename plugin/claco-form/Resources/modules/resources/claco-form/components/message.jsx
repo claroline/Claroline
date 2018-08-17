@@ -2,9 +2,9 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
-import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
+import {HtmlText} from '#/main/core/layout/components/html-text'
 
-import {actions} from '#/plugin/claco-form/resources/claco-form/actions'
+import {actions, selectors} from '#/plugin/claco-form/resources/claco-form/store'
 
 class MessageComponent extends Component {
   componentWillUnmount() {
@@ -41,7 +41,7 @@ MessageComponent.propTypes = {
 
 const Message = connect(
   (state) => ({
-    message: state.message
+    message: selectors.message(state)
   }),
   (dispatch) => ({
     resetMessage() {

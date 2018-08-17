@@ -5,16 +5,17 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {trans} from '#/main/core/translation'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
+
+import {trans} from '#/main/core/translation'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
 import {ColorPicker} from '#/main/core/layout/form/components/field/color-picker.jsx'
 
 import {Category as CategoryType} from '#/plugin/claco-form/resources/claco-form/prop-types'
-import {select} from '#/plugin/claco-form/resources/claco-form/selectors'
-import {actions} from '#/plugin/claco-form/resources/claco-form/editor/actions'
-import {CategoryFieldsValues} from '#/plugin/claco-form/resources/claco-form/editor/components/category-fields-values.jsx'
+import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
+import {actions} from '#/plugin/claco-form/resources/claco-form/editor/store'
+import {CategoryFieldsValues} from '#/plugin/claco-form/resources/claco-form/editor/components/category-fields-values'
 
 class CategoryFormModalComponent extends Component {
   constructor(props) {
@@ -136,7 +137,7 @@ class CategoryFormModalComponent extends Component {
   registerCategory() {
     if (!this.state['hasError']) {
       this.props.saveCategory(this.cleanFieldsValues(), this.props.isNew)
-      this.props.fadeModal()
+      this.props.hideModal()
     }
   }
 
@@ -253,7 +254,7 @@ class CategoryFormModalComponent extends Component {
           />
         </div>
         <div className="modal-footer">
-          <button className="btn btn-default" onClick={this.props.fadeModal}>
+          <button className="btn btn-default" onClick={this.props.hideModal}>
             {trans('cancel')}
           </button>
           <button className="btn btn-primary" onClick={() => this.validateCategory()}>
@@ -270,19 +271,19 @@ CategoryFormModalComponent.propTypes = {
   isNew: T.bool.isRequired,
   fields: T.array,
   saveCategory: T.func.isRequired,
-  fadeModal: T.func.isRequired
+  hideModal: T.func.isRequired
 }
 
 const CategoryFormModal = connect(
   (state) => ({
-    fields: select.visibleFields(state)
+    fields: selectors.visibleFields(state)
   }),
   (dispatch) => ({
     saveCategory(category, isNew) {
       dispatch(actions.saveCategory(category, isNew))
     },
-    fadeModal() {
-      dispatch(modalActions.fadeModal())
+    hideModal() {
+      dispatch(modalActions.hideModal())
     }
   })
 )(CategoryFormModalComponent)

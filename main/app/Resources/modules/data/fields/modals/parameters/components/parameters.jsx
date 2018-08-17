@@ -13,11 +13,16 @@ class ParametersModal extends Component {
 
     this.state = {
       options: props.data.options ? props.data.options : {},
-      restrictions: props.data.restrictions ? props.data.restrictions : {}
+      restrictions: props.data.restrictions ? props.data.restrictions : {},
+      typeDef: null
     }
 
     this.updateOptions = this.updateOptions.bind(this)
     this.updateRestrictions = this.updateRestrictions.bind(this)
+  }
+
+  componentDidMount() {
+    getType(this.props.data.type).then(definition => this.setState({typeDef: definition}))
   }
 
   /**
@@ -51,8 +56,6 @@ class ParametersModal extends Component {
   }
 
   render() {
-    const typeDef = getType(this.props.data.type)
-
     return (
       <FormDataModal
         {...this.props}
@@ -89,7 +92,7 @@ class ParametersModal extends Component {
                 label: trans('type'),
                 readOnly: true,
                 hideLabel: true,
-                calculated: () => typeDef.meta.label
+                calculated: () => this.state.typeDef ? this.state.typeDef.meta.label : ''
               }, {
                 name: 'label',
                 type: 'string',
@@ -105,11 +108,11 @@ class ParametersModal extends Component {
                 }
               }
             ]
-          }, {
+          }, this.state.typeDef && {
             id: 'parameters',
             icon: 'fa fa-fw fa-cog',
             title: trans('parameters'),
-            fields: typeDef.configure(this.state.options).map(optionField => merge({}, optionField, {
+            fields: this.state.typeDef.configure(this.state.options).map(optionField => merge({}, optionField, {
               name: `options.${optionField.name}`, // store all options in an `options` sub object
               onChange: (value) => this.updateOptions(optionField.name, value)
             }))
@@ -167,7 +170,7 @@ class ParametersModal extends Component {
               }
             ]
           }
-        ]}
+        ].filter(section => !!section)}
       />
     )
   }

@@ -55,6 +55,11 @@ claro_log:
     prefix: log
     type: annotation
 
+claro_user:
+    resource: "@ClarolineCoreBundle/Controller/UserController.php"
+    type: annotation
+    prefix: user
+
 # new
 claro_user_profile:
     resource: "@ClarolineCoreBundle/Controller/User/ProfileController.php"

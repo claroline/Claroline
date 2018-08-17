@@ -1,19 +1,12 @@
 import React from 'react'
-import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
-import {currentUser} from '#/main/core/user/current'
-import {makeId} from '#/main/core/scaffolding/id'
-import {now} from '#/main/core/scaffolding/date'
 import {url} from '#/main/app/api'
 import {trans} from '#/main/core/translation'
 import {RoutedPageContent} from '#/main/core/layout/router/components/page'
-import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {ResourcePage} from '#/main/core/resource/containers/page'
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 
-import {actions as entryActions} from '#/plugin/claco-form/resources/claco-form/player/entry/actions'
-import {select} from '#/plugin/claco-form/resources/claco-form/selectors'
 import {ClacoForm as ClacoFormType} from '#/plugin/claco-form/resources/claco-form/prop-types'
 import {ClacoFormMainMenu} from '#/plugin/claco-form/resources/claco-form/player/components/claco-form-main-menu'
 import {Editor} from '#/plugin/claco-form/resources/claco-form/editor/components/editor'
@@ -21,8 +14,6 @@ import {TemplateForm} from '#/plugin/claco-form/resources/claco-form/editor/temp
 import {Entries} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entries'
 import {EntryForm} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entry-form'
 import {Entry} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entry'
-
-const authenticatedUser = currentUser()
 
 function getHome(type) {
   switch (type) {
@@ -41,8 +32,9 @@ function getHome(type) {
   }
 }
 
-const Resource = props =>
+const ClacoFormResource = props =>
   <ResourcePage
+    styles={['claroline-distribution-plugin-claco-form-resource']}
     customActions={[
       {
         type: LINK_BUTTON,
@@ -157,7 +149,7 @@ const Resource = props =>
     />
   </ResourcePage>
 
-Resource.propTypes = {
+ClacoFormResource.propTypes = {
   clacoForm: T.shape(ClacoFormType.propTypes).isRequired,
   canEdit: T.bool.isRequired,
   canAddEntry: T.bool.isRequired,
@@ -170,52 +162,6 @@ Resource.propTypes = {
   resetEntryUser: T.func.isRequired,
   loadAllUsedCountries: T.func.isRequired
 }
-
-const ClacoFormResource = connect(
-  (state) => ({
-    clacoForm: select.clacoForm(state),
-    canEdit: select.canAdministrate(state),
-    canAddEntry: select.canAddEntry(state),
-    canSearchEntry: select.canSearchEntry(state),
-    defaultHome: select.getParam(state, 'default_home')
-  }),
-  (dispatch) => ({
-    resetForm(formData) {
-      dispatch(formActions.resetForm('clacoFormForm', formData))
-    },
-    openEntryForm(id, clacoFormId, fields = []) {
-      const defaultValue = {
-        id: makeId(),
-        values: {},
-        clacoForm: {
-          id: clacoFormId
-        },
-        user: authenticatedUser,
-        categories: [],
-        keywords: []
-      }
-      fields.forEach(f => {
-        if (f.type === 'date') {
-          defaultValue.values[f.id] = now()
-        }
-      })
-
-      dispatch(entryActions.openForm('entries.current', id, defaultValue))
-    },
-    resetEntryForm() {
-      dispatch(formActions.resetForm('entries.current', {}, true))
-    },
-    loadEntryUser(entryId) {
-      dispatch(entryActions.loadEntryUser(entryId))
-    },
-    resetEntryUser() {
-      dispatch(entryActions.resetEntryUser())
-    },
-    loadAllUsedCountries(clacoFormId) {
-      dispatch(entryActions.loadAllUsedCountries(clacoFormId))
-    }
-  })
-)(Resource)
 
 export {
   ClacoFormResource

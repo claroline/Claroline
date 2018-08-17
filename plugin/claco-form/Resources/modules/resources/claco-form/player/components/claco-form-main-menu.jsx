@@ -6,7 +6,7 @@ import {withRouter} from '#/main/app/router'
 import {url} from '#/main/app/api'
 import {trans} from '#/main/core/translation'
 
-import {select} from '#/plugin/claco-form/resources/claco-form/selectors'
+import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
 
 class ClacoFormMainMenuComponent extends Component {
   goToRandomEntry() {
@@ -67,10 +67,10 @@ ClacoFormMainMenuComponent.propTypes = {
 
 const ClacoFormMainMenu = withRouter(connect(
   (state) => ({
-    resourceId: select.clacoForm(state).id,
-    canSearchEntry: select.canSearchEntry(state),
-    randomEnabled: select.getParam(state, 'random_enabled'),
-    canAddEntry: select.canAddEntry(state)
+    resourceId: selectors.clacoForm(state).id,
+    canSearchEntry: selectors.canSearchEntry(state),
+    randomEnabled: selectors.params(state).random_enabled,
+    canAddEntry: selectors.canAddEntry(state)
   })
 )(ClacoFormMainMenuComponent))
 

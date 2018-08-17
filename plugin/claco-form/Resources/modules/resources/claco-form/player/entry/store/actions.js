@@ -45,7 +45,7 @@ actions.deleteEntries = (entries) => (dispatch) => {
         method: 'PATCH'
       },
       success: (data, dispatch) => {
-        dispatch(listActions.deleteItems('entries.list', entries))
+        dispatch(listActions.deleteItems(selectors.STORE_NAME+'.entries.list', entries))
       }
     }
   })

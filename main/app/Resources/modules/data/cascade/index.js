@@ -5,7 +5,6 @@ import {CascadeGroup} from '#/main/core/layout/form/components/group/cascade-gro
 const dataType = {
   name: 'cascade',
   meta: {
-    type: CASCADE_TYPE,
     creatable: true,
     icon: 'fa fa-fw fa fa-indent',
     label: trans('cascade'),
