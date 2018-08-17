@@ -1,6 +1,5 @@
 import {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import invariant from 'invariant'
 import isEqual from 'lodash/isEqual'
 
 import {makeCancelable} from '#/main/app/api'
@@ -36,9 +35,6 @@ class Await extends Component {
             this.setState({status: 'success'})
           })
           .catch(error => {
-            // this swallows the original error stack trace
-            // and make it complicated to debug but I don't find another way to do it.
-            invariant(false, `An error occurred in the awaited promise : ${error}`)
             this.setState({status: 'error'})
 
             // TODO : find better. I don't understand why invariant is not thrown
