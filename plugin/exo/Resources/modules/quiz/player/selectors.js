@@ -1,23 +1,67 @@
 import {createSelector} from 'reselect'
 
+import {select as quizSelectors} from '#/plugin/exo/quiz/selectors'
+
 // TODO : there are duplication with base quiz selectors
 
-const offline = (state) => state.noServer || state.testMode
-const paper = (state) => state.paper
-const currentStepId = (state) => state.currentStep.id
-const answers = (state) => state.answers
-const quizMaxAttempts = (state) => state.quiz.parameters.maxAttempts
-const quizEndMessage = (state) => state.quiz.parameters.endMessage
-const quizEndNavigation = (state) => state.quiz.parameters.endNavigation
-const showEndConfirm = (state) => state.quiz.parameters.showEndConfirm
-const showFeedback = (state) => state.quiz.parameters.showFeedback
-const feedbackEnabled = state => state.currentStep.feedbackEnabled || false
-const showCorrectionAt = state => state.quiz.parameters.showCorrectionAt
-const correctionDate = state => state.quiz.parameters.correctionDate
-const hasEndPage = state => state.quiz.parameters.showEndPage
+const offline = createSelector(
+  [quizSelectors.noServer, quizSelectors.testMode],
+  (noServer, testMode) => noServer || testMode
+)
+const paper = createSelector(
+  [quizSelectors.resource],
+  (resource) => resource.paper
+)
+
+const currentStepId = createSelector(
+  [quizSelectors.resource],
+  (resource) => resource.currentStep.id
+)
+
+const answers = createSelector(
+  [quizSelectors.resource],
+  (resource) => resource.answers
+)
+
+const quizMaxAttempts = createSelector(
+  [quizSelectors.parameters],
+  (parameters) => parameters.maxAttempts
+)
+const quizEndMessage = createSelector(
+  [quizSelectors.parameters],
+  (parameters) => parameters.endMessage
+)
+const quizEndNavigation = createSelector(
+  [quizSelectors.parameters],
+  (parameters) => parameters.endNavigation
+)
+const showEndConfirm = createSelector(
+  [quizSelectors.parameters],
+  (parameters) => parameters.showEndConfirm
+)
+const showFeedback = createSelector(
+  [quizSelectors.parameters],
+  (parameters) => parameters.showFeedback
+)
+const feedbackEnabled = createSelector(
+  [quizSelectors.resource],
+  (resource) => resource.currentStep.feedbackEnabled || false
+)
+const showCorrectionAt = createSelector(
+  [quizSelectors.parameters],
+  (parameters) => parameters.showCorrectionAt
+)
+const correctionDate = createSelector(
+  [quizSelectors.parameters],
+  (parameters) => parameters.correctionDate
+)
+const hasEndPage = createSelector(
+  [quizSelectors.parameters],
+  (parameters) => parameters.showEndPage || false
+)
 
 const steps = createSelector(
-  paper,
+  [paper],
   (paper) => paper.structure ? paper.structure.steps : []
 )
 
@@ -25,8 +69,7 @@ const steps = createSelector(
  * Gets the definition of the step that is currently played.
  */
 const currentStep = createSelector(
-  steps,
-  currentStepId,
+  [steps, currentStepId],
   (steps, currentStepId) => steps.find(step => step.id === currentStepId)
 )
 
@@ -39,13 +82,12 @@ const currentStepItems = createSelector(
 )
 
 const currentStepOrder = createSelector(
-  steps,
-  currentStep,
+  [steps, currentStep],
   (steps, currentStep) => steps.indexOf(currentStep)
 )
 
 const currentStepNumber = createSelector(
-  currentStepOrder,
+  [currentStepOrder],
   (currentStepOrder) => currentStepOrder + 1
 )
 
@@ -53,8 +95,7 @@ const currentStepNumber = createSelector(
  * Gets an existing answer to a question.
  */
 const currentStepAnswers = createSelector(
-  currentStepItems,
-  answers,
+  [currentStepItems, answers],
   (currentStepItems, answers) => {
     return currentStepItems.reduce((answerAcc, item) => {
       answerAcc[item.id] = Object.assign({}, answers[item.id], {

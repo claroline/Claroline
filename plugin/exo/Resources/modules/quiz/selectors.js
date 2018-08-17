@@ -4,35 +4,122 @@ import {currentUser} from '#/main/core/user/current'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
 
-// TODO : use reselect
 // TODO : there is possible code refactoring with editor/selectors.js
 
-const isLoading = state => state.currentRequests > 0
-//const alerts = state => state.alerts
-const empty = state => state.quiz.steps.length === 0
-const quiz = state => state.quiz
-const steps = state => state.steps
-const items = state => state.items
-const id = state => state.quiz.id
-const description = state => state.quiz.description
-const parameters = state => state.quiz.parameters
-const title = state => state.quiz.title
-const meta = state => state.quiz.meta
-const viewMode = state => state.viewMode
-const hasPapers = state => state.quiz.meta.paperCount > 0 || (state.papers.papers && state.papers.papers.length > 0)
-const hasUserPapers = state => state.quiz.meta.userPaperCount > 0
+const STORE_NAME = 'resource'
 
 const registered = () => null !== currentUser()
-const saveEnabled = state => !state.editor.saved && !state.editor.saving
-const noItems = state =>
-  Object.keys(state.quiz.steps).length === 1 && Object.keys(state.items).length === 0
-const firstStepId = state => state.quiz.steps[0]
-const hasOverview = state => state.quiz.parameters.showOverview
-const testMode = state => state.quiz.testMode
-const papersShowExpectedAnswers = state => state.quiz.parameters.showFullCorrection
-const papersShowStatistics = state => state.quiz.parameters.showStatistics
-const allPapersStatistics = state => state.quiz.parameters.allPapersStatistics
 
+const resource = (state) => state[STORE_NAME]
+
+const noServer = createSelector(
+  resource,
+  (resource) => resource.noServer
+)
+
+const steps = createSelector(
+  resource,
+  (resource) => resource.steps
+)
+const items = createSelector(
+  resource,
+  (resource) => resource.items
+)
+const papers = createSelector(
+  resource,
+  (resource) => resource.papers
+)
+
+const viewMode = createSelector(
+  resource,
+  (resource) => resource.viewMode
+)
+
+const quiz = createSelector(
+  resource,
+  (resource) => resource.quiz
+)
+
+const id = createSelector(
+  quiz,
+  (quiz) => quiz.id
+)
+
+const testMode = createSelector(
+  quiz,
+  (quiz) => quiz.testMode || false
+)
+
+const quizSteps = createSelector(
+  quiz,
+  (quiz) => quiz.steps || []
+)
+
+const empty = createSelector(
+  quizSteps,
+  (quizSteps) => quizSteps.length === 0
+)
+
+const description = createSelector(
+  quiz,
+  (quiz) => quiz.description
+)
+
+const parameters = createSelector(
+  quiz,
+  (quiz) => quiz.parameters || {}
+)
+
+const title = createSelector(
+  quiz,
+  (quiz) => quiz.title
+)
+
+const meta = createSelector(
+  quiz,
+  (quiz) => quiz.meta || {}
+)
+
+const hasUserPapers = createSelector(
+  meta,
+  (meta) => meta.userPaperCount > 0
+)
+
+const paperCount = createSelector(
+  meta,
+  (meta) => meta.paperCount || 0
+)
+
+const hasPapers = createSelector(
+  [paperCount, papers],
+  (paperCount, papers) => paperCount > 0 || (papers.papers && papers.papers.length > 0)
+)
+
+const noItems = createSelector(
+  [steps, items],
+  (steps, items) => Object.keys(steps).length === 1 && Object.keys(items).length === 0
+)
+const firstStepId = createSelector(
+  quizSteps,
+  (quizSteps) => quizSteps[0]
+)
+
+const hasOverview = createSelector(
+  parameters,
+  (parameters) => parameters.showOverview || false
+)
+const papersShowExpectedAnswers = createSelector(
+  parameters,
+  (parameters) => parameters.showFullCorrection || false
+)
+const papersShowStatistics = createSelector(
+  parameters,
+  (parameters) => parameters.showStatistics
+)
+const allPapersStatistics = createSelector(
+  parameters,
+  (parameters) => parameters.allPapersStatistics
+)
 const quizNumbering = createSelector(
   parameters,
   (parameters) => parameters.numbering
@@ -50,11 +137,15 @@ const docimologyAdmin = createSelector(
 
 // TODO : remove default export and use named one
 export default {
+  STORE_NAME,
+  resource,
+  noServer,
   id,
   quiz,
   steps,
   items,
   empty,
+  papers,
   hasPapers,
   hasUserPapers,
   papersAdmin,
@@ -65,8 +156,6 @@ export default {
   parameters,
   title,
   viewMode,
-  isLoading,
-  saveEnabled,
   noItems,
   firstStepId,
   hasOverview,
@@ -78,11 +167,15 @@ export default {
 }
 
 export const select = {
+  STORE_NAME,
+  resource,
+  noServer,
   id,
   quiz,
   steps,
   items,
   empty,
+  papers,
   hasPapers,
   hasUserPapers,
   papersAdmin,
@@ -93,8 +186,6 @@ export const select = {
   parameters,
   title,
   viewMode,
-  isLoading,
-  saveEnabled,
   noItems,
   firstStepId,
   hasOverview,

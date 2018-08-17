@@ -11,7 +11,8 @@ import {actions, selectors} from '#/main/core/resource/modals/creation/store'
 const ScormForm = props =>
   <FormData
     level={5}
-    name={selectors.FORM_NAME}
+    name={selectors.STORE_NAME}
+    dataPart={selectors.FORM_RESOURCE_PART}
     sections={[
       {
         title: trans('general'),
@@ -39,7 +40,7 @@ ScormForm.propTypes = {
 
 const ScormCreation = connect(
   state => ({
-    workspaceId: selectors.parent(state).workspace.id
+    workspaceId: selectors.newNode(state).workspace.id
   }),
   (dispatch) => ({
     update(data) {

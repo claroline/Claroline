@@ -171,7 +171,7 @@ Hints.propTypes = {
 }
 
 const ItemForm = props =>
-  <form>
+  <fieldset>
     <HtmlGroup
       id={`item-${props.item.id}-content`}
       label={tex('question')}
@@ -223,7 +223,7 @@ const ItemForm = props =>
         />
       </FormGroup>
     </ToggleableSet>
-  </form>
+  </fieldset>
 
 ItemForm.propTypes = {
   item: T.shape({

@@ -3,6 +3,11 @@ import cloneDeep from 'lodash/cloneDeep'
 import merge from 'lodash/merge'
 import set from 'lodash/set'
 
+import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
+
+import {getDecorators} from '#/plugin/exo/items/item-types'
+import {normalize} from '#/plugin/exo/quiz/normalizer'
+import {decorate} from '#/plugin/exo/quiz/decorators'
 import validate from '#/plugin/exo/quiz/editor/validators'
 import {decorateItem} from '#/plugin/exo/quiz/decorators'
 import {getIndex, makeId, makeItemPanelKey, update, refreshIds} from '#/plugin/exo/utils/utils'
@@ -60,6 +65,8 @@ import {
   ITEM_UPDATE_TAGS
 } from '#/plugin/tag/actions'
 
+// TODO : optimize RESOURCE_LOAD (there are multiple calls to normalize/decorate).
+
 function initialQuizState() {
   return {
     id: makeId(),
@@ -69,6 +76,11 @@ function initialQuizState() {
 
 function reduceQuiz(quiz = initialQuizState(), action = {}) {
   switch (action.type) {
+    case RESOURCE_LOAD:
+      const normalized = decorate(normalize(action.resourceData.quiz), getDecorators(), action.resourceData.resourceNode.permissions.edit)
+
+      return normalized.quiz
+
     case QUIZ_UPDATE: {
       // updates quiz
       const updatedQuiz = cloneDeep(quiz)
@@ -141,6 +153,10 @@ function reduceQuiz(quiz = initialQuizState(), action = {}) {
 
 function reduceSteps(steps = {}, action = {}) {
   switch (action.type) {
+    case RESOURCE_LOAD:
+      const normalized = decorate(normalize(action.resourceData.quiz), getDecorators(), action.resourceData.resourceNode.permissions.edit)
+
+      return normalized.steps
     case ITEM_CHANGE_STEP: {
       //remove the old one
       Object.keys(steps).forEach(stepId => {
@@ -218,6 +234,11 @@ function reduceSteps(steps = {}, action = {}) {
 
 function reduceItems(items = {}, action = {}) {
   switch (action.type) {
+    case RESOURCE_LOAD:
+      const normalized = decorate(normalize(action.resourceData.quiz), getDecorators(), action.resourceData.resourceNode.permissions.edit)
+
+      return normalized.items
+
     case ITEM_CREATE: {
       let newItem = decorateItem({
         id: action.id,
@@ -442,6 +463,11 @@ function reduceItems(items = {}, action = {}) {
 
 function reduceCurrentObject(object = {}, action = {}) {
   switch (action.type) {
+    case RESOURCE_LOAD:
+      return {
+        id: action.resourceData.quiz.id,
+        type: TYPE_QUIZ
+      }
     case OBJECT_SELECT:
       return {
         id: action.id,

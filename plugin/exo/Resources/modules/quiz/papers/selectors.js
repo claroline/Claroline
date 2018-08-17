@@ -1,3 +1,5 @@
+import {createSelector} from 'reselect'
+
 import {getDefinition} from '#/plugin/exo/items/item-types'
 import {
   RULE_TYPE_ALL,
@@ -9,11 +11,22 @@ import {
   RULE_TARGET_GLOBAL
 } from '#/plugin/exo/items/choice/constants'
 
-const quizId = state => state.quiz.id
-const papersFetched = state => state.papers.isFetched
-const papers = state => state.papers.papers
+import {select as quizSelectors} from '#/plugin/exo/quiz/selectors'
 
-const currentPaper = state => state.papers.current
+const quizId = quizSelectors.id
+const papersFetched = createSelector(
+  [quizSelectors.papers],
+  (papers) => papers.isFetched
+)
+const papers = createSelector(
+  [quizSelectors.papers],
+  (papers) => papers.papers
+)
+
+const currentPaper = createSelector(
+  [quizSelectors.papers],
+  (papers) => papers.current
+)
 
 const showScoreAt = paper => {
   return paper.structure.parameters.showScoreAt

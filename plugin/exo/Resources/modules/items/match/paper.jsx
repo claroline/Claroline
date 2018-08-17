@@ -187,7 +187,7 @@ export class MatchPaper extends Component
               </NavItem>
             }
           </Nav>
-          <div ref={(el) => { this.container = el }} id={`jsplumb-container-${this.props.item.id}`} className="jsplumb-container" style={{position:'relative'}}>
+          <div ref={(el) => { this.container = el }} id={`jsplumb-container-${this.props.item.id}`} className="jtk-container" style={{position:'relative'}}>
             <Tab.Content animation>
               <Tab.Pane eventKey="first">
                 <span className="help-block">

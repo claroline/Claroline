@@ -1,8 +1,19 @@
 import {createSelector} from 'reselect'
 
-const quizId = state => state.quiz.id
-const correction = state => state.correction
-const questionsFetched = state => !!state.correction.questions
+import {select as quizSelectors} from '#/plugin/exo/quiz/selectors'
+
+const quizId = quizSelectors.id
+
+const correction = createSelector(
+  [quizSelectors.resource],
+  (resource) => resource.correction
+)
+
+const questionsFetched = createSelector(
+  [correction],
+  (correction) => !!correction.questions
+)
+
 const questions = createSelector(
   correction,
   (correction) => {
@@ -18,20 +29,21 @@ const questions = createSelector(
   }
 )
 const answers = createSelector(
-  correction,
+  [correction],
   (correction) => {
     return correction.answers.filter(a => a.questionId === correction.currentQuestionId)
   }
 )
+
 const currentQuestion = createSelector(
-  correction,
+  [correction],
   (correction) => {
     return correction.questions ? correction.questions.find(question => question.id === correction.currentQuestionId) : {}
   }
 )
+
 const hasCorrection = createSelector(
-  correction,
-  currentQuestion,
+  [correction, currentQuestion],
   (correction, currentQuestion) => {
     let result = false
 

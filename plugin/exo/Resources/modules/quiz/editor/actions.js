@@ -150,11 +150,15 @@ actions.deleteStepAndItems = id => {
   return (dispatch, getState) => {
     dispatch(actions.nextObject(select.nextObject(getState())))
     //I'll gave to double check that
-    getState().steps[id].items.forEach(item => {
-      dispatch(actions.deleteStepItem(id, item))
-    })
+    const steps = select.steps(getState())
 
-    dispatch(actions.deleteStep(id))
+    if (steps[id]) {
+      steps[id].items.forEach(item => {
+        dispatch(actions.deleteStepItem(id, item))
+      })
+
+      dispatch(actions.deleteStep(id))
+    }
   }
 }
 
@@ -197,10 +201,10 @@ actions.save = () => {
         type: 'warning'
       }))
     } else {
-      const denormalized = formatQuizForTimer(denormalize(state.quiz, state.steps, state.items))
+      const denormalized = formatQuizForTimer(denormalize(select.quiz(state), select.steps(state), select.items(state)))
       dispatch({
         [API_REQUEST]: {
-          url: ['exercise_update', {id: state.quiz.id}],
+          url: ['exercise_update', {id: select.quiz(state).id}],
           request: {
             method: 'PUT' ,
             body: JSON.stringify(denormalized)

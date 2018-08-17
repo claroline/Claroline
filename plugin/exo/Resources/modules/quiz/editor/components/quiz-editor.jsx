@@ -498,19 +498,17 @@ function hasPanelError(allProps, errorPropNames) {
 }
 
 const QuizEditor = props =>
-  <form>
-    <PanelGroup
-      accordion
-      activeKey={props.activePanelKey}
-    >
-      {makePanel(Display, trans('display_parameters'), 'display_mode', props)}
-      {makePanel(Picking, tex('step_picking'), 'step-picking', props, ['picking'])}
-      {makePanel(Signing, tex('signing'), 'signing', props, ['duration', 'maxAttempts'])}
-      {makePanel(Correction, trans('correction'), 'correction', props)}
-      {makePanel(Notation, trans('notation'), 'notation', props)}
-      {makePanel(Access, tex('access'), 'access', props)}
-    </PanelGroup>
-  </form>
+  <PanelGroup
+    accordion
+    activeKey={props.activePanelKey}
+  >
+    {makePanel(Display, trans('display_parameters'), 'display_mode', props)}
+    {makePanel(Picking, tex('step_picking'), 'step-picking', props, ['picking'])}
+    {makePanel(Signing, tex('signing'), 'signing', props, ['duration', 'maxAttempts'])}
+    {makePanel(Correction, trans('correction'), 'correction', props)}
+    {makePanel(Notation, trans('notation'), 'notation', props)}
+    {makePanel(Access, tex('access'), 'access', props)}
+  </PanelGroup>
 
 QuizEditor.propTypes = {
   quiz: T.shape({

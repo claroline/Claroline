@@ -1,7 +1,7 @@
 
 export const associationStyle = {
-  strokeStyle: 'inherit', // delegates styles to less
-  lineWidth: 6
+  stroke: 'inherit', // delegates styles to less
+  strokeWidth: 6
 }
 
 // default jsPlumb configuration (connections are not changeable)

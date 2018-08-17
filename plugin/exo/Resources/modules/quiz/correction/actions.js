@@ -65,8 +65,8 @@ actions.updateFeedback = (answerId, feedback) => {
 actions.saveCorrection = (questionId) => {
   return (dispatch, getState) => {
     const state = getState()
-    const question = state.correction.questions.find(q => q.id === questionId)
-    const validAnswers = state.correction.answers.filter(a =>
+    const question = selectors.currentQuestion(state)
+    const validAnswers = selectors.answers(state).filter(a =>
       a.questionId === questionId && a.score !== undefined && a.score !== null && !isNaN(a.score) && a.score.trim() !== '' && a.score <= question.score.max
     )
     const answers = validAnswers.map(a => {

@@ -7,7 +7,7 @@ import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group.jsx
 import {TextGroup} from '#/main/core/layout/form/components/group/text-group.jsx'
 
 const ContentItemForm = props =>
-  <form>
+  <fieldset>
     <TextGroup
       id={`item-${props.item.id}-title`}
       label={t('title')}
@@ -25,7 +25,7 @@ const ContentItemForm = props =>
     <hr className="item-content-separator" />
 
     {props.children}
-  </form>
+  </fieldset>
 
 ContentItemForm.propTypes = {
   item: T.shape({

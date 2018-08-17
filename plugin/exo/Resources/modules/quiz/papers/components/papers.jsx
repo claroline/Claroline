@@ -22,8 +22,9 @@ const Papers = props =>
       {' '}
       <a className="btn btn-primary" href={url(['exercise_papers_export_csv', {'exerciseId': props.quiz.id}])}> {tex('csv_export')} </a>
     </div>
+
     <ListData
-      name="papers.list"
+      name={`${quizSelect.STORE_NAME}.papers.list`}
       primaryAction={(row) => ({
         type: LINK_BUTTON,
         label: trans('open'),

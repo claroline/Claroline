@@ -1,4 +1,4 @@
-/* global jsPlumb */
+import {jsPlumb} from 'jsplumb/dist/js/jsplumb'
 
 import {
   jsPlumbDefaultConfig,
@@ -28,7 +28,7 @@ utils.getJsPlumbInstance = (editEnabled) => {
 }
 
 utils.resetJsPlumb = () => {
-  jsPlumb.detachEveryConnection()
+  jsPlumb.deleteEveryConnection()
 
   // use reset instead of deleteEveryEndpoint because reset also remove event listeners
   jsPlumb.reset()

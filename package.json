@@ -55,7 +55,7 @@
     "jquery-option-tree": "git://github.com/jongilbraith/jquery-option-tree.git#502925496eea4becf88a0109fe51fc4af48b3691",
     "jquery-sortable": "0.9.13",
     "jquery-ui-dist": "1.12.1",
-    "jsplumb": "2.1.3",
+    "jsplumb": "^2.2.11",
     "lodash": "^4.16.1",
     "mathjax": "2.6.1",
     "modernizr": "^3.3.1",

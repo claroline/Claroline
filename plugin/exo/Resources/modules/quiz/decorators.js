@@ -2,7 +2,6 @@ import mapValues from 'lodash/mapValues'
 import cloneDeep from 'lodash/cloneDeep'
 import defaultsDeep from 'lodash/defaultsDeep'
 import defaults from './defaults'
-import {TYPE_QUIZ} from './enums'
 import {makeId} from './../utils/utils'
 import {isQuestionType} from './../items/item-types'
 import {tex} from '#/main/core/translation'
@@ -38,13 +37,7 @@ export function decorate(state, itemDecorators = {}, applyOnItems = true) {
     items: mapValues(newState.items, item => {
       const subDecorator = itemDecorators[item.type] || (item => item)
       return applyOnItems && isQuestionType(item.type) ? decorateItem(item, subDecorator) : item
-    }),
-    editor: {
-      currentObject: {
-        id: newState.quiz.id,
-        type: TYPE_QUIZ
-      }
-    }
+    })
   })
 }
 

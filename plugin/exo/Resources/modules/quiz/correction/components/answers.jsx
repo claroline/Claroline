@@ -124,14 +124,15 @@ Answers.propTypes = {
   saveCorrection: T.func.isRequired
 }
 
-function mapStateToProps(state) {
-  return {
+const ConnectedAnswers = connect(
+  (state) => ({
     question: correctionSelectors.currentQuestion(state),
     answers: correctionSelectors.answers(state),
     saveEnabled: correctionSelectors.hasCorrection(state)
-  }
+  }),
+  actions
+)(Answers)
+
+export {
+  ConnectedAnswers as Answers
 }
-
-const ConnectedAnswers = connect(mapStateToProps, actions)(Answers)
-
-export {ConnectedAnswers as Answers}

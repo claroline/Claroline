@@ -61,4 +61,6 @@ AddContentModal.propTypes = {
   handleFileUpload: T.func
 }
 
-export {AddContentModal}
+export {
+  AddContentModal
+}

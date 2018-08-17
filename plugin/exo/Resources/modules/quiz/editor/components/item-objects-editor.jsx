@@ -138,8 +138,4 @@ ObjectsEditor.propTypes = {
   saveItemObjectFile: T.func.isRequired
 }
 
-function mapStateToProps() {
-  return {}
-}
-
-export default connect(mapStateToProps, actions)(ObjectsEditor)
+export default connect(null, actions)(ObjectsEditor)

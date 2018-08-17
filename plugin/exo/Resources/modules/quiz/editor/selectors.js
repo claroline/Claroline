@@ -2,26 +2,44 @@ import {createSelector} from 'reselect'
 import isEmpty from 'lodash/isEmpty'
 import uniq from 'lodash/uniq'
 
+import {select as quizSelect} from '#/plugin/exo/quiz/selectors'
+
 import {tex, t} from '#/main/core/translation'
 
 import {TYPE_QUIZ, TYPE_STEP} from './../enums'
 
-const quiz = state => state.quiz
-const steps = state => state.steps
-const items = state => state.items
-const editor = state => state.editor
+const quiz = createSelector( // todo : duplicated
+  [quizSelect.resource],
+  (resource) => resource.quiz
+)
+const steps = createSelector( // todo : duplicated
+  [quizSelect.resource],
+  (resource) => resource.steps
+)
+const items = createSelector( // todo : duplicated
+  [quizSelect.resource],
+  (resource) => resource.items
+)
+
+const editor = createSelector( // todo : duplicated
+  [quizSelect.resource],
+  (resource) => resource.editor
+)
 
 const saved = createSelector(editor, editor => editor.saved)
+const saving = createSelector(editor, editor => editor.saving)
+const saveEnabled = createSelector([saved, saving], (saved, saving) => !saved && !saving)
 const validating = createSelector(editor, editor => editor.validating)
 const currentObject = createSelector(editor, editor => editor.currentObject)
 const openPanels = createSelector(editor, editor => editor.openPanels)
 const quizOpenPanel = createSelector(openPanels, panels => panels[TYPE_QUIZ])
 const openStepPanels = createSelector(openPanels, panels => panels[TYPE_STEP])
 
+
 const stepList = createSelector(
   quiz,
   steps,
-  (quiz, steps) => quiz.steps.map(id => steps[id])
+  (quiz, steps) => !isEmpty(quiz.steps) ? quiz.steps.map(id => steps[id]) : []
 )
 
 // retrieves the list of used tags and the number of questions using it
@@ -162,7 +180,8 @@ export default {
   validating,
   saved,
   steps,
-  tags
+  tags,
+  saveEnabled
 }
 
 export const select = {
@@ -179,5 +198,6 @@ export const select = {
   validating,
   saved,
   steps,
-  tags
+  tags,
+  saveEnabled
 }
