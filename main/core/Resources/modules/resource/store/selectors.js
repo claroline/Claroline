@@ -35,6 +35,11 @@ const resourceType = createSelector(
   (meta) => meta.type
 )
 
+const mimeType = createSelector(
+  [meta],
+  (meta) => meta.mimeType
+)
+
 // access restrictions selectors
 const accessErrors = (state) => !state.accessErrors.dismissed && !isEmpty(state.accessErrors.details) ? state.accessErrors.details : {}
 
@@ -82,6 +87,7 @@ export const selectors = {
   meta,
   published,
   resourceType,
+  mimeType,
   // evaluation
   resourceEvaluation,
   hasEvaluation,

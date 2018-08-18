@@ -1,46 +1,46 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
 
-import {actions as formActions} from '#/main/app/content/form/store/actions'
+import {trans} from '#/main/core/translation'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {copy} from '#/main/app/clipboard'
 import {RoutedPageContent} from '#/main/core/layout/router'
-import {Text as TextTypes} from '#/main/core/resources/text/prop-types'
-
 import {ResourcePage} from '#/main/core/resource/containers/page'
-import {Player} from '#/main/core/resources/text/player/components/player'
-import {Editor} from '#/main/core/resources/text/editor/components/editor'
 
-const Resource = props =>
-  <ResourcePage>
+import {FilePlayer} from '#/main/core/resources/file/player/components/player'
+import {FileEditor} from '#/main/core/resources/file/editor/components/editor'
+
+const FileResource = props =>
+  <ResourcePage
+    customActions={[
+      {
+        name: 'clipboard',
+        type: CALLBACK_BUTTON,
+        icon: 'fa fa-fw fa-clipboard',
+        label: trans('copy_permalink_to_clipboard'),
+        permission: 'open',
+        callback: () => copy(props.url)
+      }
+    ]}
+  >
     <RoutedPageContent
       headerSpacer={true}
       routes={[
         {
           path: '/',
           exact: true,
-          component: Player
+          component: FilePlayer
         }, {
           path: '/edit',
-          component: Editor,
-          onEnter: () => props.resetForm(props.text)
+          component: FileEditor
         }
       ]}
     />
   </ResourcePage>
 
-Resource.propTypes = {
-  text: T.shape(TextTypes.propTypes).isRequired,
-  resetForm: T.func.isRequired
+FileResource.propTypes = {
+  url: T.string
 }
-
-const FileResource = connect(
-  state => ({
-    text: state.text
-  }),
-  (dispatch) => ({
-    resetForm: (formData) => dispatch(formActions.resetForm('textForm', formData))
-  })
-)(Resource)
 
 export {
   FileResource

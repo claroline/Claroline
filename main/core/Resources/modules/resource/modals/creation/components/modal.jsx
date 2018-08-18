@@ -70,13 +70,20 @@ class ResourceCreationModal extends Component {
     }
   }
 
+  close() {
+    this.props.fadeModal()
+    this.changeStep('type')
+    this.props.reset()
+  }
+
   render() {
     return (
       <Modal
-        {...omit(this.props, 'parent', 'newNode', 'saveEnabled', 'startCreation', 'updateRights', 'save', 'add')}
+        {...omit(this.props, 'parent', 'newNode', 'saveEnabled', 'startCreation', 'updateRights', 'save', 'reset', 'add')}
         icon="fa fa-fw fa-plus"
         title={trans('new_resource', {}, 'resource')}
         subtitle={this.renderStepTitle()}
+        fadeModal={() => this.close()}
       >
         {this.renderStep()}
 
@@ -108,7 +115,7 @@ class ResourceCreationModal extends Component {
             disabled={!this.props.saveEnabled}
             callback={() => this.props.save(this.props.parent, () => {
               this.props.add(this.props.newNode)
-              this.props.fadeModal()
+              this.close()
             })}
           />
         }
@@ -128,6 +135,7 @@ ResourceCreationModal.propTypes = {
   updateRights: T.func.isRequired,
   startCreation: T.func.isRequired,
   save: T.func.isRequired,
+  reset: T.func.isRequired,
   saveEnabled: T.bool.isRequired,
   newNode: T.shape(
     ResourceNodeTypes.propTypes

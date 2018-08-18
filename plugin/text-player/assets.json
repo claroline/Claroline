@@ -1,7 +1,1 @@
-{
-  "webpack": {
-    "entry": {
-      "text-file-resource": "resources/text-file"
-    }
-  }
-}
+{}

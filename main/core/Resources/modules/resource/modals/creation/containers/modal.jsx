@@ -21,6 +21,9 @@ const ResourceCreationModal = withReducer(selectors.STORE_NAME, reducer)(
       },
       save(parent, close) {
         dispatch(actions.create(parent)).then(close)
+      },
+      reset() {
+        dispatch(actions.reset())
       }
     })
   )(ResourceCreationModalComponent)

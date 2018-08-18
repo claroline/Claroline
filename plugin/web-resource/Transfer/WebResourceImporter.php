@@ -77,7 +77,7 @@ class WebResourceImporter extends Importer implements ConfigurationInterface
 
     public function supports($type)
     {
-        return $type === 'yml' ? true : false;
+        return 'yml' === $type;
     }
 
     public function validate(array $data)
@@ -96,8 +96,8 @@ class WebResourceImporter extends Importer implements ConfigurationInterface
             return $this->container->get('claroline.listener.web_resource_listener')->create($tmpFile, $workspace);
         }
 
-        return $this->container->get('claroline.listener.file_listener')->createFile(
-            new File(), new SfFile(tempnam('/tmp', 'claroimport')),  $name, 'none', $workspace
+        return $this->container->get('claroline.manager.file_manager')->create(
+            new File(), new SfFile(tempnam('/tmp', 'claroimport')), $name, 'none', $workspace
         );
     }
 

@@ -65,7 +65,6 @@ plugin:
           api: [POST]
           recursive: true
 
-
         # Changes common resources info (the one from the node) for one or more resources
         - name: configure
           decoder: administrate

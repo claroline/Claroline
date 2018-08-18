@@ -42,9 +42,9 @@ class FileSerializer
     public function serialize(File $file)
     {
         return [
-            'id' => $file->getId(),
+            //'id' => $file->getId(),
             'hashName' => $file->getHashName(),
-            'size' => $file->getFormattedSize(),
+            'size' => $file->getSize(),
 
             // We generate URL here because the stream API endpoint uses ResourceNode ID,
             // but the new api only contains the ResourceNode UUID.

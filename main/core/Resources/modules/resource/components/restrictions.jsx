@@ -115,7 +115,7 @@ const ResourceRestrictions = props =>
         onlyWarn={true}
         failed={props.errors.locked}
         success={{
-          title: '',
+          title: 'Vous avez déverrouillé la ressource.',
           help: ''
         }}
         fail={{

@@ -1,10 +1,4 @@
 {
-  "webpack": {
-    "entry": {
-      "pdf-viewer": "resources/pdf/bootstrap"
-    }
-  },
-
   "styles": {
     "entry": {
       "pdf-resource": "resources/pdf.less"

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Event;
+namespace Claroline\CoreBundle\Event\Resource\File;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\File;
@@ -17,19 +17,33 @@ use Symfony\Component\EventDispatcher\Event;
 
 class LoadFileEvent extends Event
 {
+    /** @var File */
     private $resource;
 
     /** @var array */
     private $data = [];
 
+    /** @var string */
+    private $path;
+
+    /** @var bool */
+    private $populated = false;
+
     /**
      * LoadFileEvent constructor.
      *
-     * @param File $resource
+     * @param File   $resource
+     * @param string $path
      */
-    public function __construct(File $resource)
+    public function __construct(File $resource, string $path)
     {
         $this->resource = $resource;
+        $this->path = $path;
+    }
+
+    public function isPopulated()
+    {
+        return $this->populated;
     }
 
     /**
@@ -43,17 +57,28 @@ class LoadFileEvent extends Event
     }
 
     /**
+     * Gets the path to the real file.
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
      * Sets data to return in the api.
      * NB. It MUST contain serialized structures.
      *
      * @param array $data
      */
-    public function setAdditionalData(array $data)
+    public function setData(array $data)
     {
         $this->data = $data;
+        $this->populated = true;
     }
 
-    public function getAdditionalData()
+    public function getData()
     {
         return $this->data;
     }
