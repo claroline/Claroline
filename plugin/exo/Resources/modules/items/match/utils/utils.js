@@ -1,4 +1,4 @@
-import {jsPlumb} from 'jsplumb/dist/js/jsplumb'
+import {jsPlumb} from 'jsplumb'
 
 import {
   jsPlumbDefaultConfig,
