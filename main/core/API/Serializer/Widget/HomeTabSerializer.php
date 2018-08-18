@@ -73,7 +73,11 @@ class HomeTabSerializer
         foreach ($savedContainers as $container) {
             //temporary
             $widgetContainerConfig = $container->getWidgetContainerConfigs()[0];
-            $containers[$widgetContainerConfig->getPosition()] = $container;
+
+            if ($widgetContainerConfig) {
+                $containers[$widgetContainerConfig->getPosition()] = $container;
+            }
+
         }
 
         ksort($containers);
@@ -83,7 +87,7 @@ class HomeTabSerializer
         if ($homeTab->getPoster()) {
             $file = $this->om
                 ->getRepository('Claroline\CoreBundle\Entity\File\PublicFile')
-                ->findOneBy(['url' => $homeTabConfig->getPoster()]);
+                ->findOneBy(['url' => $homeTab->getPoster()]);
 
             if ($file) {
                 $poster = $this->serializer->serialize($file);
@@ -131,7 +135,7 @@ class HomeTabSerializer
         $this->sipe('title', 'setName', $data, $homeTabConfig);
         $this->sipe('longTitle', 'setLongTitle', $data, $homeTabConfig);
         $this->sipe('centerTitle', 'setCenterTitle', $data, $homeTabConfig);
-        $this->sipe('poster.url', 'setPoster', $data, $homeTabConfig);
+        $this->sipe('poster.url', 'setPoster', $data, $homeTab);
         $this->sipe('icon', 'setIcon', $data, $homeTabConfig);
         $this->sipe('type', 'setType', $data, $homeTab);
         $this->sipe('locked', 'setLocked', $data, $homeTabConfig);
