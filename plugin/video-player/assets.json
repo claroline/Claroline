@@ -1,8 +1,7 @@
 {
   "webpack": {
     "entry": {
-      "watcher": "watcher/watch-video",
-      "resource": "resources/video"
+      "watcher": "watcher/watch-video"
     }
   },
 
