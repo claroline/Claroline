@@ -17,6 +17,10 @@ trait FinderTrait
 {
     public function setDefaults(QueryBuilder $qb, $filterName, $filterValue)
     {
+        if (!property_exists($this->getClass(), $filterName)) {
+            return;
+        }
+
         if (is_bool($filterValue)) {
             $qb->andWhere("obj.{$filterName} = :{$filterName}");
             $qb->setParameter($filterName, $filterValue);

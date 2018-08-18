@@ -12,8 +12,6 @@
 namespace Claroline\CoreBundle\API\Finder\Home;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
-use Claroline\AppBundle\API\Finder\FinderTrait;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\QueryBuilder;
@@ -25,22 +23,6 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class HomeTabFinder extends AbstractFinder
 {
-    use FinderTrait;
-
-    /**
-     * HomeTabFinder constructor.
-     *
-     * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
-     * })
-     *
-     * @param EntityManager $em
-     */
-    public function __construct(ObjectManager $om)
-    {
-        $this->om = $om;
-    }
-
     public function getClass()
     {
         return HomeTab::class;

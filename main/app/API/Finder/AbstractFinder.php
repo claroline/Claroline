@@ -19,6 +19,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 abstract class AbstractFinder implements FinderInterface
 {
+    use FinderTrait;
+
     protected $om;
 
     /**

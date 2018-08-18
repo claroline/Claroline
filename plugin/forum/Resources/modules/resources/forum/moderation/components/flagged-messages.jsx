@@ -58,7 +58,7 @@ const FlaggedMessagesComponent = (props) =>
         icon: 'fa fa-fw fa-eye',
         label: trans('see_message_context', {}, 'forum'),
         target: '/subjects/show/'+rows[0].subject.id,
-        context: 'row'
+        scope: ['object']
       }, {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-flag',

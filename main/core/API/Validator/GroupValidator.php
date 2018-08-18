@@ -32,12 +32,6 @@ class GroupValidator implements ValidatorInterface
         return [];
     }
 
-    //not sure yet if using this or deduce from getUnique()
-    //note to myself: it should be deduced from getUnique
-    public function validateBulk(array $users)
-    {
-    }
-
     public function getUniqueFields()
     {
         return [

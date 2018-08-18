@@ -12,7 +12,6 @@
 namespace Claroline\ForumBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
-use Claroline\AppBundle\API\Finder\FinderTrait;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -22,8 +21,6 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class UserFinder extends AbstractFinder
 {
-    use FinderTrait;
-
     public function getClass()
     {
         return 'Claroline\ForumBundle\Entity\Validation\User';

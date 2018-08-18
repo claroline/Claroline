@@ -1,3 +1,7 @@
 {
-    "open_the": "Ouvert le"
+    "message_read" : "Lu",
+    "open_the": "Ouvert le",
+    "see_message": "Voir le message",
+    "marked_read_message": "Marquer comme lu",
+    "marked_unread_message": "Marquer comme non lu"
 }

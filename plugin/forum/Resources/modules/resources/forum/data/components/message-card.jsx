@@ -10,9 +10,6 @@ const MessageCard = (props) =>
     id={props.data.id}
     icon={<UserAvatar picture={props.data.meta.creator ? props.data.meta.creator.picture : undefined} alt={true}/>}
     title={props.data.subject.title}
-    // flags={[
-    //   ['fa fa-fw fa-thumb-tack', trans('stuck', {}, 'forum')]
-    // ]}
     contentText={getPlainText(props.data.content)}
   />
 

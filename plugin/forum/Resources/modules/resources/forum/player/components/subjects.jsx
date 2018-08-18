@@ -130,13 +130,13 @@ const SubjectsList = props =>
           icon: 'fa fa-fw fa-eye',
           label: trans('see_subject', {}, 'forum'),
           target: '/subjects/show/'+rows[0].id,
-          context: 'row'
+          scope: ['object']
         }, {
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-pencil',
           label: trans('edit'),
           target: '/subjects/form/'+rows[0].id,
-          context: 'row',
+          scope: ['object'],
           displayed: rows[0].meta.creator.id === authenticatedUser.id
         }, {
           type: CALLBACK_BUTTON,
@@ -156,14 +156,14 @@ const SubjectsList = props =>
           label: trans('flag', {}, 'forum'),
           displayed: !rows[0].meta.flagged && (rows[0].meta.creator.id !== authenticatedUser.id),
           callback: () => props.flagSubject(rows[0]),
-          context: 'row'
+          scope: ['object']
         }, {
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-flag',
           label: trans('unflag', {}, 'forum'),
           displayed: rows[0].meta.flagged && rows[0].meta.creator.id !== authenticatedUser.id,
           callback: () => props.unFlagSubject(rows[0]),
-          context: 'row'
+          scope: ['object']
         }, {
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-times-circle',

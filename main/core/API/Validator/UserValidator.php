@@ -99,12 +99,6 @@ class UserValidator implements ValidatorInterface
         return 0 < $qb->getQuery()->getSingleScalarResult();
     }
 
-    //not sure yet if using this or deduce from getUnique()
-    //deduce from getUnique
-    public function validateBulk(array $users)
-    {
-    }
-
     public function getClass()
     {
         return 'Claroline\CoreBundle\Entity\User';

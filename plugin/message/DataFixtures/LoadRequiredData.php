@@ -11,13 +11,16 @@
 
 namespace Claroline\MessageBundle\DataFixtures;
 
-use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * The fuck is this ? Change that.
+ */
 class LoadRequiredData extends AbstractFixture implements ContainerAwareInterface
 {
     /**
@@ -41,7 +44,7 @@ class LoadRequiredData extends AbstractFixture implements ContainerAwareInterfac
 
         if (!is_null($messagePlugin)) {
             $toolRepo = $om->getRepository('ClarolineCoreBundle:Tool\Tool');
-            $messageTool = $toolRepo->findOneBy(array('name' => 'message'));
+            $messageTool = $toolRepo->findOneBy(['name' => 'message']);
 
             if (is_null($messageTool)) {
                 $messageTool = new Tool();
@@ -125,7 +128,7 @@ class LoadRequiredData extends AbstractFixture implements ContainerAwareInterfac
         $scheduledForInsert = $om->getUnitOfWork()->getScheduledEntityInsertions();
 
         foreach ($scheduledForInsert as $entity) {
-            if (get_class($entity) === 'Claroline\CoreBundle\Entity\Plugin' &&
+            if ('Claroline\CoreBundle\Entity\Plugin' === get_class($entity) &&
                 $entity->getVendorName() === $vendorName &&
                 $entity->getBundleName() === $bundleName) {
                 $result = $entity;

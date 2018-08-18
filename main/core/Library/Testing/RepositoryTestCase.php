@@ -409,7 +409,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $userMessage->setUser($sender);
         $userMessage->setMessage($message);
         if ($removed) {
-            $userMessage->markAsRemoved($removed);
+            $userMessage->setIsRemoved($removed);
         }
         self::create($alias.'/'.$sender->getUsername(), $userMessage);
         foreach ($receivers as $receiver) {

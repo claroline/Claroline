@@ -59,7 +59,7 @@ const BlockedMessagesComponent = (props) =>
           icon: 'fa fa-fw fa-eye',
           label: trans('see_subject', {}, 'forum'),
           target: '/subjects/show/'+rows[0].subject.id,
-          context: 'row'
+          scope: ['object']
         },
         // if moderation all => validateMessage
         // if moderation once => validateUser

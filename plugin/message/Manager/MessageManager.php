@@ -16,47 +16,42 @@ use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\MailManager;
-use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\MessageBundle\Entity\Message;
 use Claroline\MessageBundle\Entity\UserMessage;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @DI\Service("claroline.manager.message_manager")
  */
 class MessageManager
 {
-    const MESSAGE_READ = 'Read';
-    const MESSAGE_SENT = 'Sent';
-    const MESSAGE_REMOVED = 'Removed';
-    const MESSAGE_UNREMOVED = 'Unremoved';
-
     private $mailManager;
     private $om;
-    private $pagerFactory;
     private $groupRepo;
     private $messageRepo;
     private $userMessageRepo;
     private $userRepo;
     private $workspaceRepo;
+    private $tokenStorage;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
      *     "mailManager"  = @DI\Inject("claroline.manager.mail_manager"),
-     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
-     *     "pagerFactory" = @DI\Inject("claroline.pager.pager_factory")
+     *     "tokenStorage"   = @DI\Inject("security.token_storage"),
+     *     "om"           = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
         MailManager $mailManager,
         ObjectManager $om,
-        PagerFactory $pagerFactory
+        TokenStorageInterface $tokenStorage
     ) {
         $this->mailManager = $mailManager;
         $this->om = $om;
-        $this->pagerFactory = $pagerFactory;
+        $this->tokenStorage = $tokenStorage;
         $this->groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
         $this->messageRepo = $om->getRepository('ClarolineMessageBundle:Message');
         $this->userMessageRepo = $om->getRepository('ClarolineMessageBundle:UserMessage');
@@ -216,143 +211,6 @@ class MessageManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\User $receiver
-     * @param string                            $search
-     * @param int                               $page
-     *
-     * @deprecated
-     *
-     * @return \PagerFanta\PagerFanta
-     */
-    public function getReceivedMessagesPager(User $receiver, $search = '', $page = 1)
-    {
-        $query = '' === $search ?
-            $this->userMessageRepo->findReceived($receiver, false) :
-            $this->userMessageRepo->findReceivedByObjectOrSender($receiver, $search, false);
-
-        return $this->pagerFactory->createPager($query, $page);
-    }
-
-    public function getReceivedMessages(User $receiver, $search = '')
-    {
-        $query = '' === $search ?
-        $this->userMessageRepo->findReceived($receiver, false) :
-        $this->userMessageRepo->findReceivedByObjectOrSender($receiver, $search, false);
-
-        return $query->getResult();
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\User $sender
-     * @param string                            $search
-     * @param int                               $page
-     *
-     * @return \PagerFanta\PagerFanta
-     */
-    public function getSentMessagesPager(User $sender, $search = '', $page = 1)
-    {
-        $query = '' === $search ?
-            $this->userMessageRepo->findSent($sender, false) :
-            $this->userMessageRepo->findSentByObject($sender, $search, false);
-
-        return $this->pagerFactory->createPager($query, $page);
-    }
-
-    public function getSentMessages(User $sender, $search = '', $page = 1)
-    {
-        $query = '' === $search ?
-        $this->userMessageRepo->findSent($sender, false) :
-        $this->userMessageRepo->findSentByObject($sender, $search, false);
-
-        return $query->getResult();
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\User $user
-     * @param string                            $search
-     * @param int                               $page
-     *
-     * @return \PagerFanta\PagerFanta
-     */
-    public function getRemovedMessagesPager(User $user, $search = '', $page = 1)
-    {
-        $query = '' === $search ?
-            $this->userMessageRepo->findRemoved($user, false) :
-            $this->userMessageRepo->findRemovedByObjectOrSender($user, $search, false);
-
-        return $this->pagerFactory->createPager($query, $page);
-    }
-
-    public function getRemovedMessages(User $user, $search = '', $page = 1)
-    {
-        $query = '' === $search ?
-        $this->userMessageRepo->findRemoved($user, false) :
-        $this->userMessageRepo->findRemovedByObjectOrSender($user, $search, false);
-
-        return $query->getResult();
-    }
-
-    /**
-     * @param \Claroline\MessageBundle\Entity\Message $message
-     * @param \Claroline\MessageBundle\Entity\User    $user
-     *
-     * @return \Claroline\MessageBundle\Entity\Message[]
-     */
-    public function getConversation(Message $message, User $user)
-    {
-        return $this->messageRepo->findAncestors($message, $user);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\User $user
-     *
-     * @return int
-     */
-    public function getNbUnreadMessages(User $user)
-    {
-        return $this->messageRepo->countUnread($user);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\User         $user
-     * @param \Claroline\MessageBundle\Entity\Message[] $messages
-     */
-    public function markAsRead(User $user, array $messages)
-    {
-        $userMessages = $this->userMessageRepo->findByMessages($user, $messages);
-
-        $this->markMessages($userMessages, self::MESSAGE_READ);
-    }
-
-    /**
-     * @param \Claroline\MessageBundle\Entity\Message[] $userMessages
-     */
-    public function markAsRemoved(array $userMessages)
-    {
-        $this->markMessages($userMessages, self::MESSAGE_REMOVED);
-    }
-
-    /**
-     * @param \Claroline\MessageBundle\Entity\Message[] $userMessages
-     */
-    public function markAsUnremoved(array $userMessages)
-    {
-        $this->markMessages($userMessages, self::MESSAGE_UNREMOVED);
-    }
-
-    /**
-     * @param \Claroline\MessageBundle\Entity\Message[] $userMessages
-     */
-    public function remove(array $userMessages)
-    {
-        foreach ($userMessages as $userMessage) {
-            $this->om->remove($userMessage);
-        }
-
-        $this->om->flush();
-    }
-
-    /**
      * Generates a string containing the usernames from a list of users.
      *
      * @param \Claroline\CoreBundle\Entity\User[]      $receivers
@@ -384,27 +242,6 @@ class MessageManager
         return $string;
     }
 
-    public function getUserMessagesBy(array $array)
-    {
-        return $this->userMessageRepo->findBy($array);
-    }
-
-    /**
-     * @param \Claroline\MessageBundle\Entity\Message[] $userMessages
-     * @param string                                    $flag
-     */
-    private function markMessages(array $userMessages, $flag)
-    {
-        $method = 'markAs'.$flag;
-
-        foreach ($userMessages as $userMessage) {
-            $userMessage->$method();
-            $this->om->persist($userMessage);
-        }
-
-        $this->om->flush();
-    }
-
     public function sendMessageToAbstractRoleSubject(
         AbstractRoleSubject $subject,
         $content,
@@ -428,8 +265,9 @@ class MessageManager
         $this->send($message, true, $withMail);
     }
 
-    public function getOneUserMessageByUserAndMessage(User $user, Message $message)
+    public function remove(Message $message)
     {
-        return $this->userMessageRepo->findOneByUserAndMessage($user, $message);
+        $this->om->remove($message);
+        $this->om->flush();
     }
 }

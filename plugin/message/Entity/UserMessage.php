@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\MessageBundle\Repository\UserMessageRepository")
+ * @ORM\Entity()
  * @ORM\Table(name="claro_user_message")
  */
 class UserMessage
@@ -79,21 +79,19 @@ class UserMessage
         return $this->id;
     }
 
-    public function markAsRemoved()
+    public function setIsRemoved($removed)
     {
-        $this->isRemoved = true;
+        $this->isRemoved = $removed;
     }
 
-    public function markAsUnremoved()
+    public function setIsRead($isRead)
     {
-        $this->isRemoved = false;
-    }
+        $this->isRead = $isRead;
 
-    public function markAsRead()
-    {
-        $this->isRead = true;
-        $now = new \DateTime();
-        $this->setLastOpenDate($now);
+        if ($isRead) {
+            $now = new \DateTime();
+            $this->setLastOpenDate($now);
+        }
     }
 
     public function isRemoved()

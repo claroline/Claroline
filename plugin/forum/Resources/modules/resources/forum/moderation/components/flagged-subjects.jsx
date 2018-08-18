@@ -58,7 +58,7 @@ const FlaggedSubjectsComponent = (props) =>
         icon: 'fa fa-fw fa-eye',
         label: trans('see_subject', {}, 'forum'),
         target: '/subjects/show/'+rows[0].id,
-        context: 'row'
+        scope: ['object']
       }, {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-flag',

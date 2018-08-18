@@ -96,7 +96,6 @@ const SubjectFormComponent = (props) =>
           level={3}
           displayLevel={2}
           name={`${select.STORE_NAME}.subjects.form`}
-          // title={trans('new_subject', {}, 'forum')}
           className="content-container"
           sections={[
             {
@@ -117,7 +116,7 @@ const SubjectFormComponent = (props) =>
                 },
                 {
                   name: 'tags',
-                  type: 'text',
+                  type: 'string',
                   label: trans('tags'),
                   help: trans('tag_form_help', {}, 'forum')
                 }
