@@ -43,7 +43,7 @@ class PluginListener
         BookReferenceManager $bookReferenceManager
     ) {
         $this->templating = $templating;
-        $this->user = $tokenStorage->getToken()->getUser();
+        $this->tokenStorage = $tokenStorage;
         $this->bookReferenceManager = $bookReferenceManager;
     }
 
@@ -55,7 +55,11 @@ class PluginListener
     public function onConfig(PluginOptionsEvent $event)
     {
         // If user is not platform admin, deny access
-        if (!$this->user || !$this->user->hasRole('ROLE_ADMIN')) {
+        if (
+          !$this->tokenStorage->getToken() &&
+          'anon.' !== $this->tokenStorage->getToken()->getUser() &&
+          !$this->tokenStorage->getToken()->getUser()->hasRole('ROLE_ADMIN')
+        ) {
             throw new AccessDeniedHttpException(
                 'Only platform administrators can configure plugins'
             );
