@@ -66,8 +66,6 @@ class WorkspaceComponent extends Component
         buttons={true}
         save={{
           type: 'callback',
-          icon: 'fa fa-fw fa-upload',
-          label: trans('save', {}, 'actions'),
           callback: () => {
             props.save(props.workspace, props.history)
             this.refreshLog()

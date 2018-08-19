@@ -14,7 +14,7 @@ class ResourceMain extends Component {
   render() {
     return (
       <Await
-        for={getResource(this.props.resourceType)()}
+        for={getResource(this.props.resourceType)}
         then={module => {
           const resourceApp = module.App()
           if (resourceApp) {

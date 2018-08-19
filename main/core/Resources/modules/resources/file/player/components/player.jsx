@@ -26,7 +26,7 @@ class Player extends Component {
   render() {
     return (
       <Await
-        for={getFile(this.props.mimeType)()}
+        for={getFile(this.props.mimeType)}
         then={module => this.setState({
           filePlayer: get(module, 'fileType.components.player') || null,
           fileStyles: get(module, 'fileType.styles') || null

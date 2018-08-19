@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Widget\Type;
 
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\Entity\Widget\Type\ListWidget;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -11,6 +12,8 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class ListWidgetSerializer
 {
+    use SerializerTrait;
+
     public function getClass()
     {
         return ListWidget::class;
@@ -25,14 +28,15 @@ class ListWidgetSerializer
             'pageSize' => $widget->getPageSize(),
             'display' => $widget->getDisplay(),
             'availableDisplays' => $widget->getAvailableDisplays(),
-            'defaultFilters' => $widget->getDefaultFilters(),
+            'defaultFilters' => $widget->getFilters(),
             'availableColumns' => $widget->getAvailableColumns(),
         ];
     }
 
     public function deserialize($data, ListWidget $widget, array $options = []): ListWidget
     {
-        // todo implement
+        $this->sipe('display', 'setDisplay', $data, $widget);
+        $this->sipe('availableDisplays', 'setAvailableDisplays', $data, $widget);
 
         return $widget;
     }

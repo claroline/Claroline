@@ -26,11 +26,19 @@ class WidgetRepository extends EntityRepository
      */
     public function findAllAvailable(array $enabledPlugins, $context = null)
     {
-        return $this->createQueryBuilder('w')
+        $query = $this->createQueryBuilder('w')
             ->leftJoin('w.plugin', 'p')
             ->where('CONCAT(p.vendorName, p.bundleName) IN (:plugins)')
+            ->setParameter('plugins', $enabledPlugins);
+
+        if ($context) {
+            $query
+                ->andWhere('w.context LIKE :context')
+                ->setParameter('context', '%'.$context.'%');
+        }
+
+        return $query
             ->getQuery()
-            ->setParameter('plugins', $enabledPlugins)
             ->getResult();
     }
 }

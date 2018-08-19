@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Entity\Widget;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\CoreBundle\Entity\DataSource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -53,7 +54,17 @@ class WidgetInstance
      *     mappedBy="widgetInstance"
      * )
      */
-    protected $widgetInstanceConfigs;
+    private $widgetInstanceConfigs;
+
+    /**
+     * The data source to fill the widget if any.
+     *
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\DataSource")
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
+     *
+     * @var DataSource
+     */
+    private $dataSource = null;
 
     /**
      * WidgetContainer constructor.
@@ -106,10 +117,25 @@ class WidgetInstance
     }
 
     /**
-     * Set widget container.
+     * Get data source.
      *
-     * @param WidgetContainer $container
+     * @return DataSource
      */
+    public function getDataSource()
+    {
+        return $this->dataSource;
+    }
+
+    /**
+     * Set data source.
+     *
+     * @param DataSource $dataSource
+     */
+    public function setDataSource(DataSource $dataSource)
+    {
+        $this->dataSource = $dataSource;
+    }
+
     public function getWidgetInstanceConfigs()
     {
         return $this->widgetInstanceConfigs;

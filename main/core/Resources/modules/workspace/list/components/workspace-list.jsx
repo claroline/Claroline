@@ -1,4 +1,4 @@
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 import {URL_BUTTON} from '#/main/app/buttons'
 
 import {WorkspaceCard} from '#/main/core/workspace/data/components/workspace-card'
@@ -11,43 +11,43 @@ const WorkspaceList = {
   definition: [
     {
       name: 'name',
-      label: t('name'),
+      label: trans('name'),
       displayed: true,
       primary: true
     }, {
       name: 'code',
-      label: t('code'),
+      label: trans('code'),
       displayed: true
     }, {
       name: 'meta.created',
-      label: t('creation_date'),
+      label: trans('creation_date'),
       type: 'date',
       alias: 'created',
       displayed: true,
       filterable: false
     }, {
       name: 'meta.personal',
-      label: t('personal_workspace'),
+      label: trans('personal_workspace'),
       type: 'boolean',
       alias: 'personal'
     }, {
       name: 'createdAfter',
-      label: t('created_after'),
+      label: trans('created_after'),
       type: 'date',
       displayable: false
     }, {
       name: 'createdBefore',
-      label: t('created_before'),
+      label: trans('created_before'),
       type: 'date',
       displayable: false
     }, {
       name: 'registration.selfRegistration',
-      label: t('public_registration'),
+      label: trans('public_registration'),
       type: 'boolean',
       alias: 'selfRegistration'
     }, {
       name: 'registration.waitingForRegistration',
-      label: t('pending'),
+      label: trans('pending'),
       type: 'boolean',
       filterable: false,
       sortable: false

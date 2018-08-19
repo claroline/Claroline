@@ -25,7 +25,7 @@ class ResourceParameters extends Component {
         <ContentMeta meta={this.props.resourceNode.meta} />
 
         <Await
-          for={getResource(this.props.resourceNode.meta.type)()}
+          for={getResource(this.props.resourceNode.meta.type)}
           then={module => {
             if (module.Creation) {
               this.setState({customForm: module.Creation()})

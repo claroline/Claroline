@@ -287,7 +287,7 @@ class WorkspaceController extends Controller
         }
 
         // mega hack to make the resource manager active when inside a resource
-        if ('claro_resource_open' === $request->get('_route')) {
+        if (in_array($request->get('_route'), ['claro_resource_show', 'claro_resource_show_short'])) {
             $current = 'resource_manager';
         }
 

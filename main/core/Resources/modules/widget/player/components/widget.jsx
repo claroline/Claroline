@@ -3,22 +3,19 @@ import {PropTypes as T} from 'prop-types'
 import sum from 'lodash/sum'
 import times from 'lodash/times'
 
-import {Embedded} from '#/main/app/components/embedded'
-
+import {WidgetContent} from '#/main/core/widget/content/components/content'
 import {
   WidgetContainer as WidgetContainerTypes,
   WidgetInstance as WidgetInstanceTypes
 } from '#/main/core/widget/prop-types'
 import {computeStyles} from '#/main/core/widget/utils'
-import {getWidget, exists} from '#/main/core/widget/types'
 
 const WidgetCol = props =>
   <div className={`widget-col col-md-${props.size}`}>
-    {props.content && exists(props.content.type) &&
-      <Embedded
-        name={`${props.content.type}-${props.content.id}`}
-        load={getWidget(props.content.type)}
-        parameters={[props.context, props.content.parameters]}
+    {props.content &&
+      <WidgetContent
+        instance={props.content}
+        context={props.context}
       />
     }
   </div>

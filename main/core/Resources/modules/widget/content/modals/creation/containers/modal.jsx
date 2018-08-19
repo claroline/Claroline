@@ -9,6 +9,7 @@ const ContentCreationModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       availableTypes: selectors.availableWidgets(state),
+      availableSources: selectors.availableSources(state),
       saveEnabled: selectors.saveEnabled(state),
       instance: selectors.instance(state)
     }),
@@ -17,8 +18,12 @@ const ContentCreationModal = withReducer(selectors.STORE_NAME, reducer)(
         dispatch(actions.fetchContents(context.type))
       },
 
-      startCreation(widgetType) {
-        dispatch(actions.startCreation(widgetType.name))
+      update(prop, value) {
+        dispatch(actions.update(prop, value))
+      },
+
+      reset() {
+        dispatch(actions.reset())
       }
     })
   )(ContentCreationModalComponent)

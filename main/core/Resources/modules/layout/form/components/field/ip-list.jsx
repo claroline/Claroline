@@ -5,7 +5,7 @@ import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-t
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
-import {HelpBlock} from '#/main/core/layout/form/components/help-block.jsx'
+import {ContentHelp} from '#/main/app/content/components/help'
 import {Ip} from '#/main/core/layout/form/components/field/ip.jsx'
 
 import {IPv4} from '#/main/core/scaffolding/ip'
@@ -86,7 +86,7 @@ class IpList extends Component {
           </TooltipButton>
         </div>
 
-        <HelpBlock help={trans('ip_input_help')} />
+        <ContentHelp help={trans('ip_input_help')} />
 
         {0 !== this.props.value.length &&
           <button

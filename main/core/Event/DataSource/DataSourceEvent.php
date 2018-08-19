@@ -4,6 +4,8 @@ namespace Claroline\CoreBundle\Event\DataSource;
 
 use Claroline\AppBundle\Event\DataConveyorEventInterface;
 use Claroline\AppBundle\Event\MandatoryEventInterface;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -13,6 +15,15 @@ use Symfony\Component\EventDispatcher\Event;
  */
 class DataSourceEvent extends Event implements MandatoryEventInterface, DataConveyorEventInterface
 {
+    /** @var string */
+    private $context;
+
+    /** @var Workspace */
+    private $workspace;
+
+    /** @var User */
+    private $user;
+
     /**
      * A list of options to configure the DataSource.
      *
@@ -33,6 +44,35 @@ class DataSourceEvent extends Event implements MandatoryEventInterface, DataConv
      * @var bool
      */
     private $populated = false;
+
+    /**
+     * DataSourceEvent constructor.
+     *
+     * @param string    $context
+     * @param User      $user
+     * @param Workspace $workspace
+     */
+    public function __construct(string $context, User $user = null, Workspace $workspace = null)
+    {
+        $this->context = $context;
+        $this->user = $user;
+        $this->workspace = $workspace;
+    }
+
+    public function getContext()
+    {
+        return $this->context;
+    }
+
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    public function getWorkspace()
+    {
+        return $this->workspace;
+    }
 
     /**
      * Get the current options of the DataSource.

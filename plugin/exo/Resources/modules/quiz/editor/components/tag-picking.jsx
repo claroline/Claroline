@@ -5,12 +5,12 @@ import omit from 'lodash/omit'
 
 import {t, tex} from '#/main/core/translation'
 
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
-import {HelpBlock} from '#/main/core/layout/form/components/help-block.jsx'
-import {Numeric} from '#/main/core/layout/form/components/field/numeric.jsx'
-import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
-import {NumberGroup} from '#/main/core/layout/form/components/group/number-group.jsx'
-import {RadiosGroup} from '#/main/core/layout/form/components/group/radios-group.jsx'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
+import {ContentHelp} from '#/main/app/content/components/help'
+import {Numeric} from '#/main/core/layout/form/components/field/numeric'
+import {FormGroup} from '#/main/core/layout/form/components/group/form-group'
+import {NumberGroup} from '#/main/core/layout/form/components/group/number-group'
+import {RadiosGroup} from '#/main/core/layout/form/components/group/radios-group'
 
 import {
   shuffleModes,
@@ -125,7 +125,7 @@ class TagList extends Component {
           </TooltipButton>
         </div>
 
-        <HelpBlock help={tex('picking_tag_input_help')} />
+        <ContentHelp help={tex('picking_tag_input_help')} />
 
         {0 !== this.props.selected.length &&
           <button

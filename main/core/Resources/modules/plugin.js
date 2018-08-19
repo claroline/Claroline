@@ -39,13 +39,8 @@ registry.add('core', {
   tools: {},
 
   widgets: {
-    // abstract
-    'list'         : () => { return import(/* webpackChunkName: "core-resource-list-widget" */ '#/main/core/widget/types/list') },
-
-    // implementations
-    'simple'       : () => { return import(/* webpackChunkName: "core-simple-widget" */        '#/main/core/widget/types/simple') },
-    'resource-list': () => { return import(/* webpackChunkName: "core-resource-list-widget" */ '#/main/core/widget/types/resource-list') },
-    'user-list'    : () => { return import(/* webpackChunkName: "core-user-list-preset" */     '#/main/core/widget/types/user-list') }
+    'list'  : () => { return import(/* webpackChunkName: "core-resource-list-widget" */ '#/main/core/widget/types/list') },
+    'simple': () => { return import(/* webpackChunkName: "core-simple-widget" */        '#/main/core/widget/types/simple') }
   },
 
   data: {
@@ -54,7 +49,9 @@ registry.add('core', {
       'resource'    : () => { return import(/* webpackChunkName: "core-data-resource" */     '#/main/core/resource/data/types/resource') }
     },
     sources: {
-
+      'resources' : () => { return import(/* webpackChunkName: "core-data-resources" */  '#/main/core/data/sources/resources') },
+      'users'     : () => { return import(/* webpackChunkName: "core-data-users" */      '#/main/core/data/sources/users') },
+      'workspaces': () => { return import(/* webpackChunkName: "core-data-workspaces" */ '#/main/core/data/sources/workspaces') }
     }
   },
 

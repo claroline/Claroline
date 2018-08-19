@@ -1,5 +1,7 @@
-import {makeReducer, combineReducers} from '#/main/app/store/reducer'
+import merge from 'lodash/merge'
 
+import {makeReducer, combineReducers} from '#/main/app/store/reducer'
+import {makeId} from '#/main/core/scaffolding/id'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 
 import {WidgetInstance as WidgetInstanceTypes} from '#/main/core/widget/content/prop-types'
@@ -7,11 +9,14 @@ import {selectors} from '#/main/core/widget/content/modals/creation/store/select
 import {WIDGET_CONTENTS_LOAD} from '#/main/core/widget/content/modals/creation/store/actions'
 
 const reducer = combineReducers({
-  availableTypes: makeReducer([], {
-    [WIDGET_CONTENTS_LOAD]: (state, action) => action.types
+  widgets: makeReducer([], {
+    [WIDGET_CONTENTS_LOAD]: (state, action) => action.widgets
+  }),
+  dataSources: makeReducer([], {
+    [WIDGET_CONTENTS_LOAD]: (state, action) => action.dataSources
   }),
   instance: makeFormReducer(selectors.FORM_NAME, {
-    data: WidgetInstanceTypes.defaultProps
+    data: merge({id: makeId()}, WidgetInstanceTypes.defaultProps)
   })
 })
 

@@ -1,5 +1,22 @@
 import {PropTypes as T} from 'prop-types'
 
+const DataSource = {
+  propTypes: {
+    id: T.string.isRequired,
+    name: T.string,
+    meta: T.shape({
+      context: T.arrayOf(T.string)
+    }),
+    tags: T.arrayOf(T.string)
+  },
+  defaultProps: {
+    meta: {
+      exportable: false
+    },
+    tags: []
+  }
+}
+
 const Widget = {
   propTypes: {
     id: T.string.isRequired,
@@ -65,6 +82,7 @@ const WidgetContainer = {
 }
 
 export {
+  DataSource,
   Widget,
   WidgetInstance,
   WidgetContainer

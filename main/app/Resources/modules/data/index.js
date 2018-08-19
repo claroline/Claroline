@@ -62,8 +62,21 @@ function getType(typeName) {
     })
 }
 
+/**
+ * Gets a data type definition by its name.
+ *
+ * @param {string} typeName
+ *
+ * @return {Promise.<Object>}
+ */
+function getSource(typeName) {
+  // retrieve the data source application
+  return getApp('data.sources', typeName)()
+}
+
 export {
   getCreatableTypes,
   getTypes,
-  getType
+  getType,
+  getSource
 }

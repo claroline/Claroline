@@ -5,8 +5,8 @@ import classes from 'classnames'
 import {t} from '#/main/core/translation'
 
 import {FormGroup as FormGroupTypes} from '#/main/core/layout/form/prop-types'
-import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
-import {HelpBlock} from '#/main/core/layout/form/components/help-block.jsx'
+import {ContentError} from '#/main/app/content/components/error'
+import {ContentHelp} from '#/main/app/content/components/help'
 
 const FormGroup = props =>
   <div className={classes('form-group', props.className, {
@@ -27,11 +27,11 @@ const FormGroup = props =>
     {props.children}
 
     {props.error &&
-      <ErrorBlock text={props.error} inGroup={true} warnOnly={props.warnOnly}/>
+      <ContentError text={props.error} inGroup={true} warnOnly={props.warnOnly}/>
     }
 
     {props.help && 0 !== props.help.length &&
-      <HelpBlock help={props.help} />
+      <ContentHelp help={props.help} />
     }
   </div>
 

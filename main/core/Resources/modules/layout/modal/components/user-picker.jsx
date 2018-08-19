@@ -3,8 +3,8 @@ import {PropTypes as T} from 'prop-types'
 
 import {t} from '#/main/core/translation'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
-import {UserTypeahead} from '#/main/core/layout/typeahead/users/typeahead.jsx'
-import {HelpBlock} from '#/main/core/layout/form/components/help-block.jsx'
+import {UserTypeahead} from '#/main/core/layout/typeahead/users/typeahead'
+import {ContentHelp} from '#/main/app/content/components/help'
 
 /**
  *
@@ -15,7 +15,10 @@ import {HelpBlock} from '#/main/core/layout/form/components/help-block.jsx'
 const UserPickerModal = props =>
   <Modal {...props}>
     <div className="modal-body">
-      {props.help && <HelpBlock help={props.help} />}
+      {props.help &&
+        <ContentHelp help={props.help} />
+      }
+
       <UserTypeahead {...props}/>
     </div>
   </Modal>

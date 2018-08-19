@@ -2,8 +2,8 @@ import React from 'react'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 
 import {FormGroupWithField as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
-import {Checkbox} from '#/main/core/layout/form/components/field/checkbox.jsx'
-import {HelpBlock} from '#/main/core/layout/form/components/help-block.jsx'
+import {Checkbox} from '#/main/core/layout/form/components/field/checkbox'
+import {ContentHelp} from '#/main/app/content/components/help'
 
 const CheckGroup = props =>
   <div className="form-group">
@@ -17,7 +17,7 @@ const CheckGroup = props =>
     />
 
     {props.help && 0 !== props.help.length &&
-      <HelpBlock help={props.help} />
+      <ContentHelp help={props.help} />
     }
   </div>
 

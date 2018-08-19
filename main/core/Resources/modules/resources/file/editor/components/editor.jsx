@@ -48,7 +48,7 @@ class Editor extends Component {
         ]}
       >
         <Await
-          for={getFile(this.props.mimeType)()}
+          for={getFile(this.props.mimeType)}
           then={module => this.setState({
             fileEditor: get(module, 'fileType.components.editor') || null,
             fileStyles: get(module, 'fileType.styles') || null

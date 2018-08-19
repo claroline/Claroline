@@ -1466,6 +1466,7 @@
     "list_columns_title": "Available columns (click to display/hide columns)",
     "list_display_modes": "Display modes",
     "list_display_modes_title": "Display modes (click to change mode)",
+    "list_display_mode_default": "Default display mode",
     "list_display_list": "Detailed list",
     "list_display_list_sm": "List",
     "list_display_table": "Table",

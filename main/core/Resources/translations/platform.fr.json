@@ -1500,6 +1500,7 @@
     "list_columns_title": "Colonnes disponibles (cliquez pour afficher/masquer des colonnes)",
     "list_display_modes": "Modes d'affichage",
     "list_display_modes_title": "Modes d'affichage (cliquez pour changer de mode)",
+    "list_display_mode_default": "Mode d'affichage par défaut",
     "list_display_list": "Liste détaillée",
     "list_display_list_sm": "Liste",
     "list_display_table": "Tableau",

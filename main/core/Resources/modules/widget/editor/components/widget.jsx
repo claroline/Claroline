@@ -56,7 +56,7 @@ const WidgetCol = props =>
     }
     {props.content &&
       <WidgetContent
-        {...props.content}
+        instance={props.content}
         context={props.context}
       />
     }
@@ -112,7 +112,7 @@ const WidgetEditor = props =>
 
     <section className="widget" style={computeStyles(props.widget)}>
       {props.widget.name &&
-            <h2 className="h-first widget-title">{props.widget.name}</h2>
+        <h2 className="h-first widget-title">{props.widget.name}</h2>
       }
 
       <div className="row">

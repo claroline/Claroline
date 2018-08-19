@@ -1,20 +1,9 @@
 import {getApp} from '#/main/app/plugins'
 
 function getWidget(name) {
-  return getApp('widgets', name)
-}
-
-function exists(name) {
-  try {
-    getWidget(name)
-    return true
-  }
-  catch(error) {
-    return false
-  }
+  return getApp('widgets', name)()
 }
 
 export {
-  getWidget,
-  exists
+  getWidget
 }

@@ -20,55 +20,58 @@ class WidgetContentFormComponent extends Component {
   }
 
   render() {
-    return (
-      <div>
-        <FormData
-          level={this.props.level}
-          name={this.props.name}
-          sections={[
-            {
-              id: 'general',
-              title: trans('general'),
-              primary: true,
-              fields: [
-                {
-                  name: 'type',
-                  type: 'translation',
-                  label: trans('widget'),
-                  readOnly: true,
-                  hideLabel: true,
-                  options: {
-                    domain: 'widget'
-                  }
-                }, {
-                  name: 'source',
-                  type: 'translation',
-                  label: trans('data_source'),
-                  readOnly: true,
-                  hideLabel: true,
-                  displayed: (content) => !!content.source,
-                  options: {
-                    domain: 'data'
-                  }
-                }
-              ]
-            }
-          ]}
-        />
+    const widget = getWidget(this.props.instance.type)
 
-        <Await
-          for={getWidget(this.props.instance.type)()}
-          then={module => {
-            if (module.Parameters) {
-              this.setState({customForm: module.Parameters()})
-            }
-          }}
-        >
-          {this.state.customForm && React.createElement(this.state.customForm.component, {
-            name: this.props.name
-          })}
-        </Await>
-      </div>
+    return (
+      <FormData
+        level={this.props.level}
+        name={this.props.name}
+        sections={[
+          {
+            id: 'general',
+            title: trans('general'),
+            primary: true,
+            fields: [
+              {
+                name: 'type',
+                type: 'translation',
+                label: trans('widget'),
+                readOnly: true,
+                hideLabel: true,
+                options: {
+                  domain: 'widget'
+                }
+              }, {
+                name: 'source',
+                type: 'translation',
+                label: trans('data_source'),
+                readOnly: true,
+                hideLabel: true,
+                displayed: (content) => !!content.source,
+                options: {
+                  domain: 'data_sources'
+                }
+              }
+            ]
+          }
+        ]}
+      >
+        {widget &&
+          <Await
+            for={widget}
+            then={module => {
+              if (module.Parameters) {
+                this.setState({customForm: module.Parameters()})
+              }
+            }}
+          >
+            {this.state.customForm && React.createElement(this.state.customForm.component, {
+              name: this.props.name,
+              instance: this.props.instance
+            })}
+          </Await>
+        }
+      </FormData>
     )
   }
 }
