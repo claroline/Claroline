@@ -302,8 +302,11 @@ class Updater120000 extends Updater
         $instance = $this->om->getRepository(WidgetInstance::class)->find($row['widget_instance_id']);
         //only one instance per container during the migration
         $container = $instance->getContainer();
-        $container->setHomeTab($homeTab);
-        $this->om->persist($container);
+        // /shrug
+        if ($container) {
+            $container->setHomeTab($homeTab);
+            $this->om->persist($container);
+        }
     }
 
     private function checkDesktopTabs()
@@ -349,13 +352,4 @@ class Updater120000 extends Updater
             $this->log('WidgetInstanceConfigs already copied');
         }
     }
-
-    /****
-    $this->addSql('
-        ALTER TABLE claro_home_tab_roles
-        ADD CONSTRAINT FK_B81359F339727CCF FOREIGN KEY (hometabconfig_id)
-        REFERENCES claro_home_tab_config (id)
-        ON DELETE CASCADE
-    ')
-    */
 }
