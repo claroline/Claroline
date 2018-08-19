@@ -32,7 +32,7 @@ class LoadHomeTabData implements RequiredFixture
         $infoName = $translator->trans('informations', [], 'platform');
 
         $desktopHomeTab = new HomeTab();
-        $desktopHomeTab->setType('admin_desktop');
+        $desktopHomeTab->setType('administration');
         $manager->persist($desktopHomeTab);
 
         $desktopHomeTabConfig = new HomeTabConfig();
