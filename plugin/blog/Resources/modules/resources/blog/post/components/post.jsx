@@ -296,7 +296,7 @@ const PostCardContainer = connect(
 
 const PostContainer = connect(
   state => ({
-    data: state.post,
+    data: select.post(state),
     full: true
   })
 )(PostCardContainer)

@@ -24,6 +24,11 @@ const showEditCommentForm = createSelector(
   (resource) => resource.showEditCommentForm
 )
 
+const user = createSelector(
+  [resource],
+  (resource) => resource.user
+)
+
 const showCommentForm = createSelector(
   [resource],
   (resource) => resource.showCommentForm
@@ -61,6 +66,11 @@ const goHome = createSelector(
   (resource) => resource.goHome
 )
 
+const post = createSelector(
+  [resource],
+  (resource) => resource.post
+)
+
 const calendarSelectedDate = createSelector(
   [resource],
   (resource) => resource.calendarSelectedDate
@@ -95,6 +105,8 @@ export const select = {
   displayTagsFrequency,
   blog,
   mode,
+  user,
+  post,
   trustedUsers,
   showEditCommentForm,
   showCommentForm,

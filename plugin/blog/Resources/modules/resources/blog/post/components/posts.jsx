@@ -84,7 +84,7 @@ PostsList.propTypes ={
 
 const PostsContainer = connect(
   state => ({
-    //posts: select.posts(state).data,
+    posts: select.posts(state).data,
     blogId: select.blog(state).data.id,
     canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
     canPost: hasPermission('post', resourceSelect.resourceNode(state))

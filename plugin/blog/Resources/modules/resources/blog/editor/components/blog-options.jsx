@@ -176,19 +176,10 @@ BlogOptionsComponent.propTypes = {
 }
 
 const BlogOptions = withRouter(connect(
-  /*
   state => ({
-    blogId: state.blog.data.id,
-    options: formSelect.data(formSelect.form(state, constants.OPTIONS_EDIT_FORM_NAME)),
-    mode: state.mode,
-    saveEnabled: formSelect.saveEnabled(formSelect.form(state, constants.OPTIONS_EDIT_FORM_NAME)),
-    tagOptionsChanged:formSelect.data(formSelect.form(state, constants.OPTIONS_EDIT_FORM_NAME)).tagTopMode !== formSelect.originalData(formSelect.form(state, constants.OPTIONS_EDIT_FORM_NAME)).tagTopMode
-    || formSelect.data(formSelect.form(state, constants.OPTIONS_EDIT_FORM_NAME)).maxTag !== formSelect.originalData(formSelect.form(state, constants.OPTIONS_EDIT_FORM_NAME)).maxTag
-  }),*/
-  state => ({
-    blogId: state.blog.data.id,
+    blogId: select.blog(state).data.id,
     options: formSelect.data(formSelect.form(state, select.STORE_NAME + '.' + constants.OPTIONS_EDIT_FORM_NAME)),
-    mode: state.mode,
+    mode: select.mode(state),
     saveEnabled: formSelect.saveEnabled(formSelect.form(state, select.STORE_NAME + '.' + constants.OPTIONS_EDIT_FORM_NAME)),
     tagOptionsChanged:formSelect.data(formSelect.form(state, select.STORE_NAME + '.' + constants.OPTIONS_EDIT_FORM_NAME)).tagTopMode !== formSelect.originalData(formSelect.form(state, select.STORE_NAME + '.' + constants.OPTIONS_EDIT_FORM_NAME)).tagTopMode
     || formSelect.data(formSelect.form(state, select.STORE_NAME + '.' + constants.OPTIONS_EDIT_FORM_NAME)).maxTag !== formSelect.originalData(formSelect.form(state, select.STORE_NAME + '.' + constants.OPTIONS_EDIT_FORM_NAME)).maxTag

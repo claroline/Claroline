@@ -140,7 +140,7 @@ CommentsComponent.propTypes = {
 
 const Comments = connect(
   state => ({
-    user: state.user,
+    user: select.user(state),
     opened: select.showComments(state),
     isModerated: select.blog(state).data.options.data.commentModerationMode !== constants.COMMENT_MODERATION_MODE_NONE,
     showForm: select.showCommentForm(state),

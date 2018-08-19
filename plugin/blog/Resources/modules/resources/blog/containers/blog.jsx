@@ -26,11 +26,3 @@ const BlogResource = withReducer(select.STORE_NAME, reducer)(
 export {
   BlogResource
 }
-
-/*
-posts: {
-  pageSize: initialData.blog.options.postPerPage
-},
-resource: {
-  node: initialData.resourceNode
-}*/

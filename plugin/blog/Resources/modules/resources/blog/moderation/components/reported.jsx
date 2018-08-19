@@ -51,7 +51,7 @@ ReportedComponent.propTypes = {
 
 const Reported = connect(
   state => ({
-    blogId: state.blog.data.id
+    blogId: select.blog(state).data.id
   })
 )(ReportedComponent)
 
