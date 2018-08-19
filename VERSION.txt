@@ -1,3 +1,3 @@
-12.0.0-beta18
-aa4eb1ca842e4c4e480dcf203e98eb458cb320dc
+12.0.0-beta19
+8e2b18cd86a33bca2c7b920ea4e6be136bfa2922
 12.x
