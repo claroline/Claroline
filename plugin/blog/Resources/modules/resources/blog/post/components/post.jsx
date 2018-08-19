@@ -20,7 +20,7 @@ import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-
+import {select} from '#/plugin/blog/resources/blog/selectors'
 import {PostType} from '#/plugin/blog/resources/blog/post/components/prop-types'
 import {actions as postActions} from '#/plugin/blog/resources/blog/post/store'
 import {Comments} from '#/plugin/blog/resources/blog/comment/components/comments'
@@ -89,7 +89,7 @@ const PostComponent = props =>
       </div>
     }
   </div>
-    
+
 PostComponent.propTypes = {
   canEdit: T.bool,
   full: T.bool,
@@ -111,8 +111,8 @@ PostComponent.propTypes = {
 }
 
 const PostCard = props =>
-  <PostComponent 
-    {...props} 
+  <PostComponent
+    {...props}
     post={props.data}
   />
 
@@ -122,7 +122,7 @@ PostCard.propTypes = {
 
 const InfoBar = props =>
   <ul className="list-inline post-infos">
-    <li 
+    <li
       onClick={(e) => {
         props.getPostsByAuthor(props.blogId, props.post.author.firstName + ' ' + props.post.author.lastName)
         e.preventDefault()
@@ -137,7 +137,7 @@ const InfoBar = props =>
     </li>
     <li><span className="fa fa-calendar"></span> {displayDate(props.post.publicationDate, false, false)} </li>
     {props.displayViews &&
-      <li><span className="fa fa-eye"></span> {transChoice('display_views', props.post.viewCounter, {'%count%': props.post.viewCounter}, 'platform')}</li> 
+      <li><span className="fa fa-eye"></span> {transChoice('display_views', props.post.viewCounter, {'%count%': props.post.viewCounter}, 'platform')}</li>
     }
     {props.post.pinned &&
       <li><span className="label label-success">{trans('icap_blog_post_pinned', {}, 'icap_blog')}</span></li>
@@ -146,7 +146,7 @@ const InfoBar = props =>
     <li><span className="label label-danger">{props.post.status ? trans('unpublished_date', {}, 'icap_blog') : trans('unpublished', {}, 'icap_blog')}</span></li>
     }
   </ul>
-    
+
 InfoBar.propTypes = {
   getPostsByAuthor: T.func.isRequired,
   blogId: T.string.isRequired,
@@ -217,7 +217,7 @@ ActionBar.propTypes = {
   deletePost: T.func.isRequired,
   pinPost: T.func.isRequired
 }
-    
+
 const Footer = props =>
   <div>
     <ul className='list-inline post-tags pull-left'>
@@ -241,13 +241,13 @@ const Footer = props =>
           ? transChoice('comments_number', getCommentsNumber(props.canEdit, props.post.commentsNumber, props.post.commentsNumberUnpublished),
             {'%count%': getCommentsNumber(props.canEdit, props.post.commentsNumber, props.post.commentsNumberUnpublished)}, 'icap_blog')
           : trans('no_comment', {}, 'icap_blog')}
-        {props.canEdit && props.post.commentsNumberUnpublished 
+        {props.canEdit && props.post.commentsNumberUnpublished
           ? transChoice('comments_pending', props.post.commentsNumberUnpublished, {'%count%': props.post.commentsNumberUnpublished}, 'icap_blog')
           : ''}
       </li>
     </ul>
   </div>
-        
+
 Footer.propTypes = {
   commentNumber: T.number,
   canEdit:T.bool,
@@ -257,17 +257,17 @@ Footer.propTypes = {
   displayViews:T.bool,
   getPostsByTag:T.func.isRequired,
   post: T.shape(PostType.propTypes)
-}    
+}
 
 const PostCardContainer = connect(
   (state) => ({
-    blogId: state.blog.data.id,
+    blogId: select.blog(state).data.id,
     canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
     canModerate: hasPermission('moderate', resourceSelect.resourceNode(state)),
-    canComment: state.blog.data.options.data.authorizeComment,
-    canAnonymousComment: state.blog.data.options.data.authorizeAnonymousComment,
-    displayViews: state.blog.data.options.data.displayPostViewCounter,
-    commentsLoaded: !state.comments.invalidated
+    canComment: select.blog(state).data.options.data.authorizeComment,
+    canAnonymousComment: select.blog(state).data.options.data.authorizeAnonymousComment,
+    displayViews: select.blog(state).data.options.data.displayPostViewCounter,
+    commentsLoaded: !state.comments(state).invalidated
   }),
   dispatch => ({
     publishPost: (blogId, postId) => {
@@ -293,12 +293,12 @@ const PostCardContainer = connect(
     }
   })
 )(PostCard)
-  
+
 const PostContainer = connect(
   state => ({
     data: state.post,
     full: true
   })
 )(PostCardContainer)
-    
+
 export {PostCardContainer as PostCard, PostContainer as Post}

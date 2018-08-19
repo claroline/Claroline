@@ -17,6 +17,7 @@ import {actions as postActions} from '#/plugin/blog/resources/blog/post/store'
 import {actions} from '#/plugin/blog/resources/blog/store'
 import {constants} from '#/plugin/blog/resources/blog/constants'
 import {hasPermission} from '#/main/core/resource/permissions'
+import {select} from '#/plugin/blog/resources/blog/selectors'
 
 const PlayerComponent = props =>
   <Grid key="blog-grid" className="blog-page">
@@ -80,9 +81,9 @@ PlayerComponent.propTypes = {
 
 const Player = connect(
   state => ({
-    blogId: state.blog.data.id,
-    postId: !isEmpty(state.post_edit) ? state.post_edit.data.id : null,
-    mode: state.mode,
+    blogId: select.blog(state).data.id,
+    postId: !isEmpty(select.postEdit(state)) ? select.postEdit(state).data.id : null,
+    mode: select.mode(state),
     canEdit: hasPermission('edit', resourceSelect.resourceNode(state))
   }),
   dispatch => ({

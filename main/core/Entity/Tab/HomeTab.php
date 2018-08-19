@@ -31,7 +31,6 @@ class HomeTab
 
     const TYPE_WORKSPACE = 'workspace';
     const TYPE_DESKTOP = 'desktop';
-    const TYPE_ADMIN_WORKSPACE = 'admin_workspace';
     const TYPE_ADMIN_DESKTOP = 'administration';
 
     /**

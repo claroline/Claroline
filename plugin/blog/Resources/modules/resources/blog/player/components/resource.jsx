@@ -1,14 +1,11 @@
 import React from 'react'
-import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
 import {url} from '#/main/app/api'
 import {ResourcePage} from '#/main/core/resource/containers/page'
 import {RoutedPageContent} from '#/main/core/layout/router'
-import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
-import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {hasPermission} from '#/main/core/resource/permissions'
+
 import {DOWNLOAD_BUTTON, LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 
 import {Moderation} from '#/plugin/blog/resources/blog/moderation/components/moderation'
@@ -73,17 +70,5 @@ Blog.propTypes = {
   canModerate: T.bool,
   canExport: T.bool
 }
-          
-const BlogContainer = connect(
-  state => ({
-    blogId: state.blog.data.id,
-    saveEnabled: formSelect.saveEnabled(formSelect.form(state, 'blog.data.options')),
-    pdfEnabled: state.pdfenabled,
-    canExport: hasPermission('export', resourceSelect.resourceNode(state)),
-    canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
-    canPost: hasPermission('post', resourceSelect.resourceNode(state)),
-    canModerate: hasPermission('moderate', resourceSelect.resourceNode(state))
-  })
-)(Blog)
-      
-export {BlogContainer}
+
+export {Blog}

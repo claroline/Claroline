@@ -14,6 +14,7 @@ import {constants} from '#/plugin/blog/resources/blog/constants'
 import {FormSection} from '#/main/core/layout/form/components/form-sections'
 import {withRouter} from '#/main/app/router'
 import {actions as toolbarActions} from '#/plugin/blog/resources/blog/toolbar/store'
+import {select} from '#/plugin/blog/resources/blog/selectors'
 
 const BlogOptionsComponent = props =>
   <section className="resource-section">
@@ -21,7 +22,7 @@ const BlogOptionsComponent = props =>
     {props.mode === constants.EDIT_OPTIONS &&
       <FormData
         level={2}
-        name="blog.data.options"
+        name={select.STORE_NAME + '.blog.data.options'}
         sections={[
           {
             id: 'display',
@@ -162,7 +163,7 @@ const BlogOptionsComponent = props =>
       </FormData>
     }
   </section>
-    
+
 BlogOptionsComponent.propTypes = {
   options: T.shape(BlogOptionsType.propTypes),
   mode: T.string,
@@ -175,6 +176,7 @@ BlogOptionsComponent.propTypes = {
 }
 
 const BlogOptions = withRouter(connect(
+  /*
   state => ({
     blogId: state.blog.data.id,
     options: formSelect.data(formSelect.form(state, constants.OPTIONS_EDIT_FORM_NAME)),
@@ -182,17 +184,25 @@ const BlogOptions = withRouter(connect(
     saveEnabled: formSelect.saveEnabled(formSelect.form(state, constants.OPTIONS_EDIT_FORM_NAME)),
     tagOptionsChanged:formSelect.data(formSelect.form(state, constants.OPTIONS_EDIT_FORM_NAME)).tagTopMode !== formSelect.originalData(formSelect.form(state, constants.OPTIONS_EDIT_FORM_NAME)).tagTopMode
     || formSelect.data(formSelect.form(state, constants.OPTIONS_EDIT_FORM_NAME)).maxTag !== formSelect.originalData(formSelect.form(state, constants.OPTIONS_EDIT_FORM_NAME)).maxTag
-  }), 
+  }),*/
+  state => ({
+    blogId: state.blog.data.id,
+    options: formSelect.data(formSelect.form(state, select.STORE_NAME + '.' + constants.OPTIONS_EDIT_FORM_NAME)),
+    mode: state.mode,
+    saveEnabled: formSelect.saveEnabled(formSelect.form(state, select.STORE_NAME + '.' + constants.OPTIONS_EDIT_FORM_NAME)),
+    tagOptionsChanged:formSelect.data(formSelect.form(state, select.STORE_NAME + '.' + constants.OPTIONS_EDIT_FORM_NAME)).tagTopMode !== formSelect.originalData(formSelect.form(state, select.STORE_NAME + '.' + constants.OPTIONS_EDIT_FORM_NAME)).tagTopMode
+    || formSelect.data(formSelect.form(state, select.STORE_NAME + '.' + constants.OPTIONS_EDIT_FORM_NAME)).maxTag !== formSelect.originalData(formSelect.form(state, select.STORE_NAME + '.' + constants.OPTIONS_EDIT_FORM_NAME)).maxTag
+  }),
   dispatch => ({
     cancel: (history) => {
       dispatch(
-        formActions.cancelChanges(constants.OPTIONS_EDIT_FORM_NAME)
+        formActions.cancelChanges(select.STORE_NAME + '.' + constants.OPTIONS_EDIT_FORM_NAME)
       )
       history.push('/')
     },
     saveOptions: (blogId, tagOptionsChanged) => {
       dispatch(
-        formActions.saveForm(constants.OPTIONS_EDIT_FORM_NAME, ['apiv2_blog_options_update', {blogId: blogId}])
+        formActions.saveForm(select.STORE_NAME + '.' + constants.OPTIONS_EDIT_FORM_NAME, ['apiv2_blog_options_update', {blogId: blogId}])
       ).then(
         () => {
           //if tag options changed

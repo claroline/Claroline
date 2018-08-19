@@ -37,28 +37,13 @@ class LoadHomeTabData implements RequiredFixture
 
         $desktopHomeTabConfig = new HomeTabConfig();
         $desktopHomeTabConfig->setHomeTab($desktopHomeTab);
-        $desktopHomeTabConfig->setType('admin_desktop');
+        $desktopHomeTabConfig->setType(HomeTab::TYPE_ADMIN_DESKTOP);
         $desktopHomeTabConfig->setVisible(true);
         $desktopHomeTabConfig->setLocked(false);
         $desktopHomeTabConfig->setTabOrder(1);
         $desktopHomeTabConfig->setName($infoName);
         $desktopHomeTabConfig->setLongTitle($infoName);
         $manager->persist($desktopHomeTabConfig);
-
-        $workspaceHomeTab = new HomeTab();
-        $workspaceHomeTab->setType('admin_workspace');
-        $manager->persist($workspaceHomeTab);
-
-        $workspaceHomeTabConfig = new HomeTabConfig();
-        $workspaceHomeTabConfig->setHomeTab($workspaceHomeTab);
-        $workspaceHomeTabConfig->setType('admin_workspace');
-        $workspaceHomeTabConfig->setVisible(true);
-        $workspaceHomeTabConfig->setLocked(false);
-        $workspaceHomeTabConfig->setTabOrder(1);
-        $workspaceHomeTabConfig->setName($infoName);
-        $workspaceHomeTabConfig->setLongTitle($infoName);
-
-        $manager->persist($workspaceHomeTabConfig);
     }
 
     public function setContainer($container)

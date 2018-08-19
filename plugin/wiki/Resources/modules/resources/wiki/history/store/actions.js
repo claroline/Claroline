@@ -1,6 +1,7 @@
 import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
 import {findInTree} from '#/plugin/wiki/resources/wiki/utils'
+import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'
 
 export const UPDATE_CURRENT_HISTORY_SECTION = 'UPDATE_CURRENT_HISTORY_SECTION'
 export const UPDATE_CURRENT_HISTORY_VERSION = 'UPDATE_CURRENT_HISTORY_VERSION'
@@ -16,7 +17,7 @@ actions.updateActiveContribution = makeActionCreator(UPDATE_ACTIVE_CONTRIBUTION,
 
 actions.setCurrentHistorySection = (sectionId = null) => (dispatch, getState) => {
   if (sectionId !== null) {
-    dispatch(actions.updateCurrentHistorySection(findInTree(getState().sections.tree, sectionId)))
+    dispatch(actions.updateCurrentHistorySection(findInTree(selectors.sectionsTree(getState()), sectionId)))
   } else {
     dispatch(actions.updateCurrentHistorySection({}))
   }
@@ -25,7 +26,7 @@ actions.setCurrentHistorySection = (sectionId = null) => (dispatch, getState) =>
 actions.setCurrentHistoryVersion = (sectionId, id) => (dispatch, getState) => {
   dispatch(actions.setCurrentHistorySection(sectionId))
   if (id !== null) {
-    const contribution = getState().history.contributions.data.find(item => item.id === id)
+    const contribution = selectors.history(getState()).contributions.data.find(item => item.id === id)
     if (contribution) {
       dispatch(actions.updateCurrentHistoryVersion(contribution))
     } else {

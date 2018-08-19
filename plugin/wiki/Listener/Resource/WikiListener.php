@@ -9,14 +9,12 @@ use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\WikiBundle\Entity\Wiki;
 use Icap\WikiBundle\Manager\SectionManager;
 use Icap\WikiBundle\Manager\WikiManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Templating\EngineInterface;
 
@@ -111,36 +109,6 @@ class WikiListener
             'sections' => $sectionTree,
         ]);
 
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("open_icap_wiki")
-     *
-     * @param OpenResourceEvent $event
-     */
-    public function onOpen(OpenResourceEvent $event)
-    {
-        $resourceNode = $event->getResourceNode();
-
-        /** @var Wiki $wiki */
-        $wiki = $event->getResource();
-        $sectionTree = $this->sectionManager->getSerializedSectionTree(
-            $wiki,
-            $this->tokenStorage->getToken()->getUser(),
-            $this->checkPermission('EDIT', $resourceNode)
-        );
-
-        $content = $this->templating->render(
-            'IcapWikiBundle:wiki:open.html.twig',
-            [
-                '_resource' => $wiki,
-                'wiki' => $this->serializer->serialize($wiki),
-                'sections' => $sectionTree,
-            ]
-        );
-
-        $event->setResponse(new Response($content));
         $event->stopPropagation();
     }
 

@@ -45,9 +45,9 @@ TagsComponent.propTypes = {
 
 const Tags = withRouter(connect(
   state => ({
-    tags: state.blog.data.options.data.tagCloud === constants.TAGCLOUD_TYPE_CLASSIC_NUM ? select.displayTagsFrequency(state) : state.blog.data.tags,
-    tagMode: state.blog.data.options.data.tagCloud,
-    maxSize: state.blog.data.options.data.maxTag
+    tags: select.blog(state).data.options.data.tagCloud === constants.TAGCLOUD_TYPE_CLASSIC_NUM ? select.displayTagsFrequency(state) : state.blog.data.tags,
+    tagMode: select.blog(state).data.options.data.tagCloud,
+    maxSize: select.blog(state).data.options.data.maxTag
   }),
   dispatch => ({
     searchByTag: (tag) => {
@@ -59,5 +59,5 @@ const Tags = withRouter(connect(
     }
   })
 )(TagsComponent))
-    
+
 export {Tags}

@@ -6,12 +6,13 @@ import {trans} from '#/main/core/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {actions} from '#/plugin/wiki/resources/wiki/deleted/store/actions'
+import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'
 
 const DeletedSectionsComponent = props =>
   <section className="wiki-deleted-sections-list">
     <h2>{trans('deleted_sections', {}, 'icap_wiki')}</h2>
     <ListData
-      name="deletedSections"
+      name={selectors.STORE_NAME + '.deletedSections'}
       fetch={{
         url: ['apiv2_wiki_section_deleted_list', {wikiId: props.wiki.id}],
         autoload: true
@@ -86,7 +87,7 @@ DeletedSectionsComponent.propTypes = {
 
 const DeletedSections = connect(
   (state) => ({
-    wiki: state.wiki
+    wiki: selectors.wiki(state)
   }),
   (dispatch) => ({
     restoreSections: (wikiId, ids) => dispatch(actions.restoreSections(wikiId, ids)),

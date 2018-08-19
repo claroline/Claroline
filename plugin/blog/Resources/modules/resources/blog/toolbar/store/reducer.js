@@ -8,10 +8,12 @@ import {
   LOAD_TAGS,
   LOAD_AUTHORS
 } from '#/plugin/blog/resources/blog/toolbar/store/actions'
+import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
 const reducer = {
   tags: makeReducer({}, {
     [LOAD_TAGS]: (state, action) => action.tags,
+    [RESOURCE_LOAD]: (state, action) => action.resourceData.tags || state,
     [ADD_TAGS]: (state, action) => {
       let originalTagsArray = action.originalTags.split(',').map(item =>item.trim())
       let tagsArray = action.tags.split(',').map(item =>item.trim())
@@ -46,9 +48,11 @@ const reducer = {
   }),
   authors: makeReducer({}, {
     [LOAD_AUTHORS]: (state, action) => action.authors,
+    [RESOURCE_LOAD]: (state, action) => action.resourceData.authors || state,
     [ADD_AUTHOR]: (state, action) => {
       const authors = cloneDeep(state)
       const authorIndex = authors.findIndex(e => e.id === action.author.id)
+      
       if(authorIndex === -1){
         authors.push(action.author)
       }

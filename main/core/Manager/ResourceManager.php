@@ -1993,4 +1993,9 @@ class ResourceManager
     {
         return $this->rightsManager->isManager($resourceNode);
     }
+
+    public function getLogger()
+    {
+        return $this->logger;
+    }
 }

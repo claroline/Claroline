@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import {Version} from '#/plugin/wiki/resources/wiki/history/components/version'
+import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'
 
 const VersionDetailComponent = props =>
   <Version version={props.version}/>
@@ -13,8 +14,8 @@ VersionDetailComponent.propTypes = {
 
 const VersionDetail = connect(
   state => ({
-    section: state.history.currentSection,
-    version: state.history.currentVersion
+    section: selectors.currentSection(state),
+    version: selectors.currentVersion(state)
   })
 )(VersionDetailComponent)
 

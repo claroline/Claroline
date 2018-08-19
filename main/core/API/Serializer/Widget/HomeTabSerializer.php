@@ -77,7 +77,6 @@ class HomeTabSerializer
             if ($widgetContainerConfig) {
                 $containers[$widgetContainerConfig->getPosition()] = $container;
             }
-
         }
 
         ksort($containers);

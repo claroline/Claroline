@@ -5,11 +5,12 @@ import {withRouter} from '#/main/app/router'
 
 import {trans} from '#/main/core/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-import {hasPermission} from '#/main/core/resource/permissions'
 import {currentUser} from '#/main/core/user/current'
-import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {actions} from '#/plugin/wiki/resources/wiki/history/store'
+import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'
+import {selectors as resourceSelect} from '#/main/core/resource/store'
+import {hasPermission} from '#/main/core/resource/permissions'
 
 const loggedUser = currentUser()
 
@@ -17,7 +18,7 @@ const HistoryComponent = props =>
   <section className="wiki-section-history">
     <h2>{(props.section.activeContribution.title ? (props.section.activeContribution.title + ': ') : '') + trans('revision_history', {}, 'icap_wiki')}</h2>
     <ListData
-      name="history.contributions"
+      name={selectors.STORE_NAME + '.history.contributions'}
       fetch={{
         url: ['apiv2_wiki_section_contribution_history', {sectionId: props.section.id}],
         autoload: true
@@ -88,9 +89,9 @@ HistoryComponent.propTypes = {
 
 const History = withRouter(connect(
   state => ({
-    section: state.history.currentSection,
+    section: selectors.currentSection(state),
     canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
-    mode: state.wiki.mode
+    mode: selectors.mode(state)
   }),
   dispatch => (
     {

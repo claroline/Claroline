@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import {User} from '#/plugin/blog/resources/blog/moderation/components/user.jsx'
+import {select} from '#/plugin/blog/resources/blog/selectors'
 
 const TrustedUsersComponent = (props) =>
 {props.trustedUsers.map((user) =>
@@ -14,8 +15,8 @@ TrustedUsersComponent.propTypes = {
 
 const TrustedUsers = connect(
   state => ({
-    blogId: state.blog.data.id,
-    trustedUsers: state.trustedUsers
+    blogId: select.blog(state).data.id,
+    trustedUsers: select.trustedUsers(state)
   })
 )(TrustedUsersComponent)
 

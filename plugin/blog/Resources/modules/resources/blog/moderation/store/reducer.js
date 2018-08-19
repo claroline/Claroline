@@ -1,5 +1,7 @@
 import {makeListReducer} from '#/main/app/content/list/store'
 import {makeReducer} from '#/main/app/store/reducer'
+import {select} from '#/plugin/blog/resources/blog/selectors'
+
 import {
   UPDATE_POST_COMMENT,
   DELETE_POST_COMMENT,
@@ -7,7 +9,7 @@ import {
 } from '#/plugin/blog/resources/blog/comment/store/actions'
 
 const reducer = {
-  moderationComments: makeListReducer('moderationComments', {
+  moderationComments: makeListReducer(select.STORE_NAME + '.moderationComments', {
     sortBy: {
       property: 'creationDate',
       direction: -1
@@ -19,7 +21,7 @@ const reducer = {
     })
   }, {selectable: false}
   ),
-  reportedComments: makeListReducer('reportedComments', {
+  reportedComments: makeListReducer(select.STORE_NAME + '.reportedComments', {
     sortBy: {
       property: 'creationDate',
       direction: -1
@@ -31,7 +33,7 @@ const reducer = {
     })
   }, {selectable: false}
   ),
-  moderationPosts: makeListReducer('moderationPosts', {
+  moderationPosts: makeListReducer(select.STORE_NAME + '.moderationPosts', {
     sortBy: {
       property: 'creationDate',
       direction: -1

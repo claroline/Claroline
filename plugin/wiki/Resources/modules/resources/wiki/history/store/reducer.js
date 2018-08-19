@@ -1,5 +1,6 @@
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
+import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'
 
 import {
   UPDATE_CURRENT_HISTORY_SECTION,
@@ -9,7 +10,7 @@ import {
 } from '#/plugin/wiki/resources/wiki/history/store/actions'
 
 const reducer = combineReducers({
-  contributions: makeListReducer('history.contributions', {sortBy: { property: 'creationDate', direction: -1 }}, {
+  contributions: makeListReducer(selectors.STORE_NAME + '.history.contributions', {sortBy: { property: 'creationDate', direction: -1 }}, {
     invalidated: makeReducer(false, {
       [UPDATE_CURRENT_HISTORY_SECTION]: () => true
     })

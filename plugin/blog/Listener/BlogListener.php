@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\BlogBundle\Entity\Blog;
@@ -23,7 +24,6 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
@@ -124,11 +124,11 @@ class BlogListener
     }
 
     /**
-     * @DI\Observe("open_icap_blog")
+     * @DI\Observe("resource.icap_blog.load")
      *
      * @param OpenResourceEvent $event
      */
-    public function onOpen(OpenResourceEvent $event)
+    public function onLoad(LoadResourceEvent $event)
     {
         /** @var Blog $blog */
         $blog = $event->getResource();
@@ -154,16 +154,14 @@ class BlogListener
             $postsData = $posts['data'];
         }
 
-        $content = $this->container->get('templating')->render(
-            'IcapBlogBundle:blog:open.html.twig', [
-                '_resource' => $blog,
-                'authors' => $postManager->getAuthors($blog),
-                'archives' => $postManager->getArchives($blog),
-                'tags' => $blogManager->getTags($blog, $postsData),
-                ]
-            );
+        $event->setData([
+          'authors' => $postManager->getAuthors($blog),
+          'archives' => $postManager->getArchives($blog),
+          'tags' => $blogManager->getTags($blog, $postsData),
+          'blog' => $this->container->get('claroline.api.serializer')->serialize($blog),
+          'pdfEnabled' => $this->container->get('claroline.config.platform_config_handler')->getParameter('is_pdf_export_active'),
+        ]);
 
-        $event->setResponse(new Response($content));
         $event->stopPropagation();
     }
 

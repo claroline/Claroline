@@ -11,6 +11,7 @@ import {trans} from '#/main/core/translation'
 import {actions as listActions} from '#/main/app/content/list/store'
 import {actions as postActions} from '#/plugin/blog/resources/blog/post/store'
 import {Section, Sections} from '#/main/core/layout/components/sections'
+import {select} from '#/plugin/blog/resources/blog/selectors'
 
 const ArchivesComponent = props =>
   <div key='redactors' className="panel panel-default">
@@ -48,7 +49,7 @@ ArchivesComponent.propTypes = {
 
 const Archives = connect(
   state => ({
-    archives: state.blog.data.archives
+    archives: select.blog(state).data.archives
   }),
   dispatch => ({
     searchByRange: (month, year) => {

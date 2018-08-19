@@ -7,10 +7,11 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {constants as listConst} from '#/main/app/content/list/constants'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {CommentModerationCard} from '#/plugin/blog/resources/blog/comment/components/comment-moderation'
+import {select} from '#/plugin/blog/resources/blog/selectors'
 
 const ReportedComponent = (props) =>
   <ListData
-    name="reportedComments"
+    name={select.STORE_NAME + '.reportedComments'}
     fetch={{
       url: ['apiv2_blog_comment_reported', {blogId: props.blogId}],
       autoload: true

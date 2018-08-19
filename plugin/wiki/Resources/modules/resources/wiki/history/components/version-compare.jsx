@@ -4,6 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import {trans} from '#/main/core/translation'
 import {Version} from '#/plugin/wiki/resources/wiki/history/components/version'
+import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'
 
 const VersionCompareComponent = props =>
   <div className="wiki-version-compare">
@@ -42,8 +43,8 @@ VersionCompareComponent.propTypes = {
 
 const VersionCompare = connect(
   state => ({
-    compareSet: state.history.compareSet,
-    section: state.history.currentSection
+    compareSet: selectors.compareSet(state),
+    section: selectors.currentSection(state)
   })
 )(VersionCompareComponent)
 

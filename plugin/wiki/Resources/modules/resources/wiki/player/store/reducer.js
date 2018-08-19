@@ -1,6 +1,8 @@
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
+import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'
+import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
 import {
   UPDATE_CURRENT_EDIT_SECTION,
@@ -31,7 +33,7 @@ const reducer = combineReducers({
     [UPDATE_SECTION_VISIBILITY]: (state, action) => updateInTree(state, action.sectionId, 'meta.visible', action.section.meta.visible),
     [SECTION_DELETED]: (state, action) => deleteFromTree(state, action.sectionId, action.children),
     [LOADED_SECTION_TREE]: (state, action) => action.sectionTree,
-    [FORM_SUBMIT_SUCCESS+'/sections.currentSection']: (state, action) => {
+    [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.sections.currentSection']: (state, action) => {
       if (action.updatedData.meta.moved) {
         return state
       }
@@ -39,23 +41,24 @@ const reducer = combineReducers({
         return appendChildToTree(state, action.updatedData.meta.parent, action.updatedData)
       }
       return updateInTree(state, action.updatedData.id, 'activeContribution', action.updatedData.activeContribution)
-    }
+    },
+    [RESOURCE_LOAD]: (state, action) => action.resourceData.sections || state
   }),
   invalidated: makeReducer(false, {
     [LOADED_SECTION_TREE]: () => false,
     [SECTION_RESTORED]: () => true,
-    [FORM_SUBMIT_SUCCESS + '/sections.currentSection']: (state, action) => action.updatedData.meta.moved || false
+    [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.sections.currentSection']: (state, action) => action.updatedData.meta.moved || false
   }),
-  currentSection: makeFormReducer('sections.currentSection', defaultCurrentSection, {
+  currentSection: makeFormReducer(selectors.STORE_NAME + '.sections.currentSection', defaultCurrentSection, {
     id: makeReducer(defaultCurrentSection.id, {
       [UPDATE_CURRENT_EDIT_SECTION]: (state, action) => action.sectionId,
       [UPDATE_CURRENT_PARENT_SECTION]: () => null,
-      [FORM_SUBMIT_SUCCESS+'/sections.currentSection']: () => null
+      [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.sections.currentSection']: () => null
     }),
     parentId: makeReducer(defaultCurrentSection.parentId, {
       [UPDATE_CURRENT_EDIT_SECTION]: () => null,
       [UPDATE_CURRENT_PARENT_SECTION]: (state, action) => action.sectionId,
-      [FORM_SUBMIT_SUCCESS+'/sections.currentSection']: () => null
+      [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.sections.currentSection']: () => null
     })
   })
 })

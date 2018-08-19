@@ -1,6 +1,70 @@
 import {createSelector} from 'reselect'
 
-const blog = state => state.blog
+const STORE_NAME = 'resource'
+
+const resource = (state) => state[STORE_NAME]
+
+const blog = createSelector(
+  [resource],
+  (resource) => resource.blog
+)
+
+const trustedUsers = createSelector(
+  [resource],
+  (resource) => resource.trustedUsers
+)
+
+const mode = createSelector(
+  [resource],
+  (resource) => resource.mode
+)
+
+const showEditCommentForm = createSelector(
+  [resource],
+  (resource) => resource.showEditCommentForm
+)
+
+const showCommentForm = createSelector(
+  [resource],
+  (resource) => resource.showCommentForm
+)
+
+const showComments = createSelector(
+  [resource],
+  (resource) => resource.showComments
+)
+
+const comments = createSelector(
+  [resource],
+  (resource) => resource.comments
+)
+
+const posts = createSelector(
+  [resource],
+  (resource) => {
+    return resource.posts
+  }
+)
+
+const pdfenabled = createSelector(
+  [resource],
+  (resource) => resource.pdfenabled
+)
+
+const postEdit = createSelector(
+  [resource],
+  (resource) => resource.post_edit
+)
+
+const goHome = createSelector(
+  [resource],
+  (resource) => resource.goHome
+)
+
+const calendarSelectedDate = createSelector(
+  [resource],
+  (resource) => resource.calendarSelectedDate
+)
 
 const countTags = createSelector(
   [blog],
@@ -27,5 +91,19 @@ const displayTagsFrequency = createSelector(
 )
 
 export const select = {
-  countTags, displayTagsFrequency
+  countTags,
+  displayTagsFrequency,
+  blog,
+  mode,
+  trustedUsers,
+  showEditCommentForm,
+  showCommentForm,
+  showComments,
+  comments,
+  posts,
+  pdfenabled,
+  postEdit,
+  goHome,
+  calendarSelectedDate,
+  STORE_NAME
 }

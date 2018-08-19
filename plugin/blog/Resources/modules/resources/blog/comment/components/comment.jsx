@@ -12,6 +12,7 @@ import {UserMessage} from '#/main/core/user/message/components/user-message.jsx'
 import {t, trans} from '#/main/core/translation'
 import isEmpty from 'lodash/isEmpty'
 import {UserMessageForm} from '#/main/core/user/message/components/user-message-form.jsx'
+import {select} from '#/plugin/blog/resources/blog/selectors'
 
 const authenticatedUser = currentUser()
 
@@ -90,8 +91,8 @@ CommentComponent.defaultProps = {
 
 const Comment = connect(
   state => ({
-    blogId: state.blog.data.id,
-    showEditCommentForm: state.showEditCommentForm,
+    blogId: select.blog(state).data.id,
+    showEditCommentForm: select.showEditCommentForm(state),
     canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
     canModerate: hasPermission('moderate', resourceSelect.resourceNode(state))
   }),

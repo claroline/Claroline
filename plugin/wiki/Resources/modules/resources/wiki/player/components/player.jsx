@@ -7,11 +7,12 @@ import {Contents} from '#/plugin/wiki/resources/wiki/player/components/contents'
 import {WikiSection} from '#/plugin/wiki/resources/wiki/player/components/wiki-section'
 import {WikiSectionTree} from '#/plugin/wiki/resources/wiki/player/components/wiki-section-tree'
 import {actions} from '#/plugin/wiki/resources/wiki/player/store'
+import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'
 
 class PlayerComponent extends Component {
   constructor(props) {
     super(props)
-    
+
     this.reload()
   }
 
@@ -20,13 +21,13 @@ class PlayerComponent extends Component {
       this.reload()
     }
   }
-  
+
   reload() {
     if (this.props.sections.invalidated) {
       this.props.fetchSectionTree(this.props.wiki.id)
     }
   }
-  
+
   render() {
     return (
       <div className={'wiki-overview'}>
@@ -62,8 +63,8 @@ PlayerComponent.propTypes = {
 
 const Player = connect(
   state => ({
-    sections: state.sections,
-    wiki: state.wiki
+    sections: selectors.sections(state),
+    wiki: selectors.wiki(state)
   }),
   dispatch => ({
     fetchSectionTree: wikiId => dispatch(actions.fetchSectionTree(wikiId))

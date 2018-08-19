@@ -6,7 +6,7 @@ import {trans} from '#/main/core/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {FormData} from '#/main/app/content/form/containers/data'
-
+import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'
 import {Wiki as WikiTypes} from '#/plugin/wiki/resources/wiki/prop-types'
 import {WIKI_MODES, WIKI_MODE_CHOICES} from '#/plugin/wiki/resources/wiki/constants'
 
@@ -21,7 +21,7 @@ const EditorComponent = props =>
       exact: true
     }}
     title={trans('configure', {}, 'platform')}
-    name="wikiForm"
+    name={selectors.STORE_NAME + '.wikiForm'}
     sections={[
       {
         icon: 'fa fa-fw fa-desktop',
@@ -65,7 +65,7 @@ EditorComponent.propTypes = {
 
 const Editor = connect(
   state => ({
-    wiki: formSelect.data(formSelect.form(state, 'wikiForm'))
+    wiki: formSelect.data(formSelect.form(state, selectors.STORE_NAME +'.wikiForm'))
   })
 )(EditorComponent)
 
