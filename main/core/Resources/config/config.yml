@@ -134,8 +134,8 @@ plugin:
           tags: [content]
           exportable: true
 
-        - name: activity
-          class: Claroline\CoreBundle\Entity\Resource\Activity
+#        - name: activity
+#          class: Claroline\CoreBundle\Entity\Resource\Activity
 
     admin_tools:
         - name: platform_parameters

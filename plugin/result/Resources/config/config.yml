@@ -1,10 +1,10 @@
 plugin:
   has_options: false
 
-  resources:
-    - class: Claroline\ResultBundle\Entity\Result
-      name: claroline_result
-      tags: [evaluation]
+#  resources:
+#    - class: Claroline\ResultBundle\Entity\Result
+#      name: claroline_result
+#      tags: [evaluation]
 
   #widgets:
   #  - name: claroline_result

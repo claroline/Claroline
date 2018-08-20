@@ -5,8 +5,8 @@ plugin:
         - name: 'LTI'
           class: 'fa fa-cog'
 
-    resources:
-        - class: UJM\LtiBundle\Entity\LtiResource
-          name: ujm_lti_resource
-          is_browsable: false
-          icon: lti.png
+#    resources:
+#        - class: UJM\LtiBundle\Entity\LtiResource
+#          name: ujm_lti_resource
+#          is_browsable: false
+#          icon: lti.png

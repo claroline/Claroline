@@ -13,6 +13,7 @@ namespace Claroline\ResultBundle;
 
 use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
+use Claroline\ResultBundle\Library\Installation\AdditionalInstaller;
 
 class ClarolineResultBundle extends DistributionPluginBundle
 {
@@ -21,5 +22,10 @@ class ClarolineResultBundle extends DistributionPluginBundle
         $config = new ConfigurationBuilder();
 
         return $config->addRoutingResource(__DIR__.'/Resources/config/routing.yml', null, 'results');
+    }
+
+    public function getAdditionalInstaller()
+    {
+        return new AdditionalInstaller();
     }
 }

@@ -1,7 +1,7 @@
 plugin:
   has_options: true
 
-  resources:
-    - name: innova_audio_recorder
-      class: Claroline\CoreBundle\Entity\Resource\File
-      exportable: false
+#  resources:
+#    - name: innova_audio_recorder
+#      class: Claroline\CoreBundle\Entity\Resource\File
+#      exportable: false

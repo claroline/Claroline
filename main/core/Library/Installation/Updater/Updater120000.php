@@ -39,6 +39,7 @@ class Updater120000 extends Updater
     public function preUpdate()
     {
         $this->saveOldTabsTables();
+        $this->deactivateActivityResourceType();
     }
 
     public function saveOldTabsTables()
@@ -350,6 +351,22 @@ class Updater120000 extends Updater
             $stmt->execute();
         } else {
             $this->log('WidgetInstanceConfigs already copied');
+        }
+    }
+
+    private function deactivateActivityResourceType()
+    {
+        $resourceTypeRepo = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
+        $activityType = $resourceTypeRepo->findOneBy(['name' => 'activity']);
+
+        if (!empty($activityType)) {
+            $this->log('Deactivating Activity resource...');
+
+            $activityType->setEnabled(false);
+            $this->om->persist($activityType);
+            $this->om->flush();
+
+            $this->log('Activity resource is deactivated.');
         }
     }
 }
