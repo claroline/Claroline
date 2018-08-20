@@ -229,7 +229,7 @@ class WorkspaceManager
         if (0 === count($workspace->getOrganizations())) {
             if (
                 $this->container->get('security.token_storage')->getToken() &&
-                $this->container->get('security.token_storage')->getToken()->getUser() &&
+                $this->container->get('security.token_storage')->getToken()->getUser() instanceof User &&
                 $this->container->get('security.token_storage')->getToken()->getUser()->getMainOrganization()
             ) {
                 //we want a min organization
