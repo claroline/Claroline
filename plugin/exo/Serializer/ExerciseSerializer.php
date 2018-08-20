@@ -37,12 +37,12 @@ class ExerciseSerializer implements SerializerInterface
 
     /** @var PaperManager */
     private $paperManager;
-    
+
     public function getClass()
     {
         return Exercise::class;
     }
-    
+
     /**
      * Converts an Exercise into a JSON-encodable structure.
      *

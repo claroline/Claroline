@@ -1,0 +1,52 @@
+{% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'external_user_group_parameters' | trans({}, 'claro_external_user_group') | striptags | raw }}{% endblock %}
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+{% block breadcrumb %}
+    {{
+    macros.breadcrumbs([
+    {
+        'icon': 'fa fa-cog',
+        'name': 'administration'|trans({}, 'platform'),
+        'href': path('claro_admin_index')
+    },
+    {
+        'name': 'parameters'|trans({}, 'platform'),
+        'href': path('claro_admin_index')
+    },
+    {
+        'name': 'external_user_group_parameters'|trans({}, 'claro_external_user_group'),
+        'href': path('claro_admin_external_sync_config_index')
+    },
+    {
+        'name': sourceConfig.name,
+        'href': ''
+    }
+    ])
+    }}
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>{{ 'user_configuration'|trans({}, 'claro_external_user_group') }}</h1>
+    </div>
+    {{ macros.flashBox() }}
+    <div class="page-body">
+        <external-source-user-config></external-source-user-config>
+    </div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        window.fieldNames = {{ fieldNames|json_serialize(['Default'])|raw }};
+        window.externalSource = '{{ source }}';
+        window.sourceConfig = {{ sourceConfig|json_serialize(['Default'])|raw }};
+        window.tableNames = {{ tableNames|json_serialize(['Default'])|raw }};
+
+    </script>
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'claro_external_user_group' }) }}"></script>
+    <script type="text/javascript" src="{{ hotAsset('dist/claroline-distribution-main-authentication-user-config.js') }}"></script>
+{% endblock%}

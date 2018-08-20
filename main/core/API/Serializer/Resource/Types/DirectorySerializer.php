@@ -63,13 +63,12 @@ class DirectorySerializer
     /**
      * Deserializes directory data into an Entity.
      *
-     * @param array $data
+     * @param array     $data
      * @param Directory $directory
      *
      * @return Text
      */
     public function deserialize(array $data, Directory $directory)
     {
-
     }
 }

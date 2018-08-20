@@ -215,7 +215,7 @@ class UserSerializer
 
     /**
      * Dispatches an event to let plugins add some custom data to the serialized user.
-     * For example: CasBundle adds CAS Id to the serialized user.
+     * For example: AuthenticationBundle adds CAS Id to the serialized user.
      *
      * @param User  $user           - the original user entity
      * @param array $serializedUser - the serialized version of the user

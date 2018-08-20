@@ -1,0 +1,79 @@
+claro_authentication_api:
+    resource: "@ClarolineAuthenticationBundle/Controller/API"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true
+
+claro_cas_admin:
+    resource: "@ClarolineAuthenticationBundle/Controller/Administration/Cas/CasConfigurationController.php"
+    type: annotation
+    prefix: /
+
+claro_cas_connection:
+    resource: "@ClarolineAuthenticationBundle/Controller/Cas/CasConnectionController.php"
+    type: annotation
+    prefix: /cas
+
+claro_oauth_controller:
+    resource: "@ClarolineAuthenticationBundle/Controller/Administration/Oauth/OauthConfigurationController.php"
+    type: annotation
+    prefix: /
+
+claro_oauth_connection:
+    resource: "@ClarolineAuthenticationBundle/Controller/Oauth/OauthConnectionController.php"
+    type: annotation
+    prefix: /oauth
+
+hwi_oauth_login:
+    resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
+    prefix: /login
+
+hwi_oauth_connect:
+    resource: "@HWIOAuthBundle/Resources/config/routing/connect.xml"
+    prefix:   /connect
+
+hwi_oauth_redirect:
+    resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
+    prefix: /connect
+
+facebook_login:
+    path: /login/check-facebook
+
+twitter_login:
+    path: /login/check-twitter
+
+google_login:
+    path: /login/check-google
+
+linkedin_login:
+    path: /login/check-linkedin
+
+windows_live_login:
+    path: /login/check-windows
+
+office_365_login:
+    path: /login/check-o365
+
+oauth2_generic_login:
+    path: /login/check-generic
+
+claro_ldap:
+    resource: "@ClarolineAuthenticationBundle/Controller/Ldap/LdapController.php"
+    type: annotation
+    prefix: /admin/ldap
+
+claro_ldap_connection:
+    resource: "@ClarolineAuthenticationBundle/Controller/Ldap/LdapConnectionController.php"
+    type: annotation
+    prefix: /ldap
+
+claro_external_user_group_sync_admin:
+    resource: "@ClarolineAuthenticationBundle/Controller/ExternalSynchronization/AdminConfigurationController.php"
+    type: annotation
+    prefix: /admin/parameters/external-sync
+
+claro_external_user_group_sync_groups:
+    resource: "@ClarolineAuthenticationBundle/Controller/ExternalSynchronization/ExternalGroupSynchronizationController.php"
+    type: annotation
+    prefix: /external-sync/groups

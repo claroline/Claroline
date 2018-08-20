@@ -1,9 +1,0 @@
-claro_external_user_group_sync_admin:
-    resource: "@ClarolineExternalSynchronizationBundle/Controller/AdminConfigurationController.php"
-    type: annotation
-    prefix: /admin/parameters/external-sync
-
-claro_external_user_group_sync_groups:
-    resource: "@ClarolineExternalSynchronizationBundle/Controller/ExternalGroupSynchronizationController.php"
-    type: annotation
-    prefix: /external-sync/groups

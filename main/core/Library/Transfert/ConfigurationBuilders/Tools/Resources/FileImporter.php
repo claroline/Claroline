@@ -137,6 +137,7 @@ class FileImporter extends Importer implements ConfigurationInterface, RichTextI
     //    data:
     //        -
     //             file: { path: 57a1a8a17766f.html, mime_type: text/html }
+
     /**
      * @param array $data The file informations from the yml file,
      */

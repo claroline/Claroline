@@ -1,0 +1,50 @@
+{% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'external_user_group_parameters' | trans({}, 'claro_external_user_group') | striptags | raw }}{% endblock %}
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+{% block breadcrumb %}
+    {{
+    macros.breadcrumbs([
+    {
+        'icon': 'fa fa-cog',
+        'name': 'administration'|trans({}, 'platform'),
+        'href': path('claro_admin_index')
+    },
+    {
+        'name': 'parameters'|trans({}, 'platform'),
+        'href': path('claro_admin_index')
+    },
+    {
+        'name': 'external_user_group_parameters'|trans({}, 'claro_external_user_group'),
+        'href': ''
+    }
+    ])
+    }}
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>{{ 'external_user_group_parameters'|trans({}, 'claro_external_user_group') }}</h1>
+    </div>
+    {{ macros.flashBox() }}
+    <div class="page-body">
+        <external-source-list></external-source-list>
+        <div>
+            <a class="btn btn-primary" href="{{ path('claro_admin_external_sync_new_source_form') }}"><i class="fa fa-plus"></i> {{ 'add_source' | trans({}, 'claro_external_user_group') }}</a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('packages/angular-loading-bar/build/loading-bar.min.css') }}" screen="media"/>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+      window.externalSources = {{ sources|json_serialize(['Default'])|raw }};
+    </script>
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'claro_external_user_group' }) }}"></script>
+    <script type="text/javascript" src="{{ hotAsset('dist/claroline-distribution-main-authentication-resource-list.js') }}"></script>
+{% endblock%}

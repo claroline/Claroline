@@ -1,0 +1,46 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block title %}{{ 'login_with_third_party'|trans({'%name%':serviceName}, 'platform') }}{% endblock %}
+
+{% set hideTopBarRightSide = true %}
+{% set hideFooter = true %}
+{% block topBarRender %}
+    {% include 'ClarolineCoreBundle:layout:top_bar.html.twig' %}
+{% endblock %}
+
+{% block content %}
+    <style>
+        a.claroline-cas-choice-btn::after{
+            font-family: "FontAwesome";
+            text-align: center;
+            content: '\f054';
+            position: absolute;
+            right: 0;
+            width: 25px;
+        }
+        a.claroline-cas-choice-btn {
+            padding-right: 25px;
+        }
+    </style>
+    <div class="col-sm-4 col-sm-offset-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ 'login_with_third_party'|trans({'%name%':serviceName}, 'platform') }}</h3>
+            </div>
+            <div class="panel-body">
+                {{ 'cas_check_connexion_info'|trans({}, 'claroline_cas') }}
+            </div>
+            <div class="list-group">
+                {% if claroUser is not empty %}
+                <a href="{{ path('claro_cas_link_account_mail') }}" class="list-group-item claroline-cas-choice-btn"><i class="fa fa-at"></i> {{ 'link_cas_to_account_mail'|trans({ '%email%': claroUser.email },'claroline_cas') }}</a>
+                {% endif %}
+                <a href="{{ path('claro_cas_login_link') }}" class="list-group-item claroline-cas-choice-btn"><i class="fa fa-chain"></i> {{ 'link_cas_to_account'|trans({},'claroline_cas') }}</a>
+                {% if selfRegistration == true %}
+                <a href="{{ path('claro_cas_register') }}" class="list-group-item claroline-cas-choice-btn"><i class="fa fa-plus"></i> {{ 'create_new_cas_account'|trans({},'claroline_cas') }}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+

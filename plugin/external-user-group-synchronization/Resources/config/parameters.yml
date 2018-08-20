@@ -1,2 +1,0 @@
-parameters:
-    claroline.param.synchronization_directory: "%kernel.root_dir%/config/Synchronization/"
