@@ -22,7 +22,11 @@ class WidgetContainer
     /**
      * The list of content instances.
      *
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstance", mappedBy="container", cascade={"persist", "remove"})
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstance",
+     *     mappedBy="container",
+     *     cascade={"persist", "remove", "refresh"}
+     * )
      *
      * @var ArrayCollection|WidgetInstance[]
      */

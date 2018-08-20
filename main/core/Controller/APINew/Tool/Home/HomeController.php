@@ -120,9 +120,11 @@ class HomeController extends AbstractApiController
                 $this->crud->delete($installedTab);
             }
         }
-        //for some reason doesn't serialize the widgets content yet the first time
 
         return new JsonResponse(array_map(function (HomeTab $tab) {
+            //just to be sure otherwise it's not serialized after the creation
+            $this->om->refresh($tab);
+
             return $this->serializer->serialize($tab);
         }, $updated));
     }

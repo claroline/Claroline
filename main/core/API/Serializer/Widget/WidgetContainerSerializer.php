@@ -59,10 +59,15 @@ class WidgetContainerSerializer
             $contents[$i] = null;
         }
 
+        //just to be sure otherwise it's not serialized after the creation
+        $this->om->refresh($widgetContainer);
+
         foreach ($widgetContainer->getInstances() as $widgetInstance) {
             $config = $widgetInstance->getWidgetInstanceConfigs()[0];
 
             if ($config) {
+                //just to be sure otherwise it's not serialized after the creation
+                $this->om->refresh($widgetInstance);
                 $contents[$config->getPosition()] = $this->serializer->serialize($widgetInstance, $options);
             }
         }
