@@ -79,17 +79,11 @@ class CursusRegistrationController extends Controller
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template()
      *
-     * @param User $user
-     *
      * @return array
      */
-    public function cursusToolRegistrationIndexAction(User $user)
+    public function cursusToolRegistrationIndexAction()
     {
-        $this->checkToolAccess();
-        $isAdmin = $this->authorization->isGranted('ROLE_ADMIN');
-        $organizations = $isAdmin ? [] : $user->getAdministratedOrganizations()->toArray();
-
-        return ['isAuthorized' => $isAdmin || count($organizations) > 0];
+        return [];
     }
 
     /**
@@ -121,14 +115,14 @@ class CursusRegistrationController extends Controller
             $course = $session->getCourse();
             $courseCode = $course->getCode();
 
-            if ($type === CourseSessionUser::LEARNER) {
+            if (CourseSessionUser::LEARNER === $type) {
                 if (!isset($learnerSessions[$courseCode])) {
                     $learnerSessions[$courseCode] = [];
                     $learnerSessions[$courseCode]['course'] = $course;
                     $learnerSessions[$courseCode]['sessions'] = [];
                 }
                 $learnerSessions[$courseCode]['sessions'][] = $sessionUser;
-            } elseif ($type === CourseSessionUser::TEACHER) {
+            } elseif (CourseSessionUser::TEACHER === $type) {
                 if (!isset($tutorSessions[$courseCode])) {
                     $tutorSessions[$courseCode] = [];
                     $tutorSessions[$courseCode]['course'] = $course;
@@ -200,14 +194,14 @@ class CursusRegistrationController extends Controller
             $course = $session->getCourse();
             $courseCode = $course->getCode();
 
-            if ($type === 0) {
+            if (0 === $type) {
                 if (!isset($learnerSessions[$courseCode])) {
                     $learnerSessions[$courseCode] = [];
                     $learnerSessions[$courseCode]['course'] = $course;
                     $learnerSessions[$courseCode]['sessions'] = [];
                 }
                 $learnerSessions[$courseCode]['sessions'][] = $sessionGroup;
-            } elseif ($type === 1) {
+            } elseif (1 === $type) {
                 if (!isset($tutorSessions[$courseCode])) {
                     $tutorSessions[$courseCode] = [];
                     $tutorSessions[$courseCode]['course'] = $course;
@@ -287,7 +281,7 @@ class CursusRegistrationController extends Controller
         $this->checkToolAccess();
         $results = $this->cursusManager->registerUsersToSessions($sessions, [$user], $type);
 
-        if ($results['status'] === 'failed') {
+        if ('failed' === $results['status']) {
             $datas = $results['datas'];
             $sessionFlashBag = $this->session->getFlashBag();
 
@@ -331,7 +325,7 @@ class CursusRegistrationController extends Controller
         $this->checkToolAccess();
         $results = $this->cursusManager->registerGroupToSessions($sessions, $group, $type);
 
-        if ($results['status'] === 'failed') {
+        if ('failed' === $results['status']) {
             $datas = $results['datas'];
             $sessionFlashBag = $this->session->getFlashBag();
 

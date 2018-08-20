@@ -84,7 +84,7 @@ class ReservationToolListener
             }
         }
 
-        $event->setContent($this->templating->render('FormaLibreReservationBundle:Tool:reservationAgenda.html.twig', ['resourcesType' => $resourcesTypes]));
+        $event->setContent($this->templating->render('FormaLibreReservationBundle:tool:reservation_agenda.html.twig', ['resourcesType' => $resourcesTypes]));
     }
 
     /**

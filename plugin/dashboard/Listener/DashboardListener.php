@@ -76,10 +76,8 @@ class DashboardListener
     public function onDesktopOpen(DisplayToolEvent $event)
     {
         $content = $this->templating->render(
-            'ClarolineDashboardBundle:Tool:dashboards.html.twig',
-            [
-                'title' => 'youpi',
-            ]
+            'ClarolineDashboardBundle:tool:dashboards.html.twig',
+            []
         );
         $event->setContent($content);
     }

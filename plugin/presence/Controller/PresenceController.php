@@ -75,10 +75,25 @@ class PresenceController extends Controller
      *
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
-     * @param User $user
      * @EXT\Template()
      */
-    public function ToolIndexAction(User $user)
+    public function ToolIndexAction()
+    {
+        return [];
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/presence/tool/index_old",
+     *     name="formalibre_presence_tool_index_old",
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * @EXT\Template()
+     */
+    public function ToolIndexOldAction(User $user)
     {
         $SchoolYear = $this->schoolYearRepo->findOneBySchoolYearActual(true);
         $Presences = $this->presenceRepo->findAll();

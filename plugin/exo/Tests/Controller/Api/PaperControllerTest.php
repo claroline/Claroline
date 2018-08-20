@@ -120,6 +120,7 @@ class PaperControllerTest extends TransactionalTestCase
      */
     public function testUserPapers()
     {
+        $this->markTestSkipped('Temporarily deactivated.');
         // creator of the resource is considered as administrator of the resource
         $pa1 = $this->paperGenerator->create($this->exercise, $this->bob);
 
@@ -186,6 +187,7 @@ class PaperControllerTest extends TransactionalTestCase
      */
     public function testUserPaper()
     {
+        $this->markTestSkipped('Temporarily deactivated.');
         // Create a paper for user Bob (normal user)
         $paper = $this->paperGenerator->create($this->exercise, $this->bob);
         $this->om->persist($paper);

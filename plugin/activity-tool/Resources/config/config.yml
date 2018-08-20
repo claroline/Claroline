@@ -1,9 +1,0 @@
-plugin:
-  has_options: false
-  icon: res_activity.png
-
-  tools:
-    - name: claroline_activity_tool
-      class: tasks
-      is_displayable_in_workspace: true
-      is_displayable_in_desktop: true

@@ -19,7 +19,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -81,6 +80,21 @@ class AdminPresenceController extends Controller
      * @EXT\Template()
      */
     public function adminToolIndexAction()
+    {
+        return [];
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/presence/tool/index/old",
+     *     name="formalibre_presence_admin_tool_index_old",
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function adminToolIndexOldAction()
     {
         $rightsValue = [];
 

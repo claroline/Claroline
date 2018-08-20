@@ -127,16 +127,11 @@ class AdminManagementController extends Controller
      * @EXT\ParamConverter("user", converter="current_user")
      * @EXT\Template()
      *
-     * @param User $user
-     *
      * @return array
      */
-    public function indexAction(User $user)
+    public function indexAction()
     {
-        $isAdmin = $this->authorization->isGranted('ROLE_ADMIN');
-        $organizations = $isAdmin ? [] : $user->getAdministratedOrganizations()->toArray();
-
-        return ['isAuthorized' => $isAdmin || count($organizations) > 0];
+        return [];
     }
 
     /**

@@ -27,44 +27,49 @@
         <p><h3 class="panel-title">{{ 'ujm_lti_resource' | trans({}, 'resource') }}</h3></p>
     </div>
     <div class="panel-body">
-        <table class="table table-bordered">
-            <tr>
-                <th>{{ 'title' | trans({}, 'platform') }}</th>
-                <th>{{ 'url' | trans({}, 'lti') }}</th>
-                <th>{{ 'description' | trans({}, 'platform') }}</th>
-                <th>{{ 'action'|trans({}, 'platform') }}</th>
-            </tr>
-            {% for app in apps %}
-                <tr>
-                    <td>{{ app.title }}</td>
-                    <td>{{ app.url }}</td>
-                    <td>{{ app.description  }}</td>
-                    <td>
-                        <a href="{{ path('ujm_lti_edit_form_app', {'appId': app.id}) }}"><i class="fa fa-edit" title="{{ 'edit'|trans({}, 'platform') }}"></i></a>
-                        <a href="{{ path('ujm_lti_delete_app', {'appId': app.id}) }}"><i class="fa fa-remove" title="{{ 'delete'|trans({}, 'platform') }}"></i></a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
-        <a class="btn btn-primary" id="bt_add_app"><i class="fa fa-plus"></i> {{ 'add_lti_app' | trans({}, 'lti') }}</a>
-        <div id="add_app" style="display: none">
-            <form class="form-horizontal" action="{{ path('ujm_admin_lti') }}" method="post" enctype="multipart/form-data" id="form_add_app">
-                {{ form_widget(form) }}
-                {{ form_rest(form) }}
-                <button type="submit" class="btn btn-primary" id="sub_add_app">{{ 'ok'|trans({}, 'platform') }}</button>
-            </form>
+        <div class="alert alert-warning">
+            {{ 'tool_work_in_progress'|trans({}, 'platform') }}
         </div>
     </div>
+    {#<div class="panel-body">#}
+        {#<table class="table table-bordered">#}
+            {#<tr>#}
+                {#<th>{{ 'title' | trans({}, 'platform') }}</th>#}
+                {#<th>{{ 'url' | trans({}, 'lti') }}</th>#}
+                {#<th>{{ 'description' | trans({}, 'platform') }}</th>#}
+                {#<th>{{ 'action'|trans({}, 'platform') }}</th>#}
+            {#</tr>#}
+            {#{% for app in apps %}#}
+                {#<tr>#}
+                    {#<td>{{ app.title }}</td>#}
+                    {#<td>{{ app.url }}</td>#}
+                    {#<td>{{ app.description  }}</td>#}
+                    {#<td>#}
+                        {#<a href="{{ path('ujm_lti_edit_form_app', {'appId': app.id}) }}"><i class="fa fa-edit" title="{{ 'edit'|trans({}, 'platform') }}"></i></a>#}
+                        {#<a href="{{ path('ujm_lti_delete_app', {'appId': app.id}) }}"><i class="fa fa-remove" title="{{ 'delete'|trans({}, 'platform') }}"></i></a>#}
+                    {#</td>#}
+                {#</tr>#}
+            {#{% endfor %}#}
+        {#</table>#}
+        {#<a class="btn btn-primary" id="bt_add_app"><i class="fa fa-plus"></i> {{ 'add_lti_app' | trans({}, 'lti') }}</a>#}
+        {#<div id="add_app" style="display: none">#}
+            {#<form class="form-horizontal" action="{{ path('ujm_admin_lti') }}" method="post" enctype="multipart/form-data" id="form_add_app">#}
+                {#{{ form_widget(form) }}#}
+                {#{{ form_rest(form) }}#}
+                {#<button type="submit" class="btn btn-primary" id="sub_add_app">{{ 'ok'|trans({}, 'platform') }}</button>#}
+            {#</form>#}
+        {#</div>#}
+    {#</div>#}
 {% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript">
-        $("#bt_add_app").click(function() {
-            $("#add_app").show();
-        });
-        $("#sub_add_app").click(function() {
-            $("#add_app").hide();
-        });
-    </script>
-{% endblock %}
+{#{% block javascripts %}#}
+    {#{{ parent() }}#}
+    {#<script type="text/javascript">#}
+        {#$("#bt_add_app").click(function() {#}
+            {#$("#add_app").show();#}
+        {#});#}
+        {#$("#sub_add_app").click(function() {#}
+            {#$("#add_app").hide();#}
+        {#});#}
+    {#</script>#}
+{#{% endblock %}#}

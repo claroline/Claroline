@@ -21,9 +21,20 @@ class LtiController extends Controller
      * @Route("/apps", name="ujm_admin_lti")
      * @Template
      *
+     * @return array
+     */
+    public function appAction()
+    {
+        return [];
+    }
+
+    /**
+     * @Route("/apps_old", name="ujm_admin_lti_old")
+     * @Template
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function appAction(Request $request)
+    public function appOldAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 

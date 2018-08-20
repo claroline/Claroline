@@ -1,16 +1,16 @@
 {% extends 'ClarolineCoreBundle:desktop:layout.html.twig' %}
 
-{% block stylesheets %}
+{#{% block stylesheets %}#}
     {# Claroline CSS #}
-    {{ parent() }}
+    {#{{ parent() }}#}
 
     {# Dashboard styles #}
-    {% stylesheets debug = false filter = 'less, cssmin' output = 'vendor/claroline/claro-dashboard.css'
-    '@ClarolineDashboardBundle/Resources/less/main.less'
- %}
-    <link rel="stylesheet" media="screen" href="{{ asset_url }}"/>
-    {% endstylesheets %}
-{% endblock %}
+    {#{% stylesheets debug = false filter = 'less, cssmin' output = 'vendor/claroline/claro-dashboard.css'#}
+    {#'@ClarolineDashboardBundle/Resources/less/main.less'#}
+ {#%}#}
+    {#<link rel="stylesheet" media="screen" href="{{ asset_url }}"/>#}
+    {#{% endstylesheets %}#}
+{#{% endblock %}#}
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
@@ -28,20 +28,25 @@
 {% endblock %}
 
 {% block section_content %}
-    {# Initialize AngularJS application #}
-    <div class="dashboard-app-container" data-ng-app="DashboardApp" data-ng-cloak="">
-        <div class="dashboard-app-views" ng-view>
-
+    <div class="panel-body">
+        <div class="alert alert-warning">
+            {{ 'tool_work_in_progress'|trans({}, 'platform') }}
         </div>
     </div>
+    {# Initialize AngularJS application #}
+    {#<div class="dashboard-app-container" data-ng-app="DashboardApp" data-ng-cloak="">#}
+        {#<div class="dashboard-app-views" ng-view>#}
+
+        {#</div>#}
+    {#</div>#}
 {% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
+{#{% block javascripts %}#}
+    {#{{ parent() }}#}
     {# Translations #}
-    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'dashboard' }) }}"></script>
-    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'tools' }) }}"></script>
-    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'platform' }) }}"></script>
+    {#<script src="{{ url('bazinga_jstranslation_js', { 'domain': 'dashboard' }) }}"></script>#}
+    {#<script src="{{ url('bazinga_jstranslation_js', { 'domain': 'tools' }) }}"></script>#}
+    {#<script src="{{ url('bazinga_jstranslation_js', { 'domain': 'platform' }) }}"></script>#}
     {# app #}
-    <script src="{{ hotAsset('dist/claroline-distribution-plugin-dashboard-app.js') }}"></script>
-{% endblock %}
+    {#<script src="{{ hotAsset('dist/claroline-distribution-plugin-dashboard-app.js') }}"></script>#}
+{#{% endblock %}#}

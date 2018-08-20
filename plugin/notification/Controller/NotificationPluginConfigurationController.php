@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 4/14/15
  */
 
@@ -13,12 +13,12 @@ namespace Icap\NotificationBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
 use Icap\NotificationBundle\Exception\InvalidNotificationFormException;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 class NotificationPluginConfigurationController extends Controller
@@ -32,10 +32,22 @@ class NotificationPluginConfigurationController extends Controller
      */
     public function getAction(User $user)
     {
+        return [];
+    }
+
+    /**
+     * @Route("/configuration_old", name="icap_notification_configuration_old")
+     * @Template("IcapNotificationBundle:configuration:config.html.twig")
+     * @Method({"GET"})
+     * @ParamConverter("user", options={"authenticatedUser" = true})
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function getOldAction(User $user)
+    {
         $configManager = $this->getNotificationPluginConfigurationManager();
         $form = $configManager->getForm();
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -56,7 +68,7 @@ class NotificationPluginConfigurationController extends Controller
             $this->addFlash('error', $infe->getMessage());
         }
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
