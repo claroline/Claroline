@@ -18,10 +18,10 @@ function getFile(mimeType) {
   })
 
   if (knownType) {
-    return knownTypes[knownType]
+    return knownTypes[knownType]()
   }
 
-  return () => Promise.resolve(null)
+  return Promise.resolve(null)
 }
 
 export {
