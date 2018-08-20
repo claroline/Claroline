@@ -129,44 +129,14 @@ class WorkspaceVoter extends AbstractVoter
 
     private function isWorkspaceManaged(TokenInterface $token, Workspace $workspace)
     {
-        if (!$token->getUser() instanceof User) {
-            return false;
-        }
+        $wm = $this->getContainer()->get('claroline.manager.workspace_manager');
 
-        if (!$this->isUsurper($token)) {
-            if ($workspace->getCreator() === $token->getUser()) {
-                return true;
-            }
-
-            //if we're amongst the administrators of the organizations
-            $adminOrganizations = $token->getUser()->getAdministratedOrganizations();
-            $workspaceOrganizations = $workspace->getOrganizations();
-
-            foreach ($adminOrganizations as $adminOrganization) {
-                foreach ($workspaceOrganizations as $workspaceOrganization) {
-                    if ($workspaceOrganization === $adminOrganization) {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        //or we have the role_manager
-        $managerRole = $workspace->getManagerRole();
-        if ($managerRole) {
-            foreach ($token->getRoles() as $role) {
-                if ($managerRole->getName() === $role->getRole()) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return $wm->isManager($workspace, $token);
     }
 
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Workspace\Workspace';
+        return Workspace::class;
     }
 
     public function getSupportedActions()

@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * ResourceRestrictionsManager.
@@ -23,12 +24,16 @@ class ResourceRestrictionsManager
     /** @var RightsManager */
     private $rightsManager;
 
+    /** @var AuthorizationCheckerInterface */
+    private $security;
+
     /**
      * ResourceRestrictionsManager constructor.
      *
      * @DI\InjectParams({
      *     "session"       = @DI\Inject("session"),
-     *     "rightsManager" = @DI\Inject("claroline.manager.rights_manager")
+     *     "rightsManager" = @DI\Inject("claroline.manager.rights_manager"),
+     *     "security"      = @DI\Inject("security.authorization_checker")
      * })
      *
      * @param SessionInterface $session
@@ -36,10 +41,12 @@ class ResourceRestrictionsManager
      */
     public function __construct(
         SessionInterface $session,
-        RightsManager $rightsManager)
-    {
+        RightsManager $rightsManager,
+        AuthorizationCheckerInterface $security
+    ) {
         $this->session = $session;
         $this->rightsManager = $rightsManager;
+        $this->security = $security;
     }
 
     /**
@@ -101,7 +108,13 @@ class ResourceRestrictionsManager
      */
     public function hasRights(ResourceNode $resourceNode, array $userRoles): bool
     {
-        return 0 !== $this->rightsManager->getMaximumRights($userRoles, $resourceNode);
+        $isAdmin = false;
+
+        if ($workspace = $resourceNode->getWorkspace()) {
+            $isAdmin = $this->security->isGranted('administrate', $workspace);
+        }
+
+        return 0 !== $this->rightsManager->getMaximumRights($userRoles, $resourceNode) || $isAdmin;
     }
 
     /**
