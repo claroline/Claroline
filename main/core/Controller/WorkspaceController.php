@@ -375,15 +375,25 @@ class WorkspaceController extends Controller
                 if (!is_null($resourceNode)) {
                     $this->session->set('isDesktop', false);
                     $route = $this->router->generate(
-                                'claro_resource_open',
-                                [
-                                    'node' => $resourceNode->getId(),
-                                    'resourceType' => $resourceNode->getResourceType()->getName(),
-                                ]
-                            );
+                        'claro_resource_show',
+                        [
+                            'id' => $resourceNode->getUuid(),
+                            'type' => $resourceNode->getResourceType()->getName(),
+                        ]
+                    );
 
                     return new RedirectResponse($route);
                 }
+            } elseif (isset($details['opening_type']) && 'tool' === $details['opening_type'] && isset($details['opening_target'])) {
+                $route = $this->router->generate(
+                    'claro_workspace_open_tool',
+                    [
+                        'toolName' => $details['opening_target'],
+                        'workspaceId' => $workspaceId,
+                    ]
+                );
+
+                return new RedirectResponse($route);
             }
         }
 
