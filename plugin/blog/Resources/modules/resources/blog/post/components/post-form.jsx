@@ -17,7 +17,7 @@ import {PostType} from '#/plugin/blog/resources/blog/post/components/prop-types'
 import {constants} from '#/plugin/blog/resources/blog/constants'
 import {currentUser} from '#/main/core/user/current'
 import {withRouter} from '#/main/app/router'
-import {select} from '#/plugin/blog/resources/blog/selectors'
+import {selectors} from '#/plugin/blog/resources/blog/store'
 
 const loggedUser = currentUser()
 
@@ -27,7 +27,7 @@ const PostFormComponent = props =>
   <div>
     {(props.mode === constants.CREATE_POST || !isEmpty(props.post.data)) &&
       <FormData
-        name={select.STORE_NAME + '.post_edit'}
+        name={selectors.STORE_NAME + '.post_edit'}
         sections={[
           {
             id: 'Post',
@@ -108,18 +108,18 @@ PostFormComponent.propTypes = {
 
 const PostForm = withRouter(connect(
   state => ({
-    mode: select.mode(state),
-    blogId: select.blog(state).data.id,
-    originalTags: formSelect.originalData(formSelect.form(state, select.STORE_NAME + '.post_edit')).tags,
-    postId: !isEmpty(state.post_edit) ? state.post_edit.data.id : null,
-    post: select.postEdit(state),
-    goHome: select.goHome(state),
-    saveEnabled: formSelect.saveEnabled(formSelect.form(state, select.STORE_NAME + '.post_edit'))
+    mode: selectors.mode(state),
+    blogId: selectors.blog(state).data.id,
+    originalTags: formSelect.originalData(formSelect.form(state, selectors.STORE_NAME + '.post_edit')).tags,
+    postId: !isEmpty(selectors.postEdit(state)) ? selectors.postEdit(state).data.id : null,
+    post: selectors.postEdit(state),
+    goHome: selectors.goHome(state),
+    saveEnabled: formSelect.saveEnabled(formSelect.form(state, selectors.STORE_NAME + '.post_edit'))
   }), dispatch => ({
     save: (blogId, mode, postId, history, originalTags) => {
       if (mode === constants.CREATE_POST){
         dispatch(
-          formActions.saveForm(select.STORE_NAME + '.' + constants.POST_EDIT_FORM_NAME, ['apiv2_blog_post_new', {blogId: blogId}])
+          formActions.saveForm(selectors.STORE_NAME + '.' + constants.POST_EDIT_FORM_NAME, ['apiv2_blog_post_new', {blogId: blogId}])
         ).then((response) => {
           if (response && !isEmpty(response.tags)){
             //update tag list
@@ -131,7 +131,7 @@ const PostForm = withRouter(connect(
         })
       }else if (mode === constants.EDIT_POST && postId !== null){
         dispatch(
-          formActions.saveForm(select.STORE_NAME + '.' + constants.POST_EDIT_FORM_NAME, ['apiv2_blog_post_update', {blogId: blogId, postId: postId}])
+          formActions.saveForm(selectors.STORE_NAME + '.' + constants.POST_EDIT_FORM_NAME, ['apiv2_blog_post_update', {blogId: blogId, postId: postId}])
         ).then((response) => {
           if (response && originalTags !== response.tags){
             //update tag list
@@ -143,7 +143,7 @@ const PostForm = withRouter(connect(
     },
     cancel: (history) => {
       dispatch(
-        formActions.cancelChanges(select.STORE_NAME + '.' + constants.POST_EDIT_FORM_NAME)
+        formActions.cancelChanges(selectors.STORE_NAME + '.' + constants.POST_EDIT_FORM_NAME)
       )
       history.push('/')
     }

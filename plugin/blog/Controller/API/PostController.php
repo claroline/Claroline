@@ -165,7 +165,7 @@ class PostController
      * Create blog post.
      *
      * @EXT\Route("/new", name="apiv2_blog_post_new")
-     * @EXT\Method("POST")
+     * @EXT\Method({"POST", "PUT"})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
      * @param Blog $blog

@@ -27,6 +27,8 @@ class Updater120000 extends Updater
         $this->migrateTags();
         //set new CommentModerationMode attribute value
         $this->setCommentModerationMode();
+        //deletes old post action
+        $this->deleteOldPostAction();
         //TODO drop blog tags tables for a future version
     }
 
@@ -122,5 +124,25 @@ class Updater120000 extends Updater
         }
 
         $om->endFlushSuite();
+    }
+
+    private function deleteOldPostAction()
+    {
+        $this->log('Deleting old Post action...');
+        $om = $this->container->get('claroline.persistence.object_manager');
+        $resourceTypeRepo = $om->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType');
+        $menuActionRepo = $om->getRepository('Claroline\CoreBundle\Entity\Resource\MenuAction');
+        $blogType = $resourceTypeRepo->findOneBy(['name' => 'icap_blog']);
+
+        if ($blogType) {
+            $actions = $menuActionRepo->findBy(['name' => 'post', 'resourceType' => $blogType]);
+
+            foreach ($actions as $action) {
+                $om->remove($action);
+            }
+            $om->flush();
+        }
+
+        $this->log('Old Post action deleted.');
     }
 }

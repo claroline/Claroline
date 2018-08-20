@@ -5,16 +5,15 @@ import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
 
-import {select} from '#/plugin/blog/resources/blog/selectors'
-import {reducer} from '#/plugin/blog/resources/blog/store/reducer'
+import {reducer, selectors} from '#/plugin/blog/resources/blog/store'
 import {Blog} from '#/plugin/blog/resources/blog/player/components/resource'
 
-const BlogResource = withReducer(select.STORE_NAME, reducer)(
+const BlogResource = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     state => ({
-      blogId: select.blog(state).data.id,
-      saveEnabled: formSelect.saveEnabled(formSelect.form(state, select.STORE_NAME + '.blog.data.options')),
-      pdfEnabled: select.pdfenabled(state),
+      blogId: selectors.blog(state).data.id,
+      saveEnabled: formSelect.saveEnabled(formSelect.form(state, selectors.STORE_NAME + '.blog.data.options')),
+      pdfEnabled: selectors.pdfEnabled(state),
       canExport: hasPermission('export', resourceSelect.resourceNode(state)),
       canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
       canPost: hasPermission('post', resourceSelect.resourceNode(state)),

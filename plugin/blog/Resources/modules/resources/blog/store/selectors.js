@@ -51,7 +51,7 @@ const posts = createSelector(
   }
 )
 
-const pdfenabled = createSelector(
+const pdfEnabled = createSelector(
   [resource],
   (resource) => resource.pdfenabled
 )
@@ -100,7 +100,7 @@ const displayTagsFrequency = createSelector(
   }
 )
 
-export const select = {
+export const selectors = {
   countTags,
   displayTagsFrequency,
   blog,
@@ -113,7 +113,7 @@ export const select = {
   showComments,
   comments,
   posts,
-  pdfenabled,
+  pdfEnabled,
   postEdit,
   goHome,
   calendarSelectedDate,

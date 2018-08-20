@@ -5,7 +5,7 @@ import {trans} from '#/main/core/translation'
 import {TagCloud} from '#/main/app/content/meta/components/tag-cloud'
 import {actions as listActions} from '#/main/app/content/list/store'
 import {actions as postActions} from '#/plugin/blog/resources/blog/post/store/actions'
-import {select} from '#/plugin/blog/resources/blog/selectors'
+import {selectors} from '#/plugin/blog/resources/blog/store'
 import {constants} from '#/plugin/blog/resources/blog/constants'
 import {cleanTag} from '#/plugin/blog/resources/blog/utils'
 import isEmpty from 'lodash/isEmpty'
@@ -45,9 +45,9 @@ TagsComponent.propTypes = {
 
 const Tags = withRouter(connect(
   state => ({
-    tags: select.blog(state).data.options.data.tagCloud === constants.TAGCLOUD_TYPE_CLASSIC_NUM ? select.displayTagsFrequency(state) : state.blog.data.tags,
-    tagMode: select.blog(state).data.options.data.tagCloud,
-    maxSize: select.blog(state).data.options.data.maxTag
+    tags: selectors.blog(state).data.options.data.tagCloud === constants.TAGCLOUD_TYPE_CLASSIC_NUM ? selectors.displayTagsFrequency(state) : selectors.blog(state).data.tags,
+    tagMode: selectors.blog(state).data.options.data.tagCloud,
+    maxSize: selectors.blog(state).data.options.data.maxTag
   }),
   dispatch => ({
     searchByTag: (tag) => {

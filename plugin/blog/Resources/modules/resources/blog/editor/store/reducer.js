@@ -9,11 +9,11 @@ import {
   BLOG_OPTIONS_WIDGET_UP,
   BLOG_OPTIONS_WIDGET_DOWN
 } from '#/plugin/blog/resources/blog/editor/store/actions'
-import {select} from '#/plugin/blog/resources/blog/selectors'
+import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
 import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
 const reducer = {
-  options: makeFormReducer(select.STORE_NAME + '.blog.data.options', {}, {
+  options: makeFormReducer(selectors.STORE_NAME + '.blog.data.options', {}, {
     pendingChanges: makeReducer({}, {
       [BLOG_OPTIONS_WIDGET_VISIBILITY]: () => true,
       [BLOG_OPTIONS_WIDGET_UP]: () => true,

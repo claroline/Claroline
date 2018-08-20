@@ -14,7 +14,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {hasPermission} from '#/main/core/resource/permissions'
 import {constants} from '#/plugin/blog/resources/blog/constants'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {select} from '#/plugin/blog/resources/blog/selectors'
+import {selectors} from '#/plugin/blog/resources/blog/store'
 
 const authenticatedUser = currentUser()
 
@@ -72,7 +72,7 @@ const CommentsComponent = props =>
         <section className="comments-section">
           <h4>{trans('all_comments', {}, 'icap_blog')}</h4>
           <ListData
-            name={select.STORE_NAME + '.comments'}
+            name={selectors.STORE_NAME + '.comments'}
             fetch={{
               url: ['apiv2_blog_comment_list', {blogId: props.blogId, postId: props.postId}],
               autoload: true
@@ -140,12 +140,12 @@ CommentsComponent.propTypes = {
 
 const Comments = connect(
   state => ({
-    user: select.user(state),
-    opened: select.showComments(state),
-    isModerated: select.blog(state).data.options.data.commentModerationMode !== constants.COMMENT_MODERATION_MODE_NONE,
-    showForm: select.showCommentForm(state),
-    showEditCommentForm: select.showEditCommentForm(state),
-    comments: state.comments.data,
+    user: selectors.user(state),
+    opened: selectors.showComments(state),
+    isModerated: selectors.blog(state).data.options.data.commentModerationMode !== constants.COMMENT_MODERATION_MODE_NONE,
+    showForm: selectors.showCommentForm(state),
+    showEditCommentForm: selectors.showEditCommentForm(state),
+    comments: selectors.comments(state).data,
     canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
     canModerate: hasPermission('moderate', resourceSelect.resourceNode(state))
   }),

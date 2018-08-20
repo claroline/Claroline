@@ -7,11 +7,11 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {constants as listConst} from '#/main/app/content/list/constants'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {CommentModerationCard} from '#/plugin/blog/resources/blog/comment/components/comment-moderation'
-import {select} from '#/plugin/blog/resources/blog/selectors'
+import {selectors} from '#/plugin/blog/resources/blog/store'
 
 const ReportedComponent = (props) =>
   <ListData
-    name={select.STORE_NAME + '.reportedComments'}
+    name={selectors.STORE_NAME + '.reportedComments'}
     fetch={{
       url: ['apiv2_blog_comment_reported', {blogId: props.blogId}],
       autoload: true
@@ -51,7 +51,7 @@ ReportedComponent.propTypes = {
 
 const Reported = connect(
   state => ({
-    blogId: select.blog(state).data.id
+    blogId: selectors.blog(state).data.id
   })
 )(ReportedComponent)
 

@@ -2,22 +2,23 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
-import {RoutedPageContent} from '#/main/core/layout/router'
 import Grid from 'react-bootstrap/lib/Grid'
 import Row from 'react-bootstrap/lib/Row'
 import Col from 'react-bootstrap/lib/Col'
-import {Posts} from '#/plugin/blog/resources/blog/post/components/posts.jsx'
-import {Post} from '#/plugin/blog/resources/blog/post/components/post.jsx'
-import {PostForm} from '#/plugin/blog/resources/blog/post/components/post-form.jsx'
+
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {Tools} from '#/plugin/blog/resources/blog/toolbar/components/toolbar.jsx'
-import {BlogOptions} from '#/plugin/blog/resources/blog/editor/components/blog-options.jsx'
+import {hasPermission} from '#/main/core/resource/permissions'
+import {RoutedPageContent} from '#/main/core/layout/router'
+
 import {actions as editorActions} from '#/plugin/blog/resources/blog/editor/store'
 import {actions as postActions} from '#/plugin/blog/resources/blog/post/store'
-import {actions} from '#/plugin/blog/resources/blog/store'
+import {actions, selectors} from '#/plugin/blog/resources/blog/store'
 import {constants} from '#/plugin/blog/resources/blog/constants'
-import {hasPermission} from '#/main/core/resource/permissions'
-import {select} from '#/plugin/blog/resources/blog/selectors'
+import {Posts} from '#/plugin/blog/resources/blog/post/components/posts'
+import {Post} from '#/plugin/blog/resources/blog/post/components/post'
+import {PostForm} from '#/plugin/blog/resources/blog/post/components/post-form'
+import {Tools} from '#/plugin/blog/resources/blog/toolbar/components/toolbar'
+import {BlogOptions} from '#/plugin/blog/resources/blog/editor/components/blog-options'
 
 const PlayerComponent = props =>
   <Grid key="blog-grid" className="blog-page">
@@ -81,9 +82,9 @@ PlayerComponent.propTypes = {
 
 const Player = connect(
   state => ({
-    blogId: select.blog(state).data.id,
-    postId: !isEmpty(select.postEdit(state)) ? select.postEdit(state).data.id : null,
-    mode: select.mode(state),
+    blogId: selectors.blog(state).data.id,
+    postId: !isEmpty(selectors.postEdit(state)) ? selectors.postEdit(state).data.id : null,
+    mode: selectors.mode(state),
     canEdit: hasPermission('edit', resourceSelect.resourceNode(state))
   }),
   dispatch => ({

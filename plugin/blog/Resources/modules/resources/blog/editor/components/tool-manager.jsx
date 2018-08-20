@@ -4,7 +4,7 @@ import {ToolConfig} from '#/plugin/blog/resources/blog/editor/components/tool-co
 import {trans} from '#/main/core/translation'
 import {PropTypes as T} from 'prop-types'
 import differenceBy from 'lodash/differenceBy'
-import {select} from '#/plugin/blog/resources/blog/selectors'
+import {selectors} from '#/plugin/blog/resources/blog/store'
 
 const ToolManagerComponent = props =>
   <div>
@@ -43,10 +43,10 @@ ToolManagerComponent.propTypes = {
 
 const ToolManager = connect(
   state => ({
-    orderedPanels: select.blog(state).data.options.data.widgetOrder,
-    orderedPanelsSize: select.blog(state).data.options.data.widgetOrder.length,
-    panels: select.blog(state).data.options.data.widgetList,
-    panelDiff: differenceBy(select.blog(state).data.options.data.widgetList, select.blog(state).data.options.data.widgetOrder, 'id')
+    orderedPanels: selectors.blog(state).data.options.data.widgetOrder,
+    orderedPanelsSize: selectors.blog(state).data.options.data.widgetOrder.length,
+    panels: selectors.blog(state).data.options.data.widgetList,
+    panelDiff: differenceBy(selectors.blog(state).data.options.data.widgetList, selectors.blog(state).data.options.data.widgetOrder, 'id')
   })
 )(ToolManagerComponent)
 

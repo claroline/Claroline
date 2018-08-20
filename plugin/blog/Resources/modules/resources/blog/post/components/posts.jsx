@@ -9,12 +9,12 @@ import {constants as listConst} from '#/main/app/content/list/constants'
 import {PostCard} from '#/plugin/blog/resources/blog/post/components/post'
 import {hasPermission} from '#/main/core/resource/permissions'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {select} from '#/plugin/blog/resources/blog/selectors'
+import {selectors} from '#/plugin/blog/resources/blog/store'
 
 const PostsList = props =>
   <div className={'posts-list'}>
     <ListData
-      name={select.STORE_NAME + '.posts'}
+      name={selectors.STORE_NAME + '.posts'}
       fetch={{
         url: ['apiv2_blog_post_list', {blogId: props.blogId}],
         autoload: true
@@ -84,8 +84,8 @@ PostsList.propTypes ={
 
 const PostsContainer = connect(
   state => ({
-    posts: select.posts(state).data,
-    blogId: select.blog(state).data.id,
+    posts: selectors.posts(state).data,
+    blogId: selectors.blog(state).data.id,
     canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
     canPost: hasPermission('post', resourceSelect.resourceNode(state))
   })

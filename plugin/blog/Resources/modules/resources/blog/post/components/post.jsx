@@ -20,7 +20,7 @@ import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-import {select} from '#/plugin/blog/resources/blog/selectors'
+import {selectors} from '#/plugin/blog/resources/blog/store'
 import {PostType} from '#/plugin/blog/resources/blog/post/components/prop-types'
 import {actions as postActions} from '#/plugin/blog/resources/blog/post/store'
 import {Comments} from '#/plugin/blog/resources/blog/comment/components/comments'
@@ -261,13 +261,13 @@ Footer.propTypes = {
 
 const PostCardContainer = connect(
   (state) => ({
-    blogId: select.blog(state).data.id,
+    blogId: selectors.blog(state).data.id,
     canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
     canModerate: hasPermission('moderate', resourceSelect.resourceNode(state)),
-    canComment: select.blog(state).data.options.data.authorizeComment,
-    canAnonymousComment: select.blog(state).data.options.data.authorizeAnonymousComment,
-    displayViews: select.blog(state).data.options.data.displayPostViewCounter,
-    commentsLoaded: !state.comments(state).invalidated
+    canComment: selectors.blog(state).data.options.data.authorizeComment,
+    canAnonymousComment: selectors.blog(state).data.options.data.authorizeAnonymousComment,
+    displayViews: selectors.blog(state).data.options.data.displayPostViewCounter,
+    commentsLoaded: !selectors.comments(state).invalidated
   }),
   dispatch => ({
     publishPost: (blogId, postId) => {
@@ -296,7 +296,7 @@ const PostCardContainer = connect(
 
 const PostContainer = connect(
   state => ({
-    data: select.post(state),
+    data: selectors.post(state),
     full: true
   })
 )(PostCardContainer)

@@ -8,7 +8,7 @@ plugin:
           tags: [community, content]
           exportable: false
           actions:
-            - name: post
+            - name: blog_post
               decoder: post
 
             - name: moderate

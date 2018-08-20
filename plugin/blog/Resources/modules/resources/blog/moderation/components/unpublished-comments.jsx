@@ -6,12 +6,12 @@ import {trans} from '#/main/core/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'
-import {select} from '#/plugin/blog/resources/blog/selectors'
+import {selectors} from '#/plugin/blog/resources/blog/store'
 import {CommentModerationCard} from '#/plugin/blog/resources/blog/comment/components/comment-moderation'
 
 const UnpublishedCommentsComponent = (props) =>
   <ListData
-    name={select.STORE_NAME + '.moderationComments'}
+    name={selectors.STORE_NAME + '.moderationComments'}
     fetch={{
       url: ['apiv2_blog_comment_unpublished', {blogId: props.blogId}],
       autoload: true
@@ -51,7 +51,7 @@ UnpublishedCommentsComponent.propTypes = {
 
 const UnpublishedComments = connect(
   state => ({
-    blogId: select.blog(state).data.id
+    blogId: selectors.blog(state).data.id
   })
 )(UnpublishedCommentsComponent)
 

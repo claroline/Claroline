@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import {getComponentByPanelLabel} from '#/plugin/blog/resources/blog/toolbar/utils'
-import {select} from '#/plugin/blog/resources/blog/selectors'
+import {selectors} from '#/plugin/blog/resources/blog/store'
 
 const ToolsComponent = (props) =>
   <div>
@@ -24,8 +24,8 @@ ToolsComponent.propTypes = {
 
 const Tools = connect(
   state => ({
-    blogId: select.blog(state).data.id,
-    panels: select.blog(state).data.options.data.widgetOrder
+    blogId: selectors.blog(state).data.id,
+    panels: selectors.blog(state).data.options.data.widgetOrder
   })
 )(ToolsComponent)
 
