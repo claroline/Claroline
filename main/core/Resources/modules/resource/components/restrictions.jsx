@@ -5,7 +5,7 @@ import isUndefined from 'lodash/isUndefined'
 
 import {trans} from '#/main/core/translation'
 import {Button} from '#/main/app/action'
-import {ASYNC_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Password} from '#/main/core/layout/form/components/field/password'
 import {ContentHelp} from '#/main/app/content/components/help'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
