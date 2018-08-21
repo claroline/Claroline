@@ -67,6 +67,11 @@ class WorkspaceFinder extends AbstractFinder
             }
 
             switch ($filterName) {
+                case 'hidden':
+                    $qb->andWhere("obj.displayable = :{$filterName}");
+                    $qb->setParameter($filterName, !$filterValue);
+
+                    break;
                 case 'sameOrganization':
                     $currentUser = $this->tokenStorage->getToken()->getUser();
 

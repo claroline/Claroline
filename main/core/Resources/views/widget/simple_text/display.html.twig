@@ -1,9 +1,0 @@
-<div class="simple-text-widget">
-    {% if content is empty %}
-        <div class="empty-widget empty-placeholder placeholder-lg text-center">
-            {{ 'widget_no_content'|trans({}, 'platform') }}
-        </div>
-    {% else %}
-        {{ content|raw }}
-    {% endif %}
-</div>

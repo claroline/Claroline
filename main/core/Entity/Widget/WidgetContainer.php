@@ -42,6 +42,8 @@ class WidgetContainer
      * )
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      * @ORM\OrderBy({"position" = "ASC"})
+     *
+     * @var HomeTab
      */
     private $homeTab;
 
@@ -101,7 +103,12 @@ class WidgetContainer
 
     public function setHomeTab(HomeTab $homeTab)
     {
+        if ($this->homeTab) {
+            $this->homeTab->removeWidgetContainer($this);
+        }
+
         $this->homeTab = $homeTab;
+        $this->homeTab->addWidgetContainer($this);
     }
 
     public function getHomeTab()

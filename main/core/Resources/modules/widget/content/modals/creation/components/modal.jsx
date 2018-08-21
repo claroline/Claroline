@@ -83,8 +83,8 @@ class ContentCreationModal extends Component {
 
   close() {
     this.props.fadeModal()
-    /*this.changeStep('widget')
-    this.props.reset()*/
+    this.changeStep('widget')
+    this.props.reset()
   }
 
   render() {

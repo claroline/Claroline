@@ -43,6 +43,11 @@ class ListWidgetForm extends Component {
                 options: {
                   choices: displayModesList,
                   condensed: true
+                },
+                onChange: (value) => {
+                  if (value && (!this.props.instance.parameters.availableDisplays || -1 === this.props.instance.parameters.availableDisplays.indexOf(value))) {
+                    this.props.updateProp(this.props.name, 'parameters.availableDisplays', [value])
+                  }
                 }
               }, {
                 name: 'availableDisplays',

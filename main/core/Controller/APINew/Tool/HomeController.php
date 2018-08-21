@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Controller\APINew\Tool\Home;
+namespace Claroline\CoreBundle\Controller\APINew\Tool;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
@@ -49,6 +49,7 @@ class HomeController extends AbstractApiController
      * @param FinderProvider     $finder
      * @param Crud               $crud
      * @param SerializerProvider $serializer
+     * @param ObjectManager      $om
      */
     public function __construct(
         FinderProvider $finder,
@@ -63,11 +64,7 @@ class HomeController extends AbstractApiController
     }
 
     /**
-     * @EXT\Route(
-     *    "/{context}/{contextId}/tabs",
-     *    name="apiv2_home_update",
-     *    options={ "method_prefix" = false }
-     * )
+     * @EXT\Route("/{context}/{contextId}", name="apiv2_home_update", options={"method_prefix"=false})
      * @EXT\Method("PUT")
      *
      * @param Request $request
@@ -76,7 +73,7 @@ class HomeController extends AbstractApiController
      *
      * @return JsonResponse
      */
-    public function updateTabsAction(Request $request, $context, $contextId)
+    public function updateAction(Request $request, $context, $contextId)
     {
         // grab tabs data
         $tabs = $this->decodeRequest($request);
@@ -85,34 +82,26 @@ class HomeController extends AbstractApiController
         $updated = [];
         foreach ($tabs as $tab) {
             // do not update tabs set by the administration tool
-
-            if (HomeTab::TYPE_ADMIN_DESKTOP === $context) {
+            if (HomeTab::TYPE_ADMIN_DESKTOP !== $tab['type']) {
                 $updated[] = $this->crud->update(HomeTab::class, $tab, [$context]);
                 $ids[] = $tab['id']; // will be used to determine deleted tabs
             } else {
-                if (HomeTab::TYPE_ADMIN_DESKTOP !== $tab['type']) {
-                    $updated[] = $this->crud->update(HomeTab::class, $tab, [$context]);
-                    $ids[] = $tab['id']; // will be used to determine deleted tabs
-                } else {
-                    $updated[] = $this->om->getObject($tab, HomeTab::class);
-                }
+                $updated[] = $this->om->getObject($tab, HomeTab::class);
             }
         }
 
         // retrieve existing tabs for the context to remove deleted ones
-        /* @var HomeTab[] $installedTabs */
-        if ('administration' === $context) {
-            $installedTabs = $this->finder->fetch(HomeTab::class, ['type' => HomeTab::TYPE_ADMIN_DESKTOP]);
-        } else {
-            $installedTabs = $this->finder->fetch(HomeTab::class, 'desktop' === $context ? [
-                'user' => $contextId,
-            ] : [
-                $context => $contextId,
-            ]);
-            $installedTabs = array_filter($installedTabs, function (HomeTab $tab) {
-                return HomeTab::TYPE_ADMIN_DESKTOP !== $tab->getType();
-            });
-        }
+        /** @var HomeTab[] $installedTabs */
+        $installedTabs = $this->finder->fetch(HomeTab::class, 'desktop' === $context ? [
+            'user' => $contextId,
+        ] : [
+            $context => $contextId,
+        ]);
+
+        // do not delete tabs set by the administration tool
+        $installedTabs = array_filter($installedTabs, function (HomeTab $tab) {
+            return HomeTab::TYPE_ADMIN_DESKTOP !== $tab->getType();
+        });
 
         foreach ($installedTabs as $installedTab) {
             if (!in_array($installedTab->getUuid(), $ids)) {
@@ -122,9 +111,43 @@ class HomeController extends AbstractApiController
         }
 
         return new JsonResponse(array_map(function (HomeTab $tab) {
-            //just to be sure otherwise it's not serialized after the creation
-            $this->om->refresh($tab);
+            return $this->serializer->serialize($tab);
+        }, $updated));
+    }
 
+    /**
+     * @EXT\Route("admin/{context}/{contextId}", name="apiv2_home_admin", options={"method_prefix"=false})
+     * @EXT\Method("PUT")
+     *
+     * @param Request $request
+     * @param string  $context
+     *
+     * @return JsonResponse
+     */
+    public function adminAction(Request $request, $context)
+    {
+        // grab tabs data
+        $tabs = $this->decodeRequest($request);
+
+        $ids = [];
+        $updated = [];
+        foreach ($tabs as $tab) {
+            $updated[] = $this->crud->update(HomeTab::class, $tab, [$context]);
+            $ids[] = $tab['id']; // will be used to determine deleted tabs
+        }
+
+        // retrieve existing tabs for the context to remove deleted ones
+        /** @var HomeTab[] $installedTabs */
+        $installedTabs = $this->finder->fetch(HomeTab::class, ['type' => HomeTab::TYPE_ADMIN_DESKTOP]);
+
+        foreach ($installedTabs as $installedTab) {
+            if (!in_array($installedTab->getUuid(), $ids)) {
+                // the tab no longer exist we can remove it
+                $this->crud->delete($installedTab);
+            }
+        }
+
+        return new JsonResponse(array_map(function (HomeTab $tab) {
             return $this->serializer->serialize($tab);
         }, $updated));
     }

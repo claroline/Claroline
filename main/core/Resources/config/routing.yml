@@ -119,11 +119,6 @@ claro_resource:
     resource: "@ClarolineCoreBundle/Controller/ResourceController.php"
     type: annotation
 
-claro_widget:
-    resource: "@ClarolineCoreBundle/Controller/Widget"
-    prefix: widget
-    type: annotation
-
 claro_activity:
     resource: "@ClarolineCoreBundle/Controller/ActivityController.php"
     prefix: activity/
