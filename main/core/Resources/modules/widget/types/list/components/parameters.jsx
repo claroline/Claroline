@@ -46,7 +46,6 @@ class ListWidgetForm extends Component {
                 },
                 onChange: (value) => {
                   if (value && (!this.props.instance.parameters.availableDisplays || -1 === this.props.instance.parameters.availableDisplays.indexOf(value))) {
-                    console.log('coucou')
                     this.props.updateProp(this.props.name, 'parameters.availableDisplays', [value])
                   }
                 }

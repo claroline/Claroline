@@ -14,6 +14,9 @@ const WidgetCreationModal = withReducer(selectors.STORE_NAME, reducer)(
     (dispatch) => ({
       startCreation(layout) {
         dispatch(actions.startCreation(layout))
+      },
+      reset() {
+        dispatch(actions.reset())
       }
     })
   )(WidgetCreationModalComponent)

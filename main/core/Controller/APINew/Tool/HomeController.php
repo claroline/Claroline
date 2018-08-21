@@ -111,9 +111,6 @@ class HomeController extends AbstractApiController
         }
 
         return new JsonResponse(array_map(function (HomeTab $tab) {
-            //just to be sure otherwise it's not serialized after the creation
-            $this->om->refresh($tab);
-
             return $this->serializer->serialize($tab);
         }, $updated));
     }
@@ -151,9 +148,6 @@ class HomeController extends AbstractApiController
         }
 
         return new JsonResponse(array_map(function (HomeTab $tab) {
-            //just to be sure otherwise it's not serialized after the creation
-            $this->om->refresh($tab);
-
             return $this->serializer->serialize($tab);
         }, $updated));
     }

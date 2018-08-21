@@ -15,6 +15,7 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Widget\WidgetContainer;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -36,7 +37,7 @@ class HomeTab
     /**
      * @ORM\Column(nullable=false)
      */
-    protected $type;
+    private $type;
 
     /**
      * @ORM\ManyToOne(
@@ -44,7 +45,7 @@ class HomeTab
      * )
      * @ORM\JoinColumn(name="user_id", nullable=true, onDelete="CASCADE")
      */
-    protected $user;
+    private $user;
 
     /**
      * @ORM\ManyToOne(
@@ -52,7 +53,7 @@ class HomeTab
      * )
      * @ORM\JoinColumn(name="workspace_id", nullable=true, onDelete="CASCADE")
      */
-    protected $workspace;
+    private $workspace = null;
 
     /**
      * @ORM\OneToMany(
@@ -60,33 +61,26 @@ class HomeTab
      *     mappedBy="homeTab"
      * )
      */
-    protected $homeTabConfigs;
+    private $homeTabConfigs;
 
     /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetContainer",
      *     mappedBy="homeTab",
-     *     cascade={"refresh"}
+     *     cascade={"persist", "remove", "refresh"}
      * )
      */
-    protected $widgetContainers;
+    private $widgetContainers;
 
+    /**
+     * HomeTab constructor.
+     */
     public function __construct()
     {
         $this->refreshUuid();
-        $this->roles = new ArrayCollection();
+
         $this->homeTabConfigs = new ArrayCollection();
         $this->widgetContainers = new ArrayCollection();
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
     }
 
     public function getType()
@@ -124,13 +118,17 @@ class HomeTab
         return $this->widgetContainers;
     }
 
-    public function serializeForWidgetPicker()
+    public function addWidgetContainer(WidgetContainer $widgetContainer)
     {
-        $return = [
-            'id' => $this->id,
-            'name' => $this->name,
-        ];
+        if (!$this->widgetContainers->contains($widgetContainer)) {
+            $this->widgetContainers->add($widgetContainer);
+        }
+    }
 
-        return $return;
+    public function removeWidgetContainer(WidgetContainer $widgetContainer)
+    {
+        if ($this->widgetContainers->contains($widgetContainer)) {
+            $this->widgetContainers->removeElement($widgetContainer);
+        }
     }
 }

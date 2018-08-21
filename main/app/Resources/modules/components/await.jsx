@@ -24,34 +24,44 @@ class Await extends Component {
     }
   }
 
+  componentWillUnmount() {
+    if (this.pending) {
+      this.pending.cancel()
+      this.pending = null
+    }
+  }
+
   load() {
     if (!this.pending) {
-      this.pending = makeCancelable(
-        this.props.for
-          .then((results) => {
+      this.pending = makeCancelable(this.props.for)
+
+      this.pending.promise
+        .then(
+          (results) => {
             if (this.props.then) {
               this.props.then(results)
             }
 
             this.setState({status: 'success'})
-          })
-          .catch(error => {
-            this.setState({
-              status: 'error',
-              error: error
-            })
+          },
+          (error) => {
+            if (typeof error !== 'object' || !error.isCanceled) {
+              this.setState({
+                status: 'error',
+                error: error
+              })
 
-            // TODO : find better. I don't understand why invariant is not thrown
-            /* eslint-disable no-console */
-            console.error(error)
-            /* eslint-enable no-console */
-          })
-      )
-
-      this.pending.promise.then(
-        () => this.pending = null,
-        () => this.pending = null
-      )
+              // TODO : find better. I don't understand why invariant is not thrown
+              /* eslint-disable no-console */
+              console.error(error)
+              /* eslint-enable no-console */
+            }
+          }
+        )
+        .then(
+          () => this.pending = null,
+          () => this.pending = null
+        )
     }
   }
 
