@@ -27,7 +27,7 @@ class HomeListener
      *
      * @DI\InjectParams({
      *     "templating" = @DI\Inject("templating"),
-     *     "finder"        = @DI\Inject("claroline.api.finder")
+     *     "finder"     = @DI\Inject("claroline.api.finder")
      * })
      *
      * @param TwigEngine     $templating

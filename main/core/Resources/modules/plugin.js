@@ -31,16 +31,16 @@ registry.add('core', {
   },
 
   resources: {
-    'directory': () => { return import(/* webpackChunkName: "core-directory-resource" */ '#/main/core/resources/directory') },
-    'file'     : () => { return import(/* webpackChunkName: "core-file-resource" */      '#/main/core/resources/file') },
-    'text'     : () => { return import(/* webpackChunkName: "core-text-resource" */      '#/main/core/resources/text') }
+    'directory': () => { return import(/* webpackChunkName: "core-resource-directory" */ '#/main/core/resources/directory') },
+    'file'     : () => { return import(/* webpackChunkName: "core-resource-file" */      '#/main/core/resources/file') },
+    'text'     : () => { return import(/* webpackChunkName: "core-resource-text" */      '#/main/core/resources/text') }
   },
 
   tools: {},
 
   widgets: {
-    'list'  : () => { return import(/* webpackChunkName: "core-resource-list-widget" */ '#/main/core/widget/types/list') },
-    'simple': () => { return import(/* webpackChunkName: "core-simple-widget" */        '#/main/core/widget/types/simple') }
+    'list'  : () => { return import(/* webpackChunkName: "core-widget-list" */   '#/main/core/widget/types/list') },
+    'simple': () => { return import(/* webpackChunkName: "core-widget-simple" */ '#/main/core/widget/types/simple') }
   },
 
   data: {
