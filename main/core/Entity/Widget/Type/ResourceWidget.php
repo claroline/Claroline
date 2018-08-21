@@ -30,7 +30,7 @@ class ResourceWidget extends AbstractWidget
      *
      * @return ResourceNode
      */
-    public function getUser()
+    public function getResourceNode()
     {
         return $this->resourceNode;
     }
@@ -40,7 +40,7 @@ class ResourceWidget extends AbstractWidget
      *
      * @param ResourceNode $resourceNode
      */
-    public function setUser(ResourceNode $resourceNode = null)
+    public function setResourceNode(ResourceNode $resourceNode = null)
     {
         $this->resourceNode = $resourceNode;
     }
