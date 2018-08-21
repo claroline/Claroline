@@ -14,7 +14,7 @@ const PopoverOverlay = props => !props.disabled ?
       <Popover
         id={props.id}
         className={props.className}
-        title={props.title}
+        title={props.label}
       >
         {props.content}
       </Popover>
@@ -30,7 +30,7 @@ PopoverOverlay.propTypes = {
   disabled: T.bool,
   children: T.element.isRequired,
   className: T.string,
-  title: T.node,
+  label: T.node,
   content: T.node.isRequired,
   position: T.oneOf(['top', 'right', 'bottom', 'left'])
 }

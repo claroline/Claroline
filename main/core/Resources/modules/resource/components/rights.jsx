@@ -1,7 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 import cloneDeep from 'lodash/cloneDeep'
 import uniq from 'lodash/uniq'
@@ -9,6 +8,7 @@ import uniq from 'lodash/uniq'
 import Tab from 'react-bootstrap/lib/Tab'
 import Tabs from 'react-bootstrap/lib/Tabs'
 
+import {param} from '#/main/app/config'
 import {trans}  from '#/main/core/translation'
 import {PopoverButton} from '#/main/app/buttons/popover/components/button'
 
@@ -18,45 +18,77 @@ import {
   hasCustomRules
 } from '#/main/core/resource/rights'
 
-const CreatePermission = props =>
-  <td
-    key="create-cell"
-    className="create-cell"
-  >
-    <PopoverButton
-      className="btn btn-link"
-      popover={{
-        position: 'left',
-        className: 'popover-list-group',
-        label: (
-          <label className="checkbox-inline">
-            <input type="checkbox" />
-            {trans('resource_type')}
-          </label>
-        ),
-        content: (
-          <ul className="list-group">
-            {Object.keys(props.permission).map(resourceType =>
-              <li key={resourceType} className="list-group-item">
-                <label className="checkbox-inline">
-                  <input
-                    type="checkbox"
-                    checked={props.permission[resourceType]}
-                  />
-                  {trans(resourceType, {}, 'resource')}
-                </label>
-              </li>
-            )}
-          </ul>
-        )
-      }}
+const CreatePermission = props => {
+  const availableTypes = param('resourceTypes')
+
+  return (
+    <td
+      key="create-cell"
+      className="create-cell"
     >
-      <span className="fa fa-fw fa-folder-open" />
-    </PopoverButton>
-  </td>
+      <PopoverButton
+        id={`${props.id}-resources-creation`}
+        className="btn btn-link"
+        popover={{
+          position: 'left',
+          className: 'popover-list-group',
+          label: (
+            <label className="checkbox-inline">
+              <input
+                type="checkbox"
+                checked={0 < props.permission.length}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    props.onChange(availableTypes.map(type => type.name))
+                  } else {
+                    props.onChange([])
+                  }
+                }}
+              />
+              {trans('resource_type')}
+            </label>
+          ),
+          content: (
+            <ul className="list-group">
+              {availableTypes.map(resourceType =>
+                <li key={resourceType.name} className="list-group-item">
+                  <label className="checkbox-inline">
+                    <input
+                      type="checkbox"
+                      checked={-1 !== props.permission.indexOf(resourceType.name)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          props.onChange([].concat(props.permission, [resourceType.name]))
+                        } else {
+                          const newPerm = props.permission.slice()
+                          newPerm.splice(newPerm.indexOf(resourceType.name), 1)
+                          props.onChange(newPerm)
+                        }
+                      }}
+                    />
+                    {trans(resourceType.name, {}, 'resource')}
+                  </label>
+                </li>
+              )}
+            </ul>
+          )
+        }}
+      >
+        <span className={classes('label', {
+          'label-primary': 0 < props.permission.length,
+          'label-default': 0 === props.permission.length
+        })}>
+          {props.permission.length}
+        </span>
+      </PopoverButton>
+    </td>
+  )
+}
 
 CreatePermission.propTypes = {
-  permission: T.object.isRequired
+  id: T.string.isRequired,
+  permission: T.array.isRequired,
+  onChange: T.func.isRequired
 }
 
 const RolePermissions = props =>
@@ -68,7 +100,7 @@ const RolePermissions = props =>
     {Object.keys(props.permissions).map(permission =>
       'create' !== permission ?
         <td
-          key={`${permission}-checkbox`}
+          key={permission}
           className={classes({
             'checkbox-cell': 'create' !== permission,
             'create-cell': 'create' === permission
@@ -81,11 +113,21 @@ const RolePermissions = props =>
           />
         </td>
         :
-        !isEmpty(props.permissions[permission]) && <CreatePermission permission={props.permissions[permission]} />
+        <CreatePermission
+          key={permission}
+          id={props.name}
+          permission={props.permissions[permission]}
+          onChange={(creationPerms) => {
+            const newPerms = merge({}, props.permissions)
+            newPerms.create = creationPerms
+            props.updatePermissions(newPerms)
+          }}
+        />
     )}
   </tr>
 
 RolePermissions.propTypes = {
+  name: T.string.isRequired,
   translationKey: T.string.isRequired,
   permissions: T.object.isRequired,
   updatePermissions: T.func.isRequired
@@ -94,7 +136,7 @@ RolePermissions.propTypes = {
 const AdvancedTab = props => {
   const allPerms = uniq(props.permissions
     .reduce((accumulator, current) => accumulator.concat(
-      Object.keys(current.permissions).filter(perm => 'create' !== perm || !isEmpty(current.permissions[perm]))
+      Object.keys(current.permissions)
     ), []))
 
   return (
@@ -103,7 +145,6 @@ const AdvancedTab = props => {
         <tr>
           <th scope="col">{trans('role')}</th>
           {allPerms.map(permission =>
-            ('create' !== permission || !isEmpty(props.permissions.find(p => 'ROLE_USER' === p.name).permissions[permission])) &&
             <th key={`${permission}-header`} scope="col">
               <div className="permission-name-container">
                 <span className="permission-name">{trans(permission, {}, 'actions')}</span>
@@ -117,6 +158,7 @@ const AdvancedTab = props => {
         {props.permissions.map(rolePerm =>
           <RolePermissions
             key={rolePerm.name}
+            name={rolePerm.name}
             translationKey={rolePerm.translationKey}
             permissions={rolePerm.permissions}
             updatePermissions={(permissions) => props.updateRolePermissions(rolePerm.name, permissions)}

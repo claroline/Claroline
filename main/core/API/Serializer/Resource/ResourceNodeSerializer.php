@@ -301,14 +301,26 @@ class ResourceNodeSerializer
         }
     }
 
-    public function deserializeRights($rights, ResourceNode $resourceNode)
+    private function deserializeRights($rights, ResourceNode $resourceNode)
     {
-        // additional data might be required later (recursive, creations)
+        // additional data might be required later (recursive)
         foreach ($rights as $right) {
+            $creationPerms = null;
+            if (isset($right['permissions']['create'])) {
+                $creationPerms = array_map(function (string $typeName) {
+                    return $this->om
+                        ->getRepository(ResourceType::class)
+                        ->findOneBy(['name' => $typeName]);
+                }, $right['permissions']['create']);
+                unset($right['permissions']['create']);
+            }
+
             $this->rightsManager->editPerms(
                 $right['permissions'],
                 $right['name'],
-                $resourceNode
+                $resourceNode,
+                false,
+                $creationPerms
             );
         }
     }

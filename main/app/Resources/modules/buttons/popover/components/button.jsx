@@ -24,7 +24,7 @@ implementPropTypes(PopoverButton, ButtonTypes, {
   id: T.string.isRequired,
   popover: T.shape({
     className: T.string,
-    label: T.string,
+    label: T.node,
     position: T.oneOf(['top', 'bottom', 'left', 'right']),
     content: T.node.isRequired
   }).isRequired

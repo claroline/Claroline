@@ -557,14 +557,20 @@ class RightsManager
     {
         return array_map(function (ResourceRights $rights) use ($resourceNode) {
             $role = $rights->getRole();
+            $permissions = $this->maskManager->decodeMask($rights->getMask(), $resourceNode->getResourceType());
+
+            if ('directory' === $resourceNode->getResourceType()->getName()) {
+                // ugly hack to only get create rights for directories (it's the only one that can handle it).
+                $permissions = array_merge(
+                    $permissions,
+                    ['create' => $this->getCreatableTypes([$role->getName()], $resourceNode)]
+                );
+            }
 
             return [
                 'name' => $role->getName(),
                 'translationKey' => $role->getTranslationKey(),
-                'permissions' => array_merge(
-                    $this->maskManager->decodeMask($rights->getMask(), $resourceNode->getResourceType()),
-                    ['create' => $this->getCreatableTypes([$role->getName()], $resourceNode)]
-                ),
+                'permissions' => $permissions,
             ];
         }, $resourceNode->getRights()->toArray());
     }
