@@ -39,7 +39,6 @@ class Updater120000 extends Updater
     public function preUpdate()
     {
         $this->saveOldTabsTables();
-        $this->deactivateActivityResourceType();
     }
 
     public function saveOldTabsTables()
@@ -96,6 +95,7 @@ class Updater120000 extends Updater
         $this->linkWidgetsInstanceToContainers();
         $this->restoreWidgetInstancesConfigs();
         $this->checkDesktopTabs();
+        $this->deactivateActivityResourceType();        
     }
 
     private function updateHomeTabType()
