@@ -44,7 +44,6 @@ class ResourceWidgetSerializer
     }
 
     /**
-     *
      * @return string
      */
     public function getClass(): string
