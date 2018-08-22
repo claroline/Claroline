@@ -1,12 +1,23 @@
 plugin:
-  has_options: false
-  tools:
-    - name: agenda_
-      is_displayable_in_workspace: true
-      is_displayable_in_desktop: true
-      class: calendar-o
-  #widgets:
-    #- name: agenda_
-    #  is_configurable: false
-    #- name : agenda_task
-    #  is_configurable: false
+    has_options: false
+    tools:
+        - name: agenda_
+          is_displayable_in_workspace: true
+          is_displayable_in_desktop: true
+          class: calendar-o
+
+    data_sources:
+        - name: events
+          type: list
+          context: [workspace, desktop]
+          tags: [tools, agenda]
+        - name: tasks
+          type: list
+          context: [workspace, desktop]
+          tags: [tools, agenda]
+
+    #widgets:
+      #- name: agenda_
+      #  is_configurable: false
+      #- name : agenda_task
+      #  is_configurable: false

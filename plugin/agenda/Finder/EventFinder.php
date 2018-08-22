@@ -53,9 +53,21 @@ class EventFinder extends AbstractFinder
                     $qb->andWhere('obj.isTask = false');
                 }
                 break;
+              case 'createdBefore':
+                $qb->andWhere("obj.start <= :{$filterName}");
+                $qb->setParameter($filterName, $filterValue);
+                break;
               case 'createdAfter':
+                $qb->andWhere("obj.start >= :{$filterName}");
+                $qb->setParameter($filterName, $filterValue);
                 break;
               case 'endBefore':
+                $qb->andWhere("obj.end <= :{$filterName}");
+                $qb->setParameter($filterName, $filterValue);
+                break;
+              case 'endAfter':
+                $qb->andWhere("obj.end >= :{$filterName}");
+                $qb->setParameter($filterName, $filterValue);
                 break;
               default:
                 $this->setDefaults($qb, $filterName, $filterValue);

@@ -1,5 +1,7 @@
 <?php
 
+namespace Claroline\ForumBundle\Listener\DataSource;
+
 /*
  * This file is part of the Claroline Connect package.
  *
@@ -9,24 +11,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\AnnouncementBundle\Listener\DataSource;
-
-use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Event\DataSource\DataSourceEvent;
+use Claroline\ForumBundle\Entity\Message;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service
  */
-class AnnouncementsSource
+class ForumSource
 {
     /** @var FinderProvider */
     private $finder;
 
     /**
-     * AnnouncementsSource constructor.
+     * ForumSource constructor.
      *
      * @DI\InjectParams({
      *     "finder" = @DI\Inject("claroline.api.finder")
@@ -40,21 +40,21 @@ class AnnouncementsSource
     }
 
     /**
-     * @DI\Observe("data_source.announcements.load")
+     * @DI\Observe("data_source.forum_messages.load")
      *
      * @param DataSourceEvent $event
      */
     public function getData(DataSourceEvent $event)
     {
         $options = $event->getOptions() ? $event->getOptions() : [];
-        $options['sortBy'] = '-publicationDate';
-        $options['hiddenFilters']['visible'] = true;
+        $options['sortBy'] = '-creationDate';
+        $options['hiddenFilters']['moderation'] = false;
 
         if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {
             $options['hiddenFilters']['workspace'] = $event->getWorkspace()->getUuid();
         }
         $event->setData(
-            $this->finder->search(Announcement::class, $options)
+            $this->finder->search(Message::class, $options)
         );
 
         $event->stopPropagation();
