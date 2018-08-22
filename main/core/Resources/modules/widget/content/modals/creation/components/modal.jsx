@@ -92,7 +92,7 @@ class ContentCreationModal extends Component {
       <Modal
         {...omit(this.props, 'context', 'add', 'instance', 'saveEnabled', 'availableTypes', 'availableSources', 'fetchContents', 'update', 'reset')}
         icon="fa fa-fw fa-plus"
-        title={trans('new_widget')}
+        title={trans('new_widget', {}, 'widget')}
         subtitle={this.renderStepTitle()}
         onEntering={() => {
           if (0 === this.props.availableTypes.length) {

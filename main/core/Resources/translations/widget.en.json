@@ -12,6 +12,7 @@
     "new_content_select": "1. Choose the type of content to add",
     "new_content_configure": "2. Configure the content",
     "no_widget": "No widget have been added yet.",
+    "restrictions_by_roles" : "Restriction by roles",
 
     "simple": "Simple content",
     "list": "Data list",
@@ -20,6 +21,6 @@
     "user-list": "Users list",
     "workspace-list": "Workspaces list",
 
-    "lock_tab": "Lock tab",
-    "lock_tab_help": "A locked tab will be visible in the desktop and will not be editable nor removable by the user."
+    "publish_tab": "Publish tab",
+    "publish_tab_help": "A published tab will be visible in the desktop but will not be editable nor removable by the user. A non published tab will not be visible in the desktop."
 }

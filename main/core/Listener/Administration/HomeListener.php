@@ -62,8 +62,9 @@ class HomeListener
         $content = $this->templating->render(
             'ClarolineCoreBundle:administration:home.html.twig', [
                 'editable' => true,
+                'administration' => true,
                 'context' => [
-                    'type' => Widget::CONTEXT_ADMINISTRATION,
+                    'type' => Widget::CONTEXT_DESKTOP,
                     'data' => [
                         'roles' => $roles['data'],
                     ],

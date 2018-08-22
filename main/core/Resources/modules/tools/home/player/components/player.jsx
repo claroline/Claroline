@@ -17,10 +17,9 @@ const PlayerComponent = props =>
   <PageContainer>
     {1 < props.sortedTabs.length &&
       <Tabs
-        tabs={props.context.type === 'workspace' || props.context.type === 'administration' ?
-          props.visibleTabs : props.sortedTabs}
-          
+        tabs={props.administration ? props.sortedTabs : props.visibleTabs}
         context={props.context}
+        administration={props.administration}
       />
     }
     <PageHeader
@@ -51,6 +50,7 @@ const PlayerComponent = props =>
 
 PlayerComponent.propTypes = {
   context: T.object.isRequired,
+  administration: T.bool.isRequired,
   sortedTabs: T.arrayOf(T.shape(
     TabTypes.propTypes
   )),
@@ -67,6 +67,7 @@ PlayerComponent.propTypes = {
 const Player = connect(
   (state) => ({
     context: selectors.context(state),
+    administration: selectors.administration(state),
     editable: selectors.editable(state),
     sortedTabs: selectors.sortedTabs(state),
     visibleTabs: selectors.visibleTabs(state),

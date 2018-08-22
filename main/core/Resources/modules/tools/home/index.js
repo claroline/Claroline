@@ -11,6 +11,7 @@ export const App = () => ({
   store: reducer,
   initialData: (initialData) => Object.assign({}, initialData, {
     editable: !!initialData.editable,
+    administration: !!initialData.administration,
     editor:{
       data: initialData.tabs || [],
       originalData: initialData.tabs || []

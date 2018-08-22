@@ -98,13 +98,13 @@ class WidgetCreationModal extends Component {
 WidgetCreationModal.propTypes = {
   create: T.func.isRequired,
   fadeModal: T.func.isRequired,
+  reset: T.func,
 
   // from redux store
   widget: T.shape(
     WidgetContainerTypes.propTypes
   ).isRequired,
   startCreation: T.func.isRequired,
-  reset: T.func.isRequired,
   saveEnabled: T.bool.isRequired
 }
 

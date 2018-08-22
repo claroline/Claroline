@@ -19,7 +19,9 @@ actions.loadContents = makeActionCreator(WIDGET_CONTENTS_LOAD, 'widgets', 'dataS
 actions.fetchContents = (context) => ({
   [API_REQUEST]: {
     url: ['apiv2_widget_available', {context: context}],
-    success: (response, dispatch) => dispatch(actions.loadContents(response.widgets, response.dataSources))
+    success: (response, dispatch) => {
+      dispatch(actions.loadContents(response.widgets, response.dataSources))
+    }
   }
 })
 

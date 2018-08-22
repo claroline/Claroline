@@ -6,6 +6,7 @@ import {currentUser} from '#/main/core/user/current'
 
 const currentTabId = (state) => state.currentTabId
 const editable = (state) => state.editable
+const administration = (state) => state.administration
 const editing = (state) => state.editing
 const context = (state) => state.context
 const tabs = (state) => state.tabs
@@ -28,9 +29,9 @@ const sortedTabs = createSelector(
 )
 
 const visibleTabs = createSelector(
-  [sortedTabs, context],
-  (sortedTabs, context) => {
-    if (context.type === 'administration') {
+  [sortedTabs, administration],
+  (sortedTabs, administration) => {
+    if (administration) {
       return sortedTabs
     }
 
@@ -51,6 +52,7 @@ export const selectors = {
   currentTab,
   currentTabId,
   editable,
+  administration,
   editing,
   context,
   tabs,
