@@ -49,12 +49,14 @@ class DataSourceEvent extends Event implements MandatoryEventInterface, DataConv
      * DataSourceEvent constructor.
      *
      * @param string    $context
+     * @param array     $options
      * @param User      $user
      * @param Workspace $workspace
      */
-    public function __construct(string $context, User $user = null, Workspace $workspace = null)
+    public function __construct(string $context, array $options, User $user = null, Workspace $workspace = null)
     {
         $this->context = $context;
+        $this->options = $options;
         $this->user = $user;
         $this->workspace = $workspace;
     }

@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Manager\DataSourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Exposes platform data sources.
@@ -74,20 +75,21 @@ class DataSourceController
      * @EXT\Route("/{type}/{context}/{contextId}", name="apiv2_data_source", defaults={"contextId"=null})
      * @EXT\Method("GET")
      *
-     * @param string $type
-     * @param string $context
-     * @param string $contextId
+     * @param Request $request
+     * @param string  $type
+     * @param string  $context
+     * @param string  $contextId
      *
      * @return JsonResponse
      */
-    public function loadAction($type, $context, $contextId = null)
+    public function loadAction(Request $request, $type, $context, $contextId = null)
     {
         if (!$this->manager->check($type, $context)) {
             return new JsonResponse('Unknown data source.', 404);
         }
 
         return new JsonResponse(
-            $this->manager->load($type, $context, $contextId)
+            $this->manager->load($type, $context, $contextId, $request->query->all())
         );
     }
 }

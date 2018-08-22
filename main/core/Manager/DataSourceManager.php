@@ -113,10 +113,11 @@ class DataSourceManager
      * @param string $type
      * @param string $context
      * @param string $contextId
+     * @param array  $options
      *
      * @return mixed
      */
-    public function load(string $type, string $context, $contextId = null)
+    public function load(string $type, string $context, $contextId = null, array $options = null)
     {
         $user = null;
         if ($this->tokenStorage->getToken()->getUser() instanceof User) {
@@ -134,7 +135,7 @@ class DataSourceManager
         $event = $this->eventDispatcher->dispatch(
             'data_source.'.$type.'.load',
             DataSourceEvent::class,
-            [$context, $user, $workspace]
+            [$context, $options, $user, $workspace]
         );
 
         return $event->getData();
