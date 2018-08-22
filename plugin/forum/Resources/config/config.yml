@@ -1,18 +1,24 @@
 plugin:
-  has_options: false
-  icon: res_forum.png
+    has_options: false
+    icon: res_forum.png
 
-  resources:
-    - name: claroline_forum
-      class: Claroline\ForumBundle\Entity\Forum
-      tags: [community]
-      exportable: true
-      actions:
-        - name: post
-      activity_rules:
-        - action: resource-read
-        - action: resource-claroline_forum-create_message
+    resources:
+        - name: claroline_forum
+          class: Claroline\ForumBundle\Entity\Forum
+          tags: [community]
+          exportable: true
+          actions:
+              - name: post
+          activity_rules:
+              - action: resource-read
+              - action: resource-claroline_forum-create_message
 
-  #widgets:
-  #   - name: claroline_forum_widget
-  #     is_configurable: true
+    data_sources:
+        - name: forum_messages
+          type: list
+          context: [workspace, desktop]
+          tags: [resources, community]
+
+    #widgets:
+    #    - name: claroline_forum_widget
+    #      is_configurable: true

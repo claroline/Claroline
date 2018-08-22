@@ -31,60 +31,68 @@ class MessageFinder extends AbstractFinder
     {
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
-              case 'subject':
-                $qb->leftJoin('obj.subject', 'subject');
-                $qb->andWhere($qb->expr()->orX(
-                    $qb->expr()->eq('subject.id', ':'.$filterName),
-                    $qb->expr()->eq('subject.uuid', ':'.$filterName)
-                ));
-                $qb->setParameter($filterName, $filterValue);
-                break;
-              case 'parent':
-                if (empty($filterValue)) {
-                    $qb->andWhere('obj.parent IS NULL');
-                } else {
-                    $qb->leftJoin('obj.parent', 'parent');
+                case 'subject':
+                    $qb->leftJoin('obj.subject', 'subject');
                     $qb->andWhere($qb->expr()->orX(
-                        $qb->expr()->eq('parent.id', ':'.$filterName),
-                        $qb->expr()->eq('parent.uuid', ':'.$filterName)
+                        $qb->expr()->eq('subject.id', ':'.$filterName),
+                        $qb->expr()->eq('subject.uuid', ':'.$filterName)
                     ));
                     $qb->setParameter($filterName, $filterValue);
-                }
-                break;
-              case 'forum':
-                $qb->leftJoin('obj.subject', 'sf');
-                $qb->leftJoin('sf.forum', 'forum');
-                $qb->andWhere($qb->expr()->orX(
-                    $qb->expr()->eq('forum.id', ':'.$filterName),
-                    $qb->expr()->eq('forum.uuid', ':'.$filterName)
-                ));
-                $qb->setParameter($filterName, $filterValue);
-                break;
-              case 'creator':
-                $qb->leftJoin('obj.creator', 'creator');
-                $qb->andWhere("creator.username LIKE :{$filterName}");
-                $qb->setParameter($filterName, '%'.$filterValue.'%');
-                break;
-              case 'createdAfter':
-                $qb->andWhere("obj.creationDate >= :{$filterName}");
-                $qb->setParameter($filterName, $filterValue);
-                break;
-              case 'moderation':
-                if ($filterValue) {
+                    break;
+                case 'parent':
+                    if (empty($filterValue)) {
+                        $qb->andWhere('obj.parent IS NULL');
+                    } else {
+                        $qb->leftJoin('obj.parent', 'parent');
+                        $qb->andWhere($qb->expr()->orX(
+                            $qb->expr()->eq('parent.id', ':'.$filterName),
+                            $qb->expr()->eq('parent.uuid', ':'.$filterName)
+                        ));
+                        $qb->setParameter($filterName, $filterValue);
+                    }
+                    break;
+                case 'forum':
+                    $qb->leftJoin('obj.subject', 'sf');
+                    $qb->leftJoin('sf.forum', 'forum');
                     $qb->andWhere($qb->expr()->orX(
-                        $qb->expr()->eq('obj.moderation', ':prior_once'),
-                        $qb->expr()->eq('obj.moderation', ':prior_all')
+                        $qb->expr()->eq('forum.id', ':'.$filterName),
+                        $qb->expr()->eq('forum.uuid', ':'.$filterName)
                     ));
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+                case 'creator':
+                    $qb->leftJoin('obj.creator', 'creator');
+                    $qb->andWhere("creator.username LIKE :{$filterName}");
+                    $qb->setParameter($filterName, '%'.$filterValue.'%');
+                    break;
+                case 'createdAfter':
+                    $qb->andWhere("obj.creationDate >= :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+                case 'moderation':
+                    if ($filterValue) {
+                        $qb->andWhere($qb->expr()->orX(
+                            $qb->expr()->eq('obj.moderation', ':prior_once'),
+                            $qb->expr()->eq('obj.moderation', ':prior_all')
+                        ));
 
-                    $qb->setParameter('prior_once', Forum::VALIDATE_PRIOR_ONCE);
-                    $qb->setParameter('prior_all', Forum::VALIDATE_PRIOR_ALL);
-                } else {
-                    $qb->andWhere('obj.moderation = :filter_none');
-                    $qb->setParameter('filter_none', Forum::VALIDATE_NONE);
-                }
-                break;
-              default:
-                $this->setDefaults($qb, $filterName, $filterValue);
+                        $qb->setParameter('prior_once', Forum::VALIDATE_PRIOR_ONCE);
+                        $qb->setParameter('prior_all', Forum::VALIDATE_PRIOR_ALL);
+                    } else {
+                        $qb->andWhere('obj.moderation = :filter_none');
+                        $qb->setParameter('filter_none', Forum::VALIDATE_NONE);
+                    }
+                    break;
+                case 'workspace':
+                    $qb->leftJoin('obj.subject', 'sf');
+                    $qb->leftJoin('sf.forum', 'forum');
+                    $qb->leftJoin('forum.resourceNode', 'node');
+                    $qb->leftJoin('node.workspace', 'w');
+                    $qb->andWhere("w.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+                default:
+                    $this->setDefaults($qb, $filterName, $filterValue);
             }
         }
     }
@@ -92,38 +100,38 @@ class MessageFinder extends AbstractFinder
     public function getFilters()
     {
         return [
-          'subject' => [
-            'type' => ['integer', 'string'],
-            'description' => 'The parent subject id (int) or uuid (string)',
-          ],
-          'parent' => [
-            'type' => ['integer', 'string'],
-            'description' => 'The parent message id (int) or uuid (string)',
-          ],
-          'flagged' => [
-            'type' => 'boolean',
-            'description' => 'If the message is visible',
-          ],
-          'moderation' => [
-            'type' => 'boolean',
-            'description' => 'If the message is waiting for a moderator',
-          ],
-          'content' => [
-            'type' => 'string',
-            'description' => 'The message content',
-          ],
-          'creationDate' => [
-            'type' => 'datetime',
-            'description' => 'The creation date',
-          ],
-          'updated' => [
-            'type' => 'datetime',
-            'description' => 'The last update date',
-          ],
-          'author' => [
-            'type' => 'string',
-            'description' => 'the author name',
-          ],
+            'subject' => [
+                'type' => ['integer', 'string'],
+                'description' => 'The parent subject id (int) or uuid (string)',
+            ],
+            'parent' => [
+                'type' => ['integer', 'string'],
+                'description' => 'The parent message id (int) or uuid (string)',
+            ],
+            'flagged' => [
+                'type' => 'boolean',
+                'description' => 'If the message is visible',
+            ],
+            'moderation' => [
+                'type' => 'boolean',
+                'description' => 'If the message is waiting for a moderator',
+            ],
+            'content' => [
+                'type' => 'string',
+                'description' => 'The message content',
+            ],
+            'creationDate' => [
+                'type' => 'datetime',
+                'description' => 'The creation date',
+            ],
+            'updated' => [
+                'type' => 'datetime',
+                'description' => 'The last update date',
+            ],
+            'author' => [
+                'type' => 'string',
+                'description' => 'the author name',
+            ],
         ];
     }
 }

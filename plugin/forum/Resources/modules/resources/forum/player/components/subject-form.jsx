@@ -161,8 +161,8 @@ const SubjectForm = withRouter(connect(
           ownProps.history.push(`/subjects/show/${subjectId}`)
         })
       } else {
-        dispatch(formActions.saveForm(`${select.STORE_NAME}.subjects.form`, ['claroline_forum_api_forum_createsubject', {id: forumId}])).then(() => {
-          ownProps.history.push(`/subjects/show/${subjectId}`)
+        dispatch(formActions.saveForm(`${select.STORE_NAME}.subjects.form`, ['claroline_forum_api_forum_createsubject', {id: forumId}])).then((subject) => {
+          ownProps.history.push(`/subjects/show/${subject.id}`)
         })
       }
     }

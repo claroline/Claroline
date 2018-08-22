@@ -16,7 +16,7 @@ const restrictByDates = (announcement) => announcement.restrictions.enableDates 
 
 const AnnounceFormComponent = props =>
   <FormData
-    name="announcementForm"
+    name={selectors.STORE_NAME+'.announcementForm'}
     target={(announcement, isNew) => isNew ?
       ['claro_announcement_create', {aggregateId: props.aggregateId}] :
       ['claro_announcement_update', {aggregateId: props.aggregateId, id: announcement.id}]
@@ -120,8 +120,8 @@ const RoutedAnnounceForm = withRouter(AnnounceFormComponent)
 
 const AnnounceForm = connect(
   (state) => ({
-    new: formSelectors.isNew(formSelectors.form(state, 'announcementForm')),
-    announcement: formSelectors.data(formSelectors.form(state, 'announcementForm')),
+    new: formSelectors.isNew(formSelectors.form(state, selectors.STORE_NAME+'.announcementForm')),
+    announcement: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME+'.announcementForm')),
     aggregateId: selectors.aggregateId(state)
   }),
   (dispatch) => ({
@@ -132,7 +132,7 @@ const AnnounceForm = connect(
       dispatch(actions.changeAnnounce(announcement))
     },
     updateProp(propName, propValue) {
-      dispatch(formActions.updateProp('announcementForm', propName, propValue))
+      dispatch(formActions.updateProp(selectors.STORE_NAME+'.announcementForm', propName, propValue))
     }
   })
 )(RoutedAnnounceForm)

@@ -17,7 +17,7 @@ import {MODAL_ANNOUNCEMENT_SENDING_CONFIRM} from '#/plugin/announcement/resource
 
 const AnnounceSendComponent = props =>
   <FormData
-    name="announcementForm"
+    name={selectors.STORE_NAME+'.announcementForm'}
     level={2}
     buttons={true}
     save={{
@@ -96,13 +96,13 @@ const RoutedAnnounceSend = withRouter(AnnounceSendComponent)
 
 const AnnounceSend = connect(
   (state) => ({
-    announcement: formSelectors.data(formSelectors.form(state, 'announcementForm')),
+    announcement: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME+'.announcementForm')),
     aggregateId: selectors.aggregateId(state),
     workspaceRoles: selectors.workspaceRoles(state)
   }),
   (dispatch) => ({
     send(aggregateId, announce) {
-      dispatch(listActions.addFilter('selected.list', 'roles', announce.roles))
+      dispatch(listActions.addFilter(selectors.STORE_NAME+'.selected.list', 'roles', announce.roles))
       dispatch(
         modalActions.showModal(MODAL_ANNOUNCEMENT_SENDING_CONFIRM, {
           filters: {roles: announce.roles},

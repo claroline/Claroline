@@ -58,7 +58,7 @@ class ForumController extends AbstractCrudController
 
     /**
      * @EXT\Route("/{id}/subject")
-     * @EXT\Method("POST")
+     * @EXT\Method({"POST", "PUT"})
      * @ParamConverter("forum", options={"mapping": {"id": "uuid"}})
      *
      * @ApiDoc(

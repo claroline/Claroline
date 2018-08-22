@@ -6,13 +6,13 @@ use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\ForumBundle\Form\Widget\LastMessageWidgetConfigType;
 use Claroline\ForumBundle\Manager\Manager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 class WidgetController extends Controller
 {
@@ -65,10 +65,10 @@ class WidgetController extends Controller
 
         return $this->render(
             'ClarolineForumBundle:Widget:lastMessageWidgetConfig.html.twig',
-            array(
+            [
                 'form' => $form->createView(),
                 'widgetInstance' => $widgetInstance,
-            )
+            ]
         );
     }
 }

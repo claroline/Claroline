@@ -24,7 +24,8 @@ const AnnouncementResource = props =>
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-list',
         label: trans('announcements_list', {}, 'announcement'),
-        target: '/'
+        target: '/',
+        exact: true
       }
     ]}
   >

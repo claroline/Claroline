@@ -8,7 +8,6 @@ import {API_REQUEST} from '#/main/app/api'
 import {actions as formActions} from '#/main/app/content/form/store'
 import {actions as listActions} from '#/main/app/content/list/store'
 
-
 import {Subject as SubjectTypes} from '#/plugin/forum/resources/forum/player/prop-types'
 import {select} from '#/plugin/forum/resources/forum/store/selectors'
 
@@ -32,13 +31,13 @@ actions.newSubject = (id = null) => (dispatch) => {
       [API_REQUEST]: {
         url: ['apiv2_forum_subject_get', {id}],
         success: (data, dispatch) => {
-          dispatch(formActions.resetForm('subjects.form', data, false))
+          dispatch(formActions.resetForm(select.STORE_NAME+'.subjects.form', data, false))
         }
       }
     })
   } else {
     dispatch(formActions.resetForm(
-      'subjects.form',
+      select.STORE_NAME+'.subjects.form',
       merge({}, SubjectTypes.defaultProps, {
         id: makeId(),
         meta: {creator: currentUser()}
@@ -64,7 +63,7 @@ actions.openSubject = (id) => (dispatch, getState) => {
   if (subject.id !== id) {
     dispatch(actions.loadSubject({id: id}))
     dispatch(actions.fetchSubject(id))
-    dispatch(listActions.invalidateData('subjects.messages'))
+    dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.messages'))
   }
 }
 
@@ -75,7 +74,7 @@ actions.deleteSubject = (id, push) => ({
       method: 'DELETE'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData('subjects.list'))
+      dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.list'))
       push('/subjects')
     }
   }
@@ -89,7 +88,7 @@ actions.stickSubject = (subject) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData('subjects.list'))
+      dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.list'))
       dispatch(actions.loadSubject(data))
     }
   }
@@ -103,7 +102,7 @@ actions.unStickSubject = (subject) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData('subjects.list'))
+      dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.list'))
       dispatch(actions.loadSubject(data))
     }
   }
@@ -117,7 +116,7 @@ actions.closeSubject = (subject) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData('subjects.list'))
+      dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.list'))
       dispatch(actions.loadSubject(data))
     }
   }
@@ -131,7 +130,7 @@ actions.unCloseSubject = (subject) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData('subjects.list'))
+      dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.list'))
       dispatch(actions.loadSubject(data))
     }
   }
@@ -145,7 +144,7 @@ actions.flagSubject = (subject) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData('subjects.list'))
+      dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.list'))
       dispatch(actions.loadSubject(data))
     }
   }
@@ -159,7 +158,7 @@ actions.unFlagSubject = (subject) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData('subjects.list'))
+      dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.list'))
       dispatch(actions.loadSubject(data))
     }
   }
@@ -183,7 +182,7 @@ actions.createMessage = (subjectId, content, moderation) => ({
       })
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData('subjects.messages'))
+      dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.messages'))
     }
   }
 })
@@ -205,7 +204,7 @@ actions.createComment = (messageId, comment, moderation) => ({
       })
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData('subjects.messages'))
+      dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.messages'))
     }
   }
 })
@@ -218,7 +217,7 @@ actions.editContent = (message, subjectId, content) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData('subjects.messages'))
+      dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.messages'))
     }
   }
 })
@@ -232,7 +231,7 @@ actions.flag = (message, subjectId) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData('subjects.messages'))
+      dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.messages'))
     }
   }
 })
@@ -245,7 +244,7 @@ actions.unFlag = (message, subjectId) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData('subjects.messages'))
+      dispatch(listActions.invalidateData(select.STORE_NAME+'.subjects.messages'))
     }
   }
 })

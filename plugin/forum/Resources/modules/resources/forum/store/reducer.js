@@ -10,11 +10,12 @@ import {reducer as editorReducer} from '#/plugin/forum/resources/forum/editor/st
 import {reducer as playerReducer} from '#/plugin/forum/resources/forum/player/store/reducer'
 import {reducer as moderationReducer} from '#/plugin/forum/resources/forum/moderation/store/reducer'
 import {reducer as overviewReducer} from '#/plugin/forum/resources/forum/overview/store/reducer'
+import {select} from '#/plugin/forum/resources/forum/store/selectors'
 
 const reducer = combineReducers({
   forum: makeReducer({}, {
     [RESOURCE_LOAD]: (state, action) => action.resourceData.forum,
-    [FORM_SUBMIT_SUCCESS+'/resource.forumForm']: (state, action) => action.updatedData,
+    [FORM_SUBMIT_SUCCESS+'/'+select.STORE_NAME+'.forumForm']: (state, action) => action.updatedData,
     [USER_NOTIFIED]: (state) => {
       const newState = cloneDeep(state)
       newState.meta.notified = true

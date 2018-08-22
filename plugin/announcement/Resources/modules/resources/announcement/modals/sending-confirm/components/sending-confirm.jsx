@@ -8,6 +8,8 @@ import {ListData} from '#/main/app/content/list/containers/data'
 import {trans} from '#/main/core/translation'
 import {UserList} from '#/main/core/administration/user/user/components/user-list'
 
+import {selectors} from '#/plugin/announcement/resources/announcement/store/selectors'
+
 const SendingConfirmModal = props =>
   <Modal
     {...omit(props, 'filters', 'aggregateId', 'announcementId', 'handleConfirm')}
@@ -17,7 +19,7 @@ const SendingConfirmModal = props =>
     bsSize="lg"
   >
     <ListData
-      name="selected.list"
+      name={selectors.STORE_NAME+'.selected.list'}
       fetch={{
         url: ['claro_announcement_validate', {aggregateId: props.aggregateId, id: props.announcementId}],
         autoload: true

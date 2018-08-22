@@ -21,10 +21,10 @@ const AnnouncementResource = withReducer(selectors.STORE_NAME, reducer)(
         dispatch(actions.resetDetail())
       },
       resetForm(data, isNew) {
-        dispatch(formActions.resetForm('announcementForm', data, isNew))
+        dispatch(formActions.resetForm(selectors.STORE_NAME+'.announcementForm', data, isNew))
       },
       initFormDefaultRoles(roleIds) {
-        dispatch(formActions.updateProp('announcementForm', 'roles', roleIds))
+        dispatch(formActions.updateProp(selectors.STORE_NAME+'.announcementForm', 'roles', roleIds))
       }
     })
   )(AnnouncementResourceComponent)

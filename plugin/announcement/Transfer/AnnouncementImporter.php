@@ -100,7 +100,7 @@ class AnnouncementImporter extends Importer implements ConfigurationInterface, R
 
     public function supports($type)
     {
-        return $type === 'yml';
+        return 'yml' === $type;
     }
 
     public function validate(array $data)

@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Updater020210 extends Updater
 {
     private $container;
-    /** @var  Connection */
+    /** @var Connection */
     private $conn;
 
     public function __construct(ContainerInterface $container)

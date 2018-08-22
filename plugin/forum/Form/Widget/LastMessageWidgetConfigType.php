@@ -13,16 +13,16 @@ class LastMessageWidgetConfigType extends AbstractType
         $builder->add(
             'forum',
             'resourcePicker',
-            array(
+            [
                 'label' => 'forum',
-                'attr' => array(
+                'attr' => [
                     'data-is-picker-multi-select-allowed' => 0,
                     'data-is-directory-selection-allowed' => 0,
                     'data-type-white-list' => 'claroline_forum',
-                ),
+                ],
                 'display_browse_button' => false,
                 'display_download_button' => false,
-            )
+            ]
         );
         $builder->add(
             'displayMyLastMessages',
@@ -38,10 +38,10 @@ class LastMessageWidgetConfigType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'data_class' => 'Claroline\ForumBundle\Entity\Widget\LastMessageWidgetConfig',
                 'translation_domain' => 'forum',
-            )
+            ]
         );
     }
 }

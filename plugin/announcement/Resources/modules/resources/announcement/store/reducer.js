@@ -3,10 +3,11 @@ import cloneDeep from 'lodash/cloneDeep'
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
-
-import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 import {LIST_FILTER_ADD} from '#/main/app/content/list/store/actions'
 
+import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
+
+import {selectors} from '#/plugin/announcement/resources/announcement/store/selectors'
 import {
   ANNOUNCE_DETAIL_OPEN,
   ANNOUNCE_DETAIL_RESET,
@@ -80,7 +81,7 @@ const reducer = combineReducers({
   sortOrder: sortReducer,
   announcement: announcementReducer,
 
-  announcementForm: makeFormReducer('announcementForm', {}, {
+  announcementForm: makeFormReducer(selectors.STORE_NAME+'.announcementForm', {}, {
     data: makeReducer({}, {
       [RESOURCE_LOAD]: (state, action) => action.resourceData.announcement
     }),
@@ -91,7 +92,7 @@ const reducer = combineReducers({
   announcementDetail: announcementDetailReducer,
 
   selected: combineReducers({
-    list: makeListReducer('selected.list', {}, {
+    list: makeListReducer(selectors.STORE_NAME+'selected.list', {}, {
       invalidated: makeReducer(false, {
         ['MODAL_HIDE']: () => true, // todo : find better
         [LIST_FILTER_ADD+'/selected.list']: () => true

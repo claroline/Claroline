@@ -83,7 +83,11 @@ const visibleSortedPosts = createSelector(
   (sortedPosts, pageSize, currentPage) => sortedPosts.slice(currentPage*pageSize, currentPage*pageSize+pageSize)
 )
 
-const announcementDetail = state => state.announcementDetail
+const announcementDetail = createSelector(
+  [resource],
+  (resource) => resource.announcementDetail
+)
+
 const detail = createSelector(
   [posts, announcementDetail],
   (posts, announcementDetail) => posts.find(post => post.id === announcementDetail)
