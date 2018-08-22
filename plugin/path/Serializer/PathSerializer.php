@@ -117,7 +117,7 @@ class PathSerializer
         $this->sipe('display.description', 'setDescription', $data, $path);
         $this->sipe('display.showOverview', 'setShowOverview', $data, $path);
         $this->sipe('display.showSummary', 'setShowSummary', $data, $path);
-        $this->sipe('display.openSummary', 'setSummaryDisplayed', $data, $path);
+        $this->sipe('display.openSummary', 'setOpenSummary', $data, $path);
         $this->sipe('display.numbering', 'setNumbering', $data, $path);
         $this->sipe('display.manualProgressionAllowed', 'setManualProgressionAllowed', $data, $path);
 

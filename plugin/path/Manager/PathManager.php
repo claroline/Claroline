@@ -99,7 +99,7 @@ class PathManager
         // Populate Path properties
         $path->setDescription($pathData['description']);
         $path->setModified($pathData['modified']);
-        $path->setSummaryDisplayed($pathData['summaryDisplayed']);
+        $path->setOpenSummary($pathData['summaryDisplayed']);
         $path->setCompleteBlockingCondition($pathData['completeBlockingCondition']);
         $path->setManualProgressionAllowed($pathData['manualProgressionAllowed']);
 

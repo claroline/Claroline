@@ -187,7 +187,7 @@ class PathListener
         $path->setDescription($pathToCopy->getDescription());
         $path->setShowOverview($pathToCopy->getShowOverview());
         $path->setShowSummary($pathToCopy->getShowSummary());
-        $path->setSummaryDisplayed($pathToCopy->isSummaryDisplayed());
+        $path->setOpenSummary($pathToCopy->getOpenSummary());
         $path->setNumbering($pathToCopy->getNumbering());
         $path->setStructure('');
 
