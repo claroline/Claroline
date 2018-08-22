@@ -69,8 +69,11 @@ class ApiListener
         if (array_key_exists('host', $parsedUrl)) {
             switch ($parsedUrl['host']) {
                 case 'www.youtube.com':
-                    parse_str($parsedUrl['query'], $parsedQuery);
-                    $return = $parsedQuery['v'];
+                    if (isset($parsedUrl['query'])) {
+                        parse_str($parsedUrl['query'], $parsedQuery);
+
+                        $return = $parsedQuery['v'];
+                    }
                     break;
                 case 'youtu.be':
                     $return = substr($parsedUrl['path'], 1);
