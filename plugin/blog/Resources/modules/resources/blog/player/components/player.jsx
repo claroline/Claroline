@@ -92,16 +92,16 @@ const Player = connect(
       dispatch(postActions.getPost(blogId, postId))
     },
     createPost: () => {
-      dispatch(postActions.createPost(constants.POST_EDIT_FORM_NAME))
+      dispatch(postActions.createPost(selectors.STORE_NAME+'.'+constants.POST_EDIT_FORM_NAME))
     },
     getPostByAuthor: (blogId, authorName) => {
       dispatch(postActions.getPostByAuthor(blogId, authorName))
     },
     editPost: (blogId, postId) => {
-      dispatch(postActions.editPost(constants.POST_EDIT_FORM_NAME, blogId, postId))
+      dispatch(postActions.editPost(selectors.STORE_NAME+'.'+constants.POST_EDIT_FORM_NAME, blogId, postId))
     },
     editBlogOptions: (blogId) => {
-      dispatch(editorActions.editBlogOptions(constants.OPTIONS_EDIT_FORM_NAME, blogId))
+      dispatch(editorActions.editBlogOptions(selectors.STORE_NAME+'.'+constants.OPTIONS_EDIT_FORM_NAME, blogId))
     },
     switchMode: (mode) => {
       dispatch(actions.switchMode(mode))

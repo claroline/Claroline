@@ -55,8 +55,8 @@ const Archives = connect(
     searchByRange: (month, year) => {
       let from = moment([year, month])
       let format = getApiFormat()
-      dispatch(listActions.addFilter('posts', 'fromDate', from.format(format)))
-      dispatch(listActions.addFilter('posts', 'toDate', from.endOf('month').format(format)))
+      dispatch(listActions.addFilter(selectors.STORE_NAME+'.posts', 'fromDate', from.format(format)))
+      dispatch(listActions.addFilter(selectors.STORE_NAME+'.posts', 'toDate', from.endOf('month').format(format)))
       dispatch(postActions.initDataList())
     }
   })

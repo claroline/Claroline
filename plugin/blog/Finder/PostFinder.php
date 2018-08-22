@@ -83,6 +83,12 @@ class PostFinder extends AbstractFinder
                   WHERE UPPER(t.name) LIKE :tagFilter
                 )");
                 $qb->setParameter('tagFilter', '%'.strtoupper($filterValue).'%');
+            } elseif ('workspace' === $filterName) {
+                $qb->leftJoin('obj.blog', 'b');
+                $qb->leftJoin('b.resourceNode', 'node');
+                $qb->leftJoin('node.workspace', 'w');
+                $qb->andWhere("w.uuid = :{$filterName}");
+                $qb->setParameter($filterName, $filterValue);
             } elseif (is_string($filterValue)) {
                 $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");
                 $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');

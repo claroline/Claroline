@@ -9,5 +9,11 @@ registry.add('blog', {
 
   resources: {
     'icap_blog': () => { return import(/* webpackChunkName: "plugin-blog-blog-resource" */ '#/plugin/blog/resources/blog') }
+  },
+
+  data: {
+    sources: {
+      'blog_posts' : () => { return import(/* webpackChunkName: "blog-data-blog-posts" */  '#/plugin/blog/data/sources/blog-posts') }
+    }
   }
 })

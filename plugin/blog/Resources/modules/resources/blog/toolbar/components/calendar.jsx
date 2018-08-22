@@ -31,7 +31,7 @@ const BlogCalendar = connect(
   }),
   dispatch => ({
     searchByDate: (date) => {
-      dispatch(listActions.addFilter('posts', 'publicationDate', date))
+      dispatch(listActions.addFilter(selectors.STORE_NAME+'.posts', 'publicationDate', date))
       dispatch(postActions.initDataList())
     }
   })

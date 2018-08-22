@@ -51,7 +51,7 @@ const Tags = withRouter(connect(
   }),
   dispatch => ({
     searchByTag: (tag) => {
-      dispatch(listActions.addFilter('posts', 'tags', tag))
+      dispatch(listActions.addFilter(selectors.STORE_NAME+'.posts', 'tags', tag))
       dispatch(postActions.initDataList())
     },
     goHome: (history) => {

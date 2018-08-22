@@ -20,6 +20,12 @@ plugin:
             - action: resource-icap_blog-post_read
             - action: resource-icap_blog-comment_create
 
+    data_sources:
+        - name: blog_posts
+          type: list
+          context: [workspace, desktop]
+          tags: [resources, community]
+
     #widgets:
     #  - name: blog_list
     #    is_configurable: true

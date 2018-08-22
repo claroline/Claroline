@@ -44,7 +44,7 @@ const Redactors = connect(
   }),
   dispatch => ({
     getPostsByAuthor: (blogId, authorName) => {
-      dispatch(listActions.addFilter('posts', 'authorName', authorName))
+      dispatch(listActions.addFilter(selectors.STORE_NAME+'.posts', 'authorName', authorName))
       dispatch(postActions.initDataList())
     }
   })

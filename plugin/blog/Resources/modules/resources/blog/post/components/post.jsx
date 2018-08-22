@@ -284,11 +284,11 @@ const PostCardContainer = connect(
       }))
     },
     getPostsByAuthor: (blogId, authorName) => {
-      dispatch(listActions.addFilter('posts', 'authorName', authorName))
+      dispatch(listActions.addFilter(selectors.STORE_NAME+'.posts', 'authorName', authorName))
       dispatch(postActions.initDataList())
     },
     getPostsByTag: (tag) => {
-      dispatch(listActions.addFilter('posts', 'tags', tag))
+      dispatch(listActions.addFilter(selectors.STORE_NAME+'.posts', 'tags', tag))
       dispatch(postActions.initDataList())
     }
   })

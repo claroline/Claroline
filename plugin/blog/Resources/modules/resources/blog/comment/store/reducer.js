@@ -2,6 +2,8 @@ import {makeReducer} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
 import isEmpty from 'lodash/isEmpty'
 import cloneDeep from 'lodash/cloneDeep'
+
+import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
 import {
   SHOW_COMMENTS, 
   SHOW_COMMENT_FORM,
@@ -25,7 +27,7 @@ const reducer = {
   showEditCommentForm: makeReducer('', {
     [SHOW_EDIT_COMMENT_FORM]: (state, action) => action.value
   }),
-  comments: makeListReducer('comments', {
+  comments: makeListReducer(selectors.STORE_NAME+'.comments', {
     sortBy: {
       property: 'creationDate',
       direction: -1
