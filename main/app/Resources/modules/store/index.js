@@ -26,13 +26,13 @@ if (process.env.NODE_ENV !== 'production') { // todo : retrieve current env else
 /**
  * Generates a new pre-configured application store.
  *
- * @param {object} reducers        - an object containing a list of reducers to mount in the store.
- * @param {object} initialState    - the data to preload in the store at creation.
- * @param {Array}  customEnhancers - [Advanced use] a list of custom store enhancers.
+ * @param {string} name         - the name of the store
+ * @param {object} reducers     - an object containing a list of reducers to mount in the store.
+ * @param {object} initialState - the data to preload in the store at creation.
  *
  * @return {*}
  */
-function createStore(reducers, initialState = {}, customEnhancers = []) {
+function createStore(name, reducers, initialState = {}) {
   // preserve initial state for not-yet-loaded reducers
   const createReducer = (reducers) => {
     const reducerNames = Object.keys(reducers)
@@ -41,33 +41,42 @@ function createStore(reducers, initialState = {}, customEnhancers = []) {
         reducers[item] = (state = null) => state
       }
     })
+
     return combineReducers(reducers)
   }
 
   // register browser extension
   // we must do it at each store creation in order to register all
   // of them in the dev console
-  const enhancers = []
-  if (window.devToolsExtension) {
-    enhancers.push(window.devToolsExtension())
-  }
+  const composeEnhancers =
+    process.env.NODE_ENV !== 'production' &&
+    typeof window === 'object' &&
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
+      window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+        name: name,
+        // this is required by dynamic reducer
+        // without it, all actions stack is replayed at each reducer injection
+        shouldHotReload: false
+      }) : compose
 
   const store = baseCreate(
     createReducer(reducers),
     initialState,
-    compose(
-      applyMiddleware(...middleware),
-      ...enhancers.concat(customEnhancers)
+    composeEnhancers(
+      applyMiddleware(...middleware)
     )
   )
 
   // support for dynamic reducer loading
   store.asyncReducers = {}
   store.injectReducer = (key, reducer) => {
-    store.asyncReducers[key] = reducer
-    store.replaceReducer(
-      createReducer(merge({}, reducers, store.asyncReducers))
-    )
+    if (!store.asyncReducers[key]) {
+      // only append non mounted reducers
+      store.asyncReducers[key] = reducer
+      store.replaceReducer(
+        createReducer(merge({}, reducers, store.asyncReducers))
+      )
+    }
 
     return store
   }

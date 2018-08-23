@@ -16,6 +16,14 @@ import {createStore} from '#/main/app/store'
 /**
  * Mounts a new React/Redux app into the DOM.
  *
+ * @todo :
+ *   We should append Alert & Modal overlays here when we will upgrade to React 16.
+ *   We can't for now because it will require additional html containers which will break styles
+ *   For now, it's added by :
+ *     - Page
+ *     - WidgetContent
+ *     - Toolbar
+ *
  * @param {HTMLElement} container     - the HTML element which will hold the JS app.
  * @param {*}           rootComponent - the React root component of the app.
  * @param {object}      reducers      - an object containing the reducers of the app.
@@ -25,7 +33,7 @@ function mount(container, rootComponent, reducers = null, initialData = {}) {
   let appRoot
   if (!isEmpty(reducers)) {
     // Create store
-    const store = createStore(reducers, initialData)
+    const store = createStore(rootComponent.displayName, reducers, initialData)
 
     appRoot = React.createElement(
       Provider, {

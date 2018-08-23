@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import omit from 'lodash/omit'
 
 import {trans} from '#/main/core/translation'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
@@ -11,7 +12,7 @@ import {DataListProperty} from '#/main/app/content/list/prop-types'
 
 const ListDataModal = props =>
   <Modal
-    {...props}
+    {...omit(props, 'name', 'confirmText', 'fetch', 'card', 'onlyId', 'display', 'definition', 'handleSelect')}
     className="data-picker-modal"
     bsSize="lg"
   >

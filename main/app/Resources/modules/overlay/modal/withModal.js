@@ -2,6 +2,10 @@ import {connect} from 'react-redux'
 
 import {actions} from '#/main/app/overlay/modal/store'
 
+function getDisplayName(WrappedComponent) {
+  return WrappedComponent.displayName || WrappedComponent.name || 'Component'
+}
+
 /**
  * HOC to give a component access to the modals methods.
  * It works like `withRouter` from 'react-router', and injects :
@@ -18,7 +22,7 @@ function withModal(Component) {
     })
   )(Component)
 
-  WithModal.displayName = `WithModal(${Component.displayName})`
+  WithModal.displayName = `WithModal(${getDisplayName(Component)})`
 
   return WithModal
 }

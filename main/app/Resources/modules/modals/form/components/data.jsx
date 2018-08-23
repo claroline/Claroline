@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import cloneDeep from 'lodash/cloneDeep'
 import isEmpty from 'lodash/isEmpty'
+import omit from 'lodash/omit'
 import set from 'lodash/set'
 
 import {trans} from '#/main/core/translation'
@@ -75,7 +76,7 @@ class FormDataModal extends Component {
   render() {
     return (
       <Modal
-        {...this.props}
+        {...omit(this.props, 'saveButtonText', 'data', 'sections', 'save', 'onChange')}
       >
         <FormData
           level={5}

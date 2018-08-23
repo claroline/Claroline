@@ -13,15 +13,14 @@ import {selectors} from '#/main/core/workspace/modals/parameters/store'
 
 const ParametersModal = props =>
   <Modal
-    {...omit(props, 'workspace', 'saveEnabled', 'workspaceLoading', 'loadWorkspace', 'saveWorkspace')}
+    {...omit(props, 'workspace', 'saveEnabled', 'loadWorkspace', 'saveWorkspace')}
     icon="fa fa-fw fa-cog"
     title={trans('parameters')}
     subtitle={props.workspace.name}
-    onEntering={() => props.workspaceLoading ? props.loadWorkspace(props.workspace) : null}
+    onEntering={() => props.loadWorkspace(props.workspace)}
   >
     <WorkspaceForm
       name={selectors.STORE_NAME}
-      modal={true}
     />
 
     <Button
@@ -42,14 +41,9 @@ ParametersModal.propTypes = {
     WorkspaceTypes.propTypes
   ).isRequired,
   saveEnabled: T.bool.isRequired,
-  workspaceLoading: T.bool.isRequired,
   saveWorkspace: T.func.isRequired,
   loadWorkspace: T.func.isRequired,
   fadeModal: T.func.isRequired
-}
-
-ParametersModal.defaultProps = {
-  workspaceLoading: true
 }
 
 export {

@@ -4,6 +4,10 @@ import isEqual from 'lodash/isEqual'
 
 import {mount, unmount} from '#/main/app/mount'
 
+// TODO : remove us when these overlays are appended by mount()
+import {ModalOverlay} from '#/main/app/overlay/modal/containers/overlay'
+import {AlertOverlay} from '#/main/app/overlay/alert/containers/overlay'
+
 import {getWidget} from '#/main/core/widget/types'
 import {reducer} from '#/main/core/widget/content/store'
 import {WidgetInstance as WidgetInstanceTypes} from '#/main/core/widget/content/prop-types'
@@ -28,7 +32,17 @@ class WidgetContent extends Component {
     getWidget(instance.type).then(module => {
       const WidgetApp = new module.App()
 
-      mount(this.mountNode, WidgetApp.component, reducer, {
+      const WidgetAppComponent = () =>
+        <div className="widget-content">
+          {React.createElement(WidgetApp.component)}
+
+          <AlertOverlay />
+          <ModalOverlay />
+        </div>
+
+      WidgetAppComponent.displayName = `WidgetApp(${instance.type})`
+
+      mount(this.mountNode, WidgetAppComponent, reducer, {
         instance: instance,
         context: context
       })
@@ -37,7 +51,7 @@ class WidgetContent extends Component {
 
   render() {
     return (
-      <div ref={element => this.mountNode = element} />
+      <div ref={element => this.mountNode = element} className="widget-content-container" />
     )
   }
 }

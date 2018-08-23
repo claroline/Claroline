@@ -6,8 +6,6 @@ import {trans} from '#/main/core/translation'
 import {url} from '#/main/app/api'
 
 import {select as workspaceSelect} from '#/main/core/workspace/selectors'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
-import {MODAL_WORKSPACE_PARAMETERS} from '#/main/core/workspace/modals/parameters'
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {
@@ -21,7 +19,6 @@ const restrictUsers     = (workspace) => workspace.restrictions.enableMaxUsers  
 const restrictResources = (workspace) => workspace.restrictions.enableMaxResources || 0 === workspace.restrictions.maxResources || !!workspace.restrictions.maxResources
 const restrictStorage   = (workspace) => workspace.restrictions.enableMaxStorage   || !!workspace.restrictions.maxStorage
 
-// TODO : finish implementation (open resource / open tool)
 // TODO : add tools
 
 const WorkspaceFormComponent = (props) =>
@@ -127,10 +124,6 @@ const WorkspaceFormComponent = (props) =>
                 displayed: (workspace) => workspace.opening && 'resource' === workspace.opening.type,
                 onChange: (selected) => {
                   props.updateProp('opening.target', selected)
-
-                  if (props.modal) {
-                    props.showWorkspaceParametersModal(props.workspace)
-                  }
                 }
               }
             ]
@@ -315,8 +308,7 @@ WorkspaceFormComponent.propTypes = {
   ).isRequired,
   children: T.any,
   tools: T.array,
-  modal: T.bool.isRequired,
-  showWorkspaceParametersModal: T.func.isRequired,
+
   // from redux
   new: T.bool.isRequired,
   updateProp: T.func.isRequired
@@ -335,9 +327,6 @@ const WorkspaceForm = connect(
   (dispatch, ownProps) =>({
     updateProp(propName, propValue) {
       dispatch(formActions.updateProp(ownProps.name, propName, propValue))
-    },
-    showWorkspaceParametersModal(workspace) {
-      dispatch(modalActions.showModal(MODAL_WORKSPACE_PARAMETERS, {workspace: workspace, workspaceLoading: false}))
     }
   })
 )(WorkspaceFormComponent)

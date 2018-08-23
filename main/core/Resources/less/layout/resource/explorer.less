@@ -1,4 +1,29 @@
 
-.resources-explorer {
+// TODO merge with other embedded list version
+.resources-picker {
+    .embedded-list-variant();
 
+    .list-header {
+        background: @modal-footer-bg;
+        border-bottom: 1px solid @modal-header-border-color;
+    }
+
+    .list-selected {
+        border-top: 1px solid @modal-header-border-color; // force border top for table display
+        border-color: @modal-header-border-color;
+        background: @modal-footer-bg;
+    }
+
+    .list-footer {
+        background: @modal-footer-bg;
+        border-top-color: @modal-header-border-color;
+    }
+
+    .summary-container {
+        top: 0;
+
+        + .content-container {
+            padding-left: 0; // removes spacing between summary and list
+        }
+    }
 }

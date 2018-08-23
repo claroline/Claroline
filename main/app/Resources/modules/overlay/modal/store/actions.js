@@ -20,5 +20,5 @@ actions.showModal = (modalType, modalProps = {}) => {
   }
 }
 
-actions.fadeModal = makeActionCreator(MODAL_FADE)
-actions.hideModal = makeActionCreator(MODAL_HIDE)
+actions.fadeModal = makeActionCreator(MODAL_FADE, 'modalId')
+actions.hideModal = makeActionCreator(MODAL_HIDE, 'modalId')

@@ -10,14 +10,14 @@ import {ModalOverlay as ModalOverlayComponent} from '#/main/app/overlay/modal/co
 const ModalOverlay = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
-      modal: selectors.modal(state)
+      modals: selectors.modals(state)
     }),
     (dispatch) => ({
-      fadeModal() {
-        dispatch(actions.fadeModal())
+      fadeModal(modalId) {
+        dispatch(actions.fadeModal(modalId))
       },
-      hideModal() {
-        dispatch(actions.hideModal())
+      hideModal(modalId) {
+        dispatch(actions.hideModal(modalId))
       }
     })
   )(ModalOverlayComponent)

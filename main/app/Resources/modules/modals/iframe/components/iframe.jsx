@@ -1,10 +1,13 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import omit from 'lodash/omit'
 
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 
 const IframeModal = props =>
-  <Modal {...props}>
+  <Modal
+    {...omit(props, 'src', 'width', 'height')}
+  >
     <iframe
       className="modal-body"
       width={props.width}

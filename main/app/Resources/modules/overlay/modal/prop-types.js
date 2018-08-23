@@ -2,7 +2,8 @@ import {PropTypes as T} from 'prop-types'
 
 const Modal = {
   propTypes: {
-    type: T.string,
+    id: T.string.isRequired,
+    type: T.string.isRequired,
     fading: T.bool.isRequired,
     props: T.object
   },

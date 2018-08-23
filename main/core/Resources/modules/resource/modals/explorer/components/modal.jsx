@@ -1,6 +1,5 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/core/translation'
@@ -17,9 +16,10 @@ const ExplorerModal = props => {
 
   return (
     <Modal
-      {...omit(props, 'current', 'currentDirectory', 'primaryAction', 'actions', 'confirmText', 'selected', 'selectAction', 'initialize', 'filters')}
+      {...omit(props, 'root', 'current', 'currentDirectory', 'primaryAction', 'actions', 'confirmText', 'selected', 'selectAction', 'initialize', 'filters')}
       subtitle={props.currentDirectory && props.currentDirectory.name}
       onEntering={() => props.initialize(props.root, props.current, props.filters)}
+      className="resources-picker"
       bsSize="lg"
     >
       <ResourceExplorer

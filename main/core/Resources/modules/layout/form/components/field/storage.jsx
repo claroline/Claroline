@@ -32,7 +32,6 @@ const Storage = props =>
         bsStyle="default"
         noCaret={true}
         pullRight={true}
-        dropUp={true}
       >
         <MenuItem header>{trans('units')}</MenuItem>
 

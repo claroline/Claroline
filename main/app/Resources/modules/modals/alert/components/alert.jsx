@@ -1,13 +1,13 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import omit from 'lodash/omit'
 
-import {trans} from '#/main/core/translation'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 
 const AlertModal = props =>
   <Modal
-    {...props}
+    {...omit(props, 'type', 'message')}
     icon={classes('fa fa-fw', {
       'fa-info-circle':          props.type === 'info',
       'fa-check-circle':         props.type === 'success',
