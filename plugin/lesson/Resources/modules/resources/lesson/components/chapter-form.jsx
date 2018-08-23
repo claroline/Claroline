@@ -153,7 +153,7 @@ const ChapterForm = withRouter(connect(
     isNew: formSelect.isNew(formSelect.form(state, constants.CHAPTER_EDIT_FORM_NAME)),
     parentSlug: formSelect.data(formSelect.form(state, constants.CHAPTER_EDIT_FORM_NAME)).parentSlug || null,
     hasParentSlug: !!formSelect.data(formSelect.form(state, constants.CHAPTER_EDIT_FORM_NAME)).parentSlug,
-    isRootSelected: formSelect.data(formSelect.form(state, constants.CHAPTER_EDIT_FORM_NAME)).parentSlug === state.tree.data.slug,
+    isRootSelected: formSelect.data(formSelect.form(state, constants.CHAPTER_EDIT_FORM_NAME)).parentSlug === selectors.treeData(state).slug,
     isSubchapterSelected: formSelect.data(formSelect.form(state, constants.CHAPTER_EDIT_FORM_NAME)).position === 'subchapter',
     isSiblingSelected: formSelect.data(formSelect.form(state, constants.CHAPTER_EDIT_FORM_NAME)).position === 'sibling',
     chapterWillBeMoved: !!formSelect.data(formSelect.form(state, constants.CHAPTER_EDIT_FORM_NAME)).move

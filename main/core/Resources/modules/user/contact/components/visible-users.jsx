@@ -2,16 +2,15 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
-import {trans} from '#/main/core/translation'
-import {url} from '#/main/app/api'
+import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
-import {ListData} from '#/main/app/content/list/containers/data.jsx'
-import {UserCard} from '#/main/core/user/data/components/user-card'
+import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'
 
-import {actions} from '#/main/core/user/contact/actions'
-import {select} from '#/main/core/user/contact/selectors'
+import {trans} from '#/main/core/translation'
+import {actions} from '#/main/core/user/contact/store'
 import {OptionsType} from '#/main/core/user/contact/prop-types'
+import {UserCard} from '#/main/core/user/data/components/user-card'
 
 const VisibleUsersComponent = props =>
   <ListData
@@ -34,11 +33,6 @@ const VisibleUsersComponent = props =>
         icon: 'fa fa-fw fa-address-book-o',
         label: trans('add_contact'),
         callback: () => props.createContacts(rows.map(r => r.id))
-      }, {
-        type: URL_BUTTON,
-        icon: 'fa fa-fw fa-paper-plane-o',
-        label: trans('send_message'),
-        target: url(['claro_message_show', {message: 0}], {userIds: rows.map(user => user.autoId)})
       }
     ]}
     definition={[
@@ -88,7 +82,7 @@ VisibleUsersComponent.propTypes = {
 
 const VisibleUsers = connect(
   (state) => ({
-    options: select.options(state)
+    options: formSelect.data(formSelect.form(state, 'options'))
   }),
   (dispatch) => ({
     createContacts: users => dispatch(actions.createContacts(users))

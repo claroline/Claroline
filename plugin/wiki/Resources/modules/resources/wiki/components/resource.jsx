@@ -25,6 +25,7 @@ const Resource = props =>
         icon: 'fa fa-fw fa-home',
         label: trans('show_overview'),
         target: '/',
+        exact: true,
         primary: false
       },
       {

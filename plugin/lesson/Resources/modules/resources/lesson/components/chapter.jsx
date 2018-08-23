@@ -16,7 +16,7 @@ const Chapter = props =>
       </div>
     }
 
-    {props.chapter.slug &&
+    {props.chapter && props.chapter.slug &&
       <div>
         <h1 id={'lesson-chapter-title'}>{props.chapter.title}</h1>
         <div>

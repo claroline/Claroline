@@ -3,14 +3,13 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
-import {trans} from '#/main/core/translation'
-import {url} from '#/main/app/api'
+import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {URL_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {UserCard} from '#/main/core/user/data/components/user-card'
 import {constants as listConst} from '#/main/app/content/list/constants'
 
-import {select} from '#/main/core/user/contact/selectors'
+import {trans} from '#/main/core/translation'
+import {UserCard} from '#/main/core/user/data/components/user-card'
 import {OptionsType} from '#/main/core/user/contact/prop-types'
 
 const ContactCard = props =>
@@ -41,14 +40,6 @@ const ContactsComponent = props =>
     delete={{
       url: ['apiv2_contact_delete_bulk']
     }}
-    actions={(rows) => [
-      {
-        type: URL_BUTTON,
-        icon: 'fa fa-fw fa-paper-plane-o',
-        label: trans('send_message'),
-        target: url(['claro_message_show', {message: 0}], {userIds: rows.map(user => user.data.autoId)})
-      }
-    ]}
     definition={[
       {
         name: 'data.username',
@@ -100,7 +91,7 @@ ContactsComponent.propTypes = {
 
 const Contacts = connect(
   (state) => ({
-    options: select.options(state)
+    options: formSelect.data(formSelect.form(state, 'options'))
   })
 )(ContactsComponent)
 

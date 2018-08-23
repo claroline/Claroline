@@ -11,80 +11,58 @@
 
 namespace Claroline\WebResourceBundle\Listener;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\WebResourceBundle\Manager\WebResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Response;
+use Ramsey\Uuid\Uuid;
 
 /**
  * @DI\Service("claroline.listener.web_resource_listener")
  */
 class WebResourceListener
 {
-    /**
-     * Service container.
-     *
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface
-     */
-    private $container;
+    /** @var string */
+    private $filesDir;
 
+    /** @var ObjectManager */
+    private $om;
+
+    /** @var string */
+    private $uploadDir;
+
+    /** @var WebResourceManager */
     private $webResourceManager;
 
     /**
-     * Path to directory where zip files are stored.
-     *
-     * @var string
-     */
-    private $zipPath;
-
-    /**
-     * Class constructor.
+     * WebResourceListener constructor.
      *
      * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container"),
-     *     "webResourceManager"    = @DI\Inject("claroline.manager.web_resource_manager"),
+     *     "filesDir"           = @DI\Inject("%claroline.param.files_directory%"),
+     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
+     *     "uploadDir"          = @DI\Inject("%claroline.param.uploads_directory%"),
+     *     "webResourceManager" = @DI\Inject("claroline.manager.web_resource_manager")
      * })
      *
-     * @param ContainerInterface $container
+     * @param string             $filesDir
+     * @param ObjectManager      $om
+     * @param string             $uploadDir
+     * @param WebResourceManager $webResourceManager
      */
     public function __construct(
-      ContainerInterface $container,
-      WebResourceManager $webResourceManager
-      ) {
-        $this->container = $container;
-        $this->filesPath = $this->container->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR;
-        $this->tokenStorage = $this->container->get('security.token_storage');
-        $this->workspaceManager = $this->container->get('claroline.manager.workspace_manager');
+        $filesDir,
+        ObjectManager $om,
+        $uploadDir,
+        WebResourceManager $webResourceManager
+    ) {
+        $this->filesDir = $filesDir;
+        $this->om = $om;
+        $this->uploadDir = $uploadDir;
         $this->webResourceManager = $webResourceManager;
-    }
-
-    /**
-     * @DI\Observe("open_claroline_web_resource")
-     *
-     * @param \Claroline\CoreBundle\Event\CreateResourceEvent|\Claroline\CoreBundle\Event\Resource\OpenResourceEvent $event
-     */
-    public function onOpen(OpenResourceEvent $event)
-    {
-        $hash = $event->getResource()->getHashName();
-        $workspace = $event->getResource()->getResourceNode()->getWorkspace();
-        $zipPath = $this->container->getParameter('claroline.param.uploads_directory').DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR;
-        $content = $this->container->get('templating')->render(
-            'ClarolineWebResourceBundle:web-resource:open.html.twig',
-            [
-                'workspace' => $workspace,
-                'path' => $zipPath.$hash.DIRECTORY_SEPARATOR.$this->webResourceManager->guessRootFileFromUnzipped($zipPath.$hash),
-                '_resource' => $event->getResource(),
-            ]
-        );
-
-        $event->setResponse(new Response($content));
-        $event->stopPropagation();
     }
 
     /**
@@ -94,11 +72,13 @@ class WebResourceListener
      */
     public function onLoad(LoadResourceEvent $event)
     {
+        $ds = DIRECTORY_SEPARATOR;
         $hash = $event->getResource()->getHashName();
         $workspace = $event->getResource()->getResourceNode()->getWorkspace();
-        $zipPath = $this->container->getParameter('claroline.param.uploads_directory').DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR;
+        $unzippedPath = $this->uploadDir.$ds.'webresource'.$ds.$workspace->getUuid();
+        $srcPath = 'uploads'.$ds.'webresource'.$ds.$workspace->getUuid().$ds.$hash;
         $event->setData([
-          'path' => $zipPath.$hash.DIRECTORY_SEPARATOR.$this->webResourceManager->guessRootFileFromUnzipped($zipPath.$hash),
+          'path' => $srcPath.$ds.$this->webResourceManager->guessRootFileFromUnzipped($unzippedPath.$ds.$hash),
         ]);
 
         $event->stopPropagation();
@@ -111,17 +91,24 @@ class WebResourceListener
      */
     public function onDelete(DeleteResourceEvent $event)
     {
-        $file = $this->filesPath.$event->getResource()->getHashName();
-        $unzipFile = $this->zipPath.$event->getResource()->getHashName();
+        $ds = DIRECTORY_SEPARATOR;
+        $resource = $event->getResource();
+        $workspace = $resource->getResourceNode()->getWorkspace();
+        $hashName = $resource->getHashName();
 
-        if (file_exists($file)) {
-            $event->setFiles([$file]);
+        $archiveFile = $this->filesDir.$ds.'webresource'.$ds.$workspace->getUuid().$ds.$hashName;
+        $webResourcesPath = $this->uploadDir.$ds.'webresource'.$ds.$workspace->getUuid().$ds.$hashName;
+
+        if (file_exists($archiveFile)) {
+            $event->setFiles([$archiveFile]);
         }
-
-        if (file_exists($unzipFile)) {
-            $this->unzipDelete($unzipFile);
+        if (file_exists($webResourcesPath)) {
+            try {
+                $this->deleteFiles($webResourcesPath);
+            } catch (\Exception $e) {
+            }
         }
-
+        $this->om->remove($resource);
         $event->stopPropagation();
     }
 
@@ -144,7 +131,7 @@ class WebResourceListener
      */
     public function onDownload(DownloadResourceEvent $event)
     {
-        $event->setItem($this->filesPath.$event->getResource()->getHashName());
+        $event->setItem($this->filesDir.DIRECTORY_SEPARATOR.$event->getResource()->getHashName());
         $event->stopPropagation();
     }
 
@@ -161,7 +148,7 @@ class WebResourceListener
             $mixed = pathinfo($mixed->getHashName(), PATHINFO_EXTENSION);
         }
 
-        return $this->container->get('claroline.utilities.misc')->generateGuid().'.'.$mixed;
+        return Uuid::uuid5()->toString().'.'.$mixed;
     }
 
     /**
@@ -173,6 +160,7 @@ class WebResourceListener
      */
     private function copy(File $resource)
     {
+        $ds = DIRECTORY_SEPARATOR;
         $hash = $this->getHash($resource);
 
         $file = new File();
@@ -180,10 +168,27 @@ class WebResourceListener
         $file->setName($resource->getName());
         $file->setMimeType($resource->getMimeType());
         $file->setHashName($hash);
-        copy($this->filesPath.$resource->getHashName(), $this->filesPath.$hash);
-        $this->getZip()->open($this->filesPath.$hash);
+        copy($this->filesDir.$ds.$resource->getHashName(), $this->filesDir.$ds.$hash);
+        $this->getZip()->open($this->filesDir.$ds.$hash);
         $this->unzip($hash);
 
         return $file;
+    }
+
+    /**
+     * Deletes recursively a directory and its content.
+     *
+     * @param $dirPath The path to the directory to delete
+     */
+    private function deleteFiles($dirPath)
+    {
+        foreach (glob($dirPath.DIRECTORY_SEPARATOR.'{*,.[!.]*,..?*}', GLOB_BRACE) as $content) {
+            if (is_dir($content)) {
+                $this->deleteFiles($content);
+            } else {
+                unlink($content);
+            }
+        }
+        rmdir($dirPath);
     }
 }

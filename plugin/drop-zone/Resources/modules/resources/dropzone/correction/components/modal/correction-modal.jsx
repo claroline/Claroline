@@ -5,7 +5,7 @@ import {registry} from '#/main/app/modals/registry'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {trans} from '#/main/core/translation'
 import {HtmlGroup}  from '#/main/core/layout/form/components/group/html-group.jsx'
-import {RadiosGroup}  from '#/main/core/layout/form/components/group/radios-group.jsx'
+import {ChoiceGroup}  from '#/main/core/layout/form/components/group/choice-group.jsx'
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
 import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box.jsx'
 
@@ -138,8 +138,8 @@ class CorrectionModal extends Component {
                       </HtmlText>
                     </td>
                     <td className="criterion-scale-form-row">
-                      <RadiosGroup
-                        id={`correction-criterion-${c.id}-radio`}
+                      <ChoiceGroup
+                        id={`criterion-form-${c.id}-radio`}
                         label="correction_criterion_radio"
                         choices={[...Array(this.props.dropzone.parameters.criteriaTotal).keys()].reduce((acc, current) => {
                           acc[current] = current
@@ -147,10 +147,9 @@ class CorrectionModal extends Component {
                           return acc
                         }, {})}
                         disabled={true}
-                        inline={true}
                         hideLabel={true}
-                        value={this.state.correction.grades.find(g => g.criterion === c.id) ?
-                          this.state.correction.grades.find(g => g.criterion === c.id).value :
+                        value={this.props.correction.grades.find(g => g.criterion === c.id) ?
+                          `${this.props.correction.grades.find(g => g.criterion === c.id).value}` :
                           ''
                         }
                         onChange={() => {}}

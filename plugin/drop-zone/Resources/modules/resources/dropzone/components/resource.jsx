@@ -26,7 +26,8 @@ const DropzoneResource = props =>
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-home',
         label: trans('show_overview'),
-        target: '/'
+        target: '/',
+        exact: true
       }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-upload',

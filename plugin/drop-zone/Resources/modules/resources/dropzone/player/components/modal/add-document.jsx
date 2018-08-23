@@ -51,7 +51,7 @@ class AddDocumentModal extends Component {
               }, {
                 name: 'data',
                 type: this.state.type,
-                label: trans('document'),
+                label: trans('document', {}, 'dropzone'),
                 displayed: null !== this.state.type && constants.DOCUMENT_TYPE_RESOURCE !== this.state.type,
                 required: true,
                 options: {

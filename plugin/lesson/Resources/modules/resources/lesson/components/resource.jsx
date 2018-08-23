@@ -13,6 +13,7 @@ import {LINK_BUTTON, DOWNLOAD_BUTTON} from '#/main/app/buttons'
 import {ChapterResource} from '#/plugin/lesson/resources/lesson/components/chapter'
 import {normalizeTree} from '#/plugin/lesson/resources/lesson/utils'
 import {ChapterForm} from '#/plugin/lesson/resources/lesson/components/chapter-form'
+import {Editor} from '#/plugin/lesson/resources/lesson/editor/components/editor'
 
 class LessonResource extends Component {
   constructor(props) {
@@ -37,6 +38,7 @@ class LessonResource extends Component {
     return (
       <ResourcePage
         styles={['claroline-distribution-plugin-lesson-lesson-resource']}
+        primaryAction="chapter"
         customActions={[
           {
             type: LINK_BUTTON,
@@ -69,6 +71,10 @@ class LessonResource extends Component {
             {
               path: '/',
               component: ChapterResource,
+              exact: true
+            }, {
+              path: '/edit',
+              component: Editor,
               exact: true
             }, {
               path: '/new',

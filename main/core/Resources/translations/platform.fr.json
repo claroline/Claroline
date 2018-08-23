@@ -815,6 +815,7 @@
     "no_activity_in_workspace": "Cet espace ne contient actuellement aucune activité.",
     "no_category": "Il n'y a aucune catégorie.",
     "no_choice": "Aucun choix",
+    "no_configuration_for_resource": "Il n'y a pas de configuration pour cette ressource.",
     "no_contact": "Aucun contact",
     "no_description": "Aucune description",
     "no_email": "Ce courriel ne correspond pas à un utilisateur inscrit.",

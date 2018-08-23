@@ -799,6 +799,7 @@
     "no_activity_in_workspace": "There are currently no activities in this workspace.",
     "no_category": "There is no category",
     "no_choice": "No choice",
+    "no_configuration_for_resource": "There is no configuration for this resource.",
     "no_contact": "No contact",
     "no_description": "No description",
     "no_email": "No email found, check the spelling",

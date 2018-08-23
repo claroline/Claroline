@@ -46,10 +46,7 @@ const WikiSectionContent = props =>
         {!props.isRoot &&
         <Button
           type={CALLBACK_BUTTON}
-          callback={() => {
-            alert('CALLBACK')
-            document.getElementsByClassName('page-title')[0].scrollIntoView({block: 'end', behavior: 'smooth',  inline: 'start'})}
-          }
+          callback={() => document.getElementsByClassName('page-title')[0].scrollIntoView({block: 'end', behavior: 'smooth',  inline: 'start'})}
           icon={'fa fa-fw fa-arrow-up'}
           className={'btn btn-link'}
           tooltip="top"
