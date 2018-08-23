@@ -259,7 +259,7 @@ const Editor = withRouter(connect(
         position: position + 1,
         type: administration ? 'administration' : context.type,
         administration: administration,
-        user: context.type === 'desktop' ? currentUser() : null,
+        user: context.type === 'desktop' && !administration ? currentUser() : null,
         workspace: context.type === 'workspace' ? {uuid: context.data.uuid} : null
       })))
 

@@ -15,9 +15,9 @@ import {Tabs} from '#/main/core/tools/home/components/tabs'
 
 const PlayerComponent = props =>
   <PageContainer>
-    {1 < props.sortedTabs.length &&
+    {1 < props.tabs.length &&
       <Tabs
-        tabs={props.administration ? props.sortedTabs : props.visibleTabs}
+        tabs={props.tabs}
         context={props.context}
         administration={props.administration}
       />
@@ -51,10 +51,7 @@ const PlayerComponent = props =>
 PlayerComponent.propTypes = {
   context: T.object.isRequired,
   administration: T.bool.isRequired,
-  sortedTabs: T.arrayOf(T.shape(
-    TabTypes.propTypes
-  )),
-  visibleTabs:T.arrayOf(T.shape(
+  tabs: T.arrayOf(T.shape(
     TabTypes.propTypes
   )),
   currentTab: T.shape(TabTypes.propTypes),
@@ -69,8 +66,7 @@ const Player = connect(
     context: selectors.context(state),
     administration: selectors.administration(state),
     editable: selectors.editable(state),
-    sortedTabs: selectors.sortedTabs(state),
-    visibleTabs: selectors.visibleTabs(state),
+    tabs: selectors.tabs(state),
     currentTab: selectors.currentTab(state),
     widgets: selectors.widgets(state)
   })
