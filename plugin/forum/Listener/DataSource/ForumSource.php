@@ -47,7 +47,6 @@ class ForumSource
     public function getData(DataSourceEvent $event)
     {
         $options = $event->getOptions() ? $event->getOptions() : [];
-        $options['sortBy'] = '-creationDate';
         $options['hiddenFilters']['moderation'] = false;
 
         if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {

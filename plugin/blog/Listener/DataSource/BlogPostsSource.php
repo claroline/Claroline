@@ -48,7 +48,6 @@ class BlogPostsSource
     public function getData(DataSourceEvent $event)
     {
         $options = $event->getOptions() ? $event->getOptions() : [];
-        $options['sortBy'] = '-publicationDate';
         $options['hiddenFilters']['status'] = Statusable::STATUS_PUBLISHED;
 
         if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {
