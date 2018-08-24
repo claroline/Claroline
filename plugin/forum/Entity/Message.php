@@ -58,6 +58,12 @@ class Message extends AbstractMessage
      */
     protected $flagged = false;
 
+    /**
+     * @ORM\Column(type="boolean")
+     * todo: renommer
+     */
+    protected $first = false;
+
     //required because we use a "property_exists" somewhere in the crud and it doesn't work otherwise.
     protected $uuid;
 
@@ -108,5 +114,10 @@ class Message extends AbstractMessage
     public function isFlagged()
     {
         return $this->flagged;
+    }
+
+    public function setIsFirst($isFirst)
+    {
+        $this->first = $isFirst;
     }
 }

@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\TagBundle\Repository\TagRepository")
- * @ORM\Table(name="claro_tagbundle_tag")
+ * @ORM\Table(name="claro_tagbundle_tag", uniqueConstraints={@ORM\UniqueConstraint(name="unique", columns={"tag_name", "user_id"})}))
  */
 class Tag
 {

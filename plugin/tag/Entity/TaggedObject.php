@@ -16,7 +16,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\TagBundle\Repository\TaggedObjectRepository")
- * @ORM\Table(name="claro_tagbundle_tagged_object")
+ * @ORM\Table(name="claro_tagbundle_tagged_object",  uniqueConstraints={@ORM\UniqueConstraint(name="unique", columns={"object_id", "object_class", "object_name"})}))
  * @DoctrineAssert\UniqueEntity({"objectId", "objectClass", "tag"})
  */
 class TaggedObject

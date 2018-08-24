@@ -53,7 +53,7 @@ class SubjectController extends AbstractCrudController
         return new JsonResponse(
           $this->finder->search('Claroline\ForumBundle\Entity\Message', array_merge(
               $request->query->all(),
-              ['hiddenFilters' => ['subject' => $id, 'parent' => null]]
+              ['hiddenFilters' => ['subject' => $id, 'parent' => null, 'first' => false]]
             ))
         );
     }

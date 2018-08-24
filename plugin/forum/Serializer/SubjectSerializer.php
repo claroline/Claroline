@@ -5,10 +5,13 @@ namespace Claroline\ForumBundle\Serializer;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
+use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
+use Claroline\ForumBundle\Finder\MessageFinder;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -47,7 +50,9 @@ class SubjectSerializer
      *     "provider"        = @DI\Inject("claroline.api.serializer"),
      *     "container"       = @DI\Inject("service_container"),
      *     "fileUt"          = @DI\Inject("claroline.utilities.file"),
-     *     "eventDispatcher" = @DI\Inject("event_dispatcher")
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
+     *     "messageFinder"   = @DI\Inject("claroline.api.finder.forum_message"),
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param SerializerProvider $serializer
@@ -56,12 +61,16 @@ class SubjectSerializer
         SerializerProvider $provider,
         ContainerInterface $container,
         FileUtilities $fileUt,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        MessageFinder $messageFinder,
+        ObjectManager $om
     ) {
         $this->serializerProvider = $provider;
         $this->container = $container;
         $this->fileUt = $fileUt;
         $this->eventDispatcher = $eventDispatcher;
+        $this->messageFinder = $messageFinder;
+        $this->om = $om;
     }
 
     /**
@@ -74,13 +83,18 @@ class SubjectSerializer
      */
     public function serialize(Subject $subject, array $options = [])
     {
+        $first = $this->messageFinder->findOneBy([
+          'subject' => $subject->getId(),
+          'first' => true,
+        ]);
+
         return [
           'id' => $subject->getUuid(),
           'forum' => [
             'id' => $subject->getForum()->getUuid(),
           ],
           'tags' => $this->serializeTags($subject),
-          'content' => $subject->getContent(),
+          'content' => $first ? $first->getContent() : null,
           'title' => $subject->getTitle(),
           'meta' => $this->serializeMeta($subject, $options),
           'restrictions' => $this->serializeRestrictions($subject, $options),
@@ -129,12 +143,32 @@ class SubjectSerializer
      */
     public function deserialize($data, Subject $subject, array $options = [])
     {
+        $first = $this->messageFinder->findOneBy([
+          'subject' => $subject->getId(),
+          'first' => true,
+        ]);
+
         $this->sipe('id', 'setUuid', $data, $subject);
         $this->sipe('title', 'setTitle', $data, $subject);
-        $this->sipe('content', 'setContent', $data, $subject);
         $this->sipe('meta.sticky', 'setSticked', $data, $subject);
         $this->sipe('meta.closed', 'setClosed', $data, $subject);
         $this->sipe('meta.flagged', 'setFlagged', $data, $subject);
+
+        if (isset($data['content'])) {
+            if (!$first) {
+                $messageData = ['content' => $data['content']];
+
+                if (isset($data['meta']) && isset($data['meta']['creator'])) {
+                    $messageData['meta']['creator'] = $data['meta']['creator'];
+                }
+
+                $first = new Message();
+                $first->setIsFirst(true);
+                $first->setSubject($subject);
+            }
+
+            $first->setContent($data['content']);
+        }
 
         if (isset($data['meta'])) {
             if (isset($data['meta']['updated'])) {
@@ -152,6 +186,9 @@ class SubjectSerializer
 
                 if ($creator) {
                     $subject->setCreator($creator);
+                    if ($first) {
+                        $first->setCreator($creator);
+                    }
                 }
             }
         }
@@ -187,6 +224,10 @@ class SubjectSerializer
             } else {
                 $this->deserializeTags($subject, $data['tags']);
             }
+        }
+
+        if ($first) {
+            $this->om->persist($first);
         }
 
         return $subject;

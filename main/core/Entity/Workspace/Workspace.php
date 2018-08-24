@@ -22,13 +22,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as Serializer;
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRepository")
  * @ORM\Table(name="claro_workspace", indexes={@ORM\Index(name="name_idx", columns={"name"})})
- * @DoctrineAssert\UniqueEntity("code")
  */
 class Workspace
 {

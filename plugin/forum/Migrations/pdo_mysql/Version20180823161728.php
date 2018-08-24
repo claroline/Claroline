@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution.
  *
- * Generation date: 2018/06/13 11:19:19
+ * Generation date: 2018/08/23 04:17:29
  */
-class Version20180613111918 extends AbstractMigration
+class Version20180823161728 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -47,11 +47,11 @@ class Version20180613111918 extends AbstractMigration
         $this->addSql('
             ALTER TABLE claro_forum_subject
             ADD poster_id INT DEFAULT NULL,
-            ADD content LONGTEXT NOT NULL,
             ADD sticked TINYINT(1) NOT NULL,
             ADD closed TINYINT(1) NOT NULL,
             ADD flagged TINYINT(1) NOT NULL,
             ADD viewCount INT NOT NULL,
+            ADD moderation VARCHAR(255) NOT NULL,
             ADD uuid VARCHAR(36) NOT NULL,
             DROP isSticked,
             DROP isClosed,
@@ -60,9 +60,7 @@ class Version20180613111918 extends AbstractMigration
         $this->addSql('
             UPDATE claro_forum_subject SET uuid = (SELECT UUID())
         ');
-        $this->addSql('
-            UPDATE claro_forum_subject SET content = ""
-        ');
+
         $this->addSql('
             UPDATE claro_forum_subject SET sticked = false
         ');
@@ -75,13 +73,7 @@ class Version20180613111918 extends AbstractMigration
         $this->addSql('
             UPDATE claro_forum_subject SET viewCount = 5
         ');
-        //might cause some issues but worth keeping
-        /*
-            ALTER TABLE claro_forum_subject
-            ADD CONSTRAINT FK_273AA20B29CCBAD0 FOREIGN KEY (forum_id)
-            REFERENCES claro_forum (id)
-            ON DELETE CASCADE
-        */
+
         $this->addSql('
             ALTER TABLE claro_forum_subject
             ADD CONSTRAINT FK_273AA20B5BB66C05 FOREIGN KEY (poster_id)
@@ -123,7 +115,8 @@ class Version20180613111918 extends AbstractMigration
             ADD parent_id INT DEFAULT NULL,
             ADD uuid VARCHAR(36) NOT NULL,
             ADD moderation VARCHAR(255) NOT NULL,
-            ADD flagged TINYINT(1) NOT NULL
+            ADD flagged TINYINT(1) NOT NULL,
+            ADD first TINYINT(1) NOT NULL
         ');
         $this->addSql('
             UPDATE claro_forum_message SET uuid = (SELECT UUID())
@@ -183,7 +176,8 @@ class Version20180613111918 extends AbstractMigration
             DROP parent_id,
             DROP uuid,
             DROP moderation,
-            DROP flagged
+            DROP flagged,
+            DROP first
         ');
         $this->addSql('
             ALTER TABLE claro_forum_subject
@@ -209,11 +203,11 @@ class Version20180613111918 extends AbstractMigration
             ADD isClosed TINYINT(1) NOT NULL,
             DROP forum_id,
             DROP poster_id,
-            DROP content,
             DROP sticked,
             DROP closed,
             DROP flagged,
             DROP viewCount,
+            DROP moderation,
             DROP uuid
         ');
         $this->addSql('
@@ -225,5 +219,13 @@ class Version20180613111918 extends AbstractMigration
         $this->addSql('
             CREATE INDEX IDX_273AA20B12469DE2 ON claro_forum_subject (category_id)
         ');
+        $this->addSql('
+            CREATE UNIQUE INDEX `unique` ON claro_tagbundle_tagged_object (
+                object_id, object_class, object_name
+            )
+        ', false);
+        $this->addSql('
+            CREATE UNIQUE INDEX `unique` ON claro_tagbundle_tag (tag_name, user_id)
+        ', false);
     }
 }

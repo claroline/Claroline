@@ -41,12 +41,6 @@ class Subject
     protected $title;
 
     /**
-     * @ORM\Column(name="content", type="text")
-     * @Assert\NotBlank()
-     */
-    protected $content;
-
-    /**
      * @ORM\Column(name="created", type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
@@ -119,6 +113,11 @@ class Subject
      * @var PublicFile
      */
     protected $poster;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $moderation = Forum::VALIDATE_NONE;
 
     /**
      * Constructor.
