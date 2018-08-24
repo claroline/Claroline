@@ -50,7 +50,9 @@ class TranslatableSerializer
                 $found = $this->translations->findTranslations($content);
 
                 foreach ($found as $lang => $text) {
-                    $translations[$lang] = $text[$options['property']];
+                    if (isset($text[$options['property']])) {
+                        $translations[$lang] = $text[$options['property']];
+                    }
                 }
             }
         } else {
