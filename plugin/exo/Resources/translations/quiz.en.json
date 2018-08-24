@@ -603,6 +603,7 @@
     "show_interact_fields": "Hints and global feedback",
     "show_metadata_fields": "Title and other fields",
     "show_overview": "Display quiz information page",
+    "show_progression_gauge": "Show progression gauge",
     "signing": "Passing the quiz",
     "size": "Size",
     "solution_score": "{-1, 0, 1} %score% point|[2,+Inf[ %score% points|]-Inf, -2] %score% points",

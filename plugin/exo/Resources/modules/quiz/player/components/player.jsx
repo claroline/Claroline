@@ -3,16 +3,17 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import Panel from 'react-bootstrap/lib/Panel'
 
-import {trans} from '#/main/core/translation'
 import {withRouter} from '#/main/app/router'
-
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {MODAL_ALERT} from '#/main/app/modals/alert'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
+
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {Timer} from '#/main/core/layout/gauge/components/timer'
 import {ProgressBar} from '#/main/core/layout/components/progress-bar'
+import {ScoreGauge} from '#/main/core/layout/evaluation/components/score-gauge'
 
+import {trans} from '#/main/core/translation'
 import {getDefinition, isQuestionType} from '#/plugin/exo/items/item-types'
 import {getContentDefinition} from '#/plugin/exo/contents/content-types'
 import selectQuiz from '#/plugin/exo/quiz/selectors'
@@ -123,17 +124,30 @@ class PlayerComponent extends Component {
             type="user"
           />
         }
-        {this.props.isTimed && this.props.duration > 0 && this.props.paper.startDate &&
-          <div className="timer-container">
-            <Timer
-              totalTime={this.props.duration * 60}
-              startDate={this.props.paper.startDate}
-              type="user"
-              onTimeOver={() => {
-                this.props.finish(this.props.quizId, this.props.paper, this.props.answers, this.props.showFeedback, false, this.props.history.push)
-                this.props.showTimeOverMessage()
-              }}
-            />
+        {(this.props.isProgressionDisplayed || this.props.isTimed) &&
+          <div className="quiz-gauges-container">
+            {this.props.isProgressionDisplayed && this.props.paper && this.props.paper.structure && this.props.allAnswers && papersSelect.paperItemsCount(this.props.paper) &&
+              <div className="quiz-progression-container">
+                <ScoreGauge
+                  userScore={Object.values(this.props.allAnswers).filter(a => a.data && a.data.length > 0).length}
+                  maxScore={papersSelect.paperItemsCount(this.props.paper)}
+                  size="sm"
+                />
+              </div>
+            }
+            {this.props.isTimed && this.props.duration > 0 && this.props.paper.startDate &&
+              <div className="timer-container">
+                <Timer
+                  totalTime={this.props.duration * 60}
+                  startDate={this.props.paper.startDate}
+                  type="user"
+                  onTimeOver={() => {
+                    this.props.finish(this.props.quizId, this.props.paper, this.props.answers, this.props.showFeedback, false, this.props.history.push)
+                    this.props.showTimeOverMessage()
+                  }}
+                />
+              </div>
+            }
           </div>
         }
 
@@ -187,6 +201,7 @@ PlayerComponent.propTypes = {
   number: T.number.isRequired,
   isTimed: T.bool.isRequired,
   duration: T.number,
+  isProgressionDisplayed: T.bool.isRequired,
   step: T.object,
   items: T.array.isRequired,
   mandatoryQuestions: T.bool.isRequired,
@@ -238,7 +253,8 @@ const Player = withRouter(connect(
     currentStepSend: select.currentStepSend(state),
     numbering: selectQuiz.quizNumbering(state),
     isTimed: selectQuiz.parameters(state).timeLimited,
-    duration: selectQuiz.parameters(state).duration
+    duration: selectQuiz.parameters(state).duration,
+    isProgressionDisplayed: selectQuiz.parameters(state).progressionDisplayed
   }),
   dispatch => ({
     start() {

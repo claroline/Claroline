@@ -602,7 +602,7 @@ class ItemSerializer extends AbstractSerializer
                 break;
 
             case 'rules':
-                $sanitized->noWrongChoice = $score->noWrongChoice;
+                $sanitized->noWrongChoice = isset($score->noWrongChoice) ? $score->noWrongChoice : false;
                 $sanitized->rules = $score->rules;
                 break;
         }

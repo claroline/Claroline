@@ -602,6 +602,7 @@
     "show_interact_fields": "Indices et commentaire final",
     "show_metadata_fields": "Titre et autres champs",
     "show_overview": "Afficher la page d'informations du questionnaire",
+    "show_progression_gauge": "Afficher la jauge de progression",
     "signing": "Passation",
     "size": "Taille",
     "solution_score": "{-1, 0, 1} %score% point|[2,+Inf[ %score% points|]-Inf, -2] %score% points",

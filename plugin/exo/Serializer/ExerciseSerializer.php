@@ -189,6 +189,7 @@ class ExerciseSerializer implements SerializerInterface
         $parameters->maxPapers = $exercise->getMaxPapers();
         $parameters->showFeedback = $exercise->getShowFeedback();
         $parameters->timeLimited = $exercise->isTimeLimited();
+        $parameters->progressionDisplayed = $exercise->isProgressionDisplayed();
         $parameters->duration = $exercise->getDuration();
         $parameters->anonymizeAttempts = $exercise->getAnonymizeAttempts();
         $parameters->interruptible = $exercise->isInterruptible();
@@ -271,6 +272,10 @@ class ExerciseSerializer implements SerializerInterface
 
         if (isset($parameters->timeLimited)) {
             $exercise->setTimeLimited($parameters->timeLimited);
+        }
+
+        if (isset($parameters->progressionDisplayed)) {
+            $exercise->setProgressionDisplayed($parameters->progressionDisplayed);
         }
 
         if (isset($parameters->duration)) {

@@ -98,7 +98,7 @@ function reduce(item = {}, action) {
       set(newItem, action.property, value)
       setChoiceTicks(newItem)
 
-      if (newItem.score.type === SCORE_FIXED) {
+      if (0 <= [SCORE_FIXED, SCORE_RULES].indexOf(newItem.score.type)) {
         setScores(newItem, choice => choice._checked ? 1 : 0)
       }
 
@@ -117,7 +117,7 @@ function reduce(item = {}, action) {
 
       newItem.choices[choiceIndex][decoratedName] = value
 
-      if (newItem.score.type === SCORE_FIXED) {
+      if (0 <= [SCORE_FIXED, SCORE_RULES].indexOf(newItem.score.type)) {
         setScores(newItem, choice => choice._checked ? 1 : 0)
       }
 

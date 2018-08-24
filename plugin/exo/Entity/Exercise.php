@@ -248,6 +248,11 @@ class Exercise extends AbstractResource
     private $timeLimited = false;
 
     /**
+     * @ORM\Column(name="progression_displayed", type="boolean", options={"default" = 1})
+     */
+    private $progressionDisplayed = true;
+
+    /**
      * Exercise constructor.
      */
     public function __construct()
@@ -776,5 +781,21 @@ class Exercise extends AbstractResource
     public function setTimeLimited($timeLimited)
     {
         $this->timeLimited = $timeLimited;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isProgressionDisplayed()
+    {
+        return $this->progressionDisplayed;
+    }
+
+    /**
+     * @param bool $progressionDisplayed
+     */
+    public function setProgressionDisplayed($progressionDisplayed)
+    {
+        $this->progressionDisplayed = $progressionDisplayed;
     }
 }
