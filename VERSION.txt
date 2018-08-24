@@ -1,3 +1,3 @@
-12.0.0-rc3
-b37891bcdbf5b8bca0f10fda899a7ec3349ea4e4
+12.0.0-rc4
+5cc2e038676faaee82d23e7b7b63ecb2fec8df19
 12.x
