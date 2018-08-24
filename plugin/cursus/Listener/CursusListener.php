@@ -15,15 +15,19 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
-use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\FacetManager;
+use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CursusBundle\Manager\CursusManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -31,46 +35,60 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class CursusListener
 {
-    private $configHandler;
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
+    /** @var TwigEngine */
+    private $templating;
+    /** @var ToolManager */
+    private $toolManager;
+    /** @var PlatformConfigurationHandler */
+    private $platformConfigHandler;
+
     private $cursusManager;
     private $facetManager;
     private $httpKernel;
     private $om;
-    private $platformConfigHandler;
     private $request;
     private $serializer;
     private $translator;
 
     /**
      * @DI\InjectParams({
-     *     "configHandler"         = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "authorization"         = @DI\Inject("security.authorization_checker"),
+     *     "templating"            = @DI\Inject("templating"),
+     *     "toolManager"           = @DI\Inject("claroline.manager.tool_manager"),
+     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
      *     "cursusManager"         = @DI\Inject("claroline.manager.cursus_manager"),
      *     "facetManager"          = @DI\Inject("claroline.manager.facet_manager"),
      *     "httpKernel"            = @DI\Inject("http_kernel"),
      *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
-     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
      *     "requestStack"          = @DI\Inject("request_stack"),
      *     "serializer"            = @DI\Inject("jms_serializer"),
      *     "translator"            = @DI\Inject("translator")
      * })
      */
     public function __construct(
-        PlatformConfigurationHandler $configHandler,
+        AuthorizationCheckerInterface $authorization,
+        TwigEngine $templating,
+        ToolManager $toolManager,
+        PlatformConfigurationHandler $platformConfigHandler,
         CursusManager $cursusManager,
         FacetManager $facetManager,
         HttpKernelInterface $httpKernel,
         ObjectManager $om,
-        PlatformConfigurationHandler $platformConfigHandler,
         RequestStack $requestStack,
         Serializer $serializer,
         TranslatorInterface $translator
     ) {
-        $this->configHandler = $configHandler;
+        $this->authorization = $authorization;
+        $this->templating = $templating;
+        $this->toolManager = $toolManager;
+        $this->platformConfigHandler = $platformConfigHandler;
+
         $this->cursusManager = $cursusManager;
         $this->facetManager = $facetManager;
         $this->httpKernel = $httpKernel;
         $this->om = $om;
-        $this->platformConfigHandler = $platformConfigHandler;
         $this->request = $requestStack->getCurrentRequest();
         $this->serializer = $serializer;
         $this->translator = $translator;
@@ -79,30 +97,21 @@ class CursusListener
     /**
      * @DI\Observe("administration_tool_claroline_cursus_tool")
      *
-     * @param DisplayToolEvent $event
+     * @param OpenAdministrationToolEvent $event
      */
     public function onAdministrationToolOpen(OpenAdministrationToolEvent $event)
     {
-        $params = [];
-        $params['_controller'] = 'ClarolineCursusBundle:API\AdminManagement:index';
-        $subRequest = $this->request->duplicate([], null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        $event->setResponse($response);
-        $event->stopPropagation();
-    }
+        $cursusTool = $this->toolManager->getAdminToolByName('claroline_cursus_tool');
 
-    /**
-     * @DI\Observe("plugin_options_cursusbundle")
-     *
-     * @param DisplayToolEvent $event
-     */
-    public function onPluginOptionsOpen(PluginOptionsEvent $event)
-    {
-        $params = [];
-        $params['_controller'] = 'ClarolineCursusBundle:Cursus:pluginConfigureForm';
-        $subRequest = $this->request->duplicate([], null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        $event->setResponse($response);
+        if (is_null($cursusTool) || !$this->authorization->isGranted('OPEN', $cursusTool)) {
+            throw new AccessDeniedException();
+        }
+        $content = $this->templating->render(
+            'ClarolineCursusBundle:administration:cursus_management.html.twig', [
+                'parameters' => $this->platformConfigHandler->getParameter('cursus'),
+            ]
+        );
+        $event->setResponse(new Response($content));
         $event->stopPropagation();
     }
 
@@ -178,7 +187,7 @@ class CursusListener
             $sessionEvents = $this->cursusManager->getSessionEventsByWorkspace($workspace);
         } elseif ('desktop' === $type) {
             $user = $data['user'];
-            $sessionEvents = $this->configHandler->getParameter('cursus_display_user_events_in_desktop_agenda') ?
+            $sessionEvents = $this->platformConfigHandler->getParameter('cursus_display_user_events_in_desktop_agenda') ?
                 $this->cursusManager->getSessionEventsByUser($user) :
                 [];
         }

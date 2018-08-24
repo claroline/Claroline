@@ -1,10 +1,8 @@
 plugin:
-  has_options: true
+  has_options: false
 
   admin_tools:
     - name: claroline_cursus_tool
-      class: institution
-    - name: claroline_cursus_tool_registration
       class: institution
 
   #widgets:

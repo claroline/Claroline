@@ -36,7 +36,6 @@ use Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSessionUser;
 use Claroline\CursusBundle\Entity\CoursesWidgetConfig;
 use Claroline\CursusBundle\Entity\Cursus;
-use Claroline\CursusBundle\Entity\CursusDisplayedWord;
 use Claroline\CursusBundle\Entity\CursusGroup;
 use Claroline\CursusBundle\Entity\CursusUser;
 use Claroline\CursusBundle\Entity\DocumentModel;
@@ -101,6 +100,7 @@ class CursusManager
     private $messageManager;
     private $om;
     private $pagerFactory;
+    private $pdfManager;
     private $platformConfigHandler;
     private $roleManager;
     private $router;
@@ -123,10 +123,10 @@ class CursusManager
     private $cursusRepo;
     private $cursusGroupRepo;
     private $cursusUserRepo;
-    private $cursusWordRepo;
     private $documentModelRepo;
     private $organizationRepo;
     private $reservationResourceRepo;
+    private $sessionEventCommentRepo;
     private $sessionEventRepo;
     private $sessionEventSetRepo;
     private $sessionEventUserRepo;
@@ -225,7 +225,6 @@ class CursusManager
         $this->cursusRepo = $om->getRepository('ClarolineCursusBundle:Cursus');
         $this->cursusGroupRepo = $om->getRepository('ClarolineCursusBundle:CursusGroup');
         $this->cursusUserRepo = $om->getRepository('ClarolineCursusBundle:CursusUser');
-        $this->cursusWordRepo = $om->getRepository('ClarolineCursusBundle:CursusDisplayedWord');
         $this->documentModelRepo = $om->getRepository('ClarolineCursusBundle:DocumentModel');
         $this->organizationRepo = $om->getRepository('ClarolineCoreBundle:Organization\Organization');
         $this->reservationResourceRepo = $om->getRepository('FormaLibre\ReservationBundle\Entity\Resource');
@@ -239,27 +238,9 @@ class CursusManager
         $this->locationRepo = $om->getRepository('ClarolineCoreBundle:Organization\Location');
     }
 
-    public function persistCursusDisplayedWord(CursusDisplayedWord $word)
-    {
-        $this->om->persist($word);
-        $this->om->flush();
-    }
-
-    public function getDisplayedWord($word)
-    {
-        $cursusDisplayedWord = $this->cursusWordRepo->findOneByWord($word);
-
-        if (is_null($cursusDisplayedWord)) {
-            $result = $this->translator->trans($word, [], 'cursus');
-        } else {
-            $displayedWord = $cursusDisplayedWord->getDisplayedWord();
-            $result = empty($displayedWord) ?
-                $this->translator->trans($word, [], 'cursus') :
-                $displayedWord;
-        }
-
-        return $result;
-    }
+    /*******************
+     *   Old methods   *
+     *******************/
 
     public function createCursus(
         $title,
@@ -289,7 +270,7 @@ class CursusManager
         $orderMax = is_null($parent) ? $this->getLastRootCursusOrder() : $this->getLastCursusOrderByParent($parent);
         $order = is_null($orderMax) ? 1 : intval($orderMax) + 1;
         $cursus->setCursusOrder($order);
-        $cursusOrganizations = empty($parent) ? $organizations : $parent->getOrganizations();
+        $cursusOrganizations = empty($parent) ? $organizations : $parent->getOrganizations()->toArray();
 
         foreach ($cursusOrganizations as $organization) {
             $cursus->addOrganization($organization);
@@ -512,7 +493,7 @@ class CursusManager
             $newCursus->setBlocking(false);
             ++$lastOrder;
             $newCursus->setCursusOrder($lastOrder);
-            $organizations = $parent->getOrganizations();
+            $organizations = $parent->getOrganizations()->toArray();
 
             foreach ($organizations as $organization) {
                 $newCursus->addOrganization($organization);
@@ -4793,14 +4774,14 @@ class CursusManager
     public function getOrganizationsByCourse(Course $course)
     {
         $organizations = [];
-        $courseOrgas = $course->getOrganizations();
+        $courseOrgas = $course->getOrganizations()->toArray();
         $courseCursus = $this->cursusRepo->findBy(['course' => $course]);
 
         foreach ($courseOrgas as $orga) {
             $organizations[$orga->getId()] = $orga;
         }
         foreach ($courseCursus as $cursus) {
-            $cursusOrgas = $cursus->getOrganizations();
+            $cursusOrgas = $cursus->getOrganizations()->toArray();
 
             foreach ($cursusOrgas as $orga) {
                 $organizations[$orga->getId()] = $orga;
@@ -4813,7 +4794,7 @@ class CursusManager
     public function updateCursusOrganizations(Cursus $cursus, array $organizations)
     {
         if (empty($cursus->getParent())) {
-            $cursusOrgasIds = $this->extractOrganizationsIds($cursus->getOrganizations());
+            $cursusOrgasIds = $this->extractOrganizationsIds($cursus->getOrganizations()->toArray());
             $orgasIds = $this->extractOrganizationsIds($organizations);
             $nbCursusOrgas = count($cursusOrgasIds);
             $nbOrgas = count($orgasIds);
@@ -4890,19 +4871,17 @@ class CursusManager
         return $data;
     }
 
-    public function persistSessionEventSet(SessionEventSet $sessionEventSet)
+    public function getSessionEventSet(CourseSession $session, $name)
     {
-        $this->om->persist($sessionEventSet);
-        $this->om->flush();
-    }
+        $set = $this->sessionEventSetRepo->findSessionEventSetBySessionAndName($session, $name);
 
-    public function createSessionEventSet(CourseSession $session, $name, $limit = 1)
-    {
-        $set = new SessionEventSet();
-        $set->setSession($session);
-        $set->setName($name);
-        $set->setLimit($limit);
-        $this->persistSessionEventSet($set);
+        if (empty($set)) {
+            $set = new SessionEventSet();
+            $set->setSession($session);
+            $set->setName($name);
+            $this->om->persist($set);
+            $this->om->flush();
+        }
 
         return $set;
     }
@@ -4911,26 +4890,6 @@ class CursusManager
     {
         $this->om->remove($sessionEventSet);
         $this->om->flush();
-    }
-
-    public function getSessionEventSet(CourseSession $session, $name)
-    {
-        $set = $this->getSessionEventSetsBySessionAndName($session, $name);
-
-        if (empty($set)) {
-            $set = $this->createSessionEventSet($session, $name);
-        }
-
-        return $set;
-    }
-
-    /***************************************************
-     * Access to CursusDisplayedWordRepository methods *
-     ***************************************************/
-
-    public function getOneDisplayedWordByWord($word)
-    {
-        return $this->cursusWordRepo->findOneByWord($word);
     }
 
     /**************************************
@@ -5707,20 +5666,6 @@ class CursusManager
         return $this->sessionEventCommentRepo->findBy(['sessionEvent' => $sessionEvent]);
     }
 
-    /***********************************************
-     * Access to SessionEventSetRepository methods *
-     ***********************************************/
-
-    public function getSessionEventSetsBySession(CourseSession $session)
-    {
-        return $this->sessionEventSetRepo->findSessionEventSetsBySession($session);
-    }
-
-    public function getSessionEventSetsBySessionAndName(CourseSession $session, $name)
-    {
-        return $this->sessionEventSetRepo->findSessionEventSetsBySessionAndName($session, $name);
-    }
-
     /******************
      * Others methods *
      ******************/
@@ -5834,7 +5779,7 @@ class CursusManager
     public function checkCursusAccess(User $user, Cursus $cursus)
     {
         $userOrgas = $this->extractOrganizationsIds($user->getAdministratedOrganizations()->toArray());
-        $cursusOrgas = $this->extractOrganizationsIds($cursus->getOrganizations());
+        $cursusOrgas = $this->extractOrganizationsIds($cursus->getOrganizations()->toArray());
 
         if (!$this->authorization->isGranted('ROLE_ADMIN') && 0 === count(array_intersect($userOrgas, $cursusOrgas))) {
             throw new AccessDeniedException();

@@ -2,10 +2,9 @@
 
 namespace Claroline\CursusBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -14,25 +13,24 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class SessionEventComment
 {
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_cursus", "api_user_min"})
      */
     protected $id;
 
     /**
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
-     * @Groups({"api_cursus", "api_user_min"})
      */
     protected $content;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", onDelete="CASCADE", nullable=false)
-     * @Groups({"api_user_min"})
      */
     protected $user;
 
@@ -47,17 +45,19 @@ class SessionEventComment
 
     /**
      * @ORM\Column(name="creation_date", type="datetime")
-     * @Groups({"api_cursus", "api_user_min"})
-     * @SerializedName("creationDate")
      */
     protected $creationDate;
 
     /**
      * @ORM\Column(name="edition_date", type="datetime", nullable=true)
-     * @Groups({"api_cursus", "api_user_min"})
-     * @SerializedName("editionDate")
      */
     protected $editionDate;
+
+    public function __construct()
+    {
+        $this->refreshUuid();
+        $this->creationDate = new \DateTime();
+    }
 
     public function getId()
     {

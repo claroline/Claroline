@@ -17,9 +17,6 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
-use JMS\Serializer\Annotation\VirtualProperty;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -37,29 +34,22 @@ class Cursus
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_cursus", "api_user_min", "api_workspace_min"})
      */
     protected $id;
 
     /**
      * @ORM\Column(unique=true, nullable=true)
-     * @Groups({"api_cursus", "api_user_min", "api_workspace_min"})
-     * @SerializedName("code")
      */
     protected $code;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api_cursus", "api_user_min", "api_workspace_min"})
-     * @SerializedName("title")
      */
     protected $title;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"api_cursus", "api_user_min", "api_workspace_min"})
-     * @SerializedName("description")
      */
     protected $description;
 
@@ -68,20 +58,16 @@ class Cursus
      *     targetEntity="Claroline\CursusBundle\Entity\Course"
      * )
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
-     * @Groups({"api_cursus", "api_workspace_min"})
      */
     protected $course;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"api_cursus", "api_user_min", "api_workspace_min"})
-     * @SerializedName("blocking")
      */
     protected $blocking = false;
 
     /**
      * @ORM\Column(type="json_array", nullable=true)
-     * @Groups({"api_cursus", "api_user_min", "api_workspace_min"})
      */
     protected $details;
 
@@ -92,7 +78,6 @@ class Cursus
      *     inversedBy="children"
      * )
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
-     * @Groups({"api_cursus", "api_workspace_min"})
      */
     protected $parent;
 
@@ -102,14 +87,11 @@ class Cursus
      *     mappedBy="parent"
      * )
      * @ORM\OrderBy({"cursusOrder" = "ASC"})
-     * @Groups({"api_cursus", "api_workspace_min"})
      */
     protected $children;
 
     /**
      * @ORM\Column(name="cursus_order", type="integer")
-     * @Groups({"api_cursus", "api_user_min", "api_workspace_min"})
-     * @SerializedName("cursusOrder")
      */
     protected $cursusOrder;
 
@@ -131,7 +113,6 @@ class Cursus
 
     /**
      * @ORM\Column(nullable=true)
-     * @Groups({"api_cursus", "api_user_min", "api_workspace_min"})
      */
     protected $icon;
 
@@ -140,39 +121,30 @@ class Cursus
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace"
      * )
      * @ORM\JoinColumn(name="workspace_id", nullable=true, onDelete="SET NULL")
-     * @Groups({"api_workspace_min"})
      */
     protected $workspace;
 
     /**
      * @Gedmo\TreeRoot
      * @ORM\Column(name="root", type="integer", nullable=true)
-     * @Groups({"api_cursus", "api_user_min", "api_workspace_min"})
-     * @SerializedName("root")
      */
     private $root;
 
     /**
      * @Gedmo\TreeLevel
      * @ORM\Column(name="lvl", type="integer")
-     * @Groups({"api_cursus", "api_user_min", "api_workspace_min"})
-     * @SerializedName("lvl")
      */
     private $lvl;
 
     /**
      * @Gedmo\TreeLeft
      * @ORM\Column(name="lft", type="integer")
-     * @Groups({"api_cursus", "api_user_min"})
-     * @SerializedName("lft")
      */
     private $lft;
 
     /**
      * @Gedmo\TreeRight
      * @ORM\Column(name="rgt", type="integer")
-     * @Groups({"api_cursus", "api_user_min"})
-     * @SerializedName("rgt")
      */
     private $rgt;
 
@@ -181,8 +153,6 @@ class Cursus
      *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization"
      * )
      * @ORM\JoinTable(name="claro_cursusbundle_cursus_organizations")
-     * @Groups({"api_cursus", "api_user_min", "api_group_min", "api_workspace_min"})
-     * @SerializedName("organizations")
      */
     protected $organizations;
 
@@ -369,7 +339,7 @@ class Cursus
 
     public function getOrganizations()
     {
-        return $this->organizations->toArray();
+        return $this->organizations;
     }
 
     public function addOrganization(Organization $organization)

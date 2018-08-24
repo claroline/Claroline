@@ -11,13 +11,12 @@
 
 namespace Claroline\CursusBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -26,6 +25,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class CourseSession
 {
+    use UuidTrait;
+
     const SESSION_NOT_STARTED = 0;
     const SESSION_OPEN = 1;
     const SESSION_CLOSED = 2;
@@ -37,15 +38,12 @@ class CourseSession
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_cursus", "api_cursus_min", "api_bulletin", "api_user_min", "api_group_min", "api_workspace_min"})
      */
     protected $id;
 
     /**
      * @ORM\Column(name="session_name")
      * @Assert\NotBlank()
-     * @Groups({"api_cursus", "api_cursus_min", "api_bulletin", "api_user_min", "api_group_min", "api_workspace_min"})
-     * @SerializedName("name")
      */
     protected $name;
 
@@ -55,14 +53,11 @@ class CourseSession
      *     inversedBy="sessions"
      * )
      * @ORM\JoinColumn(name="course_id", nullable=false, onDelete="CASCADE")
-     * @Groups({"api_cursus", "api_cursus_min", "api_bulletin", "api_user_min", "api_group_min", "api_workspace_min"})
      */
     protected $course;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_workspace_min"})
-     * @SerializedName("description")
      */
     protected $description;
 
@@ -71,7 +66,6 @@ class CourseSession
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace"
      * )
      * @ORM\JoinColumn(name="workspace_id", nullable=true, onDelete="SET NULL")
-     * @Groups({"api_workspace_min", "api_user_min"})
      */
     protected $workspace;
 
@@ -96,63 +90,46 @@ class CourseSession
      *     targetEntity="Claroline\CursusBundle\Entity\Cursus"
      * )
      * @ORM\JoinTable(name="claro_cursus_sessions")
-     * @Groups({"api_user_min"})
      */
     protected $cursus;
 
     /**
      * @ORM\Column(name="session_status", type="integer")
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_workspace_min"})
-     * @SerializedName("sessionStatus")
      */
     protected $sessionStatus = self::SESSION_NOT_STARTED;
 
     /**
      * @ORM\Column(name="default_session", type="boolean")
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_workspace_min"})
-     * @SerializedName("defaultSession")
      */
     protected $defaultSession = false;
 
     /**
      * @ORM\Column(name="creation_date", type="datetime", nullable=false)
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_workspace_min"})
-     * @SerializedName("creationDate")
      */
     protected $creationDate;
 
     /**
      * @ORM\Column(name="public_registration", type="boolean")
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_workspace_min"})
-     * @SerializedName("publicRegistration")
      */
     protected $publicRegistration = false;
 
     /**
      * @ORM\Column(name="public_unregistration", type="boolean")
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_workspace_min"})
-     * @SerializedName("publicUnregistration")
      */
     protected $publicUnregistration = false;
 
     /**
      * @ORM\Column(name="registration_validation", type="boolean")
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_workspace_min"})
-     * @SerializedName("registrationValidation")
      */
     protected $registrationValidation = false;
 
     /**
      * @ORM\Column(name="start_date", type="datetime", nullable=true)
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_workspace_min"})
-     * @SerializedName("startDate")
      */
     protected $startDate;
 
     /**
      * @ORM\Column(name="end_date", type="datetime", nullable=true)
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_workspace_min"})
-     * @SerializedName("endDate")
      */
     protected $endDate;
 
@@ -173,42 +150,33 @@ class CourseSession
     protected $sessionGroups;
 
     /**
-     * @Groups({"api_bulletin"})
-     * @SerializedName("extra")
+     * For bulletin.
      */
     protected $extra = [];
 
     /**
      * @ORM\Column(name="user_validation", type="boolean")
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_workspace_min"})
-     * @SerializedName("userValidation")
      */
     protected $userValidation = false;
 
     /**
      * @ORM\Column(name="organization_validation", type="boolean")
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_workspace_min"})
-     * @SerializedName("organizationValidation")
      */
     protected $organizationValidation = false;
 
     /**
      * @ORM\Column(name="max_users", nullable=true, type="integer")
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_workspace_min"})
-     * @SerializedName("maxUsers")
      */
     protected $maxUsers;
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinTable(name="claro_cursusbundle_course_session_validators")
-     * @Groups({"api_user_min"})
      */
     protected $validators;
 
     /**
      * @ORM\Column(name="session_type", type="integer")
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_workspace_min"})
      */
     protected $type = 0;
 
@@ -218,32 +186,28 @@ class CourseSession
      *     mappedBy="session"
      * )
      * @ORM\OrderBy({"startDate" = "ASC"})
-     * @Groups({"api_cursus", "api_user_min"})
      */
     protected $events;
 
     /**
      * @ORM\Column(name="event_registration_type", type="integer", nullable=false, options={"default" = 0})
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_workspace_min"})
-     * @SerializedName("eventRegistrationType")
      */
     protected $eventRegistrationType = self::REGISTRATION_AUTO;
 
     /**
      * @ORM\Column(name="display_order", type="integer", options={"default" = 500})
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_bulletin", "api_workspace_min"})
-     * @SerializedName("displayOrder")
      */
     protected $displayOrder = 500;
 
     /**
      * @ORM\Column(type="json_array", nullable=true)
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_bulletin", "api_workspace_min"})
      */
     protected $details;
 
     public function __construct()
     {
+        $this->refreshUuid();
+        $this->creationDate = new \DateTime();
         $this->cursus = new ArrayCollection();
         $this->sessionUsers = new ArrayCollection();
         $this->sessionGroups = new ArrayCollection();
@@ -423,7 +387,7 @@ class CourseSession
         return $this->startDate;
     }
 
-    public function setStartDate($startDate)
+    public function setStartDate(\DateTime $startDate = null)
     {
         $this->startDate = $startDate;
     }
@@ -433,7 +397,7 @@ class CourseSession
         return $this->endDate;
     }
 
-    public function setEndDate($endDate)
+    public function setEndDate(\DateTime $endDate = null)
     {
         $this->endDate = $endDate;
     }

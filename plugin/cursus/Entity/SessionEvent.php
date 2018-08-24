@@ -11,14 +11,13 @@
 
 namespace Claroline\CursusBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Organization\Location;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use FormaLibre\ReservationBundle\Entity\Reservation;
 use FormaLibre\ReservationBundle\Entity\Resource;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -27,6 +26,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class SessionEvent
 {
+    use UuidTrait;
+
     const TYPE_NONE = 0;
     const TYPE_EVENT = 1;
 
@@ -34,14 +35,12 @@ class SessionEvent
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
      */
     protected $id;
 
     /**
      * @ORM\Column(name="event_name")
      * @Assert\NotBlank()
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
      */
     protected $name;
 
@@ -51,41 +50,32 @@ class SessionEvent
      *     inversedBy="events"
      * )
      * @ORM\JoinColumn(name="session_id", nullable=false, onDelete="CASCADE")
-     * @Groups({"api_cursus", "api_user_min"})
      */
     protected $session;
 
     /**
      * @ORM\Column(name="start_date", type="datetime", nullable=false)
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
-     * @SerializedName("startDate")
      */
     protected $startDate;
 
     /**
      * @ORM\Column(name="end_date", type="datetime", nullable=false)
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
-     * @SerializedName("endDate")
      */
     protected $endDate;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
      */
     protected $description;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Organization\Location")
      * @ORM\JoinColumn(name="location_id", nullable=true, onDelete="SET NULL")
-     * @Groups({"api_user_min"})
      */
     protected $location;
 
     /**
      * @ORM\Column(name="location_extra", type="text", nullable=true)
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
-     * @SerializedName("locationExtra")
      */
     protected $locationExtra;
 
@@ -94,15 +84,12 @@ class SessionEvent
      *     targetEntity="Claroline\CursusBundle\Entity\SessionEventComment",
      *     mappedBy="sessionEvent"
      * )
-     * @Groups({"api_cursus", "api_user_min"})
      */
     protected $comments;
 
     /**
      * @ORM\ManyToOne(targetEntity="FormaLibre\ReservationBundle\Entity\Resource")
      * @ORM\JoinColumn(name="location_resource_id", nullable=true, onDelete="SET NULL")
-     * @Groups({"api_user_min"})
-     * @SerializedName("locationResource")
      */
     protected $locationResource;
 
@@ -115,7 +102,6 @@ class SessionEvent
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinTable(name="claro_cursusbundle_session_event_tutors")
-     * @Groups({"api_user_min"})
      */
     protected $tutors;
 
@@ -129,22 +115,16 @@ class SessionEvent
 
     /**
      * @ORM\Column(name="max_users", nullable=true, type="integer")
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min"})
-     * @SerializedName("maxUsers")
      */
     protected $maxUsers;
 
     /**
      * @ORM\Column(name="registration_type", type="integer", nullable=false, options={"default" = 0})
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
-     * @SerializedName("registrationType")
      */
     protected $registrationType = CourseSession::REGISTRATION_AUTO;
 
     /**
      * @ORM\Column(name="event_type", type="integer", nullable=false, options={"default" = 0})
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
-     * @SerializedName("type")
      */
     protected $type = self::TYPE_NONE;
 
@@ -154,13 +134,12 @@ class SessionEvent
      *     inversedBy="events"
      * )
      * @ORM\JoinColumn(name="event_set", nullable=true, onDelete="SET NULL")
-     * @Groups({"api_user_min"})
-     * @SerializedName("eventSet")
      */
     protected $eventSet;
 
     public function __construct()
     {
+        $this->refreshUuid();
         $this->comments = new ArrayCollection();
         $this->sessionEventUsers = new ArrayCollection();
         $this->tutors = new ArrayCollection();

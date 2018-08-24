@@ -11,10 +11,9 @@
 
 namespace Claroline\CursusBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CursusBundle\Repository\SessionEventUserRepository")
@@ -22,6 +21,8 @@ use JMS\Serializer\Annotation\SerializedName;
  */
 class SessionEventUser
 {
+    use UuidTrait;
+
     const REGISTERED = 0;
     const PENDING = 1;
 
@@ -29,14 +30,12 @@ class SessionEventUser
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
      */
     protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", nullable=false, onDelete="CASCADE")
-     * @Groups({"api_user_min"})
      */
     protected $user;
 
@@ -46,39 +45,34 @@ class SessionEventUser
      *     inversedBy="sessionEventUsers"
      * )
      * @ORM\JoinColumn(name="session_event_id", nullable=false, onDelete="CASCADE")
-     * @Groups({"api_cursus", "api_user_min"})
-     * @SerializedName("sessionEvent")
      */
     protected $sessionEvent;
 
     /**
      * @ORM\Column(name="registration_status", type="integer", nullable=false)
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
-     * @SerializedName("registrationStatus")
      */
     protected $registrationStatus = self::REGISTERED;
 
     /**
      * @ORM\Column(name="registration_date", type="datetime", nullable=true)
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
-     * @SerializedName("registrationDate")
      */
     protected $registrationDate;
 
     /**
      * @ORM\Column(name="application_date", type="datetime", nullable=true)
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
-     * @SerializedName("applicationDate")
      */
     protected $applicationDate;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CursusBundle\Entity\PresenceStatus")
      * @ORM\JoinColumn(name="presence_status_id", nullable=true, onDelete="SET NULL")
-     * @Groups({"api_user_min"})
-     * @SerializedName("presenceStatus")
      */
     protected $presenceStatus;
+
+    public function __construct()
+    {
+        $this->refreshUuid();
+    }
 
     public function getId()
     {

@@ -42,7 +42,7 @@ class RemoveCoursesCommand extends ContainerAwareCommand
                 $output->writeln("<info> Deleting training session [$sessionName]... </info>");
                 $cursusManager->deleteCourseSession($session, true);
 
-                if ($i % 100 === 0) {
+                if (0 === $i % 100) {
                     $om->forceFlush();
                 }
                 ++$i;
@@ -51,7 +51,7 @@ class RemoveCoursesCommand extends ContainerAwareCommand
             $output->writeln("<info> Deleting training [$courseTitle]... </info>");
             $cursusManager->deleteCourse($course);
 
-            if ($i % 100 === 0) {
+            if (0 === $i % 100) {
                 $om->forceFlush();
             }
             ++$i;

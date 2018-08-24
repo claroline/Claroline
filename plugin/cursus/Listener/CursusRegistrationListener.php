@@ -12,13 +12,10 @@
 namespace Claroline\CursusBundle\Listener;
 
 use Claroline\CoreBundle\Event\LogCreateEvent;
-use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use Claroline\CoreBundle\Menu\GroupAdditionalActionEvent;
 use Claroline\CoreBundle\Menu\UserAdditionalActionEvent;
 use Claroline\CursusBundle\Manager\CursusManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -28,48 +25,24 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CursusRegistrationListener
 {
     private $cursusManager;
-    private $httpKernel;
-    private $request;
     private $router;
     private $translator;
 
     /**
      * @DI\InjectParams({
      *     "cursusManager" = @DI\Inject("claroline.manager.cursus_manager"),
-     *     "httpKernel"    = @DI\Inject("http_kernel"),
-     *     "requestStack"  = @DI\Inject("request_stack"),
-     *     "router"       = @DI\Inject("router"),
-     *     "translator"   = @DI\Inject("translator")
+     *     "router"        = @DI\Inject("router"),
+     *     "translator"    = @DI\Inject("translator")
      * })
      */
     public function __construct(
         CursusManager $cursusManager,
-        HttpKernelInterface $httpKernel,
-        RequestStack $requestStack,
         UrlGeneratorInterface $router,
         TranslatorInterface $translator
     ) {
         $this->cursusManager = $cursusManager;
-        $this->httpKernel = $httpKernel;
-        $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
         $this->translator = $translator;
-    }
-
-    /**
-     * @DI\Observe("administration_tool_claroline_cursus_tool_registration")
-     *
-     * @param DisplayToolEvent $event
-     */
-    public function onAdministrationToolOpen(OpenAdministrationToolEvent $event)
-    {
-        $params = [];
-        $params['_controller'] = 'ClarolineCursusBundle:CursusRegistration:cursusToolRegistrationIndex';
-        $subRequest = $this->request->duplicate([], null, $params);
-        $response = $this->httpKernel
-            ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        $event->setResponse($response);
-        $event->stopPropagation();
     }
 
     /**
@@ -85,7 +58,7 @@ class CursusRegistrationListener
         $group = $log->getReceiverGroup();
         $sessions = ['learner' => [], 'tutor' => []];
 
-        if ($action === 'group-add_user') {
+        if ('group-add_user' === $action) {
             $multipleCursus = $this->cursusManager->getCursusByGroup($group);
             //check if the user is already persisted in database
             $force = $user->getId() ? false : true;
@@ -96,9 +69,9 @@ class CursusRegistrationListener
             foreach ($sessionGroups as $sessionGroup) {
                 $groupType = $sessionGroup->getGroupType();
 
-                if ($groupType === 0) {
+                if (0 === $groupType) {
                     $sessions['learner'][] = $sessionGroup->getSession();
-                } elseif ($groupType === 1) {
+                } elseif (1 === $groupType) {
                     $sessions['tutor'][] = $sessionGroup->getSession();
                 }
             }
@@ -110,7 +83,7 @@ class CursusRegistrationListener
             if (count($sessions['tutor']) > 0) {
                 $this->cursusManager->registerUsersToSessions($sessions['tutor'], [$user], 1, $force);
             }
-        } elseif ($action === 'group-remove_user') {
+        } elseif ('group-remove_user' === $action) {
             $multipleCursus = $this->cursusManager->getCursusByGroup($group);
             $cursusUsers = $this->cursusManager->getCursusUsersFromCursusAndUsers(
                 $multipleCursus,
@@ -123,9 +96,9 @@ class CursusRegistrationListener
             foreach ($sessionGroups as $sessionGroup) {
                 $groupType = $sessionGroup->getGroupType();
 
-                if ($groupType === 0) {
+                if (0 === $groupType) {
                     $sessions['learner'][] = $sessionGroup->getSession();
-                } elseif ($groupType === 1) {
+                } elseif (1 === $groupType) {
                     $sessions['tutor'][] = $sessionGroup->getSession();
                 }
             }

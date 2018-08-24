@@ -38,7 +38,7 @@ class LogCourseCreateEvent extends LogGenericEvent
         $details['organizations'] = [];
         $workspace = $course->getWorkspace();
         $workspaceModel = $course->getWorkspaceModel();
-        $organizations = $course->getOrganizations();
+        $organizations = $course->getOrganizations()->toArray();
 
         if (!is_null($workspace)) {
             $details['workspaceId'] = $workspace->getId();

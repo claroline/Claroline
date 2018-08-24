@@ -11,10 +11,9 @@
 
 namespace Claroline\CursusBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -30,18 +29,18 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class SessionEventSet
 {
+    use UuidTrait;
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
      */
     protected $id;
 
     /**
      * @ORM\Column(name="set_name")
      * @Assert\NotBlank()
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
      */
     protected $name;
 
@@ -51,14 +50,11 @@ class SessionEventSet
      *     inversedBy="events"
      * )
      * @ORM\JoinColumn(name="session_id", nullable=true, onDelete="CASCADE")
-     * @Groups({"api_cursus"})
      */
     protected $session;
 
     /**
      * @ORM\Column(name="set_limit", nullable=false, type="integer")
-     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
-     * @SerializedName("limit")
      */
     protected $limit = 1;
 
@@ -68,12 +64,12 @@ class SessionEventSet
      *     mappedBy="eventSet"
      * )
      * @ORM\OrderBy({"startDate" = "ASC"})
-     * @Groups({"api_cursus"})
      */
     protected $events;
 
     public function __construct()
     {
+        $this->refreshUuid();
         $this->events = new ArrayCollection();
     }
 

@@ -2,9 +2,8 @@
 
 namespace Claroline\CursusBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -13,6 +12,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class DocumentModel
 {
+    use UuidTrait;
+
     const SESSION_INVITATION = 0;
     const SESSION_EVENT_INVITATION = 1;
     const SESSION_CERTIFICATE = 2;
@@ -23,31 +24,31 @@ class DocumentModel
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_cursus"})
      */
     protected $id;
 
     /**
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
-     * @Groups({"api_cursus"})
      */
     protected $name;
 
     /**
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
-     * @Groups({"api_cursus"})
      */
     protected $content;
 
     /**
      * @ORM\Column(name="document_type", type="integer")
      * @Assert\NotBlank()
-     * @Groups({"api_cursus"})
-     * @SerializedName("documentType")
      */
     protected $documentType;
+
+    public function __construct()
+    {
+        $this->refreshUuid();
+    }
 
     public function getId()
     {

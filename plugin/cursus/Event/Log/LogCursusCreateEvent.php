@@ -33,7 +33,7 @@ class LogCursusCreateEvent extends LogGenericEvent
         $parent = $cursus->getParent();
         $course = $cursus->getCourse();
         $workspace = $cursus->getWorkspace();
-        $organizations = $cursus->getOrganizations();
+        $organizations = $cursus->getOrganizations()->toArray();
 
         if (!is_null($parent)) {
             $details['parentId'] = $parent->getId();

@@ -50,6 +50,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ hotAsset('dist/claroline-distribution-plugin-cursus-cursus-management.js') }}"></script>
     {% javascripts debug=false
         'js/translations/cursus/*.js'
         'js/translations/tools/*.js'

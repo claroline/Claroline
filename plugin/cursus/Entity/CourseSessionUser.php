@@ -11,10 +11,9 @@
 
 namespace Claroline\CursusBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CursusBundle\Repository\CourseSessionUserRepository")
@@ -30,6 +29,8 @@ use JMS\Serializer\Annotation\SerializedName;
  */
 class CourseSessionUser
 {
+    use UuidTrait;
+
     const LEARNER = 0;
     const TEACHER = 1;
     const PENDING_LEARNER = 2;
@@ -38,7 +39,6 @@ class CourseSessionUser
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_cursus", "api_user_min"})
      */
     protected $id;
 
@@ -47,7 +47,6 @@ class CourseSessionUser
      *     targetEntity="Claroline\CoreBundle\Entity\User"
      * )
      * @ORM\JoinColumn(name="user_id", nullable=false, onDelete="CASCADE")
-     * @Groups({"api_user_min"})
      */
     protected $user;
 
@@ -57,23 +56,23 @@ class CourseSessionUser
      *     inversedBy="sessionUsers"
      * )
      * @ORM\JoinColumn(name="session_id", nullable=false, onDelete="CASCADE")
-     * @Groups({"api_cursus", "api_user_min"})
      */
     protected $session;
 
     /**
      * @ORM\Column(name="registration_date", type="datetime", nullable=false)
-     * @Groups({"api_cursus", "api_user_min"})
-     * @SerializedName("registrationDate")
      */
     protected $registrationDate;
 
     /**
      * @ORM\Column(name="user_type", type="integer", nullable=false)
-     * @Groups({"api_cursus", "api_user_min"})
-     * @SerializedName("userType")
      */
     protected $userType = self::LEARNER;
+
+    public function __construct()
+    {
+        $this->refreshUuid();
+    }
 
     public function getId()
     {

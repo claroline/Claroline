@@ -3,7 +3,6 @@
 namespace Claroline\CursusBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -20,20 +19,17 @@ class PresenceStatus
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_cursus", "api_user_min"})
      */
     protected $id;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api_cursus", "api_user_min"})
      */
     protected $name;
 
     /**
      * @ORM\Column(name="presence_type", type="integer", nullable=false)
-     * @Groups({"api_cursus", "api_user_min"})
      */
     protected $type = self::NONE;
 

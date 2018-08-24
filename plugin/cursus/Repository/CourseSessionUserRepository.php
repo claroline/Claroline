@@ -319,7 +319,7 @@ class CourseSessionUserRepository extends EntityRepository
             )
         ';
 
-        if ($status === 'closed') {
+        if ('closed' === $status) {
             $dql .= '
                 ORDER BY s.endDate ASC
             ';

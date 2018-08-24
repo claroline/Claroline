@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -28,6 +29,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CursusUser
 {
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -61,6 +64,11 @@ class CursusUser
      * @ORM\Column(name="user_type", type="integer", nullable=true)
      */
     protected $userType;
+
+    public function __construct()
+    {
+        $this->refreshUuid();
+    }
 
     public function getId()
     {

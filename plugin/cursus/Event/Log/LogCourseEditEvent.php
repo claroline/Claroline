@@ -37,7 +37,7 @@ class LogCourseEditEvent extends LogGenericEvent
         $details['withSessionEvent'] = $course->getWithSessionEvent();
         $workspace = $course->getWorkspace();
         $workspaceModel = $course->getWorkspaceModel();
-        $organizations = $course->getOrganizations();
+        $organizations = $course->getOrganizations()->toArray();
 
         if (!is_null($workspace)) {
             $details['workspaceId'] = $workspace->getId();

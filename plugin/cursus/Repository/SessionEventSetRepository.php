@@ -12,25 +12,18 @@
 namespace Claroline\CursusBundle\Repository;
 
 use Claroline\CursusBundle\Entity\CourseSession;
+use Claroline\CursusBundle\Entity\SessionEventSet;
 use Doctrine\ORM\EntityRepository;
 
 class SessionEventSetRepository extends EntityRepository
 {
-    public function findSessionEventSetsBySession(CourseSession $session)
-    {
-        $dql = "
-            SELECT ses
-            FROM Claroline\CursusBundle\Entity\SessionEventSet ses
-            WHERE ses.session = :session
-            ORDER BY ses.name ASC
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('session', $session);
-
-        return $query->getResult();
-    }
-
-    public function findSessionEventSetsBySessionAndName(CourseSession $session, $name)
+    /**
+     * @param CourseSession $session
+     * @param string        $name
+     *
+     * @return SessionEventSet|null
+     */
+    public function findSessionEventSetBySessionAndName(CourseSession $session, $name)
     {
         $dql = "
             SELECT ses

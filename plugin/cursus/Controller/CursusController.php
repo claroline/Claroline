@@ -19,14 +19,12 @@ use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\CourseSession;
 use Claroline\CursusBundle\Entity\CourseSessionUser;
 use Claroline\CursusBundle\Entity\CoursesWidgetConfig;
-use Claroline\CursusBundle\Entity\CursusDisplayedWord;
 use Claroline\CursusBundle\Entity\SessionEvent;
 use Claroline\CursusBundle\Entity\SessionEventComment;
 use Claroline\CursusBundle\Entity\SessionEventSet;
 use Claroline\CursusBundle\Entity\SessionEventUser;
 use Claroline\CursusBundle\Form\CoursesWidgetConfigurationType;
 use Claroline\CursusBundle\Form\MyCoursesWidgetConfigurationType;
-use Claroline\CursusBundle\Form\PluginConfigurationType;
 use Claroline\CursusBundle\Manager\CursusManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\SerializationContext;
@@ -90,111 +88,6 @@ class CursusController extends Controller
         $this->translator = $translator;
     }
 
-    /********************************
-     * Plugin configuration methods *
-     ********************************/
-
-    /**
-     * @EXT\Route(
-     *     "/plugin/configure/form",
-     *     name="claro_cursus_plugin_configure_form"
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template()
-     */
-    public function pluginConfigureFormAction()
-    {
-        $this->checkToolAccess();
-        $displayedWords = [];
-
-        foreach (CursusDisplayedWord::$defaultKey as $key) {
-            $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
-        }
-
-        $form = $this->formFactory->create(
-            new PluginConfigurationType($this->platformConfigHandler),
-            $this->cursusManager->getConfirmationEmail()
-        );
-
-        return [
-            'form' => $form->createView(),
-            'defaultWords' => CursusDisplayedWord::$defaultKey,
-            'displayedWords' => $displayedWords,
-        ];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/plugin/configure",
-     *     name="claro_cursus_plugin_configure"
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:cursus:plugin_configure_form.html.twig")
-     */
-    public function pluginConfigureAction()
-    {
-        $this->checkToolAccess();
-        $displayedWords = [];
-
-        foreach (CursusDisplayedWord::$defaultKey as $key) {
-            $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
-        }
-
-        $formData = $this->request->get('cursus_plugin_configuration_form');
-        $this->cursusManager->persistConfirmationEmail($formData['content']);
-        $this->platformConfigHandler->setParameters(
-            [
-                'cursusbundle_default_session_start_date' => $formData['startDate'],
-                'cursusbundle_default_session_end_date' => $formData['endDate'],
-            ]
-        );
-        $form = $this->formFactory->create(
-            new PluginConfigurationType($this->platformConfigHandler),
-            $this->cursusManager->getConfirmationEmail()
-        );
-
-        return [
-            'form' => $form->createView(),
-            'defaultWords' => CursusDisplayedWord::$defaultKey,
-            'displayedWords' => $displayedWords,
-        ];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/admin/displayed/word/{key}/change/{value}",
-     *     name="claro_cursus_change_displayed_word",
-     *     defaults={"value"=""},
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     */
-    public function displayedWordChangeAction($key, $value = '')
-    {
-        $this->authorization->isGranted('ROLE_ADMIN');
-        $displayedWord = $this->cursusManager->getOneDisplayedWordByWord($key);
-
-        if (is_null($displayedWord)) {
-            $displayedWord = new CursusDisplayedWord();
-            $displayedWord->setWord($key);
-        }
-        $displayedWord->setDisplayedWord($value);
-        $this->cursusManager->persistCursusDisplayedWord($displayedWord);
-
-        $sessionFlashBag = $this->get('session')->getFlashBag();
-        $msg = $this->translator->trans('the_displayed_word_for', [], 'cursus').
-            ' ['.
-            $key.
-            '] '.
-            $this->translator->trans('will_be', [], 'cursus').
-            ' ['
-            .$value.
-            ']';
-        $sessionFlashBag->add('success', $msg);
-
-        return new Response('success', 200);
-    }
-
     /******************
      * Widget methods *
      ******************/
@@ -242,7 +135,7 @@ class CursusController extends Controller
         $order = 'ASC'
     ) {
         $authenticatedUser = $this->tokenStorage->getToken()->getUser();
-        $isAnon = $authenticatedUser === 'anon.';
+        $isAnon = 'anon.' === $authenticatedUser;
         $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
         $configCursus = $config->getCursus();
         $extra = $config->getExtra();
@@ -302,7 +195,7 @@ class CursusController extends Controller
             $courseId = $courseSession->getCourse()->getId();
             $status = $courseSession->getSessionStatus();
 
-            if ($status === 0 || $status === 1) {
+            if (0 === $status || 1 === $status) {
                 if (!isset($sessions[$courseId])) {
                     $sessions[$courseId] = [];
                 }
@@ -372,7 +265,7 @@ class CursusController extends Controller
     public function coursesListForRegistrationWidgetCalendarAction(WidgetInstance $widgetInstance, $search = '')
     {
         $authenticatedUser = $this->tokenStorage->getToken()->getUser();
-        $isAnon = $authenticatedUser === 'anon.';
+        $isAnon = 'anon.' === $authenticatedUser;
         $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
         $configCursus = $config->getCursus();
         $configPublicSessions = $config->isPublicSessionsOnly();
@@ -497,7 +390,7 @@ class CursusController extends Controller
             $setRegistrations = $this->cursusManager->getSessionEventUsersByUserAndEventSet($user, $eventSet);
             $isSetAvailable = $limit > count($setRegistrations);
         }
-        if (!$disableRegistration && ($sessionEvent->getRegistrationType() === CourseSession::REGISTRATION_PUBLIC) && $isSetAvailable) {
+        if (!$disableRegistration && (CourseSession::REGISTRATION_PUBLIC === $sessionEvent->getRegistrationType()) && $isSetAvailable) {
             $results = $this->cursusManager->selfRegisterUserToSessionEvent($sessionEvent, $user);
         }
 
@@ -819,7 +712,7 @@ class CursusController extends Controller
                 ];
             }
 
-            if ($sessionUser->getUserType() === CourseSessionUser::TEACHER) {
+            if (CourseSessionUser::TEACHER === $sessionUser->getUserType()) {
                 $editableSessions[$session->getId()] = true;
             }
         }
@@ -945,13 +838,13 @@ class CursusController extends Controller
         $type = 0
     ) {
         $user = $this->tokenStorage->getToken()->getUser();
-        $isAnon = $user === 'anon.';
+        $isAnon = 'anon.' === $user;
         $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
         $extra = $config->getExtra();
-        $disableWs = intval($withWorkspace) === 0;
-        $allInfos = intval($type) === 0;
+        $disableWs = 0 === intval($withWorkspace);
+        $allInfos = 0 === intval($type);
 
-        if (intval($withWorkspace) === 1) {
+        if (1 === intval($withWorkspace)) {
             $disableClosedSessionsWs = isset($extra['disableClosedSessionsWs']) ? $extra['disableClosedSessionsWs'] : false;
             $disableUnstartedSessionsWs = isset($extra['disableUnstartedSessionsWs']) ? $extra['disableUnstartedSessionsWs'] : false;
             $now = new \DateTime();
@@ -980,7 +873,7 @@ class CursusController extends Controller
             'tutors' => $tutors,
             'workspace' => $session->getWorkspace(),
             'disableWs' => $disableWs,
-            'withMail' => intval($withMail) === 1,
+            'withMail' => 1 === intval($withMail),
             'sessionEventUsersStatus' => $sessionEventUsersStatus,
             'allInfos' => $allInfos,
         ];
@@ -1004,7 +897,7 @@ class CursusController extends Controller
             'location' => $sessionEvent->getLocation(),
             'locationExtra' => $sessionEvent->getLocationExtra(),
             'tutors' => $sessionEvent->getTutors(),
-            'withMail' => intval($withMail) === 1,
+            'withMail' => 1 === intval($withMail),
         ];
     }
 
@@ -1126,7 +1019,7 @@ class CursusController extends Controller
     public function coursesWidgetSessionEventSetRegistrationAction(WidgetInstance $widgetInstance, SessionEventSet $sessionEventSet)
     {
         $user = $this->tokenStorage->getToken()->getUser();
-        $eventUsers = $user !== 'anon.' ?
+        $eventUsers = 'anon.' !== $user ?
             $this->cursusManager->getSessionEventUsersByUserAndEventSet($user, $sessionEventSet) :
             [];
         $registrations = [];

@@ -30,3 +30,11 @@ claro_cursus_bundle_api_session_events_tool:
     resource: "@ClarolineCursusBundle/Controller/API/SessionEventsToolController.php"
     type:     annotation
     prefix:   /
+
+# JSON API
+claro_cursus_bundle_api:
+    resource: "@ClarolineCursusBundle/Controller/APINew/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

@@ -1,0 +1,38 @@
+{% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ 'claroline_cursus_tool' | trans({}, 'tools') }}
+{% endblock %}
+
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+{% block breadcrumb %}
+    {{ macros.breadcrumbs([
+    {
+        'name': 'administration'|trans({}, 'platform'),
+        'href': path('claro_admin_index')
+    },
+    {
+        'name': 'claroline_cursus_tool'|trans({}, 'tools'),
+        'href': ''
+    }
+    ]) }}
+{% endblock %}
+
+{% block content %}
+    <div class="panel-body">
+        <div class="alert alert-warning">
+            {{ 'tool_work_in_progress'|trans({}, 'platform') }}
+        </div>
+    </div>
+    {#<div#}
+        {#class="page-container cursus-container"#}
+        {#data-parameters="{{ parameters | json_encode | raw | escape }}"#}
+    {#>#}
+    {#</div>#}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript" src="{{ hotAsset('dist/claroline-distribution-plugin-cursus-management.js') }}"></script>
+{% endblock %}

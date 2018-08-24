@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The course uuid"
+    },
+    "title": {
+      "type": "string",
+      "description": "The course title",
+      "minLength": 1
+    },
+    "code": {
+      "type": "string",
+      "description": "The course code",
+      "minLength": 1
+    },
+    "description": {
+      "type": ["string", "null"],
+      "description": "The course description"
+    },
+    "meta": {
+      "type": ["object"],
+      "properties": {
+        "workspaceModel": {
+          "type": ["object", "null"],
+          "properties": {
+            "uuid": {
+              "type": "string",
+              "description": "The course workspace model"
+            }
+          }
+        },
+        "workspace": {
+          "type": ["object", "null"],
+          "properties": {
+            "uuid": {
+              "type": "string",
+              "description": "The course workspace"
+            }
+          }
+        },
+        "tutorRoleName": {
+          "type": ["string", "null"],
+          "description": "The course role for tutor"
+        },
+        "learnerRoleName": {
+          "type": ["string", "null"],
+          "description": "The course role for learner"
+        },
+        "icon": {
+          "type": ["string", "null"],
+          "description": "The course icon"
+        },
+        "defaultSessionDuration": {
+          "type": "integer",
+          "description": "The default duration in days of session"
+        },
+        "withSessionEvent": {
+          "type": "boolean",
+          "description": "Whether a default session event is created at session creation"
+        },
+        "order": {
+          "type": "integer",
+          "description": "The course display order"
+        }
+      },
+      "required": ["defaultSessionDuration", "withSessionEvent", "order"]
+    },
+    "restrictions": {
+      "type": "object",
+      "properties": {
+        "maxUsers": {
+          "type": ["integer", "null"],
+          "description": "The maximum amount of users the course can have"
+        }
+      }
+    },
+    "registration": {
+      "type": "object",
+      "properties": {
+        "publicRegistration": {
+          "type": "boolean"
+        },
+        "publicUnregistration": {
+          "type": "boolean"
+        },
+        "registrationValidation": {
+          "type": "boolean"
+        },
+        "userValidation": {
+          "type": "boolean"
+        },
+        "organizationValidation": {
+          "type": "boolean"
+        }
+      },
+      "required": ["publicRegistration", "publicUnregistration", "registrationValidation", "userValidation", "organizationValidation"]
+    }
+  },
+  "required": ["code", "title"],
+  "claroline": {
+    "ids": ["id", "code"]
+  }
+}

@@ -39,7 +39,7 @@ class Updater100000 extends Updater
         $allCursus = $cursusRepo->findAll();
 
         foreach ($allCursus as $cursus) {
-            if (count($cursus->getOrganizations()) === 0) {
+            if (0 === count($cursus->getOrganizations()->toArray())) {
                 $cursus->addOrganization($defaultOrganization);
                 $this->om->persist($cursus);
             }
@@ -49,7 +49,7 @@ class Updater100000 extends Updater
         $allCourses = $courseRepo->findAll();
 
         foreach ($allCourses as $course) {
-            if (count($course->getOrganizations()) === 0) {
+            if (0 === count($course->getOrganizations()->toArray())) {
                 $course->addOrganization($defaultOrganization);
                 $this->om->persist($course);
             }
