@@ -57,7 +57,7 @@
         "stof/doctrine-extensions-bundle": "1.3.0",
         "symfony/assetic-bundle": "2.8.2",
         "symfony/monolog-bundle": "3.2.0",
-        "symfony/symfony": "3.4.9",
+        "symfony/symfony": "3.4.14",
         "symfony/swiftmailer-bundle": "3.2.2",
         "twig/extensions": "1.5.1",
         "twig/twig": "2.4.8",
