@@ -40,7 +40,8 @@ registry.add('core', {
 
   widgets: {
     'list'  : () => { return import(/* webpackChunkName: "core-widget-list" */   '#/main/core/widget/types/list') },
-    'simple': () => { return import(/* webpackChunkName: "core-widget-simple" */ '#/main/core/widget/types/simple') }
+    'simple': () => { return import(/* webpackChunkName: "core-widget-simple" */ '#/main/core/widget/types/simple') },
+    'resource': () => { return import(/* webpackChunkName: "core-widget-resource" */ '#/main/core/widget/types/resource') }
   },
 
   data: {
@@ -58,8 +59,8 @@ registry.add('core', {
   questions: {
 
   },
-  
+
   tinymcePlugins: {
-  
+
   }
 })

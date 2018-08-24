@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
@@ -18,25 +18,9 @@ import {WidgetContentForm} from '#/main/core/widget/content/components/form'
 import {WidgetInstance as WidgetInstanceTypes} from '#/main/core/widget/content/prop-types'
 import {selectors} from '#/main/core/widget/content/modals/creation/store'
 
-class ContentCreationModal extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      currentStep: 'widget'
-    }
-
-    this.changeStep = this.changeStep.bind(this)
-  }
-
-  changeStep(step) {
-    this.setState({
-      currentStep: step
-    })
-  }
-
-  renderStepTitle() {
-    switch(this.state.currentStep) {
+const ContentCreationModal = props => {
+  const renderStepTitle = () => {
+    switch(props.currentStep) {
       case 'widget':
         return trans('new_widget_select', {}, 'widget')
       case 'dataSource':
@@ -46,20 +30,20 @@ class ContentCreationModal extends Component {
     }
   }
 
-  renderStep() {
-    switch(this.state.currentStep) {
+  const renderStep = () => {
+    switch(props.currentStep) {
       case 'widget':
         return (
           <ContentType
-            availableTypes={this.props.availableTypes}
+            availableTypes={props.availableTypes}
             select={(widget) => {
-              this.props.update('type', widget.name)
+              props.update('type', widget.name)
 
               if (0 !== widget.sources.length) {
                 // we need to configure the data source first
-                this.changeStep('dataSource')
+                props.changeStep('dataSource')
               } else {
-                this.changeStep('parameters')
+                props.changeStep('parameters')
               }
             }}
           />
@@ -67,10 +51,10 @@ class ContentCreationModal extends Component {
       case 'dataSource':
         return (
           <ContentSource
-            sources={this.props.availableSources}
+            sources={props.availableSources}
             select={(dataSource) => {
-              this.props.update('source', dataSource.name)
-              this.changeStep('parameters')
+              props.update('source', dataSource.name)
+              props.changeStep('parameters')
             }}
           />
         )
@@ -81,44 +65,42 @@ class ContentCreationModal extends Component {
     }
   }
 
-  close() {
-    this.props.fadeModal()
-    this.changeStep('widget')
-    this.props.reset()
+  const close = () => {
+    props.fadeModal()
+    props.changeStep('widget')
+    props.reset()
   }
 
-  render() {
-    return (
-      <Modal
-        {...omit(this.props, 'context', 'add', 'instance', 'saveEnabled', 'availableTypes', 'availableSources', 'fetchContents', 'update', 'reset')}
-        icon="fa fa-fw fa-plus"
-        title={trans('new_widget', {}, 'widget')}
-        subtitle={this.renderStepTitle()}
-        onEntering={() => {
-          if (0 === this.props.availableTypes.length) {
-            this.props.fetchContents(this.props.context)
-          }
-        }}
-        fadeModal={() => this.close()}
-      >
-        {this.renderStep()}
+  return (
+    <Modal
+      {...omit(props, 'context', 'add', 'instance', 'saveEnabled', 'availableTypes', 'availableSources', 'fetchContents', 'update', 'reset', 'currentStep', 'changeStep')}
+      icon="fa fa-fw fa-plus"
+      title={trans('new_widget')}
+      subtitle={renderStepTitle()}
+      onEntering={() => {
+        if (0 === props.availableTypes.length) {
+          props.fetchContents(props.context)
+        }
+      }}
+      fadeModal={() => close()}
+    >
+      {renderStep()}
 
-        {'parameters' === this.state.currentStep &&
+      {'parameters' === props.currentStep &&
           <Button
             className="modal-btn btn"
             type={CALLBACK_BUTTON}
             primary={true}
-            disabled={!this.props.saveEnabled}
+            disabled={!props.saveEnabled}
             label={trans('add', {}, 'actions')}
             callback={() => {
-              this.props.add(this.props.instance)
-              this.close()
+              props.add(props.instance)
+              close()
             }}
           />
-        }
-      </Modal>
-    )
-  }
+      }
+    </Modal>
+  )
 }
 
 ContentCreationModal.propTypes = {
@@ -139,7 +121,9 @@ ContentCreationModal.propTypes = {
   )).isRequired,
   fetchContents: T.func.isRequired,
   update: T.func.isRequired,
-  reset: T.func.isRequired
+  reset: T.func.isRequired,
+  currentStep: T.string.isRequired,
+  changeStep: T.func.isRequired
 }
 
 export {

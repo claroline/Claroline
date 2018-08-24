@@ -11,11 +11,16 @@ const ContentCreationModal = withReducer(selectors.STORE_NAME, reducer)(
       availableTypes: selectors.availableWidgets(state),
       availableSources: selectors.availableSources(state),
       saveEnabled: selectors.saveEnabled(state),
-      instance: selectors.instance(state)
+      instance: selectors.instance(state),
+      currentStep: selectors.currentStep(state)
     }),
     (dispatch) => ({
       fetchContents(context) {
         dispatch(actions.fetchContents(context.type))
+      },
+
+      changeStep(stepName) {
+        dispatch(actions.setStep(stepName))
       },
 
       update(prop, value) {
