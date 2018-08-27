@@ -45,7 +45,14 @@ class Updater120000 extends Updater
         $tableManager = $this->container->get('claroline.persistence.table_manager');
         $tableManager->setLogger($this->logger);
 
-        $toCopy = ['claro_home_tab', 'claro_widget_instance'];
+        $toCopy = [
+          'claro_home_tab',
+          'claro_widget_instance',
+          'claro_widget_display_config',
+          'claro_widget_home_tab_config',
+          'claro_simple_text_widget_config',
+          'claro_widget',
+        ];
 
         foreach ($toCopy as $table) {
             $tableManager->copy($table);
@@ -77,13 +84,22 @@ class Updater120000 extends Updater
         $this->updateWidgetsStructure();
         $this->restoreWidgetInstancesConfigs();
         $this->checkDesktopTabs();
+        $this->updateWidgetInstanceConfigType();
         $this->deactivateActivityResourceType();
     }
 
     private function updateHomeTabType()
     {
         $this->log('Updating hometab types...');
-        $sql = 'UPDATE claro_home_tab SET type = "administration" WHERE type LIKE "admin_desktop"';
+        $sql = 'UPDATE claro_home_tab SET type = "administration" WHERE type LIKE "admin_desktop" OR type LIKE "admin"';
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+    }
+
+    private function updateWidgetInstanceConfigType()
+    {
+        $this->log('Updating hometab types...');
+        $sql = 'UPDATE claro_widget_instance_config SET type = "administration" WHERE type LIKE "admin_desktop" OR type LIKE "admin"';
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
     }
@@ -138,7 +154,7 @@ class Updater120000 extends Updater
             $this->log('WidgetContainer migration.');
             $sql = '
                 INSERT INTO claro_widget_container (id, uuid)
-                SELECT id, (SELECT UUID()) as uuid FROM claro_widget_display_config';
+                SELECT id, (SELECT UUID()) as uuid FROM claro_widget_display_config_temp';
 
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
@@ -154,31 +170,41 @@ class Updater120000 extends Updater
                 FROM claro_widget_container container
                 LEFT JOIN claro_widget_instance instance ON instance.container_id = container.id
                 LEFT JOIN claro_widget_instance_temp instance_temp ON instance_temp.id = instance.id
-                LEFT JOIN claro_widget_display_config temp ON temp.widget_instance_id = instance_temp.id";
+                LEFT JOIN claro_widget_display_config_temp temp ON temp.widget_instance_id = instance_temp.id";
 
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
         }
 
-        $this->log('Link container to home tab.');
-        $sql =
-          '
-            UPDATE claro_widget_container container
-            LEFT JOIN claro_widget_home_tab_config htc ON htc.id = container.id
-            LEFT JOIN claro_home_tab tab ON tab.id = htc.home_tab_id
-            LEFT JOIN claro_widget_instance instance ON instance.id = htc.widget_instance_id
-            SET container.homeTab_id = tab.id
-          ';
+        if (count($this->om->getRepository(SimpleWidget::class)->findAll()) > 0) {
+            $this->log('SimpleTextWidget already migrated');
+        } else {
+            $this->log('Migrating SimpleTextWidget to SimpleWidget...');
 
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute();
+            $widget = $this->om->getRepository(Widget::class)->findOneBy(['name' => 'simple']);
+
+            $sql = "
+                INSERT INTO claro_widget_instance (id, widget_id, uuid)
+                SELECT instance_temp.id, {$widget->getId()}, (SELECT UUID()) as uuid from claro_widget_instance_temp instance_temp
+                JOIN claro_widget_temp widget_temp ON instance_temp.widget_id = widget_temp.id
+                WHERE widget_temp.name = 'simple_text'
+            ";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+
+            $sql = '
+              INSERT INTO claro_widget_simple (id, content, widgetInstance_id)
+              SELECT id, content, widgetInstance_id from claro_simple_text_widget_config_temp';
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+        }
 
         $this->log('Link instances to container.');
 
         $sql =
           '
             UPDATE claro_widget_instance instance
-            LEFT JOIN claro_widget_display_config wdc ON wdc.widget_instance_id = instance.id
+            LEFT JOIN claro_widget_display_config_temp wdc ON wdc.widget_instance_id = instance.id
             LEFT JOIN claro_widget_container container ON container.id = wdc.id
             SET instance.container_id = container.id
           ';
@@ -186,29 +212,17 @@ class Updater120000 extends Updater
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
 
-        if (count($this->om->getRepository(SimpleWidget::class)->findAll()) > 0) {
-            $this->log('SimpleTextWidget already migrated');
-        } else {
-            $this->log('Migrating SimpleTextWidget to SimpleWidget...');
+        $this->log('Link container to home tab.');
+        $sql =
+          '
+            UPDATE claro_widget_container container
+            LEFT JOIN claro_widget_display_config_temp wtc ON wtc.id = container.id
+            LEFT JOIN claro_widget_home_tab_config_temp htc ON wtc.widget_instance_id = htc.widget_instance_id
+            SET container.homeTab_id = htc.home_tab_id
+          ';
 
-            $sql = '
-              INSERT INTO claro_widget_simple (id, content, widgetInstance_id)
-              SELECT id, content, widgetInstance_id from claro_simple_text_widget_config';
-            $stmt = $this->conn->prepare($sql);
-            $stmt->execute();
-
-            $widget = $this->om->getRepository(Widget::class)->findOneBy(['name' => 'simple']);
-
-            $sql = "
-              UPDATE claro_widget_instance instance
-              LEFT JOIN claro_widget widget
-              ON instance.widget_id = widget.id
-              SET instance.widget_id = {$widget->getId()}
-              WHERE widget.name LIKE 'simple_text'"
-            ;
-            $stmt = $this->conn->prepare($sql);
-            $stmt->execute();
-        }
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
     }
 
     private function checkDesktopTabs()
@@ -242,8 +256,10 @@ class Updater120000 extends Updater
             $this->log('Copying WidgetInsanceConfigs');
 
             $sql = '
-              INSERT INTO claro_widget_instance_config (id, widget_instance_id, workspace_id, widget_order, type, is_visible, is_locked)
-              SELECT id, widget_instance_id, workspace_id, widget_order, type, is_visible, is_locked from claro_widget_home_tab_config';
+                INSERT INTO claro_widget_instance_config (id, widget_instance_id, workspace_id, widget_order, type, is_visible, is_locked)
+                SELECT temp.id, temp.widget_instance_id, temp.workspace_id, temp.widget_order, temp.type, temp.is_visible, temp.is_locked from claro_widget_home_tab_config_temp temp
+                JOIN claro_widget_instance instance on instance.id = temp.widget_instance_id
+            ';
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
 
