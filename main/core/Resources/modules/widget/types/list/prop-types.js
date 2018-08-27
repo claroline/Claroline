@@ -8,11 +8,21 @@ const ListWidgetParameters = {
   propTypes: {
     display: T.string,
     availableDisplays: T.arrayOf(T.string),
+
     filterable: T.bool,
+    filters: T.arrayOf(T.shape({
+      property: T.string.isRequired,
+      value: T.any,
+      locked: T.bool
+    })),
+    availableFilters: T.arrayOf(T.string),
+
     sortable: T.bool,
+
     paginated: T.bool,
     pageSize: T.number,
-    defaultFilters: T.array,
+    availablePageSizes: T.arrayOf(T.number),
+
     availableColumns: T.array
   },
   defaultProps: {
@@ -28,7 +38,8 @@ const ListWidgetParameters = {
     filterable: listConstants.DEFAULT_FEATURES.filterable,
     sortable: listConstants.DEFAULT_FEATURES.sortable,
     paginated: listConstants.DEFAULT_FEATURES.paginated,
-    pageSize: listConstants.DEFAULT_PAGE_SIZE
+    pageSize: listConstants.DEFAULT_PAGE_SIZE,
+    availablePageSizes: listConstants.AVAILABLE_PAGE_SIZES
   }
 }
 

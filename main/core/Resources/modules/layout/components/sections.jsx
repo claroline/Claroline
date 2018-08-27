@@ -19,7 +19,7 @@ import {Heading} from '#/main/core/layout/components/heading'
  */
 const Section = props =>
   <Panel
-    {...omit(props, ['level', 'displayLevel', 'title', 'icon', 'actions', 'children'])}
+    {...omit(props, ['level', 'displayLevel', 'title', 'subtitle', 'icon', 'actions', 'children'])}
     collapsible={true}
     expanded={props.disabled ? false : props.expanded}
     className={classes(props.className, {
@@ -42,6 +42,9 @@ const Section = props =>
         />
 
         {props.title}
+        {props.subtitle &&
+          <small>{props.subtitle}</small>
+        }
 
         {0 !== props.actions.length &&
           <div className="panel-actions">
@@ -68,6 +71,7 @@ Section.propTypes = {
   displayLevel: T.number,
   icon: T.string,
   title: T.string.isRequired,
+  subtitle: T.string,
   expanded: T.bool,
   disabled: T.bool,
   actions: T.arrayOf(T.shape(

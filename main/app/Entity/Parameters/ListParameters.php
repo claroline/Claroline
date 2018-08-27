@@ -11,21 +11,35 @@ trait ListParameters
      *
      * @var bool
      */
-    private $filterable = true;
+    private $filterable = false;
 
     /**
      * @ORM\Column(type="boolean")
      *
      * @var bool
      */
-    private $sortable = true;
+    private $sortable = false;
 
     /**
      * @ORM\Column(type="boolean")
      *
      * @var bool
      */
-    private $paginated = true;
+    private $paginated = false;
+
+    /**
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    private $columnsFilterable = false;
+
+    /**
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    private $count = false;
 
     /**
      * @ORM\Column(nullable=true)
@@ -40,6 +54,13 @@ trait ListParameters
      * @var int
      */
     private $pageSize = 20;
+
+    /**
+     * @ORM\Column(type="json_array")
+     *
+     * @var array
+     */
+    private $availablePageSizes = [10, 20, 50, 100, -1];
 
     /**
      * @ORM\Column()
@@ -67,6 +88,13 @@ trait ListParameters
      *
      * @var array
      */
+    private $availableFilters = [];
+
+    /**
+     * @ORM\Column(type="json_array")
+     *
+     * @var array
+     */
     private $availableColumns = [];
 
     /**
@@ -81,7 +109,7 @@ trait ListParameters
      *
      * @return bool
      */
-    public function isFilterable()
+    public function isFilterable(): bool
     {
         return $this->filterable;
     }
@@ -101,7 +129,7 @@ trait ListParameters
      *
      * @return bool
      */
-    public function isSortable()
+    public function isSortable(): bool
     {
         return $this->sortable;
     }
@@ -121,7 +149,7 @@ trait ListParameters
      *
      * @return bool
      */
-    public function isPaginated()
+    public function isPaginated(): bool
     {
         return $this->paginated;
     }
@@ -134,6 +162,38 @@ trait ListParameters
     public function setPaginated($paginated)
     {
         $this->paginated = $paginated;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isColumnsFilterable()
+    {
+        return $this->columnsFilterable;
+    }
+
+    /**
+     * @param bool $columnsFilterable
+     */
+    public function setColumnsFilterable($columnsFilterable)
+    {
+        $this->columnsFilterable = $columnsFilterable;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getCount()
+    {
+        return $this->count;
+    }
+
+    /**
+     * @param bool $count
+     */
+    public function setCount($count)
+    {
+        $this->count = $count;
     }
 
     /**
@@ -179,11 +239,31 @@ trait ListParameters
     /**
      * Get display.
      *
-     * @return array
+     * @return string
      */
     public function getDisplay()
     {
         return $this->display;
+    }
+
+    /**
+     * Get available page sizes.
+     *
+     * @return array
+     */
+    public function getAvailablePageSizes()
+    {
+        return $this->availablePageSizes;
+    }
+
+    /**
+     * Set available page sizes.
+     *
+     * @param array $availablePageSizes
+     */
+    public function setAvailablePageSizes(array $availablePageSizes)
+    {
+        $this->availablePageSizes = $availablePageSizes;
     }
 
     /**
@@ -207,7 +287,7 @@ trait ListParameters
     }
 
     /**
-     * Set available display.
+     * Set available displays.
      *
      * @param array $availableDisplays
      */
@@ -237,6 +317,26 @@ trait ListParameters
     }
 
     /**
+     * Get available filters.
+     *
+     * @return array
+     */
+    public function getAvailableFilters()
+    {
+        return $this->availableFilters;
+    }
+
+    /**
+     * Set available filters.
+     *
+     * @param array $availableFilters
+     */
+    public function setAvailableFilters(array $availableFilters)
+    {
+        $this->availableFilters = $availableFilters;
+    }
+
+    /**
      * Get available columns.
      *
      * @return array
@@ -247,6 +347,16 @@ trait ListParameters
     }
 
     /**
+     * Set available columns.
+     *
+     * @param array $availableColumns
+     */
+    public function setAvailableColumns(array $availableColumns)
+    {
+        $this->availableColumns = $availableColumns;
+    }
+
+    /**
      * Get displayed columns.
      *
      * @return array
@@ -254,5 +364,15 @@ trait ListParameters
     public function getDisplayedColumns()
     {
         return $this->displayedColumns;
+    }
+
+    /**
+     * Set displayed columns.
+     *
+     * @param array $displayedColumns
+     */
+    public function setDisplayedColumns(array $displayedColumns)
+    {
+        $this->displayedColumns = $displayedColumns;
     }
 }

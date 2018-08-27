@@ -7,7 +7,7 @@ export const ErrorBlock = ({text, inGroup, warnOnly}) =>
     'error-block-warning': !inGroup && warnOnly,
     'error-block-danger': !inGroup && !warnOnly
   })}>
-    <span className={classes('fa fa-fw', warnOnly ? 'fa-clock-o' : 'fa-warning')}/>
+    <span className={classes('fa fa-fw icon-with-text-right', warnOnly ? 'fa-clock-o' : 'fa-warning')}/>
     {text}
   </span>
 

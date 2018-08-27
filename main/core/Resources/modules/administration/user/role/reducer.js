@@ -8,9 +8,7 @@ import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 import {PLATFORM_ROLE} from '#/main/core/user/role/constants'
 
 const reducer = combineReducers({
-  picker: makeListReducer('roles.picker', {
-    filters: []
-  }),
+  picker: makeListReducer('roles.picker'),
   list: makeListReducer('roles.list', {
     filters: [{property: 'type', value: PLATFORM_ROLE}]
   }, {

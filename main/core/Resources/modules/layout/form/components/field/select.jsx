@@ -8,7 +8,7 @@ const getSelectedValues = (e) => {
 
   for (let i = 0; i < e.target.options.length; i++) {
     if (e.target.options[i].selected) {
-      values.push(e.target.options[i].value)
+      values.push(!isNaN(e.target.options[i].value) ? parseFloat(e.target.options[i].value) : e.target.options[i].value)
     }
   }
 
@@ -19,9 +19,12 @@ const Select = props =>
   <select
     id={props.id}
     className="form-control"
-    value={props.value}
+    value={props.value || ''}
     disabled={props.disabled}
-    onChange={e => props.multiple ? props.onChange(getSelectedValues(e)) : props.onChange(e.target.value)}
+    onChange={e => props.multiple ?
+      props.onChange(getSelectedValues(e)) :
+      props.onChange(!isNaN(e.target.value) ? parseFloat(e.target.value) : e.target.value)
+    }
     multiple={props.multiple}
   >
     {!props.multiple && !props.noEmpty &&

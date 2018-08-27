@@ -4,20 +4,13 @@ import classes from 'classnames'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
-const getCheckedValues = (e) => {
-  const values = []
-  document.querySelectorAll(`input[type=checkbox][name="${e.target.name}"]:checked`).forEach(c => values.push(c.value))
-
-  return values
-}
+const parseValue = (value) => !isNaN(value) ? parseFloat(value) : value
 
 /**
  * Renders a list of radios checkbox inputs.
  */
 const Checkboxes = props =>
-  <fieldset
-    onChange={e => props.onChange(getCheckedValues(e))}
-  >
+  <fieldset>
     {Object.keys(props.choices).map(choiceValue =>
       <div
         key={choiceValue}
@@ -31,9 +24,19 @@ const Checkboxes = props =>
             type="checkbox"
             name={`${props.id}[]`}
             value={choiceValue}
-            checked={-1 !== props.value.indexOf(choiceValue)}
+            checked={props.value ? -1 !== props.value.indexOf(parseValue(choiceValue)) : false}
             disabled={props.disabled}
-            onChange={() => {}}
+            onChange={(e) => {
+              let value = [].concat(props.value || [])
+
+              if (e.target.checked) {
+                value.push(parseValue(choiceValue))
+              } else {
+                value.splice(value.indexOf(parseValue(choiceValue)), 1)
+              }
+
+              props.onChange(value)
+            }}
           />
 
           {props.choices[choiceValue]}

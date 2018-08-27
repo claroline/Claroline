@@ -35,7 +35,7 @@ const ContentCreationModal = props => {
       case 'widget':
         return (
           <ContentType
-            availableTypes={props.availableTypes}
+            types={props.availableTypes}
             select={(widget) => {
               props.update('type', widget.name)
 
@@ -75,7 +75,7 @@ const ContentCreationModal = props => {
     <Modal
       {...omit(props, 'context', 'add', 'instance', 'saveEnabled', 'availableTypes', 'availableSources', 'fetchContents', 'update', 'reset', 'currentStep', 'changeStep')}
       icon="fa fa-fw fa-plus"
-      title={trans('new_widget')}
+      title={trans('new_widget', {}, 'widget')}
       subtitle={renderStepTitle()}
       onEntering={() => {
         if (0 === props.availableTypes.length) {

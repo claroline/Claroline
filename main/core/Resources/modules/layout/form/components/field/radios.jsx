@@ -4,6 +4,8 @@ import classes from 'classnames'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
+const parseValue = (value) => !isNaN(value) ? parseFloat(value) : value
+
 /**
  * Renders a list of radio inputs.
  */
@@ -22,9 +24,9 @@ const Radios = props =>
             type="radio"
             name={props.id}
             value={choiceValue}
-            checked={choiceValue === props.value}
+            checked={parseValue(choiceValue) === props.value}
             disabled={props.disabled}
-            onChange={() => props.onChange(choiceValue)}
+            onChange={() => props.onChange(parseValue(choiceValue))}
           />
 
           {props.choices[choiceValue]}

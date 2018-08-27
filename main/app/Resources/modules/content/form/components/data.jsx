@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
-import {trans} from '#/main/core/translation'
 import {toKey} from '#/main/core/scaffolding/text/utils'
 
 import {Heading} from '#/main/core/layout/components/heading'
@@ -23,7 +22,7 @@ const AdvancedSection = props =>
     hideText={props.hideText}
   >
     {props.fields.map(field =>
-      <FormField
+      <FormProp
         key={field.name}
         {...field}
       />
@@ -138,6 +137,7 @@ class FormData extends Component {
                 key={toKey(section.title)}
                 icon={section.icon}
                 title={section.title}
+                subtitle={section.subtitle}
                 errors={this.props.errors}
                 validating={this.props.validating}
               >

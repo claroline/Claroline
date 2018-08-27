@@ -178,27 +178,27 @@ class ListData extends Component {
         />
 
         {0 !== this.props.totalResults &&
-        React.createElement(listConst.DISPLAY_MODES[this.state.display.current].component, Object.assign({},
-          listConst.DISPLAY_MODES[this.state.display.current].options,
-          {
-            data:          this.props.data,
-            count:         this.props.totalResults,
-            columns:       this.state.definition.filter(prop => -1 !== this.state.currentColumns.indexOf(prop.name)),
-            sorting:       this.props.sorting,
-            selection:     this.props.selection,
-            primaryAction: this.props.primaryAction,
-            actions:       this.props.actions,
-            card:          this.props.card
-          }
-        ))
+          React.createElement(listConst.DISPLAY_MODES[this.state.display.current].component, Object.assign({},
+            listConst.DISPLAY_MODES[this.state.display.current].options,
+            {
+              data:          this.props.data,
+              count:         this.props.totalResults,
+              columns:       this.state.definition.filter(prop => -1 !== this.state.currentColumns.indexOf(prop.name)),
+              sorting:       this.props.sorting,
+              selection:     this.props.selection,
+              primaryAction: this.props.primaryAction,
+              actions:       this.props.actions,
+              card:          this.props.card
+            }
+          ))
         }
 
         {0 !== this.props.totalResults &&
-        <ListFooter totalResults={this.props.totalResults} pagination={this.props.pagination} />
+          <ListFooter totalResults={this.props.totalResults} pagination={this.props.pagination} />
         }
 
         {0 === this.props.totalResults &&
-        <ListEmpty hasFilters={this.props.filters && 0 < this.props.filters.current.length} />
+          <ListEmpty hasFilters={this.props.filters && 0 < this.props.filters.current.length} />
         }
       </div>
     )

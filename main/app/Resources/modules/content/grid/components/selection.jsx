@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+
+import isEqual from 'lodash/isEqual'
 import uniq from 'lodash/uniq'
 
 import {trans} from '#/main/core/translation'
@@ -38,11 +40,19 @@ class GridSelection extends Component {
     super(props)
 
     this.state = {
-      currentGroup: trans('all'),
+      currentGroup: props.tag || trans('all'),
       currentType: props.items[0]
     }
 
     this.changeGroup = this.changeGroup.bind(this)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (0 === this.props.items.length && 0 < nextProps.items.length) {
+      this.setState({
+        currentType: nextProps.items[0]
+      })
+    }
   }
 
   handleItemMouseOver(type) {
@@ -83,7 +93,7 @@ class GridSelection extends Component {
               <CallbackButton
                 key={`type-${index}`}
                 className={classes('type-entry', {
-                  selected: this.state.currentType === type
+                  selected: isEqual(this.state.currentType, type)
                 })}
                 role="option"
                 onMouseOver={() => this.handleItemMouseOver(type)}
@@ -117,6 +127,7 @@ class GridSelection extends Component {
 }
 
 GridSelection.propTypes = {
+  tag: T.string,
   items: T.arrayOf(T.shape({
     label: T.string.isRequired,
     icon: T.node.isRequired, // either a FontAwesome class string or a custom icon component

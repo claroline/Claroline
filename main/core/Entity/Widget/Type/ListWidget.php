@@ -16,4 +16,21 @@ use Doctrine\ORM\Mapping as ORM;
 class ListWidget extends AbstractWidget
 {
     use ListParameters;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     *
+     * @var int
+     */
+    private $maxResults;
+
+    public function getMaxResults()
+    {
+        return $this->maxResults;
+    }
+
+    public function setMaxResults($maxResults)
+    {
+        $this->maxResults = $maxResults;
+    }
 }

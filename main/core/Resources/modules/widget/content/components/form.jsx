@@ -8,6 +8,7 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
 
 import {getWidget} from '#/main/core/widget/types'
+import {WidgetContentType, WidgetSourceType} from '#/main/core/widget/content/components/type'
 import {WidgetInstance as WidgetInstanceTypes} from '#/main/core/widget/content/prop-types'
 
 class WidgetContentFormComponent extends Component {
@@ -34,23 +35,34 @@ class WidgetContentFormComponent extends Component {
             fields: [
               {
                 name: 'type',
-                type: 'translation',
+                type: 'string',
                 label: trans('widget'),
-                readOnly: true,
                 hideLabel: true,
-                options: {
-                  domain: 'widget'
-                }
-              }, {
-                name: 'source',
-                type: 'translation',
-                label: trans('data_source'),
-                readOnly: true,
-                hideLabel: true,
-                displayed: (content) => !!content.source,
-                options: {
-                  domain: 'data_sources'
-                }
+                render: (widgetInstance) => {
+                  const ContentType =
+                    <WidgetContentType
+                      {...widgetInstance}
+                    />
+
+                  return ContentType
+                },
+                linked: [
+                  {
+                    name: 'source',
+                    type: 'string',
+                    label: trans('data_source'),
+                    displayed: !!this.props.instance.source,
+                    hideLabel: true,
+                    render: (widgetInstance) => {
+                      const SourceType =
+                        <WidgetSourceType
+                          {...widgetInstance}
+                        />
+
+                      return SourceType
+                    }
+                  }
+                ]
               }
             ]
           }
