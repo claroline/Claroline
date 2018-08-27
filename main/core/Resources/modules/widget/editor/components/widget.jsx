@@ -52,6 +52,14 @@ const WidgetCol = props =>
           callback={() => props.stopMovingContent()}
         />
         }
+        <Button
+          className="btn-link"
+          type="callback"
+          icon="fa fa-fw fa-trash-o"
+          label={trans('delete', {}, 'actions')}
+          dangerous={true}
+          callback={() => props.deleteContent(props.content)}
+        />
       </div>
     }
     {props.content &&
@@ -95,6 +103,7 @@ WidgetCol.propTypes = {
   moveContent: T.func.isRequired,
   startMovingContent: T.func.isRequired,
   stopMovingContent:T.func.isRequired,
+  deleteContent:T.func.isRequired,
   isMoving: T.string
 }
 
@@ -137,6 +146,13 @@ const WidgetEditor = props =>
               widget.contents[col] = newContent
               // propagate change
               props.update(widget)
+            }}
+            deleteContent={(content) => {
+              const widgets = cloneDeep(props.widget)
+              const contentIndex = widgets.contents.findIndex(widget => widget.id === content.id)
+              // removes the content to delete and replace by null
+              widgets.contents[contentIndex] = null
+              props.update(widgets)
             }}
             startMovingContent={props.startMovingContent}
             moveContent={(movingContentId) => props.moveContent(movingContentId, props.widget.id, col)}

@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\API\Serializer\Widget;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Finder\Home\WidgetInstanceFinder;
 use Claroline\CoreBundle\Entity\Widget\WidgetContainer;
 use Claroline\CoreBundle\Entity\Widget\WidgetContainerConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
@@ -28,8 +29,9 @@ class WidgetContainerSerializer
      * WidgetContainerSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.api.serializer"),
-     *    "om"          = @DI\Inject("claroline.persistence.object_manager")
+     *     "serializer"           = @DI\Inject("claroline.api.serializer"),
+     *     "om"                   = @DI\Inject("claroline.persistence.object_manager"),
+     *     "widgetInstanceFinder" = @DI\Inject("claroline.api.finder.widget_instance")
      * })
      *
      * @param ObjectManager      $om
@@ -37,9 +39,11 @@ class WidgetContainerSerializer
      */
     public function __construct(
         ObjectManager $om,
-        SerializerProvider $serializer
+        SerializerProvider $serializer,
+        WidgetInstanceFinder $widgetInstanceFinder
     ) {
         $this->om = $om;
+        $this->widgetInstanceFinder = $widgetInstanceFinder;
         $this->serializer = $serializer;
     }
 
@@ -126,6 +130,8 @@ class WidgetContainerSerializer
             $this->sipe('display.background', 'setBackground', $data, $widgetContainerConfig);
         }
 
+        $instanceIds = [];
+
         if (isset($data['contents'])) {
             foreach ($data['contents'] as $index => $content) {
                 if ($content) {
@@ -138,11 +144,20 @@ class WidgetContainerSerializer
                     // We either do this or cascade persist ¯\_(ツ)_/¯
                     $this->om->persist($widgetInstance);
                     $this->om->persist($widgetInstanceConfig);
+
+                    $instanceIds[] = $widgetInstance->getUuid();
                 }
             }
         }
 
-        // todo : remove superfluous (or maybe not it looks ok as is)
+        //readytoremove
+        $instances = $this->widgetInstanceFinder->find(['container' => $widgetContainer->getUuid()]);
+
+        foreach ($instances as $instance) {
+            if (!in_array($instance->getUuid(), $instanceIds)) {
+                $this->om->remove($instance);
+            }
+        }
 
         return $widgetContainer;
     }

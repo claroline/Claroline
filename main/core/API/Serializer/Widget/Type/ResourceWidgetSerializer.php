@@ -54,16 +54,16 @@ class ResourceWidgetSerializer
     public function serialize(ResourceWidget $widget, array $options = []): array
     {
         return [
-            'resourceNode' => $widget->getResourceNode() ? $this->nodeSerializer->serialize($widget->getResourceNode(), [Options::SERIALIZE_MINIMAL]) : null,
+            'resource' => $widget->getResourceNode() ? $this->nodeSerializer->serialize($widget->getResourceNode(), [Options::SERIALIZE_MINIMAL]) : null,
         ];
     }
 
     public function deserialize($data, ResourceWidget $widget, array $options = []): ResourceWidget
     {
-        if (isset($data['resourceNode'])) {
+        if (isset($data['resource'])) {
             $resourceNode = $this->om
                 ->getRepository(ResourceNode::class)
-                ->findOneBy(['uuid' => $data['resourceNode']['id']]);
+                ->findOneBy(['uuid' => $data['resource']['id']]);
 
             if ($resourceNode) {
                 $widget->setResourceNode($resourceNode);
