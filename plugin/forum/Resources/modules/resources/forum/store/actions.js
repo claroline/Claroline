@@ -20,7 +20,7 @@ actions.fetchLastMessages = (forum) => ({
 })
 
 
-actions.validateMessage = (message, subjectId) => ({
+actions.validatePost = (message, subjectId, formName) => ({
   [API_REQUEST]: {
     url: ['apiv2_forum_subject_message_update', {message: message.id, subject: subjectId}],
     request: {
@@ -28,7 +28,7 @@ actions.validateMessage = (message, subjectId) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData(select.STORE_NAME+'.moderation.blockedMessages'))
+      dispatch(listActions.invalidateData(select.STORE_NAME+formName))
     }
   }
 })

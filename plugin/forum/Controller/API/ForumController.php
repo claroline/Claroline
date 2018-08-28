@@ -51,7 +51,7 @@ class ForumController extends AbstractCrudController
         return new JsonResponse(
             $this->finder->search('Claroline\ForumBundle\Entity\Subject', array_merge(
                 $request->query->all(),
-                ['hiddenFilters' => ['forum' => [$id]]]
+                ['hiddenFilters' => ['forum' => [$id], 'moderation' => Forum::VALIDATE_NONE]]
             ))
         );
     }

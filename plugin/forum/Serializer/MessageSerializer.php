@@ -122,7 +122,6 @@ class MessageSerializer
                 $message->setParent($parent);
             }
         }
-
         $this->sipe('meta.flagged', 'setFlagged', $data, $message);
         $this->sipe('meta.moderation', 'setModerated', $data, $message);
 

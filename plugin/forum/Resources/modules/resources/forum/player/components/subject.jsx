@@ -55,8 +55,9 @@ class SubjectComponent extends Component {
 
   createMessage(subjectId, content) {
     this.props.createMessage(subjectId, content, this.props.forum.moderation)
-    if (this.props.forum.moderation === 'PRIOR_ALL' ||
-    this.props.forum.moderation === 'PRIOR_ONCE' ) {
+    if (!this.props.moderator &&
+      this.props.forum.moderation === 'PRIOR_ALL' ||
+    this.props.forum.moderation === 'PRIOR_ONCE') {
       this.props.showModal(MODAL_ALERT, {
         title: trans('moderated_posts', {}, 'forum'),
         message: trans('moderated_posts_explanation', {}, 'forum'),
@@ -123,7 +124,6 @@ class SubjectComponent extends Component {
                     <span> {transChoice('moderated_posts_count', this.props.moderatedMessages.length, {count: this.props.moderatedMessages.length}, 'forum')}</span>
                   }
                 </small>
-
               </h3>
             }
             {(this.props.showSubjectForm && this.props.editingSubject) &&
@@ -320,8 +320,10 @@ SubjectComponent.propTypes = {
 }
 
 SubjectComponent.defaultProps = {
+  bannedUser: true,
   moderatedMessages: []
 }
+
 const Subject =  withRouter(withModal(connect(
   state => ({
     forum: select.forum(state),

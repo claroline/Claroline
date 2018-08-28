@@ -104,6 +104,7 @@ OverviewComponent.propTypes = {
 }
 
 OverviewComponent.defaultProps = {
+  bannedUser: true,
   lastMessages: []
 }
 

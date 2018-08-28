@@ -47,10 +47,10 @@ const ForumResource = props =>
       }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-gavel',
-        label: trans('moderated_posts', {}, 'forum'),
+        label: trans('blocked_messages_subjects', {}, 'forum'),
         group: trans('moderation', {}, 'forum'),
         displayed: !!get(props.forum, 'restrictions.moderator'),
-        target: '/moderation/blocked',
+        target: '/moderation/blocked/subjects',
         exact: true
       }, {
         type: LINK_BUTTON,

@@ -10,15 +10,15 @@ import {select} from '#/plugin/forum/resources/forum/store/selectors'
 import {actions} from '#/plugin/forum/resources/forum/store/actions'
 import {MessageCard} from '#/plugin/forum/resources/forum/data/components/message-card'
 
-const BlockedMessagesComponent = (props) =>
+const BlockedSubjectsComponent = (props) =>
   <ListData
-    name={`${select.STORE_NAME}.moderation.blockedMessages`}
+    name={`${select.STORE_NAME}.moderation.blockedSubjects`}
     fetch={{
-      url: ['apiv2_forum_message_blocked_list', {forum: props.forum.id}],
+      url: ['apiv2_forum_subject_blocked_list', {forum: props.forum.id}],
       autoload: true
     }}
     delete={{
-      url: ['apiv2_forum_message_delete_bulk']
+      url: ['apiv2_forum_subject_delete_bulk']
     }}
     display={{
       current: listConst.DISPLAY_LIST
@@ -66,7 +66,7 @@ const BlockedMessagesComponent = (props) =>
         icon: 'fa fa-fw fa-check',
         label: trans('validate_message', {}, 'forum'),
         displayed: props.forum.moderation === 'PRIOR_ALL',
-        callback: () => props.validateMessage(rows[0], rows[0].subject.id, 'moderation.blockedMessages')
+        callback: () => props.validateSubject(rows[0], rows[0].subject.id,'moderation.blockedSubjects')
       }, {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-check',
@@ -89,13 +89,13 @@ const BlockedMessagesComponent = (props) =>
   />
 
 
-const BlockedMessages = connect(
+const BlockedSubjects = connect(
   state => ({
     forum: select.forum(state),
     subject: select.subject(state)
   }),
   dispatch => ({
-    validateMessage(message, subjectId, formName) {
+    validateSubject(message, subjectId, formName) {
       dispatch(actions.validatePost(message, subjectId, formName))
     },
     banUser(userId, forumId) {
@@ -105,8 +105,8 @@ const BlockedMessages = connect(
       dispatch(actions.unLockUser(userId, forumId))
     }
   })
-)(BlockedMessagesComponent)
+)(BlockedSubjectsComponent)
 
 export {
-  BlockedMessages
+  BlockedSubjects
 }

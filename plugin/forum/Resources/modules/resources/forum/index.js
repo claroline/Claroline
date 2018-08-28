@@ -2,7 +2,7 @@
 import {ForumResource} from '#/plugin/forum/resources/forum/containers/resource'
 
 /**
- * Path resource application.
+ * Forum resource application.
  *
  * @constructor
  */

@@ -179,6 +179,10 @@ MessageCommentsComponent.propTypes = {
   moderator: T.bool.isRequired
 }
 
+MessageCommentsComponent.defaultProps = {
+  bannedUser: true
+}
+
 const MessageComments =  withModal(connect(
   state => ({
     forum: select.forum(state),

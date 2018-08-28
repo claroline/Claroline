@@ -273,4 +273,14 @@ class Subject
     {
         return $this->content;
     }
+
+    public function setModerated($moderated)
+    {
+        $this->moderation = $moderated;
+    }
+
+    public function getModerated()
+    {
+        return $this->moderation;
+    }
 }

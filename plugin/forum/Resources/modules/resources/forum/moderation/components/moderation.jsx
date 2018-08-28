@@ -4,7 +4,7 @@ import React from 'react'
 import {Routes} from '#/main/app/router'
 
 import {Flagged} from '#/plugin/forum/resources/forum/moderation/components/flagged'
-import {BlockedMessages} from '#/plugin/forum/resources/forum/moderation/components/blocked-messages'
+import {Blocked} from '#/plugin/forum/resources/forum/moderation/components/blocked'
 
 const Moderation = () =>
   <Routes
@@ -14,7 +14,7 @@ const Moderation = () =>
         component: Flagged
       }, {
         path: '/moderation/blocked',
-        component: BlockedMessages
+        component: Blocked
       }
     ]}
   />
