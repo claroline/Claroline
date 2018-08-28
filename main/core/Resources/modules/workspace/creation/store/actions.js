@@ -32,7 +32,8 @@ actions.save = (workspace) => ({
       method: 'POST'
     },
     success: (response) => {
-      window.location = url('claro_workspace_open', {workspaceId: response.id})
+      const route = url(['claro_workspace_open', {workspaceId: response.id}])
+      window.location.href =  route
     }
   }
 })

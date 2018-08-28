@@ -11,6 +11,14 @@
 
 namespace Claroline\CoreBundle\Library\Installation;
 
+use Claroline\CoreBundle\Entity\DataSource;
+use Claroline\CoreBundle\Entity\Tab\HomeTab;
+use Claroline\CoreBundle\Entity\Tab\HomeTabConfig;
+use Claroline\CoreBundle\Entity\Widget\Widget;
+use Claroline\CoreBundle\Entity\Widget\WidgetContainer;
+use Claroline\CoreBundle\Entity\Widget\WidgetContainerConfig;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstanceConfig;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
 use Psr\Log\LogLevel;
@@ -220,5 +228,62 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
         $om->persist($usermanagement);
         $om->persist($workspacemanagement);
         $om->flush();
+    }
+
+    public function postInstall()
+    {
+        $this->buildDefaultHomeTab();
+    }
+
+    private function buildDefaultHomeTab()
+    {
+        $this->log('Build default home tab');
+
+        $manager = $this->container->get('claroline.persistence.object_manager');
+        $translator = $this->container->get('translator');
+        $infoName = $translator->trans('informations', [], 'platform');
+
+        $desktopHomeTab = new HomeTab();
+        $desktopHomeTab->setType('administration');
+        $manager->persist($desktopHomeTab);
+
+        $desktopHomeTabConfig = new HomeTabConfig();
+        $desktopHomeTabConfig->setHomeTab($desktopHomeTab);
+        $desktopHomeTabConfig->setType(HomeTab::TYPE_ADMIN_DESKTOP);
+        $desktopHomeTabConfig->setVisible(true);
+        $desktopHomeTabConfig->setLocked(true);
+        $desktopHomeTabConfig->setTabOrder(1);
+        $desktopHomeTabConfig->setName($infoName);
+        $desktopHomeTabConfig->setLongTitle($infoName);
+        $manager->persist($desktopHomeTabConfig);
+
+        $translator = $this->container->get('translator');
+        $infoName = $translator->trans('my_workspaces', [], 'platform');
+
+        $dataSource = $manager->getRepository(DataSource::class)->findOneByName('my_workspaces');
+        $widget = $manager->getRepository(Widget::class)->findOneByName('list');
+
+        $container = new WidgetContainer();
+        $container->setHomeTab($desktopHomeTab);
+        $manager->persist($container);
+
+        $containerConfig = new WidgetContainerConfig();
+        $containerConfig->setLayout([1]);
+        $containerConfig->setName($infoName);
+        $containerConfig->setWidgetContainer($container);
+        $manager->persist($containerConfig);
+
+        $widgetInstance = new WidgetInstance();
+        $widgetInstance->setDataSource($dataSource);
+        $widgetInstance->setWidget($widget);
+        $widgetInstance->setContainer($container);
+        $manager->persist($widgetInstance);
+
+        $widgetInstanceConfig = new WidgetInstanceConfig();
+        $widgetInstanceConfig->setWidgetInstance($widgetInstance);
+        $widgetInstanceConfig->setType('list');
+        $manager->persist($widgetInstanceConfig);
+
+        $manager->flush();
     }
 }

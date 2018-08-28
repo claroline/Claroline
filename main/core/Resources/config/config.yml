@@ -195,6 +195,11 @@ plugin:
           context: [desktop]
           tags: [workspaces]
 
+        - name: my_workspaces
+          type: list
+          context: [desktop]
+          tags: [workspaces]
+
         - name: users
           type: list
           context: [workspace, desktop]

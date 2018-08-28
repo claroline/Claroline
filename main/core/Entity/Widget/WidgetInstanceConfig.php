@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Entity\Widget;
 
-use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -57,7 +56,7 @@ class WidgetInstanceConfig
     /**
      * @ORM\Column(name="widget_order", type="integer")
      */
-    protected $widgetOrder;
+    protected $widgetOrder = 0;
 
     /**
      * @ORM\Column()
@@ -93,16 +92,6 @@ class WidgetInstanceConfig
     {
         $this->widgetInstance = $widgetInstance;
         $widgetInstance->addWidgetInstanceConfig($this);
-    }
-
-    public function getHomeTab()
-    {
-        return $this->homeTab;
-    }
-
-    public function setHomeTab(HomeTab $homeTab)
-    {
-        $this->homeTab = $homeTab;
     }
 
     public function getUser()
