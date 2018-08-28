@@ -8,6 +8,7 @@ import {trans} from '#/main/core/translation'
 import {toKey} from '#/main/core/scaffolding/text/utils'
 import {Button} from '#/main/app/action/components/button'
 import {MODAL_BUTTON} from '#/main/app/buttons'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
 import {
@@ -54,11 +55,17 @@ const WidgetCol = props =>
         }
         <Button
           className="btn-link"
-          type="callback"
+          type={MODAL_BUTTON}
           icon="fa fa-fw fa-trash-o"
           label={trans('delete', {}, 'actions')}
           dangerous={true}
-          callback={() => props.deleteContent(props.content)}
+          modal={[MODAL_CONFIRM, {
+            dangerous: true,
+            icon: 'fa fa-fw fa-trash-o',
+            title: trans('widget_delete_confirm_title', {}, 'widget'),
+            question: trans('widget_delete_confirm_message', {}, 'widget'),
+            handleConfirm: () => props.deleteContent(props.content)
+          }]}
         />
       </div>
     }

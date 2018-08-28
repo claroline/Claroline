@@ -2,6 +2,8 @@
     "widget": "Widget",
     "add_widget": "Ajouter un widget",
     "cancel_move_widget": "Annuler le déplacement",
+    "widget_delete_confirm_title": "Supprimer le widget",
+    "widget_delete_confirm_message": "Êtes-vous sûr de vouloir supprimer ce widget ?",
     "insert_widget": "Déposer le widget",
     "publish_tab": "Publier l'onglet",
     "publish_tab_help": "Un onglet publié sera visibile dans le bureau, mais ne pourra être ni édité ni supprimé par l'utilisateur. Un onglet non pulié ne sera pas visible dans le bureau.",
