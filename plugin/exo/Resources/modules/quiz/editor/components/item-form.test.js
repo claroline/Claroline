@@ -1,7 +1,7 @@
 import React from 'react'
 import {shallow} from 'enzyme'
 
-import {spyConsole, renew, ensure, mockGlobals} from '#/main/core/scaffolding/tests'
+import {spyConsole, renew, ensure} from '#/main/core/scaffolding/tests'
 import {ItemForm} from './item-form.jsx'
 
 describe('<ItemForm/>', () => {
@@ -28,7 +28,6 @@ describe('<ItemForm/>', () => {
       'validating',
       'children',
       'showModal',
-      'closeModal',
       'onChange',
       'onHintsChange',
       'mandatoryQuestions'
@@ -44,9 +43,8 @@ describe('<ItemForm/>', () => {
         },
         validating: [],
         onChange: 'foo',
-        onHintsChange: 'bar',
-        children: false
-      })
+        onHintsChange: 'bar'
+      }, false)
     )
 
     ensure.invalidProps('ItemForm', [
@@ -82,8 +80,7 @@ describe('<ItemForm/>', () => {
           updatedValue = value
         },
         onHintsChange: () => true,
-        showModal: () => true,
-        closeModal: () => true
+        showModal: () => true
       }, React.createElement('input'))
     )
 

@@ -1,9 +1,11 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import omit from 'lodash/omit'
 
 import {t, tex} from '#/main/core/translation'
+import {registry} from '#/main/app/modals/registry'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
-import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
+import {FormGroup} from '#/main/core/layout/form/components/group/form-group'
 
 export const MODAL_DUPLICATE_ITEM = 'MODAL_DUPLICATE_ITEM'
 
@@ -26,7 +28,7 @@ class DuplicateItemModal extends Component {
   render() {
     return (
       <Modal
-        {...this.props}
+        {...omit(this.props, 'handleSubmit')}
       >
         <div className="modal-body">
           <FormGroup
@@ -61,6 +63,8 @@ DuplicateItemModal.propTypes = {
   handleSubmit: T.func.isRequired,
   fadeModal: T.func.isRequired
 }
+
+registry.add(MODAL_DUPLICATE_ITEM, DuplicateItemModal)
 
 export {
   DuplicateItemModal

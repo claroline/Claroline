@@ -96,7 +96,6 @@ function selectSubEditor(props) {
           handleFileUpload={props.saveContentItemFile}
           numbering={props.quizProperties.parameters.numbering}
           showModal={props.showModal}
-          closeModal={props.fadeModal}
         />
       )
   }
@@ -131,8 +130,7 @@ selectSubEditor.propTypes = {
   changeItemStep: T.func.isRequired,
   duplicateItem: T.func.isRequired,
   saveContentItemFile: T.func,
-  showModal: T.func.isRequired,
-  fadeModal: T.func.isRequired
+  showModal: T.func.isRequired
 }
 
 Editor = connect(

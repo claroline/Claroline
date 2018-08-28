@@ -54,7 +54,6 @@ const Metadata = props =>
     >
       <ObjectsEditor
         showModal={props.showModal}
-        closeModal={props.closeModal}
         validating={props.validating}
         item={props.item}
       />
@@ -82,7 +81,6 @@ Metadata.propTypes = {
   }).isRequired,
   mandatoryQuestions: T.bool.isRequired,
   showModal: T.func.isRequired,
-  closeModal: T.func.isRequired,
   onChange: T.func.isRequired,
   validating: T.bool.isRequired
 }
@@ -189,7 +187,6 @@ const ItemForm = props =>
         mandatoryQuestions={props.mandatoryQuestions}
         item={props.item}
         showModal={props.showModal}
-        closeModal={props.closeModal}
         onChange={props.onChange}
         validating={props.validating}
       />
@@ -237,7 +234,6 @@ ItemForm.propTypes = {
   children: T.element.isRequired,
   validating: T.bool.isRequired,
   showModal: T.func.isRequired,
-  closeModal: T.func.isRequired,
   onChange: T.func.isRequired,
   onHintsChange: T.func.isRequired
 }

@@ -1,11 +1,14 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import omit from 'lodash/omit'
+
+import {tex} from '#/main/core/translation'
+import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {registry} from '#/main/app/modals/registry'
 
 import {update} from './../../../utils/utils'
-import {tex} from '#/main/core/translation'
-import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
-import {Modal} from '#/main/app/overlay/modal/components/modal'
-import {UserTypeahead} from './../../../users/components/typeahead.jsx'
+import {FormGroup} from '#/main/core/layout/form/components/group/form-group'
+import {UserTypeahead} from './../../../users/components/typeahead'
 
 export const MODAL_SHARE = 'MODAL_SHARE'
 
@@ -59,7 +62,10 @@ class ShareModal extends Component {
 
   render() {
     return (
-      <Modal {...this.props} className="share-modal">
+      <Modal
+        {...omit(this.props, 'handleShare')}
+        className="share-modal"
+      >
         <div className="modal-body">
           <div className="checkbox">
             <label htmlFor="share-admin-rights">
@@ -108,6 +114,8 @@ class ShareModal extends Component {
 ShareModal.propTypes = {
   handleShare: T.func.isRequired
 }
+
+registry.add(MODAL_SHARE, ShareModal)
 
 export {
   ShareModal

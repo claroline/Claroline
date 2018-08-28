@@ -1,16 +1,18 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+import omit from 'lodash/omit'
+
+import {t, tex, trans} from '#/main/core/translation'
+import {API_REQUEST, url} from '#/main/app/api'
+import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {registry} from '#/main/app/modals/registry'
 
 import {listItemNames, getDefinition} from './../../../../items/item-types'
-import {Icon} from './../../../../items/components/icon.jsx'
-import {t, tex, trans} from '#/main/core/translation'
-import {Modal} from '#/main/app/overlay/modal/components/modal'
-import {API_REQUEST} from '#/main/app/api'
-import {url} from '#/main/app/api'
-
+import {Icon} from './../../../../items/components/icon'
 
 export const MODAL_IMPORT_ITEMS = 'MODAL_IMPORT_ITEMS'
+
 const actions = {}
 
 actions.getQuestions = (filter, onSuccess) => {
@@ -83,14 +85,12 @@ class ImportItems extends Component {
     this.props.fadeModal()
   }
 
-  getTypeName(mimeType){
-    const type = this.state.types.find(type => type.type === mimeType)
-    return undefined !== type ? trans(type.name, {}, 'question_types'): t('error')
-  }
-
   render(){
     return(
-      <Modal {...this.props} className="import-items-modal">
+      <Modal
+        {...omit(this.props, 'handleSelect', 'getQuestions', 'questionRetrieved')}
+        className="import-items-modal"
+      >
         <div className="modal-body">
           <div className="form-group">
             <input
@@ -124,14 +124,9 @@ class ImportItems extends Component {
             </tbody>
           </table>
         }
-        <div className="modal-footer">
-          <button className="btn btn-default" onClick={this.props.fadeModal}>
-            {t('cancel')}
-          </button>
-          <button className="btn btn-primary" disabled={this.state.selected.length === 0} onClick={this.handleClick.bind(this)}>
-            {t('ok')}
-          </button>
-        </div>
+        <button className="modal-btn btn btn-primary" disabled={this.state.selected.length === 0} onClick={this.handleClick.bind(this)}>
+          {trans('import', {}, 'actions')}
+        </button>
       </Modal>
     )
   }
@@ -144,10 +139,15 @@ ImportItems.propTypes = {
   questionRetrieved: T.func
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
+const ImportItemsModal = connect(
+  null,
+  (dispatch) => ({
     getQuestions: (filter, onSuccess) => dispatch(actions.getQuestions(filter, onSuccess))
-  }
-}
+  })
+)(ImportItems)
 
-export const ImportItemsModal = connect(undefined, mapDispatchToProps)(ImportItems)
+registry.add(MODAL_IMPORT_ITEMS, ImportItemsModal)
+
+export {
+  ImportItemsModal
+}

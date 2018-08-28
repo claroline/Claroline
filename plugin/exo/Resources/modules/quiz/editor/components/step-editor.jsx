@@ -211,7 +211,6 @@ const ItemPanel = props =>
             validating={props.validating}
             showModal={props.showModal}
             mandatoryQuestions={props.mandatoryQuestions}
-            closeModal={props.closeModal}
             onChange={(propertyPath, value) =>
               props.handleItemUpdate(props.item.id, propertyPath, value)
             }
@@ -250,7 +249,6 @@ ItemPanel.propTypes = {
   handleItemHintsUpdate: T.func.isRequired,
   handleItemDuplicate: T.func.isRequired,
   showModal: T.func.isRequired,
-  closeModal: T.func.isRequired,
   connectDragSource: T.func.isRequired,
   connectDropTarget: T.func.isRequired,
   isDragging: T.bool.isRequired,
@@ -401,7 +399,6 @@ class StepFooter extends Component {
       this.props.showModal(MODAL_ADD_ITEM, {
         title: tex('add_question_from_new'),
         handleSelect: type => {
-          this.props.closeModal()
           this.props.handleItemCreate(this.props.stepId, type)
         }
       })
@@ -409,7 +406,6 @@ class StepFooter extends Component {
       this.props.showModal(MODAL_IMPORT_ITEMS, {
         title: tex('add_question_from_existing'),
         handleSelect: selected => {
-          this.props.closeModal()
           this.props.handleItemsImport(this.props.stepId, selected)
         }
       })
@@ -417,12 +413,10 @@ class StepFooter extends Component {
       this.props.showModal(MODAL_ADD_CONTENT, {
         title: tex('add_content'),
         handleSelect: (selected) => {
-          this.props.closeModal()
           return this.props.handleContentItemCreate(this.props.stepId, selected)
         },
         handleFileUpload: (itemId, file) => {
           this.props.handleFileUpload(itemId, file)
-          return this.props.closeModal()
         }
       })
     }
@@ -487,7 +481,6 @@ class StepFooter extends Component {
 StepFooter.propTypes = {
   stepId: T.string.isRequired,
   showModal: T.func.isRequired,
-  closeModal: T.func.isRequired,
   handleItemCreate: T.func.isRequired,
   handleItemsImport: T.func.isRequired,
   handleContentItemCreate: T.func.isRequired,
@@ -545,7 +538,6 @@ export const StepEditor = props =>
           handleItemHintsUpdate={props.handleItemHintsUpdate}
           handleItemDetailUpdate={props.handleItemDetailUpdate}
           showModal={props.showModal}
-          closeModal={props.closeModal}
         /> :
         <SortableContentPanel
           {...props}
@@ -579,7 +571,6 @@ export const StepEditor = props =>
     <StepFooter
       stepId={props.step.id}
       showModal={props.showModal}
-      closeModal={props.closeModal}
       handleItemCreate={props.handleItemCreate}
       handleItemsImport={props.handleItemsImport}
       handleContentItemCreate={props.handleContentItemCreate}
@@ -618,6 +609,5 @@ StepEditor.propTypes = {
   handleContentItemCreate: T.func.isRequired,
   handleContentItemUpdate: T.func,
   handleFileUpload: T.func,
-  showModal: T.func.isRequired,
-  closeModal: T.func.isRequired
+  showModal: T.func.isRequired
 }

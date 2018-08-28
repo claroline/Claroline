@@ -67,8 +67,6 @@ let ContentThumbnail = props => props.connectDropTarget(
     style={{opacity: props.isDragging ? 0 : 1}}
     onClick={() => {
       props.showModal(MODAL_CONTENT, {
-        fadeModal: () => props.fadeModal(),
-        hideModal: () => props.hideModal(),
         data: props.data,
         type: props.type
       })
@@ -76,11 +74,12 @@ let ContentThumbnail = props => props.connectDropTarget(
   >
     <span className="content-thumbnail-topbar">
       {props.hasErrors &&
-      <ValidationStatus
-        id={`${props.id}-thumb-tip`}
-        validating={props.validating}
-      />
+        <ValidationStatus
+          id={`${props.id}-thumb-tip`}
+          validating={props.validating}
+        />
       }
+
       <Actions
         hasDeleteBtn={props.canDelete}
         hasEditBtn={props.canEdit}
@@ -90,8 +89,6 @@ let ContentThumbnail = props => props.connectDropTarget(
         handleDelete={props.handleDelete}
         handleExpand={() => {
           props.showModal(MODAL_CONTENT, {
-            fadeModal: () => props.fadeModal(),
-            hideModal: () => props.hideModal(),
             data: props.data,
             type: props.type
           })
@@ -135,19 +132,13 @@ ContentThumbnail = makeSortable(
   ContentThumbnailDragPreview
 )
 
+ContentThumbnail = connect(
+  null,
+  (dispatch) => ({
+    showModal: (type, props) => dispatch(modalActions.showModal(type, props))
+  })
+)(ContentThumbnail)
 
-function mapStateToProps() {
-  return {}
+export {
+  ContentThumbnail
 }
-
-function mapDispatchToProps(dispatch) {
-  return {
-    showModal: (type, props) => dispatch(modalActions.showModal(type, props)),
-    fadeModal: () => dispatch(modalActions.fadeModal()),
-    hideModal: () => dispatch(modalActions.hideModal())
-  }
-}
-
-ContentThumbnail = connect(mapStateToProps, mapDispatchToProps)(ContentThumbnail)
-
-export {ContentThumbnail}

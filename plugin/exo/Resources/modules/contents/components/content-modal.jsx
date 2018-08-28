@@ -1,6 +1,9 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import omit from 'lodash/omit'
+
 import Modal from 'react-bootstrap/lib/Modal'
+
 import {getContentDefinition} from './../content-types'
 
 export const MODAL_CONTENT = 'MODAL_CONTENT'
@@ -9,10 +12,8 @@ export class ContentModal  extends Component {
   render() {
     return (
       <Modal
+        {...omit(this.props, 'type', 'data')}
         className="content-modal"
-        show={this.props.show}
-        onHide={this.props.fadeModal}
-        onExited={this.props.hideModal}
         ref={el => this.contentModal = el}
       >
         <span className="content-modal-controls">
@@ -22,6 +23,7 @@ export class ContentModal  extends Component {
           >
           </span>
         </span>
+
         {this.props.data &&
           React.createElement(getContentDefinition(this.props.type).modal, {data: this.props.data, type: this.props.type})
         }

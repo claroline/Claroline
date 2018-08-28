@@ -77,16 +77,15 @@ class ObjectsEditor extends Component {
               this.props.showModal(MODAL_ADD_CONTENT, {
                 title: tex('add_object'),
                 handleSelect: (type) => {
-                  this.props.closeModal()
                   const itemObject = this.props.createItemObject(this.props.item.id, type)
                   this.props.updateItem(this.props.item.id, '_errors', {})
                   const selectId = getContentDefinition(type).type === 'text' ? itemObject.id : ''
                   this.selectObject(selectId)
+
                   return itemObject
                 },
                 handleFileUpload: (objectId, file) => {
                   this.props.saveItemObjectFile(this.props.item.id, objectId, file)
-                  return this.props.closeModal()
                 }
               })
             }
@@ -130,7 +129,6 @@ ObjectsEditor.propTypes = {
   }).isRequired,
   validating: T.bool.isRequired,
   showModal: T.func.isRequired,
-  closeModal: T.func.isRequired,
 
   updateItem: T.func.isRequired,
   createItemObject: T.func.isRequired,

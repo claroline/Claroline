@@ -1,16 +1,19 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+import omit from 'lodash/omit'
 
 import {tex} from '#/main/core/translation'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {registry} from '#/main/app/modals/registry'
+
 import select from '../../selectors'
 
 export const MODAL_MOVE_ITEM = 'MODAL_MOVE_ITEM'
 
-const MoveItemModal = props =>
+const MoveItemModalComponent = props =>
   <Modal
-    {...props}
+    {...omit(props, 'handleClick', 'steps')}
     className="step-move-item-modal"
   >
     <div className="modal-body">
@@ -31,20 +34,21 @@ const MoveItemModal = props =>
     </div>
   </Modal>
 
-MoveItemModal.propTypes = {
+MoveItemModalComponent.propTypes = {
   handleClick: T.func.isRequired,
   steps: T.object.isRequired,
   fadeModal: T.func.isRequired
 }
 
-function mapStateToProps(state) {
-  return {
+const MoveItemModal = connect(
+  (state) => ({
     steps: select.steps(state)
-  }
-}
+  }),
+  null
+)(MoveItemModalComponent)
 
-const ConnectedMoveItemModal = connect(mapStateToProps, {})(MoveItemModal)
+registry.add(MODAL_MOVE_ITEM, MoveItemModal)
 
 export {
-  ConnectedMoveItemModal as MoveItemModal
+  MoveItemModal
 }

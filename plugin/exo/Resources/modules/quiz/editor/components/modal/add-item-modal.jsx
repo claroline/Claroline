@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import omit from 'lodash/omit'
 
 import {trans} from '#/main/core/translation'
 import {registry} from '#/main/app/modals/registry'
@@ -35,7 +36,10 @@ class AddItemModal extends Component {
 
   render() {
     return (
-      <Modal {...this.props} className="add-item-modal">
+      <Modal
+        {...omit(this.props, 'handleSelect')}
+        className="add-item-modal"
+      >
         <div className="modal-body">
           <div className="modal-item-list" role="listbox">
             {this.state.itemMimeTypes.map(type =>
@@ -44,7 +48,10 @@ class AddItemModal extends Component {
                 className={classes('modal-item-entry', {'selected': this.state.currentType === type})}
                 role="option"
                 onMouseOver={() => this.handleItemMouseOver(type)}
-                onClick={() => this.props.handleSelect(type)}
+                onClick={() => {
+                  this.props.handleSelect(type)
+                  this.props.fadeModal()
+                }}
               >
                 <ItemIcon name={getDefinition(type).name} size="lg"/>
               </div>
@@ -66,9 +73,12 @@ class AddItemModal extends Component {
 }
 
 AddItemModal.propTypes = {
+  fadeModal: T.func.isRequired,
   handleSelect: T.func.isRequired
 }
 
 registry.add(MODAL_ADD_ITEM, AddItemModal)
 
-export {AddItemModal}
+export {
+  AddItemModal
+}
