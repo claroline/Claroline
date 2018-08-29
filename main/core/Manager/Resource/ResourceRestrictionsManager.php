@@ -138,7 +138,7 @@ class ResourceRestrictionsManager
      */
     public function isEnded(ResourceNode $resourceNode): bool
     {
-        return empty($resourceNode->getAccessibleUntil()) || $resourceNode->getAccessibleUntil() > new \DateTime();
+        return !empty($resourceNode->getAccessibleUntil()) && $resourceNode->getAccessibleUntil() > new \DateTime();
     }
 
     /**
