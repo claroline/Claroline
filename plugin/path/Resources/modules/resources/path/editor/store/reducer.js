@@ -17,7 +17,6 @@ import {
 import {
   STEP_ADD,
   STEP_REMOVE,
-  STEP_UPDATE_PRIMARY_RESOURCE,
   STEP_ADD_SECONDARY_RESOURCES,
   STEP_REMOVE_SECONDARY_RESOURCES,
   STEP_UPDATE_SECONDARY_RESOURCE_INHERITANCE,
@@ -39,7 +38,6 @@ const reducer = {
     pendingChanges: makeReducer(false, {
       [STEP_ADD]: () => true,
       [STEP_REMOVE]: () => true,
-      [STEP_UPDATE_PRIMARY_RESOURCE]: () => true,
       [STEP_ADD_SECONDARY_RESOURCES]: () => true,
       [STEP_REMOVE_SECONDARY_RESOURCES]: () => true,
       [STEP_UPDATE_SECONDARY_RESOURCE_INHERITANCE]: () => true,
@@ -112,19 +110,6 @@ const reducer = {
           }
           step.children.splice(stepPath[stepPath.length - 1], 1)
         }
-
-        return newState
-      },
-      [STEP_UPDATE_PRIMARY_RESOURCE]: (state, action) => {
-        const newState = cloneDeep(state)
-        const stepPath = getStepPath(action.stepId, newState.steps, 0, [])
-
-        let step = newState.steps[stepPath[0]]
-
-        for (let i = 1; i < stepPath.length; ++i) {
-          step = step.children[stepPath[i]]
-        }
-        step.primaryResource = action.resource
 
         return newState
       },

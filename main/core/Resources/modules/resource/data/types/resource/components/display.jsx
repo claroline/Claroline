@@ -12,15 +12,19 @@ import {ResourceCard} from '#/main/core/resource/data/components/resource-card'
 // todo embedded option
 // todo add resource actions
 
-const ResourceDisplay = (props) => !isEmpty(props.data) ?
-  <ResourceCard
-    data={props.data}
-  /> :
-  <EmptyPlaceholder
-    size="lg"
-    icon="fa fa-folder"
-    title={trans('no_resource')}
-  />
+const ResourceDisplay = (props) =>
+  <div>
+    {!isEmpty(props.data) ?
+      <ResourceCard
+        data={props.data}
+      /> :
+      <EmptyPlaceholder
+        size="lg"
+        icon="fa fa-folder"
+        title={trans('no_resource')}
+      />}
+  </div>
+
 
 ResourceDisplay.propTypes = {
   data: T.shape(

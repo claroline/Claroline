@@ -1082,6 +1082,7 @@
     "resources": "Ressources",
     "resources_delete_confirm": "Suppression de ressources",
     "resources_delete_message": "Êtes-vous sûr de vouloir supprimer ces ressources ?",
+    "resource_delete_message": "Êtes-vous sûr de vouloir supprimer cette ressource ?",
     "resources_import": "Importation de ressources",
     "resources_most_downloaded": "Ressources les plus téléchargées",
     "resources_publish": "Êtes-vous sûr de vouloir publier ces ressources ?",

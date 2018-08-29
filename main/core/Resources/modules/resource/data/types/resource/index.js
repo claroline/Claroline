@@ -11,7 +11,13 @@ const dataType = {
     label: trans('resource', {}, 'data'),
     description: trans('resource_desc', {}, 'data')
   },
-
+  configure: () => [
+    {
+      name: 'embedded',
+      type: 'boolean',
+      label: trans('embedded')
+    }
+  ],
   // todo : maybe create a validator based on propTypes (would be helpful for this)
   //validate: (value, options) => chain(value, options, [string, match, lengthInRange]),
   components: {

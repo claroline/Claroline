@@ -93,8 +93,6 @@ const EditorComponent = props =>
                   numbering={getNumbering(props.path.display.numbering, props.path.steps, step)}
                   customNumbering={constants.NUMBERING_CUSTOM === props.path.display.numbering}
                   stepPath={getFormDataPart(step.id, props.path.steps)}
-                  pickPrimaryResource={stepId => props.pickResources(stepId, 'primary', props.resourceParent)}
-                  removePrimaryResource={props.removePrimaryResource}
                   pickSecondaryResources={stepId => props.pickResources(stepId, 'secondary', props.resourceParent)}
                   removeSecondaryResource={props.removeSecondaryResource}
                   updateSecondaryResourceInheritance={props.updateSecondaryResourceInheritance}
@@ -123,7 +121,6 @@ EditorComponent.propTypes = {
   addStep: T.func.isRequired,
   removeStep: T.func.isRequired,
   pickResources: T.func.isRequired,
-  removePrimaryResource: T.func.isRequired,
   removeSecondaryResource: T.func.isRequired,
   updateSecondaryResourceInheritance: T.func.isRequired,
   removeInheritedResource: T.func.isRequired,
@@ -165,10 +162,7 @@ const Editor = connect(
     pickResources(stepId, usage = 'primary', current = null) {
       let title
       let callback
-      if ('primary' === usage) {
-        title = trans('add_primary_resource', {}, 'path')
-        callback = (selected) => dispatch(actions.updatePrimaryResource(stepId, selected[0]))
-      } else if ('secondary' === usage) {
+      if ('secondary' === usage) {
         title = trans('add_secondary_resources', {}, 'path')
         callback = (selected) => dispatch(actions.addSecondaryResources(stepId, selected))
       }
@@ -180,9 +174,6 @@ const Editor = connect(
           callback: () => callback(selected)
         })
       }))
-    },
-    removePrimaryResource(stepId) {
-      dispatch(actions.updatePrimaryResource(stepId, null))
     },
     removeSecondaryResource(stepId, id) {
       dispatch(actions.removeSecondaryResources(stepId, [id]))
