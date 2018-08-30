@@ -158,7 +158,6 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     fetch:         ownProps.fetch,
     definition:    ownProps.definition,
     card:          ownProps.card,
-    filterColumns: ownProps.filterColumns,
     display:       ownProps.display,
     translations:  ownProps.translations,
     readOnly:      stateProps.readOnly,

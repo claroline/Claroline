@@ -177,7 +177,7 @@ plugin:
         - name: profile
           class: Claroline\CoreBundle\Entity\Widget\Type\ProfileWidget
           context: [workspace, desktop]
-          tags: [users]
+          tags: [community]
 
         - name: resource
           class: Claroline\CoreBundle\Entity\Widget\Type\ResourceWidget
@@ -203,7 +203,7 @@ plugin:
         - name: users
           type: list
           context: [workspace, desktop]
-          tags: [users]
+          tags: [community]
 
     tools:
         - name: home

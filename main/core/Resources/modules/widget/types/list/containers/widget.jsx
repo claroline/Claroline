@@ -11,8 +11,15 @@ const ListWidget = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       source: contentSelectors.source(state),
-      parameters: contentSelectors.parameters(state),
-      context: contentSelectors.context(state)
+      context: contentSelectors.context(state),
+
+      // list configuration
+      display: selectors.display(state),
+      availableDisplays: selectors.availableDisplays(state),
+      availableFilters: selectors.availableFilters(state),
+      availableSort: selectors.availableSort(state),
+      displayedColumns: selectors.displayedColumns(state),
+      availableColumns: selectors.availableColumns(state)
     })
   )(ListWidgetComponent)
 )

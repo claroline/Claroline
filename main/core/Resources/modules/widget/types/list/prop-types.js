@@ -6,9 +6,19 @@ import {WidgetInstance} from '#/main/core/widget/content/prop-types'
 
 const ListWidgetParameters = {
   propTypes: {
+    maxResults: T.number,
+    count: T.bool,
+
+    // display feature
     display: T.string,
     availableDisplays: T.arrayOf(T.string),
 
+    // sort feature
+    sortable: T.bool,
+    sorting: T.string,
+    availableSort: T.arrayOf(T.string),
+
+    // filter feature
     filterable: T.bool,
     filters: T.arrayOf(T.shape({
       property: T.string.isRequired,
@@ -17,15 +27,22 @@ const ListWidgetParameters = {
     })),
     availableFilters: T.arrayOf(T.string),
 
-    sortable: T.bool,
-
+    // pagination feature
     paginated: T.bool,
     pageSize: T.number,
     availablePageSizes: T.arrayOf(T.number),
 
-    availableColumns: T.array
+    // table config
+    columnsFilterable: T.bool,
+    columns: T.arrayOf(T.string),
+    availableColumns: T.arrayOf(T.string)
+
+    // grid config (todo)
   },
   defaultProps: {
+    count: listConstants.DEFAULT_FEATURES.count,
+
+    // display feature
     display: listConstants.DEFAULT_DISPLAY_MODE,
     availableDisplays: [
       listConstants.DISPLAY_TABLE,
@@ -35,11 +52,23 @@ const ListWidgetParameters = {
       listConstants.DISPLAY_LIST_SM,
       listConstants.DISPLAY_LIST
     ],
-    filterable: listConstants.DEFAULT_FEATURES.filterable,
-    sortable: listConstants.DEFAULT_FEATURES.sortable,
+
+    // sort feature
+    sortable: false,
+    availableSort: [],
+
+    // filter feature
+    filterable: false,
+    availableFilters: [],
+
+    // pagination feature
     paginated: listConstants.DEFAULT_FEATURES.paginated,
     pageSize: listConstants.DEFAULT_PAGE_SIZE,
-    availablePageSizes: listConstants.AVAILABLE_PAGE_SIZES
+    availablePageSizes: listConstants.AVAILABLE_PAGE_SIZES,
+
+    // table config
+    columnsFilterable: false,
+    availableColumns: []
   }
 }
 

@@ -125,11 +125,6 @@ AutoloadedListData.propTypes = {
    */
   card: T.func,
 
-  /**
-   * Enables/Disables the feature to filter the displayed columns.
-   */
-  filterColumns: T.bool,
-
   // calculated from redux store
   loaded: T.bool,
   invalidated: T.bool,

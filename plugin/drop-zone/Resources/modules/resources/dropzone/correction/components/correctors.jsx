@@ -90,7 +90,6 @@ const Correctors = props =>
             type: 'boolean'
           }
         ]}
-        filterColumns={true}
         actions={(rows) => [
           {
             type: LINK_BUTTON,

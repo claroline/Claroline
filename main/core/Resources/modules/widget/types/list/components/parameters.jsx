@@ -63,8 +63,16 @@ class ListWidgetForm extends Component {
   }
 
   render() {
-    const displayModesList = Object
-      .keys(constants.DISPLAY_MODES)
+    let displayModes
+    if (this.state.definition && get(this.state.definition, 'display.available')) {
+      // only grab available displays for the source
+      displayModes = get(this.state.definition, 'display.available')
+    } else {
+      // grab all implemented display modes
+      displayModes = Object.keys(constants.DISPLAY_MODES)
+    }
+
+    const displayModesList = displayModes
       .reduce((acc, current) => Object.assign(acc, {[current]: constants.DISPLAY_MODES[current].label}), {})
 
     const pageSizesList = constants.AVAILABLE_PAGE_SIZES
@@ -336,12 +344,17 @@ class ListWidgetForm extends Component {
                 name: 'columnsFilterable',
                 label: trans('list_enable_filter_columns'),
                 type: 'boolean',
+                onChange: (columnsFilterable) => {
+                  if (!columnsFilterable) {
+                    this.props.updateProp(this.props.name, 'parameters.availableColumns', [])
+                  }
+                },
                 linked: [
                   {
                     name: 'availableColumns',
                     label: trans('list_columns'),
                     type: 'choice',
-                    displayed: (parameters) => !!parameters.columnsFilterable,
+                    displayed: (parameters) => !!parameters.columnsFilterable || (parameters.availableColumns && 0 < parameters.availableColumns.length),
                     required: true,
                     options: {
                       choices: columnsList,

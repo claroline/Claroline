@@ -10,11 +10,12 @@ plugin:
         - name: events
           type: list
           context: [workspace, desktop]
-          tags: [tools, agenda]
+          tags: [agenda]
+
         - name: tasks
           type: list
           context: [workspace, desktop]
-          tags: [tools, agenda]
+          tags: [agenda]
 
     #widgets:
       #- name: agenda_

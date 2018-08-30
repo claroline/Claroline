@@ -49,6 +49,13 @@ trait ListParameters
     private $sortBy = null;
 
     /**
+     * @ORM\Column(type="json_array")
+     *
+     * @var array
+     */
+    private $availableSort = [];
+
+    /**
      * @ORM\Column(type="integer")
      *
      * @var int
@@ -214,6 +221,26 @@ trait ListParameters
     public function setSortBy($sortBy)
     {
         $this->sortBy = $sortBy;
+    }
+
+    /**
+     * Get sortable columns.
+     *
+     * @return array
+     */
+    public function getAvailableSort()
+    {
+        return $this->availableSort;
+    }
+
+    /**
+     * Set sortable columns.
+     *
+     * @param array $availableSort
+     */
+    public function setAvailableSort(array $availableSort)
+    {
+        $this->availableSort = $availableSort;
     }
 
     /**

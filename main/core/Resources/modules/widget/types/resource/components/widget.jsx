@@ -6,6 +6,7 @@ import {ResourceNode as resourceNodeTypes} from '#/main/core/resource/data/types
 
 const ResourceWidget = props =>
   <ResourceEmbedded
+    className="widget-resource"
     resourceNode={props.resourceNode}
   />
 

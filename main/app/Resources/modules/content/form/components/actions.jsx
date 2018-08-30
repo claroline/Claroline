@@ -27,8 +27,8 @@ const FormActions = props =>
         {...props.cancel}
         className="btn"
         tooltip="top"
-        icon="fa fa-fw fa-times"
-        label={trans('cancel', {}, 'actions')}
+        icon="fa fa-fw fa-sign-out-alt"
+        label={trans('exit', {}, 'actions')}
       />
     }
   </div>

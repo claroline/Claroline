@@ -31,6 +31,7 @@ ListColumnCheck.propTypes = {
   toggle: T.func.isRequired
 }
 
+// TODO : display fixed columns
 const ListColumnsButton = props =>
   <TooltipElement
     id="list-columns"

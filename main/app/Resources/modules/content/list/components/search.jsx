@@ -269,7 +269,7 @@ class ListSearch extends Component {
                 label={propDef.label}
                 options={propDef.options}
                 value={activeFilter.value}
-                locked={activeFilter.locked}
+                locked={activeFilter.locked || this.props.disabled}
                 remove={() => this.props.removeFilter(activeFilter)}
               />
             )

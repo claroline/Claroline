@@ -1,26 +1,19 @@
 {
     "widget": "Widget",
     "add_widget": "Add a widget",
-    "add_widget_before": "Insert a widget",
-    "add_content": "Add a content",
-    "widget_delete_confirm_title": "Delete widget",
-    "widget_delete_confirm_message": "Are you sure you want to delete this widget ?",
+    "cancel_move_widget": "Cancel move",
+    "insert_widget": "Drop widget",
+    "new_section_configure": "2. Configure the section",
+    "new_section_select": "1. Choose the section layout to add",
     "new_widget": "New widget",
-    "new_widget_select": "1. Choose the type of widget to add",
     "new_widget_configure": "2. Configure the widget",
-    "new_content": "New content",
-    "new_content_select": "1. Choose the type of content to add",
-    "new_content_configure": "2. Configure the content",
-    "no_widget": "No widget have been added yet.",
-    "restrictions_by_roles" : "Restriction by roles",
+    "new_widget_select": "1. Choose the type of widget to add",
+    "publish_tab": "Publish tab",
+    "publish_tab_help": "A published tab will be visible in the desktop but will not be editable nor removable by the user. A non published tab will not be visible in the desktop.",
+    "restrictions_by_roles" : "Restrict by roles",
 
     "simple": "Simple content",
     "list": "Data list",
     "profile": "User profile",
-    "resource-list": "Resources list",
-    "user-list": "Users list",
-    "workspace-list": "Workspaces list",
-
-    "publish_tab": "Publish tab",
-    "publish_tab_help": "A published tab will be visible in the desktop but will not be editable nor removable by the user. A non published tab will not be visible in the desktop."
+    "resource": "Resource"
 }

@@ -32,6 +32,7 @@ class ListWidgetSerializer
             // sort feature
             'sortable' => $widget->isSortable(),
             'sorting' => $widget->getSortBy(),
+            'availableSort' => $widget->getAvailableSort(),
 
             // filter feature
             'filterable' => $widget->isFilterable(),

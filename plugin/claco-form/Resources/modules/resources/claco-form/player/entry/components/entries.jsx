@@ -242,6 +242,10 @@ class EntriesComponent extends Component {
         }
       })
 
+    if (!this.props.searchColumnEnabled) {
+      return columns.map(column => Object.assign({}, column, {displayable: false}))
+    }
+
     return columns
   }
 
@@ -452,7 +456,6 @@ class EntriesComponent extends Component {
             autoload: true
           }}
           definition={this.generateColumns(this.props.titleLabel)}
-          filterColumns={this.props.searchColumnEnabled}
           actions={this.generateActions.bind(this)}
           card={(props) =>
             <DataCard

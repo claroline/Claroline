@@ -1,7 +1,7 @@
 import {trans} from '#/main/core/translation'
 
-import {DataTable} from '#/main/app/content/list/components/view/data-table.jsx'
-import {DataGrid} from '#/main/app/content/list/components/view/data-grid.jsx'
+import {DataTable} from '#/main/app/content/list/components/view/data-table'
+import {DataGrid} from '#/main/app/content/list/components/view/data-grid'
 
 /**
  * Default configuration for list.
@@ -14,6 +14,9 @@ const DEFAULT_FEATURES = {
   sortable  : true,
   selectable: true,
   paginated : true,
+  count: true,
+
+  // TODO : remove me. Only used in Announcement sending confirm
   readOnly  : false
 }
 
@@ -95,18 +98,6 @@ const DISPLAY_MODES = {
 const AVAILABLE_PAGE_SIZES = [10, 20, 50, 100, -1] // -1 is for all
 const DEFAULT_PAGE_SIZE    = AVAILABLE_PAGE_SIZES[1]
 
-// todo : implement me
-const DEFAULT_TRANSLATIONS = {
-  domain: 'platform',
-  keys: {
-    searchPlaceholder:     'list_search_placeholder',
-    emptyPlaceholder:      'list_no_results',
-    countResults:          'list_results_count',
-    deleteConfirmTitle:    'objects_delete_title',
-    deleteConfirmQuestion: 'objects_delete_question'
-  }
-}
-
 export const constants = {
   AVAILABLE_PAGE_SIZES,
   DEFAULT_PAGE_SIZE,
@@ -118,6 +109,5 @@ export const constants = {
   DISPLAY_TILES,
   DISPLAY_TILES_SM,
   DISPLAY_LIST,
-  DISPLAY_LIST_SM,
-  DEFAULT_TRANSLATIONS
+  DISPLAY_LIST_SM
 }
