@@ -64,9 +64,11 @@ const ResourceExplorer = props => {
             primary: true
           }, {
             name: 'meta.published',
+            alias: 'published',
             type: 'boolean',
             label: trans('published'),
-            displayed: true
+            displayed: props.current && props.current.permissions && props.current.permissions.administrate,
+            filterable: props.current && props.current.permissions && props.current.permissions.administrate
           }, {
             name: 'meta.created',
             label: trans('creation_date'),

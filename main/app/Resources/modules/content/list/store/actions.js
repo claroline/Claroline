@@ -14,7 +14,7 @@ export const LIST_FILTER_REMOVE = 'LIST_FILTER_REMOVE'
 
 actions.addFilter = (listName, property, value, locked = false) => {
   invariant(property, 'property is required.')
-  invariant(value, 'value is required.')
+  invariant(value !== undefined && value !== null, 'value is required.')
 
   return ({
     type: makeInstanceAction(LIST_FILTER_ADD, listName),
