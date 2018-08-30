@@ -22,7 +22,7 @@ const Tabs = props =>
         <span className={classes('fa fa-fw', `fa-${tab.icon}`, tab.title && 'icon-with-text-right')} />
         }
         {tab.title}
-        {tab.locked && props.administration &&
+        {tab.locked && props.editing &&
           <span className="fa fa-fw fa-eye icon-with-text-left" />
         }
       </LinkButton>
@@ -42,7 +42,7 @@ const Tabs = props =>
 
 Tabs.propTypes = {
   context: T.object.isRequired,
-  administration: T.bool.isRequired,
+  editing: T.bool.isRequired,
   prefix: T.string,
   tabs: T.arrayOf(T.shape(
     TabTypes.propTypes

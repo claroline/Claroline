@@ -15,11 +15,11 @@ import {Tabs} from '#/main/core/tools/home/components/tabs'
 
 const PlayerComponent = props =>
   <PageContainer>
-    {1 < props.tabs.length &&
+    {1 < props.visibleTabs.length &&
       <Tabs
-        tabs={props.tabs}
+        tabs={props.visibleTabs}
         context={props.context}
-        administration={props.administration}
+        editing={false}
       />
     }
     <PageHeader
@@ -50,8 +50,7 @@ const PlayerComponent = props =>
 
 PlayerComponent.propTypes = {
   context: T.object.isRequired,
-  administration: T.bool.isRequired,
-  tabs: T.arrayOf(T.shape(
+  visibleTabs: T.arrayOf(T.shape(
     TabTypes.propTypes
   )),
   currentTab: T.shape(TabTypes.propTypes),
@@ -64,9 +63,8 @@ PlayerComponent.propTypes = {
 const Player = connect(
   (state) => ({
     context: selectors.context(state),
-    administration: selectors.administration(state),
     editable: selectors.editable(state),
-    tabs: selectors.tabs(state),
+    visibleTabs: selectors.visibleTabs(state),
     currentTab: selectors.currentTab(state),
     widgets: selectors.widgets(state)
   })

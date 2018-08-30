@@ -9,7 +9,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {Workspace}  from '#/main/core/administration/workspace/workspace/components/workspace'
 //import {CreationForm as WorkspaceCreation} from '#/main/core/workspace/creation/components/creation'
-import {WorkspaceForm as WorkspaceCreation} from '#/main/core/workspace/creation/components/form' 
+import {WorkspaceForm as WorkspaceCreation} from '#/main/core/workspace/creation/components/form'
 import {Workspaces} from '#/main/core/administration/workspace/workspace/components/workspaces'
 import {actions}    from '#/main/core/administration/workspace/workspace/actions'
 
@@ -21,6 +21,7 @@ const WorkspaceTabActions = () =>
       label={trans('add_workspace')}
       target="/workspaces/creation/form"
       primary={true}
+      // disabled={}
     />
   </PageActions>
 

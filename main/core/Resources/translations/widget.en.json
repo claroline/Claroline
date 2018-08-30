@@ -15,5 +15,10 @@
     "simple": "Simple content",
     "list": "Data list",
     "profile": "User profile",
-    "resource": "Resource"
+    "resource-list": "Resources list",
+    "user-list": "Users list",
+    "workspace-list": "Workspaces list",
+
+    "publish_tab": "Publish tab",
+    "publish_section": "Publish section"
 }

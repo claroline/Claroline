@@ -27,6 +27,11 @@ class WidgetContainerConfig
     private $name;
 
     /**
+     * @ORM\Column(type="boolean", name="is_visible")
+     */
+    protected $visible = true;
+
+    /**
      * The display layout of the container.
      *
      * NB:
@@ -213,5 +218,15 @@ class WidgetContainerConfig
     public function getWidgetContainer()
     {
         return $this->widgetContainer;
+    }
+
+    public function isVisible()
+    {
+        return $this->visible;
+    }
+
+    public function setVisible($visible)
+    {
+        $this->visible = $visible;
     }
 }

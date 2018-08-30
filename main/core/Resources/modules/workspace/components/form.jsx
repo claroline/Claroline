@@ -119,6 +119,7 @@ const WorkspaceFormComponent = (props) =>
               }, {
                 name: 'opening.target',
                 type: 'resource',
+                help: trans ('opening_target_resource_help'),
                 label: trans('resource'),
                 required: true,
                 displayed: (workspace) => workspace.opening && 'resource' === workspace.opening.type,

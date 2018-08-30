@@ -24,8 +24,8 @@ const RoleCard = props =>
         })}
       />
     }
-    title={props.data.name}
-    subtitle={trans(props.data.translationKey)}
+    title={trans(props.data.translationKey)}
+    subtitle={props.data.name}
   />
 
 RoleCard.propTypes = {

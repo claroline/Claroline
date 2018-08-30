@@ -165,6 +165,7 @@ class WorkspaceComponent extends Component
                     name: 'opening.target',
                     type: 'string',
                     label: trans('resource'),
+                    help: trans('opening_target_resource_help'),
                     required: true,
                     displayed: (workspace) => workspace.opening && 'resource' === workspace.opening.type
                   }

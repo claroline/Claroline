@@ -10,7 +10,6 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 
 import {ResourceType} from '#/main/core/resource/components/type'
-import {constants} from '#/main/core/resource/constants'
 
 const restrictedByDates = (node) => get(node, 'restrictions.enableDates') || !isEmpty(get(node, 'restrictions.dates'))
 const restrictedByCode = (node) => get(node, 'restrictions.enableCode') || !!get(node, 'restrictions.code')
@@ -95,21 +94,7 @@ const ResourceFormComponent = (props) =>
             name: 'display.fullscreen',
             label: trans('resource_fullscreen', {}, 'resource'),
             type: 'boolean'
-          }, /*{
-            name: 'display.closable',
-            label: trans('resource_closable', {}, 'resource'),
-            type: 'boolean'
-          }, */{
-            name: 'display.closeTarget',
-            label: trans('resource_close_target', {}, 'resource'),
-            type: 'choice',
-            required: true,
-            options: {
-              noEmpty: true,
-              condensed: true,
-              choices: constants.RESOURCE_CLOSE_TARGETS
-            }
-          }
+          } 
         ]
       }, {
         icon: 'fa fa-fw fa-key',

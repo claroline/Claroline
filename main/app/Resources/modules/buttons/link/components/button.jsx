@@ -3,7 +3,10 @@ import classes from 'classnames'
 import omit from 'lodash/omit'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {NavLink} from '#/main/app/router'
+import {
+  NavLink,
+  withRouter,
+  matchPath} from '#/main/app/router'
 
 import {Button as ButtonTypes} from '#/main/app/buttons/prop-types'
 
@@ -16,13 +19,13 @@ import {Button as ButtonTypes} from '#/main/app/buttons/prop-types'
  * @param props
  * @constructor
  */
-const LinkButton = props =>
+const LinkButtonComponent = props =>
   <NavLink
-    {...omit(props, 'displayed', 'primary', 'dangerous', 'size', 'target', 'confirm')}
+    {...omit(props, 'displayed', 'primary', 'dangerous', 'size', 'target', 'confirm', 'history', 'match', 'staticContext')}
     tabIndex={props.tabIndex}
     to={props.target}
     exact={props.exact}
-    disabled={props.disabled}
+    disabled={props.disabled || matchPath(props.location.pathname, {path: props.target, exact: true})}
     className={classes(
       props.className,
       props.size && `btn-${props.size}`,
@@ -38,12 +41,17 @@ const LinkButton = props =>
     {props.children}
   </NavLink>
 
-implementPropTypes(LinkButton, ButtonTypes, {
+implementPropTypes(LinkButtonComponent, ButtonTypes, {
   target: T.string,
+  location: T.shape({
+    pathname: T.string
+  }),
   exact: T.bool
 }, {
   exact: false
 })
+
+const LinkButton = withRouter(LinkButtonComponent)
 
 export {
   LinkButton

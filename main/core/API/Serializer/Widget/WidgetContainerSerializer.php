@@ -74,6 +74,7 @@ class WidgetContainerSerializer
         return [
             'id' => $this->getUuid($widgetContainer, $options),
             'name' => $widgetContainerConfig->getName(),
+            'visible' => $widgetContainerConfig->isVisible(),
             'display' => $this->serializeDisplay($widgetContainerConfig),
             'contents' => $contents,
         ];
@@ -117,7 +118,7 @@ class WidgetContainerSerializer
 
         $this->sipe('id', 'setUuid', $data, $widgetContainer);
         $this->sipe('name', 'setName', $data, $widgetContainerConfig);
-
+        $this->sipe('visible', 'setVisible', $data, $widgetContainerConfig);
         $this->sipe('display.layout', 'setLayout', $data, $widgetContainerConfig);
         $this->sipe('display.color', 'setColor', $data, $widgetContainerConfig);
         $this->sipe('display.backgroundType', 'setBackgroundType', $data, $widgetContainerConfig);

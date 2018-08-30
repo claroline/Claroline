@@ -54,6 +54,7 @@ const WidgetContainer = {
   propTypes: {
     id: T.string.isRequired,
     name: T.string,
+    visible : T.bool.isRequired,
     display: T.shape({
       layout: T.arrayOf(
         T.number // the ratio for each col
@@ -70,6 +71,7 @@ const WidgetContainer = {
     ))
   },
   defaultProps: {
+    visible: true,
     display: {
       layout: [1],
       color: '#333333',

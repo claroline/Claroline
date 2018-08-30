@@ -15,6 +15,7 @@ const AVAILABLE_EMBEDDED_RESOURCES = [
   'icap_blog',
   'icap_lesson',
   'icap_wiki',
+  'file',
   'text',
   'ujm_exercise'
 ]

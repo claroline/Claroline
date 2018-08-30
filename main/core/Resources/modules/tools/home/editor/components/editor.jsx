@@ -36,7 +36,7 @@ const EditorComponent = props =>
       tabs={props.tabs}
       create={() => props.createTab(props.context, props.administration, props.tabs.length, props.history.push)}
       context={props.context}
-      administration={props.administration}
+      editing={true}
     />
 
     <PageHeader
@@ -93,7 +93,7 @@ const EditorComponent = props =>
           target: '/',
           exact: true
         }}
-        disabled={props.currentTab.locked && !props.administration}
+        disabled={props.currentTab.locked && props.context.type === 'desktop' && !props.administration}
         sections={[
           {
             icon: 'fa fa-fw fa-plus',
@@ -109,9 +109,7 @@ const EditorComponent = props =>
               }, {
                 name: 'locked',
                 type: 'boolean',
-                label: trans('publish_tab', {}, 'widget'),
-                help : trans('publish_tab_help', {}, 'widget'),
-                displayed: props.administration
+                label: trans('publish_tab', {}, 'widget')
               }
             ]
           }, {
@@ -125,7 +123,7 @@ const EditorComponent = props =>
               }, {
                 name: 'position',
                 type: 'number',
-                label: trans('position'),
+                label: trans('tab_position'),
                 options : {
                   min : 1,
                   max : props.tabs.length + 1
@@ -199,7 +197,7 @@ const EditorComponent = props =>
           }
         ]}
       >
-        {!(props.currentTab.locked && !props.administration) &&
+        {!(props.currentTab.locked && props.context.type === 'desktop' && !props.administration) &&
           <WidgetGridEditor
             context={props.context}
             widgets={props.widgets}

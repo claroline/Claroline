@@ -5,7 +5,6 @@ import {trans} from '#/main/core/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
-import {TooltipElement} from '#/main/core/layout/components/tooltip-element'
 import {ResourceEmbedded} from '#/main/core/resource/components/embedded'
 import {ModalButton} from '#/main/app/buttons/modal/containers/button'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
@@ -15,9 +14,9 @@ import {ResourceCard} from '#/main/core/resource/data/components/resource-card'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/data/types/resource/prop-types'
 import {MODAL_RESOURCE_EXPLORER} from '#/main/core/resource/modals/explorer'
 
-const ResourceInput = props =>
-  <div>
-    {!isEmpty(props.value) && !props.embedded &&
+const ResourceInput = props => {
+  if (!isEmpty(props.value) && !props.embedded) {
+    return(
       <ResourceCard
         data={props.value}
         actions={[
@@ -51,35 +50,33 @@ const ResourceInput = props =>
           }
         ]}
       />
-    }
-    {!isEmpty(props.value) && props.embedded &&
-      <div className="resource-preview">
-        <TooltipElement
-          id={`${props.value.id}-delete`}
-          position="left"
-          tip={trans('delete')}
+    )
+  }
+  else if (!isEmpty(props.value) && props.embedded) {
+    return(
+      <div>
+        <ModalButton
+          className="btn btn-sm btn-link"
+          title={trans('delete')}
+          dangerous={true}
+          modal={[MODAL_CONFIRM, {
+            dangerous: true,
+            icon: 'fa fa-fw fa-trash-o',
+            title: trans('resources_delete_confirm'),
+            question: trans('resource_delete_message'),
+            handleConfirm: () => props.onChange(null)
+          }]}
         >
-          <ModalButton
-            className="btn btn-danger"
-            title={trans('delete')}
-            dangerous={true}
-            modal={[MODAL_CONFIRM, {
-              dangerous: true,
-              icon: 'fa fa-fw fa-trash-o',
-              title: trans('resources_delete_confirm'),
-              question: trans('resource_delete_message'),
-              handleConfirm: () => props.onChange(null)
-            }]}
-          >
-            <span className="fa fa-fw fa-trash-o" />
-          </ModalButton>
-        </TooltipElement>
+          <span>{trans('delete')}</span>
+        </ModalButton>
         <ResourceEmbedded
           resourceNode={props.value}
         />
       </div>
-    }
-    {isEmpty(props.value) &&
+    )
+  }
+  else {
+    return(
       <EmptyPlaceholder
         size="lg"
         icon="fa fa-folder"
@@ -105,8 +102,9 @@ const ResourceInput = props =>
           {trans('add_resource')}
         </ModalButton>
       </EmptyPlaceholder>
-    }
-  </div>
+    )
+  }
+}
 
 
 implementPropTypes(ResourceInput, FormFieldTypes, {
