@@ -83,6 +83,7 @@ class HomeTabSerializer
         }
 
         ksort($containers);
+        $containers = array_values($containers);
 
         $poster = null;
 
