@@ -38,7 +38,11 @@ class SessionFinder extends AbstractFinder
                 case 'organizations':
                     break;
                 case 'course':
-                    $qb->andWhere("UPPER(course.title) LIKE :{$filterName}");
+                    $qb->andWhere("c.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+                case 'courseTitle':
+                    $qb->andWhere("UPPER(c.title) LIKE :{$filterName}");
                     $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
                     break;
                 default:
@@ -57,6 +61,7 @@ class SessionFinder extends AbstractFinder
 
             switch ($sortByProperty) {
                 case 'course':
+                case 'courseTitle':
                     $qb->orderBy('c.title', $sortByDirection);
                     break;
             }

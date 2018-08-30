@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Manager\Task;
 
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\Task\ScheduledTaskSerializer;
 use Claroline\CoreBundle\Entity\Task\ScheduledTask;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Validation\Exception\InvalidDataException;
@@ -33,7 +33,7 @@ class ScheduledTaskManager
     /** @var ScheduledTaskRepository */
     private $repository;
 
-    /** @var ScheduledTaskSerializer */
+    /** @var SerializerProvider */
     private $serializer;
 
     /**
@@ -42,17 +42,17 @@ class ScheduledTaskManager
      * @DI\InjectParams({
      *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
      *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "serializer"    = @DI\Inject("claroline.serializer.scheduled_task")
+     *     "serializer"    = @DI\Inject("claroline.api.serializer")
      * })
      *
      * @param ObjectManager                $om
      * @param PlatformConfigurationHandler $configHandler
-     * @param ScheduledTaskSerializer      $serializer
+     * @param SerializerProvider           $serializer
      */
     public function __construct(
         ObjectManager $om,
         PlatformConfigurationHandler $configHandler,
-        ScheduledTaskSerializer $serializer)
+        SerializerProvider $serializer)
     {
         $this->om = $om;
         $this->configHandler = $configHandler;
@@ -106,7 +106,7 @@ class ScheduledTaskManager
             throw new InvalidDataException('Scheduled task is not valid', $errors);
         }
 
-        $this->serializer->deserialize($data, $scheduledTask);
+        $this->serializer->deserialize('Claroline\CoreBundle\Entity\Task\ScheduledTask', $data);
 
         $this->om->persist($scheduledTask);
         $this->om->flush();

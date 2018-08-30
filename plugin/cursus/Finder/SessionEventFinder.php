@@ -40,10 +40,18 @@ class SessionEventFinder extends AbstractFinder
                 case 'organizations':
                     break;
                 case 'session':
+                    $qb->andWhere("s.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+                case 'sessionName':
                     $qb->andWhere("UPPER(s.name) LIKE :{$filterName}");
                     $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
                     break;
                 case 'course':
+                    $qb->andWhere("c.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+                case 'courseTitle':
                     $qb->andWhere("UPPER(c.title) LIKE :{$filterName}");
                     $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
                     break;
@@ -69,9 +77,11 @@ class SessionEventFinder extends AbstractFinder
 
             switch ($sortByProperty) {
                 case 'session':
+                case 'sessionName':
                     $qb->orderBy('s.name', $sortByDirection);
                     break;
                 case 'course':
+                case 'courseTitle':
                     $qb->orderBy('c.title', $sortByDirection);
                     break;
                 case 'eventSet':

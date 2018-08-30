@@ -13,9 +13,10 @@ const Sessions = () =>
     }}
     primaryAction={SessionList.open}
     delete={{
-      url: ['apiv2_session_delete_bulk']
+      url: ['apiv2_cursus_session_delete_bulk']
     }}
     definition={SessionList.definition}
+    card={SessionList.card}
   />
 
 export {

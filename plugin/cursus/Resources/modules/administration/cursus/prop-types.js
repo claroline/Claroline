@@ -4,6 +4,8 @@ import {Role as RoleType} from '#/main/core/user/prop-types'
 import {User as UserType} from '#/main/core/user/prop-types'
 import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
 
+import {constants} from '#/plugin/cursus/administration/cursus/constants'
+
 const Parameters = {
   propTypes: {
     disable_certificates: T.bool.isRequired,
@@ -45,9 +47,11 @@ const Course = {
     })
   },
   defaultProps: {
+    code: '',
+    title: '',
     meta: {
       withSessionEvent: true,
-      order: 500
+      order: constants.DEFAULT_ORDER
     },
     registration: {
       publicRegistration: false,
@@ -72,7 +76,7 @@ const Cursus = {
       order: T.number,
       icon: T.string,
       blocking: T.bool,
-      details: T.object
+      color: T.string
     }),
     structure: T.shape({
       root: T.number,
@@ -80,6 +84,13 @@ const Cursus = {
       lft: T.number,
       rgt: T.number
     })
+  },
+  defaultProps: {
+    title: '',
+    meta: {
+      order: 0,
+      blocking: false
+    }
   }
 }
 
@@ -114,6 +125,22 @@ const Session = {
       organizationValidation: T.bool,
       eventRegistrationType: T.number
     })
+  },
+  defaultProps: {
+    name: '',
+    meta: {
+      defaultSession: false,
+      order: constants.DEFAULT_ORDER,
+      certificated: true
+    },
+    registration: {
+      publicRegistration: false,
+      publicUnregistration: false,
+      registrationValidation: false,
+      userValidation: false,
+      organizationValidation: false,
+      eventRegistrationType: constants.REGISTRATION_AUTO
+    }
   }
 }
 
@@ -136,7 +163,7 @@ const SessionEvent = {
     meta: T.shape({
       type: T.number,
       session: T.shape(Session.propTypes),
-      set: T.shape(SessionEventSet.propTypes)
+      set: T.string
     }),
     restrictions: T.shape({
       maxUsers: T.number,
@@ -145,6 +172,15 @@ const SessionEvent = {
     registration: T.shape({
       registrationType: T.number
     })
+  },
+  defaultProps: {
+    name: '',
+    meta: {
+      type: constants.EVENT_TYPE_NONE
+    },
+    registration: {
+      registrationType: constants.REGISTRATION_AUTO
+    }
   }
 }
 

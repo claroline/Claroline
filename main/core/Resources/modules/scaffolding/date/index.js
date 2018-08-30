@@ -117,6 +117,10 @@ function getTimeDiff(startDate, endDate) {
   return duration._data.seconds + duration._data.minutes * 60 + duration._data.hours * 3600 + duration._data.days * 86400
 }
 
+function nowAdd(addition, local = true) {
+  return local ? moment().utc().local().add(addition).format(getApiFormat()) : moment().utc().add(addition).format(getApiFormat())
+}
+
 export {
   getApiFormat,
   getDisplayFormat,
@@ -127,5 +131,6 @@ export {
   apiToDateObject,
   dateToDisplayFormat,
   computeElapsedTime,
-  getTimeDiff
+  getTimeDiff,
+  nowAdd
 }

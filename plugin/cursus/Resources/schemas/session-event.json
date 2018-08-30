@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The session event uuid"
+    },
+    "name": {
+      "type": "string",
+      "description": "The session event name",
+      "minLength": 1
+    },
+    "description": {
+      "type": ["string", "null"],
+      "description": "The session event description"
+    },
+    "meta": {
+      "type": ["object"],
+      "properties": {
+        "session": {
+          "type": ["object"],
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "The session event session"
+            }
+          }
+        },
+        "type": {
+          "type": "integer",
+          "description": "The session event type"
+        },
+        "set": {
+          "type": ["string", "null"],
+          "description": "The session event set"
+        }
+      }
+    },
+    "restrictions": {
+      "type": "object",
+      "properties": {
+        "maxUsers": {
+          "type": ["integer", "null"],
+          "description": "The maximum amount of users the session event can have"
+        },
+        "dates": {
+          "type": "array",
+          "items": {
+            "type": ["string", "null"]
+          }
+        }
+      }
+    },
+    "registration": {
+      "type": "object",
+      "properties": {
+        "registrationType": {
+          "type": "integer"
+        }
+      },
+      "required": ["registrationType"]
+    }
+  },
+  "required": ["name"],
+  "claroline": {
+    "requiredAtCreation": ["name"],
+    "ids": ["id"]
+  }
+}

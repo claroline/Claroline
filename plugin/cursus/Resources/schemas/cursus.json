@@ -60,6 +60,10 @@
         "order": {
           "type": "integer",
           "description": "The cursus order"
+        },
+        "color": {
+          "type": ["string", "null"],
+          "description": "The cursus color"
         }
       },
       "required": ["blocking", "order"]

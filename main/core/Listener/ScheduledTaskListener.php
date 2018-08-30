@@ -45,7 +45,7 @@ class ScheduledTaskListener
     }
 
     /**
-     * @DI\Observe("claroline_scheduled_task_execute_mail")
+     * @DI\Observe("claroline_scheduled_task_execute_email")
      *
      * @param GenericDataEvent $event
      */
@@ -60,8 +60,9 @@ class ScheduledTaskListener
         $content = isset($data['content']) ? $data['content'] : null;
 
         if (count($users) > 0 && !empty($object) && !empty($content)) {
-            $this->mailManager->send($object, $content, $users);
-            $this->taskManager->markAsExecuted($task);
+            if ($this->mailManager->send($object, $content, $users)) {
+                $this->taskManager->markAsExecuted($task);
+            }
         }
 
         $event->stopPropagation();

@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The session uuid"
+    },
+    "name": {
+      "type": "string",
+      "description": "The session name",
+      "minLength": 1
+    },
+    "description": {
+      "type": ["string", "null"],
+      "description": "The session description"
+    },
+    "meta": {
+      "type": ["object"],
+      "properties": {
+        "course": {
+          "type": ["object"],
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "The session course"
+            }
+          }
+        },
+        "type": {
+          "type": "integer",
+          "description": "The session type"
+        },
+        "sessionStatus": {
+          "type": "integer",
+          "description": "The session status"
+        },
+        "defaultSession": {
+          "type": "boolean",
+          "description": "Whether the session is the default one"
+        },
+        "order": {
+          "type": "integer",
+          "description": "The cursus order"
+        },
+        "color": {
+          "type": ["string", "null"],
+          "description": "The session color"
+        },
+        "total": {
+          "type": "integer",
+          "description": "The session total"
+        },
+        "certificated": {
+          "type": "boolean",
+          "description": "Whether the session is certificated or not"
+        }
+      },
+      "required": ["defaultSession", "order", "certificated"]
+    },
+    "restrictions": {
+      "type": "object",
+      "properties": {
+        "maxUsers": {
+          "type": ["integer", "null"],
+          "description": "The maximum amount of users the session can have"
+        },
+        "dates": {
+          "type": "array",
+          "items": {
+            "type": ["string", "null"]
+          }
+        }
+      }
+    },
+    "registration": {
+      "type": "object",
+      "properties": {
+        "publicRegistration": {
+          "type": "boolean"
+        },
+        "publicUnregistration": {
+          "type": "boolean"
+        },
+        "registrationValidation": {
+          "type": "boolean"
+        },
+        "userValidation": {
+          "type": "boolean"
+        },
+        "organizationValidation": {
+          "type": "boolean"
+        },
+        "eventRegistrationType": {
+          "type": "integer"
+        }
+      },
+      "required": ["publicRegistration", "publicUnregistration", "registrationValidation", "userValidation", "organizationValidation", "eventRegistrationType"]
+    }
+  },
+  "required": ["name"],
+  "claroline": {
+    "requiredAtCreation": ["name"],
+    "ids": ["id"]
+  }
+}

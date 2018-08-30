@@ -238,6 +238,137 @@ class CursusManager
         $this->locationRepo = $om->getRepository('ClarolineCoreBundle:Organization\Location');
     }
 
+    /**
+     * Generates a workspace from CourseSession.
+     *
+     * @param CourseSession $session
+     *
+     * @return Workspace
+     */
+    public function generateWorkspace(CourseSession $session)
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        $course = $session->getCourse();
+
+        $model = $course->getWorkspaceModel();
+        $name = $course->getTitle().' ['.$session->getName().']';
+        $code = $this->generateWorkspaceCode($course->getCode());
+
+        $workspace = new Workspace();
+        $workspace->setCreator($user);
+        $workspace->setName($name);
+        $workspace->setCode($code);
+        $workspace->setDescription($course->getDescription());
+
+        if (is_null($model)) {
+            $defaultModel = $this->workspaceManager->getDefaultModel();
+            $workspace = $this->workspaceManager->copy($defaultModel, $workspace);
+        } else {
+            $workspace = $this->workspaceManager->copy($model, $workspace);
+        }
+        $workspace->setWorkspaceType(0);
+        $workspace->setStartDate($session->getStartDate());
+        $workspace->setEndDate($session->getEndDate());
+        $this->om->persist($workspace);
+
+        return $workspace;
+    }
+
+    /**
+     * Gets/generates workspace role for session depending on given role name and type.
+     *
+     * @param Workspace $workspace
+     * @param string    $roleName
+     * @param string    $type
+     *
+     * @return \Claroline\CoreBundle\Entity\Role
+     */
+    public function generateRoleForSession(Workspace $workspace, $roleName, $type = 'learner')
+    {
+        if (empty($roleName)) {
+            if ('manager' === $type) {
+                $role = $this->roleManager->getManagerRole($workspace);
+            } else {
+                $role = $this->roleManager->getCollaboratorRole($workspace);
+            }
+        } else {
+            $roles = $this->roleManager->getRolesByWorkspaceCodeAndTranslationKey(
+                $workspace->getCode(),
+                $roleName
+            );
+
+            if (count($roles) > 0) {
+                $role = $roles[0];
+            } else {
+                $uuid = $workspace->getUuid();
+                $wsRoleName = 'ROLE_WS_'.strtoupper($roleName).'_'.$uuid;
+
+                $role = $this->roleManager->getRoleByName($wsRoleName);
+
+                if (is_null($role)) {
+                    $role = $this->roleManager->createWorkspaceRole(
+                        $wsRoleName,
+                        $roleName,
+                        $workspace
+                    );
+                }
+            }
+        }
+
+        return $role;
+    }
+
+    /**
+     * Sets all sessions from a course (excepted given one) as non-default.
+     *
+     * @param Course             $course
+     * @param CourseSession|null $session
+     * @param bool               $noFlush
+     */
+    public function resetDefaultSessionByCourse(Course $course, CourseSession $session = null, $noFlush = true)
+    {
+        $defaultSessions = $this->courseSessionRepo->findBy(['course' => $course, 'defaultSession' => true]);
+
+        foreach ($defaultSessions as $defaultSession) {
+            if ($defaultSession !== $session) {
+                $defaultSession->setDefaultSession(false);
+                $this->om->persist($defaultSession);
+            }
+        }
+        if (!$noFlush) {
+            $this->om->flush();
+        }
+    }
+
+    /**
+     * Generates an unique workspace code from given one by iterating it.
+     *
+     * @param string $code
+     *
+     * @return string
+     */
+    private function generateWorkspaceCode($code)
+    {
+        $workspaceCodes = $this->workspaceManager->getWorkspaceCodesWithPrefix($code);
+        $existingCodes = [];
+
+        foreach ($workspaceCodes as $wsCode) {
+            $existingCodes[] = $wsCode['code'];
+        }
+
+        $index = count($existingCodes) + 1;
+        $currentCode = $code.'_'.$index;
+        $upperCurrentCode = strtoupper($currentCode);
+
+        while (in_array($upperCurrentCode, $existingCodes)) {
+            ++$index;
+            $currentCode = $code.'_'.$index;
+            $upperCurrentCode = strtoupper($currentCode);
+        }
+
+        return $currentCode;
+    }
+
     /*******************
      *   Old methods   *
      *******************/
@@ -1489,12 +1620,12 @@ class CursusManager
         $learnerRole = $this->generateRoleForSession(
             $workspace,
             $course->getLearnerRoleName(),
-            0
+            'learner'
         );
         $tutorRole = $this->generateRoleForSession(
             $workspace,
             $course->getTutorRoleName(),
-            1
+            'tutor'
         );
         $session->setLearnerRole($learnerRole);
         $session->setTutorRole($tutorRole);
@@ -1704,20 +1835,6 @@ class CursusManager
         return $createdSessionEvents;
     }
 
-    public function resetDefaultSessionByCourse(Course $course, CourseSession $session = null)
-    {
-        $defaultSessions = $this->getDefaultSessionsByCourse($course);
-
-        $this->om->startFlushSuite();
-
-        foreach ($defaultSessions as $defaultSession) {
-            if ($defaultSession !== $session) {
-                $defaultSession->setDefaultSession(false);
-            }
-        }
-        $this->om->endFlushSuite();
-    }
-
     public function deleteCourseSessionUsers(array $sessionUsers)
     {
         $this->om->startFlushSuite();
@@ -1728,88 +1845,6 @@ class CursusManager
             $this->om->remove($sessionUser);
         }
         $this->om->endFlushSuite();
-    }
-
-    public function generateWorkspace(Course $course, CourseSession $session)
-    {
-        $user = $this->tokenStorage->getToken()->getUser();
-        $model = $course->getWorkspaceModel();
-        $description = $course->getDescription();
-        $displayable = false;
-        $selfRegistration = false;
-        $selfUnregistration = false;
-        $registrationValidation = false;
-        $name = $course->getTitle().
-            ' ['.
-            $session->getName().
-            ']';
-        $code = $this->generateWorkspaceCode($course->getCode());
-        $workspace = new Workspace();
-        $workspace->setCreator($user);
-        $workspace->setName($name);
-        $workspace->setCode($code);
-        $workspace->setDisplayable($displayable);
-        $workspace->setSelfRegistration($selfRegistration);
-        $workspace->setSelfUnregistration($selfUnregistration);
-        $workspace->setRegistrationValidation($registrationValidation);
-        $workspace->setDescription($description);
-
-        if (is_null($model)) {
-            $template = new File($this->defaultTemplate);
-            $workspace = $this->workspaceManager->create($workspace, $template);
-        } else {
-            $workspace = $this->workspaceManager->copy($model, $workspace);
-        }
-        $workspace->setWorkspaceType(0);
-
-        $startDate = $session->getStartDate();
-        $endDate = $session->getEndDate();
-
-        if (!is_null($startDate)) {
-            $workspace->setStartDate($startDate);
-        }
-
-        if (!is_null($endDate)) {
-            $workspace->setEndDate($endDate);
-        }
-        $this->workspaceManager->editWorkspace($workspace);
-
-        return $workspace;
-    }
-
-    public function generateRoleForSession(Workspace $workspace, $roleName, $type)
-    {
-        if (empty($roleName)) {
-            if (1 === $type) {
-                $role = $this->roleManager->getManagerRole($workspace);
-            } else {
-                $role = $this->roleManager->getCollaboratorRole($workspace);
-            }
-        } else {
-            $roles = $this->roleManager->getRolesByWorkspaceCodeAndTranslationKey(
-                $workspace->getCode(),
-                $roleName
-            );
-
-            if (count($roles) > 0) {
-                $role = $roles[0];
-            } else {
-                $guid = $workspace->getGuid();
-                $wsRoleName = 'ROLE_WS_'.strtoupper($roleName).'_'.$guid;
-
-                $role = $this->roleManager->getRoleByName($wsRoleName);
-
-                if (is_null($role)) {
-                    $role = $this->roleManager->createWorkspaceRole(
-                        $wsRoleName,
-                        $roleName,
-                        $workspace
-                    );
-                }
-            }
-        }
-
-        return $role;
     }
 
     public function associateCursusToSessions(Cursus $cursus, array $sessions)
@@ -1832,28 +1867,6 @@ class CursusManager
             $this->getConfirmationEmail(),
             $datas
         );
-    }
-
-    private function generateWorkspaceCode($code)
-    {
-        $workspaceCodes = $this->workspaceManager->getWorkspaceCodesWithPrefix($code);
-        $existingCodes = [];
-
-        foreach ($workspaceCodes as $wsCode) {
-            $existingCodes[] = $wsCode['code'];
-        }
-
-        $index = count($existingCodes) + 1;
-        $currentCode = $code.'_'.$index;
-        $upperCurrentCode = strtoupper($currentCode);
-
-        while (in_array($upperCurrentCode, $existingCodes)) {
-            ++$index;
-            $currentCode = $code.'_'.$index;
-            $upperCurrentCode = strtoupper($currentCode);
-        }
-
-        return $currentCode;
     }
 
     public function saveIcon(UploadedFile $tmpFile, $object)

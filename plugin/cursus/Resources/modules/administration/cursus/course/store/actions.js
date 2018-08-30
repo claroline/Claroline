@@ -1,8 +1,7 @@
-// import {url} from '#/main/app/api'
-
+import {url} from '#/main/app/api'
 import {API_REQUEST} from '#/main/app/api'
 import {actions as formActions} from '#/main/app/content/form/store'
-// import {actions as listActions} from '#/main/app/content/list/store'
+import {actions as listActions} from '#/main/app/content/list/store'
 
 export const actions = {}
 
@@ -18,18 +17,23 @@ actions.open = (formName, defaultProps, id = null) => (dispatch) => {
     })
   } else {
     dispatch(formActions.resetForm(formName, defaultProps, true))
+    dispatch(listActions.invalidateData(formName+'.sessions'))
+    dispatch(listActions.invalidateData(formName+'.organizations.list'))
   }
 }
 
-// actions.addUsers = (id, users) => ({
-//   [API_REQUEST]: {
-//     url: url(['apiv2_role_add_users', {id: id}], {ids: users}),
-//     request: {
-//       method: 'PATCH'
-//     },
-//     success: (data, dispatch) => {
-//       dispatch(listActions.invalidateData('roles.list'))
-//       dispatch(listActions.invalidateData('roles.current.users'))
-//     }
-//   }
-// })
+actions.reset = (formName) => (dispatch) => {
+  dispatch(formActions.resetForm(formName, {}, true))
+}
+
+actions.addOrganizations = (courseId, organizations) => ({
+  [API_REQUEST]: {
+    url: url(['apiv2_cursus_course_add_organizations', {id: courseId}], {ids: organizations}),
+    request: {
+      method: 'PATCH'
+    },
+    success: (data, dispatch) => {
+      dispatch(listActions.invalidateData('courses.current.organizations.list'))
+    }
+  }
+})

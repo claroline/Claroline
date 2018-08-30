@@ -47,7 +47,8 @@ class SessionEvent
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CursusBundle\Entity\CourseSession",
-     *     inversedBy="events"
+     *     inversedBy="events",
+     *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="session_id", nullable=false, onDelete="CASCADE")
      */

@@ -2,6 +2,8 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {trans} from '#/main/core/translation'
 
+import {CourseCard} from '#/plugin/cursus/administration/cursus/course/data/components/course-card'
+
 const CourseList = {
   open: (row) => ({
     type: LINK_BUTTON,
@@ -57,7 +59,8 @@ const CourseList = {
       label: trans('organization_validation', {}, 'cursus'),
       displayed: true
     }
-  ]
+  ],
+  card: CourseCard
 }
 
 export {

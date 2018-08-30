@@ -19,16 +19,11 @@
 {% endblock %}
 
 {% block content %}
-    <div class="panel-body">
-        <div class="alert alert-warning">
-            {{ 'tool_work_in_progress'|trans({}, 'platform') }}
-        </div>
+    <div
+        class="page-container cursus-container"
+        data-parameters="{{ parameters | json_encode | raw | escape }}"
+    >
     </div>
-    {#<div#}
-        {#class="page-container cursus-container"#}
-        {#data-parameters="{{ parameters | json_encode | raw | escape }}"#}
-    {#>#}
-    {#</div>#}
 {% endblock %}
 
 {% block javascripts %}

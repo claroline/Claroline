@@ -13,8 +13,8 @@ namespace Claroline\CursusBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CursusBundle\Entity\SessionEventComment;
 use Claroline\CursusBundle\Repository\SessionEventRepository;
@@ -30,10 +30,8 @@ class SessionEventCommentSerializer
 
     /** @var ObjectManager */
     private $om;
-    /** @var SessionEventSerializer */
-    private $sessionEventSerializer;
-    /** @var UserSerializer */
-    private $userSerializer;
+    /** @var SerializerProvider */
+    private $serializer;
 
     /** @var SessionEventRepository */
     private $sessionEventRepo;
@@ -44,23 +42,17 @@ class SessionEventCommentSerializer
      * SessionEventCommentSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
-     *     "sessionEventSerializer" = @DI\Inject("claroline.serializer.cursus.event"),
-     *     "userSerializer"         = @DI\Inject("claroline.serializer.user")
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
+     *     "serializer" = @DI\Inject("claroline.api.serializer")
      * })
      *
-     * @param ObjectManager          $om
-     * @param SessionEventSerializer $sessionEventSerializer
-     * @param UserSerializer         $userSerializer
+     * @param ObjectManager      $om
+     * @param SerializerProvider $serializer
      */
-    public function __construct(
-        ObjectManager $om,
-        SessionEventSerializer $sessionEventSerializer,
-        UserSerializer $userSerializer
-    ) {
+    public function __construct(ObjectManager $om, SerializerProvider $serializer)
+    {
         $this->om = $om;
-        $this->sessionEventSerializer = $sessionEventSerializer;
-        $this->userSerializer = $userSerializer;
+        $this->serializer = $serializer;
 
         $this->sessionEventRepo = $om->getRepository('Claroline\CursusBundle\Entity\CourseSession');
         $this->userRepo = $om->getRepository('Claroline\CoreBundle\Entity\User');
@@ -77,13 +69,13 @@ class SessionEventCommentSerializer
         $serialized = [
             'id' => $eventComment->getUuid(),
             'content' => $eventComment->getContent(),
-            'user' => $this->userSerializer->serialize($eventComment->getUser(), [Options::SERIALIZE_MINIMAL]),
+            'user' => $this->serializer->serialize($eventComment->getUser(), [Options::SERIALIZE_MINIMAL]),
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
                 'meta' => [
-                    'sessionEvent' => $this->sessionEventSerializer->serialize($eventComment->getSessionEvent(), [Options::SERIALIZE_MINIMAL]),
+                    'sessionEvent' => $this->serializer->serialize($eventComment->getSessionEvent(), [Options::SERIALIZE_MINIMAL]),
                     'creationDate' => DateNormalizer::normalize($eventComment->getCreationDate()),
                     'editionDate' => $eventComment->getEditionDate() ?
                         DateNormalizer::normalize($eventComment->getEditionDate()) :

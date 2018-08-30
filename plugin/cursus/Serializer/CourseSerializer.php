@@ -13,8 +13,8 @@ namespace Claroline\CursusBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Repository\Organization\OrganizationRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\CursusBundle\Entity\Course;
@@ -31,10 +31,10 @@ class CourseSerializer
 
     /** @var ObjectManager */
     private $om;
+    /** @var SerializerProvider */
+    private $serializer;
     /** @var TokenStorageInterface */
     private $tokenStorage;
-    /** @var WorkspaceSerializer */
-    private $workspaceSerializer;
 
     /** @var OrganizationRepository */
     private $organizationRepo;
@@ -45,23 +45,23 @@ class CourseSerializer
      * CourseSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
-     *     "tokenStorage"        = @DI\Inject("security.token_storage"),
-     *     "workspaceSerializer" = @DI\Inject("claroline.serializer.workspace")
+     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
+     *     "serializer"   = @DI\Inject("claroline.api.serializer"),
+     *     "tokenStorage" = @DI\Inject("security.token_storage")
      * })
      *
      * @param ObjectManager         $om
+     * @param SerializerProvider    $serializer
      * @param TokenStorageInterface $tokenStorage
-     * @param WorkspaceSerializer   $workspaceSerializer
      */
     public function __construct(
         ObjectManager $om,
-        TokenStorageInterface $tokenStorage,
-        WorkspaceSerializer $workspaceSerializer
+        SerializerProvider $serializer,
+        TokenStorageInterface $tokenStorage
     ) {
         $this->om = $om;
+        $this->serializer = $serializer;
         $this->tokenStorage = $tokenStorage;
-        $this->workspaceSerializer = $workspaceSerializer;
 
         $this->organizationRepo = $om->getRepository('Claroline\CoreBundle\Entity\Organization\Organization');
         $this->workspaceRepo = $om->getRepository('Claroline\CoreBundle\Entity\Workspace\Workspace');
@@ -94,10 +94,10 @@ class CourseSerializer
             $serialized = array_merge($serialized, [
                 'meta' => [
                     'workspaceModel' => $course->getWorkspaceModel() ?
-                        $this->workspaceSerializer->serialize($course->getWorkspaceModel(), [Options::SERIALIZE_MINIMAL]) :
+                        $this->serializer->serialize($course->getWorkspaceModel(), [Options::SERIALIZE_MINIMAL]) :
                         null,
                     'workspace' => $course->getWorkspace() ?
-                        $this->workspaceSerializer->serialize($course->getWorkspace(), [Options::SERIALIZE_MINIMAL]) :
+                        $this->serializer->serialize($course->getWorkspace(), [Options::SERIALIZE_MINIMAL]) :
                         null,
                     'tutorRoleName' => $course->getTutorRoleName(),
                     'learnerRoleName' => $course->getLearnerRoleName(),

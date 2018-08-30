@@ -13,6 +13,7 @@ namespace Claroline\CursusBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CursusBundle\Entity\SessionEventSet;
 use Claroline\CursusBundle\Repository\CourseSessionRepository;
@@ -28,8 +29,8 @@ class SessionEventSetSerializer
 
     /** @var ObjectManager */
     private $om;
-    /** @var SessionSerializer */
-    private $sessionSerializer;
+    /** @var SerializerProvider */
+    private $serializer;
 
     /** @var CourseSessionRepository */
     private $sessionRepo;
@@ -38,17 +39,17 @@ class SessionEventSetSerializer
      * SessionEventSetSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
-     *     "sessionSerializer" = @DI\Inject("claroline.serializer.cursus.session")
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
+     *     "serializer" = @DI\Inject("claroline.api.serializer")
      * })
      *
-     * @param ObjectManager     $om
-     * @param SessionSerializer $sessionSerializer
+     * @param ObjectManager      $om
+     * @param SerializerProvider $serializer
      */
-    public function __construct(ObjectManager $om, SessionSerializer $sessionSerializer)
+    public function __construct(ObjectManager $om, SerializerProvider $serializer)
     {
         $this->om = $om;
-        $this->sessionSerializer = $sessionSerializer;
+        $this->serializer = $serializer;
 
         $this->sessionRepo = $om->getRepository('Claroline\CursusBundle\Entity\CourseSession');
     }
@@ -70,7 +71,7 @@ class SessionEventSetSerializer
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
                 'meta' => [
-                    'session' => $this->sessionSerializer->serialize($eventSet->getSession(), [Options::SERIALIZE_MINIMAL]),
+                    'session' => $this->serializer->serialize($eventSet->getSession(), [Options::SERIALIZE_MINIMAL]),
                 ],
             ]);
         }

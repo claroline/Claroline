@@ -8,6 +8,7 @@ import {Routes} from '#/main/app/router'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {trans} from '#/main/core/translation'
+import {makeId} from '#/main/core/scaffolding/id'
 import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions'
 
 import {selectors} from '#/plugin/cursus/administration/cursus/store'
@@ -40,14 +41,16 @@ const CourseTabComponent = props =>
       }, {
         path: '/courses/form/:id?',
         component: CourseForm,
-        onEnter: (params) => props.openForm(props.parameters, params.id)
+        onEnter: (params) => props.openForm(props.parameters, params.id),
+        onLeave: () => props.resetForm()
       }
     ]}
   />
 
 CourseTabComponent.propTypes = {
   parameters: T.shape(ParametersType.propTypes),
-  openForm: T.func.isRequired
+  openForm: T.func.isRequired,
+  resetForm: T.func.isRequired
 }
 
 const CourseTab = connect(
@@ -57,9 +60,13 @@ const CourseTab = connect(
   (dispatch) => ({
     openForm(parameters, id = null) {
       const defaultProps = cloneDeep(CourseType.defaultProps)
+      set(defaultProps, 'id', makeId())
       set(defaultProps, 'meta.defaultSessionDuration', parameters['session_default_duration'])
 
       dispatch(actions.open('courses.current', defaultProps, id))
+    },
+    resetForm() {
+      dispatch(actions.reset('courses.current'))
     }
   })
 )(CourseTabComponent)

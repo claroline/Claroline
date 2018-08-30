@@ -13,9 +13,11 @@ namespace Claroline\CursusBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CursusBundle\Entity\SessionEvent;
+use Claroline\CursusBundle\Entity\SessionEventSet;
 use Claroline\CursusBundle\Repository\CourseSessionRepository;
 use Claroline\CursusBundle\Repository\SessionEventSetRepository;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -30,10 +32,8 @@ class SessionEventSerializer
 
     /** @var ObjectManager */
     private $om;
-    /** @var SessionEventSetSerializer */
-    private $eventSetSerializer;
-    /** @var SessionSerializer */
-    private $sessionSerializer;
+    /** @var SerializerProvider */
+    private $serializer;
 
     /** @var SessionEventSetRepository */
     private $eventSetRepo;
@@ -44,26 +44,28 @@ class SessionEventSerializer
      * SessionSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "eventSetSerializer" = @DI\Inject("claroline.serializer.cursus.event.set"),
-     *     "sessionSerializer"  = @DI\Inject("claroline.serializer.cursus.session")
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
+     *     "serializer" = @DI\Inject("claroline.api.serializer")
      * })
      *
-     * @param ObjectManager             $om
-     * @param SessionEventSetSerializer $eventSetSerializer
-     * @param SessionSerializer         $sessionSerializer
+     * @param ObjectManager      $om
+     * @param SerializerProvider $serializer
      */
-    public function __construct(
-        ObjectManager $om,
-        SessionEventSetSerializer $eventSetSerializer,
-        SessionSerializer $sessionSerializer
-    ) {
+    public function __construct(ObjectManager $om, SerializerProvider $serializer)
+    {
         $this->om = $om;
-        $this->eventSetSerializer = $eventSetSerializer;
-        $this->sessionSerializer = $sessionSerializer;
+        $this->serializer = $serializer;
 
         $this->eventSetRepo = $om->getRepository('Claroline\CursusBundle\Entity\SessionEventSet');
         $this->sessionRepo = $om->getRepository('Claroline\CursusBundle\Entity\CourseSession');
+    }
+
+    /**
+     * @return string
+     */
+    public function getSchema()
+    {
+        return '#/plugin/cursus/session-event.json';
     }
 
     /**
@@ -84,7 +86,7 @@ class SessionEventSerializer
             $serialized = array_merge($serialized, [
                 'meta' => [
                     'type' => $event->getType(),
-                    'session' => $this->sessionSerializer->serialize($event->getSession(), [Options::SERIALIZE_MINIMAL]),
+                    'session' => $this->serializer->serialize($event->getSession(), [Options::SERIALIZE_MINIMAL]),
                     'set' => $event->getEventSet() ? $event->getEventSet()->getName() : null,
                 ],
                 'restrictions' => [
@@ -143,10 +145,10 @@ class SessionEventSerializer
             $eventSet = $this->eventSetRepo->findSessionEventSetBySessionAndName($session, $data['meta']['set']);
 
             if (empty($eventSet)) {
-                $set = new SessionEventSet();
-                $set->setSession($session);
-                $set->setName($data['meta']['set']);
-                $this->om->persist($set);
+                $eventSet = new SessionEventSet();
+                $eventSet->setSession($session);
+                $eventSet->setName($data['meta']['set']);
+                $this->om->persist($eventSet);
             }
             $event->setEventSet($eventSet);
         } else {

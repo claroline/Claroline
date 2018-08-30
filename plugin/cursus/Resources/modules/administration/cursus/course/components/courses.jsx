@@ -16,6 +16,7 @@ const Courses = () =>
       url: ['apiv2_cursus_course_delete_bulk']
     }}
     definition={CourseList.definition}
+    card={CourseList.card}
   />
 
 export {

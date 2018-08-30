@@ -365,6 +365,19 @@ class Cursus
         $this->organizations->clear();
     }
 
+    public function getColor()
+    {
+        return !is_null($this->details) && isset($this->details['color']) ? $this->details['color'] : null;
+    }
+
+    public function setColor($color)
+    {
+        if (is_null($this->details)) {
+            $this->details = [];
+        }
+        $this->details['color'] = $color;
+    }
+
     public function getTitleAndCode()
     {
         $result = $this->title;
@@ -376,11 +389,6 @@ class Cursus
         return $result;
     }
 
-    /**
-     * @Groups({"api", "api_cursus", "api_workspace_min"})
-     * @VirtualProperty
-     * @SerializedName("parentId")
-     */
     public function getParentId()
     {
         return is_null($this->parent) ? null : $this->parent->getId();

@@ -25,37 +25,42 @@
         </h3>
     </div>
     <div class="panel-body">
-        <div class="page-container session-events-tool-container"
-             data-workspace="{{ workspace.getId() }}"
-             data-editable="{{ canEdit }}"
-             data-disable-registration="{{ disableRegistration }}"
-             data-sessions="{{ sessions | json_serialize('api_cursus_min') | raw | escape }}"
-             data-events="{{ sessionEvents | json_serialize('api_user_min') | raw | escape }}"
-             data-events-total="{{ sessionEventsTotal }}"
-             data-events-users="{{ sessionEventUsers | json_serialize('api_cursus_min') | raw | escape }}"
-        >
+        <div class="alert alert-warning">
+            {{ 'tool_work_in_progress'|trans({}, 'platform') }}
         </div>
     </div>
+    {#<div class="panel-body">#}
+        {#<div class="page-container session-events-tool-container"#}
+             {#data-workspace="{{ workspace.getId() }}"#}
+             {#data-editable="{{ canEdit }}"#}
+             {#data-disable-registration="{{ disableRegistration }}"#}
+             {#data-sessions="{{ sessions | json_serialize('api_cursus_min') | raw | escape }}"#}
+             {#data-events="{{ sessionEvents | json_serialize('api_user_min') | raw | escape }}"#}
+             {#data-events-total="{{ sessionEventsTotal }}"#}
+             {#data-events-users="{{ sessionEventUsers | json_serialize('api_cursus_min') | raw | escape }}"#}
+        {#>#}
+        {#</div>#}
+    {#</div>#}
 {% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-exo-quiz-resource.css') }}" />
-    <style>
-        .session-events-tool-container > [data-reactroot] {
-            width: 100%;
-        }
-    </style>
-{% endblock %}
+{#{% block stylesheets %}#}
+    {#{{ parent() }}#}
+    {#<link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-exo-quiz-resource.css') }}" />#}
+    {#<style>#}
+        {#.session-events-tool-container > [data-reactroot] {#}
+            {#width: 100%;#}
+        {#}#}
+    {#</style>#}
+{#{% endblock %}#}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script src="{{ hotAsset('dist/claroline-distribution-plugin-cursus-cursus-management.js') }}"></script>
-    {% javascripts debug=false
-        'js/translations/cursus/*.js'
-        'js/translations/tools/*.js'
-    %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-    <script src="{{ hotAsset('dist/claroline-distribution-plugin-cursus-session-events-tool.js') }}"></script>
-{% endblock javascripts %}
+{#{% block javascripts %}#}
+    {#{{ parent() }}#}
+    {#<script src="{{ hotAsset('dist/claroline-distribution-plugin-cursus-cursus-management.js') }}"></script>#}
+    {#{% javascripts debug=false#}
+        {#'js/translations/cursus/*.js'#}
+        {#'js/translations/tools/*.js'#}
+    {#%}#}
+        {#<script src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+    {#<script src="{{ hotAsset('dist/claroline-distribution-plugin-cursus-session-events-tool.js') }}"></script>#}
+{#{% endblock javascripts %}#}
