@@ -10,7 +10,7 @@ const action = (resourceNodes, nodesRefresher) => ({
   label: trans('follow', {}, 'actions'),
   displayed: isAuthenticated() && -1 !== resourceNodes.findIndex(node => !get(node, 'notifications.enabled')),
   request: {
-    url: ['icap_notification_follower_resources_toggle', {ids: resourceNodes.map(node => node.id)}],
+    url: ['icap_notification_follower_resources_toggle', {mode: 'create', ids: resourceNodes.map(node => node.id)}],
     request: {
       method: 'PUT'
     },

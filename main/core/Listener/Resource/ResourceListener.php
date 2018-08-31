@@ -166,10 +166,10 @@ class ResourceListener
      */
     public function publish(ResourceActionEvent $event)
     {
-        $this->manager->setPublishedStatus([$event->getResourceNode()], true);
+        $nodes = $this->manager->setPublishedStatus([$event->getResourceNode()], true);
 
         $event->setResponse(
-            new JsonResponse($this->serializer->serialize($event->getResourceNode()))
+            new JsonResponse($this->serializer->serialize($nodes[0]))
         );
     }
 
@@ -180,10 +180,10 @@ class ResourceListener
      */
     public function unpublish(ResourceActionEvent $event)
     {
-        $this->manager->setPublishedStatus([$event->getResourceNode()], false);
+        $nodes = $this->manager->setPublishedStatus([$event->getResourceNode()], false);
 
         $event->setResponse(
-            new JsonResponse($this->serializer->serialize($event->getResourceNode()))
+            new JsonResponse($this->serializer->serialize($nodes[0]))
         );
     }
 

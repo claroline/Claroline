@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Exception\ResourceAccessException;
@@ -56,6 +57,9 @@ class ResourceController
     /** @var ResourceLifecycleManager */
     private $lifecycleManager;
 
+    /** @var ObjectManager */
+    private $om;
+
     /**
      * ResourceController constructor.
      *
@@ -66,7 +70,8 @@ class ResourceController
      *     "manager"             = @DI\Inject("claroline.manager.resource_manager"),
      *     "actionManager"       = @DI\Inject("claroline.manager.resource_action"),
      *     "restrictionsManager" = @DI\Inject("claroline.manager.resource_restrictions"),
-     *     "lifecycleManager"    = @DI\Inject("claroline.manager.resource_lifecycle")
+     *     "lifecycleManager"    = @DI\Inject("claroline.manager.resource_lifecycle"),
+     *     "om"                  = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param TokenStorageInterface       $tokenStorage
@@ -76,6 +81,7 @@ class ResourceController
      * @param ResourceActionManager       $actionManager
      * @param ResourceRestrictionsManager $restrictionsManager
      * @param ResourceLifecycleManager    $lifecycleManager
+     * @param ObjectManager               $om
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -84,8 +90,9 @@ class ResourceController
         ResourceManager $manager,
         ResourceActionManager $actionManager,
         ResourceRestrictionsManager $restrictionsManager,
-        ResourceLifecycleManager $lifecycleManager)
-    {
+        ResourceLifecycleManager $lifecycleManager,
+        ObjectManager $om
+    ) {
         $this->tokenStorage = $tokenStorage;
         $this->security = $security;
         $this->serializer = $serializer;
@@ -93,6 +100,7 @@ class ResourceController
         $this->actionManager = $actionManager;
         $this->restrictionsManager = $restrictionsManager;
         $this->lifecycleManager = $lifecycleManager;
+        $this->om = $om;
     }
 
     /**
@@ -187,11 +195,54 @@ class ResourceController
     /**
      * Executes an action on a collection of resources.
      *
+     * @EXT\Route(
+     *     "/resources/collection/action/{action}",
+     *     name="claro_resource_collection_action"
+     * )
+     *
+     * @param string  $action
      * @param Request $request
+     *
+     * @return JsonResponse
+     *
+     * @throws NotFoundHttpException
      */
-    public function executeCollectionAction(Request $request)
+    public function executeCollectionAction($action, Request $request)
     {
-        // TODO : implement
+        $ids = $request->query->get('ids');
+        $resourceNodes = $this->om->findList('Claroline\CoreBundle\Entity\Resource\ResourceNode', 'uuid', $ids);
+        $responses = [];
+
+        $this->om->startFlushSuite();
+
+        foreach ($resourceNodes as $resourceNode) {
+            // check the requested action exists
+            if (!$this->actionManager->support($resourceNode, $action, $request->getMethod())) {
+                // undefined action
+                throw new NotFoundHttpException(
+                    sprintf('The action %s with method [%s] does not exist for resource type %s.', $action, $request->getMethod(), $resourceNode->getResourceType()->getName())
+                );
+            }
+
+            // check current user rights
+            $this->checkAccess($this->actionManager->get($resourceNode, $action), [$resourceNode]);
+
+            // read request and get user query
+            $parameters = $request->query->all();
+            $content = null;
+            if (!empty($request->getContent())) {
+                $content = json_decode($request->getContent(), true);
+            }
+
+            // dispatch action event
+            $responses[] = $this->actionManager->execute($resourceNode, $action, $parameters, $content);
+        }
+
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(array_map(function (Response $response) {
+            return json_decode($response->getContent(), true);
+        }, $responses));
     }
 
     /**

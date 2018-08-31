@@ -45,22 +45,23 @@ class FollowerResourceController extends AbstractCrudController
     /**
      * Follows or unfollows resources.
      *
-     * @EXT\Route("resources/toggle", name="icap_notification_follower_resources_toggle")
+     * @EXT\Route("resources/toggle/{mode}", name="icap_notification_follower_resources_toggle")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
+     * @param string  $mode
      * @param User    $user
      * @param Request $request
      *
      * @return JsonResponse
      */
-    public function followerResourcesToggleAction(User $user, Request $request)
+    public function followerResourcesToggleAction($mode, User $user, Request $request)
     {
         $nodes = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Resource\ResourceNode');
-        $this->manager->toggleFollowResources($user, $nodes);
+        $this->manager->toggleFollowResources($user, $nodes, $mode);
 
         return new JsonResponse(array_map(function (ResourceNode $resourceNode) {
             return $this->serializer->serialize($resourceNode);
-        }, $nodes), 204);
+        }, $nodes));
     }
 }

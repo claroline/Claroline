@@ -1,10 +1,12 @@
 import get from 'lodash/get'
 
+import {url} from '#/main/app/api'
 import {number} from '#/main/app/intl'
-import {trans} from '#/main/core/translation'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 
-const action = (resourceNodes, nodesRefresher) => ({ // todo collection
+import {trans} from '#/main/core/translation'
+
+const action = (resourceNodes, nodesRefresher) => ({
   name: 'unpublish',
   type: ASYNC_BUTTON,
   icon: 'fa fa-fw fa-eye-slash',
@@ -17,15 +19,14 @@ const action = (resourceNodes, nodesRefresher) => ({ // todo collection
   } : undefined,
   request: {
     type: 'unpublish',
-    url: ['claro_resource_action', {
-      type: resourceNodes[0].meta.type,
-      action: 'unpublish',
-      id: resourceNodes[0].id
-    }],
+    url: url(
+      ['claro_resource_collection_action', {action: 'unpublish'}],
+      {ids: resourceNodes.map(resourceNode => resourceNode.id)}
+    ),
     request: {
       method: 'PUT'
     },
-    success: (response) => nodesRefresher.update([response])
+    success: (response) => nodesRefresher.update(response)
   }
 })
 
