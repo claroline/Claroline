@@ -293,8 +293,8 @@ class ResourceNodeSerializer
         $this->sipe('restrictions.code', 'setAccessCode', $data, $resourceNode);
         $this->sipe('restrictions.ips', 'setAllowedIps', $data, $resourceNode);
 
-        if (isset($restrictions['dates'])) {
-            $dateRange = DateRangeNormalizer::denormalize($restrictions['dates']);
+        if (isset($data['restrictions']['dates'])) {
+            $dateRange = DateRangeNormalizer::denormalize($data['restrictions']['dates']);
 
             $resourceNode->setAccessibleFrom($dateRange[0]);
             $resourceNode->setAccessibleUntil($dateRange[1]);

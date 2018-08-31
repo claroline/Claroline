@@ -3,8 +3,12 @@
 namespace Claroline\CoreBundle\Controller\APINew\Resource;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,6 +19,9 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ResourceNodeController extends AbstractCrudController
 {
+    /** @var ResourceManager */
+    private $resourceManager;
+
     /** @var RightsManager */
     private $rightsManager;
 
@@ -22,13 +29,18 @@ class ResourceNodeController extends AbstractCrudController
      * ResourceNodeController constructor.
      *
      * @DI\InjectParams({
-     *     "rightsManager" = @DI\Inject("claroline.manager.rights_manager")
+     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager")
      * })
      *
-     * @param RightsManager $rightsManager
+     * @param ResourceManager $resourceManager
+     * @param RightsManager   $rightsManager
      */
-    public function __construct(RightsManager $rightsManager)
-    {
+    public function __construct(
+        ResourceManager $resourceManager,
+        RightsManager $rightsManager
+    ) {
+        $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
     }
 
@@ -103,5 +115,67 @@ class ResourceNodeController extends AbstractCrudController
         return new JsonResponse(
             $this->finder->search(ResourceNode::class, $options)
         );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "{parent}/files",
+     *     name="apiv2_resource_files_create"
+     * )
+     * @EXT\ParamConverter(
+     *     "parent",
+     *     class="ClarolineCoreBundle:Resource\ResourceNode",
+     *     options={"mapping": {"parent": "uuid"}}
+     * )
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
+     *
+     * @param ResourceNode $parent
+     * @param User         $user
+     * @param Request      $request
+     *
+     * @return JsonResponse
+     */
+    public function resourceFilesCreateAction(ResourceNode $parent, User $user, Request $request)
+    {
+        $filesData = $request->files->all();
+        $files = isset($filesData['files']) ? $filesData['files'] : [];
+        $handler = $request->get('handler');
+        $publicFiles = [];
+        $resources = [];
+        /** @var StrictDispatcher */
+        $dispatcher = $this->container->get('claroline.event.event_dispatcher');
+
+        foreach ($files as $file) {
+            $publicFile = $this->crud->create(
+                'Claroline\CoreBundle\Entity\File\PublicFile',
+                [],
+                ['file' => $file]
+            );
+            $dispatcher->dispatch(strtolower('upload_file_'.$handler), 'File\UploadFile', [$publicFile]);
+            $publicFiles[] = $publicFile;
+        }
+        $resourceType = $this->resourceManager->getResourceTypeByName('file');
+
+        $this->om->startFlushSuite();
+
+        foreach ($publicFiles as $publicFile) {
+            $resource = new File();
+            $resource->setName($publicFile->getFilename());
+            $resource->setHashName($publicFile->getUrl());
+            $resource->setMimeType($publicFile->getMimeType());
+            $resource->setSize($publicFile->getSize());
+            $resources[] = $this->resourceManager->create(
+                $resource,
+                $resourceType,
+                $user,
+                null,
+                $parent
+            );
+        }
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(array_map(function (File $file) {
+            return $this->serializer->serialize($file->getResourceNode());
+        }, $resources));
     }
 }

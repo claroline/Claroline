@@ -129,6 +129,12 @@ plugin:
                 group: transfer
                 api: [POST]
 
+              # Creates one or several File resources in the directory
+              - name: add_files
+                decoder: create
+                group: management
+                api: [POST]
+
         - name: text
           class: Claroline\CoreBundle\Entity\Resource\Text
           tags: [content]

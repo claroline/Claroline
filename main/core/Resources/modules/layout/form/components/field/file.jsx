@@ -57,15 +57,25 @@ class FileComponent extends Component {
           type="file"
           className="form-control"
           disabled={this.props.disabled}
+          multiple={this.props.multiple}
           accept={this.props.types.join(',')}
           ref={input => this.input = input}
           onChange={() => {
             if (this.input.files[0]) {
-              const file = this.input.files[0]
-              if (this.props.autoUpload) {
-                this.props.uploadFile(file, this.props.uploadUrl, this.props.onChange)
+              if (!this.props.multiple) {
+                const file = this.input.files[0]
+                if (this.props.autoUpload) {
+                  this.props.uploadFile(file, this.props.uploadUrl, this.props.onChange)
+                } else {
+                  this.props.onChange(file)
+                }
               } else {
-                this.props.onChange(file)
+                // Only manages multiple files if autoUpload is false
+                if (this.props.autoUpload) {
+                  this.props.uploadFile(this.input.files[0], this.props.uploadUrl, this.props.onChange)
+                } else {
+                  this.props.onChange(this.input.files)
+                }
               }
             }}
           }
@@ -110,6 +120,7 @@ implementPropTypes(FileComponent, FormFieldTypes, {
   // custom props
   types: T.arrayOf(T.string),
 
+  multiple: T.bool,
   min: T.number,
   max: T.number,
 
@@ -121,6 +132,7 @@ implementPropTypes(FileComponent, FormFieldTypes, {
   deleteFile: T.func.isRequired
 }, {
   types: [],
+  multiple: false,
   autoUpload: true,
   unzippable: false,
   onChange: () => {},
