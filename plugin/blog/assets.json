@@ -7,7 +7,7 @@
 
   "styles": {
     "entry": {
-      "blog-resource": "blog/index.less"
+      "blog-resource": "resources/blog/index.less"
     }
   }
 }

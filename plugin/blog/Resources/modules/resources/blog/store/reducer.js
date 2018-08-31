@@ -47,12 +47,15 @@ const reducer = combineReducers({
   reportedComments: moderationReducer.reportedComments,
   moderationPosts: moderationReducer.moderationPosts,
   trustedUsers: moderationReducer.trustedUsers,
+  pdfEnabled: makeReducer(false, {
+    [RESOURCE_LOAD]: (state, action) => action.resourceData.pdfEnabled
+  }),
   blog: combineReducers({
     data: combineReducers({
-      id: makeReducer({}, {
+      id: makeReducer('', {
         [RESOURCE_LOAD]: (state, action) => action.resourceData.blog.id || state
       }),
-      title: makeReducer({}, {
+      title: makeReducer('', {
         [RESOURCE_LOAD]: (state, action) => action.resourceData.blog.title || state
       }),
       authors: toolbarReducer.authors,

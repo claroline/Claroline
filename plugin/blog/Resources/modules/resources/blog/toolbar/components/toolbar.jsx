@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import {getComponentByPanelLabel} from '#/plugin/blog/resources/blog/toolbar/utils'
 import {selectors} from '#/plugin/blog/resources/blog/store'
+import {withRouter} from '#/main/app/router'
 
 const ToolsComponent = (props) =>
   <div>
@@ -22,11 +23,11 @@ ToolsComponent.propTypes = {
   panels: T.array
 }
 
-const Tools = connect(
+const Tools = withRouter(connect(
   state => ({
     blogId: selectors.blog(state).data.id,
     panels: selectors.blog(state).data.options.data.widgetOrder
   })
-)(ToolsComponent)
+)(ToolsComponent))
 
 export {Tools}

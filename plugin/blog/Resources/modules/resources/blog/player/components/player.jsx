@@ -19,9 +19,10 @@ import {Post} from '#/plugin/blog/resources/blog/post/components/post'
 import {PostForm} from '#/plugin/blog/resources/blog/post/components/post-form'
 import {Tools} from '#/plugin/blog/resources/blog/toolbar/components/toolbar'
 import {BlogOptions} from '#/plugin/blog/resources/blog/editor/components/blog-options'
+import {initDatalistFilters} from '#/plugin/blog/resources/blog/utils'
 
 const PlayerComponent = props =>
-  <Grid key="blog-grid" className="blog-page">
+  <Grid key="blog-grid" className="blog-container  blog-page">
     <Row className="show-grid">
       <Col xs={12} md={9} className={'posts-list'}>
         <RoutedPageContent
@@ -56,7 +57,10 @@ const PlayerComponent = props =>
               path: '/',
               component: Posts,
               exact: true,
-              onEnter: () => props.switchMode(constants.LIST_POSTS)
+              onEnter: () => {
+                props.switchMode(constants.LIST_POSTS)
+                props.initDataListFilters(props.location.search)
+              }
             }
           ]}
         />
@@ -77,7 +81,9 @@ PlayerComponent.propTypes = {
   getPostByAuthor: T.func.isRequired,
   editPost: T.func.isRequired,
   editBlogOptions: T.func.isRequired,
-  switchMode: T.func.isRequired
+  switchMode: T.func.isRequired,
+  initDataListFilters: T.func.isRequired,
+  location: T.object
 }
 
 const Player = connect(
@@ -105,6 +111,9 @@ const Player = connect(
     },
     switchMode: (mode) => {
       dispatch(actions.switchMode(mode))
+    },
+    initDataListFilters: (query) => {
+      initDatalistFilters(dispatch, query)
     }
   })
 )(PlayerComponent)

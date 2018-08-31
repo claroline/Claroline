@@ -153,12 +153,13 @@
     "search_in_title_and_content": "Recherche dans les titres, contenus.",
     "see_comments": "Voir les commentaires",
     "select": "Choisir",
-    "tagcloud": "Nuage de tags",
+    "tagcloud": "Tags",
     "tags_in_the_cloud": "tags les plus utilisés",
     "to_comment": "Commenter",
     "unpublish": "Rendre non-visible",
     "valid_banner_modification": "Valider les modifications",
     "view": "%viewCounter% vue | %viewCounter% vues",
     "widget_list_no_blog": "Aucun blog affiché",
-    "post_filtered_by_monthe": "Liste des billets filtrée par mois %date%"
+    "post_filtered_by_monthe": "Liste des billets filtrée par mois %date%",
+    "vertical_list": "Liste verticale"
 }

@@ -13,6 +13,7 @@ import {Player} from '#/plugin/blog/resources/blog/player/components/player'
 
 const Blog = props =>
   <ResourcePage
+    styles={['claroline-distribution-plugin-blog-blog-resource']}
     primaryAction="blog_post"
     customActions={[
       {
@@ -43,6 +44,7 @@ const Blog = props =>
       }
     ]}
   >
+    <div id={'blog-top-page'}></div>
     <RoutedPageContent
       className={'blog-page'}
       routes={[

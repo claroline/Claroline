@@ -13,7 +13,6 @@ import {displayDate} from '#/main/core/scaffolding/date'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 import {hasPermission} from '#/main/core/resource/permissions'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {actions as listActions} from '#/main/app/content/list/store'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {UrlButton} from '#/main/app/buttons/url/components/button'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
@@ -25,6 +24,8 @@ import {PostType} from '#/plugin/blog/resources/blog/post/components/prop-types'
 import {actions as postActions} from '#/plugin/blog/resources/blog/post/store'
 import {Comments} from '#/plugin/blog/resources/blog/comment/components/comments'
 import {getCommentsNumber, splitArray} from '#/plugin/blog/resources/blog/utils'
+import {withRouter} from '#/main/app/router'
+import {updateQueryParameters} from '#/plugin/blog/resources/blog/utils'
 
 const PostComponent = props =>
   <div className='data-card-blog'>
@@ -36,6 +37,7 @@ const PostComponent = props =>
               <a href={`#/${props.post.slug}`}>{props.post.title}</a>
             </h2>
             <InfoBar
+              {...props}
               displayViews={props.displayViews}
               blogId={props.blogId}
               getPostsByAuthor={props.getPostsByAuthor}
@@ -124,7 +126,7 @@ const InfoBar = props =>
   <ul className="list-inline post-infos">
     <li
       onClick={(e) => {
-        props.getPostsByAuthor(props.blogId, props.post.author.firstName + ' ' + props.post.author.lastName)
+        props.getPostsByAuthor(props.history, props.location.search, props.blogId, props.post.author.firstName + ' ' + props.post.author.lastName)
         e.preventDefault()
         e.stopPropagation()
       }}>
@@ -132,7 +134,7 @@ const InfoBar = props =>
         <UrlButton target={['claro_user_profile', {publicUrl: get(props.post.author, 'meta.publicUrl')}]}>
           <UserAvatar className="user-picture" picture={props.post.author ? props.post.author.picture : undefined} alt={true} />
         </UrlButton>
-        <a className="user-name" href='#'>{props.post.author.firstName} {props.post.author.lastName}</a>
+        <a className="user-name link">{props.post.author.firstName} {props.post.author.lastName}</a>
       </span>
     </li>
     <li><span className="fa fa-calendar"></span> {displayDate(props.post.publicationDate, false, false)} </li>
@@ -151,7 +153,9 @@ InfoBar.propTypes = {
   getPostsByAuthor: T.func.isRequired,
   blogId: T.string.isRequired,
   post: T.shape(PostType.propTypes),
-  displayViews: T.bool
+  displayViews: T.bool,
+  history: T.object,
+  location: T.object
 }
 
 const ActionBar = props =>
@@ -225,8 +229,8 @@ const Footer = props =>
       {!isEmpty(props.post.tags) ? (
         splitArray(props.post.tags).map((tag, index) =>(
           <li key={index}>
-            <a href="#" onClick={() => {
-              props.getPostsByTag(tag)
+            <a className='link' onClick={() => {
+              props.getPostsByTag(props.history, props.location.search, tag)
             }}>{tag}</a>
           </li>
         ))
@@ -237,13 +241,15 @@ const Footer = props =>
     <ul className='list-inline pull-right'>
       <li><span className="fa fa-comments"></span></li>
       <li>
-        {getCommentsNumber(props.canEdit, props.post.commentsNumber, props.post.commentsNumberUnpublished) > 0
-          ? transChoice('comments_number', getCommentsNumber(props.canEdit, props.post.commentsNumber, props.post.commentsNumberUnpublished),
-            {'%count%': getCommentsNumber(props.canEdit, props.post.commentsNumber, props.post.commentsNumberUnpublished)}, 'icap_blog')
-          : trans('no_comment', {}, 'icap_blog')}
-        {props.canEdit && props.post.commentsNumberUnpublished
-          ? transChoice('comments_pending', props.post.commentsNumberUnpublished, {'%count%': props.post.commentsNumberUnpublished}, 'icap_blog')
-          : ''}
+        <a href={`#/${props.post.slug}`}>
+          {getCommentsNumber(props.canEdit, props.post.commentsNumber, props.post.commentsNumberUnpublished) > 0
+            ? transChoice('comments_number', getCommentsNumber(props.canEdit, props.post.commentsNumber, props.post.commentsNumberUnpublished),
+              {'%count%': getCommentsNumber(props.canEdit, props.post.commentsNumber, props.post.commentsNumberUnpublished)}, 'icap_blog')
+            : trans('no_comment', {}, 'icap_blog')}
+          {props.canEdit && props.post.commentsNumberUnpublished
+            ? transChoice('comments_pending', props.post.commentsNumberUnpublished, {'%count%': props.post.commentsNumberUnpublished}, 'icap_blog')
+            : ''}
+        </a>
       </li>
     </ul>
   </div>
@@ -256,10 +262,12 @@ Footer.propTypes = {
   canAnonymousComment:T.bool,
   displayViews:T.bool,
   getPostsByTag:T.func.isRequired,
-  post: T.shape(PostType.propTypes)
+  post: T.shape(PostType.propTypes),
+  history: T.object,
+  location: T.object
 }
 
-const PostCardContainer = connect(
+const PostCardContainer = withRouter(connect(
   (state) => ({
     blogId: selectors.blog(state).data.id,
     canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
@@ -283,16 +291,14 @@ const PostCardContainer = connect(
         handleConfirm: () => dispatch(postActions.deletePost(blogId, postId))
       }))
     },
-    getPostsByAuthor: (blogId, authorName) => {
-      dispatch(listActions.addFilter(selectors.STORE_NAME+'.posts', 'authorName', authorName))
-      dispatch(postActions.initDataList())
+    getPostsByAuthor: (history, querystring, blogId, authorName) => {
+      history.push(updateQueryParameters(querystring, 'author', authorName))
     },
-    getPostsByTag: (tag) => {
-      dispatch(listActions.addFilter(selectors.STORE_NAME+'.posts', 'tags', tag))
-      dispatch(postActions.initDataList())
+    getPostsByTag: (history, querystring, tag) => {
+      history.push(updateQueryParameters(querystring, 'tags', tag))
     }
   })
-)(PostCard)
+)(PostCard))
 
 const PostContainer = connect(
   state => ({

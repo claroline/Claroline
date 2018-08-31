@@ -3,30 +3,45 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/core/translation'
 import {TagCloud} from '#/main/app/content/meta/components/tag-cloud'
-import {actions as listActions} from '#/main/app/content/list/store'
-import {actions as postActions} from '#/plugin/blog/resources/blog/post/store/actions'
 import {selectors} from '#/plugin/blog/resources/blog/store'
 import {constants} from '#/plugin/blog/resources/blog/constants'
 import {cleanTag} from '#/plugin/blog/resources/blog/utils'
 import isEmpty from 'lodash/isEmpty'
 import {withRouter} from '#/main/app/router'
+import {updateQueryParameters} from '#/plugin/blog/resources/blog/utils'
 
 const TagsComponent = props =>
   <div key='redactors' className="panel panel-default">
     <div className="panel-heading">
-      <h2 className="panel-title">{trans('blog_widget_tag_list_blog_form_tag_cloud', {}, 'icap_blog')}</h2>
+      <h2 className="panel-title">{trans('tagcloud', {}, 'icap_blog')}</h2>
     </div>
     <div className="panel-body">
       {!isEmpty(props.tags) ?
-        (<TagCloud
-          tags={props.tags}
-          minSize={12}
-          maxSize={22}
-          onClick={(tag) => {
-            props.goHome(props.history)
-            props.searchByTag(cleanTag(props.tagMode, tag))
-          }}
-        />)
+        <div>
+          {props.tagMode !== constants.TAGCLOUD_TYPE_LIST ?
+            (<TagCloud
+              tags={props.tags}
+              minSize={12}
+              maxSize={22}
+              onClick={(tag) => {
+                props.goHome(props.history)
+                props.searchByTag(props.history, props.location.search, cleanTag(props.tagMode, tag))
+              }}
+            />)
+            : (
+              <ul>
+                {props.tags && Object.keys(props.tags).sort().map((tag, index) =>(
+                  <li key={index} className={'list-unstyled'}>
+                    <a className='link' onClick={() => {
+                      props.goHome(props.history)
+                      props.searchByTag(props.history, props.location.search, tag)
+                    }} >{tag}</a>
+                  </li>
+                ))}
+              </ul>
+            )
+          }
+        </div>
         : (
           trans('no_tags', {}, 'icap_blog')
         )
@@ -40,7 +55,8 @@ TagsComponent.propTypes = {
   tagMode: T.string,
   history: T.object,
   goHome: T.func.isRequired,
-  maxSize: T.number
+  maxSize: T.number,
+  location: T.object
 }
 
 const Tags = withRouter(connect(
@@ -49,10 +65,9 @@ const Tags = withRouter(connect(
     tagMode: selectors.blog(state).data.options.data.tagCloud,
     maxSize: selectors.blog(state).data.options.data.maxTag
   }),
-  dispatch => ({
-    searchByTag: (tag) => {
-      dispatch(listActions.addFilter(selectors.STORE_NAME+'.posts', 'tags', tag))
-      dispatch(postActions.initDataList())
+  () => ({
+    searchByTag: (history, querystring, tag) => {
+      history.push(updateQueryParameters(querystring, 'tags', tag))
     },
     goHome: (history) => {
       history.push('/')

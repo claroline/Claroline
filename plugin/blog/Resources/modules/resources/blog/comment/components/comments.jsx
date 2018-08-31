@@ -103,7 +103,7 @@ const CommentsComponent = props =>
           />
           {!isEmpty(props.comments) &&
             <Button
-              icon={'fa fa-4x fa-arrow-circle-up'}
+              icon={'fa fa-3x fa-arrow-circle-up'}
               label={trans('go-up', {}, 'icap_blog')}
               type={CALLBACK_BUTTON}
               tooltip="bottom"

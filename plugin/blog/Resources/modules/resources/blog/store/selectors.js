@@ -53,7 +53,7 @@ const posts = createSelector(
 
 const pdfEnabled = createSelector(
   [resource],
-  (resource) => resource.pdfenabled
+  (resource) => resource.pdfEnabled
 )
 
 const postEdit = createSelector(

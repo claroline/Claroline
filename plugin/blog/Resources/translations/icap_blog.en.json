@@ -157,5 +157,6 @@
     "to_comment": "Comment",
     "valid_banner_modification": "Validate updates",
     "view": "%viewCounter% view | %viewCounter% views",
-    "widget_list_no_blog": "No blog displayed"
+    "widget_list_no_blog": "No blog displayed",
+    "vertical_list": "Vertical list"
 }
