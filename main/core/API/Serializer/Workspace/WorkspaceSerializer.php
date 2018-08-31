@@ -151,16 +151,19 @@ class WorkspaceSerializer
                 'restrictions' => $this->getRestrictions($workspace),
                 'registration' => $this->getRegistration($workspace),
                 'notifications' => $this->getNotifications($workspace),
-                'roles' => array_map(function (Role $role) {
-                    return $this->serializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
-                }, $this->workspaceManager->getRolesWithAccess($workspace)),
-                'managers' => array_map(function (User $manager) {
-                    return $this->serializer->serialize($manager, [Options::SERIALIZE_MINIMAL]);
-                }, $this->workspaceManager->getManagers($workspace)),
-                'organizations' => array_map(function ($organization) {
-                    return $this->serializer->serialize($organization);
-                }, $workspace->getOrganizations()->toArray()),
             ]);
+
+            if (!in_array(Options::SERIALIZE_LIST, $options)) {
+                $serialized['roles'] = array_map(function (Role $role) {
+                    return $this->serializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
+                }, $this->workspaceManager->getRolesWithAccess($workspace));
+                $serialized['managers'] = array_map(function (User $manager) {
+                    return $this->serializer->serialize($manager, [Options::SERIALIZE_MINIMAL]);
+                }, $this->workspaceManager->getManagers($workspace));
+                $serialized['organizations'] = array_map(function ($organization) {
+                    return $this->serializer->serialize($organization);
+                }, $workspace->getOrganizations()->toArray());
+            }
         }
 
         // maybe do the same for users one day
@@ -170,29 +173,8 @@ class WorkspaceSerializer
                 ->findByWorkspace($workspace);
 
             $serialized['groups'] = array_map(function (Group $group) {
-                return $this->serializer->serialize($group, [Options::SERIALIZE_MINIMAL, Options::NO_COUNT]);
+                return $this->serializer->serialize($group, [Options::SERIALIZE_MINIMAL]);
             }, $groups);
-        }
-
-        if (in_array(Options::WORKSPACE_FETCH_RESOURCES, $options)) {
-            $root = $this->resourceManager->getWorkspaceRoot($workspace);
-            $resources = $this->serializer->serialize($root, [Options::IS_RECURSIVE, Options::SERIALIZE_MINIMAL]);
-            $serialized['resources'] = $resources;
-        }
-
-        if (in_array(Options::WORKSPACE_FETCH_HOME, $options)) {
-            $tabs = $this->finder->search(
-              'Claroline\CoreBundle\Entity\Tab\HomeTab',
-              ['filters' => ['workspace' => $workspace->getUuid()]]
-            );
-
-            $serialized['tabs'] = $tabs['data'];
-        }
-
-        if (in_array(Options::WORKSPACE_FETCH_ORDERED_TOOLS, $options)) {
-            $serialized['orderedTools'] = array_map(function ($orderedTool) {
-                return $this->serializer->serialize($orderedTool);
-            }, $workspace->getOrderedTools()->toArray());
         }
 
         return $serialized;
@@ -218,7 +200,7 @@ class WorkspaceSerializer
             'creator' => $workspace->getCreator() ? $this->serializer->serialize($workspace->getCreator(), [Options::SERIALIZE_MINIMAL]) : null,
         ];
 
-        if (!in_array(Options::NO_COUNT, $options)) {
+        if (!in_array(Options::SERIALIZE_LIST, $options)) {
             // this query is very slow
             $data['totalUsers'] = $this->finder->fetch(
               User::class,

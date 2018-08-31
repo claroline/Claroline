@@ -367,7 +367,8 @@ class WorkspaceController extends AbstractCrudController
     {
         return new JsonResponse($this->finder->search(
             'Claroline\CoreBundle\Entity\Workspace\Workspace',
-            array_merge($request->query->all(), ['hiddenFilters' => ['displayable' => true, 'selfRegistration' => true]])
+            array_merge($request->query->all(), ['hiddenFilters' => ['displayable' => true, 'selfRegistration' => true]]),
+            $this->getOptions()['list']
         ));
     }
 
@@ -384,7 +385,8 @@ class WorkspaceController extends AbstractCrudController
     {
         return new JsonResponse($this->finder->search(
             'Claroline\CoreBundle\Entity\Workspace\Workspace',
-            array_merge($request->query->all(), ['hiddenFilters' => ['displayable' => true, 'model' => false, 'sameOrganization' => true]])
+            array_merge($request->query->all(), ['hiddenFilters' => ['displayable' => true, 'model' => false, 'sameOrganization' => true]]),
+            $this->getOptions()['list']
         ));
     }
 
@@ -403,7 +405,8 @@ class WorkspaceController extends AbstractCrudController
     {
         return new JsonResponse($this->finder->search(
             'Claroline\CoreBundle\Entity\Workspace\Workspace',
-            array_merge($request->query->all(), ['hiddenFilters' => ['user' => $this->container->get('security.token_storage')->getToken()->getUser()->getId()]])
+            array_merge($request->query->all(), ['hiddenFilters' => ['user' => $this->container->get('security.token_storage')->getToken()->getUser()->getId()]]),
+            $this->getOptions()['list']
         ));
     }
 
@@ -420,7 +423,8 @@ class WorkspaceController extends AbstractCrudController
     {
         return new JsonResponse($this->finder->search(
             'Claroline\CoreBundle\Entity\Workspace\Workspace',
-            array_merge($request->query->all(), ['hiddenFilters' => ['administrated' => true]])
+            array_merge($request->query->all(), ['hiddenFilters' => ['administrated' => true]]),
+            $this->getOptions()['list']
         ));
     }
 
@@ -573,7 +577,7 @@ class WorkspaceController extends AbstractCrudController
     public function getOptions()
     {
         return [
-            'list' => [Options::NO_COUNT],
+            'list' => [Options::SERIALIZE_LIST],
         ];
     }
 }

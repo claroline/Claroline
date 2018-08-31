@@ -26,6 +26,8 @@ final class Options
 
     const NO_COUNT = 'no_count';
 
+    const SERIALIZE_LIST = 'serialize_list';
+
     /*
      * Using this option, the serializers will return minmal data (no meta or restrictions)
      */

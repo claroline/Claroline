@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Listener\DataSource;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\DataSource\DataSourceEvent;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -48,7 +49,7 @@ class MyWorkspaceSource
         $options['hiddenFilters']['user'] = $this->tokenStorage->getToken()->getUser()->getId();
 
         $event->setData(
-            $this->finder->search(Workspace::class, $options)
+            $this->finder->search(Workspace::class, $options, [Options::SERIALIZE_LIST])
         );
 
         $event->stopPropagation();

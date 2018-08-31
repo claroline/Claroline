@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Listener\Administration;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -75,7 +76,11 @@ class WorkspaceListener
                 'tools' => array_map(function (Tool $tool) {
                     return ['name' => $tool->getName()];
                 }, $workspaceTools),
-                'models' => $this->finder->search(Workspace::class, ['filters' => ['model' => true]]),
+                'models' => $this->finder->search(
+                    Workspace::class,
+                    ['filters' => ['model' => true]],
+                    [Options::SERIALIZE_MINIMAL]
+                ),
             ]
         );
 

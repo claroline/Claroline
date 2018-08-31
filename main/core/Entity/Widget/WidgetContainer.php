@@ -37,7 +37,7 @@ class WidgetContainer
      *
      * @ORM\ManyToOne(
      *    targetEntity="Claroline\CoreBundle\Entity\Tab\HomeTab",
-     *    inversedBy="container",
+     *    inversedBy="widgetContainers",
      *    cascade={"persist", "remove"}
      * )
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")

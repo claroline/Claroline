@@ -59,7 +59,8 @@ class HomeTabConfig
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Tab\HomeTab",
-     *     cascade={"persist"}
+     *     cascade={"persist"},
+     *     inversedBy="homeTabConfigs"
      * )
      * @ORM\JoinColumn(name="home_tab_id", nullable=false, onDelete="CASCADE")
      */
