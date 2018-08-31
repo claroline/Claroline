@@ -1,3 +1,4 @@
-{% set source = url('claro_file_get_media', {'node': node.getId}) %}
-
-{% include "ClarolineVideoPlayerBundle::player.html.twig" with {'video': resource, 'source': source} %}
+{% include "ClarolineVideoPlayerBundle::player.html.twig" with {
+    video: resource,
+    source: url('claro_file_stream', {id: resource.resourceNode.uuid})
+} %}

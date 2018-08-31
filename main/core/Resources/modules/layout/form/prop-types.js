@@ -12,6 +12,7 @@ const FormField = {
     value: T.any, // depends on type
     placeholder: T.any, // depends on type
     disabled: T.bool,
+    size: T.oneOf(['sm', 'lg']),
     onChange: T.func.isRequired
   },
   defaultProps: {

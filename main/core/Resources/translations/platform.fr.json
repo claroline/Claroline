@@ -54,7 +54,6 @@
     "add_contacts": "Ajouter des contacts",
     "add_field_to_facet": "Ajouter un champ à une facette",
     "add_field_to_panel": "Ajouter un champ",
-    "add_filter": "Ajouter un filtre",
     "add_friend_confirm_message": "Êtes-vous sûr de vouloir ajouter cette plateforme amie ?",
     "add_group": "Ajouter un groupe",
     "add_group_s_confirm_message": "groupe(s) ajouté(s)",
@@ -818,7 +817,6 @@
     "no_contact": "Aucun contact",
     "no_description": "Aucune description",
     "no_email": "Ce courriel ne correspond pas à un utilisateur inscrit.",
-    "no_filter": "Aucun filtre",
     "no_group": "Aucun groupe",
     "no_home_tab": "Il n'y a aucun onglet",
     "no_learning_outcomes": "Aucun référentiel de compétences",
@@ -1737,5 +1735,7 @@
     "cards": "Cartes",
     "all_results": "Tous les résultats disponibles",
     "sort_asc": "Trier par ordre croissant",
-    "sort_desc": "Trier par ordre décroissant"
+    "sort_desc": "Trier par ordre décroissant",
+    "no_filter": "Aucun filtre n'est défini.",
+    "add_filter": "Ajouter un filtre"
 }

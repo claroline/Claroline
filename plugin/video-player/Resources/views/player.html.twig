@@ -11,7 +11,7 @@
     controls
     class="video-js vjs-big-play-centered vjs-default-skin vjs-16-9 vjs-waiting"
     data-setup='{}'
-    >
+>
      <source src="{{ url('claro_file_get_media', {'node': video.resourceNode.id}) }}" type="{{ video.resourceNode.mimeType }}" />
      {% for track in get_video_tracks(video) %}
           <track

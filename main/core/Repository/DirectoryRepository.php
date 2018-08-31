@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Doctrine\ORM\EntityRepository;
 
 class DirectoryRepository extends EntityRepository
 {
@@ -34,7 +34,7 @@ class DirectoryRepository extends EntityRepository
             JOIN directory.resourceNode node
             JOIN node.workspace workspace
             WHERE workspace.id = {$workspace->getId()}
-            AND directory.isUploadDestination = true
+            AND directory.uploadDestination = true
         ";
 
         $query = $this->_em->createQuery($dql);

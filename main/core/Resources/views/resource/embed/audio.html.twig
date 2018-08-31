@@ -1,4 +1,3 @@
-<audio width="100%" controls="controls" preload='auto'>
-    <source src="{{ url('claro_file_get_media', {'node': node.getId}) }}" type="{{ node.getMimeType() }}">
+<audio controls="controls" preload="auto">
+    <source src="{{ url('claro_file_stream', {id: resource.resourceNode.uuid}) }}" type="{{ resource.resourceNode.mimeType }}" />
 </audio>
-<a href="{{ url('claro_resource_open', {'resourceType': node.getResourceType().getName(), 'node' : node.getId()}) }}">{{ node.getName() }}</a>

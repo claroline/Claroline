@@ -21,7 +21,6 @@ import {FormProp} from '#/main/app/content/form/components/prop'
 const FieldPreview = props =>
   <FormProp
     {...props}
-    onChange={() => true}
   />
 
 FieldPreview.propTypes = {

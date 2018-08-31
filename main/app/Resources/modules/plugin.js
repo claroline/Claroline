@@ -12,6 +12,7 @@ registry.add('app', {
       'cascade'     : () => { return import(/* webpackChunkName: "app-data-cascade" */      '#/main/app/data/cascade') },
       'cascade-enum': () => { return import(/* webpackChunkName: "app-data-cascade-enum" */ '#/main/app/data/cascade-enum') },
       'choice'      : () => { return import(/* webpackChunkName: "app-data-choice" */       '#/main/app/data/choice') },
+      'collection'  : () => { return import(/* webpackChunkName: "app-data-collection" */   '#/main/app/data/collection') },
       'color'       : () => { return import(/* webpackChunkName: "app-data-color" */        '#/main/app/data/color') },
       'country'     : () => { return import(/* webpackChunkName: "app-data-country" */      '#/main/app/data/country') },
       'date'        : () => { return import(/* webpackChunkName: "app-data-date" */         '#/main/app/data/date') },

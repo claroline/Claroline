@@ -17,7 +17,7 @@ const FormInput = props => {
     // TODO : maybe reuse the details component if any.
     return (
       <FormGroup
-        id={props.name}
+        id={props.id}
         label={props.label}
         hideLabel={props.hideLabel}
         help={props.help}
@@ -27,8 +27,9 @@ const FormInput = props => {
     )
   } else {
     return React.createElement(props.definition.components.form, merge({}, props.options, {
-      id: props.name.replace(/\./g, '-'),
+      id: props.id,
       label: props.label,
+      size: props.size,
       hideLabel: props.hideLabel,
       disabled: props.disabled,
       help: props.help,
@@ -37,11 +38,15 @@ const FormInput = props => {
       optional: !props.required,
       value: props.value,
       onChange: (value) => {
-        props.updateProp(props.name, value)
-
-        validateProp(props, value).then(errors => props.setErrors(errors))
+        if (props.setErrors) {
+          // forward error to the caller
+          validateProp(props, value).then(errors => {
+            props.setErrors(errors)
+          })
+        }
 
         if (props.onChange) {
+          // forward updated value to the caller
           props.onChange(value)
         }
       }
@@ -50,12 +55,14 @@ const FormInput = props => {
 }
 
 FormInput.propTypes = {
+  id: T.string.isRequired,
+  type: T.string.isRequired,
   definition: T.shape(
     DataTypeTypes.propTypes
   ).isRequired,
-  name: T.string.isRequired,
   label: T.string.isRequired,
   help: T.oneOfType([T.string, T.arrayOf(T.string)]),
+  size: T.oneOf(['sm', 'lg']),
   hideLabel: T.bool,
   disabled: T.bool,
   readOnly: T.bool,
@@ -65,7 +72,6 @@ FormInput.propTypes = {
   error: T.oneOfType([T.string, T.object]), // object is for complex types like collection
   validating: T.bool,
   onChange: T.func,
-  updateProp: T.func,
   setErrors: T.func
 }
 
@@ -98,9 +104,10 @@ class FormProp extends Component {
 
 // todo : use the one defined in prop-types
 FormProp.propTypes = {
-  name: T.string.isRequired,
+  id: T.string.isRequired,
   type: T.string,
   label: T.string.isRequired,
+  size: T.oneOf(['sm', 'lg']),
   help: T.oneOfType([T.string, T.arrayOf(T.string)]),
   hideLabel: T.bool,
   disabled: T.bool,
@@ -111,7 +118,6 @@ FormProp.propTypes = {
   error: T.oneOfType([T.string, T.object]), // object is for complex types like collection
   validating: T.bool,
   onChange: T.func,
-  updateProp: T.func,
   setErrors: T.func
 }
 

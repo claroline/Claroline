@@ -1,4 +1,5 @@
 import React from 'react'
+import classes from 'classnames'
 
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
@@ -18,7 +19,7 @@ const getSelectedValues = (e) => {
 const Select = props =>
   <select
     id={props.id}
-    className="form-control"
+    className={classes('form-control', {[`input-${props.size}`]: !!props.size})}
     value={props.value || ''}
     disabled={props.disabled}
     onChange={e => props.multiple ?

@@ -4,23 +4,23 @@ import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-t
 import {FormGroupWithField as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group'
 
-import {Text} from '#/main/core/layout/form/components/field/text'
+import {CollectionInput} from '#/main/app/data/collection/components/input'
 
-const TextGroup = props =>
+const CollectionGroup = props =>
   <FormGroup {...props}>
-    <Text {...props} />
+    <CollectionInput {...props} />
   </FormGroup>
 
-implementPropTypes(TextGroup, FormGroupWithFieldTypes, {
+implementPropTypes(CollectionGroup, FormGroupWithFieldTypes, {
   // more precise value type
-  value: T.string,
+  value: T.array,
   // custom props
-  long: T.bool,
-  minRows: T.number,
-  minLength: T.number,
-  maxLength: T.number
+  min: T.number,
+  max: T.number
+}, {
+
 })
 
 export {
-  TextGroup
+  CollectionGroup
 }

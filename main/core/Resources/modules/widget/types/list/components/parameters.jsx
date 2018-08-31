@@ -165,7 +165,15 @@ class ListWidgetForm extends Component {
               {
                 name: 'filters',
                 label: trans('list_filters_default'),
-                type: 'string'
+                type: 'collection',
+                options: {
+                  type: 'string',
+                  options: {
+
+                  },
+                  placeholder: trans('no_filter'),
+                  button: trans('add_filter')
+                }
               }, {
                 name: 'filterable',
                 label: trans('list_enable_filters'),

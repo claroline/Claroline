@@ -17,8 +17,7 @@ const FieldPreview = props =>
   <FormProp
     {...props}
     value={props.value}
-    updateProp={(prop, value) => props.onChange(value)}
-    setErrors={() => false}
+    onChange={props.onChange}
   />
 
 FieldPreview.propTypes = {
@@ -139,7 +138,6 @@ class CategoryFieldsValues extends Component {
           <FormProp
             id="category-field-select"
             type="choice"
-            name="category-field-select"
             label={trans('select_field')}
             hideLabel={true}
             options={{
@@ -150,10 +148,7 @@ class CategoryFieldsValues extends Component {
                 return acc
               }, {})
             }}
-            updateProp={(prop, value) => {
-              this.addFieldValue(value)
-            }}
-            setErrors={() => false}
+            onChange={this.addFieldValue.bind(this)}
           />
         }
       </div>

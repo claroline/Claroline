@@ -1,36 +1,11 @@
-// todo merge all *-list-control (there is also one for tags in exobundle)
-// must use collection
-
-.ip-control {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    .dot {
-        font-weight: 900;
-        display: block;
-        margin: 0 10px;
-    }
-
-    .form-control {
-        flex: 1;
-        text-align: right;
-        min-width: 0; // hack to avoid overflow in FF
-    }
-}
-
-.ip-list-control {
+.collection-control {
     ul {
         margin: 0;
         padding: 0;
         list-style-type: none;
     }
 
-    .ip-add {
-        margin-bottom: 5px;
-    }
-
-    .no-ip-info {
+    .no-item-info {
         font-style: italic;
         text-align: center;
 
@@ -42,26 +17,31 @@
         color: #999;
     }
 
-    .ip-item {
+    .collection-item {
         display: flex;
         flex-direction: row;
         align-items: center;
         background: @gray-lighter;
         padding: 5px;
 
-        + .ip-item {
+        + .collection-item {
             margin-top: 5px;
         }
 
         .border-radius(@border-radius-base);
 
-        .ip-control {
+        .form-group {
             flex: 1;
+            margin-bottom: 0;
         }
 
-        .btn {
+        .btn-link {
             margin-left: floor(@grid-gutter-width / 2);
             padding: 4px;
         }
+    }
+
+    .btn-add {
+        margin-top: 5px;
     }
 }

@@ -54,7 +54,6 @@
     "add_contacts": "Add contacts",
     "add_field_to_facet": "Add a field to a facet",
     "add_field_to_panel": "Add a field",
-    "add_filter": "Add filter",
     "add_friend_confirm_message": "Do you really want to add this friend platform ?",
     "add_group": "Add a group",
     "add_group_s_confirm_message": "group(s) added",
@@ -802,7 +801,6 @@
     "no_contact": "No contact",
     "no_description": "No description",
     "no_email": "No email found, check the spelling",
-    "no_filter": "No filter",
     "no_group": "No group",
     "no_home_tab": "There is no Home tab",
     "no_learning_outcomes": "No learning outcomes",
@@ -1693,5 +1691,7 @@
     "cards": "Cards",
     "all_results": "All available results",
     "sort_asc": "Trier par ordre croissant",
-    "sort_desc": "Trier par ordre décroissant"
+    "sort_desc": "Trier par ordre décroissant",
+    "no_filter": "No filter is defined.",
+    "add_filter": "Add a filter"
 }

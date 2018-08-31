@@ -2,6 +2,8 @@ import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+import cloneDeep from 'lodash/cloneDeep'
+import set from 'lodash/set'
 
 import {mount} from '#/main/app/mount'
 import {withRouter} from '#/main/app/router'
@@ -115,14 +117,18 @@ class EntryFormComponent extends Component {
         <FormProp
           id="field-title"
           type="string"
-          name={'title'}
           label={trans('title')}
           required={true}
           hideLabel={true}
           value={this.props.entry.title}
           error={this.props.errors.title}
-          updateProp={(prop, value) => this.props.updateFormProp('title', value)}
-          setErrors={this.props.setErrors}
+          onChange={(value) => this.props.updateFormProp('title', value)}
+          setErrors={(errors) => {
+            const newErrors = this.props.errors ? cloneDeep(this.props.errors) : {}
+            set(newErrors, 'title', errors)
+
+            this.props.setErrors(newErrors)
+          }}
         />
       const element = document.getElementById('clacoform-entry-title')
 
@@ -149,45 +155,29 @@ class EntryFormComponent extends Component {
             options['uploadUrl'] = ['apiv2_clacoformentry_file_upload', {clacoForm: this.props.clacoFormId}]
           }
 
-          if (['file', 'date'].indexOf(f.type) > -1) {
-            const fieldComponent = () =>
-              <FormProp
-                key={`field-${f.id}`}
-                id={`field-${f.id}`}
-                type={f.type}
-                name={`values.${f.id}`}
-                label={f.name}
-                required={f.required}
-                disabled={!this.props.isManager && ((this.props.isNew && f.restrictions.locked && !f.restrictions.lockedEditionOnly) || (!this.props.isNew && f.restrictions.locked))}
-                help={f.help}
-                hideLabel={true}
-                value={this.props.entry.values ? this.props.entry.values[f.id] : undefined}
-                error={this.props.errors[f.id]}
-                options={f.options ? options : {}}
-                updateProp={(prop, value) => this.props.updateFormProp(prop, value)}
-                setErrors={this.props.setErrors}
-              />
-            mount(fieldEl, fieldComponent, {})
-          } else {
-            const fieldComponent =
-              <FormProp
-                key={`field-${f.id}`}
-                id={`field-${f.id}`}
-                type={f.type}
-                name={`values.${f.id}`}
-                label={f.name}
-                required={f.required}
-                disabled={!this.props.isManager && ((this.props.isNew && f.restrictions.locked && !f.restrictions.lockedEditionOnly) || (!this.props.isNew && f.restrictions.locked))}
-                help={f.help}
-                hideLabel={true}
-                value={this.props.entry.values ? this.props.entry.values[f.id] : undefined}
-                error={this.props.errors[f.id]}
-                options={f.options ? options : {}}
-                updateProp={(prop, value) => this.props.updateFormProp(prop, value)}
-                setErrors={this.props.setErrors}
-              />
-            ReactDOM.render(fieldComponent, fieldEl)
-          }
+          const fieldComponent = () =>
+            <FormProp
+              key={`field-${f.id}`}
+              id={`field-${f.id}`}
+              type={f.type}
+              label={f.name}
+              required={f.required}
+              disabled={!this.props.isManager && ((this.props.isNew && f.restrictions.locked && !f.restrictions.lockedEditionOnly) || (!this.props.isNew && f.restrictions.locked))}
+              help={f.help}
+              hideLabel={true}
+              value={this.props.entry.values ? this.props.entry.values[f.id] : undefined}
+              error={this.props.errors[f.id]}
+              options={f.options ? options : {}}
+              updateProp={(value) => this.props.updateFormProp(`values.${f.id}`, value)}
+              setErrors={(errors) => {
+                const newErrors = this.props.errors ? cloneDeep(this.props.errors) : {}
+                set(newErrors, `values.${f.id}`, errors)
+
+                this.props.setErrors(newErrors)
+              }}
+            />
+
+          mount(fieldEl, fieldComponent, {})
         }
       })
     }

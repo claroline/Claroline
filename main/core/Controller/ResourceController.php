@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
@@ -30,6 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Templating\EngineInterface;
 
 /**
  * @EXT\Route("/resources", options={"expose"=true})
@@ -38,6 +38,9 @@ class ResourceController
 {
     /** @var TokenStorageInterface */
     private $tokenStorage;
+
+    /** @var EngineInterface */
+    private $templating;
 
     /** @var Utilities */
     private $security;
@@ -65,6 +68,7 @@ class ResourceController
      *
      * @DI\InjectParams({
      *     "tokenStorage"        = @DI\Inject("security.token_storage"),
+     *     "templating"          = @DI\Inject("templating"),
      *     "security"            = @DI\Inject("claroline.security.utilities"),
      *     "serializer"          = @DI\Inject("claroline.api.serializer"),
      *     "manager"             = @DI\Inject("claroline.manager.resource_manager"),
@@ -75,6 +79,7 @@ class ResourceController
      * })
      *
      * @param TokenStorageInterface       $tokenStorage
+     * @param EngineInterface             $templating
      * @param Utilities                   $security
      * @param SerializerProvider          $serializer
      * @param ResourceManager             $manager
@@ -85,6 +90,7 @@ class ResourceController
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
+        EngineInterface $templating,
         Utilities $security,
         SerializerProvider $serializer,
         ResourceManager $manager,
@@ -94,6 +100,7 @@ class ResourceController
         ObjectManager $om
     ) {
         $this->tokenStorage = $tokenStorage;
+        $this->templating = $templating;
         $this->security = $security;
         $this->serializer = $serializer;
         $this->manager = $manager;
@@ -152,6 +159,32 @@ class ResourceController
         }
 
         return new JsonResponse($accessErrors, 403);
+    }
+
+    /**
+     * Embeds a resource inside a rich text content.
+     *
+     * @EXT\Route("/embed/{id}", name="claro_resource_embed_short")
+     * @EXT\Route("/embed/{type}/{id}", name="claro_resource_embed")
+     *
+     * @param ResourceNode $resourceNode
+     *
+     * @return Response
+     */
+    public function embedAction(ResourceNode $resourceNode)
+    {
+        $mimeType = explode('/', $resourceNode->getMimeType());
+
+        $view = 'default';
+        if ($mimeType[0] && in_array($mimeType[0], ['video', 'audio', 'image'])) {
+            $view = $mimeType[0];
+        }
+
+        return new Response(
+            $this->templating->render("ClarolineCoreBundle:Resource:embed/{$view}.html.twig", [
+                'resource' => $this->manager->getResourceFromNode($resourceNode),
+            ])
+        );
     }
 
     /**

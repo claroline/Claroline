@@ -17,7 +17,10 @@ const SimpleWidgetParameters = (props) =>
             name: 'parameters.content',
             label: trans('content'),
             type: 'html',
-            required: true
+            required: true,
+            options: {
+              minimal: false
+            }
           }
         ]
       }

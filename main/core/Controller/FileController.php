@@ -11,168 +11,152 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\TinyMceUploadModalType;
-use Claroline\CoreBundle\Form\UpdateFileType;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
-use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Library\Utilities\MimeTypeGuesser;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Twig\HomeExtension;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Translation\TranslatorInterface;
 
-class FileController extends Controller
+/**
+ * @EXT\Route("/file", options={"expose"=true})
+ */
+class FileController
 {
-    private $authorization;
-    private $fileDir;
-    private $fileManager;
-    private $formFactory;
-    private $homeExtension;
-    private $mimeTypeGuesser;
-    private $request;
-    private $resourceManager;
-    private $roleManager;
+    use PermissionCheckerTrait;
+
+    /** @var SessionInterface */
     private $session;
+    /** @var TokenStorageInterface */
     private $tokenStorage;
-    private $translator;
-    private $ut;
+    /** @var string */
+    private $fileDir;
+    /** @var SerializerProvider */
+    private $serializer;
+    /** @var FileManager */
+    private $fileManager;
+    /** @var MimeTypeGuesser */
+    private $mimeTypeGuesser;
+    /** @var ResourceManager */
+    private $resourceManager;
+    /** @var RoleManager */
+    private $roleManager;
+    /** @var FileUtilities */
     private $fileUtils;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "authorization"   = @DI\Inject("security.authorization_checker"),
-     *     "fileDir"         = @DI\Inject("%claroline.param.files_directory%"),
-     *     "fileManager"     = @DI\Inject("claroline.manager.file_manager"),
-     *     "formFactory"     = @DI\Inject("form.factory"),
-     *     "homeExtension"   = @DI\Inject("claroline.twig.home_extension"),
-     *     "mimeTypeGuesser" = @DI\Inject("claroline.utilities.mime_type_guesser"),
-     *     "request"         = @DI\Inject("request_stack"),
-     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
      *     "session"         = @DI\Inject("session"),
      *     "tokenStorage"    = @DI\Inject("security.token_storage"),
-     *     "translator"      = @DI\Inject("translator"),
-     *     "ut"              = @DI\Inject("claroline.utilities.misc"),
+     *     "fileDir"         = @DI\Inject("%claroline.param.files_directory%"),
+     *     "serializer"      = @DI\Inject("claroline.api.serializer"),
+     *     "fileManager"     = @DI\Inject("claroline.manager.file_manager"),
+     *     "mimeTypeGuesser" = @DI\Inject("claroline.utilities.mime_type_guesser"),
+     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
      *     "fileUtils"       = @DI\Inject("claroline.utilities.file")
      * })
+     *
+     * @param SessionInterface      $session
+     * @param TokenStorageInterface $tokenStorage
+     * @param string                $fileDir
+     * @param SerializerProvider    $serializer
+     * @param FileManager           $fileManager
+     * @param MimeTypeGuesser       $mimeTypeGuesser
+     * @param ResourceManager       $resourceManager
+     * @param RoleManager           $roleManager
+     * @param FileUtilities         $fileUtils
      */
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        $fileDir,
-        FileManager $fileManager,
-        FormFactoryInterface $formFactory,
-        HomeExtension $homeExtension,
-        MimeTypeGuesser $mimeTypeGuesser,
-        RequestStack $request,
-        ResourceManager $resourceManager,
-        RoleManager $roleManager,
         SessionInterface $session,
         TokenStorageInterface $tokenStorage,
-        TranslatorInterface $translator,
-        ClaroUtilities $ut,
+        $fileDir,
+        SerializerProvider $serializer,
+        FileManager $fileManager,
+        MimeTypeGuesser $mimeTypeGuesser,
+        ResourceManager $resourceManager,
+        RoleManager $roleManager,
         FileUtilities $fileUtils
     ) {
-        $this->authorization = $authorization;
-        $this->fileDir = $fileDir;
-        $this->fileManager = $fileManager;
-        $this->formFactory = $formFactory;
-        $this->homeExtension = $homeExtension;
-        $this->mimeTypeGuesser = $mimeTypeGuesser;
-        $this->request = $request->getMasterRequest();
-        $this->resourceManager = $resourceManager;
-        $this->roleManager = $roleManager;
         $this->session = $session;
         $this->tokenStorage = $tokenStorage;
-        $this->translator = $translator;
-        $this->ut = $ut;
+        $this->fileDir = $fileDir;
+        $this->serializer = $serializer;
+        $this->fileManager = $fileManager;
+        $this->mimeTypeGuesser = $mimeTypeGuesser;
+        $this->resourceManager = $resourceManager;
+        $this->roleManager = $roleManager;
         $this->fileUtils = $fileUtils;
     }
 
     /**
-     * @EXT\Route(
-     *     "resource/media/{node}",
-     *     name="claro_file_get_media",
-     *     options={"expose"=true}
-     * )
+     * @EXT\Route("/stream/{id}", name="claro_file_stream")
+     * @EXT\Method("GET")
      *
-     * @param int $id
+     * @param ResourceNode $resourceNode
      *
-     * @return Response
+     * @return BinaryFileResponse
      */
-    public function streamMediaAction(ResourceNode $node)
+    public function streamAction(ResourceNode $resourceNode)
     {
-        $collection = new ResourceCollection([$node]);
-        $this->checkAccess('OPEN', $collection);
-
-        // free the session as soon as possible
-        // see https://github.com/claroline/CoreBundle/commit/7cee6de85bbc9448f86eb98af2abb1cb072c7b6b
-        $this->session->save();
-        $file = $this->resourceManager->getResourceFromNode($node);
-        $path = $this->fileDir.DIRECTORY_SEPARATOR.$file->getHashName();
-        $response = new BinaryFileResponse($path);
-        $response->headers->set('Content-Type', $node->getMimeType());
-
-        return $response;
+        return $this->stream($resourceNode);
     }
 
     /**
-     * @EXT\Route(
-     *     "/tinymce/upload/{parent}",
-     *     name="claro_file_upload_with_tinymce",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Route("resource/media/{node}", name="claro_file_get_media")
+     * @EXT\Method("GET")
      *
+     * @param ResourceNode $node
+     *
+     * @return Response
+     *
+     * @deprecated for retro compatibility with old tinymce embedded resources
+     */
+    public function streamMediaAction(ResourceNode $node)
+    {
+        return $this->stream($node);
+    }
+
+    /**
      * Creates a resource from uploaded file.
      *
-     * @param int $parentId the parent id
+     * @EXT\Route("/tinymce/upload/{parent}", name="claro_file_upload_with_tinymce")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * @param int     $parent
+     * @param Request $request
+     * @param User    $user
      *
      * @throws \Exception
      *
      * @return Response
      */
-    public function uploadWithTinyMceAction($parent, User $user)
+    public function uploadWithTinyMceAction($parent, Request $request, User $user)
     {
         $parent = $this->resourceManager->getById($parent);
         $workspace = $parent ? $parent->getWorkspace() : null;
-        $collection = new ResourceCollection([$parent]);
-        $collection->setAttributes(['type' => 'file']);
-        $this->checkAccess('CREATE', $collection);
 
-        if (!$this->authorization->isGranted('CREATE', $collection)) {
-            //use different header so we know something went wrong
-            $content = $this->translator->trans(
-                'resource_creation_denied',
-                ['%path%' => $parent->getPathForDisplay()],
-                'platform'
-            );
-            $response = new Response($content, 403);
-            $response->headers->add(['XXX-Claroline' => 'resource-error']);
-
-            return $response;
-        }
+        $this->checkPermission('CREATE', new ResourceCollection([$parent], ['type' => 'file']));
 
         //let's create the file !
-        $fileForm = $this->request->files->get('file_form');
+        $fileForm = $request->files->get('file_form');
         $file = $fileForm['file'];
         $ext = strtolower($file->getClientOriginalExtension());
         $mimeType = $this->mimeTypeGuesser->guess($ext);
@@ -184,9 +168,8 @@ class FileController extends Controller
             $workspace
         );
 
-        if ($workspace) {
-            $rights = [];
-        } else {
+        $rights = [];
+        if (!$workspace) {
             $rights = [
                 'ROLE_ANONYMOUS' => [
                     'open' => true, 'export' => true, 'create' => [],
@@ -206,16 +189,11 @@ class FileController extends Controller
             true
         );
 
-        $nodesArray[0] = $this->resourceManager->toArray(
-            $file->getResourceNode(),
-            $this->tokenStorage->getToken()
-        );
-
-        return new JsonResponse($nodesArray);
+        return new JsonResponse($this->serializer->serialize($file->getResourceNode(), [Options::SERIALIZE_MINIMAL]), 201);
     }
 
     /**
-     * @EXT\Route("uploadmodal", name="claro_upload_modal", options = {"expose" = true})
+     * @EXT\Route("uploadmodal", name="claro_upload_modal")
      *
      * @EXT\Template("ClarolineCoreBundle:resource:upload_modal.html.twig")
      */
@@ -229,87 +207,29 @@ class FileController extends Controller
     }
 
     /**
-     * @EXT\Route("/update/{file}/form", name="update_file_form", options = {"expose" = true})
-     *
-     * @EXT\Template()
-     */
-    public function updateFileFormAction(File $file)
-    {
-        $collection = new ResourceCollection([$file->getResourceNode()]);
-        $this->checkAccess('EDIT', $collection);
-        $form = $this->formFactory->create(UpdateFileType::class, new File());
-
-        return [
-            'form' => $form->createView(),
-            'resourceType' => 'file',
-            'file' => $file,
-            '_resource' => $file,
-        ];
-    }
-
-    /**
-     * @EXT\Route("/update/{file}", name="update_file", options = {"expose" = true})
-     *
-     * @EXT\Template("ClarolineCoreBundle:file:update_file_form.html.twig")
-     */
-    public function updateFileAction(File $file)
-    {
-        $collection = new ResourceCollection([$file->getResourceNode()]);
-        $this->checkAccess('EDIT', $collection);
-        $form = $this->formFactory->create(UpdateFileType::class, new File());
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $tmpFile = $form->get('file')->getData();
-            $this->fileManager->changeFile($file, $tmpFile);
-
-            if ($this->homeExtension->isDesktop()) {
-                $url = $this->generateUrl('claro_desktop_open_tool', ['toolName' => 'resource_manager']);
-            } else {
-                $url = $this->generateUrl(
-                    'claro_workspace_open_tool',
-                    [
-                        'toolName' => 'resource_manager',
-                        'workspaceId' => $file->getResourceNode()->getWorkspace()->getId(),
-                    ]
-                );
-            }
-
-            return $this->redirect($url);
-        }
-
-        return [
-            'form' => $form->createView(),
-            'resourceType' => 'file',
-            'file' => $file,
-            '_resource' => $file,
-        ];
-    }
-
-    /**
      * Saves a file.
      *
-     * @EXT\Route(
-     *     "/public/file/upload",
-     *     name="upload_public_file",
-     *     options = {"expose" = true}
-     * )
+     * @EXT\Route("/public/upload", name="upload_public_file")
      * @EXT\Method("POST")
      *
+     * @param Request $request
+     *
      * @return JsonResponse
+     *
+     * @deprecated only used in quiz content items. Use new file upload route instead.
      */
-    public function fileSaveAction()
+    public function fileSaveAction(Request $request)
     {
         $url = null;
-        $fileName = $this->request->get('fileName');
-        $objectClass = $this->request->get('objectClass');
-        $objectUuid = $this->request->get('objectUuid');
-        $objectName = $this->request->get('objectName');
-        $sourceType = $this->request->get('sourceType');
+        $fileName = $request->get('fileName');
+        $objectClass = $request->get('objectClass');
+        $objectUuid = $request->get('objectUuid');
+        $objectName = $request->get('objectName');
+        $sourceType = $request->get('sourceType');
 
-        if ($this->request->files->get('file')) {
+        if ($request->files->get('file')) {
             $publicFile = $this->fileUtils->createFile(
-                $this->request->files->get('file'),
+                $request->files->get('file'),
                 $fileName,
                 $objectClass,
                 $objectUuid,
@@ -323,23 +243,26 @@ class FileController extends Controller
     }
 
     /**
-     * Checks if the current user has the right to perform an action on a ResourceCollection.
-     * Be careful, ResourceCollection may need some aditionnal parameters.
+     * Streams a resource file to the user browser.
      *
-     * - for CREATE: $collection->setAttributes(array('type' => $resourceType))
-     *  where $resourceType is the name of the resource type.
-     * - for MOVE / COPY $collection->setAttributes(array('parent' => $parent))
-     *  where $parent is the new parent entity.
+     * @param ResourceNode $resourceNode
      *
-     * @param string             $permission
-     * @param ResourceCollection $collection
-     *
-     * @throws AccessDeniedException
+     * @return BinaryFileResponse
      */
-    private function checkAccess($permission, ResourceCollection $collection)
+    private function stream(ResourceNode $resourceNode)
     {
-        if (!$this->authorization->isGranted($permission, $collection)) {
-            throw new AccessDeniedException($collection->getErrorsForDisplay());
-        }
+        $this->checkPermission('OPEN', new ResourceCollection([$resourceNode]), [], true);
+
+        // free the session as soon as possible
+        // see https://github.com/claroline/CoreBundle/commit/7cee6de85bbc9448f86eb98af2abb1cb072c7b6b
+        $this->session->save();
+
+        $file = $this->resourceManager->getResourceFromNode($resourceNode);
+        $path = $this->fileDir.DIRECTORY_SEPARATOR.$file->getHashName();
+
+        $response = new BinaryFileResponse($path);
+        $response->headers->set('Content-Type', $resourceNode->getMimeType());
+
+        return $response;
     }
 }

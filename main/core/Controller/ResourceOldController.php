@@ -324,34 +324,6 @@ class ResourceOldController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/embed/{node}/{type}/{extension}/{openInNewTab}",
-     *     name="claro_resource_embed",
-     *     options={"expose"=true},
-     *     defaults={"openInNewTab"="0"}
-     * )
-     *
-     * Renders the HTML needed to embed a resource, based on its mime type.
-     */
-    public function embedResourceAction(ResourceNode $node, $type, $extension, $openInNewTab)
-    {
-        $view = in_array($type, ['video', 'audio', 'image']) ? $type : 'default';
-
-        return new Response(
-            $this->templating->render(
-                "ClarolineCoreBundle:Resource:embed/{$view}.html.twig",
-                [
-                    'node' => $node,
-                    'resource' => $this->resourceManager->getResourceFromNode($node),
-                    'type' => $type,
-                    'extension' => $extension,
-                    'openInNewTab' => '0' !== $openInNewTab,
-                ]
-            )
-        );
-    }
-
-    /**
-     * @EXT\Route(
      *     "/export",
      *     name="claro_resource_export",
      *     options={"expose"=true}

@@ -1,9 +1,15 @@
+import invariant from 'invariant'
+
 import {plugins} from '#/main/core/tinymce/plugins'
 import '#/main/core/tinymce/langs'
 import '#/main/core/tinymce/themes'
 
+import {url} from '#/main/app/api'
+import {makeId} from '#/main/core/scaffolding/id'
+import {trans} from '#/main/core/translation'
 import {locale} from '#/main/app/intl/locale'
 import {asset, param, theme} from '#/main/app/config'
+import {url as urlValidator} from '#/main/core/validation'
 import {getExternalPlugins} from '#/main/core/tinymce/plugins/external-plugins'
 
 // Load external tinymce plugins from other bundles
@@ -46,12 +52,49 @@ const config = {
   paste_data_images: true,
   paste_preprocess: (plugin, args) => {
     if (param('openGraph.enabled') && args.content) {
-      // todo check if url
       const link = args.content.trim()
+      if (link && urlValidator(link)) {
+        args.target.setProgressState(true)
 
-      window.Claroline.Home.canGenerateContent(link, function (data) {
-        args.content = '<div class="url-content">' + data + '</div>'
-      })
+        const linkPlaceholder = `<span id="url-content-${makeId()}">${link}</span>`
+        args.content = linkPlaceholder
+
+        fetch(
+          url(['claroline_can_generate_content']), {
+            credentials: 'include',
+            method: 'POST',
+            body: JSON.stringify({url: link})
+          })
+          .then(response => {
+            if (response.ok) {
+              return response.text()
+            }
+          })
+          .then(responseText => {
+            let content = args.target.getContent()
+            if (responseText) {
+              content = content.replace(linkPlaceholder, responseText)
+            } else {
+              content = content.replace(linkPlaceholder, link)
+            }
+
+            // hide loader
+            args.target.setProgressState(false)
+
+            // replace content in editor
+            args.target.setContent(content)
+          })
+          .catch((error) => {
+            // creates log error
+            invariant(false, error.message)
+
+            // displays generic error in ui
+            args.target.notificationManager.open({type: 'error', text: trans('error_occured')})
+
+            // hide loader
+            args.target.setProgressState(false)
+          })
+      }
     }
   },
 

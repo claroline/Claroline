@@ -18,6 +18,43 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class HomeService
 {
+    /** @var string */
+    private $templatesDir;
+
+    /**
+     * HomeService constructor.
+     *
+     * @DI\InjectParams({
+     *     "templatesDir" = @DI\Inject("%claroline.param.home_custom_template_directory%")
+     * })
+     *
+     * @param string $templatesDir
+     */
+    public function __construct($templatesDir)
+    {
+        $this->templatesDir = $templatesDir;
+    }
+
+    /**
+     * The path to the directory that holds custom templates files.
+     *
+     * @return string
+     */
+    public function getTemplatesDirectory()
+    {
+        return $this->templatesDir;
+    }
+
+    /**
+     * Checks if the platform uses some custom templates.
+     *
+     * @return bool
+     */
+    public function hasCustomTemplates()
+    {
+        return is_dir($this->templatesDir);
+    }
+
     /**
      * Verify if a twig template exists, If the template does not exists a default path will be return;.
      *
@@ -29,9 +66,6 @@ class HomeService
     {
         $dir = explode(':', $path);
 
-        $controller = preg_split('/(?=[A-Z])/', $dir[0]);
-        $controller = array_slice($controller, (count($controller) - 2));
-        $controller = implode('', $controller);
         $base = __DIR__.'/../../Resources/views/';
 
         if ($dir[1] === '') {
@@ -62,7 +96,7 @@ class HomeService
     }
 
     /**
-     *  Reduce some "overall complexity".
+     * Reduce some "overall complexity".
      */
     public function isDefinedPush($array, $name, $variable, $method = null)
     {

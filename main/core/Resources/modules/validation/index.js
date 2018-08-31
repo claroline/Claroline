@@ -119,6 +119,12 @@ function lengthInRange(value, options) {
   return chain(value, options, [lengthMin, lengthMax])
 }
 
+function url(value) {
+  if (match(value, {regex: /^((http[s]?|ftp):\/)?\/?([^:\/\s]+)((\/\w+)*\/)([\w\-\.]+[^#?\s]+)(.*)?(#[\w\-]+)?$/ig})) {
+    return tval('This value should be a valid url.')
+  }
+}
+
 function ip(value) {
   if (string(value)) {
     return string(value)
@@ -275,6 +281,7 @@ export {
   ltMax,
   gtZero,
   email,
+  url,
   gteZero,
   lengthMin,
   lengthMax,

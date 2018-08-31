@@ -62,12 +62,13 @@ const DataCellContent = props => {
 
 DataCellContent.propTypes = {
   definition: T.shape({
-
+    render: T.func,
+    components: T.shape({
+      table: T.any // todo : find correct typing
+    })
   }).isRequired,
   rowData: T.object.isRequired,
-  action: T.shape(
-    ActionTypes.propTypes
-  ),
+  action: T.object,
   column: T.shape(
     DataListProperty.propTypes
   ).isRequired
@@ -96,9 +97,7 @@ class DataCell extends Component {
 
 DataCell.propTypes = {
   rowData: T.object.isRequired,
-  action: T.shape(
-    ActionTypes.propTypes
-  ),
+  action: T.object,
   column: T.shape(
     DataListProperty.propTypes
   ).isRequired
@@ -152,9 +151,7 @@ DataTableRow.propTypes = {
   columns: T.arrayOf(
     T.shape(DataListProperty.propTypes)
   ).isRequired,
-  primaryAction: T.shape(
-    ActionTypes.propTypes
-  ),
+  primaryAction: T.object,
   actions: T.oneOfType([
     // a regular array of actions
     T.arrayOf(T.shape(

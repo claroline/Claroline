@@ -1,10 +1,13 @@
 import React from 'react'
+import classes from 'classnames'
 
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {isValidDate, getApiFormat, getDisplayFormat, displayDate, apiDate} from '#/main/core/scaffolding/date'
 
-import {CalendarPicker} from '#/main/core/layout/calendar/components/picker.jsx'
+import {CalendarPicker} from '#/main/core/layout/calendar/components/picker'
+
+// TODO : change calendar button size size according to props.size
 
 const Date = props => {
   const displayFormat = getDisplayFormat(false, props.time)
@@ -35,7 +38,7 @@ const Date = props => {
         id={props.id}
         type="text"
         autoComplete="date"
-        className="form-control"
+        className={classes('form-control', {[`input-${props.size}`]: !!props.size})}
         placeholder={displayFormat}
         value={displayValue}
         disabled={props.disabled}

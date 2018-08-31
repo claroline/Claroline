@@ -1,48 +1,77 @@
-import tinymce from 'tinymce/tinymce'
 import invariant from 'invariant'
 
+import {tinymce} from '#/main/core/tinymce'
+
+import {makeId} from '#/main/core/scaffolding/id'
 import {url} from '#/main/app/api'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/core/translation'
 
-const resourceManager = window.Claroline.ResourceManager
+import {MODAL_RESOURCE_EXPLORER} from '#/main/core/resource/modals/explorer'
+
+// TODO : remove placeholder on selection cancel
 
 /**
  * Opens a resource picker from a TinyMCE editor.
  */
 function openResourcePicker(editor) {
-  if (!resourceManager.hasPicker('tinyMcePicker')) {
-    resourceManager.createPicker('tinyMcePicker', {
-      isPickerMultiSelectAllowed: false,
-      callback: (nodes = {}) => {
-        // embed resourceNode
-        const nodeId = Object.keys(nodes)[0]
-        const mimeType = nodes[nodeId][2] !== '' ? nodes[nodeId][2] : 'unknown/mimetype'
+  // We need to generate an anchor in the content to know where to put the resource we will pick.
+  // For now, the resource picker will unmount the TinyMCE editor when shown in a modal
+  // so we will loose the cursor position.
+  const placeholder = `<span id="resource-picker-${makeId()}"></span>`
+  editor.insertContent(placeholder)
 
-        const typeParts = mimeType.split('/')
+  editor.settings.showModal(MODAL_RESOURCE_EXPLORER, {
+    selectAction: (selected) => ({
+      type: CALLBACK_BUTTON,
+      callback: () => {
+        selected.map((resourceNode, index) => {
+          fetch(
+            url(['claro_resource_embed', {type: resourceNode.meta.type, id: resourceNode.id}]), {
+              credentials: 'include'
+            })
+            .then(response => {
+              if (response.ok) {
+                return response.text()
+              }
+            })
+            .then(responseText => {
+              // retrieve the editor which have requested the picker
+              // ATTENTION : we don't reuse instance from func params because it could have been removed
+              // when tinyMCE is rendered in a modal
+              const initiator = tinymce.get(editor.id)
+              if (initiator) {
+                let content = initiator.getContent()
 
-        fetch(
-          url(['claro_resource_embed', {node: nodeId, type: typeParts[0], extension: typeParts[1]}]),
-          {
-            credentials: 'include'
-          }
-        )
-          .then(response => {
-            if (response.ok) {
-              return response.text()
-            }
-          })
-          .then(responseText => editor.insertContent(responseText))
-          .catch((error) => {
-            // creates log error
-            invariant(false, error.message)
-            // displays generic error in ui
-            editor.notificationManager.open({type: 'error', text: trans('error_occured')})
-          })
+                const placeholderPosition = content.indexOf(placeholder)
+                if (-1 !== placeholderPosition) {
+                  // append resource
+                  content = content.substr(0, placeholderPosition) + responseText + content.substr(placeholderPosition)
+
+                  if (1 === selected.length || index + 1 === selected.length) {
+                    // only one selected resource or appending the last one, we need to remove the placeholder
+                    content = content.replace(placeholder, '')
+                  }
+
+                  // replace content in editor
+                  initiator.setContent(content)
+                }
+              }
+            })
+            .catch((error) => {
+              // creates log error
+              invariant(false, error.message)
+
+              const initiator = tinymce.get(editor.id)
+              if (initiator) {
+                // displays generic error in ui
+                initiator.notificationManager.open({type: 'error', text: trans('error_occured')})
+              }
+            })
+        })
       }
-    }, true)
-  } else {
-    resourceManager.picker('tinyMcePicker', 'open')
-  }
+    })
+  })
 }
 
 // Register new plugin

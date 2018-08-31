@@ -1,18 +1,17 @@
 import React, {Component} from 'react'
 import classes from 'classnames'
 
-import {tinymce} from '#/main/core/tinymce'
-import {config} from '#/main/core/tinymce/config'
-
 import {trans} from '#/main/core/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 
+import {Tinymce} from '#/main/core/tinymce/components/tinymce'
+
 import {getOffsets} from '#/main/core/scaffolding/text/selection'
 
 // see https://github.com/lovasoa/react-contenteditable
-export class ContentEditable extends Component {
+class ContentEditable extends Component {
   constructor(props) {
     super(props)
 
@@ -130,105 +129,10 @@ ContentEditable.defaultProps = {
   disabled: false
 }
 
-// todo : create a standalone component
-// todo : allow to add custom CSS
-export class Tinymce extends Component {
-  constructor(props) {
-    super(props)
-
-    this.editor = null
-  }
-
-  componentDidMount() {
-    tinymce.init(
-      Object.assign({}, config, {
-        target: this.textarea,
-        ui_container: `#${this.props.id}-container`
-      })
-    )
-
-    this.editor = tinymce.get(this.props.id)
-    tinymce.activeEditor = this.editor
-    this.editor.on('mouseup', () => {
-      this.getSelection()
-    })
-    this.editor.on('change', () => {
-      const tinyContent = this.editor.getContent()
-      const tmp = document.createElement('div')
-      tmp.innerHTML = tinyContent
-
-      const offsets = getOffsets(tmp, this.editor.selection.getSel())
-      this.props.onChange(tinyContent, offsets)
-    })
-
-    this.editor.on('click', e => {
-      this.props.onClick(e.target)
-    })
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if ((nextProps.content !== this.editor.getContent()
-      && nextProps.content !== this.props.content)) {
-      this.editor.setContent(nextProps.content)
-    }
-  }
-
-  shouldComponentUpdate(nextProps) {
-    return (nextProps.content !== this.editor.getContent()
-      && nextProps.content !== this.props.content)
-  }
-
-  componentWillUnmount() {
-    this.editor.destroy()
-    this.editor = null
-  }
-
-  updateText() {
-    //nope
-  }
-
-  getSelection() {
-    const rng = this.editor.selection.getRng()
-
-    this.setState({
-      rng: this.editor.selection.getRng().cloneRange(),
-      startOffset: rng.startOffset,
-      endOffset: rng.endOffset,
-      startContainer: rng.startContainer,
-      endContainer: rng.endContainer,
-      collapsed: rng.collapsed,
-      commonAncestorContainer: rng.commonAncestorContainer
-    })
-
-    const offsets = getOffsets(this.editor.dom.getRoot(), this.editor.selection.getSel())
-    this.props.onSelect(this.editor.selection.getContent(), this.updateText.bind(this), offsets)
-  }
-
-  render() {
-    return (
-      <textarea
-        id={this.props.id}
-        ref={(el) => this.textarea = el}
-        className="form-control"
-        defaultValue={this.props.content}
-      />
-    )
-  }
-}
-
-Tinymce.propTypes = {
-  id: T.string.isRequired,
-  content: T.string.isRequired,
-  onChange: T.func.isRequired,
-  onSelect: T.func,
-  onClick: T.func,
-  disabled: T.bool
-}
-
 class Textarea extends Component {
   constructor(props) {
     super(props)
-    this.state = {minimal: true}
+    this.state = {minimal: props.minimal}
   }
 
   makeMinimalEditor() {
@@ -292,6 +196,7 @@ implementPropTypes(Textarea, FormFieldTypes, {
   // more precise value type
   value: T.string,
   // custom props
+  minimal: T.bool,
   minRows: T.number,
   onSelect: T.func,
   onClick: T.func,
@@ -299,6 +204,7 @@ implementPropTypes(Textarea, FormFieldTypes, {
 }, {
   value: '',
   minRows: 2,
+  minimal: true,
   onClick: () => {},
   onSelect: () => {},
   onChangeMode: () => {}

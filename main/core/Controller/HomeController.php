@@ -11,66 +11,79 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\AppBundle\Controller\AbstractApiController;
 use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Entity\Home\Type;
 use Claroline\CoreBundle\Form\HomeTemplateType;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Home\HomeService;
 use Claroline\CoreBundle\Manager\HomeManager;
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\InjectParams;
+use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation\Secure;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Templating\EngineInterface;
 
 /**
  * @TODO doc
  */
-class HomeController
+class HomeController extends AbstractApiController
 {
-    private $manager;
-    private $request;
+    /** @var AuthorizationCheckerInterface */
     private $authorization;
+    /** @var EngineInterface */
     private $templating;
-    private $homeService;
+    /** @var FormFactory */
     private $formFactory;
-    private $templatesDirectory;
+    /** @var PlatformConfigurationHandler */
+    private $config;
+    /** @var HomeManager */
+    private $manager;
+    /** @var HomeService */
+    private $homeService;
 
     /**
-     * @InjectParams({
-     *     "manager"        = @Inject("claroline.manager.home_manager"),
-     *     "authorization"  = @Inject("security.authorization_checker"),
-     *     "request"        = @Inject("request_stack"),
-     *     "templating"     = @Inject("templating"),
-     *     "homeService"    = @Inject("claroline.common.home_service"),
-     *     "container"      = @Inject("service_container"),
-     *     "formFactory"    = @Inject("form.factory")
+     * HomeController constructor.
+     *
+     * @DI\InjectParams({
+     *     "authorization" = @DI\Inject("security.authorization_checker"),
+     *     "templating"    = @DI\Inject("templating"),
+     *     "formFactory"   = @DI\Inject("form.factory"),
+     *     "config"        = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "manager"       = @DI\Inject("claroline.manager.home_manager"),
+     *     "homeService"   = @DI\Inject("claroline.common.home_service")
      * })
+     *
+     * @param AuthorizationCheckerInterface $authorization
+     * @param EngineInterface               $templating
+     * @param FormFactory                   $formFactory
+     * @param PlatformConfigurationHandler  $config
+     * @param HomeManager                   $manager
+     * @param HomeService                   $homeService
      */
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
+        EngineInterface $templating,
+        FormFactory $formFactory,
+        PlatformConfigurationHandler $config,
         HomeManager $manager,
-        RequestStack $request,
-        $authorization,
-        $templating,
-        $homeService,
-        ContainerInterface $container,
-        FormFactory $formFactory
+        HomeService $homeService
     ) {
-        $this->manager = $manager;
-        $this->request = $request->getMasterRequest();
         $this->authorization = $authorization;
         $this->templating = $templating;
-        $this->homeService = $homeService;
-        $this->container = $container;
         $this->formFactory = $formFactory;
-        $this->templatesDirectory = $container->getParameter('claroline.param.home_custom_template_directory');
+        $this->config = $config;
+        $this->manager = $manager;
+        $this->homeService = $homeService;
     }
 
     /**
@@ -105,13 +118,13 @@ class HomeController
      * @Route("/type/{type}", name="claro_get_content_by_type", options = {"expose" = true})
      * @Route("/", name="claro_index", defaults={"type" = "home"}, options = {"expose" = true})
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function homeAction($type)
     {
         $typeEntity = $this->manager->getType($type);
 
-        if ($url = $this->container->get('claroline.config.platform_config_handler')->getParameter('home_redirection_url')) {
+        if ($url = $this->config->getParameter('home_redirection_url')) {
             return new RedirectResponse($url);
         }
 
@@ -143,7 +156,7 @@ class HomeController
     /**
      * Render the layout of contents by type.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function typeAction($type, $father = null, $region = null)
     {
@@ -162,12 +175,11 @@ class HomeController
      * @Route("/types", name="claroline_types_manager")
      * @Secure(roles="ROLE_HOME_MANAGER")
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function typesAction()
     {
         $types = $this->manager->getTypes();
-        $hasCustomTemplates = is_dir($this->templatesDirectory);
 
         $response = $this->render(
             'ClarolineCoreBundle:home:home.html.twig',
@@ -176,7 +188,7 @@ class HomeController
                 'region' => $this->renderRegions($this->manager->getRegionContents()),
                 'content' => $this->render(
                     'ClarolineCoreBundle:Home:types.html.twig',
-                    ['types' => $types, 'hasCustomTemplates' => $hasCustomTemplates]
+                    ['types' => $types, 'hasCustomTemplates' => $this->homeService->hasCustomTemplates()]
                 )->getContent(),
             ]
         );
@@ -192,12 +204,14 @@ class HomeController
     /**
      * Publish a content type page.
      *
-     * @Route("/publish/type/{type}", name="claro_content_publish_type", options = {"expose" = true})
+     * @Route("/publish/type/{type}", name="claro_content_publish_type", options={"expose" = true})
      * @Secure(roles="ROLE_HOME_MANAGER")
      *
-     * @ParamConverter("type", class = "ClarolineCoreBundle:home\Type")
+     * @ParamConverter("type", class="ClarolineCoreBundle:home\Type")
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Type $type
+     *
+     * @return Response
      */
     public function publishTypeAction($type)
     {
@@ -209,10 +223,9 @@ class HomeController
      *
      * @Route("/rename/type/{type}", name="claro_content_rename_type_form", options = {"expose" = true})
      * @Secure(roles="ROLE_HOME_MANAGER")
-     *
      * @Template("ClarolineCoreBundle:home:rename.html.twig")
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return array
      */
     public function renameContentFormAction($type)
     {
@@ -224,18 +237,20 @@ class HomeController
      *
      * @Route("/rename/type/{type}/{name}", name="claro_content_rename_type", options = {"expose" = true})
      * @Secure(roles="ROLE_HOME_MANAGER")
-     *
      * @ParamConverter("type", class = "ClarolineCoreBundle:Home\Type", options = {"mapping" : {"type": "name"}})
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Type   $type
+     * @param string $name
+     *
+     * @return Response
      */
-    public function renameContentAction($type, $name)
+    public function renameContentAction(Type $type, $name)
     {
         try {
             $this->manager->renameType($type, $name);
 
             return new Response('true');
-        } catch (\Exeption $e) {
+        } catch (\Exception $e) {
             return new Response('false'); //useful in ajax
         }
     }
@@ -249,17 +264,18 @@ class HomeController
      *     options = {"expose" = true}
      * )
      * @Secure(roles="ROLE_HOME_MANAGER")
-     *
      * @Template("ClarolineCoreBundle:home:change_template_modal_form.html.twig")
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Type $type
+     *
+     * @return array
      */
     public function changeTemplateFormAction(Type $type)
     {
         $form = $this->formFactory->create(
             HomeTemplateType::class,
             $type,
-            ['dir' => $this->templatesDirectory]
+            ['dir' => $this->homeService->getTemplatesDirectory()]
         );
 
         return ['form' => $form->createView(), 'type' => $type];
@@ -274,19 +290,21 @@ class HomeController
      *     options = {"expose" = true}
      * )
      * @Secure(roles="ROLE_HOME_MANAGER")
-     *
      * @Template("ClarolineCoreBundle:home:change_template_modal_form.html.twig")
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Type    $type
+     * @param Request $request
+     *
+     * @return Response|array
      */
-    public function changeTemplateAction(Type $type)
+    public function changeTemplateAction(Type $type, Request $request)
     {
         $form = $this->formFactory->create(
             HomeTemplateType::class,
             $type,
-            ['dir' => $this->templatesDirectory]
+            ['dir' => $this->homeService->getTemplatesDirectory()]
         );
-        $form->handleRequest($this->request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $this->manager->persistType($type);
@@ -305,7 +323,7 @@ class HomeController
      *
      * @Template("ClarolineCoreBundle:home:move.html.twig")
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return array
      */
     public function moveContentFormAction($currentType)
     {
@@ -333,7 +351,7 @@ class HomeController
             $this->manager->moveContent($content, $type, $page);
 
             return new Response('true');
-        } catch (\Exeption $e) {
+        } catch (\Exception $e) {
             return new Response('false'); //useful in ajax
         }
     }
@@ -402,9 +420,9 @@ class HomeController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function graphAction()
+    public function graphAction(Request $request)
     {
-        $graph = $this->manager->getGraph($this->request->get('generated_content_url'));
+        $graph = $this->manager->getGraph($request->get('generated_content_url'));
 
         if (isset($graph['type'])) {
             return $this->render(
@@ -449,9 +467,9 @@ class HomeController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function createAction($type = null, $father = null)
+    public function createAction($type = null, $father = null, Request $request)
     {
-        if ($id = $this->manager->createContent($this->request->get('home_content_form'), $type, $father)) {
+        if ($id = $this->manager->createContent($request->get('home_content_form'), $type, $father)) {
             return new Response($id);
         }
 
@@ -473,13 +491,13 @@ class HomeController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function updateAction($content, $size = null, $type = null)
+    public function updateAction($content, $size = null, $type = null, Request $request)
     {
         try {
-            $this->manager->UpdateContent($content, $this->request->get('home_content_form'), $size, $type);
+            $this->manager->UpdateContent($content, $request->get('home_content_form'), $size, $type);
 
             return new Response('true');
-        } catch (\Exeption $e) {
+        } catch (\Exception $e) {
             return new Response('false'); //useful in ajax
         }
     }
@@ -511,7 +529,7 @@ class HomeController
             $this->manager->reorderContent($type, $a, $b, $father);
 
             return new Response('true');
-        } catch (\Exeption $e) {
+        } catch (\Exception $e) {
             return new Response('false'); //useful in ajax
         }
     }
@@ -533,7 +551,7 @@ class HomeController
             $this->manager->deleteContent($content);
 
             return new Response('true');
-        } catch (\Exeption $e) {
+        } catch (\Exception $e) {
             return new Response('false'); //useful in ajax
         }
     }
@@ -569,7 +587,7 @@ class HomeController
     {
         try {
             return ['type' => $this->manager->createType($name)];
-        } catch (\Exeption $e) {
+        } catch (\Exception $e) {
             return new Response('false'); //useful in ajax
         }
     }
@@ -591,13 +609,13 @@ class HomeController
             $this->manager->deleteType($type);
 
             return new Response('true');
-        } catch (\Exeption $e) {
+        } catch (\Exception $e) {
             return new Response('false'); //useful in ajax
         }
     }
 
     /**
-     * Put a content into a region in front page as left, right, footer. This is sueful for menus.
+     * Put a content into a region in front page as left, right, footer. This is useful for menus.
      *
      * @Route("/region/{region}/{content}", requirements={"content" = "\d+"}, name="claroline_content_to_region")
      *
@@ -614,7 +632,7 @@ class HomeController
             $this->manager->contentToRegion($region, $content);
 
             return new Response('true');
-        } catch (\Exeption $e) {
+        } catch (\Exception $e) {
             return new Response('false'); //useful in ajax
         }
     }
@@ -641,7 +659,7 @@ class HomeController
             $this->manager->collapse($content, $type);
 
             return new Response('true');
-        } catch (\Exeption $e) {
+        } catch (\Exception $e) {
             return new Response('false');
         }
     }
@@ -649,14 +667,18 @@ class HomeController
     /**
      * Check if a string is a valid URL.
      *
-     * @Route("/cangeneratecontent", name="claroline_can_generate_content")
+     * @Route("/cangeneratecontent", name="claroline_can_generate_content", options={"expose" = true})
+     * @Method("POST")
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     *
+     * @return Response
      */
-    public function canGenerateContentAction()
+    public function canGenerateContentAction(Request $request)
     {
-        if ($this->manager->isValidUrl($this->request->get('url'))) {
-            $graph = $this->manager->getGraph($this->request->get('url'));
+        $content = $this->decodeRequest($request);
+        if ($content && $content['url'] && $this->manager->isValidUrl($content['url'])) {
+            $graph = $this->manager->getGraph($content['url']);
 
             if (isset($graph['type'])) {
                 return $this->render(
@@ -671,16 +693,14 @@ class HomeController
     }
 
     /**
-     * menu_settings.
-     *
      * @Route("/content/menu/settings/{content}", name="claroline_content_menu_settings")
      * @Secure(roles="ROLE_HOME_MANAGER")
-     *
      * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
-     *
      * @Template("ClarolineCoreBundle:home:menu_settings.html.twig")
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Content $content
+     *
+     * @return array
      */
     public function menuSettingsAction($content)
     {
@@ -700,14 +720,14 @@ class HomeController
      *     options = {"expose" = true}
      * )
      *
-     * @param menu The id of the menu
-     * @param login A Boolean that determine if there is the login button in the footer
-     * @param workspaces A Boolean that determine if there is the workspace button in the footer
-     * @param locale A boolean that determine if there is a locale button in the header
+     * @param int  $menu       The id of the menu
+     * @param bool $login      A Boolean that determine if there is the login button in the footer
+     * @param bool $workspaces A Boolean that determine if there is the workspace button in the footer
+     * @param bool $locale     A boolean that determine if there is a locale button in the header
      *
      * @Secure(roles="ROLE_HOME_MANAGER")
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function saveMenuSettingsAction($menu, $login, $workspaces, $locale)
     {
@@ -715,13 +735,15 @@ class HomeController
             $this->manager->saveHomeParameters($menu, $login, $workspaces, $locale);
 
             return new Response('true');
-        } catch (\Exeption $e) {
+        } catch (\Exception $e) {
             return new Response('false');
         }
     }
 
     /**
      * Render the HTML of the content.
+     *
+     * @param string $layout
      *
      * @return array
      */
@@ -745,6 +767,8 @@ class HomeController
     /**
      * Render the HTML of the regions.
      *
+     * @param array $regions
+     *
      * @return string
      */
     public function renderRegions($regions)
@@ -767,7 +791,11 @@ class HomeController
     /**
      * Extends templating render.
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param string $template
+     * @param array  $variables
+     * @param bool   $default
+     *
+     * @return Response
      */
     public function render($template, $variables, $default = false)
     {
