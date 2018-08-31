@@ -129,7 +129,7 @@ class Updater120000 extends Updater
             SET
                 config.name = tab.name,
                 config.longTitle = tab.name,
-                config.centerTitle = false
+                config.centerTitle = false,
                 config.is_visible = true
             ';
 

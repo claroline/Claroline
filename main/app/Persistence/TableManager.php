@@ -47,12 +47,15 @@ class TableManager
 
         if (!in_array($tempName, $tablesList)) {
             $this->log("backing up {$tableName} table...");
-
-            $query = "
-                CREATE TABLE {$tempName}
-                AS (SELECT * FROM {$tableName})
-            ";
-            $this->connection->query($query);
+            try {
+                $query = "
+                    CREATE TABLE {$tempName}
+                    AS (SELECT * FROM {$tableName})
+                ";
+                $this->connection->query($query);
+            } catch (\Exception $e) {
+                $this->log("{$tableName} doesn't exist");
+            }
         } else {
             $this->log("{$tempName} table already exists");
         }

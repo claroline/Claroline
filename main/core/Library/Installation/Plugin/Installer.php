@@ -173,7 +173,7 @@ class Installer
         $this->versionManager->execute($version);
     }
 
-    public function end(PluginBundleInterface $plugin, $currentVersion, $targetVersion)
+    public function end(PluginBundleInterface $plugin, $currentVersion = null, $targetVersion = null)
     {
         $this->baseInstaller->end($plugin, $currentVersion, $targetVersion);
     }
