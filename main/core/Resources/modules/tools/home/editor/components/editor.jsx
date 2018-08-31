@@ -56,7 +56,10 @@ const EditorComponent = props =>
                 title: trans('home_tab_delete_confirm_title'),
                 message: trans('home_tab_delete_confirm_message')
               }}
-              disabled={props.currentTab.locked && !props.administration}
+              disabled={props.currentTab.type === 'administration' &&
+              props.currentTab.locked &&
+              props.context.type === 'desktop' &&
+              !props.administration}
               callback={() => props.deleteTab(props.tabs, props.currentTab, props.history.push)}
             />
           </PageGroupActions>
@@ -93,7 +96,10 @@ const EditorComponent = props =>
           target: '/',
           exact: true
         }}
-        disabled={props.currentTab.locked && props.context.type === 'desktop' && !props.administration}
+        disabled={props.currentTab.type === 'administration' &&
+          props.currentTab.locked &&
+          props.context.type === 'desktop' &&
+          !props.administration}
         sections={[
           {
             icon: 'fa fa-fw fa-plus',
@@ -185,7 +191,7 @@ const EditorComponent = props =>
                       multiple : true,
                       choices: props.context.type === 'workspace' || props.administration ?
                         props.context.data.roles.reduce((acc, role) => {
-                          acc[role.id] = role.translationKey
+                          acc[role.id] = trans(role.translationKey)
                           return acc
                         }, {})
                         : ''
@@ -197,7 +203,10 @@ const EditorComponent = props =>
           }
         ]}
       >
-        {!(props.currentTab.locked && props.context.type === 'desktop' && !props.administration) &&
+        {!(props.currentTab.type === 'administration' &&
+          props.currentTab.locked &&
+          props.context.type === 'desktop' &&
+          !props.administration) &&
           <WidgetGridEditor
             context={props.context}
             widgets={props.widgets}

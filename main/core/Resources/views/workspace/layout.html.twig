@@ -25,6 +25,10 @@
     {{ workspace.name }}
 {% endblock %}
 
+{% block breadcrumb %}
+    {{ breadcrumb }}
+{% endblock %}
+
 {% block leftbar %}
     {% if workspace is defined and workspace != null and is_granted('OPEN', workspace) %}
         {{ render(controller("ClarolineCoreBundle:Workspace:renderToolbar", {workspace: workspace, request: app.request})) }}

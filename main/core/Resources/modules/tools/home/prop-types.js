@@ -27,7 +27,7 @@ const Tab = {
     widgets: [],
     centerTitle: false,
     restrictions: false,
-    locked: false
+    locked: true
   }
 }
 
