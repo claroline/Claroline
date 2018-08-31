@@ -173,9 +173,9 @@ class Installer
         $this->versionManager->execute($version);
     }
 
-    public function end(PluginBundleInterface $plugin)
+    public function end(PluginBundleInterface $plugin, $currentVersion, $targetVersion)
     {
-        $this->baseInstaller->end($plugin);
+        $this->baseInstaller->end($plugin, $currentVersion, $targetVersion);
     }
 
     public function checkInstallationStatus(PluginBundleInterface $plugin, $shouldBeInstalled = true)

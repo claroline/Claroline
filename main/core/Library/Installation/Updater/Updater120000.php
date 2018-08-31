@@ -130,6 +130,7 @@ class Updater120000 extends Updater
                 config.name = tab.name,
                 config.longTitle = tab.name,
                 config.centerTitle = false
+                config.is_visible = true
             ';
 
         $stmt = $this->conn->prepare($sql);
@@ -242,7 +243,15 @@ class Updater120000 extends Updater
         } else {
             $this->log('WidgetContainerConfig migration.');
             $sql = "
-                INSERT INTO claro_widget_container_config (id, uuid, backgroundType, position, layout, widget_container_id, is_visible)
+                INSERT INTO claro_widget_container_config (
+                    id,
+                    uuid,
+                    backgroundType,
+                    position,
+                    layout,
+                    widget_container_id,
+                    is_visible
+                )
                 SELECT container.id, (SELECT UUID()) as uuid, 'none', config.row_position, '[1]', container.id, true
                 FROM claro_widget_container container
                 JOIN claro_widget_display_config_temp config ON config.id = container.id
