@@ -83,6 +83,6 @@ class TestUpdateCommand extends ContainerAwareCommand
         $from = $input->getArgument('from_version');
         $to = $input->getArgument('to_version');
         $installer->update($bundle, $from, $to);
-        $container->get('claroline.installation.operation_executor')->end();
+        $installer->end($bundle, $from, $to);
     }
 }

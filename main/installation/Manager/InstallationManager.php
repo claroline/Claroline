@@ -97,10 +97,10 @@ class InstallationManager
 
     public function update(InstallableInterface $bundle, $currentVersion, $targetVersion)
     {
-        if (strpos($currentVersion, 'dev') === 0) {
+        if (0 === strpos($currentVersion, 'dev')) {
             $currentVersion = '9999999-'.$currentVersion;
         }
-        if (strpos($targetVersion, 'dev') === 0) {
+        if (0 === strpos($targetVersion, 'dev')) {
             $targetVersion = '9999999-'.$targetVersion;
         }
 
@@ -137,12 +137,12 @@ class InstallationManager
     //This function is fired at the end of a plugin installation/update.
     //This is the stuff we do no matter what, at the very end.
     //It allows us to override some stuff and it's just easier that way.
-    public function end(InstallableInterface $bundle)
+    public function end(InstallableInterface $bundle, $currentVersion = null, $targetVersion = null)
     {
         $additionalInstaller = $this->getAdditionalInstaller($bundle);
 
         if ($additionalInstaller) {
-            $additionalInstaller->end();
+            $additionalInstaller->end($currentVersion, $targetVersion);
         }
     }
 

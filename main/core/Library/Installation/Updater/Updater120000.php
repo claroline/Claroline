@@ -70,10 +70,18 @@ class Updater120000 extends Updater
             'claro_widget_simple',
             'claro_widget_container',
             'claro_widget_list',
+            'claro_home_tab_roles',
             'claro_widget_container_config',
         ];
 
         foreach ($tables as $table) {
+            $this->truncate($table);
+        }
+    }
+
+    private function truncate($table)
+    {
+        try {
             $this->log('TRUNCATE '.$table);
             $sql = '
                 SET FOREIGN_KEY_CHECKS=0;
@@ -83,6 +91,8 @@ class Updater120000 extends Updater
 
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
+        } catch (\Exception $e) {
+            $this->log('Couldnt truncate '.$table);
         }
     }
 
@@ -99,8 +109,8 @@ class Updater120000 extends Updater
           'claro_widget_home_tab_config',
           'claro_simple_text_widget_config',
           'claro_widget_roles',
-          'claro_widget_list',
           'claro_widget',
+          'claro_home_tab_roles',
         ];
 
         foreach ($toCopy as $table) {
@@ -129,16 +139,19 @@ class Updater120000 extends Updater
     public function postUpdate()
     {
         $this->updatePlatformParameters();
-
-        $this->updateHomeTabType();
         $this->removeTool('parameters');
         $this->removeTool('claroline_activity_tool');
         $this->updateTabsStructure();
         $this->buildContainers();
-        $this->updateWidgetInstances();
-        $this->checkDesktopTabs();
-        $this->updateWidgetInstanceConfigType();
         $this->deactivateActivityResourceType();
+    }
+
+    public function end()
+    {
+        $this->updateWidgetInstances();
+        $this->updateWidgetInstanceConfigType();
+        $this->updateHomeTabType();
+        $this->checkDesktopTabs();
     }
 
     private function updateHomeTabType()
@@ -229,8 +242,8 @@ class Updater120000 extends Updater
         } else {
             $this->log('WidgetContainerConfig migration.');
             $sql = "
-                INSERT INTO claro_widget_container_config (id, uuid, backgroundType, position, layout, widget_container_id)
-                SELECT container.id, (SELECT UUID()) as uuid, 'none', config.row_position, '[1]', container.id
+                INSERT INTO claro_widget_container_config (id, uuid, backgroundType, position, layout, widget_container_id, is_visible)
+                SELECT container.id, (SELECT UUID()) as uuid, 'none', config.row_position, '[1]', container.id, true
                 FROM claro_widget_container container
                 JOIN claro_widget_display_config_temp config ON config.id = container.id
             ";
@@ -321,8 +334,8 @@ class Updater120000 extends Updater
                 $this->log('Setting default list parameters...');
 
                 $sql = "
-                    INSERT INTO claro_widget_list (sortBy, widgetInstance_id)
-                    SELECT '{$sortBy}', conf.id from claro_widget_display_config_temp conf
+                    INSERT INTO claro_widget_list (sortBy, widgetInstance_id, display, displayedColumns)
+                    SELECT '{$sortBy}', conf.id, 'list', '[]' from claro_widget_display_config_temp conf
                     JOIN claro_widget_instance_temp instance_temp ON instance_temp.id = conf.widget_instance_id
                     JOIN claro_widget_temp widget_temp ON instance_temp.widget_id = widget_temp.id
                     JOIN claro_widget_instance instance ON instance.id = conf.id

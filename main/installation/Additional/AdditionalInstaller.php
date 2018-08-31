@@ -53,7 +53,7 @@ abstract class AdditionalInstaller implements AdditionalInstallerInterface
     {
     }
 
-    public function end()
+    public function end($currentVersion, $targetVersion)
     {
     }
 }
