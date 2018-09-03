@@ -117,7 +117,9 @@ class WidgetInstanceSerializer
                 }
 
                 // deserializes custom config and link it to the instance
-                $typeParameters = $this->serializer->deserialize($typeParameters, $data['parameters'], $options);
+                $typeParameters = $this->serializer
+                  ->get($parametersClass)
+                  ->deserialize($data['parameters'], $typeParameters, $options);
                 $typeParameters->setWidgetInstance($widgetInstance);
 
                 // We either do this or cascade persist ¯\_(ツ)_/¯
