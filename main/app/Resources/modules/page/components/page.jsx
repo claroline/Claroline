@@ -68,6 +68,8 @@ const Page = props =>
 implementPropTypes(Page, PageTypes, {
   children: T.node.isRequired,
   showHeader: T.bool.isRequired
+}, {
+  showHeader: true
 })
 
 export {
