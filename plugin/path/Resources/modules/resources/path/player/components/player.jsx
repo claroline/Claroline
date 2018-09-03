@@ -29,7 +29,7 @@ const PlayerComponent = props =>
         steps={props.path.steps}
       />
     }
-
+    
     <Routes
       redirect={[
         {from: '/play', to: `/play/${props.steps[0].id}`}

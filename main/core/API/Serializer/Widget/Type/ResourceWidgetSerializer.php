@@ -55,6 +55,7 @@ class ResourceWidgetSerializer
     {
         return [
             'resource' => $widget->getResourceNode() ? $this->nodeSerializer->serialize($widget->getResourceNode(), [Options::SERIALIZE_MINIMAL]) : null,
+            'showResourceHeader' => $widget->getShowResourceHeader(),
         ];
     }
 
@@ -69,6 +70,7 @@ class ResourceWidgetSerializer
                 $widget->setResourceNode($resourceNode);
             }
         }
+        $this->sipe('showResourceHeader', 'setShowResourceHeader', $data, $widget);
 
         return $widget;
     }

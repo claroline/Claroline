@@ -51,6 +51,7 @@ class ResourcePage extends Component {
         className={classes('resource-page', `${this.props.resourceNode.meta.type}-page`)}
         styles={this.props.styles}
         embedded={this.props.embedded}
+        showHeader={this.props.embedded ? this.props.showHeader : true}
         fullscreen={this.state.fullscreen}
         title={this.props.resourceNode.name}
         poster={this.props.resourceNode.poster ? this.props.resourceNode.poster.url : undefined}
@@ -113,6 +114,7 @@ class ResourcePage extends Component {
 ResourcePage.propTypes = {
   loaded: T.bool.isRequired,
   embedded: T.bool,
+  showHeader: T.bool,
   managed: T.bool.isRequired,
 
   /**

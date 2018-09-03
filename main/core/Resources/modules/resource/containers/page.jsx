@@ -15,6 +15,7 @@ const ResourcePage = connect(
   (state) => ({
     loaded: selectors.loaded(state),
     embedded: selectors.embedded(state),
+    showHeader: selectors.showHeader(state),
     managed: selectors.managed(state),
     resourceNode: selectors.resourceNode(state),
     userEvaluation: selectors.resourceEvaluation(state),

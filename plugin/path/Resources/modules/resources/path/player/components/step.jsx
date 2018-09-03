@@ -177,6 +177,7 @@ const Step = props =>
             <ResourceEmbedded
               className="step-primary-resource"
               resourceNode={props.primaryResource}
+              showHeader={props.showResourceHeader}
               lifecycle={{
                 play: props.disableNavigation,
                 end: props.enableNavigation
@@ -205,6 +206,7 @@ const Step = props =>
 implementPropTypes(Step, StepTypes, {
   fullWidth: T.bool.isRequired,
   numbering: T.string,
+  showHeader: T.bool.isRequired,
   manualProgressionAllowed: T.bool.isRequired,
   updateProgression: T.func.isRequired,
   enableNavigation: T.func.isRequired,

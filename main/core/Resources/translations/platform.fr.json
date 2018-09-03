@@ -1204,6 +1204,7 @@
     "show_profile": "Voir le profil",
     "show_profile_for_anonymous": "Afficher le profil public des utilisateurs",
     "show_register_button_in_login_page": "Afficher le bouton d'inscription sur la page de connexion",
+    "show_resource_header" : "Afficher l'entête de la ressource",
     "show_username": "Afficher le nom d'utilisateur",
     "simple": "Simple",
     "size": "Taille",

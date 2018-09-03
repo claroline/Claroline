@@ -4,7 +4,10 @@ import {trans} from '#/main/core/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
+import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
+import {ResourceCard} from '#/main/core/resource/data/components/resource-card'
+import {MODAL_BUTTON} from '#/main/app/buttons'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 
 import {Step as StepTypes} from '#/plugin/path/resources/path/prop-types'
 import {selectors} from '#/plugin/path/resources/path/editor/store'
@@ -12,22 +15,32 @@ import {selectors} from '#/plugin/path/resources/path/editor/store'
 const SecondaryResourcesSection = props =>
   <div>
     {props.secondaryResources && props.secondaryResources.map(sr =>
-      <div key={`secondary-resource-${sr.id}`}>
-        {sr.resource.name} [{trans(sr.resource.meta.type, {}, 'resource')}]
-        <span
-          className={`fa fa-fw pointer-hand ${sr.inheritanceEnabled ? 'fa-eye-slash' : 'fa-eye'}`}
-          onClick={() => props.updateSecondaryResourceInheritance(props.stepId, sr.id, !sr.inheritanceEnabled)}
-        />
-        <span
-          className="fa fa-fw fa-trash-o pointer-hand"
-          onClick={() => props.removeSecondaryResource(props.stepId, sr.id)}
-        />
-      </div>
+      <ResourceCard
+        className="step-secondary-resources"
+        key={`secondary-resource-${sr.id}`}
+        data={sr.resource}
+        actions={[
+          {
+            name: 'delete',
+            type: MODAL_BUTTON,
+            icon: 'fa fa-fw fa-trash-o',
+            label: trans('delete', {}, 'actions'),
+            dangerous: true,
+            modal: [MODAL_CONFIRM, {
+              dangerous: true,
+              icon: 'fa fa-fw fa-trash-o',
+              title: trans('resources_delete_confirm'),
+              question: trans('resource_delete_message'),
+              handleConfirm: () => props.removeSecondaryResource(props.stepId, sr.id)
+            }]
+          }
+        ]}
+      />
     )}
 
     <button
       type="button"
-      className="btn btn-default"
+      className="btn btn-default btn-block"
       onClick={() => props.pickSecondaryResources(props.stepId)}
     >
       <span className="fa fa-fw fa-plus icon-with-text-right"/>
@@ -136,8 +149,14 @@ const StepForm = props =>
             type: 'resource',
             label: trans('resource'),
             options: {
-              embedded: true
+              embedded: true,
+              showHeader: true
             }
+          },
+          {
+            name: 'showResourceHeader',
+            type: 'boolean',
+            label: trans('show_resource_header')
           }
         ]
       }
@@ -160,17 +179,17 @@ const StepForm = props =>
       </FormSection>
 
       {props.inheritedResources.length > 0 &&
-        <FormSection
-          className="embedded-list-section"
-          icon="fa fa-fw fa-folder-open-o"
-          title={trans('inherited_resources', {}, 'path')}
-        >
-          <InheritedResourcesSection
-            stepId={props.id}
-            inheritedResources={props.inheritedResources}
-            removeInheritedResource={props.removeInheritedResource}
-          />
-        </FormSection>
+          <FormSection
+            className="embedded-list-section"
+            icon="fa fa-fw fa-folder-open-o"
+            title={trans('inherited_resources', {}, 'path')}
+          >
+            <InheritedResourcesSection
+              stepId={props.id}
+              inheritedResources={props.inheritedResources}
+              removeInheritedResource={props.removeInheritedResource}
+            />
+          </FormSection>
       }
     </FormSections>
   </FormData>
@@ -186,6 +205,7 @@ implementPropTypes(StepForm, StepTypes, {
 }, {
   customNumbering: false
 })
+
 
 export {
   StepForm

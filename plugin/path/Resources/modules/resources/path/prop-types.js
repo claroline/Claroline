@@ -18,6 +18,7 @@ const Step = {
         type: T.string.isRequired
       })
     }),
+    showResourceHeader: T.bool,
     secondaryResources: T.arrayOf(T.shape({
       // minimal resource
     })),
@@ -29,6 +30,7 @@ const Step = {
     })
   },
   defaultProps: {
+    showResourceHeader: true,
     secondaryResources: [],
     inheritedResources: [],
     children: []

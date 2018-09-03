@@ -43,6 +43,7 @@ const Page = props =>
   >
     <AlertOverlay />
 
+    {props.showHeader &&
     <PageHeader
       title={props.title}
       subtitle={props.subtitle}
@@ -51,7 +52,7 @@ const Page = props =>
       toolbar={props.toolbar}
       actions={props.actions}
     />
-
+    }
     <div className="page-content" role="presentation">
       {props.children}
     </div>
@@ -65,7 +66,8 @@ const Page = props =>
 
 
 implementPropTypes(Page, PageTypes, {
-  children: T.node.isRequired
+  children: T.node.isRequired,
+  showHeader: T.bool.isRequired
 })
 
 export {

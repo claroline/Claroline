@@ -132,6 +132,7 @@ class Updater120000 extends Updater
                 config.centerTitle = false,
                 config.is_visible = true,
                 config.is_locked = true
+
             ';
 
         $stmt = $this->conn->prepare($sql);

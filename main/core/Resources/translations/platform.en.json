@@ -1176,6 +1176,7 @@
     "show_profile": "Show profile",
     "show_profile_for_anonymous": "Display the public profile of users",
     "show_register_button_in_login_page": "Display register button in login page",
+    "show_resource_header" : "Show resource header",
     "show_username": "Show username",
     "simple": "Simple",
     "size": "Size",

@@ -4,6 +4,7 @@ import isEmpty from 'lodash/isEmpty'
 import {constants} from '#/main/core/resource/constants'
 
 const embedded = (state) => state.embedded
+const showHeader = (state) => state.showHeader
 
 const managed = (state) => state.managed
 
@@ -75,6 +76,7 @@ const isSuccessful = createSelector(
 
 export const selectors = {
   embedded,
+  showHeader,
   managed,
   loaded,
   // lifecycle

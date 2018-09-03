@@ -163,6 +163,13 @@ class Step
     protected $resource;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="showResourceHeader", type="boolean")
+     */
+    protected $showResourceHeader = false;
+
+    /**
      * Secondary resources.
      *
      * @var ArrayCollection|SecondaryResource[]
@@ -629,6 +636,26 @@ class Step
         if ($this->secondaryResources->contains($secondaryResource)) {
             $this->secondaryResources->removeElement($secondaryResource);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getShowResourceHeader()
+    {
+        return $this->showResourceHeader;
+    }
+
+    /**
+     * @param bool $showResourceHeader
+     *
+     * @return Step
+     */
+    public function setShowResourceHeader($showResourceHeader)
+    {
+        $this->showResourceHeader = $showResourceHeader;
 
         return $this;
     }

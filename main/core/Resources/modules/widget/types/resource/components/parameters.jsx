@@ -19,6 +19,10 @@ const ResourceWidgetParameters = (props) =>
             label: trans('resource'),
             type: 'resource',
             required: true
+          }, {
+            name: 'parameters.showResourceHeader',
+            type: 'boolean',
+            label: trans('show_resource_header')
           }
         ]
       }

@@ -9,6 +9,11 @@ const parameters = createSelector(
   (instance) => instance.parameters || {}
 )
 
+const showResourceHeader = createSelector(
+  [instance],
+  (instance) => instance.showResourceHeader
+)
+
 const source = createSelector(
   [instance],
   (instance) => instance.source
@@ -18,5 +23,6 @@ export const selectors = {
   context,
   instance,
   parameters,
+  showResourceHeader,
   source
 }

@@ -8,10 +8,12 @@ const ResourceWidget = props =>
   <ResourceEmbedded
     className="widget-resource"
     resourceNode={props.resourceNode}
+    showHeader={props.showResourceHeader}
   />
 
 ResourceWidget.propTypes = {
-  resourceNode: T.shape(resourceNodeTypes.propTypes).isRequired
+  resourceNode: T.shape(resourceNodeTypes.propTypes).isRequired,
+  showResourceHeader: T.bool.isRequired
 }
 
 export {
