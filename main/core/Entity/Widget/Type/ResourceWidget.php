@@ -27,6 +27,8 @@ class ResourceWidget extends AbstractWidget
 
     /**
      * Choose to display the header of the resource.
+     *
+     * @ORM\Column(type="boolean")
      */
     private $showResourceHeader = true;
 
