@@ -7,6 +7,7 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -134,7 +135,16 @@ class WorkspaceSerializer
             'uuid' => $workspace->getUuid(), // todo: should be merged with `id`
             'name' => $workspace->getName(),
             'code' => $workspace->getCode(),
-            'thumbnail' => $workspace->getThumbnail() ? $this->serializer->serialize($workspace->getThumbnail()) : null,
+            'thumbnail' => $workspace->getThumbnail() ? $this->serializer->serialize(
+              $this->om->getRepository(PublicFile::class)->findOneBy([
+                  'url' => $workspace->getThumbnail(),
+              ])
+            ) : null,
+            'poster' => $workspace->getPoster() ? $this->serializer->serialize(
+                $this->om->getRepository(PublicFile::class)->findOneBy([
+                    'url' => $workspace->getPoster(),
+                ])
+            ) : null,
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
@@ -330,12 +340,25 @@ class WorkspaceSerializer
     {
         if (isset($data['thumbnail']) && isset($data['thumbnail']['id'])) {
             $thumbnail = $this->serializer->deserialize(
-                'Claroline\CoreBundle\Entity\File\PublicFile',
+                PublicFile::class,
                 $data['thumbnail']
             );
-            $workspace->setThumbnail($thumbnail);
+            $workspace->setThumbnail($data['thumbnail']['url']);
             $this->fileUt->createFileUse(
                 $thumbnail,
+                'Claroline\CoreBundle\Entity\Workspace',
+                $workspace->getUuid()
+            );
+        }
+
+        if (isset($data['poster']) && isset($data['poster']['id'])) {
+            $poster = $this->serializer->deserialize(
+                PublicFile::class,
+                $data['poster']
+            );
+            $workspace->setPoster($data['poster']['url']);
+            $this->fileUt->createFileUse(
+                $poster,
                 'Claroline\CoreBundle\Entity\Workspace',
                 $workspace->getUuid()
             );

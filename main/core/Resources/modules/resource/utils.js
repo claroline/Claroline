@@ -92,15 +92,20 @@ function getActions(resourceNodes, nodesRefresher, absolute = false, withDefault
 
   const collectionActions = resourceTypes
     .reduce((accumulator, resourceType) => {
-      let typeActions = getType({meta: {type: resourceType}}).actions
-        .filter(action =>
-          // filter default if needed
-          (withDefault || undefined === action.default || !action.default)
-          // filter by permissions (the user must have perms on AT LEAST ONE node in the collection)
-          && !!resourceNodes.find(resourceNode => hasPermission(action.permission, resourceNode))
-        )
+      const type = getType({meta: {type: resourceType}})
 
-      return uniqBy(accumulator.concat(typeActions), 'name')
+      if (type) {
+        let typeActions = type.actions
+          .filter(action =>
+            // filter default if needed
+            (withDefault || undefined === action.default || !action.default)
+            // filter by permissions (the user must have perms on AT LEAST ONE node in the collection)
+            && !!resourceNodes.find(resourceNode => hasPermission(action.permission, resourceNode))
+          )
+
+        return uniqBy(accumulator.concat(typeActions), 'name')
+      }
+      return accumulator
     }, [])
 
   return loadActions(resourceNodes, collectionActions, nodesRefresher, absolute)

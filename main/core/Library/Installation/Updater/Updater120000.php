@@ -40,6 +40,7 @@ class Updater120000 extends Updater
         $this->saveOldTabsTables();
         $this->setWidgetPlugin();
         $this->truncateTables();
+        $this->saveOldResourcesMessages();
     }
 
     public function setWidgetPlugin()
@@ -141,6 +142,7 @@ class Updater120000 extends Updater
 
     public function postUpdate()
     {
+        $this->restoreResourceThumbnails();
         $this->updatePlatformParameters();
         $this->removeTool('parameters');
         $this->removeTool('claroline_activity_tool');
@@ -422,6 +424,37 @@ class Updater120000 extends Updater
             $this->om->flush();
 
             $this->log('Activity resource is deactivated.');
+        }
+    }
+
+    private function saveOldResourcesMessages()
+    {
+        try {
+            $this->log('Save old resources thumbnail links');
+            $query = '
+                CREATE TABLE resource_icon_save_link
+                AS (SELECT id, thumbnail_id FROM claro_resource_node)
+            ';
+            $this->conn->query($query);
+        } catch (\Exception $e) {
+            $this->log('resource_icon_save_link already saved');
+        }
+    }
+
+    private function restoreResourceThumbnails()
+    {
+        try {
+            $this->log('Restore old resources thumbnail links');
+            $query = '
+                UPDATE claro_resource_node node
+                JOIN resource_icon_save_link link ON node.id = link.id
+                JOIN claro_resource_thumbnail thumbnail ON thumbnail.id = link.thumbnail_id
+                SET node.thumbnail = thumbnail.relative_url
+            ';
+
+            $this->conn->query($query);
+        } catch (\Exception $e) {
+            $this->log('Failed copying thumbnails');
         }
     }
 }

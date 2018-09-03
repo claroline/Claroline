@@ -11,7 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity\Workspace;
 
-use Claroline\CoreBundle\Entity\File\PublicFile;
+use Claroline\AppBundle\Entity\Meta\Poster;
+use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\CoreBundle\Entity\Model\OrganizationsTrait;
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -30,8 +31,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Workspace
 {
+    use Poster;
     use OrganizationsTrait;
     use UuidTrait;
+    use Thumbnail;
 
     const DEFAULT_MAX_STORAGE_SIZE = '1 TB';
     const DEFAULT_MAX_FILE_COUNT = 10000;
@@ -342,16 +345,6 @@ class Workspace
      * @var ArrayCollection
      */
     protected $organizations;
-
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\File\PublicFile"
-     * )
-     * @ORM\JoinColumn(name="thumbnail_id", referencedColumnName="id", onDelete="SET NULL")
-     *
-     * @var PublicFile
-     */
-    protected $thumbnail;
 
     //not mapped. Used for creation
     private $workspaceModel;
@@ -880,16 +873,6 @@ class Workspace
     public function setSlug($slug)
     {
         $this->slug = $slug;
-    }
-
-    public function setThumbnail(PublicFile $file)
-    {
-        $this->thumbnail = $file;
-    }
-
-    public function getThumbnail()
-    {
-        return $this->thumbnail;
     }
 
     public function setDefaultRole(Role $role)

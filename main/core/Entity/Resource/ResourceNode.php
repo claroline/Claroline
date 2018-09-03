@@ -16,6 +16,7 @@ use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Creator;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\Poster;
+use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
 use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -37,6 +38,7 @@ class ResourceNode
     use Uuid;
 
     // meta
+    use Thumbnail;
     use Poster;
     use Description;
     use Creator;
@@ -108,19 +110,6 @@ class ResourceNode
      * @ORM\Column(type="boolean", options={"default": 1})
      */
     private $showIcon = true;
-
-    /**
-     * @var ResourceThumbnail
-     *
-     * @ORM\OneToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceThumbnail",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(onDelete="SET NULL")
-     *
-     * @todo use PublicFile api instead
-     */
-    private $thumbnail;
 
     /**
      * @var string
@@ -461,26 +450,6 @@ class ResourceNode
     public function setShowIcon($showIcon)
     {
         $this->showIcon = $showIcon;
-    }
-
-    /**
-     * Returns the resource thumbnail.
-     *
-     * @return ResourceThumbnail
-     */
-    public function getThumbnail()
-    {
-        return $this->thumbnail;
-    }
-
-    /**
-     * Sets the resource thumbnail.
-     *
-     * @param ResourceThumbnail $thumbnail
-     */
-    public function setThumbnail(ResourceThumbnail $thumbnail)
-    {
-        $this->thumbnail = $thumbnail;
     }
 
     /**

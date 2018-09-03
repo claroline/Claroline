@@ -79,6 +79,11 @@ const ResourceFormComponent = (props) =>
         title: trans('display_parameters'),
         fields: [
           {
+            name: 'thumbnail',
+            label: trans('thumbnail'),
+            type: 'image'
+          },
+          {
             name: 'poster',
             label: trans('poster'),
             type: 'image',
@@ -94,7 +99,7 @@ const ResourceFormComponent = (props) =>
             name: 'display.fullscreen',
             label: trans('resource_fullscreen', {}, 'resource'),
             type: 'boolean'
-          } 
+          }
         ]
       }, {
         icon: 'fa fa-fw fa-key',

@@ -47,7 +47,7 @@ const ResourceCard = props => {
         'data-card-muted': !props.data.meta.published
       })}
       id={props.data.id}
-      poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
+      poster={props.data.thumbnail ? asset(props.data.thumbnail.url) : null}
       icon={<ResourceIcon className="icon" mimeType={props.data.meta.mimeType} />}
       title={props.data.name}
       subtitle={trans(props.data.meta.type, {}, 'resource')}

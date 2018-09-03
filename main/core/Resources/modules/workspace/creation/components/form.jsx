@@ -181,6 +181,10 @@ class WorkspaceComponent extends Component
                 type: 'image',
                 label: trans('thumbnail')
               }, {
+                name: 'poster',
+                type: 'image',
+                label: trans('poster')
+              }, {
                 name: 'display.color',
                 type: 'color',
                 label: trans('color')

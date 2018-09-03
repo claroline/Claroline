@@ -89,10 +89,10 @@ class ResourceNodeSerializer
             'id' => $resourceNode->getUuid(),
             'autoId' => $resourceNode->getId(), // TODO : remove me
             'name' => $resourceNode->getName(),
-            'thumbnail' => $resourceNode->getThumbnail() ? $resourceNode->getThumbnail()->getRelativeUrl() : null,
             'meta' => $this->serializeMeta($resourceNode, $options),
             'permissions' => $this->rightsManager->getCurrentPermissionArray($resourceNode),
             'poster' => $this->serializePoster($resourceNode),
+            'thumbnail' => $this->serializeThumbnail($resourceNode),
             // TODO : it should not be available in minimal mode
             // for now I need it to compute simple access rights (for display)
             // we should compute simple access here to avoid exposing this big object
@@ -181,8 +181,31 @@ class ResourceNodeSerializer
         if (!empty($resourceNode->getPoster())) {
             /** @var PublicFile $file */
             $file = $this->om
-                ->getRepository('Claroline\CoreBundle\Entity\File\PublicFile')
+                ->getRepository(PublicFile::class)
                 ->findOneBy(['url' => $resourceNode->getPoster()]);
+
+            if ($file) {
+                return $this->fileSerializer->serialize($file);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Serialize the resource thumbnail.
+     *
+     * @param ResourceNode $resourceNode
+     *
+     * @return array|null
+     */
+    private function serializeThumbnail(ResourceNode $resourceNode)
+    {
+        if (!empty($resourceNode->getThumbnail())) {
+            /** @var PublicFile $file */
+            $file = $this->om
+                ->getRepository(PublicFile::class)
+                ->findOneBy(['url' => $resourceNode->getThumbnail()]);
 
             if ($file) {
                 return $this->fileSerializer->serialize($file);
@@ -249,8 +272,13 @@ class ResourceNodeSerializer
     public function deserialize(array $data, ResourceNode $resourceNode)
     {
         $this->sipe('name', 'setName', $data, $resourceNode);
+
         if (isset($data['poster']) && isset($data['poster']['url'])) {
             $resourceNode->setPoster($data['poster']['url']);
+        }
+
+        if (isset($data['thumbnail']) && isset($data['thumbnail']['url'])) {
+            $resourceNode->setThumbnail($data['thumbnail']['url']);
         }
 
         // meta
