@@ -3,9 +3,12 @@ import omit from 'lodash/omit'
 import uniq from 'lodash/uniq'
 import uniqBy from 'lodash/uniqBy'
 
+import {url} from '#/main/app/api'
 import {param} from '#/main/app/config'
 import {getApps} from '#/main/app/plugins'
 import {trans} from '#/main/core/translation'
+
+import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 
 import {hasPermission} from '#/main/core/resource/permissions'
 
@@ -24,13 +27,14 @@ function getType(resourceNode) {
 /**
  * Loads the available actions apps from configuration.
  *
- * @param {Array}  resourceNodes
- * @param {Array}  actions
- * @param {object} nodesRefresher - an object containing methods to update the node context.
+ * @param {Array}   resourceNodes
+ * @param {Array}   actions
+ * @param {object}  nodesRefresher - an object containing methods to update the node context
+ * @param {boolean} absolute       - tells if we need to turn internal resource links into absolute urls
  *
  * @return {Promise.<Array>}
  */
-function loadActions(resourceNodes, actions, nodesRefresher) {
+function loadActions(resourceNodes, actions, nodesRefresher, absolute = false) {
   // adds default refresher actions
   const refresher = Object.assign({
     add: (resourceNodes) => resourceNodes,
@@ -52,7 +56,18 @@ function loadActions(resourceNodes, actions, nodesRefresher) {
     const realActions = {}
     loadedActions.map(actionModule => {
       const generated = actionModule.action(resourceNodes, refresher)
-      realActions[generated.name] = generated
+
+      if (absolute && LINK_BUTTON === generated.type) {
+        realActions[generated.name] = Object.assign({}, generated, {
+          type: URL_BUTTON,
+          target: url(['claro_resource_show', {
+            type: resourceNodes[0].meta.type,
+            id: resourceNodes[0].id
+          }]) + `#${generated.target}`
+        })
+      } else {
+        realActions[generated.name] = generated
+      }
     })
 
     // merge server action with ui implementation
@@ -65,13 +80,14 @@ function loadActions(resourceNodes, actions, nodesRefresher) {
 /**
  * Gets the list of available actions for a resource.
  *
- * @param {Array}   resourceNodes  - the current resource node
- * @param {object}  nodesRefresher - an object containing methods to update the node context.
- * @param {boolean} withDefault    - include the default action (most of the time, it's not useful to get it)
+ * @param {Array}    resourceNodes  - the current resource node
+ * @param {object}   nodesRefresher - an object containing methods to update the node context
+ * @param {boolean}  absolute       - tells if we need to turn internal resource links into absolute urls
+ * @param {boolean}  withDefault    - include the default action (most of the time, it's not useful to get it)
  *
  * @return {Promise.<Array>}
  */
-function getActions(resourceNodes, nodesRefresher, withDefault = false) {
+function getActions(resourceNodes, nodesRefresher, absolute = false, withDefault = false) {
   const resourceTypes = uniq(resourceNodes.map(resourceNode => resourceNode.meta.type))
 
   const collectionActions = resourceTypes
@@ -87,23 +103,24 @@ function getActions(resourceNodes, nodesRefresher, withDefault = false) {
       return uniqBy(accumulator.concat(typeActions), 'name')
     }, [])
 
-  return loadActions(resourceNodes, collectionActions, nodesRefresher)
+  return loadActions(resourceNodes, collectionActions, nodesRefresher, absolute)
 }
 
 /**
  * Gets the default action of a resource.
  *
- * @param {object} resourceNode
- * @param {object} nodesRefresher
+ * @param {object}  resourceNode
+ * @param {object}  nodesRefresher
+ * @param {boolean} absolute
  *
  * @return {Promise.<Array>}
  */
-function getDefaultAction(resourceNode, nodesRefresher) {
+function getDefaultAction(resourceNode, nodesRefresher, absolute = false) {
   const defaultAction = getType(resourceNode).actions
     .find(action => action.default)
 
   if (hasPermission(defaultAction.permission, resourceNode)) {
-    return loadActions([resourceNode], [defaultAction], nodesRefresher)
+    return loadActions([resourceNode], [defaultAction], nodesRefresher, absolute)
       .then(loadActions => loadActions[0] || null)
   }
 
