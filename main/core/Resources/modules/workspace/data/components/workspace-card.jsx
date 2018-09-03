@@ -11,7 +11,7 @@ const WorkspaceCard = props =>
   <DataCard
     {...props}
     id={props.data.id}
-    poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
+    poster={props.data.thumbnail ? asset(props.data.thumbnail.url) : null}
     icon="fa fa-book"
     title={props.data.name}
     subtitle={props.data.code}
