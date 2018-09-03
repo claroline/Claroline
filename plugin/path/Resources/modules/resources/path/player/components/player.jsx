@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/core/translation'
 import {Routes} from '#/main/app/router'
 import {currentUser} from '#/main/core/user/current'
+import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 
 import {selectors} from '#/plugin/path/resources/path/store'
 
@@ -20,31 +21,39 @@ const authenticatedUser = currentUser()
 
 // todo manage empty steps
 const PlayerComponent = props =>
-  <section className="summarized-content">
-    <h2 className="sr-only">{trans('play')}</h2>
+  <div>
+    {0 === props.steps.length &&
+      <EmptyPlaceholder
+        size="lg"
+        title={trans('no_step', {}, 'path')}
+      />
+    }
+    {0 !== props.steps.length &&
+    <section className="summarized-content">
+      <h2 className="sr-only">{trans('play')}</h2>
 
-    {props.path.display.showSummary &&
+      {props.path.display.showSummary &&
       <PathSummary
         prefix="play"
         steps={props.path.steps}
       />
-    }
-    
-    <Routes
-      redirect={[
-        {from: '/play', to: `/play/${props.steps[0].id}`}
-      ]}
-      routes={[
-        {
-          path: '/play/:id',
-          onEnter: (params) => {
-            if (authenticatedUser && getStepUserProgression(props.steps, params.id) === constants.STATUS_UNSEEN) {
-              props.updateProgression(params.id)
-            }
-          },
-          render: (routeProps) => {
-            const step = props.steps.find(step => routeProps.match.params.id === step.id)
-            const Current =
+      }
+
+      <Routes
+        redirect={[
+          {from: '/play', to: `/play/${props.steps[0].id}`}
+        ]}
+        routes={[
+          {
+            path: '/play/:id',
+            onEnter: (params) => {
+              if (authenticatedUser && getStepUserProgression(props.steps, params.id) === constants.STATUS_UNSEEN) {
+                props.updateProgression(params.id)
+              }
+            },
+            render: (routeProps) => {
+              const step = props.steps.find(step => routeProps.match.params.id === step.id)
+              const Current =
               <PathCurrent
                 prefix="/play"
                 current={step}
@@ -62,12 +71,14 @@ const PlayerComponent = props =>
                 />
               </PathCurrent>
 
-            return Current
+              return Current
+            }
           }
-        }
-      ]}
-    />
-  </section>
+        ]}
+      />
+    </section>
+    }
+  </div>
 
 PlayerComponent.propTypes = {
   fullWidth: T.bool.isRequired,

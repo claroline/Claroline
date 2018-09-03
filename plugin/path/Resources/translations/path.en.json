@@ -5,6 +5,7 @@
     "inherited_resources": "Inherited resources",
     "no_primary_resource": "There is no primary resource in this step.",
     "no_secondary_resources": "There is no secondary resource in this step.",
+    "no_step": "No step have been created yet.",
     "open_summary": "Open summary",
     "path_manual_progression_allowed": "Allow user to mark its progression",
     "primary_resource": "Primary resource",
