@@ -90,6 +90,7 @@ const EditorComponent = props =>
 
                 <StepForm
                   {...step}
+                  resourceParent={props.resourceParent}
                   numbering={getNumbering(props.path.display.numbering, props.path.steps, step)}
                   customNumbering={constants.NUMBERING_CUSTOM === props.path.display.numbering}
                   stepPath={getFormDataPart(step.id, props.path.steps)}

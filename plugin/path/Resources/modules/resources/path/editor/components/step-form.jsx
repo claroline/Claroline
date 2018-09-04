@@ -8,6 +8,7 @@ import {FormSections, FormSection} from '#/main/core/layout/form/components/form
 import {ResourceCard} from '#/main/core/resource/data/components/resource-card'
 import {MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
+import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 
 import {Step as StepTypes} from '#/plugin/path/resources/path/prop-types'
 import {selectors} from '#/plugin/path/resources/path/editor/store'
@@ -150,7 +151,10 @@ const StepForm = props =>
             label: trans('resource'),
             options: {
               embedded: true,
-              showHeader: true
+              showHeader: true,
+              picker: {
+                current : props.resourceParent
+              }
             }
           },
           {
@@ -199,6 +203,7 @@ implementPropTypes(StepForm, StepTypes, {
   customNumbering: T.bool,
   pickSecondaryResources: T.func.isRequired,
   removeSecondaryResource: T.func.isRequired,
+  resourceParent: T.shape(ResourceNodeTypes.propTypes),
   updateSecondaryResourceInheritance: T.func.isRequired,
   removeInheritedResource: T.func.isRequired,
   saveForm: T.func.isRequired
