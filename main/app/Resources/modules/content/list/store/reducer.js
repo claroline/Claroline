@@ -275,7 +275,8 @@ function makeListReducer(listName, initialState = {}, customReducer = {}, option
 
   // adds reducers for optional features when enabled
   if (listOptions.filterable) {
-    reducer.filters = baseReducer.filters(listName, listState.filters)
+    reducer.filters = customReducer.filters ?
+      reduceReducers(baseReducer.filters(listName, listState.filters), customReducer.filters) : baseReducer.filters(listName, listState.filters)
   }
 
   if (listOptions.sortable) {

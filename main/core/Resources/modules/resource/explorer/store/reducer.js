@@ -105,6 +105,9 @@ function makeResourceExplorerReducer(explorerName, initialState = {}, customRedu
      * The list of resources for the current directory.
      */
     resources: makeListReducer(`${explorerName}.resources`, {}, {
+      filters: makeReducer([], {
+        [`${EXPLORER_SET_CURRENT}/${explorerName}`]: () => []
+      }),
       invalidated: makeReducer(false, {
         [`${EXPLORER_SET_CURRENT}/${explorerName}`]: () => true
       })
