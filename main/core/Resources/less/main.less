@@ -145,6 +145,10 @@ ul.desktop-parameters-menu {
 @content-iteration: 12;
 @content-margin: 1.5;
 
+.claroline-home {
+    padding: floor(@grid-gutter-width / 2);
+}
+
 @media (min-width: 767px) {
     .content-size (@index) when (@index >= 1) {
         .content-@{index} {

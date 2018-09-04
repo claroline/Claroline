@@ -37,43 +37,45 @@
 {% endblock %}
 
 {% block content %}
-    <div class="visible-xs spacing-right">
-        {{ block("leftbar") }}
-    </div>
-
-    {% if region['header'] is defined %}
-        <div class="content-12 region-header clearfix">
-            {{  region['header'] | raw }}
+    <div class="claroline-home">
+        <div class="visible-xs spacing-right">
+            {{ block("leftbar") }}
         </div>
-    {% endif %}
-    <div>
-        {% if region['left'] is defined %}
-            <div class="content-3">
-                    {{ region['left'] | raw }}
+
+        {% if region['header'] is defined %}
+            <div class="content-12 region-header clearfix">
+                {{  region['header'] | raw }}
             </div>
         {% endif %}
-
-        <div class="{% if region['left'] is defined and
-            region['right'] is defined %}content-6{% elseif region['left'] is defined or
-            region['right'] is defined %}content-9{% else %}content-12{% endif %}">
-            {% if region['content'] is defined %}
-                {{ region['content'] | raw }}
+        <div>
+            {% if region['left'] is defined %}
+                <div class="content-3">
+                        {{ region['left'] | raw }}
+                </div>
             {% endif %}
 
-            {{ content | raw }}
-        </div>
+            <div class="{% if region['left'] is defined and
+                region['right'] is defined %}content-6{% elseif region['left'] is defined or
+                region['right'] is defined %}content-9{% else %}content-12{% endif %}">
+                {% if region['content'] is defined %}
+                    {{ region['content'] | raw }}
+                {% endif %}
 
-        {% if region['right'] is defined %}
-            <div class="content-3">
-                {{ region['right'] | raw }}
+                {{ content | raw }}
+            </div>
+
+            {% if region['right'] is defined %}
+                <div class="content-3">
+                    {{ region['right'] | raw }}
+                </div>
+            {% endif %}
+        </div>
+        {% if region['footer'] is defined %}
+            <div class='content-12'>
+                {{  region['footer'] | raw }}
             </div>
         {% endif %}
     </div>
-    {% if region['footer'] is defined %}
-        <div class='content-12'>
-            {{  region['footer'] | raw }}
-        </div>
-    {% endif %}
 {% endblock %}
 
 {% block javascripts %}
