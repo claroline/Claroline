@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\AnnouncementBundle\API\Serializer;
+namespace Claroline\AnnouncementBundle\Serializer;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -136,7 +136,8 @@ class AnnouncementSerializer
 
         if (!empty($data['roles'])) {
             foreach ($data['roles'] as $roleUuid) {
-                $role = $this->roleRepo->findOneByUuid($roleUuid);
+                /** @var Role $role */
+                $role = $this->roleRepo->findOneBy(['uuid' => $roleUuid]);
 
                 if (!empty($role)) {
                     $announce->addRole($role);

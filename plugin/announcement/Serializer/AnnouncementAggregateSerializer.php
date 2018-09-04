@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\AnnouncementBundle\API\Serializer;
+namespace Claroline\AnnouncementBundle\Serializer;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;

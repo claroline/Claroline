@@ -11,16 +11,14 @@
 
 namespace Claroline\AnnouncementBundle\Manager;
 
-use Claroline\AnnouncementBundle\API\Serializer\AnnouncementSerializer;
+use Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer;
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementSend;
-use Claroline\AnnouncementBundle\Entity\AnnouncementsWidgetConfig;
 use Claroline\AnnouncementBundle\Repository\AnnouncementRepository;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
@@ -50,7 +48,6 @@ class AnnouncementManager
 
     /** @var AnnouncementRepository */
     private $announcementRepo;
-    private $announcementsWidgetConfigRepo;
 
     /** @var RoleRepository */
     private $roleRepo;
@@ -75,6 +72,7 @@ class AnnouncementManager
      * @param AnnouncementSerializer $serializer
      * @param MailManager            $mailManager
      * @param ScheduledTaskManager   $taskManager
+     * @param FinderProvider         $finder
      */
     public function __construct(
         ObjectManager $om,
@@ -92,7 +90,6 @@ class AnnouncementManager
         $this->finder = $finder;
 
         $this->announcementRepo = $om->getRepository('ClarolineAnnouncementBundle:Announcement');
-        $this->announcementsWidgetConfigRepo = $om->getRepository('ClarolineAnnouncementBundle:AnnouncementsWidgetConfig');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
     }
@@ -112,7 +109,7 @@ class AnnouncementManager
     public function getVisibleAnnouncementsByWorkspace(Workspace $workspace, array $roles)
     {
         if (in_array('ROLE_ADMIN', $roles)
-            || in_array("ROLE_WS_MANAGER_{$workspace->getGuid()}", $roles)) {
+            || in_array("ROLE_WS_MANAGER_{$workspace->getUuid()}", $roles)) {
             return $this->announcementRepo->findVisibleByWorkspace($workspace);
         }
 
@@ -143,7 +140,7 @@ class AnnouncementManager
      * Sends an Announcement by message to Users that can access it.
      *
      * @param Announcement $announcement
-     * @param array        $roles
+     * @param array        $users
      */
     public function sendMessage(Announcement $announcement, array $users = [])
     {
@@ -151,7 +148,7 @@ class AnnouncementManager
 
         $announcementSend = new AnnouncementSend();
         $data = $message;
-        $data['receivers'] = array_map(function ($receiver) {
+        $data['receivers'] = array_map(function (User $receiver) {
             return $receiver->getUsername();
         }, $message['receivers']);
         $data['sender'] = $message['sender']->getUsername();
@@ -223,7 +220,7 @@ class AnnouncementManager
      * Gets the data which will be sent by message (internal &email) to Users.
      *
      * @param Announcement $announce
-     * @param array        $roles
+     * @param array        $users
      *
      * @return array
      */
@@ -272,30 +269,10 @@ class AnnouncementManager
             }
 
             $roles[] = $this->roleRepo->findOneBy([
-                'name' => 'ROLE_WS_MANAGER_'.$node->getWorkspace()->getGuid(),
+                'name' => 'ROLE_WS_MANAGER_'.$node->getWorkspace()->getUuid(),
             ]);
         }
 
         return $this->userRepo->findByRolesIncludingGroups($roles, false, 'id', 'ASC');
-    }
-
-    public function getAnnouncementsWidgetConfig(WidgetInstance $widgetInstance)
-    {
-        $config = $this->announcementsWidgetConfigRepo->findOneBy(['widgetInstance' => $widgetInstance]);
-
-        if (is_null($config)) {
-            $config = new AnnouncementsWidgetConfig();
-            $config->setWidgetInstance($widgetInstance);
-            $this->om->persist($config);
-            $this->om->flush();
-        }
-
-        return $config;
-    }
-
-    public function persistAnnouncementsWidgetConfig(AnnouncementsWidgetConfig $config)
-    {
-        $this->om->persist($config);
-        $this->om->flush();
     }
 }

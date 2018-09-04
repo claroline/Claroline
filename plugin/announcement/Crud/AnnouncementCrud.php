@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\AnnouncementBundle\API\Crud;
+namespace Claroline\AnnouncementBundle\Crud;
 
 use Claroline\AnnouncementBundle\Manager\AnnouncementManager;
 use Claroline\AppBundle\API\Options;

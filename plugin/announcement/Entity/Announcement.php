@@ -356,6 +356,9 @@ class Announcement
         $this->aggregate = $aggregate;
     }
 
+    /**
+     * @return ScheduledTask
+     */
     public function getTask()
     {
         return $this->task;
