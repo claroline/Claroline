@@ -123,6 +123,12 @@ class ListWidgetForm extends Component {
                   if (value && -1 === availableDisplays.indexOf(value)) {
                     this.props.updateProp(this.props.name, 'parameters.availableDisplays', [value].concat(availableDisplays))
                   }
+
+                  // Sets default columns list (all) for table
+                  if (value && constants.DISPLAY_MODES[value].options.filterColumns
+                    && (!this.props.instance.parameters.columns || 0 === this.props.instance.parameters.columns.length)) {
+                    this.props.updateProp(this.props.name, 'parameters.columns', Object.keys(columnsList))
+                  }
                 }
               }, {
                 name: 'enableDisplays',
@@ -152,6 +158,11 @@ class ListWidgetForm extends Component {
                       if (-1 === selected.indexOf(this.props.instance.parameters.display) && selected[0]) {
                         // the default display is no longer in the list of available, get the first available
                         this.props.updateProp(this.props.name, 'parameters.display', selected[0])
+                      }
+
+                      // Sets default columns list (all) for tables
+                      if (!!selected.find(displayMode => constants.DISPLAY_MODES[displayMode].options.filterColumns)) {
+                        this.props.updateProp(this.props.name, 'parameters.columns', Object.keys(columnsList))
                       }
                     }
                   }
