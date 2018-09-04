@@ -21,10 +21,7 @@ const FileForm = props =>
             label: trans('file'),
             type: 'file',
             required: true,
-            onChange: (file) => props.update(props.newNode, file),
-            options: {
-              //unzippable: true
-            }
+            onChange: (file) => props.update(props.newNode, file)
           }
         ]
       }

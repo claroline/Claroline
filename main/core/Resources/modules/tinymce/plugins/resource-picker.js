@@ -1,6 +1,5 @@
+import tinymce from 'tinymce/tinymce'
 import invariant from 'invariant'
-
-import {tinymce} from '#/main/core/tinymce'
 
 import {makeId} from '#/main/core/scaffolding/id'
 import {url} from '#/main/app/api'
@@ -9,6 +8,7 @@ import {trans} from '#/main/core/translation'
 
 import {MODAL_RESOURCE_EXPLORER} from '#/main/core/resource/modals/explorer'
 
+// TODO : make loaders work
 // TODO : remove placeholder on selection cancel
 
 /**
@@ -18,8 +18,10 @@ function openResourcePicker(editor) {
   // We need to generate an anchor in the content to know where to put the resource we will pick.
   // For now, the resource picker will unmount the TinyMCE editor when shown in a modal
   // so we will loose the cursor position.
-  const placeholder = `<span id="resource-picker-${makeId()}"></span>`
+  const placeholder = `<span id="resource-picker-${makeId()}" style="display: none;">${trans('resource')}</span>`
   editor.insertContent(placeholder)
+
+  editor.setProgressState(true)
 
   editor.settings.showModal(MODAL_RESOURCE_EXPLORER, {
     selectAction: (selected) => ({
@@ -51,6 +53,7 @@ function openResourcePicker(editor) {
                   if (1 === selected.length || index + 1 === selected.length) {
                     // only one selected resource or appending the last one, we need to remove the placeholder
                     content = content.replace(placeholder, '')
+                    initiator.setProgressState(false)
                   }
 
                   // replace content in editor
@@ -66,6 +69,7 @@ function openResourcePicker(editor) {
               if (initiator) {
                 // displays generic error in ui
                 initiator.notificationManager.open({type: 'error', text: trans('error_occured')})
+                initiator.setProgressState(false)
               }
             })
         })

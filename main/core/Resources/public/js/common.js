@@ -27,52 +27,6 @@
     };
 
     /**
-     * Upload a file and add it in a TinyMCE editor.
-     *
-     * @param form A HTML form element.
-     * @param element A HTML modal element.
-     *
-     */
-    common.uploadfile = function (form, element, parent, callBack) {
-        var workspace = $(form).data('workspace');
-        $(form).upload(
-            routing.generate(
-                'claro_file_upload_with_tinymce',
-                {'parent': parent}
-            ),
-            function (done) {
-                if (done.getResponseHeader('Content-Type')  === 'application/json') {
-                    //for upload without personal workspace; it goes directory in the upload/files folder.
-                    var data = $.parseJSON(done.responseText)
-                    var resource = data[0];
-                    var nodes = {};
-                    var mimeType = 'mime_type'; //camel case fix in order to have 0 jshint errors
-                    nodes[resource.id] = new Array(resource.name, resource.type, resource[mimeType]);
-                    $(element).modal('hide');
-                    callBack(nodes);
-                    $.ajax(
-                        routing.generate('claro_resource_open_perms', {'node': resource.id})
-                    );
-                } else {
-                    $('.progress', element).addClass('hide');
-                    $('.alert', element).removeClass('hide');
-                    $('.progress-bar', element).attr('aria-valuenow', 0).css('width', '0%').find('sr-only').text('0%');
-                }
-            },
-            function (progress) {
-                var percent = Math.round((progress.loaded * 100) / progress.totalSize);
-
-                $('.progress', element).removeClass('hide');
-                $('.alert', element).addClass('hide');
-                $('.progress-bar', element)
-                    .attr('aria-valuenow', percent)
-                    .css('width', percent + '%')
-                    .find('sr-only').text(percent + '%');
-            }
-        );
-    };
-
-    /**
      * If has namespace
      */
     common.hasNamespace = function (element, namespace)

@@ -6,7 +6,7 @@
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {UploadModal} from '#/main/core/tinymce/modals/upload/components/modal'
+import {UploadModal} from '#/main/core/tinymce/modals/upload/containers/modal'
 
 const MODAL_TINYMCE_UPLOAD = 'MODAL_TINYMCE_UPLOAD'
 
