@@ -1171,7 +1171,7 @@ class WorkspaceManager
         $managerRole = $workspace->getManagerRole();
         if ($managerRole) {
             foreach ($token->getRoles() as $role) {
-                if ($managerRole->getName() === $role->getRole() || $role->getRole() === 'ROLE_ADMIN') {
+                if ($managerRole->getName() === $role->getRole() || 'ROLE_ADMIN' === $role->getRole()) {
                     return true;
                 }
             }

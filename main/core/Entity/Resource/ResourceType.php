@@ -126,6 +126,23 @@ class ResourceType
      */
     public function getClass()
     {
+        //some legacy compatibilty goes here
+        $classMap = [
+          'activity' => 'Claroline\CoreBundle\Entity\Resource\Activity',
+          'claroline_scorm_12' => 'Claroline\ScormBundle\Entity\Scorm12Resource',
+          'claroline_scorm_2004' => 'Claroline\ScormBundle\Entity\Scorm2004Resource',
+          'icap_dropzone' => 'Icap\DropzoneBundle\Entity\Dropzone',
+          'claroline_result' => 'Claroline\ResultBundle\Entity\Result',
+          'innova_video_recorder' => null,
+          'innova_audio_recorder' => null,
+          'claroline_chat_room' => null,
+          'ujm_lti_resource' => 'UJM\LtiBundle\Entity\LtiResource',
+        ];
+
+        if (isset($classMap[$this->getName()])) {
+            return $classMap[$this->getName()];
+        }
+
         return $this->class;
     }
 

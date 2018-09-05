@@ -35,6 +35,7 @@ class ObjectManager extends ObjectManagerDecorator
     private $activateLog = false;
     private $allowForceFlush = true;
     private $showFlushLevel = false;
+    private $ignoreForeignKeys = false;
 
     /**
      * ObjectManager constructor.
@@ -398,5 +399,21 @@ class ObjectManager extends ObjectManagerDecorator
         }
 
         //else we look what's fetchable or no for that class
+    }
+
+    public function ignoreForeignKeys()
+    {
+        $conn = $this->wrapped->getConnection();
+        $sql = 'SET FOREIGN_KEY_CHECKS=0;';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+    }
+
+    public function restoreForeignKeys()
+    {
+        $conn = $this->wrapped->getConnection();
+        $sql = 'SET FOREIGN_KEY_CHECKS=1;';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
     }
 }

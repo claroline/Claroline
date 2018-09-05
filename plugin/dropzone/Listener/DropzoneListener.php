@@ -181,7 +181,7 @@ class DropzoneListener
      */
     public function onDelete(DeleteResourceEvent $event)
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
+        $em = $this->container->get('claroline.persistence.object_manager');
         $resource = $event->getResource();
 
         foreach ($resource->getDrops() as $drop) {

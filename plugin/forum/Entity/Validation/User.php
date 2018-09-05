@@ -42,6 +42,7 @@ class User
      *     targetEntity="Claroline\ForumBundle\Entity\Forum",
      *     cascade={"persist"}
      * )
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $forum;
 

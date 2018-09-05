@@ -940,6 +940,8 @@ class ResourceManager
                     'Log\LogResourceDelete',
                     [$node]
                 );
+            } else {
+                $this->log($node->getName().'['.$node->getResourceType()->getName().':id:'.$node->getId().'] not found', 'error');
             }
         }
 
@@ -1466,6 +1468,8 @@ class ResourceManager
             $resource = $this->om->getRepository($node->getClass())->findOneBy(['resourceNode' => $node]);
 
             return $resource;
+        } else {
+            $this->log('class '.$node->getClass().' doesnt exists', 'error');
         }
     }
 

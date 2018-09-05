@@ -35,7 +35,6 @@ class RemoveWorkspaceCommand extends ContainerAwareCommand
     {
         $this->setName('claroline:remove:workspaces')
             ->setDescription('Remove workspaces');
-
         $this->addOption(
             'personal',
             'p',
@@ -174,19 +173,22 @@ class RemoveWorkspaceCommand extends ContainerAwareCommand
             $continue = $helper->ask($this->getInput(), $this->getOutput(), $question);
         }
 
+        $this->getContainer()->get('claroline.core_bundle.listener.log.log_listener')->disable();
+
         if ($this->getForce() || $continue) {
             $om = $this->getContainer()->get('claroline.persistence.object_manager');
+            $i = 1;
+
             $om->startFlushSuite();
-            $i = 0;
 
             foreach ($workspaces as $workspace) {
+                $this->getOutput()->writeln('Removing '.$i.'/'.count($workspaces));
                 $workspaceManager->deleteWorkspace($workspace);
                 ++$i;
             }
 
             $this->getOutput()->writeln('<comment> Flushing... </comment>');
             $om->endFlushSuite();
-            $om->clear();
         } else {
             //stop script here
             exit(0);
