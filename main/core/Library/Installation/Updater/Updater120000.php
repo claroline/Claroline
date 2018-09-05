@@ -358,7 +358,7 @@ class Updater120000 extends Updater
     {
         $lists = [
             'agenda_' => ['events', ['-start', 'table', "[''title'', ''allDay'', ''start'', ''end'']"]],
-            'my_workspaces' => ['my_workspaces', ['-id', 'grid', '[]']],
+            'my_workspaces' => ['my_workspaces', ['-id', 'tiles', '[]']],
             'agenda_task' => ['tasks', ['-start', 'table', "[''title'', ''allDay'', ''start'', ''end'']"]],
             'claroline_announcement_widget' => ['announcements', ['-id', 'list', '[]']],
             'blog_list' => ['blog_posts', ['-id', 'list', '[]']],
@@ -456,8 +456,9 @@ class Updater120000 extends Updater
 
             $sql = '
                 INSERT INTO claro_widget_instance_config (id, widget_instance_id, workspace_id, widget_order, type, is_visible, is_locked)
-                SELECT temp.id, temp.widget_instance_id, temp.workspace_id, temp.widget_order, temp.type, temp.is_visible, temp.is_locked from claro_widget_home_tab_config_temp temp
-                JOIN claro_widget_instance instance on instance.id = temp.widget_instance_id
+                SELECT config.id, instance.id, temp.workspace_id, temp.widget_order, temp.type, temp.is_visible, temp.is_locked from claro_widget_home_tab_config_temp temp
+                JOIN claro_widget_display_config_temp config on temp.widget_instance_id = config.widget_instance_id
+                JOIN claro_widget_instance instance on instance.id = config.id
             ';
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
