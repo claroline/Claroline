@@ -108,6 +108,10 @@ class RightsManager
      * @param ResourceNode $node
      * @param bool         $isRecursive
      * @param array        $creations
+     *
+     * @deprecated
+     *
+     * @todo remove me. This does the same thing than editPerms, this is just written a different way
      */
     public function create(
         $permissions,
@@ -148,7 +152,7 @@ class RightsManager
         $this->log('Editing permissions...');
 
         if (is_string($role)) {
-            $role = $this->roleRepo->findOneByName($role);
+            $role = $this->roleRepo->findOneBy(['name' => $role]);
         }
 
         $this->om->startFlushSuite();
@@ -180,6 +184,10 @@ class RightsManager
                 $this->setPermissions($toUpdate, $permissions);
             }
 
+            if (count($creations) > 0) {
+                $toUpdate->setCreatableResourceTypes($creations);
+            }
+
             $this->om->persist($toUpdate);
 
             //this is bad but for a huge datatree, logging everythings takes way too much time.
@@ -190,40 +198,7 @@ class RightsManager
             }
         }
 
-        if (count($creations) > 0) {
-            $this->editCreationRights($creations, $role, $node, $isRecursive);
-        }
-
         $this->om->endFlushSuite();
-
-        return $arRights;
-    }
-
-    /**
-     * @param array        $resourceTypes
-     * @param Role         $role
-     * @param ResourceNode $node
-     * @param bool         $isRecursive
-     *
-     * @return ResourceRights[]
-     */
-    public function editCreationRights(
-        array $resourceTypes,
-        Role $role,
-        ResourceNode $node,
-        $isRecursive
-    ) {
-        //Bugfix: If the flushSuite is uncommented, doctrine returns an error
-
-        $arRights = ($isRecursive) ?
-            $this->updateRightsTree($role, $node) :
-            [$this->getOneByRoleAndResource($role, $node)];
-
-        foreach ($arRights as $toUpdate) {
-            $toUpdate->setCreatableResourceTypes($resourceTypes);
-            $this->om->persist($toUpdate);
-            $this->logChangeSet($toUpdate);
-        }
 
         return $arRights;
     }
