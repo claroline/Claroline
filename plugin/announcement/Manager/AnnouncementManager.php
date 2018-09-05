@@ -11,10 +11,10 @@
 
 namespace Claroline\AnnouncementBundle\Manager;
 
-use Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer;
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementSend;
 use Claroline\AnnouncementBundle\Repository\AnnouncementRepository;
+use Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;

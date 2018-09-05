@@ -18,7 +18,10 @@ const UploadModal = withReducer(selectors.STORE_NAME, reducer)(
         dispatch(actions.fetchUploadDestinations())
       },
       upload(onSuccess) {
-        dispatch(formActions.save(selectors.FORM_NAME, ['claro_tinymce_file_upload'])).then((resourceNode) => onSuccess(resourceNode))
+        dispatch(formActions.save(selectors.FORM_NAME, ['claro_tinymce_file_upload'])).then((resourceNode) => {
+          onSuccess(resourceNode)
+          dispatch(formActions.reset(selectors.FORM_NAME, {}, true))
+        })
       }
     })
   )(UploadModalComponent)

@@ -161,7 +161,7 @@ class ListWidgetForm extends Component {
                       }
 
                       // Sets default columns list (all) for tables
-                      if (!!selected.find(displayMode => constants.DISPLAY_MODES[displayMode].options.filterColumns)) {
+                      if (selected.find(displayMode => constants.DISPLAY_MODES[displayMode].options.filterColumns)) {
                         this.props.updateProp(this.props.name, 'parameters.columns', Object.keys(columnsList))
                       }
                     }

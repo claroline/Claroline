@@ -163,8 +163,8 @@ class FileController extends AbstractApiController
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Method("POST")
      *
-     * @param Request      $request
-     * @param User         $user
+     * @param Request $request
+     * @param User    $user
      *
      * @throws \Exception
      *

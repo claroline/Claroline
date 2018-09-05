@@ -1,9 +1,9 @@
 import tinymce from 'tinymce/tinymce'
+import invariant from 'invariant'
 
 import {makeId} from '#/main/core/scaffolding/id'
 import {url} from '#/main/app/api'
 import {trans} from '#/main/core/translation'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {MODAL_TINYMCE_UPLOAD} from '#/main/core/tinymce/modals/upload'
 
@@ -41,8 +41,6 @@ function openFileUpload(editor) {
           if (initiator) {
             let content = initiator.getContent()
             content = content.replace(placeholder, responseText)
-
-            console.log(content)
 
             // replace content in editor
             initiator.setContent(content)
