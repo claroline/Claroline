@@ -358,7 +358,7 @@ class Updater120000 extends Updater
     {
         $lists = [
             'agenda_' => ['events', ['-start', 'table', "[''title'', ''allDay'', ''start'', ''end'']"]],
-            'my_workspaces' => ['my_workspaces', ['-id', 'list', '[]']],
+            'my_workspaces' => ['my_workspaces', ['-id', 'grid', '[]']],
             'agenda_task' => ['tasks', ['-start', 'table', "[''title'', ''allDay'', ''start'', ''end'']"]],
             'claroline_announcement_widget' => ['announcements', ['-id', 'list', '[]']],
             'blog_list' => ['blog_posts', ['-id', 'list', '[]']],
