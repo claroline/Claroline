@@ -4,9 +4,8 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/core/translation'
 import {url} from '#/main/app/api'
 
-
 import {ResourcePage} from '#/main/core/resource/containers/page'
-import {RoutedPageContent} from '#/main/core/layout/router'
+import {Routes} from '#/main/app/router'
 import {DOWNLOAD_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
 import {Editor} from '#/plugin/wiki/resources/wiki/editor/components/editor'
@@ -46,8 +45,7 @@ const Resource = props =>
       }
     ]}
   >
-    <RoutedPageContent
-      headerSpacer={false}
+    <Routes
       routes={[
         {
           path: '/',

@@ -3,7 +3,7 @@ import React from 'react'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {trans} from '#/main/core/translation'
-import {RoutedPageContent} from '#/main/core/layout/router'
+import {Routes} from '#/main/app/router'
 import {ResourcePage} from '#/main/core/resource/containers/page'
 
 import {Player} from '#/plugin/web-resource/resources/web-resource/player/components/player'
@@ -21,8 +21,7 @@ const WebResource = () =>
       }
     ]}
   >
-    <RoutedPageContent
-      headerSpacer={true}
+    <Routes
       routes={[
         {
           path: '/',

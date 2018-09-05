@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
-import {RoutedPageContent} from '#/main/core/layout/router/components/page'
+import {Routes} from '#/main/app/router'
 import {ResourcePage} from '#/main/core/resource/containers/page'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
@@ -32,9 +32,8 @@ const ScormResource = props =>
       }
     ]}
   >
-    <RoutedPageContent
+    <Routes
       key="resource-content"
-      headerSpacer={true}
       redirect={[
         {from: '/', exact: true, to: '/play'}
       ]}

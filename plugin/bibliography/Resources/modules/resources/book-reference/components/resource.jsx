@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {RoutedPageContent} from '#/main/core/layout/router'
+import {Routes} from '#/main/app/router'
 import {ResourcePage} from '#/main/core/resource/containers/page'
 
 import {Player} from '#/plugin/bibliography/resources/book-reference/player/components/player'
@@ -9,7 +9,7 @@ import {Editor} from '#/plugin/bibliography/resources/book-reference/editor/comp
 
 const BookReferenceResource = props =>
   <ResourcePage>
-    <RoutedPageContent
+    <Routes
       routes={[
         {
           path: '/',

@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {trans} from '#/main/core/translation'
-import {RoutedPageContent} from '#/main/core/layout/router'
+import {Routes} from '#/main/app/router'
 import {ResourcePage} from '#/main/core/resource/containers/page'
 import {currentUser} from '#/main/core/user/current'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
@@ -63,8 +63,7 @@ const ForumResource = props =>
       }
     ]}
   >
-    <RoutedPageContent
-      headerSpacer={false}
+    <Routes
       routes={[
         {
           path: '/edit',
