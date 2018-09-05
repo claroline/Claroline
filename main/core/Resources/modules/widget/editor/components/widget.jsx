@@ -15,7 +15,10 @@ import {
   WidgetContainer as WidgetContainerTypes,
   WidgetInstance as WidgetInstanceTypes
 } from '#/main/core/widget/prop-types'
-import {computeStyles} from '#/main/core/widget/utils'
+import {
+  computeStyles,
+  computeTitleStyles
+} from '#/main/core/widget/utils'
 import {WidgetContent} from '#/main/core/widget/content/components/content'
 import {MODAL_WIDGET_CONTENT} from '#/main/core/widget/content/modals/creation'
 import {MODAL_CONTENT_PARAMETERS} from '#/main/core/widget/content/modals/parameters'
@@ -128,7 +131,7 @@ const WidgetEditor = props =>
 
     <section className="widget" style={computeStyles(props.widget)}>
       {props.widget.name &&
-        <h2 className="h-first widget-title">{props.widget.name}</h2>
+        <h2 className="h-first widget-title" style={computeTitleStyles(props.widget)}>{props.widget.name}</h2>
       }
 
       <div className="row">

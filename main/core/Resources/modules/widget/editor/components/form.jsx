@@ -57,7 +57,7 @@ const WidgetForm = props =>
         fields: [
           {
             name: 'display.color',
-            label: trans('textColor'),
+            label: trans('titleColor'),
             type: 'color'
           }, {
             name: 'display.backgroundType',

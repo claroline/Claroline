@@ -1647,6 +1647,7 @@
     "clipboard_copy": "Copy to clipboard",
     "image": "Image",
     "textColor": "Text color",
+    "titleColor": "Title color",
     "background": "Background",
     "backgroundColor": "Background color",
     "backgroundImage": "Background image",

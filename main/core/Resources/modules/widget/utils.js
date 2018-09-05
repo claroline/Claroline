@@ -6,10 +6,6 @@ function computeStyles(widget) {
   const styles = {}
   const display = get(widget, 'display') || {}
 
-  if (display.color) {
-    styles.color = display.color
-  }
-
   switch (display.backgroundType) {
     case 'none':
       styles.background = 'none'
@@ -24,7 +20,17 @@ function computeStyles(widget) {
 
   return styles
 }
+function computeTitleStyles(widget) {
+  const styles = {}
+  const display = get(widget, 'display') || {}
+
+  if (display.color) {
+    styles.color = display.color
+  }
+  return styles
+}
 
 export {
-  computeStyles
+  computeStyles,
+  computeTitleStyles
 }

@@ -33,7 +33,7 @@ const PlayerComponent = props =>
             type={LINK_BUTTON}
             label={trans('configure', {}, 'actions')}
             icon="fa fa-fw fa-cog"
-            target="/edit"
+            target={`/edit/tab/${props.currentTab.id}`}
             primary={true}
           />
         </PageActions>

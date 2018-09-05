@@ -140,7 +140,8 @@ class WidgetGridEditor extends Component {
                 dangerous: true,
                 confirm: {
                   title: trans('section_delete_confirm_title'),
-                  message: trans('section_delete_confirm_message')
+                  message: trans('section_delete_confirm_message'),
+                  subtitle: this.props.widgets[index].name
                 },
                 callback: () => {
                   const widgets = this.props.widgets.slice(0) // copy array

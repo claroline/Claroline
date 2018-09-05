@@ -8,7 +8,10 @@ import {
   WidgetContainer as WidgetContainerTypes,
   WidgetInstance as WidgetInstanceTypes
 } from '#/main/core/widget/prop-types'
-import {computeStyles} from '#/main/core/widget/utils'
+import {
+  computeStyles,
+  computeTitleStyles
+} from '#/main/core/widget/utils'
 
 const WidgetCol = props =>
   <div className={`widget-col col-md-${props.size}`}>
@@ -37,7 +40,7 @@ WidgetCol.propTypes = {
 const Widget = props =>
   <section className="widget" style={computeStyles(props.widget)}>
     {props.widget.name &&
-      <h2 className="h-first widget-title">{props.widget.name}</h2>
+      <h2 className="h-first widget-title" style={computeTitleStyles(props.widget)}>{props.widget.name}</h2>
     }
     <div className="row">
       {times(props.widget.display.layout.length, col =>

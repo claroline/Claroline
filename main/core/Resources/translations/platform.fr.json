@@ -1693,6 +1693,7 @@
     "clipboard_copy": "Copier dans le presse-papiers",
     "image": "Image",
     "textColor": "Couleur du texte",
+    "titleColor": "Couleur du titre",
     "background": "Remplissage du fond",
     "backgroundColor": "Couleur du fond",
     "backgroundImage": "Image de fond",

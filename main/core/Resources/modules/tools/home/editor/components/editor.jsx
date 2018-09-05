@@ -71,6 +71,7 @@ const EditorComponent = props =>
             label={trans('configure', {}, 'actions')}
             icon="fa fa-fw fa-cog"
             target="/edit"
+            disabled={true}
             primary={true}
           />
         </PageGroupActions>
@@ -93,7 +94,7 @@ const EditorComponent = props =>
           }]}
         cancel={{
           type: LINK_BUTTON,
-          target: '/',
+          target: `/tab/${props.currentTab.id}`,
           exact: true
         }}
         disabled={props.currentTab.type === 'administration' &&
@@ -188,6 +189,7 @@ const EditorComponent = props =>
                     displayed: props.currentTab.restrictions,
                     type: 'choice',
                     options:{
+                      inline: false,
                       multiple : true,
                       choices: props.context.type === 'workspace' || props.administration ?
                         props.context.data.roles.reduce((acc, role) => {
