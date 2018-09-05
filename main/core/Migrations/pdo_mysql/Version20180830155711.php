@@ -15,7 +15,7 @@ class Version20180830155711 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql('
-            ALTER TABLE claro_home_tab_config CHANGE centerTitle centerTitle TINYINT(1) NOT NULL
+            ALTER TABLE claro_home_tab_config CHANGE centerTitle centerTitle TINYINT(1)
         ');
         $this->addSql('
             ALTER TABLE claro_home_tab_roles

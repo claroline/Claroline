@@ -6,6 +6,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Entity\Tab\HomeTabConfig;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Widget\Type\ResourceWidget;
 use Claroline\CoreBundle\Entity\Widget\Type\SimpleWidget;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\WidgetContainer;
@@ -310,15 +311,58 @@ class Updater120000 extends Updater
         }
     }
 
+    private function restoreResourceTextWidgets()
+    {
+        if (count($this->om->getRepository(ResourceWidget::class)->findAll()) > 0) {
+            $this->log('ResourceWidget already migrated');
+        } else {
+            $this->log('Migrating ResourceTextWidget to ResourceWidget...');
+
+            $widget = $this->om->getRepository(Widget::class)->findOneBy(['name' => 'resource']);
+
+            $sql = "
+                INSERT INTO claro_widget_instance (id, widget_id, uuid, container_id)
+                SELECT conf.id, {$widget->getId()}, (SELECT UUID()) as uuid, container.id
+                FROM claro_widget_display_config_temp conf
+                JOIN claro_widget_instance_temp instance_temp ON instance_temp.id = conf.widget_instance_id
+                JOIN claro_widget_temp widget_temp ON instance_temp.widget_id = widget_temp.id
+                JOIN claro_widget_container container ON container.id = conf.id
+                WHERE widget_temp.name = 'resource_text'
+            ";
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+
+            //configs are stored in a json array so we can't go full sql
+            $sql = "
+                SELECT * FROM `claro_widget_display_config_temp` WHERE `details` LIKE '%nodeId%'
+            ";
+
+            $texts = $this->conn->query($sql);
+
+            while ($row = $texts->fetch()) {
+                $details = json_decode($row['details'], true);
+                if (isset($details['nodeId'])) {
+                    $sql = "
+                        INSERT INTO claro_widget_resource (id, node_id, widgetInstance_id, showResourceHeader)
+                        VALUES ({$row['id']}, {$details['nodeId']}, {$row['id']}, false)
+                    ";
+                    $stmt = $this->conn->prepare($sql);
+                    $stmt->execute();
+                }
+            }
+        }
+    }
+
     private function restoreListsWidgets()
     {
         $lists = [
-            'agenda_' => ['events', ['-start']],
-            'my_workspaces' => ['my_workspaces', ['-id']],
-            'agenda_task' => ['tasks', ['-start']],
-            'claroline_announcement_widget' => ['announcements', ['-id']],
-            'blog_list' => ['blog_posts', ['-id']],
-            'claroline_forum_widget' => ['forum_messages', ['-id']],
+            'agenda_' => ['events', ['-start', 'table', "[''title'', ''allDay'', ''start'', ''end'']"]],
+            'my_workspaces' => ['my_workspaces', ['-id', 'list', '[]']],
+            'agenda_task' => ['tasks', ['-start', 'table', "[''title'', ''allDay'', ''start'', ''end'']"]],
+            'claroline_announcement_widget' => ['announcements', ['-id', 'list', '[]']],
+            'blog_list' => ['blog_posts', ['-id', 'list', '[]']],
+            'claroline_forum_widget' => ['forum_messages', ['-id', 'list', '[]']],
         ];
 
         foreach ($lists as $oldList => $data) {
@@ -343,12 +387,51 @@ class Updater120000 extends Updater
             if (isset($data[1])) {
                 $parameters = $data[1];
                 $sortBy = $parameters[0];
+                $display = $parameters[1];
+                $displayedColumns = $parameters[2];
 
                 $this->log('Setting default list parameters...');
 
+                $availableDisplays = "[''table'', ''table-sm'', ''tiles'', ''tiles-sm'', ''list'']";
+                $availablePageSizes = '[10, 20, 50, 100, -1]';
+
                 $sql = "
-                    INSERT INTO claro_widget_list (sortBy, widgetInstance_id, display, displayedColumns)
-                    SELECT '{$sortBy}', conf.id, 'list', '[]' from claro_widget_display_config_temp conf
+                    INSERT INTO claro_widget_list (
+                      sortBy,
+                      widgetInstance_id,
+                      display,
+                      displayedColumns,
+                      count,
+                      columnsFilterable,
+                      paginated,
+                      sortable,
+                      filterable,
+                      availableDisplays,
+                      availableColumns,
+                      availableFilters,
+                      filters,
+                      availablePageSizes,
+                      pageSize,
+                      availableSort
+                    )
+                    SELECT
+                      '{$sortBy}',
+                      conf.id,
+                      '{$display}',
+                      '{$displayedColumns}',
+                      false,
+                      false,
+                      false,
+                      false,
+                      false,
+                      '{$availableDisplays}',
+                      '[]',
+                      '[]',
+                      '[]',
+                      '{$availablePageSizes}',
+                      20,
+                      '[]'
+                    FROM claro_widget_display_config_temp conf
                     JOIN claro_widget_instance_temp instance_temp ON instance_temp.id = conf.widget_instance_id
                     JOIN claro_widget_temp widget_temp ON instance_temp.widget_id = widget_temp.id
                     JOIN claro_widget_instance instance ON instance.id = conf.id
@@ -365,10 +448,11 @@ class Updater120000 extends Updater
     {
         $this->log('Update widget instances...');
         $this->restoreTextsWidgets();
+        $this->restoreResourceTextWidgets();
         $this->restoreListsWidgets();
 
         if (0 === $this->om->count(WidgetInstanceConfig::class)) {
-            $this->log('Copying WidgetInsanceConfigs');
+            $this->log('Copying WidgetInstanceConfigs');
 
             $sql = '
                 INSERT INTO claro_widget_instance_config (id, widget_instance_id, workspace_id, widget_order, type, is_visible, is_locked)

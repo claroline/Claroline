@@ -93,10 +93,10 @@ class Updater120000 extends Updater
             INSERT INTO claro_tagbundle_tagged_object (tag_id, object_class, object_id, object_name)
             SELECT DISTINCT tag.id, 'Claroline\\ForumBundle\\Entity\\Subject', subject.uuid, subject.title
             FROM claro_forum_category category
-            LEFT JOIN claro_forum_subject_temp_new tmp on tmp.category_id = category.id
-            LEFT JOIN claro_forum_subject subject on tmp.id = subject.id
-            LEFT JOIN claro_tagbundle_tag tag on tag.tag_name = category.name
-            LEFT JOIN claro_forum forum on category.forum_id = forum.id
+            JOIN claro_forum_subject_temp_new tmp on tmp.category_id = category.id
+            JOIN claro_forum_subject subject on tmp.id = subject.id
+            JOIN claro_tagbundle_tag tag on tag.tag_name = category.name
+            JOIN claro_forum forum on category.forum_id = forum.id
             JOIN claro_resource_node node on forum.resourceNode_id = node.id
             JOIN claro_user clarouser on node.creator_id = clarouser.id
             WHERE tag.user_id = clarouser.id
@@ -131,8 +131,8 @@ class Updater120000 extends Updater
             $this->log('Build forum users...');
 
             $sql = '
-                INSERT INTO claro_forum_user (user_id, forum_id)
-                SELECT DISTINCT user.id, forum.id
+                INSERT INTO claro_forum_user (user_id, forum_id, access, notified, banned)
+                SELECT DISTINCT user.id, forum.id, false, false, false
                 FROM claro_forum forum
                 JOIN claro_forum_category category ON category.forum_id = forum.id
                 JOIN claro_forum_subject_temp_new subject ON subject.category_id = category.id

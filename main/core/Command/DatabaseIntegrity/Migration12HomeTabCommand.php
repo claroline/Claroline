@@ -53,7 +53,7 @@ class Migration12HomeTabCommand extends ContainerAwareCommand
 
     protected function stripTrim($text, $maxChar = null)
     {
-        $text = strip_tags($text);
+        $text = html_entity_decode(strip_tags($text));
 
         if ($maxChar) {
             $text = substr($text, 0, $maxChar);
