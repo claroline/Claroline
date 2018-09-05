@@ -1,8 +1,8 @@
 import React from 'react'
 
-import {RoutedPageContent} from '#/main/core/layout/router'
-
+import {Routes} from '#/main/app/router'
 import {ResourcePage} from '#/main/core/resource/containers/page'
+
 import {DirectoryPlayer} from '#/main/core/resources/directory/player/components/directory'
 import {DirectoryEditor} from '#/main/core/resources/directory/editor/components/directory'
 
@@ -10,8 +10,7 @@ const DirectoryResource = () =>
   <ResourcePage
     primaryAction="add"
   >
-    <RoutedPageContent
-      headerSpacer={true}
+    <Routes
       routes={[
         {
           path: '/',

@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/core/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {copy} from '#/main/app/clipboard'
-import {RoutedPageContent} from '#/main/core/layout/router'
+import {Routes} from '#/main/app/router'
 import {ResourcePage} from '#/main/core/resource/containers/page'
 
 import {FilePlayer} from '#/main/core/resources/file/player/components/player'
@@ -23,8 +23,7 @@ const FileResource = props =>
       }
     ]}
   >
-    <RoutedPageContent
-      headerSpacer={true}
+    <Routes
       routes={[
         {
           path: '/',

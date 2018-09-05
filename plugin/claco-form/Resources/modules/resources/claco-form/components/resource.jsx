@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {url} from '#/main/app/api'
 import {trans} from '#/main/core/translation'
-import {RoutedPageContent} from '#/main/core/layout/router/components/page'
+import {Routes} from '#/main/app/router'
 import {ResourcePage} from '#/main/core/resource/containers/page'
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 
@@ -70,8 +70,7 @@ const ClacoFormResource = props =>
       }
     ]}
   >
-    <RoutedPageContent
-      headerSpacer={false}
+    <Routes
       routes={[
         {
           path: '/',

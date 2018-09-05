@@ -7,7 +7,7 @@ import {makeId} from '#/main/core/scaffolding/id'
 
 import {ResourcePage} from '#/main/core/resource/containers/page'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {RoutedPageContent} from '#/main/core/layout/router'
+import {Routes} from '#/main/app/router'
 
 import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'
 import {Announces} from '#/plugin/announcement/resources/announcement/components/announces'
@@ -29,7 +29,7 @@ const AnnouncementResource = props =>
       }
     ]}
   >
-    <RoutedPageContent
+    <Routes
       routes={[
         {
           path: '/',
