@@ -32,7 +32,7 @@ class MessageFinder extends AbstractFinder
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'subject':
-                    $qb->leftJoin('obj.subject', 'subject');
+                    $qb->join('obj.subject', 'subject');
                     $qb->andWhere($qb->expr()->orX(
                         $qb->expr()->eq('subject.id', ':'.$filterName),
                         $qb->expr()->eq('subject.uuid', ':'.$filterName)
@@ -43,7 +43,7 @@ class MessageFinder extends AbstractFinder
                     if (empty($filterValue)) {
                         $qb->andWhere('obj.parent IS NULL');
                     } else {
-                        $qb->leftJoin('obj.parent', 'parent');
+                        $qb->join('obj.parent', 'parent');
                         $qb->andWhere($qb->expr()->orX(
                             $qb->expr()->eq('parent.id', ':'.$filterName),
                             $qb->expr()->eq('parent.uuid', ':'.$filterName)
@@ -52,8 +52,8 @@ class MessageFinder extends AbstractFinder
                     }
                     break;
                 case 'forum':
-                    $qb->leftJoin('obj.subject', 'sf');
-                    $qb->leftJoin('sf.forum', 'forum');
+                    $qb->join('obj.subject', 'sf');
+                    $qb->join('sf.forum', 'forum');
                     $qb->andWhere($qb->expr()->orX(
                         $qb->expr()->eq('forum.id', ':'.$filterName),
                         $qb->expr()->eq('forum.uuid', ':'.$filterName)
@@ -61,7 +61,7 @@ class MessageFinder extends AbstractFinder
                     $qb->setParameter($filterName, $filterValue);
                     break;
                 case 'creator':
-                    $qb->leftJoin('obj.creator', 'creator');
+                    $qb->join('obj.creator', 'creator');
                     $qb->andWhere("creator.username LIKE :{$filterName}");
                     $qb->setParameter($filterName, '%'.$filterValue.'%');
                     break;
@@ -84,10 +84,10 @@ class MessageFinder extends AbstractFinder
                     }
                     break;
                 case 'workspace':
-                    $qb->leftJoin('obj.subject', 'sf');
-                    $qb->leftJoin('sf.forum', 'forum');
-                    $qb->leftJoin('forum.resourceNode', 'node');
-                    $qb->leftJoin('node.workspace', 'w');
+                    $qb->join('obj.subject', 'sf');
+                    $qb->join('sf.forum', 'forum');
+                    $qb->join('forum.resourceNode', 'node');
+                    $qb->join('node.workspace', 'w');
                     $qb->andWhere("w.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;

@@ -65,12 +65,13 @@ class Updater120000 extends Updater
         //step 1: restore forum subject
         $this->log('Set subject forums...');
 
-        $sql = '
+        $sql = "
             UPDATE claro_forum_subject subject
             JOIN claro_forum_subject_temp_new tmp on tmp.id = subject.id
             JOIN claro_forum_category category on tmp.category_id = category.id
-            SET subject.forum_id = category.forum_id;
-        ';
+            SET subject.forum_id = category.forum_id,
+            subject.moderation = 'NONE'
+        ";
 
         $this->executeSql($sql);
 
@@ -78,8 +79,8 @@ class Updater120000 extends Updater
         $this->log('Insert tags...');
 
         $sql = '
-            INSERT INTO claro_tagbundle_tag (tag_name, user_id)
-            SELECT DISTINCT category.name, node.creator_id
+            INSERT INTO claro_tagbundle_tag (tag_name)
+            SELECT DISTINCT category.name
             FROM claro_forum_category category
             JOIN claro_forum forum on category.forum_id = forum.id
             JOIN claro_resource_node node on forum.resourceNode_id = node.id
@@ -91,7 +92,7 @@ class Updater120000 extends Updater
 
         $sql = "
             INSERT INTO claro_tagbundle_tagged_object (tag_id, object_class, object_id, object_name)
-            SELECT DISTINCT tag.id, 'Claroline\\ForumBundle\\Entity\\Subject', subject.uuid, subject.title
+            SELECT DISTINCT tag.id, 'Claroline\\\\ForumBundle\\\\Entity\\\\Subject', subject.uuid, subject.title
             FROM claro_forum_category category
             JOIN claro_forum_subject_temp_new tmp on tmp.category_id = category.id
             JOIN claro_forum_subject subject on tmp.id = subject.id
@@ -99,7 +100,7 @@ class Updater120000 extends Updater
             JOIN claro_forum forum on category.forum_id = forum.id
             JOIN claro_resource_node node on forum.resourceNode_id = node.id
             JOIN claro_user clarouser on node.creator_id = clarouser.id
-            WHERE tag.user_id = clarouser.id
+            WHERE category.name = tag.tag_name
 
         ";
 

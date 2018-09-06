@@ -47,7 +47,7 @@ class MessageSerializer
 
     public function getClass()
     {
-        return 'Claroline\ForumBundle\Entity\Message';
+        return Message::class;
     }
 
     /**

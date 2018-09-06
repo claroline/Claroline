@@ -26,7 +26,7 @@ class SubjectSerializer
 
     public function getClass()
     {
-        return 'Claroline\ForumBundle\Entity\Subject';
+        return Subject::class;
     }
 
     /**
