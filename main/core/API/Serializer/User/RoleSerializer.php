@@ -11,6 +11,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -189,7 +190,8 @@ class RoleSerializer
     private function serializeTools(Role $role, $workspaceId)
     {
         $tools = [];
-        $orderedTools = $this->orderedToolRepo->findBy(['workspace' => $workspaceId]);
+        $workspace = $this->om->getRepository(Workspace::class)->findBy(['uuid' => $workspaceId]);
+        $orderedTools = $this->orderedToolRepo->findBy(['workspace' => $workspace]);
 
         foreach ($orderedTools as $orderedTool) {
             $toolRights = $this->toolRightsRepo->findBy(['role' => $role, 'orderedTool' => $orderedTool], ['id' => 'ASC']);
