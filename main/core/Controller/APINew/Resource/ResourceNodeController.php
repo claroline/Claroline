@@ -88,6 +88,20 @@ class ResourceNodeController extends AbstractCrudController
         $options['hiddenFilters']['active'] = true;
         $options['hiddenFilters']['resourceTypeEnabled'] = true;
 
+        //fix the very large list at the root
+        //todo: when impersonating is fixed for easy testing, do that kind of stuff everywhere (not only at the root level)
+        //directly in the finder
+        //it currently work (altough we can see stuff we shouldnt do through the api)
+
+        // it's easy to make an exception for the admin but we might also have to do it for the workspace mangers
+        // wich will complicate everything.
+        if ($options['hiddenFilters']['parent'] === null) {
+            $options['hiddenFilters']['roles'] = array_map(
+                function ($role) { return $role->getRole(); },
+                $this->container->get('security.token_storage')->getToken()->getRoles()
+            );
+        }
+
         return new JsonResponse(
             $this->finder->search(ResourceNode::class, $options)
         );

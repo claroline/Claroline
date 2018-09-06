@@ -27,8 +27,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
@@ -38,6 +40,9 @@ class ResourceController
 {
     /** @var TokenStorageInterface */
     private $tokenStorage;
+
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
 
     /** @var EngineInterface */
     private $templating;
@@ -75,21 +80,24 @@ class ResourceController
      *     "actionManager"       = @DI\Inject("claroline.manager.resource_action"),
      *     "restrictionsManager" = @DI\Inject("claroline.manager.resource_restrictions"),
      *     "lifecycleManager"    = @DI\Inject("claroline.manager.resource_lifecycle"),
-     *     "om"                  = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
+     *     "authorization"       = @DI\Inject("security.authorization_checker")
      * })
      *
-     * @param TokenStorageInterface       $tokenStorage
-     * @param EngineInterface             $templating
-     * @param Utilities                   $security
-     * @param SerializerProvider          $serializer
-     * @param ResourceManager             $manager
-     * @param ResourceActionManager       $actionManager
-     * @param ResourceRestrictionsManager $restrictionsManager
-     * @param ResourceLifecycleManager    $lifecycleManager
-     * @param ObjectManager               $om
+     * @param TokenStorageInterface         $tokenStorage
+     * @param EngineInterface               $templating
+     * @param Utilities                     $security
+     * @param SerializerProvider            $serializer
+     * @param ResourceManager               $manager
+     * @param ResourceActionManager         $actionManager
+     * @param ResourceRestrictionsManager   $restrictionsManager
+     * @param ResourceLifecycleManager      $lifecycleManager
+     * @param ObjectManager                 $om
+     * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization,
         EngineInterface $templating,
         Utilities $security,
         SerializerProvider $serializer,
@@ -108,6 +116,62 @@ class ResourceController
         $this->restrictionsManager = $restrictionsManager;
         $this->lifecycleManager = $lifecycleManager;
         $this->om = $om;
+        $this->authorization = $authorization;
+    }
+
+    /**
+     * First method so it doesn't go into the "get" method.
+     *
+     * @EXT\Route(
+     *     "/download",
+     *     name="claro_resource_download",
+     *     options={"expose"=true},
+     *     defaults ={"forceArchive"=false}
+     * )
+     * @EXT\Route(
+     *     "/download/{forceArchive}",
+     *     name="claro_resource_download",
+     *     options={"expose"=true},
+     *     requirements={"forceArchive" = "^(true|false|0|1)$"},
+     * )
+     *
+     * @param array $nodes
+     * @param bool  $forceArchive
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function downloadAction($forceArchive = false, Request $request)
+    {
+        $ids = $request->query->get('ids');
+        $nodes = $this->om->findList(ResourceNode::class, 'uuid', $ids);
+
+        $collection = new ResourceCollection($nodes);
+
+        if (!$this->authorization->isGranted('EXPORT', $collection)) {
+            throw new ResourceAccessException($collection->getErrorsForDisplay(), $collection->getResources());
+        }
+
+        $data = $this->manager->download($nodes, $forceArchive);
+
+        $fileName = $data['name'];
+        $mimeType = $data['mimeType'];
+        $response = new StreamedResponse();
+
+        $file = $data['file'] ?: tempnam('tmp', 'tmp');
+        $response->setCallBack(
+                function () use ($file) {
+                    readfile($file);
+                }
+            );
+
+        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename='.urlencode($fileName));
+        if (null !== $mimeType) {
+            $response->headers->set('Content-Type', $mimeType);
+        }
+        $response->headers->set('Connection', 'close');
+        $response->send();
     }
 
     /**

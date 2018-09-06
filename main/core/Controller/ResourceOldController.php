@@ -36,7 +36,6 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -220,63 +219,6 @@ class ResourceOldController extends Controller
     }
 
     /**
-     * @EXT\Route(
-     *     "/download",
-     *     name="claro_resource_download",
-     *     options={"expose"=true},
-     *     defaults ={"forceArchive"=false}
-     * )
-     * @EXT\Route(
-     *     "/download/{forceArchive}",
-     *     name="claro_resource_download",
-     *     options={"expose"=true},
-     *     requirements={"forceArchive" = "^(true|false|0|1)$"},
-     * )
-     * @EXT\ParamConverter(
-     *     "nodes",
-     *     class="ClarolineCoreBundle:Resource\ResourceNode",
-     *     options={"multipleIds" = true}
-     * )
-     *
-     * This function takes an array of parameters. Theses parameters are the ids
-     * of the resources which are going to be downloaded
-     * (query string: "ids[]=1&ids[]=2" ...).
-     *
-     * @param array $nodes
-     * @param bool  $forceArchive
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function downloadAction(array $nodes, $forceArchive = false)
-    {
-        $collection = new ResourceCollection($nodes);
-        $this->checkAccess('EXPORT', $collection);
-        $data = $this->resourceManager->download($nodes, $forceArchive);
-
-        $fileName = $data['name'];
-        $mimeType = $data['mimeType'];
-        $response = new StreamedResponse();
-
-        $file = $data['file'] ?: tempnam('tmp', 'tmp');
-        $response->setCallBack(
-            function () use ($file) {
-                readfile($file);
-            }
-        );
-
-        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
-        $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.urlencode($fileName));
-        if (null !== $mimeType) {
-            $response->headers->set('Content-Type', $mimeType);
-        }
-        $response->headers->set('Connection', 'close');
-        $response->send();
-
-        return new Response();
-    }
-
-    /**
      * @EXT\Template("ClarolineCoreBundle:resource:breadcrumbs.html.twig")
      *
      * @param ResourceNode $node
@@ -320,55 +262,6 @@ class ResourceOldController extends Controller
         if (!$this->authorization->isGranted($permission, $collection)) {
             throw new ResourceAccessException($collection->getErrorsForDisplay(), $collection->getResources());
         }
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/export",
-     *     name="claro_resource_export",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter(
-     *     "nodes",
-     *     class="ClarolineCoreBundle:Resource\ResourceNode",
-     *     options={"multipleIds" = true}
-     * )
-     *
-     * This function takes an array of parameters. Theses parameters are the ids
-     * of the resources which are going to be exported
-     * (query string: "ids[]=1&ids[]=2" ...).
-     *
-     * @param array $nodes
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function exportAction(array $nodes)
-    {
-        if (0 === count($nodes)) {
-            throw new \Exception('No resource to export');
-        }
-
-        $workspace = $nodes[0]->getWorkspace();
-        $archive = $this->transferManager->exportResources($workspace, $nodes);
-        $fileName = $workspace->getCode().'.zip';
-
-        $mimeType = 'application/zip';
-        $response = new StreamedResponse();
-
-        $response->setCallBack(
-            function () use ($archive) {
-                readfile($archive);
-            }
-        );
-
-        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
-        $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.urlencode($fileName));
-        $response->headers->set('Content-Type', $mimeType);
-        $response->headers->set('Content-Length', filesize($archive));
-        $response->headers->set('Connection', 'close');
-
-        return $response;
     }
 
     /**

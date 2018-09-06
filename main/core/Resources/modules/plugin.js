@@ -13,7 +13,7 @@ registry.add('core', {
     'copy'     : () => { return import(/* webpackChunkName: "core-action-copy" */      '#/main/core/resource/actions/copy') },
     'delete'   : () => { return import(/* webpackChunkName: "core-action-delete" */    '#/main/core/resource/actions/delete') },
     'edit'     : () => { return import(/* webpackChunkName: "core-action-edit" */      '#/main/core/resource/actions/edit') },
-    // 'export'   : () => { return import(/* webpackChunkName: "core-action-export" */    '#/main/core/resource/actions/export') },
+    'export'   : () => { return import(/* webpackChunkName: "core-action-export" */    '#/main/core/resource/actions/export') },
     'logs'     : () => { return import(/* webpackChunkName: "core-action-logs" */      '#/main/core/resource/actions/logs') },
     'move'     : () => { return import(/* webpackChunkName: "core-action-move" */      '#/main/core/resource/actions/move') },
     'open'     : () => { return import(/* webpackChunkName: "core-action-open" */      '#/main/core/resource/actions/open') },
@@ -24,7 +24,7 @@ registry.add('core', {
 
     // directory resource
     'add'       : () => { return import(/* webpackChunkName: "core-action-add" */       '#/main/core/resources/directory/actions/add') },
-    'import'    : () => { return import(/* webpackChunkName: "core-action-import" */    '#/main/core/resources/directory/actions/import') },
+    //'import'    : () => { return import(/* webpackChunkName: "core-action-import" */    '#/main/core/resources/directory/actions/import') },
     'add_files' : () => { return import(/* webpackChunkName: "core-action-add-files" */ '#/main/core/resources/directory/actions/add-files') }
 
     // file resource

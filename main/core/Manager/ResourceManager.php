@@ -994,7 +994,7 @@ class ResourceManager
         if (!$forceArchive && 1 === count($nodes)) {
             $event = $this->dispatcher->dispatch(
                 "download_{$nodes[0]->getResourceType()->getName()}",
-                'DownloadResource',
+                'Resource\DownloadResource',
                 [$this->getResourceFromNode($this->getRealTarget($nodes[0]))]
             );
             $extension = $event->getExtension();
@@ -1034,7 +1034,7 @@ class ResourceManager
                     if ('directory' !== $node->getResourceType()->getName()) {
                         $event = $this->dispatcher->dispatch(
                             "download_{$node->getResourceType()->getName()}",
-                            'DownloadResource',
+                            'Resource\DownloadResource',
                             [$resource]
                         );
 
