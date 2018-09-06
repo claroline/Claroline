@@ -10,6 +10,8 @@ import {TooltipElement} from '#/main/core/layout/components/tooltip-element'
 
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
+// todo : move tooltip management inside buttons module
+
 const ButtonComponent = props => {
   const button = buttonRegistry.get(props.type)
 

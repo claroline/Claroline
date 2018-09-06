@@ -1,3 +1,7 @@
 {
-  
+  "webpack": {
+    "entry": {
+      "header": "overlay/header"
+    }
+  }
 }

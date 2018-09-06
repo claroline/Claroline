@@ -32,7 +32,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -131,7 +130,8 @@ class WorkspaceController extends Controller
     /**
      * @EXT\Route(
      *     "/list",
-     *     name="claro_workspace_list"
+     *     name="claro_workspace_list",
+     *     options={"expose"=true}
      * )
      * @EXT\Template
      */
@@ -143,7 +143,8 @@ class WorkspaceController extends Controller
     /**
      * @EXT\Route(
      *     "/list/currentuser",
-     *     name="claro_workspace_by_user"
+     *     name="claro_workspace_by_user",
+     *     options={"expose"=true}
      * )
      * @EXT\Template
      */

@@ -3,7 +3,10 @@
 namespace UJM\LtiBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -11,7 +14,7 @@ class LtiResourceType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('LtiApp', 'entity', [
+        $builder->add('LtiApp', EntityType::class, [
             'class' => 'UJMLtiBundle:LtiApp',
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('l')
@@ -34,7 +37,6 @@ class LtiResourceType extends AbstractType
             [
                 'label' => 'open_application_in_a_new_window',
             ]
-
         );
     }
 

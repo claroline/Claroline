@@ -4,15 +4,6 @@
 
 {% block stylesheets %}
     {% include 'ClarolineCoreBundle:layout:stylesheets.html.twig' %}
-
-    {# todo : this should be removed and fully managed in LESS #}
-    {% if hideTopBar is defined and hideTopBar and not (has_role('ROLE_USURPATE_WORKSPACE_ROLE') or is_impersonated()) %}
-        <style type="text/css">
-            html, #left-bar {
-                padding-top: 0 !important;
-            }
-        </style>
-    {% endif %}
 {% endblock %}
 
 {% block javascripts_header %}
@@ -40,9 +31,9 @@
         {% if (hideTopBar is not defined or not hideTopBar) and not has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
             {% block topBarRender %}
                 {% if workspace is defined and workspace is not null %}
-                    {{ render(controller('ClarolineCoreBundle:Layout:topBar', {'workspaceId': workspace.id})) }}
+                    {{ render(controller('ClarolineCoreBundle:Layout:topBar', {'workspaceId': workspace.id, request: app.request})) }}
                 {% else %}
-                    {{ render(controller('ClarolineCoreBundle:Layout:topBar')) }}
+                    {{ render(controller('ClarolineCoreBundle:Layout:topBar', {request: app.request})) }}
                 {% endif %}
             {% endblock %}
         {% endif %}

@@ -70,7 +70,6 @@
     '@ClarolineCoreBundle/Resources/public/js/common.js'
     '@ClarolineCoreBundle/Resources/public/js/modal.js'
     '@ClarolineCoreBundle/Resources/public/js/simplerights.js'
-    '@ClarolineCoreBundle/Resources/public/js/topbar.js'
     '@ClarolineCoreBundle/Resources/public/js/checkbox-dropdown.js'
     '@ClarolineCoreBundle/Resources/public/js/home/home.js'
     '@ClarolineCoreBundle/Resources/public/js/locale.js'
@@ -83,6 +82,9 @@
 {% endjavascripts %}
 
 <script src="{{ hotAsset('dist/claroline-distribution-main-core-tinymce.js') }}"></script>
+
+{# Topbar #}
+<script src="{{ hotAsset('dist/claroline-distribution-main-app-header.js') }}"></script>
 
 <script>
     $('body').tooltip({

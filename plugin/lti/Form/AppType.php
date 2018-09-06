@@ -3,6 +3,9 @@
 namespace UJM\LtiBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -21,7 +24,7 @@ class AppType extends AbstractType
                 ]
             )
             ->add(
-                UrlType::class, TextType::class, [
+                'url', UrlType::class, [
                     'label' => ' ',
                     'attr' => ['style' => 'height:34px; ',
                         'class' => 'form-control',
@@ -60,6 +63,7 @@ class AppType extends AbstractType
                 ]
             );
     }
+
     public function getName()
     {
         return 'platform_parameters_form';

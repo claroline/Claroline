@@ -4,21 +4,14 @@
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
-    macros.breadcrumbs([
-    {
-        'icon': 'fa fa-cog',
-        'name': 'administration'|trans({}, 'platform'),
-        'href': path('claro_admin_parameters_index')
-    },
-    {
-        'name': 'parameters'|trans({}, 'platform'),
-        'href': path('claro_admin_parameters_index')
-    },
-    {
-        'name': 'LTI'|trans({}, 'lti'),
-        'href': ''
-    }
-    ])
+        macros.breadcrumbs([{
+            'icon': 'fa fa-cog',
+            'name': 'administration'|trans({}, 'platform'),
+            'href': path('claro_admin_parameters_index')
+        }, {
+            'name': 'LTI'|trans({}, 'lti'),
+            'href': ''
+        }])
     }}
 {% endblock %}
 

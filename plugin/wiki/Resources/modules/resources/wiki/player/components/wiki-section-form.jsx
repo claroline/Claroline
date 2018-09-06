@@ -3,10 +3,11 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
+import {selectors as formSelect} from '#/main/app/content/form/store'
+
 import {buildSectionMoveChoices} from '#/plugin/wiki/resources/wiki/utils'
 import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'
 

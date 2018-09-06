@@ -35,11 +35,12 @@ class PlatformDefaults implements ParameterProviderInterface
     public function getDefaultParameters()
     {
         return [
-            'name' => 'claroline',
+            'name' => 'Claroline Connect',
+            'secondary_name' => 'Easy & flexible learning',
             'name_active' => true,
             'support_email' => 'noreply@changeme.com',
             'footer' => null,
-            'logo' => 'clarolineconnect.png',
+            'logo' => 'logo-sm.svg',
             'allow_self_registration' => false,
             'locale_language' => 'fr',
             'theme' => 'claroline',
@@ -76,7 +77,7 @@ class PlatformDefaults implements ParameterProviderInterface
             'home_menu' => null,
             'footer_login' => false,
             'footer_workspaces' => false,
-            'header_locale' => false,
+            'header_locale' => true,
             'portfolio_url' => null,
             'max_storage_size' => Workspace::DEFAULT_MAX_STORAGE_SIZE,
             'max_upload_resources' => Workspace::DEFAULT_MAX_FILE_COUNT,
@@ -91,6 +92,7 @@ class PlatformDefaults implements ParameterProviderInterface
             'registration_mail_validation' => self::REGISTRATION_MAIL_VALIDATION_PARTIAL,
             'resource_soft_delete' => false,
             'show_help_button' => true,
+            'show_about_button' => true,
             'help_url' => 'http://doc.claroline.com',
             'register_button_at_login' => false,
             'send_mail_at_workspace_registration' => true,
@@ -112,11 +114,11 @@ class PlatformDefaults implements ParameterProviderInterface
             'tmp_dir' => sys_get_temp_dir(),
             'resource_icon_set' => 'claroline',
             'direct_third_party_authentication' => false,
-            'platform_log_enabled' => true,
             'workspace_users_csv_import_by_full_name' => false,
             'platform_log_enabled' => true,
             //not documented, for the cli tool claroline:user:mailing
             'auto_validate_email' => false,
+            'notifications_refresh_delay' => 12000, // in ms
             'auto_enable_email_redirect' => false,
             'auto_enable_notifications' => [
               'resource-create' => ['visible'],

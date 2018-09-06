@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
+import {selectors as formSelect} from '#/main/app/content/form/store'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {

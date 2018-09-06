@@ -2,8 +2,8 @@ plugin:
     has_options: false
 
     admin_tools:
-        - name: 'LTI'
-          class: 'fa fa-cog'
+        - name: LTI
+          class: plug
 
 #    resources:
 #        - class: UJM\LtiBundle\Entity\LtiResource

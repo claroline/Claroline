@@ -45,7 +45,7 @@ const MoreTools = props =>
     menu={{
       label: trans('tools'),
       items: props.tools.map(tool => ({
-        type: 'url',
+        type: URL_BUTTON,
         icon: `fa fa-fw fa-${tool.icon}`,
         label: trans(tool.name, {}, 'tools'),
         target: tool.open

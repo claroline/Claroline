@@ -2,13 +2,14 @@ import React from 'react'
 import classes from 'classnames'
 
 import {trans} from '#/main/core/translation'
-import {asset} from '#/main/core/scaffolding/asset'
 import {param} from '#/main/app/config'
 
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
+import {LocaleFlag} from '#/main/app/intl/locale/components/flag'
+
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
 
 const Locale = props =>
   <div className="locales" role="checklist">
@@ -22,9 +23,7 @@ const Locale = props =>
         })}
         onClick={() => props.onChange(locale)}
       >
-        <svg className="locale-icon">
-          <use xlinkHref={`${asset('bundles/clarolinecore/images/locale-icons.svg')}#icon-locale-${locale}`} />
-        </svg>
+        <LocaleFlag locale={props.value} />
       </TooltipButton>
     )}
   </div>

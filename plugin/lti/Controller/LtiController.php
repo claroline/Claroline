@@ -39,7 +39,7 @@ class LtiController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = new LtiApp();
-        $form = $this->createForm(new AppType(), $entity);
+        $form = $this->createForm(AppType::class, $entity);
         $vars['form'] = $form->createView();
 
         if ($request->isMethod('POST')) {

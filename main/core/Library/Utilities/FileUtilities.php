@@ -273,6 +273,11 @@ class FileUtilities
         return $next;
     }
 
+    /**
+     * @param array $filters
+     *
+     * @return PublicFile
+     */
     public function getOneBy($filters)
     {
         return $this->om->getRepository('ClarolineCoreBundle:File\PublicFile')->findOneBy($filters);

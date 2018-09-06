@@ -1,21 +1,295 @@
-// todo detach from native .navbar fro cleaner implementation
+/**
+ * Application top bar styles.
+ */
+
+.app-header-container {
+    position: fixed;
+    z-index: @zindex-navbar-fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: @top-bar-height;
+}
+
+.app-header {
+    max-width: @top-bar-max-width;
+    height: 100%;
+    margin: 0 auto;
+    color: @top-bar-color;
+    background: @top-bar-bg;
+    font-size: @top-bar-font-size;
+    border-bottom: @top-bar-border-bottom;
+    .box-shadow(@top-bar-box-shadow);
+
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+
+    .dropdown-menu {
+        margin-top: 0;
+        .border-top-radius(0);
+    }
+
+    .app-header-item {
+        padding: 0 15px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .dropdown {
+        display: flex;
+        justify-content: center;
+        align-items: stretch;
+
+        &.open .dropdown-toggle {
+            &,
+            &:hover,
+            &:focus {
+                color: @top-bar-link-active-color;
+                background-color: @top-bar-link-active-bg;
+            }
+        }
+    }
+}
+
+
+
+.app-header-brand {
+    flex: 0;
+    height: 100%;
+    min-width: @toolbar-size;
+    text-align: center;
+
+    // permit to center the img
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.app-header-logo {
+    max-height: 75%;
+
+    // fallback for IE 11 and logos that don't define color schema
+    fill: @top-bar-brand-color;
+
+    // declare colors var to make ir usable inside the SVG
+    --logo-default: @top-bar-brand-color;
+    --logo-primary: @brand-primary;
+}
+
+.app-header-title {
+    flex-direction: column !important; // override default alignment
+    align-items: flex-start !important; // override default alignment
+    padding: 0 floor(@grid-gutter-width / 2);
+    margin: 0;
+    line-height: 1;
+    font-size: 24px;
+    font-weight: 900;
+    color: @top-bar-brand-color;
+
+    > small {
+        display: block;
+        margin-top: 2px;
+        font-size: 70%;
+        font-weight: normal;
+        font-style: italic;
+        color: @brand-primary;
+    }
+}
+
+.app-header-btn {
+    color: @top-bar-link-color;
+
+    .action-icon,
+    .fa {
+        font-size: @font-size-large;
+    }
+
+    // puts labels in the bottom right corner
+    .action-subscript {
+        position: absolute;
+        top: auto; // reset bootstrap default
+        bottom: 5px;
+        right: 5px;
+        line-height: 1;
+
+        &.label {
+            font-size: 10px;
+            padding: .2em .4em;
+        }
+    }
+
+    &:hover,
+    &:focus {
+        color: @top-bar-link-hover-color;
+        background: @top-bar-link-hover-bg;
+    }
+
+    &.active {
+        &,
+        &:hover,
+        &:focus {
+            color: @top-bar-link-active-color;
+            background-color: @top-bar-link-active-bg;
+        }
+    }
+
+    &.disabled {
+        &,
+        &:hover,
+        &:focus {
+            color: @top-bar-link-disabled-color;
+            background-color: @top-bar-link-disabled-bg;
+        }
+    }
+}
+
+.app-header-tools {
+
+}
+
+.app-header-workspaces {
+    flex: 1;
+}
+
+.app-current-user {
+    width: 360px;
+    padding: 0; // reset default .dropdown-menu
+
+    .app-current-user-header {
+        padding: 15px;
+        text-align: center;
+        background: @panel-default-heading-bg;
+
+        .fa {
+            margin-right: 0; // because there is a hack in styles to add margins on dropdown icons
+        }
+
+        h2 {
+            color: @text-color;
+            margin-bottom: 5px;
+            font-weight: 900;
+        }
+    }
+
+    .app-current-user-icon {
+        width: 80px;
+        height: 80px;
+        font-size: floor(80px / 2); // for FA icons
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, .6);
+        border-radius: 50%;
+        line-height: 0;
+
+        // for FA icons
+        color: #777777 !important;
+
+        // for SVG icons
+        fill: #777777 !important;
+        stroke: #777777 !important;
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    }
+
+    .app-current-user-body {
+        padding: 15px;
+        border-top: 1px solid @list-group-border;
+    }
+
+    .app-current-user-tools {
+        margin: 0;
+
+        .list-group-item {
+            border-left-color: transparent;
+            border-right-color: transparent;
+        }
+        .list-group-item:first-child {
+            border-top-right-radius: 0;
+            border-top-left-radius: 0;
+        }
+
+        .list-group-item:last-child {
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+    }
+
+    .app-current-user-footer {
+        padding: 15px;
+        display: flex;
+        flex-direction: row;
+        //justify-content: space-around;
+        align-items: center;
+        background: @panel-footer-bg;
+    }
+
+    .app-current-user-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+
+        // center icon inside the fiwed width button
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        color: white;
+        background: #777;
+
+        margin-left: 5px;
+
+        .fa {
+            margin-right: 0; // because there is a hack in styles to add margins on dropdown icons
+        }
+    }
+}
+
+.app-notifications {
+
+}
+
+#app-workspaces-menu-menu,
+.app-workspaces {
+    width: 100%;
+    font-size: @font-size-large;
+}
+
+#app-workspaces-menu-menu {
+    display: flex;
+    justify-content: space-between;
+}
+
+.header-workspaces {
+    .icon-with-text-right {
+        margin-right: 15px;
+    }
+}
 
 #top_bar,
 .top-bar {
-    min-height: @top-bar-height;
-    background: @top-bar-bg;
-    border-radius: 0;
-    border: none;
-    border-bottom: @top-bar-border-bottom;
-    margin-bottom: 0;
-    font-size: @top-bar-font-size;
-    .box-shadow(@top-bar-box-shadow);
+    //min-height: @top-bar-height;
+    //background: @top-bar-bg;
+    //border-radius: 0;
+    //border: none;
+    //border-bottom: @top-bar-border-bottom;
+    //margin-bottom: 0;
+    //font-size: @top-bar-font-size;
+    //.box-shadow(@top-bar-box-shadow);
 
     .top-bar-content {
         min-height: @top-bar-height - @top-bar-border-bottom-size; // permits to fill parent height when using flex boxes
         height: 100%;
-        max-width: @top-bar-max-width;
-        margin: 0 auto;
+        //max-width: @top-bar-max-width;
+        //margin: 0 auto;
     }
 
     .navbar-header {

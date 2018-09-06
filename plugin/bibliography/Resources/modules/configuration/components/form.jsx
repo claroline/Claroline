@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
+import {selectors as formSelect} from '#/main/app/content/form/store'
 
 const ConfigurationFormComponent = props =>
   <FormData
@@ -26,8 +26,7 @@ const ConfigurationFormComponent = props =>
         ]
       }
     ]}
-  >
-  </FormData>
+  />
 
 ConfigurationFormComponent.propTypes = {
   id: T.oneOfType([T.number, T.string]).isRequired,
