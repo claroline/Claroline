@@ -40,7 +40,8 @@ class FieldValue
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\ClacoFormBundle\Entity\Entry",
-     *     inversedBy="fieldValues"
+     *     inversedBy="fieldValues",
+     *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="entry_id", onDelete="CASCADE")
      */
