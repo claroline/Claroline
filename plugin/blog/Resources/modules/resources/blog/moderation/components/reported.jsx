@@ -43,6 +43,7 @@ const ReportedComponent = (props) =>
       available : [listConst.DISPLAY_LIST],
       current: listConst.DISPLAY_LIST
     }}
+    selectable={false}
   />
 
 ReportedComponent.propTypes = {

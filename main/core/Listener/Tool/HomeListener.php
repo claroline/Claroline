@@ -121,11 +121,10 @@ class HomeListener
           ['filters' => ['workspace' => $workspace->getUuid()]]
         );
 
-        $orderedTabs = $tabs['data'];
-
-        foreach ($orderedTabs as $position => $tab) {
-            $orderedTabs[$position + 1] = $tab;
-            $orderedTabs[$position + 1]['position'] = $position + 1;
+        $orderedTabs = [];
+        foreach ($tabs['data'] as $position => $tab) {
+            $orderedTabs[$position] = $tab;
+            $orderedTabs[$position]['position'] = $position + 1;
         }
 
         $content = $this->templating->render(

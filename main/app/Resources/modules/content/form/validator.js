@@ -14,14 +14,14 @@ import {getType} from '#/main/app/data'
  * @return {object} - the errors thrown.
  */
 function validateProp(propDef, propValue) {
-  return getType(propDef.type).then(propType => chain(propValue, propDef.options || {}, [
+  return getType(propDef.type).then(propType => Promise.resolve(chain(propValue, propDef.options || {}, [
     // checks if not empty when field is required
     validateIf(propDef.required, notEmpty),
     // execute data type validator if any
     validateIf(propType.validate, propType.validate),
     // execute form instance validator if any
     validateIf(propDef.validate, propDef.validate)
-  ]))
+  ])))
 }
 
 /**

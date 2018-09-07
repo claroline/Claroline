@@ -14,5 +14,6 @@ const DOWNLOAD_BUTTON = 'download'
 registry.add(DOWNLOAD_BUTTON, DownloadButton)
 
 export {
-  DOWNLOAD_BUTTON
+  DOWNLOAD_BUTTON,
+  DownloadButton
 }

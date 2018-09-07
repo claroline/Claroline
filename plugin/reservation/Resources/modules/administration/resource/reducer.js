@@ -28,11 +28,8 @@ const resourceRightsReducer = makeReducer([], {
 })
 
 const reducer = {
-  resources: makeListReducer('resources', {}, {}),
+  resources: makeListReducer('resources'),
   resourceForm: makeFormReducer('resourceForm', {}, {
-    // data: combineReducers({
-    //   resourceRights: resourceRightsReducer
-    // }),
     data: combineReducers({
       id: defaultReducer,
       name: defaultReducer,

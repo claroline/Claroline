@@ -14,5 +14,6 @@ const EMAIL_BUTTON = 'email'
 registry.add(EMAIL_BUTTON, EmailButton)
 
 export {
-  EMAIL_BUTTON
+  EMAIL_BUTTON,
+  EmailButton
 }

@@ -23,6 +23,7 @@ class ListWidgetSerializer
     {
         return [
             'maxResults' => $widget->getMaxResults(),
+
             'count' => $widget->getCount(),
 
             // display feature
@@ -30,12 +31,10 @@ class ListWidgetSerializer
             'availableDisplays' => $widget->getAvailableDisplays(),
 
             // sort feature
-            'sortable' => $widget->isSortable(),
             'sorting' => $widget->getSortBy(),
             'availableSort' => $widget->getAvailableSort(),
 
             // filter feature
-            'filterable' => $widget->isFilterable(),
             'filters' => $widget->getFilters(),
             'availableFilters' => $widget->getAvailableFilters(),
 
@@ -46,7 +45,6 @@ class ListWidgetSerializer
 
             // table config
             'columns' => $widget->getDisplayedColumns(),
-            'columnsFilterable' => $widget->isColumnsFilterable(),
             'availableColumns' => $widget->getAvailableColumns(),
 
             // grid config (todo)
@@ -56,6 +54,7 @@ class ListWidgetSerializer
     public function deserialize($data, ListWidget $widget, array $options = []): ListWidget
     {
         $this->sipe('maxResults', 'setMaxResults', $data, $widget);
+
         $this->sipe('count', 'setCount', $data, $widget);
 
         // display feature
@@ -63,11 +62,12 @@ class ListWidgetSerializer
         $this->sipe('availableDisplays', 'setAvailableDisplays', $data, $widget);
 
         // sort feature
-        $this->sipe('sortable', 'setSortable', $data, $widget);
         $this->sipe('sorting', 'setSortBy', $data, $widget);
+        $this->sipe('availableSort', 'setAvailableSort', $data, $widget);
 
         // filter feature
-        $this->sipe('filterable', 'setFilterable', $data, $widget);
+        $this->sipe('filters', 'setFilters', $data, $widget);
+        $this->sipe('availableFilters', 'setAvailableFilters', $data, $widget);
 
         // pagination feature
         $this->sipe('paginated', 'setPaginated', $data, $widget);
@@ -75,7 +75,6 @@ class ListWidgetSerializer
         $this->sipe('availablePageSizes', 'setAvailablePageSizes', $data, $widget);
 
         // table config
-        $this->sipe('columnsFilterable', 'setColumnsFilterable', $data, $widget);
         $this->sipe('columns', 'setDisplayedColumns', $data, $widget);
         $this->sipe('availableColumns', 'setAvailableColumns', $data, $widget);
 

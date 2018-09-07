@@ -40,11 +40,9 @@ const reducer = {
       [LOAD_WIDGETS]: (state, action) => action.data
     })
   }),
-  topActions: makeListReducer('topActions',
-    { filters: [{property: 'type', value: 'top_users_connections'}] },
-    {},
-    { selectable: false }
-  )
+  topActions: makeListReducer('topActions', {
+    filters: [{property: 'type', value: 'top_users_connections'}]
+  })
 }
 
 export {reducer}

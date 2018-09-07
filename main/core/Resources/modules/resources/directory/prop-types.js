@@ -1,37 +1,23 @@
 import {PropTypes as T} from 'prop-types'
 
+import {ListParameters} from '#/main/app/content/list/parameters/prop-types'
+
 const Directory = {
   propTypes: {
     display: T.shape({
-      showSummary: T.bool
+      showSummary: T.bool,
+      openSummary: T.bool
     }),
-    list: T.shape({
-      columns: T.shape({
-        default: T.arrayOf(T.string),
-        available: T.arrayOf(T.string)
-      }),
-      display: T.shape({
-        default: T.string,
-        available: T.arrayOf(T.string)
-      }),
-      filters: T.shape({
-
-      }),
-      pagination: T.shape({
-
-      }),
-      sorting: T.shape({
-
-      })
-    })
+    list: T.shape(
+      ListParameters.propTypes
+    )
   },
   defaultProps: {
     display: {
-      showSummary: true
+      showSummary: true,
+      openSummary: false
     },
-    list: {
-
-    }
+    list: ListParameters.defaultProps
   }
 }
 

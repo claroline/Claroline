@@ -19,8 +19,7 @@ const reducer = {
       [UPDATE_POST_COMMENT]: () => true,
       [DELETE_POST_COMMENT]: () => true
     })
-  }, {selectable: false}
-  ),
+  }),
   reportedComments: makeListReducer(selectors.STORE_NAME + '.reportedComments', {
     sortBy: {
       property: 'creationDate',
@@ -31,16 +30,14 @@ const reducer = {
       [REPORT_POST_COMMENT]: () => true,
       [DELETE_POST_COMMENT]: () => true
     })
-  }, {selectable: false}
-  ),
+  }),
   moderationPosts: makeListReducer(selectors.STORE_NAME + '.moderationPosts', {
     sortBy: {
       property: 'creationDate',
       direction: -1
     }
-  }, {}, {selectable: false}
-  ),
-  trustedUsers: makeReducer([], {})
+  }),
+  trustedUsers: makeReducer([])
 }
 
 export {reducer}

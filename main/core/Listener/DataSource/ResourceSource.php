@@ -49,7 +49,6 @@ class ResourceSource
     {
         $options = $event->getOptions();
         $options['hiddenFilters']['hidden'] = false;
-        $options['hiddenFilters']['published'] = true;
 
         if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {
             // only grab workspace root directory content

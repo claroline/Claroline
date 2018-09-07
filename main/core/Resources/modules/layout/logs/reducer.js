@@ -34,18 +34,12 @@ const defaultState = {
 const makeLogReducer = (initialState = {}, customReducer = {}) => {
   const listState = merge({}, defaultState, initialState)
   const reducer = {
-    logs: makeListReducer(
-      'logs',
-      { sortBy: { property: 'dateLog', direction: -1 } },
-      {},
-      { selectable: false }
-    ),
-    userActions: makeListReducer(
-      'userActions',
-      { sortBy: { property: 'doer.name', direction: 1 } },
-      {},
-      { selectable: false }
-    ),
+    logs: makeListReducer('logs', {
+      sortBy: { property: 'dateLog', direction: -1 }
+    }),
+    userActions: makeListReducer('userActions', {
+      sortBy: { property: 'doer.name', direction: 1 }
+    }),
     log: makeReducer(listState.log, {
       [RESET_LOG]: (state, action) => action.log,
       [LOAD_LOG]: (state, action) => action.log

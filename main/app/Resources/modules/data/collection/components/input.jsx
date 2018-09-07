@@ -19,7 +19,7 @@ const CollectionInput = props =>
 
     {!isEmpty(props.value) &&
       <Button
-        className="btn-link"
+        className="btn-link btn-delete-all"
         type={CALLBACK_BUTTON}
         label={trans('delete_all')}
         disabled={props.disabled}
@@ -30,7 +30,7 @@ const CollectionInput = props =>
     }
 
     {!isEmpty(props.value) &&
-      <ul className="">
+      <ul>
         {props.value.map((value, index) =>
           <li key={index} className="collection-item">
             <FormProp
@@ -46,7 +46,7 @@ const CollectionInput = props =>
               readOnly={props.readOnly}
               validating={props.validating}
 
-              error={props.error && props.error instanceof Array ? props.error[index] : undefined}
+              error={props.error instanceof Object ? props.error[index] : undefined}
               value={value}
 
               onChange={(newValue) => {
@@ -60,7 +60,7 @@ const CollectionInput = props =>
             />
 
             <Button
-              className="btn-link"
+              className="btn-link btn-delete"
               type={CALLBACK_BUTTON}
               icon="fa fa-fw fa-trash-o"
               label={trans('delete')}

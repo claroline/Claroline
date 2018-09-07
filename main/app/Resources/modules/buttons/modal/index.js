@@ -14,5 +14,6 @@ const MODAL_BUTTON = 'modal'
 registry.add(MODAL_BUTTON, ModalButton)
 
 export {
-  MODAL_BUTTON
+  MODAL_BUTTON,
+  ModalButton
 }

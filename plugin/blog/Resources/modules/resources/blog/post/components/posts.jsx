@@ -93,13 +93,13 @@ class PostsList extends Component {
             }
           ]}
 
-          selection={{}}
           card={PostCard}
 
           display={{
             available : [listConst.DISPLAY_LIST],
             current: listConst.DISPLAY_LIST
           }}
+          selectable={false}
         />
         {!isEmpty(this.props.posts) &&
         <Button

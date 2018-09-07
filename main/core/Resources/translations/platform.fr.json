@@ -388,7 +388,7 @@
     "display": "Afficher",
     "display_at_registration": "Afficher à la création du compte",
     "display_captcha": "Activer les captchas",
-    "display_mode": "Mode affichage",
+    "display_mode": "Mode de vue",
     "display_options": "Options d'affichage",
     "display_views": "{0,1} %count% vue|[2,Inf[ %count% vues",
     "displayable_in_desktop": "Disponible dans le bureau",
@@ -1506,9 +1506,9 @@
 
     "list_columns": "Colonnes disponibles",
     "list_columns_title": "Colonnes disponibles (cliquez pour afficher/masquer des colonnes)",
-    "list_display_modes": "Modes d'affichage",
-    "list_display_modes_title": "Modes d'affichage (cliquez pour changer de mode)",
-    "list_display_mode_default": "Mode d'affichage par défaut",
+    "list_display_modes": "Modes de vue",
+    "list_display_modes_title": "Modes de vue (cliquez pour changer de mode)",
+    "list_display_mode_default": "Mode de vue par défaut",
     "list_display_list": "Liste détaillée",
     "list_display_list_sm": "Liste",
     "list_display_table": "Tableau",
@@ -1522,7 +1522,7 @@
     "list_filters_default": "Filtres par défaut",
     "list_columns_default": "Colonnes affichées par défaut",
     "list_display_count": "Afficher le nombre total de résultats",
-    "list_enable_display": "Activer le choix de l'affichage",
+    "list_enable_display": "Activer le choix de du mode de vue",
     "list_enable_pagination_perf_help": "Il est recommandé d'activer la pagination pour les listes pouvant retourner un grand nombre de résultats.",
     "list_all_results_perf_help": "Il est recommandé de limiter le nombre de résultats par page pour les listes pouvant retourner un grand nombre de résultats.",
     "list_enable_filters": "Activer la recherche",
@@ -1744,5 +1744,8 @@
     "sort_asc": "Trier par ordre croissant",
     "sort_desc": "Trier par ordre décroissant",
     "no_filter": "Aucun filtre n'est défini.",
-    "add_filter": "Ajouter un filtre"
+    "add_filter": "Ajouter un filtre",
+    "page_number": "Page %number%",
+    "rich_text_upload_directory": "Utiliser pour le stockage des fichiers des textes riches",
+    "rich_text_upload_directory_help": "Ce dossier sera proposé aux utilisateurs lors de l'ajout de nouveaux fichiers dans les éditeurs de textes riches."
 }

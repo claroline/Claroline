@@ -76,6 +76,19 @@ class AutoloadedTreeData extends Component {
 }
 
 AutoloadedTreeData.propTypes = {
+  // calculated from redux store
+  loaded: T.bool,
+  invalidated: T.bool,
+  data: T.array.isRequired,
+  totalResults: T.number.isRequired,
+  filters: T.object,
+  selection: T.object,
+  fetchData: T.func
+}
+
+const TreeData = connect()(AutoloadedTreeData)
+
+TreeData.propTypes = {
   /**
    * The name of the data in the tree.
    *
@@ -123,17 +136,20 @@ AutoloadedTreeData.propTypes = {
    */
   actions: T.func,
 
-  // calculated from redux store
-  loaded: T.bool,
-  invalidated: T.bool,
-  data: T.array.isRequired,
-  totalResults: T.number.isRequired,
-  filters: T.object,
-  selection: T.object,
-  fetchData: T.func
+  // The features to render for the TreeData.
+  // NB. by default all features are enabled,
+  // so use this props to disable the ones you don't want.
+  filterable: T.bool,
+  sortable  : T.bool,
+  selectable: T.bool,
+  paginated : T.bool,
+  count     : T.bool
 }
 
-const TreeData = connect()(AutoloadedTreeData)
+TreeData.defaultProps = {
+  sortable: false, // not implemented
+  paginated: false // not implemented
+}
 
 export {
   TreeData

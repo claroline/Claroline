@@ -4,12 +4,6 @@ import {createSelector} from 'reselect'
 // retrieves a list instance in the store
 const list = (state, listName) => get(state, listName)
 
-// check enabled list features
-const isFilterable = (listState) => typeof listState.filters !== 'undefined'
-const isSortable   = (listState) => typeof listState.sortBy !== 'undefined'
-const isSelectable = (listState) => typeof listState.selected !== 'undefined'
-const isPaginated  = (listState) => typeof listState.page !== 'undefined' && listState.pageSize !== 'undefined'
-
 // access list data
 const loaded       = (listState) => listState.loaded
 const invalidated  = (listState) => listState.invalidated
@@ -72,10 +66,6 @@ const pages = createSelector(
 
 export const select = {
   list,
-  isFilterable,
-  isSortable,
-  isSelectable,
-  isPaginated,
   loaded,
   invalidated,
   data,
@@ -83,9 +73,9 @@ export const select = {
   filters,
   sortBy,
   selected,
+  selectedFull,
   currentPage,
   pageSize,
   pages,
-  queryString,
-  selectedFull
+  queryString
 }

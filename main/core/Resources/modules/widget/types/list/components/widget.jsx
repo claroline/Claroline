@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import isEmpty from 'lodash/isEmpty'
 
 import {ListData} from '#/main/app/content/list/containers/data'
 import {getSource} from '#/main/app/data'
@@ -48,7 +49,6 @@ class ListWidget extends Component {
     return (
       <ListData
         name={selectors.STORE_NAME}
-        level={3}
         fetch={{
           url: ['apiv2_data_source', {
             type: this.props.source,
@@ -64,14 +64,11 @@ class ListWidget extends Component {
           current: this.props.display,
           available: this.props.availableDisplays
         }}
-        features={{
-          filterable: true,
-          sortable  : true,
-          selectable: true,
-          paginated : true,
-          count: true,
-          columnsFilterable: true
-        }}
+        count={this.props.count}
+        filterable={!isEmpty(this.props.availableFilters)}
+        sortable={!isEmpty(this.props.availableSort)}
+        selectable={false}
+        paginated={this.props.paginated}
       />
     )
   }
@@ -83,6 +80,8 @@ ListWidget.propTypes = {
 
   // list configuration
   display: T.string.isRequired,
+  count: T.bool.isRequired,
+  paginated: T.bool.isRequired,
   availableDisplays: T.arrayOf(T.string).isRequired,
   availableFilters: T.arrayOf(T.string).isRequired,
   availableSort: T.arrayOf(T.string).isRequired,

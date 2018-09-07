@@ -65,6 +65,8 @@ const PortalPage = props =>
           current: listConstants.DISPLAY_TILES,
           available: Object.keys(listConstants.DISPLAY_MODES)
         }}
+
+        selectable={false}
       />
     </PageContent>
   </PageContainer>

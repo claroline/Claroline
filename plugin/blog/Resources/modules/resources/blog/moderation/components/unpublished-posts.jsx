@@ -58,7 +58,7 @@ const UnpublishedPostsComponent = (props) =>
       }
     ]}
 
-    selection={{}}
+    selectable={false}
     card={PostCard}
 
     display={{

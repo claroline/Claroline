@@ -10,6 +10,8 @@ import {getPropDefinition} from '#/main/app/content/list/utils'
 
 import {TooltipElement} from '#/main/core/layout/components/tooltip-element'
 
+// TODO : reuse #/main/app/content/search/components/prop
+
 class CurrentFilter extends Component {
   constructor(props) {
     super(props)
@@ -292,7 +294,10 @@ class ListSearch extends Component {
 
         {this.state.currentSearch &&
           <FiltersList
-            available={this.props.available}
+            available={this.props.available.filter(availableFilter =>
+              // removes locked filters
+              -1 === this.props.current.findIndex(currentFilter => currentFilter.property === availableFilter.name && currentFilter.locked)
+            )}
             currentSearch={this.state.currentSearch}
             onSelect={this.addFilter}
           />

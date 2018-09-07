@@ -23,6 +23,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceFavourite;
@@ -33,13 +34,13 @@ use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Transfert\Resolver;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Resource\MaskManager;
-use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Repository\WorkspaceRecentRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Doctrine\Common\Persistence\ObjectRepository;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -59,8 +60,6 @@ class WorkspaceManager
 
     const MAX_WORKSPACE_BATCH_SIZE = 10;
 
-    /** @var HomeTabManager */
-    private $homeTabManager;
     /** @var MaskManager */
     private $maskManager;
     /** @var OrderedToolRepository */
@@ -90,8 +89,6 @@ class WorkspaceManager
     /** @var ClaroUtilities */
     private $ut;
     private $sut;
-    /** @var PagerFactory */
-    private $pagerFactory;
     /** @var ObjectRepository */
     private $workspaceFavouriteRepo;
     private $container;
@@ -103,7 +100,6 @@ class WorkspaceManager
      * WorkspaceManager constructor.
      *
      * @DI\InjectParams({
-     *     "homeTabManager"        = @DI\Inject("claroline.manager.home_tab_manager"),
      *     "roleManager"           = @DI\Inject("claroline.manager.role_manager"),
      *     "maskManager"           = @DI\Inject("claroline.manager.mask_manager"),
      *     "resourceManager"       = @DI\Inject("claroline.manager.resource_manager"),
@@ -111,11 +107,9 @@ class WorkspaceManager
      *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
      *     "ut"                    = @DI\Inject("claroline.utilities.misc"),
      *     "sut"                   = @DI\Inject("claroline.security.utilities"),
-     *     "pagerFactory"          = @DI\Inject("claroline.pager.pager_factory"),
      *     "container"             = @DI\Inject("service_container")
      * })
      *
-     * @param HomeTabManager     $homeTabManager
      * @param RoleManager        $roleManager
      * @param MaskManager        $maskManager
      * @param ResourceManager    $resourceManager
@@ -123,11 +117,9 @@ class WorkspaceManager
      * @param ObjectManager      $om
      * @param ClaroUtilities     $ut
      * @param Utilities          $sut
-     * @param PagerFactory       $pagerFactory
      * @param ContainerInterface $container
      */
     public function __construct(
-        HomeTabManager $homeTabManager,
         RoleManager $roleManager,
         MaskManager $maskManager,
         ResourceManager $resourceManager,
@@ -135,10 +127,8 @@ class WorkspaceManager
         ObjectManager $om,
         ClaroUtilities $ut,
         Utilities $sut,
-        PagerFactory $pagerFactory,
         ContainerInterface $container
     ) {
-        $this->homeTabManager = $homeTabManager;
         $this->maskManager = $maskManager;
         $this->roleManager = $roleManager;
         $this->resourceManager = $resourceManager;
@@ -155,7 +145,6 @@ class WorkspaceManager
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\Workspace');
         $this->workspaceOptionsRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceOptions');
         $this->workspaceFavouriteRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceFavourite');
-        $this->pagerFactory = $pagerFactory;
         $this->container = $container;
         $this->importData = [];
         $this->templateDirectory = $container->getParameter('claroline.param.templates_directory');
@@ -207,9 +196,9 @@ class WorkspaceManager
      * Creates a workspace.
      *
      * @param Workspace $workspace
-     * @param $templateDirectory uncompressed template
+     * @param string    $templateDirectory uncompressed template
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
+     * @return Workspace
      */
     public function createFromTemplate(Workspace $workspace, $templateDirectory)
     {
@@ -355,20 +344,20 @@ class WorkspaceManager
     {
         return [
           'id' => $workspace->getId(),
-          'guid' => $workspace->getGuid(),
+          'guid' => $workspace->getUuid(),
           'name' => $workspace->getName(),
           'description' => $workspace->getDescription(),
           'code' => $workspace->getCode(),
           'maxStorageSize' => $workspace->getMaxStorageSize(),
           'maxUploadResources' => $workspace->getMaxUploadResources(),
           'maxUsers' => $workspace->getMaxUsers(),
-          'displayable' => $workspace->isDisplayable(),
+          'displayable' => !$workspace->isHidden(),
           'creatorId' => $workspace->getCreator()->getId(),
           'selfRegistration' => $workspace->getSelfRegistration(),
           'registrationValidation' => $workspace->getRegistrationValidation(),
           'selfUnregistration' => $workspace->getSelfUnregistration(),
           'disabledNotifications' => $workspace->isDisabledNotifications(),
-          'creationDate' => $workspace->getCreationDate(),
+          'creationDate' => $workspace->getCreated(),
           'isPersonal' => $workspace->isPersonal(),
           'startDate' => $workspace->getStartDate(),
           'endDate' => $workspace->getEndDate(),
@@ -457,7 +446,7 @@ class WorkspaceManager
         $workspacesWithoutManagerRole = [];
 
         foreach ($workspaces as $workspace) {
-            if (in_array('ROLE_WS_MANAGER_'.$workspace->getGuid(), $userRoleNames)) {
+            if (in_array('ROLE_WS_MANAGER_'.$workspace->getUuid(), $userRoleNames)) {
                 $accesses[$workspace->getId()] = true;
             } else {
                 $accesses[$workspace->getId()] = $hasAllAccesses = false;
@@ -582,33 +571,6 @@ class WorkspaceManager
     }
 
     /**
-     * @param int $page
-     * @param int $max
-     *
-     * @return \PagerFanta\PagerFanta
-     */
-    public function getDisplayableWorkspacesPager($page, $max = 20)
-    {
-        $workspaces = $this->workspaceRepo->findDisplayableWorkspaces();
-
-        return $this->pagerFactory->createPagerFromArray($workspaces, $page, $max);
-    }
-
-    /**
-     * @param string $search
-     * @param int    $page
-     * @param int    $max
-     *
-     * @return \PagerFanta\PagerFanta
-     */
-    public function getDisplayableWorkspacesBySearchPager($search, $page, $max = 20)
-    {
-        $workspaces = $this->workspaceRepo->findDisplayableWorkspacesBySearch($search);
-
-        return $this->pagerFactory->createPagerFromArray($workspaces, $page, $max);
-    }
-
-    /**
      * @param Workspace $workspace
      * @param Role[]    $roles
      * @param int       $orderedToolType
@@ -652,15 +614,13 @@ class WorkspaceManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param \Claroline\CoreBundle\Entity\User                $user
+     * @param Workspace $workspace
+     * @param User      $user
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\WorkspaceFavourite
+     * @return WorkspaceFavourite
      */
-    public function getFavouriteByWorkspaceAndUser(
-        Workspace $workspace,
-        User $user
-    ) {
+    public function getFavouriteByWorkspaceAndUser(Workspace $workspace, User $user)
+    {
         return $this->workspaceFavouriteRepo->findOneBy([
             'workspace' => $workspace,
             'user' => $user,
@@ -863,31 +823,6 @@ class WorkspaceManager
         }
     }
 
-    public function getAllNonPersonalWorkspaces(
-        $page = 1,
-        $max = 50,
-        $search = '',
-        $orderedBy = 'name',
-        $order = 'ASC'
-    ) {
-        $workspaces = '' === $search ?
-            $this->workspaceRepo
-                ->findAllNonPersonalWorkspaces(
-                    $orderedBy,
-                    $order,
-                    $this->container->get('security.token_storage')->getToken()->getUser()
-                ) :
-            $this->workspaceRepo
-                ->findAllNonPersonalWorkspacesBySearch(
-                    $search,
-                    $orderedBy,
-                    $order,
-                    $this->container->get('security.token_storage')->getToken()->getUser()
-                );
-
-        return $this->pagerFactory->createPagerFromArray($workspaces, $page, $max);
-    }
-
     public function getWorkspaceByCode($workspaceCode, $executeQuery = true)
     {
         return $this->workspaceRepo
@@ -958,10 +893,17 @@ class WorkspaceManager
         );
     }
 
+    /**
+     * @param Workspace $workspace
+     *
+     * @return Tool
+     */
     public function getFirstOpenableTool(Workspace $workspace)
     {
         $token = $this->container->get('security.token_storage')->getToken();
         $roles = $this->container->get('claroline.security.utilities')->getRoles($token);
+
+        /** @var Tool[] $orderedTools */
         $orderedTools = $this->container->get('claroline.manager.tool_manager')->getDisplayedByRolesAndWorkspace($roles, $workspace);
         //loop through the tools till we can open one !
         $authorization = $this->container->get('security.authorization_checker');
@@ -1691,8 +1633,23 @@ class WorkspaceManager
         return $this->userRepo->findUsersByRolesIncludingGroups([$roleManager]);
     }
 
+    public function getRecentWorkspaceForUser(User $user, array $roles)
+    {
+        $wsLogs = $this->getLatestWorkspacesByUser($user, $roles);
+        $workspaces = [];
+
+        if (!empty($wsLogs)) {
+            foreach ($wsLogs as $wsLog) {
+                $workspaces[] = $wsLog['workspace'];
+            }
+        }
+
+        return $workspaces;
+    }
+
     public function addRecentWorkspaceForUser(User $user, Workspace $workspace)
     {
+        /** @var WorkspaceRecentRepository $recentWorkspaceRepo */
         $recentWorkspaceRepo = $this->om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRecent');
         //If workspace already in recent workspaces, update date
         $recentWorkspace = $recentWorkspaceRepo->findOneBy(['user' => $user, 'workspace' => $workspace]);
@@ -1703,6 +1660,7 @@ class WorkspaceManager
             $recentWorkspace->setWorkspace($workspace);
         }
         $recentWorkspace->setEntryDate(new \DateTime());
+
         $this->om->persist($recentWorkspace);
         $this->om->flush();
     }
@@ -1711,13 +1669,15 @@ class WorkspaceManager
     public function cleanRecentWorkspaces()
     {
         $this->log('Cleaning recent workspaces entries that are older than six months');
+
+        /** @var WorkspaceRecentRepository $recentWorkspaceRepo */
         $recentWorkspaceRepo = $this->om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRecent');
         $recentWorkspaceRepo->removeAllEntriesBefore(new \DateTime('-6 months'));
     }
 
     public function unregister(AbstractRoleSubject $subject, Workspace $workspace)
     {
-        $rolesToRemove = array_filter($workspace->getRoles()->toArray(), function ($role) use ($workspace) {
+        $rolesToRemove = array_filter($workspace->getRoles()->toArray(), function (Role $role) use ($workspace) {
             return $role->getWorkspace()->getId() === $workspace->getId();
         });
 

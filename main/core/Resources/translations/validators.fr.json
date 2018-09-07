@@ -35,5 +35,8 @@
     "value_greater_or_equal_to": "Cette valeur doit être supérieure ou égale à %limit%.",
     "value_lower_or_equal_to": "Cette valeur doit être inférieure ou égale à %limit%.",
     "value_not_blank": "Cette valeur ne peut pas être vide.",
-    "value_not_unique": "Cette valeur est déjà utilisée."
+    "value_not_unique": "Cette valeur est déjà utilisée.",
+    "This filter should have a name.": "Ce filtre doit avoir un nom.",
+    "This filter should have a value.": "Ce filtre doit avoir une valeur.",
+    "This filter should use a filterable property.": "Ce filtre doit utiliser une propriété filtrable."
 }

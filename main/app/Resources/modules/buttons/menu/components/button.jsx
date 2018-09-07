@@ -166,12 +166,12 @@ const MenuButton = props => {
       position={props.menu.position}
       align={props.menu.align}
       className={props.containerClassName}
+      disabled={(isStandard && !hasActions) || props.disabled}
     >
       <CallbackButton
-        {...omit(props, 'menu')}
+        {...omit(props, 'menu', 'containerClassName')}
         className={classes('dropdown-toggle', props.className)}
         bsRole="toggle"
-        disabled={isStandard && !hasActions}
         callback={() => true}
       >
         {props.children}

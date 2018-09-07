@@ -14,5 +14,6 @@ const URL_BUTTON = 'url'
 registry.add(URL_BUTTON, UrlButton)
 
 export {
-  URL_BUTTON
+  URL_BUTTON,
+  UrlButton
 }

@@ -133,14 +133,6 @@ class HomeTabManager
         return $this->homeTabRepo->findBy(['workspace' => $workspace]);
     }
 
-    /**
-     * used by claro_list_visible_workspace_home_tabs_picker.
-     */
-    public function getVisibleWorkspaceHomeTabConfigsByWorkspace(Workspace $workspace)
-    {
-        return $this->homeTabConfigRepo->findVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
-    }
-
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;

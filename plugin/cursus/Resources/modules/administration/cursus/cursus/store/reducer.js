@@ -16,7 +16,6 @@ const reducer = combineReducers({
       picker: makeListReducer('cursus.current.organizations.picker')
     })
   })
-  // picker: makeListReducer('cursus.picker')
 })
 
 export {

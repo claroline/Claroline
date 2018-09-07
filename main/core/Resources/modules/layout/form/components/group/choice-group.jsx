@@ -30,6 +30,7 @@ implementPropTypes(ChoiceGroup, FormGroupWithFieldTypes, {
   value: T.oneOfType([T.string, T.number, T.array]),
   // custom props
   choices: T.object.isRequired,
+  disabledChoices: T.arrayOf(T.string),
   multiple: T.bool,
   condensed: T.bool
 }, {

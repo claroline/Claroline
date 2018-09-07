@@ -22,6 +22,7 @@ registry.add('app', {
       'enum-plus'   : () => { return import(/* webpackChunkName: "app-data-enum-plus" */    '#/main/app/data/enum-plus') },
       'fields'      : () => { return import(/* webpackChunkName: "app-data-fields" */       '#/main/app/data/fields') },
       'file'        : () => { return import(/* webpackChunkName: "app-data-file" */         '#/main/app/data/file') },
+      'filter'      : () => { return import(/* webpackChunkName: "app-data-filter" */       '#/main/app/data/filter') },
       'html'        : () => { return import(/* webpackChunkName: "app-data-html" */         '#/main/app/data/html') },
       'image'       : () => { return import(/* webpackChunkName: "app-data-image" */        '#/main/app/data/image') },
       'ip'          : () => { return import(/* webpackChunkName: "app-data-ip" */           '#/main/app/data/ip') },

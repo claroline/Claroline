@@ -26,6 +26,10 @@ const SendingConfirmModal = props =>
       }}
       definition={UserList.definition}
       card={UserList.card}
+      selectable={false}
+      filterable={false}
+      paginated={false}
+      sortable={false}
     />
     <button
       className="modal-btn btn btn-primary"
@@ -34,7 +38,7 @@ const SendingConfirmModal = props =>
         props.handleConfirm()
       }}
     >
-      {trans('send')}
+      {trans('send', {}, 'actions')}
     </button>
   </Modal>
 

@@ -227,11 +227,11 @@ class Tab extends Component {
           autoload: true
         }}
         definition={this.getDefinition()}
-
         display={{
           available : [listConst.DISPLAY_TABLE],
           current: listConst.DISPLAY_TABLE
         }}
+        selectable={false}
       />
     )
   }

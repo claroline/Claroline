@@ -11,9 +11,6 @@ const reducer = combineReducers({
     invalidated: makeReducer(false, {
       [FORM_SUBMIT_SUCCESS+'/organizations.current']: () => true // todo : find better
     })
-  }, {
-    sortable: false,
-    paginated: false
   }),
   current: makeFormReducer('organizations.current', {}, {
     workspaces: makeListReducer('organizations.current.workspaces'),

@@ -437,31 +437,6 @@ class WorkspaceManagerTest extends MockeryTestCase
         );
     }
 
-    public function testGetDisplayableWorkspacesBySearchPager()
-    {
-        $workspaceA = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
-        $workspaceB = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
-        $workspaces = [$workspaceA, $workspaceB];
-
-        m::getConfiguration()->allowMockingNonExistentMethods(true);
-        $this->workspaceRepo
-            ->shouldReceive('findDisplayableWorkspacesBySearch')
-            ->with('search')
-            ->once()
-            ->andReturn($workspaces);
-        m::getConfiguration()->allowMockingNonExistentMethods(false);
-        $this->pagerFactory
-            ->shouldReceive('createPagerFromArray')
-            ->with($workspaces, 1)
-            ->once()
-            ->andReturn('pager');
-
-        $this->assertEquals(
-            'pager',
-            $this->getManager()->getDisplayableWorkspacesBySearchPager('search', 1)
-        );
-    }
-
     public function testAddUserAction()
     {
         $user = new User();

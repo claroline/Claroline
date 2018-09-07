@@ -21,7 +21,6 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\InjectJavascriptEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Utilities;
-use Claroline\CoreBundle\Manager\HomeManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
@@ -32,10 +31,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Role\SwitchUserRole;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Actions of this controller are not routed. They're intended to be rendered
@@ -44,48 +41,39 @@ use Symfony\Component\Translation\TranslatorInterface;
 class LayoutController extends Controller
 {
     use PermissionCheckerTrait;
+
     private $dispatcher;
     private $roleManager;
     private $workspaceManager;
     private $notificationManager;
-    private $request;
-    private $router;
     private $tokenStorage;
     private $utils;
-    private $translator;
     private $configHandler;
     private $toolManager;
-    private $homeManager;
     private $serializer;
 
     /**
      * LayoutController constructor.
      *
      * @DI\InjectParams({
-     *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
-     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "roleManager"         = @DI\Inject("claroline.manager.role_manager"),
+     *     "workspaceManager"    = @DI\Inject("claroline.manager.workspace_manager"),
      *     "notificationManager" = @DI\Inject("icap.notification.manager"),
-     *     "router"           = @DI\Inject("router"),
-     *     "tokenStorage"     = @DI\Inject("security.token_storage"),
-     *     "utils"            = @DI\Inject("claroline.security.utilities"),
-     *     "translator"       = @DI\Inject("translator"),
-     *     "configHandler"    = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "toolManager"      = @DI\Inject("claroline.manager.tool_manager"),
-     *     "homeManager"      = @DI\Inject("claroline.manager.home_manager"),
-     *     "dispatcher"       = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "serializer"       = @DI\Inject("claroline.api.serializer")
+     *     "tokenStorage"        = @DI\Inject("security.token_storage"),
+     *     "utils"               = @DI\Inject("claroline.security.utilities"),
+     *     "configHandler"       = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "toolManager"         = @DI\Inject("claroline.manager.tool_manager"),
+     *     "dispatcher"          = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "serializer"          = @DI\Inject("claroline.api.serializer")
      * })
      *
      * @param RoleManager                  $roleManager
      * @param WorkspaceManager             $workspaceManager
      * @param ToolManager                  $toolManager
      * @param NotificationManager          $notificationManager
-     * @param UrlGeneratorInterface        $router
      * @param TokenStorageInterface        $tokenStorage
      * @param Utilities                    $utils
-     * @param TranslatorInterface          $translator
      * @param PlatformConfigurationHandler $configHandler
-     * @param HomeManager                  $homeManager
      * @param StrictDispatcher             $dispatcher
      * @param SerializerProvider           $serializer
      */
@@ -94,12 +82,9 @@ class LayoutController extends Controller
         WorkspaceManager $workspaceManager,
         ToolManager $toolManager,
         NotificationManager $notificationManager,
-        UrlGeneratorInterface $router,
         TokenStorageInterface $tokenStorage,
         Utilities $utils,
-        TranslatorInterface $translator,
         PlatformConfigurationHandler $configHandler,
-        HomeManager $homeManager,
         StrictDispatcher $dispatcher,
         SerializerProvider $serializer
     ) {
@@ -107,12 +92,9 @@ class LayoutController extends Controller
         $this->workspaceManager = $workspaceManager;
         $this->toolManager = $toolManager;
         $this->notificationManager = $notificationManager;
-        $this->router = $router;
         $this->tokenStorage = $tokenStorage;
         $this->utils = $utils;
-        $this->translator = $translator;
         $this->configHandler = $configHandler;
-        $this->homeManager = $homeManager;
         $this->dispatcher = $dispatcher;
         $this->serializer = $serializer;
     }
@@ -169,17 +151,11 @@ class LayoutController extends Controller
             $user = $token->getUser();
         }
 
-        // todo : find what is it
-        $homeMenu = $this->configHandler->getParameter('home_menu');
-        if (is_numeric($homeMenu)) {
-            $homeMenu = $this->homeManager->getContentByType('menu', $homeMenu);
-        }
-
         $workspaces = [];
         $personalWs = null;
         if ($user instanceof User) {
             $personalWs = $user->getPersonalWorkspace();
-            $workspaces = $this->findWorkspacesFromLogs();
+            $workspaces = $this->workspaceManager->getRecentWorkspaceForUser($user, $this->utils->getRoles($token));
         }
 
         $lockedOrderedTools = $this->toolManager->getOrderedToolsLockedByAdmin(1);
@@ -320,7 +296,7 @@ class LayoutController extends Controller
     public function injectJavascriptAction()
     {
         /** @var InjectJavascriptEvent $event */
-        $event = $this->dispatcher->dispatch('inject_javascript_layout', 'InjectJavascript');
+        $event = $this->dispatcher->dispatch('inject_javascript_layout', InjectJavascriptEvent::class);
 
         return new Response($event->getContent());
     }
@@ -336,22 +312,5 @@ class LayoutController extends Controller
         }
 
         return false;
-    }
-
-    private function findWorkspacesFromLogs()
-    {
-        $token = $this->tokenStorage->getToken();
-        $user = $token->getUser();
-        $roles = $this->utils->getRoles($token);
-        $wsLogs = $this->workspaceManager->getLatestWorkspacesByUser($user, $roles);
-        $workspaces = [];
-
-        if (!empty($wsLogs)) {
-            foreach ($wsLogs as $wsLog) {
-                $workspaces[] = $wsLog['workspace'];
-            }
-        }
-
-        return $workspaces;
     }
 }

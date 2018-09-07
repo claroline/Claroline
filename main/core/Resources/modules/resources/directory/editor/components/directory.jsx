@@ -6,11 +6,16 @@ import {trans} from '#/main/core/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {FormData} from '#/main/app/content/form/containers/data'
-import {ConfigurationForm} from '#/main/app/content/list/configuration/components/form'
+import {ListForm} from '#/main/app/content/list/parameters/containers/form'
 import {selectors} from '#/main/core/resources/directory/editor/store'
+
+import resourcesList from '#/main/core/data/sources/resources'
+
+import {Directory as DirectoryTypes} from '#/main/core/resources/directory/prop-types'
 
 const DirectoryForm = (props) =>
   <FormData
+    level={3}
     name={selectors.FORM_NAME}
     target={['apiv2_resource_directory_update', {id: props.directory.id}]}
     buttons={true}
@@ -24,7 +29,12 @@ const DirectoryForm = (props) =>
         title: trans('general'),
         primary: true,
         fields: [
-
+          {
+            name: 'uploadDestination',
+            type: 'boolean',
+            label: trans('rich_text_upload_directory'),
+            help: trans('rich_text_upload_directory_help')
+          }
         ]
       }, {
         icon: 'fa fa-fw fa-desktop',
@@ -47,15 +57,23 @@ const DirectoryForm = (props) =>
       }
     ]}
   >
-    <ConfigurationForm
+    <ListForm
+      level={3}
       name={selectors.FORM_NAME}
+      dataPart="list"
+      list={resourcesList.parameters}
+      parameters={props.directory.list}
     />
   </FormData>
 
 DirectoryForm.propTypes = {
-  directory: T.shape({
-    id: T.string.isRequired
-  })
+  directory: T.shape(
+    DirectoryTypes.propTypes
+  )
+}
+
+DirectoryForm.defaultProps = {
+  directory: DirectoryTypes.defaultProps
 }
 
 const DirectoryEditor = connect(

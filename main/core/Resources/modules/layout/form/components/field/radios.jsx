@@ -25,7 +25,7 @@ const Radios = props =>
             name={props.id}
             value={choiceValue}
             checked={parseValue(choiceValue) === props.value}
-            disabled={props.disabled}
+            disabled={props.disabled || -1 !== props.disabledChoices.indexOf(choiceValue)}
             onChange={() => props.onChange(parseValue(choiceValue))}
           />
 
@@ -40,9 +40,11 @@ implementPropTypes(Radios, FormFieldTypes, {
 
   // custom props
   choices: T.object.isRequired,
+  disabledChoices: T.arrayOf(T.string),
   inline: T.bool
 }, {
   value: '',
+  disabledChoices: [],
   inline: true
 })
 

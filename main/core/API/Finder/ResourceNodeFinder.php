@@ -62,6 +62,10 @@ class ResourceNodeFinder extends AbstractFinder
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
+                case 'meta.published':
+                    $qb->andWhere('obj.published LIKE :published');
+                    $qb->setParameter('published', $filterValue);
+                    break;
                 case 'meta.type':
                 case 'resourceType':
                     if (is_array($filterValue)) {

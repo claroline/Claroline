@@ -25,7 +25,7 @@ const Checkboxes = props =>
             name={`${props.id}[]`}
             value={choiceValue}
             checked={props.value ? -1 !== props.value.indexOf(parseValue(choiceValue)) : false}
-            disabled={props.disabled}
+            disabled={props.disabled || -1 !== props.disabledChoices.indexOf(choiceValue)}
             onChange={(e) => {
               let value = [].concat(props.value || [])
 
@@ -48,9 +48,11 @@ const Checkboxes = props =>
 implementPropTypes(Checkboxes, FormFieldTypes, {
   value: T.array,
   choices: T.object.isRequired,
+  disabledChoices: T.arrayOf(T.string),
   inline: T.bool
 }, {
   value: [],
+  disabledChoices: [],
   inline: true
 })
 

@@ -4,6 +4,11 @@ namespace Claroline\AppBundle\Entity\Parameters;
 
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * Contains all properties required to configure an UI ListData.
+ *
+ * NB. maybe create an entity with this and create a rel in the entities using it.
+ */
 trait ListParameters
 {
     /**

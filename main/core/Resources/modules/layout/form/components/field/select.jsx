@@ -4,6 +4,8 @@ import classes from 'classnames'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
+// TODO : implement disabledChoices
+
 const getSelectedValues = (e) => {
   const values = []
 
@@ -31,8 +33,13 @@ const Select = props =>
     {!props.multiple && !props.noEmpty &&
       <option value=""/>
     }
+
     {Object.keys(props.choices).map(option =>
-      <option key={option} value={option}>
+      <option
+        key={option}
+        value={option}
+        disabled={-1 !== props.disabledChoices.indexOf(option)}
+      >
         {props.choices[option]}
       </option>
     )}
@@ -40,11 +47,13 @@ const Select = props =>
 
 implementPropTypes(Select, FormFieldTypes, {
   choices: T.object.isRequired,
+  disabledChoices: T.arrayOf(T.string),
   value: T.oneOfType([T.string, T.number, T.array]),
   multiple: T.bool,
   noEmpty: T.bool
 }, {
   value: '',
+  disabledChoices: [],
   multiple: false,
   noEmpty: false
 })

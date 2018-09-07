@@ -12,6 +12,10 @@ import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 
 import {hasPermission} from '#/main/core/resource/permissions'
 
+function getTypes() {
+  return param('resourceTypes')
+}
+
 /**
  * Get the type implemented by a resource node.
  *
@@ -157,6 +161,7 @@ function getToolbar(primaryAction = null, fullscreen = true) {
 
 export {
   getType,
+  getTypes,
   getActions,
   getDefaultAction,
   getToolbar

@@ -33,6 +33,7 @@ const UserLogList = props =>
       available : [listConst.DISPLAY_TABLE, listConst.DISPLAY_TABLE_SM, listConst.DISPLAY_LIST],
       current: listConst.DISPLAY_LIST
     }}
+    selectable={false}
   />
 
 UserLogList.propTypes = {

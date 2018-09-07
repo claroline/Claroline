@@ -12,7 +12,7 @@ const reducer = combineReducers({
       [FORM_SUBMIT_SUCCESS+'/notifications.current']: () => true
     })
   }),
-  current: makeFormReducer('notifications.current', {}, {})
+  current: makeFormReducer('notifications.current')
 })
 
 export {

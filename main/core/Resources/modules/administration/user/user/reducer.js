@@ -22,12 +22,12 @@ const reducer = combineReducers({
     selected: makeReducer([], {
       [USER_COMPARE]: (state, action) => action.data
     }),
-    groupsUser0: makeListReducer('users.compare.groupsUser0', {}, {}, {selectable: false}),
-    groupsUser1: makeListReducer('users.compare.groupsUser1', {}, {}, {selectable: false}),
-    organizationsUser0: makeListReducer('users.compare.organizationsUser0', {}, {}, {selectable: false}),
-    organizationsUser1: makeListReducer('users.compare.organizationsUser1', {}, {}, {selectable: false}),
-    rolesUser0: makeListReducer('users.compare.rolesUser0', {}, {}, {selectable: false}),
-    rolesUser1: makeListReducer('users.compare.rolesUser1', {}, {}, {selectable: false})
+    groupsUser0: makeListReducer('users.compare.groupsUser0'),
+    groupsUser1: makeListReducer('users.compare.groupsUser1'),
+    organizationsUser0: makeListReducer('users.compare.organizationsUser0'),
+    organizationsUser1: makeListReducer('users.compare.organizationsUser1'),
+    rolesUser0: makeListReducer('users.compare.rolesUser0'),
+    rolesUser1: makeListReducer('users.compare.rolesUser1')
   })
 })
 

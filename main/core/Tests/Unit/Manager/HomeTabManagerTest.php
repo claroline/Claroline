@@ -38,24 +38,6 @@ class HomeTabManagerTest extends MockeryTestCase
             $this->mock('Claroline\CoreBundle\Repository\DisplayConfigRepository');
     }
 
-    public function testGetVisibleWorkspaceHomeTabConfigsByWorkspace()
-    {
-        $workspace =
-            $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
-        $homeTabConfigs = ['home_tab_config_A', 'home_tab_config_B'];
-
-        $this->homeTabConfigRepo
-            ->shouldReceive('findVisibleWorkspaceHomeTabConfigsByWorkspace')
-            ->with($workspace)
-            ->once()
-            ->andReturn($homeTabConfigs);
-
-        $this->assertEquals(
-            $homeTabConfigs,
-            $this->getManager()->getVisibleWorkspaceHomeTabConfigsByWorkspace($workspace)
-        );
-    }
-
     public function testGetOrderOfLastWidgetInAdminHomeTab()
     {
         $homeTab = new HomeTab();

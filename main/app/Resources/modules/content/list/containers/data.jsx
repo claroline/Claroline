@@ -67,10 +67,22 @@ class AutoloadedListData extends Component {
 }
 
 AutoloadedListData.propTypes = {
-  level: T.number,
-  displayLevel: T.number,
-  title: T.string,
+  // calculated from redux store
+  loaded: T.bool,
+  invalidated: T.bool,
+  data: T.array.isRequired,
+  totalResults: T.number.isRequired,
+  filters: T.object,
+  sorting: T.object,
+  pagination: T.object,
+  selection: T.object,
+  fetchData: T.func
+}
 
+// connect list to redux
+const ListData = connect()(AutoloadedListData)
+
+ListData.propTypes = {
   /**
    * The name of the data in the list.
    *
@@ -125,20 +137,23 @@ AutoloadedListData.propTypes = {
    */
   card: T.func,
 
-  // calculated from redux store
-  loaded: T.bool,
-  invalidated: T.bool,
-  data: T.array.isRequired,
-  totalResults: T.number.isRequired,
-  filters: T.object,
-  sorting: T.object,
-  pagination: T.object,
-  selection: T.object,
-  fetchData: T.func
+  // The features to render for the ListData.
+  // NB. by default all features are enabled,
+  // so use this props to disable the ones you don't want.
+  filterable: T.bool,
+  sortable  : T.bool,
+  selectable: T.bool,
+  paginated : T.bool,
+  count     : T.bool
 }
 
-// connect list to redux
-const ListData = connect()(AutoloadedListData)
+ListData.defaultProps = {
+  filterable: true,
+  sortable  : true,
+  selectable: true,
+  paginated : true,
+  count     : true
+}
 
 export {
   ListData

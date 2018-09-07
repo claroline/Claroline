@@ -22,6 +22,7 @@
         flex-direction: row;
         align-items: center;
         background: @gray-lighter;
+        border: 1px solid transparent;
         padding: 5px;
 
         + .collection-item {
@@ -35,10 +36,14 @@
             margin-bottom: 0;
         }
 
-        .btn-link {
+        .btn-delete {
             margin-left: floor(@grid-gutter-width / 2);
-            padding: 4px;
+            align-self: flex-start;
         }
+    }
+
+    .btn-delete-all {
+        padding: 5px;
     }
 
     .btn-add {

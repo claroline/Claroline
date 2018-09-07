@@ -1,13 +1,9 @@
-import isEmpty from 'lodash/isEmpty'
-
 import {trans} from '#/main/core/translation'
-import {chain, array} from '#/main/core/validation'
+import {chain, array, lengthInRange} from '#/main/core/validation'
 import {validateProp} from '#/main/app/content/form/validator'
 
 import {CollectionGroup} from '#/main/app/data/collection/components/group'
 import {CollectionInput} from '#/main/app/data/collection/components/input'
-
-// TODO : implement min/max
 
 const dataType = {
   name: 'collection',
@@ -17,27 +13,17 @@ const dataType = {
     description: trans('collection_desc')
   },
 
-  validate: (value, options = {}) => {
-    return chain(value, options, [array, (value) => {
+  validate(value, options = {}) {
+    return chain(value, options, [array, lengthInRange, (value) => {
       if (value) {
-        const errors = {}
-
-        value.map((item, index) => {
-          // call correct type validator for all items
-          const error = validateProp({
-            type: options.type,
-            required: true,
-            options: options.options
-          })
-
-          if (error) {
-            errors[index] = error
-          }
-        })
-
-        if (!isEmpty(errors)) {
-          return errors
-        }
+        return Promise
+          .all(
+            value.map((item) => validateProp({
+              type: options.type,
+              required: true,
+              options: options.options
+            }, item))
+          )
       }
     }])
   },

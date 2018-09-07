@@ -113,37 +113,12 @@ class ListData extends Component {
     )
   }
 
-  /**
-   * Displays/Hides a data property in display modes that support it.
-   *
-   * @param {string} column - the name of the column to toggle
-   */
-  toggleColumn(column) {
-    // Display/Hide columns is only available for display modes that support it (aka tables)
-    if (listConst.DISPLAY_MODES[this.state.display.current].options.filterColumns) {
-      const newColumns = this.state.currentColumns.slice(0)
-
-      // checks if the column is displayed
-      const pos = newColumns.indexOf(column)
-      if (-1 === pos) {
-        // column is not displayed, display it
-        newColumns.push(column)
-      } else {
-        // column is displayed, hide it
-        newColumns.splice(pos, 1)
-      }
-
-      // updates displayed column list
-      this.setState({currentColumns: newColumns})
-    }
-  }
-
   render() {
     // enables and configures list tools
     let displayTool
     if (1 < this.state.display.available.length) {
       displayTool = Object.assign({}, this.state.display, {
-        onChange: this.toggleDisplay.bind(this)
+        change: this.toggleDisplay.bind(this)
       })
     }
 
@@ -155,7 +130,7 @@ class ListData extends Component {
         columnsTool = {
           current: this.state.currentColumns,
           available: getDisplayableProps(this.state.definition),
-          toggle: this.toggleColumn.bind(this)
+          change: (newColumns) => this.setState({currentColumns: newColumns})
         }
       }
     }
@@ -163,8 +138,7 @@ class ListData extends Component {
     let filtersTool
     if (this.props.filters) {
       filtersTool = Object.assign({}, this.props.filters, {
-        available: getFilterableProps(this.state.definition),
-        readOnly: this.props.readOnly
+        available: getFilterableProps(this.state.definition)
       })
     }
 
@@ -176,6 +150,10 @@ class ListData extends Component {
           columns={columnsTool}
           filters={filtersTool}
         />
+
+        {0 === this.props.totalResults &&
+          <ListEmpty hasFilters={this.props.filters && 0 < this.props.filters.current.length} />
+        }
 
         {0 !== this.props.totalResults &&
           React.createElement(listConst.DISPLAY_MODES[this.state.display.current].component, Object.assign({},
@@ -193,12 +171,12 @@ class ListData extends Component {
           ))
         }
 
-        {0 !== this.props.totalResults &&
-          <ListFooter totalResults={this.props.totalResults} pagination={this.props.pagination} />
-        }
-
-        {0 === this.props.totalResults &&
-          <ListEmpty hasFilters={this.props.filters && 0 < this.props.filters.current.length} />
+        {0 !== this.props.totalResults && (this.props.count || this.props.pagination) &&
+          <ListFooter
+            count={this.props.count}
+            totalResults={this.props.totalResults}
+            pagination={this.props.pagination}
+          />
         }
       </div>
     )
@@ -256,11 +234,6 @@ ListData.propTypes = {
   }),
 
   /**
-   * Is the filter in readonly mode.
-   */
-  readOnly: T.bool,
-
-  /**
    * Search filters configuration.
    * Providing this object automatically display the search box component.
    */
@@ -297,6 +270,11 @@ ListData.propTypes = {
   ),
 
   /**
+   * Displays the list total results.
+   */
+  count: T.bool,
+
+  /**
    * The card representation for the current data.
    * It's required to enable cards based display modes.
    *
@@ -306,6 +284,7 @@ ListData.propTypes = {
 }
 
 ListData.defaultProps = {
+  count: false,
   display: {
     available: Object.keys(listConst.DISPLAY_MODES),
     current: listConst.DEFAULT_DISPLAY_MODE

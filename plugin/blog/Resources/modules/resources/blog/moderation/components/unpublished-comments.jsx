@@ -43,6 +43,7 @@ const UnpublishedCommentsComponent = (props) =>
       available : [listConst.DISPLAY_LIST],
       current: listConst.DISPLAY_LIST
     }}
+    selectable={false}
   />
 
 UnpublishedCommentsComponent.propTypes = {

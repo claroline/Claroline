@@ -25,8 +25,6 @@ const reducer = {
       [INIT_DATALIST]: () => true,
       [POST_DELETE]: () => true
     })
-  },{
-    selectable: false
   }),
   post: makeReducer({}, {
     [POST_LOAD]: (state, action) => action.post,

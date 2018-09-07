@@ -14,5 +14,6 @@ const LINK_BUTTON = 'link'
 registry.add(LINK_BUTTON, LinkButton)
 
 export {
-  LINK_BUTTON
+  LINK_BUTTON,
+  LinkButton
 }

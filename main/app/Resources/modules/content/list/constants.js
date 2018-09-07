@@ -1,24 +1,9 @@
 import {trans} from '#/main/core/translation'
 
+import {constants as paginationConst} from '#/main/app/content/pagination/constants'
+
 import {DataTable} from '#/main/app/content/list/components/view/data-table'
 import {DataGrid} from '#/main/app/content/list/components/view/data-grid'
-
-/**
- * Default configuration for list.
- * By default, all implemented features are enabled.
- *
- * @type {object}
- */
-const DEFAULT_FEATURES = {
-  filterable: true,
-  sortable  : true,
-  selectable: true,
-  paginated : true,
-  count: true,
-
-  // TODO : remove me. Only used in Announcement sending confirm
-  readOnly  : false
-}
 
 const DISPLAY_TABLE    = 'table'
 const DISPLAY_TABLE_SM = 'table-sm'
@@ -95,13 +80,8 @@ const DISPLAY_MODES = {
   }
 }
 
-const AVAILABLE_PAGE_SIZES = [10, 20, 50, 100, -1] // -1 is for all
-const DEFAULT_PAGE_SIZE    = AVAILABLE_PAGE_SIZES[1]
-
-export const constants = {
-  AVAILABLE_PAGE_SIZES,
-  DEFAULT_PAGE_SIZE,
-  DEFAULT_FEATURES,
+// reexport pagination constants here for retro compatibility
+export const constants = Object.assign({}, paginationConst, {
   DISPLAY_MODES,
   DEFAULT_DISPLAY_MODE,
   DISPLAY_TABLE,
@@ -110,4 +90,4 @@ export const constants = {
   DISPLAY_TILES_SM,
   DISPLAY_LIST,
   DISPLAY_LIST_SM
-}
+})

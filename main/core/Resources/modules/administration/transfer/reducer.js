@@ -4,13 +4,10 @@ import {makeListReducer} from '#/main/app/content/list/store'
 import {reducer as logReducer} from '#/main/core/administration/transfer/log/reducer'
 
 const reducer = {
-  explanation: makeReducer({}, {}),
+  explanation: makeReducer({}),
   import: makeFormReducer('import'),
   export: makeFormReducer('export'),
-  history: makeListReducer('history', {}, {
-    invalidated: makeReducer(false, {
-    })
-  }),
+  history: makeListReducer('history'),
   log: logReducer
 }
 

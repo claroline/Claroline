@@ -6,7 +6,7 @@ import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 
 const reducer = combineReducers({
-  picker: makeListReducer('roles.picker', {}),
+  picker: makeListReducer('roles.picker'),
   workspacePicker: makeListReducer('roles.workspacePicker'),
   list: makeListReducer('roles.list', {}, {
     invalidated: makeReducer(false, {

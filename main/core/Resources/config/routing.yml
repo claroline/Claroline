@@ -88,7 +88,6 @@ claro_desktop_tool_properties:
 
 claro_workspace:
     resource: "@ClarolineCoreBundle/Controller/WorkspaceController.php"
-    prefix: workspaces
     type: annotation
 
 claro_workspace_tool_properties:

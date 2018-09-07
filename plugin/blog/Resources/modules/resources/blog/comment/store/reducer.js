@@ -63,8 +63,7 @@ const reducer = {
       [POST_LOAD]: () => true,
       [POST_RESET]: () => true
     })
-  }, {selectable: false}
-  )
+  })
 }
 
 export {

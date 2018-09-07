@@ -32,28 +32,19 @@ function mapStateToProps(state, ownProps) {
   }
 
   // grab data for optional features
-  newProps.filterable = listSelect.isFilterable(listState)
-  if (newProps.filterable) {
+  if (ownProps.filterable) {
     newProps.filters = listSelect.filters(listState)
   }
 
-  newProps.sortable = listSelect.isSortable(listState)
-
-  if (listState.readOnly) {
-    newProps.readOnly = listState.readOnly
-  }
-
-  if (newProps.sortable) {
+  if (ownProps.sortable) {
     newProps.sortBy = listSelect.sortBy(listState)
   }
 
-  newProps.selectable = listSelect.isSelectable(listState)
-  if (newProps.selectable) {
+  if (ownProps.selectable) {
     newProps.selected = listSelect.selected(listState)
   }
 
-  newProps.paginated = listSelect.isPaginated(listState)
-  if (newProps.paginated) {
+  if (ownProps.paginated) {
     newProps.pageSize    = listSelect.pageSize(listState)
     newProps.currentPage = listSelect.currentPage(listState)
   }
@@ -216,7 +207,9 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
   }
 
   // optional list features
-  if (stateProps.filterable) {
+  props.count = ownProps.count
+
+  if (ownProps.filterable) {
     props.filters = {
       current: stateProps.filters,
       addFilter: asyncDecorator(dispatchProps.addFilter),
@@ -224,14 +217,14 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     }
   }
 
-  if (stateProps.sortable) {
+  if (ownProps.sortable) {
     props.sorting = {
       current: stateProps.sortBy,
       updateSort: asyncDecorator(dispatchProps.updateSort)
     }
   }
 
-  if (stateProps.selectable) {
+  if (ownProps.selectable) {
     props.selection = {
       current: stateProps.selected,
       toggle: dispatchProps.toggleSelect,
@@ -239,7 +232,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     }
   }
 
-  if (stateProps.paginated) {
+  if (ownProps.paginated) {
     props.pagination = {
       pageSize: stateProps.pageSize,
       current: stateProps.currentPage,

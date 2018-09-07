@@ -14,5 +14,6 @@ const ASYNC_BUTTON = 'async'
 registry.add(ASYNC_BUTTON, AsyncButton)
 
 export {
-  ASYNC_BUTTON
+  ASYNC_BUTTON,
+  AsyncButton
 }

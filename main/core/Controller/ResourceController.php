@@ -22,6 +22,7 @@ use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -38,6 +39,8 @@ use Symfony\Component\Templating\EngineInterface;
  */
 class ResourceController
 {
+    use PermissionCheckerTrait;
+
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
@@ -245,7 +248,7 @@ class ResourceController
         }
 
         return new Response(
-            $this->templating->render("ClarolineCoreBundle:Resource:embed/{$view}.html.twig", [
+            $this->templating->render("ClarolineCoreBundle:resource:embed/{$view}.html.twig", [
                 'resource' => $this->manager->getResourceFromNode($resourceNode),
             ])
         );

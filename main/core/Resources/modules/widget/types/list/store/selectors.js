@@ -9,6 +9,11 @@ const display = createSelector(
   (parameters) => parameters.display || []
 )
 
+const count = createSelector(
+  [contentSelectors.parameters],
+  (parameters) => parameters.count || false
+)
+
 const availableDisplays = createSelector(
   [contentSelectors.parameters],
   (parameters) => parameters.availableDisplays || []
@@ -17,6 +22,30 @@ const availableDisplays = createSelector(
 const availableFilters = createSelector(
   [contentSelectors.parameters],
   (parameters) => parameters.availableFilters || []
+)
+
+const filters = createSelector(
+  [contentSelectors.parameters],
+  (parameters) => parameters.filters || []
+)
+
+const sorting = createSelector(
+  [contentSelectors.parameters],
+  (parameters) => {
+    if (parameters.sorting) {
+      const reverse = 0 === parameters.sorting.indexOf('-')
+
+      return {
+        property: reverse ? parameters.sorting.replace('-', '') : parameters.sorting,
+        direction: reverse ? -1 : 1
+      }
+    }
+
+    return {
+      property: null,
+      direction: 0
+    }
+  }
 )
 
 const availableSort = createSelector(
@@ -34,11 +63,32 @@ const availableColumns = createSelector(
   (parameters) => parameters.availableColumns || []
 )
 
+const paginated = createSelector(
+  [contentSelectors.parameters],
+  (parameters) => parameters.paginated || false
+)
+
+const pageSize = createSelector(
+  [contentSelectors.parameters],
+  (parameters) => parameters.pageSize || false
+)
+
+const availablePageSizes = createSelector(
+  [contentSelectors.parameters],
+  (parameters) => parameters.availablePageSizes || []
+)
+
 export const selectors = {
   STORE_NAME,
   display,
+  count,
+  paginated,
+  pageSize,
+  availablePageSizes,
   availableDisplays,
   availableFilters,
+  filters,
+  sorting,
   availableSort,
   displayedColumns,
   availableColumns

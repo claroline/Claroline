@@ -6,8 +6,8 @@ import omitBy from 'lodash/omitBy'
 
 import {DataFormSection, DataFormProperty} from '#/main/app/content/form/prop-types'
 
-function isFieldDisplayed(field, data) {
-  return typeof field.displayed === 'function' ? field.displayed(data) : field.displayed
+function isDisplayed(element, data) {
+  return typeof element.displayed === 'function' ? element.displayed(data) : element.displayed
 }
 
 function createFieldDefinition(field, data) {
@@ -19,7 +19,7 @@ function createFieldDefinition(field, data) {
       // adds default to fields
       .map(field => merge({}, DataFormProperty.defaultProps, field))
       // filters hidden fields
-      .filter(field => isFieldDisplayed(field, data))
+      .filter(field => isDisplayed(field, data))
   }
 
   return defaultedField
@@ -39,21 +39,21 @@ function createFormDefinition(sections, data) {
     .map(section => {
       // adds defaults to the section configuration
       const defaultedSection = merge({}, DataFormSection.defaultProps, section)
-      if (defaultedSection.displayed) {
+      if (isDisplayed(defaultedSection, data)) {
         // fields
         if (defaultedSection.fields && 0 !== defaultedSection.fields.length) {
           defaultedSection.fields = defaultedSection.fields
             // adds default to fields
             .map(field => createFieldDefinition(field, data))
             // filters hidden fields
-            .filter(field => isFieldDisplayed(field, data))
+            .filter(field => isDisplayed(field, data))
         }
 
         // advanced fields
         if (defaultedSection.advanced && defaultedSection.advanced.fields && 0 !== defaultedSection.advanced.fields.length) {
           defaultedSection.advanced.fields = defaultedSection.advanced.fields
             .map(field => createFieldDefinition(field, data))
-            .filter(field => isFieldDisplayed(field, data))
+            .filter(field => isDisplayed(field, data))
         }
 
         if (0 < defaultedSection.fields.length || (defaultedSection.advanced && 0 < defaultedSection.advanced.fields.length)) {
@@ -74,7 +74,7 @@ function createFormDefinition(sections, data) {
  * @param {object} newErrors - the new error object (removed errors are set to `undefined`)
  */
 function cleanErrors(errors, newErrors) {
-  return omitBy(mergeWith({}, errors, newErrors, (objV, srcV) => {
+  return omitBy(mergeWith(errors instanceof Array ? [] : {}, errors, newErrors, (objV, srcV) => {
     // recursive walk in sub objects
     return (isObject(srcV) ? cleanErrors(objV, srcV) : srcV) || null
   }), isEmpty)

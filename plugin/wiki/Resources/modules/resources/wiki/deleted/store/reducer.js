@@ -11,10 +11,16 @@ import {
   SECTION_DELETED
 } from '#/plugin/wiki/resources/wiki/player/store/actions'
 
-export const reducer = makeListReducer(selectors.STORE_NAME +'.deletedSections', {sortBy: { property: 'deletionDate', direction: -1 }}, {
+const reducer = makeListReducer(selectors.STORE_NAME +'.deletedSections', {
+  sortBy: { property: 'deletionDate', direction: -1 }
+}, {
   invalidated: makeReducer(false, {
     [SECTION_PERMANENTLY_REMOVED]: () => true,
     [SECTION_RESTORED]: () => true,
     [SECTION_DELETED]: () => true
   })
 })
+
+export {
+  reducer
+}

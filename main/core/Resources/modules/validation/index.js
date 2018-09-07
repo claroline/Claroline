@@ -180,7 +180,7 @@ function validateIf(condition, validator) {
  * Applies N validators to `value`.
  * The chain stops at the first failed validator.
  *
- * @param {mixed}  value      - the value to validate.
+ * @param {*}      value      - the value to validate.
  * @param {object} options    - the validation options.
  * @param {Array}  validators - the list of validators to apply.
  */

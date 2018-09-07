@@ -96,6 +96,7 @@ const UserCompare = props =>
             }}
             definition={GroupList.definition}
             card={GroupList.card}
+            selectable={false}
           />
         </Section>
 
@@ -112,6 +113,7 @@ const UserCompare = props =>
             }}
             definition={OrganizationList.definition}
             card={OrganizationList.card}
+            selectable={false}
           />
         </Section>
 
@@ -128,6 +130,7 @@ const UserCompare = props =>
             }}
             definition={RoleList.definition}
             card={RoleList.card}
+            selectable={false}
           />
         </Section>
       </Sections>

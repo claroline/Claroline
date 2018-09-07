@@ -51,7 +51,8 @@ function getPrimaryAction(item, actionGenerator) {
  */
 function getActions(items, actionsGenerator) {
   if (actionsGenerator) {
-    return actionsGenerator(items) // generates actions
+    // generates action
+    return actionsGenerator(items)
   }
 
   return []
@@ -111,26 +112,6 @@ function isRowSelected(row, selection) {
   return selection && -1 !== selection.indexOf(row.id)
 }
 
-
-/**
- * Counts the number of pages of the list.
- *
- * @param {number} totalResults
- * @param {number} pageSize
- *
- * @returns {number}
- */
-function countPages(totalResults, pageSize) {
-  if (-1 === pageSize) {
-    return 1
-  }
-
-  const rest = totalResults % pageSize
-  const nbPages = (totalResults - rest) / pageSize
-
-  return nbPages + (rest > 0 ? 1 : 0)
-}
-
 export {
   createListDefinition,
   getPropDefinition,
@@ -140,6 +121,5 @@ export {
   getDisplayedProps,
   getFilterableProps,
   getSortableProps,
-  isRowSelected,
-  countPages
+  isRowSelected
 }

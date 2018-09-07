@@ -5,7 +5,6 @@ import merge from 'lodash/merge'
 
 import {makeInstanceReducer, reduceReducers, combineReducers} from '#/main/app/store/reducer'
 
-import {constants} from '#/main/app/content/list/constants'
 import {
   LIST_FILTER_ADD,
   LIST_FILTER_REMOVE,
@@ -27,22 +26,25 @@ const defaultState = {
   data: [],
   totalResults: 0,
   filters: [],
-  readOnly: false,
   sortBy: {
     property: null,
     direction: 0
   },
   selected: [],
   page: 0,
-  pageSize: constants.DEFAULT_PAGE_SIZE
+  // fixme : this should be -1, otherwise it will break if paginated=false
+  // but if I change it know, it will make -1 the default for all list in app
+  pageSize: 20
 }
 
+/**
+ * Reducers list data invalidated state.
+ * A list is invalidated when its data need to be refreshed.
+ */
 const invalidatedReducer = makeInstanceReducer(defaultState.invalidated, {
   [LIST_DATA_INVALIDATE]: () => true,
   [LIST_DATA_LOAD]: () => false
 })
-
-const readOnlyReducer = makeInstanceReducer(defaultState.readOnly, {})
 
 const loadedReducer = makeInstanceReducer(defaultState.invalidated, {
   [LIST_DATA_LOAD]: () => true
@@ -231,16 +233,13 @@ const baseReducer = {
   sortBy: sortByReducer,
   selected: selectedReducer,
   page: pageReducer,
-  pageSize: pageSizeReducer,
-  readOnly: readOnlyReducer
+  pageSize: pageSizeReducer
 }
 
 /**
  * Creates reducers for lists.
- * It will register reducers for enabled features (eg. filtering, pagination)
  *
  * The `customReducers` param permits to pass reducers for specific list actions.
- * For now, `customReducers` can only have access to the `data` and `totalResults` stores.
  * `customReducers` are applied after the list ones.
  *
  * Example to add a custom reducer to `data`:
@@ -251,51 +250,28 @@ const baseReducer = {
  * @param {string} listName      - the name of the list.
  * @param {object} initialState  - the initial state of the list instance (useful to add default filters in autoloading lists).
  * @param {object} customReducer - an object containing custom reducer.
- * @param {object} options       - an options object to disable/enable list features (default: DEFAULT_FEATURES).
  *
  * @returns {function}
  */
-function makeListReducer(listName, initialState = {}, customReducer = {}, options = {}) {
-  const reducer = {}
+function makeListReducer(listName, initialState = {}, customReducer = {}) {
+  //const reducer = {}
 
   const listState = merge({}, defaultState, initialState)
-  const listOptions = merge({}, constants.DEFAULT_FEATURES, options)
 
-  // adds base list reducers
-  reducer.loaded = baseReducer.loaded(listName, listState.loaded)
+  // generates the list store by merging base reducers and app ones
+  const reducer = Object
+    .keys(baseReducer)
+    .reduce((finalReducer, current) => {
+      if (customReducer[current]) {
+        // apply base and custom reducer to the store key
+        finalReducer[current] = reduceReducers(baseReducer[current](listName, listState[current]), customReducer[current])
+      } else {
+        // we just need to add the standard reducer
+        finalReducer[current] = baseReducer[current](listName, listState[current])
+      }
 
-  reducer.invalidated = customReducer.invalidated ?
-    reduceReducers(baseReducer.invalidated(listName, listState.invalidated), customReducer.invalidated) : baseReducer.invalidated(listName, listState.invalidated)
-
-  reducer.data = customReducer.data ?
-    reduceReducers(baseReducer.data(listName, listState.data), customReducer.data) : baseReducer.data(listName, listState.data)
-
-  reducer.totalResults = customReducer.totalResults ?
-    reduceReducers(baseReducer.totalResults(listName, listState.totalResults), customReducer.totalResults) : baseReducer.totalResults(listName, listState.totalResults)
-
-  // adds reducers for optional features when enabled
-  if (listOptions.filterable) {
-    reducer.filters = customReducer.filters ?
-      reduceReducers(baseReducer.filters(listName, listState.filters), customReducer.filters) : baseReducer.filters(listName, listState.filters)
-  }
-
-  if (listOptions.sortable) {
-    reducer.sortBy = baseReducer.sortBy(listName, listState.sortBy)
-  }
-
-  if (listOptions.selectable) {
-    reducer.selected = customReducer.selected ?
-      reduceReducers(baseReducer.selected(listName, listState.selected), customReducer.selected) : baseReducer.selected(listName, listState.selected)
-  }
-
-  if (listOptions.readOnly) {
-    reducer.readOnly = baseReducer.readOnly(listName, listOptions.readOnly)
-  }
-
-  if (listOptions.paginated) {
-    reducer.page = baseReducer.page(listName, listState.page)
-    reducer.pageSize = baseReducer.pageSize(listName, listState.pageSize)
-  }
+      return finalReducer
+    }, {})
 
   // get custom keys
   const rest = difference(Object.keys(customReducer), Object.keys(baseReducer))

@@ -25,8 +25,8 @@ const reducer = combineReducers({
       return newState
     }
   }),
-  results: makeListReducer(selectors.STORE_NAME+'.results', {}),
-  scormForm: makeFormReducer(selectors.STORE_NAME+'.scormForm', {})
+  results: makeListReducer(selectors.STORE_NAME+'.results'),
+  scormForm: makeFormReducer(selectors.STORE_NAME+'.scormForm')
 })
 
 export {

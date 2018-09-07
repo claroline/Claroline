@@ -105,7 +105,6 @@ const AnnounceSend = connect(
       dispatch(listActions.addFilter(selectors.STORE_NAME+'.selected.list', 'roles', announce.roles))
       dispatch(
         modalActions.showModal(MODAL_ANNOUNCEMENT_SENDING_CONFIRM, {
-          filters: {roles: announce.roles},
           aggregateId: aggregateId,
           announcementId: announce.id,
           handleConfirm: () => {

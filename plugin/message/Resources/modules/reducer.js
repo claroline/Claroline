@@ -7,10 +7,10 @@ import {MESSAGE_LOAD, IS_REPLY, MAIL_NOTIFICATION_UPDATE} from '#/plugin/message
 const authenticatedUser = currentUser()
 
 const reducer = {
-  receivedMessages: makeListReducer('receivedMessages', {}),
-  sentMessages: makeListReducer('sentMessages', {}),
-  deletedMessages: makeListReducer('deletedMessages', {}),
-  messagesParameters: makeFormReducer('messagesParameters', {}),
+  receivedMessages: makeListReducer('receivedMessages'),
+  sentMessages: makeListReducer('sentMessages'),
+  deletedMessages: makeListReducer('deletedMessages'),
+  messagesParameters: makeFormReducer('messagesParameters'),
   mailNotified: makeReducer(authenticatedUser.meta.mailNotified, {
     [MAIL_NOTIFICATION_UPDATE]: (state, action) => action.notified
   }),

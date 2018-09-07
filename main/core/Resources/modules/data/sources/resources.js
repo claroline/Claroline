@@ -4,6 +4,8 @@ import {ResourceCard} from '#/main/core/resource/data/components/resource-card'
 import {trans} from '#/main/core/translation'
 import {URL_BUTTON} from '#/main/app/buttons'
 
+import {getTypes} from '#/main/core/resource/utils'
+
 export default {
   name: 'resources',
   icon: 'fa fa-fw fa-folder',
@@ -23,6 +25,7 @@ export default {
         primary: true
       }, {
         name: 'meta.published',
+        alias: 'published',
         type: 'boolean',
         label: trans('published'),
         displayed: true
@@ -41,7 +44,11 @@ export default {
       }, {
         name: 'resourceType',
         label: trans('type'),
-        type: 'string',
+        type: 'choice',
+        options: {
+          choices: getTypes().reduce((resourceTypes, current) => Object.assign(resourceTypes, {[current.name]: trans(current.name, {}, 'resource')}), {}),
+          condensed: true
+        },
         displayable: false,
         filterable: true
       }

@@ -14,5 +14,6 @@ const MENU_BUTTON = 'menu'
 registry.add(MENU_BUTTON, MenuButton)
 
 export {
-  MENU_BUTTON
+  MENU_BUTTON,
+  MenuButton
 }

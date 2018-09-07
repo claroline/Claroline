@@ -40,7 +40,7 @@ const DataFormSection = {
     icon: T.string,
     title: T.string.isRequired,
     primary: T.bool,
-    displayed: T.bool,
+    displayed: T.oneOfType([T.bool, T.func]),
     defaultOpened: T.bool,
     fields: T.arrayOf(T.shape(
       merge({}, DataFormProperty.propTypes, {

@@ -35,7 +35,7 @@ const BooleanFilter = (props) => {
 }
 
 BooleanFilter.propTypes = {
-  search: T.string.isRequired,
+  search: T.oneOfType([T.string, T.bool]),
   isValid: T.bool.isRequired,
   updateSearch: T.func.isRequired
 }

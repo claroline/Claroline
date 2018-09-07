@@ -8,6 +8,7 @@ const MenuOverlay = props =>
     pullRight={'right' === props.align}
     dropup={'top' === props.position}
     className={props.className}
+    disabled={props.disabled}
   >
     {props.children}
   </Dropdown>
@@ -15,12 +16,14 @@ const MenuOverlay = props =>
 MenuOverlay.propTypes = {
   id: T.string.isRequired,
   className: T.string,
+  disabled: T.bool,
   position: T.oneOf(['top', 'bottom']),
   align: T.oneOf(['left', 'right']),
   children: T.node.isRequired
 }
 
 MenuOverlay.defaultProps = {
+  disabled: false,
   position: 'bottom',
   align: 'left'
 }

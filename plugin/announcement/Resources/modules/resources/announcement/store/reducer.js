@@ -92,17 +92,13 @@ const reducer = combineReducers({
   announcementDetail: announcementDetailReducer,
 
   selected: combineReducers({
-    list: makeListReducer(selectors.STORE_NAME+'.selected.list', {}, {
+    list: makeListReducer(selectors.STORE_NAME+'.selected.list', {
+      pageSize: -1
+    }, {
       invalidated: makeReducer(false, {
         ['MODAL_HIDE']: () => true, // todo : find better
-        [LIST_FILTER_ADD+'/selected.list']: () => true
+        [LIST_FILTER_ADD+'/selected.list']: () => true // todo : find better
       })
-    }, {
-      selectable: false,
-      filterable: true,
-      readOnly: true,
-      paginated: false,
-      sortable: false
     })
   }),
   workspaceRoles: makeReducer({}, {

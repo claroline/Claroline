@@ -100,6 +100,7 @@ const CommentsComponent = props =>
               available : [listConst.DISPLAY_LIST],
               current: listConst.DISPLAY_LIST
             }}
+            selectable={false}
           />
           {!isEmpty(props.comments) &&
             <Button

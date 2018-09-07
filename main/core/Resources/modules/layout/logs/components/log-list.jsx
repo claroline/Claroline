@@ -101,7 +101,7 @@ class LogList extends Component {
             available : [listConst.DISPLAY_TABLE, listConst.DISPLAY_TABLE_SM],
             current: listConst.DISPLAY_TABLE
           }}
-        
+          selectable={false}
         />
       </div>
     )

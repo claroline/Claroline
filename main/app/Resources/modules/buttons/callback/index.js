@@ -14,5 +14,6 @@ const CALLBACK_BUTTON = 'callback'
 registry.add(CALLBACK_BUTTON, CallbackButton)
 
 export {
-  CALLBACK_BUTTON
+  CALLBACK_BUTTON,
+  CallbackButton
 }
