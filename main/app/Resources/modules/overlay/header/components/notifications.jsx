@@ -4,12 +4,19 @@ import classes from 'classnames'
 
 import {trans} from '#/main/core/translation'
 import {Button} from '#/main/app/action/components/button'
-import {MENU_BUTTON} from '#/main/app/buttons'
+import {URL_BUTTON, MENU_BUTTON} from '#/main/app/buttons'
 
 const NotificationsMenu = () =>
-  <div className="app-notifications dropdown-menu dropdown-menu-right">
-
-  </div>
+  <ul className="app-notifications dropdown-menu dropdown-menu-right">
+    <li role="presentation">
+      <Button
+        type={URL_BUTTON}
+        icon="fa fa-fw fa-bell"
+        label={trans('show-notifications', {}, 'actions')}
+        target={['icap_notification_view']}
+      />
+    </li>
+  </ul>
 
 NotificationsMenu.propTypes = {
 
@@ -21,7 +28,7 @@ const HeaderNotifications = props =>
     type={MENU_BUTTON}
     className="app-header-item app-header-btn"
     icon={classes('fa fa-fw', {
-      'fa-bell': 0 !== props.count,
+      'fa-mail-bulk': 0 !== props.count,
       'fa-bell-slash': 0 === props.count
     })}
     label={trans('notifications')}

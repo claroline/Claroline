@@ -23,7 +23,8 @@ class NotificationController extends Controller
      *        "page" = 1,
      *        "markViewed" = 0
      *    },
-     *    name="icap_notification_view"
+     *    name="icap_notification_view",
+     *    options={"expose"=true}
      * )
      * @Template()
      * @ParamConverter("user", options={"authenticatedUser" = true})
@@ -46,7 +47,7 @@ class NotificationController extends Controller
             );
         } else {
             $category = $request->get('category');
-            if ($markViewed === true) {
+            if (true === $markViewed) {
                 $notificationManager->markAllNotificationsAsViewed($user->getId());
             }
             $result = $notificationManager->getPaginatedNotifications($user, $page, $category);

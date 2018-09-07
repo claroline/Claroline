@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
+import {User as UserTypes} from '#/main/core/user/prop-types'
 
 import {HeaderBrand} from '#/main/app/overlay/header/components/brand'
 import {HeaderLocale} from '#/main/app/overlay/header/components/locale'
@@ -38,6 +39,7 @@ const Header = props =>
       {...props.workspaces}
       label={trans('history')}
       currentLocation={props.currentLocation}
+      currentUser={props.currentUser}
     />
 
     {0 !== props.administration.length &&
@@ -49,9 +51,11 @@ const Header = props =>
       />
     }
 
-    <HeaderNotifications
-      count={props.count}
-    />
+    {'Invité' !== props.currentUser.name &&
+      <HeaderNotifications
+        count={props.count}
+      />
+    }
 
     <HeaderUser
       currentUser={props.currentUser}
@@ -88,9 +92,9 @@ Header.propTypes = {
   /**
    * The currently logged user.
    */
-  currentUser: T.shape({
-
-  }).isRequired,
+  currentUser: T.shape(
+    UserTypes.propTypes
+  ).isRequired,
   count: T.number,
   authenticated: T.bool.isRequired,
   currentLocation: T.string.isRequired,

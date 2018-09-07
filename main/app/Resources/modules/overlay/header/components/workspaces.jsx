@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
+import {User as UserTypes} from '#/main/core/user/prop-types'
 import {url} from '#/main/app/api'
 import {Button} from '#/main/app/action/components/button'
 import {URL_BUTTON} from '#/main/app/buttons'
@@ -29,11 +30,13 @@ const WorkspacesMenu = props =>
       />
     </li>
     }
+    {0 !== props.history.length &&
     <li role="presentation" className="divider"/>
-    {props.history &&
+    }
+    {0 !== props.history.length &&
       <li role="presentation" className="dropdown-header">{trans('history')}</li>
     }
-    {props.history &&
+    {0 !== props.history.length &&
       props.history.map((ws) =>
         <li role="presentation" key ={ws.id}>
           <Button
@@ -45,11 +48,11 @@ const WorkspacesMenu = props =>
         </li>
       )
     }
-    {props.history &&
+    {0 !== props.history.length &&
       <li role="presentation" className="divider"/>
     }
-
     {/* user workspaces */}
+    {'Invité' !== props.currentUser.name &&
     <li role="presentation">
       <Button
         type={URL_BUTTON}
@@ -58,16 +61,18 @@ const WorkspacesMenu = props =>
         target={['claro_workspace_by_user']}
       />
     </li>
-    <li role="presentation">
-      {/* public workspaces */}
-      <Button
-        type={URL_BUTTON}
-        icon="fa fa-fw fa-book"
-        label={trans('find_workspaces')}
-        target={['claro_workspace_list']}
-      />
-    </li>
-
+    }
+    {/* public workspaces */}
+    {'Invité' !== props.currentUser.name &&
+      <li role="presentation">
+        <Button
+          type={URL_BUTTON}
+          icon="fa fa-fw fa-book"
+          label={trans('find_workspaces')}
+          target={['claro_workspace_list']}
+        />
+      </li>
+    }
     {/* create new workspace */}
     {props.creatable &&
     <li role="presentation" className="divider"/>
@@ -97,6 +102,7 @@ const HeaderWorkspaces = props =>
         history={props.history}
         creatable={props.creatable}
         currentLocation={props.currentLocation}
+        currentUser={props.currentUser}
       />
     }
   >
@@ -118,7 +124,10 @@ HeaderWorkspaces.propTypes = {
 
   })),
   currentLocation: T.string.isRequired,
-  creatable: T.bool.isRequired
+  creatable: T.bool.isRequired,
+  currentUser: T.shape(
+    UserTypes.propTypes
+  ).isRequired
 }
 
 HeaderWorkspaces.defaultProps = {
