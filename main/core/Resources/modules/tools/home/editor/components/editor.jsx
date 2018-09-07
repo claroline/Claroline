@@ -29,195 +29,202 @@ import {selectors as editorSelectors} from '#/main/core/tools/home/editor/select
 import {actions as editorActions} from '#/main/core/tools/home/editor/actions'
 import {Tabs} from '#/main/core/tools/home/components/tabs'
 
-const EditorComponent = props =>
-  <PageContainer>
-    <Tabs
-      prefix="/edit"
-      tabs={props.tabs}
-      create={() => props.createTab(props.context, props.administration, props.tabs.length, props.history.push)}
-      context={props.context}
-      editing={true}
-    />
+const EditorComponent = props => {
+  let readOnly = props.currentTab.type === 'administration' &&
+    props.currentTab.locked &&
+    props.context.type === 'desktop' &&
+    !props.administration
 
-    <PageHeader
-      alignTitle={true === props.currentTab.centerTitle ? 'center' : 'left'}
-      title={props.currentTab ? props.currentTab.longTitle : ('desktop' === props.context.type ? trans('desktop') : props.context.data.name)}
-      poster={props.currentTab.poster ? props.currentTab.poster.url: undefined}
-    >
-      <PageActions>
-        {1 < props.tabs.length &&
+  return (
+    <PageContainer>
+      <Tabs
+        prefix="/edit"
+        tabs={props.tabs}
+        create={() => props.createTab(props.context, props.administration, props.tabs.length, props.history.push)}
+        context={props.context}
+        editing={true}
+      />
+
+      <PageHeader
+        alignTitle={true === props.currentTab.centerTitle ? 'center' : 'left'}
+        title={props.currentTab ? props.currentTab.longTitle : ('desktop' === props.context.type ? trans('desktop') : props.context.data.name)}
+        poster={props.currentTab.poster ? props.currentTab.poster.url: undefined}
+      >
+        <PageActions>
+          {1 < props.tabs.length &&
+            <PageGroupActions>
+              <PageAction
+                type={CALLBACK_BUTTON}
+                label={trans('delete')}
+                icon="fa fa-fw fa-trash-o"
+                dangerous={true}
+                confirm={{
+                  title: trans('home_tab_delete_confirm_title'),
+                  message: trans('home_tab_delete_confirm_message'),
+                  subtitle: props.currentTab.title
+                }}
+                disabled={readOnly}
+                callback={() => props.deleteTab(props.tabs, props.currentTab, props.history.push)}
+              />
+            </PageGroupActions>
+          }
+
           <PageGroupActions>
             <PageAction
-              type={CALLBACK_BUTTON}
-              label={trans('delete')}
-              icon="fa fa-fw fa-trash-o"
-              dangerous={true}
-              confirm={{
-                title: trans('home_tab_delete_confirm_title'),
-                message: trans('home_tab_delete_confirm_message')
-              }}
-              disabled={props.currentTab.type === 'administration' &&
-              props.currentTab.locked &&
-              props.context.type === 'desktop' &&
-              !props.administration}
-              callback={() => props.deleteTab(props.tabs, props.currentTab, props.history.push)}
+              type={LINK_BUTTON}
+              label={trans('configure', {}, 'actions')}
+              icon="fa fa-fw fa-cog"
+              target="/edit"
+              disabled={true}
+              primary={true}
             />
           </PageGroupActions>
-        }
+        </PageActions>
+      </PageHeader>
 
-        <PageGroupActions>
-          <PageAction
-            type={LINK_BUTTON}
-            label={trans('configure', {}, 'actions')}
-            icon="fa fa-fw fa-cog"
-            target="/edit"
-            disabled={true}
-            primary={true}
-          />
-        </PageGroupActions>
-      </PageActions>
-    </PageHeader>
-
-    <PageContent>
-      <FormData
-        name="editor"
-        dataPart={`[${props.currentTabIndex}]`}
-        buttons={true}
-        target={props.administration ? ['apiv2_home_admin', {
-          context: props.context.type,
-          contextId: props.context.data ? props.context.data.uuid : currentUser().id
-        }]
-          :
-          ['apiv2_home_update', {
+      <PageContent>
+        <FormData
+          name="editor"
+          dataPart={`[${props.currentTabIndex}]`}
+          buttons={true}
+          target={props.administration ? ['apiv2_home_admin', {
             context: props.context.type,
             contextId: props.context.data ? props.context.data.uuid : currentUser().id
-          }]}
-        cancel={{
-          type: LINK_BUTTON,
-          target: `/tab/${props.currentTab.id}`,
-          exact: true
-        }}
-        disabled={props.currentTab.type === 'administration' &&
-          props.currentTab.locked &&
-          props.context.type === 'desktop' &&
-          !props.administration}
-        sections={[
-          {
-            icon: 'fa fa-fw fa-plus',
-            title: trans('general'),
-            primary: true,
-            fields: [
-              {
-                name: 'longTitle',
-                type: 'string',
-                label: trans('title'),
-                required: true,
-                onChange: (title) => props.updateTitle(props.currentTabIndex, 'title', title.substring(0, 20))
-              }, {
-                name: 'locked',
-                type: 'boolean',
-                label: trans('publish_tab', {}, 'widget')
-              }
-            ]
-          }, {
-            icon: 'fa fa-fw fa-desktop',
-            title: trans('display_parameters'),
-            fields: [
-              {
-                name: 'centerTitle',
-                type: 'boolean',
-                label: trans('center_title')
-              }, {
-                name: 'position',
-                type: 'number',
-                label: trans('tab_position'),
-                options : {
-                  min : 1,
-                  max : props.tabs.length + 1
-                },
-                required: true,
-                onChange: (newPosition) => props.moveTab(props.tabs, props.currentTab, newPosition)
-              }, {
-                name: 'title',
-                type: 'string',
-                label: trans('menu_title'),
-                help: trans('menu_title_help'),
-                options: {
-                  maxLength: 20
-                },
-                onChange: (value) => {
-                  if (isEmpty(value) && 0 === props.currentTab.icon.length) {
-                    props.setErrors({
-                      [props.currentTabIndex]: {title: 'Ce champ ne peux pas être vide si l\'onglet n\'a pas d\'icône'}
-                    })
-                  }
+          }]
+            :
+            ['apiv2_home_update', {
+              context: props.context.type,
+              contextId: props.context.data ? props.context.data.uuid : currentUser().id
+            }]}
+          cancel={{
+            type: LINK_BUTTON,
+            target: `/tab/${props.currentTab.id}`,
+            exact: true
+          }}
+          sections={[
+            {
+              icon: 'fa fa-fw fa-plus',
+              title: trans('general'),
+              primary: true,
+              fields: [
+                {
+                  name: 'longTitle',
+                  type: 'string',
+                  label: trans('title'),
+                  disabled: readOnly,
+                  required: true,
+                  onChange: (title) => props.updateTitle(props.currentTabIndex, 'title', title.substring(0, 20))
+                }, {
+                  name: 'locked',
+                  type: 'boolean',
+                  disabled: readOnly,
+                  label: trans('publish_tab', {}, 'widget')
                 }
-              }, {
-                name: 'icon',
-                type: 'string',
-                label: trans('icon'),
-                help: trans('icon_tab_help'),
-                onChange: (icon) => {
-                  if (0 === icon.length && 0 === props.currentTab.title.length) {
-                    props.setErrors({
-                      [props.currentTabIndex]: {icon: 'Ce champ ne peux pas être vide si l\'onglet n\'a pas de titre.'}
-                    })
-                  }
-                }
-              }, {
-                name: 'poster',
-                label: trans('poster'),
-                type: 'file',
-                options: {
-                  ratio: '3:1'
-                }
-              }
-            ]
-          }, {
-            icon: 'fa fa-fw fa-key',
-            title: trans('access_restrictions'),
-            displayed: props.context.type === 'workspace' || props.administration,
-            fields: [
-              {
-                name: 'restrictions',
-                type: 'boolean',
-                label: trans('restrictions_by_roles', {}, 'widget'),
-                linked: [
-                  {
-                    name: 'roles',
-                    label: trans('role'),
-                    displayed: props.currentTab.restrictions,
-                    type: 'choice',
-                    options:{
-                      inline: false,
-                      multiple : true,
-                      choices: props.context.type === 'workspace' || props.administration ?
-                        props.context.data.roles.reduce((acc, role) => {
-                          acc[role.id] = trans(role.translationKey)
-                          return acc
-                        }, {})
-                        : ''
+              ]
+            }, {
+              icon: 'fa fa-fw fa-desktop',
+              title: trans('display_parameters'),
+              fields: [
+                {
+                  name: 'centerTitle',
+                  type: 'boolean',
+                  disabled: readOnly,
+                  label: trans('center_title')
+                }, {
+                  name: 'position',
+                  type: 'number',
+                  label: trans('tab_position'),
+                  disabled: readOnly,
+                  options : {
+                    min : 1,
+                    max : props.tabs.length + 1
+                  },
+                  required: true,
+                  onChange: (newPosition) => props.moveTab(props.tabs, props.currentTab, newPosition)
+                }, {
+                  name: 'title',
+                  type: 'string',
+                  disabled: readOnly,
+                  label: trans('menu_title'),
+                  help: trans('menu_title_help'),
+                  options: {
+                    maxLength: 20
+                  },
+                  onChange: (value) => {
+                    if (isEmpty(value) && 0 === props.currentTab.icon.length) {
+                      props.setErrors({
+                        [props.currentTabIndex]: {title: 'Ce champ ne peux pas être vide si l\'onglet n\'a pas d\'icône'}
+                      })
                     }
                   }
-                ]
-              }
-            ]
+                }, {
+                  name: 'icon',
+                  type: 'string',
+                  disabled: readOnly,
+                  label: trans('icon'),
+                  help: trans('icon_tab_help'),
+                  onChange: (icon) => {
+                    if (0 === icon.length && 0 === props.currentTab.title.length) {
+                      props.setErrors({
+                        [props.currentTabIndex]: {icon: 'Ce champ ne peux pas être vide si l\'onglet n\'a pas de titre.'}
+                      })
+                    }
+                  }
+                }, {
+                  name: 'poster',
+                  label: trans('poster'),
+                  disabled: readOnly,
+                  type: 'file',
+                  options: {
+                    ratio: '3:1'
+                  }
+                }
+              ]
+            }, {
+              icon: 'fa fa-fw fa-key',
+              title: trans('access_restrictions'),
+              displayed: props.context.type === 'workspace' || props.administration,
+              fields: [
+                {
+                  name: 'restrictions',
+                  type: 'boolean',
+                  label: trans('restrictions_by_roles', {}, 'widget'),
+                  linked: [
+                    {
+                      name: 'roles',
+                      label: trans('role'),
+                      displayed: props.currentTab.restrictions,
+                      type: 'choice',
+                      options:{
+                        inline: false,
+                        multiple : true,
+                        choices: props.context.type === 'workspace' || props.administration ?
+                          props.context.data.roles.reduce((acc, role) => {
+                            acc[role.id] = trans(role.translationKey)
+                            return acc
+                          }, {})
+                          : ''
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]}
+        >
+          {!readOnly &&
+            <WidgetGridEditor
+              context={props.context}
+              widgets={props.widgets}
+              update={(widgets) => props.updateWidgets(props.currentTabIndex, widgets)}
+            />
           }
-        ]}
-      >
-        {!(props.currentTab.type === 'administration' &&
-          props.currentTab.locked &&
-          props.context.type === 'desktop' &&
-          !props.administration) &&
-          <WidgetGridEditor
-            context={props.context}
-            widgets={props.widgets}
-            update={(widgets) => props.updateWidgets(props.currentTabIndex, widgets)}
-          />
-        }
-      </FormData>
-    </PageContent>
-  </PageContainer>
+        </FormData>
+      </PageContent>
+    </PageContainer>
+
+  )
+}
 
 
 EditorComponent.propTypes = {

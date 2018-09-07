@@ -191,6 +191,9 @@ class HomeTabSerializer
 
         foreach ($containers as $container) {
             if (!in_array($container->getUuid(), $containerIds)) {
+                foreach ($container->getWidgetContainerConfigs() as $config) {
+                    $this->om->remove($config);
+                }
                 $this->om->remove($container);
             }
         }
