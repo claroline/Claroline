@@ -84,6 +84,8 @@ class Updater120000 extends Updater
             FROM claro_forum_category category
             JOIN claro_forum forum on category.forum_id = forum.id
             JOIN claro_resource_node node on forum.resourceNode_id = node.id
+            LEFT JOIN claro_tagbundle_tag tag on tag.tag_name = category.name
+            WHERE tag.id IS NULL
         ';
 
         $this->executeSql($sql, true);
