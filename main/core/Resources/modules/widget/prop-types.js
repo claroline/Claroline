@@ -54,6 +54,7 @@ const WidgetContainer = {
   propTypes: {
     id: T.string.isRequired,
     name: T.string,
+    alignName:T.oneOf(['left', 'center', 'right']),
     visible : T.bool.isRequired,
     display: T.shape({
       layout: T.arrayOf(

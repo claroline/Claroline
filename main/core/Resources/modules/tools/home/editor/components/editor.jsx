@@ -136,7 +136,7 @@ const EditorComponent = props => {
                   label: trans('tab_position'),
                   disabled: readOnly,
                   options : {
-                    min : 1,
+                    min : 0,
                     max : props.tabs.length + 1
                   },
                   required: true,

@@ -7,10 +7,6 @@ const editing = (state) => state.editing
 const context = (state) => state.context
 const tabs = (state) => state.tabs
 
-const visibleTabs = createSelector(
-  [tabs],
-  (tabs) => tabs.filter(tab => tab.locked === true)
-)
 const currentTab = createSelector(
   [tabs, currentTabId],
   (tabs, currentTabId) => tabs.find(tab => currentTabId === tab.id)
@@ -21,9 +17,13 @@ const widgets = createSelector(
   (currentTab) => currentTab.widgets
 )
 
+const sortedTabs = createSelector(
+  [tabs],
+  (tabs) => tabs.sort((a,b) => a.position - b.position)
+)
 
 export const selectors = {
-  visibleTabs,
+  sortedTabs,
   currentTab,
   currentTabId,
   editable,

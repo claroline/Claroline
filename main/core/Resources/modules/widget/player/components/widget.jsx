@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import sum from 'lodash/sum'
 import times from 'lodash/times'
+import classes from 'classnames'
 
 import {WidgetContent} from '#/main/core/widget/content/components/content'
 import {
@@ -40,7 +41,15 @@ WidgetCol.propTypes = {
 const Widget = props =>
   <section className="widget" style={computeStyles(props.widget)}>
     {props.widget.name &&
-      <h2 className="h-first widget-title" style={computeTitleStyles(props.widget)}>{props.widget.name}</h2>
+      <h2
+        className={classes('h-first widget-title', {
+          'left-widget-title': 'left' === props.widget.alignName,
+          'center-widget-title': 'center' === props.widget.alignName,
+          'right-widget-title': 'right' === props.widget.alignName
+        })}
+        style={computeTitleStyles(props.widget)}>
+        {props.widget.name}
+      </h2>
     }
     <div className="row">
       {times(props.widget.display.layout.length, col =>

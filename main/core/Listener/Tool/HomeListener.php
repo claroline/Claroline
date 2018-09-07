@@ -85,6 +85,12 @@ class HomeListener
           'Claroline\CoreBundle\Entity\Tab\HomeTab',
           ['filters' => ['user' => $currentUser->getUuid()]]
         );
+        $orderedTabs = $tabs['data'];
+
+        foreach ($orderedTabs as $position => $tab) {
+            $orderedTabs[$position + 1] = $tab;
+            $orderedTabs[$position + 1]['position'] = $position + 1;
+        }
 
         $content = $this->templating->render(
             'ClarolineCoreBundle:tool:home.html.twig', [

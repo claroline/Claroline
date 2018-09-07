@@ -27,6 +27,15 @@ class WidgetContainerConfig
     private $name;
 
     /**
+     * Widget name align (left, center, right).
+     *
+     * @ORM\Column()
+     *
+     * @var string
+     */
+    private $alignName = 'left';
+
+    /**
      * @ORM\Column(type="boolean", name="is_visible")
      */
     protected $visible = true;
@@ -117,6 +126,26 @@ class WidgetContainerConfig
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * Get name align.
+     *
+     * @return string
+     */
+    public function getAlignName()
+    {
+        return $this->alignName;
+    }
+
+    /**
+     * Set name align.
+     *
+     * @param string $alignName
+     */
+    public function setAlignName($alignName)
+    {
+        $this->alignName = $alignName;
     }
 
     /**

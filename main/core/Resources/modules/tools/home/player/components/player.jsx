@@ -64,7 +64,7 @@ const Player = connect(
   (state) => ({
     context: selectors.context(state),
     editable: selectors.editable(state),
-    tabs: selectors.tabs(state),
+    tabs: selectors.sortedTabs(state),
     currentTab: selectors.currentTab(state),
     widgets: selectors.widgets(state)
   })

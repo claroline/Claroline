@@ -43,8 +43,21 @@ const WidgetForm = props =>
             name: 'name',
             type: 'string',
             label: trans('name')
-          },
-          {
+          },{
+            name: 'alignName',
+            label: trans('title_align'),
+            type: 'choice',
+            required: true,
+            options: {
+              noEmpty: true,
+              condensed: true,
+              choices: {
+                left: trans('text_left_align'),
+                center: trans('center'),
+                right: trans('text_right_align')
+              }
+            }
+          }, {
             name: 'visible',
             type: 'boolean',
             label: trans('publish_section', {}, 'widget')
