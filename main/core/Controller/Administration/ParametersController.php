@@ -102,7 +102,7 @@ class ParametersController extends Controller
      *     "themeManager"       = @DI\Inject("claroline.manager.theme_manager"),
      *     "pluginManager"      = @DI\Inject("claroline.manager.plugin_manager"),
      *     "session"            = @DI\Inject("session"),
-     *     "iconSetManager"        = @DI\Inject("claroline.manager.icon_set_manager")
+     *     "iconSetManager"     = @DI\Inject("claroline.manager.icon_set_manager")
      * })
      */
     public function __construct(

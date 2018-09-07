@@ -14,6 +14,7 @@ namespace Claroline\AppBundle\Logger;
 use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Symfony\Component\Filesystem\Filesystem;
 
 class JsonLogger implements LoggerInterface
 {
@@ -28,7 +29,8 @@ class JsonLogger implements LoggerInterface
         $this->cache = null;
 
         if (!file_exists($file)) {
-            touch($file);
+            $fs = new FileSystem();
+            $fs->touch($file);
         }
     }
 

@@ -9,6 +9,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -87,6 +88,9 @@ class TransferProvider
         if (!$logFile) {
             $logFile = uniqid();
         }
+
+        $fs = new FileSystem();
+        $fs->mkDir($this->logDir);
 
         $logFile = $this->logDir.'/'.$logFile;
         $jsonLogger = new JsonLogger($logFile.'.json');

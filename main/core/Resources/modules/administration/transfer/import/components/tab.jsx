@@ -162,7 +162,10 @@ const ConnectedExplain = withRouter(connect(
   }),
   dispatch =>({
     updateProp: (prop, value, form, entity) => dispatch(actions.updateProp(prop, value, form, entity)),
-    resetLog: () => dispatch(logActions.reset())
+    resetLog: () => dispatch(logActions.reset()),
+    loadLog(filename) {
+      dispatch(logActions.load(filename))
+    }
   })
 )(RoutedExplain))
 
@@ -186,9 +189,11 @@ const Import = props =>
 
 const ConnectedImport = connect(
   state => ({explanation: select.explanation(state)}),
-  dispatch =>({openForm(params) {
-    dispatch(actions.open('import', params))
-  }})
+  dispatch =>({
+    openForm(params) {
+      dispatch(actions.open('import', params))
+    }
+  })
 )(Import)
 
 export {

@@ -115,6 +115,13 @@ class HomeListener
           ['filters' => ['workspace' => $workspace->getUuid()]]
         );
 
+        $orderedTabs = $tabs['data'];
+
+        foreach ($orderedTabs as $position => $tab) {
+            $orderedTabs[$position + 1] = $tab;
+            $orderedTabs[$position + 1]['position'] = $position + 1;
+        }
+
         $content = $this->templating->render(
             'ClarolineCoreBundle:tool:home.html.twig', [
                 'workspace' => $workspace,
@@ -123,7 +130,7 @@ class HomeListener
                     'type' => Widget::CONTEXT_WORKSPACE,
                     'data' => $this->serializer->serialize($workspace),
                 ],
-                'tabs' => $tabs['data'],
+                'tabs' => $orderedTabs,
             ]
         );
 
