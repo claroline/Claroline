@@ -86,7 +86,7 @@ class BadgeListener
     }
 
     /**
-     * @DI\Observe("claroline.log.create")
+     * @DI\Observe("claroline.log.create.OLD")
      *
      * @param \Claroline\CoreBundle\Event\LogCreateEvent $event
      */
