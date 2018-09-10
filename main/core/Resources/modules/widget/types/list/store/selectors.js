@@ -6,7 +6,7 @@ const STORE_NAME = 'list' // where the DataList will be mounted
 
 const display = createSelector(
   [contentSelectors.parameters],
-  (parameters) => parameters.display || []
+  (parameters) => parameters.display
 )
 
 const count = createSelector(

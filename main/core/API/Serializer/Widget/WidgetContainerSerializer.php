@@ -153,15 +153,6 @@ class WidgetContainerSerializer
             }
         }
 
-        //readytoremove
-        $instances = $this->widgetInstanceFinder->find(['container' => $widgetContainer->getUuid()]);
-
-        foreach ($instances as $instance) {
-            if (!in_array($instance->getUuid(), $instanceIds)) {
-                $this->om->remove($instance);
-            }
-        }
-
         return $widgetContainer;
     }
 

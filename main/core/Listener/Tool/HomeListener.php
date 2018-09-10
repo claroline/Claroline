@@ -85,9 +85,12 @@ class HomeListener
           'Claroline\CoreBundle\Entity\Tab\HomeTab',
           ['filters' => ['user' => $currentUser->getUuid()]]
         );
-        $orderedTabs = $tabs['data'];
 
-        foreach ($orderedTabs as $position => $tab) {
+        $tabs = array_filter($tabs['data'], function ($data) {
+            return $data !== [];
+        });
+
+        foreach ($tabs as $position => $tab) {
             $orderedTabs[$position + 1] = $tab;
             $orderedTabs[$position + 1]['position'] = $position + 1;
         }
@@ -98,7 +101,7 @@ class HomeListener
                 'context' => [
                     'type' => Widget::CONTEXT_DESKTOP,
                 ],
-                'tabs' => $tabs['data'],
+                'tabs' => array_values($orderedTabs),
             ]
         );
 
@@ -116,13 +119,17 @@ class HomeListener
     public function onDisplayWorkspace(DisplayToolEvent $event)
     {
         $workspace = $event->getWorkspace();
+
         $tabs = $this->finder->search(
           'Claroline\CoreBundle\Entity\Tab\HomeTab',
           ['filters' => ['workspace' => $workspace->getUuid()]]
         );
 
-        $orderedTabs = [];
-        foreach ($tabs['data'] as $position => $tab) {
+        $tabs = array_filter($tabs['data'], function ($data) {
+            return $data !== [];
+        });
+
+        foreach ($tabs as $position => $tab) {
             $orderedTabs[$position] = $tab;
             $orderedTabs[$position]['position'] = $position + 1;
         }
@@ -135,7 +142,7 @@ class HomeListener
                     'type' => Widget::CONTEXT_WORKSPACE,
                     'data' => $this->serializer->serialize($workspace),
                 ],
-                'tabs' => $orderedTabs,
+                'tabs' => array_values($orderedTabs),
             ]
         );
 

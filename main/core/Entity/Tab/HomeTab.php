@@ -66,8 +66,7 @@ class HomeTab
     /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetContainer",
-     *     mappedBy="homeTab",
-     *     cascade={"persist", "remove", "refresh"}
+     *     mappedBy="homeTab"
      * )
      */
     private $widgetContainers;
@@ -130,5 +129,10 @@ class HomeTab
         if ($this->widgetContainers->contains($widgetContainer)) {
             $this->widgetContainers->removeElement($widgetContainer);
         }
+    }
+
+    public function getHomeTabConfigs()
+    {
+        return $this->homeTabConfigs;
     }
 }

@@ -37,10 +37,8 @@ class WidgetContainer
      *
      * @ORM\ManyToOne(
      *    targetEntity="Claroline\CoreBundle\Entity\Tab\HomeTab",
-     *    inversedBy="widgetContainers",
-     *    cascade={"persist", "remove"}
+     *    inversedBy="widgetContainers"
      * )
-     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      * @ORM\OrderBy({"position" = "ASC"})
      *
      * @var HomeTab

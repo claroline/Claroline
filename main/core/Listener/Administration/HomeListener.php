@@ -55,6 +55,15 @@ class HomeListener
           ['filters' => ['type' => HomeTab::TYPE_ADMIN_DESKTOP]]
         );
 
+        $tabs = array_filter($tabs['data'], function ($data) {
+            return $data !== [];
+        });
+
+        foreach ($tabs as $position => $tab) {
+            $orderedTabs[$position] = $tab;
+            $orderedTabs[$position]['position'] = $position + 1;
+        }
+
         $roles = $this->finder->search('Claroline\CoreBundle\Entity\Role',
           ['filters' => ['type' => Role::PLATFORM_ROLE]]
         );
@@ -69,7 +78,7 @@ class HomeListener
                         'roles' => $roles['data'],
                     ],
                 ],
-                'tabs' => $tabs['data'],
+                'tabs' => array_values($orderedTabs),
             ]
         );
         $event->setResponse(new Response($content));

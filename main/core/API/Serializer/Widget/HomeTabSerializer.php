@@ -176,25 +176,15 @@ class HomeTabSerializer
         $this->om->persist($homeTabConfig);
         $containerIds = [];
 
-        foreach ($data['widgets'] as $position => $widgetContainer) {
-            /** @var WidgetContainer $widgetContainer */
-            $widgetContainer = $this->serializer->deserialize(WidgetContainer::class, $widgetContainer, $options);
-            $widgetContainer->setHomeTab($homeTab);
-            $widgetContainerConfig = $widgetContainer->getWidgetContainerConfigs()[0];
-            $widgetContainerConfig->setPosition($position);
-            $this->om->persist($widgetContainerConfig);
-            $containerIds[] = $widgetContainer->getUuid();
-        }
-
-        //readytoremove
-        $containers = $this->widgetContainerFinder->find(['homeTab' => $homeTab->getUuid()]);
-
-        foreach ($containers as $container) {
-            if (!in_array($container->getUuid(), $containerIds)) {
-                foreach ($container->getWidgetContainerConfigs() as $config) {
-                    $this->om->remove($config);
-                }
-                $this->om->remove($container);
+        if (isset($data['widgets'])) {
+            foreach ($data['widgets'] as $position => $widgetContainer) {
+                /** @var WidgetContainer $widgetContainer */
+                $widgetContainer = $this->serializer->deserialize(WidgetContainer::class, $widgetContainer, $options);
+                $widgetContainer->setHomeTab($homeTab);
+                $widgetContainerConfig = $widgetContainer->getWidgetContainerConfigs()[0];
+                $widgetContainerConfig->setPosition($position);
+                $this->om->persist($widgetContainerConfig);
+                $containerIds[] = $widgetContainer->getUuid();
             }
         }
 

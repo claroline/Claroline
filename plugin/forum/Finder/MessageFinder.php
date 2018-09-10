@@ -95,6 +95,17 @@ class MessageFinder extends AbstractFinder
                     $this->setDefaults($qb, $filterName, $filterValue);
             }
         }
+
+        if (!is_null($sortBy) && isset($sortBy['property']) && isset($sortBy['direction'])) {
+            $sortByProperty = $sortBy['property'];
+            $sortByDirection = 1 === $sortBy['direction'] ? 'ASC' : 'DESC';
+
+            switch ($sortByProperty) {
+                case 'meta.created':
+                    $qb->orderBy('obj.creationDate', $sortByDirection);
+                    break;
+            }
+        }
     }
 
     public function getFilters()
