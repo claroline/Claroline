@@ -7,7 +7,8 @@ const reducer = {
   workspaces: combineReducers({
     personal: makeReducer(null),
     current: makeReducer(null),
-    history: makeReducer([])
+    history: makeReducer([]),
+    creatable: makeReducer(false)
   }),
   display: makeReducer({}),
   tools: makeReducer([]),

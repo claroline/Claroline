@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 
 import {trans} from '#/main/core/translation'
 import {User as UserTypes} from '#/main/core/user/prop-types'
@@ -20,7 +21,7 @@ const WorkspacesMenu = props =>
       />
     </li>
     }
-    {'desktop' !== props.currentLocation &&
+    {('desktop' !== props.currentLocation && props.currentUser.id) &&
     <li role="presentation">
       <Button
         type={URL_BUTTON}
@@ -30,6 +31,18 @@ const WorkspacesMenu = props =>
       />
     </li>
     }
+    {/* personal workspace */}
+    {props.personal &&
+      <li role="presentation" key ={props.personal.id}>
+        <Button
+          type={URL_BUTTON}
+          icon="fa fa-fw fa-book"
+          label={props.personal.name}
+          target={['claro_workspace_open', {'workspaceId': props.personal.id}]}
+        />
+      </li>
+    }
+
     {0 !== props.history.length &&
     <li role="presentation" className="divider"/>
     }
@@ -52,7 +65,7 @@ const WorkspacesMenu = props =>
       <li role="presentation" className="divider"/>
     }
     {/* user workspaces */}
-    {'Invité' !== props.currentUser.name &&
+    {props.currentUser.id &&
     <li role="presentation">
       <Button
         type={URL_BUTTON}
@@ -63,16 +76,14 @@ const WorkspacesMenu = props =>
     </li>
     }
     {/* public workspaces */}
-    {'Invité' !== props.currentUser.name &&
-      <li role="presentation">
-        <Button
-          type={URL_BUTTON}
-          icon="fa fa-fw fa-book"
-          label={trans('find_workspaces')}
-          target={['claro_workspace_list']}
-        />
-      </li>
-    }
+    <li role="presentation">
+      <Button
+        type={URL_BUTTON}
+        icon="fa fa-fw fa-book"
+        label={trans('find_workspaces')}
+        target={['claro_workspace_list']}
+      />
+    </li>
     {/* create new workspace */}
     {props.creatable &&
     <li role="presentation" className="divider"/>
@@ -107,7 +118,12 @@ const HeaderWorkspaces = props =>
     }
   >
     <div className="header-workspaces">
-      <span className="fa fa-fw fa-atlas icon-with-text-right" />
+      <span className={classes('icon-with-text-right', {
+        'fa fa-fw fa-home':   'home' === props.currentLocation,
+        'fa fa-fw fa-atlas':  'desktop' === props.currentLocation,
+        'fa fa-fw fa-book':   'workspace' === props.currentLocation,
+        'fa fa-fw fa-cogs':   'administration'=== props.currentLocation
+      })}/>
       {'workspace' === props.currentLocation ? props.current.name : trans(props.currentLocation)}
     </div>
     <span className="fa fa-fw fa-caret-down icon-with-text-left" />

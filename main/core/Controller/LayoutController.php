@@ -192,6 +192,7 @@ class LayoutController extends Controller
                 'help' => $this->configHandler->getParameter('show_help_button'),
                 'registration' => $this->configHandler->getParameter('allow_self_registration'),
                 'locale' => $this->configHandler->getParameter('header_locale'),
+                'name' => $this->configHandler->getParameter('name_active'),
             ],
 
             'workspaces' => [
