@@ -82,15 +82,16 @@ const ListForm = props => {
                 condensed: true
               },
               onChange: (value) => {
-                const availableDisplays = get(props.parameters, 'availableDisplays') || []
-                if (value && -1 === availableDisplays.indexOf(value)) {
-                  props.updateProp('availableDisplays', [value].concat(availableDisplays))
-                }
+                if (value) {
+                  if (isMultiDisplays(props.parameters)) {
+                    props.updateProp('availableDisplays', union([value], get(props.parameters, 'availableDisplays') || []))
+                  }
 
-                // Sets default columns list (all) for table
-                if (value && constants.DISPLAY_MODES[value].options.filterColumns
-                  && (!props.parameters.columns || 0 === props.parameters.columns.length)) {
-                  props.updateProp('columns', Object.keys(columnsList))
+                  // Sets default columns list (all) for table
+                  if (constants.DISPLAY_MODES[value].options.filterColumns
+                    && (!props.parameters.columns || 0 === props.parameters.columns.length)) {
+                    props.updateProp('columns', Object.keys(columnsList))
+                  }
                 }
               }
             }, {
@@ -99,9 +100,12 @@ const ListForm = props => {
               label: trans('list_enable_display'),
               calculated: isMultiDisplays,
               onChange: (checked) => {
-                if (!checked) {
-                  const currentDisplay = get(props.parameters, 'display')
-                  props.updateProp('availableDisplays', currentDisplay ? [currentDisplay] : [])
+                if (checked) {
+                  if (props.parameters.display) {
+                    props.updateProp('availableDisplays', [props.parameters.display])
+                  }
+                } else {
+                  props.updateProp('availableDisplays', [])
                 }
               },
               linked: [
@@ -113,6 +117,7 @@ const ListForm = props => {
                   displayed: isMultiDisplays,
                   options: {
                     choices: displayModesList,
+                    disabledChoices: props.parameters.display ? Object.keys(displayModesList).filter(displayMode => displayMode === props.parameters.display) : [],
                     noEmpty: true,
                     multiple: true,
                     inline: false
