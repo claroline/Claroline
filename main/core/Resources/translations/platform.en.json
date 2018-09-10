@@ -1712,5 +1712,6 @@
     "add_filter": "Add a filter",
     "page_number": "Page %number%",
     "rich_text_upload_directory": "Use to store files from rich texts",
-    "rich_text_upload_directory_help": "This folder will be proposed to users when adding new files in rich text editors."
+    "rich_text_upload_directory_help": "This folder will be proposed to users when adding new files in rich text editors.",
+    "directory_not_implemented_display": "Attention. The 'Display Settings' as well as the configuration of the list are being developed. Changes to these properties are not used yet."
 }

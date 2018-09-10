@@ -1747,5 +1747,6 @@
     "add_filter": "Ajouter un filtre",
     "page_number": "Page %number%",
     "rich_text_upload_directory": "Utiliser pour le stockage des fichiers des textes riches",
-    "rich_text_upload_directory_help": "Ce dossier sera proposé aux utilisateurs lors de l'ajout de nouveaux fichiers dans les éditeurs de textes riches."
+    "rich_text_upload_directory_help": "Ce dossier sera proposé aux utilisateurs lors de l'ajout de nouveaux fichiers dans les éditeurs de textes riches.",
+    "directory_not_implemented_display": "Attention. Les 'Paramètres d'affichage' ainsi que la configuration de la liste sont en cours de développement. Les modifications apportées à ces propriétés ne sont pas encore utilisées."
 }

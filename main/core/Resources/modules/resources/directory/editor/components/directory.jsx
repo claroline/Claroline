@@ -14,57 +14,64 @@ import resourcesList from '#/main/core/data/sources/resources'
 import {Directory as DirectoryTypes} from '#/main/core/resources/directory/prop-types'
 
 const DirectoryForm = (props) =>
-  <FormData
-    level={3}
-    name={selectors.FORM_NAME}
-    target={['apiv2_resource_directory_update', {id: props.directory.id}]}
-    buttons={true}
-    cancel={{
-      type: LINK_BUTTON,
-      target: '/',
-      exact: true
-    }}
-    sections={[
-      {
-        title: trans('general'),
-        primary: true,
-        fields: [
-          {
-            name: 'uploadDestination',
-            type: 'boolean',
-            label: trans('rich_text_upload_directory'),
-            help: trans('rich_text_upload_directory_help')
-          }
-        ]
-      }, {
-        icon: 'fa fa-fw fa-desktop',
-        title: trans('display_parameters'),
-        fields: [
-          {
-            name: 'display.showSummary',
-            type: 'boolean',
-            label: trans('show_summary', {}, 'path'),
-            linked: [
-              {
-                name: 'display.openSummary',
-                type: 'boolean',
-                label: trans('show_opened_summary', {}, 'path'),
-                displayed: (directory) => directory.display.showSummary
-              }
-            ]
-          }
-        ]
-      }
-    ]}
-  >
-    <ListForm
+  <div>
+    <div className="alert alert-info">
+      <span className="fa fa-fw fa-exclamation-circle" />
+      {trans('directory_not_implemented_display')}
+    </div>
+
+    <FormData
       level={3}
       name={selectors.FORM_NAME}
-      dataPart="list"
-      list={resourcesList.parameters}
-      parameters={props.directory.list}
-    />
-  </FormData>
+      target={['apiv2_resource_directory_update', {id: props.directory.id}]}
+      buttons={true}
+      cancel={{
+        type: LINK_BUTTON,
+        target: '/',
+        exact: true
+      }}
+      sections={[
+        {
+          title: trans('general'),
+          primary: true,
+          fields: [
+            {
+              name: 'uploadDestination',
+              type: 'boolean',
+              label: trans('rich_text_upload_directory'),
+              help: trans('rich_text_upload_directory_help')
+            }
+          ]
+        }, {
+          icon: 'fa fa-fw fa-desktop',
+          title: trans('display_parameters'),
+          fields: [
+            {
+              name: 'display.showSummary',
+              type: 'boolean',
+              label: trans('show_summary', {}, 'path'),
+              linked: [
+                {
+                  name: 'display.openSummary',
+                  type: 'boolean',
+                  label: trans('show_opened_summary', {}, 'path'),
+                  displayed: (directory) => directory.display.showSummary
+                }
+              ]
+            }
+          ]
+        }
+      ]}
+    >
+      <ListForm
+        level={3}
+        name={selectors.FORM_NAME}
+        dataPart="list"
+        list={resourcesList.parameters}
+        parameters={props.directory.list}
+      />
+    </FormData>
+  </div>
 
 DirectoryForm.propTypes = {
   directory: T.shape(
