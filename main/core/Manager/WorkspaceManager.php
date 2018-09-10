@@ -1196,7 +1196,7 @@ class WorkspaceManager
         if (!$user) {
             $user = (!$user && $token && 'anon.' !== $token->getUser()) ?
               $this->container->get('security.token_storage')->getToken()->getUser() :
-              $this->container->get('claroline.manager.user_manager')->getDefaultUser();
+              $this->container->get('claroline.manager.user_manager')->getDefaultClarolineAdmin();
         }
 
         $this->om->startFlushSuite();
@@ -1603,7 +1603,7 @@ class WorkspaceManager
             $workspace->setPersonal($isPersonal);
             $workspace->setCode($name);
             $workspace->setModel(true);
-            $workspace->setCreator($this->container->get('claroline.manager.user_manager')->getDefaultUser());
+            $workspace->setCreator($this->container->get('claroline.manager.user_manager')->getDefaultClarolineAdmin());
             $templateName = $isPersonal ? 'claroline.param.personal_template' : 'claroline.param.default_template';
             $template = new File($this->container->getParameter($templateName));
             $this->container->get('claroline.manager.transfer_manager')->createWorkspace($workspace, $template, true);

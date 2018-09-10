@@ -1633,7 +1633,7 @@ class UserManager
         return $user;
     }
 
-    public function getDefaultUser()
+    public function getDefaultClarolineAdmin()
     {
         $user = $this->getUserByUsername('claroline-connect');
 
@@ -1654,6 +1654,33 @@ class UserManager
 
         $roleAdmin = $this->roleManager->getRoleByName('ROLE_ADMIN');
         $user->addRole($roleAdmin);
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
+
+        return $user;
+    }
+
+    public function getDefaultClarolineUser()
+    {
+        $user = $this->getUserByUsername('claroline-connect-user');
+
+        if (!$user) {
+            $user = new User();
+
+            $user->setUsername('claroline-connect-user');
+            $user->setFirstName('claroline-connect-user');
+            $user->setLastName('claroline-connect-user');
+            $user->setEmail('claroline-connect-user');
+            $user->setPlainPassword(uniqid('', true));
+
+            $user->disable();
+            $user->remove();
+
+            $this->createUser($user, false, [], null, null, [], false, false);
+        }
+
+        $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
+        $user->addRole($roleUser);
         $this->objectManager->persist($user);
         $this->objectManager->flush();
 

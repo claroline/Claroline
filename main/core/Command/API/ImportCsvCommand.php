@@ -54,7 +54,7 @@ class ImportCsvCommand extends ContainerAwareCommand
         $jsonLogger->set('data.success', []);
 
         try {
-            $user = $this->getContainer()->get('claroline.manager.user_manager')->getDefaultUser();
+            $user = $this->getContainer()->get('claroline.manager.user_manager')->getDefaultClarolineAdmin();
             $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
             $this->getContainer()->get('security.context')->setToken($token);
 

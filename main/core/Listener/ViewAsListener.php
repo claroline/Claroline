@@ -11,16 +11,17 @@
 
 namespace Claroline\CoreBundle\Listener;
 
+use Claroline\CoreBundle\Library\Security\Token\ViewAsToken;
+use Claroline\CoreBundle\Library\Security\TokenUpdater;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\UserManager;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Library\Security\Token\ViewAsToken;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Library\Security\TokenUpdater;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @DI\Service
@@ -31,6 +32,7 @@ class ViewAsListener
     private $authorization;
     private $roleManager;
     private $tokenUpdater;
+    private $userManager;
 
     /**
      * @DI\InjectParams({
@@ -38,13 +40,15 @@ class ViewAsListener
      *     "tokenStorage"  = @DI\Inject("security.token_storage"),
      *     "em"            = @DI\Inject("doctrine.orm.entity_manager"),
      *     "roleManager"   = @DI\Inject("claroline.manager.role_manager"),
-     *     "tokenUpdater"  = @DI\Inject("claroline.security.token_updater")
+     *     "tokenUpdater"  = @DI\Inject("claroline.security.token_updater"),
+     *     "userManager"   = @DI\Inject("claroline.manager.user_manager")
      * })
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
         EntityManager $em,
+        UserManager $userManager,
         RoleManager $roleManager,
         TokenUpdater $tokenUpdater
     ) {
@@ -53,6 +57,7 @@ class ViewAsListener
         $this->em = $em;
         $this->roleManager = $roleManager;
         $this->tokenUpdater = $tokenUpdater;
+        $this->userManager = $userManager;
     }
 
     /**
@@ -72,10 +77,12 @@ class ViewAsListener
             }
 
             //then we go as intended
-            $user = $this->tokenStorage->getToken()->getUser();
             $viewAs = $attributes['view_as'];
-            if ($viewAs === 'exit') {
+            if ('exit' === $viewAs) {
                 if ($this->authorization->isGranted('ROLE_USURPATE_WORKSPACE_ROLE')) {
+                    $viewAsToken = $this->tokenStorage->getToken();
+                    $user = $this->em->getRepository('ClarolineCoreBundle:User')
+                        ->findOneBy(['uuid' => $viewAsToken->getAttribute('user_uuid')]);
                     $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
                     $this->tokenStorage->setToken($token);
                 }
@@ -84,17 +91,20 @@ class ViewAsListener
                 $baseRole = substr($viewAs, 0, strripos($viewAs, '_'));
 
                 if ($this->authorization->isGranted('ROLE_WS_MANAGER_'.$guid)) {
-                    if ($baseRole === 'ROLE_ANONYMOUS') {
+                    if ('ROLE_ANONYMOUS' === $baseRole) {
                         throw new \Exception('No implementation yet');
                     } else {
                         $role = $this->roleManager->getRoleByName($viewAs);
 
-                        if ($role === null) {
+                        if (null === $role) {
                             throw new \Exception("The role {$viewAs} does not exists");
                         }
 
-                        $token = new ViewAsToken(array('ROLE_USER', $viewAs, 'ROLE_USURPATE_WORKSPACE_ROLE'));
-                        $token->setUser($user);
+                        $token = new ViewAsToken(
+                          ['ROLE_USER', $viewAs, 'ROLE_USURPATE_WORKSPACE_ROLE']
+                        );
+                        $token->setUser($this->userManager->getDefaultClarolineUser());
+                        $token->setAttribute('user_uuid', $this->tokenStorage->getToken()->getUser()->getUuid());
                         $this->tokenStorage->setToken($token);
                     }
                 } else {

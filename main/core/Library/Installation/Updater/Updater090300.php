@@ -43,7 +43,7 @@ class Updater090300 extends Updater
         $this->om = $this->container->get('claroline.persistence.object_manager');
 
         //set the default claroline user
-        $defaultUser = $container->get('claroline.manager.user_manager')->getDefaultUser();
+        $defaultUser = $container->get('claroline.manager.user_manager')->getDefaultClarolineAdmin();
         $token = new UsernamePasswordToken($defaultUser, '123', 'main', $defaultUser->getRoles());
         $this->container->get('security.token_storage')->setToken($token);
     }
@@ -93,7 +93,7 @@ class Updater090300 extends Updater
                     $groups = $om->findByIds('Claroline\CoreBundle\Entity\User', $groupIds);
                     $nodes = $om->findByIds('Claroline\CoreBundle\Entity\Resource\ResourceNode', $nodeIds);
                     if (count($users) === 0) {
-                        $users[0] = $this->container->get('claroline.manager.user_manager')->getDefaultUser();
+                        $users[0] = $this->container->get('claroline.manager.user_manager')->getDefaultClarolineAdmin();
                     }
                     $user = $users[0];
 
@@ -124,7 +124,7 @@ class Updater090300 extends Updater
                     $this->log('Flushing...');
                     $this->om->flush();
                     $this->om->clear();
-                    $defaultUser = $this->container->get('claroline.manager.user_manager')->getDefaultUser();
+                    $defaultUser = $this->container->get('claroline.manager.user_manager')->getDefaultClarolineAdmin();
                     $token = new UsernamePasswordToken($defaultUser, '123', 'main', $defaultUser->getRoles());
                     $this->container->get('security.token_storage')->setToken($token);
                     $this->om->merge($defaultUser);
