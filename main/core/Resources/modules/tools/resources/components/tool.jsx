@@ -22,7 +22,7 @@ const Tool = props =>
       add: props.addNodes,
       update: props.updateNodes,
       delete: props.deleteNodes
-    })}
+    }, true)}
   >
     <ResourceExplorer
       name={selectors.STORE_NAME}
