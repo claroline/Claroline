@@ -33,12 +33,12 @@ class ListWidgetParameters extends Component {
     }))
   }
 
-  hasPerformanceWarn() {
+  /*hasPerformanceWarn() {
     // lots of results
     return (!this.props.instance.parameters.maxResults || this.props.instance.parameters.maxResults > 100)
       // with no pagination or default pagination to all
       && (!this.props.instance.parameters.paginated || -1 === this.props.instance.parameters.pageSize)
-  }
+  }*/
 
   render() {
     return (
@@ -52,7 +52,7 @@ class ListWidgetParameters extends Component {
             title: trans('general'),
             primary: true,
             fields: [
-              {
+              /*{
                 name: 'maxResults',
                 label: trans('list_total_results'),
                 type: 'number',
@@ -61,7 +61,7 @@ class ListWidgetParameters extends Component {
                   placeholder: trans('all_results'),
                   min: 1
                 }
-              }
+              }*/
             ]
           }
         ]}
