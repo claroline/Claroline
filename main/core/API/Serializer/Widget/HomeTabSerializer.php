@@ -107,7 +107,6 @@ class HomeTabSerializer
             'type' => $homeTab->getType(),
             'position' => $homeTabConfig->getTabOrder(),
             'locked' => $homeTabConfig->isLocked(),
-            //bot used yet
             'visible' => $homeTabConfig->isVisible(),
             'roles' => array_map(function ($role) {
                 return $role->getUuid();
