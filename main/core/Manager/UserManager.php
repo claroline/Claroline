@@ -1645,6 +1645,7 @@ class UserManager
             $user->setLastName('claroline-connect');
             $user->setEmail('claroline-connect');
             $user->setPlainPassword(uniqid('', true));
+            $user->setAcceptedTerms(true);
 
             $user->disable();
             $user->remove();
@@ -1672,7 +1673,7 @@ class UserManager
             $user->setLastName('claroline-connect-user');
             $user->setEmail('claroline-connect-user');
             $user->setPlainPassword(uniqid('', true));
-
+            $user->setAcceptedTerms(true);
             $user->disable();
             $user->remove();
 
