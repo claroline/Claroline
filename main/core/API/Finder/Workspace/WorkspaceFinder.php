@@ -123,9 +123,13 @@ class WorkspaceFinder extends AbstractFinder
                 case 'user':
                     $qb->leftJoin('obj.roles', 'r');
                     $qb->leftJoin('r.users', 'ru');
+                    $qb->leftJoin('r.groups', 'rg');
+                    $qb->leftJoin('rg.users', 'rgu');
                     $qb->andWhere($qb->expr()->orX(
                         $qb->expr()->eq('ru.id', ':currentUserId'),
-                        $qb->expr()->eq('ru.uuid', ':currentUserId')
+                        $qb->expr()->eq('ru.uuid', ':currentUserId'),
+                        $qb->expr()->eq('rgu.id', ':currentUserId'),
+                        $qb->expr()->eq('rgu.uuid', ':currentUserId')
                     ));
                     $qb->andWhere('r.name != :roleUser');
                     $qb->setParameter('currentUserId', $filterValue);
