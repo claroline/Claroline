@@ -166,7 +166,7 @@ class HomeController extends AbstractApiController
             return $this->render('ClarolineCoreBundle:home:layout.html.twig', $this->renderContent($layout));
         }
 
-        return $this->render('ClarolineCoreBundle:Home:error.html.twig', ['path' => $type]);
+        return $this->render('ClarolineCoreBundle:home:error.html.twig', ['path' => $type]);
     }
 
     /**
@@ -187,7 +187,7 @@ class HomeController extends AbstractApiController
                 'type' => '_pages',
                 'region' => $this->renderRegions($this->manager->getRegionContents()),
                 'content' => $this->render(
-                    'ClarolineCoreBundle:Home:types.html.twig',
+                    'ClarolineCoreBundle:home:types.html.twig',
                     ['types' => $types, 'hasCustomTemplates' => $this->homeService->hasCustomTemplates()]
                 )->getContent(),
             ]
@@ -469,7 +469,7 @@ class HomeController extends AbstractApiController
      */
     public function createAction($type = null, $father = null, Request $request)
     {
-        if ($id = $this->manager->createContent($request->get('home_content_form'), $type, $father)) {
+        if ($id = $this->manager->createContent($request->get('home_content'), $type, $father)) {
             return new Response($id);
         }
 
