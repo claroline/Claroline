@@ -77,8 +77,9 @@ class ThemeExtension extends \Twig_Extension
         if (empty($themeName)) {
             $themeName = $this->config->getParameter('theme');
         }
-
+        $themeName = str_replace(' ', '-', strtolower($themeName));
         $assets = $this->getThemeAssets();
+
         if (!isset($assets[$themeName]) || !isset($assets[$themeName][$path])) {
             // selected theme can not be found, fall back to default theme
             $defaultTheme = $this->themeManager->getDefaultTheme();

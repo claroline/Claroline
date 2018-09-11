@@ -7,7 +7,7 @@ import {param} from '#/main/app/config/parameters'
  * @return {string}
  */
 function currentTheme() {
-  return param('theme.name')
+  return param('theme.name').toLowerCase().replace(/\s/g, '-')
 }
 
 /**
