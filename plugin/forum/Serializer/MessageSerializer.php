@@ -77,12 +77,18 @@ class MessageSerializer
     public function serialize(Message $message, array $options = [])
     {
         $data = $this->messageSerializer->serialize($message, $options);
+        $subject = $message->getSubject();
 
-        if ($message->getSubject()) {
+        if ($subject) {
             $data['subject'] = [
-                'id' => $message->getSubject()->getUuid(),
-                'title' => $message->getSubject()->getTitle(),
+                'id' => $subject->getUuid(),
+                'title' => $subject->getTitle(),
             ];
+            if ($subject->getForum() && $subject->getForum()->getResourceNode()) {
+                $data['meta']['resource'] = [
+                    'id' => $subject->getForum()->getResourceNode()->getId(),
+                ];
+            }
         }
 
         $data['meta']['flagged'] = $message->isFlagged();

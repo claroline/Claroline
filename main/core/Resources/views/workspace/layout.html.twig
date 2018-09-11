@@ -26,7 +26,9 @@
 {% endblock %}
 
 {% block breadcrumb %}
-    {{ breadcrumb }}
+    {% if breadcrumb is defined %}
+        {{ breadcrumb }}
+    {% endif %}
 {% endblock %}
 
 {% block leftbar %}

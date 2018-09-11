@@ -42,6 +42,8 @@ class AnnouncementFinder extends AbstractFinder
                     $qb->andWhere("w.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
+                case 'meta.publishedAt':
+                    break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
             }

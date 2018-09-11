@@ -1,3 +1,5 @@
+import {URL_BUTTON} from '#/main/app/buttons'
+
 import {trans} from '#/main/core/translation'
 
 import {EventCard} from '#/plugin/agenda/data/components/event-card'
@@ -5,6 +7,13 @@ import {EventCard} from '#/plugin/agenda/data/components/event-card'
 export default {
   name: 'events',
   parameters: {
+    primaryAction: (event) => ({
+      type: URL_BUTTON,
+      target: ['claro_workspace_open_tool', {
+        workspaceId: event.workspace.id,
+        toolName: 'agenda_'
+      }]
+    }),
     definition: [
       {
         name: 'title',

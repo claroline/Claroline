@@ -1,3 +1,6 @@
+import {url} from '#/main/app/api'
+import {URL_BUTTON} from '#/main/app/buttons'
+
 import {trans} from '#/main/core/translation'
 
 import {AnnouncementCard} from '#/plugin/announcement/data/components/announcement-card'
@@ -5,6 +8,12 @@ import {AnnouncementCard} from '#/plugin/announcement/data/components/announceme
 export default {
   name: 'announcements',
   parameters: {
+    primaryAction: (announcement) => ({
+      type: URL_BUTTON,
+      target: url([ 'claro_resource_show_short', {
+        id: announcement.meta.resource.id
+      }]) + `#/${announcement.id}`
+    }),
     definition: [
       {
         name: 'title',
