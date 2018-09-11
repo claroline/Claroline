@@ -93,13 +93,13 @@ class ResourceNodeController extends AbstractCrudController
         //directly in the finder
         //it currently work (altough we can see stuff we shouldnt do through the api)
 
-        // it's easy to make an exception for the admin but we might also have to do it for the workspace mangers
-        // wich will complicate everything.
-        if ($options['hiddenFilters']['parent'] === null) {
-            $options['hiddenFilters']['roles'] = array_map(
-                function ($role) { return $role->getRole(); },
-                $this->container->get('security.token_storage')->getToken()->getRoles()
-            );
+        $roles = array_map(
+            function ($role) { return $role->getRole(); },
+            $this->container->get('security.token_storage')->getToken()->getRoles()
+        );
+
+        if (!in_array('ROLE_ADMIN', $roles) || $options['hiddenFilters']['parent'] === null) {
+            $options['hiddenFilters']['roles'] = $roles;
         }
 
         return new JsonResponse(
