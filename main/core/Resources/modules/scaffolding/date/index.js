@@ -66,7 +66,8 @@ function isValidDate(value, format = null) {
 function apiDate(displayDate, long = false, withTime = false) {
   let date = moment(displayDate, getDisplayFormat(long, withTime))
   if (withTime) {
-    date = date.utc()
+    // This is causing a lost of 2 hours in date field of a form
+    // date = date.utc()
   }
 
   return date.format(getApiFormat())
