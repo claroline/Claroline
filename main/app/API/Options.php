@@ -60,6 +60,7 @@ final class Options
     //but it's probably not where the option should be located
     const USER_SELF_LOG = 'user_self_log';
     const ADD_PERSONAL_WORKSPACE = 'add_personal_workspace';
+    const NO_PERSONAL_WORKSPACE = 'no_personal_workspace';
     const DESERIALIZE_FACET = 'deserialize_facet';
     const SERIALIZE_FACET = 'serialize_facet';
     const SEND_EMAIL = 'send_email';

@@ -1586,10 +1586,13 @@ class WorkspaceManager
 
     public function getDefaultModel($isPersonal = false, $restore = false)
     {
+        $this->log('Search old default workspace...');
+
         $name = $isPersonal ? 'default_personal' : 'default_workspace';
         $workspace = $this->workspaceRepo->findOneBy(['code' => $name, 'personal' => $isPersonal, 'model' => true]);
 
         if (!$workspace || $restore) {
+            $this->log('Rebuilding...');
             //don't log this or it'll crash everything during the platform installation
             //(some database tables aren't already created because they come from plugins)
             if ($workspace && $restore) {
@@ -1603,11 +1606,14 @@ class WorkspaceManager
             $workspace->setPersonal($isPersonal);
             $workspace->setCode($name);
             $workspace->setModel(true);
+            $this->log('Build and set default admin');
             $workspace->setCreator($this->container->get('claroline.manager.user_manager')->getDefaultClarolineAdmin());
             $templateName = $isPersonal ? 'claroline.param.personal_template' : 'claroline.param.default_template';
             $template = new File($this->container->getParameter($templateName));
+            $this->log('Build from archive...');
             $this->container->get('claroline.manager.transfer_manager')->createWorkspace($workspace, $template, true);
             $this->container->get('claroline.core_bundle.listener.log.log_listener')->setDefaults();
+            $this->log('Add tools...');
             $this->container->get('claroline.manager.tool_manager')->addMissingWorkspaceTools($workspace);
 
             if ($restore) {

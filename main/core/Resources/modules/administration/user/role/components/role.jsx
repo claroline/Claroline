@@ -56,17 +56,18 @@ const RoleForm = props =>
               choices: enumRole
             }
           }
-        ],
-        advanced: {
-          fields: [
-            {
-              name: 'meta.personalWorkspaceCreation',
-              type: 'boolean',
-              label: t('role_personalWorkspaceCreation'),
-              help: t('role_personalWorkspaceCreation_help')
-            }
-          ]
-        }
+        ]
+      }, {
+        icon: 'fa fa-fw fa-book',
+        title: t('workspace'),
+        fields: [
+          {
+            name: 'meta.personalWorkspaceCreationEnabled',
+            type: 'boolean',
+            label: t('role_personalWorkspaceCreation'),
+            help: t('role_personalWorkspaceCreation_help')
+          }
+        ]
       }, {
         icon: 'fa fa-fw fa-key',
         title: t('access_restrictions'),

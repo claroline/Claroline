@@ -185,19 +185,24 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
 
         $this->container->get('claroline.installation.refresher')->installAssets();
         $this->log('Updating resource icons...');
+
         $this->container->get('claroline.manager.icon_set_manager')->setLogger($this->logger);
         $this->container->get('claroline.manager.icon_set_manager')->addDefaultIconSets();
         $om = $this->container->get('claroline.persistence.object_manager');
-
-        if (!$om->getRepository(Workspace::class)->findOneBy(['code' => 'default_personal', 'personal' => true, 'model' => true])) {
-            $this->container->get('claroline.manager.workspace_manager')->getDefaultModel(true, true);
-        }
+        $workspaceManager = $this->container->get('claroline.manager.workspace_manager');
+        $workspaceManager->setLogger($this->logger);
+        $this->log('Update Roles Admin');
+        $this->updateRolesAdmin();
 
         if (!$om->getRepository(Workspace::class)->findOneBy(['code' => 'default_workspace', 'personal' => false, 'model' => true])) {
-            $this->container->get('claroline.manager.workspace_manager')->getDefaultModel(false, true);
+            $this->log('Build default workspace');
+            $workspaceManager->getDefaultModel(false, true);
         }
 
-        $this->updateRolesAdmin();
+        if (!$om->getRepository(Workspace::class)->findOneBy(['code' => 'default_personal', 'personal' => true, 'model' => true])) {
+            $this->log('Build default personal workspace');
+            $workspaceManager->getDefaultModel(true, true);
+        }
     }
 
     private function setLocale()

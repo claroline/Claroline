@@ -155,6 +155,12 @@ class ResourceNodeFinder extends AbstractFinder
                 case 'meta.type':
                     $qb->orderBy('ort.name', $sortByDirection);
                     break;
+                case 'meta.updated':
+                    $qb->orderBy('obj.modificationDate', $sortByDirection);
+                    break;
+                case 'meta.created':
+                    $qb->orderBy('obj.creationDate', $sortByDirection);
+                    break;
                 case 'workspace.name':
                     $qb->orderBy('ow.name', $sortByDirection);
                     break;

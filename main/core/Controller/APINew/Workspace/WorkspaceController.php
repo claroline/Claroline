@@ -29,6 +29,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -105,13 +106,14 @@ class WorkspaceController extends AbstractCrudController
             return new JsonResponse($workspace, 400);
         }
 
-        $model = $this->om->getRepository(Workspace::class)->find($modelId);
+        $model = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $modelId]);
 
         if (!$model) {
             $model = $this->workspaceManager->getDefaultModel();
         }
 
-        $logger = new JsonLogger($this->getLogFile($workspace));
+        $logFile = $this->getLogFile($workspace);
+        $logger = new JsonLogger($logFile);
         $this->workspaceManager->setLogger($logger);
 
         $this->workspaceManager->duplicateWorkspaceRoles($model, $workspace, $workspace->getCreator());
@@ -535,6 +537,9 @@ class WorkspaceController extends AbstractCrudController
      */
     private function getLogFile(Workspace $workspace)
     {
+        $fs = new Filesystem();
+        $fs->mkDir($this->logDir);
+
         return $this->logDir.DIRECTORY_SEPARATOR.$workspace->getCode().'.json';
     }
 

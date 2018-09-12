@@ -376,8 +376,6 @@ class ExternalSynchronizationManager
                 },
                 $updateReferenceUsers
             );
-            // List with already used public urls
-            $publicUrlList = [];
             // For every user
             foreach ($externalSourceUsers as $externalSourceUser) {
                 $externalSourceUser['username'] = $this->utilities->stringToUtf8($externalSourceUser['username']);
@@ -455,10 +453,7 @@ class ExternalSynchronizationManager
                     $user->setAdministrativeCode($this->utilities->stringToUtf8($externalSourceUser['code']));
                 }
                 if (is_null($alreadyImportedUser)) {
-                    $publicUrl = $this->userManager->generatePublicUrl($user);
-                    $publicUrl .= in_array($publicUrl, $publicUrlList) ? '_'.uniqid() : '';
-                    $publicUrlList[] = $publicUrl;
-                    $this->userManager->createUser($user, false, $rolesToAdd, null, $publicUrl, [], true);
+                    $this->userManager->createUser($user, [], $rolesToAdd);
                     $this->externalUserManager->createExternalUser(
                         $externalSourceUser['id'],
                         $sourceName,

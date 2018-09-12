@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Form\BaseProfileType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Listener\AuthenticationSuccessListener;
-use Claroline\CoreBundle\Security\PlatformRoles;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -133,11 +132,7 @@ class RegistrationManager
     {
         /** @var Facet[] $facets */
         $facets = $this->facetManager->findForcedRegistrationFacet();
-        $user = $this->userManager->createUser(
-            $user,
-            true,
-            [PlatformRoles::USER]
-        );
+        $user = $this->userManager->createUser($user);
         $this->roleManager->setRoleToRoleSubject($user, $this->platformConfigHandler->getParameter('default_role'));
         //then we add the different values for facets.
         foreach ($facets as $facet) {

@@ -79,6 +79,6 @@ class CreateCommand extends ContainerAwareCommand
         $userManager = $this->getContainer()->get('claroline.manager.user_manager');
         $consoleLogger = ConsoleLogger::get($output);
         $userManager->setLogger($consoleLogger);
-        $userManager->createUser($user, false, [$roleName]);
+        $userManager->createUser($user, [], [$roleName]);
     }
 }
