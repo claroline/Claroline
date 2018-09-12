@@ -14,8 +14,8 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -41,8 +41,8 @@ class LocaleController
      */
     public function __construct(
         LocaleManager $localeManager,
-        TokenStorageInterface $tokenStorage)
-    {
+        TokenStorageInterface $tokenStorage
+    ) {
         $this->localeManager = $localeManager;
         $this->tokenStorage = $tokenStorage;
     }
@@ -79,7 +79,8 @@ class LocaleController
         }
 
         $request->getSession()->set('_locale', $locale);
+        $referer = $request->headers->get('referer');
 
-        return new Response('Locale changed to '.$locale, 200);
+        return new RedirectResponse($referer);
     }
 }

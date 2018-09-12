@@ -30,12 +30,13 @@ class HomeTabFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
     {
+        $qb->leftJoin('obj.homeTabConfigs', 'config');
+
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'user':
                     $roles = $this->om->find(User::class, $filterValue)->getRoles();
 
-                    $qb->leftJoin('obj.homeTabConfigs', 'config');
                     $qb->leftJoin('obj.user', 'u');
 
                     $expr = [];
@@ -94,6 +95,8 @@ class HomeTabFinder extends AbstractFinder
                   $this->setDefaults($qb, $filterName, $filterValue);
             }
         }
+
+        $qb->orderBy('config.tabOrder', 'ASC');
 
         return $qb;
     }
