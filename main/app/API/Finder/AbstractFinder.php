@@ -42,7 +42,7 @@ abstract class AbstractFinder implements FinderInterface
 
         /** @var QueryBuilder $qb */
         $qb = $this->om->createQueryBuilder();
-        $qb->select($count ? 'COUNT(DISTINCT obj)' : 'DISTINCT obj')->from($this->getClass(), 'obj');
+        $qb->select($count ? 'COUNT(obj)' : 'obj')->from($this->getClass(), 'obj');
         //make an option parameters for query builder ?
         $options = [
           'page' => $page,

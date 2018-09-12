@@ -616,8 +616,7 @@ class UserManager
         $locale = $this->platformConfigHandler->getParameter('locale_language');
         $this->translator->setLocale($locale);
         $created = $this->workspaceManager->getWorkspaceByCode($user->getUsername());
-
-        if (count($created) > 0) {
+        if ($created) {
             $code = $user->getUsername().'~'.uniqid();
         } else {
             $code = $user->getUsername();
