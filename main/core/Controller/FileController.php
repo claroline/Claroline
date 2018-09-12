@@ -273,6 +273,7 @@ class FileController extends AbstractApiController
      */
     private function stream(ResourceNode $resourceNode)
     {
+        //temporary because otherwise injected resource must have the "open" right
         $this->checkPermission('OPEN', new ResourceCollection([$resourceNode]), [], true);
 
         // free the session as soon as possible

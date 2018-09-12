@@ -178,10 +178,11 @@ class HomeController extends AbstractApiController
             $installedContainers = array_merge($installedContainers, $this->finder->fetch(
               WidgetContainer::class, ['homeTab' => $installedTab->getUuid()]
           ));
+        }
 
-            if (!in_array($installedTab->getUuid(), $ids)) {
-                // the tab no longer exist we can remove it
-                $this->crud->delete($installedTab);
+        foreach ($installedContainers as $container) {
+            if (!in_array($container->getUuid(), $containerIds)) {
+                $this->crud->delete($container);
             }
         }
 
@@ -191,9 +192,10 @@ class HomeController extends AbstractApiController
             }
         }
 
-        foreach ($installedContainers as $container) {
-            if (!in_array($container->getUuid(), $containerIds)) {
-                $this->crud->delete($container);
+        foreach ($installedTabs as $installedTab) {
+            if (!in_array($installedTab->getUuid(), $ids)) {
+                // the tab no longer exist we can remove it
+                $this->crud->delete($installedTab);
             }
         }
     }

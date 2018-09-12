@@ -37,20 +37,19 @@ export default {
         label: trans('start_date'),
         displayed: true
       }, {
-        name: 'endBeforeNow',
-        type: 'date',
-        label: trans('end_before_now'),
+        name: 'notDoneYet',
+        type: 'boolean',
+        label: trans('not_done_yet'),
         displayed: false,
         displayable: false,
         filterable: true,
         sortable: false
       }, {
-        name: 'startBeforeNow',
-        type: 'date',
-        label: trans('start_before_now'),
-        displayed: false,
-        displayable: false,
-        filterable: true,
+        name: 'workspace.code',
+        type: 'string',
+        label: trans('workspace'),
+        displayed: true,
+        filterable: false,
         sortable: false
       }
     ],

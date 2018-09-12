@@ -494,7 +494,7 @@ class HomeController extends AbstractApiController
     public function updateAction($content, $size = null, $type = null, Request $request)
     {
         try {
-            $this->manager->UpdateContent($content, $request->get('home_content_form'), $size, $type);
+            $this->manager->updateContent($content, $request->get('home_content'), $size, $type);
 
             return new Response('true');
         } catch (\Exception $e) {

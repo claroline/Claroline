@@ -271,6 +271,14 @@ class WorkspaceManager
                 }
             }
         }
+
+        $tabs = $this->om->getRepository(HomeTab::class)->findBy(['workspace' => $workspace]);
+        $crud = $this->container->get('claroline.api.crud');
+
+        foreach ($tabs as $tab) {
+            $crud->delete($tab);
+        }
+
         $this->dispatcher->dispatch(
             'claroline_workspaces_delete',
             'GenericData',

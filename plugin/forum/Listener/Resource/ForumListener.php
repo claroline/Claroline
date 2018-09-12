@@ -15,7 +15,6 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
-use Claroline\CoreBundle\Event\DeleteUserEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
@@ -109,27 +108,6 @@ class ForumListener
 
         $event->setCopy($new);
         $event->stopPropagation();
-    }
-
-    /**
-     * Removes forum notifications when a user is deleted.
-     *
-     * @DI\Observe("delete_user")
-     *
-     * @param DeleteUserEvent $event
-     */
-    public function onDeleteUser(DeleteUserEvent $event)
-    {
-        //remove notification for user if it exists
-        $notificationRepo = $this->om->getRepository('ClarolineForumBundle:Notification');
-
-        $notifications = $notificationRepo->findBy(['user' => $event->getUser()]);
-        if (count($notifications) > 0) {
-            foreach ($notifications as $notification) {
-                $this->om->remove($notification);
-            }
-            $this->om->flush();
-        }
     }
 
     /**
