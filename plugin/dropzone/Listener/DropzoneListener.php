@@ -124,7 +124,7 @@ class DropzoneListener
      */
     public function onOpenCustom(CustomActionResourceEvent $event)
     {
-        $resource = 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut' === get_class($event->getResource()) ?
+        $resource = 'Claroline\LinkBundle\Entity\Resource\Shortcut' === get_class($event->getResource()) ?
             $this->resourceManager->getResourceFromShortcut($event->getResource()->getResourceNode()) :
             $event->getResource();
         $params = [];
@@ -143,7 +143,7 @@ class DropzoneListener
      */
     public function onEdit(CustomActionResourceEvent $event)
     {
-        $resource = 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut' === get_class($event->getResource()) ?
+        $resource = 'Claroline\LinkBundle\Entity\Resource\Shortcut' === get_class($event->getResource()) ?
             $this->resourceManager->getResourceFromShortcut($event->getResource()->getResourceNode()) :
             $event->getResource();
         $params = [];
@@ -162,7 +162,7 @@ class DropzoneListener
      */
     public function onList(CustomActionResourceEvent $event)
     {
-        $resource = 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut' === get_class($event->getResource()) ?
+        $resource = 'Claroline\LinkBundle\Entity\Resource\Shortcut' === get_class($event->getResource()) ?
             $this->resourceManager->getResourceFromShortcut($event->getResource()->getResourceNode()) :
             $event->getResource();
         $params = [];

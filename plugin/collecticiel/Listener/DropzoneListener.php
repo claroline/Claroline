@@ -2,13 +2,13 @@
 
 namespace Innova\CollecticielBundle\Listener;
 
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
+use Claroline\CoreBundle\Event\PluginOptionsEvent;
+use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
-use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Innova\CollecticielBundle\Entity\Criterion;
@@ -114,9 +114,9 @@ class DropzoneListener
             $params['_controller'] = 'InnovaCollecticielBundle:Drop:drop';
         } else {
             // Modification ERV (août 2015) InnovaERV
-        // suite demande JJQ, voir son document de référence d'août 2015
-        // il faut venir sur l'onglet "Demandes adressées" et non plus sur "Paramètres"
-        // Point 3 du document
+            // suite demande JJQ, voir son document de référence d'août 2015
+            // il faut venir sur l'onglet "Demandes adressées" et non plus sur "Paramètres"
+            // Point 3 du document
 
             $em = $this->container->get('doctrine.orm.entity_manager');
 
@@ -147,7 +147,7 @@ class DropzoneListener
      */
     public function onOpenCustom(CustomActionResourceEvent $event)
     {
-        $dropzone = get_class($event->getResource()) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut' ?
+        $dropzone = 'Claroline\LinkBundle\Entity\Resource\Shortcut' === get_class($event->getResource()) ?
             $this->resourceManager->getResourceFromShortcut($event->getResource()->getResourceNode()) :
             $event->getResource();
         $dropzoneVoter = $this->container->get('innova.manager.dropzone_voter');
@@ -180,7 +180,7 @@ class DropzoneListener
      */
     public function onEdit(CustomActionResourceEvent $event)
     {
-        $resource = get_class($event->getResource()) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut' ?
+        $resource = 'Claroline\LinkBundle\Entity\Resource\Shortcut' === get_class($event->getResource()) ?
             $this->resourceManager->getResourceFromShortcut($event->getResource()->getResourceNode()) :
             $event->getResource();
         $route = $this->container

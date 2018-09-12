@@ -14,7 +14,7 @@ class NotificationListener
         $notificationView = $event->getNotificationView();
         $notification = $notificationView->getNotification();
         $content = $this->container->get('templating')->render(
-            'IcapBadgeBundle:Notification:notification_item.html.twig',
+            'IcapBadgeBundle:notification:notification_item.html.twig',
             [
                 'notification' => $notification,
                 'status' => $notificationView->getStatus(),

@@ -14,7 +14,7 @@ class NotificationListener
         $notificationView = $event->getNotificationView();
         $notification = $notificationView->getNotification();
         $content = $this->container->get('templating')->render(
-            'IcapDropzoneBundle:Notification:notification_item.html.twig',
+            'IcapDropzoneBundle:notification:notification_item.html.twig',
             [
                 'notification' => $notification,
                 'status' => $notificationView->getStatus(),

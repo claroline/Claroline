@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 5/18/15
  */
 
@@ -44,12 +44,12 @@ class NotificationListener
         $notificationView = $event->getNotificationView();
         $notification = $notificationView->getNotification();
         $content = $this->templating->render(
-            'IcapSocialmediaBundle:Notification:notification_item.html.twig',
-            array(
+            'IcapSocialmediaBundle:notification:notification_item.html.twig',
+            [
                 'notification' => $notification,
                 'status' => $notificationView->getStatus(),
                 'systemName' => $event->getSystemName(),
-            )
+            ]
         );
 
         $event->setResponseContent($content);

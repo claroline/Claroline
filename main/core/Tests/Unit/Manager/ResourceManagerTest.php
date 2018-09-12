@@ -522,9 +522,9 @@ class ResourceManagerTest extends MockeryTestCase
         $newNode->shouldReceive('setClass')->once()->with('class');
 
         $resourceType->shouldReceive('getName')->andReturn('type_name');
-        $copy = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceShortcut');
+        $copy = $this->mock('Claroline\LinkBundle\Entity\Resource\Shortcut');
         $this->om->shouldReceive('factory')->once()
-            ->with('Claroline\CoreBundle\Entity\Resource\ResourceShortcut')->andReturn($copy);
+            ->with('Claroline\LinkBundle\Entity\Resource\Shortcut')->andReturn($copy);
         $copy->shouldReceive('setResourceNode')->once()->with($newNode);
         $copy->shouldReceive('setTarget')->once()->with($target);
         $this->resourceNodeRepo->shouldReceive('findOneBy')->once()->andReturn($last);
@@ -716,7 +716,7 @@ class ResourceManagerTest extends MockeryTestCase
             ->andReturn($this->rightsRepo);
         $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Role')
             ->andReturn($this->roleRepo);
-        $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Resource\ResourceShortcut')
+        $this->om->shouldReceive('getRepository')->with('ClarolineLinkBundle:Resource\Shortcut')
             ->andReturn($this->shortcutRepo);
 
         if (0 === count($mockedMethods)) {

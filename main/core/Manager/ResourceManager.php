@@ -623,7 +623,7 @@ class ResourceManager
     public function hasLinkTo(ResourceNode $parent, ResourceNode $target)
     {
         $nodes = $this->resourceNodeRepo
-            ->findBy(['parent' => $parent, 'class' => 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut']);
+            ->findBy(['parent' => $parent, 'class' => 'Claroline\LinkBundle\Entity\Resource\Shortcut']);
 
         foreach ($nodes as $node) {
             $shortcut = $this->getResourceFromNode($node);
@@ -1823,7 +1823,7 @@ class ResourceManager
      */
     public function getRealTarget(ResourceNode $node, $throwException = true)
     {
-        if ('Claroline\CoreBundle\Entity\Resource\ResourceShortcut' === $node->getClass()) {
+        if ('Claroline\LinkBundle\Entity\Resource\Shortcut' === $node->getClass()) {
             $resource = $this->getResourceFromNode($node);
             if (null === $resource) {
                 if ($throwException) {
