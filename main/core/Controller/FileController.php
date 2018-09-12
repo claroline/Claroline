@@ -37,7 +37,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * @EXT\Route("/file", options={"expose"=true})
+ * @EXT\Route(options={"expose"=true})
  */
 class FileController extends AbstractApiController
 {
@@ -129,7 +129,7 @@ class FileController extends AbstractApiController
     }
 
     /**
-     * @EXT\Route("resource/media/{node}", name="claro_file_get_media")
+     * @EXT\Route("/resource/media/{node}", name="claro_file_get_media")
      * @EXT\Method("GET")
      *
      * @param ResourceNode $node
