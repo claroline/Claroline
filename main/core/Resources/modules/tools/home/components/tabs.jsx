@@ -22,7 +22,7 @@ const Tabs = props =>
         <span className={classes('fa fa-fw', `fa-${tab.icon}`, tab.title && 'icon-with-text-right')} />
         }
         {tab.title}
-        {!tab.visible && props.editing &&
+        {!tab.locked && props.editing &&
           <span className="fa fa-fw fa-eye-slash icon-with-text-left" />
         }
       </LinkButton>

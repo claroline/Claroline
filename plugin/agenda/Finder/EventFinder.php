@@ -69,6 +69,14 @@ class EventFinder extends AbstractFinder
                 $qb->andWhere("obj.end >= :{$filterName}");
                 $qb->setParameter($filterName, $filterValue);
                 break;
+              case 'endBeforeNow':
+                $qb->andWhere("obj.end <= :{$filterName}");
+                $qb->setParameter($filterName, new \DateTime());
+                break;
+              case 'endAfterNow':
+                $qb->andWhere("obj.end >= :{$filterName}");
+                $qb->setParameter($filterName, new \DateTime());
+                break;
               default:
                 $this->setDefaults($qb, $filterName, $filterValue);
              }

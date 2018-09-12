@@ -37,10 +37,21 @@ export default {
         label: trans('start_date'),
         displayed: true
       }, {
-        name: 'end',
+        name: 'endBeforeNow',
         type: 'date',
-        label: trans('end_date'),
-        displayed: true
+        label: trans('end_before_now'),
+        displayed: false,
+        displayable: false,
+        filterable: true,
+        sortable: false
+      }, {
+        name: 'startBeforeNow',
+        type: 'date',
+        label: trans('start_before_now'),
+        displayed: false,
+        displayable: false,
+        filterable: true,
+        sortable: false
       }
     ],
     card: EventCard

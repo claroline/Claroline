@@ -126,12 +126,14 @@ class Updater120000 extends Updater
 
         $sql = '
             UPDATE claro_home_tab_config config
+            JOIN claro_widget_home_tab_config temp on temp.id = config.id
             LEFT JOIN claro_home_tab_temp tab
             ON config.home_tab_id = tab.id
             SET
                 config.name = tab.name,
                 config.longTitle = tab.name,
-                config.centerTitle = false
+                config.centerTitle = false,
+                config.is_locked = true
             ';
 
         $stmt = $this->conn->prepare($sql);

@@ -38,14 +38,14 @@ claro_content_confirm:
     options: { expose: true }
     defaults:
         _controller: FrameworkBundle:Template:template
-        template: 'ClarolineCoreBundle:Home:confirm.html.twig'
+        template: 'ClarolineCoreBundle:home:confirm.html.twig'
 
 claro_content_link:
     path: /content/link
     options: { expose: true }
     defaults:
         _controller: FrameworkBundle:Template:template
-        template: 'ClarolineCoreBundle:Home:link.html.twig'
+        template: 'ClarolineCoreBundle:home:link.html.twig'
 
 claro_authentication:
     resource: "@ClarolineCoreBundle/Controller/AuthenticationController.php"

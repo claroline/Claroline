@@ -51,7 +51,7 @@ class HomeTabFinder extends AbstractFinder
 
                             WHERE (user.uuid = :userId OR user.id = :userId)
                             AND tab.type = :adminDesktop
-                            AND htc.visible = true
+                            AND htc.locked = true
                           ";
 
                         $subQuery2 =
@@ -61,7 +61,7 @@ class HomeTabFinder extends AbstractFinder
                             LEFT JOIN htc2.roles role2
                             WHERE role2.id IS NULL
                             AND tab2.type = :adminDesktop
-                            AND htc2.visible = true
+                            AND htc2.locked = true
                           ";
 
                         $expr[] = $qb->expr()->orX(
