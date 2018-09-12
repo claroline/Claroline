@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
@@ -25,6 +26,7 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\MessageBundle\Entity\Message;
 use Icap\NotificationBundle\Manager\NotificationManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -51,6 +53,7 @@ class LayoutController extends Controller
     private $configHandler;
     private $toolManager;
     private $serializer;
+    private $finder;
 
     /**
      * LayoutController constructor.
@@ -64,7 +67,8 @@ class LayoutController extends Controller
      *     "configHandler"       = @DI\Inject("claroline.config.platform_config_handler"),
      *     "toolManager"         = @DI\Inject("claroline.manager.tool_manager"),
      *     "dispatcher"          = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "serializer"          = @DI\Inject("claroline.api.serializer")
+     *     "serializer"          = @DI\Inject("claroline.api.serializer"),
+     *     "finder"          = @DI\Inject("claroline.api.finder")
      * })
      *
      * @param RoleManager                  $roleManager
@@ -76,6 +80,7 @@ class LayoutController extends Controller
      * @param PlatformConfigurationHandler $configHandler
      * @param StrictDispatcher             $dispatcher
      * @param SerializerProvider           $serializer
+     * @param FinderProvider               $configHandler
      */
     public function __construct(
         RoleManager $roleManager,
@@ -86,7 +91,8 @@ class LayoutController extends Controller
         Utilities $utils,
         PlatformConfigurationHandler $configHandler,
         StrictDispatcher $dispatcher,
-        SerializerProvider $serializer
+        SerializerProvider $serializer,
+        FinderProvider $finder
     ) {
         $this->roleManager = $roleManager;
         $this->workspaceManager = $workspaceManager;
@@ -97,6 +103,7 @@ class LayoutController extends Controller
         $this->configHandler = $configHandler;
         $this->dispatcher = $dispatcher;
         $this->serializer = $serializer;
+        $this->finderProvider = $finder;
     }
 
     /**
@@ -205,7 +212,17 @@ class LayoutController extends Controller
             ],
 
             'notifications' => [
-                'count' => $token->getUser() instanceof User ? $this->notificationManager->countUnviewedNotifications($token->getUser()) : '',
+                'count' => [
+                  'notifications' => $token->getUser() instanceof User ? $this->notificationManager->countUnviewedNotifications($token->getUser()) : '',
+                  'messages' => $token->getUser() instanceof User ? $this->finderProvider->fetch(
+                    Message::class,
+                    ['removed' => false, 'read' => false],
+                    null,
+                    0,
+                    -1,
+                    true
+                  ) : '',
+                ],
                 'refreshDelay' => $this->configHandler->getParameter('notifications_refresh_delay'),
             ],
 
