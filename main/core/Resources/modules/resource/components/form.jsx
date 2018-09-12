@@ -148,7 +148,7 @@ const ResourceFormComponent = (props) =>
                 label: trans('access_code'),
                 displayed: restrictedByCode,
                 type: 'password',
-                required: true
+                required: restrictedByCode
               }
             ]
           }, {

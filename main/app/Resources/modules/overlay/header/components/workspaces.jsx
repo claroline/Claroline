@@ -43,9 +43,7 @@ const WorkspacesMenu = props =>
       </li>
     }
 
-    {0 !== props.history.length &&
     <li role="presentation" className="divider"/>
-    }
     {0 !== props.history.length &&
       <li role="presentation" className="dropdown-header">{trans('history')}</li>
     }
@@ -61,7 +59,10 @@ const WorkspacesMenu = props =>
         </li>
       )
     }
-    {0 !== props.history.length &&
+    {0 !== props.history.length && !props.currentUser.id &&
+      <li role="presentation" className="divider"/>
+    }
+    {props.currentUser.id &&
       <li role="presentation" className="divider"/>
     }
     {/* user workspaces */}

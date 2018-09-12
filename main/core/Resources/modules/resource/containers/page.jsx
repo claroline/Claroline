@@ -30,6 +30,9 @@ const ResourcePage = connect(
     },
     dismissRestrictions() {
       dispatch(actions.dismissRestrictions())
+    },
+    checkAccessCode(code) {
+      dispatch(actions.checkAccessCode(code))
     }
   })
 )(ResourcePageComponent)

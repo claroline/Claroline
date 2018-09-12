@@ -9,11 +9,13 @@ export const USER_EVALUATION_UPDATE = 'USER_EVALUATION_UPDATE'
 export const RESOURCE_LOAD          = 'RESOURCE_LOAD'
 export const RESOURCE_RESTRICTIONS_DISMISS = 'RESOURCE_RESTRICTIONS_DISMISS'
 export const RESOURCE_RESTRICTIONS_ERROR = 'RESOURCE_RESTRICTIONS_ERROR'
+export const RESOURCE_RESTRICTIONS_UNLOCKED = 'RESOURCE_RESTRICTIONS_UNLOCKED'
 
 // action creators
 export const actions = {}
 
 actions.setRestrictionsError = makeActionCreator(RESOURCE_RESTRICTIONS_ERROR, 'errors')
+actions.unlockResource = makeActionCreator(RESOURCE_RESTRICTIONS_UNLOCKED)
 actions.loadResource = makeActionCreator(RESOURCE_LOAD, 'resourceData')
 actions.fetchResource = (resourceNode) => ({
   [API_REQUEST]: {
@@ -40,3 +42,14 @@ actions.triggerLifecycleAction = (action) => (dispatch, getState) => {
 actions.updateUserEvaluation = makeActionCreator(USER_EVALUATION_UPDATE, 'userEvaluation')
 
 actions.dismissRestrictions = makeActionCreator(RESOURCE_RESTRICTIONS_DISMISS)
+
+actions.checkAccessCode = (resourceNode, code) => ({
+  [API_REQUEST] : {
+    url: ['claro_resource_unlock', {resourceNode: resourceNode, code: code}],
+    success: (response, dispatch) => {
+      dispatch(actions.unlockResource())
+      dispatch(actions.loadResource(response))
+    },
+    error: (response, dispatch) => dispatch(actions.setRestrictionsError(response))
+  }
+})

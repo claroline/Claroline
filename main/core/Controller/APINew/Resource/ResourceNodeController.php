@@ -60,14 +60,12 @@ class ResourceNodeController extends AbstractCrudController
      * @param string  $class
      *
      * @return JsonResponse
-     *
-     * @todo do not return hidden resources to standard users
      */
     public function listAction(Request $request, $parent, $class = ResourceNode::class)
     {
         $options = $request->query->all();
 
-        if (!empty($parent)) {
+        if ($parent) {
             // grab directory content
             $parentNode = $this->om
                 ->getRepository(ResourceNode::class)
@@ -80,6 +78,7 @@ class ResourceNodeController extends AbstractCrudController
 
                 if (!isset($permissions['administrate']) || !$permissions['administrate']) {
                     $options['hiddenFilters']['published'] = true;
+                    $options['hiddenFilters']['hidden'] = false;
                 }
             }
         } else {
@@ -98,7 +97,7 @@ class ResourceNodeController extends AbstractCrudController
             $this->container->get('security.token_storage')->getToken()->getRoles()
         );
 
-        if (!in_array('ROLE_ADMIN', $roles) || $options['hiddenFilters']['parent'] === null) {
+        if (!in_array('ROLE_ADMIN', $roles) || null === $options['hiddenFilters']['parent']) {
             $options['hiddenFilters']['roles'] = $roles;
         }
 

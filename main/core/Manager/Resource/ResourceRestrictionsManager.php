@@ -148,6 +148,8 @@ class ResourceRestrictionsManager
      *
      * @return bool
      */
+
+    // TODO : works just with IPv4, should be working with IPv6
     public function isIpAuthorized(ResourceNode $resourceNode): bool
     {
         $allowed = $resourceNode->getAllowedIps();
@@ -159,7 +161,9 @@ class ResourceRestrictionsManager
                 $allowBlock = [];
 
                 foreach ($allowedParts as $key => $val) {
-                    $allowBlock[] = ($val === $currentParts[$key] || '*' === $val);
+                    if (isset($currentParts[$key])) {
+                        $allowBlock[] = ($val === $currentParts[$key] || '*' === $val);
+                    }
                 }
 
                 if (!in_array(false, $allowBlock)) {

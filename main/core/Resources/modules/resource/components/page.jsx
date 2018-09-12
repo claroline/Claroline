@@ -95,11 +95,13 @@ class ResourcePage extends Component {
           ])
         })}
       >
-        {this.props.loaded && !isEmpty(this.props.accessErrors) &&
+        {/* {this.props.loaded &&*/}
+        {!isEmpty(this.props.accessErrors) &&
           <ResourceRestrictions
             errors={this.props.accessErrors}
             dismiss={this.props.dismissRestrictions}
             managed={this.props.managed}
+            checkAccessCode={(code) => this.props.checkAccessCode(code)}
           />
         }
 
@@ -129,6 +131,7 @@ ResourcePage.propTypes = {
   updateNode: T.func.isRequired,
   loadResource: T.func.isRequired,
   dismissRestrictions: T.func.isRequired,
+  checkAccessCode: T.func,
 
   /**
    * The current user evaluation.

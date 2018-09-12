@@ -51,7 +51,7 @@ const Header = props =>
       />
     }
 
-    {props.currentUser.id &&
+    {props.authenticated &&
       <HeaderNotifications
         count={props.count}
       />
@@ -68,7 +68,7 @@ const Header = props =>
     />
 
     {props.display.locale &&
-      <HeaderLocale locale={props.locale} />
+    <HeaderLocale locale={props.locale} />
     }
   </header>
 

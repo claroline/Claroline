@@ -78,6 +78,7 @@ class LocaleController
             $this->localeManager->setUserLocale($locale);
         }
 
+        $request->getLocale($locale);
         $request->getSession()->set('_locale', $locale);
         $referer = $request->headers->get('referer');
 

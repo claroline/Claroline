@@ -1,6 +1,5 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
 
 import {trans} from '#/main/core/translation'
 import {Button} from '#/main/app/action/components/button'
@@ -48,10 +47,7 @@ const HeaderNotifications = props => {
       id="app-notifications-menu"
       type={MENU_BUTTON}
       className="app-header-item app-header-btn"
-      icon={classes('fa fa-fw', {
-        'fa-mail-bulk': 0 !== totalCount,
-        'fa-bell-slash': 0 === totalCount
-      })}
+      icon="fa fa-fw fa-mail-bulk"
       label={trans('notifications')}
       subscript={0 !== totalCount ? {
         type: 'label',
