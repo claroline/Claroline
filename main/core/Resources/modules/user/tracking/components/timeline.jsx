@@ -2,12 +2,13 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {asset} from '#/main/core/scaffolding/asset'
 import {url} from '#/main/app/api'
+
+import {asset} from '#/main/core/scaffolding/asset'
 import {trans} from '#/main/core/translation'
 import {displayDate} from '#/main/core/scaffolding/date'
 import {constants} from '#/main/core/user/tracking/constants'
-
+import {ResourceIcon} from '#/main/core/resource/components/icon'
 import {ScoreGauge} from '#/main/core/layout/evaluation/components/score-gauge.jsx'
 
 const EventWrapper = props =>
@@ -32,10 +33,16 @@ const EventWrapper = props =>
       <div className="timeline-event-block">
         <div className="timeline-event-header">
           <a href={url(['claro_resource_open', {node: props.resource.autoId, resourceType: props.resource.meta.type}])}>
-            <img
-              src={props.resource.thumbnail ? asset(props.resource.thumbnail) : asset(props.resource.meta.icon)}
-              alt="resource_icon"
-            />
+            {props.resource.thumbnail ?
+              <img
+                src={asset(props.resource.thumbnail)}
+                alt="resource_icon"
+              /> :
+              <ResourceIcon
+                className="icon"
+                mimeType={props.resource.meta.mimeType}
+              />
+            }
           </a>
         </div>
 
@@ -80,6 +87,7 @@ EventWrapper.propTypes = {
     thumbnail: T.string,
     meta: T.shape({
       type: T.string.isRequired,
+      mimeType: T.string.isRequired,
       icon: T.string.isRequired
     }).isRequired
   })

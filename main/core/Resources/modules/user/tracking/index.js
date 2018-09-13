@@ -1,6 +1,6 @@
 import {bootstrap} from '#/main/app/bootstrap'
 
-import {reducer} from '#/main/core/user/tracking/reducer'
+import {reducer} from '#/main/core/user/tracking/store/reducer'
 import {Tracking} from '#/main/core/user/tracking/components/main.jsx'
 
 // mount the react application

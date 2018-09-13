@@ -143,10 +143,14 @@
         background: #f9f9f9; // same as grid items
         border-right: 1px solid #ddd; // same as grid items
         border-radius: @panel-border-radius 0 0 @panel-border-radius;
+
+        .resource-icon {
+            max-height: fit-content;
+        }
     }
 
     .timeline-event-content {
-        flex: 1 0 0%;
+        flex: 100%;
         padding: @panel-body-padding;
     }
 
