@@ -125,10 +125,10 @@ class MailServerType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-          'translation_domain' => 'platform',
-          'transport' => 'sendmail',
-          'lockedParams' => [],
-          'formDisplay' => [
+            'translation_domain' => 'platform',
+            'transport' => 'sendmail',
+            'lockedParams' => [],
+            'formDisplay' => [
                 'sendmail' => [
                     'host' => false,
                     'username' => false,

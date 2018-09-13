@@ -475,7 +475,7 @@ class ParametersController extends Controller
     public function registrationMailFormAction()
     {
         $form = $this->formFactory->create(
-            new AdminForm\MailInscriptionType(),
+            AdminForm\MailInscriptionType::class,
             $this->mailManager->getMailInscription()
         );
 
@@ -494,7 +494,7 @@ class ParametersController extends Controller
      */
     public function submitRegistrationMailAction()
     {
-        $formData = $this->request->get('platform_parameters_form');
+        $formData = $this->request->request->get('mail_inscription');
         $form = $this->formFactory->create(AdminForm\MailInscriptionType::class, $formData['content']);
         $errors = $this->mailManager->validateMailVariable($formData['content'], '%password%');
 
@@ -532,7 +532,7 @@ class ParametersController extends Controller
      */
     public function submitMailLayoutAction()
     {
-        $formData = $this->request->get('platform_parameters_form');
+        $formData = $this->request->request->get('mail_layout');
         $form = $this->formFactory->create(AdminForm\MailLayoutType::class, $formData['content']);
         $errors = $this->mailManager->validateMailVariable($formData['content'], '%content%');
 
@@ -543,7 +543,7 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/email/layout/option/form", name="claro_admin_mail_option_form")
-     * @EXT\Template("ClarolineCoreBundle:administration/parameters:open_mail_form.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:administration/parameters:option_mail_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -551,7 +551,8 @@ class ParametersController extends Controller
     public function optionMailFormAction()
     {
         $form = $this->formFactory->create(
-            AdminForm\MailOptionType::class, ['from' => $this->mailManager->getMailerFrom()]
+            AdminForm\MailOptionType::class,
+            ['from' => $this->mailManager->getMailerFrom()]
         );
 
         return ['form' => $form->createView()];

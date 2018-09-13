@@ -27,7 +27,7 @@ class MailOptionType extends AbstractType
                 [
                     'required' => false,
                     'label' => 'mailer_from',
-                    'data' => $options['from'],
+                    'data' => $builder->getData()['from'],
                 ]
             );
     }
