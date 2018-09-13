@@ -2,14 +2,14 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {trans} from '#/main/core/translation'
-import {CALLBACK_BUTTON, LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
-
-import {ListData} from '#/main/app/content/list/containers/data'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
+import {CALLBACK_BUTTON, LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {ListData} from '#/main/app/content/list/containers/data'
+
+import {trans, transChoice} from '#/main/core/translation'
 import {MODAL_USER_PASSWORD} from '#/main/core/user/modals/password'
 import {actions as userActions} from '#/main/core/user/actions'
-
 import {actions} from '#/main/core/administration/user/user/actions'
 import {UserList, getUserListDefinition} from '#/main/core/administration/user/user/components/user-list'
 
@@ -56,31 +56,31 @@ const UsersList = props =>
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-check-circle',
         label: trans('enable_user'),
-        scope: ['object'], // todo should be a selection action too
-        displayed: rows[0].restrictions.disabled,
-        callback: () => props.enable(rows[0])
+        scope: ['object', 'collection'],
+        displayed: 0 < rows.filter(u => u.restrictions.disabled).length,
+        callback: () => props.enable(rows)
       }, {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-times-circle',
         label: trans('disable_user'),
-        scope: ['object'], // todo should be a selection action too
-        displayed: !rows[0].restrictions.disabled,
-        callback: () => props.disable(rows[0]),
+        scope: ['object', 'collection'],
+        displayed: 0 < rows.filter(u => !u.restrictions.disabled).length,
+        callback: () => props.disable(rows),
         dangerous: true
       }, {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-book',
         label: trans('enable_personal_ws'),
-        scope: ['object'], // todo should be a selection action too
-        displayed: !rows[0].meta.personalWorkspace,
-        callback: () => props.createWorkspace(rows[0])
+        scope: ['object', 'collection'],
+        displayed: 0 < rows.filter(u => !u.meta.personalWorkspace).length,
+        callback: () => props.createWorkspace(rows)
       }, {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-book',
         label: trans('disable_personal_ws'),
-        scope: ['object'], // todo should be a selection action too
-        displayed: rows[0].meta.personalWorkspace,
-        callback: () => props.deleteWorkspace(rows[0]),
+        scope: ['object', 'collection'],
+        displayed: 0 < rows.filter(u => u.meta.personalWorkspace).length,
+        callback: () => props.deleteWorkspace(rows),
         dangerous: true
       }, {
         type: LINK_BUTTON,
@@ -113,19 +113,33 @@ const Users = connect(
     platformRoles: state.platformRoles
   }),
   dispatch => ({
-    enable(user) {
-      dispatch(actions.enable(user))
+    enable(users) {
+      dispatch(actions.enable(users))
     },
-    disable(user) {
-      // todo add confirm
-      dispatch(actions.disable(user))
+    disable(users) {
+      dispatch(
+        modalActions.showModal(MODAL_CONFIRM, {
+          icon: 'fa fa-fw fa-times-circle',
+          title: transChoice('disable_users', users.length, {count: users.length}),
+          question: trans('disable_users_confirm', {users_list: users.map(u => `${u.firstName} ${u.lastName}`).join(', ')}),
+          dangerous: true,
+          handleConfirm: () => dispatch(actions.disable(users))
+        })
+      )
     },
-    createWorkspace(user) {
-      dispatch(actions.createWorkspace(user))
+    createWorkspace(users) {
+      dispatch(actions.createWorkspace(users))
     },
-    deleteWorkspace(user) {
-      // todo add confirm
-      dispatch(actions.deleteWorkspace(user))
+    deleteWorkspace(users) {
+      dispatch(
+        modalActions.showModal(MODAL_CONFIRM, {
+          icon: 'fa fa-fw fa-book',
+          title: transChoice('disable_personal_workspaces', users.length, {count: users.length}),
+          question: trans('disable_personal_workspaces_confirm', {users_list: users.map(u => `${u.firstName} ${u.lastName}`).join(', ')}),
+          dangerous: true,
+          handleConfirm: () => dispatch(actions.deleteWorkspace(users))
+        })
+      )
     },
     updatePassword(user) {
       dispatch(

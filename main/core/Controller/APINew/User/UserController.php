@@ -60,33 +60,57 @@ class UserController extends AbstractCrudController
     use HasGroupsTrait;
 
     /**
-     * @Route("/{id}/pws/create", name="apiv2_user_pws_create")
+     * @Route("/pws/create", name="apiv2_users_pws_create")
      * @Method("POST")
-     * @ParamConverter("user", options={"mapping": {"id": "uuid"}})
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
      */
-    public function createPersonalWorkspaceAction(User $user)
+    public function createPersonalWorkspaceAction(Request $request)
     {
-        if (!$user->getPersonalWorkspace()) {
-            $this->container->get('claroline.manager.user_manager')
-              ->setPersonalWorkspace($user);
-        } else {
-            throw new \Exception('Workspace already exists');
-        }
+        $users = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\User');
 
-        return new JsonResponse($this->serializer->get('Claroline\CoreBundle\Entity\User')->serialize($user));
+        $this->om->startFlushSuite();
+
+        foreach ($users as $user) {
+            if (!$user->getPersonalWorkspace()) {
+                $this->container->get('claroline.manager.user_manager')->setPersonalWorkspace($user);
+            }
+        }
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(array_map(function (User $user) {
+            return $this->serializer->serialize($user);
+        }, $users));
     }
 
     /**
-     * @Route("/{id}/pws/delete", name="apiv2_user_pws_delete")
+     * @Route("/pws/delete", name="apiv2_users_pws_delete")
      * @Method("DELETE")
-     * @ParamConverter("user", options={"mapping": {"id": "uuid"}})
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
      */
-    public function deletePersonalWorkspaceAction(User $user)
+    public function deletePersonalWorkspaceAction(Request $request)
     {
-        $personalWorkspace = $user->getPersonalWorkspace();
-        $this->container->get('claroline.manager.workspace_manager')->deleteWorkspace($personalWorkspace);
+        $users = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\User');
 
-        return new JsonResponse($this->serializer->get('Claroline\CoreBundle\Entity\User')->serialize($user));
+        $this->om->startFlushSuite();
+
+        foreach ($users as $user) {
+            $personalWorkspace = $user->getPersonalWorkspace();
+
+            if ($personalWorkspace) {
+                $this->container->get('claroline.manager.workspace_manager')->deleteWorkspace($personalWorkspace);
+            }
+        }
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(array_map(function (User $user) {
+            return $this->serializer->serialize($user);
+        }, $users));
     }
 
     /**
@@ -324,5 +348,61 @@ class UserController extends AbstractCrudController
             'Claroline\CoreBundle\Entity\User',
             array_merge($request->query->all(), ['hiddenFilters' => $filters])
         ));
+    }
+
+    /**
+     * @Route(
+     *    "/users/enable",
+     *    name="apiv2_users_enable"
+     * )
+     * @Method("PUT")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function usersEnableAction(Request $request)
+    {
+        $users = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\User');
+
+        $this->om->startFlushSuite();
+
+        foreach ($users as $user) {
+            $user->setIsEnabled(true);
+            $this->om->persist($user);
+        }
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(array_map(function (User $user) {
+            return $this->serializer->serialize($user);
+        }, $users));
+    }
+
+    /**
+     * @Route(
+     *    "/users/disable",
+     *    name="apiv2_users_disable"
+     * )
+     * @Method("PUT")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function usersDisableAction(Request $request)
+    {
+        $users = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\User');
+
+        $this->om->startFlushSuite();
+
+        foreach ($users as $user) {
+            $user->setIsEnabled(false);
+            $this->om->persist($user);
+        }
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(array_map(function (User $user) {
+            return $this->serializer->serialize($user);
+        }, $users));
     }
 }

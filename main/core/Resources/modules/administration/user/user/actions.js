@@ -82,11 +82,10 @@ actions.addOrganizations = (id, organizations) => ({
   }
 })
 
-actions.enable = (user) => ({
+actions.enable = (users) => ({
   [API_REQUEST]: {
-    url: ['apiv2_user_update', {id: user.id}],
+    url: url(['apiv2_users_enable'], {ids: users.map(u => u.id)}),
     request: {
-      body: JSON.stringify(Object.assign({}, user, {restrictions: {disabled:false}})),
       method: 'PUT'
     },
     success: (data, dispatch) => {
@@ -95,12 +94,11 @@ actions.enable = (user) => ({
   }
 })
 
-actions.disable = (user) => ({
+actions.disable = (users) => ({
   [API_REQUEST]: {
-    url: ['apiv2_user_update', {id: user.id}],
+    url: url(['apiv2_users_disable'], {ids: users.map(u => u.id)}),
     request: {
-      method: 'PUT',
-      body: JSON.stringify(Object.assign({}, user, {restrictions: {disabled:true}}))
+      method: 'PUT'
     },
     success: (data, dispatch) => {
       dispatch(listActions.invalidateData('users.list'))
@@ -108,18 +106,22 @@ actions.disable = (user) => ({
   }
 })
 
-actions.createWorkspace = (user) => ({
+actions.createWorkspace = (users) => ({
   [API_REQUEST]: {
-    url: ['apiv2_user_pws_create', {id: user.id}],
-    request: { method: 'POST'},
+    url: url(['apiv2_users_pws_create'], {ids: users.map(u => u.id)}),
+    request: {
+      method: 'POST'
+    },
     success: (data, dispatch) => dispatch(listActions.invalidateData('users.list'))
   }
 })
 
-actions.deleteWorkspace = (user) => ({
+actions.deleteWorkspace = (users) => ({
   [API_REQUEST]: {
-    url: ['apiv2_user_pws_delete', {id: user.id}],
-    request: {method: 'DELETE'},
+    url: url(['apiv2_users_pws_delete'], {ids: users.map(u => u.id)}),
+    request: {
+      method: 'DELETE'
+    },
     success: (data, dispatch) => dispatch(listActions.invalidateData('users.list'))
   }
 })
