@@ -1,4 +1,5 @@
 import merge from 'lodash/merge'
+import cloneDeep from 'lodash/cloneDeep'
 
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 
@@ -7,7 +8,8 @@ import {
   RESOURCE_UPDATE_NODE,
   USER_EVALUATION_UPDATE,
   RESOURCE_RESTRICTIONS_DISMISS,
-  RESOURCE_RESTRICTIONS_ERROR
+  RESOURCE_RESTRICTIONS_ERROR,
+  RESOURCE_RESTRICTIONS_UNLOCKED
 } from '#/main/core/resource/store/actions'
 
 const reducer = {
@@ -27,7 +29,12 @@ const reducer = {
     }),
     details: makeReducer({}, {
       [RESOURCE_LOAD]: (state, action) => action.resourceData.accessErrors || {},
-      [RESOURCE_RESTRICTIONS_ERROR]: (state, action) => action.errors
+      [RESOURCE_RESTRICTIONS_ERROR]: (state, action) => action.errors,
+      [RESOURCE_RESTRICTIONS_UNLOCKED]: (state) => {
+        const newState = cloneDeep(state)
+        newState.locked = false
+        return newState
+      }
     })
   }),
 

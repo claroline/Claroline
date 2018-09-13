@@ -101,7 +101,7 @@ class ResourcePage extends Component {
             errors={this.props.accessErrors}
             dismiss={this.props.dismissRestrictions}
             managed={this.props.managed}
-            checkAccessCode={(code) => this.props.checkAccessCode(code)}
+            checkAccessCode={(code) => this.props.checkAccessCode(this.props.resourceNode, code)}
           />
         }
 
@@ -118,7 +118,7 @@ ResourcePage.propTypes = {
   embedded: T.bool,
   showHeader: T.bool,
   managed: T.bool.isRequired,
-
+  
   /**
    * The current resource node.
    */

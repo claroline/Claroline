@@ -45,11 +45,15 @@ actions.dismissRestrictions = makeActionCreator(RESOURCE_RESTRICTIONS_DISMISS)
 
 actions.checkAccessCode = (resourceNode, code) => ({
   [API_REQUEST] : {
-    url: ['claro_resource_unlock', {resourceNode: resourceNode, code: code}],
+    url: ['claro_resource_unlock', {id: resourceNode.id}],
+    request: {
+      method: 'POST',
+      body: JSON.stringify({code: code})
+    },
     success: (response, dispatch) => {
       dispatch(actions.unlockResource())
-      dispatch(actions.loadResource(response))
+      dispatch(actions.fetchResource(resourceNode))
     },
-    error: (response, dispatch) => dispatch(actions.setRestrictionsError(response))
+    error: (response, dispatch) => dispatch(actions.fetchResource(resourceNode))
   }
 })

@@ -95,7 +95,7 @@ Header.propTypes = {
    */
   currentUser: T.shape(
     UserTypes.propTypes
-  ).isRequired,
+  ),
   count: T.shape({
     notifications: T.number,
     messages: T.number

@@ -348,8 +348,13 @@ class ResourceController
     /**
      * Submit access code.
      *
-     * @EXT\Route("/{id}/unlock", name="claro_resource_unlock")
+     * @EXT\Route("resource/{id}/unlock", name="claro_resource_unlock")
      * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     * "resourceNode",
+     * class="ClarolineCoreBundle:Resource\ResourceNode",
+     * options={"mapping": {"id": "uuid"}}
+     * )
      *
      * @param ResourceNode $resourceNode
      * @param Request      $request
@@ -358,7 +363,7 @@ class ResourceController
      */
     public function unlockAction(ResourceNode $resourceNode, Request $request)
     {
-        $this->restrictionsManager->unlock($resourceNode, json_decode($request->getContent(), true));
+        $this->restrictionsManager->unlock($resourceNode, json_decode($request->getContent(), true)['code']);
 
         return new JsonResponse(null, 204);
     }
