@@ -90,6 +90,11 @@ class HomeListener
             return $data !== [];
         });
 
+        usort($tabs, function ($a, $b) {
+            //spaceship operator. administration is '<' than desktop so it works
+            return $a['type'] <=> $b['type'];
+        });
+
         foreach ($tabs as $position => $tab) {
             $orderedTabs[$position + 1] = $tab;
             $orderedTabs[$position + 1]['position'] = $position + 1;
