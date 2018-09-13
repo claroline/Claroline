@@ -89,6 +89,12 @@ const UsersList = props =>
         target: rows.length === 2 ? `/users/merge/${rows[0].id}/${rows[1].id}`: '',
         displayed: rows.length === 2,
         dangerous: true
+      }, {
+        type: CALLBACK_BUTTON,
+        icon: 'fa fa-fw fa-user-lock',
+        label: trans('reset_password'),
+        scope: ['object', 'collection'],
+        callback: () => props.resetPassword(rows)
       }
     ]}
     definition={getUserListDefinition({platformRoles: props.platformRoles})}
@@ -101,6 +107,7 @@ UsersList.propTypes = {
   createWorkspace: T.func.isRequired,
   deleteWorkspace: T.func.isRequired,
   updatePassword: T.func.isRequired,
+  resetPassword: T.func.isRequired,
   platformRoles: T.array.isRequired
 }
 
@@ -147,6 +154,9 @@ const Users = connect(
           changePassword: (password) => dispatch(userActions.updatePassword(user, password))
         })
       )
+    },
+    resetPassword(users) {
+      dispatch(actions.resetPassword(users))
     }
   })
 )(UsersList)

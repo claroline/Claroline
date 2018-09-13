@@ -126,6 +126,15 @@ actions.deleteWorkspace = (users) => ({
   }
 })
 
+actions.resetPassword = (users) => ({
+  [API_REQUEST]: {
+    url: url(['apiv2_users_password_reset'], {ids: users.map(u => u.id)}),
+    request: {
+      method: 'PUT'
+    }
+  }
+})
+
 actions.merge = (id1, id2, navigate) => ({
   [API_REQUEST]: {
     url: ['apiv2_user_merge', {keep: id1, remove: id2}],

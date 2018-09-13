@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\User\MergeUsersEvent;
+use Claroline\CoreBundle\Manager\MailManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -36,18 +37,24 @@ class UserController extends AbstractCrudController
     /** @var StrictDispatcher */
     private $eventDispatcher;
 
+    /** @var MailManager */
+    private $mailManager;
+
     /**
      * UserController constructor.
      *
      * @DI\InjectParams({
-     *    "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher")
+     *    "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
+     *    "mailManager"     = @DI\Inject("claroline.manager.mail_manager")
      * })
      *
      * @param StrictDispatcher $eventDispatcher
+     * @param MailManager      $mailManager
      */
-    public function __construct(StrictDispatcher $eventDispatcher)
+    public function __construct(StrictDispatcher $eventDispatcher, MailManager $mailManager)
     {
         $this->eventDispatcher = $eventDispatcher;
+        $this->mailManager = $mailManager;
     }
 
     public function getName()
@@ -398,6 +405,37 @@ class UserController extends AbstractCrudController
         foreach ($users as $user) {
             $user->setIsEnabled(false);
             $this->om->persist($user);
+        }
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(array_map(function (User $user) {
+            return $this->serializer->serialize($user);
+        }, $users));
+    }
+
+    /**
+     * @Route(
+     *    "/password/reset",
+     *    name="apiv2_users_password_reset"
+     * )
+     * @Method("PUT")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function passwordResetAction(Request $request)
+    {
+        $users = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\User');
+
+        $this->om->startFlushSuite();
+
+        foreach ($users as $user) {
+            $user->setHashTime(time());
+            $password = sha1(rand(1000, 10000).$user->getUsername().$user->getSalt());
+            $user->setResetPasswordHash($password);
+            $this->om->persist($user);
+            $this->mailManager->sendForgotPassword($user);
         }
         $this->om->endFlushSuite();
 
