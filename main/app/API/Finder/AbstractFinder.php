@@ -42,7 +42,7 @@ abstract class AbstractFinder implements FinderInterface
 
         /** @var QueryBuilder $qb */
         $qb = $this->om->createQueryBuilder();
-        $qb->select($count ? 'COUNT(obj)' : 'obj')->from($this->getClass(), 'obj');
+        $qb->select($count ? 'COUNT(DISTINCT obj)' : 'DISTINCT obj')->from($this->getClass(), 'obj');
         //make an option parameters for query builder ?
         $options = [
           'page' => $page,
@@ -52,6 +52,10 @@ abstract class AbstractFinder implements FinderInterface
 
         // filter query - let's the finder implementation process the filters to configure query
         $query = $this->configureQueryBuilder($qb, $filters, $sortBy, $options);
+
+        if ($query instanceof QueryBuilder) {
+            $qb = $query;
+        }
 
         if (!($query instanceof NativeQuery)) {
             // order query if implementation has not done it
