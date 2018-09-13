@@ -126,7 +126,7 @@ class Updater120000 extends Updater
 
         $sql = '
             UPDATE claro_home_tab_config config
-            JOIN claro_widget_home_tab_config temp on temp.id = config.id
+            LEFT JOIN claro_widget_home_tab_config temp on temp.id = config.id
             LEFT JOIN claro_home_tab_temp tab
             ON config.home_tab_id = tab.id
             SET
