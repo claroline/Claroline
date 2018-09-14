@@ -274,7 +274,7 @@ class FileController extends AbstractApiController
     private function stream(ResourceNode $resourceNode)
     {
         //temporary because otherwise injected resource must have the "open" right
-        $this->checkPermission('OPEN', new ResourceCollection([$resourceNode]), [], true);
+        $this->checkPermission('OPEN', $resourceNode, [], true);
 
         // free the session as soon as possible
         // see https://github.com/claroline/CoreBundle/commit/7cee6de85bbc9448f86eb98af2abb1cb072c7b6b
