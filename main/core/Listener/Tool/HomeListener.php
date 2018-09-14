@@ -79,6 +79,7 @@ class HomeListener
      */
     public function onDisplayDesktop(DisplayToolEvent $event)
     {
+        $orderedTabs = [];
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
         $tabs = $this->finder->search(
@@ -123,6 +124,7 @@ class HomeListener
      */
     public function onDisplayWorkspace(DisplayToolEvent $event)
     {
+        $orderedTabs = [];
         $workspace = $event->getWorkspace();
 
         $tabs = $this->finder->search(

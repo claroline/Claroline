@@ -27,7 +27,7 @@ const ProfileComponent = props =>
         }, {
           path: '/edit',
           component: ProfileEdit,
-          disabled: props.user.username !== authenticatedUser.username &&
+          disabled: authenticatedUser === null || props.user.username !== authenticatedUser.username &&
             authenticatedUser.roles.filter(r => ['ROLE_ADMIN'].concat(props.parameters['roles_edition']).indexOf(r.name) > -1).length === 0
         }
       ]}

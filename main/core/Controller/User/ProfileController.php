@@ -23,7 +23,6 @@ use Doctrine\ORM\NoResultException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -107,26 +106,17 @@ class ProfileController extends Controller
      */
     public function indexAction($publicUrl)
     {
-        $this->checkAccess();
-
         try {
             $user = $this->repository->findOneByIdOrPublicUrl($publicUrl);
+            $serializedUser = $this->userSerializer->serialize($user, [Options::SERIALIZE_FACET]);
 
             return [
-                'user' => $this->userSerializer->serialize($user, [Options::SERIALIZE_FACET]),
+                'user' => $serializedUser,
                 'facets' => $this->profileSerializer->serialize(),
                 'parameters' => $this->parametersSerializer->serialize()['profile'],
             ];
         } catch (NoResultException $e) {
             throw new NotFoundHttpException('Page not found');
-        }
-    }
-
-    private function checkAccess()
-    {
-        $isAccessibleForAnon = $this->configHandler->getParameter('anonymous_public_profile');
-        if (!$isAccessibleForAnon && 'anon.' === $this->tokenStorage->getToken()->getUser()) {
-            throw new AccessDeniedHttpException();
         }
     }
 }

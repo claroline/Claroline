@@ -38,6 +38,21 @@ export default {
         type: 'string',
         label: trans('author'),
         displayed: true
+      }, {
+        name: 'workspace.code',
+        type: 'string',
+        label: trans('workspace'),
+        displayed: true,
+        filterable: false,
+        sortable: false
+      }, {
+        name: 'notDoneYet',
+        type: 'boolean',
+        label: trans('not_done_yet'),
+        displayed: false,
+        displayable: false,
+        filterable: true,
+        sortable: false
       }
     ],
     card: AnnouncementCard

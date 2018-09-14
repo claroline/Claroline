@@ -88,7 +88,7 @@ const UserPageActions = props => {
         </PageGroupActions>
       }
 
-      {hasPermission('contact', props.user) &&
+      {hasPermission('contact', props.user) && isAuthenticated() &&
         <PageGroupActions>
           <PageAction
             id="send-message"

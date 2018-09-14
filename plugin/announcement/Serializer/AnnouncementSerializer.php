@@ -3,8 +3,10 @@
 namespace Claroline\AnnouncementBundle\Serializer;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
@@ -36,21 +38,25 @@ class AnnouncementSerializer
      * @DI\InjectParams({
      *     "tokenStorage"   = @DI\Inject("security.token_storage"),
      *     "userSerializer" = @DI\Inject("claroline.serializer.user"),
-     *     "om"             = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
+     *     "wsSerializer"   = @DI\Inject("claroline.serializer.workspace")
      * })
      *
      * @param TokenStorageInterface $tokenStorage
      * @param UserSerializer        $userSerializer
      * @param ObjectManager         $om
+     * @param WorkspaceSerializer   $wsSerializer
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         UserSerializer $userSerializer,
-        ObjectManager $om
+        ObjectManager $om,
+        WorkspaceSerializer $wsSerializer
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->userSerializer = $userSerializer;
         $this->om = $om;
+        $this->wsSerializer = $wsSerializer;
 
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
     }
@@ -66,12 +72,15 @@ class AnnouncementSerializer
             'id' => $announce->getUuid(),
             'title' => $announce->getTitle(),
             'content' => $announce->getContent(),
+            'workspace' => $announce->getAggregate()->getResourceNode()->getWorkspace() ?
+                $this->wsSerializer->serialize($announce->getAggregate()->getResourceNode()->getWorkspace(), [Options::SERIALIZE_MINIMAL]) :
+                null,
             'meta' => [
                 'resource' => [
                     'id' => $announce->getAggregate()->getResourceNode()->getUuid(),
                 ],
                 'created' => $announce->getCreationDate()->format('Y-m-d\TH:i:s'),
-                'creator' => $announce->getCreator() ? $this->userSerializer->serialize($announce->getCreator()) : null,
+                'creator' => $announce->getCreator() ? $this->userSerializer->serialize($announce->getCreator(), [Options::SERIALIZE_MINIMAL]) : null,
                 'publishedAt' => $announce->getPublicationDate() ? $announce->getPublicationDate()->format('Y-m-d\TH:i:s') : null,
                 'author' => $announce->getAnnouncer(),
                 'notifyUsers' => !empty($announce->getTask()) ? 2 : 0,

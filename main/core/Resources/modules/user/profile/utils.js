@@ -101,8 +101,8 @@ function getFormDefaultSection(userData, isNew = false) {
 }
 
 function formatFormSections(sections, userData, params) {
-  const hasConfidentialRights = hasRoles(authenticatedUser.roles, ['ROLE_ADMIN'].concat(params['roles_confidential']))
-  const hasLockedRights = hasRoles(authenticatedUser.roles, ['ROLE_ADMIN'].concat(params['roles_locked']))
+  const hasConfidentialRights = authenticatedUser ? hasRoles(authenticatedUser.roles, ['ROLE_ADMIN'].concat(params['roles_confidential'])): false
+  const hasLockedRights = authenticatedUser ? hasRoles(authenticatedUser.roles, ['ROLE_ADMIN'].concat(params['roles_locked'])): false
 
   sections.forEach(section => {
     section.fields = section.fields.filter(f => !f.restrictions.hidden && (hasConfidentialRights || !f.restrictions.isMetadata || (authenticatedUser && authenticatedUser.id === userData['id'])))
