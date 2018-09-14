@@ -32,7 +32,6 @@ use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\PluginManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\SecurityTokenManager;
-use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Claroline\CoreBundle\Manager\Theme\ThemeManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -86,7 +85,6 @@ class ParametersController extends Controller
      *     "localeManager"      = @DI\Inject("claroline.manager.locale_manager"),
      *     "request"            = @DI\Inject("request_stack"),
      *     "translator"         = @DI\Inject("translator"),
-     *     "termsOfService"     = @DI\Inject("claroline.common.terms_of_service_manager"),
      *     "mailManager"        = @DI\Inject("claroline.manager.mail_manager"),
      *     "cacheManager"       = @DI\Inject("claroline.manager.cache_manager"),
      *     "contentManager"     = @DI\Inject("claroline.manager.content_manager"),
@@ -112,7 +110,6 @@ class ParametersController extends Controller
         LocaleManager $localeManager,
         RequestStack $request,
         TranslatorInterface $translator,
-        TermsOfServiceManager $termsOfService,
         MailManager $mailManager,
         ContentManager $contentManager,
         CacheManager $cacheManager,
@@ -134,7 +131,6 @@ class ParametersController extends Controller
         $this->roleManager = $roleManager;
         $this->formFactory = $formFactory;
         $this->request = $request->getMasterRequest();
-        $this->termsOfService = $termsOfService;
         $this->localeManager = $localeManager;
         $this->translator = $translator;
         $this->mailManager = $mailManager;
@@ -575,64 +571,6 @@ class ParametersController extends Controller
             $this->addFlashMessage('parameters_save_success');
 
             return $this->redirect($this->generateUrl('claro_admin_parameters_mail_index'));
-        }
-
-        return ['form' => $form->createView()];
-    }
-
-    /**
-     * @EXT\Route("/terms", name="claro_admin_edit_terms_of_service")
-     * @EXT\Template("ClarolineCoreBundle:administration/parameters:terms_of_service_form.html.twig")
-     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function termsOfServiceFormAction()
-    {
-        $form = $this->formFactory->create(
-            AdminForm\TermsOfServiceType::class,
-            $this->termsOfService->getTermsOfService(false),
-            [
-              'active' => $this->configHandler->getParameter('terms_of_service'),
-              'locked_params' => $this->configHandler->getLockedParameters(),
-            ]
-        );
-
-        return ['form' => $form->createView()];
-    }
-
-    /**
-     * @EXT\Route("/terms/submit", name="claro_admin_edit_terms_of_service_submit")
-     * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:administration/parameters:terms_of_service_form.html.twig")
-     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function submitTermsOfServiceAction()
-    {
-        $form = $this->formFactory->create(
-            AdminForm\TermsOfServiceType::class,
-            $this->termsOfService->getTermsOfService(false),
-            [
-              'active' => $this->configHandler->getParameter('terms_of_service'),
-              'locked_params' => $this->configHandler->getLockedParameters(),
-            ]
-        );
-
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $areTermsEnabled = $form->get('active')->getData();
-            $terms = $this->request->get('terms_of_service')['termsOfService'];
-
-            if ($areTermsEnabled && $this->termsOfService->areTermsEmpty($terms)) {
-                $error = $this->translator->trans('terms_enabled_but_empty', [], 'platform');
-                $form->addError(new FormError($error));
-            } else {
-                $this->termsOfService->setTermsOfService($terms);
-                $this->configHandler->setParameter('terms_of_service', $areTermsEnabled);
-            }
         }
 
         return ['form' => $form->createView()];

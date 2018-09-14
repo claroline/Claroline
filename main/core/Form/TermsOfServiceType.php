@@ -22,10 +22,13 @@ class TermsOfServiceType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $data = $builder->getData();
         $content = '';
 
-        if ($builder->getData() instanceof Content) {
-            $content = $builder->getData()->getContent();
+        if ($data instanceof Content) {
+            $content = $data->getContent();
+        } elseif (is_array($data) && isset($data['content'])) {
+            $content = $data['content'];
         }
 
         $builder
