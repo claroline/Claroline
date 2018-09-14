@@ -17,6 +17,8 @@ use Claroline\CoreBundle\Event\User\DecorateUserEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Manager\FacetManager;
+use Claroline\CoreBundle\Repository\Organization\OrganizationRepository;
+use Claroline\CoreBundle\Repository\RoleRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -54,6 +56,11 @@ class UserSerializer
 
     /** @var StrictDispatcher */
     private $eventDispatcher;
+
+    /** @var OrganizationRepository */
+    private $organizationRepo;
+    /** @var RoleRepository */
+    private $roleRepo;
 
     /**
      * UserManager constructor.
@@ -96,6 +103,9 @@ class UserSerializer
         $this->fileSerializer = $fileSerializer;
         $this->container = $container;
         $this->eventDispatcher = $eventDispatcher;
+
+        $this->organizationRepo = $om->getRepository('ClarolineCoreBundle:Organization\Organization');
+        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
     }
 
     /**
@@ -463,10 +473,19 @@ class UserSerializer
         //only add role here. If we want to remove them, use the crud remove method instead
         //it's useful if we want to create a user with a list of roles
         if (isset($data['roles'])) {
-            foreach ($data['roles'] as $role) {
-                /** @var Role $role */
-                $role = $this->container->get('claroline.api.serializer')
-                    ->deserialize('Claroline\CoreBundle\Entity\Role', $role);
+            foreach ($data['roles'] as $roleData) {
+                $role = null;
+
+                if (isset($roleData['id'])) {
+                    $role = $this->roleRepo->findOneBy(['uuid' => $roleData['id']]);
+                } elseif (isset($roleData['name'])) {
+                    $role = $this->roleRepo->findOneBy(['name' => $roleData['name']]);
+                } elseif (isset($roleData['translationKey'])) {
+                    $role = $this->roleRepo->findOneBy([
+                        'translationKey' => $roleData['translationKey'],
+                        'type' => Role::PLATFORM_ROLE,
+                    ]);
+                }
                 if ($role && $role->getId()) {
                     $user->addRole($role);
                 }
@@ -489,9 +508,18 @@ class UserSerializer
         //only add organizations here. If we want to remove them, use the crud remove method instead
         //it's useful if we want to create a user with a list of roles
         if (isset($data['organizations'])) {
-            foreach ($data['organizations'] as $organization) {
-                $organization = $this->container->get('claroline.api.serializer')
-                    ->deserialize('Claroline\CoreBundle\Entity\Organization\Organization', $organization);
+            foreach ($data['organizations'] as $organizationData) {
+                $organization = null;
+
+                if (isset($organizationData['id'])) {
+                    $organization = $this->organizationRepo->findOneBy(['uuid' => $organizationData['id']]);
+                } elseif (isset($organizationData['name'])) {
+                    $organization = $this->organizationRepo->findOneBy(['name' => $organizationData['name']]);
+                } elseif (isset($organizationData['code'])) {
+                    $organization = $this->organizationRepo->findOneBy(['code' => $organizationData['code']]);
+                } elseif (isset($organizationData['email'])) {
+                    $organization = $this->organizationRepo->findOneBy(['email' => $organizationData['email']]);
+                }
                 if ($organization && $organization->getId()) {
                     $user->addOrganization($organization);
                 }
