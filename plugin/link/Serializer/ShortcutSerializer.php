@@ -45,7 +45,7 @@ class ShortcutSerializer
 
     public function getClass()
     {
-        return 'Claroline\LinkBundle\Entity\Shortcut';
+        return Shortcut::class;
     }
 
     /**

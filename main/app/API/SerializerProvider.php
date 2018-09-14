@@ -101,6 +101,12 @@ class SerializerProvider
     public function get($object)
     {
         // search for the correct serializer
+        if (is_string($object)) {
+            if ($meta = $this->om->getClassMetaData($object)) {
+                $object = $meta->name;
+            }
+        }
+
         foreach ($this->serializers as $serializer) {
             $className = $this->getSerializerHandledClass($serializer);
 
@@ -173,6 +179,11 @@ class SerializerProvider
      */
     public function deserialize($class, $data, $options = [])
     {
+        // search for the correct serializer
+        if ($meta = $this->om->getClassMetaData($class)) {
+            $class = $meta->name;
+        }
+
         $object = null;
         $serializer = $this->get($class);
 
