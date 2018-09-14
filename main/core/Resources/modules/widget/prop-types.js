@@ -46,7 +46,7 @@ const WidgetInstance = {
     parameters: T.object
   },
   defaultProps: {
-
+    
   }
 }
 

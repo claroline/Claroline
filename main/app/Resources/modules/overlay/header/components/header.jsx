@@ -17,6 +17,7 @@ const Header = props =>
     {props.logo &&
       <HeaderBrand
         logo={props.logo}
+        redirectHome={props.redirectHome}
       />
     }
 
@@ -24,6 +25,7 @@ const Header = props =>
       <HeaderTitle
         title={props.title}
         subtitle={props.subtitle}
+        redirectHome={props.redirectHome}
       />
     }
 
@@ -121,7 +123,8 @@ Header.propTypes = {
   loginUrl: T.string.isRequired,
   helpUrl: T.string,
   registrationUrl: T.string,
-  maintenance: T.bool
+  maintenance: T.bool,
+  redirectHome: T.bool.isRequired
 }
 
 Header.defaultProps = {

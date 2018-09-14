@@ -30,7 +30,7 @@ class ResourceWidget extends AbstractWidget
      *
      * @ORM\Column(type="boolean")
      */
-    private $showResourceHeader = true;
+    private $showResourceHeader = false;
 
     /**
      * Get resource node.

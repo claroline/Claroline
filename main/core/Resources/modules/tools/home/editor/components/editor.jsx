@@ -35,6 +35,8 @@ const EditorComponent = props => {
     props.context.type === 'desktop' &&
     !props.administration
 
+  let tabExist= 0 !== props.playerTabs.filter(tab => props.currentTab.id === tab.id).length
+
   return (
     <PageContainer>
       <Tabs
@@ -98,7 +100,7 @@ const EditorComponent = props => {
             }]}
           cancel={{
             type: LINK_BUTTON,
-            target: `/tab/${props.currentTab.id}`,
+            target:tabExist ? `/tab/${props.currentTab.id}` : '/',
             exact: true
           }}
           sections={[
@@ -233,6 +235,9 @@ EditorComponent.propTypes = {
   tabs: T.arrayOf(T.shape(
     TabTypes.propTypes
   )),
+  playerTabs: T.arrayOf(T.shape(
+    TabTypes.propTypes
+  )),
   currentTab: T.shape(TabTypes.propTypes),
   currentTabIndex: T.number.isRequired,
   widgets: T.arrayOf(T.shape(
@@ -254,6 +259,7 @@ const Editor = withRouter(connect(
     context: selectors.context(state),
     administration: selectors.administration(state),
     tabs: editorSelectors.editorTabs(state),
+    playerTabs: selectors.tabs(state),
     widgets: editorSelectors.widgets(state),
     currentTabIndex: editorSelectors.currentTabIndex(state),
     currentTab: editorSelectors.currentTab(state)

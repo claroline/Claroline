@@ -21,7 +21,8 @@ const Header = connect(
     tools: selectors.tools(state),
     userTools: selectors.userTools(state),
     maintenance: selectors.maintenance(state),
-    currentLocation: selectors.current(state)
+    currentLocation: selectors.current(state),
+    redirectHome: selectors.redirectHome(state)
   })
 )(HeaderComponent)
 
