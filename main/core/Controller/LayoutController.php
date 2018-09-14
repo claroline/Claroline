@@ -178,11 +178,12 @@ class LayoutController extends Controller
             $excludedTools[] = $lockedTool;
         }
         // current context (desktop, index or workspace)
-        $current = 'desktop';
-        if ('claro_admin_open_tool' === $request->get('_route')) {
+        $current = 'home';
+
+        if ('claro_admin_open_tool' === $request->get('_route') || null === $request->get('_route')) {
             $current = 'administration';
-        } elseif ('claro_index' === $request->get('_route')) {
-            $current = 'home';
+        } elseif ('claro_desktop_open_tool' === $request->get('_route')) {
+            $current = 'desktop';
         } elseif ('claro_workspace_open_tool' === $request->get('_route')) {
             $current = 'workspace';
         }

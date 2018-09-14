@@ -42,6 +42,7 @@ const SentMessagesComponent = (props) =>
           sortable: true
         }, {
           name: 'meta.date',
+          alias: 'date',
           type: 'date',
           label: trans('date'),
           displayed: true,

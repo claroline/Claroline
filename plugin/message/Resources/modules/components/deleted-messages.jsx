@@ -34,6 +34,7 @@ const DeletedMessagesComponent = (props) =>
           primary: true
         }, {
           name: 'from.username',
+          alias: 'senderUsername',
           type: 'string',
           label: trans('from_message'),
           displayed: true,
@@ -41,6 +42,7 @@ const DeletedMessagesComponent = (props) =>
           sortable: true
         }, {
           name: 'meta.date',
+          alias: 'date',
           type: 'date',
           label: trans('date'),
           displayed: true,
@@ -51,6 +53,7 @@ const DeletedMessagesComponent = (props) =>
           }
         }, {
           name: 'meta.read',
+          alias: 'isRead',
           type: 'boolean',
           label: trans('message_read', {}, 'message'),
           displayed: true,
@@ -86,7 +89,7 @@ const DeletedMessagesComponent = (props) =>
       }
     />
   </div>
-  
+
 DeletedMessagesComponent.propTypes = {
   deleteMessages: T.func.isRequired,
   restoreMessages: T.func.isRequired,

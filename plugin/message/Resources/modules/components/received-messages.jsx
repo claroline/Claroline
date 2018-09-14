@@ -35,6 +35,7 @@ const ReceivedMessagesComponent = (props) =>
           primary: true
         }, {
           name: 'from.username',
+          alias: 'senderUsername',
           type: 'string',
           label: trans('from_message'),
           displayed: true,
@@ -42,6 +43,7 @@ const ReceivedMessagesComponent = (props) =>
           sortable: true
         }, {
           name: 'meta.date',
+          alias: 'date',
           type: 'date',
           label: trans('date'),
           displayed: true,
@@ -52,6 +54,7 @@ const ReceivedMessagesComponent = (props) =>
           }
         }, {
           name: 'meta.read',
+          alias: 'isRead',
           type: 'boolean',
           label: trans('message_read', {}, 'message'),
           displayed: true,
