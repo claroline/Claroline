@@ -63,7 +63,15 @@ class UserCrud
     public function create(User $user, $options = [], $extra = [])
     {
         $this->om->startFlushSuite();
-        $user->setPublicUrl($this->userManager->generatePublicUrl($user));
+
+        if (in_array(Options::FORCE_RANDOM_PUBLIC_URL, $options)) {
+            $publicUrl = $user->getFirstName().'.'.$user->getLastName();
+            $publicUrl = strtolower(str_replace(' ', '-', $publicUrl)).uniqid();
+            $user->setPublicUrl($publicUrl);
+        } else {
+            $user->setPublicUrl($this->userManager->generatePublicUrl($user));
+        }
+
         $this->toolManager->addRequiredToolsToUser($user, 0);
         $this->toolManager->addRequiredToolsToUser($user, 1);
         $roleUser = $this->roleManager->getRoleByName(PlatformRoles::USER);

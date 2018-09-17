@@ -20,7 +20,7 @@
       "minLength": 1
     },
     "meta": {
-      "type": ["object"],
+      "type": "object",
       "properties": {
         "model": {
           "type": "boolean",

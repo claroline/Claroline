@@ -28,7 +28,7 @@ abstract class AbstractCreateAction extends AbstractAction
         $this->crud->create($this->getClass(), $data);
         $successData['create'][] = [
           'data' => $data,
-          'log' => 'The user '.$data['username'].' was successfully created.',
+          'log' => $this->getAction()[0].' created.',
         ];
     }
 

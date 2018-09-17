@@ -499,6 +499,7 @@ class UserSerializer
                 /** @var Group $group */
                 $group = $this->container->get('claroline.api.serializer')
                     ->deserialize('Claroline\CoreBundle\Entity\Group', $group);
+
                 if ($group && $group->getId()) {
                     $user->addGroup($group);
                 }

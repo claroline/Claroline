@@ -11,6 +11,7 @@
 
 namespace Claroline\AppBundle\Command;
 
+use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -46,8 +47,9 @@ class ApiImportCommand extends ContainerAwareCommand
     {
         $file = $input->getArgument('file');
         $action = $input->getArgument('action');
-
+        $consoleLogger = ConsoleLogger::get($output);
         $this->getContainer()->get('claroline.authenticator')->authenticate($input->getArgument('owner'), null, false);
+        $this->getContainer()->get('claroline.api.transfer')->setLogger($consoleLogger);
 
         $this->getContainer()->get('claroline.api.transfer')->execute(
           file_get_contents($file),

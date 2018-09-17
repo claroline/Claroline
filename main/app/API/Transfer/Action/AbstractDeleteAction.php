@@ -15,15 +15,17 @@ abstract class AbstractDeleteAction extends AbstractAction
      *
      * @DI\InjectParams({
      *     "crud"       = @DI\Inject("claroline.api.crud"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
+     *     "serializer" = @DI\Inject("claroline.api.serializer"),
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param Crud $crud
      */
-    public function __construct(Crud $crud, SerializerProvider $serializer)
+    public function __construct(Crud $crud, SerializerProvider $serializer, $om)
     {
         $this->crud = $crud;
         $this->serializer = $serializer;
+        $this->om = $om;
     }
 
     public function execute(array $data, &$successData = [])
@@ -33,10 +35,13 @@ abstract class AbstractDeleteAction extends AbstractAction
             $data[$this->getAction()[0]]
         );
 
-        $this->crud->delete($object);
-        $successData['delete'][] = [
-          'data' => $data,
-        ];
+        if ($object->getId()) {
+            $this->crud->delete($object);
+
+            $successData['delete'][] = [
+                'data' => $data,
+            ];
+        }
     }
 
     public function getSchema()

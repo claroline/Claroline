@@ -152,6 +152,8 @@ class TransferProvider
                 $loggedSuccess = array_merge_recursive($loggedSuccess, $successData);
                 $jsonLogger->set('data.success', $loggedSuccess);
             } catch (\Exception $e) {
+                $this->log("Operation {$i}/{$total} failed");
+                $this->log($e->getMessage());
                 $jsonLogger->info("Operation {$i}/{$total} failed");
                 $jsonLogger->increment('error');
 
@@ -185,6 +187,7 @@ class TransferProvider
                     $loaded = [];
                 } catch (\Exception $e) {
                     $jsonLogger->info($e->getMessage());
+                    $this->log($e->getMessage());
                 }
             }
 

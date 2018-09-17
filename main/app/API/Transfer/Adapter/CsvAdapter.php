@@ -113,6 +113,7 @@ class CsvAdapter implements AdapterInterface
         }
 
         if ('boolean' === $property->getType()) {
+            $value = (bool) $value;
         }
 
         $this->arrayUtils->set($object, $propertyName, $value);

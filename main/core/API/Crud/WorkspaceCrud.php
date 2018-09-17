@@ -25,10 +25,10 @@ class WorkspaceCrud
      * WorkspaceCrud constructor.
      *
      * @DI\InjectParams({
-     *     "manager" = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "tokenStorage" = @DI\Inject("security.token_storage"),
+     *     "manager"         = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param WorkspaceManager $manager
