@@ -279,7 +279,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             && !$this->isImpersonated()
             && ($content = $this->termsOfService->getTermsOfService(true))
         ) {
-            $content = 0 < count(array_keys($content)) ? $content[array_keys($content)[0]] : null;
+            $content = isset($content['fr']) ? $content['fr'] : null;
 
             if (($termsOfService = $event->getRequest()->get('terms_of_service'))
                 && isset($termsOfService['terms_of_service'])
