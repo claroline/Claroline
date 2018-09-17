@@ -1,7 +1,0 @@
-{
-    "resource-innova_collecticiel-correction_report": "heeft een correctie in %dropzone% vermeld.",
-    "resource-innova_collecticiel-drop_end": "heeft een document in %dropzone% gedropd.",
-    "resource-innova_collecticiel-drop_grade_available": "Uw kopie is gecorrigeerd. Uw notatie is nu beschikbaar in %dropzone%.",
-    "resource-innova_collecticiel-drop_report": "heeft een kopie in %dropzone% vermeld.",
-    "resource-innova_collecticiel-dropzone_manual_state_changed": "De huidige fase van %dropzone% is pas veranderd in : %newState%."
-}

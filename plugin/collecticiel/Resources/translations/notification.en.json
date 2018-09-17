@@ -1,7 +1,0 @@
-{
-    "resource-innova_collecticiel-correction_report": "reported a correction in %dropzone% ",
-    "resource-innova_collecticiel-drop_end": "has dropped a document in %dropzone%",
-    "resource-innova_collecticiel-drop_grade_available": "Your copy has been corrected, your score is now available in %dropzone%",
-    "resource-innova_collecticiel-drop_report": " reported a copy in  %dropzone%",
-    "resource-innova_collecticiel-dropzone_manual_state_changed": "The current phase of  %dropzone% has just changed to : %newState%"
-}
