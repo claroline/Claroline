@@ -1,30 +1,32 @@
 import React, { Component } from 'react'
-import $ from 'jquery'
-
-import cloneDeep from 'lodash/cloneDeep'
-
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+import $ from 'jquery'
+import cloneDeep from 'lodash/cloneDeep'
+
+import {url} from '#/main/app/api/router'
 import {trans} from '#/main/core/translation'
+import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {getApiFormat} from '#/main/core/scaffolding/date'
 
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {actions} from '#/plugin/agenda/actions'
-import {PageContainer, PageHeader} from '#/main/core/layout/page'
+import {PageContainer, PageHeader, PageActions, MoreAction} from '#/main/core/layout/page'
 
 import {Calendar} from '#/plugin/agenda/components/calendar.jsx'
-import {FilterBar} from '#/plugin/agenda/components/filter-bar.jsx'
+import {FilterBar} from '#/plugin/agenda/components/filter-bar'
 import {MODAL_EVENT} from '#/plugin/agenda/components/modal'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {MODAL_DATA_FORM} from '#/main/app/modals/form'
-import {url} from '#/main/app/api/router'
+
 
 function arrayTrans(key) {
   if (typeof key === 'object') {
-    var transWords = []
-    for (var i = 0; i < key.length; i++) {
+    const transWords = []
+    for (let i = 0; i < key.length; i++) {
       transWords.push(trans(key[i], {}, 'agenda'))
     }
+
     return transWords
   }
 }
@@ -148,12 +150,34 @@ class AgendaComponent extends Component {
   render() {
     return (
       <PageContainer>
-        <PageHeader title={trans('agenda', {}, 'tool')}></PageHeader>
-        <div className="container row panel-body">
-          <Calendar {...this.calendar} />
+        <PageHeader
+          title={trans('agenda', {}, 'tools')}
+        >
+          <PageActions>
+            <MoreAction
+              actions={[
+                {
+                  type: CALLBACK_BUTTON,
+                  icon: 'fa fa-fw fa-upload',
+                  label: trans('import'),
+                  callback: this.props.openImportForm
+                }, {
+                  type: URL_BUTTON,
+                  icon: 'fa fa-fw fa-download',
+                  label: trans('export'),
+                  target: url(['apiv2_download_agenda', {workspace: this.props.workspace.id}])
+                }
+              ]}
+            />
+          </PageActions>
+        </PageHeader>
+
+        <div className="row">
+          <div className="col-md-9">
+            <Calendar {...this.calendar} />
+          </div>
+
           <FilterBar
-            openImportForm={this.props.openImportForm}
-            onExport={this.props.onExport}
             onChangeFiltersType={this.props.onChangeFiltersType}
             onChangeFiltersWorkspace={this.props.onChangeFiltersWorkspace}
             workspace={this.props.workspace}
@@ -176,7 +200,7 @@ const Agenda = connect(
   dispatch => ({
     openImportForm(workspace = null) {
       dispatch (
-        modalActions.showModal('MODAL_DATA_FORM', {
+        modalActions.showModal(MODAL_DATA_FORM, {
           title: trans('import'),
           save: data => {
             //bad hack for $('#fullcalendar')
@@ -197,12 +221,9 @@ const Agenda = connect(
         })
       )
     },
-    onExport(workspace) {
-      dispatch(actions.download(workspace))
-    },
     onDayClick(calendarRef, workspace, date) {
       dispatch (
-        modalActions.showModal('MODAL_DATA_FORM', {
+        modalActions.showModal(MODAL_DATA_FORM, {
           title: 'event',
           save: event => {
             dispatch(actions.create(event, workspace, calendarRef))
@@ -221,8 +242,6 @@ const Agenda = connect(
     onEventClick(calendarRef, event) {
       dispatch (
         modalActions.showModal(MODAL_EVENT, {
-          title: trans('event', {}, 'agenda'),
-          show: true,
           event: sanitize(event),
           onDelete: () => {
             dispatch(
@@ -319,7 +338,6 @@ AgendaComponent.propTypes = {
   onEventResize: T.func.isRequired,
   onEventResizeStart: T.func.isRequired,
   openImportForm: T.func.isRequired,
-  onExport: T.func.isRequired,
   onChangeFiltersWorkspace: T.func.isRequired,
   onChangeFiltersType: T.func.isRequired,
   workspace: T.object,

@@ -3,5 +3,10 @@
     "entry": {
       "agenda": "index"
     }
+  },
+  "styles": {
+    "entry": {
+      "agenda": "agenda.less"
+    }
   }
 }
