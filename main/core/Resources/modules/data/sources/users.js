@@ -62,6 +62,12 @@ export default {
         options: {
           time: true
         }
+      }, {
+        name: 'roleTranslation',
+        type: 'string',
+        label: trans('role'),
+        displayed: false,
+        filterable: true
       }
     ],
     card: UserCard
