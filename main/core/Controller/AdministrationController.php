@@ -101,7 +101,9 @@ class AdministrationController extends Controller
      */
     public function openToolAction($toolName)
     {
-        if (!$this->authorization->isGranted($toolName)) {
+        $tool = $this->toolManager->getAdminToolByName($toolName);
+
+        if (!$this->authorization->isGranted('OPEN', $tool)) {
             throw new AccessDeniedException();
         }
 
