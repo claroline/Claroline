@@ -47,9 +47,8 @@ const AboutModal = props =>
               name: 'url',
               type: 'url',
               label: trans('url', {}, 'data'),
-              calculated: (resourceNode) => url(['claro_resource_open', {
-                resourceType: resourceNode.meta.type,
-                node: resourceNode.id
+              calculated: (resourceNode) => url(['claro_resource_show_short', {
+                id: resourceNode.id
               }, true])
             }, {
               name: 'meta.description',

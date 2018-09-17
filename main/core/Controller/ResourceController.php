@@ -197,6 +197,30 @@ class ResourceController
     }
 
     /**
+     * Renders a resource application. Used for old links compatibility.
+     *
+     * @EXT\Route("/open/{node}", name="claro_resource_open_short")
+     * @EXT\Route("/open/{resourceType}/{node}", name="claro_resource_open")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "resourceNode",
+     *     class="ClarolineCoreBundle:Resource\ResourceNode",
+     *     options={"mapping": {"node": "id"}}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:resource:show.html.twig")
+     *
+     * @param ResourceNode $resourceNode
+     *
+     * @return array
+     */
+    public function openAction(ResourceNode $resourceNode)
+    {
+        return [
+            'resourceNode' => $resourceNode,
+        ];
+    }
+
+    /**
      * Gets a resource.
      *
      * @EXT\Route("/{id}", name="claro_resource_load_short")

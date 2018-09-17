@@ -15,7 +15,6 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
-use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\EventManager;
@@ -124,68 +123,6 @@ class ResourceOldController extends Controller
         $this->userManager = $userManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->eventManager = $eventManager;
-    }
-
-    /**
-     * Opens a resource.
-     *
-     * @EXT\Route(
-     *     "/open/{resourceType}/{node}",
-     *     name="claro_resource_open",
-     *     options={"expose"=true}
-     * )
-     *
-     * @EXT\Route(
-     *     "/open/{node}",
-     *     name="claro_resource_open_short",
-     *     requirements={"node" = "\d+"},
-     *     defaults={"resourceType" = null},
-     *     options={"expose"=true}
-     * )
-     *
-     * @param ResourceNode $node         the node
-     * @param string       $resourceType the resource type
-     *
-     * @return Response
-     *
-     * @throws AccessDeniedException
-     * @throws \Exception
-     */
-    public function openAction(ResourceNode $node, $resourceType = null)
-    {
-        //in order to remember for later. To keep links breadcrumb working we'll need to do something like this
-        //if we don't want to change to much code
-
-        // Fetch workspace details, otherwise it won't store them in session.
-        // I know it's not pretty but it's the only way
-        // I could think of to load them before the node gets stored is session
-        if ($node->getWorkspace()) {
-            $options = $node->getWorkspace()->getOptions();
-
-            if ($options) {
-                $options->getDetails();
-            }
-        }
-        $this->request->getSession()->set('current_resource_node', $node);
-        $isIframe = (bool) $this->request->query->get('iframe');
-        //double check... first the resource, then the target
-        $collection = new ResourceCollection([$node]);
-        $this->checkAccess('OPEN', $collection);
-        //If it's a link, the resource will be its target.
-        $node = $this->getRealTarget($node);
-        $this->checkAccess('OPEN', $collection);
-        if (null === $resourceType) {
-            $resourceType = $node->getResourceType()->getName();
-        }
-        $event = $this->dispatcher->dispatch(
-            'open_'.$resourceType,
-            OpenResourceEvent::class,
-            [$this->resourceManager->getResourceFromNode($node), $isIframe]
-        );
-        $this->dispatcher->dispatch('log', 'Log\LogResourceRead', [$node]);
-        $this->dispatcher->dispatch('log', 'Log\LogWorkspaceEnter', [$node->getWorkspace()]);
-
-        return $event->getResponse();
     }
 
     /**
@@ -393,21 +330,5 @@ class ResourceOldController extends Controller
         );
 
         return $event->getResponse();
-    }
-
-    private function getRealTarget(ResourceNode $node)
-    {
-        if ('Claroline\LinkBundle\Entity\Resource\Shortcut' === $node->getClass()) {
-            $resource = $this->resourceManager->getResourceFromNode($node);
-            if (null === $resource) {
-                throw new \Exception('The resource was removed.');
-            }
-            $node = $resource->getTarget();
-            if (null === $node) {
-                throw new \Exception('The node target was removed.');
-            }
-        }
-
-        return $node;
     }
 }
