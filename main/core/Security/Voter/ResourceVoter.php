@@ -298,6 +298,10 @@ class ResourceVoter implements VoterInterface
      */
     private function checkCreation($type, ResourceNode $node, TokenInterface $token)
     {
+        if (null === $type) {
+            return [];
+        }
+
         $errors = [];
 
         //even the workspace manager can't break the file limit.

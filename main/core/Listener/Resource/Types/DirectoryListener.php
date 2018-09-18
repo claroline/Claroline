@@ -24,6 +24,9 @@ use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
+use Claroline\CoreBundle\Exception\ResourceAccessException;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
+use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -63,6 +66,7 @@ class DirectoryListener
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "serializer"      = @DI\Inject("claroline.api.serializer"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "actionManager"   = @DI\Inject("claroline.manager.resource_action"),
      *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager")
      * })
      *
@@ -72,8 +76,10 @@ class DirectoryListener
      * @param SerializerProvider    $serializer
      * @param ResourceManager       $resourceManager
      * @param RightsManager         $rightsManager
+     * @param ResourceActionManager $actionManager
      */
     public function __construct(
+        ResourceActionManager $actionManager,
         TokenStorageInterface $tokenStorage,
         TwigEngine $templating,
         ObjectManager $om,
@@ -87,6 +93,7 @@ class DirectoryListener
         $this->serializer = $serializer;
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
+        $this->actionManager = $actionManager;
     }
 
     /**
@@ -98,8 +105,19 @@ class DirectoryListener
      */
     public function onAdd(ResourceActionEvent $event)
     {
-        $parent = $event->getResourceNode();
         $data = $event->getData();
+        $parent = $event->getResourceNode();
+
+        $attributes['type'] = $data['resourceNode']['meta']['type'];
+        $collection = new ResourceCollection([$parent]);
+        $collection->setAttributes($attributes);
+
+        $add = $this->actionManager->get($parent, 'add');
+
+        if (!$this->actionManager->hasPermission($add, $collection)) {
+            throw new ResourceAccessException($collection->getErrorsForDisplay(), $collection->getResources());
+        }
+
         $options = $event->getOptions();
 
         // create the resource node

@@ -111,7 +111,8 @@ class ResourceCollection
      */
     public function getAttribute($key)
     {
-        return $this->attributes[$key];
+        return isset($this->attributes[$key]) ?
+          $this->attributes[$key] : null;
     }
 
     /**

@@ -307,11 +307,11 @@ class ResourceController
 
         // read request and get user query
         $parameters = $request->query->all();
+
         $content = null;
         if (!empty($request->getContent())) {
             $content = json_decode($request->getContent(), true);
         }
-
         // dispatch action event
         return $this->actionManager->execute($resourceNode, $action, $parameters, $content);
     }
@@ -398,9 +398,11 @@ class ResourceController
      * @param MenuAction $action
      * @param array      $resourceNodes
      */
-    private function checkAccess(MenuAction $action, array $resourceNodes)
+    private function checkAccess(MenuAction $action, array $resourceNodes, array $attributes = [])
     {
         $collection = new ResourceCollection($resourceNodes);
+        $collection->setAttributes($attributes);
+
         if (!$this->actionManager->hasPermission($action, $collection)) {
             throw new ResourceAccessException($collection->getErrorsForDisplay(), $collection->getResources());
         }
