@@ -37,7 +37,7 @@ function openFileUpload(editor) {
           // retrieve the editor which have requested the picker
           // ATTENTION : we don't reuse instance from func params because it could have been removed
           // when tinyMCE is rendered in a modal
-          const initiator = tinymce.get(editor.id)
+          const initiator = /*tinymce.get(editor.id) */ tinymce.activeEditor
           if (initiator) {
             let content = initiator.getContent()
             content = content.replace(placeholder, responseText)
@@ -46,6 +46,8 @@ function openFileUpload(editor) {
             initiator.setContent(content)
             initiator.setProgressState(false)
           }
+
+          initiator.fire('change')
         })
         .catch((error) => {
           // creates log error

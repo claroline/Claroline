@@ -6,6 +6,10 @@ function getOffsets(element, selection = null) {
 
   //I saw that on stackoverflow http://stackoverflow.com/questions/42272239/get-the-position-of-a-selected-text-from-html-document
   //This is already a little hack to get the offset inside a particular div
+  if (selection.rangeCount === 0) {
+    return {}
+  }
+
   let range = selection.getRangeAt(0)
   let priorRange = range.cloneRange()
   priorRange.selectNodeContents(element)

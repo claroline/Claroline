@@ -41,7 +41,7 @@ function openResourcePicker(editor) {
               // retrieve the editor which have requested the picker
               // ATTENTION : we don't reuse instance from func params because it could have been removed
               // when tinyMCE is rendered in a modal
-              const initiator = tinymce.get(editor.id)
+              const initiator = /*tinymce.get(editor.id) */ tinymce.activeEditor
               if (initiator) {
                 let content = initiator.getContent()
 
@@ -59,6 +59,8 @@ function openResourcePicker(editor) {
                   // replace content in editor
                   initiator.setContent(content)
                 }
+
+                initiator.fire('change')
               }
             })
             .catch((error) => {
