@@ -76,7 +76,7 @@ const UserPageActions = props => {
 
   return (
     <PageActions>
-      {hasPermission('edit', props.user) &&
+      {(hasPermission('edit', props.user) || isOwner) &&
         <PageGroupActions>
           <PageAction
             type={LINK_BUTTON}
