@@ -53,7 +53,9 @@ actions.fetchDirectories = (explorerName, parent = null) => ({
       filters: {
         resourceType: 'directory'
       },
-      sortBy: '-name'
+      sortBy: '-name',
+      //todo: lazy load instead
+      limit: 20
     }),
     success: (response, dispatch) => dispatch(actions.loadDirectories(explorerName, parent, response.data || []))
   }
