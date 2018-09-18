@@ -118,12 +118,14 @@ class WorkspaceController extends AbstractCrudController
 
         $this->workspaceManager->duplicateWorkspaceRoles($model, $workspace, $workspace->getCreator());
         $this->workspaceManager->duplicateOrderedTools($model, $workspace);
-        $homeTabs = $this->container->get('claroline.manager.home_tab_manager')->getHomeTabByWorkspace($model);
-        $this->workspaceManager->duplicateHomeTabs($model, $workspace, $homeTabs);
         $rootNode = $this->workspaceManager->duplicateRoot($model, $workspace, $workspace->getCreator());
         $resourceNodes = $this->resourceManager->getWorkspaceRoot($model)->getChildren()->toArray();
         $workspaceRoles = $this->workspaceManager->getArrayRolesByWorkspace($workspace);
-        $this->workspaceManager->duplicateResources($resourceNodes, $workspaceRoles, $workspace->getCreator(), $rootNode);
+        $resourceInfos = ['copies' => []];
+        $this->workspaceManager->duplicateResources($resourceNodes, $workspaceRoles, $workspace->getCreator(), $rootNode, $resourceInfos);
+        $homeTabs = $this->container->get('claroline.manager.home_tab_manager')->getHomeTabByWorkspace($model);
+
+        $this->workspaceManager->duplicateHomeTabs($workspace, $homeTabs, $resourceInfos);
 
         $logger->end();
 

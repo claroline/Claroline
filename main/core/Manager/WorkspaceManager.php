@@ -1257,7 +1257,7 @@ class WorkspaceManager
 
         $homeTabs = $this->container->get('claroline.manager.home_tab_manager')->getHomeTabByWorkspace($workspace);
         //get home tabs from source
-        $this->duplicateHomeTabs($workspace, $newWorkspace, $homeTabs, $resourceInfo);
+        $this->duplicateHomeTabs($newWorkspace, $homeTabs, $resourceInfo);
 
         $this->container->get('claroline.security.token_updater')->updateNormal($token);
 
@@ -1477,25 +1477,46 @@ class WorkspaceManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $source
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param array                                            $homeTabs
+     * @param Workspace $workspace
+     * @param array     $homeTabs
+     * @param array     $resourceInfos
+     *
+     * @return array
      */
-    public function duplicateHomeTabs(
-        Workspace $source,
-        Workspace $workspace,
-        array $homeTabs,
-        &$resourceInfos = [],
-        &$tabInfos = []
-    ) {
+    public function duplicateHomeTabs(Workspace $workspace, array $homeTabs, $resourceInfos = [])
+    {
         $this->log('Duplicating home tabs...');
         $serializer = $this->container->get('claroline.api.serializer');
         $crud = $this->container->get('claroline.api.crud');
         $newTabs = [];
 
+        // Creates a mapping for copied nodes with the uuid of the original one
+        $resourcesMapping = [];
+
+        if (isset($resourceInfos['copies'])) {
+            foreach ($resourceInfos['copies'] as $infos) {
+                $originalUuid = $infos['original']->getUuid();
+                $resourcesMapping[$originalUuid] = $serializer->serialize($infos['copy'], [Options::SERIALIZE_MINIMAL]);
+            }
+        }
+
         foreach ($homeTabs as $homeTab) {
             $homeTabSerialized = $serializer->serialize($homeTab, [Options::REFRESH_UUID]);
             $homeTabSerialized['workspace'] = $serializer->serialize($workspace, [Options::SERIALIZE_MINIMAL]);
+
+            // Updates target of resource widgets
+            foreach ($homeTabSerialized['widgets'] as $wKey => $widgetContainer) {
+                foreach ($widgetContainer['contents'] as $cKey => $widget) {
+                    if ('resource' === $widget['type'] &&
+                        isset($widget['parameters']['resource']['id']) &&
+                        isset($resourcesMapping[$widget['parameters']['resource']['id']])
+                    ) {
+                        $homeTabSerialized['widgets'][$wKey]['contents'][$cKey]['parameters']['resource'] =
+                            $resourcesMapping[$widget['parameters']['resource']['id']];
+                    }
+                }
+            }
+
             $newTabs[] = $crud->create(HomeTab::class, $homeTabSerialized, [Options::NO_FETCH]);
             //maybe not a good idea
             $this->om->forceFlush();
