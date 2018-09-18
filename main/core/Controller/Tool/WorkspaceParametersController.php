@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Controller\Tool;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\GroupManager;
@@ -42,7 +41,6 @@ class WorkspaceParametersController extends Controller
     private $eventDispatcher;
     private $formFactory;
     private $router;
-    private $request;
     private $userManager;
     private $utilities;
     private $groupManager;
@@ -74,7 +72,6 @@ class WorkspaceParametersController extends Controller
         StrictDispatcher $eventDispatcher,
         FormFactory $formFactory,
         UrlGeneratorInterface $router,
-        Request $request,
         UserManager $userManager,
         GroupManager $groupManager,
         ClaroUtilities $utilities,
@@ -87,7 +84,6 @@ class WorkspaceParametersController extends Controller
         $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
         $this->router = $router;
-        $this->request = $request;
         $this->userManager = $userManager;
         $this->groupManager = $groupManager;
         $this->utilities = $utilities;
