@@ -9,7 +9,7 @@ const dropzone = createSelector(
   (resource) => resource.dropzone
 )
 
-export const select = {
+export const selectors = {
   STORE_NAME,
   resource,
   dropzone
