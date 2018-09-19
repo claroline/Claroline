@@ -221,7 +221,9 @@ class ResourceNodeSerializer
             'type' => $resourceNode->getResourceType()->getName(),
             'mimeType' => $resourceNode->getMimeType(),
             'description' => $resourceNode->getDescription(),
-            'creator' => $resourceNode->getCreator() ? $this->userSerializer->serialize($resourceNode->getCreator()) : null,
+            'creator' => $resourceNode->getCreator() ?
+                $this->userSerializer->serialize($resourceNode->getCreator(), [Options::SERIALIZE_MINIMAL]) :
+                null,
             'created' => DateNormalizer::normalize($resourceNode->getCreationDate()),
             'updated' => DateNormalizer::normalize($resourceNode->getModificationDate()),
             'published' => $resourceNode->isPublished(),

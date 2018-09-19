@@ -12,6 +12,9 @@
 namespace Claroline\CoreBundle\API\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -36,18 +39,22 @@ class ResourceNodeFinder extends AbstractFinder
      *
      * @DI\InjectParams({
      *     "authChecker"  = @DI\Inject("security.authorization_checker"),
+     *     "em"           = @DI\Inject("doctrine.orm.entity_manager"),
      *     "tokenStorage" = @DI\Inject("security.token_storage")
      * })
      *
      * @param AuthorizationCheckerInterface $authChecker
      * @param TokenStorageInterface         $tokenStorage
+     * @param EntityManager                 $em
      */
     public function __construct(
         AuthorizationCheckerInterface $authChecker,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        EntityManager $em
     ) {
         $this->authChecker = $authChecker;
         $this->tokenStorage = $tokenStorage;
+        $this->_em = $em;
     }
 
     public function getClass()
@@ -55,7 +62,7 @@ class ResourceNodeFinder extends AbstractFinder
         return 'Claroline\CoreBundle\Entity\Resource\ResourceNode';
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
         $qb->join('obj.resourceType', 'ort');
         $qb->join('obj.workspace', 'ow');
@@ -128,12 +135,68 @@ class ResourceNodeFinder extends AbstractFinder
                             $otherRoles[] = $roleName;
                         }
                     }
+
+                    $managerSearch = $roleSearch = $searches;
+                    $managerSearch['_managerRoles'] = $managerRoles;
+                    $roleSearch['_roles'] = $otherRoles;
+                    unset($managerSearch['roles']);
+                    unset($roleSearch['roles']);
+                    unset($searches['roles']);
+
+                    $qbManager = $this->om->createQueryBuilder();
+                    $qbManager->select('DISTINCT obj')->from($this->getClass(), 'obj');
+                    $this->configureQueryBuilder($qbManager, $managerSearch, $sortBy);
+                    //this is our first part of the union
+                    $sqlManager = $this->getSql($qbManager->getQuery());
+                    $sqlManager = $this->removeAlias($sqlManager);
+
+                    $qbRoles = $this->om->createQueryBuilder();
+                    $qbRoles->select('DISTINCT obj')->from($this->getClass(), 'obj');
+                    $this->configureQueryBuilder($qbRoles, $roleSearch, $sortBy);
+                    //this is the second part of the union
+                    $sqlRoles = $this->getSql($qbRoles->getQuery());
+                    $sqlRoles = $this->removeAlias($sqlRoles);
+                    $together = $sqlManager.' UNION '.$sqlRoles;
+
+                    //we might want to add a count somehere here
+                    //add limit & offset too
+
+                    if ($options['count']) {
+                        $together = "SELECT COUNT(*) as count FROM ($together) AS wathever";
+                        $rsm = new ResultSetMapping();
+                        $rsm->addScalarResult('count', 'count', 'integer');
+                        $query = $this->_em->createNativeQuery($together, $rsm);
+                    } else {
+                        //add page & limit
+                        if ($options['limit'] > -1) {
+                            $together .= ' LIMIT '.$options['limit'];
+                        }
+
+                        if ($options['limit'] > 0) {
+                            $offset = $options['limit'] * $options['page'];
+                            $together .= ' OFFSET  '.$offset;
+                        }
+
+                        $rsm = new ResultSetMappingBuilder($this->_em);
+                        $rsm->addRootEntityFromClassMetadata($this->getClass(), 'c0_');
+                        $query = $this->_em->createNativeQuery($together, $rsm);
+                    }
+
+                    return $query;
+
+                    break;
+                case '_managerRoles':
                     $qb->leftJoin('ow.roles', 'owr');
+                    $qb->andWhere('owr.name IN (:managerRoles)');
+
+                    $qb->setParameter('managerRoles', $filterValue);
+                    break;
+                case '_roles':
                     $qb->leftJoin('obj.rights', 'rights');
                     $qb->join('rights.role', 'rightsr');
-                    $qb->andWhere('(owr.name IN (:managerRoles)) OR ((rightsr.name IN (:otherRoles)) AND (BIT_AND(rights.mask, 1) = 1))');
-                    $qb->setParameter('managerRoles', $managerRoles);
-                    $qb->setParameter('otherRoles', $otherRoles);
+                    $qb->andWhere('rightsr.name IN (:otherRoles)');
+                    $qb->andWhere('BIT_AND(rights.mask, 1) = 1');
+                    $qb->setParameter('otherRoles', $filterValue);
                     break;
                 default:
                     if (is_string($filterValue)) {
@@ -174,5 +237,49 @@ class ResourceNodeFinder extends AbstractFinder
         }
 
         return $qb;
+    }
+
+    public function removeAlias($sql)
+    {
+        $aliases = [
+          'AS license_0',
+          'AS creation_date_1',
+          'AS modification_date_2',
+          'AS showIcon_3',
+          'AS name_4',
+          'AS hidden_5',
+          'AS lvl_6',
+          'AS path_7',
+          'AS value_8',
+          'AS mime_type_9',
+          'AS published_10',
+          'AS published_to_portal_11',
+          'AS author_12',
+          'AS active_13',
+          'AS fullscreen_14',
+          'AS closable_15',
+          'AS closeTarget_16',
+          'AS accesses_17',
+          'AS views_count_18',
+          'AS deletable_19',
+          'AS id_20',
+          'AS uuid_21',
+          'AS thumbnail_22',
+          'AS poster_23 ',
+          'AS description_24',
+          'AS accessible_from_25',
+          'AS accessible_until_26',
+          'AS resource_type_id_27',
+          'AS icon_id_28',
+          'AS parent_id_29',
+          'AS workspace_id_30',
+          'AS creator_id_31',
+        ];
+
+        foreach ($aliases as $alias) {
+            $sql = str_replace($alias, '', $sql);
+        }
+
+        return $sql;
     }
 }

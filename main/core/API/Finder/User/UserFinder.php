@@ -352,29 +352,4 @@ class UserFinder extends AbstractFinder
 
         return $sql;
     }
-
-    //bad way to do it but otherwise we use a prepared statement and the sql contains '?'
-    //https://stackoverflow.com/questions/2095394/doctrine-how-to-print-out-the-real-sql-not-just-the-prepared-statement/28294482
-    private function getSql(Query $query)
-    {
-        $vals = $query->getParameters();
-
-        foreach (explode('?', $query->getSql()) as $i => $part) {
-            $sql = (isset($sql) ? $sql : null).$part;
-            if (isset($vals[$i])) {
-                $value = $vals[$i]->getValue();
-                //oh god... maybe more will required to be added here
-                if (is_string($value)) {
-                    $sql .= "'{$value}'";
-                } elseif (is_array($value)) {
-                } elseif (is_int($value)) {
-                } elseif (is_bool($value)) {
-                } else {
-                    $sql .= $value;
-                }
-            }
-        }
-
-        return $sql;
-    }
 }

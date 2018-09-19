@@ -13,7 +13,7 @@ namespace Claroline\AppBundle\API\Finder;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Doctrine\ORM\NativeQuery;
-use Doctrine\ORM\Query\Query;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -97,5 +97,33 @@ abstract class AbstractFinder implements FinderInterface
                 $qb->orderBy('obj.'.$sortBy['property'], 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
             }
         }
+    }
+
+    //bad way to do it but otherwise we use a prepared statement and the sql contains '?'
+    //https://stackoverflow.com/questions/2095394/doctrine-how-to-print-out-the-real-sql-not-just-the-prepared-statement/28294482
+    protected function getSql(Query $query)
+    {
+        $vals = $query->getParameters();
+
+        foreach (explode('?', $query->getSql()) as $i => $part) {
+            $sql = (isset($sql) ? $sql : null).$part;
+            if (isset($vals[$i])) {
+                $value = $vals[$i]->getValue();
+                //oh god... maybe more will required to be added here
+                if (is_string($value)) {
+                    $sql .= "'{$value}'";
+                } elseif (is_array($value)) {
+                    $value = array_map(function ($val) {
+                        return is_string($val) ? "'$val'" : $val;
+                    }, $value);
+                    $sql .= implode(',', $value);
+                } elseif (is_int($value)) {
+                } else {
+                    $sql .= $value;
+                }
+            }
+        }
+
+        return $sql;
     }
 }
