@@ -18,27 +18,18 @@ use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\EventManager;
-use Claroline\CoreBundle\Manager\FileManager;
-use Claroline\CoreBundle\Manager\LogManager;
 use Claroline\CoreBundle\Manager\Resource\MaskManager;
-use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\TransferManager;
-use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class ResourceOldController.
@@ -50,19 +41,10 @@ class ResourceOldController extends Controller
     private $tokenStorage;
     private $authorization;
     private $resourceManager;
-    private $rightsManager;
-    private $roleManager;
-    private $translator;
     private $request;
     private $dispatcher;
     private $maskManager;
     private $templating;
-    private $logManager;
-    private $fileManager;
-    private $transferManager;
-    private $formFactory;
-    private $userManager;
-    private $eventDispatcher;
     /** @var EventManager */
     private $eventManager;
 
@@ -72,18 +54,9 @@ class ResourceOldController extends Controller
      *     "tokenStorage"        = @DI\Inject("security.token_storage"),
      *     "resourceManager"     = @DI\Inject("claroline.manager.resource_manager"),
      *     "maskManager"         = @DI\Inject("claroline.manager.mask_manager"),
-     *     "rightsManager"       = @DI\Inject("claroline.manager.rights_manager"),
-     *     "roleManager"         = @DI\Inject("claroline.manager.role_manager"),
-     *     "translator"          = @DI\Inject("translator"),
      *     "requestStack"        = @DI\Inject("request_stack"),
      *     "dispatcher"          = @DI\Inject("claroline.event.event_dispatcher"),
      *     "templating"          = @DI\Inject("templating"),
-     *     "logManager"          = @DI\Inject("claroline.log.manager"),
-     *     "fileManager"         = @DI\Inject("claroline.manager.file_manager"),
-     *     "transferManager"     = @DI\Inject("claroline.manager.transfer_manager"),
-     *     "formFactory"         = @DI\Inject("form.factory"),
-     *     "userManager"         = @DI\Inject("claroline.manager.user_manager"),
-     *     "eventDispatcher"     = @DI\Inject("event_dispatcher"),
      *     "eventManager"        = @DI\Inject("claroline.event.manager")
      * })
      */
@@ -91,38 +64,44 @@ class ResourceOldController extends Controller
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
         ResourceManager $resourceManager,
-        RightsManager $rightsManager,
-        RoleManager $roleManager,
-        TranslatorInterface $translator,
         RequestStack $requestStack,
         StrictDispatcher $dispatcher,
         MaskManager $maskManager,
         TwigEngine $templating,
-        LogManager $logManager,
-        FileManager $fileManager,
-        TransferManager $transferManager,
-        FormFactory $formFactory,
-        UserManager $userManager,
-        EventDispatcherInterface $eventDispatcher,
         EventManager $eventManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
         $this->resourceManager = $resourceManager;
-        $this->translator = $translator;
-        $this->rightsManager = $rightsManager;
-        $this->roleManager = $roleManager;
         $this->request = $requestStack->getCurrentRequest();
         $this->dispatcher = $dispatcher;
         $this->maskManager = $maskManager;
         $this->templating = $templating;
-        $this->logManager = $logManager;
-        $this->fileManager = $fileManager;
-        $this->transferManager = $transferManager;
-        $this->formFactory = $formFactory;
-        $this->userManager = $userManager;
-        $this->eventDispatcher = $eventDispatcher;
         $this->eventManager = $eventManager;
+    }
+
+    /**
+     * Renders a resource application. Used for old links compatibility.
+     *
+     * @EXT\Route("/open/{node}", name="claro_resource_open_short")
+     * @EXT\Route("/open/{resourceType}/{node}", name="claro_resource_open")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "resourceNode",
+     *     class="ClarolineCoreBundle:Resource\ResourceNode",
+     *     options={"mapping": {"node": "id"}}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:resource:show.html.twig")
+     *
+     * @param ResourceNode $resourceNode
+     *
+     * @return array
+     */
+    public function openAction(ResourceNode $resourceNode)
+    {
+        return [
+            'resourceNode' => $resourceNode,
+        ];
     }
 
     /**

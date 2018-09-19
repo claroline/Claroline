@@ -112,7 +112,7 @@ claro_admin_portal_config:
 # todo : remove me
 claro_resource_old:
     resource: "@ClarolineCoreBundle/Controller/ResourceOldController.php"
-    prefix: /old
+    prefix: /resource
     type: annotation
 
 claro_resource:
