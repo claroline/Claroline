@@ -106,7 +106,7 @@ class ScheduledTaskManager
             throw new InvalidDataException('Scheduled task is not valid', $errors);
         }
 
-        $this->serializer->deserialize('Claroline\CoreBundle\Entity\Task\ScheduledTask', $data);
+        $scheduledTask = $this->serializer->deserialize('Claroline\CoreBundle\Entity\Task\ScheduledTask', $data);
 
         $this->om->persist($scheduledTask);
         $this->om->flush();
