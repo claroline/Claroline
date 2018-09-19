@@ -135,15 +135,18 @@ class WorkspaceSerializer
             'uuid' => $workspace->getUuid(), // todo: should be merged with `id`
             'name' => $workspace->getName(),
             'code' => $workspace->getCode(),
-            'thumbnail' => $workspace->getThumbnail() ? $this->serializer->serialize(
-              $this->om->getRepository(PublicFile::class)->findOneBy([
+            'thumbnail' => $workspace->getThumbnail() && $this->om->getRepository(PublicFile::class)->findOneBy([
+                  'url' => $workspace->getThumbnail(),
+              ]) ? $this->serializer->serialize($this->om->getRepository(PublicFile::class)->findOneBy([
                   'url' => $workspace->getThumbnail(),
               ])
             ) : null,
-            'poster' => $workspace->getPoster() ? $this->serializer->serialize(
+            'poster' => $workspace->getPoster() && $this->om->getRepository(PublicFile::class)->findOneBy([
+                  'url' => $workspace->getPoster(),
+              ]) ? $this->serializer->serialize(
                 $this->om->getRepository(PublicFile::class)->findOneBy([
                     'url' => $workspace->getPoster(),
-                ])
+              ])
             ) : null,
         ];
 
