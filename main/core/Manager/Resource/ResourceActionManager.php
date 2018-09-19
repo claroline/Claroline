@@ -110,10 +110,11 @@ class ResourceActionManager
      * @param string       $actionName
      * @param array        $options
      * @param array        $content
+     * @param array        $files
      *
      * @return Response
      */
-    public function execute(ResourceNode $resourceNode, string $actionName, array $options = [], array $content = null): Response
+    public function execute(ResourceNode $resourceNode, string $actionName, array $options = [], array $content = null, array $files = null): Response
     {
         $resourceAction = $this->get($resourceNode, $actionName);
         $resource = $this->resourceManager->getResourceFromNode($resourceNode);
@@ -122,7 +123,7 @@ class ResourceActionManager
         $event = $this->dispatcher->dispatch(
             static::eventName($actionName, $resourceAction->getResourceType()),
             ResourceActionEvent::class,
-            [$resource, $options, $content]
+            [$resource, $options, $content, $files]
         );
 
         return $event->getResponse();

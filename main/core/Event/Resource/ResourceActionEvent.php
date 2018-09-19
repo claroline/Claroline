@@ -30,6 +30,13 @@ class ResourceActionEvent extends ResourceEvent
     private $data = null;
 
     /**
+     * The files passed to the action (eg. uploaded files).
+     *
+     * @var array
+     */
+    private $files = null;
+
+    /**
      * The options of the action (eg. list query string).
      *
      * NB. Options depend on the requested action, so we can not validate them.
@@ -56,11 +63,13 @@ class ResourceActionEvent extends ResourceEvent
     public function __construct(
         AbstractResource $resource,
         array $options = [],
-        array $data = null)
+        array $data = null,
+        array $files = null)
     {
         parent::__construct($resource);
 
         $this->data = $data;
+        $this->files = $files;
         $this->options = $options;
     }
 
@@ -70,6 +79,14 @@ class ResourceActionEvent extends ResourceEvent
     public function getData()
     {
         return $this->data;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFiles()
+    {
+        return $this->files;
     }
 
     /**

@@ -24,11 +24,14 @@ use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\File\LoadFileEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
+use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
+use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Library\Utilities\MimeTypeGuesser;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -65,6 +68,10 @@ class FileListener
 
     /** @var ResourceEvaluationManager */
     private $resourceEvalManager;
+    /**
+     * @var FileUtilities
+     */
+    private $fileUtils;
 
     /**
      * FileListener constructor.
@@ -77,7 +84,8 @@ class FileListener
      *     "mimeTypeGuesser"     = @DI\Inject("claroline.utilities.mime_type_guesser"),
      *     "serializer"          = @DI\Inject("claroline.api.serializer"),
      *     "resourceManager"     = @DI\Inject("claroline.manager.resource_manager"),
-     *     "resourceEvalManager" = @DI\Inject("claroline.manager.resource_evaluation_manager")
+     *     "resourceEvalManager" = @DI\Inject("claroline.manager.resource_evaluation_manager"),
+     *     "fileUtils"           = @DI\Inject("claroline.utilities.file")
      * })
      *
      * @param TokenStorageInterface     $tokenStorage
@@ -88,6 +96,7 @@ class FileListener
      * @param SerializerProvider        $serializer
      * @param ResourceManager           $resourceManager
      * @param ResourceEvaluationManager $resourceEvalManager
+     * @param FileUtilities             $fileUtils
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -97,7 +106,8 @@ class FileListener
         MimeTypeGuesser $mimeTypeGuesser,
         SerializerProvider $serializer,
         ResourceManager $resourceManager,
-        ResourceEvaluationManager $resourceEvalManager)
+        ResourceEvaluationManager $resourceEvalManager,
+        FileUtilities $fileUtils)
     {
         $this->tokenStorage = $tokenStorage;
         $this->om = $om;
@@ -107,6 +117,7 @@ class FileListener
         $this->serializer = $serializer;
         $this->resourceManager = $resourceManager;
         $this->resourceEvalManager = $resourceEvalManager;
+        $this->fileUtils = $fileUtils;
     }
 
     /**
@@ -153,6 +164,36 @@ class FileListener
                 $this->serializer->serialize($resource)
             ),
         ]);
+    }
+
+    /**
+     * Changes actual file associated to File resource.
+     *
+     * @DI\Observe("resource.file.change_file")
+     *
+     * @param ResourceActionEvent $event
+     */
+    public function onFileChange(ResourceActionEvent $event)
+    {
+        $files = $event->getFiles();
+        $node = $event->getResourceNode();
+
+        $file = isset($files['file']) ? $files['file'] : null;
+
+        if ($file) {
+            $publicFile = $this->fileUtils->createFile($file, null, ResourceNode::class, $node->getUuid());
+            $resource = $this->resourceManager->getResourceFromNode($node);
+
+            if ($resource && $publicFile) {
+                $this->om->persist($publicFile);
+                $resource->setHashName($publicFile->getUrl());
+                $resource->setMimeType($publicFile->getMimeType());
+                $resource->setSize($publicFile->getSize());
+                $this->om->persist($resource);
+                $this->om->flush();
+            }
+        }
+        $event->setResponse(new JsonResponse($this->serializer->serialize($node)));
     }
 
     /**

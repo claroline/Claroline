@@ -25,10 +25,11 @@ registry.add('core', {
     // directory resource
     'add'       : () => { return import(/* webpackChunkName: "core-action-add" */       '#/main/core/resources/directory/actions/add') },
     //'import'    : () => { return import(/* webpackChunkName: "core-action-import" */    '#/main/core/resources/directory/actions/import') },
-    'add_files' : () => { return import(/* webpackChunkName: "core-action-add-files" */ '#/main/core/resources/directory/actions/add-files') }
+    'add_files' : () => { return import(/* webpackChunkName: "core-action-add-files" */ '#/main/core/resources/directory/actions/add-files') },
 
     // file resource
-    //'download' : () => { return import(/* webpackChunkName: "resource-action-download" */       '#/main/core/resources/file/actions/download') }
+    //'download' : () => { return import(/* webpackChunkName: "resource-action-download" */       '#/main/core/resources/file/actions/download') },
+    'change_file' : () => { return import(/* webpackChunkName: "resource-action-change-file" */ '#/main/core/resources/file/actions/change-file') }
   },
 
   resources: {

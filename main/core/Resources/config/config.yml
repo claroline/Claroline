@@ -111,6 +111,11 @@ plugin:
                 decoder: export
                 group: transfer
                 api: [GET]
+              # Edits the underlying resource file
+              - name: change_file
+                decoder: edit
+                group: management
+                api: [POST]
 
         - name: directory
           class: Claroline\CoreBundle\Entity\Resource\Directory

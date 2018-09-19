@@ -285,11 +285,14 @@ class ResourceController
         $parameters = $request->query->all();
 
         $content = null;
+
         if (!empty($request->getContent())) {
             $content = json_decode($request->getContent(), true);
         }
+        $files = $request->files->all();
+
         // dispatch action event
-        return $this->actionManager->execute($resourceNode, $action, $parameters, $content);
+        return $this->actionManager->execute($resourceNode, $action, $parameters, $content, $files);
     }
 
     /**
@@ -313,6 +316,15 @@ class ResourceController
         $resourceNodes = $this->om->findList('Claroline\CoreBundle\Entity\Resource\ResourceNode', 'uuid', $ids);
         $responses = [];
 
+        // read request and get user query
+        $parameters = $request->query->all();
+        $content = null;
+
+        if (!empty($request->getContent())) {
+            $content = json_decode($request->getContent(), true);
+        }
+        $files = $request->files->all();
+
         $this->om->startFlushSuite();
 
         foreach ($resourceNodes as $resourceNode) {
@@ -327,15 +339,8 @@ class ResourceController
             // check current user rights
             $this->checkAccess($this->actionManager->get($resourceNode, $action), [$resourceNode]);
 
-            // read request and get user query
-            $parameters = $request->query->all();
-            $content = null;
-            if (!empty($request->getContent())) {
-                $content = json_decode($request->getContent(), true);
-            }
-
             // dispatch action event
-            $responses[] = $this->actionManager->execute($resourceNode, $action, $parameters, $content);
+            $responses[] = $this->actionManager->execute($resourceNode, $action, $parameters, $content, $files);
         }
 
         $this->om->endFlushSuite();

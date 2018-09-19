@@ -15,6 +15,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\File\PublicFileUse;
 use JMS\DiExtraBundle\Annotation as DI;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\Filesystem\Filesystem as SymfonyFileSystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\File\File;
@@ -27,7 +28,6 @@ class FileUtilities
 {
     const MAX_FILES = 1000;
 
-    private $claroUtils;
     private $filesDir;
     private $fileSystem;
     private $om;
@@ -36,7 +36,6 @@ class FileUtilities
 
     /**
      * @DI\InjectParams({
-     *     "claroUtils"     = @DI\Inject("claroline.utilities.misc"),
      *     "filesDir"       = @DI\Inject("%claroline.param.files_directory%"),
      *     "fileSystem"     = @DI\Inject("filesystem"),
      *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
@@ -45,14 +44,12 @@ class FileUtilities
      * })
      */
     public function __construct(
-        ClaroUtilities $claroUtils,
         $filesDir,
         SymfonyFileSystem $fileSystem,
         ObjectManager $om,
         $publicFilesDir,
         TokenStorageInterface $tokenStorage
     ) {
-        $this->claroUtils = $claroUtils;
         $this->filesDir = $filesDir;
         $this->fileSystem = $fileSystem;
         $this->om = $om;
@@ -91,7 +88,7 @@ class FileUtilities
         $size = filesize($tmpFile);
         $mimeType = $tmpFile->getMimeType();
         $extension = pathinfo($fileName, PATHINFO_EXTENSION);
-        $hashName = $this->claroUtils->generateGuid().'.'.$extension;
+        $hashName = Uuid::uuid4()->toString().'.'.$extension;
         $prefix = 'data'.DIRECTORY_SEPARATOR.$directoryName;
         $url = $prefix.DIRECTORY_SEPARATOR.$hashName;
 
@@ -142,7 +139,6 @@ class FileUtilities
         $objectName = null,
         $sourceType = null
     ) {
-        $user = $this->tokenStorage->getToken()->getUser();
         $directoryName = $this->getActiveDirectoryName();
         $dataParts = explode(',', $data);
         $dataBin = base64_decode($dataParts[1]);
@@ -155,7 +151,7 @@ class FileUtilities
                 $extension = $matches[1];
             }
         }
-        $hashName = $this->claroUtils->generateGuid();
+        $hashName = Uuid::uuid4()->toString();
         if (!empty($extension)) {
             $hashName .= '.'.$extension;
         }
@@ -171,7 +167,7 @@ class FileUtilities
         $publicFile->setUrl($url);
         $publicFile->setSourceType($sourceType);
 
-        if ($this->tokenStorage->getToken() && $user = 'anon.' !== $this->tokenStorage->getToken()->getUser()) {
+        if ($this->tokenStorage->getToken() && 'anon.' !== $this->tokenStorage->getToken()->getUser()) {
             $user = $this->tokenStorage->getToken()->getUser();
             $publicFile->setCreator($user);
         }
