@@ -156,7 +156,12 @@ class ResourceNodeFinder extends AbstractFinder
                     //this is the second part of the union
                     $sqlRoles = $this->getSql($qbRoles->getQuery());
                     $sqlRoles = $this->removeAlias($sqlRoles);
-                    $together = $sqlManager.' UNION '.$sqlRoles;
+
+                    $together = $sqlRoles;
+
+                    if (count($managerRoles) > 0) {
+                        $together .= ' UNION '.$sqlManager;
+                    }
 
                     //we might want to add a count somehere here
                     //add limit & offset too

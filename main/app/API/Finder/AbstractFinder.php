@@ -117,7 +117,8 @@ abstract class AbstractFinder implements FinderInterface
                         return is_string($val) ? "'$val'" : $val;
                     }, $value);
                     $sql .= implode(',', $value);
-                } elseif (is_int($value)) {
+                } elseif (is_bool($value)) {
+                    $sql .= $value ? 'TRUE' : 'FALSE';
                 } else {
                     $sql .= $value;
                 }
