@@ -3,8 +3,10 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import {Row, Col} from 'react-bootstrap'
 
-import {trans} from '#/main/core/translation'
+import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {DetailsData} from '#/main/app/content/details/containers/data'
+
+import {trans} from '#/main/core/translation'
 
 import {selectors} from '#/plugin/bibliography/resources/book-reference/store'
 
@@ -24,7 +26,7 @@ const PlayerComponent = props =>
     <Col md={props.bookReference.cover ? 9 : 12}>
       <DetailsData
         level={3}
-        name="bookReference"
+        name={selectors.STORE_NAME+'.bookReference'}
         sections={[
           {
             id: 'general',
@@ -88,7 +90,7 @@ PlayerComponent.propTypes = {
 
 const Player = connect(
   state => ({
-    bookReference: selectors.bookReferenceOriginal(state)
+    bookReference: formSelect.originalData(formSelect.form(state, selectors.STORE_NAME+'.bookReference'))
   })
 )(PlayerComponent)
 

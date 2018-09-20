@@ -36,7 +36,7 @@ class BookReferenceSerializer
     public function serialize(BookReference $bookReference, array $options = [])
     {
         return [
-            'id' => $bookReference->getId(),
+            'id' => $bookReference->getUuid(),
             'name' => $bookReference->getResourceNode()->getName(),
             'author' => $bookReference->getAuthor(),
             'abstract' => $bookReference->getAbstract(),
