@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\DataSource\DataSourceEvent;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 /**
  * @DI\Service
@@ -21,23 +22,30 @@ class ResourceSource
     /** @var FinderProvider */
     private $finder;
 
+    /** @var TokenStorage */
+    private $tokenStorage;
+
     /**
      * ResourceSource constructor.
      *
      * @DI\InjectParams({
-     *     "om"     = @DI\Inject("claroline.persistence.object_manager"),
-     *     "finder" = @DI\Inject("claroline.api.finder")
+     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
+     *     "finder"       = @DI\Inject("claroline.api.finder"),
+     *     "tokenStorage" = @DI\Inject("security.token_storage")
      * })
      *
      * @param ObjectManager  $om
      * @param FinderProvider $finder
+     * @param TokenStorage   $tokenSorage
      */
     public function __construct(
         ObjectManager $om,
-        FinderProvider $finder)
-    {
+        FinderProvider $finder,
+        TokenStorage $tokenStorage
+    ) {
         $this->repository = $om->getRepository(ResourceNode::class);
         $this->finder = $finder;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -59,6 +67,15 @@ class ResourceSource
             ]);
 
             $options['hiddenFilters']['parent'] = $workspaceRoot->getId();
+        }
+
+        $roles = array_map(
+            function ($role) { return $role->getRole(); },
+            $this->tokenStorage->getToken()->getRoles()
+        );
+
+        if (!in_array('ROLE_ADMIN', $roles)) {
+            $options['hiddenFilters']['roles'] = $roles;
         }
 
         $event->setData(
