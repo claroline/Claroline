@@ -2,17 +2,12 @@
 
 {% block title %}{{ parent() ~ ' - ' ~ 'badges' | trans({}, 'icap_badge') | striptags | raw }}{% endblock %}
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
-{% block section_content %}
-    <div class="panel-body">
-        <div class="alert alert-warning">
-            {{ 'tool_work_in_progress'|trans({}, 'platform') }}
-        </div>
-    </div>
-    {#<div class="panel-heading">#}
-        {#<h1 class="panel-title">{% block section_title %}{% endblock %}</h1>#}
-    {#</div>#}
-    {#{{ macros.flashBox() }}#}
 
+{% block page_title %}{{ 'badges' | trans({}, 'icap_badge') }}{% endblock %}
+{% block page_content %}
+    <div class="alert alert-warning">
+        {{ 'tool_work_in_progress'|trans({}, 'platform') }}
+    </div>
     {#<div class="panel-body badge_body">#}
         {#{% block section_body %}{% endblock %}#}
     {#</div>#}

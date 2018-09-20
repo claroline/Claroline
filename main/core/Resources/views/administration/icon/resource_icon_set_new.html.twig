@@ -30,29 +30,25 @@
     }}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'new_icon_set'|trans({}, 'platform') }}</h3>
+{% block page_title %}{{ 'new_icon_set'|trans({}, 'platform') }}{% endblock %}
+{% block page_content %}
+    <div class="row callout callout-info">
+        <div class="col-md-12">
+            <div class="text-info fa fa-info-circle fa-lg"></div>
+            <div>{{ 'resource_icon_set_info_text'|trans({}, 'platform')|raw }}</div>
+            <div style="margin-top: 10px;"><abbr title="" class="text-info" uib-tooltip-html="{{ '\"' ~ ('resource_icon_set_illustrator_options'|trans({}, 'platform')) ~ '\"'  }}|trust_html"><i class="fa fa-lightbulb-o fa-lg"></i> {{ 'resource_icon_set_illustrator_help'|trans({}, 'platform')  }}</abbr></div>
+        </div>
     </div>
-    <div class="panel-body">
-        <div class="row callout callout-info">
-            <div class="col-md-12">
-                <div class="text-info fa fa-info-circle fa-lg"></div>
-                <div>{{ 'resource_icon_set_info_text'|trans({}, 'platform')|raw }}</div>
-                <div style="margin-top: 10px;"><abbr title="" class="text-info" uib-tooltip-html="{{ '\"' ~ ('resource_icon_set_illustrator_options'|trans({}, 'platform')) ~ '\"'  }}|trust_html"><i class="fa fa-lightbulb-o fa-lg"></i> {{ 'resource_icon_set_illustrator_help'|trans({}, 'platform')  }}</abbr></div>
+    <form role="form" class="form-horizontal" action="{{path('claro_admin_resource_icon_set_create')}}" method="post" enctype="multipart/form-data" id="form_settings" enctype='multipart/form-data'>
+        {{ form_widget(form) }}
+        <div class="form-group row">
+            <div class="col-md-offset-3 col-md-9">
+                <button type="submit" class="btn btn-primary">{{ 'create'|trans({}, 'platform') }}</button>
+                <a href="{{ path('claro_admin_resource_icon_set_list') }}" type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</a>
             </div>
         </div>
-        <form role="form" class="form-horizontal" action="{{path('claro_admin_resource_icon_set_create')}}" method="post" enctype="multipart/form-data" id="form_settings" enctype='multipart/form-data'>
-            {{ form_widget(form) }}
-            <div class="form-group row">
-                <div class="col-md-offset-3 col-md-9">
-                    <button type="submit" class="btn btn-primary">{{ 'create'|trans({}, 'platform') }}</button>
-                    <a href="{{ path('claro_admin_resource_icon_set_list') }}" type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</a>
-                </div>
-            </div>
-        </form>
-        <resource-icon-item-list></resource-icon-item-list>
-    </div>
+    </form>
+    <resource-icon-item-list></resource-icon-item-list>
 {% endblock %}
 
 {% block stylesheets %}

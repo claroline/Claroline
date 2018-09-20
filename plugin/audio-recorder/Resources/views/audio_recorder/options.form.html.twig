@@ -23,16 +23,22 @@
     }}
 {% endblock %}
 
+{% block page_title %}{{ 'innova_audio_recorder_config'|trans({}, 'innova_audio_recorder') }}{% endblock %}
+{% block page_content %}
+    <form role="form" class="data-form" action="{{ path('audio_recorder_config_save', {'id':id }) }}" method="post" enctype="multipart/form-data">
+        <div class="panel panel-default">
+            {{ form_widget(form) }}
+        </div>
 
-{% block section_content %}
-    {{ parent() }}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'innova_audio_recorder_config'|trans({}, 'innova_audio_recorder') }}</h3>
-    </div>
-
-    <div class="panel-body">
-        {{ form_start(form, {'action': path('audio_recorder_config_save', {'id':id }) , 'method': 'POST'}) }}
-        {{ form_widget(form) }}
-        {{ form_end(form) }}
-    </div>
+        <div class="form-toolbar">
+            <button type="submit" class="btn btn-primary">
+                <span class="action-icon fa fa-fw fa-save"></span>
+                <span class="sr-only">{{ 'save'|trans({}, 'actions') }}</span>
+            </button>
+            <a href="{{ path('claro_admin_index') }}" class="btn btn-default">
+                <span class="action-icon fa fa-fw fa-sign-out-alt"></span>
+                <span class="sr-only">{{ 'exit'|trans({}, 'actions') }}</span>
+            </a>
+        </div>
+    </form>
 {% endblock %}

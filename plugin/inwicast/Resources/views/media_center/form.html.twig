@@ -26,86 +26,91 @@
     ]) }}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'inwicastclarolineplugin' | trans({}, 'plugin_description') }}</h3>
-    </div>
+{% block page_title %}{{ 'inwicastclarolineplugin'|trans({}, 'plugin_description') }}{% endblock %}
+{% block page_content %}
     <form action="{{ path('inwicast_mediacenter_configure') }}" method="POST">
-        <div class="panel-body">
-            {{ form_errors(form) }}
-            <div class="row">
-                <label for="link" class="control-label col-md-3 required">
-                    {{ 'inwicast_mediacenter_url'|trans({}, 'widget') }}:
-                </label>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                {{ form_errors(form) }}
+                <div class="row">
+                    <label for="link" class="control-label col-md-3 required">
+                        {{ 'inwicast_mediacenter_url'|trans({}, 'widget') }}:
+                    </label>
 
-                <div class="col-md-9">
-                    {{ form_widget(form.url) }}
+                    <div class="col-md-9">
+                        {{ form_widget(form.url) }}
+                    </div>
                 </div>
-            </div>
-            <div class="row inwicast-db-params">
-                <h4 class="col-md-12">{{ 'database_parameters'|trans({}, 'widget') }}</h4>
-            </div>
-            <div class="row">
-                <label for="link" class="control-label col-md-3 required">
-                    {{ 'inwicast_mediacenter_driver'|trans({}, 'widget') }}:
-                </label>
+                <div class="row inwicast-db-params">
+                    <h4 class="col-md-12">{{ 'database_parameters'|trans({}, 'widget') }}</h4>
+                </div>
+                <div class="row">
+                    <label for="link" class="control-label col-md-3 required">
+                        {{ 'inwicast_mediacenter_driver'|trans({}, 'widget') }}:
+                    </label>
 
-                <div class="col-md-9">
-                    {{ form_widget(form.driver) }}
+                    <div class="col-md-9">
+                        {{ form_widget(form.driver) }}
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <label for="link" class="control-label col-md-3 required">
-                    {{ 'inwicast_mediacenter_host'|trans({}, 'widget') }}:
-                </label>
+                <div class="row">
+                    <label for="link" class="control-label col-md-3 required">
+                        {{ 'inwicast_mediacenter_host'|trans({}, 'widget') }}:
+                    </label>
 
-                <div class="col-md-9">
-                    {{ form_widget(form.host) }}
+                    <div class="col-md-9">
+                        {{ form_widget(form.host) }}
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <label for="link" class="control-label col-md-3 required">
-                    {{ 'inwicast_mediacenter_port'|trans({}, 'widget') }}:
-                </label>
+                <div class="row">
+                    <label for="link" class="control-label col-md-3 required">
+                        {{ 'inwicast_mediacenter_port'|trans({}, 'widget') }}:
+                    </label>
 
-                <div class="col-md-9">
-                    {{ form_widget(form.port) }}
+                    <div class="col-md-9">
+                        {{ form_widget(form.port) }}
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <label for="link" class="control-label col-md-3 required">
-                    {{ 'inwicast_mediacenter_dbname'|trans({}, 'widget') }}:
-                </label>
+                <div class="row">
+                    <label for="link" class="control-label col-md-3 required">
+                        {{ 'inwicast_mediacenter_dbname'|trans({}, 'widget') }}:
+                    </label>
 
-                <div class="col-md-9">
-                    {{ form_widget(form.dbname) }}
+                    <div class="col-md-9">
+                        {{ form_widget(form.dbname) }}
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <label for="link" class="control-label col-md-3 required">
-                    {{ 'inwicast_mediacenter_user'|trans({}, 'widget') }}:
-                </label>
+                <div class="row">
+                    <label for="link" class="control-label col-md-3 required">
+                        {{ 'inwicast_mediacenter_user'|trans({}, 'widget') }}:
+                    </label>
 
-                <div class="col-md-9">
-                    {{ form_widget(form.user) }}
+                    <div class="col-md-9">
+                        {{ form_widget(form.user) }}
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <label for="link" class="control-label col-md-3 required">
-                    {{ 'inwicast_mediacenter_password'|trans({}, 'widget') }}:
-                </label>
+                <div class="row">
+                    <label for="link" class="control-label col-md-3 required">
+                        {{ 'inwicast_mediacenter_password'|trans({}, 'widget') }}:
+                    </label>
 
-                <div class="col-md-9">
-                    {{ form_widget(form.password) }}
+                    <div class="col-md-9">
+                        {{ form_widget(form.password) }}
+                    </div>
                 </div>
+                {{ form_rest(form) }}
             </div>
-            {{ form_rest(form) }}
         </div>
-        <div class="panel-footer">
-            <input class="btn btn-primary" type="submit" id="inwicast_mediacenter_submit"
-                   value="{{ 'validate'|trans({}, 'widget') }}"/>
-            <a href="{{ path('claro_admin_index') }}"
-               class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</a>
+
+        <div class="form-toolbar">
+            <button type="submit" class="btn btn-primary">
+                <span class="action-icon fa fa-fw fa-save"></span>
+                <span class="sr-only">{{ 'save'|trans({}, 'actions') }}</span>
+            </button>
+            <a href="{{ path('claro_admin_index') }}" class="btn btn-default">
+                <span class="action-icon fa fa-fw fa-sign-out-alt"></span>
+                <span class="sr-only">{{ 'exit'|trans({}, 'actions') }}</span>
+            </a>
         </div>
     </form>
 {% endblock %}

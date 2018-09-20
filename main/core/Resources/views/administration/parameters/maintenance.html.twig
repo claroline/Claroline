@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'email' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'maintenance' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
@@ -22,25 +22,25 @@
     }}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'maintenance'|trans({}, 'platform') }}</h3>
-    </div>
-    <div class="panel-body">
-        {{ macros.flashBox() }}
+{% block page_title %}
+    {{ 'parameters'|trans({}, 'platform') }}
+    <small>{{ 'maintenance'|trans({}, 'platform') }}</small>
+{% endblock %}
 
-        {% if not is_maintenance_enabled() %}
-            <a class="btn btn-primary" href="{{ path('claro_admin_parameters_start_maintenance') }}">
-                {{ 'start_maintenance'|trans({}, 'platform') }}
-            </a>
-        {% else %}
-            <a class="btn btn-primary" href="{{ path('claro_admin_parameters_end_maintenance') }}">
-                {{ 'end_maintenance'|trans({}, 'platform') }}
-            </a>
-        {% endif %}
-        <a class="btn btn-default" href="{{ path('claro_admin_parameters_maintenance_message_edit_form') }}">
-            <i class="fa fa-pencil"></i>
-            {{ 'edit_maintenance_message'|trans({}, 'platform') }}
+{% block page_content %}
+    {{ macros.flashBox() }}
+
+    {% if not is_maintenance_enabled() %}
+        <a class="btn btn-primary btn-block" href="{{ path('claro_admin_parameters_start_maintenance') }}">
+            {{ 'start_maintenance'|trans({}, 'platform') }}
         </a>
-    </div>
+    {% else %}
+        <a class="btn btn-primary btn-block" href="{{ path('claro_admin_parameters_end_maintenance') }}">
+            {{ 'end_maintenance'|trans({}, 'platform') }}
+        </a>
+    {% endif %}
+    <a class="btn btn-default btn-block" href="{{ path('claro_admin_parameters_maintenance_message_edit_form') }}">
+        <i class="fa fa-pencil"></i>
+        {{ 'edit_maintenance_message'|trans({}, 'platform') }}
+    </a>
 {% endblock %}

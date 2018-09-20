@@ -20,11 +20,9 @@
     }}
 {% endblock %}
 
-{% block section_panel %}
-    <div class="page-header">
-        <h1>{{ 'parameters'|trans({}, 'platform') }}</h1>
-    </div>
+{% block page_title %}{{ 'parameters'|trans({}, 'platform') }}{% endblock %}
 
+{% block page_content %}
     {{ macros.flashBox() }}
 
     <div class="list-group">
@@ -64,6 +62,7 @@
         <a class="list-group-item" href="{{ path('claro_admin_plugins') }}">
             {{ 'plugins'|trans({}, 'platform') }}
         </a>
+
         {{ knp_menu_render('ClarolineCoreBundle:Builder:externalParametersMenu', {}, 'external_authentication_renderer') }}
     </div>
 {% endblock %}

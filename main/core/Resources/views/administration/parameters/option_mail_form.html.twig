@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'server' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'email' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
@@ -26,20 +26,29 @@
     }}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'options'|trans({}, 'platform') }}</h3>
-    </div>
+{% block page_title %}
+    {{ 'email'|trans({}, 'platform') }}
+    <small>{{ 'options'|trans({}, 'platform') }}</small>
+{% endblock %}
+
+{% block page_content %}
     {{ macros.flashBox() }}
     {% form_theme form 'ClarolineCoreBundle::form_theme_no_translations.html.twig' %}
     <form role="form" class="form-horizontal" action="{{ path('claro_admin_mail_submit_form') }}" method="post" enctype="multipart/form-data" id="form_settings" enctype='multipart/form-data'>
-        <div class="panel-body">
-            {{ form_widget(form) }}
+        <div class="panel panel-default">
+            <div class="panel-body">
+                {{ form_widget(form) }}
+            </div>
         </div>
-        <div class="panel-footer">
-            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            <a href="{{ path('claro_admin_index') }}">
-                <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+
+        <div class="form-toolbar">
+            <button type="submit" class="btn btn-primary">
+                <span class="action-icon fa fa-fw fa-save"></span>
+                <span class="sr-only">{{ 'save'|trans({}, 'actions') }}</span>
+            </button>
+            <a href="{{ path('claro_admin_parameters_mail_index') }}" class="btn btn-default">
+                <span class="action-icon fa fa-fw fa-sign-out-alt"></span>
+                <span class="sr-only">{{ 'exit'|trans({}, 'actions') }}</span>
             </a>
         </div>
     </form>

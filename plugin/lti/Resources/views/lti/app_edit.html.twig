@@ -15,7 +15,7 @@
     }}
 {% endblock %}
 
-{% block section_content %}
+{% block page_content %}
         <div id="add_app">
             <form class="form-horizontal" action="{{ path('ujm_lti_edit_form_app', {'appId': appId}) }}" method="post" enctype="multipart/form-data" id="form_edit_app">
                 {{ form_errors(form) }}

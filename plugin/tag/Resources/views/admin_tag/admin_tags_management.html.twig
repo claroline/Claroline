@@ -24,33 +24,27 @@
     }}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">
-            {{ 'claroline_tag_admin_tool' | trans({}, 'tools') }}
-        </h3>
-    </div>
-    <div class="panel-body">
-        <div class="input-group col-md-6 pull-right margin-top-sm">
-            <input class="form-control search-tag"
-                   type="text"
-                   id="search-tag-input"
-                   placeholder="{{ 'search'|trans({}, 'platform') }}"
+{% block page_title %}{{ 'claroline_tag_admin_tool' | trans({}, 'tools') }}{% endblock %}
+{% block page_content %}
+    <div class="input-group col-md-6 pull-right margin-top-sm">
+        <input class="form-control search-tag"
+               type="text"
+               id="search-tag-input"
+               placeholder="{{ 'search'|trans({}, 'platform') }}"
+        >
+        <span class="input-group-btn">
+            <button class="filter btn btn-default search-tag-btn"
+                    type="button"
+                    id="search-tag-btn"
             >
-            <span class="input-group-btn">
-                <button class="filter btn btn-default search-tag-btn"
-                        type="button"
-                        id="search-tag-btn"
-                >
-                    <i class="fa fa-search"></i>
-                </button>
-            </span>
-        </div>
-        <br>
-        <br>
-        <div id="tags-display-box">
-            {{ render(controller('ClarolineTagBundle:AdminTag:adminTagsDisplay')) }}
-        </div>
+                <i class="fa fa-search"></i>
+            </button>
+        </span>
+    </div>
+    <br>
+    <br>
+    <div id="tags-display-box">
+        {{ render(controller('ClarolineTagBundle:AdminTag:adminTagsDisplay')) }}
     </div>
 {% endblock %}
 

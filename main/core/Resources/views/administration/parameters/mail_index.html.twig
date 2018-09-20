@@ -22,10 +22,12 @@
     }}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'email'|trans({}, 'platform') }}</h3>
-    </div>
+{% block page_title %}
+    {{ 'parameters'|trans({}, 'platform') }}
+    <small>{{ 'email'|trans({}, 'platform') }}</small>
+{% endblock %}
+
+{% block page_content %}
     <div class="list-group">
         <a class="list-group-item" href="{{ path('claro_admin_parameters_mail_server') }}">
             {{ 'server'|trans({}, 'platform') }}

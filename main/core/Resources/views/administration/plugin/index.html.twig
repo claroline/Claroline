@@ -22,7 +22,11 @@
 }}
 {% endblock %}
 
-{% block section_panel %}
+{% block page_title %}
+    {{ 'parameters' | trans({}, 'platform') }}
+    <small>{{ 'plugins' | trans({}, 'platform') }}</small>
+{% endblock %}
+{% block page_content %}
     <div id="plugin-panel" data-ng-app="PluginManager">
         <plugin-manager></plugin-manager>
     </div>

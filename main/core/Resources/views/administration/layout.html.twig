@@ -24,11 +24,28 @@
 {% endblock %}
 
 {% block content %}
-    {% block section_panel %}
-        <div class="panel panel-default">
-            {% block section_content %}{% endblock %}
-        </div>
-    {% endblock %}
+    {#
+        The following HTML is only used to mimic React apps in old twig templates.
+        It will be removed when all apps will be in react.
+    #}
+    <div class="page-container">
+        <main class="page">
+            {% block page %}
+                <header class="page-header">
+                    {% block page_header %}
+                        <h1 class="page-title">
+                            {% block page_title %}{% endblock %}
+                        </h1>
+                    {% endblock %}
+                </header>
+
+                <div class="page-content page-content-shift">
+                    {% block page_content %}
+                    {% endblock %}
+                </div>
+            {% endblock %}
+        </main>
+    </div>
 {% endblock %}
 
 {% block javascripts %}

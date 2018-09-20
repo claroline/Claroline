@@ -3,20 +3,16 @@
 {% block title %}{{ parent() ~ ' - ' ~ 'users' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
-    {{ macros.breadcrumbs([
-    {
+    {{ macros.breadcrumbs([{
         'name': 'administration'|trans({}, 'platform'),
         'href': path('claro_admin_index')
-    },
-    {
+    }, {
         'name': 'users_management'|trans({}, 'tools'),
         'href': ''
-    }
-    ]) }}
+    }]) }}
 {% endblock %}
 
 {% block content %}
-    <div>{{ macros.flashBox() }}</div>
     <div
       class="page-container users-container"
       data-parameters="{{ parameters | json_encode | raw | escape }}"

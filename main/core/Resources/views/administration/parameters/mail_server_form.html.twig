@@ -26,23 +26,38 @@
     }}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'server'|trans({}, 'platform') }}</h3>
-    </div>
+{% block page_title %}
+    {{ 'mail'|trans({}, 'platform') }}
+    <small>{{ 'server'|trans({}, 'platform') }}</small>
+{% endblock %}
+
+
+{% block page_content %}
     {{ macros.flashBox() }}
+
     {% form_theme form_mail 'ClarolineCoreBundle::form_theme_no_translations.html.twig' %}
+
     <form role="form" class="form-horizontal" action="{{ path('claro_admin_edit_parameters_mail_server') }}" method="post" id="form_settings" enctype='multipart/form-data'>
-        <div class="panel-body">
-            {{ form_widget(form_mail) }}
+        <div class="panel panel-default">
+            <div class="panel-body">
+                {{ form_widget(form_mail) }}
+            </div>
         </div>
-        <div class="panel-footer">
-            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            <a href="{{ path('claro_admin_reset_mail_server') }}">
-                <button type="button" class="btn btn-primary">{{ 'reset'|trans({}, 'platform') }}</button>
+
+        <div class="form-toolbar">
+            <button type="submit" class="btn btn-primary">
+                <span class="action-icon fa fa-fw fa-save"></span>
+                <span class="sr-only">{{ 'save'|trans({}, 'actions') }}</span>
+            </button>
+
+            <a href="{{ path('claro_admin_reset_mail_server') }}" class="btn btn-default">
+                <span class="action-icon fa fa-fw fa-recycle"></span>
+                <span class="sr-only">{{ 'reset'|trans({}, 'platform') }}</span>
             </a>
-            <a href="{{ path('claro_admin_index') }}">
-                <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+
+            <a href="{{ path('claro_admin_parameters_mail_index') }}" class="btn btn-default">
+                <span class="action-icon fa fa-fw fa-sign-out-alt"></span>
+                <span class="sr-only">{{ 'exit'|trans({}, 'actions') }}</span>
             </a>
         </div>
     </form>

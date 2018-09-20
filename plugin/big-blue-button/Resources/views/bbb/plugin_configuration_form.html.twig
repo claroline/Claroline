@@ -27,20 +27,13 @@
     }}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">
-            {{ 'bbb_configuration'|trans({}, 'bbb') }}
-        </h3>
-    </div>
-    <div class="panel-body">
-        <div class="page-container bbb-config-container"
-             data-user="{{ user | api_serialize({'public': true}) | json_encode | raw | escape }}"
-             data-server-url="{{ serverUrl | json_encode | raw | escape }}"
-             data-security-salt="{{ securitySalt | json_encode | raw | escape }}"
-        >
-        </div>
-    </div>
+{% block page_title %}{{ 'bbb_configuration'|trans({}, 'bbb') }}{% endblock %}
+{% block page_content %}
+    <div class="bbb-config-container"
+         data-user="{{ user | api_serialize({'public': true}) | json_encode | raw | escape }}"
+         data-server-url="{{ serverUrl | json_encode | raw | escape }}"
+         data-security-salt="{{ securitySalt | json_encode | raw | escape }}"
+    ></div>
 {% endblock %}
 
 {% block stylesheets %}

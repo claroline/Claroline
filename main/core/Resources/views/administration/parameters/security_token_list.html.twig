@@ -12,7 +12,7 @@
 
 {% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'email' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'security_token_list' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
@@ -34,34 +34,40 @@
     }}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'security_token_list'|trans({}, 'platform') }}</h3>
-    </div>
-    <div class="panel-body">
+{% block page_title %}
+    {{ 'parameters'|trans({}, 'platform') }}
+    <small>{{ 'security_token_list'|trans({}, 'platform') }}</small>
+{% endblock %}
 
-        {% if tokens|length > 0 %}
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <tr>
-                        <th>
-                            <a href="{{ sortUrl('tokenName', direction) }}">
-                                {{ 'name'|trans({}, 'platform') }}
-                            </a>
-                        </th>
-                        <th>{{ 'ip_address'|trans({}, 'platform') }}</th>
-                        <th>{{ 'token'|trans({}, 'platform') }}</th>
-                        <th>{{ 'actions'|trans({}, 'platform') }}</th>
-                    </tr>
+{% block page_content %}
+    <a href="{{ path('claro_admin_security_token_create_form') }}"
+       class="btn btn-primary pull-right"
+    >
+        {{ 'create_security_token'|trans({}, 'platform') }}
+    </a>
 
-                    {% for token in tokens %}
+    {% if tokens|length > 0 %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <tr>
+                    <th>
+                        <a href="{{ sortUrl('tokenName', direction) }}">
+                            {{ 'name'|trans({}, 'platform') }}
+                        </a>
+                    </th>
+                    <th>{{ 'ip_address'|trans({}, 'platform') }}</th>
+                    <th>{{ 'token'|trans({}, 'platform') }}</th>
+                    <th>{{ 'actions'|trans({}, 'platform') }}</th>
+                </tr>
+
+                {% for token in tokens %}
                     <tr>
                         <td>{{ token.getClientName() }}</td>
                         <td>{{ token.getClientIp() }}</td>
                         <td>{{ token.getToken() }}</td>
                         <td>
                             <a href="{{ path('claro_admin_security_token_edit_form', {'tokenId': token.getId()}) }}"
-                                class="btn btn-default"
+                               class="btn btn-default"
                             >
                                 <i class="fa fa-edit"></i>
                             </a>
@@ -70,17 +76,10 @@
                             </span>
                         </td>
                     </tr>
-                    {% endfor %}
-                </table>
-            </div>
-        {% endif %}
-
-        <a href="{{ path('claro_admin_security_token_create_form') }}"
-            class="btn btn-primary"
-        >
-            {{ 'create_security_token'|trans({}, 'platform') }}
-        </a>
-    </div>
+                {% endfor %}
+            </table>
+        </div>
+    {% endif %}
 
     <div id="delete-security-token-validation-box" class="modal fade" role="dialog" aria-hidden="true">
         <div class="modal-dialog">

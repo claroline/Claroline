@@ -136,12 +136,9 @@
     }}
 {% endblock %}
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">
-            {{ 'user_sessions_management'|trans({}, 'cursus') }}
-        </h3>
-    </div>
+
+{% block page_title %}{{ 'user_sessions_management'|trans({}, 'cursus') }}{% endblock %}
+{% block page_content %}
     <div id="user-sessions-managament-body" class="panel-body">
         {{ macros.flashBox() }}
         <h3>{{ user.getFirstName() }} {{ user.getLastName() }}</h3>

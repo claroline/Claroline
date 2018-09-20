@@ -22,14 +22,14 @@
     }}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'claroline_oauth_apps'|trans({}, 'platform') }}</h3>
-    </div>
-    <div class="panel-body">
-        <div class="list-group">
-            <a href="{{ path('claro_admin_oauth_clients') }}" class="list-group-item"> {{ 'client_list'|trans({}, 'platform') }}</a>
-            <a href="{{ path('claro_admin_oauth_claroline') }}" class="list-group-item">Claroline</a>
-        </div>
+{% block page_title %}
+    {{ 'parameters'|trans({}, 'platform') }}
+    <small>{{ 'claroline_oauth_apps'|trans({}, 'platform') }}</small>
+{% endblock %}
+
+{% block page_content %}
+    <div class="list-group">
+        <a href="{{ path('claro_admin_oauth_clients') }}" class="list-group-item"> {{ 'client_list'|trans({}, 'platform') }}</a>
+        <a href="{{ path('claro_admin_oauth_claroline') }}" class="list-group-item">Claroline</a>
     </div>
 {% endblock %}

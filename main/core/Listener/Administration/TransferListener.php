@@ -50,7 +50,7 @@ class TransferListener
     public function onDisplayTool(OpenAdministrationToolEvent $event)
     {
         $content = $this->templating->render(
-            'ClarolineCoreBundle:administration:transfer\index.html.twig', [
+            'ClarolineCoreBundle:administration:transfer.html.twig', [
                 'explanation' => $this->transfer->getAvailableActions('csv'),
             ]
         );

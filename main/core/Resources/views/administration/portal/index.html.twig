@@ -22,21 +22,28 @@
     }}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'portal'|trans({}, 'platform') }}</h3>
-    </div>
+{% block page_title %}{{ 'portal'|trans({}, 'platform') }}{% endblock %}
+
+{% block page_content %}
     <form role="form" class="form-horizontal general_parameters_form" action="{{path('claro_admin_portal_parameters')}}" method="post" id="form">
         {{ macros.flashBox() }}
-        <div class="panel-body">
-            {{ form_errors(form) }}
-            {{ form_row(form.portalResources) }}
-            {{ form_rest(form) }}
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                {{ form_errors(form) }}
+                {{ form_row(form.portalResources) }}
+                {{ form_rest(form) }}
+            </div>
         </div>
-        <div class="panel-footer">
-            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            <a href="{{ path('claro_admin_index') }}">
-                <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+
+        <div class="form-toolbar">
+            <button type="submit" class="btn btn-primary">
+                <span class="action-icon fa fa-fw fa-save"></span>
+                <span class="sr-only">{{ 'save'|trans({}, 'actions') }}</span>
+            </button>
+            <a href="{{ path('claro_admin_index') }}" class="btn btn-default">
+                <span class="action-icon fa fa-fw fa-sign-out-alt"></span>
+                <span class="sr-only">{{ 'exit'|trans({}, 'actions') }}</span>
             </a>
         </div>
     </form>

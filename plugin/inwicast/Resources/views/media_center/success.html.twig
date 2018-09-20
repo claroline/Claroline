@@ -30,19 +30,14 @@
     ]) }}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'inwicastclarolineplugin' | trans({}, 'plugin_description') }}</h3>
+{% block page_title %}{{ 'inwicastclarolineplugin'|trans({}, 'plugin_description') }}{% endblock %}
+{% block page_content %}
+    <div class="alert alert-success">
+        <strong>{{ 'operation_done' | trans({}, 'platform') }}</strong> {{ 'mediacenter_url_updated' | trans({}, 'widget') }}
     </div>
-    <div class="panel-body">
-        <div class="alert alert-success">
-            <strong>{{ 'operation_done' | trans({}, 'platform') }}</strong> {{ 'mediacenter_url_updated' | trans({}, 'widget') }}
-        </div>
-    </div>
-    <div class="panel-footer">
-        <a href="{{ path('claro_admin_open_tool', {'toolName': 'platform_parameters'}) }}"
-           class="btn btn-default btn-primary">{{ 'back_to_parameters' | trans({}, 'widget') }}</a>
-        <a href="{{ path('claro_admin_open_tool', {'toolName': 'inwicast_configuration'}) }}"
-           class="btn btn-default btn-default">{{ 'reconfigure' | trans({}, 'widget') }}</a>
-    </div>
+
+    <a href="{{ path('claro_admin_open_tool', {'toolName': 'platform_parameters'}) }}"
+       class="btn btn-default btn-primary">{{ 'back_to_parameters' | trans({}, 'widget') }}</a>
+    <a href="{{ path('claro_admin_open_tool', {'toolName': 'inwicast_configuration'}) }}"
+       class="btn btn-default btn-default">{{ 'reconfigure' | trans({}, 'widget') }}</a>
 {% endblock %}

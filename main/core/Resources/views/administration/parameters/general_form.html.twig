@@ -24,63 +24,72 @@
     }}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'general'|trans({}, 'platform') }}</h3>
-    </div>
-    <form role="form" class="form-horizontal general_parameters_form" action="{{path('claro_admin_parameters_general')}}" method="post" id="form_settings" enctype='multipart/form-data'>
+{% block page_title %}
+    {{ 'parameters'|trans({}, 'platform') }}
+    <small>{{ 'general'|trans({}, 'platform') }}</small>
+{% endblock %}
+
+{% block page_content %}
+    <form role="form" class="data-form form-horizontal general_parameters_form" action="{{path('claro_admin_parameters_general')}}" method="post" id="form_settings" enctype='multipart/form-data'>
         {{ macros.flashBox() }}
-        <div class="panel-body">
-            {{ form_errors(form_settings) }}
+        <div class="panel panel-default">
+            <div class="panel-body">
+                {{ form_errors(form_settings) }}
 
-            {{ form_row(form_settings.name) }}
-            {{ form_row(form_settings.description) }}
-            {{ form_row(form_settings.supportEmail) }}
-            {{ form_row(form_settings.allowSelfRegistration) }}
-            {{ form_row(form_settings.registerButtonAtLogin) }}
-            {{ form_row(form_settings.defaultRole) }}
-            {{ form_row(form_settings.localeLanguage) }}
-            {{ form_row(form_settings.formCaptcha) }}
-            {{ form_row(form_settings.formHoneypot) }}
-            {{ form_row(form_settings.redirectAfterLoginOption) }}
-            {{ form_row(form_settings.accountDuration) }}
-            {{ form_row(form_settings.platformInitDate) }}
-            {{ form_row(form_settings.platformLimitDate) }}
-            {{ form_row(form_settings.anonymousPublicProfile) }}
+                {{ form_row(form_settings.name) }}
+                {{ form_row(form_settings.description) }}
+                {{ form_row(form_settings.supportEmail) }}
+                {{ form_row(form_settings.allowSelfRegistration) }}
+                {{ form_row(form_settings.registerButtonAtLogin) }}
+                {{ form_row(form_settings.defaultRole) }}
+                {{ form_row(form_settings.localeLanguage) }}
+                {{ form_row(form_settings.formCaptcha) }}
+                {{ form_row(form_settings.formHoneypot) }}
+                {{ form_row(form_settings.redirectAfterLoginOption) }}
+                {{ form_row(form_settings.accountDuration) }}
+                {{ form_row(form_settings.platformInitDate) }}
+                {{ form_row(form_settings.platformLimitDate) }}
+                {{ form_row(form_settings.anonymousPublicProfile) }}
 
-            {% set value = form_settings.vars.value.portfolioUrl %}
-            <div class="form-group row portfolio_url_row">
-                {{ form_label(form_settings.portfolioUrl) }}
-                <div class="col-md-9">
-                    <div class="portfolio-url">
-                        <div class="radio portfolio_url">
-                            <label class="col-md-12">
-                                <div class="pull-left">
-                                    <input type="radio" name="portfolioUrlOptions" id="portfolioUrlOptions1" value="0" {% if value is empty %} checked="checked"{% endif %}>
-                                    <span>{{ 'internal_portfolio'|trans({}, 'platform') }}</span>
-                                </div>
-                            </label>
-                        </div>
-                        <div class="radio radio-with-input">
-                            <label class="col-md-12">
-                                <div class="pull-left">
-                                    <input type="radio" name="portfolioUrlOptions" id="portfolioUrlOptions2" value="1" {% if value is not empty %} checked="checked"{% endif %}>
-                                    <span>{{ 'general_parameters_portfolio_url_help'|trans({}, 'platform') }}</span>
-                                </div>
-                                <div class="col-md-6 portfolio_url_field">
-                                    {{ form_widget(form_settings.portfolioUrl) }}
-                                </div>
-                            </label>
+                {% set value = form_settings.vars.value.portfolioUrl %}
+                <div class="form-group row portfolio_url_row">
+                    {{ form_label(form_settings.portfolioUrl) }}
+                    <div class="col-md-9">
+                        <div class="portfolio-url">
+                            <div class="radio portfolio_url">
+                                <label class="col-md-12">
+                                    <div class="pull-left">
+                                        <input type="radio" name="portfolioUrlOptions" id="portfolioUrlOptions1" value="0" {% if value is empty %} checked="checked"{% endif %}>
+                                        <span>{{ 'internal_portfolio'|trans({}, 'platform') }}</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="radio radio-with-input">
+                                <label class="col-md-12">
+                                    <div class="pull-left">
+                                        <input type="radio" name="portfolioUrlOptions" id="portfolioUrlOptions2" value="1" {% if value is not empty %} checked="checked"{% endif %}>
+                                        <span>{{ 'general_parameters_portfolio_url_help'|trans({}, 'platform') }}</span>
+                                    </div>
+                                    <div class="col-md-6 portfolio_url_field">
+                                        {{ form_widget(form_settings.portfolioUrl) }}
+                                    </div>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
+                {{ form_rest(form_settings) }}
             </div>
-            {{ form_rest(form_settings) }}
         </div>
-        <div class="panel-footer">
-            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            <a href="{{ path('claro_admin_index') }}">
-                <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+
+        <div class="form-toolbar">
+            <button type="submit" class="btn btn-primary">
+                <span class="action-icon fa fa-fw fa-save"></span>
+                <span class="sr-only">{{ 'save'|trans({}, 'actions') }}</span>
+            </button>
+            <a href="{{ path('claro_admin_index') }}" class="btn btn-default">
+                <span class="action-icon fa fa-fw fa-sign-out-alt"></span>
+                <span class="sr-only">{{ 'exit'|trans({}, 'actions') }}</span>
             </a>
         </div>
     </form>

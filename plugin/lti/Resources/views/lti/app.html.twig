@@ -15,14 +15,10 @@
     }}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <p><h3 class="panel-title">{{ 'ujm_lti_resource' | trans({}, 'resource') }}</h3></p>
-    </div>
-    <div class="panel-body">
-        <div class="alert alert-warning">
-            {{ 'tool_work_in_progress'|trans({}, 'platform') }}
-        </div>
+{% block page_title %}{{ 'ujm_lti_resource' | trans({}, 'resource') }}{% endblock %}
+{% block page_content %}
+    <div class="alert alert-warning">
+        {{ 'tool_work_in_progress'|trans({}, 'platform') }}
     </div>
     {#<div class="panel-body">#}
         {#<table class="table table-bordered">#}

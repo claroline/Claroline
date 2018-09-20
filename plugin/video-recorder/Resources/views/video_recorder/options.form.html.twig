@@ -23,16 +23,10 @@
     }}
 {% endblock %}
 
+{% block page_title %}{{ 'innova_video_recorder_config'|trans({}, 'innova_video_recorder') }}{% endblock %}
 
-{% block section_content %}
-    {{ parent() }}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'innova_video_recorder_config'|trans({}, 'innova_video_recorder') }}</h3>
-    </div>
-
-    <div class="panel-body">
-        {{ form_start(form, {'action': path('video_recorder_config_save', {'id':id }) , 'method': 'POST'}) }}
-        {{ form_widget(form) }}
-        {{ form_end(form) }}
-    </div>
+{% block page_content %}
+    {{ form_start(form, {'action': path('video_recorder_config_save', {'id':id }) , 'method': 'POST'}) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
 {% endblock %}

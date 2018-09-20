@@ -26,11 +26,10 @@
     }}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'resource_icon_set_management'|trans({}, 'platform') }}</h3>
-    </div>
-    <div class="icon-set-list panel-body">
+{% block page_title %}{{ 'resource_icon_set_management'|trans({}, 'platform') }}{% endblock %}
+
+{% block page_content %}
+    <div class="icon-set-list">
         <div>
             {{ macros.flashBox() }}
         </div>

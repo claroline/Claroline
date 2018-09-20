@@ -50,7 +50,7 @@ class ScheduledTaskListener
     public function onDisplayTool(OpenAdministrationToolEvent $event)
     {
         $content = $this->templating->render(
-            'ClarolineCoreBundle:administration:scheduled_task\index.html.twig', [
+            'ClarolineCoreBundle:administration:scheduled_tasks.html.twig', [
                 'isCronConfigured' => $this->configHandler->hasParameter('is_cron_configured') && $this->configHandler->getParameter('is_cron_configured'),
             ]
         );

@@ -27,36 +27,45 @@
     }}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'registration'|trans({}, 'platform') }}</h3>
-    </div>
+{% block page_title %}
+    {{ 'email'|trans({}, 'platform') }}
+    <small>{{ 'registration'|trans({}, 'platform') }}</small>
+{% endblock %}
+
+{% block page_content %}
     <form role="form" class="form-horizontal" action="{{ path('claro_admin_edit_mail_registration') }}" method="post" enctype="multipart/form-data" id="form_settings" enctype='multipart/form-data'>
-        <div class="panel-body">
-            <div class="alert alert-warning">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                {{ 'registration_mail_content_override' | trans({}, 'platform') }}.<br>
-                <br>
-                {{ 'variable_available_message' | trans({}, 'platform') }}:<br>
-                <br>
-                <ul>
-                    <li><strong>%platform_name%</strong> {{ 'replace_platform_name_display_message' | trans({}, 'platform') }}.
-                    <li><strong>%username%</strong> {{ 'replace_username_display_message' | trans({}, 'platform') }}.
-                    <li><strong>%password%</strong> {{ 'replace_password_display' | trans({}, 'platform') }}.
-                    <li><strong>%first_name%</strong> {{ 'replace_first_name_display_message' | trans({}, 'platform') }}.
-                    <li><strong>%last_name%</strong> {{ 'replace_last_name_display_message' | trans({}, 'platform') }}.
-                    <li><strong>%validation_mail%</strong> {{ 'replace_validation_email_message' | trans({}, 'platform') }}.
-                </ul>
-                <br>
-                {{ 'fullscreen_text_editor' | trans({}, 'platform') }}.
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="alert alert-warning">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    {{ 'registration_mail_content_override' | trans({}, 'platform') }}.<br>
+                    <br>
+                    {{ 'variable_available_message' | trans({}, 'platform') }}:<br>
+                    <br>
+                    <ul>
+                        <li><strong>%platform_name%</strong> {{ 'replace_platform_name_display_message' | trans({}, 'platform') }}.
+                        <li><strong>%username%</strong> {{ 'replace_username_display_message' | trans({}, 'platform') }}.
+                        <li><strong>%password%</strong> {{ 'replace_password_display' | trans({}, 'platform') }}.
+                        <li><strong>%first_name%</strong> {{ 'replace_first_name_display_message' | trans({}, 'platform') }}.
+                        <li><strong>%last_name%</strong> {{ 'replace_last_name_display_message' | trans({}, 'platform') }}.
+                        <li><strong>%validation_mail%</strong> {{ 'replace_validation_email_message' | trans({}, 'platform') }}.
+                    </ul>
+                    <br>
+                    {{ 'fullscreen_text_editor' | trans({}, 'platform') }}.
+                </div>
+                {% form_theme form 'ClarolineCoreBundle::form_theme_no_label.html.twig' %}
+                {{ form_widget(form) }}
             </div>
-            {% form_theme form 'ClarolineCoreBundle::form_theme_no_label.html.twig' %}
-            {{ form_widget(form) }}
         </div>
-        <div class="panel-footer">
-            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            <a href="{{ path('claro_admin_parameters_mail_index') }}">
-                <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+
+        <div class="form-toolbar">
+            <button type="submit" class="btn btn-primary">
+                <span class="action-icon fa fa-fw fa-save"></span>
+                <span class="sr-only">{{ 'save'|trans({}, 'actions') }}</span>
+            </button>
+            <a href="{{ path('claro_admin_parameters_mail_index') }}" class="btn btn-default">
+                <span class="action-icon fa fa-fw fa-sign-out-alt"></span>
+                <span class="sr-only">{{ 'exit'|trans({}, 'actions') }}</span>
             </a>
         </div>
     </form>

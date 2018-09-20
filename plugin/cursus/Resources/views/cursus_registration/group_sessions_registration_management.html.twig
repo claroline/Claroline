@@ -33,12 +33,8 @@
     }}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">
-            {{ pageTitle }}
-        </h3>
-    </div>
+{% block page_title %}{{ pageTitle }}{% endblock %}
+{% block page_content %}
     <div class="panel-body">
         <h3>{{ group.getName() }}</h3>
         <hr>

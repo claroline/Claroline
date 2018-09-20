@@ -21,15 +21,12 @@
     }}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ title|trans({}, 'notification') }}</h3>
+{% block page_title %}{{ title|trans({}, 'notification') }}{% endblock %}
+{% block page_content %}
+    <div class="alert alert-warning">
+        {{ 'tool_work_in_progress'|trans({}, 'platform') }}
     </div>
-    <div class="panel-body">
-        <div class="alert alert-warning">
-            {{ 'tool_work_in_progress'|trans({}, 'platform') }}
-        </div>
-    </div>
+
     {#{{ macros.flashBox() }}#}
     {#<div class="panel-body">#}
         {#<form id="notification-plugin-configuration-form" action="{{ path("icap_notification_configuration_save") }}" method="post">#}

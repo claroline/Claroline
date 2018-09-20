@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'email' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'edit_security_token' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
@@ -26,10 +26,12 @@
     }}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'edit_security_token'|trans({}, 'platform') }}</h3>
-    </div>
+{% block page_title %}
+    {{ 'parameters'|trans({}, 'platform') }}
+    <small>{{ 'edit_security_token'|trans({}, 'platform') }}</small>
+{% endblock %}
+
+{% block page_content %}
     <form role="form"
         class="form-horizontal"
         action="{{ path('claro_admin_security_token_edit', {'tokenId': token.getId()}) }}"
@@ -38,18 +40,24 @@
         id="form_settings"
         novalidate
     >
-        <div class="panel-body">
-            {{ form_widget(form) }}
-            <span id="generate-token-btn" class="btn btn-default">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                {{ form_widget(form) }}
+                <span id="generate-token-btn" class="btn btn-default">
                 <i class="fa fa-random"></i>
-                {{ 'generate_token'|trans({}, 'platform') }}
+                    {{ 'generate_token'|trans({}, 'platform') }}
             </span>
+            </div>
         </div>
-        <br>
-        <div class="panel-footer">
-            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            <a href="{{ path('claro_admin_security_token_list') }}">
-                <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+
+        <div class="form-toolbar">
+            <button type="submit" class="btn btn-primary">
+                <span class="action-icon fa fa-fw fa-save"></span>
+                <span class="sr-only">{{ 'save'|trans({}, 'actions') }}</span>
+            </button>
+            <a href="{{ path('claro_admin_security_token_list') }}" class="btn btn-default">
+                <span class="action-icon fa fa-fw fa-sign-out-alt"></span>
+                <span class="sr-only">{{ 'exit'|trans({}, 'actions') }}</span>
             </a>
         </div>
     </form>

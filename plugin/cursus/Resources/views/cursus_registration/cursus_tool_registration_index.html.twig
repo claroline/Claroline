@@ -20,10 +20,9 @@
     }}
 {% endblock %}
 
-{% block section_content %}%}
-    <div class="panel-body">
-        <div class="alert alert-warning">
-            {{ 'tool_work_in_progress'|trans({}, 'platform') }}
-        </div>
+{% block page_title %}'claroline_cursus_tool_registration' | trans({}, 'tools'){% endblock %}
+{% block page_content %}
+    <div class="alert alert-warning">
+        {{ 'tool_work_in_progress'|trans({}, 'platform') }}
     </div>
 {% endblock %}

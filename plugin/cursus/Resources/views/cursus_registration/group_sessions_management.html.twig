@@ -49,35 +49,30 @@
     }}
 {% endblock %}
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">
-            {{ 'user_sessions_management'|trans({}, 'cursus') }}
-        </h3>
-    </div>
-    <div class="panel-body">
-        {{ macros.flashBox() }}
-        <h3>{{ group.getName() }}</h3>
-        <hr>
-        <a class="btn btn-primary"
-           href="{{ path('claro_cursus_group_sessions_registration_management', {'group': group.getId(), 'type': 0}) }}"
-        >
-            <i class="fa fa-sign-in"></i>
-            {{ 'registration'|trans({}, 'platform') }}
-        </a>
-        <hr>
 
-        {% if learnerSessions|length > 0 %}
+{% block page_title %}{{ 'user_sessions_management'|trans({}, 'cursus') }}{% endblock %}
+{% block page_content %}
+    {{ macros.flashBox() }}
+    <h3>{{ group.getName() }}</h3>
+    <hr>
+    <a class="btn btn-primary"
+       href="{{ path('claro_cursus_group_sessions_registration_management', {'group': group.getId(), 'type': 0}) }}"
+    >
+        <i class="fa fa-sign-in"></i>
+        {{ 'registration'|trans({}, 'platform') }}
+    </a>
+    <hr>
 
-            {% for learnerSession in learnerSessions %}
-                {{ displayCourseSessions(learnerSession, 0) }}
-            {% endfor %}
-        {% else %}
-            <div class="alert alert-warning">
-                {{ 'no_session'|trans({}, 'cursus') }}
-            </div>
-        {% endif %}
-    </div>
+    {% if learnerSessions|length > 0 %}
+
+        {% for learnerSession in learnerSessions %}
+            {{ displayCourseSessions(learnerSession, 0) }}
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-warning">
+            {{ 'no_session'|trans({}, 'cursus') }}
+        </div>
+    {% endif %}
 
     <div id="group-sessions-datas-box"
          data-group-id="{{ group.getId() }}"

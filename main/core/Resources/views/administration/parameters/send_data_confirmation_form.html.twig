@@ -20,34 +20,38 @@
     }}
 {% endblock %}
 
+{% block page_title %}
+    {{ 'parameters'|trans({}, 'platform') }}
+    <small>{{ 'infos_sending_acceptance'|trans({}, 'platform') }}</small>
+{% endblock %}
+
 {% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">
-            {{ 'infos_sending_acceptance'|trans({}, 'platform') }}
-        </h3>
+    <div class="sendData">
+        <p>{{ 'confirm_send_data'|trans({}, 'platform') }}</p>
+        <ul>
+            <li>
+                {{ 'technical'|trans({}, 'platform') }}
+                (<i>{{ 'technical_data'|trans({}, 'platform') }}</i>)
+            </li>
+            <li>
+                {{ 'statistics'|trans({}, 'platform') }}
+                (<i>{{ 'statistics_data'|trans({}, 'platform') }}</i>)
+            </li>
+        </ul>
+        <small>
+            <p>{{ 'agreeing'|trans({}, 'platform') }}</p>
+            <p>{{ 'personal_data'|trans({}, 'platform') }}</p>
+        </small>
     </div>
-    <div class="panel-body">
-        <div class="sendData">
-            <p>{{ 'confirm_send_data'|trans({}, 'platform') }}</p>
-            <ul>
-                <li>
-                    {{ 'technical'|trans({}, 'platform') }}
-                    (<i>{{ 'technical_data'|trans({}, 'platform') }}</i>)
-                </li>
-                <li>
-                    {{ 'statistics'|trans({}, 'platform') }}
-                    (<i>{{ 'statistics_data'|trans({}, 'platform') }}</i>)
-                </li>
-            </ul>
-            <small>
-                <p>{{ 'agreeing'|trans({}, 'platform') }}</p>
-                <p>{{ 'personal_data'|trans({}, 'platform') }}</p>
-            </small>
-        </div>
-    </div>
-    <div class="panel-footer">
+
+    <div class="form-toolbar">
         <a href="{{ path('claro_admin_send_data_confirm') }}" class="btn btn-primary">
-            {{ 'accept'|trans({}, 'platform') }}
+            <span class="action-icon fa fa-fw fa-check"></span>
+            <span class="sr-only">{{ 'accept'|trans({}, 'actions') }}</span>
+        </a>
+        <a href="{{ path('claro_admin_index') }}" class="btn btn-default">
+            <span class="action-icon fa fa-fw fa-sign-out-alt"></span>
+            <span class="sr-only">{{ 'exit'|trans({}, 'actions') }}</span>
         </a>
     </div>
 {% endblock %}
