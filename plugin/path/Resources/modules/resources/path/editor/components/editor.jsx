@@ -6,7 +6,7 @@ import {trans} from '#/main/core/translation'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {MODAL_RESOURCE_EXPLORER} from '#/main/core/resource/modals/explorer'
-import {Routes} from '#/main/app/router'
+import {Routes, withRouter} from '#/main/app/router'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
@@ -48,7 +48,7 @@ const EditorComponent = props =>
         }, {
           icon: 'fa fa-fw fa-trash-o',
           label: trans('delete', {}, 'actions'),
-          action: props.removeStep
+          action: (step) => props.removeStep(step, props.history)
         }
       ]}
       parameters={true}
@@ -127,12 +127,18 @@ EditorComponent.propTypes = {
   removeInheritedResource: T.func.isRequired,
   copyStep: T.func.isRequired,
   pasteStep: T.func.isRequired,
-  saveForm: T.func.isRequired
+  saveForm: T.func.isRequired,
+  history: T.shape({
+    location: T.shape({
+      pathname: T.string.isRequired
+    }).isRequired,
+    push: T.func.isRequired
+  }).isRequired
 }
 
 // todo merge resources pickers
 
-const Editor = connect(
+const Editor = withRouter(connect(
   state => ({
     path: selectors.path(state),
     steps: flattenSteps(selectors.steps(state)),
@@ -143,14 +149,20 @@ const Editor = connect(
     addStep(parentStep = null) {
       dispatch(actions.addStep(parentStep ? parentStep.id : null))
     },
-    removeStep(step) {
+    removeStep(step, history) {
       dispatch(
         modalActions.showModal(MODAL_CONFIRM, {
           icon: 'fa fa-fw fa-trash-o',
           title: trans('step_delete_title', {}, 'path'),
           question: trans('step_delete_confirm', {}, 'path'),
           dangerous: true,
-          handleConfirm: () => dispatch(actions.removeStep(step.id))
+          handleConfirm: () => {
+            dispatch(actions.removeStep(step.id))
+
+            if (`/edit/${step.id}` === history.location.pathname) {
+              history.push('/edit')
+            }
+          }
         })
       )
     },
@@ -187,7 +199,7 @@ const Editor = connect(
     },
     saveForm: (pathId) => dispatch(formActions.saveForm(selectors.FORM_NAME, ['apiv2_path_update', {id: pathId}]))
   })
-)(EditorComponent)
+)(EditorComponent))
 
 export {
   Editor
