@@ -48,7 +48,14 @@ class EventController extends AbstractCrudController
 
         //get start & end date and add them to the hidden filters list
         $query['hiddenFilters']['createdAfter'] = $query['start'];
-        $query['hiddenFilters']['endBefore'] = $query['end'];
+
+        //we want to be able to fetch events that start a months before and ends a month after
+        $date = new \DateTime($query['end']);
+        $interval = new \DateInterval('P2M');
+        $date->add($interval);
+        $end = $date->format('Y-m-d');
+
+        $query['hiddenFilters']['endBefore'] = $end;
 
         $data = $this->finder->search(
             $class,
