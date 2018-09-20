@@ -25,10 +25,11 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -156,25 +157,17 @@ class ResourceController
 
         $data = $this->manager->download($nodes, $forceArchive);
 
-        $fileName = $data['name'];
         $mimeType = $data['mimeType'];
-        $response = new StreamedResponse();
 
         $file = $data['file'] ?: tempnam('tmp', 'tmp');
-        $response->setCallBack(
-                function () use ($file) {
-                    readfile($file);
-                }
-            );
+        $fileName = $data['name'];
+        $response = new BinaryFileResponse($file);
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            null === $fileName ? $response->getFile()->getFilename() : $fileName
+        );
 
-        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
-        $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.urlencode($fileName));
-        if (null !== $mimeType) {
-            $response->headers->set('Content-Type', $mimeType);
-        }
-        $response->headers->set('Connection', 'close');
-        $response->send();
+        return $response;
     }
 
     /**

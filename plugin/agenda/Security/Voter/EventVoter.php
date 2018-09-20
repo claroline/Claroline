@@ -23,7 +23,6 @@ class EventVoter extends AbstractVoter
 {
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
-        //Crud voter Create
     }
 
     public function getClass()
