@@ -123,7 +123,7 @@ class ResourceActionManager
         $event = $this->dispatcher->dispatch(
             static::eventName($actionName, $resourceAction->getResourceType()),
             ResourceActionEvent::class,
-            [$resource, $options, $content, $files]
+            [$resource, $options, $content, $files, $resourceNode]
         );
 
         return $event->getResponse();

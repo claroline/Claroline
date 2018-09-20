@@ -941,7 +941,30 @@ class ResourceManager
                     [$node]
                 );
             } else {
-                $this->log($node->getName().'['.$node->getResourceType()->getName().':id:'.$node->getId().'] not found', 'error');
+                if ($softDelete || $eventSoftDelete) {
+                    $node->setActive(false);
+                    // Rename node to allow future nodes have the same name
+                    $node->setName($node->getName().uniqid('_'));
+                    $this->om->persist($node);
+                } else {
+                    //what is it ?
+                    $this->dispatcher->dispatch(
+                        'claroline_resources_delete',
+                        'GenericData',
+                        [[$node]]
+                    );
+
+                    if ($node->getIcon() && $workspace) {
+                        $this->iconManager->delete($node->getIcon(), $workspace);
+                    }
+                    $this->om->remove($node);
+                }
+
+                $this->dispatcher->dispatch(
+                    'log',
+                    'Log\LogResourceDelete',
+                    [$node]
+                );
             }
         }
 

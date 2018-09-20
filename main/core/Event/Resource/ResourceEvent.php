@@ -24,14 +24,19 @@ class ResourceEvent extends Event implements MandatoryEventInterface
     /** @var AbstractResource */
     private $resource;
 
+    /** @var ResourceNode */
+    private $resourceNode;
+
     /**
      * ResourceEvent constructor.
      *
      * @param AbstractResource $resource
+     * @param ResourceNode     $resourceNode
      */
-    public function __construct(AbstractResource $resource)
+    public function __construct(AbstractResource $resource = null, ResourceNode $resourceNode = null)
     {
         $this->resource = $resource;
+        $this->resourceNode = $resourceNode;
     }
 
     /**
@@ -47,6 +52,12 @@ class ResourceEvent extends Event implements MandatoryEventInterface
      */
     public function getResourceNode()
     {
-        return $this->resource->getResourceNode();
+        if ($this->resourceNode) {
+            return $this->resourceNode;
+        } elseif ($this->resource) {
+            return $this->resource->getResourceNode();
+        } else {
+            return null;
+        }
     }
 }

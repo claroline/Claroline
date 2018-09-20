@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Event\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -59,14 +60,17 @@ class ResourceActionEvent extends ResourceEvent
      * @param AbstractResource $resource
      * @param array            $options
      * @param array            $data
+     * @param array            $files
+     * @param ResourceNode     $resourceNode
      */
     public function __construct(
-        AbstractResource $resource,
+        AbstractResource $resource = null,
         array $options = [],
         array $data = null,
-        array $files = null)
+        array $files = null,
+        ResourceNode $resourceNode = null)
     {
-        parent::__construct($resource);
+        parent::__construct($resource, $resourceNode);
 
         $this->data = $data;
         $this->files = $files;
