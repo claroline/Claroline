@@ -59,7 +59,7 @@ const QuestionsPage = props =>
           }, {
             name: 'content',
             label: tex('question'),
-            type: 'html',
+            type: 'string',
             render: (rowData) => {
               if (rowData.title) {
                 return rowData.title
