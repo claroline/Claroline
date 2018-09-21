@@ -26,7 +26,6 @@ class HomeTabVoter extends AbstractVoter
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
         switch ($attributes[0]) {
-            case self::CREATE: return $this->check($token, $object);
             case self::EDIT:   return $this->check($token, $object);
             case self::DELETE: return $this->check($token, $object);
       }

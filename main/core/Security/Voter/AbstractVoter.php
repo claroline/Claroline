@@ -16,6 +16,7 @@ use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\AppBundle\Security\Voter\VoterInterface as ClarolineVoterInterface;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -246,5 +247,37 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
     public function isAdmin(TokenInterface $token)
     {
         return $this->isGranted('ROLE_ADMIN');
+    }
+
+    protected function getWorkspaceToolPerm(Workspace $workspace, $toolName, TokenInterface $token)
+    {
+        if ($this->container->get('claroline.manager.workspace_manager')->isManager($workspace, $token)) {
+            //create + edit as mask
+            return 3;
+        }
+
+        $roles = array_map(function ($role) {
+            return $role->getRole();
+        }, $token->getRoles());
+
+        $perm = 0;
+
+        $finder = $this->container->get('claroline.api.finder.ordered_tool');
+        $ot = $finder->findOneBy([
+          'tool' => $toolName,
+          'workspace' => $workspace->getUuid(),
+        ]);
+
+        $rights = $ot->getRights();
+
+        foreach ($rights as $right) {
+            $role = $right->getRole();
+
+            if (in_array($role->getName(), $roles)) {
+                $perm = $right->getMask() | $perm;
+            }
+        }
+
+        return $perm;
     }
 }

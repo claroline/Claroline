@@ -29,7 +29,6 @@ class GroupVoter extends AbstractVoter
         $collection = isset($options['collection']) ? $options['collection'] : null;
 
         switch ($attributes[0]) {
-            case self::CREATE: return $this->checkCreation($token);
             case self::EDIT:   return $this->checkEdit($token, $object);
             case self::DELETE: return $this->checkDelete($token, $object);
             case self::VIEW:   return $this->checkView($token, $object);
@@ -37,13 +36,6 @@ class GroupVoter extends AbstractVoter
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
-    }
-
-    private function checkCreation(TokenInterface $token)
-    {
-        return $this->hasAdminToolAccess($token, 'user_management') ?
-             VoterInterface::ACCESS_GRANTED :
-             VoterInterface::ACCESS_DENIED;
     }
 
     private function checkEdit($token, Group $group)

@@ -38,25 +38,12 @@ class UserVoter extends AbstractVoter
 
         switch ($attributes[0]) {
             case self::VIEW:   return $this->checkView($token, $object);
-            case self::CREATE: return $this->checkCreation();
             case self::EDIT:   return $this->checkEdit($token, $object);
             case self::DELETE: return $this->checkDelete($token, $object);
             case self::PATCH:  return $this->checkPatch($token, $object, $collection);
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
-    }
-
-    /**
-     * @return int
-     */
-    private function checkCreation()
-    {
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler */
-        $handler = $this->getContainer()->get('claroline.config.platform_config_handler');
-
-        return $handler->getParameter('allow_self_registration') ?
-             VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_ABSTAIN;
     }
 
     /**

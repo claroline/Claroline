@@ -73,7 +73,7 @@ class AgendaListener
             'ClarolineAgendaBundle:tool:agenda.html.twig',
             [
                 'workspace' => $workspace,
-                'editableWorkspaces' => [$workspace->getId() => $editableWorkspace],
+                'editableWorkspaces' => [$workspace->getUuid() => $editableWorkspace],
             ]
         );
 
@@ -116,9 +116,5 @@ class AgendaListener
         );
 
         $event->setContent($content);
-    }
-
-    public function desktopAgenda()
-    {
     }
 }

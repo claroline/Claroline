@@ -7,6 +7,7 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @DI\Service("claroline.serializer.event")
@@ -23,14 +24,16 @@ class EventSerializer
      * RoleSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
+     *     "serializer"     = @DI\Inject("claroline.api.serializer"),
+     *     "authorization"  = @DI\Inject("security.authorization_checker"),
      * })
      *
      * @param SerializerProvider $serializer
      */
-    public function __construct(SerializerProvider $serializer)
+    public function __construct(SerializerProvider $serializer, AuthorizationCheckerInterface $authorization)
     {
         $this->serializer = $serializer;
+        $this->authorization = $authorization;
     }
 
     /**
@@ -40,6 +43,10 @@ class EventSerializer
      */
     public function serialize(Event $event)
     {
+        $editable = $event->getWorkspace() ?
+            $this->authorization->isGranted('EDIT', $event) :
+            false !== $event->isEditable();
+
         return [
             'id' => $event->getId(),
             'title' => $event->getTitle(),
@@ -52,7 +59,7 @@ class EventSerializer
             'description' => $event->getDescription(),
             'workspace' => $event->getWorkspace() ? $this->serializer->serialize($event->getWorkspace()) : null,
             'className' => 'event_'.$event->getId(),
-            'editable' => false !== $event->isEditable(),
+            'editable' => $editable,
             'meta' => $this->serializeMeta($event),
         ];
     }

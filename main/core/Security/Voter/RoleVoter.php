@@ -28,7 +28,6 @@ class RoleVoter extends AbstractVoter
         $collection = isset($options['collection']) ? $options['collection'] : null;
 
         switch ($attributes[0]) {
-            case self::CREATE: return $this->check($token, $object);
             case self::EDIT:   return $this->check($token, $object);
             case self::DELETE: return $this->check($token, $object);
             case self::PATCH:  return $this->checkPatch($token, $object, $collection);

@@ -89,7 +89,7 @@ class Crud
         $object = $this->serializer->deserialize($class, $data, $options);
 
         // creates the entity if allowed
-        //$this->checkPermission('CREATE', $object, [], true);
+        $this->checkPermission('CREATE', $object, [], true);
 
         if ($this->dispatch('create', 'pre', [$object, $options])) {
             $this->om->save($object);
