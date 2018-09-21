@@ -73,9 +73,11 @@ class ShortcutSerializer
      */
     public function deserialize(array $data, Shortcut $shortcut)
     {
-        if (!empty($data['target']) && !empty($data['target']['id']) && $data['target']['id'] !== $shortcut->getTarget()->getUuid()) {
+        if (!empty($data['target']) &&
+            !empty($data['target']['id']) &&
+            (!$shortcut->getTarget() || $data['target']['id'] !== $shortcut->getTarget()->getUuid())
+        ) {
             // the target is specified and as changed
-
             /** @var ResourceNode $target */
             $target = $this->om
                 ->getRepository('ClarolineCoreBundle:Resource\ResourceNode')

@@ -4,13 +4,13 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {selectors} from '#/main/core/resource/modals/creation/store'
+import {actions, selectors} from '#/main/core/resource/modals/creation/store'
 
 const ShortcutForm = props =>
   <FormData
     level={5}
-    name={selectors.FORM_NAME}
-    dataPart="resource"
+    name={selectors.STORE_NAME}
+    dataPart={selectors.FORM_RESOURCE_PART}
     sections={[
       {
         title: trans('general'),
@@ -34,9 +34,9 @@ ShortcutForm.propTypes = {
 
 const ShortcutCreation = connect(
   null,
-  () => ({
-    update() {
-      // todo default set props of the shortcut with target
+  (dispatch) => ({
+    update(target) {
+      dispatch(actions.updateResource('target', target))
     }
   })
 )(ShortcutForm)

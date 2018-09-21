@@ -139,8 +139,8 @@ class ResourceController
      *     requirements={"forceArchive" = "^(true|false|0|1)$"},
      * )
      *
-     * @param array $nodes
-     * @param bool  $forceArchive
+     * @param bool    $forceArchive
+     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -156,8 +156,6 @@ class ResourceController
         }
 
         $data = $this->manager->download($nodes, $forceArchive);
-
-        $mimeType = $data['mimeType'];
 
         $file = $data['file'] ?: tempnam('tmp', 'tmp');
         $fileName = $data['name'];
@@ -184,6 +182,11 @@ class ResourceController
      */
     public function showAction(ResourceNode $resourceNode)
     {
+        if ('shortcut' === $resourceNode->getResourceType()->getName()) {
+            $shortcut = $this->manager->getResourceFromNode($resourceNode);
+            $resourceNode = $shortcut->getTarget();
+        }
+
         return [
             'resourceNode' => $resourceNode,
         ];
