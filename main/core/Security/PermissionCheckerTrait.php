@@ -52,6 +52,10 @@ trait PermissionCheckerTrait
      */
     private function checkPermission($permission, $object, $options = [], $throwException = false)
     {
+        if ('cli' === php_sapi_name()) {
+            return true;
+        }
+
         switch ($object) {
             //@todo Remove that line once we can
             case $object instanceof ResourceNode:

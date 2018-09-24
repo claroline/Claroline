@@ -80,7 +80,7 @@ class MailManager
     {
         $this->container->get('claroline.manager.user_manager')->initializePassword($user);
         $hash = $user->getResetPasswordHash();
-        $link = $this->router->generate('claro_security_reset_password', ['hash' => $hash], true);
+        $link = $this->router->generate('claro_security_reset_password', ['hash' => $hash], UrlGeneratorInterface::ABSOLUTE_URL);
         $subject = $this->translator->trans('resetting_your_password', [], 'platform');
 
         $body = $this->container->get('templating')->render(
@@ -95,7 +95,7 @@ class MailManager
     {
         $this->container->get('claroline.manager.user_manager')->initializePassword($user);
         $hash = $user->getResetPasswordHash();
-        $link = $this->router->generate('claro_security_reset_password', ['hash' => $hash], true);
+        $link = $this->router->generate('claro_security_reset_password', ['hash' => $hash], UrlGeneratorInterface::ABSOLUTE_URL);
         $subject = $this->translator->trans('initialize_your_password', [], 'platform');
 
         $body = $this->container->get('templating')->render(
@@ -109,7 +109,7 @@ class MailManager
     public function sendEnableAccountMessage(User $user)
     {
         $hash = $user->getResetPasswordHash();
-        $link = $this->router->generate('claro_security_activate_user', ['hash' => $hash], true);
+        $link = $this->router->generate('claro_security_activate_user', ['hash' => $hash], UrlGeneratorInterface::ABSOLUTE_URL);
         $subject = $this->translator->trans('activate_account', [], 'platform');
 
         $body = $this->container->get('templating')->render(
@@ -123,7 +123,7 @@ class MailManager
     public function sendValidateEmail($hash)
     {
         $users = $this->container->get('claroline.manager.user_manager')->getByEmailValidationHash($hash);
-        $url = $this->router->generate('claro_security_validate_email', ['hash' => $hash], true);
+        $url = $this->router->generate('claro_security_validate_email', ['hash' => $hash], UrlGeneratorInterface::ABSOLUTE_URL);
         $body = $this->translator->trans(
             'email_validation_url_display',
             ['%url%' => $this->ch->getParameter('domain_name').$url],
@@ -146,7 +146,7 @@ class MailManager
         $displayedLocale = isset($content[$locale]) ? $locale : $this->ch->getParameter('locale_language');
         $body = $content[$displayedLocale]['content'];
         $subject = $content[$displayedLocale]['title'];
-        $url = $this->router->generate('claro_security_validate_email', ['hash' => $user->getEmailValidationHash()], true);
+        $url = $this->router->generate('claro_security_validate_email', ['hash' => $user->getEmailValidationHash()], UrlGeneratorInterface::ABSOLUTE_URL);
         $validationLink = $this->translator->trans('email_validation_url_display', ['%url%' => $url], 'platform');
 
         $body = str_replace('%first_name%', $user->getFirstName(), $body);

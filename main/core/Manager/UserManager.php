@@ -1014,7 +1014,7 @@ class UserManager
         /** @var User $user */
         $user = $this->userRepo->findBy(['resetPasswordHash' => $resetPassword]);
 
-        return $user;
+        return end($user);
     }
 
     /**
