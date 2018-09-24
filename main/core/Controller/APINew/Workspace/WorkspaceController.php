@@ -448,14 +448,14 @@ class WorkspaceController extends AbstractCrudController
 
         foreach ($workspaces as $workspace) {
             if ('collaborator' === $role) {
-                $role = $this->roleManager->getCollaboratorRole($workspace);
+                $roleEntity = $this->roleManager->getCollaboratorRole($workspace);
             } elseif ('manager' === $role) {
-                $role = $this->roleManager->getManagerRole($workspace);
+                $roleEntity = $this->roleManager->getManagerRole($workspace);
             } else {
                 throw new \Exception('The role '.$role.' does not exists');
             }
 
-            $this->crud->patch($role, 'user', Crud::COLLECTION_ADD, $users);
+            $this->crud->patch($roleEntity, 'user', Crud::COLLECTION_ADD, $users);
         }
 
         return new JsonResponse(array_map(function ($workspace) {
@@ -481,14 +481,14 @@ class WorkspaceController extends AbstractCrudController
 
         foreach ($workspaces as $workspace) {
             if ('collaborator' === $role) {
-                $role = $this->roleManager->getCollaboratorRole($workspace);
+                $roleEntity = $this->roleManager->getCollaboratorRole($workspace);
             } elseif ('manager' === $role) {
-                $role = $this->roleManager->getManagerRole($workspace);
+                $roleEntity = $this->roleManager->getManagerRole($workspace);
             } else {
                 throw new \Exception('The role '.$role.' does not exists');
             }
 
-            $this->crud->patch($role, 'group', Crud::COLLECTION_ADD, $groups);
+            $this->crud->patch($roleEntity, 'group', Crud::COLLECTION_ADD, $groups);
         }
 
         return new JsonResponse(array_map(function ($workspace) {
