@@ -145,16 +145,16 @@ class ResourceNodeFinder extends AbstractFinder
 
                     $qbManager = $this->om->createQueryBuilder();
                     $qbManager->select('DISTINCT obj')->from($this->getClass(), 'obj');
-                    $this->configureQueryBuilder($qbManager, $managerSearch, $sortBy);
+                    $this->configureQueryBuilder($qbManager, $managerSearch);
                     //this is our first part of the union
-                    $sqlManager = $this->getSql($qbManager->getQuery());
+                    $sqlManager = $this->getSql($qbManager);
                     $sqlManager = $this->removeAlias($sqlManager);
 
                     $qbRoles = $this->om->createQueryBuilder();
                     $qbRoles->select('DISTINCT obj')->from($this->getClass(), 'obj');
-                    $this->configureQueryBuilder($qbRoles, $roleSearch, $sortBy);
+                    $this->configureQueryBuilder($qbRoles, $roleSearch);
                     //this is the second part of the union
-                    $sqlRoles = $this->getSql($qbRoles->getQuery());
+                    $sqlRoles = $this->getSql($qbRoles);
                     $sqlRoles = $this->removeAlias($sqlRoles);
 
                     $together = $sqlRoles;

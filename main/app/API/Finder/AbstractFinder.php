@@ -89,10 +89,10 @@ abstract class AbstractFinder implements FinderInterface
      */
     private function sortResults(QueryBuilder $qb, array $sortBy = null)
     {
-        if (!empty($sortBy) && !empty($sortBy['property']) && 0 !== $sortBy['direction']) {
+        if ($sortBy && $sortBy['property'] && 0 !== $sortBy['direction']) {
             // query needs to be sorted, check if the Finder implementation has a custom sort system
             $queryOrder = $qb->getDQLPart('orderBy');
-            if (empty($queryOrder)) {
+            if (!$queryOrder) {
                 // no order by defined
                 $qb->orderBy('obj.'.$sortBy['property'], 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
             }
@@ -101,8 +101,10 @@ abstract class AbstractFinder implements FinderInterface
 
     //bad way to do it but otherwise we use a prepared statement and the sql contains '?'
     //https://stackoverflow.com/questions/2095394/doctrine-how-to-print-out-the-real-sql-not-just-the-prepared-statement/28294482
-    protected function getSql(Query $query)
+    protected function getSql(QueryBuilder $qb)
     {
+        $query = $qb->getQuery();
+
         $vals = $query->getParameters();
 
         foreach (explode('?', $query->getSql()) as $i => $part) {
@@ -126,5 +128,36 @@ abstract class AbstractFinder implements FinderInterface
         }
 
         return $sql;
+    }
+
+    public function getSqlOrderBy(array $sortBy = null)
+    {
+        if ($sortBy && $sortBy['property'] && 0 !== $sortBy['direction']) {
+            // no order by defined
+            $property = array_key_exists($sortBy['property'], $this->getExtraFieldMapping()) ?
+               $this->getExtraFieldMapping()[$sortBy['property']] :
+               $this->getSqlPropertyFromMapping($sortBy['property']);
+
+            if ($property) {
+                $sql = 'ORDER BY '.$property.' ';
+                $dir = 1 === $sortBy['direction'] ? 'ASC' : 'DESC';
+
+                return $sql.$dir;
+            }
+        }
+
+        return '';
+    }
+
+    public function getSqlPropertyFromMapping($property)
+    {
+        $metadata = $this->om->getClassMetadata($this->getClass());
+
+        return $metadata->getColumnName($property);
+    }
+
+    public function getExtraFieldMapping()
+    {
+        return [];
     }
 }

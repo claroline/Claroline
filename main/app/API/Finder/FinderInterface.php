@@ -24,6 +24,13 @@ interface FinderInterface
      */
     public function configureQueryBuilder(QueryBuilder $qb, array $searches, array $sortBy = null);
 
-    /** @return $string */
+    /** @return string */
     public function getClass();
+
+    /**
+     * Allow us to make optimize sql directly by mapping serialized property path to their own database colum.
+     *
+     * @return array
+     */
+    public function getExtraFieldMapping();
 }

@@ -182,15 +182,15 @@ class UserFinder extends AbstractFinder
                     unset($byGroupSearch['workspace']);
                     $qbUser = $this->om->createQueryBuilder();
                     $qbUser->select('DISTINCT obj')->from($this->getClass(), 'obj');
-                    $this->configureQueryBuilder($qbUser, $byUserSearch, $sortBy);
+                    $this->configureQueryBuilder($qbUser, $byUserSearch);
                     //this is our first part of the union
-                    $sqlUser = $this->getSql($qbUser->getQuery());
+                    $sqlUser = $this->getSql($qbUser);
                     $sqlUser = $this->removeAlias($sqlUser);
                     $qbGroup = $this->om->createQueryBuilder();
                     $qbGroup->select('DISTINCT obj')->from($this->getClass(), 'obj');
-                    $this->configureQueryBuilder($qbGroup, $byGroupSearch, $sortBy);
+                    $this->configureQueryBuilder($qbGroup, $byGroupSearch);
                     //this is the second part of the union
-                    $sqlGroup = $this->getSql($qbGroup->getQuery());
+                    $sqlGroup = $this->getSql($qbGroup);
                     $sqlGroup = $this->removeAlias($sqlGroup);
                     $together = $sqlUser.' UNION '.$sqlGroup;
                     //we might want to add a count somehere here
@@ -203,6 +203,8 @@ class UserFinder extends AbstractFinder
                         $query = $this->_em->createNativeQuery($together, $rsm);
                     } else {
                         //add page & limit
+                        $together .= ' '.$this->getSqlOrderBy($sortBy);
+
                         if ($options['limit'] > -1) {
                             $together .= ' LIMIT '.$options['limit'];
                         }
@@ -262,19 +264,35 @@ class UserFinder extends AbstractFinder
             $qb->andWhere('obj.isRemoved = FALSE');
         }
 
+        $this->sortBy($qb, $sortBy);
+
+        return $qb;
+    }
+
+    //probably deprecated since we try hard to optimize everything and is a duplicata of getExtraFieldMapping
+    private function sortBy($qb, array $sortBy = null)
+    {
         // manages custom sort properties
-        if (!empty($sortBy) && 0 !== $sortBy['direction']) {
+        if ($sortBy && 0 !== $sortBy['direction']) {
             switch ($sortBy['property']) {
-                case 'name':
-                    $qb->orderBy('obj.lastName', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
-                    break;
-                case 'isDisabled':
-                    $qb->orderBy('obj.isEnabled', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
-                    break;
-            }
+              case 'name':
+                  $qb->orderBy('obj.lastName', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
+                  break;
+              case 'isDisabled':
+                  $qb->orderBy('obj.isEnabled', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
+                  break;
+          }
         }
 
         return $qb;
+    }
+
+    public function getExtraFieldMapping()
+    {
+        return [
+          'name' => 'last_name',
+          'isDisabled' => 'is_enabled',
+        ];
     }
 
     private function getContactableUsers(QueryBuilder $qb)
