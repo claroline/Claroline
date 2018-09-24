@@ -17,24 +17,13 @@ const restrictByDates = (announcement) => announcement.restrictions.enableDates 
 const AnnounceFormComponent = props =>
   <FormData
     name={selectors.STORE_NAME+'.announcementForm'}
-    target={(announcement, isNew) => isNew ?
-      ['claro_announcement_create', {aggregateId: props.aggregateId}] :
-      ['claro_announcement_update', {aggregateId: props.aggregateId, id: announcement.id}]
-    }
     buttons={true}
     save={{
       type: CALLBACK_BUTTON,
       target: `/${props.announcement.id}`,
-      callback: () => {
-        if (props.new) {
-          props.addAnnounce(props.announcement)
-        } else {
-          props.updateAnnounce(props.announcement)
-        }
-
-        // open announcement
-        props.history.push(`/${props.announcement.id}`)
-      }
+      callback: () => props.new ?
+        props.saveNewForm(props.aggregateId, props.history, props.addAnnounce) :
+        props.saveForm(props.aggregateId, props.announcement, props.history, props.updateAnnounce)
     }}
     cancel={{
       type: LINK_BUTTON,
@@ -109,7 +98,9 @@ AnnounceFormComponent.propTypes = {
   ).isRequired,
   updateProp: T.func.isRequired,
   addAnnounce: T.func.isRequired,
-  updateAnnounce: T.func.isRequired
+  updateAnnounce: T.func.isRequired,
+  saveNewForm: T.func.isRequired,
+  saveForm: T.func.isRequired
 }
 
 AnnounceFormComponent.defaultProps = {
@@ -133,6 +124,28 @@ const AnnounceForm = connect(
     },
     updateProp(propName, propValue) {
       dispatch(formActions.updateProp(selectors.STORE_NAME+'.announcementForm', propName, propValue))
+    },
+    saveNewForm(aggregateId, history, onSuccess) {
+      dispatch(formActions.saveForm(
+        selectors.STORE_NAME+'.announcementForm',
+        ['claro_announcement_create', {aggregateId: aggregateId}]
+      )).then(
+        (announcement) => {
+          onSuccess(announcement)
+          history.push('/' + announcement.id)
+        }
+      )
+    },
+    saveForm(aggregateId, announcement, history, onSuccess) {
+      dispatch(formActions.saveForm(
+        selectors.STORE_NAME+'.announcementForm',
+        ['claro_announcement_update', {aggregateId: aggregateId, id: announcement.id}]
+      )).then(
+        (announcement) => {
+          onSuccess(announcement)
+          history.push('/' + announcement.id)
+        }
+      )
     }
   })
 )(RoutedAnnounceForm)
