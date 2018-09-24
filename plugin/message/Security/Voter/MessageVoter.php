@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CursusBundle\Security\Voter;
+namespace Claroline\MessageBundle\Security\Voter;
 
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
  * @DI\Service
  * @DI\Tag("security.voter")
  */
-class SessionVoter extends AbstractVoter
+class MessageVoter extends AbstractVoter
 {
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
@@ -31,9 +31,7 @@ class SessionVoter extends AbstractVoter
             case self::PATCH:
             case self::OPEN:
             case self::VIEW:
-                return $this->hasAdminToolAccess($token, 'claroline_cursus_tool') ?
-                    VoterInterface::ACCESS_GRANTED :
-                    VoterInterface::ACCESS_DENIED;
+                return 'anon.' !== $token->getUser() ? VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
@@ -41,7 +39,7 @@ class SessionVoter extends AbstractVoter
 
     public function getClass()
     {
-        return 'Claroline\CursusBundle\Entity\CourseSession';
+        return 'Claroline\MessageBundle\Entity\Message';
     }
 
     public function getSupportedActions()

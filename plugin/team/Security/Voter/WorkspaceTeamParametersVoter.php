@@ -11,10 +11,10 @@
 
 namespace Claroline\TeamBundle\Security\Voter;
 
-use Claroline\AppBundle\Security\Voter\VoterInterface;
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
  * @DI\Service
