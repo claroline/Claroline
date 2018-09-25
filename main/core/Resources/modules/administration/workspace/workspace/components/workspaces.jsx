@@ -3,11 +3,11 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans, transChoice} from '#/main/core/translation'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {MODAL_DATA_LIST} from '#/main/app/modals/list'
-import {MODAL_DATA_FORM} from '#/main/app/modals/form'
+import {MODAL_WORKSPACE_ROLES} from '#/main/core/administration/workspace/workspace/modals/registration/index'
 
 import {UserList} from '#/main/core/administration/user/user/components/user-list'
 import {GroupList} from '#/main/core/administration/user/group/components/group-list'
@@ -20,7 +20,6 @@ import {actions} from '#/main/core/administration/workspace/workspace/actions'
 import {WorkspaceList} from '#/main/core/administration/workspace/workspace/components/workspace-list'
 
 // todo : restore custom actions the same way resource actions are implemented
-
 const WorkspacesList = props =>
   <ListData
     name="workspaces.list"
@@ -48,15 +47,45 @@ const WorkspacesList = props =>
         label: trans('duplicate_model'),
         callback: () => props.copyWorkspaces(rows, true)
       }, {
-        type: CALLBACK_BUTTON,
+        type: MODAL_BUTTON,
         icon: 'fa fa-fw fa-user',
         label: trans('register_users'),
-        callback: () => props.registerUsers(rows)
+        modal: [MODAL_DATA_LIST, {
+          icon: 'fa fa-fw fa-user',
+          title: trans('register'),
+          confirmText: trans('register'),
+          name: 'selected.user',
+          definition: UserList.definition,
+          card: UserList.card,
+          fetch: {
+            url: ['apiv2_user_list_managed_organization'],
+            autoload: true
+          },
+          onEntering:() => props.loadRoles(rows),
+          handleSelect: (users) => {
+            props.showRolesModal(rows, users, 'user')
+          }
+        }]
       }, {
-        type: CALLBACK_BUTTON,
+        type: MODAL_BUTTON,
         icon: 'fa fa-fw fa-users',
         label: trans('register_groups'),
-        callback: () => props.registerGroups(rows)
+        modal: [MODAL_DATA_LIST, {
+          icon: 'fa fa-fw fa-users',
+          title: trans('register'),
+          confirmText: trans('register'),
+          name: 'selected.group',
+          definition: GroupList.definition,
+          card: GroupList.card,
+          onEntering:() => props.loadRoles(rows),
+          fetch: {
+            url: ['apiv2_group_list_managed'],
+            autoload: true
+          },
+          handleSelect: (groups) => {
+            props.showRolesModal(rows, groups, 'group')
+          }
+        }]
       },
       // TODO / FIXME : Uses component delete option.
       // Not possible for the moment because it is not possible to display an alert message if the workspace contains not deletable resources.
@@ -77,7 +106,9 @@ WorkspacesList.propTypes = {
   copyWorkspaces: T.func.isRequired,
   deleteWorkspaces: T.func.isRequired,
   registerUsers: T.func.isRequired,
-  registerGroups: T.func.isRequired
+  registerGroups: T.func.isRequired,
+  loadRoles: T.func.isRequired,
+  showRolesModal: T.func.isRequired
 }
 
 const Workspaces = connect(
@@ -106,94 +137,12 @@ const Workspaces = connect(
       )
     },
 
-    registerUsers(workspaces) {
-      dispatch(
-        modalActions.showModal(MODAL_DATA_LIST, {
-          icon: 'fa fa-fw fa-user',
-          title: trans('register'),
-          confirmText: trans('register'),
-          name: 'selected.user',
-          definition: UserList.definition,
-          card: UserList.card,
-          fetch: {
-            url: ['apiv2_user_list_managed_organization'],
-            autoload: true
-          },
-          handleSelect: (users) => {
-            dispatch(modalActions.showModal(MODAL_DATA_FORM, {
-              title: trans('register'),
-              save: role => {
-                dispatch(actions.registerUsers(role.role, workspaces, users))
-              },
-              sections: [
-                {
-                  title: trans('roles'),
-                  primary: true,
-                  fields: [{
-                    name: 'role',
-                    type: 'choice',
-                    label: trans('role'),
-                    required: true,
-                    options: {
-                      multiple: false,
-                      condensed: false,
-                      choices: {
-                        'collaborator': trans('collaborator'),
-                        'manager': trans('manager')
-                      }
-                    }
-                  }]
-                }
-              ]
-            }))
-          }
-        })
-      )
+    loadRoles(workspaces) {
+      dispatch(actions.loadRoles(workspaces))
     },
 
-    registerGroups(workspaces) {
-      dispatch(
-        modalActions.showModal(MODAL_DATA_LIST, {
-          icon: 'fa fa-fw fa-users',
-          title: trans('register'),
-          confirmText: trans('register'),
-          name: 'selected.group',
-          definition: GroupList.definition,
-          card: GroupList.card,
-          fetch: {
-            url: ['apiv2_group_list_managed'],
-            autoload: true
-          },
-          handleSelect: (groups) => {
-            dispatch(modalActions.showModal(MODAL_DATA_FORM, {
-              title: trans('register'),
-              save: role => {
-                dispatch(actions.registerGroups(role.role, workspaces, groups))
-              },
-              sections: [
-                {
-                  title: trans('roles'),
-                  primary: true,
-                  fields: [{
-                    name: 'role',
-                    type: 'choice',
-                    label: trans('role'),
-                    required: true,
-                    options: {
-                      multiple: false,
-                      condensed: false,
-                      choices: {
-                        'collaborator': trans('collaborator'),
-                        'manager': trans('manager')
-                      }
-                    }
-                  }]
-                }
-              ]
-            }))
-          }
-        })
-      )
+    showRolesModal(workspaces, objects, mode) {
+      dispatch(modalActions.showModal(MODAL_WORKSPACE_ROLES, {workspaces, objects, mode}))
     }
   })
 )(WorkspacesList)

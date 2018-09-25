@@ -6,6 +6,8 @@ import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 
 import {reducer as creationReducer} from '#/main/core/workspace/creation/store'
 
+import {LOAD_ROLES} from '#/main/core/administration/workspace/workspace/actions'
+
 const reducer = {
   workspaces: combineReducers({
     creation: creationReducer,
@@ -23,6 +25,9 @@ const reducer = {
     current: makeFormReducer('workspaces.current', {}, {
       organizations: makeListReducer('workspaces.current.organizations'),
       managers: makeListReducer('workspaces.current.managers')
+    }),
+    registerableRoles: makeReducer(['manager', 'collaborator'], {
+      [LOAD_ROLES] : (state, action) => action.roles
     })
   }),
   organizations: combineReducers({

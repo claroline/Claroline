@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -447,13 +448,8 @@ class WorkspaceController extends AbstractCrudController
         $users = $this->decodeQueryParam($request, 'Claroline\CoreBundle\Entity\User', 'users');
 
         foreach ($workspaces as $workspace) {
-            if ('collaborator' === $role) {
-                $roleEntity = $this->roleManager->getCollaboratorRole($workspace);
-            } elseif ('manager' === $role) {
-                $roleEntity = $this->roleManager->getManagerRole($workspace);
-            } else {
-                throw new \Exception('The role '.$role.' does not exists');
-            }
+            $roleEntity = $this->om->getRepository(Role::class)
+              ->findOneBy(['translationKey' => $role, 'workspace' => $workspace]);
 
             $this->crud->patch($roleEntity, 'user', Crud::COLLECTION_ADD, $users);
         }
@@ -480,13 +476,8 @@ class WorkspaceController extends AbstractCrudController
         $groups = $this->decodeQueryParam($request, 'Claroline\CoreBundle\Entity\Group', 'groups');
 
         foreach ($workspaces as $workspace) {
-            if ('collaborator' === $role) {
-                $roleEntity = $this->roleManager->getCollaboratorRole($workspace);
-            } elseif ('manager' === $role) {
-                $roleEntity = $this->roleManager->getManagerRole($workspace);
-            } else {
-                throw new \Exception('The role '.$role.' does not exists');
-            }
+            $roleEntity = $this->om->getRepository(Role::class)
+                ->findOneBy(['translationKey' => $role, 'workspace' => $workspace]);
 
             $this->crud->patch($roleEntity, 'group', Crud::COLLECTION_ADD, $groups);
         }
@@ -494,6 +485,41 @@ class WorkspaceController extends AbstractCrudController
         return new JsonResponse(array_map(function ($workspace) {
             return $this->serializer->serialize($workspace);
         }, $workspaces));
+    }
+
+    /**
+     * @Route(
+     *    "/roles/common",
+     *    name="apiv2_workspace_roles_common"
+     * )
+     * @Method("GET")
+     *
+     * @param Workspace $workspace
+     *
+     * @return JsonResponse
+     */
+    public function getCommonRolesAction(Request $request)
+    {
+        $workspaces = $this->decodeQueryParam($request, 'Claroline\CoreBundle\Entity\Workspace\Workspace', 'workspaces');
+        $roles = [];
+
+        foreach ($workspaces as $workspace) {
+            foreach ($workspace->getRoles() as $role) {
+                if (!isset($roles[$role->getTranslationKey()])) {
+                    $roles[$role->getTranslationKey()] = 1;
+                } else {
+                    ++$roles[$role->getTranslationKey()];
+                }
+            }
+        }
+
+        if (count($workspaces) > 1) {
+            $roles = array_filter($roles, function ($amount) {
+                return $amount > 1;
+            });
+        }
+
+        return new JsonResponse(array_keys($roles));
     }
 
     /**
