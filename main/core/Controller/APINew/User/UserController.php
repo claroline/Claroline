@@ -443,4 +443,30 @@ class UserController extends AbstractCrudController
             return $this->serializer->serialize($user);
         }, $users));
     }
+
+    /**
+     * @Route(
+     *    "/picker",
+     *    name="apiv2_users_picker_list"
+     * )
+     * @Method("GET")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function usersPickerListAction(Request $request)
+    {
+        return new JsonResponse($this->finder->search(
+            'Claroline\CoreBundle\Entity\User',
+            array_merge(
+                $request->query->all(),
+                ['hiddenFilters' => [
+                    'isEnabled' => true,
+                    'isRemoved' => false,
+                    'contactable' => true,
+                ]]
+            )
+        ));
+    }
 }

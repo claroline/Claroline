@@ -301,6 +301,15 @@ class UserFinder extends AbstractFinder
         $organizationsIds = array_map(function (Organization $organization) {
             return $organization->getUuid();
         }, $currentUser->getOrganizations());
+        $administratedOrganizationsIds = array_map(function (Organization $organization) {
+            return $organization->getUuid();
+        }, $currentUser->getAdministratedOrganizations()->toArray());
+
+        foreach ($administratedOrganizationsIds as $id) {
+            if (!in_array($id, $organizationsIds)) {
+                $organizationsIds[] = $id;
+            }
+        }
         $workspacesIds = array_map(function (Workspace $workspace) {
             return $workspace->getUuid();
         }, $this->workspaceManager->getWorkspacesByUser($currentUser));
