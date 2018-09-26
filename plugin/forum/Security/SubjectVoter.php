@@ -23,12 +23,12 @@ class SubjectVoter extends AbstractVoter
 {
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
-        //check if we can create the message here
+        //check if we can create the subject here
     }
 
     public function getClass()
     {
-        return 'Claroline\ForumBundle\Entity\Message';
+        return 'Claroline\ForumBundle\Entity\Subject';
     }
 
     public function getSupportedActions()
