@@ -3,12 +3,13 @@ import cloneDeep from 'lodash/cloneDeep'
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
 
+import quizSelect from '#/plugin/exo/quiz/selectors'
 import {update} from '#/plugin/exo/utils/utils'
 import {PAPERS_INIT, PAPER_CURRENT, PAPER_ADD} from '#/plugin/exo/quiz/papers/actions'
 import {utils} from '#/plugin/exo/quiz/papers/utils'
 
 const reducer = combineReducers({
-  list: makeListReducer('papers.list', {}, {
+  list: makeListReducer(quizSelect.STORE_NAME+'.papers.list', {}, {
     invalidated: makeReducer(false, {
       [PAPER_ADD]: () => true
     })

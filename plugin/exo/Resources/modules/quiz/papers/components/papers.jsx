@@ -51,14 +51,14 @@ const Papers = props =>
           label: trans('start_date'),
           displayed: true,
           filterable: false,
-          type: 'datetime'
+          type: 'string'
         }, {
           name: 'endDate',
           alias: 'end',
           label: trans('end_date'),
           displayed: true,
           filterable: false,
-          type: 'datetime'
+          type: 'string'
         }, {
           name: 'duration',
           label: trans('duration'),
