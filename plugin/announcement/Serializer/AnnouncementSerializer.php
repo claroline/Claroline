@@ -29,6 +29,7 @@ class AnnouncementSerializer
     /** @var ObjectManager */
     private $om;
 
+    private $aggregateRepo;
     /** @var RoleRepository */
     private $roleRepo;
 
@@ -58,6 +59,7 @@ class AnnouncementSerializer
         $this->om = $om;
         $this->wsSerializer = $wsSerializer;
 
+        $this->aggregateRepo = $om->getRepository('ClarolineAnnouncementBundle:AnnouncementAggregate');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
     }
 
@@ -140,6 +142,15 @@ class AnnouncementSerializer
                 $announce->setPublicationDate($now);
             } else {
                 $announce->setPublicationDate($announce->getVisibleFrom());
+            }
+        }
+
+        // set aggregate
+        if (isset($data['aggregate']['id'])) {
+            $aggregate = $this->aggregateRepo->findOneBy(['uuid' => $data['aggregate']['id']]);
+
+            if (!empty($aggregate)) {
+                $announce->setAggregate($aggregate);
             }
         }
 

@@ -65,8 +65,10 @@ class AnnouncementController
     public function createAction(AnnouncementAggregate $aggregate, Request $request)
     {
         $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
+        $data = $this->decodeRequest($request);
+        $data['aggregate'] = ['id' => $aggregate->getUuid()];
 
-        $announcement = $this->crud->create($this->getClass(), $this->decodeRequest($request), [
+        $announcement = $this->crud->create($this->getClass(), $data, [
           'announcement_aggregate' => $aggregate,
         ]);
 
