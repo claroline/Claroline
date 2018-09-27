@@ -84,7 +84,12 @@ To update an existing development installation, just pull the latest changes
    npm run dll
    npm run webpack
 ``
-#### 3. Launch update script
+#### 3. Clear cache
+ ``  
+   rm -rf app/cache/*
+``
+
+#### 4. Launch update script
  ``  
    php app/console claroline:update 1x.x.xx 12.1.0
 ``
