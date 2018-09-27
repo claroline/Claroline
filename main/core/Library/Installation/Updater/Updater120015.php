@@ -40,6 +40,10 @@ class Updater120015 extends Updater
             'innova_video_recorder',
             'innova_media_resource',
             'claroline_flashcard',
+            'claroline_chat_room',
+            'claroline_big_blue_button',
+            'claroline_result',
+            'ujm_lti_resource'
         ];
 
         $typeList = implode(',', array_map(function ($type) {
