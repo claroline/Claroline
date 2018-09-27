@@ -18,21 +18,22 @@ const Cursus = () =>
       url: ['apiv2_cursus_delete_bulk']
     }}
     definition={CursusList.definition}
-    // actions={(rows) => [
+    actions={(rows) => [
+      {
+        type: 'link',
+        icon: 'fa fa-fw fa-plus',
+        label: trans('create_cursus_child', {}, 'cursus'),
+        scope: ['object'],
+        target: 'cursus/form/parent/' + rows[0].id
+      }
     //   {
-    //     type: 'link',
-    //     icon: 'fa fa-fw fa-plus',
-    //     label: trans('create_cursus_child', {}, 'cursus'),
-    //     scope: ['object'],
-    //     target: 'cursus/form/parent/' + rows[0].id
-    //   }, {
     //     type: 'callback',
     //     icon: 'fa fa-fw fa-tasks',
     //     label: trans('add_course_to_cursus', {}, 'cursus'),
     //     scope: ['object'],
     //     callback: () => console.log(rows[0])
     //   }
-    // ]}
+    ]}
     card={(row) => ({
       icon: 'fa fa-database',
       title: row.title,

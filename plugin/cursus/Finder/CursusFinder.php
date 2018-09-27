@@ -36,6 +36,15 @@ class CursusFinder extends AbstractFinder
             switch ($filterName) {
                 case 'organizations':
                     break;
+                case 'parent':
+                    if (empty($filterValue)) {
+                        $qb->andWhere('obj.parent IS NULL');
+                    } else {
+                        $qb->leftJoin('obj.parent', 'p');
+                        $qb->andWhere('p.uuid IN (:parentIds)');
+                        $qb->setParameter('parentIds', is_array($filterValue) ? $filterValue : [$filterValue]);
+                    }
+                    break;
                 default:
                     if (is_bool($filterValue)) {
                         $qb->andWhere("obj.{$filterName} = :{$filterName}");

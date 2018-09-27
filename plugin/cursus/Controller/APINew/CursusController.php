@@ -12,6 +12,7 @@
 namespace Claroline\CursusBundle\Controller\APINew;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
@@ -99,10 +100,11 @@ class CursusController extends AbstractCrudController
         if (!isset($params['hiddenFilters'])) {
             $params['hiddenFilters'] = [];
         }
+        $params['hiddenFilters']['parent'] = null;
         $params['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
             return $organization->getUuid();
         }, $user->getAdministratedOrganizations()->toArray());
-        $data = $this->finder->search('Claroline\CursusBundle\Entity\Cursus', $params);
+        $data = $this->finder->search('Claroline\CursusBundle\Entity\Cursus', $params, [Options::IS_RECURSIVE]);
 
         return new JsonResponse($data, 200);
     }

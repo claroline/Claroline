@@ -247,7 +247,7 @@ class Cursus
 
     public function getChildren()
     {
-        return $this->children->toArray();
+        return $this->children;
     }
 
     public function addChild(Cursus $cursus)

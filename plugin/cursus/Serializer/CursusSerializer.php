@@ -121,6 +121,11 @@ class CursusSerializer
                 ],
             ]);
         }
+        if (in_array(Options::IS_RECURSIVE, $options)) {
+            $serialized['children'] = array_map(function (Cursus $child) use ($options) {
+                return $this->serialize($child, $options);
+            }, $cursus->getChildren()->toArray());
+        }
 
         return $serialized;
     }

@@ -40,6 +40,11 @@ const CursusTabComponent = props =>
         component: CursusForm,
         onEnter: (params) => props.openForm(params.id),
         onLeave: () => props.resetForm()
+      }, {
+        path: '/cursus/form/parent/:parentId',
+        component: CursusForm,
+        onEnter: (params) => props.openForm(null, params.parentId),
+        onLeave: () => props.resetForm()
       }
     ]}
   />
@@ -52,10 +57,10 @@ CursusTabComponent.propTypes = {
 const CursusTab = connect(
   null,
   (dispatch) => ({
-    openForm(id = null) {
+    openForm(id = null, parentId = null) {
       const defaultProps = cloneDeep(CursusType.defaultProps)
       set(defaultProps, 'id', makeId())
-      dispatch(actions.open('cursus.current', defaultProps, id))
+      dispatch(actions.open('cursus.current', defaultProps, id, parentId))
     },
     resetForm() {
       dispatch(actions.reset('cursus.current'))
