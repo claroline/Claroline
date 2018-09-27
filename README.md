@@ -29,8 +29,8 @@ For a development installation, you'll need at least:
     - zip
 - MySQL/MariaDB >=5.0
 - [composer][composer] (recent version)
-- [node.js][node] >= 6.12
-- [npm][npm] >= 3.7
+- [node.js][node] >= 8.9
+- [npm][npm] >= 6.4
 
 It's also highly recommended to develop on an UNIX-like OS.
 
