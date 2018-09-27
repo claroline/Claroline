@@ -363,13 +363,25 @@ class ResourceNodeSerializer
             $recursive = in_array(Options::IS_RECURSIVE, $options) ? true : false;
             $role = $this->om->getRepository(Role::class)->findOneBy(['name' => $right['name']]);
 
-            $this->newRightsManager->update(
-                $resourceNode,
-                $role,
-                $this->maskManager->encodeMask($right['permissions'], $resourceNode->getResourceType()),
-                $creationPerms,
-                $recursive
-            );
+            //if we update (we need the id anyway)
+            if ($resourceNode->getId()) {
+                $this->newRightsManager->update(
+                    $resourceNode,
+                    $role,
+                    $this->maskManager->encodeMask($right['permissions'], $resourceNode->getResourceType()),
+                    $creationPerms,
+                    $recursive
+                );
+            //otherwise the old one will do the trick
+            } else {
+                $this->rightsManager->editPerms(
+                    $right['permissions'],
+                    $right['name'],
+                    $resourceNode,
+                    false,
+                    $creationPerms
+                );
+            }
         }
     }
 }
