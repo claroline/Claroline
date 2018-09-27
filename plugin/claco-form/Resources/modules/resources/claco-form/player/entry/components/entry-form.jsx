@@ -9,6 +9,7 @@ import {mount} from '#/main/app/mount'
 import {withRouter} from '#/main/app/router'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {FormProp} from '#/main/app/content/form/components/prop'
 
@@ -204,8 +205,18 @@ class EntryFormComponent extends Component {
         {this.props.entry && (!this.props.useTemplate || !this.props.template) &&
           <FormData
             level={3}
+            buttons={true}
             name={selectors.STORE_NAME+'.entries.current'}
             sections={this.getSections()}
+            save={{
+              type: CALLBACK_BUTTON,
+              callback: () => this.props.saveForm(this.props.entry, this.props.isNew, this.props.history.push)
+            }}
+            cancel={{
+              type: LINK_BUTTON,
+              target: '/',
+              exact: true
+            }}
           />
         }
         {(this.props.canEdit || this.props.isManager || this.props.isKeywordsEnabled) &&
@@ -243,12 +254,14 @@ class EntryFormComponent extends Component {
             }
           </FormSections>
         }
-        <button
-          className="btn btn-primary"
-          onClick={() => this.props.saveForm(this.props.entry, this.props.isNew, this.props.history.push)}
-        >
-          {trans('save')}
-        </button>
+        {this.props.entry && (this.props.useTemplate && this.props.template) &&
+          <button
+            className="btn btn-primary"
+            onClick={() => this.props.saveForm(this.props.entry, this.props.isNew, this.props.history.push)}
+          >
+            {trans('save')}
+          </button>
+        }
       </div>
     )
   }

@@ -28,7 +28,7 @@ const UsersList = props =>
 
 UsersList.propTypes = {
   users: T.arrayOf(T.shape({
-    id: T.number.isRequired,
+    id: T.string.isRequired,
     firstName: T.string.isRequired,
     lastName: T.string.isRequired
   })).isRequired,
@@ -79,7 +79,7 @@ export class UserTypeahead extends Component {
     if (search && search.length > 2) {
       this.setState({isFetching: true})
 
-      fetch(url(['apiv2_user_list', {limit: 20, page: 0}]) + '?filters[name]=' + search, {
+      fetch(url(['apiv2_user_list', {limit: 20, page: 0}]) + '&filters[name]=' + search, {
         method: 'GET' ,
         credentials: 'include'
       })
@@ -94,7 +94,7 @@ export class UserTypeahead extends Component {
     this.setState({
       searchString: '',
       results: [],
-      selected: this.state.selected.concat([user])
+      selected: this.props.unique ? [user] : this.state.selected.concat([user])
     })
   }
 
@@ -148,9 +148,11 @@ export class UserTypeahead extends Component {
 UserTypeahead.propTypes = {
   handleSelect: T.func.isRequired,
   handleRemove: T.func,
-  selected: T.array.isRequired
+  selected: T.array.isRequired,
+  unique: T.bool
 }
 
 UserTypeahead.defaultProps = {
-  selected: []
+  selected: [],
+  unique: false
 }

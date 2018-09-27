@@ -21,7 +21,7 @@ import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
 import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
 import {actions} from '#/plugin/claco-form/resources/claco-form/player/entry/store'
 import {constants} from '#/plugin/claco-form/resources/claco-form/constants'
-import {Field as FieldType} from '#/plugin/claco-form/resources/claco-form/prop-types'
+import {Field as FieldType, Category as CategoryType} from '#/plugin/claco-form/resources/claco-form/prop-types'
 
 const authenticatedUser = currentUser()
 
@@ -169,8 +169,23 @@ class EntriesComponent extends Component {
         name: 'categories',
         label: trans('categories'),
         displayed: this.isDisplayedField('categories'),
-        filterable: this.isFilterableField('categories'),
+        filterable: false,
         render: (rowData) => rowData.categories ? rowData.categories.map(c => c.name).join(', ') : ''
+      })
+      columns.push({
+        name: 'category',
+        label: trans('category'),
+        type: 'choice',
+        displayed: false,
+        displayable: false,
+        filterable: this.isFilterableField('categories'),
+        options: {
+          choices: this.props.categories.reduce((acc, category) => {
+            acc[category.id] = category.name
+
+            return acc
+          }, {})
+        }
       })
     }
     if (this.props.displayKeywords) {
@@ -455,7 +470,7 @@ class EntriesComponent extends Component {
             url: ['apiv2_clacoformentry_list', {clacoForm: this.props.clacoFormId}],
             autoload: true
           }}
-          definition={this.generateColumns(this.props.titleLabel)}
+          definition={this.generateColumns(this.props.titleLabel, this.props.categories)}
           actions={this.generateActions.bind(this)}
           card={(props) =>
             <DataCard
@@ -513,7 +528,8 @@ EntriesComponent.propTypes = {
     })),
     sortBy: T.object
   }).isRequired,
-  countries: T.array
+  countries: T.array,
+  categories: T.arrayOf(T.shape(CategoryType.propTypes))
 }
 
 const Entries = connect(
@@ -539,7 +555,8 @@ const Entries = connect(
     titleLabel: selectors.params(state).title_field_label,
     isCategoryManager: selectors.isCategoryManager(state),
     entries: selectors.entries(state).list,
-    countries: selectors.usedCountries(state)
+    countries: selectors.usedCountries(state),
+    categories: selectors.categories(state)
   }),
   (dispatch) => ({
     downloadEntryPdf(entryId) {

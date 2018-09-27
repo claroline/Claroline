@@ -209,6 +209,13 @@ class EntryFinder extends AbstractFinder
                     $qb->andWhere('UPPER(c.name) LIKE :categoryName');
                     $qb->setParameter('categoryName', '%'.strtoupper($filterValue).'%');
                     break;
+                case 'category':
+                    if (!isset($this->usedJoin['categories'])) {
+                        $qb->join('obj.categories', 'c');
+                    }
+                    $qb->andWhere('c.uuid = :categoryUuid');
+                    $qb->setParameter('categoryUuid', $filterValue);
+                    break;
                 case 'keywords':
                     $qb->join('obj.keywords', 'k');
                     $qb->andWhere('UPPER(k.name) LIKE :keywordName');

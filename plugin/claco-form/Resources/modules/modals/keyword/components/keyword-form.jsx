@@ -2,9 +2,9 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import omit from 'lodash/omit'
 
 import {url} from '#/main/app/api'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 
 import {trans} from '#/main/core/translation'
@@ -62,7 +62,7 @@ class KeywordFormModalComponent extends Component {
   registerKeyword() {
     if (!this.state['hasError']) {
       this.props.saveKeyword(this.state, this.props.isNew)
-      this.props.hideModal()
+      this.props.fadeModal()
     }
   }
 
@@ -81,7 +81,9 @@ class KeywordFormModalComponent extends Component {
 
   render() {
     return (
-      <Modal {...this.props}>
+      <Modal
+        {...omit(this.props, 'isNew', 'keyword', 'clacoFormId', 'saveKeyword')}
+      >
         <div className="modal-body">
           <div className={classes('form-group form-group-align row', {'has-error': this.state.nameError})}>
             <label className="control-label col-md-3">
@@ -103,7 +105,7 @@ class KeywordFormModalComponent extends Component {
           </div>
         </div>
         <div className="modal-footer">
-          <button className="btn btn-default" onClick={this.props.hideModal}>
+          <button className="btn btn-default" onClick={this.props.fadeModal}>
             {trans('cancel')}
           </button>
           <button className="btn btn-primary" onClick={() => this.validateKeyword()}>
@@ -123,7 +125,7 @@ KeywordFormModalComponent.propTypes = {
   isNew: T.bool.isRequired,
   keyword: T.shape(KeywordType.propTypes).isRequired,
   saveKeyword: T.func.isRequired,
-  hideModal: T.func.isRequired
+  fadeModal: T.func.isRequired
 }
 
 const KeywordFormModal = connect(
@@ -133,9 +135,6 @@ const KeywordFormModal = connect(
   (dispatch) => ({
     saveKeyword(keyword, isNew) {
       dispatch(actions.saveKeyword(keyword, isNew))
-    },
-    hideModal() {
-      dispatch(modalActions.hideModal())
     }
   })
 )(KeywordFormModalComponent)

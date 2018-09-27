@@ -18,6 +18,7 @@ import {displayDate} from '#/main/core/scaffolding/date'
 import {UserMicro} from '#/main/core/user/components/micro'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
 import {HtmlText} from '#/main/core/layout/components/html-text'
+import {MODAL_USER_PICKER} from '#/main/core/layout/modal/user-picker'
 
 import {
   Field as FieldType,
@@ -121,7 +122,7 @@ const EntryActions = props =>
         icon="fa fa-fw fa-pencil"
         label={trans('edit')}
         tooltip="top"
-        target={`#/entry/form/${props.entryId}`}
+        target={`/entry/form/${props.entryId}`}
       />
     }
 
@@ -236,7 +237,7 @@ class EntryComponent extends Component {
       .then(response => response.json())
       .then(data => {
         this.props.showModal(
-          'MODAL_USER_PICKER',
+          MODAL_USER_PICKER,
           {
             title: trans('select_users_to_share', {}, 'clacoform'),
             help: trans('share_entry_msg', {}, 'clacoform'),
@@ -250,14 +251,12 @@ class EntryComponent extends Component {
 
   showOwnerForm() {
     this.props.showModal(
-      'MODAL_USER_PICKER',
+      MODAL_USER_PICKER,
       {
         title: trans('change_entry_owner', {}, 'clacoform'),
+        unique: true,
         handleRemove: () => {},
-        handleSelect: (user) => {
-          this.props.changeEntryOwner(this.props.entryId, user.id)
-          this.props.fadeModal()
-        }
+        handleSelect: (user) => this.props.changeEntryOwner(this.props.entryId, user.id)
       }
     )
   }
@@ -539,7 +538,6 @@ EntryComponent.propTypes = {
   updateEntryUserProp: T.func.isRequired,
   saveEntryUser: T.func.isRequired,
   showModal: T.func.isRequired,
-  fadeModal: T.func.isRequired,
   history: T.object.isRequired
 }
 
@@ -614,9 +612,6 @@ const Entry = withRouter(connect(
     },
     showModal(type, props) {
       dispatch(modalActions.showModal(type, props))
-    },
-    fadeModal() {
-      dispatch(modalActions.fadeModal())
     }
   })
 )(EntryComponent))

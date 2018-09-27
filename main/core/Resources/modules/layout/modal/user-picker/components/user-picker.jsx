@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import omit from 'lodash/omit'
 
 import {t} from '#/main/core/translation'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
@@ -13,7 +14,9 @@ import {ContentHelp} from '#/main/app/content/components/help'
  * @deprecated only used in claco-form
  */
 const UserPickerModal = props =>
-  <Modal {...props}>
+  <Modal
+    {...omit(props, 'handleRemove', 'handleSelect', 'help', 'unique')}
+  >
     <div className="modal-body">
       {props.help &&
         <ContentHelp help={props.help} />
@@ -29,13 +32,15 @@ UserPickerModal.propTypes = {
   handleRemove: T.func.isRequired,
   fadeModal: T.func.isRequired,
   selected: T.array.isRequired,
-  help: T.string
+  help: T.string,
+  unique: T.bool
 }
 
 UserPickerModal.defaultProps = {
   bsStyle: 'info',
   title: t('add_user'),
-  selected: []
+  selected: [],
+  unique: false
 }
 
 export {

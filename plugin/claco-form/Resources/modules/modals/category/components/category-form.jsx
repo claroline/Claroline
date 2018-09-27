@@ -4,8 +4,8 @@ import cloneDeep from 'lodash/cloneDeep'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import omit from 'lodash/omit'
 
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 
 import {trans} from '#/main/core/translation'
@@ -137,7 +137,7 @@ class CategoryFormModalComponent extends Component {
   registerCategory() {
     if (!this.state['hasError']) {
       this.props.saveCategory(this.cleanFieldsValues(), this.props.isNew)
-      this.props.hideModal()
+      this.props.fadeModal()
     }
   }
 
@@ -156,7 +156,9 @@ class CategoryFormModalComponent extends Component {
 
   render() {
     return (
-      <Modal {...this.props}>
+      <Modal
+        {...omit(this.props, 'isNew', 'category', 'fields', 'saveCategory')}
+      >
         <div className="modal-body">
           <div className={classes('form-group form-group-align row', {'has-error': this.state.nameError})}>
             <label className="control-label col-md-3">
@@ -254,7 +256,7 @@ class CategoryFormModalComponent extends Component {
           />
         </div>
         <div className="modal-footer">
-          <button className="btn btn-default" onClick={this.props.hideModal}>
+          <button className="btn btn-default" onClick={this.props.fadeModal}>
             {trans('cancel')}
           </button>
           <button className="btn btn-primary" onClick={() => this.validateCategory()}>
@@ -271,7 +273,7 @@ CategoryFormModalComponent.propTypes = {
   isNew: T.bool.isRequired,
   fields: T.array,
   saveCategory: T.func.isRequired,
-  hideModal: T.func.isRequired
+  fadeModal: T.func.isRequired
 }
 
 const CategoryFormModal = connect(
@@ -281,9 +283,6 @@ const CategoryFormModal = connect(
   (dispatch) => ({
     saveCategory(category, isNew) {
       dispatch(actions.saveCategory(category, isNew))
-    },
-    hideModal() {
-      dispatch(modalActions.hideModal())
     }
   })
 )(CategoryFormModalComponent)
