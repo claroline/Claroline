@@ -36,7 +36,7 @@ QuestionRow.propTypes = {
   answers: T.arrayOf(T.object)
 }
 
-let Questions = props =>
+const Questions = props =>
   props.questions.length > 0 ?
     <div className="questions-list">
       <table className="table table-striped table-hover">
@@ -62,6 +62,10 @@ let Questions = props =>
 
 Questions.propTypes = {
   questions: T.arrayOf(T.object).isRequired
+}
+
+Questions.defaultProps = {
+  questions: []
 }
 
 function mapStateToProps(state) {

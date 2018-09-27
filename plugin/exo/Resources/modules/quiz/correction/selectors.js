@@ -18,12 +18,15 @@ const questions = createSelector(
   correction,
   (correction) => {
     let data = []
-    correction.questions.forEach(q => {
-      data.push({
-        question: q,
-        answers: correction.answers.filter(a => a.questionId === q.id)
+
+    if (correction.questions) {
+      correction.questions.forEach(q => {
+        data.push({
+          question: q,
+          answers: correction.answers.filter(a => a.questionId === q.id)
+        })
       })
-    })
+    }
 
     return data
   }

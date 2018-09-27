@@ -63,11 +63,9 @@ class CorrectionController extends AbstractController
      */
     public function listQuestionsToCorrectAction(Exercise $exercise)
     {
-        if ($this->isAdmin($exercise)) {
-            return new JsonResponse(
-                $this->correctionManager->getToCorrect($exercise)
-            );
-        }
+        $toCorrect = $this->isAdmin($exercise) ? $this->correctionManager->getToCorrect($exercise) : [];
+
+        return new JsonResponse($toCorrect);
     }
 
     /**
