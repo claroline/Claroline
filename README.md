@@ -17,7 +17,7 @@ Requirements
 
 For a development installation, you'll need at least:
 
-- PHP >= 7.2 with the following extensions:
+- PHP >= 7.1 with the following extensions:
     - curl
     - fileinfo
     - [gd][gd]
