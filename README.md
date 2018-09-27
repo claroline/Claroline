@@ -17,7 +17,7 @@ Requirements
 
 For a development installation, you'll need at least:
 
-- PHP >= 5.6 with the following extensions:
+- PHP >= 7.1 with the following extensions:
     - curl
     - fileinfo
     - [gd][gd]
@@ -27,11 +27,10 @@ For a development installation, you'll need at least:
     - xml
     - json
     - zip
-    - [ffmpeg][ffmpeg] (optional)
 - MySQL/MariaDB >=5.0
 - [composer][composer] (recent version)
-- [node.js][node] >= 6.12
-- [npm][npm] >= 3.7
+- [node.js][node] >= 8.9
+- [npm][npm] >= 6.4
 
 It's also highly recommended to develop on an UNIX-like OS.
 
@@ -47,19 +46,7 @@ For mysql >= 5.7, there is an additonal step:
 Installation
 ------------
 
-### 1. From a pre-built archive
-
-A tarball containing everything needed for development and testing
-(pre-fetched sources, database dump, etc.) is made available with every release
-of the platform at [packages.claroline.net/releases][releases]. This is the
-fastest way to get started:
-
-    curl packages.claroline.net/releases/latest/claroline-16.05.tar.gz | tar xzv
-    cd claroline-16.05
-    php scripts/configure.php
-    composer fast-install
-
-### 2. From source
+### 1. From source
 
 The raw installation procedure is comprised of several steps that need to be
 executed in order (fetching php sources, installing dev dependencies, building,
@@ -70,22 +57,35 @@ file. For an installation from scratch, the commands would be:
     git clone http://github.com/claroline/Claroline
     cd Claroline
     php scripts/configure.php
-    composer sync-dev
+    composer update --prefer-dist --no-dev
+     
+    npm install
+    composer build
 
-### 3. From web installer
+    php app/console claroline:install
 
-``` curl packages.claroline.net/releases/latest/claroline-16.05.tar.gz | tar xzv ```
 
-Open /install.php from your webserver and follow the instructions.
-
-Upgrade
+Upgrade From 10.x or 11.x
 -------
 
 To update an existing development installation, just pull the latest changes
 (or a specific version) of this repository and use the `sync-dev` script:
 
-    git pull
-    composer sync-dev
+#### 1. go to 12.x branch
+``
+    git fetch origin
+    git checkout origin/12.x
+``
+#### 2. Update source
+``
+   composer update --no-dev
+   npm install
+   composer build
+``
+#### 3. Launch update script
+ ``  
+   php app/console claroline:update 1x.x.xx 12.1.0
+``
 
 Development
 -----------
