@@ -14,6 +14,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Library\Validator\ValidationException;
+use UJM\ExoBundle\Manager\DocimologyManager;
 use UJM\ExoBundle\Manager\ExerciseManager;
 use UJM\ExoBundle\Manager\JsonQuizManager;
 
@@ -33,27 +34,34 @@ class ExerciseController extends AbstractController
     /** @var JsonQuizManager */
     private $jsonQuizManager;
 
+    /** @var DocimologyManager */
+    private $docimologyManager;
+
     /**
      * ExerciseController constructor.
      *
      * @DI\InjectParams({
-     *     "authorization"   = @DI\Inject("security.authorization_checker"),
-     *     "exerciseManager" = @DI\Inject("ujm_exo.manager.exercise"),
-     *     "jsonQuizManager" = @DI\Inject("ujm_exo.manager.json_quiz")
+     *     "authorization"     = @DI\Inject("security.authorization_checker"),
+     *     "exerciseManager"   = @DI\Inject("ujm_exo.manager.exercise"),
+     *     "jsonQuizManager"   = @DI\Inject("ujm_exo.manager.json_quiz"),
+     *     "docimologyManager" = @DI\Inject("ujm_exo.manager.docimology")
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param ExerciseManager               $exerciseManager
      * @param JsonQuizManager               $jsonQuizManager
+     * @param DocimologyManager             $docimologyManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ExerciseManager $exerciseManager,
-        JsonQuizManager $jsonQuizManager
+        JsonQuizManager $jsonQuizManager,
+        DocimologyManager $docimologyManager
     ) {
         $this->authorization = $authorization;
         $this->exerciseManager = $exerciseManager;
         $this->jsonQuizManager = $jsonQuizManager;
+        $this->docimologyManager = $docimologyManager;
     }
 
     /**
@@ -192,6 +200,28 @@ class ExerciseController extends AbstractController
         $response->send();
 
         return new Response();
+    }
+
+    /**
+     * Opens the docimology of a quiz.
+     *
+     * @EXT\Route("/{id}/docimology", name="exercise_docimology")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
+     * @EXT\Template("UJMExoBundle:exercise:docimology.html.twig")
+     *
+     * @param Exercise $exercise
+     *
+     * @return array
+     */
+    public function docimologyOpenAction(Exercise $exercise)
+    {
+        return [
+            '_resource' => $exercise,
+            'resourceNode' => $exercise->getResourceNode(),
+            'exercise' => $this->exerciseManager->serialize($exercise, [Transfer::MINIMAL]),
+            'statistics' => $this->docimologyManager->getStatistics($exercise, 100),
+        ];
     }
 
     private function assertHasPermission($permission, Exercise $exercise)

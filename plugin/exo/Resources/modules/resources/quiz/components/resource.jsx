@@ -75,7 +75,7 @@ const QuizResource = props =>
         icon: 'fa fa-fw fa-pie-chart',
         label: trans('docimology', {}, 'quiz'),
         displayed: props.docimologyAdmin,
-        target: ['claro_resource_custom_action', {action: 'docimology', node: props.resourceNodeId}]
+        target: ['exercise_docimology', {id: props.quizId}]
       }
     ]}
   >

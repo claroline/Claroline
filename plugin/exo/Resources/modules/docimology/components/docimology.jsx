@@ -2,7 +2,6 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {url} from '#/main/app/api'
 import {t, tex} from '#/main/core/translation'
 import {
   Page,
@@ -275,7 +274,7 @@ const Docimology = props =>
           type={URL_BUTTON}
           label={tex('back_to_the_quiz')}
           icon="fa fa-fw fa-sign-out"
-          target={url(['claro_resource_open', {node: props.resourceNode.autoId, resourceType: props.resourceNode.meta.type}])}
+          target={['claro_resource_show_short', {id: props.resourceNode.id}]}
         />
       </PageActions>
     </PageHeader>
