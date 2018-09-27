@@ -58,10 +58,9 @@ file. For an installation from scratch, the commands would be:
     cd Claroline
     php scripts/configure.php
     composer update --prefer-dist --no-dev
-    
+     
     npm install
-    npm run dll
-    npm run webpack
+    composer build
 
     php app/console claroline:install
 
@@ -81,8 +80,7 @@ To update an existing development installation, just pull the latest changes
 ``
    composer update --no-dev
    npm install
-   npm run dll
-   npm run webpack
+   composer build
 ``
 #### 3. Clear cache
  ``  
