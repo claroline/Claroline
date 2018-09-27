@@ -11,10 +11,12 @@ use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Event\Resource\DecorateResourceNodeEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Manager\Resource\MaskManager;
+use Claroline\CoreBundle\Manager\Resource\OptimizedRightsManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -38,6 +40,9 @@ class ResourceNodeSerializer
     /** @var UserSerializer */
     private $userSerializer;
 
+    /** @var OptimizedRightsManager */
+    private $newRightsManager;
+
     /** @var RightsManager */
     private $rightsManager;
 
@@ -50,15 +55,17 @@ class ResourceNodeSerializer
      *     "fileSerializer"  = @DI\Inject("claroline.serializer.public_file"),
      *     "userSerializer"  = @DI\Inject("claroline.serializer.user"),
      *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
+     *     "newRightsManager"   = @DI\Inject("claroline.manager.optimized_rights_manager"),
      *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager")
      * })
      *
-     * @param ObjectManager        $om
-     * @param StrictDispatcher     $eventDispatcher
-     * @param PublicFileSerializer $fileSerializer
-     * @param UserSerializer       $userSerializer
-     * @param MaskManager          $maskManager
-     * @param RightsManager        $rightsManager
+     * @param ObjectManager          $om
+     * @param StrictDispatcher       $eventDispatcher
+     * @param PublicFileSerializer   $fileSerializer
+     * @param UserSerializer         $userSerializer
+     * @param MaskManager            $maskManager
+     * @param OptimizedRightsManager $newRightsManager
+     * @param RightsManager          $newRightsManager
      */
     public function __construct(
         ObjectManager $om,
@@ -66,12 +73,15 @@ class ResourceNodeSerializer
         PublicFileSerializer $fileSerializer,
         UserSerializer $userSerializer,
         MaskManager $maskManager,
+        OptimizedRightsManager $newRightsManager,
         RightsManager $rightsManager
     ) {
         $this->om = $om;
         $this->eventDispatcher = $eventDispatcher;
         $this->fileSerializer = $fileSerializer;
         $this->userSerializer = $userSerializer;
+        $this->newRightsManager = $newRightsManager;
+        $this->maskManager = $maskManager;
         $this->rightsManager = $rightsManager;
     }
 
@@ -271,7 +281,7 @@ class ResourceNodeSerializer
      * @param array        $data
      * @param ResourceNode $resourceNode
      */
-    public function deserialize(array $data, ResourceNode $resourceNode)
+    public function deserialize(array $data, ResourceNode $resourceNode, array $options = [])
     {
         $this->sipe('name', 'setName', $data, $resourceNode);
 
@@ -304,7 +314,7 @@ class ResourceNodeSerializer
         }
 
         if (isset($data['rights'])) {
-            $this->deserializeRights($data['rights'], $resourceNode);
+            $this->deserializeRights($data['rights'], $resourceNode, $options);
         }
 
         $this->sipe('meta.published', 'setPublished', $data, $resourceNode);
@@ -332,7 +342,7 @@ class ResourceNodeSerializer
         }
     }
 
-    private function deserializeRights($rights, ResourceNode $resourceNode)
+    private function deserializeRights($rights, ResourceNode $resourceNode, array $options = [])
     {
         // additional data might be required later (recursive)
         foreach ($rights as $right) {
@@ -350,12 +360,15 @@ class ResourceNodeSerializer
                 unset($right['permissions']['create']);
             }
 
-            $this->rightsManager->editPerms(
-                $right['permissions'],
-                $right['name'],
+            $recursive = in_array(Options::IS_RECURSIVE, $options) ? true : false;
+            $role = $this->om->getRepository(Role::class)->findOneBy(['name' => $right['name']]);
+
+            $this->newRightsManager->update(
                 $resourceNode,
-                false,
-                $creationPerms
+                $role,
+                $this->maskManager->encodeMask($right['permissions'], $resourceNode->getResourceType()),
+                $creationPerms,
+                $recursive
             );
         }
     }

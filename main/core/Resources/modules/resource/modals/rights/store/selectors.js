@@ -1,6 +1,13 @@
 
+const FORM_NAME = 'resourceRights.form'
 const STORE_NAME = 'resourceRights'
 
+const recursiveEnabled = (state) => {
+  return state[STORE_NAME].recursiveEnabled
+}
+
 export const selectors = {
-  STORE_NAME
+  FORM_NAME,
+  STORE_NAME,
+  recursiveEnabled
 }

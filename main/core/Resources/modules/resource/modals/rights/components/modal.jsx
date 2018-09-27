@@ -7,6 +7,7 @@ import {trans}  from '#/main/core/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {Checkbox} from '#/main/core/layout/form/components/field/checkbox'
 
 import {ResourceRights} from '#/main/core/resource/components/rights'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
@@ -28,6 +29,15 @@ const RightsModal = props =>
       />
     }
 
+    <div>
+      <Checkbox
+        id={'recursive-node-' + props.resourceNode.id}
+        label={trans('apply_recursively_to_directories', {}, 'platform')}
+        checked={props.recursiveEnabled}
+        onChange={value => props.setRecursiveEnabled(value)}
+      />
+    </div>
+
     <Button
       className="btn modal-btn"
       type={CALLBACK_BUTTON}
@@ -35,7 +45,7 @@ const RightsModal = props =>
       label={trans('save', {}, 'actions')}
       disabled={!props.saveEnabled}
       callback={() => {
-        props.save(props.nodeForm, props.updateNode)
+        props.save(props.nodeForm, props.updateNode, props.recursiveEnabled)
         props.fadeModal()
       }}
     />
@@ -53,7 +63,9 @@ RightsModal.propTypes = {
   updateRights: T.func.isRequired,
   loadNode: T.func.isRequired,
   updateNode: T.func.isRequired,
-  fadeModal: T.func.isRequired
+  fadeModal: T.func.isRequired,
+  setRecursiveEnabled: T.func.isRequired,
+  recursiveEnabled: T.bool.isRequired
 }
 
 export {

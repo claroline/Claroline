@@ -34,6 +34,8 @@ use Symfony\Component\Security\Core\Role\RoleInterface;
 
 /**
  * @DI\Service("claroline.manager.rights_manager")
+ *
+ * @deprecated use OptimizedRightsManager instead
  */
 class RightsManager
 {

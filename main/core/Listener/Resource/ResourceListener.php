@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
@@ -140,8 +141,16 @@ class ResourceListener
     public function rights(ResourceActionEvent $event)
     {
         // forward to the resource type
+        $options = [];
+
+        $params = $event->getOptions();
+
+        if (isset($params['recursive']) && 'true' === $params['recursive']) {
+            $options[] = Options::IS_RECURSIVE;
+        }
+
         $data = $event->getData();
-        $this->crud->update(ResourceNode::class, $data);
+        $this->crud->update(ResourceNode::class, $data, $options);
         $this->lifecycleManager->rights($event->getResourceNode(), $event->getData());
 
         $event->setResponse(new JsonResponse(
