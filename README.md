@@ -64,28 +64,44 @@ file. For an installation from scratch, the commands would be:
 
     php app/console claroline:install
 
+Upgrade 12.x
+-------
+
+To update your 12.x just follow this steps :
+
+#### 1. Update source
+
+    composer update --no-dev   
+    npm install
+    composer build
+
+#### 2. Launch update script
+   
+    php app/console claroline:update 12.x.xx 12.y.yy
+
+
 
 Upgrade From 10.x or 11.x
 -------
 
 To update an existing development installation, just pull the latest changes
-(or a specific version) of this repository and use the `sync-dev` script:
+(or a specific version) of this repository and follow this steps:
 
 #### 1. go to 12.x branch
-``
-    git fetch origin
-    git checkout origin/12.x
-``
+
+     git fetch origin
+     git checkout origin/12.x
+
 #### 2. Update source
-``
-   composer update --no-dev
-   npm install
-   composer build
-``
+
+    composer update --no-dev
+    npm install
+    composer build
+
 #### 3. Launch update script
- ``  
-   php app/console claroline:update 1x.x.xx 12.1.0
-``
+   
+    php app/console claroline:update 1x.x.xx 12.1.0
+
 
 Development
 -----------
