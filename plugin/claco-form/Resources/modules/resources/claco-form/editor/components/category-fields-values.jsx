@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import cloneDeep from 'lodash/cloneDeep'
 
 import {makeId} from '#/main/core/scaffolding/id'
 import {trans} from '#/main/core/translation'
@@ -57,7 +58,7 @@ class CategoryFieldsValues extends Component {
   }
 
   updateFieldValue(index, value) {
-    const fieldsValues = this.props.value.slice()
+    const fieldsValues = cloneDeep(this.props.value)
     fieldsValues[index]['value'] = value
 
     this.props.onChange(fieldsValues)
@@ -70,7 +71,7 @@ class CategoryFieldsValues extends Component {
     this.props.onChange(fieldsValues)
   }
 
-  formatField(fieldChoiceCategory) {
+  formatField(fieldChoiceCategory, index) {
     const options = fieldChoiceCategory.field.options ? Object.assign({}, fieldChoiceCategory.field.options) : {}
 
     if (fieldChoiceCategory.field.type === 'choice') {
@@ -83,8 +84,8 @@ class CategoryFieldsValues extends Component {
         {}
     }
     const newValues = fieldChoiceCategory.field.type === 'choice' ?
-      {options: options, name: fieldChoiceCategory.id} :
-      {name: fieldChoiceCategory.id}
+      {options: options, name: fieldChoiceCategory.id, id: `${fieldChoiceCategory.id}_${index}`} :
+      {name: fieldChoiceCategory.id, id: `${fieldChoiceCategory.id}_${index}`}
 
     return Object.assign({}, fieldChoiceCategory.field, newValues)
   }
@@ -97,7 +98,7 @@ class CategoryFieldsValues extends Component {
             {this.props.value.map((fieldChoiceCategory, index) =>
               <li key={index} className="field-item">
                 <FieldPreview
-                  {...this.formatField(fieldChoiceCategory)}
+                  {...this.formatField(fieldChoiceCategory, index)}
                   value={fieldChoiceCategory.value}
                   onChange={(value) => this.updateFieldValue(index, value)}
                 />
