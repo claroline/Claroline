@@ -12,8 +12,10 @@ const action = (resourceNodes, nodesRefresher) => ({
   modal: [MODAL_RESOURCE_CREATION, {
     parent: resourceNodes[0],
     add: (newNode) => nodesRefresher.add([newNode])
-  }]
+  }],
+  displayed: resourceNodes[0].permissions.create.length > 0
 })
+
 
 export {
   action

@@ -7,6 +7,9 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Exception\ResourceAccessException;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
+use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -25,23 +28,30 @@ class ResourceNodeController extends AbstractCrudController
     /** @var RightsManager */
     private $rightsManager;
 
+    /** @var ResourceActionManager */
+    private $actionManager;
+
     /**
      * ResourceNodeController constructor.
      *
      * @DI\InjectParams({
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "actionManager"   = @DI\Inject("claroline.manager.resource_action"),
      *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager")
      * })
      *
      * @param ResourceManager $resourceManager
      * @param RightsManager   $rightsManager
+     * @param ResourceActionManager
      */
     public function __construct(
+        ResourceActionManager $actionManager,
         ResourceManager $resourceManager,
         RightsManager $rightsManager
     ) {
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
+        $this->actionManager = $actionManager;
     }
 
     /**
@@ -132,7 +142,7 @@ class ResourceNodeController extends AbstractCrudController
 
     /**
      * @EXT\Route(
-     *     "{parent}/files",
+     *     "/{parent}/files",
      *     name="apiv2_resource_files_create"
      * )
      * @EXT\ParamConverter(
@@ -150,6 +160,16 @@ class ResourceNodeController extends AbstractCrudController
      */
     public function resourceFilesCreateAction(ResourceNode $parent, User $user, Request $request)
     {
+        $attributes['type'] = 'file';
+        $collection = new ResourceCollection([$parent]);
+        $collection->setAttributes($attributes);
+
+        $add = $this->actionManager->get($parent, 'add');
+
+        if (!$this->actionManager->hasPermission($add, $collection)) {
+            throw new ResourceAccessException($collection->getErrorsForDisplay(), $collection->getResources());
+        }
+
         $filesData = $request->files->all();
         $files = isset($filesData['files']) ? $filesData['files'] : [];
         $handler = $request->get('handler');
