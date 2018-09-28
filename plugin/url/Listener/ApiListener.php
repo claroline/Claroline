@@ -39,6 +39,9 @@ class ApiListener
 
             $resource = $this->om->getRepository('HeVinciUrlBundle:Url')->findOneByResourceNode($resourceNode);
 
+            if (!$resource) {
+                return;
+            }
             // Is it a youtube video ?
             $youtubeId = $this->getYoutubeId($resource->getUrl());
             if (false !== $youtubeId) {
