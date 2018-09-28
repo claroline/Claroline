@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
-use Claroline\CoreBundle\Menu\ConfigureMenuEvent;
 use Claroline\CoreBundle\Menu\ContactAdditionalActionEvent;
 use Claroline\MessageBundle\Entity\Message;
 use Claroline\MessageBundle\Manager\MessageManager;
@@ -72,45 +71,6 @@ class MessageListener
         $this->httpKernel = $httpKernel;
         $this->taskManager = $taskManager;
         $this->finderProvider = $finder;
-    }
-
-    /**
-     * @DI\Observe("claroline_top_bar_left_menu_configure_desktop_tool_message")
-     *
-     * @param \Acme\DemoBundle\Event\ConfigureMenuEvent $event
-     */
-    public function onTopBarLeftMenuConfigureMessage(ConfigureMenuEvent $event)
-    {
-        $user = $this->tokenStorage->getToken()->getUser();
-        $tool = $event->getTool();
-
-        if ('anon.' !== $user) {
-            $countUnreadMessages = $this->finderProvider->fetch(
-              Message::class,
-              ['removed' => false, 'read' => false],
-              null,
-              0,
-              -1,
-              true
-            );
-            $messageTitle = $this->translator->trans(
-                'new_message_alert',
-                ['%count%' => $countUnreadMessages],
-                'platform'
-            );
-            $menu = $event->getMenu();
-            $messageMenuLink = $menu->addChild(
-                $this->translator->trans('messages', [], 'platform'),
-                ['route' => 'claro_message_index']
-            )->setExtra('icon', 'fa fa-'.$tool->getClass())
-            ->setExtra('title', $messageTitle);
-
-            if ($countUnreadMessages > 0) {
-                $messageMenuLink->setExtra('badge', $countUnreadMessages);
-            }
-
-            return $menu;
-        }
     }
 
     /**

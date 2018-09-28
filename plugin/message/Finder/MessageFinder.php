@@ -91,6 +91,17 @@ class MessageFinder extends AbstractFinder
             }
         }
 
+        if (!is_null($sortBy) && isset($sortBy['property']) && isset($sortBy['direction'])) {
+            $sortByProperty = $sortBy['property'];
+            $sortByDirection = 1 === $sortBy['direction'] ? 'ASC' : 'DESC';
+
+            switch ($sortByProperty) {
+                case 'isRead':
+                    $qb->orderBy('um.isRead', $sortByDirection);
+                    break;
+            }
+        }
+
         return $qb;
     }
 

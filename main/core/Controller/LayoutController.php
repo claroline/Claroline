@@ -217,7 +217,7 @@ class LayoutController extends Controller
                   'notifications' => $token->getUser() instanceof User ? $this->notificationManager->countUnviewedNotifications($token->getUser()) : '',
                   'messages' => $token->getUser() instanceof User ? $this->finderProvider->fetch(
                     Message::class,
-                    ['removed' => false, 'read' => false],
+                    ['removed' => false, 'read' => false, 'sent' => false],
                     null,
                     0,
                     -1,
