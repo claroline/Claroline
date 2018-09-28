@@ -169,6 +169,7 @@ const canAddEntry = createSelector(
   myEntriesCount,
   (canAdministrate, isAnon, params, myEntriesCount) => {
     return canAdministrate || (
+      params &&
       params['creation_enabled'] &&
       !(isAnon && params['max_entries'] > 0) &&
       !(params['max_entries'] > 0 && myEntriesCount >= params['max_entries'])
@@ -185,7 +186,7 @@ const canOpenCurrentEntry = createSelector(
   (canAdministrate, params, currentEntry, isCurrentEntryOwner, canManageCurrentEntry) => {
     return canAdministrate || (
       currentEntry && (
-        (params['search_enabled'] && currentEntry.status === 1) ||
+        (params && params['search_enabled'] && currentEntry.status === 1) ||
         isCurrentEntryOwner ||
         canManageCurrentEntry
       )
