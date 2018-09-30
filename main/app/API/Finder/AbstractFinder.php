@@ -12,8 +12,12 @@
 namespace Claroline\AppBundle\API\Finder;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -22,17 +26,20 @@ abstract class AbstractFinder implements FinderInterface
     use FinderTrait;
 
     protected $om;
+    protected $_em;
 
     /**
      * @DI\InjectParams({
-     *      "om" = @DI\Inject("claroline.persistence.object_manager")
+     *      "om" = @DI\Inject("claroline.persistence.object_manager"),
+     *      "em" = @DI\Inject("doctrine.orm.entity_manager")
      * })
      *
      * @param ObjectManager $om
      */
-    public function setObjectManager(ObjectManager $om)
+    public function setObjectManager(ObjectManager $om, EntityManager $em)
     {
         $this->om = $om;
+        $this->_em = $em;
     }
 
     public function find(array $filters = [], array $sortBy = null, $page = 0, $limit = -1, $count = false)
@@ -99,38 +106,104 @@ abstract class AbstractFinder implements FinderInterface
         }
     }
 
-    //bad way to do it but otherwise we use a prepared statement and the sql contains '?'
-    //https://stackoverflow.com/questions/2095394/doctrine-how-to-print-out-the-real-sql-not-just-the-prepared-statement/28294482
-    protected function getSql(QueryBuilder $qb)
+    //     .--..--..--..--..--..--.
+    //   .' \  (`._   (_)     _   \
+    // .'    |  '._)         (_)  |
+    // \ _.')\      .----..---.   /
+    // |(_.'  |    /    .-\-.  \  |
+    // \     0|    |   ( O| O) | o|
+    //  |  _  |  .--.____.'._.-.  |
+    //  \ (_) | o         -` .-`  |
+    //   |    \   |`-._ _ _ _ _\ /
+    //   \    |   |  `. |_||_|   |
+    //   | o  |    \_      \     |     -.   .-.
+    //   |.-.  \     `--..-'   O |     `.`-' .'
+    // _.'  .' |     `-.-'      /-.__   ' .-'
+    // .' `-.` '.|='=.='=.='=.='=|._/_ `-'.'
+    // `-._  `.  |________/\_____|    `-.'
+    //  .'   ).| '=' '='\/ '=' |
+    //  `._.`  '---------------'
+    //          //___\   //___\
+    //            ||       ||
+    //            ||_.-.   ||_.-.
+    //           (_.--__) (_.--__)
+    //
+    // This is going to be wtf until the end of file. We're more or less implementing the union for our query builder.
+    //
+    public function union(array $firstSearch, array $secondSearch, array $options = [], array $sortBy = null)
     {
-        $query = $qb->getQuery();
+        //let doctrine do its stuff for the fist part
+        $firstQb = $this->om->createQueryBuilder();
+        $firstQb->select('DISTINCT obj')->from($this->getClass(), 'obj');
+        $this->configureQueryBuilder($firstQb, $firstSearch);
+        //this is our first part of the union
 
-        $vals = $query->getParameters();
+        $firstQ = $firstQb->getQuery();
+        $firstSql = $this->getSql($firstQ);
 
-        foreach (explode('?', $query->getSql()) as $i => $part) {
-            $sql = (isset($sql) ? $sql : null).$part;
-            if (isset($vals[$i])) {
-                $value = $vals[$i]->getValue();
-                //oh god... maybe more will required to be added here
-                if (is_string($value)) {
-                    $sql .= "'{$value}'";
-                } elseif (is_array($value)) {
-                    $value = array_map(function ($val) {
-                        return is_string($val) ? "'$val'" : $val;
-                    }, $value);
-                    $sql .= implode(',', $value);
-                } elseif (is_bool($value)) {
-                    $sql .= $value ? 'TRUE' : 'FALSE';
-                } else {
-                    $sql .= $value;
-                }
-            }
+        //new qb for the 2nd part
+        $secQb = $this->om->createQueryBuilder();
+        $secQb->select('DISTINCT obj')->from($this->getClass(), 'obj');
+        $this->configureQueryBuilder($secQb, $secondSearch);
+        //this is the second part of the union
+        $secQ = $secQb->getQuery();
+        $secSql = $this->getSql($secQ);
+
+        $sql = $firstSql.' UNION '.$secSql;
+
+        $query = $this->buildQueryFromSql($sql, $options, $sortBy);
+
+        $parameters = new ArrayCollection(array_merge(
+          $firstQb->getParameters()->toArray(),
+          $secQb->getParameters()->toArray()
+        ));
+
+        foreach ($parameters as $k => $p) {
+            $query->setParameter($k, $p->getValue(), $p->getType());
         }
+
+        return $query;
+    }
+
+    private function getSql(Query $query)
+    {
+        $sql = $query->getSql();
+
+        $sql = preg_replace('/ AS \S+/', ',', $sql);
+        $sql = str_replace(', FROM', ' FROM', $sql);
 
         return $sql;
     }
 
-    public function getSqlOrderBy(array $sortBy = null)
+    private function buildQueryFromSql($sql, array $options, array $sortBy = null)
+    {
+        if ($options['count']) {
+            $sql = "SELECT COUNT(*) as count FROM ($sql) AS wathever";
+            $rsm = new ResultSetMapping();
+            $rsm->addScalarResult('count', 'count', 'integer');
+            $query = $this->_em->createNativeQuery($sql, $rsm);
+        } else {
+            //add page & limit
+            $sql .= ' '.$this->getSqlOrderBy($sortBy);
+
+            if ($options['limit'] > -1) {
+                $sql .= ' LIMIT '.$options['limit'];
+            }
+
+            if ($options['limit'] > 0) {
+                $offset = $options['limit'] * $options['page'];
+                $sql .= ' OFFSET  '.$offset;
+            }
+
+            $rsm = new ResultSetMappingBuilder($this->_em);
+            $rsm->addRootEntityFromClassMetadata($this->getClass(), 'c0_');
+            $query = $this->_em->createNativeQuery($sql, $rsm);
+        }
+
+        return $query;
+    }
+
+    private function getSqlOrderBy(array $sortBy = null)
     {
         if ($sortBy && $sortBy['property'] && 0 !== $sortBy['direction']) {
             // no order by defined
@@ -149,7 +222,7 @@ abstract class AbstractFinder implements FinderInterface
         return '';
     }
 
-    public function getSqlPropertyFromMapping($property)
+    private function getSqlPropertyFromMapping($property)
     {
         $metadata = $this->om->getClassMetadata($this->getClass());
 

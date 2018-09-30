@@ -13,8 +13,6 @@ namespace Claroline\CoreBundle\API\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query\ResultSetMapping;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -102,6 +100,10 @@ class ResourceNodeFinder extends AbstractFinder
                     $qb->setParameter('parent', '%'.strtoupper($filterValue).'%');
                     $this->usedJoin['parent'] = true;
                     break;
+                case 'path.after':
+                    $qb->andWhere('UPPER(obj.path) LIKE :path');
+                    $qb->setParameter('path', strtoupper($filterValue).'%');
+                    break;
                 case 'parent':
                     if (is_null($filterValue)) {
                         $qb->andWhere('obj.parent IS NULL');
@@ -141,53 +143,8 @@ class ResourceNodeFinder extends AbstractFinder
                     $roleSearch['_roles'] = $otherRoles;
                     unset($managerSearch['roles']);
                     unset($roleSearch['roles']);
-                    unset($searches['roles']);
 
-                    $qbManager = $this->om->createQueryBuilder();
-                    $qbManager->select('DISTINCT obj')->from($this->getClass(), 'obj');
-                    $this->configureQueryBuilder($qbManager, $managerSearch);
-                    //this is our first part of the union
-                    $sqlManager = $this->getSql($qbManager);
-                    $sqlManager = $this->removeAlias($sqlManager);
-
-                    $qbRoles = $this->om->createQueryBuilder();
-                    $qbRoles->select('DISTINCT obj')->from($this->getClass(), 'obj');
-                    $this->configureQueryBuilder($qbRoles, $roleSearch);
-                    //this is the second part of the union
-                    $sqlRoles = $this->getSql($qbRoles);
-                    $sqlRoles = $this->removeAlias($sqlRoles);
-
-                    $together = $sqlRoles;
-
-                    if (count($managerRoles) > 0) {
-                        $together .= ' UNION '.$sqlManager;
-                    }
-
-                    //we might want to add a count somehere here
-                    //add limit & offset too
-
-                    if ($options['count']) {
-                        $together = "SELECT COUNT(*) as count FROM ($together) AS wathever";
-                        $rsm = new ResultSetMapping();
-                        $rsm->addScalarResult('count', 'count', 'integer');
-                        $query = $this->_em->createNativeQuery($together, $rsm);
-                    } else {
-                        //add page & limit
-                        if ($options['limit'] > -1) {
-                            $together .= ' LIMIT '.$options['limit'];
-                        }
-
-                        if ($options['limit'] > 0) {
-                            $offset = $options['limit'] * $options['page'];
-                            $together .= ' OFFSET  '.$offset;
-                        }
-
-                        $rsm = new ResultSetMappingBuilder($this->_em);
-                        $rsm->addRootEntityFromClassMetadata($this->getClass(), 'c0_');
-                        $query = $this->_em->createNativeQuery($together, $rsm);
-                    }
-
-                    return $query;
+                    return $this->union($managerSearch, $roleSearch, $options, $sortBy);
 
                     break;
                 case '_managerRoles':
@@ -242,49 +199,5 @@ class ResourceNodeFinder extends AbstractFinder
         }
 
         return $qb;
-    }
-
-    public function removeAlias($sql)
-    {
-        $aliases = [
-          'AS license_0',
-          'AS creation_date_1',
-          'AS modification_date_2',
-          'AS showIcon_3',
-          'AS name_4',
-          'AS hidden_5',
-          'AS lvl_6',
-          'AS path_7',
-          'AS value_8',
-          'AS mime_type_9',
-          'AS published_10',
-          'AS published_to_portal_11',
-          'AS author_12',
-          'AS active_13',
-          'AS fullscreen_14',
-          'AS closable_15',
-          'AS closeTarget_16',
-          'AS accesses_17',
-          'AS views_count_18',
-          'AS deletable_19',
-          'AS id_20',
-          'AS uuid_21',
-          'AS thumbnail_22',
-          'AS poster_23 ',
-          'AS description_24',
-          'AS accessible_from_25',
-          'AS accessible_until_26',
-          'AS resource_type_id_27',
-          'AS icon_id_28',
-          'AS parent_id_29',
-          'AS workspace_id_30',
-          'AS creator_id_31',
-        ];
-
-        foreach ($aliases as $alias) {
-            $sql = str_replace($alias, '', $sql);
-        }
-
-        return $sql;
     }
 }

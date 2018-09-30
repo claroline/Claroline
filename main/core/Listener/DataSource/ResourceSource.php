@@ -66,8 +66,10 @@ class ResourceSource
                 'workspace' => $event->getWorkspace(),
             ]);
 
-            $options['hiddenFilters']['parent'] = $workspaceRoot->getId();
+            $options['hiddenFilters']['path.after'] = $workspaceRoot->getPath();
         }
+
+        $options['hiddenFilters']['published'] = true;
 
         $roles = array_map(
             function ($role) { return $role->getRole(); },
