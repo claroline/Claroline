@@ -1,20 +1,18 @@
 import {trans} from '#/main/core/translation'
 
-import widget from '#/main/core/tools/home/walkthroughs/widget'
 import widgetList from '#/main/core/tools/home/walkthroughs/widget-list'
 import widgetResource from '#/main/core/tools/home/walkthroughs/widget-resource'
 import widgetSimple from '#/main/core/tools/home/walkthroughs/widget-simple'
 
-export default {
+export default (currentTab, update) => ({
   title: trans('home.editor.name', {}, 'walkthrough'),
   description: trans('home.editor.description', {}, 'walkthrough'),
   difficulty: 'easy',
 
   additional: [
-    widget,
-    widgetSimple,
-    widgetList,
-    widgetResource
+    widgetSimple(currentTab, update),
+    widgetList(currentTab, update),
+    widgetResource(currentTab, update)
   ],
 
   scenario: [
@@ -206,4 +204,4 @@ export default {
       }
     }
   ]
-}
+})

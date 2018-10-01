@@ -11,6 +11,7 @@ const ContentType = props =>
   <GridSelection
     items={props.types.map(type => {
       return ({
+        id: `widget-type-${type.name}`,
         name: type.name,
         icon: React.createElement(WidgetContentIcon, {
           type: type.name

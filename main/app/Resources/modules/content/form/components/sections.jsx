@@ -20,6 +20,7 @@ const FormSection = props =>
   </Section>
 
 FormSection.propTypes = {
+  id: T.string,
   className: T.string,
   children: T.node.isRequired,
   disabled: T.bool,

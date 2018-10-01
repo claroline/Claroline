@@ -9,7 +9,7 @@ import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
+import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
 import {ProfileFacet as ProfileFacetTypes} from '#/main/core/user/profile/prop-types'
 import {actions} from '#/main/core/administration/user/profile/actions'

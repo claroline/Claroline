@@ -10,7 +10,7 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {ListData} from '#/main/app/content/list/containers/data'
 
 import {trans} from '#/main/core/translation'
-import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
+import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {OrganizationList} from '#/main/core/administration/user/organization/components/organization-list'
 
 import {Cursus as CursusType} from '#/plugin/cursus/administration/cursus/prop-types'

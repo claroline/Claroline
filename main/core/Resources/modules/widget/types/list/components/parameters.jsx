@@ -43,6 +43,7 @@ class ListWidgetParameters extends Component {
   render() {
     return (
       <FormData
+        className="list-form"
         embedded={true}
         level={5}
         name={this.props.name}

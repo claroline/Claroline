@@ -1,18 +1,34 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
+import {trans} from '#/main/core/translation'
+import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+
 import {ResourceEmbedded} from '#/main/core/resource/components/embedded'
 import {ResourceNode as resourceNodeTypes} from '#/main/core/resource/data/types/resource/prop-types'
 
-const ResourceWidget = props =>
-  <ResourceEmbedded
-    className="widget-resource"
-    resourceNode={props.resourceNode}
-    showHeader={props.showResourceHeader}
-  />
+const ResourceWidget = props => {
+  if (props.resourceNode) {
+    return (
+      <ResourceEmbedded
+        className="widget-resource"
+        resourceNode={props.resourceNode}
+        showHeader={props.showResourceHeader}
+      />
+    )
+  }
+
+  return (
+    <EmptyPlaceholder
+      size="lg"
+      icon="fa fa-folder"
+      title={trans('no_resource')}
+    />
+  )
+}
 
 ResourceWidget.propTypes = {
-  resourceNode: T.shape(resourceNodeTypes.propTypes).isRequired,
+  resourceNode: T.shape(resourceNodeTypes.propTypes),
   showResourceHeader: T.bool.isRequired
 }
 

@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
-import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
+import {FormSections, FormSection} from '#/main/app/content/form/components/sections.jsx'
 
 import {DropzoneType, DropType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {select} from '#/plugin/drop-zone/resources/dropzone/store/selectors'

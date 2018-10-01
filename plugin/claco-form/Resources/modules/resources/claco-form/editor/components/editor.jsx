@@ -9,7 +9,7 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
-import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
+import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 

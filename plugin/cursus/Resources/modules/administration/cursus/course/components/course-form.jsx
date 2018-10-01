@@ -14,7 +14,7 @@ import {ListData} from '#/main/app/content/list/containers/data'
 import {trans} from '#/main/core/translation'
 import {makeId} from '#/main/core/scaffolding/id'
 import {now, nowAdd} from '#/main/core/scaffolding/date'
-import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
+import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {OrganizationList} from '#/main/core/administration/user/organization/components/organization-list'
 
 import {

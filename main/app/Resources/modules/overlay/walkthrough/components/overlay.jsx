@@ -62,6 +62,16 @@ class Walkthrough extends Component {
   }
 
   startStep(step) {
+    if (step.before) {
+      step.before.map(beforeAction => {
+        switch (beforeAction.type) {
+          case 'callback':
+            beforeAction.action()
+            break
+        }
+      })
+    }
+
     // scroll to the correct UI element if needed
     let scrollTo
     if (step.position) {
@@ -90,6 +100,16 @@ class Walkthrough extends Component {
     // handle next step
     if (step.requiredInteraction) {
       document.querySelector(step.requiredInteraction.target).addEventListener(step.requiredInteraction.type, this.doUserAction)
+    }
+
+    if (step.after) {
+      step.after.map(afterAction => {
+        switch (afterAction.type) {
+          case 'callback':
+            afterAction.action()
+            break
+        }
+      })
     }
   }
 

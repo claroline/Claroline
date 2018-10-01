@@ -7,7 +7,7 @@ import {trans} from '#/main/core/translation'
 
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {MODAL_DATA_LIST} from '#/main/app/modals/list'
-import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
+import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {actions} from '#/main/core/administration/workspace/workspace/actions'

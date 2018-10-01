@@ -67,7 +67,7 @@ const EditorComponent = props =>
                 icon: 'fa fa-street-view',
                 label: trans('show-walkthrough', {}, 'actions'),
                 modal: [MODAL_WALKTHROUGHS, {
-                  walkthroughs: getWalkthroughs()
+                  walkthroughs: getWalkthroughs(props.currentTab, (field, value) => props.updateTab(props.currentTabIndex, field, value))
                 }]
               }, {
                 type: CALLBACK_BUTTON,

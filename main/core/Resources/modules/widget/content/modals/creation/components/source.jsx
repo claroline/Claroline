@@ -10,6 +10,7 @@ const ContentSource = props =>
   <GridSelection
     items={props.sources.map(source => {
       return ({
+        id: `source-type-${source.name}`,
         name: source.name,
         icon: React.createElement(WidgetSourceIcon, {
           type: source.name

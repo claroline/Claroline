@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 
 import {t} from '#/main/core/translation'
 
-import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
+import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'

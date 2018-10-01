@@ -11,7 +11,7 @@ import {MODAL_DATA_LIST} from '#/main/app/modals/list'
 
 import {trans} from '#/main/core/translation'
 import {select as workspaceSelect} from '#/main/core/workspace/selectors'
-import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
+import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {UserList} from '#/main/core/administration/user/user/components/user-list'
 
 import {Team as TeamType} from '#/plugin/team/tools/team/prop-types'

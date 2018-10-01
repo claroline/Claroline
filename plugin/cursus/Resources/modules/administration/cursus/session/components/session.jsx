@@ -16,7 +16,7 @@ import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 
 import {trans} from '#/main/core/translation'
 import {makeId} from '#/main/core/scaffolding/id'
-import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
+import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
 import {
   Session as SessionType,

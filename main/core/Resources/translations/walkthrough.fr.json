@@ -176,22 +176,96 @@
 
     "create-widget": {
       "name": "Créer un widget",
-      "description": "Apprenez comment ajouter un nouveau widget dans une section existante."
+      "description": "Apprenez comment ajouter un nouveau widget dans une section existante.",
+
+      "add_widget": {
+        "message": "Les widgets sont ajoutés dans les colonnes d'une section. Vous pouvez ajouter un widget dans n'importe quelle colonne vide.",
+        "info": "Pour ce tutoriel, nous avons créé une section à une colonne vide pour que vous puissiez ajouter votre nouveau widget.",
+        "action": "Cliquez sur le bouton pour commencer la création d'un widget."
+      },
+
+      "widget_type": {
+        "title": "Le type de widget",
+        "message": "Il y a plusieurs types de widget disponibles en fonction de la configuration de l'application."
+      },
+
+      "select_type": {
+        "message": "Avant de pouvoir configurer le widget, il faut choisir son type.",
+        "action": "Cliquez sur le bouton pour créer un widget %widgetType%."
+      },
+
+      "save": {
+        "message": "Une fois que vous avez terminé de configurer votre widget, vous devez sauvegarder vos changements.",
+        "action": "Cliquez sur le bouton pour ajouter le nouveau widget à la section."
+      },
+
+      "created_widget": {
+        "message": "Ceci est la widget que vous venez de créer. Vous pourrez le modifier plus tard."
+      }
     },
 
     "create-widget-list": {
       "name": "Créer un widget : le widget Liste",
-      "description": "Apprenez comment ajouter et configurer un widget contenant une liste de données."
+      "description": "Apprenez comment ajouter et configurer un widget contenant une liste de données.",
+
+      "intro": {
+        "title": "Bienvenue dans la création d'un widget Liste",
+        "message": "Le widget Liste permet d'afficher une liste de données de votre choix."
+      },
+
+      "data_source": {
+        "title": "La source de données",
+        "message": "Pour le widget Liste, il y a une étape supplémentaire avant de pouvoir configurer le widget : le choix du type de données à afficher dans la liste."
+      },
+
+      "select_source": {
+        "message": "Pour ce tutoriel, nous allons créer une liste de ressources.",
+        "action": "Cliquez sur le bouton pour créer une liste de ressources."
+      },
+
+      "list_form": {
+        "title": "La configuration de la liste",
+        "message": "Toutes les options disponibles pour la liste sont regroupées dans ce formulaire (la configuration avancée des listes est détaillée dans un autre tutoriel)."
+      },
+
+      "list_display": {
+        "message": "Le seul paramètre obligatoire est le mode de vue à utiliser pour la liste.",
+        "action": "Cliquez sur le bouton pour ouvrir la configuration des modes de vues."
+      },
+
+      "list_display_select": {
+        "message": "Le champ 'Mode de vue par défaut' permet de choisir le mode de vue qui sera utilisé au chargement.",
+        "action": "Choisissez un mode de vue pour votre liste."
+      }
     },
 
     "create-widget-simple": {
       "name": "Créer un widget : le widget Contenu",
-      "description": "Apprenez comment ajouter et configurer un widget contenant un contenu riche."
+      "description": "Apprenez comment ajouter et configurer un widget contenant un contenu riche.",
+
+      "intro": {
+        "title": "Bienvenue dans la création d'un widget Contenu",
+        "message": "Le widget Contenu permet de créer et mettre en forme un contenu riche."
+      },
+
+      "create_content": {
+        "message": "Cet éditeur permet de modifier le contenu qui sera affiché dans le widget."
+      }
     },
 
     "create-widget-resource": {
       "name": "Créer un widget : le widget Ressource",
-      "description": "Apprenez comment ajouter et configurer un widget contenant une ressource."
+      "description": "Apprenez comment ajouter et configurer un widget contenant une ressource.",
+
+      "intro": {
+        "title": "Bienvenue dans la création d'un widget Ressource",
+        "message": "Le widget Ressource permet d'afficher la ressource sélectionnée."
+      },
+
+      "select_resource": {
+        "message": "Ce champ permet de sélectionner la ressource à afficher.",
+        "action": "Cliquez sur le bouton pour ouvrir l'explorateur de ressource."
+      }
     }
   }
 }

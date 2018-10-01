@@ -11,7 +11,7 @@ import {DetailsData} from '#/main/app/content/details/containers/data'
 import {LinkButton} from '#/main/app/buttons/link/components/button'
 
 import {trans} from '#/main/core/translation'
-import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
+import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {UserList} from '#/main/core/administration/user/user/components/user-list'
 
 import {selectors, actions} from '#/plugin/team/tools/team/store'

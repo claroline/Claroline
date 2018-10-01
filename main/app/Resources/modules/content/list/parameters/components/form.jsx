@@ -69,6 +69,7 @@ const ListForm = props => {
       dataPart={props.dataPart}
       sections={[
         {
+          id: 'list-display',
           icon: 'fa fa-fw fa-layer-group',
           title: trans('list_display_modes'),
           fields: [
@@ -138,6 +139,7 @@ const ListForm = props => {
             }
           ]
         }, {
+          id: 'list-filters',
           icon: 'fa fa-fw fa-filter',
           title: trans('filters'),
           fields: [
@@ -195,6 +197,7 @@ const ListForm = props => {
             }
           ]
         }, {
+          id: 'list-sorting',
           icon: 'fa fa-fw fa-sort-amount-down',
           title: trans('sorting'),
           fields: [
@@ -300,6 +303,7 @@ const ListForm = props => {
             }
           ]
         }, {
+          id: 'list-results',
           icon: 'fa fa-fw fa-ellipsis-h',
           title: trans('results'),
           fields: [
@@ -354,6 +358,7 @@ const ListForm = props => {
             }
           ]
         }, {
+          id: 'list-columns',
           icon: 'fa fa-fw fa-columns',
           title: trans('columns'),
           subtitle: trans('table_modes'),
@@ -402,6 +407,7 @@ const ListForm = props => {
             }
           ]
         }, {
+          id: 'list-card',
           icon: 'fa fa-fw fa-th-large',
           title: trans('cards'),
           subtitle: trans('grid_modes'),

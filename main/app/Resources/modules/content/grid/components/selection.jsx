@@ -88,28 +88,31 @@ class GridSelection extends Component {
         }
 
         <div className="modal-body">
-          <div className="types-list" role="listbox">
+          <ul className="types-list" role="listbox">
             {filteredItems.map((type, index) =>
-              <CallbackButton
-                key={`type-${index}`}
+              <li
+                key={type.id || `type-${index}`}
                 className={classes('type-entry', {
                   selected: isEqual(this.state.currentType, type)
                 })}
-                role="option"
                 onMouseOver={() => this.handleItemMouseOver(type)}
-                callback={() => {
-                  this.props.handleSelect(type)
-                }}
               >
-                {typeof type.icon === 'string' ?
-                  <span className={classes('type-icon', type.icon)} /> :
-                  React.cloneElement(type.icon, {
-                    className: 'type-icon'
-                  })
-                }
-              </CallbackButton>
+                <CallbackButton
+                  id={type.id}
+                  className="type-entry-btn"
+                  role="option"
+                  callback={() => this.props.handleSelect(type)}
+                >
+                  {typeof type.icon === 'string' ?
+                    <span className={classes('type-icon', type.icon)} /> :
+                    React.cloneElement(type.icon, {
+                      className: 'type-icon'
+                    })
+                  }
+                </CallbackButton>
+              </li>
             )}
-          </div>
+          </ul>
 
           {this.state.currentType &&
             <div className="type-desc">
@@ -129,6 +132,7 @@ class GridSelection extends Component {
 GridSelection.propTypes = {
   tag: T.string,
   items: T.arrayOf(T.shape({
+    id: T.string,
     label: T.string.isRequired,
     icon: T.node.isRequired, // either a FontAwesome class string or a custom icon component
     description: T.string,

@@ -177,22 +177,92 @@
 
     "create-widget": {
       "name": "Create a widget",
-      "description": "Learn how to add a new widget to an existing section."
+      "description": "Learn how to add a new widget to an existing section.",
+
+      "add_widget": {
+        "message": "You can add a widget in any empty column of a section.",
+        "info": "For this tutorial we've added an empty section with one column for you to add a new widget.",
+        "action": "Click on the button to start the creation of a widget."
+      },
+      "widget_type": {
+        "title": "The type of widget",
+        "message": "There are many widget types available based on the configuration of the application."
+      },
+      "select_type": {
+        "message": "Before you can configure the widget, you need to choose its type.",
+        "action": "Click on the button to create a widget %widgetType%."
+      },
+      "save": {
+        "message": "Once you have finished configuring your widget, you have to save your changes.",
+        "action": "Click on the button to add the new widget to the section."
+      },
+      "created_widget": {
+        "message": "This is the widget you have just created. You will be able to modify it later."
+      }
     },
 
     "create-widget-list": {
       "name": "Create a widget: the List widget",
-      "description": "Learn how to add a new List widget."
+      "description": "Learn how to add a new List widget.",
+
+      "intro": {
+        "title": "Welcome in the List widget creation",
+        "message": "The List widget allows you to display a list of data of your choice."
+      },
+
+      "data_source": {
+        "title": "The source of data",
+        "message": "For the List widget, there is an additional step before you can configure your widget: the choice of a data type to display in your list."
+      },
+
+      "select_source": {
+        "message": "For this tutorial, we will create a list of resources.",
+        "action": "Click on the button to create a list of resources."
+      },
+
+      "list_form": {
+        "title": "The configuration of the list",
+        "message": "All of the options available for the list are in this form (advanced configuration of list is explained in another tutorial)."
+      },
+
+      "list_display": {
+        "message": "The only require parameter is the view mode to use for the list.",
+        "action": "Click on the button to open the configuration of view modes."
+      },
+
+      "list_display_select": {
+        "message": "The field 'Default view mode' permits to choose the view mode which will be used by at loading.",
+        "action": "Choose a view mode for your list."
+      }
     },
 
     "create-widget-simple": {
       "name": "Create a widget: the Content widget",
-      "description": "Learn how to add a new Content widget."
+      "description": "Learn how to add a new Content widget.",
+
+      "intro": {
+        "title": "Welcome in the Content widget creation",
+        "message": "The Content widget allows you to create and style a rich content."
+      },
+
+      "create_content": {
+        "message": "This editor allows you to modify the content displayed in the widget."
+      }
     },
 
     "create-widget-resource": {
       "name": "Create a widget: the Resource widget",
-      "description": "Learn how to add a new Resource widget."
+      "description": "Learn how to add a new Resource widget.",
+
+      "intro": {
+        "title": "Welcome in the Resource widget creation",
+        "message": "The Resource widget allows you to display the selected resource."
+      },
+
+      "select_resource": {
+        "message": "This field permits to choose the resource to display.",
+        "action": "Click on the button to open the resource explorer."
+      }
     }
   }
 }

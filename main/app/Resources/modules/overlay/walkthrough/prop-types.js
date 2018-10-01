@@ -15,6 +15,7 @@ const WalkthroughStep = {
       icon: T.oneOfType([T.string, T.element]),
       title: T.string,
       message: T.string.isRequired,
+      info: T.string,
       link: T.string
     }).isRequired,
 
@@ -32,16 +33,18 @@ const WalkthroughStep = {
      * An action required by the user to pass to the next step.
      */
     requiredInteraction: T.shape({
-      type: T.oneOf(['click']),
+      type: T.oneOf(['click', 'change']).isRequired,
       target: T.string.isRequired,
       message: T.string.isRequired
     }),
 
     before: T.arrayOf(T.shape({
-
+      type: T.oneOf(['callback']).isRequired,
+      action: T.oneOfType([T.func]).isRequired
     })),
     after: T.arrayOf(T.shape({
-
+      type: T.oneOf(['callback']).isRequired,
+      action: T.oneOfType([T.func]).isRequired
     }))
   },
   defaultProps: {

@@ -13,7 +13,7 @@ import {constants} from '#/main/core/administration/scheduled-task/constants'
 import {actions} from '#/main/core/administration/scheduled-task/actions'
 import {UserList} from '#/main/core/administration/user/user/components/user-list'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
+import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
 const ScheduledTaskForm = props =>
   <FormData

@@ -17,7 +17,7 @@ import {currentUser} from '#/main/core/user/current'
 import {trans} from '#/main/core/translation'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
-import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
+import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 
 import {selectors} from '#/plugin/claco-form/resources/claco-form/store'

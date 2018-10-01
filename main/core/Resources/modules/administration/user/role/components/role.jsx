@@ -6,7 +6,7 @@ import classes from 'classnames'
 import {t, trans} from '#/main/core/translation'
 
 import {FormData} from '#/main/app/content/form/containers/data'
-import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
+import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {Checkbox} from '#/main/core/layout/form/components/field/checkbox'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'

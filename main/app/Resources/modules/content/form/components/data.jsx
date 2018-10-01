@@ -8,7 +8,7 @@ import {toKey} from '#/main/core/scaffolding/text/utils'
 
 import {Heading} from '#/main/core/layout/components/heading'
 import {ContentMeta} from '#/main/app/content/meta/components/meta'
-import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
+import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {SubSet} from '#/main/core/layout/form/components/fieldset/sub-set'
 import {ToggleableSet} from '#/main/core/layout/form/components/fieldset/toggleable-set'
 
@@ -127,7 +127,7 @@ class FormData extends Component {
         }
 
         {primarySections.map(primarySection =>
-          <div key={toKey(primarySection.title)} className="form-primary-section panel panel-default">
+          <div id={primarySection.id} key={toKey(primarySection.title)} className="form-primary-section panel panel-default">
             <fieldset className="panel-body">
               <Heading level={hLevel} displayed={false}>
                 {primarySection.title}
@@ -150,7 +150,8 @@ class FormData extends Component {
           >
             {otherSections.map(section =>
               <FormSection
-                key={toKey(section.title)}
+                id={section.id}
+                key={section.id || toKey(section.title)}
                 icon={section.icon}
                 title={section.title}
                 subtitle={section.subtitle}

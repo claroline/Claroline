@@ -41,6 +41,12 @@ const WalkThroughStep = props =>
       }
     </div>
 
+    {props.info &&
+      <div className="walkthrough-info">
+        {props.info}
+      </div>
+    }
+
     {props.requiredInteraction &&
       <div className="walkthrough-interaction">
         <span className="fa fa-hand-pointer icon-with-text-right" />
@@ -97,6 +103,7 @@ WalkThroughStep.propTypes = {
   icon: T.oneOfType([T.string, T.element]),
   title: T.string,
   message: T.string.isRequired,
+  info: T.string,
   link: T.string,
 
   // interaction

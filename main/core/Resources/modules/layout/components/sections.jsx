@@ -66,6 +66,7 @@ const Section = props =>
   </Panel>
 
 Section.propTypes = {
+  id: T.string,
   className: T.string,
   level: T.number,
   displayLevel: T.number,

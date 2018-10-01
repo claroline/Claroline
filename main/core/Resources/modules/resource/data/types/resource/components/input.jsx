@@ -54,7 +54,7 @@ const ResourceInput = props => {
   }
   else if (!isEmpty(props.value) && props.embedded) {
     return(
-      <div>
+      <div id={props.id}>
         <ModalButton
           className="btn btn-sm btn-link"
           title={trans('delete')}
@@ -78,12 +78,13 @@ const ResourceInput = props => {
   else {
     return(
       <EmptyPlaceholder
+        id={props.id}
         size="lg"
         icon="fa fa-folder"
         title={trans('no_resource')}
       >
         <ModalButton
-          className="btn btn-resource-primary"
+          className="btn btn-add-resource"
           primary={true}
           modal={[MODAL_RESOURCE_EXPLORER, {
             title: props.picker.title,

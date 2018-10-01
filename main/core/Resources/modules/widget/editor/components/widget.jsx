@@ -94,7 +94,7 @@ const WidgetCol = props =>
     }
     {!props.content && !props.isMoving &&
       <Button
-        className="btn btn-block btn-emphasis"
+        className="btn btn-block btn-emphasis btn-add-widget"
         type={MODAL_BUTTON}
         label={trans('add_widget', {}, 'widget')}
         modal={[MODAL_WIDGET_CONTENT, {
