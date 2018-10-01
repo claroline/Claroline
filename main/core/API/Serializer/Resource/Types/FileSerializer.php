@@ -42,7 +42,7 @@ class FileSerializer
     public function serialize(File $file)
     {
         return [
-            //'id' => $file->getId(),
+            'id' => $file->getId(),
             'hashName' => $file->getHashName(),
             'size' => $file->getSize(),
 

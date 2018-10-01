@@ -21,7 +21,7 @@ class PdfPlayer extends Component {
     PDFJS.getDocument(this.props.file.url).then((pdf) => {
       this.setState({
         pdf: pdf,
-        context: document.getElementById('pdf-canvas').getContext('2d')
+        context: document.getElementById('pdf-canvas-' + this.props.file.id).getContext('2d')
       }, () => this.renderPage())
     })
   }
@@ -29,7 +29,7 @@ class PdfPlayer extends Component {
   renderPage() {
     this.state.pdf.getPage(this.state.page).then(page => {
       const viewport = page.getViewport(this.state.scale / 100)
-      const canvas = document.getElementById('pdf-canvas')
+      const canvas = document.getElementById('pdf-canvas-' + this.props.file.id)
       canvas.height = viewport.height
       canvas.width = viewport.width
 
@@ -118,7 +118,7 @@ class PdfPlayer extends Component {
           </div>
         </div>
         <div className="pdf-player">
-          <canvas id="pdf-canvas" className="pdf-player-page" />
+          <canvas id={'pdf-canvas-' + this.props.file.id} className="pdf-player-page" />
         </div>
       </div>
     )
