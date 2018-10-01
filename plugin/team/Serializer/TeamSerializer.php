@@ -100,6 +100,7 @@ class TeamSerializer
             'description' => $team->getDescription(),
             'workspace' => $this->workspaceSerializer->serialize($team->getWorkspace(), [Options::SERIALIZE_MINIMAL]),
             'maxUsers' => $team->getMaxUsers(),
+            'countUsers' => count($team->getUsers()),
             'selfRegistration' => $team->isSelfRegistration(),
             'selfUnregistration' => $team->isSelfUnregistration(),
             'directory' => $team->getDirectory() ?

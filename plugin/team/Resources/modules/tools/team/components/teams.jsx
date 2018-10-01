@@ -56,6 +56,13 @@ const TeamsComponent = props =>
         displayed: true,
         filterable: true,
         type: 'number'
+      },
+      {
+        name: 'countUsers',
+        label: trans('registered_users', {}, 'platform'),
+        displayed: true,
+        filterable: false,
+        type: 'number'
       }
     ]}
     delete={{
