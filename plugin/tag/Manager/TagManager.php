@@ -217,6 +217,7 @@ class TagManager
 
             if ($replace) {
                 $this->removeTaggedObjectsByClassAndIds($objectClass, [$objectId]);
+                $this->om->forceFlush();
             }
 
             foreach ($uniqueTags as $tagName) {
