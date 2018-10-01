@@ -125,4 +125,12 @@ class AnnouncementFinder extends AbstractFinder
             }
         }
     }
+
+    //required for the unions
+    public function getExtraFieldMapping()
+    {
+        return [
+          'meta.publishedAt' => 'publication_date',
+        ];
+    }
 }

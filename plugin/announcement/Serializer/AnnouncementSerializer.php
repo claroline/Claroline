@@ -4,9 +4,11 @@ namespace Claroline\AnnouncementBundle\Serializer;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
+use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
@@ -20,6 +22,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class AnnouncementSerializer
 {
+    use SerializerTrait;
+
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
@@ -98,6 +102,13 @@ class AnnouncementSerializer
             'roles' => array_map(function (Role $role) {
                 return $role->getUuid();
             }, $announce->getRoles()),
+            'poster' => $announce->getPoster() && $this->om->getRepository(PublicFile::class)->findOneBy([
+                  'url' => $announce->getPoster(),
+              ]) ? $this->serializer->serialize(
+                $this->om->getRepository(PublicFile::class)->findOneBy([
+                    'url' => $announce->getPoster(),
+              ])
+            ) : null,
         ];
     }
 
@@ -168,11 +179,24 @@ class AnnouncementSerializer
             }
         }
 
+        if (isset($data['poster']) && isset($data['poster']['id'])) {
+            $poster = $this->serializer->deserialize(
+                PublicFile::class,
+                $data['poster']
+            );
+            $announce->setPoster($data['poster']['url']);
+            $this->fileUt->createFileUse(
+                $poster,
+                Announcement::class,
+                $announce->getUuid()
+            );
+        }
+
         return $announce;
     }
 
     public function getClass()
     {
-        return 'Claroline\AnnouncementBundle\Entity\Announcement';
+        return Announcement::class;
     }
 }

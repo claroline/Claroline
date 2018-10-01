@@ -11,6 +11,7 @@
 
 namespace Claroline\AnnouncementBundle\Entity;
 
+use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Task\ScheduledTask;
@@ -37,6 +38,7 @@ class Announcement
     private $id;
 
     use UuidTrait;
+    use Poster;
 
     /**
      * The title of the Announcement.

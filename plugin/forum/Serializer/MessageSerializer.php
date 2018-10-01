@@ -23,26 +23,37 @@ class MessageSerializer
     /** @var AbstractMessageSerializer */
     private $messageSerializer;
 
+    /** @var AbstractMessageSerializer */
+    private $subjectSerializer;
+
+    /** @var ObjectManager */
+    private $om;
+
     /**
      * ParametersSerializer constructor.
      *
      * @DI\InjectParams({
      *     "serializer"        = @DI\Inject("claroline.api.serializer"),
      *     "messageSerializer" = @DI\Inject("claroline.serializer.message"),
-     *     "om"                = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
+     *     "subjectSerializer" = @DI\Inject("claroline.serializer.forum_subject")
      * })
      *
      * @param SerializerProvider        $serializer
      * @param AbstractMessageSerializer $messageSerializer
+     * @param ObjectManager             $om
+     * @param SubjectSerializer         $subjectSerializer
      */
     public function __construct(
         SerializerProvider $serializer,
         AbstractMessageSerializer $messageSerializer,
-        ObjectManager $om
+        ObjectManager $om,
+        SubjectSerializer $subjectSerializer
     ) {
         $this->serializer = $serializer;
         $this->messageSerializer = $messageSerializer;
         $this->om = $om;
+        $this->subjectSerializer = $subjectSerializer;
     }
 
     public function getClass()
@@ -89,6 +100,10 @@ class MessageSerializer
                     'id' => $subject->getForum()->getResourceNode()->getId(),
                 ];
             }
+
+            $data['meta']['poster'] = $subject->getPoster() ?
+              $this->container->get('claroline.serializer.public_file')->serialize($subject->getPoster()) :
+              null;
         }
 
         $data['meta']['flagged'] = $message->isFlagged();
