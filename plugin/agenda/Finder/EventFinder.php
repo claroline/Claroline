@@ -70,7 +70,10 @@ class EventFinder extends AbstractFinder
                 $qb->setParameter($filterName, $filterValue);
                 break;
               case 'notDoneYet':
+                //includes today
                 $now = new \DateTime();
+                $interval = new \DateInterval('P1D');
+                $now->sub($interval);
                 if ($filterValue) {
                     $qb->andWhere("obj.start >= :{$filterName}");
                 } else {
