@@ -9,24 +9,25 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {WidgetContainer as WidgetContainerTypes} from '#/main/core/widget/prop-types'
 import {WidgetGrid} from '#/main/core/widget/player/components/grid'
 import {Tab as TabTypes} from '#/main/core/tools/home/prop-types'
-import {selectors} from '#/main/core/tools/home/selectors'
+import {selectors} from '#/main/core/tools/home/store'
+import {selectors as playerSelectors} from '#/main/core/tools/home/player/store'
 import {Tabs} from '#/main/core/tools/home/components/tabs'
-
 
 const PlayerComponent = props =>
   <PageContainer>
-    {1 < props.tabs.filter(tab => tab.locked === true).length &&
-      <Tabs
-        tabs={props.tabs.filter(tab => tab.locked === true)}
-        context={props.context}
-        editing={false}
-      />
-    }
     <PageHeader
-      className={props.currentTab.centerTitle ? 'center-page-title' : ''}
+      className={props.currentTab.centerTitle ? 'text-center' : ''}
       title={props.currentTab ? props.currentTab.longTitle : ('desktop' === props.context.type ? trans('desktop') : props.context.data.name)}
       poster={props.currentTab.poster ? props.currentTab.poster.url: undefined}
     >
+      {1 < props.tabs.length &&
+        <Tabs
+          tabs={props.tabs}
+          context={props.context}
+          editing={false}
+        />
+      }
+
       {props.editable &&
         <PageActions>
           <PageAction
@@ -64,7 +65,7 @@ const Player = connect(
   (state) => ({
     context: selectors.context(state),
     editable: selectors.editable(state),
-    tabs: selectors.sortedTabs(state),
+    tabs: playerSelectors.tabs(state),
     currentTab: selectors.currentTab(state),
     widgets: selectors.widgets(state)
   })

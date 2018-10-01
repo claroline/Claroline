@@ -15,7 +15,7 @@ function toKey(text) {
     // removes uppercase
     .toLowerCase()
     // shorten text
-    .substring(0, 20)
+    .substring(0, 30)
 }
 
 export {

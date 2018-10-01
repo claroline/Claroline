@@ -5,8 +5,10 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {theme} from '#/main/app/config'
 
 import {Router} from '#/main/app/router'
+import {OverlayStack} from '#/main/app/overlay/containers/stack'
 import {ModalOverlay} from '#/main/app/overlay/modal/containers/overlay'
 import {AlertOverlay} from '#/main/app/overlay/alert/containers/overlay'
+import {WalkthroughOverlay} from '#/main/app/overlay/walkthrough/containers/overlay'
 
 import {Page as PageTypes} from '#/main/app/page/prop-types'
 import {PageHeader} from '#/main/app/page/components/header'
@@ -44,20 +46,24 @@ const Page = props =>
     <AlertOverlay />
 
     {props.showHeader &&
-    <PageHeader
-      title={props.title}
-      subtitle={props.subtitle}
-      icon={props.icon}
-      poster={props.poster}
-      toolbar={props.toolbar}
-      actions={props.actions}
-    />
+      <PageHeader
+        title={props.title}
+        subtitle={props.subtitle}
+        icon={props.icon}
+        poster={props.poster}
+        toolbar={props.toolbar}
+        actions={props.actions}
+      />
     }
+
     <div className="page-content" role="presentation">
       {props.children}
     </div>
 
-    <ModalOverlay />
+    <OverlayStack>
+      <ModalOverlay />
+      <WalkthroughOverlay />
+    </OverlayStack>
 
     {props.styles.map(styleName =>
       <link key={styleName} rel="stylesheet" type="text/css" href={theme(styleName)} />

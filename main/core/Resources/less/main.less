@@ -21,6 +21,10 @@
 
 // Import claroline layout
 @import "mixins";
+// ATTENTION (advanced CSS) : walkthrough must always be included first
+// because it declare some classes which will be appended to existing ui component.
+// I need to keep those classes with a lower specificity than the real ui styles.
+@import "walkthrough/index";
 @import "scaffolding";
 @import "utilities";
 @import "type";
@@ -28,43 +32,10 @@
 @import "data/index";
 @import "libraries/index";
 @import "layout/index";
-@import "resources/index";
 @import "tinymce/index";
 @import "users/index";
 @import "widget/index";
 @import "workspace/index";
-
-@media (min-width: @screen-sm) {
-    body.left-bar-push {
-        margin-left: 40px;
-    }
-    /*#top_bar.left-bar-push,*/
-    /*.impersonalitation > .navbar-fixed-top.left-bar-push {
-        padding-left: 40px;
-    }*/
-    body.right-bar-push {
-        margin-right: 40px;
-    }
-    /*#top_bar.right-bar-push, */
-    /*.impersonalitation > .navbar-fixed-top.right-bar-push {
-        padding-right: 40px;
-    }*/
-}
-
-@media (max-width: (@screen-sm - 1)) {
-    body.left-bar-push {
-        margin-left: 0;
-    }
-    /*#top_bar.left-bar-push, .impersonalitation > .navbar-fixed-top.left-bar-push {
-        padding-left: 0;
-    }*/
-    body.right-bar-push {
-        margin-right: 0;
-    }
-    /*#top_bar.right-bar-push, .impersonalitation > .navbar-fixed-top.right-bar-push {
-        padding-right: 0;
-    }*/
-}
 
 /*****************************/
 /*  Desktop parameters menu  */
@@ -98,17 +69,6 @@ ul.desktop-parameters-menu {
 .notification-date {
     text-decoration: underline;
     font-style: italic;
-}
-
-.navbar.desktop {
-    .border-top-radius(@border-radius-base);
-    .border-bottom-radius(@border-radius-base);
-    padding-left: 15px;
-    padding-right: 15px;
-
-    ul li {
-        float: left !important;
-    }
 }
 
 .locale-select {
@@ -413,43 +373,6 @@ ul.desktop-parameters-menu {
     &:hover {
         cursor:          pointer;
         text-decoration: underline;
-    }
-}
-
-#public_profile_url {
-    .public_profile_url {
-        label {
-            padding-right: 2px;
-        }
-        div {
-            padding-left: 0;
-        }
-
-        .check-ok {
-            border-color: #3c763d;
-        }
-        .check-ko {
-            border-color: #843534;
-        }
-
-        .feedback {
-            position:    absolute;
-            top:         0;
-            right:       15px;
-            width:       34px;
-            height:      34px;
-            line-height: 34px;
-            text-align:  center;
-            .loading {
-                margin-top: 6px;
-            }
-            .icon-ok {
-                color: #3c763d;
-            }
-            .icon-remove {
-                color: #843534;
-            }
-        }
     }
 }
 

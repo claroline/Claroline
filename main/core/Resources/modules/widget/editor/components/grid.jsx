@@ -154,15 +154,15 @@ class WidgetGridEditor extends Component {
         )}
 
         {0 === this.props.widgets.length &&
-      <EmptyPlaceholder
-        size="lg"
-        icon="fa fa-frown-o"
-        title={trans('no_section')}
-      />
+          <EmptyPlaceholder
+            size="lg"
+            icon="fa fa-frown-o"
+            title={trans('no_section')}
+          />
         }
 
         <Button
-          className="btn btn-block btn-emphasis"
+          className="btn btn-block btn-emphasis btn-add-section"
           type={MODAL_BUTTON}
           label={trans('add_section')}
           modal={[MODAL_WIDGET_CREATION, {
@@ -170,6 +170,7 @@ class WidgetGridEditor extends Component {
               this.props.widgets.concat([widget]) // copy array & append element
             )
           }]}
+          disabled={this.props.disabled}
           primary={true}
         />
       </div>
@@ -178,6 +179,7 @@ class WidgetGridEditor extends Component {
 }
 
 WidgetGridEditor.propTypes = {
+  disabled: T.bool,
   context: T.object.isRequired,
   widgets: T.arrayOf(T.shape(
     WidgetContainerTypes.propTypes
@@ -186,6 +188,7 @@ WidgetGridEditor.propTypes = {
 }
 
 WidgetGridEditor.defaultProps = {
+  disabled: false,
   widgets: []
 }
 

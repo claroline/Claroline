@@ -10,6 +10,7 @@ import {ModalOverlay as ModalOverlayComponent} from '#/main/app/overlay/modal/co
 const ModalOverlay = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
+      show: selectors.show(state),
       modals: selectors.modals(state)
     }),
     (dispatch) => ({

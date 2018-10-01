@@ -3,23 +3,18 @@
  */
 
 .app-header-container {
-    position: fixed;
-    z-index: @zindex-navbar-fixed;
-    top: 0;
-    left: 0;
-    right: 0;
     height: @top-bar-height;
+    color: @top-bar-color;
+    font-size: @top-bar-font-size;
+    border-bottom: @top-bar-border-bottom;
+    background: @top-bar-bg;
+    .box-shadow(@top-bar-box-shadow);
 }
 
 .app-header {
     max-width: @top-bar-max-width;
     height: 100%;
     margin: 0 auto;
-    color: @top-bar-color;
-    background: @top-bar-bg;
-    font-size: @top-bar-font-size;
-    border-bottom: @top-bar-border-bottom;
-    .box-shadow(@top-bar-box-shadow);
 
     display: flex;
     flex-direction: row;
@@ -31,7 +26,7 @@
     }
 
     .app-header-item {
-        padding: 0 15px;
+        padding: 0 floor(@grid-gutter-width / 2);
         display: flex;
         flex-direction: row;
         justify-content: center;
@@ -54,8 +49,6 @@
     }
 }
 
-
-
 .app-header-brand {
     flex: 0;
     height: 100%;
@@ -74,7 +67,7 @@
     // fallback for IE 11 and logos that don't define color schema
     fill: @top-bar-brand-color;
 
-    // declare colors var to make ir usable inside the SVG
+    // declare colors var to make it usable inside the SVG
     --logo-default: @top-bar-brand-color;
     --logo-primary: @brand-primary;
 }
@@ -89,7 +82,7 @@
     padding: 0 floor(@grid-gutter-width / 2);
     margin: 0;
     line-height: 1;
-    font-size: 24px;
+    font-size: @top-bar-brand-font-size;
     font-weight: 900;
     color: @top-bar-brand-color;
 
@@ -105,7 +98,7 @@
 
 .app-header-btn {
     color: @top-bar-link-color;
-
+    background: @top-bar-link-bg;
     .action-icon,
     .fa {
         font-size: @font-size-large;
@@ -156,6 +149,25 @@
 
 .app-header-workspaces {
     flex: 1;
+    font-size: @font-size-large;
+
+    .dropdown-toggle {
+        width: 100%;
+
+        display: flex;
+        justify-content: space-between;
+
+        .header-workspaces {
+            .icon-with-text-right {
+                margin-right: 15px;
+            }
+        }
+    }
+
+    .dropdown-menu {
+        font-size: @font-size-large;
+        min-width: 100%;
+    }
 }
 
 .app-current-user {
@@ -260,261 +272,8 @@
 
 }
 
-#app-workspaces-menu-menu,
-.app-workspaces {
-    width: 100%;
-    font-size: @font-size-large;
-}
 
-#app-workspaces-menu-menu {
-    display: flex;
-    justify-content: space-between;
-}
-
-.header-workspaces {
-    .icon-with-text-right {
-        margin-right: 15px;
-    }
-}
-
-#top_bar,
-.top-bar {
-    //min-height: @top-bar-height;
-    //background: @top-bar-bg;
-    //border-radius: 0;
-    //border: none;
-    //border-bottom: @top-bar-border-bottom;
-    //margin-bottom: 0;
-    //font-size: @top-bar-font-size;
-    //.box-shadow(@top-bar-box-shadow);
-
-    .top-bar-content {
-        min-height: @top-bar-height - @top-bar-border-bottom-size; // permits to fill parent height when using flex boxes
-        height: 100%;
-        //max-width: @top-bar-max-width;
-        //margin: 0 auto;
-    }
-
-    .navbar-header {
-        max-height: @top-bar-height;
-        overflow: hidden !important;
-        position: relative;
-    }
-
-    .navbar-brand {
-        font-size: @top-bar-brand-font-size;
-        color: @top-bar-brand-color;
-        min-width: @toolbar-size;
-        height: @top-bar-height;
-        padding: @top-bar-padding-vertical @top-bar-padding-horizontal;
-
-        &:hover,
-        &:focus {
-            color: @top-bar-brand-hover-color;
-            background: @top-bar-brand-hover-bg;
-        }
-
-        // Platform logo
-        &.logo {
-            padding-top: 0;
-            padding-bottom: 0;
-
-            // vertical align the logo img using flex box
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            img {
-                height: @top-bar-logo-height;
-
-                // Let some space between logo img and platform name
-                & ~ span {
-                    margin-left: 5px;
-                }
-            }
-        }
-    }
-
-    .navbar-text {
-        color: @top-bar-color;
-    }
-
-    .navbar-toggle {
-        border-color: @top-bar-toggle-border-color;
-        &:hover,
-        &:focus {
-            background: @top-bar-toggle-hover-bg;
-        }
-        .icon-bar {
-            background-color: @top-bar-toggle-icon-bar-bg;
-        }
-    }
-
-    .navbar-collapse,
-    .navbar-form {
-        border-color: @top-bar-inner-border-color;
-    }
-
-    .navbar-nav {
-        margin: (@top-bar-padding-vertical / 2) -@top-bar-padding-horizontal;
-
-        > li > a {
-            color: @top-bar-link-color;
-
-            &:hover,
-            &:focus {
-                color: @top-bar-link-hover-color;
-                background: @top-bar-link-hover-bg;
-            }
-        }
-        > .active > a {
-            &,
-            &:hover,
-            &:focus {
-                color: @top-bar-link-active-color;
-                background-color: @top-bar-link-active-bg;
-            }
-        }
-        > .disabled > a {
-            &,
-            &:hover,
-            &:focus {
-                color: @top-bar-link-disabled-color;
-                background-color: @top-bar-link-disabled-bg;
-            }
-        }
-
-        // Dropdown menu items
-        // Remove background color from open dropdown
-        > .open > a {
-            &,
-            &:hover,
-            &:focus {
-                background-color: @top-bar-link-active-bg;
-                color: @top-bar-link-active-color;
-            }
-        }
-
-        // Uncollapse the nav
-        @media (min-width: @grid-float-breakpoint) {
-            float: left;
-            margin: 0;
-
-            > li {
-                float: left;
-                > a {
-                    padding-top:    @top-bar-padding-vertical;
-                    padding-bottom: @top-bar-padding-vertical;
-                }
-            }
-        }
-
-        @media (max-width: @grid-float-breakpoint-max) {
-            // Dropdowns get custom display when collapsed
-            .open .dropdown-menu {
-                > .dropdown-header {
-                    color: @top-bar-link-active-color;
-                    border-color: @top-bar-inner-border-color;
-                }
-                .divider {
-                    background-color: @top-bar-inner-border-color;
-                }
-                > li > a {
-                    color: @top-bar-link-color;
-                    &:hover,
-                    &:focus {
-                        color: @top-bar-link-hover-color;
-                        background-color: @top-bar-link-hover-bg;
-                    }
-                }
-                > .active > a {
-                    &,
-                    &:hover,
-                    &:focus {
-                        color: @top-bar-link-active-color;
-                        background-color: @top-bar-link-active-bg;
-                    }
-                }
-                > .disabled > a {
-                    &,
-                    &:hover,
-                    &:focus {
-                        color: @top-bar-link-disabled-color;
-                        background-color: @top-bar-link-disabled-bg;
-                    }
-                }
-            }
-        }
-    }
-
-    .badge {
-        color: @navbar-inverse-bg;
-        background: @navbar-inverse-link-color;
-        padding: 1px 4px;
-        font-weight: normal;
-    }
-
-    li.active {
-        .badge {
-            color: @navbar-inverse-link-active-bg;
-        }
-    }
-
-    .break-hide {
-        display: none;
-    }
-
-    &.break{
-        .break-hide {
-            display: inline;
-        }
-    }
-
-    /*.navbar-form button {
-        background-color: @navbar-inverse-link-color;
-        border: none;
-        color: @navbar-inverse-bg;
-        font-weight: bold;
-    }*/
-
-    @media (min-width: @screen-md) {
-        max-height: @top-bar-height;
-        overflow: hidden;
-
-        &.break {
-            max-height: 395px !important;
-            overflow: visible !important;
-
-            .navbar-header {
-                width: 100%;
-            }
-
-            .navbar-toggle {
-                display: block;
-            }
-
-            .navbar-collapse.collapse {
-                display: none !important;
-            }
-            .navbar-collapse.in {
-                display: block;
-            }
-            .navbar-collapse.collapsing {
-                overflow: hidden !important;
-            }
-            .navbar-collapse {
-                overflow: auto !important;
-                max-height: 340px  !important;
-                overflow-x: visible  !important;
-                .navbar-nav {
-                    &, li {
-                        width: 100%;
-                    }
-                }
-            }
-        }
-    }
-}
+// OLD
 
 .impersonalitation {
     &.spaced .spacer {

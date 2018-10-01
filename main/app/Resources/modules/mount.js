@@ -3,8 +3,11 @@ import ReactDOM from 'react-dom'
 import {Provider} from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
 
+// TODO : move in dom module
+
 // todo : find where I must put it
 // (I put it here for now because it's the root of all apps)
+// this give the source paths to webpack for dynamic loading
 import {asset} from '#/main/app/config'
 
 /* eslint-disable no-undef, no-unused-vars, no-global-assign */
@@ -23,6 +26,7 @@ import {createStore} from '#/main/app/store'
  *     - Page
  *     - WidgetContent
  *     - Toolbar
+ *     - Header
  *
  * @param {HTMLElement} container     - the HTML element which will hold the JS app.
  * @param {*}           rootComponent - the React root component of the app.

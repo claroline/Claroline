@@ -10,15 +10,22 @@ body {
     background: transparent; // removes bootstrap default
 
     &.claroline-app {
+        position: relative;
         height: 100%;
         overflow-y: hidden;
-        padding-top: @top-bar-height;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
 
         // only put body bg for claroline apps (avoids modifying TinyMCE content bg)
         background: @body-bg;
-
-        position: relative; // to constrain sidebar
     }
+}
+
+.app-content-container {
+    height: 100%;
+    overflow-y: hidden;
+    position: relative; // to constrain sidebar
 }
 
 .app-toolbar {
@@ -57,9 +64,9 @@ body {
         margin: 0 auto;
     }
 
-    &.app-content-full {
+    /*&.app-content-full {
         max-width: 100% !important; // make sure it overrides default max-width
-    }
+    }*/
 }
 
 .component-container {

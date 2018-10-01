@@ -109,6 +109,7 @@ class FormData extends Component {
 
     return (
       <Form
+        id={this.props.id}
         className={this.props.className}
         embedded={this.props.embedded}
         disabled={this.props.disabled}
@@ -173,6 +174,7 @@ class FormData extends Component {
 }
 
 FormData.propTypes = {
+  id: T.string,
   /**
    * Is the form embed into another ?
    *

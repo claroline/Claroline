@@ -20,7 +20,7 @@ const StandardLogo = props =>
 const HeaderBrand = props => {
   return (
     props.redirectHome ?
-      <a href={url(['claro_index'])} className="app-header-item app-header-brand">
+      <a href={url(['claro_index'])} className="app-header-item app-header-brand hidden-xs">
         {props.logo.colorized &&
           <SvgLogo url={props.logo.url} />
         }
@@ -29,7 +29,7 @@ const HeaderBrand = props => {
         }
       </a>
       :
-      <div className="app-header-item app-header-brand">
+      <div className="app-header-item app-header-brand hidden-xs">
         {props.logo.colorized &&
           <SvgLogo url={props.logo.url} />
         }

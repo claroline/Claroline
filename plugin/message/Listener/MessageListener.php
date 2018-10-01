@@ -11,162 +11,73 @@
 
 namespace Claroline\MessageBundle\Listener;
 
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\Task\ScheduledTask;
-use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
-use Claroline\CoreBundle\Menu\ContactAdditionalActionEvent;
-use Claroline\MessageBundle\Entity\Message;
 use Claroline\MessageBundle\Manager\MessageManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service()
  */
 class MessageListener
 {
+    /** @var MessageManager */
     private $messageManager;
-    private $router;
-    private $tokenStorage;
-    private $translator;
-    private $request;
-    private $httpKernel;
+    /** @var ScheduledTaskManager */
     private $taskManager;
-    private $finder;
 
     /**
+     * MessageListener constructor.
+     *
      * @DI\InjectParams({
-     *     "messageManager"  = @DI\Inject("claroline.manager.message_manager"),
-     *     "router"          = @DI\Inject("router"),
-     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
-     *     "translator"      = @DI\Inject("translator"),
-     *     "httpKernel"      = @DI\Inject("http_kernel"),
-     *     "requestStack"    = @DI\Inject("request_stack"),
-     *     "taskManager"     = @DI\Inject("claroline.manager.scheduled_task_manager"),
-     *     "finder"          = @DI\Inject("claroline.api.finder")
+     *     "messageManager" = @DI\Inject("claroline.manager.message_manager"),
+     *     "taskManager"    = @DI\Inject("claroline.manager.scheduled_task_manager")
      * })
+     *
+     * @param MessageManager       $messageManager
+     * @param ScheduledTaskManager $taskManager
      */
     public function __construct(
         MessageManager $messageManager,
-        UrlGeneratorInterface $router,
-        TokenStorageInterface $tokenStorage,
-        TranslatorInterface $translator,
-        RequestStack $requestStack,
-        HttpKernelInterface $httpKernel,
-        ScheduledTaskManager $taskManager,
-        FinderProvider $finder
+        ScheduledTaskManager $taskManager
     ) {
         $this->messageManager = $messageManager;
-        $this->router = $router;
-        $this->tokenStorage = $tokenStorage;
-        $this->translator = $translator;
-        $this->request = $requestStack->getCurrentRequest();
-        $this->httpKernel = $httpKernel;
         $this->taskManager = $taskManager;
-        $this->finderProvider = $finder;
-    }
-
-    /**
-     * @DI\Observe("claroline_workspace_users_action")
-     *
-     * @param \Acme\DemoBundle\Event\ConfigureMenuEvent $event
-     */
-    public function onWorkspaceUsersConfigureMessage(ContactAdditionalActionEvent $event)
-    {
-        $user = $event->getUser();
-        $menu = $event->getMenu();
-        $menu->addChild(
-            $this->translator->trans('messages', [], 'platform'),
-            ['route' => 'claro_message_show']
-        )
-        ->setExtra('icon', 'fa fa-envelope')
-        ->setExtra('qstring', 'userIds[]='.$user->getId())
-        ->setExtra('title', $this->translator->trans('message', [], 'platform'));
     }
 
     /**
      * @DI\Observe("claroline_message_sending")
      *
-     * @param Claroline\CoreBundle\Event\SendMessageEvent $event
+     * @param SendMessageEvent $event
      */
     public function onMessageSending(SendMessageEvent $event)
     {
-        $receiver = $event->getReceiver();
-        $sender = $event->getSender();
-        $content = $event->getContent();
-        $object = $event->getObject();
-        $withMail = $event->getWithMail();
         $this->messageManager->sendMessageToAbstractRoleSubject(
-            $receiver,
-            $content,
-            $object,
-            $sender,
-            $withMail
+            $event->getReceiver(),
+            $event->getContent(),
+            $event->getObject(),
+            $event->getSender(),
+            $event->getWithMail()
         );
     }
 
     /**
      * @DI\Observe("claroline_message_sending_to_users")
      *
-     * @param Claroline\CoreBundle\Event\SendMessageEvent $event
+     * @param SendMessageEvent $event
      */
     public function onMessageSendingToUsers(SendMessageEvent $event)
     {
-        $users = $event->getUsers();
-        $sender = $event->getSender();
-        $content = $event->getContent();
-        $object = $event->getObject();
         $message = $this->messageManager->create(
-            $content,
-            $object,
-            $users,
-            $sender
+            $event->getContent(),
+            $event->getObject(),
+            $event->getUsers(),
+            $event->getSender()
         );
+
         $this->messageManager->send($message);
-    }
-
-    /**
-     * @DI\Observe("claroline_contact_additional_action")
-     *
-     * @param \Claroline\CoreBundle\Menu\ContactAdditionalActionEvent $event
-     */
-    public function onContactActionMenuRender(ContactAdditionalActionEvent $event)
-    {
-        $user = $event->getUser();
-        $url = $this->router->generate('claro_message_show', ['message' => 0])
-            .'?userIds[]='.$user->getId();
-
-        $menu = $event->getMenu();
-        $menu->addChild(
-            $this->translator->trans('send_message', [], 'platform'),
-            ['uri' => $url]
-        )->setExtra('icon', 'fa fa-envelope-o');
-
-        return $menu;
-    }
-
-    /**
-     * @DI\Observe("open_tool_desktop_messaging")
-     *
-     * @param DisplayToolEvent $event
-     */
-    public function onOpenDesktopTool(DisplayToolEvent $event)
-    {
-        $params = [];
-        $params['_controller'] = 'ClarolineMessageBundle:Message:index';
-        $params['page'] = 1;
-        $params['search'] = '';
-        $subRequest = $this->request->duplicate([], null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        $event->setContent($response->getContent());
-        $event->stopPropagation();
     }
 
     /**
@@ -183,11 +94,12 @@ class MessageListener
         $object = isset($data['object']) ? $data['object'] : null;
         $content = isset($data['content']) ? $data['content'] : null;
 
-        if (count($users) > 0 && !empty($object) && !empty($content)) {
+        if (!empty($users) && !empty($object) && !empty($content)) {
             $message = $this->messageManager->create($content, $object, $users);
             $this->messageManager->send($message);
             $this->taskManager->markAsExecuted($task);
         }
+
         $event->stopPropagation();
     }
 }

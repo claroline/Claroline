@@ -43,9 +43,9 @@ const Widget = props =>
     {props.widget.name &&
       <h2
         className={classes('h-first widget-title', {
-          'left-widget-title': 'left' === props.widget.alignName,
-          'center-widget-title': 'center' === props.widget.alignName,
-          'right-widget-title': 'right' === props.widget.alignName
+          'text-left': 'left' === props.widget.alignName,
+          'text-center': 'center' === props.widget.alignName,
+          'text-right': 'right' === props.widget.alignName
         })}
         style={computeTitleStyles(props.widget)}>
         {props.widget.name}

@@ -1,0 +1,248 @@
+@highlightColor: @brand-primary;
+
+// internal
+@moveLength: 4px;
+@smallCircleSize: 1px;
+@smallCircleOffset: 4px; // space between the 2 circles
+@largeCircleSize: 4px;
+@componentPadding: 2px;
+
+.walkthrough-backdrop {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: @modal-backdrop-bg;
+
+    // Fade for backdrop
+    &.fade { .opacity(0); }
+    &.in { .opacity(@modal-backdrop-opacity); }
+}
+
+.walkthrough-popover {
+    z-index: @zindex-modal + 2;
+    min-width: 300px;
+    max-width: 300px;
+
+    &.walkthrough-popover-centered {
+        min-width: 340px;
+        max-width: 340px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        .arrow {
+            display: none;
+        }
+    }
+
+    &.bottom > .arrow:after {
+        border-bottom-color: @popover-bg !important;
+    }
+    &.top > .arrow:after {
+        border-top-color: @popover-title-bg !important;
+    }
+
+    .popover-content {
+        padding: 0;
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        flex-wrap: wrap;
+    }
+
+    .progress {
+        width: 100%;
+        border-top-left-radius: @border-radius-small;
+        border-top-right-radius: @border-radius-small;
+    }
+
+    .walkthrough-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: @popover-content-padding;
+
+        // for .fa
+        width: 36px + @popover-content-padding*2;
+        font-size: 36px;
+    }
+
+    .walkthrough-title {
+        margin-top: 0;
+        font-weight: bold;
+        font-size: @font-size-large;
+    }
+
+    .walkthrough-content {
+        flex: 1;
+        padding: @popover-content-padding;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .walkthrough-link {
+        margin-top: floor(@popover-content-padding / 2);
+        font-size: @font-size-small;
+    }
+
+    .walkthrough-interaction {
+        padding: @popover-content-padding;
+        margin: 0 @popover-content-padding @popover-content-padding;
+        width: 100%;
+        border: 1px solid @state-info-border;
+        color: @state-info-text;
+        background: @state-info-bg;
+        border-radius: @border-radius-small;
+    }
+
+    .walkthrough-nav {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+
+        background: @popover-title-bg;
+        border-top: 1px solid @popover-title-border-color;
+        border-radius: 0 0 @popover-border-radius @popover-border-radius;
+
+        .btn,
+        .btn-link {
+            margin-top: -1px; // absorb container border
+            padding: @padding-small-vertical @popover-content-padding;
+        }
+
+        .btn-previous {
+            margin-left: auto; // push to right
+        }
+
+        .btn-next {
+            border-radius: 0 0 @border-radius-small 0 !important;
+        }
+    }
+
+    .walkthrough-additional {
+        width: 100%;
+        border-top: 1px solid @modal-footer-border-color;
+        border-bottom: 1px solid @modal-footer-border-color;
+        background: @modal-footer-bg;
+        padding: @popover-content-padding @popover-content-padding @popover-content-padding @popover-content-padding*4;
+    }
+
+    .walkthrough-additional-link {
+        color: @link-color;
+
+        &:hover,
+        &:focus {
+            color: @link-hover-color;
+            text-decoration: @link-hover-decoration;
+        }
+    }
+
+    .walkthrough-btns {
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+
+        .btn {
+            margin: @popover-content-padding;
+            flex: 1;
+        }
+    }
+}
+
+// NB. all the !important are to be sure the highlight override the default component behavior
+//     this may broke some advance styling using pseudo-classes.
+.walkthrough-highlight {
+    position: relative;
+    z-index: @zindex-modal + 1 !important;
+    box-shadow: 0 0 6px 1px rgba(0, 0, 0, .5);
+
+    &:before,
+    &:after {
+        border-radius: inherit !important;
+        content: " " !important;
+        position: absolute !important;
+        display: block !important;
+
+        width: auto !important;
+        height: auto !important;
+        transform: none !important;
+
+        animation-iteration-count: infinite !important;
+        animation-timing-function: ease-out !important;
+        animation-duration: 1.25s !important;
+
+        box-shadow: inset 0 0 2px 0 fadeOut(@highlightColor, .5),
+                          0 0 2px 0 fadeOut(@highlightColor, .5) !important;
+    }
+
+    &:before {
+        border: @largeCircleSize solid @highlightColor !important;
+        animation-name: circleLarge !important;
+    }
+
+    &:after {
+        border: @smallCircleSize solid @highlightColor !important;
+
+        animation-name: circleSmall !important;
+    }
+}
+
+.walkthroughs-list {
+    .list-group-item {
+        font-weight: bold;
+    }
+
+    .label {
+        float: right;
+    }
+
+    small {
+        margin-top: 5px;
+        display: block;
+        color: @text-muted;
+        font-weight: normal;
+    }
+}
+
+@keyframes circleSmall {
+    from {
+        opacity: 1;
+
+        top   : -(@componentPadding + @largeCircleSize + @smallCircleSize);
+        left  : -(@componentPadding + @largeCircleSize + @smallCircleSize);
+        bottom: -(@componentPadding + @largeCircleSize + @smallCircleSize);
+        right : -(@componentPadding + @largeCircleSize + @smallCircleSize);
+    }
+
+    to {
+        opacity: .15;
+
+        top   : -(@largeCircleSize + @smallCircleOffset + @smallCircleSize + @moveLength);
+        left  : -(@largeCircleSize + @smallCircleOffset + @smallCircleSize + @moveLength);
+        bottom: -(@largeCircleSize + @smallCircleOffset + @smallCircleSize + @moveLength);
+        right : -(@largeCircleSize + @smallCircleOffset + @smallCircleSize + @moveLength);
+    }
+}
+
+@keyframes circleLarge {
+    from {
+        opacity: 1;
+
+        top   : -(@componentPadding + @largeCircleSize);
+        left  : -(@componentPadding + @largeCircleSize);
+        bottom: -(@componentPadding + @largeCircleSize);
+        right : -(@componentPadding + @largeCircleSize);
+    }
+
+    to {
+        opacity: .25;
+
+        top   : -(@largeCircleSize + @moveLength);
+        left  : -(@largeCircleSize + @moveLength);
+        bottom: -(@largeCircleSize + @moveLength);
+        right : -(@largeCircleSize + @moveLength);
+    }
+}

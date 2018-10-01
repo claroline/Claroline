@@ -2,7 +2,6 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import merge from 'lodash/merge'
-import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/core/translation'
 import {makeId} from '#/main/core/scaffolding/id'
@@ -12,33 +11,33 @@ import {
   PageContainer,
   PageHeader,
   PageContent,
+  PageGroupActions,
   PageActions,
   PageAction,
-  PageGroupActions
+  MoreAction
 } from '#/main/core/layout/page'
-import {FormData} from '#/main/app/content/form/containers/data'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, MODAL_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {MODAL_WALKTHROUGHS} from '#/main/app/overlay/walkthrough/modals/walkthroughs'
 
-import {WidgetGridEditor} from '#/main/core/widget/editor/components/grid'
+import {getWalkthroughs} from '#/main/core/tools/home/walkthroughs'
 import {WidgetContainer as WidgetContainerTypes} from '#/main/core/widget/prop-types'
-
 import {Tab as TabTypes} from '#/main/core/tools/home/prop-types'
-import {selectors} from '#/main/core/tools/home/selectors'
-import {selectors as editorSelectors} from '#/main/core/tools/home/editor/selectors'
-import {actions as editorActions} from '#/main/core/tools/home/editor/actions'
+import {selectors} from '#/main/core/tools/home/store'
+import {actions as editorActions, selectors as editorSelectors} from '#/main/core/tools/home/editor/store'
 import {Tabs} from '#/main/core/tools/home/components/tabs'
 
-const EditorComponent = props => {
-  let readOnly = props.currentTab.type === 'administration' &&
-    props.currentTab.locked &&
-    props.context.type === 'desktop' &&
-    !props.administration
+import {TabEditor} from '#/main/core/tools/home/editor/components/tab'
 
-  let tabExist= 0 !== props.playerTabs.filter(tab => props.currentTab.id === tab.id).length
-
-  return (
-    <PageContainer>
+const EditorComponent = props =>
+  <PageContainer
+    className="home-tool"
+  >
+    <PageHeader
+      alignTitle={true === props.currentTab.centerTitle ? 'center' : 'left'}
+      title={props.currentTab ? props.currentTab.longTitle : ('desktop' === props.context.type ? trans('desktop') : props.context.data.name)}
+      poster={props.currentTab.poster ? props.currentTab.poster.url: undefined}
+    >
       <Tabs
         prefix="/edit"
         tabs={props.tabs}
@@ -47,191 +46,70 @@ const EditorComponent = props => {
         editing={true}
       />
 
-      <PageHeader
-        alignTitle={true === props.currentTab.centerTitle ? 'center' : 'left'}
-        title={props.currentTab ? props.currentTab.longTitle : ('desktop' === props.context.type ? trans('desktop') : props.context.data.name)}
-        poster={props.currentTab.poster ? props.currentTab.poster.url: undefined}
-      >
-        <PageActions>
-          {1 < props.tabs.length &&
-            <PageGroupActions>
-              <PageAction
-                type={CALLBACK_BUTTON}
-                label={trans('delete')}
-                icon="fa fa-fw fa-trash-o"
-                dangerous={true}
-                confirm={{
+      <PageActions>
+        <PageGroupActions>
+          <PageAction
+            type={LINK_BUTTON}
+            label={trans('configure', {}, 'actions')}
+            icon="fa fa-fw fa-cog"
+            target="/edit"
+            disabled={true}
+            primary={true}
+          />
+        </PageGroupActions>
+
+        <PageGroupActions>
+          <MoreAction
+            actions={[
+              {
+                name: 'walkthrough',
+                type: MODAL_BUTTON,
+                icon: 'fa fa-street-view',
+                label: trans('show-walkthrough', {}, 'actions'),
+                modal: [MODAL_WALKTHROUGHS, {
+                  walkthroughs: getWalkthroughs()
+                }]
+              }, {
+                type: CALLBACK_BUTTON,
+                label: trans('delete', {}, 'actions'),
+                icon: 'fa fa-fw fa-trash-o',
+                dangerous: true,
+                confirm: {
                   title: trans('home_tab_delete_confirm_title'),
                   message: trans('home_tab_delete_confirm_message'),
                   subtitle: props.currentTab.title
-                }}
-                disabled={readOnly}
-                callback={() => props.deleteTab(props.tabs, props.currentTab, props.history.push)}
-              />
-            </PageGroupActions>
-          }
+                },
+                disabled: props.readOnly || 1 >= props.tabs.length,
+                callback: () => props.deleteTab(props.tabs, props.currentTab, props.history.push)
+              }
+            ]}
+          />
+        </PageGroupActions>
+      </PageActions>
+    </PageHeader>
 
-          <PageGroupActions>
-            <PageAction
-              type={LINK_BUTTON}
-              label={trans('configure', {}, 'actions')}
-              icon="fa fa-fw fa-cog"
-              target="/edit"
-              disabled={true}
-              primary={true}
-            />
-          </PageGroupActions>
-        </PageActions>
-      </PageHeader>
+    <PageContent>
+      <TabEditor
+        context={props.context}
+        currentTabIndex={props.currentTabIndex}
+        currentTab={props.currentTab}
+        widgets={props.widgets}
+        administration={props.administration}
+        readOnly={props.readOnly}
+        created={0 !== props.playerTabs.filter(tab => props.currentTab.id === tab.id).length}
+        tabs={props.tabs}
 
-      <PageContent>
-        <FormData
-          name="editor"
-          dataPart={`[${props.currentTabIndex}]`}
-          buttons={true}
-          target={props.administration ? ['apiv2_home_admin', {
-            context: props.context.type,
-            contextId: props.context.data ? props.context.data.uuid : currentUser().id
-          }]
-            :
-            ['apiv2_home_update', {
-              context: props.context.type,
-              contextId: props.context.data ? props.context.data.uuid : currentUser().id
-            }]}
-          cancel={{
-            type: LINK_BUTTON,
-            target:tabExist ? `/tab/${props.currentTab.id}` : '/',
-            exact: true
-          }}
-          sections={[
-            {
-              icon: 'fa fa-fw fa-plus',
-              title: trans('general'),
-              primary: true,
-              fields: [
-                {
-                  name: 'longTitle',
-                  type: 'string',
-                  label: trans('title'),
-                  disabled: readOnly,
-                  required: true,
-                  onChange: (title) => props.updateTitle(props.currentTabIndex, 'title', title.substring(0, 20))
-                }, {
-                  name: 'locked',
-                  type: 'boolean',
-                  disabled: readOnly,
-                  label: trans('publish_tab', {}, 'widget')
-                }
-              ]
-            }, {
-              icon: 'fa fa-fw fa-desktop',
-              title: trans('display_parameters'),
-              fields: [
-                {
-                  name: 'centerTitle',
-                  type: 'boolean',
-                  disabled: readOnly,
-                  label: trans('center_title')
-                }, {
-                  name: 'position',
-                  type: 'number',
-                  label: trans('tab_position'),
-                  disabled: readOnly,
-                  options : {
-                    min : 0,
-                    max : props.tabs.length + 1
-                  },
-                  required: true,
-                  onChange: (newPosition) => props.moveTab(props.tabs, props.currentTab, newPosition)
-                }, {
-                  name: 'title',
-                  type: 'string',
-                  disabled: readOnly,
-                  label: trans('menu_title'),
-                  help: trans('menu_title_help'),
-                  options: {
-                    maxLength: 20
-                  },
-                  onChange: (value) => {
-                    if (isEmpty(value) && 0 === props.currentTab.icon.length) {
-                      props.setErrors({
-                        [props.currentTabIndex]: {title: 'Ce champ ne peux pas être vide si l\'onglet n\'a pas d\'icône'}
-                      })
-                    }
-                  }
-                }, {
-                  name: 'icon',
-                  type: 'string',
-                  disabled: readOnly,
-                  label: trans('icon'),
-                  help: trans('icon_tab_help'),
-                  onChange: (icon) => {
-                    if (0 === icon.length && 0 === props.currentTab.title.length) {
-                      props.setErrors({
-                        [props.currentTabIndex]: {icon: 'Ce champ ne peux pas être vide si l\'onglet n\'a pas de titre.'}
-                      })
-                    }
-                  }
-                }, {
-                  name: 'poster',
-                  label: trans('poster'),
-                  disabled: readOnly,
-                  type: 'file',
-                  options: {
-                    ratio: '3:1'
-                  }
-                }
-              ]
-            }, {
-              icon: 'fa fa-fw fa-key',
-              title: trans('access_restrictions'),
-              displayed: props.context.type === 'workspace' || props.administration,
-              fields: [
-                {
-                  name: 'restrictions',
-                  type: 'boolean',
-                  label: trans('restrictions_by_roles', {}, 'widget'),
-                  linked: [
-                    {
-                      name: 'roles',
-                      label: trans('role'),
-                      displayed: props.currentTab.restrictions,
-                      type: 'choice',
-                      options:{
-                        inline: false,
-                        multiple : true,
-                        choices: props.context.type === 'workspace' || props.administration ?
-                          props.context.data.roles.reduce((acc, role) => {
-                            acc[role.id] = trans(role.translationKey)
-                            return acc
-                          }, {})
-                          : ''
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          ]}
-        >
-          {!readOnly &&
-            <WidgetGridEditor
-              context={props.context}
-              widgets={props.widgets}
-              update={(widgets) => props.updateWidgets(props.currentTabIndex, widgets)}
-            />
-          }
-        </FormData>
-      </PageContent>
-    </PageContainer>
-
-  )
-}
-
+        update={props.updateTab}
+        move={props.moveTab}
+        setErrors={props.setErrors}
+      />
+    </PageContent>
+  </PageContainer>
 
 EditorComponent.propTypes = {
   context: T.object.isRequired,
   administration: T.bool.isRequired,
+  readOnly: T.bool.isRequired,
   tabs: T.arrayOf(T.shape(
     TabTypes.propTypes
   )),
@@ -247,25 +125,25 @@ EditorComponent.propTypes = {
     push: T.func.isRequired
   }).isRequired,
   createTab: T.func.isRequired,
-  updateWidgets: T.func.isRequired,
-  updateTitle: T.func.isRequired,
+  updateTab: T.func.isRequired,
   setErrors: T.func.isRequired,
   deleteTab: T.func.isRequired,
   moveTab: T.func.isRequired
 }
 
 const Editor = withRouter(connect(
-  state => ({
+  (state) => ({
     context: selectors.context(state),
     administration: selectors.administration(state),
+    readOnly: editorSelectors.readOnly(state),
     tabs: editorSelectors.editorTabs(state),
     playerTabs: selectors.tabs(state),
     widgets: editorSelectors.widgets(state),
     currentTabIndex: editorSelectors.currentTabIndex(state),
     currentTab: editorSelectors.currentTab(state)
   }),
-  dispatch => ({
-    updateTitle(currentTabIndex, field, value) {
+  (dispatch) => ({
+    updateTab(currentTabIndex, field, value) {
       dispatch(formActions.updateProp('editor', `[${currentTabIndex}].${field}`, value))
     },
     setErrors(errors) {
@@ -296,9 +174,6 @@ const Editor = withRouter(connect(
 
       // redirect
       navigate('/edit')
-    },
-    updateWidgets(currentTabIndex, widgets) {
-      dispatch(formActions.updateProp('editor', `[${currentTabIndex}].widgets`, widgets))
     }
   })
 )(EditorComponent))

@@ -1,5 +1,7 @@
 import {mount} from '#/main/app/mount'
 
+// TODO : move in dom module
+
 /**
  * Retrieves app container with CSS selector.
  * NB. It MUST be any selector understandable by `querySelector`.

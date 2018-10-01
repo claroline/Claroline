@@ -14,6 +14,7 @@ import {WidgetForm} from '#/main/core/widget/editor/components/form'
 const ParametersModal = props =>
   <Modal
     {...omit(props, 'saveEnabled', 'save', 'widget', 'loadWidget', 'formData')}
+    className="home-section-parameters"
     icon="fa fa-fw fa-cog"
     title={trans('parameters')}
     subtitle={props.widget.name}

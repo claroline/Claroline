@@ -5,8 +5,10 @@ import isEqual from 'lodash/isEqual'
 import {mount, unmount} from '#/main/app/mount'
 
 // TODO : remove us when these overlays are appended by mount()
+import {OverlayStack} from '#/main/app/overlay/containers/stack'
 import {ModalOverlay} from '#/main/app/overlay/modal/containers/overlay'
 import {AlertOverlay} from '#/main/app/overlay/alert/containers/overlay'
+import {WalkthroughOverlay} from '#/main/app/overlay/walkthrough/containers/overlay'
 
 import {getWidget} from '#/main/core/widget/types'
 import {reducer} from '#/main/core/widget/content/store'
@@ -34,10 +36,14 @@ class WidgetContent extends Component {
 
       const WidgetAppComponent = () =>
         <div className="widget-content">
+          <AlertOverlay />
+
           {React.createElement(WidgetApp.component)}
 
-          <AlertOverlay />
-          <ModalOverlay />
+          <OverlayStack>
+            <ModalOverlay />
+            <WalkthroughOverlay />
+          </OverlayStack>
         </div>
 
       WidgetAppComponent.displayName = `WidgetApp(${instance.type})`

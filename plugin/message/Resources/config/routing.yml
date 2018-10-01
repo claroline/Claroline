@@ -1,8 +1,3 @@
-claro_message_bundle:
-    resource: "@ClarolineMessageBundle/Controller/"
-    prefix:   message
-    type:     annotation
-
 # JSON API
 claro_messaging_api:
     resource: "@ClarolineMessageBundle/Controller/APINew/"

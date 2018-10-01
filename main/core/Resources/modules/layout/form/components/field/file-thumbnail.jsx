@@ -165,10 +165,10 @@ FileThumbnail.propTypes = {
   canDelete: T.bool.isRequired,
   canExpand: T.bool.isRequired,
   canDownload: T.bool.isRequired,
-  handleEdit: T.func.isRequired,
+  handleEdit: T.func,
   handleDelete: T.func.isRequired,
-  handleExpand: T.func.isRequired,
-  handleDownload: T.func.isRequired
+  handleExpand: T.func,
+  handleDownload: T.func
 }
 
 FileThumbnail.defaultProps = {

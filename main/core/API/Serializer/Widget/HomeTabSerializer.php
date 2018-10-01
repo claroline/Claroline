@@ -60,13 +60,14 @@ class HomeTabSerializer
 
     public function serialize(HomeTab $homeTab, array $options = []): array
     {
-        $homeTabConfig = $this->getConfig($homeTab, $options);
+        $homeTabConfig = $this->getConfig($homeTab);
 
         if (!$homeTabConfig) {
             //something went wrong
             return [];
         }
 
+        /** @var WidgetContainer[] $savedContainers */
         $savedContainers = $homeTab->getWidgetContainers()->toArray();
         $containers = [];
 
@@ -106,11 +107,12 @@ class HomeTabSerializer
             'icon' => $homeTabConfig->getIcon(),
             'type' => $homeTab->getType(),
             'position' => $homeTabConfig->getTabOrder(),
-            'locked' => $homeTabConfig->isLocked(),
-            'visible' => $homeTabConfig->isVisible(),
-            'roles' => array_map(function ($role) {
-                return $role->getUuid();
-            }, $homeTabConfig->getRoles()),
+            'restrictions' => [
+                'hidden' => !$homeTabConfig->isLocked(),
+                'roles' => array_map(function (Role $role) {
+                    return $role->getUuid();
+                }, $homeTabConfig->getRoles()),
+            ],
             'user' => $homeTab->getUser() ? $this->serializer->serialize($homeTab->getUser(), [Options::SERIALIZE_MINIMAL]) : null,
             'workspace' => $homeTab->getWorkspace() ? $this->serializer->serialize($homeTab->getWorkspace(), [Options::SERIALIZE_MINIMAL]) : null,
             'widgets' => array_map(function ($container) use ($options) {
@@ -140,26 +142,30 @@ class HomeTabSerializer
         $this->sipe('poster.url', 'setPoster', $data, $homeTab);
         $this->sipe('icon', 'setIcon', $data, $homeTabConfig);
         $this->sipe('type', 'setType', $data, $homeTab);
-        $this->sipe('locked', 'setLocked', $data, $homeTabConfig);
 
-        if (isset($data['roles'])) {
-            foreach ($data['roles'] as $roleUuid) {
-                $role = $this->om->getRepository(Role::class)->findOneBy(['uuid' => $roleUuid]);
-
-                $homeTabConfig->addRole($role);
+        if (isset($data['restrictions'])) {
+            if (isset($data['restrictions']['hidden'])) {
+                $homeTabConfig->setLocked(!$data['restrictions']['hidden']);
             }
 
-            $existingRoles = $homeTabConfig->getRoles();
+            if (isset($data['restrictions']['roles'])) {
+                foreach ($data['restrictions']['roles'] as $roleUuid) {
+                    /** @var Role $role */
+                    $role = $this->om->getRepository(Role::class)->findOneBy(['uuid' => $roleUuid]);
 
-            foreach ($existingRoles as $role) {
-                if (!in_array($role->getUuid(), $data['roles'])) {
-                    // the role no longer exist we can remove it
-                    $homeTabConfig->removeRole($role);
+                    $homeTabConfig->addRole($role);
+                }
+
+                $existingRoles = $homeTabConfig->getRoles();
+
+                foreach ($existingRoles as $role) {
+                    if (!in_array($role->getUuid(), $data['roles'])) {
+                        // the role no longer exist we can remove it
+                        $homeTabConfig->removeRole($role);
+                    }
                 }
             }
         }
-
-        $workspace = $user = null;
 
         if (isset($data['workspace'])) {
             $workspace = $this->serializer->deserialize(Workspace::class, $data['workspace']);
@@ -190,8 +196,14 @@ class HomeTabSerializer
         return $homeTab;
     }
 
-    public function getConfig(HomeTab $tab, array $options)
+    /**
+     * @param HomeTab $tab
+     *
+     * @return HomeTabConfig
+     */
+    public function getConfig(HomeTab $tab)
     {
+        /** @var HomeTabConfig $homeTabConfig */
         $homeTabConfig = $this->om->getRepository(HomeTabConfig::class)
           ->findOneBy(['homeTab' => $tab]);
 

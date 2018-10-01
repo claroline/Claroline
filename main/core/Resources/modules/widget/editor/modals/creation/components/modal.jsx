@@ -70,6 +70,7 @@ class WidgetCreationModal extends Component {
     return (
       <Modal
         {...omit(this.props, 'widget', 'saveEnabled', 'startCreation', 'create', 'reset')}
+        className="home-section-creation"
         icon="fa fa-fw fa-plus"
         title={trans('new_section')}
         subtitle={this.renderStepTitle()}
@@ -79,6 +80,7 @@ class WidgetCreationModal extends Component {
 
         {'parameters' === this.state.currentStep &&
           <Button
+            id="widget-section-form-save"
             className="modal-btn btn"
             type={CALLBACK_BUTTON}
             primary={true}

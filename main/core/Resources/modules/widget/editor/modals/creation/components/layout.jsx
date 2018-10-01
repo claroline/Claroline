@@ -4,6 +4,7 @@ import fill from 'lodash/fill'
 import sum from 'lodash/sum'
 import times from 'lodash/times'
 
+import {transChoice} from '#/main/core/translation'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 
 const LayoutPreview = props => {
@@ -16,6 +17,7 @@ const LayoutPreview = props => {
 
   return (
     <CallbackButton
+      id={`layout-cols-${props.cols.join('-')}`}
       className="widget-layout-preview"
       callback={() => props.select(ratio)}
     >
@@ -42,20 +44,20 @@ LayoutPreview.propTypes = {
  * @constructor
  */
 const WidgetLayout = props =>
-  <div className="modal-body">
-    <h5>1 colonne</h5>
+  <div className="modal-body home-section-layout">
+    <h5>{transChoice('layout_columns', 1, {count: 1}, 'widget')}</h5>
 
-    <LayoutPreview cols={[1]} select={(layout) => props.selectLayout(layout)} />
+    <LayoutPreview cols={[1]} select={props.selectLayout} />
 
-    <h5>2 colonnes</h5>
+    <h5>{transChoice('layout_columns', 2, {count: 2}, 'widget')}</h5>
 
-    <LayoutPreview cols={[1, 1]} select={(layout) => props.selectLayout(layout)} />
-    <LayoutPreview cols={[1, 2]} select={(layout) => props.selectLayout(layout)} />
-    <LayoutPreview cols={[2, 1]} select={(layout) => props.selectLayout(layout)} />
+    <LayoutPreview cols={[1, 1]} select={props.selectLayout} />
+    <LayoutPreview cols={[1, 2]} select={props.selectLayout} />
+    <LayoutPreview cols={[2, 1]} select={props.selectLayout} />
 
-    <h5>3 colonnes</h5>
+    <h5>{transChoice('layout_columns', 3, {count: 3}, 'widget')}</h5>
 
-    <LayoutPreview cols={[1, 1, 1]} select={(layout) => props.selectLayout(layout)} />
+    <LayoutPreview cols={[1, 1, 1]} select={props.selectLayout} />
   </div>
 
 WidgetLayout.propTypes = {

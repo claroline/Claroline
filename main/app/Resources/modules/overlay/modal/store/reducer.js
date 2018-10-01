@@ -2,8 +2,6 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import {makeReducer} from '#/main/app/store/reducer'
 
-import {makeId} from '#/main/core/scaffolding/id'
-
 import {
   MODAL_SHOW,
   MODAL_FADE,
@@ -12,7 +10,7 @@ import {
 
 const reducer = makeReducer([], {
   [MODAL_SHOW]: (state, action) => [{
-    id: makeId(),
+    id: action.modalId,
     type: action.modalType,
     props: action.modalProps,
     fading: false

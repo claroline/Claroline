@@ -30,7 +30,7 @@ const display = (state) => state.display
 
 // this will later be retrieved from the store
 const logo = () => param('logo')
-const redirectHome = () => ('logo_redirect_home')
+const redirectHome = () => param('logo_redirect_home') || false
 const title = () => param('name')
 const subtitle = () => param('secondaryName')
 const user = () => {

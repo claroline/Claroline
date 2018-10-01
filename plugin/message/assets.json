@@ -1,7 +1,7 @@
 {
   "webpack": {
     "entry": {
-      "messaging": "index"
+      "messaging": "tools/messaging/index"
     }
   }
 }

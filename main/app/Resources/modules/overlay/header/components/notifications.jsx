@@ -28,7 +28,7 @@ const NotificationsMenu = props =>
           value: 100 > props.count.messages ? props.count.messages : '99+'
         } : undefined}
         label={trans('show-messages', {}, 'actions')}
-        target={['claro_message_index']}
+        target={['claro_desktop_open_tool', {toolName: 'messaging'}]}
       />
     </li>
   </ul>

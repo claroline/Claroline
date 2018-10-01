@@ -5,6 +5,7 @@ import {Widget} from '#/main/core/widget/prop-types'
 const Tab = {
   propTypes: {
     id: T.string.isRequired,
+    type: T.oneOf(['workspace', 'admin_desktop', 'desktop', 'administration']),
     title: T.string.isRequired,
     longTitle: T.string,
     centerTitle: T.bool.isRequired,
@@ -14,9 +15,11 @@ const Tab = {
       T.object
     ]),
     locked: T.bool,
-    visible: T.bool,
     position: T.number,
-    type: T.oneOf(['workspace', 'admin_desktop', 'desktop', 'administration']),
+    restrictions: T.shape({
+      hidden: T.bool,
+      roles: T.array
+    }),
     widgets: T.arrayOf(T.shape(
       Widget.propTypes
     ))
@@ -26,8 +29,10 @@ const Tab = {
     poster: null,
     widgets: [],
     centerTitle: false,
-    restrictions: false,
-    locked: true
+    restrictions: {
+      hidden: false,
+      roles: []
+    }
   }
 }
 

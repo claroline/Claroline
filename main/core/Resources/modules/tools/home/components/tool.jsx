@@ -5,11 +5,10 @@ import {connect} from 'react-redux'
 import {Router, Routes} from '#/main/app/router'
 
 import {Tab as TabTypes} from '#/main/core/tools/home/prop-types'
-import {selectors} from '#/main/core/tools/home/selectors'
-import {actions} from '#/main/core/tools/home/actions'
 import {Player} from '#/main/core/tools/home/player/components/player'
 import {Editor} from '#/main/core/tools/home/editor/components/editor'
-import {selectors as editorSelectors} from '#/main/core/tools/home/editor/selectors'
+import {actions, selectors} from '#/main/core/tools/home/store'
+import {selectors as editorSelectors} from '#/main/core/tools/home/editor/store'
 
 const Tool = props =>
   <Router>
@@ -23,9 +22,7 @@ const Tool = props =>
           path: '/tab/:id?',
           exact: true,
           component: Player,
-          onEnter: (params) => {
-            props.setCurrentTab(params.id)
-          }
+          onEnter: (params) => props.setCurrentTab(params.id)
         }, {
           path: '/edit/tab/:id?',
           component: Editor,

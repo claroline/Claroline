@@ -9,6 +9,7 @@ import {FormData} from '#/main/app/content/form/containers/data'
 
 const WidgetForm = props =>
   <FormData
+    className="widget-section-form"
     level={props.level}
     name={props.name}
     sections={[
@@ -42,21 +43,7 @@ const WidgetForm = props =>
           }, {
             name: 'name',
             type: 'string',
-            label: trans('name')
-          },{
-            name: 'alignName',
-            label: trans('title_align'),
-            type: 'choice',
-            required: true,
-            options: {
-              noEmpty: true,
-              condensed: true,
-              choices: {
-                left: trans('text_left_align'),
-                center: trans('center'),
-                right: trans('text_right_align')
-              }
-            }
+            label: trans('title')
           }, {
             name: 'visible',
             type: 'boolean',
@@ -69,9 +56,25 @@ const WidgetForm = props =>
         title: trans('display_parameters'),
         fields: [
           {
+            name: 'alignName',
+            label: trans('title_align'),
+            type: 'choice',
+            displayed: (section) => !!section.name,
+            required: true,
+            options: {
+              noEmpty: true,
+              condensed: true,
+              choices: {
+                left: trans('text_left_align'),
+                center: trans('center'),
+                right: trans('text_right_align')
+              }
+            }
+          }, {
             name: 'display.color',
             label: trans('titleColor'),
-            type: 'color'
+            type: 'color',
+            displayed: (section) => !!section.name
           }, {
             name: 'display.backgroundType',
             label: trans('background'),
@@ -102,13 +105,6 @@ const WidgetForm = props =>
               }
             ]
           }
-        ]
-      }, {
-        id: 'parameters',
-        icon: 'fa fa-fw fa-cog',
-        title: trans('parameters'),
-        fields: [
-
         ]
       }
     ]}

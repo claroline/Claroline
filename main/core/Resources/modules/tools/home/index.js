@@ -1,5 +1,5 @@
 import {HomeTool} from '#/main/core/tools/home/components/tool'
-import {reducer} from '#/main/core/tools/home/reducer'
+import {reducer} from '#/main/core/tools/home/store'
 
 /**
  * HomeTool application.

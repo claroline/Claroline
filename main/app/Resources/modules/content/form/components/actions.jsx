@@ -17,7 +17,7 @@ const FormActions = props =>
       icon="fa fa-fw fa-save"
       label={trans('save', {}, 'actions')}
       {...props.save}
-      className="btn"
+      className="btn btn-save"
       tooltip="top"
       primary={true}
     />
@@ -25,7 +25,7 @@ const FormActions = props =>
     {props.cancel &&
       <Button
         {...props.cancel}
-        className="btn"
+        className="btn btn-exit"
         tooltip="top"
         icon="fa fa-fw fa-sign-out-alt"
         label={trans('exit', {}, 'actions')}

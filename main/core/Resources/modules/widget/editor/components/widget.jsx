@@ -37,25 +37,27 @@ const WidgetCol = props =>
             content: props.content,
             save: props.updateContent
           }]}
+          disabled={props.disabled}
         />
         {props.content.id !== props.isMoving &&
-        <Button
-          className="btn-link"
-          type="callback"
-          icon="fa fa-fw fa-arrows"
-          label={trans('move', {}, 'actions')}
-          callback={() => props.startMovingContent(props.content.id)}
-          disabled={!!props.isMoving}
-        />
+          <Button
+            className="btn-link"
+            type="callback"
+            icon="fa fa-fw fa-arrows"
+            label={trans('move', {}, 'actions')}
+            callback={() => props.startMovingContent(props.content.id)}
+            disabled={!!props.isMoving || props.disabled}
+          />
         }
         {props.content.id === props.isMoving &&
-        <Button
-          className="btn-link"
-          type="callback"
-          icon="fa fa-fw fa-ban"
-          label={trans('cancel', {}, 'actions')}
-          callback={() => props.stopMovingContent()}
-        />
+          <Button
+            className="btn-link"
+            type="callback"
+            icon="fa fa-fw fa-ban"
+            label={trans('cancel', {}, 'actions')}
+            callback={() => props.stopMovingContent()}
+            disabled={props.disabled}
+          />
         }
         <Button
           className="btn-link"
@@ -70,6 +72,7 @@ const WidgetCol = props =>
             question: trans('widget_delete_confirm_message', {}, 'widget'),
             handleConfirm: () => props.deleteContent(props.content)
           }]}
+          disabled={props.disabled}
         />
       </div>
     }
@@ -86,6 +89,7 @@ const WidgetCol = props =>
         type="callback"
         label={trans('insert_widget', {}, 'widget')}
         callback={() => props.moveContent(props.isMoving)}
+        disabled={props.disabled}
       />
     }
     {!props.content && !props.isMoving &&
@@ -97,13 +101,13 @@ const WidgetCol = props =>
           context: props.context,
           add: props.addContent
         }]}
+        disabled={props.disabled}
       />
     }
   </div>
 
-
-
 WidgetCol.propTypes = {
+  disabled: T.bool,
   size: T.number.isRequired,
   context: T.object,
   content: T.shape(
@@ -118,6 +122,10 @@ WidgetCol.propTypes = {
   isMoving: T.string
 }
 
+WidgetCol.defaultProps = {
+  disabled: false
+}
+
 const WidgetEditor = props =>
   <div className="widget-container">
     {props.actions.map(action =>
@@ -127,6 +135,7 @@ const WidgetEditor = props =>
         id={`${toKey(action.label)}-${props.widget.id}`}
         className="btn-link"
         tooltip="top"
+        disabled={props.disabled}
       />
     )}
 
@@ -134,9 +143,9 @@ const WidgetEditor = props =>
       {props.widget.name &&
         <h2
           className={classes('h-first widget-title', {
-            'left-widget-title': 'left' === props.widget.alignName,
-            'center-widget-title': 'center' === props.widget.alignName,
-            'right-widget-title': 'right' === props.widget.alignName
+            'text-left': 'left' === props.widget.alignName,
+            'text-center': 'center' === props.widget.alignName,
+            'text-right': 'right' === props.widget.alignName
           })} 
           style={computeTitleStyles(props.widget)}>
           {props.widget.name}
@@ -177,6 +186,7 @@ const WidgetEditor = props =>
             moveContent={(movingContentId) => props.moveContent(movingContentId, props.widget.id, col)}
             stopMovingContent={props.stopMovingContent}
             isMoving={props.isMoving}
+            disabled={props.disabled}
           />
         )}
       </div>
@@ -185,6 +195,7 @@ const WidgetEditor = props =>
 
 
 WidgetEditor.propTypes = {
+  disabled: T.bool,
   context: T.object,
   widget: T.shape(
     WidgetContainerTypes.propTypes
@@ -199,6 +210,9 @@ WidgetEditor.propTypes = {
   isMoving: T.string
 }
 
+WidgetEditor.defaultProps = {
+  disabled: false
+}
 
 export {
   WidgetEditor

@@ -1,7 +1,25 @@
 {
+    "message": "Message",
+    "message_form_content": "Contenu",
+    "message_form_object": "Objet",
+    "message_form_to": "À",
+    "message_sending": "Envoi de message",
+    "messages": "Messages",
+    "messages_delete_title": "Supprimer des messages",
+    "messages_confirm_delete": "Etes-vous sûr de vouloir supprimer ce(s) message(s) ?",
+    "messages_confirm_permanent_delete": "Etes-vous sûr de vouloir supprimer définitivement ce(s) message(s) ?",
+    "messages_restore_title": "Restaurer des messages",
+    "messages_confirm_restore": "Etes-vous sûr de vouloir restaurer ce(s) message(s) ?",
+    "messages_received": "Messages reçus",
+    "messages_received_removed": "Messages reçus supprimés",
+    "messages_removed": "Messages supprimés",
+    "messages_sent": "Messages envoyés",
+    "messages_sent_removed": "Messages envoyés supprimés",
+
     "message_read" : "Lu",
-    "open_the": "Ouvert le",
-    "see_message": "Voir le message",
     "marked_read_message": "Marquer comme lu",
-    "marked_unread_message": "Marquer comme non lu"
+    "marked_unread_message": "Marquer comme non lu",
+    "new_message": "New message",
+    "remove_message_confirm_message": "Êtes-vous sûr de vouloir supprimer ce message ?",
+    "remove_message_s_confirm_message": "Êtes-vous sûr de vouloir supprimer ces %count% messages ?"
 }

@@ -59,7 +59,10 @@
 }
 
 .lateral-link {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
     text-align: left;
     padding: 10px 15px;
     border: 1px solid transparent;
@@ -67,10 +70,6 @@
     background: #ebebeb;
     text-decoration: none;
     border-radius: @border-radius-base;
-
-    > .fa {
-    margin-right: @icon-text-spacer;
-    }
 
     &.active {
         background: @summary-bg;
@@ -83,7 +82,7 @@
         .box-shadow(@summary-box-shadow);
     }
 
-    +.lateral-link {
+    + .lateral-link {
         margin-top: 5px;
     }
 }

@@ -1,5 +1,7 @@
 import {connect} from 'react-redux'
 
+import {actions as walkthroughActions} from '#/main/app/overlay/walkthrough/store'
+
 import {selectors} from '#/main/app/overlay/header/store'
 import {Header as HeaderComponent} from '#/main/app/overlay/header/components/header'
 
@@ -23,6 +25,11 @@ const Header = connect(
     maintenance: selectors.maintenance(state),
     currentLocation: selectors.current(state),
     redirectHome: selectors.redirectHome(state)
+  }),
+  (dispatch) => ({
+    startWalkthrough(steps, additional, documentation) {
+      dispatch(walkthroughActions.start(steps, additional, documentation))
+    }
   })
 )(HeaderComponent)
 

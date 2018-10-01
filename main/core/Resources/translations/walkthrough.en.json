@@ -1,0 +1,198 @@
+{
+  "action_required": "Action required",
+  "action": "Action: %actionName%",
+  "actions": "The actions",
+  "tool": "Tool: %toolName%",
+  "desktop_tools": "The tools",
+  "administration_tools": "The administration tools",
+  "workspace_tools": "The workspace tools",
+  "user_tools": "The user tools",
+
+  "end": {
+    "title": "Congratulations ! You have finished this tutorial.",
+    "message": "You can replay it now and choose another tutorial to follow. Also note, you can find available tutorials by searching the tutorial icons in Claroline interface."
+  },
+
+  "header": {
+    "name": "Discover the Claroline menu",
+    "description": "Familiarize yourself with the features available in the Claroline menu.",
+
+
+    "intro": {
+
+    },
+    "tools_group": {
+      "message": "The tools menu gives you access to all the tools added through your preference tool.",
+      "action": "Click the button to open the tools menu."
+    },
+    "workspaces_menu": {
+      "title": "The main menu",
+      "message": "This menu allows you to navigate to your desktop, the application home or browse your workspaces."
+    },
+    "administration_group": {
+      "message": "The administration menu gives you access to all the administration tools you have access to.",
+      "action": "Click the button to open the administration menu."
+    },
+    "notifications": {
+      "title": "The notifications center",
+      "message": "The notifications center regroups all your communications inside the applications (eg. user messages, notifications)",
+      "action": "Click the button to open the notification center."
+    },
+    "user_menu": {
+      "title": "The user menu",
+      "message": "The user menu gives you access to your personal tools, your profile and your preference.",
+      "action": "Click the button to open the user menu."
+    },
+    "locale": {
+      "message": "You can change the application locale at any time through this menu."
+    },
+
+    "tools": {
+      "resource_manager": {
+        "documentation": "https://claroline.gitbooks.io/claroline-connect-documentation/content/fr/resources/resources.html",
+        "message": "Permet de voir et gérer toutes vos ressources."
+      }
+    },
+
+    "administration": {
+      "user_management": {
+        "documentation": "",
+        "message": "Permet de voir les utilisateurs et les groupes inscrits, de changer leurs droits ainsi que d'en inscrire de nouveaux."
+      }
+    }
+  },
+
+  "workspace": {
+    "sidebar": {
+      "name": "Discover the workspace sidebar",
+      "description": "Familiarize yourself with the features available in the workspace sidebar.",
+
+      "intro": {
+        "title": "Let's discover the workspace toolbar together !",
+        "message": "The toolbar will allow you to navigate inside the current workspace."
+      },
+      "tools_group": {
+        "message": "The tools group permits to open the different enabled tools."
+      },
+      "opened_tool": {
+        "message": "This is the currently opened tool."
+      },
+      "actions_group": {
+        "message": "The actions group permits to manage and show information about the workspace."
+      }
+    },
+
+    "tools": {
+      "analytics": {
+        "documentation": "",
+        "message": "Shows some analytics data of the workspace usage."
+      },
+      "home": {
+        "documentation": "https://claroline.gitbooks.io/claroline-connect-documentation/content/fr/workspaces/ws-homepage.html",
+        "message": "Permits to create an overview of the workspace."
+      },
+      "logs": {
+        "documentation": "",
+        "message": "Shows the actions done by users in the workspace."
+      },
+      "resource_manager": {
+        "documentation": "https://claroline.gitbooks.io/claroline-connect-documentation/content/fr/resources/resources.html",
+        "message": "Permits to view and manage the resources of the workspace."
+      },
+      "users": {
+        "documentation": "https://claroline.gitbooks.io/claroline-connect-documentation/content/fr/tools/manage-users.html",
+        "message": "Permits to view the registered users and groups, changes their rights and register new ones."
+      }
+    },
+
+    "actions": {
+      "about": "Shows general information about the workspace.",
+      "delete": "Permits to delete the workspace and all of its contents.",
+      "impersonation": "Permits to navigate inside the workspace with another role to see what those users see.",
+      "parameters": "Permits to configure the workspace.",
+      "walkthrough": "Shows the list of available workspace tutorials."
+    }
+  },
+
+  "home": {
+    "editor": {
+      "name": "Discover the home configuration",
+      "description": "Familiarize yourself with the editor by browsing through its basic features.",
+
+      "intro": {
+        "title": "Welcome in the home configuration",
+        "message": "This editor allows you to configure all the parts of the home: tabs, sections and widgets."
+      },
+      "tabs": {
+        "title": "The tabs",
+        "message": "Home is composed of different tabs accessible through this menu."
+      },
+      "opened_tab": {
+        "message": "This is the currently opened tab."
+      },
+      "add_tab": {
+        "message": "Permits to add new tabs to the home.",
+        "action": "Click the button to add a new tab and continue this tutorial."
+      },
+      "created_tab": {
+        "message": "After creation, the new tab is automatically opened."
+      },
+      "tab_form": {
+        "title": "The configuration of the tab",
+        "message": "All of the options available for the tab are in this form (advanced configuration of tabs is explained in another tutorial)."
+      },
+      "tab_sections": {
+        "title": "The sections of the tab",
+        "message": "Each tab can contain one or more sections that will organize and format the widgets. Since we just created this tab, there is no section at the moment."
+      },
+      "add_section": {
+        "message": "We will now add a section to our tab.",
+        "action": "Click the button to add a new section and continue this tutorial."
+      },
+      "section_form": {
+        "title": "The configuration of the section",
+        "message": "Before you can use it, you must choose the number and the size of columns to add to the section."
+      },
+      "select_layout": {
+        "message": "The button shows the number and size of the columns which will be displayed.",
+        "action": "Click the button to create 3 columns section."
+      },
+      "section_configure": {
+        "message": "All of the options available for the section are in this form."
+      },
+      "section_save": {
+        "message": "Once you have finished to configure your section, you have to save your changes.",
+        "action": "Click the button to add the new section to the tab."
+      },
+      "created_section": {
+        "message": "This is the section you have created. You will be able to add 3 widgets in it later."
+      },
+      "save": {
+        "message": "Remember to save your changes if you want them to be applied to the home."
+      },
+      "exit": {
+        "message": "Or you can simply exit the editor if you don't want to keep your changes."
+      }
+    },
+
+    "create-widget": {
+      "name": "Create a widget",
+      "description": "Learn how to add a new widget to an existing section."
+    },
+
+    "create-widget-list": {
+      "name": "Create a widget: the List widget",
+      "description": "Learn how to add a new List widget."
+    },
+
+    "create-widget-simple": {
+      "name": "Create a widget: the Content widget",
+      "description": "Learn how to add a new Content widget."
+    },
+
+    "create-widget-resource": {
+      "name": "Create a widget: the Resource widget",
+      "description": "Learn how to add a new Resource widget."
+    }
+  }
+}

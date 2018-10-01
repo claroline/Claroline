@@ -40,6 +40,7 @@
 @zindex-list-search:   @zindex-popover;
 @zindex-flying-alerts: @zindex-modal + 10;
 
+@zindex-walkthrough:   @zindex-modal + 20;
 
 // -
 // Application
@@ -60,11 +61,9 @@
 // Header
 // ---
 
-@top-bar-max-width:           none; // max width for the top bar content (do not affect top bar container)
+@top-bar-max-width:           100%; // max width for the top bar content (do not affect top bar container)
 @top-bar-height:              60px + @top-bar-border-bottom-size;
 @top-bar-font-size:           @font-size-base;
-@top-bar-padding-vertical:    ((@top-bar-height - @line-height-computed) / 2);
-@top-bar-padding-horizontal:  floor(@grid-gutter-width / 2);
 @top-bar-color:               lighten(@top-bar-bg, 30%);
 @top-bar-bg:                  @navbar-inverse-bg;
 @top-bar-border-bottom-size:  0;
@@ -72,14 +71,11 @@
 @top-bar-border-bottom:       @top-bar-border-bottom-size solid @top-bar-border-bottom-color;
 @top-bar-box-shadow:          none;
 
-@top-bar-logo-height:         35px;
-
-@top-bar-brand-font-size:     22px;
 @top-bar-brand-color:         #FFFFFF;
-@top-bar-brand-hover-color:   #FFFFFF;
-@top-bar-brand-hover-bg:      transparent;
+@top-bar-brand-font-size:     24px;
 
 @top-bar-link-color:          lighten(@top-bar-bg, 60%);
+@top-bar-link-bg:             @top-bar-bg;
 @top-bar-link-hover-color:    lighten(@top-bar-bg, 70%);
 @top-bar-link-hover-bg:       darken(@top-bar-bg, 5%);
 @top-bar-link-active-color:   lighten(@top-bar-bg, 80%);

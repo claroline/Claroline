@@ -2,49 +2,54 @@
 @import "../../less/mixins";
 @import "../../less/themes/default/variables";
 
-.center-page-title {
-  text-align: center;
-}
-
 .tool-nav {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  width: 100%;
+  align-self: flex-start;
   justify-content: flex-start;
   align-items: center;
-  margin-bottom: floor(@grid-gutter-width / 2);
-  background: @panel-body-padding;
-  border: 1px solid @panel-default-border;
 
+  margin: 0 floor((@grid-gutter-width / 2) - 5px);
 
-  .box-shadow(@box-shadow-base);
-
-  .nav-tab {
-    border-right: 1px solid @panel-default-border;
-    border-bottom: 1px solid @panel-default-border;
-  }
-
-  .tab-icon {
-    margin-right: 0.3em;
+  .nav-tab-hidden {
+    color: @text-muted;
+    text-decoration: line-through;
   }
 
   .nav-add-tab,
   .nav-tab {
+    position: relative;
     color: @text-color;
     padding: @padding-large-vertical @padding-large-horizontal;
-    background-color: #fafafa;
-
+    margin: 5px;
+    background: #ebebeb;
+    border: 1px solid transparent;
+    border-radius: @border-radius-small;
 
     &:hover {
-      background: #f2f2f2;
-      color: rgba(0,0,0,.95);
+      background: white;
+      .box-shadow(@box-shadow-base);
     }
 
     &.active {
-      background: #ebebeb;
-    }
-    &.default {
-      background-color: #fafafa;
+      color: @btn-primary-color;
+      background: @btn-primary-bg;
+      .box-shadow(0 0 3px rgba(0, 0, 0, 0.5));
+
+      &:after {
+        position: absolute;
+        content: " ";
+        width: 0;
+        height: 0;
+        left: 50%;
+        top: 100%;
+        transform: translate(-50%, 0);
+        border-style: solid;
+        border-width: 5px 5px 0 5px;
+        border-color: @btn-primary-bg transparent transparent transparent;
+      }
     }
   }
 }

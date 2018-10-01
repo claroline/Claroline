@@ -10,15 +10,16 @@ import {Heading} from '#/main/core/layout/components/heading'
 import {FormActions} from '#/main/app/content/form/components/actions'
 
 const FormWrapper = props => props.embedded ?
-  <fieldset className={classes('form data-form', props.className)}>
+  <fieldset id={props.id} className={classes('form data-form', props.className)}>
     {props.children}
   </fieldset>
   :
-  <form action="#" className={classes('form data-form', props.className)}>
+  <form id={props.id} action="#" className={classes('form data-form', props.className)}>
     {props.children}
   </form>
 
 FormWrapper.propTypes = {
+  id: T.string,
   className: T.string,
   embedded: T.bool,
   children: T.node.isRequired
@@ -61,7 +62,7 @@ class Form extends Component {
 
   render() {
     return (
-      <FormWrapper embedded={this.props.embedded} className={this.props.className}>
+      <FormWrapper id={this.props.id} embedded={this.props.embedded} className={this.props.className}>
         {this.props.title &&
           <Heading level={this.props.level} displayLevel={this.props.displayLevel}>
             {this.props.title}
@@ -84,6 +85,7 @@ class Form extends Component {
 }
 
 Form.propTypes = {
+  id: T.string,
   className: T.string,
   /**
    * Is the form embed into another ?

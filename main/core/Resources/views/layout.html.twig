@@ -46,45 +46,56 @@
         {% endblock %}
     {% endif %}
 
-    {# Toolbar #}
-    {% if hideSidebars is not defined or not hideSidebars %}
-        {% block leftbar %}{% endblock %}
-    {% endif %}
-
-    {# Content #}
-    {# do not use block `wrap_attrs` it will be removed (only used in login) #}
-    <div {% block wrap_attrs %}class="app-content"{% endblock %}>
-        {% if (hideBreadcrumb is not defined or not hideBreadcrumb) and not isRenderedInIframe %}
-            {% block breadcrumb %}{% endblock %}
+    <div class="app-content-container">
+        {# Toolbar #}
+        {% if hideSidebars is not defined or not hideSidebars %}
+            {% block leftbar %}{% endblock %}
         {% endif %}
 
-        {% block content %}
-            <div class="page-container">
-                <main class="page">
-                    {% block page %}
-                        <header class="page-header">
-                            {% block page_header %}
-                                <h1 class="page-title">
-                                    {% block page_title %}{% endblock %}
-                                </h1>
-                            {% endblock %}
-                        </header>
+        {# Content #}
+        {# do not use block `wrap_attrs` it will be removed (only used in login) #}
+        <div {% block wrap_attrs %}class="app-content"{% endblock %}>
+            {% if (hideBreadcrumb is not defined or not hideBreadcrumb) and not isRenderedInIframe %}
+                {% block breadcrumb %}{% endblock %}
+            {% endif %}
 
-                        <div class="page-content">
-                            {% block page_content %}
-                            {% endblock %}
-                        </div>
-                    {% endblock %}
-                </main>
-            </div>
-        {% endblock %}
+            {{ macros.flashBox() }}
 
-        {% if not isRenderedInIframe and (hideFooter is not defined or not hideFooter) %}
-            {% block footer %}
-                {{ render(controller('ClarolineCoreBundle:layout:footer')) }}
-            {% endblock%}
-        {% endif %}
+            {% block content %}
+                {#
+                    The following HTML is only used to mimic React apps in old twig templates.
+                    It will be removed when all apps will be in react.
+                #}
+                <div class="page-container">
+                    <main class="page">
+                        {% block page %}
+                            <header class="page-header">
+                                {% block page_header %}
+                                    <h1 class="page-title">
+                                        {% block page_title %}{% endblock %}
+                                    </h1>
+                                {% endblock %}
+                            </header>
+
+                            <div class="page-content page-content-shift">
+                                {% block page_content %}
+                                {% endblock %}
+                            </div>
+                        {% endblock %}
+                    </main>
+                </div>
+            {% endblock %}
+
+            {% if not isRenderedInIframe and (hideFooter is not defined or not hideFooter) %}
+                {% block footer %}
+                    {{ render(controller('ClarolineCoreBundle:layout:footer')) }}
+                {% endblock%}
+            {% endif %}
+        </div>
     </div>
+
+    {# Anchor for UI portals (eg. modals, walkthroughs) #}
+    <div class="app-overlays-container"></div>
 {% endblock %}
 
 {% block javascripts %}

@@ -65,8 +65,8 @@ class StandardMenu extends Component {
           {primaryActions.map((action) =>
             <MenuAction
               {...action}
-              key={toKey(action.label)}
-              id={`${props.id}${action.id || toKey(action.label)}`}
+              key={action.id || toKey(action.label)}
+              id={action.id || `${props.id}-${toKey(action.label)}`}
             />
           )}
 
@@ -77,8 +77,8 @@ class StandardMenu extends Component {
           {unclassifiedActions.map((action) =>
             <MenuAction
               {...action}
-              key={toKey(action.label)}
-              id={`${props.id}${action.id || toKey(action.label)}`}
+              key={action.id || toKey(action.label)}
+              id={action.id || `${props.id}-${toKey(action.label)}`}
             />
           )}
 
@@ -87,8 +87,8 @@ class StandardMenu extends Component {
             ...groupActions[group].map((action) =>
               <MenuAction
                 {...action}
-                key={toKey(action.label)}
-                id={`${props.id}${action.id || toKey(action.label)}`}
+                key={action.id || toKey(action.label)}
+                id={action.id || `${props.id}-${toKey(action.label)}`}
               />
             )
           ])}
@@ -100,8 +100,8 @@ class StandardMenu extends Component {
           {dangerousActions.map((action) =>
             <MenuAction
               {...action}
-              key={toKey(action.label)}
-              id={`${props.id}${action.id || toKey(action.label)}`}
+              key={action.id || toKey(action.label)}
+              id={action.id || `${props.id}-${toKey(action.label)}`}
             />
           )}
         </Menu>
@@ -162,7 +162,7 @@ const MenuButton = props => {
   // only display button if there are actions
   return (
     <MenuOverlay
-      id={`${props.id}-menu`}
+      id={props.id}
       position={props.menu.position}
       align={props.menu.align}
       className={props.containerClassName}

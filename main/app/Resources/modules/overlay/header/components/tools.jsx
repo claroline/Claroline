@@ -2,14 +2,12 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
-import {toKey} from '#/main/core/scaffolding/text/utils'
-
 import {Button} from '#/main/app/action/components/button'
 import {MENU_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 
 const HeaderTools = props =>
   <Button
-    id={`app-tools-${toKey(props.label)}`}
+    id={`app-${props.type}`}
     type={MENU_BUTTON}
     className="app-header-btn app-header-item"
     icon={props.icon}
@@ -20,6 +18,7 @@ const HeaderTools = props =>
       align: props.right ? 'right' : 'left',
       label: props.label,
       items: props.tools.map(tool => ({
+        id: `app-${props.type}-${tool.name}`,
         type: URL_BUTTON,
         icon: `fa fa-fw fa-${tool.icon}`,
         label: trans(tool.name, {}, 'tools'),
@@ -29,6 +28,7 @@ const HeaderTools = props =>
   />
 
 HeaderTools.propTypes = {
+  type: T.string.isRequired,
   icon: T.string.isRequired,
   label: T.string.isRequired,
   right: T.bool,

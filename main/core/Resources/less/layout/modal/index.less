@@ -66,6 +66,20 @@
     .font-size-modifier(16px);
 }
 
+// customize list groups
+.modal-content > .list-group {
+    margin-bottom: 0;
+
+    .list-group-item {
+        border-left: none;
+        border-right: none;
+
+        &:first-child {
+            border-top: none;
+        }
+    }
+}
+
 // customize nav tabs
 .modal-content .nav-tabs {
     padding: 0 @modal-inner-padding;

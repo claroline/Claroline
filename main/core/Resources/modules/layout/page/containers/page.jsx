@@ -2,8 +2,10 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {Router} from '#/main/app/router'
+import {OverlayStack} from '#/main/app/overlay/containers/stack'
 import {ModalOverlay} from '#/main/app/overlay/modal/containers/overlay'
 import {AlertOverlay} from '#/main/app/overlay/alert/containers/overlay'
+import {WalkthroughOverlay} from '#/main/app/overlay/walkthrough/containers/overlay'
 
 import {Page} from '#/main/core/layout/page/components/page'
 
@@ -20,7 +22,10 @@ const PageContainer = props =>
 
       {props.children}
 
-      <ModalOverlay />
+      <OverlayStack>
+        <ModalOverlay />
+        <WalkthroughOverlay />
+      </OverlayStack>
     </Page>
   </Router>
 

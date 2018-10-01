@@ -2,6 +2,8 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
+import {toKey} from '#/main/core/scaffolding/text/utils'
+import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {Button} from '#/main/app/action/components/button'
 import {URL_BUTTON} from '#/main/app/buttons'
 import {MenuButton} from '#/main/app/buttons/menu/components/button'
@@ -74,61 +76,39 @@ const UserMenu = props =>
         />
       }
 
-      {props.userTools &&
-        props.userTools.map((tool, index) =>
+      {props.tools.map((tool) =>
+        <Button
+          key={tool.name}
+          type={URL_BUTTON}
+          className="list-group-item"
+          icon={`fa fa-fw fa-${tool.icon}`}
+          label={trans(tool.name, {}, 'tools')}
+          target={tool.open}
+        />
+      )}
+    </div>
+
+    {0 !== props.actions.length &&
+      <div className="app-current-user-footer">
+        {props.actions.map(action =>
           <Button
-            key ={index}
-            type={URL_BUTTON}
-            className="list-group-item"
-            icon={`fa fa-fw fa-${tool.icon}`}
-            label={trans(tool.name, {}, 'tools')}
-            target={tool.open}
+            {...action}
+            key={toKey(action.label)}
+            className="app-current-user-btn"
+            tooltip="bottom"
           />
-        )
-      }
-    </div>
-
-    <div className="app-current-user-footer">
-      {props.help &&
-        <Button
-          type={URL_BUTTON}
-          className="app-current-user-btn"
-          icon="fa fa-fw fa-question"
-          label={trans('help')}
-          tooltip="bottom"
-          target={props.help}
-        />
-      }
-
-      {/* <Button
-        type={URL_BUTTON}
-        className="app-current-user-btn"
-        icon="fa fa-fw fa-info"
-        label={trans('about')}
-        tooltip="bottom"
-        target=""
-      /> */}
-
-      {props.authenticated &&
-        <Button
-          type={URL_BUTTON}
-          className="app-current-user-btn"
-          icon="fa fa-fw fa-power-off"
-          label={trans('logout')}
-          tooltip="bottom"
-          target={['claro_security_logout']}
-        />
-      }
-    </div>
+        )}
+      </div>
+    }
 
   </div>
 
 UserMenu.propTypes = {
   authenticated: T.bool.isRequired,
-  userTools: T.array,
+  tools: T.array.isRequired,
+  actions: T.array.isRequired,
   login: T.string.isRequired,
   registration: T.string,
-  help: T.string,
   currentUser: T.shape(UserTypes.propTypes).isRequired
 }
 
@@ -142,8 +122,8 @@ const HeaderUser = props =>
         currentUser={props.currentUser}
         login={props.login}
         registration={props.registration}
-        help={props.help}
-        userTools={props.userTools}
+        tools={props.tools}
+        actions={props.actions.filter(action => undefined === action.displayed || action.displayed)}
       />
     }
   >
@@ -152,13 +132,20 @@ const HeaderUser = props =>
 
 HeaderUser.propTypes = {
   login: T.string.isRequired,
-  userTools: T.array,
+  tools: T.array,
+  actions: T.arrayOf(T.shape(
+    ActionTypes.propTypes
+  )),
   registration: T.string,
-  help: T.string,
   authenticated: T.bool.isRequired,
   currentUser: T.shape({
 
   }).isRequired
+}
+
+HeaderUser.defaultProps = {
+  tools: [],
+  actions: []
 }
 
 export {

@@ -5,8 +5,10 @@ import {PropTypes as T} from 'prop-types'
 import times from 'lodash/times'
 
 // TODO : remove us when toolbar bars will be mounted in the main app
+import {OverlayStack} from '#/main/app/overlay/containers/stack'
 import {ModalOverlay} from '#/main/app/overlay/modal/containers/overlay'
 import {AlertOverlay} from '#/main/app/overlay/alert/containers/overlay'
+import {WalkthroughOverlay} from '#/main/app/overlay/walkthrough/containers/overlay'
 
 import {trans} from '#/main/core/translation'
 import {toKey} from '#/main/core/scaffolding/text/utils'
@@ -18,6 +20,7 @@ import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
 const ToolLink = props =>
   <Button
+    id={`tool-link-${props.name}`}
     className="tool-link"
     type={URL_BUTTON}
     icon={`fa fa-fw fa-${props.icon}`}
@@ -196,6 +199,7 @@ class Toolbar extends Component {
             {times(this.state.displayedActions, (i) =>
               <Button
                 {...displayedActions[i]}
+                id={`action-link-${displayedActions[i].name}`}
                 key={toKey(displayedActions[i].label)}
                 className="tool-link"
                 tooltip="right"
@@ -211,7 +215,13 @@ class Toolbar extends Component {
         }
 
         <AlertOverlay />
-        <ModalOverlay />
+
+        {this.props.children}
+
+        <OverlayStack>
+          <ModalOverlay />
+          <WalkthroughOverlay />
+        </OverlayStack>
       </nav>
     )
   }
@@ -231,7 +241,10 @@ Toolbar.propTypes = {
   })),
   actions: T.arrayOf(T.shape(
     ActionTypes.propTypes
-  ))
+  )),
+
+  // I only use it to append the walkthrough.
+  children: T.node
 }
 
 Toolbar.defaultProps = {

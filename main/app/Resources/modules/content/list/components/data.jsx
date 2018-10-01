@@ -3,6 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import invariant from 'invariant'
 import isEqual from 'lodash/isEqual'
 
+import {Heading} from '#/main/core/layout/components/heading'
+
 import {constants as listConst} from '#/main/app/content/list/constants'
 import {
   DataListProperty,
@@ -144,6 +146,12 @@ class ListData extends Component {
 
     return (
       <div className="data-list">
+        {this.props.title &&
+          <Heading level={this.props.level} displayLevel={this.props.displayLevel}>
+            {this.props.title}
+          </Heading>
+        }
+
         <ListHeader
           disabled={0 === this.props.totalResults}
           display={displayTool}
@@ -184,6 +192,10 @@ class ListData extends Component {
 }
 
 ListData.propTypes = {
+  level: T.number,
+  displayLevel: T.number,
+  title: T.string,
+
   /**
    * The data list to display.
    */
@@ -284,6 +296,7 @@ ListData.propTypes = {
 }
 
 ListData.defaultProps = {
+  level: 2,
   count: false,
   display: {
     available: Object.keys(listConst.DISPLAY_MODES),

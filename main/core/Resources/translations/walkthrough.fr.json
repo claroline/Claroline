@@ -1,0 +1,197 @@
+{
+  "action_required": "Action requise",
+  "action": "L'action \"%actionName%\"",
+  "actions": "Les actions",
+  "tool": "L'outil \"%toolName%\"",
+  "desktop_tools": "Les outils",
+  "administration_tools": "Les outils d'administration",
+  "workspace_tools": "Les outils de l'espace d'activités",
+  "user_tools": "Les outils de l'utilisateur",
+
+  "end": {
+    "title": "Félicitations ! Vous avez terminé ce tutoriel.",
+    "message": "Vous pouvez le rejouer maintenant ou choisir un autre tutoriel à suivre. Vous pouvez aussi retrouver tous les tutoriels disponibles en cherchant les icônes tutoriel dans l'interface."
+  },
+
+  "header": {
+    "name": "Découvrir le menu Claroline.",
+    "description": "Familiarisez-vous avec les fonctionnalités du menu Claroline.",
+
+    "intro": {
+
+    },
+    "tools_group": {
+      "message": "Le menu d'Outils vous permet d'accéder à tous les outils du bureau ajoutés.",
+      "action": "Cliquez sur le bouton pour ouvrir le menu Outils."
+    },
+    "workspaces_menu": {
+      "title": "Le menu principale",
+      "message": "Le menu principale vous permet d'ouvrir votre bureau, l'accueil ou encore de parcourir vos espaces d'activités."
+    },
+    "administration_group": {
+      "message": "Le menu d'Administration vous permet d'accéder à tous les outils d'administration auxquels vous avez accès.",
+      "action": "Cliquez sur le bouton pour ouvrir le menu Administration."
+    },
+    "notifications": {
+      "title": "Le centre de notifications",
+      "message": "Le centre de notifications regroupe toute votre communications au sein de l'application: messages avec les autres utilisateurs, notifications, ...",
+      "action": "Cliquez sur le bouton pour ouvrir le centre de notifications."
+    },
+    "user_menu": {
+      "title": "Le menu utilisateur",
+      "message": "Le menu Utilisateur vous permet d'accéder à vos outils personnels, votre profile ainsi que vos préférences.",
+      "action": "Cliquez sur le bouton pour ouvrir le menu Utilisateur."
+    },
+    "locale": {
+      "message": "Vous pouvez changer la locale de l'application à tout moment grâce à ce menu."
+    },
+
+    "tools": {
+      "resource_manager": {
+        "documentation": "https://claroline.gitbooks.io/claroline-connect-documentation/content/fr/resources/resources.html",
+        "message": "Permet de voir et gérer toutes vos ressources."
+      }
+    },
+
+    "administration": {
+      "user_management": {
+        "documentation": "",
+        "message": "Permet de voir les utilisateurs et les groupes inscrits, de changer leurs droits ainsi que d'en inscrire de nouveaux."
+      }
+    }
+  },
+
+  "workspace": {
+    "sidebar": {
+      "name": "Découvrir la barre d'outils de l'espace d'activités",
+      "description": "Familiarisez-vous avec les fonctionnalités accessible depuis la barre d'outils de l'espace d'activités.",
+
+      "intro": {
+        "title": "Découvrons la barre d'outils de l'espace d'activités ensemble !",
+        "message": "La barre d'outils vous permet de vous déplacer au sein de l'espace d'activités ouvert."
+      },
+      "tools_group": {
+        "message": "La section outils vous permet d'ouvrir les différents outils activés dans l'espace d'activités."
+      },
+      "actions_group": {
+        "message": "La section actions vous permet de gérer et consulter les informations de l'espace d'activités."
+      },
+      "opened_tool": {
+        "message": "Ceci est l'outil actuellement ouvert."
+      }
+    },
+
+    "tools": {
+      "analytics": {
+        "documentation": "",
+        "message": "Affiche des statistiques sur l'usage de l'espace d'activités."
+      },
+      "home": {
+        "documentation": "https://claroline.gitbooks.io/claroline-connect-documentation/content/fr/workspaces/ws-homepage.html",
+        "message": "Permet de créer une vue d'ensemble de l'espace d'activités."
+      },
+      "logs": {
+        "documentation": "",
+        "message": "Affiche les actions effectuées par les utilisateurs dans l'espace d'activités."
+      },
+      "resource_manager": {
+        "documentation": "https://claroline.gitbooks.io/claroline-connect-documentation/content/fr/resources/resources.html",
+        "message": "Permet de voir et gérer les ressources de l'espace d'activités."
+      },
+      "users": {
+        "documentation": "https://claroline.gitbooks.io/claroline-connect-documentation/content/fr/tools/manage-users.html",
+        "message": "Permet de voir les utilisateurs et les groupes inscrits, de changer leurs droits ainsi que d'en inscrire de nouveaux."
+      }
+    },
+
+    "actions": {
+      "about": "Affiche les informations générales de l'espace d'activités.",
+      "delete": "Permet de supprimer l'espace d'activités ainsi que tous ses contenus.",
+      "impersonation": "Permet de parcourir l'espace d'activités en utilisant un autre rôle afin de voir ce que ces utilisateurs voient.",
+      "parameters": "Permet de configurer l'espace d'activités.",
+      "walkthrough": "Affiche les tutoriels disponibles dans l'espace d'activités."
+    }
+  },
+
+  "home": {
+    "editor": {
+      "name": "Découvrir la configuration de l'accueil",
+      "description": "Familiarisez-vous avec l'éditeur en parcourant ses fonctionnalités de base.",
+
+      "intro": {
+        "title": "Bienvenue dans la configuration de l'accueil",
+        "message": "Cet éditeur vous permet de configurer les différentes parties composant l'accueil : les onglets, les sections et les widgets."
+      },
+      "tabs": {
+        "title": "Les onglets",
+        "message": "L'accueil est composé de différents onglets accessibles via ce menu."
+      },
+      "opened_tab": {
+        "message": "Ceci est l'onglet actuellement ouvert."
+      },
+      "add_tab": {
+        "message": "Permet d'ajouter de nouveaux onglets sur l'accueil.",
+        "action": "Cliquez sur le bouton pour créer un nouvel onglet et continuer ce tutoriel."
+      },
+      "created_tab": {
+        "message": "Après la création, le nouvel onglet est automatiquement ouvert."
+      },
+      "tab_form": {
+        "title": "La configuration de l'onglet",
+        "message": "Toutes les options disponibles pour l'onglet sont regroupées dans ce formulaire (la configuration avancée des onglets est détaillée dans un autre tutoriel)."
+      },
+      "tab_sections": {
+        "title": "Les sections de l'onglet",
+        "message": "Chaque onglet peut contenir une ou plusieurs sections qui permettront d'organiser et de mettre en forme les widgets. Comme nous venons de créer cet onglet, il n'y a aucune section pour le moment."
+      },
+      "add_section": {
+        "message": "Nous allons maintenant ajouter une section à notre onglet.",
+        "action": "Cliquez sur le bouton pour créer une nouvelle section et continuer ce tutoriel."
+      },
+      "section_form": {
+        "title": "La configuration de la section",
+        "message": "Avant de pouvoir l'utiliser, vous devez choisir le nombre et la taille des colonnes à ajouter à la section."
+      },
+      "select_layout": {
+        "message": "Vous avez le choix entre plusieurs structures prédéfinies. Le bouton vous montre le nombre et la taille des colonnes qui seront affichées.",
+        "action": "Cliquez sur le bouton pour créer une section à 3 colonnes."
+      },
+      "section_configure": {
+        "message": "Toutes les options disponibles pour la section sont regroupées dans ce formulaire."
+      },
+      "section_save": {
+        "message": "Une fois que vous avez terminé de configurer votre section, vous devez sauvegarder vos changements.",
+        "action": "Cliquez sur le bouton pour ajouter la nouvelle section à l'onglet."
+      },
+      "created_section": {
+        "message": "Ceci est la section que vous venez de créer. Vous pourrez lui ajouter 3 widgets plus tard."
+      },
+      "save": {
+        "message": "Pensez à sauvegarder vos changements afin qu'ils soient pris en compte."
+      },
+      "exit": {
+        "message": "Ou vous pouvez tout simplement quitter l'éditeur si vous ne désirez pas conserver vos modifications."
+      }
+    },
+
+    "create-widget": {
+      "name": "Créer un widget",
+      "description": "Apprenez comment ajouter un nouveau widget dans une section existante."
+    },
+
+    "create-widget-list": {
+      "name": "Créer un widget : le widget Liste",
+      "description": "Apprenez comment ajouter et configurer un widget contenant une liste de données."
+    },
+
+    "create-widget-simple": {
+      "name": "Créer un widget : le widget Contenu",
+      "description": "Apprenez comment ajouter et configurer un widget contenant un contenu riche."
+    },
+
+    "create-widget-resource": {
+      "name": "Créer un widget : le widget Ressource",
+      "description": "Apprenez comment ajouter et configurer un widget contenant une ressource."
+    }
+  }
+}
