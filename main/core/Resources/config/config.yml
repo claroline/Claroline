@@ -185,10 +185,10 @@ plugin:
           class: Claroline\CoreBundle\Entity\Widget\Type\ListWidget
           sources: [list]
 
-        - name: profile
-          class: Claroline\CoreBundle\Entity\Widget\Type\ProfileWidget
-          context: [workspace, desktop]
-          tags: [community]
+        # - name: profile
+        #   class: Claroline\CoreBundle\Entity\Widget\Type\ProfileWidget
+        #   context: [workspace, desktop]
+        #   tags: [community]
 
         - name: resource
           class: Claroline\CoreBundle\Entity\Widget\Type\ResourceWidget

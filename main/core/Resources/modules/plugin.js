@@ -43,7 +43,8 @@ registry.add('core', {
   widgets: {
     'list'  : () => { return import(/* webpackChunkName: "core-widget-list" */   '#/main/core/widget/types/list') },
     'simple': () => { return import(/* webpackChunkName: "core-widget-simple" */ '#/main/core/widget/types/simple') },
-    'resource': () => { return import(/* webpackChunkName: "core-widget-resource" */ '#/main/core/widget/types/resource') }
+    'resource': () => { return import(/* webpackChunkName: "core-widget-resource" */ '#/main/core/widget/types/resource') },
+    'profile': () => { return import(/* webpackChunkName: "core-widget-profile" */ '#/main/core/widget/types/profile') }
   },
 
   data: {
