@@ -129,6 +129,7 @@ abstract class AbstractFinder implements FinderInterface
     //           (_.--__) (_.--__)
     //
     // This is going to be wtf until the end of file. We're more or less implementing the union for our query builder.
+    // ONLY ONE PER REQUEST MAXS
     //
     public function union(array $firstSearch, array $secondSearch, array $options = [], array $sortBy = null)
     {

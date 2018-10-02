@@ -26,7 +26,7 @@ class EventFinder extends AbstractFinder
         return 'Claroline\AgendaBundle\Entity\Event';
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
@@ -82,24 +82,45 @@ class EventFinder extends AbstractFinder
                 $qb->setParameter($filterName, $now);
                 break;
               case 'user':
+                $byUserSearch = $byGroupSearch = $searches;
+                $byUserSearch['_user'] = $filterValue;
+                $byGroupSearch['_group'] = $filterValue;
+                unset($byUserSearch['user']);
+                unset($byGroupSearch['user']);
+
+                return $this->union($byUserSearch, $byGroupSearch, $options, $sortBy);
+                break;
+              case '_user':
                 $qb->join('obj.workspace', 'w');
                 $qb->leftJoin('w.roles', 'r');
                 $qb->leftJoin('r.users', 'ru');
+                $qb->andWhere($qb->expr()->orX(
+                    $qb->expr()->eq('ru.id', ':_userId'),
+                    $qb->expr()->eq('ru.uuid', ':_userUuid')
+                ));
+                $qb->andWhere('r.name != :roleUser');
+                $qb->setParameter('_userId', $filterValue);
+                $qb->setParameter('_userUuid', $filterValue);
+                $qb->setParameter('roleUser', 'ROLE_USER');
+
+                break;
+              case '_group':
+                $qb->join('obj.workspace', 'w');
+                $qb->leftJoin('w.roles', 'r');
                 $qb->leftJoin('r.groups', 'rg');
                 $qb->leftJoin('rg.users', 'rgu');
                 $qb->andWhere($qb->expr()->orX(
-                    $qb->expr()->eq('ru.uuid', ':currentUserId'),
-                    $qb->expr()->eq('rgu.uuid', ':currentUserId'),
-                    $qb->expr()->eq('ru.id', ':currentUserId'),
-                    $qb->expr()->eq('rgu.id', ':currentUserId')
+                    $qb->expr()->eq('rgu.id', ':_groupUserId'),
+                    $qb->expr()->eq('rgu.uuid', ':_groupUserUuid')
                 ));
                 $qb->andWhere('r.name != :roleUser');
-                $qb->setParameter('currentUserId', $filterValue);
+                $qb->setParameter('_groupUserId', $filterValue);
+                $qb->setParameter('_groupUserUuid', $filterValue);
                 $qb->setParameter('roleUser', 'ROLE_USER');
                 break;
               default:
                 $this->setDefaults($qb, $filterName, $filterValue);
-             }
+           }
         }
 
         return $qb;
