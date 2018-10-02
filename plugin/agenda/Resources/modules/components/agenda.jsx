@@ -33,8 +33,8 @@ function arrayTrans(key) {
 
 function sanitize(event) {
   const data = cloneDeep(event)
-  data.start = event.start.format(getApiFormat())
-  data.end = event.end.format(getApiFormat())
+  data.start = event.start ? event.start.format(getApiFormat()): null
+  data.end = event.end ? event.end.format(getApiFormat()): null
   delete data.source
 
   return data
