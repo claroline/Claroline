@@ -1,14 +1,18 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
+import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
 import {URL_BUTTON} from '#/main/app/buttons'
 import {ResourceExplorer} from '#/main/core/resource/explorer/containers/explorer'
+import {getActions} from '#/main/core/resource/utils'
 
+import {actions as explorerActions} from '#/main/core/resource/explorer/store'
 import {selectors} from '#/main/core/resources/directory/player/store'
 
 // TODO : fix reloading at resource creation
 
-const DirectoryPlayer = () =>
+const DirectoryPlayerComponent = (props) =>
   <ResourceExplorer
     name={selectors.EXPLORER_NAME}
     primaryAction={(resourceNode) => ({ // todo : use resource default action
@@ -19,7 +23,35 @@ const DirectoryPlayer = () =>
         id: resourceNode.id
       }]
     })}
+    actions={(resourceNodes) => getActions(resourceNodes, {
+      add: props.addNodes,
+      update: props.updateNodes,
+      delete: props.deleteNodes
+    }, true)}
   />
+
+DirectoryPlayerComponent.propTypes = {
+  addNodes: T.func.isRequired,
+  updateNodes: T.func.isRequired,
+  deleteNodes: T.func.isRequired
+}
+
+const DirectoryPlayer = connect(
+  null,
+  (dispatch) => ({
+    addNodes(resourceNodes) {
+      dispatch(explorerActions.addNodes(selectors.EXPLORER_NAME, resourceNodes))
+    },
+
+    updateNodes(resourceNodes) {
+      dispatch(explorerActions.updateNodes(selectors.EXPLORER_NAME, resourceNodes))
+    },
+
+    deleteNodes(resourceNodes) {
+      dispatch(explorerActions.deleteNodes(selectors.EXPLORER_NAME, resourceNodes))
+    }
+  })
+)(DirectoryPlayerComponent)
 
 export {
   DirectoryPlayer
