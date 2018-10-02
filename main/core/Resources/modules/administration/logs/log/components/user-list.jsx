@@ -1,4 +1,5 @@
 import React from 'react'
+
 import {UserLogList} from '#/main/core/layout/logs'
 
 const List = () =>

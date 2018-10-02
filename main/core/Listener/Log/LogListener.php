@@ -21,13 +21,16 @@ use Claroline\CoreBundle\Event\Log\LogNotRepeatableInterface;
 use Claroline\CoreBundle\Event\Log\LogResourceDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogUserDeleteEvent;
+use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceRoleDeleteEvent;
 use Claroline\CoreBundle\Event\LogCreateEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -40,8 +43,10 @@ class LogListener
     private $container;
     private $roleManager;
     private $ch;
+    private $enabledLog;
     private $resourceManager;
     private $resourceEvalManager;
+    private $logConnectManager;
 
     /**
      * @DI\InjectParams({
@@ -51,17 +56,28 @@ class LogListener
      *     "roleManager"         = @DI\Inject("claroline.manager.role_manager"),
      *     "ch"                  = @DI\Inject("claroline.config.platform_config_handler"),
      *     "resourceManager"     = @DI\Inject("claroline.manager.resource_manager"),
-     *     "resourceEvalManager" = @DI\Inject("claroline.manager.resource_evaluation_manager")
+     *     "resourceEvalManager" = @DI\Inject("claroline.manager.resource_evaluation_manager"),
+     *     "logConnectManager"   = @DI\Inject("claroline.manager.log_connect")
      * })
+     *
+     * @param ObjectManager                $om
+     * @param TokenStorageInterface        $tokenStorage
+     * @param ContainerInterface           $container
+     * @param RoleManager                  $roleManager
+     * @param PlatformConfigurationHandler $ch
+     * @param ResourceManager              $resourceManager
+     * @param ResourceEvaluationManager    $resourceEvalManager
+     * @param LogConnectManager            $logConnectManager
      */
     public function __construct(
         ObjectManager $om,
         TokenStorageInterface $tokenStorage,
-        $container,
+        ContainerInterface $container,
         RoleManager $roleManager,
         PlatformConfigurationHandler $ch,
         ResourceManager $resourceManager,
-        ResourceEvaluationManager $resourceEvalManager
+        ResourceEvaluationManager $resourceEvalManager,
+        LogConnectManager $logConnectManager
     ) {
         $this->om = $om;
         $this->tokenStorage = $tokenStorage;
@@ -71,6 +87,7 @@ class LogListener
         $this->enabledLog = $this->ch->getParameter('platform_log_enabled');
         $this->resourceManager = $resourceManager;
         $this->resourceEvalManager = $resourceEvalManager;
+        $this->logConnectManager = $logConnectManager;
     }
 
     private function createLog(LogGenericEvent $event)
@@ -221,6 +238,8 @@ class LogListener
 
         $createLogEvent = new LogCreateEvent($log);
         $this->container->get('event_dispatcher')->dispatch(LogCreateEvent::NAME, $createLogEvent);
+
+        return $log;
     }
 
     /**
@@ -285,10 +304,11 @@ class LogListener
      */
     public function onLog(LogGenericEvent $event)
     {
+        $log = null;
         $logCreated = false;
 
         if (!($event instanceof LogNotRepeatableInterface) || !$this->isARepeat($event)) {
-            $this->createLog($event);
+            $log = $this->createLog($event);
             $logCreated = true;
         }
 
@@ -320,6 +340,8 @@ class LogListener
                     true
                 );
             }
+        } elseif ($event instanceof LogUserLoginEvent && $logCreated && $log) {
+            $this->logConnectManager->manageConnection($log);
         }
     }
 
