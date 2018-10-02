@@ -13,6 +13,33 @@ import {Heading} from '#/main/core/layout/components/heading'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {DataCard as DataCardTypes} from '#/main/app/data/prop-types'
 
+const CardAction = props => {
+  if (!props.action || props.action.disabled) {
+    // no action defined
+    return (
+      <div className={props.className}>
+        {props.children}
+      </div>
+    )
+  } else {
+    return (
+      <Button
+        {...omit(props.action, 'group', 'icon', 'label', 'context', 'scope')}
+        label={props.children}
+        className={props.className}
+      />
+    )
+  }
+}
+
+CardAction.propTypes = {
+  className: T.string,
+  action: T.shape(
+    ActionTypes.propTypes
+  ),
+  children: T.any.isRequired
+}
+
 /**
  * Renders the card header.
  *
@@ -26,12 +53,12 @@ const CardHeader = props =>
     backgroundPosition: 'center'
   }}>
     {props.icon &&
-      <span className="data-card-icon">
+      <CardAction action={props.action} className="data-card-icon">
         {typeof props.icon === 'string' ?
           <span className={props.icon} /> :
           props.icon
         }
-      </span>
+      </CardAction>
     }
 
     {0 !== props.flags.length &&
@@ -61,43 +88,10 @@ CardHeader.propTypes = {
   poster: T.string,
   flags: T.arrayOf(
     T.arrayOf(T.oneOfType([T.string, T.number]))
-  )
-}
-
-/**
- * Renders the card content.
- *
- * @param props
- * @constructor
- */
-const CardContent = props => {
-  if (!props.action || props.action.disabled) {
-    // no action defined
-    return (
-      <div className="data-card-content">
-        {props.children}
-      </div>
-    )
-  } else {
-    return (
-      <Button
-        {...omit(props.action, 'group', 'icon', 'label', 'context', 'scope')}
-        label={props.children}
-        className="data-card-content"
-      />
-    )
-  }
-}
-
-CardContent.propTypes = {
+  ),
   action: T.shape(
     ActionTypes.propTypes
-  ),
-  children: T.any.isRequired
-}
-
-CardContent.defaultProps = {
-  disabled: false
+  )
 }
 
 /**
@@ -116,10 +110,12 @@ const DataCard = props =>
       icon={props.icon}
       poster={props.poster}
       flags={props.flags}
+      action={props.primaryAction}
     />
 
-    <CardContent
+    <CardAction
       action={props.primaryAction}
+      className="data-card-content"
     >
       <Heading
         key="data-card-title"
@@ -143,7 +139,7 @@ const DataCard = props =>
           {props.footer}
         </div>
       }
-    </CardContent>
+    </CardAction>
 
     {0 !== props.actions.length &&
       <Toolbar
@@ -162,6 +158,5 @@ implementPropTypes(DataCard, DataCardTypes)
 
 export {
   DataCard,
-  CardHeader as DataCardHeader,
-  CardContent as DataCardContent
+  CardHeader as DataCardHeader
 }

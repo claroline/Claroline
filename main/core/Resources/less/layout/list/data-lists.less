@@ -30,13 +30,13 @@
 .list-header {
     display: flex;
     align-items: stretch;
-    background: @list-controls-bg;
 }
 
 .list-search {
     flex: 1;
     position: relative;
     font-size: @font-size-large;
+    background: @list-controls-bg;
 
     &.open {
         .box-shadow(0 1px 2px rgba(0,0,0,.5)); // todo : use a var
@@ -227,6 +227,7 @@
 }
 
 .list-options {
+    background: @list-controls-bg;
     display: flex;
     align-items: flex-end;
     margin-left: auto; // force right alignment if no search
