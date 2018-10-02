@@ -28,6 +28,7 @@
     .app-header-item {
         padding: 0 floor(@grid-gutter-width / 2);
         display: flex;
+        vertical-align: middle;
         flex-direction: row;
         justify-content: center;
         align-items: center;
@@ -70,10 +71,6 @@
     // declare colors var to make it usable inside the SVG
     --logo-default: @top-bar-brand-color;
     --logo-primary: @brand-primary;
-}
-
-.app-header-title-link {
-    margin-top: 10px;
 }
 
 .app-header-title {
@@ -143,10 +140,6 @@
     }
 }
 
-.app-header-tools {
-
-}
-
 .app-header-workspaces {
     flex: 1;
     font-size: @font-size-large;
@@ -167,6 +160,24 @@
     .dropdown-menu {
         font-size: @font-size-large;
         min-width: 100%;
+    }
+}
+
+.app-header-user {
+    font-size: @font-size-small;
+    font-weight: bold;
+
+    .user-avatar {
+        color: @top-bar-link-color;
+        // for picture
+        max-height: 30px;
+
+        // for .fa when no picture
+        font-size: 30px;
+    }
+
+    .user-username {
+        margin-left: 10px;
     }
 }
 
@@ -266,10 +277,6 @@
             margin-right: 0; // because there is a hack in styles to add margins on dropdown icons
         }
     }
-}
-
-.app-notifications {
-
 }
 
 

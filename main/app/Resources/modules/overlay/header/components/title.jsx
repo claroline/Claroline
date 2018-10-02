@@ -4,25 +4,28 @@ import {PropTypes as T} from 'prop-types'
 import {url} from '#/main/app/api'
 
 const HeaderTitle = props => {
-  return (
-    props.redirectHome ?
-      <a href={url(['claro_index'])} className="app-header-title-link hidden-xs hidden-sm">
+  if (props.redirectHome) {
+    return (
+      <a href={url(['claro_index'])} className="app-header-item app-header-title hidden-xs hidden-sm">
         <h1 className="app-header-item app-header-title">
           {props.title}
 
           {props.subtitle &&
-            <small>{props.subtitle}</small>
+          <small>{props.subtitle}</small>
           }
         </h1>
       </a>
-      :
-      <h1 className="app-header-item app-header-title hidden-xs hidden-sm">
-        {props.title}
+    )
+  }
 
-        {props.subtitle &&
-        <small>{props.subtitle}</small>
-        }
-      </h1>
+  return (
+    <h1 className="app-header-item app-header-title hidden-xs hidden-sm">
+      {props.title}
+
+      {props.subtitle &&
+      <small>{props.subtitle}</small>
+      }
+    </h1>
   )
 }
 

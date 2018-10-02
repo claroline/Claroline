@@ -9,7 +9,6 @@ import {URL_BUTTON} from '#/main/app/buttons'
 import {MenuButton} from '#/main/app/buttons/menu/components/button'
 
 import {UserAvatar} from '#/main/core/user/components/avatar'
-import {UserMicro} from '#/main/core/user/components/micro'
 import {constants as roleConstants} from '#/main/core/user/role/constants'
 import {User as UserTypes} from '#/main/core/user/prop-types'
 
@@ -109,13 +108,15 @@ UserMenu.propTypes = {
   actions: T.array.isRequired,
   login: T.string.isRequired,
   registration: T.string,
-  currentUser: T.shape(UserTypes.propTypes).isRequired
+  currentUser: T.shape(
+    UserTypes.propTypes
+  ).isRequired
 }
 
 const HeaderUser = props =>
   <MenuButton
     id="authenticated-user-menu"
-    className="app-header-item app-header-btn"
+    className="app-header-user app-header-item app-header-btn"
     menu={
       <UserMenu
         authenticated={props.authenticated}
@@ -127,7 +128,10 @@ const HeaderUser = props =>
       />
     }
   >
-    <UserMicro {...props.currentUser} showUsername={true} />
+    <UserAvatar picture={props.currentUser.picture} alt={false} />
+    <span className="user-username hidden-xs">
+      {props.authenticated ? props.currentUser.username : trans('login')}
+    </span>
   </MenuButton>
 
 HeaderUser.propTypes = {
@@ -138,9 +142,9 @@ HeaderUser.propTypes = {
   )),
   registration: T.string,
   authenticated: T.bool.isRequired,
-  currentUser: T.shape({
-
-  }).isRequired
+  currentUser: T.shape(
+    UserTypes.propTypes
+  ).isRequired
 }
 
 HeaderUser.defaultProps = {
