@@ -200,4 +200,13 @@ class ResourceNodeFinder extends AbstractFinder
 
         return $qb;
     }
+
+    //required for the unions
+    public function getExtraFieldMapping()
+    {
+        return [
+          'meta.updated' => 'creation_date',
+          'meta.created' => 'modification_date',
+        ];
+    }
 }
