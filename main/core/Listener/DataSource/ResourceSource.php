@@ -70,6 +70,8 @@ class ResourceSource
         }
 
         $options['hiddenFilters']['published'] = true;
+        $options['hiddenFilters']['active'] = true;
+        $options['hiddenFilters']['resourceTypeEnabled'] = true;
 
         $roles = array_map(
             function ($role) { return $role->getRole(); },
