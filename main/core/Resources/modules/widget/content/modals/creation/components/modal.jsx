@@ -60,7 +60,7 @@ const ContentCreationModal = props => {
         )
       case 'parameters':
         return (
-          <WidgetContentForm level={5} name={selectors.FORM_NAME} />
+          <WidgetContentForm level={5} name={selectors.FORM_NAME} context={props.context} />
         )
     }
   }

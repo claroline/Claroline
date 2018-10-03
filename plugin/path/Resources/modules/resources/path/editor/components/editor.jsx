@@ -64,7 +64,7 @@ const EditorComponent = props =>
           path: '/edit/parameters',
           exact: true,
           render: () => {
-            const Parameters = <ParametersForm path={props.path} saveForm={() => props.saveForm(props.path.id)}/>
+            const Parameters = <ParametersForm path={props.path} workspace={props.workspace} saveForm={() => props.saveForm(props.path.id)}/>
 
             return Parameters
           }
@@ -90,6 +90,7 @@ const EditorComponent = props =>
 
                 <StepForm
                   {...step}
+                  workspace={props.workspace}
                   resourceParent={props.resourceParent}
                   numbering={getNumbering(props.path.display.numbering, props.path.steps, step)}
                   customNumbering={constants.NUMBERING_CUSTOM === props.path.display.numbering}
@@ -111,6 +112,7 @@ const EditorComponent = props =>
   </section>
 
 EditorComponent.propTypes = {
+  workspace: T.object,
   path: T.shape(
     PathTypes.propTypes
   ).isRequired,
@@ -143,7 +145,8 @@ const Editor = withRouter(connect(
     path: selectors.path(state),
     steps: flattenSteps(selectors.steps(state)),
     copy: selectors.stepCopy(state),
-    resourceParent: resourceSelect.parent(state)
+    resourceParent: resourceSelect.parent(state),
+    workspace: resourceSelect.workspace(state)
   }),
   dispatch => ({
     addStep(parentStep = null) {

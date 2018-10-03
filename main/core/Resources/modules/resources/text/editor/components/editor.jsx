@@ -6,6 +6,7 @@ import {trans} from '#/main/core/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {selectors} from '#/main/core/resources/text/editor/store'
 import {Text as TextTypes} from '#/main/core/resources/text/prop-types'
 
@@ -31,6 +32,7 @@ const EditorComponent = (props) =>
             hideLabel: true,
             required: true,
             options: {
+              workspace: props.workspace,
               minRows: 3
             }
           }
@@ -40,6 +42,7 @@ const EditorComponent = (props) =>
   />
 
 EditorComponent.propTypes = {
+  workspace: T.object,
   text: T.shape(
     TextTypes.propTypes
   ).isRequired
@@ -47,6 +50,7 @@ EditorComponent.propTypes = {
 
 const Editor = connect(
   state => ({
+    workspace: resourceSelectors.workspace(state),
     text: selectors.text(state)
   })
 )(EditorComponent)

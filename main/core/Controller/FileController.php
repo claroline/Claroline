@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Library\Utilities\MimeTypeGuesser;
@@ -144,16 +145,18 @@ class FileController extends AbstractApiController
     }
 
     /**
-     * @EXT\Route("/tinymce/destinations", name="claro_tinymce_file_destinations")
+     * @EXT\Route("/tinymce/destinations/{workspace}", name="claro_tinymce_file_destinations", defaults ={"workspace"=null})
      * @EXT\Method("GET")
+     *
+     * @param Workspace $workspace
      *
      * @return JsonResponse
      */
-    public function listTinyMceDestinationsAction()
+    public function listTinyMceDestinationsAction(Workspace $workspace = null)
     {
         return new JsonResponse(array_map(function (Directory $directory) {
             return $this->serializer->serialize($directory->getResourceNode(), [Options::SERIALIZE_MINIMAL]);
-        }, $this->resourceManager->getDefaultUploadDestinations()));
+        }, $this->resourceManager->getDefaultUploadDestinations($workspace)));
     }
 
     /**

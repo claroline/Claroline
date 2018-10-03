@@ -1,22 +1,23 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
-import {FormData} from '#/main/app/content/form/containers/data'
-import {trans} from '#/main/core/translation'
 import isEmpty from 'lodash/isEmpty'
-import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
-
 // todo : remove me
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar'
 
-import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
-import {actions as formActions} from '#/main/app/content/form/store/actions'
+import {trans} from '#/main/core/translation'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {withRouter} from '#/main/app/router'
+import {FormData} from '#/main/app/content/form/containers/data'
+import {actions as formActions, selectors as formSelect} from '#/main/app/content/form/store'
+
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
+
 import {actions as toolbarActions} from '#/plugin/blog/resources/blog/toolbar/store'
 import {PostType} from '#/plugin/blog/resources/blog/post/components/prop-types'
 import {constants} from '#/plugin/blog/resources/blog/constants'
 import {currentUser} from '#/main/core/user/current'
-import {withRouter} from '#/main/app/router'
 import {selectors} from '#/plugin/blog/resources/blog/store'
 
 const loggedUser = currentUser()
@@ -54,7 +55,8 @@ const PostFormComponent = props =>
                 label: trans('icap_blog_post_form_content', {}, 'icap_blog'),
                 required: true,
                 options: {
-                  minRows: 6
+                  minRows: 6,
+                  workspace: props.workspace
                 }
               },{
                 name: 'tags',
@@ -94,6 +96,7 @@ const PostFormComponent = props =>
   </div>
 
 PostFormComponent.propTypes = {
+  workspace: T.object,
   mode: T.string,
   blogId: T.string,
   postId: T.string,
@@ -108,6 +111,7 @@ PostFormComponent.propTypes = {
 
 const PostForm = withRouter(connect(
   state => ({
+    workspace: resourceSelectors.workspace(state),
     mode: selectors.mode(state),
     blogId: selectors.blog(state).data.id,
     originalTags: formSelect.originalData(formSelect.form(state, selectors.STORE_NAME + '.post_edit')).tags,

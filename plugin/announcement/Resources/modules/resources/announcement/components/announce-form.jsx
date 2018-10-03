@@ -9,6 +9,7 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
 
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'
 import {actions, selectors} from '#/plugin/announcement/resources/announcement/store'
 
@@ -43,7 +44,10 @@ const AnnounceFormComponent = props =>
             name: 'content',
             type: 'html',
             label: trans('content'),
-            required: true
+            required: true,
+            options: {
+              workspace: props.workspace
+            }
           }, {
             name: 'meta.author',
             type: 'string',
@@ -96,6 +100,7 @@ AnnounceFormComponent.propTypes = {
   announcement: T.shape(
     AnnouncementTypes.propTypes
   ).isRequired,
+  workspace: T.object,
   updateProp: T.func.isRequired,
   addAnnounce: T.func.isRequired,
   updateAnnounce: T.func.isRequired,
@@ -107,10 +112,9 @@ AnnounceFormComponent.defaultProps = {
   announcement: AnnouncementTypes.defaultProps
 }
 
-const RoutedAnnounceForm = withRouter(AnnounceFormComponent)
-
-const AnnounceForm = connect(
+const AnnounceForm = withRouter(connect(
   (state) => ({
+    workspace: resourceSelectors.workspace(state),
     new: formSelectors.isNew(formSelectors.form(state, selectors.STORE_NAME+'.announcementForm')),
     announcement: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME+'.announcementForm')),
     aggregateId: selectors.aggregateId(state)
@@ -148,7 +152,7 @@ const AnnounceForm = connect(
       )
     }
   })
-)(RoutedAnnounceForm)
+)(AnnounceFormComponent))
 
 export {
   AnnounceForm

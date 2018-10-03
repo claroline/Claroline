@@ -18,7 +18,7 @@ const MultipleTeamFormComponent = props =>
       level={3}
       name="teams.multiple"
       buttons={true}
-      target={['apiv2_team_multiple_create', {workspace: props.workspaceId}]}
+      target={['apiv2_team_multiple_create', {workspace: props.workspace.uuid}]}
       cancel={{
         type: LINK_BUTTON,
         target: '/',
@@ -39,7 +39,10 @@ const MultipleTeamFormComponent = props =>
             }, {
               name: 'description',
               type: 'html',
-              label: trans('description')
+              label: trans('description'),
+              options: {
+                workspace: props.workspace
+              }
             }, {
               name: 'nbTeams',
               type: 'number',
@@ -109,7 +112,9 @@ MultipleTeamFormComponent.propTypes = {
     defaultResource: T.object,
     creatableResources: T.arrayOf(T.string)
   }).isRequired,
-  workspaceId: T.string.isRequired,
+  workspace: T.shape({
+    uuid: T.string.isRequired
+  }).isRequired,
   resourceTypes: T.arrayOf(T.string).isRequired,
   history: T.shape({
     push: T.func.isRequired
@@ -119,7 +124,7 @@ MultipleTeamFormComponent.propTypes = {
 const MultipleTeamForm = connect(
   (state) => ({
     form: formSelectors.data(formSelectors.form(state, 'teams.multiple')),
-    workspaceId: workspaceSelect.workspace(state).uuid,
+    workspace: workspaceSelect.workspace(state),
     resourceTypes: selectors.resourceTypes(state)
   })
 )(MultipleTeamFormComponent)

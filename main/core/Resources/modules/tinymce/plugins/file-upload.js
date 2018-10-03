@@ -23,6 +23,7 @@ function openFileUpload(editor) {
   editor.setProgressState(true)
 
   editor.settings.showModal(MODAL_TINYMCE_UPLOAD, {
+    workspace: editor.settings.workspace,
     add: (newResourceNode) => {
       fetch(
         url(['claro_resource_embed', {type: newResourceNode.meta.type, id: newResourceNode.id}]), {

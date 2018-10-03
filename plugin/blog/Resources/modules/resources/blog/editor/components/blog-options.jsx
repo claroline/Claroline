@@ -1,26 +1,29 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
-import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
-import {FormData} from '#/main/app/content/form/containers/data'
-import {actions as formActions} from '#/main/app/content/form/store/actions'
+import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar'
+
+import {withRouter} from '#/main/app/router'
+import {trans} from '#/main/core/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar'
-import {trans} from '#/main/core/translation'
+
+import {FormData} from '#/main/app/content/form/containers/data'
+import {FormSection} from '#/main/app/content/form/components/sections'
+import {actions as formActions, selectors as formSelect} from '#/main/app/content/form/store'
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
+
 import {BlogOptionsType} from '#/plugin/blog/resources/blog/editor/components/prop-types'
 import {ToolManager} from '#/plugin/blog/resources/blog/editor/components/tool-manager'
-import {constants} from '#/plugin/blog/resources/blog/constants'
-import {FormSection} from '#/main/app/content/form/components/sections'
-import {withRouter} from '#/main/app/router'
 import {actions as toolbarActions} from '#/plugin/blog/resources/blog/toolbar/store'
 import {selectors} from '#/plugin/blog/resources/blog/store'
+import {constants} from '#/plugin/blog/resources/blog/constants'
 
 const BlogOptionsComponent = props =>
   <section className="resource-section">
-    <h2 className="h-first">{trans('configure_blog', {}, 'icap_blog')}</h2>
     {props.mode === constants.EDIT_OPTIONS &&
       <FormData
+        title={trans('configure_blog', {}, 'icap_blog')}
         level={2}
         name={selectors.STORE_NAME + '.blog.data.options'}
         sections={[
@@ -127,7 +130,10 @@ const BlogOptionsComponent = props =>
               {
                 name: 'infos',
                 type: 'html',
-                label: trans('infobar', {}, 'icap_blog')
+                label: trans('infobar', {}, 'icap_blog'),
+                options: {
+                  workspace: props.workspace
+                }
               }
             ]
           }
@@ -165,6 +171,7 @@ const BlogOptionsComponent = props =>
   </section>
 
 BlogOptionsComponent.propTypes = {
+  workspace: T.object,
   options: T.shape(BlogOptionsType.propTypes),
   mode: T.string,
   history: T.shape({}),
@@ -177,6 +184,7 @@ BlogOptionsComponent.propTypes = {
 
 const BlogOptions = withRouter(connect(
   state => ({
+    workspace: resourceSelectors.resource(state),
     blogId: selectors.blog(state).data.id,
     options: formSelect.data(formSelect.form(state, selectors.STORE_NAME + '.' + constants.OPTIONS_EDIT_FORM_NAME)),
     mode: selectors.mode(state),

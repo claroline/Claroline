@@ -7,6 +7,7 @@ import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {Forum as ForumType} from '#/plugin/forum/resources/forum/prop-types'
 import {constants} from '#/plugin/forum/resources/forum/constants'
@@ -43,7 +44,10 @@ const EditorComponent = (props) =>
                 name: 'display.description',
                 type: 'html',
                 label: trans('overview_message', {}, 'forum'),
-                displayed: props.forumForm.display.showOverview
+                displayed: props.forumForm.display.showOverview,
+                options: {
+                  workspace: props.workspace
+                }
               },
               {
                 name: 'display.lastMessagesCount',
@@ -109,12 +113,14 @@ const EditorComponent = (props) =>
   />
 
 EditorComponent.propTypes = {
+  workspace: T.object,
   forumForm: T.shape(ForumType.propTypes).isRequired,
   saveForm: T.func.isRequired
 }
 
 const Editor = connect(
   (state) => ({
+    workspace: resourceSelectors.workspace(state),
     forumForm: formSelect.data(formSelect.form(state, selectors.FORM_NAME))
   }),
   (dispatch) => ({

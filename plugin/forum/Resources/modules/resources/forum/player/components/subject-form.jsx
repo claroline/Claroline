@@ -14,6 +14,7 @@ import {currentUser} from '#/main/core/user/current'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {select} from '#/plugin/forum/resources/forum/store/selectors'
 
@@ -132,7 +133,10 @@ const SubjectFormComponent = (props) => {
                     name: 'content',
                     type: 'html',
                     label: trans('post', {}, 'forum'),
-                    required: true
+                    required: true,
+                    options: {
+                      workspace: props.workspace
+                    }
                   },
                   {
                     name: 'tags',
@@ -172,6 +176,7 @@ const SubjectFormComponent = (props) => {
 
 const SubjectForm = withRouter(connect(
   state => ({
+    workspace: resourceSelectors.workspace(state),
     bannedUser: select.bannedUser(state),
     subject: formSelect.data(formSelect.form(state, `${select.STORE_NAME}.subjects.form`)),
     editingSubject: select.editingSubject(state),

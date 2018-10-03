@@ -34,6 +34,7 @@ const WidgetCol = props =>
           icon="fa fa-fw fa-pencil"
           label={trans('edit', {}, 'actions')}
           modal={[MODAL_CONTENT_PARAMETERS, {
+            context: props.context,
             content: props.content,
             save: props.updateContent
           }]}

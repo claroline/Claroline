@@ -53,7 +53,10 @@ const TeamFormComponent = props =>
             }, {
               name: 'description',
               type: 'html',
-              label: trans('description')
+              label: trans('description'),
+              options: {
+                workspace: props.workspace
+              }
             }, {
               name: 'defaultResource',
               type: 'resource',
@@ -114,7 +117,7 @@ const TeamFormComponent = props =>
                 type: 'callback',
                 icon: 'fa fa-fw fa-plus',
                 label: trans('add_members', {}, 'team'),
-                callback: () => props.pickUsers(props.team.id, props.workspaceId)
+                callback: () => props.pickUsers(props.team.id, props.workspace.uuid)
               }
             ]}
           >
@@ -143,7 +146,7 @@ const TeamFormComponent = props =>
                 type: 'callback',
                 icon: 'fa fa-fw fa-plus',
                 label: trans('add_managers', {}, 'team'),
-                callback: () => props.pickUsers(props.team.id, props.workspaceId, true)
+                callback: () => props.pickUsers(props.team.id, props.workspace.uuid, true)
               }
             ]}
           >
@@ -167,7 +170,9 @@ const TeamFormComponent = props =>
 
 TeamFormComponent.propTypes = {
   team: T.shape(TeamType.propTypes).isRequired,
-  workspaceId: T.string.isRequired,
+  workspace: T.shape({
+    uuid: T.string.isRequired
+  }).isRequired,
   isNew: T.bool.isRequired,
   resourceTypes: T.arrayOf(T.string).isRequired,
   history: T.shape({
@@ -179,7 +184,7 @@ TeamFormComponent.propTypes = {
 const TeamForm = connect(
   (state) => ({
     team: formSelectors.data(formSelectors.form(state, 'teams.current')),
-    workspaceId: workspaceSelect.workspace(state).uuid,
+    workspace: workspaceSelect.workspace(state),
     isNew: formSelectors.isNew(formSelectors.form(state, 'teams.current')),
     resourceTypes: selectors.resourceTypes(state)
   }),

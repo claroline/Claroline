@@ -19,7 +19,7 @@ const ParametersModal = props =>
     onEntering={() => props.loadContent(props.content)}
   >
     {!isEmpty(props.formData) &&
-      <WidgetContentForm level={5} name={selectors.STORE_NAME} />
+      <WidgetContentForm level={5} name={selectors.STORE_NAME} context={props.context} />
     }
 
     <Button
@@ -36,6 +36,7 @@ const ParametersModal = props =>
   </Modal>
 
 ParametersModal.propTypes = {
+  context: T.object,
   formData: T.shape({}),
   content: T.shape({}),
   loadContent: T.func.isRequired,

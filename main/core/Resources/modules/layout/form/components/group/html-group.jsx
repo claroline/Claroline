@@ -19,7 +19,8 @@ implementPropTypes(HtmlGroup, FormGroupWithFieldTypes, {
   minRows: T.number,
   onSelect: T.func,
   onClick: T.func,
-  onChangeMode: T.func
+  onChangeMode: T.func,
+  workspace: T.object
 }, {
   value: '',
   minimal: true

@@ -154,6 +154,7 @@ class Textarea extends Component {
       <Tinymce
         id={this.props.id}
         content={this.props.value || ''}
+        workspace={this.props.workspace}
         disabled={this.props.disabled}
         onChange={this.props.onChange}
         onSelect={this.props.onSelect}
@@ -198,6 +199,7 @@ implementPropTypes(Textarea, FormFieldTypes, {
   // custom props
   minimal: T.bool,
   minRows: T.number,
+  workspace: T.object,
   onSelect: T.func,
   onClick: T.func,
   onChangeMode: T.func

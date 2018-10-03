@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {withModal} from '#/main/app/overlay/modal/withModal'
+import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 
 import {tinymce} from '#/main/core/tinymce'
 import {config} from '#/main/core/tinymce/config'
@@ -25,7 +26,9 @@ class Editor extends Component {
 
         // give access to the show modal action to tinymce plugins
         // it's not really aesthetic but there is no other way
-        showModal: this.props.showModal
+        showModal: this.props.showModal,
+        // get the current workspace for the file upload and resource explorer plugins
+        workspace: this.props.workspace
       })
     )
 
@@ -108,7 +111,10 @@ Editor.propTypes = {
   onClick: T.func,
   disabled: T.bool,
 
-  showModal: T.func.isRequired
+  showModal: T.func.isRequired,
+  workspace: T.shape(
+    WorkspaceTypes.propTypes
+  )
 }
 
 const Tinymce = withModal(Editor)

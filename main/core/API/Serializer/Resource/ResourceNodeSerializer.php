@@ -46,6 +46,9 @@ class ResourceNodeSerializer
     /** @var RightsManager */
     private $rightsManager;
 
+    /** @var MaskManager */
+    private $maskManager;
+
     /**
      * ResourceNodeManager constructor.
      *
@@ -65,7 +68,7 @@ class ResourceNodeSerializer
      * @param UserSerializer         $userSerializer
      * @param MaskManager            $maskManager
      * @param OptimizedRightsManager $newRightsManager
-     * @param RightsManager          $newRightsManager
+     * @param RightsManager          $rightsManager
      */
     public function __construct(
         ObjectManager $om,
@@ -361,6 +364,8 @@ class ResourceNodeSerializer
             }
 
             $recursive = in_array(Options::IS_RECURSIVE, $options) ? true : false;
+
+            /** @var Role $role */
             $role = $this->om->getRepository(Role::class)->findOneBy(['name' => $right['name']]);
 
             //if we update (we need the id anyway)

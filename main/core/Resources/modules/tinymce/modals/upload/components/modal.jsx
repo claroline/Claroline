@@ -8,14 +8,16 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {FormData} from '#/main/app/content/form/containers/data'
 
+import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
+
 const UploadModal = (props) =>
   <Modal
-    {...omit(props, 'formName', 'uploadDestinations', 'fetchUploadDestinations', 'add', 'upload', 'uploadEnabled')}
+    {...omit(props, 'formName', 'uploadDestinations', 'fetchUploadDestinations', 'add', 'upload', 'uploadEnabled', 'workspace')}
     icon="fa fa-fw fa-file"
     title={trans('upload')}
     onEntering={() => {
       if (0 === props.uploadDestinations.length) {
-        props.fetchUploadDestinations()
+        props.fetchUploadDestinations(props.workspace)
       }
     }}
   >
@@ -64,6 +66,9 @@ const UploadModal = (props) =>
 
 UploadModal.propTypes = {
   formName: T.string.isRequired,
+  workspace: T.shape(
+    WorkspaceTypes.propTypes
+  ),
   uploadDestinations: T.arrayOf(T.shape({
     id: T.string.isRequired,
     name: T.string.isRequired

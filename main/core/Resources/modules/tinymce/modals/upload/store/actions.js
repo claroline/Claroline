@@ -9,9 +9,9 @@ export const actions = {}
 
 actions.loadUploadDestinations = makeActionCreator(UPLOAD_DESTINATIONS_LOAD, 'directories')
 
-actions.fetchUploadDestinations = () => ({
+actions.fetchUploadDestinations = (workspace = null) => ({
   [API_REQUEST]: {
-    url: ['claro_tinymce_file_destinations'],
+    url: ['claro_tinymce_file_destinations', workspace ? {workspace: workspace.id} : {}],
     success: (response, dispatch) => dispatch(actions.loadUploadDestinations(response))
   }
 })

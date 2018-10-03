@@ -1,4 +1,5 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
@@ -19,6 +20,7 @@ const SimpleWidgetParameters = (props) =>
             type: 'html',
             required: true,
             options: {
+              workspace: 'workspace' === props.context.type ? props.context.data : undefined,
               minimal: false
             }
           }
@@ -26,6 +28,14 @@ const SimpleWidgetParameters = (props) =>
       }
     ]}
   />
+
+SimpleWidgetParameters.propTypes = {
+  name: T.string.isRequired,
+  context: T.shape({
+    type: T.string,
+    data: T.object
+  })
+}
 
 export {
   SimpleWidgetParameters

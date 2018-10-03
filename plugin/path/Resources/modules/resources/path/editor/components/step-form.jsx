@@ -100,7 +100,10 @@ const StepForm = props =>
           {
             name: 'description',
             type: 'html',
-            label: trans('content')
+            label: trans('content'),
+            options: {
+              workspace: props.workspace
+            }
           }
         ]
       }, {
@@ -199,6 +202,7 @@ const StepForm = props =>
   </FormData>
 
 implementPropTypes(StepForm, StepTypes, {
+  workspace: T.object,
   stepPath: T.string.isRequired,
   customNumbering: T.bool,
   pickSecondaryResources: T.func.isRequired,

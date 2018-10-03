@@ -16,6 +16,7 @@ import {buildParentChapterChoices} from '#/plugin/lesson/resources/lesson/utils'
 import {actions as lessonActions} from '#/plugin/lesson/resources/lesson/store'
 import {MODAL_LESSON_CHAPTER_DELETE} from '#/plugin/lesson/resources/lesson/modals/chapter'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {selectors} from '#/plugin/lesson/resources/lesson/store'
 
@@ -105,7 +106,10 @@ const ChapterFormComponent = props =>
             name: 'text',
             type: 'html',
             label: trans('text'),
-            required: true
+            required: true,
+            options: {
+              workspace: props.workspace
+            }
           }
         ]
       }
@@ -140,11 +144,11 @@ const ChapterFormComponent = props =>
         callback={() => {props.delete(props.lesson.id, props.chapter.slug, props.chapter.title, props.history)}}
       />}
     </ButtonToolbar>
-
   </FormData>
 
 const ChapterForm = withRouter(connect(
   state => ({
+    workspace: resourceSelectors.workspace(state),
     lesson: selectors.lesson(state),
     chapter: selectors.chapter(state),
     tree: selectors.treeData(state),

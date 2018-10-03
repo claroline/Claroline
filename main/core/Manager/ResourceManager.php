@@ -25,6 +25,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\ExportResourceException;
@@ -1787,9 +1788,11 @@ class ResourceManager
     /**
      * Returns the list of file upload destination choices.
      *
+     * @param Workspace $workspace
+     *
      * @return array
      */
-    public function getDefaultUploadDestinations()
+    public function getDefaultUploadDestinations(Workspace $workspace = null)
     {
         /** @var User $user */
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
@@ -1807,15 +1810,18 @@ class ResourceManager
             );
         }
 
-        /** @var ResourceNode $node */
-        $node = $this->container->get('request_stack')->getMasterRequest()->getSession()->get('current_resource_node');
+        if ($workspace) {
+            $directories = array_filter($this->directoryRepo->findDefaultUploadDirectories($workspace), function (ResourceNode $node) {
+                $collection = new ResourceCollection([$node]);
+                $collection->setAttributes(['type' => 'file']);
 
-        if ($node && $node->getWorkspace()) {
-            $root = $this->directoryRepo->findDefaultUploadDirectories($node->getWorkspace());
+                return $this->container->get('security.authorization_checker')->isGranted('CREATE', $collection);
+            });
 
-            if ($this->container->get('security.authorization_checker')->isGranted('CREATE', $root)) {
-                $defaults = array_merge($defaults, $root);
-            }
+            $defaults = array_merge(
+                $defaults,
+                $directories
+            );
         }
 
         return $defaults;

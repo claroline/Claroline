@@ -79,6 +79,7 @@ class WidgetContentFormComponent extends Component {
           >
             {this.state.customForm && React.createElement(this.state.customForm.component, {
               name: this.props.name,
+              context: this.props.context,
               instance: this.props.instance
             })}
           </Await>
@@ -91,6 +92,7 @@ class WidgetContentFormComponent extends Component {
 WidgetContentFormComponent.propTypes = {
   level: T.number,
   name: T.string.isRequired,
+  context: T.object.isRequired,
   instance: T.shape(
     WidgetInstanceTypes.propTypes
   ).isRequired

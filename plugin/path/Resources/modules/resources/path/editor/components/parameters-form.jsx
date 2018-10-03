@@ -39,7 +39,10 @@ const ParametersForm = props =>
                 name: 'display.description',
                 type: 'html',
                 label: trans('overview_message', {}, 'path'),
-                displayed: props.path.display.showOverview
+                displayed: props.path.display.showOverview,
+                options: {
+                  workspace: props.workspace
+                }
               }
             ]
           }
@@ -81,6 +84,7 @@ const ParametersForm = props =>
   />
 
 ParametersForm.propTypes = {
+  workspace: T.object,
   path: T.shape({
     display: T.shape({
       description: T.string,

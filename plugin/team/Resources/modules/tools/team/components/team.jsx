@@ -14,6 +14,7 @@ import {trans} from '#/main/core/translation'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {UserList} from '#/main/core/administration/user/user/components/user-list'
 
+import {select as workspaceSelect} from '#/main/core/workspace/selectors'
 import {selectors, actions} from '#/plugin/team/tools/team/store'
 import {Team as TeamType} from '#/plugin/team/tools/team/prop-types'
 
@@ -75,7 +76,10 @@ const TeamComponent = props =>
             {
               name: 'description',
               type: 'html',
-              label: trans('description')
+              label: trans('description'),
+              options: {
+                workspace: props.workspace
+              }
             }
           ]
         }
@@ -128,6 +132,7 @@ const TeamComponent = props =>
   </div>
 
 TeamComponent.propTypes = {
+  workspace: T.object,
   team: T.shape(TeamType.propTypes).isRequired,
   canEdit: T.bool.isRequired,
   allowedTeams: T.number,
@@ -139,6 +144,7 @@ TeamComponent.propTypes = {
 
 const Team = connect(
   (state) => ({
+    workspace: workspaceSelect.workspace(state),
     team: formSelectors.data(formSelectors.form(state, 'teams.current')),
     canEdit: selectors.canEdit(state),
     allowedTeams: selectors.allowedTeams(state),

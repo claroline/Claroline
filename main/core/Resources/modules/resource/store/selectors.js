@@ -21,6 +21,11 @@ const parent = createSelector(
   (resourceNode) => resourceNode.parent
 )
 
+const workspace = createSelector(
+  [resourceNode],
+  (resourceNode) => resourceNode.workspace
+)
+
 const meta = createSelector(
   [resourceNode],
   (resourceNode) => resourceNode.meta
@@ -85,6 +90,7 @@ export const selectors = {
   accessErrors,
   // node
   resourceNode,
+  workspace,
   parent,
   meta,
   published,
