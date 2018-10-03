@@ -159,7 +159,7 @@ class HomeTabSerializer
                 $existingRoles = $homeTabConfig->getRoles();
 
                 foreach ($existingRoles as $role) {
-                    if (!in_array($role->getUuid(), $data['roles'])) {
+                    if (!in_array($role->getUuid(), $data['restrictions']['roles'])) {
                         // the role no longer exist we can remove it
                         $homeTabConfig->removeRole($role);
                     }

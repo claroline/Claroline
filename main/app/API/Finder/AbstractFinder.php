@@ -136,7 +136,8 @@ abstract class AbstractFinder implements FinderInterface
         //let doctrine do its stuff for the fist part
         $firstQb = $this->om->createQueryBuilder();
         $firstQb->select('DISTINCT obj')->from($this->getClass(), 'obj');
-        $this->configureQueryBuilder($firstQb, $firstSearch);
+        $build = $this->configureQueryBuilder($firstQb, $firstSearch);
+        $firstQb = $build ? $build : $firstQb;
         //this is our first part of the union
 
         $firstQ = $firstQb->getQuery();
@@ -145,13 +146,13 @@ abstract class AbstractFinder implements FinderInterface
         //new qb for the 2nd part
         $secQb = $this->om->createQueryBuilder();
         $secQb->select('DISTINCT obj')->from($this->getClass(), 'obj');
-        $this->configureQueryBuilder($secQb, $secondSearch);
+
+        $build = $this->configureQueryBuilder($secQb, $secondSearch);
+        $secQb = $build ? $build : $secQb;
         //this is the second part of the union
         $secQ = $secQb->getQuery();
         $secSql = $this->getSql($secQ);
-
         $sql = $firstSql.' UNION '.$secSql;
-
         $query = $this->buildQueryFromSql($sql, $options, $sortBy);
 
         $parameters = new ArrayCollection(array_merge(

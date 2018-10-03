@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @DI\Service("claroline.api.finder.home_tab")
@@ -23,6 +24,21 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class HomeTabFinder extends AbstractFinder
 {
+    /**
+     * WorkspaceFinder constructor.
+     *
+     * @DI\InjectParams({
+     *     "tokenStorage" = @DI\Inject("security.token_storage")
+     * })
+     *
+     * @param AuthorizationCheckerInterface $authChecker
+     * @param TokenStorageInterface         $tokenStorage
+     */
+    public function __construct(TokenStorageInterface $tokenStorage)
+    {
+        $this->tokenStorage = $tokenStorage;
+    }
+
     public function getClass()
     {
         return HomeTab::class;
@@ -92,17 +108,52 @@ class HomeTabFinder extends AbstractFinder
                     $qb->setParameter('userId', $filterValue);
                     break;
                 case 'workspace':
-                    $qb->leftJoin('obj.workspace', 'w');
-                    $qb->andWhere("w.uuid = :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue);
+                    $roleNames = array_map(function ($role) {
+                        return $role->getRole();
+                    }, $this->tokenStorage->getToken()->getRoles());
 
+                    if (in_array('ROLE_ADMIN', $roleNames) || in_array('ROLE_MANAGER_'.$filterValue, $roleNames)) {
+                        $qb->leftJoin('obj.workspace', 'w');
+                        $qb->andWhere("w.uuid = :{$filterName}");
+                        $qb->setParameter($filterName, $filterValue);
+                    } else {
+                        $freeSearch = $workspaceSearch = $searches;
+                        $freeSearch['_workspace_free'] = $filterValue;
+                        $workspaceSearch['_workspace_roles'] = $filterValue;
+                        unset($workspaceSearch['workspace']);
+                        unset($freeSearch['workspace']);
+
+                        return $this->union($freeSearch, $workspaceSearch, $options, $sortBy);
+                    }
+
+                    break;
+                case '_workspace_free':
+                    $qb->join('obj.workspace', '_wf');
+                    $qb->leftJoin('config.roles', '_rr2');
+                    $qb->having('COUNT(_rr2.id) = 0');
+                    $qb->andWhere("_wf.uuid = :{$filterName}");
+                    $qb->groupBy('obj.id');
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+                case '_workspace_roles':
+                    $roleNames = array_map(function ($role) {
+                        return $role->getRole();
+                    }, $this->tokenStorage->getToken()->getRoles());
+                    $qb->join('obj.workspace', '_wr');
+                    $qb->join('config.roles', '_rr');
+                    $qb->andWhere("_wr.uuid = :{$filterName}");
+                    $qb->andWhere($qb->expr()->in('_rr.name', ':roleNames'));
+                    $qb->setParameter($filterName, $filterValue);
+                    $qb->setParameter('roleNames', $roleNames);
                     break;
                 default:
                   $this->setDefaults($qb, $filterName, $filterValue);
             }
         }
 
-        $qb->orderBy('config.tabOrder', 'ASC');
+        if (!array_key_exists('_workspace_free', $searches) && !array_key_exists('_workspace_roles', $searches)) {
+            $qb->orderBy('config.tabOrder', 'ASC');
+        }
 
         return $qb;
     }

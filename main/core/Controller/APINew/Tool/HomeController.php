@@ -123,7 +123,7 @@ class HomeController extends AbstractApiController
     }
 
     /**
-     * @EXT\Route("admin/{context}/{contextId}", name="apiv2_home_admin", options={"method_prefix"=false})
+     * @EXT\Route("/admin/{context}/{contextId}", name="apiv2_home_admin", options={"method_prefix"=false})
      * @EXT\Method("PUT")
      *
      * @param Request $request
