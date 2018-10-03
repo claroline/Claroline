@@ -20,23 +20,25 @@ import {actions} from '#/plugin/path/resources/path/store'
 const authenticatedUser = currentUser()
 
 // todo manage empty steps
-const PlayerComponent = props =>
-  <div>
-    {0 === props.steps.length &&
+const PlayerComponent = props => {
+  if (0 === props.steps.length) {
+    return (
       <EmptyPlaceholder
         size="lg"
         title={trans('no_step', {}, 'path')}
       />
-    }
-    {0 !== props.steps.length &&
+    )
+  }
+
+  return (
     <section className="summarized-content">
       <h2 className="sr-only">{trans('play')}</h2>
 
       {props.path.display.showSummary &&
-      <PathSummary
-        prefix="play"
-        steps={props.path.steps}
-      />
+        <PathSummary
+          prefix="play"
+          steps={props.path.steps}
+        />
       }
 
       <Routes
@@ -54,22 +56,22 @@ const PlayerComponent = props =>
             render: (routeProps) => {
               const step = props.steps.find(step => routeProps.match.params.id === step.id)
               const Current =
-              <PathCurrent
-                prefix="/play"
-                current={step}
-                all={props.steps}
-                navigation={props.navigationEnabled}
-              >
-                <Step
-                  {...step}
-                  fullWidth={props.fullWidth}
-                  numbering={getNumbering(props.path.display.numbering, props.path.steps, step)}
-                  manualProgressionAllowed={props.path.display.manualProgressionAllowed}
-                  updateProgression={props.updateProgression}
-                  enableNavigation={props.enableNavigation}
-                  disableNavigation={props.disableNavigation}
-                />
-              </PathCurrent>
+                <PathCurrent
+                  prefix="/play"
+                  current={step}
+                  all={props.steps}
+                  navigation={props.navigationEnabled}
+                >
+                  <Step
+                    {...step}
+                    fullWidth={props.fullWidth}
+                    numbering={getNumbering(props.path.display.numbering, props.path.steps, step)}
+                    manualProgressionAllowed={props.path.display.manualProgressionAllowed}
+                    updateProgression={props.updateProgression}
+                    enableNavigation={props.enableNavigation}
+                    disableNavigation={props.disableNavigation}
+                  />
+                </PathCurrent>
 
               return Current
             }
@@ -77,8 +79,8 @@ const PlayerComponent = props =>
         ]}
       />
     </section>
-    }
-  </div>
+  )
+}
 
 PlayerComponent.propTypes = {
   fullWidth: T.bool.isRequired,

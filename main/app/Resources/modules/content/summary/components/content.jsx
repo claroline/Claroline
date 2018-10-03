@@ -7,9 +7,7 @@ import {Summary as SummaryTypes} from '#/main/app/content/summary/prop-types'
 const SummarizedContent = props =>
   <section className="summarized-content">
     {props.summary.displayed &&
-      <Summary
-        {...props.summary}
-      />
+      <Summary {...props.summary} />
     }
 
     <div className="content-container">

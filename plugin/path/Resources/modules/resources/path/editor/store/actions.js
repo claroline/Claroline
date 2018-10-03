@@ -1,5 +1,7 @@
 import {makeActionCreator} from '#/main/app/store/actions'
 
+import {selectors} from '#/plugin/path/resources/path/editor/store/selectors'
+
 export const STEP_ADD = 'STEP_ADD'
 export const STEP_REMOVE = 'STEP_REMOVE'
 export const STEP_PASTE = 'STEP_PASTE'
@@ -24,7 +26,7 @@ actions.paste = (parentId) => (dispatch, getState) => {
   // retrieves the copy
   const state = getState()
 
-  dispatch(actions.pasteStep(parentId, state.pathForm.copy))
+  dispatch(actions.pasteStep(parentId, selectors.stepCopy(state)))
   dispatch(actions.resetStepCopy())
 }
 

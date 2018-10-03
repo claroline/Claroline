@@ -35,7 +35,7 @@ const reducer = combineReducers({
   path: makeReducer({}, {
     [RESOURCE_LOAD]: (state, action) => action.resourceData.path || state,
     // replaces path data after success updates
-    [FORM_SUBMIT_SUCCESS+'/pathForm']: (state, action) => action.updatedData,
+    [FORM_SUBMIT_SUCCESS+'/resource.pathForm']: (state, action) => action.updatedData,
     [STEP_UPDATE_PROGRESSION]: (state, action) => {
       const newState = cloneDeep(state)
       const stepPath = getStepPath(action.stepId, newState.steps, 0, [])

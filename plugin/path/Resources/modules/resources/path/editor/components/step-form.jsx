@@ -85,7 +85,7 @@ const StepForm = props =>
     buttons={true}
     save={{
       type: CALLBACK_BUTTON,
-      callback: () => props.saveForm()
+      callback: props.saveForm
     }}
     cancel={{
       type: LINK_BUTTON,

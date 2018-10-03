@@ -4,7 +4,8 @@ import {connect} from 'react-redux'
 import classes from 'classnames'
 
 import {trans} from '#/main/core/translation'
-import {NavLink} from '#/main/app/router'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action.jsx'
 import {Action as ActionTypes} from '#/main/core/layout/action/prop-types'
 
@@ -70,11 +71,13 @@ class SummaryLink extends Component {
     return (
       <li className="summary-link-container">
         <div className="summary-link">
-          <NavLink to={`/${this.props.prefix}/${this.props.step.id}`}>
-            <span className={classes('step-progression fa fa-circle', this.props.step.userProgression && this.props.step.userProgression.status)} />
-
-            {this.props.opened && this.props.step.title}
-          </NavLink>
+          <Button
+            type={LINK_BUTTON}
+            tooltip={!this.props.opened ? 'right' : undefined}
+            icon={classes('step-progression fa fa-circle', this.props.step.userProgression && this.props.step.userProgression.status)}
+            label={this.props.step.title}
+            target={`/${this.props.prefix}/${this.props.step.id}`}
+          />
 
           {(this.props.opened && (this.state.collapsible || 0 !== this.props.actions.length)) &&
             <div className="step-actions">
@@ -159,10 +162,13 @@ const Summary = props =>
         {props.parameters &&
           <li className="summary-link-container">
             <div className="summary-link">
-              <NavLink to={`/${props.prefix}/parameters`}>
-                <span className="fa fa-cog"/>
-                {props.opened && trans('parameters')}
-              </NavLink>
+              <Button
+                type={LINK_BUTTON}
+                tooltip={!props.opened ? 'right' : undefined}
+                icon="fa fa-cog"
+                label={trans('parameters')}
+                target={`/${props.prefix}/parameters`}
+              />
             </div>
           </li>
         }
@@ -180,15 +186,13 @@ const Summary = props =>
         {props.add &&
           <li className="summary-link-container">
             <div className="summary-link">
-              <button
-                type="button"
-                className="btn btn-link btn-add"
-                onClick={() => props.add(null)}
-              >
-                <span className="fa fa-plus"/>
-
-                {props.opened && trans('step_add', {}, 'path')}
-              </button>
+              <Button
+                type={CALLBACK_BUTTON}
+                tooltip={!props.opened ? 'right' : undefined}
+                icon="fa fa-plus"
+                label={trans('step_add', {}, 'path')}
+                callback={() => props.add(null)}
+              />
             </div>
           </li>
         }
