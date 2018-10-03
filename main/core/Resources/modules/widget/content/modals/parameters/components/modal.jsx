@@ -13,7 +13,7 @@ import {selectors} from '#/main/core/widget/content/modals/parameters/store'
 
 const ParametersModal = props =>
   <Modal
-    {...omit(props, 'instance', 'saveEnabled', 'save','loadContent', 'formData')}
+    {...omit(props, 'instance', 'saveEnabled', 'save','loadContent', 'formData', 'context')}
     icon="fa fa-fw fa-cog"
     title={trans('parameters')}
     onEntering={() => props.loadContent(props.content)}

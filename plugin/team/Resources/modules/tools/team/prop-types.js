@@ -1,6 +1,6 @@
 import {PropTypes as T} from 'prop-types'
 
-import {ResourceNode as ResourceNodeType} from '#/main/core/resource/data/types/resource/prop-types'
+import {ResourceNode as ResourceNodeType} from '#/main/core/resource/prop-types'
 import {Role as RoleType} from '#/main/core/user/prop-types'
 import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
 

@@ -5,7 +5,7 @@ import {trans} from '#/main/core/translation'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 
 import {ResourceEmbedded} from '#/main/core/resource/components/embedded'
-import {ResourceNode as resourceNodeTypes} from '#/main/core/resource/data/types/resource/prop-types'
+import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 
 const ResourceWidget = props => {
   if (props.resourceNode) {
@@ -28,7 +28,9 @@ const ResourceWidget = props => {
 }
 
 ResourceWidget.propTypes = {
-  resourceNode: T.shape(resourceNodeTypes.propTypes),
+  resourceNode: T.shape(
+    ResourceNodeTypes.propTypes
+  ),
   showResourceHeader: T.bool.isRequired
 }
 

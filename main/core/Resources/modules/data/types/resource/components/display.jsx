@@ -5,26 +5,29 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/core/translation'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 
-import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/data/types/resource/prop-types'
+import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {ResourceCard} from '#/main/core/resource/data/components/resource-card'
 
-// todo placeholder
 // todo embedded option
 // todo add resource actions
 
-const ResourceDisplay = (props) =>
-  <div>
-    {!isEmpty(props.data) ?
+const ResourceDisplay = (props) => {
+  if (!isEmpty(props.data)) {
+    return (
       <ResourceCard
         data={props.data}
-      /> :
-      <EmptyPlaceholder
-        size="lg"
-        icon="fa fa-folder"
-        title={trans('no_resource')}
-      />}
-  </div>
+      />
+    )
+  }
 
+  return (
+    <EmptyPlaceholder
+      size="lg"
+      icon="fa fa-folder"
+      title={trans('no_resource')}
+    />
+  )
+}
 
 ResourceDisplay.propTypes = {
   data: T.shape(

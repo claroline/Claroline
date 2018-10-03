@@ -34,6 +34,10 @@ export default {
           condensed: true
         }
       }, {
+        name: 'parent',
+        label: trans('parent'),
+        type: 'resource'
+      }, {
         name: 'meta.published',
         alias: 'published',
         type: 'boolean',

@@ -11,7 +11,7 @@ import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 
 import {ResourceCard} from '#/main/core/resource/data/components/resource-card'
-import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/data/types/resource/prop-types'
+import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {MODAL_RESOURCE_EXPLORER} from '#/main/core/resource/modals/explorer'
 
 const ResourceInput = props => {

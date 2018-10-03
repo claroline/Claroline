@@ -4,8 +4,8 @@ import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-t
 import {FormGroupWithField as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group'
 
-import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/data/types/resource/prop-types'
-import {ResourceInput} from '#/main/core/resource/data/types/resource/components/input'
+import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
+import {ResourceInput} from '#/main/core/data/types/resource/components/input'
 
 const ResourceGroup = props =>
   <FormGroup {...props}>
