@@ -81,7 +81,6 @@ class MailManager
         $this->container->get('claroline.manager.user_manager')->initializePassword($user);
         $hash = $user->getResetPasswordHash();
         $link = $this->ch->getParameter('ssl_enabled') ? 'https://' : 'http://';
-        $link .= $this->ch->getParameter('domain_name');
         $link .= $this->router->generate(
             'claro_security_reset_password',
             ['hash' => $hash],
@@ -102,7 +101,6 @@ class MailManager
         $this->container->get('claroline.manager.user_manager')->initializePassword($user);
         $hash = $user->getResetPasswordHash();
         $link = $this->ch->getParameter('ssl_enabled') ? 'https://' : 'http://';
-        $link .= $this->ch->getParameter('domain_name');
         $link .= $this->router->generate(
             'claro_security_reset_password',
             ['hash' => $hash],
@@ -122,7 +120,6 @@ class MailManager
     {
         $hash = $user->getResetPasswordHash();
         $link = $this->ch->getParameter('ssl_enabled') ? 'https://' : 'http://';
-        $link .= $this->ch->getParameter('domain_name');
         $link .= $this->router->generate(
             'claro_security_activate_user',
             ['hash' => $hash],
@@ -142,7 +139,6 @@ class MailManager
     {
         $users = $this->container->get('claroline.manager.user_manager')->getByEmailValidationHash($hash);
         $url = $this->ch->getParameter('ssl_enabled') ? 'https://' : 'http://';
-        $url .= $this->ch->getParameter('domain_name');
         $url .= $this->router->generate(
             'claro_security_validate_email',
             ['hash' => $hash],
@@ -171,7 +167,6 @@ class MailManager
         $body = $content[$displayedLocale]['content'];
         $subject = $content[$displayedLocale]['title'];
         $url = $this->ch->getParameter('ssl_enabled') ? 'https://' : 'http://';
-        $url .= $this->ch->getParameter('domain_name');
         $url .= $this->router->generate(
             'claro_security_validate_email',
             ['hash' => $user->getEmailValidationHash()],
