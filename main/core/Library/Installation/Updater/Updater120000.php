@@ -460,32 +460,36 @@ class Updater120000 extends Updater
 
     private function restoreWidgetResourcesListConfig()
     {
-        //configs are stored in a json array so we can't go full sql
-        $sql = '
+        try {
+            //configs are stored in a json array so we can't go full sql
+            $sql = '
             SELECT instance.id as id, config.details as details FROM `claro_resources_widget_config` config
             JOIN claro_widget_instance_temp tempWidget on config.widgetInstance_id = tempWidget.id
             JOIN claro_widget_display_config_temp instance on instance.widget_instance_id = tempWidget.id
         ';
 
-        $configs = $this->conn->query($sql);
+            $configs = $this->conn->query($sql);
 
-        while ($row = $configs->fetch()) {
-            $details = json_decode($row['details'], true);
+            while ($row = $configs->fetch()) {
+                $details = json_decode($row['details'], true);
 
-            if (isset($details['directories'])) {
-                $dirId = $details['directories'][0];
+                if (isset($details['directories'])) {
+                    $dirId = $details['directories'][0];
 
-                $filters = "[{\"property\": \"parent\", \"value\": $dirId}]";
+                    $filters = "[{\"property\": \"parent\", \"value\": $dirId}]";
 
-                $sql = "
+                    $sql = "
                     UPDATE claro_widget_list
                     SET filters = '{$filters}'
                     WHERE widgetInstance_id = {$row['id']}
                 ";
 
-                $stmt = $this->conn->prepare($sql);
-                $stmt->execute();
+                    $stmt = $this->conn->prepare($sql);
+                    $stmt->execute();
+                }
             }
+        } catch (\Exception $e) {
+            $this->log($e->getMessage());
         }
     }
 
