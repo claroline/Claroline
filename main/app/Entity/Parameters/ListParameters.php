@@ -72,7 +72,7 @@ trait ListParameters
      *
      * @var array
      */
-    private $availablePageSizes = [10, 20, 50, 100, -1];
+    private $availablePageSizes = [15, 30, 60, 120, -1];
 
     /**
      * @ORM\Column()

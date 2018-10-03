@@ -5,6 +5,7 @@ import merge from 'lodash/merge'
 
 import {makeInstanceReducer, reduceReducers, combineReducers} from '#/main/app/store/reducer'
 
+import {constants as paginationConst} from '#/main/app/content/pagination/constants'
 import {
   LIST_FILTER_ADD,
   LIST_FILTER_REMOVE,
@@ -34,7 +35,7 @@ const defaultState = {
   page: 0,
   // fixme : this should be -1, otherwise it will break if paginated=false
   // but if I change it know, it will make -1 the default for all list in app
-  pageSize: 20
+  pageSize: paginationConst.DEFAULT_PAGE_SIZE
 }
 
 /**

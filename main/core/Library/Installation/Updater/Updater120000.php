@@ -407,7 +407,7 @@ class Updater120000 extends Updater
                 $this->log('Setting default list parameters...');
 
                 $availableDisplays = "[''table'', ''table-sm'', ''tiles'', ''tiles-sm'', ''list'']";
-                $availablePageSizes = '[10, 20, 50, 100, -1]';
+                $availablePageSizes = '[15, 30, 60, 120, -1]';
 
                 $sql = "
                     INSERT INTO claro_widget_list (
@@ -443,7 +443,7 @@ class Updater120000 extends Updater
                       '[]',
                       '[]',
                       '{$availablePageSizes}',
-                      20,
+                      30,
                       '[]'
                     FROM claro_widget_display_config_temp conf
                     JOIN claro_widget_instance_temp instance_temp ON instance_temp.id = conf.widget_instance_id
