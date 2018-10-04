@@ -113,6 +113,22 @@ class UserFinder extends AbstractFinder
                     $qb->andWhere('r.uuid IN (:roleIds)');
                     $qb->setParameter('roleIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
+                case 'unionRole':
+                    $byUserSearch = $byGroupSearch = $searches;
+                    $byUserSearch['role'] = $filterValue;
+                    $byGroupSearch['_roleGroup'] = $filterValue;
+                    unset($byUserSearch['unionRole']);
+                    unset($byGroupSearch['unionRole']);
+
+                    return $this->union($byUserSearch, $byGroupSearch, $options, $sortBy);
+
+                    break;
+                case '_roleGroup':
+                    $qb->leftJoin('obj.groups', 'ggr');
+                    $qb->leftJoin('ggr.roles', 'groupRole');
+                    $qb->andWhere('groupRole.uuid IN (:groleIds)');
+                    $qb->setParameter('groleIds', is_array($filterValue) ? $filterValue : [$filterValue]);
+                    break;
                 case 'roleTranslation':
                     $qb->leftJoin('obj.roles', 'rn');
                     $qb->andWhere('UPPER(rn.translationKey) LIKE :roleTranslation');

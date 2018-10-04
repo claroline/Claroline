@@ -92,9 +92,7 @@ const reducer = combineReducers({
   announcementDetail: announcementDetailReducer,
 
   selected: combineReducers({
-    list: makeListReducer(selectors.STORE_NAME+'.selected.list', {
-      pageSize: -1
-    }, {
+    list: makeListReducer(selectors.STORE_NAME+'.selected.list', {}, {
       invalidated: makeReducer(false, {
         ['MODAL_HIDE']: () => true, // todo : find better
         [LIST_FILTER_ADD+'/selected.list']: () => true // todo : find better

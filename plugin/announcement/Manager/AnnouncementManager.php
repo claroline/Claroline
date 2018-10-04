@@ -243,36 +243,4 @@ class AnnouncementManager
             'content' => $content,
         ];
     }
-
-    /**
-     * Gets the list of Users that can see an announce.
-     *
-     * @todo make a dql request to retrieve the users (it may be a difficult one to do)
-     *
-     * @param Announcement $announce
-     * @param array        $roles
-     *
-     * @return User[]
-     */
-    public function getVisibleBy(Announcement $announce, array $roles = [])
-    {
-        $node = $announce->getAggregate()->getResourceNode();
-
-        $rights = $node->getRights();
-
-        if (0 === count($roles)) {
-            foreach ($rights as $right) {
-                //1 is the default "open" mask
-                if ($right->getMask() & 1) {
-                    $roles[] = $right->getRole();
-                }
-            }
-
-            $roles[] = $this->roleRepo->findOneBy([
-                'name' => 'ROLE_WS_MANAGER_'.$node->getWorkspace()->getUuid(),
-            ]);
-        }
-
-        return $this->userRepo->findByRolesIncludingGroups($roles, false, 'id', 'ASC');
-    }
 }
