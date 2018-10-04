@@ -12,42 +12,32 @@
 namespace Claroline\CoreBundle\API\Finder\Log\Connection;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
-use Claroline\CoreBundle\Entity\Log\Connection\LogConnectPlatform;
+use Claroline\CoreBundle\Entity\Log\Connection\LogConnectResource;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service("claroline.api.finder.log.connection.platform")
+ * @DI\Service("claroline.api.finder.log.connection.resource")
  * @DI\Tag("claroline.finder")
  */
-class LogConnectPlatformFinder extends AbstractFinder
+class LogConnectResourceFinder extends AbstractFinder
 {
     public function getClass()
     {
-        return LogConnectPlatform::class;
+        return LogConnectResource::class;
     }
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
     {
-        $userJoined = false;
-
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
-                case 'organizations':
-                    if (!$userJoined) {
-                        $qb->join('obj.user', 'u');
-                        $userJoined = true;
-                    }
-                    $qb->leftJoin('u.userOrganizationReferences', 'oref');
-                    $qb->leftJoin('oref.organization', 'o');
-                    $qb->andWhere('o.uuid IN (:organizationIds)');
-                    $qb->setParameter('organizationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
+                case 'resource':
+                    $qb->join('obj.resource', 'r');
+                    $qb->andWhere("r.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
                     break;
                 case 'name':
-                    if (!$userJoined) {
-                        $qb->join('obj.user', 'u');
-                        $userJoined = true;
-                    }
+                    $qb->join('obj.user', 'u');
                     $qb->andWhere($qb->expr()->orX(
                         $qb->expr()->like('UPPER(u.username)', ':name'),
                         $qb->expr()->like(

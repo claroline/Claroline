@@ -19,6 +19,7 @@ class ToolSerializer
     public function serialize(Tool $tool): array
     {
         return [
+          'id' => $tool->getUuid(),
           'name' => $tool->getName(),
         ];
     }

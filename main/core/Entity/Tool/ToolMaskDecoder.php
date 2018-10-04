@@ -26,16 +26,16 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ToolMaskDecoder
 {
-    public static $defaultActions = array('open', 'edit');
-    public static $defaultValues = array('open' => 1, 'edit' => 2);
-    public static $defaultDeniedIconClass = array(
+    public static $defaultActions = ['open', 'edit'];
+    public static $defaultValues = ['open' => 1, 'edit' => 2];
+    public static $defaultDeniedIconClass = [
         'open' => 'fa fa-eye-slash',
         'edit' => 'fa fa-edit',
-    );
-    public static $defaultGrantedIconClass = array(
+    ];
+    public static $defaultGrantedIconClass = [
         'open' => 'fa fa-eye',
         'edit' => 'fa fa-edit',
-    );
+    ];
 
     /**
      * @ORM\Id

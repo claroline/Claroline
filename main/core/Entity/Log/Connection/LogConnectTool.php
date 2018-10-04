@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Entity\Log\Connection;
 
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -37,7 +38,13 @@ class LogConnectTool extends AbstractLogConnect
     protected $originalToolName;
 
     /**
-     * @ORM\Column(name="workspace_name")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
+     * @ORM\JoinColumn(name="workspace_id", onDelete="SET NULL", nullable=true)
+     */
+    protected $workspace;
+
+    /**
+     * @ORM\Column(name="workspace_name", nullable=true)
      */
     protected $workspaceName;
 
@@ -59,7 +66,13 @@ class LogConnectTool extends AbstractLogConnect
         if ($tool) {
             $this->setToolName($tool->getName());
             $this->setOrignalToolName($tool->getTool()->getName());
-            $this->setWorkspaceName($tool->getWorkspace()->getName());
+
+            $workspace = $tool->getWorkspace();
+
+            if ($workspace) {
+                $this->setWorkspace($workspace);
+                $this->setWorkspaceName($tool->getWorkspace()->getName());
+            }
         }
     }
 
@@ -93,6 +106,26 @@ class LogConnectTool extends AbstractLogConnect
     public function setOrignalToolName($originalToolName)
     {
         $this->originalToolName = $originalToolName;
+    }
+
+    /**
+     * @return Workspace
+     */
+    public function getWorkspace()
+    {
+        return $this->workspace;
+    }
+
+    /**
+     * @param Workspace $workspace
+     */
+    public function setWorkspace(Workspace $workspace = null)
+    {
+        $this->workspace = $workspace;
+
+        if ($workspace) {
+            $this->setWorkspaceName($workspace->getName());
+        }
     }
 
     /**

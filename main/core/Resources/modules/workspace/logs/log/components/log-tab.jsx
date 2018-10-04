@@ -18,8 +18,8 @@ import {
   PageAction,
   MoreAction
 } from '#/main/core/layout/page/components/page-actions'
-import {Logs} from '#/main/core/administration/logs/log/components/log-list'
-import {UserLogs} from '#/main/core/administration/logs/log/components/user-list'
+import {Logs} from '#/main/core/workspace/logs/log/components/log-list'
+import {UserLogs} from '#/main/core/workspace/logs/log/components/user-list'
 import {LogDetails} from '#/main/core/layout/logs'
 
 const LogTabActionsComponent = (props) => {
@@ -34,7 +34,7 @@ const LogTabActionsComponent = (props) => {
       }, {
         type: DOWNLOAD_BUTTON,
         file: {
-          url: url(['apiv2_admin_tool_logs_list_csv']) + props.logsQuery
+          url: url(['apiv2_workspace_tool_logs_list_csv', {'workspaceId': props.workspaceId}]) + props.logsQuery
         },
         label: trans('download_csv_list', {}, 'log'),
         icon: 'fa fa-download'
@@ -53,10 +53,10 @@ const LogTabActionsComponent = (props) => {
       }, {
         type: DOWNLOAD_BUTTON,
         file: {
-          url: url(['apiv2_admin_tool_logs_list_users_csv']) + props.usersQuery
+          url: url(['apiv2_workspace_tool_logs_list_users_csv', {'workspaceId': props.workspaceId}]) + props.usersQuery
         },
         label: trans('download_csv_list', {}, 'log'),
-        icon: 'fa fa-download'
+        icon: 'fa fa-fw fa-download'
       }
     ])
   }
@@ -82,12 +82,14 @@ const LogTabActionsComponent = (props) => {
 
 LogTabActionsComponent.propTypes = {
   location: T.object.isRequired,
+  workspaceId: T.number,
   logsQuery: T.string,
   usersQuery: T.string
 }
 
 const LogTabActions = withRouter(connect(
   state => ({
+    workspaceId: state.workspaceId,
     logsQuery: listSelect.queryString(listSelect.list(state, 'logs')),
     usersQuery: listSelect.queryString(listSelect.list(state, 'userActions'))
   })
@@ -104,7 +106,7 @@ const LogTabComponent = props =>
         path: '/log/:id',
         component: LogDetails,
         exact: true,
-        onEnter: (params) => props.openLog(params.id)
+        onEnter: (params) => props.openLog(params.id, props.workspaceId)
       }, {
         path: '/log/users/logs',
         component: UserLogs,
@@ -114,14 +116,17 @@ const LogTabComponent = props =>
   />
 
 LogTabComponent.propTypes = {
+  workspaceId: T.number.isRequired,
   openLog: T.func.isRequired
 }
 
 const LogTab = connect(
-  null,
+  state => ({
+    workspaceId: state.workspaceId
+  }),
   dispatch => ({
-    openLog(id) {
-      dispatch(logActions.openLog('apiv2_admin_tool_logs_get', {id}))
+    openLog(id, workspaceId) {
+      dispatch(logActions.openLog('apiv2_workspace_tool_logs_get', {id, workspaceId}))
     }
   })
 )(LogTabComponent)

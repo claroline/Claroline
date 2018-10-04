@@ -4,8 +4,8 @@ import {PropTypes as T} from 'prop-types'
 import {asset} from '#/main/core/scaffolding/asset'
 import {DataCard} from '#/main/core/data/components/data-card'
 import {UserAvatar} from '#/main/core/user/components/avatar'
-import {convertTimestampToString} from '#/main/core/administration/logs/connection/utils'
-import {LogConnectPlatform as LogConnectPlatformType} from '#/main/core/administration/logs/connection/prop-types'
+import {convertTimestampToString} from '#/main/core/logs/utils'
+import {LogConnectPlatform as LogConnectPlatformType} from '#/main/core/logs/prop-types'
 
 const LogConnectPlatformCard = props =>
   <DataCard

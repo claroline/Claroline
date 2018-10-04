@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Tool;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Plugin;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,6 +25,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Tool
 {
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -136,6 +139,7 @@ class Tool
 
     public function __construct()
     {
+        $this->refreshUuid();
         $this->maskDecoders = new ArrayCollection();
         $this->pwsToolConfig = new ArrayCollection();
     }

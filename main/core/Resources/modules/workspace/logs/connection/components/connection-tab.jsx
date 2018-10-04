@@ -8,11 +8,12 @@ import {DOWNLOAD_BUTTON} from '#/main/app/buttons'
 import {Routes} from '#/main/app/router'
 
 import {trans} from '#/main/core/translation'
+// import {select as workspaceSelect} from '#/main/core/workspace/selectors'
 import {
   PageActions,
   MoreAction
 } from '#/main/core/layout/page/components/page-actions'
-import {Connections} from '#/main/core/administration/logs/connection/components/connections'
+import {Connections} from '#/main/core/workspace/logs/connection/components/connections'
 
 const ConnectionTabActionsComponent = (props) =>
   <PageActions>
@@ -21,7 +22,7 @@ const ConnectionTabActionsComponent = (props) =>
         {
           type: DOWNLOAD_BUTTON,
           file: {
-            url: url(['apiv2_log_connect_platform_list_csv']) + props.queryString
+            url: url(['apiv2_log_connect_workspace_list_csv', {workspace: props.workspaceId}]) + props.queryString
           },
           label: trans('download_csv_list', {}, 'log'),
           icon: 'fa fa-download'
@@ -31,11 +32,14 @@ const ConnectionTabActionsComponent = (props) =>
   </PageActions>
 
 ConnectionTabActionsComponent.propTypes = {
+  workspaceId: T.string,
   queryString: T.string
 }
 
 const ConnectionTabActions = connect(
   state => ({
+    workspaceId: state.workspaceId,
+    // workspaceUuid: workspaceSelect.workspace(state).uuid,
     queryString: listSelect.queryString(listSelect.list(state, 'connections.list'))
   })
 )(ConnectionTabActionsComponent)

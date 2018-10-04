@@ -5,14 +5,14 @@ namespace Claroline\CoreBundle\API\Serializer\Log\Connection;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\CoreBundle\Entity\Log\Connection\LogConnectPlatform;
+use Claroline\CoreBundle\Entity\Log\Connection\LogConnectResource;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service("claroline.serializer.log.connect.platform")
+ * @DI\Service("claroline.serializer.log.connect.resource")
  * @DI\Tag("claroline.serializer")
  */
-class LogConnectPlatformSerializer
+class LogConnectResourceSerializer
 {
     use SerializerTrait;
 
@@ -20,7 +20,7 @@ class LogConnectPlatformSerializer
     private $serializer;
 
     /**
-     * LogConnectPlatformSerializer constructor.
+     * LogConnectResourceSerializer constructor.
      *
      * @DI\InjectParams({
      *     "serializer" = @DI\Inject("claroline.api.serializer")
@@ -35,22 +35,25 @@ class LogConnectPlatformSerializer
 
     public function getClass()
     {
-        return LogConnectPlatform::class;
+        return LogConnectResource::class;
     }
 
     /**
-     * @param LogConnectPlatform $log
+     * @param LogConnectResource $log
      * @param array              $options
      *
      * @return array
      */
-    public function serialize(LogConnectPlatform $log, array $options = [])
+    public function serialize(LogConnectResource $log, array $options = [])
     {
         $serialized = [
             'id' => $log->getUuid(),
             'date' => $log->getConnectionDate()->format('Y-m-d\TH:i:s'),
             'duration' => $log->getDuration(),
             'user' => $this->serializer->serialize($log->getUser(), [Options::SERIALIZE_MINIMAL]),
+            'resource' => $this->serializer->serialize($log->getResource(), [Options::SERIALIZE_MINIMAL]),
+            'resourceName' => $log->getResourceName(),
+            'resourceType' => $log->getResourceType(),
         ];
 
         return $serialized;

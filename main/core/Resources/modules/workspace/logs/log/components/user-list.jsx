@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
+
 import {UserLogList} from '#/main/core/layout/logs'
 
 const List = props =>

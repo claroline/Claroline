@@ -1,6 +1,6 @@
 import {bootstrap} from '#/main/app/bootstrap'
 
-import {LogTool} from '#/main/core/administration/logs/components/tool.jsx'
+import {LogTool} from '#/main/core/administration/logs/components/tool'
 import {reducer} from '#/main/core/administration/logs/reducer'
 
 

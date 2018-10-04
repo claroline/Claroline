@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Tool;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -25,6 +26,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AdminTool
 {
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -59,6 +62,7 @@ class AdminTool
 
     public function __construct()
     {
+        $this->refreshUuid();
         $this->roles = new ArrayCollection();
     }
 

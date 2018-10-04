@@ -22,6 +22,7 @@ use Claroline\CoreBundle\Event\Log\LogResourceDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogUserDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
+use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceRoleDeleteEvent;
 use Claroline\CoreBundle\Event\LogCreateEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -340,7 +341,7 @@ class LogListener
                     true
                 );
             }
-        } elseif ($event instanceof LogUserLoginEvent && $logCreated && $log) {
+        } elseif ($logCreated && $log && ($event instanceof LogUserLoginEvent || $event instanceof LogWorkspaceEnterEvent)) {
             $this->logConnectManager->manageConnection($log);
         }
     }

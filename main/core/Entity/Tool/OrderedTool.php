@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Tool;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -42,6 +43,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  */
 class OrderedTool
 {
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -118,6 +121,7 @@ class OrderedTool
 
     public function __construct()
     {
+        $this->refreshUuid();
         $this->rights = new ArrayCollection();
     }
 

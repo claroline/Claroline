@@ -38,6 +38,7 @@ class OrderedToolSerializer
         return [
           //maybe remove tools. See later
           'id' => $orderedTool->getId(),
+          'uuid' => $orderedTool->getUuid(),
           'tool' => $this->toolSerializer->serialize($orderedTool->getTool()),
           'position' => $orderedTool->getOrder(),
           'restrictions' => $this->serializeRestrictions($orderedTool),

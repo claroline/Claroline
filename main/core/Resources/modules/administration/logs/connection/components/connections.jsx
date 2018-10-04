@@ -11,7 +11,6 @@ const Connections = () =>
       url: ['apiv2_log_connect_platform_list'],
       autoload: true
     }}
-    primaryAction={ConnectionList.open}
     definition={ConnectionList.definition}
     card={ConnectionList.card}
   />
