@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
 import {select as listSelectors} from '#/main/app/content/list/store/selectors'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {DetailsData} from '#/main/app/content/details/containers/data'
@@ -23,7 +24,7 @@ const getUserActions = (team, myTeams, totalUsers, allowedTeams, register, unreg
 
   if (canRegister(team, myTeams, totalUsers, allowedTeams)) {
     actions.push({
-      type: 'callback',
+      type: CALLBACK_BUTTON,
       icon: 'fa fa-fw fa-sign-in',
       label: trans('self_register', {}, 'team'),
       callback: () => register(team.id)
@@ -31,7 +32,7 @@ const getUserActions = (team, myTeams, totalUsers, allowedTeams, register, unreg
   }
   if (canUnregister(team, myTeams)) {
     actions.push({
-      type: 'callback',
+      type: CALLBACK_BUTTON,
       icon: 'fa fa-fw fa-sign-out',
       label: trans('self_unregister', {}, 'team'),
       callback: () => unregister(team.id)

@@ -52,6 +52,7 @@ actions.selfRegister = (teamId) => ({
     success: (data, dispatch) => {
       dispatch(actions.addToMyTeams(teamId))
       dispatch(listActions.invalidateData('teams.current.users'))
+      dispatch(listActions.invalidateData('teams.list'))
     }
   }
 })
@@ -65,6 +66,7 @@ actions.selfUnregister = (teamId) => ({
     success: (data, dispatch) => {
       dispatch(actions.removeFromMyTeams(teamId))
       dispatch(listActions.invalidateData('teams.current.users'))
+      dispatch(listActions.invalidateData('teams.list'))
     }
   }
 })
