@@ -122,16 +122,8 @@ class SectionSerializer
 
         $author = null;
 
-        if (!empty($node['author'])) {
-            foreach ($node['author'] as $key => $value) {
-                if ($value instanceof \stdClass || $value instanceof \DateTime) {
-                    unset($node['author'][$key]);
-                }
-            }
-            $author = $this->userSerializer->serialize(
-                $this->userSerializer->deserialize($node['author'], new User()),
-                [Options::SERIALIZE_MINIMAL]
-            );
+        if ($node['author']) {
+            $author = $node['author'];
         }
 
         return [
