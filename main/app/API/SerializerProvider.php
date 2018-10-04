@@ -165,6 +165,10 @@ class SerializerProvider
      */
     public function serialize($object, $options = [])
     {
+        if (!$object) {
+            return $object;
+        }
+
         return $this->get($object)->serialize($object, $options);
     }
 
