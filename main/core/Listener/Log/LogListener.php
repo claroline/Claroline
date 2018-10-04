@@ -260,36 +260,65 @@ class LogListener
             $is = false;
             $pushInSession = true;
             $now = time();
+            $notRepeatableLogTimeInSeconds = $this->container->getParameter(
+                'non_repeatable_log_time_in_seconds'
+            );
 
-            //if ($session->get($event->getAction()) != null) {
-            if (null !== $session->get($event->getLogSignature())) {
-                $oldArray = json_decode($session->get($event->getLogSignature()));
-                $oldSignature = $oldArray->logSignature;
-                $oldTime = $oldArray->time;
+            // Always logs workspace entering if the workspace is different from the previous one
+            if ($event->getIsWorkspaceEnterEvent()) {
+                $workspaceId = $event->getWorkspace()->getUuid();
 
-                if ($oldSignature === $event->getLogSignature()) {
-                    $diff = ($now - $oldTime);
-                    $notRepeatableLogTimeInSeconds = $this->container->getParameter(
-                        'non_repeatable_log_time_in_seconds'
-                    );
+                if (null !== $session->get(LogWorkspaceEnterEvent::ACTION)) {
+                    $oldArray = json_decode($session->get(LogWorkspaceEnterEvent::ACTION));
+                    $oldSignature = $oldArray->logSignature;
+                    $oldTime = $oldArray->time;
 
-                    if ($event->getIsWorkspaceEnterEvent()) {
+                    if ($oldSignature === $event->getAction()) {
+                        $diff = ($now - $oldTime);
+                        $oldWorkspaceId = $oldArray->workspaceId;
                         $notRepeatableLogTimeInSeconds = $notRepeatableLogTimeInSeconds * 3;
-                    }
 
-                    if ($diff > $notRepeatableLogTimeInSeconds) {
-                        $is = false;
-                    } else {
-                        $is = true;
-                        $pushInSession = false;
+                        if ($oldWorkspaceId !== $workspaceId || $diff > $notRepeatableLogTimeInSeconds) {
+                            $is = false;
+                        } else {
+                            $is = true;
+                            $pushInSession = false;
+                        }
                     }
                 }
-            }
 
-            if ($pushInSession) {
-                //Update last logSignature for this event category
-                $array = ['logSignature' => $event->getLogSignature(), 'time' => $now];
-                $session->set($event->getLogSignature(), json_encode($array));
+                if ($pushInSession) {
+                    //Update last log action for this event category
+                    $array = [
+                        'logSignature' => LogWorkspaceEnterEvent::ACTION,
+                        'time' => $now,
+                        'workspaceId' => $workspaceId,
+                    ];
+                    $session->set(LogWorkspaceEnterEvent::ACTION, json_encode($array));
+                }
+            } else {
+                if (null !== $session->get($event->getLogSignature())) {
+                    $oldArray = json_decode($session->get($event->getLogSignature()));
+                    $oldSignature = $oldArray->logSignature;
+                    $oldTime = $oldArray->time;
+
+                    if ($oldSignature === $event->getLogSignature()) {
+                        $diff = ($now - $oldTime);
+
+                        if ($diff > $notRepeatableLogTimeInSeconds) {
+                            $is = false;
+                        } else {
+                            $is = true;
+                            $pushInSession = false;
+                        }
+                    }
+                }
+
+                if ($pushInSession) {
+                    //Update last logSignature for this event category
+                    $array = ['logSignature' => $event->getLogSignature(), 'time' => $now];
+                    $session->set($event->getLogSignature(), json_encode($array));
+                }
             }
 
             return $is;

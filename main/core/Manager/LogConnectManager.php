@@ -121,7 +121,7 @@ class LogConnectManager
 
     private function getPreviousUserLog(User $user, \DateTime $date)
     {
-        $userLogs = $this->logRepo->findBy(['doer' => $user], ['dateLog' => 'DESC']);
+        $userLogs = $this->logRepo->findBy(['doer' => $user], ['dateLog' => 'DESC'], 20);
         $index = 0;
 
         // Retrieves the first log which date is lower than log triggering this function
