@@ -100,6 +100,8 @@ class MessageFinder extends AbstractFinder
                     $qb->orderBy('um.isRead', $sortByDirection);
                     break;
             }
+        } else {
+            $qb->orderBy('obj.date', 'DESC');
         }
 
         return $qb;

@@ -58,12 +58,13 @@ class MessageValidator implements ValidatorInterface
 
             return $errors;
         }
+
         if (isset($data['to'])) {
             $error = $this->validateTo($data['to']);
-        }
 
-        if ($error) {
-            $errors[] = ['path' => 'to', 'message' => $error];
+            if ($error) {
+                $errors[] = ['path' => 'to', 'message' => $error];
+            }
         }
 
         return $errors;

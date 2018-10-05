@@ -60,12 +60,23 @@ const NewMessageComponent = (props) =>
         className="content-container"
         sections={[
           {
-            title: trans('general'),
-            primary: true,
-            fields: [
+            title: 'message',
+            fields:[
               {
-                name: 'to',
-                type: 'username',
+                name: 'toUser',
+                type: 'users',
+                label: trans('message_form_to'),
+                required: true
+              },
+              {
+                name: 'toGroups',
+                type: 'groups',
+                label: trans('message_form_to'),
+                required: true
+              },
+              {
+                name: 'toWorkspaces',
+                type: 'workspaces',
                 label: trans('message_form_to'),
                 required: true
               },

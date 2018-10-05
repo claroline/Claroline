@@ -119,7 +119,6 @@ class MessageSerializer
 
         $this->sipe('object', 'setObject', $data, $message);
         $this->sipe('content', 'setContent', $data, $message);
-        $this->sipe('to', 'setTo', $data, $message);
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
         if (isset($data['parent'])) {
@@ -144,6 +143,36 @@ class MessageSerializer
 
                 $this->om->persist($userMessage);
             }
+        }
+
+        //build the "to" string here
+        //; is the separator
+        //{} for groups
+        //[] for workspaces
+        $receivers = [];
+
+        if (isset($data['toGroups'])) {
+            $receivers = array_merge(array_map(function ($group) {
+                return '{'.$group['name'].'}';
+            }, $data['toGroups']), $receivers);
+        }
+
+        if (isset($data['toUsers'])) {
+            $receivers = array_merge(array_map(function ($user) {
+                return $user['username'];
+            }, $data['toUsers']), $receivers);
+        }
+
+        if (isset($data['toWorkspaces'])) {
+            $receivers = array_merge(array_map(function ($workspace) {
+                return '['.$workspace['code'].']';
+            }, $data['toWorkspaces']), $receivers);
+        }
+
+        $receiversString = implode(';', $receivers);
+
+        if ('' !== $receiversString && !$message->getTo()) {
+            $message->setTo($receiversString);
         }
 
         return $message;
