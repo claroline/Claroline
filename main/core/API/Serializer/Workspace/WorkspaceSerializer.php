@@ -169,7 +169,7 @@ class WorkspaceSerializer
             if (!in_array(Options::SERIALIZE_LIST, $options)) {
                 $serialized['roles'] = array_map(function (Role $role) {
                     return $this->serializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
-                }, $this->workspaceManager->getRolesWithAccess($workspace));
+                }, array_values(array_unique(array_merge($this->workspaceManager->getRolesWithAccess($workspace), $workspace->getRoles()->toArray()))));
                 $serialized['managers'] = array_map(function (User $manager) {
                     return $this->serializer->serialize($manager, [Options::SERIALIZE_MINIMAL]);
                 }, $this->workspaceManager->getManagers($workspace));
