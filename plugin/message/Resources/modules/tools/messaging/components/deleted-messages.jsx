@@ -65,12 +65,20 @@ const DeletedMessagesComponent = (props) =>
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-sync-alt',
         label: trans('restore', {}, 'actions'),
-        callback: () => props.restoreMessages(rows)
+        callback: () => props.restoreMessages(rows),
+        confirm: {
+          title: trans('messages_restore_title', {}, 'message'),
+          message: trans('messages_restore_confirm', {}, 'message')
+        }
       }, {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-trash-o',
         label: trans('delete', {}, 'actions'),
         dangerous: true,
+        confirm: {
+          title: trans('messages_delete_title', {}, 'message'),
+          message: trans('messages_delete_confirm_permanent', {}, 'message')
+        },
         callback: () => props.deleteMessages(rows)
       }
     ]}

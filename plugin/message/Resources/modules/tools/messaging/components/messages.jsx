@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
-import {Router, Routes} from '#/main/app/router'
+import {Routes} from '#/main/app/router'
 import {actions as listActions} from '#/main/app/content/list/store'
 import {actions as formActions} from '#/main/app/content/form/store'
 
@@ -16,54 +16,48 @@ import {actions, selectors} from '#/plugin/message/tools/messaging/store'
 
 
 const MessagesComponent = (props) =>
-  <Router>
-    <Routes
-      redirect={[
-        {from: '/', exact: true, to: '/received' }
-      ]}
-      routes={[
-        {
-          path: '/received',
-          exact: true,
-          component: ReceivedMessages,
-          onEnter: () => props.invalidateData('receivedMessages')
-        }, {
-          path: '/sent',
-          exact: true,
-          component: SentMessages,
-          onEnter: () => props.invalidateData('sentMessages')
-        }, {
-          path: '/deleted',
-          exact: true,
-          component: DeletedMessages,
-          onEnter: () => props.invalidateData('deletedMessages')
-        }, {
-          path: '/new',
-          exact: true,
-          component: NewMessage,
-          onEnter: () => {
-            props.newMessage()
-          }
-        }, {
-          path: '/message/:id?',
-          exact: true,
-          component: Message,
-          onEnter: (params) => {
-            props.openMessage(params.id)
-            props.newMessage(params.id)
-            props.setAsReply()
-          }
-        }, {
-          path: '/parameters',
-          exact: true,
-          component: MessagesParameters,
-          onEnter: () => {
-            props.resetForm(props.mailNotified)
-          }
+  <Routes
+    redirect={[
+      {from: '/', exact: true, to: '/received' }
+    ]}
+    routes={[
+      {
+        path: '/received',
+        exact: true,
+        component: ReceivedMessages,
+        onEnter: () => props.invalidateData('receivedMessages')
+      }, {
+        path: '/sent',
+        exact: true,
+        component: SentMessages,
+        onEnter: () => props.invalidateData('sentMessages')
+      }, {
+        path: '/deleted',
+        exact: true,
+        component: DeletedMessages,
+        onEnter: () => props.invalidateData('deletedMessages')
+      }, {
+        path: '/new',
+        exact: true,
+        component: NewMessage,
+        onEnter: () => props.newMessage()
+      }, {
+        path: '/message/:id?',
+        exact: true,
+        component: Message,
+        onEnter: (params) => {
+          props.openMessage(params.id)
+          props.newMessage(params.id)
+          props.setAsReply()
         }
-      ]}
-    />
-  </Router>
+      }, {
+        path: '/parameters',
+        exact: true,
+        component: MessagesParameters,
+        onEnter: () => props.resetForm(props.mailNotified)
+      }
+    ]}
+  />
 
 MessagesComponent.propTypes = {
   invalidateData: T.func.isRequired,

@@ -11,7 +11,6 @@ import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {NewMessage} from '#/plugin/message/tools/messaging/components/new-message'
 import {actions, selectors} from '#/plugin/message/tools/messaging/store'
 
-
 const MessageComponent = (props) =>
   <div>
     <h2>{props.message.object}</h2>
@@ -41,6 +40,7 @@ const MessageComponent = (props) =>
         }
       ]}
     />
+
     {(!get(props.message, 'meta.sent') && !get(props.message, 'meta.removed')) &&
       <NewMessage/>
     }
@@ -107,6 +107,7 @@ const Message = connect(
     }
   })
 )(MessageComponent)
+
 export {
   Message
 }
