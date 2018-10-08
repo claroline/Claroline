@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Event\Log\LogUserDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceRoleDeleteEvent;
+use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Event\LogCreateEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\LogConnectManager;
@@ -32,6 +33,7 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -286,9 +288,11 @@ class LogListener
                         if (LogWorkspaceEnterEvent::ACTION === $event->getAction()) {
                             $notRepeatableLogTimeInSeconds = $notRepeatableLogTimeInSeconds * 3;
                         }
-                        if ($oldWorkspaceId !== $workspaceId || $oldKey !== $key || $diff > $notRepeatableLogTimeInSeconds) {
-                            $is = false;
-                        } else {
+                        if ($oldWorkspaceId === $workspaceId &&
+                            $oldKey === $key &&
+                            $diff <= $notRepeatableLogTimeInSeconds &&
+                            !$this->hasBreakingRepeatEvent($session, $event)
+                        ) {
                             $is = true;
                             $pushInSession = false;
                         }
@@ -428,5 +432,47 @@ class LogListener
     public function setDefaults()
     {
         $this->enabledLog = $this->ch->getParameter('platform_log_enabled');
+    }
+
+    /**
+     * Checks if a tool has been opened between 2 resources opening.
+     * If it is the case, the resource opening will not be labelled as a repeat even if it is the same resource.
+     * The same is checked between 2 tools opening.
+     *
+     * @param SessionInterface $session
+     * @param LogGenericEvent  $event
+     *
+     * @return bool
+     */
+    private function hasBreakingRepeatEvent(SessionInterface $session, LogGenericEvent $event)
+    {
+        $hasBreakingRepeatEvent = false;
+        $breakingSignatures = [
+            LogWorkspaceToolReadEvent::ACTION,
+            LogResourceReadEvent::ACTION,
+        ];
+
+        // Only checks for tools (desktop, workspace & admin) & resources opening
+        // TODO: checks for desktop & admin tools
+        if ($event->getIsToolReadEvent() || $event->getIsResourceReadEvent()) {
+            if (!is_null($session->get($event->getAction()))) {
+                $oldArray = json_decode($session->get($event->getAction()));
+                $oldSignature = $oldArray->logSignature;
+                $oldTime = $oldArray->time;
+
+                foreach ($breakingSignatures as $breakingSignature) {
+                    if ($oldSignature !== $breakingSignature && $session->get($breakingSignature)) {
+                        $breakingArray = json_decode($session->get($breakingSignature));
+
+                        if ($oldTime < $breakingArray->time) {
+                            $hasBreakingRepeatEvent = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $hasBreakingRepeatEvent;
     }
 }
