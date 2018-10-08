@@ -170,10 +170,13 @@ const Editor = withRouter(connect(
       dispatch(editorActions.moveTab(tabs, currentTab, newPosition))
     },
     deleteTab(tabs, currentTab, navigate) {
-      dispatch(editorActions.deleteTab(tabs, currentTab))
+      let tabIndex = tabs.findIndex(tab => tab.id === currentTab.id)
+      tabIndex === 0 ? tabIndex++: tabIndex--
 
+      dispatch(editorActions.deleteTab(tabs, currentTab))
+      const redirected = tabs[tabIndex]
       // redirect
-      navigate('/edit')
+      navigate('/edit/tab/' + redirected.id)
     }
   })
 )(EditorComponent))
