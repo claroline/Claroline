@@ -131,7 +131,7 @@ const InfoBar = props =>
         e.stopPropagation()
       }}>
       <span>
-        <UrlButton target={['claro_user_profile', {publicUrl: get(props.post.author, 'meta.publicUrl')}]}>
+        <UrlButton target={['claro_user_profile', {user: get(props.post.author, 'meta.publicUrl')}]}>
           <UserAvatar className="user-picture" picture={props.post.author ? props.post.author.picture : undefined} alt={true} />
         </UrlButton>
         <a className="user-name link">{props.post.author.firstName} {props.post.author.lastName}</a>

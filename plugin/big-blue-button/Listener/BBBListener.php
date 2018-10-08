@@ -15,13 +15,12 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BigBlueButtonBundle\Entity\BBB;
 use Claroline\BigBlueButtonBundle\Form\BBBType;
 use Claroline\BigBlueButtonBundle\Manager\BBBManager;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
-use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Event\PluginOptionsEvent;
+use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
@@ -83,25 +82,6 @@ class BBBListener
         $subRequest = $this->request->duplicate([], null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("create_form_claroline_big_blue_button")
-     *
-     * @param CreateFormResourceEvent $event
-     */
-    public function onCreationForm(CreateFormResourceEvent $event)
-    {
-        $form = $this->formFactory->create(new BBBType(), new BBB());
-        $content = $this->templating->render(
-            'ClarolineBigBlueButtonBundle:BBB:createForm.html.twig',
-            [
-                'form' => $form->createView(),
-                'resourceType' => 'claroline_big_blue_button',
-            ]
-        );
-        $event->setResponseContent($content);
         $event->stopPropagation();
     }
 

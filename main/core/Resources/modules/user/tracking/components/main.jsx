@@ -39,7 +39,7 @@ class TrackingComponent extends Component {
             type: 'url',
             icon: 'fa fa-fw fa-id-card-o',
             label: trans('show_profile', {}, 'platform'),
-            target: ['claro_user_profile', {publicUrl: this.props.user.meta.publicUrl}]
+            target: ['claro_user_profile', {user: this.props.user.meta.publicUrl}]
           }, {
             type: 'callback',
             icon: 'fa fa-fw fa-file-pdf-o',

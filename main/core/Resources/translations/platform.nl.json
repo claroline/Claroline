@@ -601,7 +601,6 @@
     "is_not_writable": "is niet toegangkelijk voor het schrijven",
     "is_not_writable_recursive": "en zijn subdossiers zijn niet toegangkelijk voor het schrijven",
     "is_visible": "Zichtbaar door de gebruikers",
-    "jqplot_date_output_format": "%d-%m-%Y",
     "keep_me_logged_in": "Gebruikersnaam onthouden",
     "keep_user": "",
     "language": "Taal",

@@ -6,6 +6,9 @@ claro_security_logout:
     path: /logout
     options: { expose: true }
 
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+
 claro_oauth_authorize:
     resource: "@ClarolineCoreBundle/Controller/OauthController.php"
     type: annotation
@@ -56,11 +59,6 @@ claro_log:
     prefix: log
     type: annotation
 
-claro_user:
-    resource: "@ClarolineCoreBundle/Controller/UserController.php"
-    type: annotation
-    prefix: user
-
 # new
 claro_user_profile:
     resource: "@ClarolineCoreBundle/Controller/User/ProfileController.php"
@@ -95,11 +93,6 @@ claro_workspace_tool_properties:
     prefix: workspaces/tool/properties
     type: annotation
 
-claro_workspace_tool_tools_properties:
-    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceToolsParametersController.php"
-    prefix: workspaces/tool/properties
-    type: annotation
-
 claro_admin:
     resource: "@ClarolineCoreBundle/Controller/AdministrationController.php"
     type: annotation
@@ -119,21 +112,6 @@ claro_resource_old:
 claro_resource:
     resource: "@ClarolineCoreBundle/Controller/ResourceController.php"
     type: annotation
-
-claro_activity:
-    resource: "@ClarolineCoreBundle/Controller/ActivityController.php"
-    prefix: activity/
-    type: annotation
-
-claro_activity_remove_resource_confirm:
-    path: /activity/remove
-    options: { expose: true }
-    defaults:
-        _controller: FrameworkBundle:Template:template
-        template: 'ClarolineCoreBundle:Activity:remove.html.twig'
-
-fos_js_routing:
-    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
 
 claro_file:
     resource: "@ClarolineCoreBundle/Controller/FileController.php"
@@ -159,14 +137,6 @@ claro_admin_plugin:
     resource: "@ClarolineCoreBundle/Controller/Administration/PluginController.php"
     prefix: admin/plugins
     type: annotation
-
-claro_api:
-    resource: "@ClarolineCoreBundle/Controller/API/User/ApiController.php"
-    type: rest
-    prefix: api
-    defaults: {_format: json}
-    options:
-        expose: true
 
 claro_plugin_api:
     resource: "@ClarolineCoreBundle/Controller/API/Admin/PluginController.php"

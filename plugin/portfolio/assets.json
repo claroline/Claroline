@@ -1,13 +1,1 @@
-{
-  "webpack": {
-    "entry": {
-      "index-app": "index/indexApp",
-      "portfolio-app": "portfolio/portfolioApp",
-      "guides": "guides",
-      "index": "index",
-      "visibility": "visibility",
-      "analytics-portfolio-usage-visibility-chart": "_js/analytics/portfolio_usage_visibility_chart",
-      "portfolio-view": "_js/Portfolio/view"
-    }
-  }
-}
+{}

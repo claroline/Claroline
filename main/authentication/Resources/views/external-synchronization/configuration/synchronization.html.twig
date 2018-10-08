@@ -48,5 +48,5 @@
       window.externalSource = {{ sourceConfig|json_serialize(['Default'])|raw }};
       window.platformRoles = {{ platformRoles|json_serialize()|raw }};
     </script>
-    <script type="text/javascript" src="{{ hotAsset('dist/claroline-distribution-main-authentication-synchronize.js') }}"></script>
+    {#<script type="text/javascript" src="{{ hotAsset('dist/claroline-distribution-main-authentication-synchronize.js') }}"></script>#}
 {% endblock %}

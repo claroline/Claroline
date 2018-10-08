@@ -11,7 +11,6 @@
 
 namespace Claroline\ResultBundle\Listener;
 
-use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Form\Handler\FormHandler;
@@ -95,21 +94,6 @@ class ResultListener
     public function onDelete(DeleteResourceEvent $event)
     {
         $this->manager->delete($event->getResource());
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("widget_claroline_result")
-     *
-     * @param DisplayWidgetEvent $event
-     */
-    public function onDisplayWidget(DisplayWidgetEvent $event)
-    {
-        $loggedUser = $this->tokenStorage->getToken()->getUser();
-        $user = 'anon.' !== $loggedUser ? $loggedUser : null;
-        $workspace = $event->getInstance()->getWorkspace();
-        $content = $this->manager->getWidgetContent($workspace, $user);
-        $event->setContent($content);
         $event->stopPropagation();
     }
 }

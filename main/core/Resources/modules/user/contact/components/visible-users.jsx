@@ -17,7 +17,7 @@ const VisibleUsersComponent = props =>
     name="visibleUsers"
     primaryAction={(row) => ({
       type: URL_BUTTON,
-      target: ['claro_user_profile', {'publicUrl': row.meta.publicUrl}]
+      target: ['claro_user_profile', {'user': row.meta.publicUrl}]
     })}
     fetch={{
       url: ['apiv2_visible_users_list'],

@@ -23,7 +23,7 @@ actions.updatePublicUrl = (user, publicUrl, redirect = false) => ({
     },
     success: () => {
       if (redirect) {
-        window.location = url(['claro_user_profile', {publicUrl: publicUrl}]) // TODO : find better
+        window.location = url(['claro_user_profile', {user: publicUrl}]) // TODO : find better
       }
     }
   }

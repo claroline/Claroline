@@ -654,7 +654,6 @@
     "is_not_writable": "n'est pas accessible en écriture",
     "is_not_writable_recursive": "et ses sous dossiers ne sont pas accessibles en écriture.",
     "is_visible": "Visible par les utilisateurs",
-    "jqplot_date_output_format": "%d-%m-%Y",
     "keep_me_logged_in": "Se souvenir de moi",
     "keep_user": "Conserver cet utilisateur",
     "language": "Langue",

@@ -72,24 +72,4 @@
             ajaxServerErrorHandler(jqXHR.status, jqXHR.responseText);
         }
     });
-
-    // Without the next lines, the fixed top bar overlays content
-    // when jumping to a an internal anchor target
-    var shiftWindow = function () {
-        scrollBy(0, -50);
-    };
-    $(document).ready(function () {
-        if (location.hash) {
-            setTimeout(
-                function () {
-                    shiftWindow();
-                },
-                300
-            );
-        }
-    });
-    $(window).on('hashchange', shiftWindow);
-
-
-
 })();

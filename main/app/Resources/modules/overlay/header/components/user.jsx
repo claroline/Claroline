@@ -61,7 +61,7 @@ const UserMenu = props =>
           className="list-group-item"
           icon="fa fa-fw fa-user"
           label={trans('user_profile')}
-          target={['claro_user_profile', {publicUrl: props.currentUser.publicUrl}]}
+          target={['claro_user_profile', {user: props.currentUser.publicUrl}]}
         />
       }
 

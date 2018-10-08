@@ -107,11 +107,11 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('packages/select2/select2.css') }}" screen="media" />
+    {#<link rel="stylesheet" href="{{ asset('packages/select2/select2.css') }}" screen="media" />#}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/zenstruckform/js/helper.js') }}"></script>
-    <script type="text/javascript" src="{{ hotAsset("dist/claroline-distribution-plugin-portfolio-guides.js") }}"></script>
+    {#<script type="text/javascript" src="{{ hotAsset("dist/claroline-distribution-plugin-portfolio-guides.js") }}"></script>#}
 {% endblock %}

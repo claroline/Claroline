@@ -136,7 +136,7 @@
                                                     class="fa fa-times-circle-o"></span></a>
                                     </td>
                                     <td>
-                                        <a href="{{ path('claro_user_profile', {'publicUrl': user.getPublicUrl()}) }}"
+                                        <a href="{{ path('claro_user_profile', {'user': user.getPublicUrl()}) }}"
                                            title="{{ user.firstname }} {{ user.lastname }}">{{ user.firstname }}</a>
                                     </td>
                                     <td>{{ user.lastname }}</td>

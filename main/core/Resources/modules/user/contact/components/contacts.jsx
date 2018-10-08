@@ -35,7 +35,7 @@ const ContactsComponent = props =>
     }}
     primaryAction={(row) => ({
       type: URL_BUTTON,
-      target: ['claro_user_profile', {publicUrl: row.data.meta.publicUrl}]
+      target: ['claro_user_profile', {user: row.data.meta.publicUrl}]
     })}
     delete={{
       url: ['apiv2_contact_delete_bulk']

@@ -217,11 +217,10 @@
     {% stylesheets debug=false filter='less, cssmin'  output='css/icapportfolio/style_view.css'
       "@IcapPortfolioBundle/Resources/views/less/style.less"
       "@IcapPortfolioBundle/Resources/views/less/interface.less"
-      "packages/angular-motion/dist/angular-motion.min.css"
     %}
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
     {% endstylesheets %}
-    <link rel='stylesheet' type='text/css' href='{{ asset('packages/angular-gridster/dist/angular-gridster.min.css')}}'>
+    {#<link rel='stylesheet' type='text/css' href='{{ asset('packages/angular-gridster/dist/angular-gridster.min.css')}}'>#}
 {% endblock %}
 
 {% block javascripts %}
@@ -245,14 +244,14 @@
 
         <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_portfolio' }) }}"></script>
 
-        <script type="text/javascript" src="{{ hotAsset("dist/claroline-distribution-plugin-portfolio-portfolio-app.js") }}"></script>
+        {#<script type="text/javascript" src="{{ hotAsset("dist/claroline-distribution-plugin-portfolio-portfolio-app.js") }}"></script>#}
         <script type="text/javascript" src="{{ asset('packages/angular-gridster/dist/angular-gridster.min.js') }}"></script>
     {% else %}
         <script type="text/javascript">
           window.widgets = {{ widgets|json_encode()|raw }};
         </script>
 
-        <script type="text/javascript" src="{{ hotAsset("dist/claroline-distribution-plugin-portfolio-portfolio-view.js") }}"></script>
+        {#<script type="text/javascript" src="{{ hotAsset("dist/claroline-distribution-plugin-portfolio-portfolio-view.js") }}"></script>#}
         <script type="text/javascript" src="{{ asset('packages/angular-gridster/dist/angular-gridster.min.js') }}"></script>
     {% endif %}
 {% endblock %}

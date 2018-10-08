@@ -1,5 +1,0 @@
-services:
-    icap_bibliography.twig.bibliography_extension:
-        class: Icap\BibliographyBundle\Twig\BibliographyExtension
-        tags:
-            - { name: twig.extension }

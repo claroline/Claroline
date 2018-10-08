@@ -65,14 +65,6 @@ const reactDllReference = () => {
   })
 }
 
-const angularDllReference = () => {
-  return new webpack.DllReferencePlugin({
-    context: paths.output(),
-    manifest: require(paths.output() + '/angular_dll.manifest.json'),
-    name: 'angular_dll.js'
-  })
-}
-
 /**
  * Makes the build crash in case of babel compilation errors. That
  * behaviour is pretty much needed when testing with karma.
@@ -135,7 +127,6 @@ module.exports = {
   dllReferences,
   assetsInfoFile,
   reactDllReference,
-  angularDllReference,
   scaffoldingDllReference,
   circularDependencies
 }

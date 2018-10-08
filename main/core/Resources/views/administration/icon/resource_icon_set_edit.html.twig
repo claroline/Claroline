@@ -74,5 +74,5 @@
         window.iconSet = {{ iconSet|json_serialize(['Default'])|raw }};
         window.iconItemsByTypes = {{ iconNamesForTypes|json_serialize(['Default'])|raw }};
     </script>
-    <script type="text/javascript" src="{{ hotAsset('dist/claroline-distribution-main-core-resource-icon-item-list.js') }}"></script>
+    {#<script type="text/javascript" src="{{ hotAsset('dist/claroline-distribution-main-core-resource-icon-item-list.js') }}"></script>#}
 {% endblock%}

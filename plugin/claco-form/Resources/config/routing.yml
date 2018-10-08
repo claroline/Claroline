@@ -2,10 +2,6 @@ claro_claco_form_bundle_claco_form:
     resource: "@ClarolineClacoFormBundle/Controller/ClacoFormController.php"
     type:     annotation
     prefix:   /
-claro_claco_form_bundle_claco_form_widget:
-    resource: "@ClarolineClacoFormBundle/Controller/ClacoFormWidgetController.php"
-    type:     annotation
-    prefix:   /
 
 # JSON API
 claro_claco_form_bundle_claco_form_api:
@@ -14,5 +10,3 @@ claro_claco_form_bundle_claco_form_api:
     type: api
     options:
         expose: true
-
-

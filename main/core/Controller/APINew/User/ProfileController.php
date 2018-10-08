@@ -66,19 +66,6 @@ class ProfileController extends AbstractApiController
     }
 
     /**
-     * Gets the profile configuration for the current platform.
-     *
-     * @EXT\Route("", name="apiv2_profile_get")
-     * @EXT\Method("GET")
-     */
-    public function getAction()
-    {
-        return new JsonResponse(
-            $this->serializer->serialize()
-        );
-    }
-
-    /**
      * Updates the profile configuration for the current platform.
      *
      * @EXT\Route("", name="apiv2_profile_update")

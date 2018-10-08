@@ -32,8 +32,7 @@
                 </li>
 
                 {{ render(controller("ClarolineCoreBundle:ResourceOld:renderBreadcrumbs", {
-                    'node': resourceNode,
-                    '_breadcrumbs': app.request.query.get('_breadcrumbs', {})
+                    'node': resourceNode
                 })) }}
             {% endif %}
 

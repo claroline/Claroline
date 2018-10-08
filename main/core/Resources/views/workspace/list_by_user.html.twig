@@ -1,27 +1,28 @@
 {% extends 'ClarolineCoreBundle:desktop:layout.html.twig' %}
 
-{% block title %}{{ parent() ~ ' - ' ~ "all_public_workspaces" | trans({}, "platform") | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ "my_workspaces" | trans({}, "platform") | striptags | raw }}{% endblock %}
 
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 
 {% block breadcrumb %}
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'fa fa-book',
-                'name': 'workspaces'|trans({}, 'platform'),
-                'href': path('claro_workspace_list')
-            },
-            {
-                'name': 'my_workspaces'|trans({}, 'platform'),
-                'href': ''
-            }
-        ])
-    }}
+    {{ macros.breadcrumbs([
+        {
+            'name': 'workspaces'|trans({}, 'platform'),
+            'href': path('claro_workspace_list')
+        },
+        {
+            'name': 'my_workspaces'|trans({}, 'platform'),
+            'href': ''
+        }
+    ]) }}
 {% endblock %}
 
 {% block content %}
-    <div class="page-container workspaces-container" data-url="{{'apiv2_workspace_registered_list'| json_encode | raw | escape }}" data-parameters="{{ parameters | json_encode | raw | escape }}"></div>
+    <div
+        class="page-container workspaces-container"
+        data-url="{{'apiv2_workspace_registered_list'| json_encode | raw | escape }}"
+        data-parameters="{{ parameters | json_encode | raw | escape }}"
+    ></div>
 {% endblock %}
 
 {% block javascripts %}

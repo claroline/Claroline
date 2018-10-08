@@ -64,13 +64,6 @@ services:
         tags:
             - { name: form.type, alias: tags }
 
-    icap.blog.twig.extension:
-        class: "%icap.blog.twig.extension.class%"
-        arguments: ["@icap.blog.manager.tag", "@icap.blog.post_repository", %icap.blog.banner_directory%, %icap.blog.banner_upload_directory%]
-        tags:
-            - { name: twig.extension }
-
-
     icap.blog.form.type.listWidgetBlog:
         class: Icap\BlogBundle\Form\ListWidgetBlogType
         arguments:

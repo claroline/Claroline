@@ -31,7 +31,7 @@ const UsersList = props =>
         type: URL_BUTTON,
         icon: 'fa fa-fw fa-id-card-o',
         label: trans('show_profile'),
-        target: ['claro_user_profile', {publicUrl: rows[0].meta.publicUrl}],
+        target: ['claro_user_profile', {user: rows[0].meta.publicUrl}],
         scope: ['object']
       }, {
         type: CALLBACK_BUTTON,

@@ -26,11 +26,8 @@
     }}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">CAS</h3>
-    </div>
-    {{ macros.flashBox() }}
+{% block page_title %}CAS{% endblock %}
+{% block page_content %}
     <form role="form" class="form-horizontal" action="{{ path('claro_admin_cas_server_config_form_submit') }}" method="post" enctype="multipart/form-data" id="form_settings">
         <div class="panel-body">
             {{ form_widget(form) }}

@@ -1,3 +1,0 @@
-twig:
-  form_themes:
-    - 'IcapBlogBundle:form:fields.html.twig'

@@ -1,7 +1,1 @@
-{
-  "webpack": {
-    "entry": {
-      "list": "flashcard/flashcard"
-    }
-  }
-}
+{}

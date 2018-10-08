@@ -46,14 +46,14 @@
 </div>
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
+    {#<link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />#}
 {% endblock %}
 
 {% block javascripts %}
     <script type="text/javascript" src='{{ asset('bundles/icapbadge/js/list.js') }}'></script>
     {% if parameters.badges_per_user is defined and parameters.badges_per_user is not empty and parameters.totalBadges > 0 %}
-        <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="{{ asset('packages/jqplot/src/excanvas.min.js') }}"></script><![endif]-->
-        <script type="text/javascript" src="{{ asset('packages/jqplot/src/jquery.jqplot.js') }}"></script>
+        <!--<script language="javascript" type="text/javascript" src="{{ asset('packages/jqplot/src/excanvas.min.js') }}"></script>-->
+        {#<script type="text/javascript" src="{{ asset('packages/jqplot/src/jquery.jqplot.js') }}"></script>
         {% javascripts debug=false output='js/icapbadge/jqplot.plugins.min.js'
         'packages/jqplot/src/plugins/jqplot.pieRenderer.js'
         'packages/jqplot/src/plugins/jqplot.donutRenderer.js'
@@ -64,7 +64,7 @@
         'packages/jqplot/src/plugins/jqplot.pointLabels.js'
         %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
-        {% endjavascripts %}
+        {% endjavascripts %}#}
 
 
         <script type="text/javascript">

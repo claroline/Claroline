@@ -18,7 +18,3 @@ plugin:
           type: list
           context: [workspace, desktop]
           tags: [resources, community]
-
-    #widgets:
-    #    - name: claroline_forum_widget
-    #      is_configurable: true

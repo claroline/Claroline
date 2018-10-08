@@ -14,7 +14,6 @@ namespace Claroline\ClacoFormBundle\Manager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
-use Claroline\ClacoFormBundle\Entity\ClacoFormWidgetConfig;
 use Claroline\ClacoFormBundle\Entity\Comment;
 use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\ClacoFormBundle\Entity\EntryUser;
@@ -38,7 +37,6 @@ use Claroline\CoreBundle\Entity\Facet\FieldFacetChoice;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -73,7 +71,6 @@ class ClacoFormManager
 
     private $categoryRepo;
     private $clacoFormRepo;
-    private $clacoFormWidgetConfigRepo;
     private $commentRepo;
     private $entryRepo;
     private $entryUserRepo;
@@ -123,7 +120,6 @@ class ClacoFormManager
         $this->userManager = $userManager;
         $this->categoryRepo = $om->getRepository('ClarolineClacoFormBundle:Category');
         $this->clacoFormRepo = $om->getRepository('ClarolineClacoFormBundle:ClacoForm');
-        $this->clacoFormWidgetConfigRepo = $om->getRepository('ClarolineClacoFormBundle:ClacoFormWidgetConfig');
         $this->commentRepo = $om->getRepository('ClarolineClacoFormBundle:Comment');
         $this->entryRepo = $om->getRepository('ClarolineClacoFormBundle:Entry');
         $this->entryUserRepo = $om->getRepository('ClarolineClacoFormBundle:EntryUser');
@@ -721,34 +717,6 @@ class ClacoFormManager
         $this->om->flush();
         $event = new LogCommentDeleteEvent($details);
         $this->eventDispatcher->dispatch('log', $event);
-    }
-
-    public function persistClacoFormWidgetConfiguration(ClacoFormWidgetConfig $config)
-    {
-        $this->om->persist($config);
-        $this->om->flush();
-    }
-
-    public function createClacoFormWidgetConfiguration(WidgetInstance $widgetInstance)
-    {
-        $config = new ClacoFormWidgetConfig();
-        $config->setWidgetInstance($widgetInstance);
-        $config->setNbEntries(1);
-        $config->setShowFieldLabel(false);
-        $this->persistClacoFormWidgetConfiguration($config);
-
-        return $config;
-    }
-
-    public function getClacoFormWidgetConfiguration(WidgetInstance $widgetInstance)
-    {
-        $config = $this->clacoFormWidgetConfigRepo->findOneBy(['widgetInstance' => $widgetInstance->getId()]);
-
-        if (is_null($config)) {
-            $config = $this->createClacoFormWidgetConfiguration($widgetInstance);
-        }
-
-        return $config;
     }
 
     public function getNRandomEntries(ClacoForm $clacoForm, $nbEntries, array $categoriesIds)

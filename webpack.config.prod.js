@@ -39,7 +39,6 @@ Encore
   .addPlugin(plugins.distributionShortcut())
   .addPlugin(plugins.scaffoldingDllReference())
   .addPlugin(plugins.reactDllReference())
-  .addPlugin(plugins.angularDllReference())
   .addPlugin(plugins.commonsChunk())
 
   // Babel configuration

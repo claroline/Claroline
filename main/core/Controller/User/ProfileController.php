@@ -80,35 +80,20 @@ class ProfileController extends Controller
     }
 
     /**
-     * Redirect to user profile when only the id is known.
+     * Displays a user profile from its public URL or ID.
      *
-     * @EXT\Route("/id/{user}", name="claro_user_profile_id")
+     * @EXT\Route("/{user}", name="claro_user_profile")
      * @EXT\Template("ClarolineCoreBundle:user:profile.html.twig")
      *
-     * @param User $user
+     * @param string|int $user
      *
      * @return array
      */
-    public function redirectAction(User $user)
-    {
-        return $this->indexAction($user->getPublicUrl());
-    }
-
-    /**
-     * Displays a user profile.
-     *
-     * @EXT\Route("/{publicUrl}", name="claro_user_profile")
-     * @EXT\Template("ClarolineCoreBundle:user:profile.html.twig")
-     *
-     * @param string $publicUrl
-     *
-     * @return array
-     */
-    public function indexAction($publicUrl)
+    public function indexAction($user)
     {
         try {
-            $user = $this->repository->findOneByIdOrPublicUrl($publicUrl);
-            $serializedUser = $this->userSerializer->serialize($user, [Options::SERIALIZE_FACET]);
+            $profileUser = $this->repository->findOneByIdOrPublicUrl($user);
+            $serializedUser = $this->userSerializer->serialize($profileUser, [Options::SERIALIZE_FACET]);
 
             return [
                 'user' => $serializedUser,

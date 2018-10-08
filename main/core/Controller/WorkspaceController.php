@@ -325,61 +325,6 @@ class WorkspaceController
     }
 
     /**
-     * Adds a workspace to the favourite list.
-     *
-     * @EXT\Route("/{workspaceId}/update/favourite", name="claro_workspace_update_favourite")
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true},
-     *      converter="strict_id"
-     * )
-     *
-     * @param Workspace $workspace
-     *
-     * @return Response
-     */
-    public function updateWorkspaceFavourite(Workspace $workspace)
-    {
-        $this->assertIsGranted('ROLE_USER');
-
-        $token = $this->tokenStorage->getToken();
-        $user = $token->getUser();
-        $roles = $this->utils->getRoles($token);
-        $workspaceManagerRole = $this->roleManager
-            ->getManagerRole($workspace)->getRole();
-        $isWorkspaceManager = false;
-
-        if (in_array($workspaceManagerRole, $roles)) {
-            $isWorkspaceManager = true;
-        }
-
-        $resultWorkspace = null;
-        if (!$isWorkspaceManager) {
-            $resultWorkspace = $this->workspaceManager
-                ->getWorkspaceByWorkspaceAndRoles($workspace, $roles);
-        }
-
-        if ($isWorkspaceManager || !is_null($resultWorkspace)) {
-            $favourite = $this->workspaceManager
-                ->getFavouriteByWorkspaceAndUser($workspace, $user);
-
-            if (is_null($favourite)) {
-                $this->workspaceManager->addFavourite($workspace, $user);
-
-                return new Response('added', 200);
-            } else {
-                $this->workspaceManager->removeFavourite($favourite);
-
-                return new Response('removed', 200);
-            }
-        }
-
-        return new Response('error', 400);
-    }
-
-    /**
      * @EXT\Route("/{workspace}/export", name="claro_workspace_export")
      *
      * @param Workspace $workspace

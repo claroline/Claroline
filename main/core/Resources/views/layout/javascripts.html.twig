@@ -1,14 +1,8 @@
-{# todo : this needs to be removed and be managed server side #}
-<script src='{{ asset('bundles/clarolinecore/js/iframe/iframe.js') }}'></script>
-
 {# Base libraries #}
 <script src="{{ hotAsset('dist/scaffolding_dll.js') }}"></script>
 
 {# React/Redux & related libraries #}
 <script src="{{ hotAsset('dist/react_dll.js') }}"></script>
-
-{# AngularJS & related libraries #}
-<script src="{{ hotAsset('dist/angular_dll.js') }}"></script>
 
 {# Frequently used Claroline JS #}
 <script src="{{ hotAsset('dist/commons.js') }}"></script>
@@ -20,7 +14,7 @@
 <script src="{{ hotAsset('dist/claroline-distribution-main-core-polyfills.js') }}"></script>
 
 <script>
-    if (window.sessionStorage.getItem('hide_brower_warning')) {
+    if (window.sessionStorage.getItem('hide_browser_warning')) {
         $('.outdated-browser-warning').hide();
     }
 </script>
@@ -33,15 +27,12 @@
     'packages/bootstrap/js/transition.js'
     'packages/bootstrap/js/alert.js'
     'packages/bootstrap/js/button.js'
-    'packages/bootstrap/js/carousel.js'
     'packages/bootstrap/js/collapse.js'
     'packages/bootstrap/js/dropdown.js'
     'packages/bootstrap/js/modal.js'
-    'packages/bootstrap/js/scrollspy.js'
     'packages/bootstrap/js/tab.js'
     'packages/bootstrap/js/tooltip.js'
     'packages/bootstrap/js/popover.js'
-    'packages/bootstrap/js/affix.js'
     %}<script src="{{ asset_url }}"></script>
 {% endjavascripts %}
 
@@ -61,21 +52,13 @@
 
 <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
 <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
-<script src="{{ asset('packages/bootstrap-datepicker/dist/js/bootstrap-datepicker.js') }}"></script>
-{% if 'en' != app.request.locale %}
-    <script src="{{ asset('packages/bootstrap-datepicker/js/locales/bootstrap-datepicker.' ~ app.request.locale ~ '.js') }}"></script>
-{% endif %}
 
 {% javascripts debug=false output='vendor/claroline/js/libraries.js'
     '@ClarolineCoreBundle/Resources/public/js/common.js'
     '@ClarolineCoreBundle/Resources/public/js/modal.js'
-    '@ClarolineCoreBundle/Resources/public/js/checkbox-dropdown.js'
     '@ClarolineCoreBundle/Resources/public/js/home/home.js'
     '@ClarolineCoreBundle/Resources/public/js/locale.js'
-    '@ClarolineCoreBundle/Resources/public/js/resourceinput.js'
-    '@ClarolineCoreBundle/Resources/public/js/utilities.js'
     '@ClarolineCoreBundle/Resources/public/js/startup.js'
-    '@ClarolineCoreBundle/Resources/public/js/user/user_picker.js'
 %}
     <script src="{{ asset_url }}"></script>
 {% endjavascripts %}
@@ -102,8 +85,8 @@
         });
     });
 
-    $('#close-browser-warning').on('click', function(event) {
-        window.sessionStorage.setItem('hide_brower_warning', true);
+    $('#close-browser-warning').on('click', function() {
+        window.sessionStorage.setItem('hide_browser_warning', true);
     })
 
     // The following code fixes the issue of unscrollable modal due to focus loss when multiple modals are opened.

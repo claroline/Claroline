@@ -73,8 +73,11 @@ class WebResourceListener
     public function onLoad(LoadResourceEvent $event)
     {
         $ds = DIRECTORY_SEPARATOR;
-        $hash = $event->getResource()->getHashName();
-        $workspace = $event->getResource()->getResourceNode()->getWorkspace();
+        /** @var File $resource */
+        $resource = $event->getResource();
+
+        $hash = $resource->getHashName();
+        $workspace = $resource->getResourceNode()->getWorkspace();
         $unzippedPath = $this->uploadDir.$ds.'webresource'.$ds.$workspace->getUuid();
         $srcPath = 'uploads'.$ds.'webresource'.$ds.$workspace->getUuid().$ds.$hash;
         $event->setData([
@@ -92,6 +95,8 @@ class WebResourceListener
     public function onDelete(DeleteResourceEvent $event)
     {
         $ds = DIRECTORY_SEPARATOR;
+
+        /** @var File $resource */
         $resource = $event->getResource();
         $workspace = $resource->getResourceNode()->getWorkspace();
         $hashName = $resource->getHashName();
@@ -119,7 +124,10 @@ class WebResourceListener
      */
     public function onCopy(CopyResourceEvent $event)
     {
-        $file = $this->copy($event->getResource());
+        /** @var File $webResource */
+        $webResource = $event->getResource();
+
+        $file = $this->copy($webResource);
         $event->setCopy($file);
         $event->stopPropagation();
     }
@@ -131,14 +139,17 @@ class WebResourceListener
      */
     public function onDownload(DownloadResourceEvent $event)
     {
-        $event->setItem($this->filesDir.DIRECTORY_SEPARATOR.$event->getResource()->getHashName());
+        /** @var File $resource */
+        $resource = $event->getResource();
+
+        $event->setItem($this->filesDir.DIRECTORY_SEPARATOR.$resource->getHashName());
         $event->stopPropagation();
     }
 
     /**
      * Returns a new hash for a file.
      *
-     * @param mixed mixed The extension of the file or an Claroline\CoreBundle\Entity\Resource\File
+     * @param mixed $mixed The extension of the file or an Claroline\CoreBundle\Entity\Resource\File
      *
      * @return string
      */
@@ -148,7 +159,7 @@ class WebResourceListener
             $mixed = pathinfo($mixed->getHashName(), PATHINFO_EXTENSION);
         }
 
-        return Uuid::uuid5()->toString().'.'.$mixed;
+        return Uuid::uuid4()->toString().'.'.$mixed;
     }
 
     /**
@@ -169,8 +180,6 @@ class WebResourceListener
         $file->setMimeType($resource->getMimeType());
         $file->setHashName($hash);
         copy($this->filesDir.$ds.$resource->getHashName(), $this->filesDir.$ds.$hash);
-        $this->getZip()->open($this->filesDir.$ds.$hash);
-        $this->unzip($hash);
 
         return $file;
     }
@@ -178,7 +187,7 @@ class WebResourceListener
     /**
      * Deletes recursively a directory and its content.
      *
-     * @param $dirPath The path to the directory to delete
+     * @param string $dirPath The path to the directory to delete
      */
     private function deleteFiles($dirPath)
     {

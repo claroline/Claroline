@@ -11,23 +11,15 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\EventManager;
-use Claroline\CoreBundle\Manager\Resource\MaskManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -38,45 +30,35 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class ResourceOldController extends Controller
 {
-    private $tokenStorage;
+    /** @var AuthorizationCheckerInterface */
     private $authorization;
+
+    /** @var ResourceManager */
     private $resourceManager;
-    private $request;
-    private $dispatcher;
-    private $maskManager;
-    private $templating;
+
     /** @var EventManager */
     private $eventManager;
 
     /**
+     * ResourceOldController constructor.
+     *
      * @DI\InjectParams({
-     *     "authorization"       = @DI\Inject("security.authorization_checker"),
-     *     "tokenStorage"        = @DI\Inject("security.token_storage"),
-     *     "resourceManager"     = @DI\Inject("claroline.manager.resource_manager"),
-     *     "maskManager"         = @DI\Inject("claroline.manager.mask_manager"),
-     *     "requestStack"        = @DI\Inject("request_stack"),
-     *     "dispatcher"          = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "templating"          = @DI\Inject("templating"),
-     *     "eventManager"        = @DI\Inject("claroline.event.manager")
+     *     "authorization"   = @DI\Inject("security.authorization_checker"),
+     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "eventManager"    = @DI\Inject("claroline.event.manager")
      * })
+     *
+     * @param AuthorizationCheckerInterface $authorization
+     * @param ResourceManager               $resourceManager
+     * @param EventManager                  $eventManager
      */
     public function __construct(
-        TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
         ResourceManager $resourceManager,
-        RequestStack $requestStack,
-        StrictDispatcher $dispatcher,
-        MaskManager $maskManager,
-        TwigEngine $templating,
         EventManager $eventManager
     ) {
-        $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
         $this->resourceManager = $resourceManager;
-        $this->request = $requestStack->getCurrentRequest();
-        $this->dispatcher = $dispatcher;
-        $this->maskManager = $maskManager;
-        $this->templating = $templating;
         $this->eventManager = $eventManager;
     }
 
@@ -138,24 +120,14 @@ class ResourceOldController extends Controller
      * @EXT\Template("ClarolineCoreBundle:resource:breadcrumbs.html.twig")
      *
      * @param ResourceNode $node
-     * @param int[]        $_breadcrumbs
      *
      * @return array
-     *
-     * @throws \Exception
      */
-    public function renderBreadcrumbsAction(ResourceNode $node, $_breadcrumbs)
+    public function renderBreadcrumbsAction(ResourceNode $node)
     {
-        //this trick will never work with shortcuts to directory
-        //we don't support directory links anymore
-        $nodeFromSession = $this->request->getSession()->get('current_resource_node');
-        $node = null !== $nodeFromSession ? $nodeFromSession : $node;
-        $workspace = $node->getWorkspace();
-        $ancestors = $this->resourceManager->getAncestors($node);
-
         return [
-            'ancestors' => $ancestors,
-            'workspaceId' => $workspace->getId(),
+            'ancestors' => $this->resourceManager->getAncestors($node),
+            'workspaceId' => $node->getWorkspace(),
         ];
     }
 
@@ -178,136 +150,5 @@ class ResourceOldController extends Controller
         if (!$this->authorization->isGranted($permission, $collection)) {
             throw new ResourceAccessException($collection->getErrorsForDisplay(), $collection->getResources());
         }
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/create/{resourceType}/{parentId}/published/{published}",
-     *     name="claro_resource_create",
-     *     defaults={"published"=0},
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter(
-     *      "parent",
-     *      class="ClarolineCoreBundle:Resource\ResourceNode",
-     *      options={"id" = "parentId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     *
-     * Creates a resource.
-     *
-     * @param string       $resourceType the resource type
-     * @param ResourceNode $parent       the parent
-     * @param User         $user         the user
-     *
-     * @throws \Exception
-     *
-     * @return Response
-     */
-    public function createAction(
-        $resourceType,
-        ResourceNode $parent,
-        User $user,
-        $published = 0
-    ) {
-        $collection = new ResourceCollection([$parent]);
-        $collection->setAttributes(['type' => $resourceType]);
-        if (!$this->authorization->isGranted('CREATE', $collection)) {
-            $errors = $collection->getErrors();
-            $content = $this->templating->render(
-            'ClarolineCoreBundle:Resource:errors.html.twig',
-            ['errors' => $errors]
-        );
-            $response = new Response($content, 403);
-            $response->headers->add(['XXX-Claroline' => 'resource-error']);
-
-            return $response;
-        }
-        $event = $this->dispatcher->dispatch('create_'.$resourceType, 'CreateResource', [$parent, $resourceType]);
-        $isPublished = 1 === intval($published) ? true : $event->isPublished();
-        if (count($event->getResources()) > 0) {
-            $nodesArray = [];
-            foreach ($event->getResources() as $resource) {
-                if ($event->getProcess()) {
-                    $createdResource = $this->resourceManager->create(
-                    $resource,
-                    $this->resourceManager->getResourceTypeByName($resourceType),
-                    $user,
-                    $parent->getWorkspace(),
-                    $parent,
-                    null,
-                    [],
-                    $isPublished
-                );
-                    $this->dispatcher->dispatch(
-                    'resource_created_'.$resourceType,
-                    'ResourceCreated',
-                    [$createdResource->getResourceNode()]
-                );
-                    $nodesArray[] = $this->resourceManager->toArray(
-                    $createdResource->getResourceNode(),
-                    $this->tokenStorage->getToken()
-                );
-                } else {
-                    $nodesArray[] = $this->resourceManager->toArray(
-                    $resource->getResourceNode(),
-                    $this->tokenStorage->getToken()
-                );
-                }
-            }
-
-            return new JsonResponse($nodesArray);
-        }
-
-        return new Response($event->getErrorFormContent());
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/custom/{action}/{node}",
-     *     name="claro_resource_custom_action",
-     *     options={"expose"=true}
-     * )
-     *
-     * Handles any custom action (i.e. not defined in this controller) on a
-     * resource of a given type.
-     *
-     * If the ResourceType is null, it's an action (resource action) valides for all type of resources.
-     *
-     * @param string       $action the action
-     * @param ResourceNode $node   the resource
-     *
-     * @throws \Exception
-     *
-     * @return Response
-     */
-    public function customAction($action, ResourceNode $node)
-    {
-        $type = $node->getResourceType();
-        $menuAction = $this->maskManager->getMenuFromNameAndResourceType($action, $type);
-
-        if (!$menuAction) {
-            throw new \Exception("The menu {$action} doesn't exists");
-        }
-        $collection = new ResourceCollection([$node]);
-
-        if (null === $menuAction->getResourceType()) {
-            if (!$this->authorization->isGranted('ROLE_USER')) {
-                throw new AccessDeniedException('You must be log in to execute this action !');
-            }
-            $this->checkAccess('open', $collection);
-            $eventName = 'resource_action_'.$action;
-        } else {
-            $decoder = $menuAction->getDecoder();
-            $this->checkAccess($decoder, $collection);
-            $eventName = $action.'_'.$type->getName();
-        }
-        $event = $this->dispatcher->dispatch(
-            $eventName,
-            'CustomActionResource',
-            [$this->resourceManager->getResourceFromNode($node)]
-        );
-
-        return $event->getResponse();
     }
 }

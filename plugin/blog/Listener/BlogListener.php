@@ -3,24 +3,18 @@
 namespace Icap\BlogBundle\Listener;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
-use Claroline\CoreBundle\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
-use Icap\BlogBundle\Form\BlogType;
 use Icap\BlogBundle\Manager\PostManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -33,14 +27,10 @@ class BlogListener
 {
     use PermissionCheckerTrait;
 
-    /** @var FormFactory */
-    private $formFactory;
     /** @var HttpKernelInterface */
     private $httpKernel;
     /** @var Request */
     private $request;
-    /** @var TwigEngine */
-    private $templating;
     /** @var ContainerInterface */
     private $container;
 
@@ -48,85 +38,29 @@ class BlogListener
      * BlogListener constructor.
      *
      * @DI\InjectParams({
-     *     "formFactory"           = @DI\Inject("form.factory"),
-     *     "httpKernel"            = @DI\Inject("http_kernel"),
-     *     "requestStack"          = @DI\Inject("request_stack"),
-     *     "templating"            = @DI\Inject("templating"),
-     *     "container"             = @DI\Inject("service_container")
+     *     "httpKernel"   = @DI\Inject("http_kernel"),
+     *     "requestStack" = @DI\Inject("request_stack"),
+     *     "container"    = @DI\Inject("service_container")
      * })
      *
-     * @param FormFactory         $formFactory
      * @param HttpKernelInterface $httpKernel
      * @param RequestStack        $requestStack
-     * @param TwigEngine          $templating
      * @param ContainerInterface  $container
      */
     public function __construct(
-        FormFactory $formFactory,
         HttpKernelInterface $httpKernel,
         RequestStack $requestStack,
-        TwigEngine $templating,
         ContainerInterface $container
     ) {
-        $this->formFactory = $formFactory;
         $this->httpKernel = $httpKernel;
         $this->request = $requestStack->getCurrentRequest();
-        $this->templating = $templating;
         $this->container = $container;
-    }
-
-    /**
-     * @DI\Observe("create_form_icap_blog")
-     *
-     * @param CreateFormResourceEvent $event
-     */
-    public function onCreateForm(CreateFormResourceEvent $event)
-    {
-        $form = $this->container->get('form.factory')->create(new BlogType(), new Blog());
-        $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:resource:create_form.html.twig',
-            [
-                'form' => $form->createView(),
-                'resourceType' => 'icap_blog',
-            ]
-        );
-        $event->setResponseContent($content);
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("create_icap_blog")
-     *
-     * @param CreateResourceEvent $event
-     */
-    public function onCreate(CreateResourceEvent $event)
-    {
-        $request = $this->container->get('request_stack')->getMasterRequest();
-        $form = $this->container->get('form.factory')->create(new BlogType(), new Blog());
-        $form->bind($request);
-
-        if ($form->isValid()) {
-            $event->setResources([$form->getData()]);
-            $event->stopPropagation();
-
-            return;
-        }
-
-        $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:resource:create_form.html.twig',
-            [
-                'form' => $form->createView(),
-                'resourceType' => 'icap_blog',
-            ]
-        );
-        $event->setErrorFormContent($content);
-        $event->stopPropagation();
     }
 
     /**
      * @DI\Observe("resource.icap_blog.load")
      *
-     * @param OpenResourceEvent $event
+     * @param LoadResourceEvent $event
      */
     public function onLoad(LoadResourceEvent $event)
     {
@@ -172,34 +106,10 @@ class BlogListener
      */
     public function onDelete(DeleteResourceEvent $event)
     {
+        /** @var Blog $blog */
         $blog = $event->getResource();
         $options = $blog->getOptions();
         @unlink($this->container->getParameter('icap.blog.banner_directory').DIRECTORY_SEPARATOR.$options->getBannerBackgroundImage());
-
-        $widgetInstanceRepo = $this->container->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Widget\WidgetInstance');
-        $widgetBlogRepo = $this->container->get('icap.blog.widgetblog_repository');
-        $widgetTagListRepo = $this->container->get('icap.blog.widgettaglistblog_repository');
-
-        $blogWidgets = $widgetBlogRepo->findByResourceNode($blog->getResourceNode());
-        $tagListWidgets = $widgetTagListRepo->findByResourceNode($blog->getResourceNode());
-
-        $entityManager = $this->container->get('claroline.persistence.object_manager');
-
-        // Remove blog widgets
-        foreach ($blogWidgets as $blogWidget) {
-            $entityManager->remove($blogWidget);
-            $widgetBlogInstance = $widgetInstanceRepo->findOneById($blogWidget->getWidgetInstance()->getId());
-            $entityManager->remove($widgetBlogInstance);
-        }
-
-        // Remove tag list blog widgets
-        foreach ($tagListWidgets as $tagListWidget) {
-            $entityManager->remove($tagListWidget);
-            $widgetInstance = $widgetInstanceRepo->findOneById($tagListWidget->getWidgetInstance()->getId());
-            $entityManager->remove($widgetInstance);
-        }
-
-        $entityManager->flush();
 
         $event->stopPropagation();
     }

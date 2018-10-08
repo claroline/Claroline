@@ -53,8 +53,6 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('packages/bootstrap-additions/dist/modules/callout.min.css') }}" screen="media"/>
-    <link rel="stylesheet" href="{{ asset('packages/angular-loading-bar/build/loading-bar.min.css') }}" screen="media"/>
     {% stylesheets
     debug=false
     filter='less, cssmin'
@@ -71,5 +69,5 @@
         window.iconSet = null;
         window.iconItemsByTypes = {{ iconNamesForTypes|json_serialize(['Default'])|raw }};
     </script>
-    <script type="text/javascript" src="{{ hotAsset('dist/claroline-distribution-main-core-resource-icon-item-list.js') }}"></script>
+    {#<script type="text/javascript" src="{{ hotAsset('dist/claroline-distribution-main-core-resource-icon-item-list.js') }}"></script>#}
 {% endblock%}

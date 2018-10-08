@@ -14,7 +14,6 @@ class IcapBlogBundle extends DistributionPluginBundle
 
         return $config
             ->addRoutingResource(__DIR__.'/Resources/config/routing.yml', null, 'icap_blog')
-            ->addContainerResource($this->getPath().'/Resources/config/twig.yml')
             ->addContainerResource($this->getPath().'/Resources/config/parameters.yml');
     }
 

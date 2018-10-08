@@ -9,13 +9,13 @@
 </style>
 <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
 {% if filesImported is not defined or filesImported is empty %}
-<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="{{ asset('packages/jqplot/src/excanvas.js') }}"></script><![endif]-->
-<script type="text/javascript" src="{{ asset('packages/jqplot/src/jquery.jqplot.js') }}"></script>
+<!--<script language="javascript" type="text/javascript" src="{{ asset('packages/jqplot/src/excanvas.js') }}"></script>-->
+{#<script type="text/javascript" src="{{ asset('packages/jqplot/src/jquery.jqplot.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/jqplot/jqplot.colors.js') }}"></script>
 <script type="text/javascript" src="{{ asset('packages/jqplot/src/plugins/jqplot.pieRenderer.js') }}"></script>
-<script type="text/javascript" src="{{ asset('packages/jqplot/src/plugins/jqplot.canvasTextRenderer.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/jqplot/src/plugins/jqplot.canvasTextRenderer.js') }}"></script>#}
 {% else %}
-<script type="text/javascript" src="{{ asset('packages/jqplot/src/plugins/jqplot.pieRenderer.js') }}"></script>
+{#<script type="text/javascript" src="{{ asset('packages/jqplot/src/plugins/jqplot.pieRenderer.js') }}"></script>#}
 {% endif %}
 
 <div id="analytics-resources-piechart" class="panel panel-default">
@@ -35,4 +35,5 @@
   window.pieChartData.push(["{{portfolioRepartitionStatus.name|trans({}, 'analytics')}}",{{portfolioRepartitionStatus.value}}]);
   {% endfor %}
 </script>
-<script type="text/javascript" src="{{ hotAsset("dist/claroline-distribution-plugin-portfolio-analytics-portfolio-usage-visibility-chart.js") }}"></script>
+{#
+<script type="text/javascript" src="{{ hotAsset("dist/claroline-distribution-plugin-portfolio-analytics-portfolio-usage-visibility-chart.js") }}"></script>#}

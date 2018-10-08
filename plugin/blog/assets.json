@@ -1,13 +1,8 @@
 {
-  "webpack": {
-    "entry": {
-      "widget-tagcanvas": "widget-tagcanvas"
-    }
-  },
-
   "styles": {
     "entry": {
-      "blog-resource": "resources/blog/index.less"
+      "blog-resource": "resources/blog/index.less",
+      "blog-pdf": "resources/blog/pdf.less"
     }
   }
 }

@@ -38,7 +38,7 @@ class PublicUrlModal extends Component {
                 label: trans('profile_public_url_preview'),
                 calculated: () =>
                   <HtmlText className="read-only">
-                    {url(['claro_user_profile', {publicUrl: this.state.url}, true]).replace(this.state.url, `<b>${this.state.url}</b>`)}
+                    {url(['claro_user_profile', {user: this.state.url}, true]).replace(this.state.url, `<b>${this.state.url}</b>`)}
                   </HtmlText>,
                 hideLabel: true,
                 readOnly: true

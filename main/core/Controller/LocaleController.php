@@ -65,12 +65,12 @@ class LocaleController
     /**
      * Change locale.
      *
-     * @EXT\Route("/change/{locale}", name="claroline_locale_change", options = {"expose" = true})
+     * @EXT\Route("/change/{locale}", name="claroline_locale_change")
      *
      * @param Request $request
      * @param string  $locale
      *
-     * @return Response
+     * @return RedirectResponse
      */
     public function changeAction(Request $request, $locale)
     {
@@ -78,10 +78,11 @@ class LocaleController
             $this->localeManager->setUserLocale($locale);
         }
 
-        $request->getLocale($locale);
+        $request->setLocale($locale);
         $request->getSession()->set('_locale', $locale);
-        $referer = $request->headers->get('referer');
 
-        return new RedirectResponse($referer);
+        return new RedirectResponse(
+            $request->headers->get('referer')
+        );
     }
 }
