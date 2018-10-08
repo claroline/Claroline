@@ -81,9 +81,10 @@ class HomeTabFinder extends AbstractFinder
                             SELECT tab2 from Claroline\CoreBundle\Entity\Tab\HomeTab tab2
                             JOIN tab2.homeTabConfigs htc2
                             LEFT JOIN htc2.roles role2
-                            WHERE role2.id IS NULL
-                            AND tab2.type = :adminDesktop
+                            WHERE tab2.type = :adminDesktop
                             AND htc2.locked = true
+                            GROUP BY tab2.id
+                            HAVING COUNT(role2.id) = 0
                           ";
 
                         $expr[] = $qb->expr()->orX(
@@ -130,9 +131,9 @@ class HomeTabFinder extends AbstractFinder
                 case '_workspace_free':
                     $qb->join('obj.workspace', '_wf');
                     $qb->leftJoin('config.roles', '_rr2');
-                    $qb->having('COUNT(_rr2.id) = 0');
                     $qb->andWhere("_wf.uuid = :{$filterName}");
                     $qb->groupBy('obj.id');
+                    $qb->having('COUNT(_rr2.id) = 0');
                     $qb->setParameter($filterName, $filterValue);
                     break;
                 case '_workspace_roles':
