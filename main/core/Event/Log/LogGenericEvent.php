@@ -45,6 +45,12 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     /** @var bool */
     protected $isWorkspaceEnterEvent = false;
 
+    /** @var bool */
+    protected $isToolReadEvent = false;
+
+    /** @var bool */
+    protected $isResourceReadEvent = false;
+
     /**
      * @var int
      */
@@ -64,7 +70,9 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
         User $owner = null,
         $toolName = null,
         $isWorkspaceEnterEvent = false,
-        $elementId = null
+        $elementId = null,
+        $isToolReadEvent = false,
+        $isResourceReadEvent = false
     ) {
         $this->action = $action;
         $this->details = $details;
@@ -77,6 +85,8 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
         $this->toolName = $toolName;
         $this->isWorkspaceEnterEvent = $isWorkspaceEnterEvent;
         $this->otherElementId = $elementId;
+        $this->isToolReadEvent = $isToolReadEvent;
+        $this->isResourceReadEvent = $isResourceReadEvent;
 
         $this->setVisibilityFromRestriction();
     }
@@ -179,8 +189,8 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
         // TODO: refactor the log system to reflect that change (i.e. events are
         // displayable everywhere, unless they're marked as "admin" events)
         if (($restrictions = $this->getRestriction())
-            && count($restrictions) === 1
-            && $restrictions[0] === self::DISPLAYED_ADMIN) {
+            && 1 === count($restrictions)
+            && self::DISPLAYED_ADMIN === $restrictions[0]) {
             $this->isDisplayedInWorkspace = false;
         }
 
@@ -277,5 +287,21 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
         $this->otherElementId = $otherElementId;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsToolReadEvent()
+    {
+        return $this->isToolReadEvent;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsResourceReadEvent()
+    {
+        return $this->isResourceReadEvent;
     }
 }

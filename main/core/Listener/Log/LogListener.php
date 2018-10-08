@@ -264,21 +264,29 @@ class LogListener
                 'non_repeatable_log_time_in_seconds'
             );
 
-            // Always logs workspace entering if the workspace is different from the previous one
-            if ($event->getIsWorkspaceEnterEvent()) {
+            // Always logs workspace entering, tool reading and resource reading if the target object is different from the previous one
+            if ($event->getIsWorkspaceEnterEvent() || $event->getIsToolReadEvent() || $event->getIsResourceReadEvent()) {
                 $workspaceId = $event->getWorkspace()->getUuid();
+                $key = $event->getIsWorkspaceEnterEvent() ?
+                    $workspaceId :
+                    $event->getIsToolReadEvent() ?
+                        $event->getToolName() :
+                        $event->getResource()->getUuid();
 
-                if (null !== $session->get(LogWorkspaceEnterEvent::ACTION)) {
-                    $oldArray = json_decode($session->get(LogWorkspaceEnterEvent::ACTION));
+                if (!is_null($session->get($event->getAction()))) {
+                    $oldArray = json_decode($session->get($event->getAction()));
                     $oldSignature = $oldArray->logSignature;
                     $oldTime = $oldArray->time;
 
                     if ($oldSignature === $event->getAction()) {
                         $diff = ($now - $oldTime);
                         $oldWorkspaceId = $oldArray->workspaceId;
-                        $notRepeatableLogTimeInSeconds = $notRepeatableLogTimeInSeconds * 3;
+                        $oldKey = $oldArray->key;
 
-                        if ($oldWorkspaceId !== $workspaceId || $diff > $notRepeatableLogTimeInSeconds) {
+                        if (LogWorkspaceEnterEvent::ACTION === $event->getAction()) {
+                            $notRepeatableLogTimeInSeconds = $notRepeatableLogTimeInSeconds * 3;
+                        }
+                        if ($oldWorkspaceId !== $workspaceId || $oldKey !== $key || $diff > $notRepeatableLogTimeInSeconds) {
                             $is = false;
                         } else {
                             $is = true;
@@ -286,15 +294,15 @@ class LogListener
                         }
                     }
                 }
-
                 if ($pushInSession) {
                     //Update last log action for this event category
                     $array = [
-                        'logSignature' => LogWorkspaceEnterEvent::ACTION,
+                        'logSignature' => $event->getAction(),
                         'time' => $now,
                         'workspaceId' => $workspaceId,
+                        'key' => $key,
                     ];
-                    $session->set(LogWorkspaceEnterEvent::ACTION, json_encode($array));
+                    $session->set($event->getAction(), json_encode($array));
                 }
             } else {
                 if (null !== $session->get($event->getLogSignature())) {

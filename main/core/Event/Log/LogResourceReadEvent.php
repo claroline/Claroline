@@ -24,25 +24,30 @@ class LogResourceReadEvent extends LogGenericEvent implements LogNotRepeatableIn
     {
         parent::__construct(
             self::ACTION,
-            array(
-                'resource' => array(
+            [
+                'resource' => [
                     'name' => $node->getName(),
                     'path' => $node->getPathForDisplay(),
-                ),
-                'workspace' => array(
+                ],
+                'workspace' => [
                     'name' => $node->getWorkspace() ? $node->getWorkspace()->getName() : ' - ',
-                ),
-                'owner' => array(
+                ],
+                'owner' => [
                     'lastName' => $node->getCreator()->getLastName(),
                     'firstName' => $node->getCreator()->getFirstName(),
-                ),
-            ),
+                ],
+            ],
             null,
             null,
             $node,
             null,
             $node->getWorkspace(),
-            $node->getCreator()
+            $node->getCreator(),
+            null,
+            null,
+            null,
+            null,
+            true
         );
     }
 
