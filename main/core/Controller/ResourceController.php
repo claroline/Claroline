@@ -19,7 +19,6 @@ use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
-use Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -66,9 +65,6 @@ class ResourceController
     /** @var ResourceRestrictionsManager */
     private $restrictionsManager;
 
-    /** @var ResourceLifecycleManager */
-    private $lifecycleManager;
-
     /** @var ObjectManager */
     private $om;
 
@@ -83,7 +79,6 @@ class ResourceController
      *     "manager"             = @DI\Inject("claroline.manager.resource_manager"),
      *     "actionManager"       = @DI\Inject("claroline.manager.resource_action"),
      *     "restrictionsManager" = @DI\Inject("claroline.manager.resource_restrictions"),
-     *     "lifecycleManager"    = @DI\Inject("claroline.manager.resource_lifecycle"),
      *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
      *     "authorization"       = @DI\Inject("security.authorization_checker")
      * })
@@ -95,7 +90,6 @@ class ResourceController
      * @param ResourceManager               $manager
      * @param ResourceActionManager         $actionManager
      * @param ResourceRestrictionsManager   $restrictionsManager
-     * @param ResourceLifecycleManager      $lifecycleManager
      * @param ObjectManager                 $om
      * @param AuthorizationCheckerInterface $authorization
      */
@@ -108,7 +102,6 @@ class ResourceController
         ResourceManager $manager,
         ResourceActionManager $actionManager,
         ResourceRestrictionsManager $restrictionsManager,
-        ResourceLifecycleManager $lifecycleManager,
         ObjectManager $om
     ) {
         $this->tokenStorage = $tokenStorage;
@@ -118,7 +111,6 @@ class ResourceController
         $this->manager = $manager;
         $this->actionManager = $actionManager;
         $this->restrictionsManager = $restrictionsManager;
-        $this->lifecycleManager = $lifecycleManager;
         $this->om = $om;
         $this->authorization = $authorization;
     }
