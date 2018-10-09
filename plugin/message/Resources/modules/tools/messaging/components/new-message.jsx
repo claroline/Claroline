@@ -65,20 +65,17 @@ const NewMessageComponent = (props) =>
               {
                 name: 'toUsers',
                 type: 'users',
-                label: trans('message_form_to', {}, 'message'),
-                required: true
+                label: trans('message_form_to', {}, 'message')
               },
               {
                 name: 'toGroups',
                 type: 'groups',
-                label: trans('message_form_to', {}, 'message'),
-                required: true
+                label: trans('message_form_to', {}, 'message')
               },
               {
                 name: 'toWorkspaces',
                 type: 'workspaces',
-                label: trans('message_form_to', {}, 'message'),
-                required: true
+                label: trans('message_form_to', {}, 'message')
               },
               {
                 name: 'object',
