@@ -69,7 +69,7 @@ class WorkspaceFinder extends AbstractFinder
 
             switch ($filterName) {
                 case 'hidden':
-                    $qb->andWhere("displayable = :{$filterName}");
+                    $qb->andWhere("obj.displayable = :{$filterName}");
                     $qb->setParameter($filterName, !$filterValue);
 
                     break;
@@ -77,7 +77,7 @@ class WorkspaceFinder extends AbstractFinder
                     $currentUser = $this->tokenStorage->getToken()->getUser();
 
                     if ($currentUser instanceof User) {
-                        $qb->leftJoin('organizations', 'uo');
+                        $qb->leftJoin('obj.organizations', 'uo');
                         $qb->leftJoin('uo.users', 'ua');
 
                         $qb->andWhere($qb->expr()->orX(
@@ -92,7 +92,7 @@ class WorkspaceFinder extends AbstractFinder
                     if ('cli' !== php_sapi_name() && !$this->authChecker->isGranted('ROLE_ADMIN') && !$this->authChecker->isGranted('ROLE_ANONYMOUS')) {
                         /** @var User $currentUser */
                         $currentUser = $this->tokenStorage->getToken()->getUser();
-                        $qb->leftJoin('organizations', 'uo');
+                        $qb->leftJoin('obj.organizations', 'uo');
                         $qb->leftJoin('uo.administrators', 'ua');
                         $qb->leftJoin('obj.creator', 'creator');
                         $qb->leftJoin('obj.roles', 'r');

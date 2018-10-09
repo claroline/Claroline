@@ -273,6 +273,7 @@ class UserFinder extends AbstractFinder
         $organizationsIds = array_map(function (Organization $organization) {
             return $organization->getUuid();
         }, $currentUser->getOrganizations());
+
         $administratedOrganizationsIds = array_map(function (Organization $organization) {
             return $organization->getUuid();
         }, $currentUser->getAdministratedOrganizations()->toArray());

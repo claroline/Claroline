@@ -161,6 +161,7 @@ class UserSerializer
             'meta' => $this->serializeMeta($user),
             'publicUrl' => $user->getPublicUrl(), // todo : merge with the one from meta (I do it to have it in minimal)
             'permissions' => $this->serializePermissions($user),
+            'restrictions' => $this->serializeRestrictions($user),
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {

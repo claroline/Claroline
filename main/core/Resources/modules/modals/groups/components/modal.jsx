@@ -14,6 +14,7 @@ import {Group as GroupType} from '#/main/core/user/prop-types'
 const GroupsPickerModal = props => {
   const selectAction = props.selectAction(props.selected)
 
+  //apiv2_group_list_registerable = filter by current user organizations
   return (
     <Modal
       {...omit(props, 'confirmText', 'selected', 'selectAction', 'resetSelect')}
@@ -25,7 +26,7 @@ const GroupsPickerModal = props => {
       <ListData
         name={selectors.STORE_NAME}
         fetch={{
-          url: ['apiv2_group_list_managed'],
+          url: ['apiv2_group_list_registerable'],
           autoload: true
         }}
         definition={GroupList.definition}

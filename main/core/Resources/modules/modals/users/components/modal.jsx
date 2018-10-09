@@ -14,6 +14,7 @@ import {User as UserType} from '#/main/core/user/prop-types'
 const UsersPickerModal = props => {
   const selectAction = props.selectAction(props.selected)
 
+  //apiv2_user_list_registerable = filter by current user organizations
   return (
     <Modal
       {...omit(props, 'confirmText', 'selected', 'selectAction', 'resetSelect')}
@@ -25,7 +26,7 @@ const UsersPickerModal = props => {
       <ListData
         name={selectors.STORE_NAME}
         fetch={{
-          url: ['apiv2_users_picker_list'],
+          url: ['apiv2_user_list_registerable'],
           autoload: true
         }}
         definition={[
