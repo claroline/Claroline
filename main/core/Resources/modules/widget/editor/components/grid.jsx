@@ -11,6 +11,7 @@ import {WidgetEditor} from '#/main/core/widget/editor/components/widget'
 import {WidgetContainer as WidgetContainerTypes} from '#/main/core/widget/prop-types'
 import {MODAL_WIDGET_CREATION} from '#/main/core/widget/editor/modals/creation'
 import {MODAL_WIDGET_PARAMETERS} from '#/main/core/widget/editor/modals/parameters'
+import {Tab as TabTypes} from '#/main/core/tools/home/prop-types'
 
 class WidgetGridEditor extends Component {
   constructor(props) {
@@ -42,23 +43,48 @@ class WidgetGridEditor extends Component {
             stopMovingContent={() => this.stopMovingContent()}
             startMovingContent={(contentId) => this.startMovingContent(contentId)}
             moveContent={(movingContentId, newParentId, position) => {
-              // copy array
               const widgets = cloneDeep(this.props.widgets)
               let movingContentIndex
-              const oldParent = widgets.find(widget => {
-                movingContentIndex = widget.contents.findIndex(content => content && content.id === movingContentId)
-                return -1 !== movingContentIndex
+
+              let oldWidgets = null
+              let oldParentTabIndex = null
+              let oldParent = null
+
+              //this is not pretty but we need to be aware of all the tabs because widget can move from one to an other
+              this.props.tabs.forEach((tab, index) => {
+                tab.widgets.forEach(widget => {
+                  if (widget.contents.findIndex(content => content && content.id === movingContentId) > -1) {
+                    oldWidgets = tab.widgets
+                    oldParentTabIndex = index
+                    movingContentIndex = widget.contents.findIndex(content => content && content.id === movingContentId)
+                  }
+                })
               })
 
-              if (oldParent) {
+              if (oldWidgets) {
+                if (this.props.currentTabIndex !== oldParentTabIndex) {
+                  oldWidgets = cloneDeep(oldWidgets)
+                } else {
+                  oldWidgets = widgets
+                }
+
+                oldWidgets.forEach(widget => {
+                  if (widget.contents.findIndex(content => content && content.id === movingContentId) > -1) {
+                    oldParent = widget
+                  }
+                })
+
                 const newParent = widgets.find(widget => widget.id === newParentId)
                 newParent.contents[position] = oldParent.contents[movingContentIndex]
                 // removes the content to delete and replace by null
                 oldParent.contents[movingContentIndex] = null
+
+                this.props.update(widgets)
+                this.props.update(oldWidgets, oldParentTabIndex)
               }
 
-              // propagate change
-              this.props.update(widgets)
+
+
               this.stopMovingContent()
             }}
             update={(widget) => {
@@ -183,6 +209,10 @@ WidgetGridEditor.propTypes = {
   context: T.object.isRequired,
   widgets: T.arrayOf(T.shape(
     WidgetContainerTypes.propTypes
+  )),
+  currentTabIndex: T.number.isRequired,
+  tabs: T.arrayOf(T.shape(
+    TabTypes.propTypes
   )),
   update: T.func.isRequired
 }

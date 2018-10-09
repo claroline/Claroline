@@ -154,7 +154,12 @@ const TabEditor = props =>
       disabled={props.readOnly}
       context={props.context}
       widgets={props.widgets}
-      update={(widgets) => props.update(props.currentTabIndex, 'widgets', widgets)}
+      tabs={props.tabs}
+      currentTabIndex={props.currentTabIndex}
+      update={(widgets, tabIndex = null) => {
+        if (tabIndex === null) tabIndex = props.currentTabIndex
+        props.update(tabIndex, 'widgets', widgets)}
+      }
     />
   </FormData>
 
