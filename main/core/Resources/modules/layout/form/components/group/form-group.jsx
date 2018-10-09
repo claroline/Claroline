@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import classes from 'classnames'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 import {FormGroup as FormGroupTypes} from '#/main/core/layout/form/prop-types'
 import {ContentError} from '#/main/app/content/components/error'
@@ -20,7 +20,7 @@ const FormGroup = props =>
       >
         {props.label}
 
-        {props.optional && <small>({t('optional')})</small>}
+        {props.optional && <small>({trans('optional')})</small>}
       </label>
     }
 

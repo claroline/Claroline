@@ -2,22 +2,21 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {t, trans} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
-import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder.jsx'
+import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
 
 import {actions, selectors} from '#/plugin/announcement/resources/announcement/store'
-
-import {AnnouncePost} from './announce-post.jsx'
+import {AnnouncePost} from '#/plugin/announcement/resources/announcement/components/announce-post'
 
 const AnnouncesList = props =>
   <div>
     <div className="announces-sort">
-      {t('list_sort_by')}
+      {trans('list_sort_by')}
       <button
         type="button"
         className="btn btn-link"

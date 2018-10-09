@@ -2,14 +2,14 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {isQuestionType} from './../../../items/item-types'
 
-import {t, tex} from '#/main/core/translation'
+import {trans, tex} from '#/main/core/translation'
 
 // TODO : replace all button by #/main/app/action/components/button
 
 const PreviousButton = props =>
   <button className="btn btn-previous btn-default" onClick={props.onClick}>
     <span className="fa fa-fw fa-angle-double-left" />
-    {t('previous')}
+    {trans('previous')}
   </button>
 
 PreviousButton.propTypes = {
@@ -18,7 +18,7 @@ PreviousButton.propTypes = {
 
 const NextButton = props =>
   <button className="btn btn-next btn-default" onClick={props.onClick}>
-    {t('next')}
+    {trans('next')}
     <span className="fa fa-fw fa-angle-double-right" />
   </button>
 
@@ -28,7 +28,7 @@ NextButton.propTypes = {
 
 const ValidateButton = props =>
   <button className="btn btn-next btn-validate btn-default" onClick={props.onClick}>
-    {t('validate')}
+    {trans('validate')}
     <span className="fa fa-fw fa-angle-double-right" />
   </button>
 
@@ -39,7 +39,7 @@ ValidateButton.propTypes = {
 const SubmitButton = props =>
   <button className="btn btn-submit btn-success" onClick={props.onClick}>
     <span className="fa fa-fw fa-check" />
-    {t('validate')}
+    {trans('validate')}
   </button>
 
 SubmitButton.propTypes = {

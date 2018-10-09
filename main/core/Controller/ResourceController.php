@@ -21,7 +21,6 @@ use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -39,8 +38,6 @@ use Symfony\Component\Templating\EngineInterface;
  */
 class ResourceController
 {
-    use PermissionCheckerTrait;
-
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
@@ -345,11 +342,7 @@ class ResourceController
      *
      * @EXT\Route("resource/{id}/unlock", name="claro_resource_unlock")
      * @EXT\Method("POST")
-     * @EXT\ParamConverter(
-     * "resourceNode",
-     * class="ClarolineCoreBundle:Resource\ResourceNode",
-     * options={"mapping": {"id": "uuid"}}
-     * )
+     * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
      *
      * @param ResourceNode $resourceNode
      * @param Request      $request
@@ -368,6 +361,7 @@ class ResourceController
      *
      * @param MenuAction $action
      * @param array      $resourceNodes
+     * @param array      $attributes
      */
     private function checkAccess(MenuAction $action, array $resourceNodes, array $attributes = [])
     {

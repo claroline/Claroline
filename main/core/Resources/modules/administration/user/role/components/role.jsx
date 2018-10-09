@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import classes from 'classnames'
 
-import {t, trans} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 import {FormData} from '#/main/app/content/form/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
@@ -37,19 +37,19 @@ const RoleForm = props =>
     }}
     sections={[
       {
-        title: t('general'),
+        title: trans('general'),
         primary: true,
         fields: [
           {
             name: 'translationKey',
             type: 'translation',
-            label: t('name'),
+            label: trans('name'),
             required: true,
             disabled: props.role.meta && props.role.meta.readOnly
           }, {
             name: 'type',
             type: 'choice',
-            label: t('type'),
+            label: trans('type'),
             readOnly: true,
             options: {
               condensed: true,
@@ -59,23 +59,23 @@ const RoleForm = props =>
         ]
       }, {
         icon: 'fa fa-fw fa-book',
-        title: t('workspace'),
+        title: trans('workspace'),
         fields: [
           {
             name: 'meta.personalWorkspaceCreationEnabled',
             type: 'boolean',
-            label: t('role_personalWorkspaceCreation'),
-            help: t('role_personalWorkspaceCreation_help')
+            label: trans('role_personalWorkspaceCreation'),
+            help: trans('role_personalWorkspaceCreation_help')
           }
         ]
       }, {
         icon: 'fa fa-fw fa-key',
-        title: t('access_restrictions'),
+        title: trans('access_restrictions'),
         fields: [
           {
             name: 'access_max_users',
             type: 'boolean',
-            label: t('access_max_users'),
+            label: trans('access_max_users'),
             calculated: (role) => role.restrictions && null !== role.restrictions.maxUsers && '' !== role.restrictions.maxUsers,
             onChange: checked => {
               if (checked) {
@@ -90,7 +90,7 @@ const RoleForm = props =>
               {
                 name: 'restrictions.maxUsers',
                 type: 'number',
-                label: t('maxUsers'),
+                label: trans('maxUsers'),
                 displayed: props.role.restrictions && null !== props.role.restrictions.maxUsers && '' !== props.role.restrictions.maxUsers,
                 required: true,
                 options: {
@@ -109,7 +109,7 @@ const RoleForm = props =>
       {PLATFORM_ROLE === props.role.type &&
         <FormSection
           icon="fa fa-fw fa-cogs"
-          title={t('administration_tools')}
+          title={trans('administration_tools')}
         >
           <div className="list-group" fill={true}>
             {Object.keys(props.role.adminTools || {}).map(toolName =>
@@ -131,13 +131,13 @@ const RoleForm = props =>
       <FormSection
         className="embedded-list-section"
         icon="fa fa-fw fa-user"
-        title={t('users')}
+        title={trans('users')}
         disabled={props.new}
         actions={[
           {
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
-            label: t('add_user'),
+            label: trans('add_user'),
             callback: () => props.pickUsers(props.role.id),
             disabled: props.role.restrictions && null !== props.role.restrictions.maxUsers && props.role.restrictions.maxUsers <= props.role.meta.users
           }
@@ -161,13 +161,13 @@ const RoleForm = props =>
       <FormSection
         className="embedded-list-section"
         icon="fa fa-fw fa-id-badge"
-        title={t('groups')}
+        title={trans('groups')}
         disabled={props.new}
         actions={[
           {
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
-            label: t('add_group'),
+            label: trans('add_group'),
             callback: () => props.pickGroups(props.role.id)
           }
         ]}
@@ -211,8 +211,8 @@ const Role = connect(
     pickUsers(roleId) {
       dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-user',
-        title: t('add_users'),
-        confirmText: t('add'),
+        title: trans('add_users'),
+        confirmText: trans('add'),
         name: 'users.picker',
         definition: UserList.definition,
         card: UserList.card,
@@ -226,8 +226,8 @@ const Role = connect(
     pickGroups(roleId){
       dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-users',
-        title: t('add_groups'),
-        confirmText: t('add'),
+        title: trans('add_groups'),
+        confirmText: trans('add'),
         name: 'groups.picker',
         definition: GroupList.definition,
         card: GroupList.card,

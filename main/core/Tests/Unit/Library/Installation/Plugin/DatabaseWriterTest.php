@@ -18,7 +18,6 @@ use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 class DatabaseWriterTest extends MockeryTestCase
 {
     private $om;
-    private $im;
     private $mm;
     private $fileSystem;
     private $kernelRootDir;
@@ -32,7 +31,6 @@ class DatabaseWriterTest extends MockeryTestCase
 
         $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
         $this->om->shouldReceive('getRepository')->andReturn($this->mock('Doctrine\ORM\EntityRepository'));
-        $this->im = $this->mock('Claroline\CoreBundle\Manager\IconManager');
         $this->mm = $this->mock('Claroline\CoreBundle\Manager\Resource\MaskManager');
         $this->tm = $this->mock('Claroline\CoreBundle\Manager\ToolManager');
         $this->tmd = $this->mock('Claroline\CoreBundle\Manager\ToolMaskDecoderManager');
@@ -45,7 +43,6 @@ class DatabaseWriterTest extends MockeryTestCase
         $this->kernelRootDir = 'kernelRootDir';
         $this->dbWriter = new DatabaseWriter(
             $this->om,
-            $this->im,
             $this->fileSystem,
             $this->kernel,
             $this->mm,

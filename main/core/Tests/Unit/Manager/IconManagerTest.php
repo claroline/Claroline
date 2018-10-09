@@ -57,7 +57,7 @@ class IconManagerTest extends MockeryTestCase
      */
     public function testGetIconForFile()
     {
-        $manager = $this->getManager(['createFromFile', 'createShortcutIcon', 'getEntity']);
+        $manager = $this->getManager(['createFromFile', 'getEntity']);
         $file = $this->mock('Claroline\CoreBundle\Entity\Resource\File');
         $node = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $file->shouldReceive('getResourceNode')->once()->andReturn($node);
@@ -70,7 +70,6 @@ class IconManagerTest extends MockeryTestCase
         $manager->shouldReceive('createFromFile')->once()
             ->with($this->fileDir.DIRECTORY_SEPARATOR.'ABCDEFG.mp4', 'video')
             ->andReturn('path/to/thumbnail');
-        $manager->shouldReceive('createShortcutIcon')->once()->with($icon);
         $this->om->shouldReceive('startFlushSuite')->once();
         $this->om->shouldReceive('endFlushSuite')->once();
         $this->om->shouldReceive('persist')->with($icon)->once();
@@ -94,59 +93,6 @@ class IconManagerTest extends MockeryTestCase
         $this->repo->shouldReceive('findOneByMimeType')->with('custom/default')->once()->andReturn($icon);
 
         $this->assertEquals($icon, $this->getManager()->searchIcon($mimeType));
-    }
-
-    /**
-     * @group resource
-     */
-    public function testCreateShortcutIcon()
-    {
-        $manager = $this->getManager(['getEntity']);
-        $icon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
-        $shortcutIcon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
-        $this->om->shouldReceive('factory')->once()
-            ->with('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
-            ->andReturn($shortcutIcon);
-        $icon->shouldReceive('getIconLocation')->once()->andReturn('/path/to/icon/location');
-        $icon->shouldReceive('getMimeType')->once()->andReturn('video/mp4');
-        $this->om->shouldReceive('startFlushSuite')->once();
-        $this->thumbnailCreator->shouldReceive('shortcutThumbnail')->once()->with('/path/to/icon/location')
-            ->andReturn('/path/to/bundles/shortcut/location');
-        $shortcutIcon->shouldReceive('setRelativeUrl')->with('bundles/shortcut/location');
-        $shortcutIcon->shouldReceive('setMimeType')->once()->with('video/mp4');
-        $shortcutIcon->shouldReceive('setShortcut')->once()->with(true);
-        $icon->shouldReceive('setShortcutIcon')->once()->with($shortcutIcon);
-        $shortcutIcon->shouldReceive('setShortcutIcon')->once()->with($shortcutIcon);
-        $this->om->shouldReceive('persist')->once()->with($icon);
-        $this->om->shouldReceive('persist')->once()->with($shortcutIcon);
-        $this->om->shouldReceive('endFlushSuite');
-
-        $this->assertEquals($shortcutIcon, $manager->createShortcutIcon($icon));
-    }
-
-    /**
-     * @group resource
-     */
-    public function testCreateCustomnIcon()
-    {
-        $manager = $this->getManager(['getEntity', 'createShortcutIcon']);
-        $icon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
-        $file = $this->mock('Symfony\Component\HttpFoundation\File\UploadedFile');
-        $file->shouldReceive('getClientOriginalName')->once()->andReturn('original/name.ext');
-        $this->ut->shouldReceive('generateGuid')->andReturn('ABCDEF')->once();
-        $file->shouldReceive('move')->once()->with($this->thumbDir, 'ABCDEF.ext');
-        $icon->shouldReceive('setRelativeUrl')->once()
-            ->with('thumbnails'.DIRECTORY_SEPARATOR.'ABCDEF.ext');
-        $icon->shouldReceive('setMimeType')->once()->with('custom');
-        $icon->shouldReceive('setShortcut')->once()->with(false);
-        $manager->shouldReceive('createShortcutIcon')->once()->with($icon);
-        $this->om->shouldReceive('startFlushSuite');
-        $this->om->shouldReceive('endFlushSuite');
-        $this->om->shouldReceive('persist')->once()->with($icon);
-        $this->om->shouldReceive('factory')->once()
-            ->with('Claroline\CoreBundle\Entity\Resource\ResourceIcon')
-            ->andReturn($icon);
-        $this->assertEquals($icon, $manager->createCustomIcon($file));
     }
 
     /**

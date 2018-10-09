@@ -4,10 +4,10 @@ import Popover from 'react-bootstrap/lib/Popover'
 import classes from 'classnames'
 import get from 'lodash/get'
 
-import {tex, t} from '#/main/core/translation'
-import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
-import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
+import {tex, trans} from '#/main/core/translation'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea'
+import {ErrorBlock} from '#/main/core/layout/form/components/error-block'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
 import {actions} from './editor'
 import {utils} from './utils/utils'
 
@@ -137,7 +137,7 @@ class MatchItem extends Component{
           <div className="left-controls">
             <TooltipButton
               id={`match-source-${this.props.item.id}-delete`}
-              title={t('delete')}
+              title={trans('delete')}
               disabled={!this.props.item._deletable}
               className="btn-link-default"
               onClick={() => this.props.item._deletable && this.props.onUnmount(
@@ -161,7 +161,7 @@ class MatchItem extends Component{
           <div className="right-controls">
             <TooltipButton
               id={`match-target-${this.props.type + '_' + this.props.item.id}-delete`}
-              title={t('delete')}
+              title={trans('delete')}
               disabled={!this.props.item._deletable}
               className="btn-link-default"
               onClick={() => this.props.item._deletable && this.props.onUnmount(

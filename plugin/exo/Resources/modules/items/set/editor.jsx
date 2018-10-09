@@ -5,7 +5,7 @@ import {PropTypes as T} from 'prop-types'
 
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
-import {tex, t} from '#/main/core/translation'
+import {tex, trans} from '#/main/core/translation'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
@@ -82,7 +82,7 @@ class Association extends Component {
           <TooltipButton
             id={`ass-${this.props.association.itemId}-${this.props.association.setId}-delete`}
             className="btn-link-default"
-            title={t('delete')}
+            title={trans('delete')}
             onClick={() => this.props.onChange(
               actions.removeAssociation(this.props.association.setId, this.props.association.itemId))
             }
@@ -124,7 +124,7 @@ class Set extends Component {
             <TooltipButton
               id={`set-${this.props.set.id}-delete`}
               className="btn-link-default"
-              title={t('delete')}
+              title={trans('delete')}
               disabled={!this.props.set._deletable}
               onClick={() => this.props.onChange(
                 actions.removeSet(this.props.set.id))
@@ -233,7 +233,7 @@ let Item = props => {
         <TooltipButton
           id={`set-item-${props.item.id}-delete`}
           className="btn-link-default"
-          title={t('delete')}
+          title={trans('delete')}
           disabled={!props.item._deletable}
           onClick={() => props.onChange(
             actions.removeItem(props.item.id, false)
@@ -247,10 +247,10 @@ let Item = props => {
             <OverlayTrigger
               placement="top"
               overlay={
-                <Tooltip id={`set-item-${props.item.id}-drag`}>{t('move')}</Tooltip>
+                <Tooltip id={`set-item-${props.item.id}-drag`}>{trans('move')}</Tooltip>
               }>
               <span
-                title={t('move')}
+                title={trans('move')}
                 draggable="true"
                 className={classes(
                   'tooltiped-button',
@@ -372,7 +372,7 @@ class Odd extends Component {
           <TooltipButton
             id={`odd-${this.props.odd.id}-delete`}
             className="btn-link-default"
-            title={t('delete')}
+            title={trans('delete')}
             onClick={() => this.props.onChange(actions.removeItem(this.props.odd.id, true))}
           >
             <span className="fa fa-fw fa-trash-o" />

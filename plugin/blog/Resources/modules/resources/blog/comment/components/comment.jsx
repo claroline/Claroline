@@ -1,17 +1,19 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import classes from 'classnames'
-import {PropTypes as T} from 'prop-types'
+import isEmpty from 'lodash/isEmpty'
+
 import {currentUser} from '#/main/core/user/current'
+import {trans} from '#/main/core/translation'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
-import {actions as commentActions} from '#/plugin/blog/resources/blog/comment/store'
 import {hasPermission} from '#/main/core/resource/permissions'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {UserMessage} from '#/main/core/user/message/components/user-message.jsx'
-import {t, trans} from '#/main/core/translation'
-import isEmpty from 'lodash/isEmpty'
-import {UserMessageForm} from '#/main/core/user/message/components/user-message-form.jsx'
+
+import {UserMessage} from '#/main/core/user/message/components/user-message'
+import {UserMessageForm} from '#/main/core/user/message/components/user-message-form'
+import {actions as commentActions} from '#/plugin/blog/resources/blog/comment/store'
 import {selectors} from '#/plugin/blog/resources/blog/store'
 
 const authenticatedUser = currentUser()
@@ -24,7 +26,7 @@ const CommentComponent = (props) =>
         user={props.comment.author ? props.comment.author : undefined}
         content={props.comment.message}
         allowHtml={true}
-        submitLabel={t('add_comment')}
+        submitLabel={trans('add_comment')}
         submit={(commentContent) => props.editComment(props.blogId, props.comment.id, commentContent)}
         cancel={() => props.switchEditCommentFormDisplay('')}
       /> :
@@ -37,7 +39,7 @@ const CommentComponent = (props) =>
         actions={[
           {
             icon: 'fa fa-fw fa-pencil',
-            label: t('edit'),
+            label: trans('edit'),
             displayed: props.showEdit && (props.canEdit || (props.comment.author !== null && authenticatedUser !== null && props.comment.author.id === authenticatedUser.id && !props.comment.isPublished)),
             action: () => props.switchEditCommentFormDisplay(props.comment.id)
           },{
@@ -58,7 +60,7 @@ const CommentComponent = (props) =>
             dangerous: true
           },{
             icon: 'fa fa-fw fa-trash',
-            label: t('delete'),
+            label: trans('delete'),
             displayed: props.canEdit || (props.comment.author !== null && authenticatedUser !== null && props.comment.author.id === authenticatedUser.id && !props.comment.isPublished),
             action: () => props.deleteComment(props.blogId, props.comment.id),
             dangerous: true

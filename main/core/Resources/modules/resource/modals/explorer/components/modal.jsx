@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/core/translation'
+import {Router} from '#/main/app/router'
 import {Button} from '#/main/app/action/components/button'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 
@@ -22,11 +23,13 @@ const ExplorerModal = props => {
       className="resources-picker"
       bsSize="lg"
     >
-      <ResourceExplorer
-        name={selectors.STORE_NAME}
-        primaryAction={props.primaryAction}
-        actions={props.actions}
-      />
+      <Router embedded={true}>
+        <ResourceExplorer
+          name={selectors.STORE_NAME}
+          primaryAction={props.primaryAction}
+          actions={props.actions}
+        />
+      </Router>
 
       <Button
         label={props.confirmText}

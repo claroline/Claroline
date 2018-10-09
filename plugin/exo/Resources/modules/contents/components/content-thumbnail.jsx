@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import classes from 'classnames'
 
 import {makeSortable} from './../../utils/sortable'
-import {t, tex} from '#/main/core/translation'
+import {trans, tex} from '#/main/core/translation'
 import {ValidationStatus} from './../../quiz/editor/components/validation-status.jsx'
 import {getContentDefinition} from './../content-types'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
@@ -27,7 +27,7 @@ const Actions = props =>
     {props.hasEditBtn &&
       <span
         role="button"
-        title={t('edit')}
+        title={trans('edit')}
         className="action-button fa fa-pencil"
         onClick={e => props.handleEdit(e)}
       />
@@ -35,7 +35,7 @@ const Actions = props =>
     {props.hasDeleteBtn &&
       <span
         role="button"
-        title={t('delete')}
+        title={trans('delete')}
         className="action-button fa fa-trash-o"
         onClick={e => props.handleDelete(e)}
       />
@@ -43,7 +43,7 @@ const Actions = props =>
     {props.hasSortBtn && props.connectDragSource(
       <span
         role="button"
-        title={t('move')}
+        title={trans('move')}
         className="action-button fa fa-arrows drag-handle"
         draggable="true"
       />

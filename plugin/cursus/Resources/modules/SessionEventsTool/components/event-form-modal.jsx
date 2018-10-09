@@ -7,9 +7,9 @@ import moment from 'moment'
 import {registry} from '#/main/app/modals/registry'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 
-import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
-import {t, trans} from '#/main/core/translation'
-import {Date} from '#/main/core/layout/form/components/field/date.jsx'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea'
+import {trans} from '#/main/core/translation'
+import {Date} from '#/main/core/layout/form/components/field/date'
 
 import {actions} from '../actions'
 
@@ -140,7 +140,7 @@ class EventFormModal  extends Component {
         <div className="modal-body">
           <div className={classes('form-group row', {'has-error': this.state.nameError})}>
             <label className="control-label col-md-3">
-              {t('name')}
+              {trans('name')}
             </label>
             <div className="col-md-9">
               <input
@@ -159,7 +159,7 @@ class EventFormModal  extends Component {
 
           <div className="form-group row">
             <div className="control-label col-md-3">
-              <label>{t('description')}</label>
+              <label>{trans('description')}</label>
             </div>
             <div className="col-md-9">
               <Textarea
@@ -172,7 +172,7 @@ class EventFormModal  extends Component {
 
           <div className={classes('form-group row', {'has-error': this.state.startDateError})}>
             <div className="control-label col-md-3">
-              <label htmlFor="startDate">{t('start_date')}</label>
+              <label htmlFor="startDate">{trans('start_date')}</label>
             </div>
             <div className="col-md-9">
               <Date
@@ -191,7 +191,7 @@ class EventFormModal  extends Component {
 
           <div className={classes('form-group row', {'has-error': this.state.endDateError})}>
             <div className="control-label col-md-3">
-              <label htmlFor="endDate">{t('end_date')}</label>
+              <label htmlFor="endDate">{trans('end_date')}</label>
             </div>
             <div className="col-md-9">
               <Date
@@ -255,7 +255,7 @@ class EventFormModal  extends Component {
 
           <div className="form-group row">
             <div className="control-label col-md-3">
-              <label>{t('location')}</label>
+              <label>{trans('location')}</label>
             </div>
             <div className="col-md-9">
               <select
@@ -306,7 +306,7 @@ class EventFormModal  extends Component {
           {this.state.registrationType === 2 &&
             <div className="form-group row">
               <label className="control-label col-md-3">
-                {t('group')}
+                {trans('group')}
               </label>
               <div className="col-md-9">
                 <input
@@ -333,10 +333,10 @@ class EventFormModal  extends Component {
         </div>
         <div className="modal-footer">
           <button className="btn btn-default" onClick={this.props.fadeModal}>
-            {t('cancel')}
+            {trans('cancel')}
           </button>
           <button className="btn btn-primary" onClick={() => this.validateSessionEvent()}>
-            {t('ok')}
+            {trans('ok')}
           </button>
         </div>
       </Modal>

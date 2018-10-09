@@ -5,7 +5,7 @@ import classes from 'classnames'
 
 import {registry} from '#/main/app/modals/registry'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
-import {t, trans} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 import {actions} from '../actions'
 
@@ -73,7 +73,7 @@ class EventSetFormModal  extends Component {
         <div className="modal-body">
           <div className={classes('form-group row', {'has-error': this.state.nameError})}>
             <label className="control-label col-md-3">
-              {t('name')}
+              {trans('name')}
             </label>
             <div className="col-md-9">
               <input
@@ -92,7 +92,7 @@ class EventSetFormModal  extends Component {
 
           <div className={classes('form-group row', {'has-error': this.state.limitError})}>
             <div className="control-label col-md-3">
-              <label>{t('limit')}</label>
+              <label>{trans('limit')}</label>
             </div>
             <div className="col-md-9">
               <input
@@ -112,13 +112,13 @@ class EventSetFormModal  extends Component {
         </div>
         <div className="modal-footer">
           <button className="btn btn-danger pull-left" onClick={() => this.deleteEventSet()}>
-            {t('delete')}
+            {trans('delete')}
           </button>
           <button className="btn btn-default" onClick={this.props.fadeModal}>
-            {t('cancel')}
+            {trans('cancel')}
           </button>
           <button className="btn btn-primary" onClick={() => this.validateEventSet()}>
-            {t('ok')}
+            {trans('ok')}
           </button>
         </div>
       </Modal>

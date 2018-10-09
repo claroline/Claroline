@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 import {User as UserTypes} from '#/main/core/user/prop-types'
 
@@ -43,7 +43,7 @@ class UserMessageForm extends Component {
           <div className="user-message-meta">
             <div className="user-message-info">
               {this.props.user && this.props.user.name ?
-                this.props.user.name : t('unknown')
+                this.props.user.name : trans('unknown')
               }
             </div>
 
@@ -54,7 +54,7 @@ class UserMessageForm extends Component {
                   className="btn-link-default"
                   position="bottom"
                   icon="fa fa-fw fa-times"
-                  label={t('cancel')}
+                  label={trans('cancel')}
                   action={this.props.cancel}
                 />
               </div>
@@ -65,7 +65,7 @@ class UserMessageForm extends Component {
             this.props.allowHtml ? HtmlGroup : TextGroup,
             {
               id: 'user-message-content',
-              label: t('message'),
+              label: trans('message'),
               hideLabel: true,
               value: this.state.content,
               long: true,
@@ -135,7 +135,7 @@ UserMessageForm.defaultProps = {
   content: '',
   allowHtml: false,
   position: 'left',
-  submitLabel: t('create')
+  submitLabel: trans('create')
 }
 
 export {

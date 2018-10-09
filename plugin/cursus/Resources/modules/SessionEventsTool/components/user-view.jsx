@@ -2,7 +2,7 @@ import {connect} from 'react-redux'
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {trans, t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 import {
   actions as listActions,
   select as listSelect
@@ -40,13 +40,13 @@ class UserView extends Component {
             {
               name: 'name',
               type: 'string',
-              label: t('name'),
+              label: trans('name'),
               render: (rowData) => <a href={`#event/${rowData.id}`}>{rowData.name}</a>
             },
             {
               name: 'startDate',
               type: 'date',
-              label: t('start_date'),
+              label: trans('start_date'),
               options: {
                 time: true
               }
@@ -54,7 +54,7 @@ class UserView extends Component {
             {
               name: 'endDate',
               type: 'date',
-              label: t('end_date'),
+              label: trans('end_date'),
               options: {
                 time: true
               }
@@ -62,7 +62,7 @@ class UserView extends Component {
             {
               name: 'registration',
               type: 'none',
-              label: t('registration'),
+              label: trans('registration'),
               render: (rowData) => {
                 if (this.props.eventsUsers[rowData.id]) {
                   switch (this.props.eventsUsers[rowData.id].registrationStatus) {

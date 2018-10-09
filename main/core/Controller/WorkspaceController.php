@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
+use Claroline\CoreBundle\Exception\WorkspaceAccessException;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -367,20 +368,13 @@ class WorkspaceController
         return false;
     }
 
-    private function throwWorkspaceDeniedException(Workspace $workspace)
+    private function assertIsGranted($attributes, Workspace $workspace)
     {
-        $exception = new Exception\WorkspaceAccessDeniedException();
-        $exception->setWorkspace($workspace);
+        if (!$this->authorization->isGranted($attributes, $workspace)) {
+            $exception = new WorkspaceAccessException();
+            $exception->setWorkspace($workspace);
 
-        throw $exception;
-    }
-
-    private function assertIsGranted($attributes, $object = null)
-    {
-        if (false === $this->authorization->isGranted($attributes, $object)) {
-            if ($object instanceof Workspace) {
-                $this->throwWorkspaceDeniedException($object);
-            }
+            throw $exception;
         }
     }
 

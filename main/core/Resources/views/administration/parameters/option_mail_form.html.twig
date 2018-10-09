@@ -28,12 +28,12 @@
 
 {% block page_title %}
     {{ 'email'|trans({}, 'platform') }}
-    <small>{{ 'options'|trans({}, 'platform') }}</small>
+    <small>{{ 'mail_options'|trans({}, 'platform') }}</small>
 {% endblock %}
 
 {% block page_content %}
     {{ macros.flashBox() }}
-    {% form_theme form 'ClarolineCoreBundle::form_theme_no_translations.html.twig' %}
+
     <form role="form" class="form-horizontal" action="{{ path('claro_admin_mail_submit_form') }}" method="post" enctype="multipart/form-data" id="form_settings" enctype='multipart/form-data'>
         <div class="panel panel-default">
             <div class="panel-body">

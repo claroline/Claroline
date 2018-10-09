@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
 
-import {t, tex} from '#/main/core/translation'
+import {trans, tex} from '#/main/core/translation'
 
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
 import {ContentHelp} from '#/main/app/content/components/help'
@@ -116,7 +116,7 @@ class TagList extends Component {
 
           <TooltipButton
             id={`${this.props.id}-add-btn`}
-            title={t('add')}
+            title={trans('add')}
             className="btn-link"
             disabled={!this.state.pending[0] || !this.state.pending[1]}
             onClick={this.addTag}
@@ -133,7 +133,7 @@ class TagList extends Component {
             className="btn btn-sm btn-link-danger"
             onClick={this.removeAll}
           >
-            {t('delete_all')}
+            {trans('delete_all')}
           </button>
         }
 
@@ -150,7 +150,7 @@ class TagList extends Component {
 
                 <TooltipButton
                   id={`${this.props.id}-auth-${index}-delete`}
-                  title={t('delete')}
+                  title={trans('delete')}
                   className="btn-link-danger"
                   onClick={() => this.removeTag(index)}
                 >

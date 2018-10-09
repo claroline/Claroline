@@ -53,7 +53,7 @@ class FileController extends AbstractCrudController
         return new JsonResponse($data, 200);
     }
 
-    public function uploadFiles(Request $request)
+    private function uploadFiles(Request $request)
     {
         $files = $request->files->all();
         $handler = $request->get('handler');

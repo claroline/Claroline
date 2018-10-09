@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import merge from 'lodash/merge'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 import {Await} from '#/main/app/components/await'
 import {getType} from '#/main/app/data'
 import {getPropDefinition} from '#/main/app/content/list/utils'
@@ -37,7 +37,7 @@ class CurrentFilter extends Component {
               {!this.props.locked &&
                 <button type="button" className="btn btn-link" onClick={this.props.remove}>
                   <span className="fa fa-times"/>
-                  <span className="sr-only">{t('list_remove_filter')}</span>
+                  <span className="sr-only">{trans('list_remove_filter')}</span>
                 </button>
               }
             </span>
@@ -94,7 +94,7 @@ const AvailableFilterFlag = props => props.isValid ?
   :
   <TooltipElement
     id={props.id}
-    tip={t('list_search_invalid_filter')}
+    tip={trans('list_search_invalid_filter')}
     position="right"
   >
     <span className="cursor-help fa fa-fw fa-warning" />
@@ -281,7 +281,7 @@ class ListSearch extends Component {
             ref={(input) => this.searchInput = input}
             type="text"
             className="form-control search-control"
-            placeholder={t('list_search_placeholder')}
+            placeholder={trans('list_search_placeholder')}
             value={this.state.currentSearch}
             disabled={this.props.disabled}
             onChange={(e) => this.updateSearch(e.target.value)}

@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import cloneDeep from 'lodash/cloneDeep'
 import classes from 'classnames'
 
-import {t, tex} from '#/main/core/translation'
+import {trans, tex} from '#/main/core/translation'
 import {MODE_INSIDE, MODE_BESIDE, DIRECTION_HORIZONTAL, DIRECTION_VERTICAL} from './editor'
 import {makeSortable, SORT_HORIZONTAL, SORT_VERTICAL} from './../../utils/sortable'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
@@ -11,13 +11,12 @@ import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button
 import {OrderingItemDragPreview} from './ordering-item-drag-preview.jsx'
 
 let DropBox = props => {
-  return props.connectDropTarget (
-     <div className={classes(
-       'drop-container',
-       {'on-hover': props.isOver}
-     )}>
-       {tex('set_drop_item')}
-     </div>
+  return props.connectDropTarget(
+    <div className={classes('drop-container', {
+      'on-hover': props.isOver})}
+    >
+      {tex('set_drop_item')}
+    </div>
    )
 }
 
@@ -39,14 +38,14 @@ let SortableItem = props => {
           {props.canDelete &&
             <TooltipButton
               id={`answer-${props.index}-delete`}
-              title={t('delete')}
+              title={trans('delete')}
               onClick={props.onDelete}
             >
               <span className="fa fa-fw fa-trash-o" />
             </TooltipButton>
           }
           <span
-            title={t('move')}
+            title={trans('move')}
             draggable="true"
             className="tooltiped-button btn"
           >
@@ -79,7 +78,7 @@ let DraggableItem = props => {
     <div className="item">
       <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.data}} />      
       <span
-        title={t('move')}
+        title={trans('move')}
         draggable="true"
         className="tooltiped-button btn"
       >
@@ -136,9 +135,8 @@ class OrderingPlayer extends Component {
   onDelete(id) {
     const answers = cloneDeep(this.props.answer.filter(answer => answer.itemId !== id))
     answers.map((answer, index) => answer.position = index + 1)
-    this.props.onChange(
-       answers
-    )
+
+    this.props.onChange(answers)
   }
 
   onSort(id, swapId) {
@@ -164,10 +162,10 @@ class OrderingPlayer extends Component {
       <div className="ordering-player">
         <div className="row">
           <div className={classes(
-              {'horizontal': this.props.item.direction === DIRECTION_HORIZONTAL},
-              {'col-md-12': this.props.item.mode === MODE_INSIDE},
-              {'col-md-6': this.props.item.direction === DIRECTION_VERTICAL && this.props.item.mode === MODE_BESIDE}
-            )}>
+            {'horizontal': this.props.item.direction === DIRECTION_HORIZONTAL},
+            {'col-md-12': this.props.item.mode === MODE_INSIDE},
+            {'col-md-6': this.props.item.direction === DIRECTION_VERTICAL && this.props.item.mode === MODE_BESIDE}
+          )}>
             {this.props.item.mode === MODE_INSIDE ?
               this.props.answer.map((a, index) =>
                 <SortableItem

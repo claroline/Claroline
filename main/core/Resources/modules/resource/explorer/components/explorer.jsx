@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {trans} from '#/main/core/translation'
+import {Routes} from '#/main/app/router'
 import {SummarizedContent} from '#/main/app/content/summary/components/content'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConstants} from '#/main/app/content/list/constants'

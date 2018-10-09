@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import classes from 'classnames'
 
-import {t, tex} from '#/main/core/translation'
+import {trans, tex} from '#/main/core/translation'
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
@@ -94,7 +94,7 @@ class ChoiceItem extends Component {
             id={`choice-${this.props.id}-delete`}
             className="btn-link-default"
             disabled={!this.props.deletable}
-            title={t('delete')}
+            title={trans('delete')}
             onClick={() => this.props.deletable && this.props.onChange(
               actions.removeChoice(this.props.id)
             )}

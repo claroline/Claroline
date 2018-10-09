@@ -1,7 +1,7 @@
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 import {chain, number, inRange} from '#/main/core/validation'
 
-import {NumberGroup} from '#/main/core/layout/form/components/group/number-group.jsx'
+import {NumberGroup} from '#/main/core/layout/form/components/group/number-group'
 
 /**
  * Number definition.
@@ -12,8 +12,8 @@ const dataType = {
   meta: {
     creatable: true,
     icon: 'fa fa-fw fa fa-calculator',
-    label: t('number'),
-    description: t('number_desc')
+    label: trans('number'),
+    description: trans('number_desc')
   },
 
   /**
@@ -23,21 +23,21 @@ const dataType = {
     {
       name: 'min',
       type: 'number',
-      label: t('min_value'),
+      label: trans('min_value'),
       options: {
         max: options.max
       }
     }, {
       name: 'max',
       type: 'number',
-      label: t('max_value'),
+      label: trans('max_value'),
       options: {
         min: options.min
       }
     }, {
       name: 'unit',
       type: 'string',
-      label: t('unit')
+      label: trans('unit')
     }
   ],
 

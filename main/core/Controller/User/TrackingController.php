@@ -14,24 +14,19 @@ namespace Claroline\CoreBundle\Controller\User;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Doctrine\ORM\NoResultException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @EXT\Route("/user/tracking")
  */
 class TrackingController extends Controller
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var PlatformConfigurationHandler */
-    private $configHandler;
     /** @var UserRepository */
     private $userRepo;
     /** @var ResourceUserEvaluation */
@@ -40,30 +35,22 @@ class TrackingController extends Controller
     private $serializer;
 
     /**
-     * ProfileController constructor.
+     * TrackingController constructor.
      *
      * @DI\InjectParams({
-     *     "tokenStorage"  = @DI\Inject("security.token_storage"),
-     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer"    = @DI\Inject("claroline.api.serializer")
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
+     *     "serializer" = @DI\Inject("claroline.api.serializer")
      * })
      *
-     * @param TokenStorageInterface        $tokenStorage
-     * @param PlatformConfigurationHandler $configHandler
-     * @param ObjectManager                $om
-     * @param SerializerProvider           $serializer
+     * @param ObjectManager      $om
+     * @param SerializerProvider $serializer
      */
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        PlatformConfigurationHandler $configHandler,
         ObjectManager $om,
         SerializerProvider $serializer
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->configHandler = $configHandler;
-        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
-        $this->resourceUserEvaluationRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceUserEvaluation');
+        $this->userRepo = $om->getRepository(User::class);
+        $this->resourceUserEvaluationRepo = $om->getRepository(ResourceUserEvaluation::class);
         $this->serializer = $serializer;
     }
 

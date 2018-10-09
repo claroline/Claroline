@@ -2,11 +2,10 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {t} from '#/main/core/translation'
 import {NavLink} from '#/main/app/router'
 
 import {Action as ActionTypes} from '#/main/core/layout/action/prop-types'
-import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action.jsx'
+import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action'
 
 const ProfileNav = props =>
   <nav className="lateral-nav">
@@ -20,7 +19,7 @@ const ProfileNav = props =>
           <span className={facet.icon} />
         }
 
-        {facet.title || t('profile_facet')}
+        {facet.title}
 
         {0 !== props.actions.length &&
           <div className="lateral-nav-actions">

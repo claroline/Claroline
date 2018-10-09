@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {UserTypeahead} from '#/main/core/layout/typeahead/users/typeahead'
 import {ContentHelp} from '#/main/app/content/components/help'
@@ -38,7 +38,7 @@ UserPickerModal.propTypes = {
 
 UserPickerModal.defaultProps = {
   bsStyle: 'info',
-  title: t('add_user'),
+  title: trans('add_user'),
   selected: [],
   unique: false
 }

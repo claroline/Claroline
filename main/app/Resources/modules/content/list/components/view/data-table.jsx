@@ -4,7 +4,7 @@ import get from 'lodash/get'
 import merge from 'lodash/merge'
 import isEmpty from 'lodash/isEmpty'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 import {Await} from '#/main/app/components/await'
 import {getType} from '#/main/app/data'
 import {getPrimaryAction, getActions, isRowSelected} from '#/main/app/content/list/utils'
@@ -185,7 +185,7 @@ const DataTable = props =>
             <TooltipElement
               id="data-table-select"
               position="right"
-              tip={t(0 < props.selection.current.length ? 'list_deselect_all' : 'list_select_all')}
+              tip={trans(0 < props.selection.current.length ? 'list_deselect_all' : 'list_select_all')}
             >
               <input
                 type="checkbox"

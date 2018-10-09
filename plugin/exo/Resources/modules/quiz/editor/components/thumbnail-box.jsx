@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {t, tex} from '#/main/core/translation'
+import {trans, tex} from '#/main/core/translation'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 
@@ -32,7 +32,7 @@ const Actions = props =>
     {props.connectDragSource(
       <span
         role="button"
-        title={t('move')}
+        title={trans('move')}
         className="fa fa-fw fa-arrows drag-handle"
         draggable="true"
       />

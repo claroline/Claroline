@@ -2,9 +2,9 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
-import {t, tex} from '#/main/core/translation'
-import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
-import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
+import {trans, tex} from '#/main/core/translation'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea'
+import {FormGroup} from '#/main/core/layout/form/components/group/form-group'
 import {actions} from './editor'
 
 import {KeywordsPopover} from './../components/keywords.jsx'
@@ -117,7 +117,7 @@ export class Cloze extends Component {
         <FormGroup
           id="cloze-text"
           className="cloze-text"
-          label={t('text')}
+          label={trans('text')}
           warnOnly={!this.props.validating}
           error={get(this.props.item, '_errors.text')}
         >

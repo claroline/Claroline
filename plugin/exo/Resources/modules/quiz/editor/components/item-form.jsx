@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
-import {t, tex} from '#/main/core/translation'
+import {trans, tex} from '#/main/core/translation'
 import {HINT_ADD, HINT_CHANGE, HINT_REMOVE} from './../actions'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group.jsx'
@@ -20,14 +20,14 @@ const Metadata = props =>
   <div>
     <TextGroup
       id={`item-${props.item.id}-title`}
-      label={t('title')}
+      label={trans('title')}
       value={props.item.title}
       onChange={text => props.onChange('title', text)}
     />
 
     <HtmlGroup
       id={`item-${props.item.id}-description`}
-      label={t('description')}
+      label={trans('description')}
       value={props.item.description}
       onChange={text => props.onChange('description', text)}
     />
@@ -60,7 +60,7 @@ const Metadata = props =>
     </FormGroup>
     <FormGroup
       id={`item-${props.item.id}-tags`}
-      label={t('tags')}
+      label={trans('tags')}
     >
       <TagsEditor
         item={props.item}
@@ -111,7 +111,7 @@ const Hint = props =>
 
     <TooltipButton
       id={`hint-${props.id}-delete`}
-      title={t('delete')}
+      title={trans('delete')}
       className="btn-link-default"
       onClick={props.onRemove}
     >

@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {trans, t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 import {Date} from '#/main/core/layout/form/components/field/date.jsx'
 
 import {actions} from '../actions'
@@ -103,7 +103,7 @@ class BBBConfig extends Component {
 
         <div className={classes('form-group row', {'has-error': this.props.params.startDateError})}>
           <div className="control-label col-md-3">
-            <label htmlFor="startDate">{t('start_date')}</label>
+            <label htmlFor="startDate">{trans('start_date')}</label>
           </div>
           <div className="col-md-9">
             <Date
@@ -122,7 +122,7 @@ class BBBConfig extends Component {
 
         <div className={classes('form-group row', {'has-error': this.props.params.endDateError})}>
           <div className="control-label col-md-3">
-            <label htmlFor="endDate">{t('end_date')}</label>
+            <label htmlFor="endDate">{trans('end_date')}</label>
           </div>
           <div className="col-md-9">
             <Date

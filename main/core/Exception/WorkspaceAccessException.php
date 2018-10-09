@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Controller\Exception;
+namespace Claroline\CoreBundle\Exception;
 
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
-class WorkspaceAccessDeniedException extends AccessDeniedException
+class WorkspaceAccessException extends AccessDeniedException
 {
     /** @var Workspace */
     private $workspace;

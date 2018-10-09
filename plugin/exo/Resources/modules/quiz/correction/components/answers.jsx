@@ -3,12 +3,12 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import classes from 'classnames'
 
-import {t, tex} from '#/main/core/translation'
-import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
+import {trans, tex} from '#/main/core/translation'
+import {HtmlText} from '#/main/core/layout/components/html-text'
 import {actions} from './../actions'
 import {selectors as correctionSelectors} from './../selectors'
-import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
 
 class AnswerRow extends Component {
   constructor(props) {
@@ -90,7 +90,7 @@ let Answers = props =>
           onClick={() => props.saveEnabled && props.saveCorrection(props.question.id)}
         >
           <span className="fa fa-fw fa-save"/>
-          {t('save')}
+          {trans('save')}
         </button>
       }
     </h2>

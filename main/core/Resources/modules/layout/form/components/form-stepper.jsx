@@ -4,7 +4,7 @@ import classes from 'classnames'
 
 import {Button as ButtonTypes} from '#/main/app/buttons/prop-types'
 import {Button} from '#/main/app/action'
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 import {Redirect as RedirectTypes} from '#/main/app/router/prop-types'
 import {Router, Routes, NavLink, withRouter} from '#/main/app/router'
 
@@ -57,7 +57,7 @@ const FormStepperFooter = props =>
         className="btn btn-next btn-link"
         href={`#${props.nextStep}`}
       >
-        {t('form_next_step')}
+        {trans('form_next_step')}
         <span className="fa fa-angle-double-right" />
       </a>
     }
@@ -76,7 +76,7 @@ const FormStepperFooter = props =>
         <span className={props.submit.icon} />
       }
 
-      {props.submit.label || t('save')}
+      {props.submit.label || trans('save')}
     </button>
   </div>
 

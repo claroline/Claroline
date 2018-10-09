@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {t, tex} from '#/main/core/translation'
+import {trans, tex} from '#/main/core/translation'
 import {
   Page,
   PageHeader,
@@ -41,8 +41,8 @@ const GeneralStats = props =>
   <div className="general-stats">
     <CountCard label={tex('steps')} icon="fa fa-th-list" count={props.statistics.nbSteps} />
     <CountCard label={tex('questions')} icon="fa fa-question" count={props.statistics.nbQuestions} />
-    <CountCard label={t('users')} icon="fa fa-user" count={props.statistics.nbRegisteredUsers} />
-    <CountCard label={t('anonymous')} icon="fa fa-user-secret" count={props.statistics.nbAnonymousUsers} />
+    <CountCard label={trans('users')} icon="fa fa-user" count={props.statistics.nbRegisteredUsers} />
+    <CountCard label={trans('anonymous')} icon="fa fa-user-secret" count={props.statistics.nbAnonymousUsers} />
     <CountCard label={tex('papers')} icon="fa fa-file" count={props.statistics.nbPapers} />
   </div>
 

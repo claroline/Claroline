@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
@@ -42,7 +42,7 @@ class Password extends Component {
         <span className="input-group-btn">
           <TooltipElement
             id={`${this.props.id}-show`}
-            tip={t('show_password')}
+            tip={trans('show_password')}
           >
             <button
               type="button"

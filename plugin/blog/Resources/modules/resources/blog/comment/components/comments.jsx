@@ -1,20 +1,22 @@
 import React from 'react'
-import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
-import {currentUser} from '#/main/core/user/current'
-import {UserMessageForm} from '#/main/core/user/message/components/user-message-form'
-import {t, trans} from '#/main/core/translation'
+import {connect} from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
-import {CommentCard} from '#/plugin/blog/resources/blog/comment/components/comment'
-import {actions as commentActions} from '#/plugin/blog/resources/blog/comment/store'
+
+import {t, trans} from '#/main/core/translation'
+import {currentUser} from '#/main/core/user/current'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {hasPermission} from '#/main/core/resource/permissions'
-import {constants} from '#/plugin/blog/resources/blog/constants'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
+
+import {UserMessageForm} from '#/main/core/user/message/components/user-message-form'
+import {constants} from '#/plugin/blog/resources/blog/constants'
 import {selectors} from '#/plugin/blog/resources/blog/store'
+import {CommentCard} from '#/plugin/blog/resources/blog/comment/components/comment'
+import {actions as commentActions} from '#/plugin/blog/resources/blog/comment/store'
 
 const authenticatedUser = currentUser()
 

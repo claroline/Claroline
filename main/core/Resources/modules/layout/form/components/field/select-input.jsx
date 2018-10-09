@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {t} from '#/main/core/translation'
+
+import {trans} from '#/main/core/translation'
 
 const ChoicesTypeAhead = props => {
   return (
@@ -149,8 +150,8 @@ SelectInput.defaultProps = {
   selectMode: false,
   withEmptyOption: true,
   emptyValue: '',
-  primaryLabel: t('ok'),
-  secondaryLabel: t('cancel'),
+  primaryLabel: trans('ok'),
+  secondaryLabel: trans('cancel'),
   typeAhead: false,
   disablePrimary: false,
   disableSecondary: false,

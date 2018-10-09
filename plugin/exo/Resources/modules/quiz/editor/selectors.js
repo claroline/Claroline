@@ -4,7 +4,7 @@ import uniq from 'lodash/uniq'
 
 import {select as quizSelect} from '#/plugin/exo/quiz/selectors'
 
-import {tex, t} from '#/main/core/translation'
+import {tex, trans} from '#/main/core/translation'
 
 import {TYPE_QUIZ, TYPE_STEP} from './../enums'
 
@@ -54,7 +54,7 @@ const quizThumbnail = createSelector(
   (quiz, current) => {
     return {
       id: quiz.id,
-      title: t('parameters'),
+      title: trans('parameters'),
       type: TYPE_QUIZ,
       active: quiz.id === current.id && current.type === TYPE_QUIZ,
       hasErrors: !isEmpty(quiz._errors)

@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import cloneDeep from 'lodash/cloneDeep'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 import {url} from '#/main/app/api'
 import {actions} from './actions.js'
 
@@ -159,7 +159,7 @@ class TagsEditor extends Component {
               disabled={!this.state.currentTag.trim()}
               onClick={() => this.addCurrentTag()}
             >
-              {t('add')}
+              {trans('add')}
             </button>
           </span>
         </div>

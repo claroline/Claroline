@@ -14,10 +14,8 @@ namespace Claroline\TagBundle\Manager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Pager\PagerFactory;
-use Claroline\TagBundle\Entity\ResourcesTagsWidgetConfig;
 use Claroline\TagBundle\Entity\Tag;
 use Claroline\TagBundle\Entity\TaggedObject;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -29,7 +27,6 @@ class TagManager
 {
     private $om;
     private $pagerFactory;
-    private $resWidgetConfigRepo;
     private $taggedObjectRepo;
     private $tagRepo;
 
@@ -43,8 +40,6 @@ class TagManager
     {
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
-        $this->resWidgetConfigRepo =
-            $om->getRepository('ClarolineTagBundle:ResourcesTagsWidgetConfig');
         $this->taggedObjectRepo = $om->getRepository('ClarolineTagBundle:TaggedObject');
         $this->tagRepo = $om->getRepository('ClarolineTagBundle:Tag');
     }
@@ -291,27 +286,6 @@ class TagManager
                 $this->om->flush();
             }
         }
-    }
-
-    public function getResourcesTagsWidgetConfig(WidgetInstance $widgetInstance)
-    {
-        $config = $this->resWidgetConfigRepo->findOneByWidgetInstance($widgetInstance);
-
-        if (is_null($config)) {
-            $config = new ResourcesTagsWidgetConfig();
-            $config->setWidgetInstance($widgetInstance);
-            $details = ['nb_tags' => 10];
-            $config->setDetails($details);
-            $this->persistResourcesTagsWidgetConfig($config);
-        }
-
-        return $config;
-    }
-
-    public function persistResourcesTagsWidgetConfig(ResourcesTagsWidgetConfig $config)
-    {
-        $this->om->persist($config);
-        $this->om->flush();
     }
 
     public function removeTaggedObjectByTagNameAndObjectIdAndClass($tagName, $objectId, $objectClass)

@@ -109,7 +109,6 @@ class FileManager
         $this->om->startFlushSuite();
         $this->deleteContent($file);
         $this->uploadContent($file, $upload);
-        $this->resManager->resetIcon($file->getResourceNode());
         $this->om->endFlushSuite();
 
         $this->dispatcher->dispatch(

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 import {FormData} from '#/main/app/content/form/containers/data'
 
@@ -16,24 +16,24 @@ const Optional = () =>
     name="user"
     sections={[
       {
-        title: t('general'),
+        title: trans('general'),
         primary: true,
         fields: [
           {
             name: 'preferences.locale',
             type: 'locale',
-            label: t('language'),
+            label: trans('language'),
             options: {
               onlyEnabled: true
             }
           }, {
             name: 'meta.description',
             type: 'html',
-            label: t('description')
+            label: trans('description')
           }, {
             name: 'picture',
             type: 'image',
-            label: t('picture')
+            label: trans('picture')
           }
         ]
       }

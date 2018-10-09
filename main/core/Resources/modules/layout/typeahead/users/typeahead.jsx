@@ -3,10 +3,10 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import cloneDeep from 'lodash/cloneDeep'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 import {url} from '#/main/app/api'
 
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
 
 const UsersList = props =>
   <ul className="dropdown-menu">
@@ -41,13 +41,13 @@ const SelectedUser = props =>
 
     <TooltipButton
       id={`remove-${props.user.id}`}
-      title={t('delete')}
+      title={trans('delete')}
       position="left"
       onClick={props.remove}
       className="btn-link btn-link-danger"
     >
       <span className="fa fa-fw fa-trash-o" />
-      <span className="sr-only">{t('delete')}</span>
+      <span className="sr-only">{trans('delete')}</span>
     </TooltipButton>
   </li>
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 const ListEmpty = props =>
   <div className="list-empty">
@@ -9,7 +9,7 @@ const ListEmpty = props =>
       <span className="list-empty-icon fa fa-refresh" />
 
       <div className="list-empty-content">
-        {t(props.hasFilters ? 'list_search_no_results' : 'list_no_results')}
+        {trans(props.hasFilters ? 'list_search_no_results' : 'list_no_results')}
 
         {props.contentDesc &&
           <p className="list-content-desc">

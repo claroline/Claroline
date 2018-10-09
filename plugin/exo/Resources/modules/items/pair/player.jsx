@@ -4,7 +4,7 @@ import classes from 'classnames'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
 import times from 'lodash/times'
-import {tex, t} from '#/main/core/translation'
+import {tex, trans} from '#/main/core/translation'
 import {utils} from './utils/utils'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
@@ -36,7 +36,7 @@ const PairItem = props =>
       <TooltipButton
         id={`pair-${props.item.id}-delete`}
         className="btn-link-default btn-item-remove pull-right"
-        title={t('delete')}
+        title={trans('delete')}
         onClick={() => props.handleItemRemove(props.item.id)}
       >
         <span className="fa fa-fw fa-trash-o" />
@@ -94,7 +94,7 @@ let Item = props => {
           <OverlayTrigger
             placement="top"
             overlay={
-              <Tooltip id={`item-${props.item.id}-drag`}>{t('move')}</Tooltip>
+              <Tooltip id={`item-${props.item.id}-drag`}>{trans('move')}</Tooltip>
             }>
             <span
               draggable="true"

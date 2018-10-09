@@ -1,6 +1,6 @@
 import isBoolean from 'lodash/isBoolean'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 /**
  * Parses a boolean display string into a real Boolean.
@@ -23,15 +23,15 @@ function parseBool(value, silent = false) {
     switch (value.toLowerCase().trim()) {
       case '1':
       case 'true':
-      case t('true').toLowerCase().trim():
+      case trans('true').toLowerCase().trim():
       case 'yes':
-      case t('yes').toLowerCase().trim():
+      case trans('yes').toLowerCase().trim():
         return true
       case '0':
       case 'false':
-      case t('false').toLowerCase().trim():
+      case trans('false').toLowerCase().trim():
       case 'no':
-      case t('no').toLowerCase().trim():
+      case trans('no').toLowerCase().trim():
         return false
     }
   }
@@ -51,7 +51,7 @@ function parseBool(value, silent = false) {
  * @returns {string}
  */
 function translateBool(value) {
-  return value ? t('yes') : t('no')
+  return value ? trans('yes') : trans('no')
 }
 
 export {

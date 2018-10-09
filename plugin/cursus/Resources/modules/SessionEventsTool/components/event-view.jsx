@@ -5,7 +5,7 @@ import {PropTypes as T} from 'prop-types'
 import moment from 'moment'
 
 import {withModal} from '#/main/app/overlay/modal/withModal'
-import {trans, t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 import {actions} from '../actions'
 import {selectors} from '../selectors'
 import {registrationTypes, registrationStatus} from '../enums'
@@ -35,7 +35,7 @@ class EventView extends Component {
 
   showEventCommentsManagement(sessionEvent) {
     this.props.showModal(MODAL_EVENT_COMMENTS, {
-      title: this.props.canEdit ? trans('informations_management', {}, 'cursus') : t('informations'),
+      title: this.props.canEdit ? trans('informations_management', {}, 'cursus') : trans('informations'),
       event: sessionEvent
     })
   }
@@ -97,7 +97,7 @@ class EventView extends Component {
             className="btn btn-primary margin-right-sm"
             data-toggle="tooltip"
             data-placement="top"
-            title={this.props.canEdit ? trans('informations_management', {}, 'cursus') : t('informations')}
+            title={this.props.canEdit ? trans('informations_management', {}, 'cursus') : trans('informations')}
             onClick={() => this.showEventCommentsManagement(this.props.event)}
           >
             <i className="fa fa-info"></i>
@@ -145,7 +145,7 @@ class EventView extends Component {
               aria-labelledby="description-heading"
             >
               <div className="panel-body">
-                <b>{t('duration')} :</b>
+                <b>{trans('duration')} :</b>
                 &nbsp;
                 {moment(this.props.event['startDate']).format('DD/MM/YYYY HH:mm')}
                 &nbsp;
@@ -160,7 +160,7 @@ class EventView extends Component {
                   '-'
                 }
                 <br/>
-                <b>{t('registration')} :</b>
+                <b>{trans('registration')} :</b>
                 &nbsp;
                 {registrationTypes[this.props.event['registrationType']]}
                 <hr/>
@@ -174,7 +174,7 @@ class EventView extends Component {
                 <hr/>
                 {this.props.event['location'] || this.props.event['locationExtra'] ?
                   <div>
-                    <h4>{t('location')}</h4>
+                    <h4>{trans('location')}</h4>
                     {this.props.event['location'] &&
                       <div>
                         {this.props.event['location']['name']}
@@ -249,10 +249,10 @@ class EventView extends Component {
                       <table className="table table-stripped">
                         <thead>
                           <tr>
-                            <th>{t('last_name')}</th>
-                            <th>{t('first_name')}</th>
-                            <th>{t('status')}</th>
-                            <th>{t('actions')}</th>
+                            <th>{trans('last_name')}</th>
+                            <th>{trans('first_name')}</th>
+                            <th>{trans('status')}</th>
+                            <th>{trans('actions')}</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -302,7 +302,7 @@ class EventView extends Component {
         <a className="btn btn-default" href={'#'}>
           <i className="fa fa-arrow-left"></i>
           &nbsp;
-          {t('back')}
+          {trans('back')}
         </a>
       </div>
     )

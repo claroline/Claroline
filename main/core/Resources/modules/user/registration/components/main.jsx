@@ -2,22 +2,21 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 import {PageContainer, PageHeader} from '#/main/core/layout/page/index'
-import {FormStepper} from '#/main/core/layout/form/components/form-stepper.jsx'
-import {actions as formActions} from '#/main/app/content/form/store/actions'
-import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
+import {FormStepper} from '#/main/core/layout/form/components/form-stepper'
+import {actions as formActions, selectors as formSelect} from '#/main/app/content/form/store'
 
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 
-import {Facet} from '#/main/core/user/registration/components/facet.jsx'
-import {Required} from '#/main/core/user/registration/components/required.jsx'
-import {Optional} from '#/main/core/user/registration/components/optional.jsx'
-import {Organization} from '#/main/core/user/registration/components/organization.jsx'
-import {Workspace} from '#/main/core/user/registration/components/workspace.jsx'
-import {Registration} from '#/main/core/user/registration/components/registration.jsx'
+import {Facet} from '#/main/core/user/registration/components/facet'
+import {Required} from '#/main/core/user/registration/components/required'
+import {Optional} from '#/main/core/user/registration/components/optional'
+import {Organization} from '#/main/core/user/registration/components/organization'
+import {Workspace} from '#/main/core/user/registration/components/workspace'
+import {Registration} from '#/main/core/user/registration/components/registration'
 
 import {select} from '#/main/core/user/registration/selectors'
 
@@ -72,14 +71,14 @@ const RegistrationForm = props => {
     <PageContainer id="user-registration">
       <PageHeader
         key="header"
-        title={t('user_registration')}
+        title={trans('user_registration')}
       />
       <FormStepper
         key="form"
         className="page-content"
         submit={{
           icon: 'fa fa-user-plus',
-          label: t('registration_confirm'),
+          label: trans('registration_confirm'),
           action: () => props.register(props.user, props.termOfService)
         }}
         steps={steps}
@@ -125,10 +124,10 @@ const UserRegistration = connect(
       if (termOfService) {
         dispatch(modalActions.showModal(MODAL_CONFIRM, {
           icon: 'fa fa-fw fa-copyright',
-          title: t('term_of_service'),
+          title: trans('term_of_service'),
           question: termOfService,
           isHtml: true,
-          confirmButtonText: t('accept_term_of_service'),
+          confirmButtonText: trans('accept_term_of_service'),
           handleConfirm: () => {
             // todo : set acceptedTerms flag
             dispatch(formActions.saveForm('user', ['apiv2_user_create_and_login']))

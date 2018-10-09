@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Controller\User;
 
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\Entity\User;
@@ -23,8 +22,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -32,7 +31,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  * that the user is anonymous and the self-registration is allowed by the
  * platform configuration.
  *
- * @EXT\Route("/user/registration")
+ * @EXT\Route("/user/registration", options={"expose"=true})
  */
 class RegistrationController extends Controller
 {
@@ -50,8 +49,6 @@ class RegistrationController extends Controller
     private $userManager;
     /** @var TermsOfServiceManager */
     private $tosManager;
-    /** @var FinderProvider */
-    private $finder;
 
     /**
      * RegistrationController constructor.
@@ -63,8 +60,7 @@ class RegistrationController extends Controller
      *     "configHandler"     = @DI\Inject("claroline.config.platform_config_handler"),
      *     "profileSerializer" = @DI\Inject("claroline.serializer.profile"),
      *     "userManager"       = @DI\Inject("claroline.manager.user_manager"),
-     *     "tosManager"        = @DI\Inject("claroline.common.terms_of_service_manager"),
-     *     "finder"            = @DI\Inject("claroline.api.finder")
+     *     "tosManager"        = @DI\Inject("claroline.common.terms_of_service_manager")
      * })
      *
      * @param TokenStorageInterface        $tokenStorage
@@ -74,7 +70,6 @@ class RegistrationController extends Controller
      * @param ProfileSerializer            $profileSerializer
      * @param UserManager                  $userManager
      * @param TermsOfServiceManager        $tosManager
-     * @param FinderProvider               $finder
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -83,8 +78,7 @@ class RegistrationController extends Controller
         PlatformConfigurationHandler $configHandler,
         ProfileSerializer $profileSerializer,
         UserManager $userManager,
-        TermsOfServiceManager $tosManager,
-        FinderProvider $finder
+        TermsOfServiceManager $tosManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->session = $session;
@@ -93,7 +87,6 @@ class RegistrationController extends Controller
         $this->profileSerializer = $profileSerializer;
         $this->userManager = $userManager;
         $this->tosManager = $tosManager;
-        $this->finder = $finder;
     }
 
     /**
@@ -130,11 +123,7 @@ class RegistrationController extends Controller
     }
 
     /**
-     * @EXT\Route(
-     *     "/activate/{hash}",
-     *     name="claro_security_activate_user",
-     *     options={"expose"=true}
-     * )
+     * @EXT\Route("/activate/{hash}", name="claro_security_activate_user")
      *
      * @param string $hash
      *
@@ -164,13 +153,13 @@ class RegistrationController extends Controller
      * Checks if a user is allowed to register.
      * ie: if the self registration is disabled, he can't.
      *
-     * @throws AccessDeniedHttpException
+     * @throws AccessDeniedException
      */
     private function checkAccess()
     {
         $isSelfRegistrationAllowed = $this->configHandler->getParameter('allow_self_registration');
         if (!$isSelfRegistrationAllowed || $this->tokenStorage->getToken()->getUser() instanceof User) {
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
     }
 }

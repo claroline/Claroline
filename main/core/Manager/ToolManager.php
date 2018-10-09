@@ -21,7 +21,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException;
-use Claroline\CoreBundle\Manager\Exception\UnremovableToolException;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\ToolRepository;
@@ -430,8 +429,6 @@ class ToolManager
     /**
      * @param \Claroline\CoreBundle\Entity\Tool\Tool $tool
      * @param \Claroline\CoreBundle\Entity\User      $user
-     *
-     * @throws UnremovableToolException
      */
     public function removeDesktopTool(Tool $tool, User $user, $type = 0)
     {
@@ -767,7 +764,7 @@ class ToolManager
 
     /**
      * @param User $user
-     * @param int $type
+     * @param int  $type
      *
      * @return OrderedTool[]
      */

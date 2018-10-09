@@ -8,7 +8,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {getPlainText} from '#/main/app/data/html/utils'
 
-import {t, tex, trans, transChoice} from '#/main/core/translation'
+import {tex, trans, transChoice} from '#/main/core/translation'
 import {
   PageContainer,
   PageHeader,
@@ -72,18 +72,18 @@ const QuestionsPage = props =>
             displayed: true
           }, {
             name: 'meta.model',
-            label: t('model'),
+            label: trans('model'),
             type: 'boolean',
             alias: 'model',
             displayed: true
           }, {
             name: 'meta.created',
-            label: t('creation_date'),
+            label: trans('creation_date'),
             type: 'date',
             alias: 'dateCreate'
           }, {
             name: 'meta.updated',
-            label: t('last_modification'),
+            label: trans('last_modification'),
             type: 'date',
             alias: 'dateModify',
             displayed: true,
@@ -101,11 +101,11 @@ const QuestionsPage = props =>
         actions={(rows) => [
           /*{
             icon: 'fa fa-fw fa-copy',
-            label: t('duplicate'),
+            label: trans('duplicate'),
             action: (rows) => props.duplicateQuestions(rows, false)
           }, {
             icon: 'fa fa-fw fa-clone',
-            label: t('duplicate_model'),
+            label: trans('duplicate_model'),
             action: (rows) => props.duplicateQuestions(rows, true)
           },*/ {
             // TODO : checks if the current user has the rights to share to enable the action
@@ -116,7 +116,7 @@ const QuestionsPage = props =>
           }, {
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-trash-o',
-            label: t('delete'),
+            label: trans('delete'),
             callback: () => props.removeQuestions(rows),
             dangerous: true
           }

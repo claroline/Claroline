@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import classes from 'classnames'
 
-import {t, tex} from '#/main/core/translation'
+import {trans, tex} from '#/main/core/translation'
 import {SCORE_SUM, SCORE_FIXED} from './../../quiz/enums'
 import {makeSortable, SORT_HORIZONTAL, SORT_VERTICAL} from './../../utils/sortable'
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
@@ -72,7 +72,7 @@ class Item extends Component {
             id={`item-${this.props.id}-delete`}
             className="btn-link-default"
             disabled={!this.props.deletable}
-            title={t('delete')}
+            title={trans('delete')}
             onClick={() => this.props.onChange(
               actions.removeItem(this.props.id)
             )}
@@ -115,7 +115,7 @@ let OrderingItem = props => {
       <Item {...props} />
       {props.connectDragSource(
         <span
-          title={t('move')}
+          title={trans('move')}
           draggable="true"
           className={classes(
             'tooltiped-button',

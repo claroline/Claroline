@@ -5,7 +5,7 @@ import classes from 'classnames'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
 
-import {tex, t} from '#/main/core/translation'
+import {tex, trans} from '#/main/core/translation'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
@@ -152,7 +152,7 @@ class Pair extends Component {
             id={`ass-${this.props.pair.itemIds[0]}-${this.props.pair.itemIds[1]}-delete`}
             className="btn-link-default"
             disabled={!this.props.pair._deletable}
-            title={t('delete')}
+            title={trans('delete')}
             onClick={() => this.props.onChange(
               actions.removePair(this.props.pair.itemIds[0], this.props.pair.itemIds[1]))
             }
@@ -304,7 +304,7 @@ class Odd extends Component {
           <TooltipButton
             id={`odd-${this.props.odd.id}-delete`}
             className="btn-link-default"
-            title={t('delete')}
+            title={trans('delete')}
             onClick={() => this.props.onChange(actions.removeItem(this.props.odd.id, true))}
           >
             <span className="fa fa-fw fa-trash-o" />
@@ -364,7 +364,7 @@ let Item = props => {
         <TooltipButton
           id={`set-item-${props.item.id}-delete`}
           className="btn-link-default"
-          title={t('delete')}
+          title={trans('delete')}
           disabled={!props.item._deletable}
           onClick={() => props.onChange(
             actions.removeItem(props.item.id, false)
@@ -378,11 +378,11 @@ let Item = props => {
             <OverlayTrigger
               placement="top"
               overlay={
-                <Tooltip id={`item-${props.item.id}-drag`}>{t('move')}</Tooltip>
+                <Tooltip id={`item-${props.item.id}-drag`}>{trans('move')}</Tooltip>
               }>
               <span
                 role="button"
-                title={t('move')}
+                title={trans('move')}
                 draggable="true"
                 className={classes(
                   'btn',

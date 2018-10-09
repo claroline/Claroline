@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {MODAL_DATA_LIST} from '#/main/app/modals/list'
@@ -34,13 +34,13 @@ const GroupForm = props =>
     }}
     sections={[
       {
-        title: t('general'),
+        title: trans('general'),
         primary: true,
         fields: [
           {
             name: 'name',
             type: 'string',
-            label: t('name'),
+            label: trans('name'),
             required: true
           }
         ]
@@ -53,13 +53,13 @@ const GroupForm = props =>
       <FormSection
         className="embedded-list-section"
         icon="fa fa-fw fa-user"
-        title={t('users')}
+        title={trans('users')}
         disabled={props.new}
         actions={[
           {
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
-            label: t('add_users'),
+            label: trans('add_users'),
             callback: () => props.pickUsers(props.group.id)
           }
         ]}
@@ -82,13 +82,13 @@ const GroupForm = props =>
       <FormSection
         className="embedded-list-section"
         icon="fa fa-fw fa-id-badge"
-        title={t('roles')}
+        title={trans('roles')}
         disabled={props.new}
         actions={[
           {
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
-            label: t('add_roles'),
+            label: trans('add_roles'),
             callback: () => props.pickRoles(props.group.id)
           }
         ]}
@@ -111,13 +111,13 @@ const GroupForm = props =>
       <FormSection
         className="embedded-list-section"
         icon="fa fa-fw fa-building"
-        title={t('organizations')}
+        title={trans('organizations')}
         disabled={props.new}
         actions={[
           {
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
-            label: t('add_organizations'),
+            label: trans('add_organizations'),
             callback: () => props.pickOrganizations(props.group.id)
           }
         ]}
@@ -158,8 +158,8 @@ const Group = connect(
     pickUsers(groupId) {
       dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-user',
-        title: t('add_users'),
-        confirmText: t('add'),
+        title: trans('add_users'),
+        confirmText: trans('add'),
         name: 'users.picker',
         definition: UserList.definition,
         card: UserList.card,
@@ -173,8 +173,8 @@ const Group = connect(
     pickRoles(groupId) {
       dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-id-badge',
-        title: t('add_roles'),
-        confirmText: t('add'),
+        title: trans('add_roles'),
+        confirmText: trans('add'),
         name: 'roles.picker',
         definition: RoleList.definition,
         card: RoleList.card,
@@ -188,8 +188,8 @@ const Group = connect(
     pickOrganizations(groupId) {
       dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-buildings',
-        title: t('add_organizations'),
-        confirmText: t('add'),
+        title: trans('add_organizations'),
+        confirmText: trans('add'),
         name: 'organizations.picker',
         definition: OrganizationList.definition,
         card: OrganizationList.card,

@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {asset} from '#/main/core/scaffolding/asset'
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 const AudioThumbnail = props =>
   <div className="audio-file-thumbnail">
@@ -83,7 +83,7 @@ const Actions = props =>
     {props.hasExpandBtn &&
       <span
         role="button"
-        title={t('watch_at_the_original_size')}
+        title={trans('watch_at_the_original_size')}
         className="action-button fa fa-fw fa-external-link"
         onClick={e => {
           e.stopPropagation()
@@ -95,7 +95,7 @@ const Actions = props =>
       <a href={asset(props.data.url)} download={props.data.name}>
         <span
           role="button"
-          title={t('download')}
+          title={trans('download')}
           className="action-button fa fa-fw fa-download"
           onClick={e => {
             props.handleDownload(e, props.data)
@@ -106,7 +106,7 @@ const Actions = props =>
     {props.hasEditBtn &&
       <span
         role="button"
-        title={t('edit')}
+        title={trans('edit')}
         className="action-button fa fa-fw fa-pencil"
         onClick={e => props.handleEdit(e)}
       />
@@ -114,7 +114,7 @@ const Actions = props =>
     {props.hasDeleteBtn &&
       <span
         role="button"
-        title={t('delete')}
+        title={trans('delete')}
         className="action-button fa fa-fw fa-trash-o"
         onClick={e => props.handleDelete(e)}
       />

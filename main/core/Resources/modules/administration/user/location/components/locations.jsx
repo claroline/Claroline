@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {ListData} from '#/main/app/content/list/containers/data'
@@ -30,7 +30,7 @@ const LocationsList = props =>
     actions={(rows) => [{
       type: CALLBACK_BUTTON,
       icon: 'fa fa-fw fa-map-marker',
-      label: t('geolocate'),
+      label: trans('geolocate'),
       callback: () => props.geolocate(rows[0]),
       scope: ['object'] // todo should be available in selection mode too
     }]}

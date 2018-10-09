@@ -1,22 +1,22 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {t} from '#/main/core/translation'
-import {TextGroup} from '#/main/core/layout/form/components/group/text-group.jsx'
-import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group.jsx'
+import {trans} from '#/main/core/translation'
+import {TextGroup} from '#/main/core/layout/form/components/group/text-group'
+import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group'
 
 const StepForm = props =>
   <fieldset>
     <TextGroup
       id={`step-${props.id}-title`}
-      label={t('title')}
+      label={trans('title')}
       value={props.title}
       onChange={text => props.onChange({title: text})}
     />
 
     <HtmlGroup
       id={`step-${props.id}-description`}
-      label={t('description')}
+      label={trans('description')}
       value={props.description}
       onChange={text => props.onChange({description: text})}
     />

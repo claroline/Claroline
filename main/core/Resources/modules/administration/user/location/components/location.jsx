@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {FormData} from '#/main/app/content/form/containers/data'
@@ -34,30 +34,30 @@ const LocationForm = props =>
     }}
     sections={[
       {
-        title: t('general'),
+        title: trans('general'),
         primary: true,
         fields: [
-          {name: 'name', type: 'string', label: t('name'), required: true},
-          {name: 'meta.type', type: 'choice', label: t('type'), options: {condensed: true, choices: locationTypes}}
+          {name: 'name', type: 'string', label: trans('name'), required: true},
+          {name: 'meta.type', type: 'choice', label: trans('type'), options: {condensed: true, choices: locationTypes}}
         ]
       }, {
-        title: t('contact'),
+        title: trans('contact'),
         icon: 'fa fa-fw fa-address-card',
         fields: [
-          {name: 'phone', type: 'text', label: t('phone')},
-          {name: 'street', type: 'string', label: t('street'), required: true},
-          {name: 'boxNumber', type: 'string', label: t('box_number')},
-          {name: 'streetNumber', type: 'string', label: t('street_number'), required: true},
-          {name: 'zipCode', type: 'string', label: t('postal_code'), required: true},
-          {name: 'town', type: 'string', label: t('town'), required: true},
-          {name: 'country', type: 'string', label: t('country'), required: true}
+          {name: 'phone', type: 'text', label: trans('phone')},
+          {name: 'street', type: 'string', label: trans('street'), required: true},
+          {name: 'boxNumber', type: 'string', label: trans('box_number')},
+          {name: 'streetNumber', type: 'string', label: trans('street_number'), required: true},
+          {name: 'zipCode', type: 'string', label: trans('postal_code'), required: true},
+          {name: 'town', type: 'string', label: trans('town'), required: true},
+          {name: 'country', type: 'string', label: trans('country'), required: true}
         ]
       }, {
-        title: t('geolocation'),
+        title: trans('geolocation'),
         icon: 'fa fa-fw fa-map-marker',
         fields: [
-          {name: 'gps.latitude', type: 'number', label: t('latitude')}, // todo make a field
-          {name: 'gps.longitude', type: 'number', label: t('longitude')}
+          {name: 'gps.latitude', type: 'number', label: trans('latitude')}, // todo make a field
+          {name: 'gps.longitude', type: 'number', label: trans('longitude')}
         ]
       }
     ]}
@@ -68,13 +68,13 @@ const LocationForm = props =>
       <FormSection
         className="embedded-list-section"
         icon="fa fa-fw fa-user"
-        title={t('users')}
+        title={trans('users')}
         disabled={props.new}
         actions={[
           {
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
-            label: t('add_user'),
+            label: trans('add_user'),
             callback: () => props.pickUsers(props.location.id)
           }
         ]}
@@ -97,13 +97,13 @@ const LocationForm = props =>
       <FormSection
         className="embedded-list-section"
         icon="fa fa-fw fa-users"
-        title={t('groups')}
+        title={trans('groups')}
         disabled={props.new}
         actions={[
           {
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
-            label: t('add_group'),
+            label: trans('add_group'),
             callback: () => props.pickGroups(props.location.id)
           }
         ]}
@@ -126,13 +126,13 @@ const LocationForm = props =>
       <FormSection
         className="embedded-list-section"
         icon="fa fa-fw fa-building"
-        title={t('organizations')}
+        title={trans('organizations')}
         disabled={props.new}
         actions={[
           {
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
-            label: t('add_organizations'),
+            label: trans('add_organizations'),
             callback: () => props.pickOrganizations(props.location.id)
           }
         ]}
@@ -173,8 +173,8 @@ const Location = connect(
     pickUsers(locationId) {
       dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-user',
-        title: t('add_users'),
-        confirmText: t('add'),
+        title: trans('add_users'),
+        confirmText: trans('add'),
         name: 'users.picker',
         definition: UserList.definition,
         card: UserList.card,
@@ -188,8 +188,8 @@ const Location = connect(
     pickGroups(locationId) {
       dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-users',
-        title: t('add_groups'),
-        confirmText: t('add'),
+        title: trans('add_groups'),
+        confirmText: trans('add'),
         name: 'groups.picker',
         definition: GroupList.definition,
         card: GroupList.card,
@@ -203,8 +203,8 @@ const Location = connect(
     pickOrganizations(locationId) {
       dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-buildings',
-        title: t('add_organizations'),
-        confirmText: t('add'),
+        title: trans('add_organizations'),
+        confirmText: trans('add'),
         name: 'organizations.picker',
         definition: OrganizationList.definition,
         card: OrganizationList.card,

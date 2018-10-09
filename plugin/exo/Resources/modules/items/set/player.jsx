@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
-import {tex, t} from '#/main/core/translation'
+import {tex, trans} from '#/main/core/translation'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {SetItemDragPreview} from './set-item-drag-preview.jsx'
@@ -37,7 +37,7 @@ const Association = props =>
     <TooltipButton
       id={`ass-${props.association.itemId}-${props.association.setId}-delete`}
       className="btn-link-default"
-      title={t('delete')}
+      title={trans('delete')}
       onClick={() => props.handleItemRemove(props.association.setId, props.association.itemId)}
     >
       <span className="fa fa-fw fa-trash-o" />
@@ -102,7 +102,7 @@ let Item = props => {
           <OverlayTrigger
             placement="top"
             overlay={
-              <Tooltip id={`item-${props.item.id}-drag`}>{t('move')}</Tooltip>
+              <Tooltip id={`item-${props.item.id}-drag`}>{trans('move')}</Tooltip>
             }>
             <span
               draggable="true"

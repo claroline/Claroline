@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {MODAL_DATA_LIST} from '#/main/app/modals/list'
@@ -35,33 +35,33 @@ const UserForm = props =>
     }}
     sections={[
       {
-        title: t('general'),
+        title: trans('general'),
         primary: true,
         fields: [
           {
             name: 'lastName',
             type: 'string',
-            label: t('last_name'),
+            label: trans('last_name'),
             required: true
           }, {
             name: 'firstName',
             type: 'string',
-            label: t('first_name'),
+            label: trans('first_name'),
             required: true
           }, {
             name: 'email',
             type: 'email',
-            label: t('email'),
+            label: trans('email'),
             required: true
           }, {
             name: 'username',
             type: 'username',
-            label: t('username'),
+            label: trans('username'),
             required: true
           }, {
             name: 'plainPassword',
             type: 'password',
-            label: t('password'),
+            label: trans('password'),
             displayed: props.new,
             required: true,
             options: {
@@ -71,31 +71,31 @@ const UserForm = props =>
           {
             name: 'mainOrganization',
             type: 'organization',
-            label: t('main_organization')
+            label: trans('main_organization')
           }
         ]
       }, {
         icon: 'fa fa-fw fa-info',
-        title: t('information'),
+        title: trans('information'),
         fields: [
           {
             name: 'administrativeCode',
             type: 'string',
-            label: t('administrativeCode')
+            label: trans('administrativeCode')
           }, {
             name: 'meta.description',
             type: 'html',
-            label: t('description')
+            label: trans('description')
           }
         ]
       }, {
         icon: 'fa fa-fw fa-desktop',
-        title: t('display_parameters'),
+        title: trans('display_parameters'),
         fields: [
           {
             name: 'meta.locale',
             type: 'locale',
-            label: t('language'),
+            label: trans('language'),
             required: true,
             options: {
               onlyEnabled: true
@@ -103,21 +103,21 @@ const UserForm = props =>
           }, {
             name: 'picture',
             type: 'image',
-            label: t('picture')
+            label: trans('picture')
           }
         ]
       }, {
         icon: 'fa fa-fw fa-key',
-        title: t('access_restrictions'),
+        title: trans('access_restrictions'),
         fields: [
           {
             name: 'restrictions.disabled',
             type: 'boolean',
-            label: t('disable_user')
+            label: trans('disable_user')
           }, {
             name: 'restrictions.enableDates',
             type: 'boolean',
-            label: t('restrict_by_dates'),
+            label: trans('restrict_by_dates'),
             calculated: (user) => user.restrictions && 0 !== user.restrictions.dates.length,
             onChange: activated => {
               if (!activated) {
@@ -130,7 +130,7 @@ const UserForm = props =>
               {
                 name: 'restrictions.dates',
                 type: 'date-range',
-                label: t('access_dates'),
+                label: trans('access_dates'),
                 displayed: props.user.restrictions && 0!== props.user.restrictions.dates.length,
                 required: true,
                 options: {
@@ -149,13 +149,13 @@ const UserForm = props =>
       <FormSection
         className="embedded-list-section"
         icon="fa fa-fw fa-users"
-        title={t('groups')}
+        title={trans('groups')}
         disabled={props.new}
         actions={[
           {
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
-            label: t('add_groups'),
+            label: trans('add_groups'),
             callback: () => props.pickGroups(props.user.id)
           }
         ]}
@@ -178,13 +178,13 @@ const UserForm = props =>
       <FormSection
         className="embedded-list-section"
         icon="fa fa-fw fa-building"
-        title={t('organizations')}
+        title={trans('organizations')}
         disabled={props.new}
         actions={[
           {
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
-            label: t('add_organizations'),
+            label: trans('add_organizations'),
             callback: () => props.pickOrganizations(props.user.id)
           }
         ]}
@@ -207,13 +207,13 @@ const UserForm = props =>
       <FormSection
         className="embedded-list-section"
         icon="fa fa-fw fa-id-badge"
-        title={t('roles')}
+        title={trans('roles')}
         disabled={props.new}
         actions={[
           {
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-plus',
-            label: t('add_roles'),
+            label: trans('add_roles'),
             callback: () => props.pickRoles(props.user.id)
           }
         ]}
@@ -261,7 +261,7 @@ const User = connect(
     pickGroups(userId) {
       dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-users',
-        title: t('add_groups'),
+        title: trans('add_groups'),
         name: 'groups.picker',
         definition: GroupList.definition,
         card: GroupList.card,
@@ -275,8 +275,8 @@ const User = connect(
     pickOrganizations(userId) {
       dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-building',
-        title: t('add_organizations'),
-        confirmText: t('add'),
+        title: trans('add_organizations'),
+        confirmText: trans('add'),
         name: 'organizations.picker',
         definition: OrganizationList.definition,
         card: OrganizationList.card,
@@ -290,7 +290,7 @@ const User = connect(
     pickRoles(userId) {
       dispatch(modalActions.showModal(MODAL_DATA_LIST, {
         icon: 'fa fa-fw fa-id-badge',
-        title: t('add_roles'),
+        title: trans('add_roles'),
         name: 'roles.picker',
         definition: RoleList.definition,
         card: RoleList.card,

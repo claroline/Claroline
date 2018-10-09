@@ -21,8 +21,8 @@ use Claroline\CoreBundle\Library\Transfert\ResourceRichTextInterface;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Claroline\CoreBundle\Library\Transfert\ToolRichTextInterface;
 use Claroline\CoreBundle\Manager\Resource\MaskManager;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -156,21 +156,13 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 }
 
                 $isDirectoryPublished = isset($directory['directory']['published']) || false === $directory['directory']['published'] ? $directory['directory']['published'] : true;
-                $icon = null;
-                //add the custom icons
-                if (isset($directory['directory']['icon']) && $directory['directory']['icon']) {
-                    $icon = $this->generateIcon(
-                        $this->getRootPath().'/'.$directory['directory']['icon']
-                    );
-                }
-
                 $directories[$directory['directory']['uid']] = $this->resourceManager->create(
                     $directoryEntity,
                     $this->om->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneByName('directory'),
                     $owner,
                     $workspace,
                     null,
-                    $icon,
+                    null,
                     [],
                     $isDirectoryPublished
                 );
@@ -251,23 +243,13 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                         }
 
                         $isPublished = isset($item['item']['published']) ? $item['item']['published'] : true;
-
-                        //add the custom icons
-                        $icon = null;
-
-                        if (isset($item['item']['icon']) && $item['item']['icon']) {
-                            $icon = $this->generateIcon(
-                                $this->getRootPath().'/'.$item['item']['icon']
-                            );
-                        }
-
                         $entity = $this->resourceManager->create(
                             $entity,
                             $type,
                             $owner,
                             $workspace,
                             null,
-                            $icon,
+                            null,
                             [],
                             $isPublished
                         );
@@ -889,13 +871,6 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         }
 
         return;
-    }
-
-    private function generateIcon($iconpath)
-    {
-        $file = new File($iconpath);
-
-        return $this->container->get('claroline.manager.icon_manager')->createCustomIcon($file, $this->getWorkspace());
     }
 
     public static function fileNotExists($v, $rootpath)

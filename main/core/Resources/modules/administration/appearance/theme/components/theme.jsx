@@ -6,7 +6,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import isEmpty from 'lodash/isEmpty'
 import set from 'lodash/set'
 
-import {t, trans, transChoice} from '#/main/core/translation'
+import {trans, transChoice} from '#/main/core/translation'
 
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 
@@ -78,8 +78,8 @@ const GeneralSection = props =>
       />
 
       <ToggleableSet
-        showText={t('show_advanced_options')}
-        hideText={t('hide_advanced_options')}
+        showText={trans('show_advanced_options')}
+        hideText={trans('hide_advanced_options')}
       >
         <CheckGroup
           id="theme-enabled"
@@ -326,7 +326,7 @@ class Theme extends Component {
     return (
       <PageContainer id="theme-form">
         <PageHeader
-          title={t('themes_management')}
+          title={trans('themes_management')}
           subtitle={this.props.theme.name}
         >
           <PageActions>

@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -27,7 +26,6 @@ class ResourceManagerTest extends MockeryTestCase
     private $roleRepo;
     private $roleManager;
     private $shortcutRepo;
-    private $iconManager;
     private $rightsRepo;
     private $eventDispatcher;
     private $om;
@@ -45,7 +43,6 @@ class ResourceManagerTest extends MockeryTestCase
         $this->roleRepo = $this->mock('Claroline\CoreBundle\Repository\RoleRepository');
         $this->roleManager = $this->mock('Claroline\CoreBundle\Manager\RoleManager');
         $this->rightsRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceRightsRepository');
-        $this->iconManager = $this->mock('Claroline\CoreBundle\Manager\IconManager');
         $this->eventDispatcher = $this->mock('Claroline\CoreBundle\Event\StrictDispatcher');
         $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
         $this->ut = $this->mock('Claroline\CoreBundle\Library\Utilities\ClaroUtilities');
@@ -61,7 +58,6 @@ class ResourceManagerTest extends MockeryTestCase
         $resourceType->shouldReceive('getName')->once()->andReturn('directory');
         $user = new User();
         $workspace = new Workspace();
-        $icon = new ResourceIcon();
         $resource = $this->mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $node = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $name = 'name';
@@ -78,14 +74,12 @@ class ResourceManagerTest extends MockeryTestCase
         $this->resourceNodeRepo->shouldReceive('findOneBy')->once()
             ->with(['parent' => $parent, 'next' => null])->andReturn($prev);
         $prev->shouldReceive('setNext')->once()->with($node);
-        $this->iconManager->shouldReceive('getIcon')->once()->with($resource)->andReturn($icon);
         $node->shouldReceive('setCreator')->once()->with($user);
         $node->shouldReceive('setWorkspace')->once()->with($workspace);
         $node->shouldReceive('setResourceType')->once()->with($resourceType);
         $node->shouldReceive('setParent')->once()->with($parent);
         $node->shouldReceive('setName')->once()->with($name);
         $node->shouldReceive('setPrevious')->once()->with($prev);
-        $node->shouldReceive('setIcon')->once()->with($icon);
         $node->shouldReceive('setClass')->once()->with(get_class($resource));
         $node->shouldReceive('setPathForCreationLog')->once()->with('path / name');
         $resource->shouldReceive('setResourceNode')->once()->with($node);
@@ -420,9 +414,6 @@ class ResourceManagerTest extends MockeryTestCase
         $manager->shouldReceive('getDescendants')->once()->andReturn([$descendant]);
         $this->eventDispatcher->shouldReceive('dispatch')
             ->times(2);
-        $icon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
-        $node->shouldReceive('getIcon')->once()->andReturn($icon);
-        $this->iconManager->shouldReceive('delete')->once()->with($icon);
         $this->om->shouldReceive('remove')->once()->with($node);
         $this->om->shouldReceive('remove')->once()->with($descendant);
         $this->om->shouldReceive('remove')->times(2);
@@ -447,7 +438,6 @@ class ResourceManagerTest extends MockeryTestCase
         $event = $this->mock('Claroline\CoreBundle\Event\Resource\CopyResourceEvent');
         $resourceType = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
         $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
-        $icon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
 
         $manager->shouldReceive('getResourceFromNode')->once()
             ->with($node)->andReturn(new Directory());
@@ -455,7 +445,6 @@ class ResourceManagerTest extends MockeryTestCase
             ->andReturn($newNode);
 
         $node->shouldReceive('getResourceType')->andReturn($resourceType);
-        $node->shouldReceive('getIcon')->andReturn($icon);
         $node->shouldReceive('getClass')->once()->andReturn('class');
         $node->shouldReceive('getMimeType')->once()->andReturn('mime');
         $resourceType->shouldReceive('getName')->andReturn('type_name');
@@ -468,7 +457,6 @@ class ResourceManagerTest extends MockeryTestCase
         $newNode->shouldReceive('setName')->once()->with();
         $newNode->shouldReceive('setPrevious')->once()->with($last);
         $newNode->shouldReceive('setNext')->once()->with(null);
-        $newNode->shouldReceive('setIcon')->once()->with($icon);
         $newNode->shouldReceive('setClass')->once()->with('class');
         $this->resourceNodeRepo->shouldReceive('findOneBy')->once()->andReturn($last);
         $this->eventDispatcher->shouldReceive('dispatch')->andReturn($event);
@@ -498,13 +486,11 @@ class ResourceManagerTest extends MockeryTestCase
         $event = $this->mock('Claroline\CoreBundle\Event\Resource\CopyResourceEvent');
         $resourceType = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
         $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
-        $icon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
         $newNode = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
 
         $this->om->shouldReceive('factory')->once()->with('Claroline\CoreBundle\Entity\Resource\ResourceNode')
             ->andReturn($newNode);
         $node->shouldReceive('getResourceType')->andReturn($resourceType);
-        $node->shouldReceive('getIcon')->andReturn($icon);
         $node->shouldReceive('getClass')->once()->andReturn('class');
         $node->shouldReceive('getMimeType')->once()->andReturn('mime');
         $manager->shouldReceive('getResourceFromNode')->once()
@@ -518,7 +504,6 @@ class ResourceManagerTest extends MockeryTestCase
         $newNode->shouldReceive('setName')->once()->with();
         $newNode->shouldReceive('setPrevious')->once()->with($last);
         $newNode->shouldReceive('setNext')->once()->with(null);
-        $newNode->shouldReceive('setIcon')->once()->with($icon);
         $newNode->shouldReceive('setClass')->once()->with('class');
 
         $resourceType->shouldReceive('getName')->andReturn('type_name');
@@ -556,21 +541,6 @@ class ResourceManagerTest extends MockeryTestCase
         $manager->shouldReceive('logChangeSet')->once()->with($node);
 
         $this->assertEquals($node, $manager->rename($node, 'name'));
-    }
-
-    public function testChangeIcon()
-    {
-        $manager = $this->getManager(['logChangeSet']);
-        $node = new ResourceNode();
-        $file = $this->mock('Symfony\Component\HttpFoundation\File\UploadedFile');
-        $icon = new ResourceIcon();
-        $this->iconManager->shouldReceive('createCustomIcon')->once()->with($file)->andReturn($icon);
-        $this->iconManager->shouldReceive('replace')->once()->with($node, $icon);
-        $this->om->shouldReceive('startFlushSuite')->once();
-        $this->om->shouldReceive('endFlushSuite')->once();
-        $manager->shouldReceive('logChangeSet')->once()->with($node);
-
-        $this->assertEquals($icon, $manager->changeIcon($node, $file));
     }
 
     public function testLogChangeSet()
@@ -722,7 +692,6 @@ class ResourceManagerTest extends MockeryTestCase
         if (0 === count($mockedMethods)) {
             return new ResourceManager(
                 $this->roleManager,
-                $this->iconManager,
                 $this->rightsManager,
                 $this->eventDispatcher,
                 $this->om,
@@ -743,7 +712,6 @@ class ResourceManagerTest extends MockeryTestCase
                 'Claroline\CoreBundle\Manager\ResourceManager'.$stringMocked,
                 [
                     $this->roleManager,
-                    $this->iconManager,
                     $this->rightsManager,
                     $this->eventDispatcher,
                     $this->om,

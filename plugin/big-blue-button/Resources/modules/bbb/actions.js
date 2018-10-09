@@ -1,7 +1,7 @@
 import cloneDeep from 'lodash/cloneDeep'
 import shajs from 'sha.js'
 
-import {trans, t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 import {isValidDate} from '#/main/core/scaffolding/date'
 import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
@@ -79,11 +79,11 @@ actions.validateResourceForm = () => (dispatch, getState) => {
   }
 
   if (form['startDate'] && !isValidDate(form['startDate'])) {
-    validation['startDateError'] = t('form_not_valid_error')
+    validation['startDateError'] = trans('form_not_valid_error')
     validation['hasError'] = true
   }
   if (form['endDate'] && !isValidDate(form['endDate'])) {
-    validation['endDateError'] = t('form_not_valid_error')
+    validation['endDateError'] = trans('form_not_valid_error')
     validation['hasError'] = true
   }
   dispatch(actions.updateResourceForm('startDateError', validation['startDateError']))

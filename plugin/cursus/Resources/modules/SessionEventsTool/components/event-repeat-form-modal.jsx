@@ -6,8 +6,8 @@ import moment from 'moment'
 import {registry} from '#/main/app/modals/registry'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 
-import {t, trans} from '#/main/core/translation'
-import {Date} from '#/main/core/layout/form/components/field/date.jsx'
+import {trans} from '#/main/core/translation'
+import {Date} from '#/main/core/layout/form/components/field/date'
 
 export const MODAL_EVENT_REPEAT_FORM = 'MODAL_EVENT_REPEAT_FORM'
 
@@ -204,7 +204,7 @@ export class EventRepeatFormModal  extends Component {
           {!this.state.until &&
             <div className={classes('form-group row', {'has-error': this.state.durationError})}>
               <label className="control-label col-md-3">
-                {t('duration')}
+                {trans('duration')}
               </label>
               <div className="col-md-9">
                 <span className="input-group">
@@ -216,7 +216,7 @@ export class EventRepeatFormModal  extends Component {
                     onChange={e => this.updateFormState('duration', e.target.value)}
                   />
                   <span className="input-group-addon">
-                    {t('weeks')}
+                    {trans('weeks')}
                   </span>
                 </span>
                 {this.state.durationError &&
@@ -230,10 +230,10 @@ export class EventRepeatFormModal  extends Component {
         </div>
         <div className="modal-footer">
           <button className="btn btn-default" onClick={this.props.fadeModal}>
-            {t('cancel')}
+            {trans('cancel')}
           </button>
           <button className="btn btn-primary" onClick={() => this.validateSessionEvent()}>
-            {t('ok')}
+            {trans('ok')}
           </button>
         </div>
       </Modal>

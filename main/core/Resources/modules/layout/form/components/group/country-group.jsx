@@ -1,19 +1,15 @@
 import React from 'react'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 import {FormGroupWithField as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
-import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
-import {Country} from '#/main/core/layout/form/components/field/country.jsx'
+import {FormGroup} from '#/main/core/layout/form/components/group/form-group'
+import {Country} from '#/main/core/layout/form/components/field/country'
 
 const CountryGroup = props =>
-  <FormGroup
-    {...props}
-  >
-    <Country
-      {...props}
-    />
+  <FormGroup {...props}>
+    <Country {...props} />
   </FormGroup>
 
 implementPropTypes(CountryGroup, FormGroupWithFieldTypes, {
@@ -23,7 +19,7 @@ implementPropTypes(CountryGroup, FormGroupWithFieldTypes, {
   multiple: T.bool,
   noEmpty: T.bool
 }, {
-  label: t('country'),
+  label: trans('country'),
   multiple: false,
   noEmpty: false
 })

@@ -1,7 +1,6 @@
 import React from 'react'
 
-import {t} from '#/main/core/translation'
-
+import {trans} from '#/main/core/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 /**
@@ -16,33 +15,33 @@ const Required = () =>
     name="user"
     sections={[
       {
-        title: t('general'),
+        title: trans('general'),
         primary: true,
         fields: [
           {
             name: 'lastName',
             type: 'string',
-            label: t('last_name'),
+            label: trans('last_name'),
             required: true
           }, {
             name: 'firstName',
             type: 'string',
-            label: t('first_name'),
+            label: trans('first_name'),
             required: true
           }, {
             name: 'email',
             type: 'email',
-            label: t('email'),
+            label: trans('email'),
             required: true
           }, {
             name: 'username',
             type: 'username',
-            label: t('username'),
+            label: trans('username'),
             required: true
           }, {
             name: 'plainPassword',
             type: 'password',
-            label: t('password'),
+            label: trans('password'),
             required: true
           }
         ]

@@ -27,15 +27,12 @@
 {% endblock %}
 
 {% block page_title %}
-    {{ 'mail'|trans({}, 'platform') }}
+    {{ 'email'|trans({}, 'platform') }}
     <small>{{ 'server'|trans({}, 'platform') }}</small>
 {% endblock %}
 
-
 {% block page_content %}
     {{ macros.flashBox() }}
-
-    {% form_theme form_mail 'ClarolineCoreBundle::form_theme_no_translations.html.twig' %}
 
     <form role="form" class="form-horizontal" action="{{ path('claro_admin_edit_parameters_mail_server') }}" method="post" id="form_settings" enctype='multipart/form-data'>
         <div class="panel panel-default">

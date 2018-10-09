@@ -124,7 +124,6 @@ class IconManager
                 $icon->setShortcut(false);
                 $icon->setUuid(uniqid('', true));
                 $this->om->persist($icon);
-                $this->createShortcutIcon($icon, $workspace);
                 $this->om->endFlushSuite();
 
                 $this->fu->createFileUse(
@@ -171,72 +170,6 @@ class IconManager
         }
 
         return $icon;
-    }
-
-    /**
-     * Creates the shortcut icon for an existing icon.
-     *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceIcon $icon
-     *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceIcon
-     *
-     * @throws \RuntimeException
-     */
-    public function createShortcutIcon(ResourceIcon $icon, Workspace $workspace = null)
-    {
-        $this->om->startFlushSuite();
-
-        $relativeUrl = $this->createShortcutFromRelativeUrl($icon->getRelativeUrl());
-        $shortcutIcon = new ResourceIcon();
-        $shortcutIcon->setRelativeUrl($relativeUrl);
-        $shortcutIcon->setMimeType($icon->getMimeType());
-        $shortcutIcon->setShortcut(true);
-        $shortcutIcon->setUuid(uniqid('', true));
-        $icon->setShortcutIcon($shortcutIcon);
-        $shortcutIcon->setShortcutIcon($shortcutIcon);
-        $this->om->persist($icon);
-        $this->om->persist($shortcutIcon);
-
-        $this->om->endFlushSuite();
-
-        return $shortcutIcon;
-    }
-
-    /**
-     * Creates a custom ResourceIcon entity from a File (wich should contain an image).
-     * (for instance if the thumbnail of a resource is changed).
-     *
-     * @param File      $file
-     * @param Workspace $workspace (for the storage directory...)
-     *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceIcon
-     */
-    public function createCustomIcon(File $file, Workspace $workspace = null)
-    {
-        $this->om->startFlushSuite();
-        $mimeElements = explode('/', $file->getMimeType());
-        $ds = DIRECTORY_SEPARATOR;
-
-        $publicFile = $this->createFromFile(
-            $file->getPathname(),
-            $mimeElements[0],
-            $workspace
-        );
-        if ($publicFile) {
-            $thumbnailPath = $this->webdir.$ds.$publicFile->getUrl();
-            $relativeUrl = ltrim(str_replace($this->webdir, '', $thumbnailPath), "{$ds}");
-            //entity creation
-            $icon = new ResourceIcon();
-            $icon->setRelativeUrl($relativeUrl);
-            $icon->setMimeType('custom');
-            $icon->setShortcut(false);
-            $icon->setUuid(uniqid('', true));
-            $this->om->persist($icon);
-            $this->createShortcutIcon($icon);
-            $this->om->endFlushSuite();
-
-            return $icon;
-        }
     }
 
     /**

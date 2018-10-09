@@ -33,11 +33,6 @@ use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Transfert\Resolver;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
-use Claroline\CoreBundle\Manager\Resource\MaskManager;
-use Claroline\CoreBundle\Repository\OrderedToolRepository;
-use Claroline\CoreBundle\Repository\ResourceNodeRepository;
-use Claroline\CoreBundle\Repository\ResourceRightsRepository;
-use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRecentRepository;
@@ -60,20 +55,10 @@ class WorkspaceManager
 
     const MAX_WORKSPACE_BATCH_SIZE = 10;
 
-    /** @var MaskManager */
-    private $maskManager;
-    /** @var OrderedToolRepository */
-    private $orderedToolRepo;
     /** @var RoleManager */
     private $roleManager;
     /** @var ResourceManager */
     private $resourceManager;
-    /** @var ResourceNodeRepository */
-    private $resourceRepo;
-    /** @var ResourceRightsRepository */
-    private $resourceRightsRepo;
-    /** @var ResourceTypeRepository */
-    private $resourceTypeRepo;
     /** @var RoleRepository */
     private $roleRepo;
     /** @var UserRepository */
@@ -101,7 +86,6 @@ class WorkspaceManager
      *
      * @DI\InjectParams({
      *     "roleManager"           = @DI\Inject("claroline.manager.role_manager"),
-     *     "maskManager"           = @DI\Inject("claroline.manager.mask_manager"),
      *     "resourceManager"       = @DI\Inject("claroline.manager.resource_manager"),
      *     "dispatcher"            = @DI\Inject("claroline.event.event_dispatcher"),
      *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
@@ -111,7 +95,6 @@ class WorkspaceManager
      * })
      *
      * @param RoleManager        $roleManager
-     * @param MaskManager        $maskManager
      * @param ResourceManager    $resourceManager
      * @param StrictDispatcher   $dispatcher
      * @param ObjectManager      $om
@@ -121,7 +104,6 @@ class WorkspaceManager
      */
     public function __construct(
         RoleManager $roleManager,
-        MaskManager $maskManager,
         ResourceManager $resourceManager,
         StrictDispatcher $dispatcher,
         ObjectManager $om,
@@ -129,18 +111,13 @@ class WorkspaceManager
         Utilities $sut,
         ContainerInterface $container
     ) {
-        $this->maskManager = $maskManager;
         $this->roleManager = $roleManager;
         $this->resourceManager = $resourceManager;
         $this->ut = $ut;
         $this->sut = $sut;
         $this->om = $om;
         $this->dispatcher = $dispatcher;
-        $this->resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
-        $this->orderedToolRepo = $om->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
-        $this->resourceRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
-        $this->resourceRightsRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\Workspace');
         $this->workspaceOptionsRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceOptions');

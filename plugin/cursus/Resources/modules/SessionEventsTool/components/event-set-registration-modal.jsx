@@ -6,7 +6,7 @@ import moment from 'moment'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {registry} from '#/main/app/modals/registry'
 
-import {t, trans} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 import {actions} from '../actions'
 import {selectors} from '../selectors'
@@ -55,7 +55,7 @@ class EventSetRegistrationModal  extends Component {
                           {(e.location || e.locationExtra) &&
                             <div>
                               <hr/>
-                              <b>{t('location')}</b>
+                              <b>{trans('location')}</b>
                             </div>
                           }
                           {e.location &&
@@ -108,7 +108,7 @@ class EventSetRegistrationModal  extends Component {
                           </span> :
                         !this.props.disableRegistration && this.props.eventSet.limit > this.props.nbRegistrations &&
                           <button className="btn btn-default" onClick={() => this.props.selfRegisterToSessionEvent(e.id)}>
-                            {t('register')}
+                            {trans('register')}
                           </button>
                       }
                     </td>
@@ -120,7 +120,7 @@ class EventSetRegistrationModal  extends Component {
         </div>
         <div className="modal-footer">
           <button className="btn btn-default" onClick={this.props.fadeModal}>
-            {t('close')}
+            {trans('close')}
           </button>
         </div>
       </Modal>

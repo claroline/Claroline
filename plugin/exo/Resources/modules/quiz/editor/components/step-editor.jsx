@@ -6,7 +6,7 @@ import isEmpty from 'lodash/isEmpty'
 import Panel from 'react-bootstrap/lib/Panel'
 import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 
-import {t, tex, trans} from '#/main/core/translation'
+import {tex, trans} from '#/main/core/translation'
 import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {makeItemPanelKey, makeStepPropPanelKey} from './../../../utils/utils'
@@ -39,7 +39,7 @@ const ParametersHeader = props =>
         props.active ? 'fa-caret-down' : 'fa-caret-right'
       )}
     />
-    &nbsp;{t('parameters', {}, 'platform')}
+    &nbsp;{trans('parameters', {}, 'platform')}
   </div>
 
 ParametersHeader.propTypes = {
@@ -60,7 +60,7 @@ const ItemActions = props =>
     <TooltipButton
       id={`item-panel-${props.itemId}-delete`}
       className="btn-link-danger"
-      title={t('delete')}
+      title={trans('delete')}
       position="left"
       onClick={e => {
         e.stopPropagation()

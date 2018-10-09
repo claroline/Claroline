@@ -2,14 +2,13 @@ import React, {Component} from 'react'
 import pickBy from 'lodash/pickBy'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 
-import {t} from '#/main/core/translation'
-import {makeCancelable} from '#/main/app/api'
-import {url} from '#/main/app/api'
+import {trans} from '#/main/core/translation'
+import {url, makeCancelable} from '#/main/app/api'
 
 import {FormGroup as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
-import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
+import {FormGroup} from '#/main/core/layout/form/components/group/form-group'
 
-import {Select} from '#/main/core/layout/form/components/field/select.jsx'
+import {Select} from '#/main/core/layout/form/components/field/select'
 
 class OrganizationGroup extends Component {
   constructor(props) {
@@ -59,7 +58,7 @@ class OrganizationGroup extends Component {
         {...this.props}
       >
         {!this.state.fetched &&
-          <div>{t('Please wait while we load organizations...')}</div>
+          <div>{trans('Please wait while we load organizations...')}</div>
         }
 
         {this.state.fetched &&
@@ -90,7 +89,7 @@ implementPropTypes(OrganizationGroup, FormGroupWithFieldTypes, {
   }),
   filterChoices: T.func
 }, {
-  label: t('organization'),
+  label: trans('organization'),
   filterChoices: () => true
 })
 

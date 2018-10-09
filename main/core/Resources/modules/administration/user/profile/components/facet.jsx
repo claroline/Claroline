@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import omit from 'lodash/omit'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
@@ -20,13 +20,13 @@ import {select} from '#/main/core/administration/user/profile/selectors'
 const FacetSection = props =>
   <FormSection
     {...omit(props, ['parentIndex', 'index', 'remove'])}
-    title={props.title || t('profile_facet_section')}
+    title={props.title || trans('profile_facet_section')}
     className="embedded-form-section"
     actions={[
       {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-trash-o',
-        label: t('delete'),
+        label: trans('delete'),
         callback: props.remove,
         dangerous: true
       }
@@ -40,21 +40,21 @@ const FacetSection = props =>
       sections={[
         {
           icon: 'fa fa-fw fa-cog',
-          title: t('general'),
+          title: trans('general'),
           primary: true,
           fields: [
             {
               name: 'title',
               type: 'string',
-              label: t('title'),
+              label: trans('title'),
               required: true
             }, {
               name: 'fields',
               type: 'fields',
-              label: t('fields_list'),
+              label: trans('fields_list'),
               required: true,
               options: {
-                placeholder: t('profile_section_no_field'),
+                placeholder: trans('profile_section_no_field'),
                 min: 1
               }
             }
@@ -82,23 +82,23 @@ const ProfileFacetComponent = props =>
     sections={[
       {
         icon: 'fa fa-fw fa-cog',
-        title: t('parameters'),
+        title: trans('parameters'),
         fields: [
           {
             name: 'title',
             type: 'string',
-            label: t('title'),
+            label: trans('title'),
             required: true
           }, {
             name: 'display.creation',
             type: 'boolean',
-            label: t('display_on_create'),
+            label: trans('display_on_create'),
             displayed: !props.facet.meta.main
           }
         ]
       }, {
         icon: 'fa fa-fw fa-key',
-        title: t('access_restrictions'),
+        title: trans('access_restrictions'),
         fields: [
         ]
       }
@@ -120,7 +120,7 @@ const ProfileFacetComponent = props =>
     }
 
     {0 === props.facet.sections.length &&
-      <div className="no-section-info">{t('profile_facet_no_section')}</div>
+      <div className="no-section-info">{trans('profile_facet_no_section')}</div>
     }
 
     <div className="text-center">
@@ -129,7 +129,7 @@ const ProfileFacetComponent = props =>
         className="btn btn-primary btn-block btn-emphasis"
         onClick={() => props.addSection(props.facet.id)}
       >
-        {t('profile_facet_section_add')}
+        {trans('profile_facet_section_add')}
       </button>
     </div>
   </FormData>
@@ -156,8 +156,8 @@ const ProfileFacet = connect(
       dispatch(
         modalActions.showModal(MODAL_CONFIRM, {
           icon: 'fa fa-fw fa-trash-o',
-          title: t('profile_remove_section'),
-          question: t('profile_remove_section_question'),
+          title: trans('profile_remove_section'),
+          question: trans('profile_remove_section_question'),
           dangerous: true,
           handleConfirm: () => dispatch(actions.removeSection(facetId, sectionId))
         })

@@ -36,8 +36,6 @@ class LoadResourceImagesData implements RequiredFixture
             $rimg->setUuid(uniqid('', true));
             $manager->persist($rimg);
 
-            $this->container->get('claroline.manager.icon_manager')
-                ->createShortcutIcon($rimg);
             // Also add the new resource type icon to default resource icon set
             $this->container->get('claroline.manager.icon_set_manager')
                 ->addOrUpdateIconItemToDefaultResourceIconSet($rimg);

@@ -33,7 +33,7 @@ class PlatformConfigurationExtension extends Twig_Extension
      *     "serializer" = @DI\Inject("claroline.serializer.platform_client")
      * })
      *
-     * @param PlatformSerializer $serializer
+     * @param ClientSerializer $serializer
      */
     public function __construct(
         ClientSerializer $serializer

@@ -6,8 +6,8 @@ import moment from 'moment'
 import {registry} from '#/main/app/modals/registry'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 
-import {t, trans} from '#/main/core/translation'
-import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
+import {trans} from '#/main/core/translation'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea'
 
 import {actions} from '../actions'
 
@@ -154,11 +154,11 @@ class EventCommentsModal  extends Component {
                   />
                   <br/>
                   <button className="btn btn-primary" onClick={() => this.validateNewComment(false)}>
-                    {t('ok')}
+                    {trans('ok')}
                   </button>
                   &nbsp;
                   <button className="btn btn-default" onClick={() => this.switchCreationForm(false)}>
-                    {t('cancel')}
+                    {trans('cancel')}
                   </button>
                 </div> :
                 <button className="btn btn-default" onClick={() => this.switchCreationForm(true)}>
@@ -175,8 +175,8 @@ class EventCommentsModal  extends Component {
               <table className="table table-stripped">
                 <thead>
                   <tr>
-                    <th>{t('informations')}</th>
-                    <th>{t('creation_date')}</th>
+                    <th>{trans('informations')}</th>
+                    <th>{trans('creation_date')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -193,11 +193,11 @@ class EventCommentsModal  extends Component {
                             />
                             <br/>
                             <button className="btn btn-primary" onClick={() => this.validateEditionComment()}>
-                              {t('ok')}
+                              {trans('ok')}
                             </button>
                             &nbsp;
                             <button className="btn btn-default" onClick={() => this.switchEditionForm(0, null)}>
-                              {t('cancel')}
+                              {trans('cancel')}
                             </button>
                           </td>
                         </tr>
@@ -248,7 +248,7 @@ class EventCommentsModal  extends Component {
         </div>
         <div className="modal-footer">
           <button className="btn btn-default" onClick={this.props.fadeModal}>
-            {t('close')}
+            {trans('close')}
           </button>
         </div>
       </Modal>

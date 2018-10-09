@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import omit from 'lodash/omit'
 
-import {t, tex, trans} from '#/main/core/translation'
+import {tex, trans} from '#/main/core/translation'
 import {API_REQUEST, url} from '#/main/app/api'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {registry} from '#/main/app/modals/registry'
@@ -103,7 +103,7 @@ class ImportItems extends Component {
           {this.state.questions.length === 0 && null !== this.state.criterion && '' !== this.state.criterion &&
             <div className="text-center">
               <hr/>
-              <h4>{t('no_search_results')}</h4>
+              <h4>{trans('no_search_results')}</h4>
             </div>
           }
         </div>

@@ -2,7 +2,7 @@ import {connect} from 'react-redux'
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {trans, t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 import {
   actions as listActions,
@@ -125,13 +125,13 @@ class ManagerView extends Component {
               {
                 name: 'name',
                 type: 'string',
-                label: t('name'),
+                label: trans('name'),
                 primary: true,
                 displayed: true
               }, {
                 name: 'startDate',
                 type: 'date',
-                label: t('start_date'),
+                label: trans('start_date'),
                 displayed: true,
                 options: {
                   time: true
@@ -139,7 +139,7 @@ class ManagerView extends Component {
               }, {
                 name: 'endDate',
                 type: 'date',
-                label: t('end_date'),
+                label: trans('end_date'),
                 displayed: true,
                 options: {
                   time: true
@@ -151,12 +151,12 @@ class ManagerView extends Component {
               },  {
                 name: 'registrationType',
                 type: 'number',
-                label: t('registration'),
+                label: trans('registration'),
                 render: (rowData) => registrationTypes[rowData.registrationType]
               }, {
                 name: 'eventSet',
                 type: 'string',
-                label: t('group'),
+                label: trans('group'),
                 render: (rowData) => rowData.eventSet ?
                   <a className="pointer-hand" onClick={() => this.showEventSetForm(rowData.eventSet)}>
                     {rowData.eventSet['name']}
@@ -168,7 +168,7 @@ class ManagerView extends Component {
               {
                 type: 'callback',
                 icon: 'fa fa-fw fa-edit',
-                label: t('edit'),
+                label: trans('edit'),
                 callback: () => this.showEventEditionForm(rows[0]),
                 scope: ['object']
               }, {
@@ -186,7 +186,7 @@ class ManagerView extends Component {
               }, {
                 type: 'callback',
                 icon: 'fa fa-fw fa-trash-o',
-                label: t('delete'),
+                label: trans('delete'),
                 callback: () => this.deleteSessionEvent(rows[0]),
                 dangerous: true,
                 scope: ['object']
@@ -210,7 +210,7 @@ class ManagerView extends Component {
               toggle: this.props.toggleSelect,
               toggleAll: this.props.toggleSelectAll,
               actions: [{
-                label: t('delete'),
+                label: trans('delete'),
                 icon: 'fa fa-fw fa-trash-o',
                 action: () => this.deleteSessionEvents(this.props.selected),
                 dangerous: true
