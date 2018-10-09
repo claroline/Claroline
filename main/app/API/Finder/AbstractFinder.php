@@ -153,6 +153,7 @@ abstract class AbstractFinder implements FinderInterface
         $secQ = $secQb->getQuery();
         $secSql = $this->getSql($secQ);
         $sql = $firstSql.' UNION '.$secSql;
+
         $query = $this->buildQueryFromSql($sql, $options, $sortBy);
 
         $parameters = new ArrayCollection(array_merge(
@@ -170,7 +171,6 @@ abstract class AbstractFinder implements FinderInterface
     private function getSql(Query $query)
     {
         $sql = $query->getSql();
-
         $sql = preg_replace('/ AS \S+/', ',', $sql);
         $sql = str_replace(', FROM', ' FROM', $sql);
 

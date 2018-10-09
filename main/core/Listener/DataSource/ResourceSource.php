@@ -69,7 +69,6 @@ class ResourceSource
             $options['hiddenFilters']['path.after'] = $workspaceRoot->getPath();
         }
 
-        $options['hiddenFilters']['published'] = true;
         $options['hiddenFilters']['active'] = true;
         $options['hiddenFilters']['resourceTypeEnabled'] = true;
 
@@ -82,9 +81,7 @@ class ResourceSource
             $options['hiddenFilters']['roles'] = $roles;
         }
 
-        $event->setData(
-            $this->finder->search(ResourceNode::class, $options)
-        );
+        $event->setData($this->finder->search(ResourceNode::class, $options));
 
         $event->stopPropagation();
     }
