@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Security\Voter;
 
+use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -97,8 +98,11 @@ class ResourceVoter implements VoterInterface
 
     public function vote(TokenInterface $token, $object, array $attributes)
     {
+        if ($object instanceof ObjectCollection) {
+            $object = $object->toArray()[0];
+        }
+
         $classes = $this->supportsClass($object);
-        $supports = false;
 
         foreach ($classes as $class) {
             if ($object instanceof $class) {
@@ -181,9 +185,9 @@ class ResourceVoter implements VoterInterface
     public function supportsClass($class)
     {
         return [
-            'Claroline\CoreBundle\Entity\Resource\AbstractResource',
-            'Claroline\CoreBundle\Entity\Resource\ResourceNode',
-            'Claroline\CoreBundle\Library\Security\Collection\ResourceCollection',
+            AbstractResource::class,
+            ResourceNode::class,
+            ResourceCollection::class,
         ];
     }
 

@@ -84,7 +84,7 @@ class GroupVoter extends AbstractVoter
 
         //we can only add platform roles to users if we have that platform role
         //require dedicated unit test imo
-        if ($collection->isInstanceOf('Claroline\CoreBundle\Entity\Role')) {
+        if ($collection->isInstanceOf(Role::class)) {
             $currentRoles = array_map(function ($role) {
                 return $role->getRole();
             }, $token->getRoles());
@@ -126,7 +126,7 @@ class GroupVoter extends AbstractVoter
      */
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Group';
+        return Group::class;
     }
 
     /**
