@@ -95,6 +95,10 @@ const TabEditor = props =>
         title: trans('display_parameters'),
         fields: [
           {
+            name: 'display.color',
+            label: trans('color'),
+            type: 'color'
+          }, {
             name: 'centerTitle',
             type: 'boolean',
             label: trans('center_title')

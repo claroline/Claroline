@@ -7,7 +7,7 @@ function computeStyles(widget) {
   const display = get(widget, 'display') || {}
 
   if (display.borderColor) {
-    styles.borderColor = display.borderColor;
+    styles.borderColor = display.borderColor
   }
 
   switch (display.backgroundType) {
@@ -29,7 +29,7 @@ function computeTitleStyles(widget) {
   const display = get(widget, 'display') || {}
 
   if (display.borderColor) {
-    styles.background = display.borderColor;
+    styles.background = display.borderColor
   }
 
   if (display.color) {

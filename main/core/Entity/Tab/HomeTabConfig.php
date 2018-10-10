@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Tab;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,38 +22,36 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class HomeTabConfig
 {
-    public function __construct()
-    {
-        $this->centerTitle = false;
-        $this->roles = new ArrayCollection();
-    }
-
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use Id;
 
     /**
      * @ORM\Column(nullable=true)
      */
-    protected $name;
+    private $name;
 
     /**
      * @ORM\Column(nullable=false, type="text")
      */
-    protected $longTitle = '';
+    private $longTitle = '';
 
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $centerTitle = false;
+    private $centerTitle = false;
 
     /**
      * @ORM\Column(nullable=true)
      */
-    protected $icon;
+    private $icon;
+
+    /**
+     * The color of the tab.
+     *
+     * @ORM\Column(nullable=true)
+     *
+     * @var string
+     */
+    private $color = null;
 
     /**
      * @ORM\ManyToOne(
@@ -62,27 +61,27 @@ class HomeTabConfig
      * )
      * @ORM\JoinColumn(name="home_tab_id", nullable=false, onDelete="CASCADE")
      */
-    protected $homeTab;
+    private $homeTab;
 
     /**
      * @ORM\Column(type="boolean", name="is_visible")
      */
-    protected $visible = true;
+    private $visible = true;
 
     /**
      * @ORM\Column(type="boolean", name="is_locked")
      */
-    protected $locked = false;
+    private $locked = false;
 
     /**
      * @ORM\Column(type="integer", name="tab_order")
      */
-    protected $tabOrder;
+    private $tabOrder;
 
     /**
      * @ORM\Column(type="json_array", nullable=true)
      */
-    protected $details;
+    private $details;
 
     /**
      * @ORM\ManyToMany(
@@ -91,7 +90,36 @@ class HomeTabConfig
      * )
      * @ORM\JoinTable(name="claro_home_tab_roles")
      */
-    protected $roles;
+    private $roles;
+
+    /**
+     * HomeTabConfig constructor.
+     */
+    public function __construct()
+    {
+        $this->centerTitle = false;
+        $this->roles = new ArrayCollection();
+    }
+
+    /**
+     * Get color.
+     *
+     * @return string
+     */
+    public function getColor()
+    {
+        return $this->color;
+    }
+
+    /**
+     * Set color.
+     *
+     * @param string $color
+     */
+    public function setColor($color)
+    {
+        $this->color = $color;
+    }
 
     public function getRoles()
     {
@@ -113,16 +141,6 @@ class HomeTabConfig
     public function emptyRoles()
     {
         $this->roles->clear();
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     public function getHomeTab()
@@ -175,16 +193,6 @@ class HomeTabConfig
         $this->tabOrder = $tabOrder;
     }
 
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
     public function getDetails()
     {
         return $this->details;
@@ -227,6 +235,8 @@ class HomeTabConfig
 
     /**
      * Alias of setTabOrder.
+     *
+     * @param int $position
      */
     public function setPosition($position)
     {

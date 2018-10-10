@@ -2,7 +2,6 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import sum from 'lodash/sum'
 import times from 'lodash/times'
-import classes from 'classnames'
 
 import {Heading} from '#/main/core/layout/components/heading'
 import {WidgetContent} from '#/main/core/widget/content/components/content'

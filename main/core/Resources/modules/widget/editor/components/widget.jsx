@@ -3,7 +3,6 @@ import {PropTypes as T} from 'prop-types'
 import cloneDeep from 'lodash/cloneDeep'
 import sum from 'lodash/sum'
 import times from 'lodash/times'
-import classes from 'classnames'
 
 import {trans} from '#/main/core/translation'
 import {toKey} from '#/main/core/scaffolding/text/utils'

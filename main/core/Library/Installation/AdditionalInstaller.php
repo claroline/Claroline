@@ -267,12 +267,11 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
         $infoName = $translator->trans('informations', [], 'platform');
 
         $desktopHomeTab = new HomeTab();
-        $desktopHomeTab->setType('administration');
+        $desktopHomeTab->setType(HomeTab::TYPE_ADMIN_DESKTOP);
         $manager->persist($desktopHomeTab);
 
         $desktopHomeTabConfig = new HomeTabConfig();
         $desktopHomeTabConfig->setHomeTab($desktopHomeTab);
-        $desktopHomeTabConfig->setType(HomeTab::TYPE_ADMIN_DESKTOP);
         $desktopHomeTabConfig->setVisible(true);
         $desktopHomeTabConfig->setLocked(true);
         $desktopHomeTabConfig->setTabOrder(1);
