@@ -54,12 +54,12 @@ const WidgetContainer = {
   propTypes: {
     id: T.string.isRequired,
     name: T.string,
-    alignName:T.oneOf(['left', 'center', 'right']),
     visible : T.bool.isRequired,
     display: T.shape({
       layout: T.arrayOf(
         T.number // the ratio for each col
       ).isRequired,
+      alignName:T.oneOf(['left', 'center', 'right']),
       color: T.string,
       backgroundType: T.oneOf(['none', 'color', 'image']),
       background: T.oneOfType([

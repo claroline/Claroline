@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Widget;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,12 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class WidgetInstanceConfig
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use Id;
 
     /**
      * @ORM\ManyToOne(
@@ -35,7 +31,7 @@ class WidgetInstanceConfig
      * )
      * @ORM\JoinColumn(name="widget_instance_id", onDelete="CASCADE", nullable=true)
      */
-    protected $widgetInstance;
+    private $widgetInstance;
 
     /**
      * @ORM\ManyToOne(
@@ -43,7 +39,7 @@ class WidgetInstanceConfig
      * )
      * @ORM\JoinColumn(name="user_id", nullable=true, onDelete="CASCADE")
      */
-    protected $user;
+    private $user;
 
     /**
      * @ORM\ManyToOne(
@@ -51,37 +47,27 @@ class WidgetInstanceConfig
      * )
      * @ORM\JoinColumn(name="workspace_id", nullable=true, onDelete="CASCADE")
      */
-    protected $workspace;
+    private $workspace;
 
     /**
      * @ORM\Column(name="widget_order", type="integer")
      */
-    protected $widgetOrder = 0;
+    private $widgetOrder = 0;
 
     /**
      * @ORM\Column()
      */
-    protected $type;
+    private $type;
 
     /**
      * @ORM\Column(type="boolean", name="is_visible")
      */
-    protected $visible = true;
+    private $visible = true;
 
     /**
      * @ORM\Column(type="boolean", name="is_locked")
      */
-    protected $locked = false;
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
+    private $locked = false;
 
     public function getWidgetInstance()
     {

@@ -25,6 +25,9 @@ class WidgetContainerSerializer
     /** @var ObjectManager */
     private $om;
 
+    /** @var WidgetInstanceFinder */
+    private $widgetInstanceFinder;
+
     /**
      * WidgetContainerSerializer constructor.
      *
@@ -34,8 +37,9 @@ class WidgetContainerSerializer
      *     "widgetInstanceFinder" = @DI\Inject("claroline.api.finder.widget_instance")
      * })
      *
-     * @param ObjectManager      $om
-     * @param SerializerProvider $serializer
+     * @param ObjectManager        $om
+     * @param SerializerProvider   $serializer
+     * @param WidgetInstanceFinder $widgetInstanceFinder
      */
     public function __construct(
         ObjectManager $om,
@@ -74,7 +78,6 @@ class WidgetContainerSerializer
         return [
             'id' => $this->getUuid($widgetContainer, $options),
             'name' => $widgetContainerConfig->getName(),
-            'alignName' => $widgetContainerConfig->getAlignName(),
             'visible' => $widgetContainerConfig->isVisible(),
             'display' => $this->serializeDisplay($widgetContainerConfig),
             'contents' => $contents,
@@ -85,7 +88,9 @@ class WidgetContainerSerializer
     {
         $display = [
             'layout' => $widgetContainerConfig->getLayout(),
+            'alignName' => $widgetContainerConfig->getAlignName(),
             'color' => $widgetContainerConfig->getColor(),
+            'borderColor' => $widgetContainerConfig->getBorderColor(),
             'backgroundType' => $widgetContainerConfig->getBackgroundType(),
             'background' => $widgetContainerConfig->getBackground(),
         ];
@@ -119,10 +124,11 @@ class WidgetContainerSerializer
 
         $this->sipe('id', 'setUuid', $data, $widgetContainer);
         $this->sipe('name', 'setName', $data, $widgetContainerConfig);
-        $this->sipe('alignName', 'setAlignName', $data, $widgetContainerConfig);
         $this->sipe('visible', 'setVisible', $data, $widgetContainerConfig);
         $this->sipe('display.layout', 'setLayout', $data, $widgetContainerConfig);
+        $this->sipe('display.alignName', 'setAlignName', $data, $widgetContainerConfig);
         $this->sipe('display.color', 'setColor', $data, $widgetContainerConfig);
+        $this->sipe('display.borderColor', 'setBorderColor', $data, $widgetContainerConfig);
         $this->sipe('display.backgroundType', 'setBackgroundType', $data, $widgetContainerConfig);
 
         $display = $data['display'];
@@ -154,9 +160,5 @@ class WidgetContainerSerializer
         }
 
         return $widgetContainer;
-    }
-
-    public function getConfig(WidgetContainer $container, array $options)
-    {
     }
 }

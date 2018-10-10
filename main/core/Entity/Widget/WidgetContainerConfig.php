@@ -65,6 +65,15 @@ class WidgetContainerConfig
     private $color = null;
 
     /**
+     * The color of the border of the widget.
+     *
+     * @ORM\Column(nullable=true)
+     *
+     * @var string
+     */
+    private $borderColor = null;
+
+    /**
      * The type of the background (none, color, image).
      *
      * @ORM\Column()
@@ -181,6 +190,26 @@ class WidgetContainerConfig
     public function setColor($color)
     {
         $this->color = $color;
+    }
+
+    /**
+     * Get border color.
+     *
+     * @return string
+     */
+    public function getBorderColor()
+    {
+        return $this->borderColor;
+    }
+
+    /**
+     * Set border color.
+     *
+     * @param string $borderColor
+     */
+    public function setBorderColor($borderColor)
+    {
+        $this->borderColor = $borderColor;
     }
 
     /**

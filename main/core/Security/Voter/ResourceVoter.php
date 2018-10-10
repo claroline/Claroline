@@ -103,11 +103,12 @@ class ResourceVoter implements VoterInterface
         }
 
         $classes = $this->supportsClass($object);
-        $supports = false;
 
+        $supports = false;
         foreach ($classes as $class) {
             if ($object instanceof $class) {
                 $supports = true;
+                break;
             }
         }
 

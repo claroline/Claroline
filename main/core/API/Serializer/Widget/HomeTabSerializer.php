@@ -113,6 +113,9 @@ class HomeTabSerializer
                     return $role->getUuid();
                 }, $homeTabConfig->getRoles()),
             ],
+            'display' => [
+                'color' => $homeTabConfig->getColor(),
+            ],
             'user' => $homeTab->getUser() ? $this->serializer->serialize($homeTab->getUser(), [Options::SERIALIZE_MINIMAL]) : null,
             'workspace' => $homeTab->getWorkspace() ? $this->serializer->serialize($homeTab->getWorkspace(), [Options::SERIALIZE_MINIMAL]) : null,
             'widgets' => array_map(function ($container) use ($options) {
@@ -142,6 +145,7 @@ class HomeTabSerializer
         $this->sipe('poster.url', 'setPoster', $data, $homeTab);
         $this->sipe('icon', 'setIcon', $data, $homeTabConfig);
         $this->sipe('type', 'setType', $data, $homeTab);
+        $this->sipe('display.color', 'setColor', $data, $homeTabConfig);
 
         if (isset($data['restrictions'])) {
             if (isset($data['restrictions']['hidden'])) {
