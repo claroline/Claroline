@@ -19,7 +19,7 @@ const widgets = createSelector(
 
 const sortedTabs = createSelector(
   [tabs],
-  (tabs) => tabs.sort((a,b) => a.position - b.position)
+  (tabs) => [].concat(tabs).sort((a,b) => a.position - b.position)
 )
 
 export const selectors = {
