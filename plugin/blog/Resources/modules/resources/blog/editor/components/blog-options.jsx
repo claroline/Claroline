@@ -184,7 +184,7 @@ BlogOptionsComponent.propTypes = {
 
 const BlogOptions = withRouter(connect(
   state => ({
-    workspace: resourceSelectors.resource(state),
+    workspace: resourceSelectors.workspace(state),
     blogId: selectors.blog(state).data.id,
     options: formSelect.data(formSelect.form(state, selectors.STORE_NAME + '.' + constants.OPTIONS_EDIT_FORM_NAME)),
     mode: selectors.mode(state),
