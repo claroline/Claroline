@@ -19,6 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\Question;
 
 class UpdateRichTextCommand extends ContainerAwareCommand
 {
@@ -54,17 +55,15 @@ class UpdateRichTextCommand extends ContainerAwareCommand
 
     protected function interact(InputInterface $input, OutputInterface $output)
     {
-        $params = [
-        'old_string' => 'The string to match',
-        'new_string' => 'The string to replace',
-    ];
-        foreach ($params as $argument => $argumentName) {
-            if (!$input->getArgument($argument)) {
+        foreach ($this->params as $parameter => $question) {
+            if (!$input->getArgument($parameter)) {
                 $input->setArgument(
-                $argument, $this->askArgument($output, $argumentName)
-            );
+                    $parameter,
+                    $this->getHelper('question')->ask($input, $output, new Question($question.': '))
+                );
             }
         }
+
         $helper = $this->getHelper('question');
         $entities = array_keys($this->getParsableEntities());
         $question = new ChoiceQuestion('Entity to parse: (use \',\' as a separator) ', $entities);
@@ -73,23 +72,6 @@ class UpdateRichTextCommand extends ContainerAwareCommand
             $entity = $helper->ask($input, $output, $question);
             $input->setArgument('classes', $entity);
         }
-    }
-
-    protected function askArgument(OutputInterface $output, $argumentName)
-    {
-        $argument = $this->getHelper('dialog')->askAndValidate(
-        $output,
-        "Enter the {$argumentName}: ",
-        function ($argument) {
-            if (empty($argument)) {
-                throw new \Exception('This argument is required');
-            }
-
-            return $argument;
-        }
-    );
-
-        return $argument;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
