@@ -160,6 +160,8 @@ class Updater120000 extends Updater
         $this->updateWidgetInstanceConfigType();
         $this->updateHomeTabType();
         $this->checkDesktopTabs();
+        $this->restoreTabsColor();
+        $this->restoreContainersColor();
     }
 
     private function updateHomeTabType()
@@ -463,10 +465,10 @@ class Updater120000 extends Updater
         try {
             //configs are stored in a json array so we can't go full sql
             $sql = '
-            SELECT instance.id as id, config.details as details FROM `claro_resources_widget_config` config
-            JOIN claro_widget_instance_temp tempWidget on config.widgetInstance_id = tempWidget.id
-            JOIN claro_widget_display_config_temp instance on instance.widget_instance_id = tempWidget.id
-        ';
+                SELECT instance.id as id, config.details as details FROM `claro_resources_widget_config` config
+                JOIN claro_widget_instance_temp tempWidget on config.widgetInstance_id = tempWidget.id
+                JOIN claro_widget_display_config_temp instance on instance.widget_instance_id = tempWidget.id
+            ';
 
             $configs = $this->conn->query($sql);
 
@@ -590,6 +592,48 @@ class Updater120000 extends Updater
             $this->conn->query($query);
         } catch (\Exception $e) {
             $this->log('Failed copying thumbnails');
+        }
+    }
+
+    private function restoreTabsColor()
+    {
+        $this->log('Restore tabs colors...');
+
+        //configs are stored in a json array so we can't go full sql
+        $sql = "SELECT * FROM `claro_home_tab_config_temp` WHERE `details` LIKE '%color%'";
+
+        $configs = $this->conn->query($sql);
+
+        while ($row = $configs->fetch()) {
+            $details = json_decode($row['details'], true);
+            if (isset($details['color'])) {
+                $sql = "
+                    UPDATE claro_home_tab_config SET color = '{$details['color']}' WHERE home_tab_id = {$row['id']}
+                ";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute();
+            }
+        }
+    }
+
+    private function restoreContainersColor()
+    {
+        $this->log('Restore containers colors...');
+
+        //configs are stored in a json array so we can't go full sql
+        $sql = "SELECT * FROM `claro_widget_display_config_temp` WHERE `details` LIKE '%color%'";
+
+        $configs = $this->conn->query($sql);
+
+        while ($row = $configs->fetch()) {
+            $details = json_decode($row['details'], true);
+            if (isset($details['color'])) {
+                $sql = "
+                    UPDATE claro_widget_container_config SET color = '{$details['color']}' WHERE container_id = {$row['id']}
+                ";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute();
+            }
         }
     }
 }
