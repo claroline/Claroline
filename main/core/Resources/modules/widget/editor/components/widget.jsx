@@ -12,6 +12,7 @@ import {MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
+import {Heading} from '#/main/core/layout/components/heading'
 import {
   WidgetContainer as WidgetContainerTypes,
   WidgetInstance as WidgetInstanceTypes
@@ -77,6 +78,7 @@ const WidgetCol = props =>
         />
       </div>
     }
+
     {props.content &&
       <WidgetContent
         instance={props.content}
@@ -93,6 +95,7 @@ const WidgetCol = props =>
         disabled={props.disabled}
       />
     }
+
     {!props.content && !props.isMoving &&
       <Button
         className="btn btn-block btn-emphasis btn-add-widget"
@@ -142,54 +145,55 @@ const WidgetEditor = props =>
 
     <section className="widget" style={computeStyles(props.widget)}>
       {props.widget.name &&
-        <h2
-          className={classes('h-first widget-title', {
-            'text-left': 'left' === props.widget.alignName,
-            'text-center': 'center' === props.widget.alignName,
-            'text-right': 'right' === props.widget.alignName
-          })} 
-          style={computeTitleStyles(props.widget)}>
+        <Heading
+          level={2}
+          className="widget-title"
+          align={props.widget.display ? props.widget.display.alignName : undefined}
+          style={computeTitleStyles(props.widget)}
+        >
           {props.widget.name}
-        </h2>
+        </Heading>
       }
 
-      <div className="row">
-        {times(props.widget.display.layout.length, col =>
-          <WidgetCol
-            key={col}
-            size={(12 / sum(props.widget.display.layout)) * props.widget.display.layout[col]}
-            context={props.context}
-            widget={props.widget}
-            content={props.widget.contents[col]}
-            addContent={(content) => {
-              const widget = cloneDeep(props.widget)
+      <div className="widget-body">
+        <div className="row">
+          {times(props.widget.display.layout.length, col =>
+            <WidgetCol
+              key={col}
+              size={(12 / sum(props.widget.display.layout)) * props.widget.display.layout[col]}
+              context={props.context}
+              widget={props.widget}
+              content={props.widget.contents[col]}
+              addContent={(content) => {
+                const widget = cloneDeep(props.widget)
 
-              widget.contents[col] = content
+                widget.contents[col] = content
 
-              props.update(widget)
-            }}
-            updateContent={(newContent) => {
-              // copy array
-              const widget = cloneDeep(props.widget)
-              // replace modified widget
-              widget.contents[col] = newContent
-              // propagate change
-              props.update(widget)
-            }}
-            deleteContent={(content) => {
-              const widgets = cloneDeep(props.widget)
-              const contentIndex = widgets.contents.findIndex(widget => widget.id === content.id)
-              // removes the content to delete and replace by null
-              widgets.contents[contentIndex] = null
-              props.update(widgets)
-            }}
-            startMovingContent={props.startMovingContent}
-            moveContent={(movingContentId) => props.moveContent(movingContentId, props.widget.id, col)}
-            stopMovingContent={props.stopMovingContent}
-            isMoving={props.isMoving}
-            disabled={props.disabled}
-          />
-        )}
+                props.update(widget)
+              }}
+              updateContent={(newContent) => {
+                // copy array
+                const widget = cloneDeep(props.widget)
+                // replace modified widget
+                widget.contents[col] = newContent
+                // propagate change
+                props.update(widget)
+              }}
+              deleteContent={(content) => {
+                const widgets = cloneDeep(props.widget)
+                const contentIndex = widgets.contents.findIndex(widget => widget.id === content.id)
+                // removes the content to delete and replace by null
+                widgets.contents[contentIndex] = null
+                props.update(widgets)
+              }}
+              startMovingContent={props.startMovingContent}
+              moveContent={(movingContentId) => props.moveContent(movingContentId, props.widget.id, col)}
+              stopMovingContent={props.stopMovingContent}
+              isMoving={props.isMoving}
+              disabled={props.disabled}
+            />
+          )}
+        </div>
       </div>
     </section>
   </div>

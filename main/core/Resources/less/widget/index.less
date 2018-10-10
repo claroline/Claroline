@@ -49,9 +49,19 @@
 
 .widget {
     text-align: left;
-    padding: @panel-body-padding;
     margin-bottom: 20px;
     background-size: cover !important;
+    border: 1px solid transparent;
+    border-radius: @panel-border-radius;
+
+    .widget-title {
+        padding: @panel-body-padding;
+        margin: 0;
+    }
+
+    .widget-body {
+        padding: @panel-body-padding;
+    }
 }
 
 .widget-col-configure {

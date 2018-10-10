@@ -6,6 +6,10 @@ function computeStyles(widget) {
   const styles = {}
   const display = get(widget, 'display') || {}
 
+  if (display.borderColor) {
+    styles.borderColor = display.borderColor;
+  }
+
   switch (display.backgroundType) {
     case 'none':
       styles.background = 'none'
@@ -24,9 +28,14 @@ function computeTitleStyles(widget) {
   const styles = {}
   const display = get(widget, 'display') || {}
 
+  if (display.borderColor) {
+    styles.background = display.borderColor;
+  }
+
   if (display.color) {
     styles.color = display.color
   }
+
   return styles
 }
 

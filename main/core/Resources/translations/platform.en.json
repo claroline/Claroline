@@ -1711,5 +1711,6 @@
     "easy": "Easy",
     "intermediate": "Intermediate",
     "hard": "Hard",
-    "expert": "Expert"
+    "expert": "Expert",
+    "border": "Border"
 }

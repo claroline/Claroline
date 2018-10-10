@@ -4,6 +4,7 @@ import sum from 'lodash/sum'
 import times from 'lodash/times'
 import classes from 'classnames'
 
+import {Heading} from '#/main/core/layout/components/heading'
 import {WidgetContent} from '#/main/core/widget/content/components/content'
 import {
   WidgetContainer as WidgetContainerTypes,
@@ -41,25 +42,27 @@ WidgetCol.propTypes = {
 const Widget = props =>
   <section className="widget" style={computeStyles(props.widget)}>
     {props.widget.name &&
-      <h2
-        className={classes('h-first widget-title', {
-          'text-left': 'left' === props.widget.alignName,
-          'text-center': 'center' === props.widget.alignName,
-          'text-right': 'right' === props.widget.alignName
-        })}
-        style={computeTitleStyles(props.widget)}>
+      <Heading
+        level={2}
+        className="widget-title"
+        align={props.widget.display ? props.widget.display.alignName : undefined}
+        style={computeTitleStyles(props.widget)}
+      >
         {props.widget.name}
-      </h2>
+      </Heading>
     }
-    <div className="row">
-      {times(props.widget.display.layout.length, col =>
-        <WidgetCol
-          key={col}
-          size={(12 / sum(props.widget.display.layout)) * props.widget.display.layout[col]}
-          context={props.context}
-          content={props.widget.contents[col]}
-        />
-      )}
+
+    <div className="widget-body">
+      <div className="row">
+        {times(props.widget.display.layout.length, col =>
+          <WidgetCol
+            key={col}
+            size={(12 / sum(props.widget.display.layout)) * props.widget.display.layout[col]}
+            context={props.context}
+            content={props.widget.contents[col]}
+          />
+        )}
+      </div>
     </div>
   </section>
 
