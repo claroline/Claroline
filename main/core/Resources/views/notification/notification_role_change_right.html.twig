@@ -1,4 +1,4 @@
-{% if notification.details.resource.id is defined %}
+{% if notification.details.resource.id is defined and notification.details.resource.id != '' %}
     {% set path = path('claro_resource_open', {'node': notification.details.resource.id, 'resourceType': notification.details.resource.resourceType}) %}
     {% set resource = '<a href="' ~ path ~ '">' ~ notification.details.resource.name ~ '</a>' %}
 {% else %}

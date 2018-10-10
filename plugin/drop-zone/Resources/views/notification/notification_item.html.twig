@@ -1,4 +1,4 @@
-{% extends 'IcapNotificationBundle:Templates:notification.html.twig' %}
+{% extends 'IcapNotificationBundle:templates:notification.html.twig' %}
 {% set avatarUrlPrefix = asset('uploads/pictures/') %}
 
 {% block notificationText %}
@@ -21,7 +21,7 @@
         {% include 'ClarolineDropZoneBundle:Notification:notification_dropzone_manual_state_changed.html.twig' %}
     {% elseif constant('Claroline\\DropZoneBundle\\Event\\Log\\LogDropEndEvent::ACTION') == notification.actionKey %}
         {#    DROP END  #}
-        {% include 'ClarolineDropZoneBundle:Notification:notification_drop_end.html.twig' %}
+        {% include 'ClarolineDropZoneBundle:notification:notification_drop_end.html.twig' %}
 
     {% endif %}
 {% endblock %}

@@ -32,8 +32,8 @@ In order to integrate and enable notifications in a Claroline connect plugin you
 
 1.  Add
     `{% render controller('IcapNotificationBundle:FollowerResource:renderForm', {'resourceId': _resource.resourceNode.id, 'resourceClass': _resource.resourceNode.class}) %}`
-    somewhere in your interface to render the button that allows user to enable and disable notifications for a resource.     As you can see, 2 parameters are required, the resource node id and the resource node class. 
-    
+    somewhere in your interface to render the button that allows user to enable and disable notifications for a resource.     As you can see, 2 parameters are required, the resource node id and the resource node class.
+
     ![enable notification button](Resources/doc/img/follow_button.jpg "enable notification button")
 2.  Any event that you want to generate a notification needs to implement the *NotifiableInterface*. This interface has 9 methods.
     -   getSendToFollowers() : returns true or false if event can notify the resource's followers
@@ -45,11 +45,11 @@ In order to integrate and enable notifications in a Claroline connect plugin you
     -   getResource() : returns the resource on which the action was performed (this method already exists in LogGenericEvent class)
     -   getNotificationDetails() : returns an array (JsonArray in database) which contains informations about the resource name, id and type as well as other information, necessary to render the notification text. All the information about the "doer" are added by the Notification plugin automatically. All the rest (resource, etc.) need to be added manually.
     -   isAllowedToNotify() : returns true or false and informs CoreBundle that this event raises or not a notification. It can test a condition and if this condition fails no notification is created or sent, else if condition is fulfilled a notification is created and sent to users.
-    
-    You can use the example of the [LogContributionCreateEvent](https://github.com/iCAPLyon1/WikiBundle/blob/master/Event/Log/LogContributionCreateEvent.php) in the WikiBundle to guide you. 
+
+    You can use the example of the [LogContributionCreateEvent](https://github.com/iCAPLyon1/WikiBundle/blob/master/Event/Log/LogContributionCreateEvent.php) in the WikiBundle to guide you.
 
 3.  Create a domain for translations under translations folder following the name pattern `notification.lang.yml`
-4.  Under views folder create a `Notification` folder and store inside all views related to notifications' display/rendering. It is recommended to create a general twig file say `notification_item.html.twig` which will extend the `IcapNotificationBundle:Templates:notification.html.twig` template, will render all common elements and include any other necessary template according to the action type. An example is given [here](https://github.com/iCAPLyon1/WikiBundle/blob/master/Resources/views/Notification/notification_item.html.twig)
+4.  Under views folder create a `Notification` folder and store inside all views related to notifications' display/rendering. It is recommended to create a general twig file say `notification_item.html.twig` which will extend the `IcapNotificationBundle:templates:notification.html.twig` template, will render all common elements and include any other necessary template according to the action type. An example is given [here](https://github.com/iCAPLyon1/WikiBundle/blob/master/Resources/views/Notification/notification_item.html.twig)
 5.  Create listener, for example [`NotificationListener`](https://github.com/iCAPLyon1/WikiBundle/blob/master/Listener/NotificationListener.php) and service e.g. [`listeners.yml`](https://github.com/iCAPLyon1/WikiBundle/blob/master/Resources/config/services/listeners.yml) is the example for WikiBundle
 6.  `*new`Create listener, [`NotificationUserParametersListener`](https://github.com/iCAPLyon1/WikiBundle/blob/master/Listener/NotificationUserParametersListener.php) to enable user activate and deactivate the display of your notifications
 
@@ -90,15 +90,10 @@ If you want to allow users to tag and notify other users then you should follow 
 
 2.  Add in `listeners.yml` file a line for the new event.
     Example:
-    
+
     ```
         - { name: kernel.event_listener, event: create_notification_item_resource-icap_wiki-user_tagged, method: onCreateNotificationItem }
     ```
 3.  Handle the rendering of the new notification event. (Create dedicated view etc.)
     [Here](https://github.com/iCAPLyon1/WikiBundle/blob/master/Resources/views/Notification/notification_user_tagged.html.twig) is this view for the wiki bundle and [here](https://github.com/iCAPLyon1/WikiBundle/blob/master/Resources/views/Notification/notification_item.html.twig)
     is the modified notification_item view to include the new event.
-
-
-
-
-
