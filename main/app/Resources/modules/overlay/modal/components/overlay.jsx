@@ -21,7 +21,7 @@ class ModalOverlay extends Component {
           Object.assign({
             key: modal.id,
             show: !modal.fading,
-            disabled: 0 !== index,
+            disabled: 0 !== index && !modal.fading,
             container: this.container,
             fadeModal: () => this.props.fadeModal(modal.id),
             hideModal: () => this.props.hideModal(modal.id)
