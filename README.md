@@ -101,7 +101,11 @@ To update an existing development installation, just pull the latest changes
 #### 3. Launch update script
    
     php app/console claroline:update 1x.x.xx 12.1.0
+    
+#### 4. Migrate some ressource
 
+    php app/console claroline:scorm:convert
+    php app/console claroline:dropzone:convert
 
 Development
 -----------
