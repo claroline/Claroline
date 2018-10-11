@@ -215,6 +215,7 @@ class NotificationManager
                 );
             }
         }
+
         $this->markNotificationsAsViewed($unviewedNotificationIds);
 
         return ['views' => $views, 'colors' => $colorChooser->getColorObjectArray()];
@@ -359,6 +360,7 @@ class NotificationManager
     public function createNotificationAndNotify(NotifiableInterface $notifiable)
     {
         $userIds = $this->getUsersToNotifyForNotifiable($notifiable);
+
         $notification = null;
         if (count($userIds) > 0) {
             $resourceId = null;

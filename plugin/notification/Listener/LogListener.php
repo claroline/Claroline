@@ -40,7 +40,7 @@ class LogListener
         if ($event instanceof NotifiableInterface && $this->ch->getParameter('is_notification_active')) {
             $workspace = $event->getWorkspace();
             if ($event->isAllowedToNotify() &&
-                ($workspace === null || ($workspace !== null && !$workspace->isDisabledNotifications()))
+                (null === $workspace || (null !== $workspace && !$workspace->isDisabledNotifications()))
             ) {
                 $this->notificationManager->createNotificationAndNotify($event);
             }

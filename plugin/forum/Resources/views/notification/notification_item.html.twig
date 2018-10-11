@@ -1,0 +1,15 @@
+{% extends 'IcapNotificationBundle:templates:notification.html.twig' %}
+
+{% block notificationText %}
+    {% if notification.details.doer is defined %}
+        <a href="{{ path('claro_user_profile', {'user' : notification.details.doer.id}) }}"><strong>{{ notification.details.doer.firstName ~ ' ' ~ notification.details.doer.lastName }}</strong></a>
+    {% else %}
+        <strong>{{ systemName }}</strong>
+    {% endif %}
+
+{# app_dev.php/resources/show/claroline_forum/45817074-b92a-4b24-a314-20f15ec666ea#/subjects/show/3cc5611f-22d0-4ccc-a5a3-4b36d9cd96df #}
+    {% if notification.details is defined and notification.details.resource.name is defined %}
+        {% set url = path('claro_resource_show_short', {'id': notification.details.resource.guid}) ~ '#/subjects/show/' ~ notification.details.subject.uuid %}
+        {{ 'resource-claroline_forum-create_message'|trans({'%forum%': notification.details.resource.name, '%url%': url}, 'notification')|raw }}
+    {% endif %}
+{% endblock %}

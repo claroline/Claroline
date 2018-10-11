@@ -4,9 +4,9 @@ namespace Icap\WikiBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
-use Icap\WikiBundle\Entity\Wiki;
-use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Entity\Contribution;
+use Icap\WikiBundle\Entity\Section;
+use Icap\WikiBundle\Entity\Wiki;
 
 class LogContributionCreateEvent extends AbstractLogResourceEvent implements NotifiableInterface
 {
@@ -22,16 +22,16 @@ class LogContributionCreateEvent extends AbstractLogResourceEvent implements Not
     public function __construct(Wiki $wiki, Section $section, Contribution $contribution)
     {
         $this->wiki = $wiki;
-        $this->details = array(
-            'contribution' => array(
+        $this->details = [
+            'contribution' => [
                 'wiki' => $wiki->getId(),
                 'section' => $section->getId(),
                 'id' => $contribution->getId(),
                 'title' => $contribution->getTitle(),
                 'text' => $contribution->getText(),
                 'contributor' => $contribution->getContributor()->getFirstName().' '.$contribution->getContributor()->getLastName(),
-            ),
-        );
+            ],
+        ];
 
         parent::__construct($wiki->getResourceNode(), $this->details);
     }
@@ -41,7 +41,7 @@ class LogContributionCreateEvent extends AbstractLogResourceEvent implements Not
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_WORKSPACE);
+        return [self::DISPLAYED_WORKSPACE];
     }
 
     /**
@@ -61,7 +61,7 @@ class LogContributionCreateEvent extends AbstractLogResourceEvent implements Not
      */
     public function getIncludeUserIds()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -71,7 +71,7 @@ class LogContributionCreateEvent extends AbstractLogResourceEvent implements Not
      */
     public function getExcludeUserIds()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -101,12 +101,12 @@ class LogContributionCreateEvent extends AbstractLogResourceEvent implements Not
      */
     public function getNotificationDetails()
     {
-        $notificationDetails = array_merge($this->details, array());
-        $notificationDetails['resource'] = array(
+        $notificationDetails = array_merge($this->details, []);
+        $notificationDetails['resource'] = [
             'id' => $this->wiki->getId(),
             'name' => $this->resource->getName(),
             'type' => $this->resource->getResourceType()->getName(),
-        );
+        ];
 
         return $notificationDetails;
     }
