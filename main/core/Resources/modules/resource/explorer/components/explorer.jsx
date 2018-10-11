@@ -1,32 +1,27 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/core/translation'
 import {Routes} from '#/main/app/router'
 import {SummarizedContent} from '#/main/app/content/summary/components/content'
-import {ListData} from '#/main/app/content/list/containers/data'
-import {constants as listConstants} from '#/main/app/content/list/constants'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {getTypes} from '#/main/core/resource/utils'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
-import {ResourceCard} from '#/main/core/resource/data/components/resource-card'
-
-// todo expose directories actions in summary
+import {Directory as DirectoryTypes} from '#/main/core/resources/directory/prop-types'
+import {CurrentDirectory} from '#/main/core/resource/explorer/components/current'
 
 const ResourceExplorer = props => {
   function summaryLink(directory) {
     return {
-      type: CALLBACK_BUTTON,
+      type: LINK_BUTTON,
       id: directory.id,
       icon: directory._opened ? 'fa fa-fw fa-folder-open' : 'fa fa-fw fa-folder',
       label: directory.name,
       collapsed: !directory._opened,
       collapsible: !directory._loaded || (directory.children && 0 !== directory.children.length),
       toggleCollapse: (collapsed) => props.toggleDirectoryOpen(directory, !collapsed),
-      active: props.current && props.current.id === directory.id,
-      callback: () => props.changeDirectory(directory),
+      target: `/${directory.id}`,
       children: directory.children ? directory.children.map(summaryLink) : []
     }
   }
@@ -35,86 +30,48 @@ const ResourceExplorer = props => {
     <SummarizedContent
       className="resources-explorer"
       summary={{
-        displayed: true,
+        displayed: isEmpty(props.currentConfiguration) || props.currentConfiguration.display.showSummary,
+        opened: !isEmpty(props.currentConfiguration) && props.currentConfiguration.display.openSummary,
         title: trans('directories'),
         links: props.directories.map(summaryLink)
       }}
     >
-      <ListData
-        name={`${props.name}.resources`}
-        primaryAction={(resourceNode) => {
-          if ('directory' !== resourceNode.meta.type) {
-            return props.primaryAction && props.primaryAction(resourceNode)
-          } else {
-            // do not open directory, just change the target of the explorer
-            return {
-              label: trans('open', {}, 'actions'),
-              type: CALLBACK_BUTTON,
-              callback: () => props.changeDirectory(resourceNode)
-            }
-          }
-        }}
-        fetch={{
-          url: ['apiv2_resource_list', {parent: get(props, 'current.id') || get(props, 'root.id') || null}],
-          autoload: props.initialized
-        }}
-        definition={[
+      <Routes
+        redirect={props.root ? [
+          {from: '/', exact: true, to: `/${props.root.id}`}
+        ] : undefined}
+        routes={[
           {
-            name: 'name',
-            label: trans('name'),
-            displayed: true,
-            primary: true
-          }, {
-            name: 'meta.published',
-            alias: 'published',
-            type: 'boolean',
-            label: trans('published'),
-            displayed: props.current && props.current.permissions && props.current.permissions.administrate,
-            filterable: props.current && props.current.permissions && props.current.permissions.administrate
-          }, {
-            name: 'meta.created',
-            label: trans('creation_date'),
-            type: 'date',
-            alias: 'creationDate',
-            displayed: true
-          }, {
-            name: 'meta.updated',
-            label: trans('modification_date'),
-            type: 'date',
-            alias: 'modificationDate',
-            displayed: true
-          }, {
-            name: 'meta.type',
-            alias: 'resourceType',
-            label: trans('type'),
-            displayed: true,
-            type: 'choice',
-            options: {
-              choices: getTypes().reduce((resourceTypes, current) => Object.assign(resourceTypes, {[current.name]: trans(current.name, {}, 'resource')}), {}),
-              condensed: true
+            path: props.root ? '/:id' : '/:id?',
+            onEnter: (params = {}) => props.changeDirectory(params.id),
+            render: () => {
+              const Current =
+                <CurrentDirectory
+                  name={props.name}
+                  primaryAction={props.primaryAction}
+                  actions={props.actions}
+                  currentId={props.currentId}
+                  listConfiguration={!isEmpty(props.currentConfiguration) ? props.currentConfiguration.list : undefined}
+                />
+
+              return Current
             }
           }
         ]}
-        actions={props.actions}
-        card={ResourceCard}
-
-        display={{
-          current: listConstants.DISPLAY_TILES_SM
-        }}
       />
     </SummarizedContent>
   )
 }
 
 ResourceExplorer.propTypes = {
-  initialized: T.bool,
   name: T.string.isRequired,
   primaryAction: T.func,
   root: T.shape(
     ResourceNodeTypes.propTypes
   ),
-  current: T.shape(
-    ResourceNodeTypes.propTypes
+  currentId: T.string,
+  currentConfiguration: T.shape(
+    DirectoryTypes.propTypes
   ),
   directories: T.arrayOf(T.shape(
     ResourceNodeTypes.propTypes
@@ -125,9 +82,7 @@ ResourceExplorer.propTypes = {
 }
 
 ResourceExplorer.defaultProps = {
-  initialized: false,
-  root: {},
-  current: {},
+  currentConfiguration: {},
   directories: []
 }
 

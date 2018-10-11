@@ -190,12 +190,7 @@ class DirectoryListener
      */
     public function onLoad(LoadResourceEvent $event)
     {
-        $workspace = $event->getResourceNode()->getWorkspace();
-
         $event->setData([
-            'root' => $workspace ? $this->serializer->serialize(
-                $this->resourceManager->getWorkspaceRoot($workspace)
-            ) : null,
             'directory' => $this->serializer->serialize($event->getResource()),
         ]);
 

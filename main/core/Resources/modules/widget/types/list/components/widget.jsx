@@ -31,10 +31,10 @@ class ListWidget extends Component {
   computeDefinition() {
     if (this.state.source && this.state.source.parameters.definition) {
       return this.state.source.parameters.definition.map(column => Object.assign({}, column, {
-        filterable: -1 !== this.props.availableFilters.indexOf(column.name),
-        sortable: -1 !== this.props.availableSort.indexOf(column.name),
+        filterable : -1 !== this.props.availableFilters.indexOf(column.name),
+        sortable   : -1 !== this.props.availableSort.indexOf(column.name),
         displayable: -1 !== this.props.availableColumns.indexOf(column.name),
-        displayed: -1 !== this.props.displayedColumns.indexOf(column.name)
+        displayed  : -1 !== this.props.displayedColumns.indexOf(column.name)
       }))
     }
 

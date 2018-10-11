@@ -13,7 +13,7 @@ import {reducer, selectors} from '#/main/core/resource/modals/explorer/store'
 const ExplorerModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
-      currentDirectory: explorerSelectors.current(explorerSelectors.explorer(state, selectors.STORE_NAME)),
+      currentDirectory: explorerSelectors.currentNode(explorerSelectors.explorer(state, selectors.STORE_NAME)),
       selected: explorerSelectors.selectedFull(explorerSelectors.explorer(state, selectors.STORE_NAME))
     }),
     (dispatch) => ({

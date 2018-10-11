@@ -37,7 +37,7 @@ export default {
         name: 'parent',
         label: trans('parent'),
         type: 'resource'
-      }, {
+      }, { // todo : find a way to display it only to those who have 'administrate' right
         name: 'meta.published',
         alias: 'published',
         type: 'boolean',

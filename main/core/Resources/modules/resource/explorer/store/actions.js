@@ -6,8 +6,9 @@ import {selectors} from '#/main/core/resource/explorer/store/selectors'
 
 // actions
 export const EXPLORER_SET_ROOT = 'EXPLORER_SET_ROOT'
-export const EXPLORER_SET_CURRENT = 'EXPLORER_SET_CURRENT'
-export const EXPLORER_SET_INITIALIZED = 'EXPLORER_SET_INITIALIZED'
+export const EXPLORER_SET_CURRENT_ID = 'EXPLORER_SET_CURRENT_ID'
+export const EXPLORER_SET_CURRENT_NODE = 'EXPLORER_SET_CURRENT_NODE'
+export const EXPLORER_SET_CURRENT_CONFIGURATION = 'EXPLORER_SET_CURRENT_CONFIGURATION'
 export const DIRECTORY_TOGGLE_OPEN = 'DIRECTORY_TOGGLE_OPEN'
 export const DIRECTORIES_LOAD = 'DIRECTORIES_LOAD'
 export const DIRECTORY_UPDATE = 'DIRECTORY_UPDATE'
@@ -16,57 +17,98 @@ export const DIRECTORY_UPDATE = 'DIRECTORY_UPDATE'
 export const actions = {}
 
 actions.setRoot = makeInstanceActionCreator(EXPLORER_SET_ROOT, 'root')
-actions.setCurrent = makeInstanceActionCreator(EXPLORER_SET_CURRENT, 'current')
-actions.setInitialized = makeInstanceActionCreator(EXPLORER_SET_INITIALIZED, 'initialized')
+actions.setCurrentId = makeInstanceActionCreator(EXPLORER_SET_CURRENT_ID, 'currentId')
+actions.setCurrentNode = makeInstanceActionCreator(EXPLORER_SET_CURRENT_NODE, 'current')
+actions.setCurrentConfiguration = makeInstanceActionCreator(EXPLORER_SET_CURRENT_CONFIGURATION, 'currentConfiguration')
 actions.updateDirectory = makeInstanceActionCreator(DIRECTORY_UPDATE, 'updatedDirectory')
 
-actions.initialize = (explorerName, root = null, current = null, filters = []) => (dispatch) => {
+/**
+ * Initializes the explorer.
+ *
+ * NB. It can also be initialized by setting the initial state of the store.
+ * This is mostly useful when the store initialization is not directly accessible (like in modals).
+ *
+ * @param explorerName
+ * @param root
+ * @param current
+ */
+actions.initialize = (explorerName, root = null, current = null) => (dispatch) => {
   dispatch(actions.setRoot(explorerName, root))
-  dispatch(actions.setCurrent(explorerName, current || root))
-
-  if (root) {
-    dispatch(actions.loadDirectories(explorerName, [root]))
-  }
-
-  if (filters && filters.length > 0) {
-    filters.forEach(f => {
-      const property = Object.keys(f)[0]
-      dispatch(listActions.addFilter(explorerName+'.resources', property, f[property]))
-    })
-  }
-
-  dispatch(actions.setInitialized(explorerName, true))
+  dispatch(actions.setCurrentNode(explorerName, current))
 }
 
-actions.openDirectory = (explorerName, directory) => (dispatch) => {
-  dispatch(actions.setCurrent(explorerName, directory))
-  // mark directory has opened
-  dispatch(actions.toggleDirectoryOpen(explorerName, directory, true))
+/**
+ * Changes the current directory of the explorer.
+ *
+ * @param {string}      explorerName
+ * @param {string|null} directoryId
+ */
+actions.changeDirectory = (explorerName, directoryId = null) => (dispatch, getState) => {
+  const oldId = selectors.currentId(selectors.explorer(getState(), explorerName))
+
+  // store current id now to make the ListData load the correct data
+  dispatch(actions.setCurrentId(explorerName, directoryId))
+
+  if (directoryId) {
+    // mark directory has opened
+    dispatch(actions.toggleDirectoryOpen(explorerName, directoryId, true))
+
+    // check if the current directory as changed
+    if (oldId !== directoryId) {
+      // current directory as changed
+      dispatch(actions.fetchCurrentDirectory(explorerName, directoryId))
+    }
+  } else {
+    dispatch(actions.setCurrentNode(explorerName, null))
+    dispatch(actions.setCurrentConfiguration(explorerName, null))
+
+    // Load the list of resource for the current directory
+    dispatch(listActions.fetchData(explorerName +'.resources', ['apiv2_resource_list']))
+  }
 }
 
 actions.setDirectoryOpen = makeInstanceActionCreator(DIRECTORY_TOGGLE_OPEN, 'directoryId', 'opened')
 
-actions.loadDirectories = makeInstanceActionCreator(DIRECTORIES_LOAD, 'parent', 'directories')
-actions.fetchDirectories = (explorerName, parent = null) => ({
+actions.loadDirectories = makeInstanceActionCreator(DIRECTORIES_LOAD, 'parentId', 'directories')
+actions.fetchDirectories = (explorerName, parentId = null) => ({
   [API_REQUEST]: {
-    url: url(['apiv2_resource_list', {parent: parent ? parent.id : null}], {
+    url: url(['apiv2_resource_list', {parent: parentId}], {
       filters: {
         resourceType: 'directory'
       },
-      sortBy: '-name',
+      sortBy: 'name',
       //todo: lazy load instead
       limit: 20
     }),
-    success: (response, dispatch) => dispatch(actions.loadDirectories(explorerName, parent, response.data || []))
+    success: (response, dispatch) => dispatch(actions.loadDirectories(explorerName, parentId, response.data || []))
   }
 })
 
-actions.toggleDirectoryOpen = (explorerName, directory, opened) => (dispatch) => {
-  if (opened && !directory._loaded)  {
-    dispatch(actions.fetchDirectories(explorerName, directory))
+actions.fetchCurrentDirectory = (explorerName, directoryId) => ({
+  [API_REQUEST]: {
+    url: ['claro_resource_load_short', {id: directoryId}],
+    success: (response, dispatch) => {
+      // load directory node
+      dispatch(actions.setCurrentNode(explorerName, response.resourceNode))
+      // load directory resource (for list & display config)
+      dispatch(actions.setCurrentConfiguration(explorerName, response.directory))
+
+      // Load the list of resource for the current directory
+      dispatch(listActions.fetchData(explorerName +'.resources', ['apiv2_resource_list', {parent: directoryId}]))
+    }
+  }
+})
+
+actions.toggleDirectoryOpen = (explorerName, directoryId, opened) => (dispatch, getState) => {
+  if (opened) {
+    // get the current directory to know if we need to load its children or not for summary
+    const directory = selectors.directory(selectors.directories(selectors.explorer(getState(), explorerName)), directoryId)
+    if (directory && !directory._loaded)  {
+      dispatch(actions.fetchDirectories(explorerName, directoryId))
+    }
   }
 
-  dispatch(actions.setDirectoryOpen(explorerName, directory.id, opened))
+  dispatch(actions.setDirectoryOpen(explorerName, directoryId, opened))
 }
 
 actions.addNodes = (explorerName, createdNodes) => (dispatch, getState) => {
@@ -90,6 +132,7 @@ actions.addNodes = (explorerName, createdNodes) => (dispatch, getState) => {
 
       return acc
     }, {})
+
   Object.keys(newDirectories).map(parentId => {
     const parent = selectors.directory(directories, parentId)
     if (parent && parent._opened) {
@@ -105,10 +148,10 @@ actions.updateNodes = (explorerName, updatedNodes) => (dispatch, getState) => {
   const explorerState = selectors.explorer(getState(), explorerName)
 
   // check if current has been updated
-  const current = selectors.current(explorerState)
+  const current = selectors.currentNode(explorerState)
   const updatedCurrent = updatedNodes.find(node => current.id === node.id)
   if (updatedCurrent) {
-    dispatch(actions.setCurrent(explorerName, updatedCurrent))
+    dispatch(actions.setCurrentNode(explorerName, updatedCurrent))
   }
 
   // check if root has been updated
@@ -136,9 +179,9 @@ actions.deleteNodes = (explorerName, deletedNodes) => (dispatch, getState) => {
   // we may need to implement it later
 
   // change current directory if it is deleted
-  const current = selectors.current(explorerState)
+  const current = selectors.currentNode(explorerState)
   if (-1 !== deletedNodes.findIndex(node => node.is === current.id)) {
-    dispatch(actions.setCurrent(explorerName, selectors.directory(selectors.directories(explorerState), current.parent.id)))
+    dispatch(actions.setCurrentNode(explorerName, selectors.directory(selectors.directories(explorerState), current.parent.id)))
   } else {
     // reset list if nodes are deleted from the current directory
     dispatch(actions.invalidateCurrentResources(explorerName, deletedNodes))
@@ -173,12 +216,12 @@ actions.deleteNodes = (explorerName, deletedNodes) => (dispatch, getState) => {
 
 actions.invalidateCurrentResources = (explorerName, updatedNodes) => (dispatch, getState) => {
   const explorerState = selectors.explorer(getState(), explorerName)
-  const current = selectors.current(explorerState)
+  const current = selectors.currentNode(explorerState)
 
   if (current && -1 !== updatedNodes.findIndex(node => node.parent && current.id === node.parent.id)) {
     // we are inside a directory and one of the child have changed
-    dispatch(listActions.invalidateData(explorerName+'.resources'))
+    dispatch(listActions.fetchData(explorerName +'.resources', ['apiv2_resource_list', {parent: current.id}]))
   } else if (-1 !== updatedNodes.findIndex(node => !!node.parent)) {
-    dispatch(listActions.invalidateData(explorerName+'.resources'))
+    dispatch(listActions.fetchData(explorerName +'.resources', ['apiv2_resource_list']))
   }
 }

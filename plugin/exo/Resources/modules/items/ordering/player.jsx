@@ -17,7 +17,7 @@ let DropBox = props => {
     >
       {tex('set_drop_item')}
     </div>
-   )
+  )
 }
 
 DropBox.propTypes = {

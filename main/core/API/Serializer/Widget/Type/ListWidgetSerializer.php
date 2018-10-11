@@ -21,6 +21,7 @@ class ListWidgetSerializer
 
     public function serialize(ListWidget $widget, array $options = []): array
     {
+        // todo : find a way to merge with directory serializer
         return [
             'maxResults' => $widget->getMaxResults(),
 
@@ -55,6 +56,7 @@ class ListWidgetSerializer
     {
         $this->sipe('maxResults', 'setMaxResults', $data, $widget);
 
+        // todo : find a way to merge with directory serializer
         $this->sipe('count', 'setCount', $data, $widget);
 
         // display feature

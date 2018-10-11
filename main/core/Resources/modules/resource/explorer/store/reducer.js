@@ -1,13 +1,17 @@
 import cloneDeep from 'lodash/cloneDeep'
+import difference from 'lodash/difference'
+import get from 'lodash/get'
 import merge from 'lodash/merge'
 
 import {makeReducer, makeInstanceReducer, combineReducers, reduceReducers} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
+import {constants as listConst} from '#/main/app/content/list/constants'
 
 import {
-  EXPLORER_SET_INITIALIZED,
   EXPLORER_SET_ROOT,
-  EXPLORER_SET_CURRENT,
+  EXPLORER_SET_CURRENT_ID,
+  EXPLORER_SET_CURRENT_NODE,
+  EXPLORER_SET_CURRENT_CONFIGURATION,
   DIRECTORY_TOGGLE_OPEN,
   DIRECTORIES_LOAD,
   DIRECTORY_UPDATE
@@ -42,51 +46,104 @@ function replaceDirectory(directories, newDir) {
 }
 
 const defaultState = {
-  initialized: false,
+  filters: [],
   root: null,
-  current: null,
+  currentId: null,
+  currentNode: null,
+  currentConfiguration: null,
   directories: []
 }
 
-const initializedReducer = makeInstanceReducer(defaultState.initialized, {
-  [EXPLORER_SET_INITIALIZED]: (state, action) => action.initialized
-})
+const baseReducer = {
+  /**
+   * A list of filters that needs to be applied to all the directories.
+   */
+  filters: makeInstanceReducer(defaultState.filters, {
 
-const rootReducer = makeInstanceReducer(defaultState.root, {
-  [EXPLORER_SET_ROOT]: (state, action) => action.root
-})
+  }),
 
-const currentReducer = makeInstanceReducer(null, {
-  [EXPLORER_SET_CURRENT]: (state, action) => action.current
-})
+  /**
+   * The root of the explorer instance.
+   *
+   * The user will not be able to go higher in the directory structure
+   * (most of the times it's used to store the WS root).
+   */
+  root: makeInstanceReducer(defaultState.root, {
+    [EXPLORER_SET_ROOT]: (state, action) => action.root
+  }),
 
-const directoriesReducer = makeInstanceReducer([], {
-  [EXPLORER_SET_ROOT]: (state, action) => action.root ? [action.root] : [],
-  [DIRECTORIES_LOAD]: (state, action) => {
-    if (!action.parent) {
-      return action.directories
+  /**
+   * The resource node ID of the current directory.
+   *
+   * NB. ID is stored in its own key, so I can load current directory config, summary, and ListData in //
+   * Otherwise, I must wait the end of the ajax call to get the id in `current.node`
+   */
+  currentId: makeInstanceReducer(defaultState.currentId, {
+    [EXPLORER_SET_CURRENT_ID]: (state, action) => action.currentId
+  }),
+
+  /**
+   * The resource node of the current directory
+   */
+  currentNode: makeInstanceReducer(defaultState.currentNode, {
+    [EXPLORER_SET_CURRENT_NODE]: (state, action) => action.current
+  }),
+
+  /**
+   * The configuration of the current directory (aka the DirectoryResource).
+   */
+  currentConfiguration: makeInstanceReducer(defaultState.currentConfiguration, {
+    [EXPLORER_SET_CURRENT_CONFIGURATION]: (state, action) => action.currentConfiguration
+  }),
+
+  /**
+   * The list of available directories.
+   *
+   * NB. Each level is loaded on demand when the user uses directories nav,
+   * so you can not assert this contains the full directories list.
+   */
+  directories: makeInstanceReducer([], {
+    [EXPLORER_SET_ROOT]: (state, action) => action.root ? [action.root] : [],
+    [DIRECTORIES_LOAD]: (state, action) => {
+      if (!action.parentId) {
+        return action.directories
+      }
+
+      const updatedParent = cloneDeep(selectors.directory(state, action.parentId))
+      if (updatedParent) {
+        // set parent children
+        updatedParent._loaded = true
+        updatedParent.children = action.directories
+
+        return replaceDirectory(state, updatedParent)
+      }
+
+      return state
+    },
+    [DIRECTORY_TOGGLE_OPEN]: (state, action) => {
+      const toToggle = cloneDeep(selectors.directory(state, action.directoryId))
+      if (toToggle) {
+        toToggle._opened = action.opened
+
+        return replaceDirectory(state, toToggle)
+      }
+
+      return state
+    },
+    [DIRECTORY_UPDATE]: (state, action) => {
+      const toUpdate = selectors.directory(state, action.updatedDirectory.id)
+
+      if (toUpdate) {
+        return replaceDirectory(state, merge(
+          // we merge with previous state to keep loaded children if any
+          {}, toUpdate, action.updatedDirectory
+        ))
+      }
+
+      return state
     }
-
-    const updatedParent = cloneDeep(selectors.directory(state, action.parent.id))
-
-    // set parent children
-    updatedParent._loaded = true
-    updatedParent.children = action.directories
-
-    return replaceDirectory(state, updatedParent)
-  },
-  [DIRECTORY_TOGGLE_OPEN]: (state, action) => {
-    const updatedDirectory = cloneDeep(selectors.directory(state, action.directoryId))
-
-    updatedDirectory._opened = action.opened
-
-    return replaceDirectory(state, updatedDirectory)
-  },
-  [DIRECTORY_UPDATE]: (state, action) => replaceDirectory(state, merge(
-    // we merge with previous state to keep loaded children if any
-    {}, selectors.directory(state, action.updatedDirectory.id), action.updatedDirectory
-  ))
-})
+  })
+}
 
 /**
  * Creates reducers for resource explorer.
@@ -100,51 +157,56 @@ const directoriesReducer = makeInstanceReducer([], {
 function makeResourceExplorerReducer(explorerName, initialState = {}, customReducer = {}) {
   const explorerState = merge({}, defaultState, initialState)
 
-  const reducer = {
+  // enhances base explorer reducer with the ones defined by the user if any
+  const final = Object
+    .keys(baseReducer)
+    .reduce((finalReducer, current) => {
+      if (customReducer[current]) {
+        // apply base and custom reducer to the store key
+        finalReducer[current] = reduceReducers(baseReducer[current](explorerName, explorerState[current]), customReducer[current])
+      } else {
+        // we just need to add the standard reducer
+        finalReducer[current] = baseReducer[current](explorerName, explorerState[current])
+      }
+
+      return finalReducer
+    }, {})
+
+  // get custom keys
+  const rest = difference(Object.keys(customReducer), Object.keys(baseReducer))
+  rest.map(reducerName =>
+    final[reducerName] = customReducer[reducerName]
+  )
+
+  // add resources list reducer (I must declare it here to namespace list with explorerName)
+  // It can't be extended by customReducer
+  Object.assign(final, {
     /**
      * The list of resources for the current directory.
      */
     resources: makeListReducer(`${explorerName}.resources`, {}, {
-      filters: makeReducer([], {
-        [`${EXPLORER_SET_CURRENT}/${explorerName}`]: () => []
-      }),
       invalidated: makeReducer(false, {
-        [`${EXPLORER_SET_CURRENT}/${explorerName}`]: () => true
+        [`${EXPLORER_SET_CURRENT_ID}/${explorerName}`]: () => true
+      }),
+      selected: makeReducer(false, {
+        [`${EXPLORER_SET_CURRENT_ID}/${explorerName}`]: () => []
+      }),
+      filters: makeReducer([], {
+        [`${EXPLORER_SET_CURRENT_CONFIGURATION}/${explorerName}`]: (state, action) => get(action.currentConfiguration, 'list.filters') || []
+      }),
+      page: makeReducer([], {
+        [`${EXPLORER_SET_CURRENT_CONFIGURATION}/${explorerName}`]: () => 0
+      }),
+      pageSize: makeReducer([], {
+        [`${EXPLORER_SET_CURRENT_CONFIGURATION}/${explorerName}`]: (state, action) => get(action.currentConfiguration, 'list.pageSize') || listConst.DEFAULT_PAGE_SIZE
+      }),
+      sortBy: makeReducer([], {
+        [`${EXPLORER_SET_CURRENT_CONFIGURATION}/${explorerName}`]: (state, action) => get(action.currentConfiguration, 'list.sorting') || {property: null, direction: 0}
       })
     })
-  }
+  })
 
-  reducer.initialized = customReducer.initialized ?
-    reduceReducers(initializedReducer(explorerName, explorerState.initialized), customReducer.initialized) : initializedReducer(explorerName, explorerState.initialized)
-
-  /**
-   * The root of the explorer instance.
-   *
-   * The user will not be able to go higher in the directory structure
-   * (most of the times it's used to store the WS root).
-   */
-  reducer.root = customReducer.root ?
-    reduceReducers(rootReducer(explorerName, explorerState.root), customReducer.root) :
-    rootReducer(explorerName, explorerState.root)
-
-  /**
-   * The current displayed directory.
-   */
-  reducer.current = customReducer.current ?
-    reduceReducers(currentReducer(explorerName, explorerState.current), customReducer.current) :
-    currentReducer(explorerName, explorerState.current)
-
-  /**
-   * The list of available directories.
-   *
-   * Each level is loaded on demand when the user uses directories nav,
-   * so you can not assert this contains the full directories list.
-   */
-  reducer.directories = customReducer.directories ?
-    reduceReducers(directoriesReducer(explorerName, explorerState.directories), customReducer.directories) :
-    directoriesReducer(explorerName, explorerState.directories)
-
-  return combineReducers(reducer)
+  return combineReducers(final)
 }
 
 export {

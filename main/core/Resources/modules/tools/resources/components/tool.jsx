@@ -54,7 +54,7 @@ Tool.propTypes = {
 
 const ResourcesTool = connect(
   state => ({
-    current: explorerSelectors.current(explorerSelectors.explorer(state, selectors.STORE_NAME))
+    current: explorerSelectors.currentNode(explorerSelectors.explorer(state, selectors.STORE_NAME))
   }),
   dispatch => ({
     addNodes(resourceNodes) {

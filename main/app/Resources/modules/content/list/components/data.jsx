@@ -43,7 +43,8 @@ class ListData extends Component {
   componentWillReceiveProps(nextProps) {
     // display config or definition have changed
     if (!isEqual(this.props.definition, nextProps.definition)
-      || !isEqual(this.props.display, nextProps.display)) {
+      || !isEqual(this.props.display, nextProps.display)
+      || !isEqual(this.props.card, nextProps.card)) {
       const definition = createListDefinition(nextProps.definition)
       const currentDisplay = this.computeDisplay(
         definition,

@@ -19,7 +19,6 @@ class Route extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // todo find a way to block mounting (for async)
     if (this.props.location.pathname !== nextProps.location.pathname) {
       if (this.props.onLeave) {
         this.props.onLeave(this.props.computedMatch.params)
@@ -32,7 +31,6 @@ class Route extends Component {
   }
 
   componentWillUnmount() {
-    // todo find a way to block unmounting(for async)
     if (this.props.onLeave) {
       this.props.onLeave(this.props.computedMatch)
     }

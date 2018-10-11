@@ -12,9 +12,7 @@ export const App = () => ({
   initialData: initialData => ({
     context: initialData.context,
     resourceManager: {
-      initialized: true,
       root: initialData.root,
-      current: initialData.root || null,
       directories: initialData.root ? [initialData.root] : []
     }
   })

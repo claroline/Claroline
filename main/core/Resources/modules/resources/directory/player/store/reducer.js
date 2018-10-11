@@ -7,17 +7,20 @@ import {selectors} from '#/main/core/resources/directory/player/store/selectors'
 
 const reducer = {
   directoryExplorer: makeResourceExplorerReducer(selectors.EXPLORER_NAME, {}, {
-    initialized: makeReducer(false, {
-      [RESOURCE_LOAD]: () => true
-    }),
-    current: makeReducer({}, {
+    root: makeReducer({}, {
       [RESOURCE_LOAD]: (state, action) => action.resourceData.resourceNode
     }),
-    root: makeReducer({}, {
-      [RESOURCE_LOAD]: (state, action) => action.resourceData.root
+    currentId: makeReducer({}, {
+      [RESOURCE_LOAD]: (state, action) => action.resourceData.resourceNode.id
+    }),
+    currentNode: makeReducer({}, {
+      [RESOURCE_LOAD]: (state, action) => action.resourceData.resourceNode
+    }),
+    currentConfiguration: makeReducer({}, {
+      [RESOURCE_LOAD]: (state, action) => action.resourceData.directory
     }),
     directories: makeReducer({}, {
-      [RESOURCE_LOAD]: (state, action) => action.resourceData.root ? [action.resourceData.root] : []
+      [RESOURCE_LOAD]: (state, action) => [action.resourceData.resourceNode]
     })
   })
 }
