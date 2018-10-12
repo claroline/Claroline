@@ -94,16 +94,19 @@ class CourseController extends AbstractCrudController
     public function coursesListAction(User $user, Request $request)
     {
         $this->checkToolAccess();
+        $params = $request->query->all();
+
+        if (!isset($params['hiddenFilters'])) {
+            $params['hiddenFilters'] = [];
+        }
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
+            $params['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
+                return $organization->getUuid();
+            }, $user->getAdministratedOrganizations()->toArray());
+        }
 
         return new JsonResponse(
-            $this->finder->search('Claroline\CursusBundle\Entity\Course', array_merge(
-                $request->query->all(),
-                ['hiddenFilters' => [
-                    'organizations' => array_map(function (Organization $organization) {
-                        return $organization->getUuid();
-                    }, $user->getAdministratedOrganizations()->toArray()),
-                ]]
-            ))
+            $this->finder->search('Claroline\CursusBundle\Entity\Course', $params)
         );
     }
 
@@ -128,17 +131,21 @@ class CourseController extends AbstractCrudController
     public function sessionsListAction(User $user, Course $course, Request $request)
     {
         $this->checkToolAccess();
+        $params = $request->query->all();
+
+        if (!isset($params['hiddenFilters'])) {
+            $params['hiddenFilters'] = [];
+        }
+        $params['hiddenFilters']['course'] = $course->getUuid();
+
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
+            $params['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
+                return $organization->getUuid();
+            }, $user->getAdministratedOrganizations()->toArray());
+        }
 
         return new JsonResponse(
-            $this->finder->search('Claroline\CursusBundle\Entity\CourseSession', array_merge(
-                $request->query->all(),
-                ['hiddenFilters' => [
-                    'organizations' => array_map(function (Organization $organization) {
-                        return $organization->getUuid();
-                    }, $user->getAdministratedOrganizations()->toArray()),
-                    'course' => $course->getUuid(),
-                ]]
-            ))
+            $this->finder->search('Claroline\CursusBundle\Entity\CourseSession', $params)
         );
     }
 

@@ -93,12 +93,14 @@ class SessionEventController extends AbstractCrudController
         $this->checkToolAccess();
         $params = $request->query->all();
 
-        if (!isset($params['hiddenFilters'])) {
-            $params['hiddenFilters'] = [];
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
+            if (!isset($params['hiddenFilters'])) {
+                $params['hiddenFilters'] = [];
+            }
+            $params['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
+                return $organization->getUuid();
+            }, $user->getAdministratedOrganizations()->toArray());
         }
-        $params['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
-            return $organization->getUuid();
-        }, $user->getAdministratedOrganizations()->toArray());
         $data = $this->finder->search('Claroline\CursusBundle\Entity\SessionEvent', $params);
 
         return new JsonResponse($data, 200);

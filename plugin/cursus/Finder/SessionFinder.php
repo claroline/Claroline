@@ -29,13 +29,13 @@ class SessionFinder extends AbstractFinder
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
     {
         $qb->join('obj.course', 'c');
-        $qb->join('c.organizations', 'o');
-        $qb->andWhere('o.uuid IN (:organizations)');
-        $qb->setParameter('organizations', $searches['organizations']);
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'organizations':
+                    $qb->join('c.organizations', 'o');
+                    $qb->andWhere("o.uuid IN (:{$filterName})");
+                    $qb->setParameter($filterName, $filterValue);
                     break;
                 case 'course':
                     $qb->andWhere("c.uuid = :{$filterName}");

@@ -30,14 +30,14 @@ class SessionEventFinder extends AbstractFinder
     {
         $qb->join('obj.session', 's');
         $qb->join('s.course', 'c');
-        $qb->join('c.organizations', 'o');
-        $qb->andWhere('o.uuid IN (:organizations)');
-        $qb->setParameter('organizations', $searches['organizations']);
         $eventSetJoin = false;
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'organizations':
+                    $qb->join('c.organizations', 'o');
+                    $qb->andWhere("o.uuid IN (:{$filterName})");
+                    $qb->setParameter($filterName, $filterValue);
                     break;
                 case 'session':
                     $qb->andWhere("s.uuid = :{$filterName}");

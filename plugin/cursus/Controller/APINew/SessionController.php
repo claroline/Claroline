@@ -91,16 +91,19 @@ class SessionController extends AbstractCrudController
     public function sessionsListAction(User $user, Request $request)
     {
         $this->checkToolAccess();
+        $params = $request->query->all();
+
+        if (!isset($params['hiddenFilters'])) {
+            $params['hiddenFilters'] = [];
+        }
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
+            $params['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
+                return $organization->getUuid();
+            }, $user->getAdministratedOrganizations()->toArray());
+        }
 
         return new JsonResponse(
-            $this->finder->search('Claroline\CursusBundle\Entity\CourseSession', array_merge(
-                $request->query->all(),
-                ['hiddenFilters' => [
-                    'organizations' => array_map(function (Organization $organization) {
-                        return $organization->getUuid();
-                    }, $user->getAdministratedOrganizations()->toArray()),
-                ]]
-            ))
+            $this->finder->search('Claroline\CursusBundle\Entity\CourseSession', $params)
         );
     }
 
@@ -125,17 +128,21 @@ class SessionController extends AbstractCrudController
     public function sessionEventsListAction(User $user, CourseSession $session, Request $request)
     {
         $this->checkToolAccess();
+        $params = $request->query->all();
+
+        if (!isset($params['hiddenFilters'])) {
+            $params['hiddenFilters'] = [];
+        }
+        $params['hiddenFilters']['session'] = $session->getUuid();
+
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
+            $params['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
+                return $organization->getUuid();
+            }, $user->getAdministratedOrganizations()->toArray());
+        }
 
         return new JsonResponse(
-            $this->finder->search('Claroline\CursusBundle\Entity\SessionEvent', array_merge(
-                $request->query->all(),
-                ['hiddenFilters' => [
-                    'organizations' => array_map(function (Organization $organization) {
-                        return $organization->getUuid();
-                    }, $user->getAdministratedOrganizations()->toArray()),
-                    'session' => $session->getUuid(),
-                ]]
-            ))
+            $this->finder->search('Claroline\CursusBundle\Entity\SessionEvent', $params)
         );
     }
 

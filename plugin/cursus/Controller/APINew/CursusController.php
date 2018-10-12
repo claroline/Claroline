@@ -101,9 +101,12 @@ class CursusController extends AbstractCrudController
             $params['hiddenFilters'] = [];
         }
         $params['hiddenFilters']['parent'] = null;
-        $params['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
-            return $organization->getUuid();
-        }, $user->getAdministratedOrganizations()->toArray());
+
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
+            $params['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
+                return $organization->getUuid();
+            }, $user->getAdministratedOrganizations()->toArray());
+        }
         $data = $this->finder->search('Claroline\CursusBundle\Entity\Cursus', $params, [Options::IS_RECURSIVE]);
 
         return new JsonResponse($data, 200);
