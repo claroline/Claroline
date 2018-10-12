@@ -43,6 +43,14 @@ class LogConnectPlatformFinder extends AbstractFinder
                     $qb->andWhere('o.uuid IN (:organizationIds)');
                     $qb->setParameter('organizationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
+                case 'user':
+                    if (!$userJoined) {
+                        $qb->join('obj.user', 'u');
+                        $userJoined = true;
+                    }
+                    $qb->andWhere("u.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
                 case 'name':
                     if (!$userJoined) {
                         $qb->join('obj.user', 'u');
@@ -60,6 +68,14 @@ class LogConnectPlatformFinder extends AbstractFinder
                         )
                     ));
                     $qb->setParameter('name', '%'.strtoupper($filterValue).'%');
+                    break;
+                case 'afterDate':
+                    $qb->andWhere("obj.connectionDate > :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+                case 'beforeDate':
+                    $qb->andWhere("obj.connectionDate < :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
                     break;
                 default:
                     if (is_bool($filterValue)) {

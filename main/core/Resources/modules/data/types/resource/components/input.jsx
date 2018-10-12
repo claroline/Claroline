@@ -71,6 +71,7 @@ const ResourceInput = props => {
         </ModalButton>
         <ResourceEmbedded
           resourceNode={props.value}
+          onResourceClose={props.onEmbeddedResourceClose}
         />
       </div>
     )
@@ -117,7 +118,8 @@ implementPropTypes(ResourceInput, FormFieldTypes, {
     title: T.string,
     current: T.shape(ResourceNodeTypes.propTypes),
     root: T.shape(ResourceNodeTypes.propTypes)
-  })
+  }),
+  onEmbeddedResourceClose: T.func
 }, {
   value: null,
   picker: {

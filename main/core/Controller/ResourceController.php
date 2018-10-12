@@ -189,20 +189,22 @@ class ResourceController
      *
      * @EXT\Route("/{id}", name="claro_resource_load_short")
      * @EXT\Route("/{type}/{id}", name="claro_resource_load")
+     * @EXT\Route("/{type}/{id}/embedded/{embedded}", name="claro_resource_load_embedded")
      * @EXT\Method("GET")
      *
      * @param ResourceNode $resourceNode
+     * @param int          $embedded
      *
      * @return JsonResponse
      */
-    public function getAction(ResourceNode $resourceNode)
+    public function getAction(ResourceNode $resourceNode, $embedded = 0)
     {
         // gets the current user roles to check access restrictions
         $userRoles = $this->security->getRoles($this->tokenStorage->getToken());
 
         $accessErrors = $this->restrictionsManager->getErrors($resourceNode, $userRoles);
         if (empty($accessErrors) || $this->manager->isManager($resourceNode)) {
-            $loaded = $this->manager->load($resourceNode);
+            $loaded = $this->manager->load($resourceNode, intval($embedded) ? true : false);
 
             return new JsonResponse(
                 array_merge([

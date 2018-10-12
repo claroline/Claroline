@@ -182,6 +182,7 @@ const Step = props =>
                 play: props.disableNavigation,
                 end: props.enableNavigation
               }}
+              onResourceClose={props.onEmbeddedResourceClose}
             />
           }
 
@@ -210,7 +211,8 @@ implementPropTypes(Step, StepTypes, {
   manualProgressionAllowed: T.bool.isRequired,
   updateProgression: T.func.isRequired,
   enableNavigation: T.func.isRequired,
-  disableNavigation: T.func.isRequired
+  disableNavigation: T.func.isRequired,
+  onEmbeddedResourceClose: T.func
 })
 
 export {

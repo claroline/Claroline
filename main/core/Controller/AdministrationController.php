@@ -113,6 +113,11 @@ class AdministrationController extends Controller
             'OpenAdministrationTool',
             ['toolName' => $toolName]
         );
+        $this->eventDispatcher->dispatch(
+            'log',
+            'Log\LogAdminToolRead',
+            ['toolName' => $toolName]
+        );
 
         return $event->getResponse();
     }

@@ -30,14 +30,14 @@ class ResourcePage extends Component {
   }
 
   componentDidMount() {
-    this.props.loadResource(this.props.resourceNode)
+    this.props.loadResource(this.props.resourceNode, this.props.embedded)
   }
 
   componentWillReceiveProps(nextProps) {
     // the resource has changed
     if (this.props.resourceNode.id !== nextProps.resourceNode.id) {
       // load the new one
-      this.props.loadResource(nextProps.resourceNode)
+      this.props.loadResource(nextProps.resourceNode, nextProps.embedded)
     }
   }
 
@@ -101,7 +101,7 @@ class ResourcePage extends Component {
             errors={this.props.accessErrors}
             dismiss={this.props.dismissRestrictions}
             managed={this.props.managed}
-            checkAccessCode={(code) => this.props.checkAccessCode(this.props.resourceNode, code)}
+            checkAccessCode={(code) => this.props.checkAccessCode(this.props.resourceNode, code, this.props.embedded)}
           />
         }
 

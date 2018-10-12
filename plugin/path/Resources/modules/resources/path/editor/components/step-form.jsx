@@ -157,7 +157,8 @@ const StepForm = props =>
               showHeader: true,
               picker: {
                 current : props.resourceParent
-              }
+              },
+              onEmbeddedResourceClose: props.onEmbeddedResourceClose
             }
           },
           {
@@ -210,7 +211,8 @@ implementPropTypes(StepForm, StepTypes, {
   resourceParent: T.shape(ResourceNodeTypes.propTypes),
   updateSecondaryResourceInheritance: T.func.isRequired,
   removeInheritedResource: T.func.isRequired,
-  saveForm: T.func.isRequired
+  saveForm: T.func.isRequired,
+  onEmbeddedResourceClose: T.func
 }, {
   customNumbering: false
 })

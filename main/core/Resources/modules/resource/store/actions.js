@@ -17,9 +17,9 @@ export const actions = {}
 actions.setRestrictionsError = makeActionCreator(RESOURCE_RESTRICTIONS_ERROR, 'errors')
 actions.unlockResource = makeActionCreator(RESOURCE_RESTRICTIONS_UNLOCKED)
 actions.loadResource = makeActionCreator(RESOURCE_LOAD, 'resourceData')
-actions.fetchResource = (resourceNode) => ({
+actions.fetchResource = (resourceNode, embedded = false) => ({
   [API_REQUEST]: {
-    url: ['claro_resource_load', {type: resourceNode.meta.type, id: resourceNode.id}],
+    url: ['claro_resource_load_embedded', {type: resourceNode.meta.type, id: resourceNode.id, embedded: embedded ? 1 : 0}],
     success: (response, dispatch) => dispatch(actions.loadResource(response)),
     error: (response, dispatch) => dispatch(actions.setRestrictionsError(response))
   }
@@ -43,7 +43,7 @@ actions.updateUserEvaluation = makeActionCreator(USER_EVALUATION_UPDATE, 'userEv
 
 actions.dismissRestrictions = makeActionCreator(RESOURCE_RESTRICTIONS_DISMISS)
 
-actions.checkAccessCode = (resourceNode, code) => ({
+actions.checkAccessCode = (resourceNode, code, embedded = false) => ({
   [API_REQUEST] : {
     url: ['claro_resource_unlock', {id: resourceNode.id}],
     request: {
@@ -52,8 +52,8 @@ actions.checkAccessCode = (resourceNode, code) => ({
     },
     success: (response, dispatch) => {
       dispatch(actions.unlockResource())
-      dispatch(actions.fetchResource(resourceNode))
+      dispatch(actions.fetchResource(resourceNode, embedded))
     },
-    error: (response, dispatch) => dispatch(actions.fetchResource(resourceNode))
+    error: (response, dispatch) => dispatch(actions.fetchResource(resourceNode, embedded))
   }
 })

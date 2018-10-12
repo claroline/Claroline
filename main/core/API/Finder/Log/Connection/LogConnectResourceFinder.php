@@ -29,6 +29,8 @@ class LogConnectResourceFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
     {
+        $userJoined = false;
+
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'resource':
@@ -36,8 +38,19 @@ class LogConnectResourceFinder extends AbstractFinder
                     $qb->andWhere("r.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
+                case 'user':
+                    if (!$userJoined) {
+                        $qb->join('obj.user', 'u');
+                        $userJoined = true;
+                    }
+                    $qb->andWhere("u.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
                 case 'name':
-                    $qb->join('obj.user', 'u');
+                    if (!$userJoined) {
+                        $qb->join('obj.user', 'u');
+                        $userJoined = true;
+                    }
                     $qb->andWhere($qb->expr()->orX(
                         $qb->expr()->like('UPPER(u.username)', ':name'),
                         $qb->expr()->like(
@@ -67,6 +80,7 @@ class LogConnectResourceFinder extends AbstractFinder
             $sortByDirection = 1 === $sortBy['direction'] ? 'ASC' : 'DESC';
 
             switch ($sortByProperty) {
+                case 'user':
                 case 'name':
                     $qb->orderBy('obj.user', $sortByDirection);
                     break;

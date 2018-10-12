@@ -14,7 +14,9 @@ namespace Claroline\CoreBundle\Listener\Log;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
+use Claroline\CoreBundle\Event\Log\LogAdminToolReadEvent;
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
+use Claroline\CoreBundle\Event\Log\LogDesktopToolReadEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\LogGroupDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogNotRepeatableInterface;
@@ -268,12 +270,16 @@ class LogListener
 
             // Always logs workspace entering, tool reading and resource reading if the target object is different from the previous one
             if ($event->getIsWorkspaceEnterEvent() || $event->getIsToolReadEvent() || $event->getIsResourceReadEvent()) {
-                $workspaceId = $event->getWorkspace()->getUuid();
-                $key = $event->getIsWorkspaceEnterEvent() ?
-                    $workspaceId :
-                    $event->getIsToolReadEvent() ?
-                        $event->getToolName() :
-                        $event->getResource()->getUuid();
+                $workspaceId = !is_null($event->getWorkspace()) ? $event->getWorkspace()->getUuid() : null;
+                $key = null;
+
+                if ($event->getIsWorkspaceEnterEvent()) {
+                    $key = $workspaceId;
+                } elseif ($event->getIsToolReadEvent()) {
+                    $key = $event->getToolName();
+                } elseif ($event->getIsResourceReadEvent()) {
+                    $key = $event->getResource()->getUuid();
+                }
 
                 if (!is_null($session->get($event->getAction()))) {
                     $oldArray = json_decode($session->get($event->getAction()));
@@ -288,7 +294,7 @@ class LogListener
                         if (LogWorkspaceEnterEvent::ACTION === $event->getAction()) {
                             $notRepeatableLogTimeInSeconds = $notRepeatableLogTimeInSeconds * 3;
                         }
-                        if ($oldWorkspaceId === $workspaceId &&
+                        if (((is_null($oldWorkspaceId) && is_null($workspaceId)) || $oldWorkspaceId === $workspaceId) &&
                             $oldKey === $key &&
                             $diff <= $notRepeatableLogTimeInSeconds &&
                             !$this->hasBreakingRepeatEvent($session, $event)
@@ -382,7 +388,15 @@ class LogListener
                     true
                 );
             }
-        } elseif ($logCreated && $log && ($event instanceof LogUserLoginEvent || $event instanceof LogWorkspaceEnterEvent)) {
+        }
+        if ($logCreated && $log && (
+            $event instanceof LogUserLoginEvent ||
+            $event instanceof LogWorkspaceEnterEvent ||
+            $event instanceof LogResourceReadEvent ||
+            $event instanceof LogWorkspaceToolReadEvent ||
+            $event instanceof LogDesktopToolReadEvent ||
+            $event instanceof LogAdminToolReadEvent
+        )) {
             $this->logConnectManager->manageConnection($log);
         }
     }
@@ -450,18 +464,26 @@ class LogListener
         $breakingSignatures = [
             LogWorkspaceToolReadEvent::ACTION,
             LogResourceReadEvent::ACTION,
+            LogDesktopToolReadEvent::ACTION,
+            LogAdminToolReadEvent::ACTION,
+        ];
+        $breakingWorkspaceSignatures = [
+            LogDesktopToolReadEvent::ACTION,
+            LogAdminToolReadEvent::ACTION,
         ];
 
         // Only checks for tools (desktop, workspace & admin) & resources opening
-        // TODO: checks for desktop & admin tools
-        if ($event->getIsToolReadEvent() || $event->getIsResourceReadEvent()) {
+        if ($event->getIsWorkspaceEnterEvent() || $event->getIsToolReadEvent() || $event->getIsResourceReadEvent()) {
             if (!is_null($session->get($event->getAction()))) {
                 $oldArray = json_decode($session->get($event->getAction()));
                 $oldSignature = $oldArray->logSignature;
                 $oldTime = $oldArray->time;
 
                 foreach ($breakingSignatures as $breakingSignature) {
-                    if ($oldSignature !== $breakingSignature && $session->get($breakingSignature)) {
+                    if ((($event->getIsWorkspaceEnterEvent() && in_array($breakingSignature, $breakingWorkspaceSignatures)) ||
+                        (!$event->getIsWorkspaceEnterEvent() && $oldSignature !== $breakingSignature)) &&
+                        $session->get($breakingSignature)
+                    ) {
                         $breakingArray = json_decode($session->get($breakingSignature));
 
                         if ($oldTime < $breakingArray->time) {

@@ -37,6 +37,11 @@ class LogConnectResource extends AbstractLogConnect
     protected $resourceType;
 
     /**
+     * @ORM\Column(name="embedded", type="boolean")
+     */
+    protected $embedded = false;
+
+    /**
      * @return ResourceNode
      */
     public function getResource()
@@ -87,5 +92,21 @@ class LogConnectResource extends AbstractLogConnect
     public function setResourceType($resourceType)
     {
         $this->resourceType = $resourceType;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEmbedded()
+    {
+        return $this->embedded;
+    }
+
+    /**
+     * @param bool $embedded
+     */
+    public function setEmbedded($embedded)
+    {
+        $this->embedded = $embedded;
     }
 }

@@ -35,6 +35,14 @@ class LogFinder extends AbstractFinder
                     }
                     $qb->setParameter($filterName, $filterValue);
                     break;
+                case 'doer':
+                    if (!$userJoin) {
+                        $userJoin = true;
+                        $qb->join('obj.doer', 'doer');
+                    }
+                    $qb->andWhere("doer.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
                 case 'doer.name':
                     if (!$userJoin) {
                         $userJoin = true;
@@ -60,9 +68,17 @@ class LogFinder extends AbstractFinder
                     $qb->andWhere('obj.dateLog >= :dateFrom')
                         ->setParameter('dateFrom', $filterValue);
                     break;
+                case 'dateFromStrict':
+                    $qb->andWhere('obj.dateLog > :dateFromStrict')
+                        ->setParameter('dateFromStrict', $filterValue);
+                    break;
                 case 'dateTo':
                     $qb->andWhere('obj.dateLog <= :dateTo')
                         ->setParameter('dateTo', $filterValue);
+                    break;
+                case 'dateToStrict':
+                    $qb->andWhere('obj.dateLog < :dateToStrict')
+                        ->setParameter('dateToStrict', $filterValue);
                     break;
                 case 'action':
                     $this->filterAction($filterValue, $qb);

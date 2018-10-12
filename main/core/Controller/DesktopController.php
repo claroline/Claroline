@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\Log\LogDesktopToolReadEvent;
 use Claroline\CoreBundle\Manager\ToolManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
@@ -101,7 +102,9 @@ class DesktopController
         /** @var DisplayToolEvent $event */
         $event = $this->eventDispatcher->dispatch('open_tool_desktop_'.$toolName, new DisplayToolEvent());
 
-        if ($toolName === 'resource_manager') {
+        $this->eventDispatcher->dispatch('log', new LogDesktopToolReadEvent($toolName));
+
+        if ('resource_manager' === $toolName) {
             // FIXME : but why ?
             $this->session->set('isDesktop', true);
         }

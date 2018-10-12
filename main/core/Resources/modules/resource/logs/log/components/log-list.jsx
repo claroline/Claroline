@@ -1,9 +1,11 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
-import {select} from '#/main/app/content/list/store'
-import {LogList} from '#/main/core/layout/logs'
+
+import {select as listSelect} from '#/main/app/content/list/store'
+
 import {actions as logActions} from  '#/main/core/layout/logs/actions'
+import {LogList} from '#/main/core/layout/logs'
 
 const List = (props) =>
   <LogList
@@ -28,7 +30,7 @@ const ListContainer = connect(
     resourceId: state.resourceId,
     chart: state.chart,
     actions: state.actions,
-    queryString: select.queryString(select.list(state, 'logs'))
+    queryString: listSelect.queryString(listSelect.list(state, 'logs'))
   }),
   dispatch => ({
     getChartData(resourceId, filters) {

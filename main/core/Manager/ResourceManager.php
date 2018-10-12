@@ -2007,10 +2007,10 @@ class ResourceManager
         return $node;
     }
 
-    public function load(ResourceNode $resourceNode)
+    public function load(ResourceNode $resourceNode, $embedded = false)
     {
         // maybe use a specific log ?
-        $this->dispatcher->dispatch('log', 'Log\LogResourceRead', [$resourceNode]);
+        $this->dispatcher->dispatch('log', 'Log\LogResourceRead', [$resourceNode, $embedded]);
 
         /** @var LoadResourceEvent $event */
         $event = $this->dispatcher->dispatch(

@@ -20,7 +20,7 @@ class LogResourceReadEvent extends LogGenericEvent implements LogNotRepeatableIn
     /**
      * Constructor.
      */
-    public function __construct(ResourceNode $node)
+    public function __construct(ResourceNode $node, $embedded = false)
     {
         parent::__construct(
             self::ACTION,
@@ -36,6 +36,7 @@ class LogResourceReadEvent extends LogGenericEvent implements LogNotRepeatableIn
                     'lastName' => $node->getCreator()->getLastName(),
                     'firstName' => $node->getCreator()->getFirstName(),
                 ],
+                'embedded' => $embedded,
             ],
             null,
             null,

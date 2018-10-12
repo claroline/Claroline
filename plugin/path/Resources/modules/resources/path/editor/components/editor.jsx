@@ -13,6 +13,7 @@ import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {actions, selectors} from '#/plugin/path/resources/path/editor/store'
+import {actions as pathActions} from '#/plugin/path/resources/path/store'
 import {PathCurrent} from '#/plugin/path/resources/path/components/current'
 import {PathSummary} from '#/plugin/path/resources/path/components/summary'
 import {ParametersForm} from '#/plugin/path/resources/path/editor/components/parameters-form'
@@ -100,6 +101,7 @@ const EditorComponent = props =>
                   updateSecondaryResourceInheritance={props.updateSecondaryResourceInheritance}
                   removeInheritedResource={props.removeInheritedResource}
                   saveForm={() => props.saveForm(props.path.id)}
+                  onEmbeddedResourceClose={props.computeResourceDuration}
                 />
               </PathCurrent>
             )
@@ -130,6 +132,7 @@ EditorComponent.propTypes = {
   copyStep: T.func.isRequired,
   pasteStep: T.func.isRequired,
   saveForm: T.func.isRequired,
+  computeResourceDuration: T.func.isRequired,
   history: T.shape({
     location: T.shape({
       pathname: T.string.isRequired
@@ -202,6 +205,9 @@ const Editor = withRouter(connect(
     },
     saveForm(pathId) {
       dispatch(formActions.saveForm(selectors.FORM_NAME, ['apiv2_path_update', {id: pathId}]))
+    },
+    computeResourceDuration(resourceId) {
+      dispatch(pathActions.computeResourceDuration(resourceId))
     }
   })
 )(EditorComponent))

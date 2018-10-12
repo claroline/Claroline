@@ -37,3 +37,13 @@ actions.updateProgression = (stepId, status = constants.STATUS_SEEN) => ({
     }
   }
 })
+
+actions.computeResourceDuration = (resourceId) => ({
+  [API_REQUEST]: {
+    silent: true,
+    url: ['apiv2_log_connect_embedded_resource_compute', {resource: resourceId}],
+    request: {
+      method: 'PUT'
+    }
+  }
+})

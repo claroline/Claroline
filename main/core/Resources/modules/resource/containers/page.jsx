@@ -25,14 +25,14 @@ const ResourcePage = connect(
     updateNode(resourceNode) {
       dispatch(actions.updateNode(resourceNode))
     },
-    loadResource(resourceNode) {
-      dispatch(actions.fetchResource(resourceNode))
+    loadResource(resourceNode, embedded = false) {
+      dispatch(actions.fetchResource(resourceNode, embedded))
     },
     dismissRestrictions() {
       dispatch(actions.dismissRestrictions())
     },
-    checkAccessCode(resourceNode, code) {
-      dispatch(actions.checkAccessCode(resourceNode, code))
+    checkAccessCode(resourceNode, code, embedded = false) {
+      dispatch(actions.checkAccessCode(resourceNode, code, embedded))
     }
   })
 )(ResourcePageComponent)
