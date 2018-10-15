@@ -176,6 +176,17 @@ class WorkspaceFinder extends AbstractFinder
             }
         }
 
+        if (!is_null($sortBy) && isset($sortBy['property']) && isset($sortBy['direction'])) {
+            $sortByProperty = $sortBy['property'];
+            $sortByDirection = 1 === $sortBy['direction'] ? 'ASC' : 'DESC';
+
+            switch ($sortByProperty) {
+                case 'meta.created':
+                    $qb->orderBy('obj.created', $sortByDirection);
+                    break;
+            }
+        }
+
         return $qb;
     }
 
