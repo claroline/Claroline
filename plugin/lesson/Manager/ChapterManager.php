@@ -72,6 +72,8 @@ class ChapterManager
      */
     public function copyRoot(Chapter $root_original, Chapter $root_copy)
     {
+        $root_copy->setTitle($root_original->getTitle());
+        $root_copy->setText($root_original->getText());
         $this->copyChildren($root_original, $root_copy, true);
     }
 
