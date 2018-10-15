@@ -201,7 +201,22 @@ function makeResourceExplorerReducer(explorerName, initialState = {}, customRedu
         [`${EXPLORER_SET_CURRENT_CONFIGURATION}/${explorerName}`]: (state, action) => get(action.currentConfiguration, 'list.pageSize') || listConst.DEFAULT_PAGE_SIZE
       }),
       sortBy: makeReducer([], {
-        [`${EXPLORER_SET_CURRENT_CONFIGURATION}/${explorerName}`]: (state, action) => get(action.currentConfiguration, 'list.sorting') || {property: null, direction: 0}
+        [`${EXPLORER_SET_CURRENT_CONFIGURATION}/${explorerName}`]: (state, action) => {
+          const sorting = get(action.currentConfiguration, 'list.sorting')
+
+          let sortBy = {property: null, direction: 0}
+          if (sorting) {
+            if (0 === sorting.indexOf('-')) {
+              sortBy.property = sorting.replace('-', '') // replace first -
+              sortBy.direction = -1
+            } else {
+              sortBy.property = sorting
+              sortBy.direction = 1
+            }
+          }
+
+          return sortBy
+        }
       })
     })
   })

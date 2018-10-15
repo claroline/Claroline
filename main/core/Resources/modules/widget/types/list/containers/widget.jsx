@@ -15,10 +15,22 @@ class Widget extends Component {
   }
 
   render() {
+    // TODO : do it elsewhere (required for all configured list)
+    let sortBy = {property: null, direction: 0}
+    if (this.props.sorting) {
+      if (0 === this.props.sorting.indexOf('-')) {
+        sortBy.property = this.props.sorting.replace('-', '') // replace first -
+        sortBy.direction = -1
+      } else {
+        sortBy.property = this.props.sorting
+        sortBy.direction = 1
+      }
+    }
+
     const ListWidgetInstance = withReducer(selectors.STORE_NAME, makeListWidgetReducer(selectors.STORE_NAME, {
       pageSize: this.props.pageSize,
       filters: this.props.filters,
-      sortBy: this.props.sorting
+      sortBy: sortBy
     }))(ListWidgetComponent)
 
     return (
