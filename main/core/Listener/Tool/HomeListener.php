@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Listener\Tool;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -79,27 +80,42 @@ class HomeListener
      */
     public function onDisplayDesktop(DisplayToolEvent $event)
     {
-        $orderedTabs = [];
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
-        $tabs = $this->finder->search(
-          'Claroline\CoreBundle\Entity\Tab\HomeTab',
-          ['filters' => ['user' => $currentUser->getUuid()]]
-        );
+        $allTabs = $this->finder->search(HomeTab::class, [
+            'filters' => ['user' => $currentUser->getUuid()],
+        ]);
 
-        $tabs = array_filter($tabs['data'], function ($data) {
-            return $data !== [];
-        });
+        // Order tabs. We want :
+        //   - Administration tabs to be at first
+        //   - Tabs to be ordered by position
+        // For this, we separate administration tabs and user ones, order them by position
+        // and then concat all tabs with admin in first (I don't have a easier solution to achieve this)
 
-        usort($tabs, function ($a, $b) {
-            //spaceship operator. administration is '<' than desktop so it works
-            return $a['type'] <=> $b['type'];
-        });
-
-        foreach ($tabs as $tab) {
-            $orderedTabs[$tab['position']] = $tab;
+        $adminTabs = [];
+        $userTabs = [];
+        foreach ($allTabs['data'] as $tab) {
+            if (!empty($tab)) {
+                // we use the define position for array keys for easier sort
+                if (HomeTab::TYPE_ADMIN_DESKTOP === $tab['type']) {
+                    $adminTabs[$tab['position']] = $tab;
+                } else {
+                    $userTabs[$tab['position']] = $tab;
+                }
+            }
         }
-        ksort($orderedTabs);
+
+        // order tabs by position
+        ksort($adminTabs);
+        ksort($userTabs);
+
+        // generate the final list of tabs
+        $orderedTabs = array_merge(array_values($adminTabs), array_values($userTabs));
+
+        // we rewrite tab position because an admin and a user tab may have the same position
+        foreach ($orderedTabs as $index => &$tab) {
+            $tab['position'] = $index;
+        }
 
         $content = $this->templating->render(
             'ClarolineCoreBundle:tool:home.html.twig', [
@@ -107,7 +123,7 @@ class HomeListener
                 'context' => [
                     'type' => Widget::CONTEXT_DESKTOP,
                 ],
-                'tabs' => array_values($orderedTabs),
+                'tabs' => $orderedTabs,
             ]
         );
 
@@ -127,11 +143,11 @@ class HomeListener
         $orderedTabs = [];
         $workspace = $event->getWorkspace();
 
-        $tabs = $this->finder->search(
-          'Claroline\CoreBundle\Entity\Tab\HomeTab',
-          ['filters' => ['workspace' => $workspace->getUuid()]]
-        );
+        $tabs = $this->finder->search(HomeTab::class, [
+            'filters' => ['workspace' => $workspace->getUuid()],
+        ]);
 
+        // but why ? finder should never give you an empty row
         $tabs = array_filter($tabs['data'], function ($data) {
             return $data !== [];
         });
