@@ -86,7 +86,7 @@ trait ListParameters
      *
      * @var array
      */
-    private $availableDisplays = ['table', 'table-sm', 'tiles', 'tiles-sm', 'list'];
+    private $availableDisplays = ['table', 'table-sm', 'tiles', 'tiles-sm', 'list', 'list-sm'];
 
     /**
      * @ORM\Column(type="json_array")
