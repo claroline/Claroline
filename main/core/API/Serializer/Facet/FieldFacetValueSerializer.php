@@ -91,10 +91,9 @@ class FieldFacetValueSerializer
      */
     public function deserialize(array $data, FieldFacetValue $fieldFacetValue = null, array $options = [])
     {
-        $fieldFacet = $this->container->get('claroline.api.serializer')->deserialize(
-          'Claroline\CoreBundle\Entity\Facet\FieldFacet',
-          $data['fieldFacet']
-        );
+        $fieldFacet = $this->container->get('claroline.persistence.object_manager')
+            ->getRepository(FieldFacet::class)
+            ->findOneByUuid($data['fieldFacet']['id']);
 
         $fieldFacetValue->setFieldFacet($fieldFacet);
         $value = $data['value'];

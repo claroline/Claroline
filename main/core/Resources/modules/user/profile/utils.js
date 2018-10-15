@@ -100,18 +100,23 @@ function getFormDefaultSection(userData, isNew = false) {
   }
 }
 
-function formatFormSections(sections, userData, params) {
-  const hasConfidentialRights = authenticatedUser ? hasRoles(authenticatedUser.roles, ['ROLE_ADMIN'].concat(params['roles_confidential'])): false
-  const hasLockedRights = authenticatedUser ? hasRoles(authenticatedUser.roles, ['ROLE_ADMIN'].concat(params['roles_locked'])): false
+//the `force` param is here for the user registration: just show everything
+function formatFormSections(sections, userData, params, force = null) {
+  let hasConfidentialRights = authenticatedUser ? hasRoles(authenticatedUser.roles, ['ROLE_ADMIN'].concat(params['roles_confidential'])): false
+  let hasLockedRights = authenticatedUser ? hasRoles(authenticatedUser.roles, ['ROLE_ADMIN'].concat(params['roles_locked'])): false
+
+  if (force !== null) {
+    hasLockedRights = hasConfidentialRights = force
+  }
 
   sections.forEach(section => {
     section.fields = section.fields.filter(f => !f.restrictions.hidden && (hasConfidentialRights || !f.restrictions.isMetadata || (authenticatedUser && authenticatedUser.id === userData['id'])))
     section.fields.forEach(f => {
-      f['name'] = f['id']
+      f['name'] = 'profile.' + f['id']
 
       if (!hasLockedRights && (
         (f.restrictions.locked && !f.restrictions.lockedEditionOnly) ||
-        (f.restrictions.locked && f.restrictions.lockedEditionOnly && userData[f.id] !== undefined && userData[f.id] !== null)
+        (f.restrictions.locked && f.restrictions.lockedEditionOnly && userData['profile'][f.id] !== undefined && userData['profile'][f.id] !== null)
       )) {
         f['disabled'] = true
       }
@@ -137,7 +142,7 @@ function formatDetailsSections(sections, user, params) {
   sections.forEach(section => {
     section.fields = section.fields.filter(f => !f.restrictions.hidden && (hasConfidentialRights || !f.restrictions.isMetadata || (authenticatedUser && authenticatedUser.id === user.id)))
     section.fields.forEach(f => {
-      f['name'] = f['id']
+      f['name'] = 'profile.' + f['id']
 
       if (f.type === 'choice') {
         const options = f.options ? f.options : {}

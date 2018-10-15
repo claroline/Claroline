@@ -9,11 +9,15 @@ import {url} from '#/main/app/api'
  * @constructor
  */
 const Registration = props => {
-  const link = `<a href='${url(['claro_workspace_subscription_url_generate_user', {workspace: props.defaultWorkspaces[0].id}])}'>${trans('here')}</a>`
+  const link = props.defaultWorkspaces[0] ?
+    `<a href='${url(['claro_workspace_subscription_url_generate_user', {workspace: props.defaultWorkspaces[0].id}])}'>${trans('here')}</a>`:
+    null
 
   return (
     <div>
-      <div className="well" dangerouslySetInnerHTML={{__html: trans('register_to_workspace_account_exists', {'link': link})}}/>
+      {link &&
+        <div className="well" dangerouslySetInnerHTML={{__html: trans('register_to_workspace_account_exists', {'link': link})}}/>
+      }
       <div>
         <div>{trans('following_workspace_registration')}</div>
         <ul>

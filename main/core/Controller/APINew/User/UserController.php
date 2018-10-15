@@ -210,6 +210,7 @@ class UserController extends AbstractCrudController
             'deleteBulk' => [Options::SOFT_DELETE],
             'create' => $create,
             'get' => [Options::SERIALIZE_FACET],
+            'update' => [Options::SERIALIZE_FACET],
         ];
     }
 

@@ -123,7 +123,6 @@ const UserRegistration = connect(
   (dispatch) => ({
     register(user, termOfService) {
       if (termOfService) {
-        // show terms before create new account
         dispatch(modalActions.showModal(MODAL_CONFIRM, {
           icon: 'fa fa-fw fa-copyright',
           title: t('term_of_service'),

@@ -89,9 +89,14 @@ class PanelFacetSerializer
 
         if (isset($data['fields']) && in_array(Options::DEEP_DESERIALIZE, $options)) {
             $panel->resetFieldFacets();
+            $i = 0;
 
             foreach ($data['fields'] as $field) {
-                $field = $this->serializer->deserialize('Claroline\CoreBundle\Entity\Facet\FieldFacet', $field, $options);
+                if (!isset($field['restrictions']['order'])) {
+                    $field['restrictions']['order'] = $i;
+                }
+                ++$i;
+                $field = $this->serializer->deserialize(FieldFacet::class, $field, $options);
                 $field->setPanelFacet($panel);
             }
         }

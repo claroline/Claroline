@@ -35,16 +35,17 @@ class FacetRepository extends EntityRepository
         }, $token->getRoles());
 
         $qb = $this->createQueryBuilder('f');
-        if (!in_array('ROLE_ADMIN', $roleNames)) {
-            // filter query to only get accessible facets for the current roles
-            $qb
-                ->leftJoin('f.roles', 'r')
-                ->where('(r.id IS NULL OR r.name IN (:roles))')
-                ->setParameter('roles', $roleNames);
-        }
 
         if ($isRegistration) {
             $qb->andWhere('f.forceCreationForm = true');
+        } else {
+            if (!in_array('ROLE_ADMIN', $roleNames)) {
+                // filter query to only get accessible facets for the current roles
+                $qb
+                  ->leftJoin('f.roles', 'r')
+                  ->where('(r.id IS NULL OR r.name IN (:roles))')
+                  ->setParameter('roles', $roleNames);
+            }
         }
 
         $qb->orderBy('f.main DESC, f.position');

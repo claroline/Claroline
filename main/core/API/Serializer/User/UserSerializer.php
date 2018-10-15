@@ -213,11 +213,12 @@ class UserSerializer
             $fields = $this->om
                 ->getRepository('Claroline\CoreBundle\Entity\Facet\FieldFacetValue')
                 ->findPlatformValuesByUser($user);
+            $serializedUser['facets'] = [];
 
             /** @var FieldFacetValue $field */
             foreach ($fields as $field) {
                 // we just flatten field facets in the base user structure
-                $serializedUser[$field->getFieldFacet()->getUuid()] = $field->getValue();
+                $serializedUser['profile'][$field->getFieldFacet()->getUuid()] = $field->getValue();
             }
         }
 
@@ -529,25 +530,25 @@ class UserSerializer
         }
 
         $fieldFacets = $this->om
-            ->getRepository('Claroline\CoreBundle\Entity\Facet\FieldFacet')
+            ->getRepository(FieldFacet::class)
             ->findPlatformFieldFacets();
 
         /** @var FieldFacet $fieldFacet */
         foreach ($fieldFacets as $fieldFacet) {
-            if (isset($data[$fieldFacet->getUuid()])) {
+            if (isset($data['profile']) && isset($data['profile'][$fieldFacet->getUuid()])) {
                 /** @var FieldFacetValue $fieldFacetValue */
                 $fieldFacetValue = $this->om
-                    ->getRepository('Claroline\CoreBundle\Entity\Facet\FieldFacetValue')
+                    ->getRepository(FieldFacetValue::class)
                     ->findOneBy([
                         'user' => $user,
                         'fieldFacet' => $fieldFacet,
                     ]);
 
                 $user->addFieldFacet(
-                    $serializer->deserialize('Claroline\CoreBundle\Entity\Facet\FieldFacetValue', [
-                        'id' => !empty($fieldFacetValue) ? $fieldFacetValue->getUuid() : null,
+                    $serializer->deserialize(FieldFacetValue::class, [
+                        'id' => $fieldFacetValue ? $fieldFacetValue->getUuid() : null,
                         'name' => $fieldFacet->getName(),
-                        'value' => $data[$fieldFacet->getUuid()],
+                        'value' => $data['profile'][$fieldFacet->getUuid()],
                         'fieldFacet' => ['id' => $fieldFacet->getUuid()],
                     ])
                 );
