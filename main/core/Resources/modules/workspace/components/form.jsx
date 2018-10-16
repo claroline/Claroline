@@ -98,9 +98,7 @@ const WorkspaceFormComponent = (props) =>
                 resource: trans('open_workspace_resource')
               }
             },
-            onChange: () => {
-              props.updateProp('opening.target', null)
-            },
+            onChange: () => props.updateProp('opening.target', null),
             linked: [
               {
                 name: 'opening.target',

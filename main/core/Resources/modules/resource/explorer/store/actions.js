@@ -9,6 +9,7 @@ export const EXPLORER_SET_ROOT = 'EXPLORER_SET_ROOT'
 export const EXPLORER_SET_CURRENT_ID = 'EXPLORER_SET_CURRENT_ID'
 export const EXPLORER_SET_CURRENT_NODE = 'EXPLORER_SET_CURRENT_NODE'
 export const EXPLORER_SET_CURRENT_CONFIGURATION = 'EXPLORER_SET_CURRENT_CONFIGURATION'
+export const EXPLORER_SET_FILTERS = 'EXPLORER_SET_FILTERS'
 export const DIRECTORY_TOGGLE_OPEN = 'DIRECTORY_TOGGLE_OPEN'
 export const DIRECTORIES_LOAD = 'DIRECTORIES_LOAD'
 export const DIRECTORY_UPDATE = 'DIRECTORY_UPDATE'
@@ -19,7 +20,8 @@ export const actions = {}
 actions.setRoot = makeInstanceActionCreator(EXPLORER_SET_ROOT, 'root')
 actions.setCurrentId = makeInstanceActionCreator(EXPLORER_SET_CURRENT_ID, 'currentId')
 actions.setCurrentNode = makeInstanceActionCreator(EXPLORER_SET_CURRENT_NODE, 'current')
-actions.setCurrentConfiguration = makeInstanceActionCreator(EXPLORER_SET_CURRENT_CONFIGURATION, 'currentConfiguration')
+actions.setCurrentConfiguration = makeInstanceActionCreator(EXPLORER_SET_CURRENT_CONFIGURATION, 'currentConfiguration', 'explorerFilters')
+actions.setFilters = makeInstanceActionCreator(EXPLORER_SET_FILTERS, 'filters')
 actions.updateDirectory = makeInstanceActionCreator(DIRECTORY_UPDATE, 'updatedDirectory')
 
 /**
@@ -30,11 +32,15 @@ actions.updateDirectory = makeInstanceActionCreator(DIRECTORY_UPDATE, 'updatedDi
  *
  * @param explorerName
  * @param root
- * @param current
+ * @param filters
  */
-actions.initialize = (explorerName, root = null, current = null) => (dispatch) => {
+actions.initialize = (explorerName, root = null, filters = []) => (dispatch) => {
   dispatch(actions.setRoot(explorerName, root))
-  dispatch(actions.setCurrentNode(explorerName, current))
+  dispatch(actions.setFilters(explorerName, filters))
+
+  if (!root) {
+    dispatch(actions.fetchDirectories(explorerName))
+  }
 }
 
 /**
@@ -45,6 +51,8 @@ actions.initialize = (explorerName, root = null, current = null) => (dispatch) =
  */
 actions.changeDirectory = (explorerName, directoryId = null) => (dispatch, getState) => {
   const oldId = selectors.currentId(selectors.explorer(getState(), explorerName))
+  // grab filters fixed by the explorer
+  const filters = selectors.filters(selectors.explorer(getState(), explorerName))
 
   // store current id now to make the ListData load the correct data
   dispatch(actions.setCurrentId(explorerName, directoryId))
@@ -56,14 +64,20 @@ actions.changeDirectory = (explorerName, directoryId = null) => (dispatch, getSt
     // check if the current directory as changed
     if (oldId !== directoryId) {
       // current directory as changed
-      dispatch(actions.fetchCurrentDirectory(explorerName, directoryId))
+      dispatch(actions.fetchCurrentDirectory(explorerName, directoryId, filters))
     }
   } else {
     dispatch(actions.setCurrentNode(explorerName, null))
-    dispatch(actions.setCurrentConfiguration(explorerName, null))
+    dispatch(actions.setCurrentConfiguration(explorerName, null, filters))
 
     // Load the list of resource for the current directory
     dispatch(listActions.fetchData(explorerName +'.resources', ['apiv2_resource_list']))
+
+    // Load summary directories if not already done
+    const directories = selectors.directories(selectors.explorer(getState(), explorerName))
+    if (0 === directories.length) {
+      dispatch(actions.fetchDirectories(explorerName))
+    }
   }
 }
 
@@ -84,14 +98,14 @@ actions.fetchDirectories = (explorerName, parentId = null) => ({
   }
 })
 
-actions.fetchCurrentDirectory = (explorerName, directoryId) => ({
+actions.fetchCurrentDirectory = (explorerName, directoryId, filters = []) => ({
   [API_REQUEST]: {
     url: ['claro_resource_load_short', {id: directoryId}],
     success: (response, dispatch) => {
       // load directory node
       dispatch(actions.setCurrentNode(explorerName, response.resourceNode))
       // load directory resource (for list & display config)
-      dispatch(actions.setCurrentConfiguration(explorerName, response.directory))
+      dispatch(actions.setCurrentConfiguration(explorerName, response.directory, filters))
 
       // Load the list of resource for the current directory
       dispatch(listActions.fetchData(explorerName +'.resources', ['apiv2_resource_list', {parent: directoryId}]))

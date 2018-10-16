@@ -7,6 +7,8 @@ import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {MODAL_RESOURCE_EXPLORER} from '#/main/core/resource/modals/explorer'
 
+// TODO : reuse explorer config (title, root, filters, etc.)
+
 const ResourceFilter = (props) =>
   <span className="resource-filter">
     {props.search}

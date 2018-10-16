@@ -44,16 +44,13 @@ class ListData extends Component {
     // display config or definition have changed
     if (!isEqual(this.props.definition, nextProps.definition)
       || !isEqual(this.props.display, nextProps.display)
-      || !isEqual(this.props.card, nextProps.card)) {
+      || !isEqual(this.props.card, nextProps.card)
+    ) {
       const definition = createListDefinition(nextProps.definition)
-      const currentDisplay = this.computeDisplay(
-        definition,
-        isEqual(this.props.display, nextProps.display) ? this.state.display : nextProps.display,
-        !!nextProps.card
-      )
+      const currentDisplay = this.computeDisplay(definition, nextProps.display, !!nextProps.card)
 
       this.setState(Object.assign({}, currentDisplay, {
-        definition: createListDefinition(nextProps.definition)
+        definition: definition
       }))
     }
   }

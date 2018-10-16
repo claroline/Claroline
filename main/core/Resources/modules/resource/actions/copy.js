@@ -26,7 +26,7 @@ const action = (resourceNodes, nodesRefresher) => ({
         success: (response) => nodesRefresher.add(response)
       }
     }),
-    filters: [{resourceType: 'directory'}]
+    filters: [{property: 'resourceType', value: 'directory', locked: true}]
   }]
 })
 

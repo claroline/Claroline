@@ -5,6 +5,7 @@ import {select as listSelectors} from '#/main/app/content/list/store'
 const explorer = (state, name) => get(state, name)
 
 const root = (explorerState) => explorerState.root
+const filters = (explorerState) => explorerState.filters
 const currentId = (explorerState) => explorerState.currentId
 const currentNode = (explorerState) => explorerState.currentNode
 const currentConfiguration = (explorerState) => explorerState.currentConfiguration
@@ -28,6 +29,7 @@ const directory = (dirs, directoryId) => {
 export const selectors = {
   explorer,
   root,
+  filters,
   currentId,
   currentNode,
   currentConfiguration,

@@ -148,7 +148,7 @@ AvailableFilterContent.propTypes = {
     parse: T.func.isRequired,
     validate: T.func.isRequired,
     components: T.shape({
-      search: T.node
+      search: T.any // todo : find correct typing
     })
   }).isRequired
 }
@@ -296,7 +296,7 @@ class ListSearch extends Component {
           <FiltersList
             available={this.props.available.filter(availableFilter =>
               // removes locked filters
-              -1 === this.props.current.findIndex(currentFilter => currentFilter.property === availableFilter.name && currentFilter.locked)
+              -1 === this.props.current.findIndex(currentFilter => (currentFilter.property === availableFilter.name || currentFilter.property === availableFilter.alias) && currentFilter.locked)
             )}
             currentSearch={this.state.currentSearch}
             onSelect={this.addFilter}

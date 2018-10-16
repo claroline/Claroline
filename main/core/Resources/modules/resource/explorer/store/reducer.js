@@ -2,6 +2,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import difference from 'lodash/difference'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
+import unionBy from 'lodash/unionBy'
 
 import {makeReducer, makeInstanceReducer, combineReducers, reduceReducers} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
@@ -12,11 +13,11 @@ import {
   EXPLORER_SET_CURRENT_ID,
   EXPLORER_SET_CURRENT_NODE,
   EXPLORER_SET_CURRENT_CONFIGURATION,
+  EXPLORER_SET_FILTERS,
   DIRECTORY_TOGGLE_OPEN,
   DIRECTORIES_LOAD,
   DIRECTORY_UPDATE
 } from '#/main/core/resource/explorer/store/actions'
-
 import {selectors} from '#/main/core/resource/explorer/store/selectors'
 
 /**
@@ -59,7 +60,7 @@ const baseReducer = {
    * A list of filters that needs to be applied to all the directories.
    */
   filters: makeInstanceReducer(defaultState.filters, {
-
+    [EXPLORER_SET_FILTERS]: (state, action) => action.filters
   }),
 
   /**
@@ -192,7 +193,12 @@ function makeResourceExplorerReducer(explorerName, initialState = {}, customRedu
         [`${EXPLORER_SET_CURRENT_ID}/${explorerName}`]: () => []
       }),
       filters: makeReducer([], {
-        [`${EXPLORER_SET_CURRENT_CONFIGURATION}/${explorerName}`]: (state, action) => get(action.currentConfiguration, 'list.filters') || []
+        [`${EXPLORER_SET_CURRENT_CONFIGURATION}/${explorerName}`]: (state, action) => {
+          const explorerFilters = action.explorerFilters || []
+          const directoryFilters = get(action.currentConfiguration, 'list.filters') || []
+
+          return unionBy(explorerFilters, directoryFilters, (filter) => filter.property)
+        }
       }),
       page: makeReducer([], {
         [`${EXPLORER_SET_CURRENT_CONFIGURATION}/${explorerName}`]: () => 0
