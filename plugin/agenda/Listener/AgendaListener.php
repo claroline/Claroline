@@ -12,7 +12,6 @@
 namespace Claroline\AgendaBundle\Listener;
 
 use Claroline\AgendaBundle\Manager\AgendaManager;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
@@ -94,13 +93,13 @@ class AgendaListener
         $filters = [];
         $editableWorkspaces = [0 => true];
 
-        foreach ($listEvents as $event) {
-            $workspaceId = $event->getWorkspace()->getUuid();
-            $filters[$workspaceId] = $event->getWorkspace()->getName();
+        foreach ($listEvents as $agendaEvent) {
+            $workspaceId = $agendaEvent->getWorkspace()->getUuid();
+            $filters[$workspaceId] = $agendaEvent->getWorkspace()->getName();
             $editableWorkspaces[$workspaceId] = $this->authorization->isGranted(
-              ['agenda_', 'edit'],
-              $event->getWorkspace()
-          );
+                ['agenda_', 'edit'],
+                $agendaEvent->getWorkspace()
+            );
         }
 
         if (count($listEventsDesktop) > 0) {
