@@ -61,20 +61,17 @@ class RestoreTabsColorCommand extends ContainerAwareCommand
         $connection = $this->getContainer()->get('doctrine.dbal.default_connection');
 
         //configs are stored in a json array so we can't go full sql
-        $sql = "SELECT * FROM `claro_widget_display_config_temp` WHERE `details` LIKE '%color%'";
+        $sql = "SELECT * FROM `claro_widget_display_config_temp` WHERE `color` IS NOT NULL";
 
         $configs = $connection->query($sql);
 
-        while ($row = $configs->fetch()) {
-            $details = json_decode($row['details'], true);
-
-            if (isset($details['color'])) {
+	while ($row = $configs->fetch())  
+	{
                 $sql = "
-                    UPDATE claro_widget_container_config SET color = '{$details['color']}' WHERE container_id = {$row['id']}
+                    UPDATE claro_widget_container_config SET borderColor = '{$row['color']}' WHERE widget_container_id = {$row['id']}
                 ";
                 $stmt = $connection->prepare($sql);
                 $stmt->execute();
-            }
         }
     }
 }
