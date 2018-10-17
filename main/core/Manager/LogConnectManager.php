@@ -504,7 +504,9 @@ class LogConnectManager
         // Gets current user's connection to platform
         $platformConnection = $this->getLogConnectPlatform($user);
 
-        $isComputable = !is_null($workspaceConnection) && $this->isComputableWithoutLogs($workspaceConnection, $platformConnection);
+        $isComputable = !is_null($workspaceConnection) &&
+            !is_null($platformConnection) &&
+            $this->isComputableWithoutLogs($workspaceConnection, $platformConnection);
 
         return $isComputable ? $workspaceConnection : null;
     }
@@ -516,7 +518,9 @@ class LogConnectManager
         // Gets current user's connection to platform
         $platformConnection = $this->getLogConnectPlatform($user);
 
-        $isComputable = !is_null($toolConnection) && $this->isComputableWithoutLogs($toolConnection, $platformConnection);
+        $isComputable = !is_null($toolConnection) &&
+            !is_null($platformConnection) &&
+            $this->isComputableWithoutLogs($toolConnection, $platformConnection);
 
         return $isComputable ? $toolConnection : null;
     }
@@ -528,7 +532,9 @@ class LogConnectManager
         // Gets current user's connection to platform
         $platformConnection = $this->getLogConnectPlatform($user);
 
-        $isComputable = !is_null($resourceConnection) && $this->isComputableWithoutLogs($resourceConnection, $platformConnection);
+        $isComputable = !is_null($resourceConnection) &&
+            !is_null($platformConnection) &&
+            $this->isComputableWithoutLogs($resourceConnection, $platformConnection);
 
         return $isComputable ? $resourceConnection : null;
     }
@@ -540,7 +546,9 @@ class LogConnectManager
         // Gets current user's connection to platform
         $platformConnection = $this->getLogConnectPlatform($user);
 
-        $isComputable = !is_null($toolConnection) && $this->isComputableWithoutLogs($toolConnection, $platformConnection);
+        $isComputable = !is_null($toolConnection) &&
+            !is_null($platformConnection) &&
+            $this->isComputableWithoutLogs($toolConnection, $platformConnection);
 
         return $isComputable ? $toolConnection : null;
     }
