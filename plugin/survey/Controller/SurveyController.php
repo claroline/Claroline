@@ -11,7 +11,9 @@
 
 namespace Claroline\SurveyBundle\Controller;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\SurveyBundle\Entity\Answer\MultipleChoiceQuestionAnswer;
 use Claroline\SurveyBundle\Entity\Answer\OpenEndedQuestionAnswer;
 use Claroline\SurveyBundle\Entity\Answer\QuestionAnswer;
@@ -54,6 +56,7 @@ class SurveyController extends Controller
     private $templating;
     private $tokenStorage;
     private $translator;
+    private $resourceManager;
 
     /**
      * @DI\InjectParams({
@@ -66,7 +69,8 @@ class SurveyController extends Controller
      *     "surveyManager"   = @DI\Inject("claroline.manager.survey_manager"),
      *     "templating"      = @DI\Inject("templating"),
      *     "tokenStorage"    = @DI\Inject("security.token_storage"),
-     *     "translator"      = @DI\Inject("translator")
+     *     "translator"      = @DI\Inject("translator"),
+     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager")
      * })
      */
     public function __construct(
@@ -79,7 +83,8 @@ class SurveyController extends Controller
         SurveyManager $surveyManager,
         TwigEngine $templating,
         TokenStorageInterface $tokenStorage,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        ResourceManager $resourceManager
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
@@ -91,6 +96,36 @@ class SurveyController extends Controller
         $this->templating = $templating;
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
+        $this->resourceManager = $resourceManager;
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/node/{node}",
+     *     name="claro_survey_node_index",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template()
+     * @EXT\ParamConverter(
+     *     "node",
+     *     class="ClarolineCoreBundle:Resource\ResourceNode",
+     *     options={"mapping": {"node": "uuid"}}
+     * )
+     *
+     * @param ResourceNode $node
+     *
+     * @return array
+     */
+    public function nodeIndexAction(ResourceNode $node)
+    {
+        $survey = $this->resourceManager->getResourceFromNode($node);
+        $params = [];
+        $params['_controller'] = 'ClarolineSurveyBundle:Survey:index';
+        $params['survey'] = $survey;
+        $subRequest = $this->request->getCurrentRequest()->duplicate([], null, $params);
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+
+        return $response;
     }
 
     /**

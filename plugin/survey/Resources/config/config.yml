@@ -4,5 +4,7 @@ plugin:
   resources:
     - class: Claroline\SurveyBundle\Entity\Survey
       name: claroline_survey
+      actions:
+          - name: open_survey
       activity_rules:
         - action: resource-claroline_survey-answer

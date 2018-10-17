@@ -49,3 +49,8 @@
         </div>
     </form>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('dist/plugin-formula-formula-tinymce-plugin.js') }}"></script>
+{% endblock %}
