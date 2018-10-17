@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
-import {Routes} from '#/main/app/router'
+import {withRouter, Routes} from '#/main/app/router'
 import {actions as listActions} from '#/main/app/content/list/store'
 import {actions as formActions} from '#/main/app/content/form/store'
 
@@ -68,7 +68,7 @@ MessagesComponent.propTypes = {
   mailNotified: T.bool.isRequired
 }
 
-const Messages = connect(
+const Messages = withRouter(connect(
   state => ({
     mailNotified: selectors.mailNotified(state)
   }),
@@ -89,7 +89,7 @@ const Messages = connect(
       dispatch(formActions.resetForm('messagesParameters', {mailNotified: mailNotified}))
     }
   })
-)(MessagesComponent)
+)(MessagesComponent))
 
 
 export {
