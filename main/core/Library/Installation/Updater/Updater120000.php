@@ -621,17 +621,16 @@ class Updater120000 extends Updater
         $this->log('Restore containers colors...');
 
         //configs are stored in a json array so we can't go full sql
-        $sql = "SELECT * FROM `claro_widget_display_config_temp` WHERE `color` IS NOT NULL";
+        $sql = 'SELECT * FROM `claro_widget_display_config_temp` WHERE `color` IS NOT NULL';
 
         $configs = $this->conn->query($sql);
 
         while ($row = $configs->fetch()) {
-                $sql = "
-                    UPDATE claro_widget_container_config SET borderColor = '{$row['color']}' WHERE widget_container_id = {$row['id']}
-                ";
-                $stmt = $this->conn->prepare($sql);
-                $stmt->execute();
-            }
+              $sql = "
+                  UPDATE claro_widget_container_config SET borderColor = '{$row['color']}' WHERE widget_container_id = {$row['id']}
+              ";
+              $stmt = $this->conn->prepare($sql);
+              $stmt->execute();
         }
     }
 }
