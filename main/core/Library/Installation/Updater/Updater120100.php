@@ -19,6 +19,7 @@ class Updater120100 extends Updater
     public function postUpdate()
     {
         $this->setDirectoryDefaults();
+        $this->emptyConnectionLogTables();
     }
 
     public function setDirectoryDefaults()
@@ -47,5 +48,26 @@ class Updater120100 extends Updater
                     availableSort = "[\"name\",\"meta.type\",\"meta.updated\", \"meta.created\"]"
             ')
             ->execute();
+    }
+
+    public function emptyConnectionLogTables()
+    {
+        try {
+            $this->log('Truncating connection log tables...');
+            $sql = '
+                SET FOREIGN_KEY_CHECKS=0;
+                TRUNCATE TABLE claro_log_connect_platform;
+                TRUNCATE TABLE claro_log_connect_workspace;
+                TRUNCATE TABLE claro_log_connect_admin_tool;
+                TRUNCATE TABLE claro_log_connect_tool;
+                TRUNCATE TABLE claro_log_connect_resource;
+                SET FOREIGN_KEY_CHECKS=1;
+            ';
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+        } catch (\Exception $e) {
+            $this->log('Couldnt truncate connection log tables');
+        }
     }
 }
