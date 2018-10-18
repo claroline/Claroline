@@ -85,177 +85,179 @@ class LogConnectManager
         $dateLog = $log->getDateLog();
         $user = $log->getDoer();
 
-        switch ($action) {
-            case LogUserLoginEvent::ACTION:
-                $this->om->startFlushSuite();
+        if (!is_null($user)) {
+            switch ($action) {
+                case LogUserLoginEvent::ACTION:
+                    $this->om->startFlushSuite();
 
-                $this->createLogConnectPlatform($user, $dateLog);
+                    $this->createLogConnectPlatform($user, $dateLog);
 
-                $this->om->endFlushSuite();
-                break;
-            case LogWorkspaceEnterEvent::ACTION:
-                $this->om->startFlushSuite();
+                    $this->om->endFlushSuite();
+                    break;
+                case LogWorkspaceEnterEvent::ACTION:
+                    $this->om->startFlushSuite();
 
-                $logWorkspace = $log->getWorkspace();
+                    $logWorkspace = $log->getWorkspace();
 
-                // Computes duration for the most recent workspace connection (with no duration)
-                // for the current user's session
-                $workspaceConnection = $this->getComputableWorkspace($user);
-
-                if (!is_null($workspaceConnection)) {
-                    // Ignores log if previous workspace entering log and this one are associated to the same workspace
-                    // for the current session
-                    if ($workspaceConnection->getWorkspace() === $logWorkspace) {
-                        break;
-                    } else {
-                        $this->computeConnectionDuration($workspaceConnection, $dateLog);
-                    }
-                }
-                // Creates workspace log for current connection
-                $this->createLogConnectWorkspace($user, $logWorkspace, $dateLog);
-
-                $this->om->endFlushSuite();
-                break;
-            /*
-             * When opening tool, computes duration for :
-             * - last resource
-             * - last admin tool
-             * - last tool
-             */
-            case LogWorkspaceToolReadEvent::ACTION:
-            case LogDesktopToolReadEvent::ACTION:
-                $this->om->startFlushSuite();
-
-                $logWorkspace = $log->getWorkspace();
-                $logToolName = $log->getToolName();
-
-                // Computes duration for the most recent tool connection (with no duration)
-                // for the current user's session
-                $toolConnection = $this->getComputableLogTool($user);
-                $resourceConnection = $this->getComputableLogResource($user);
-                $adminToolConnection = $this->getComputableLogAdminTool($user);
-
-                // Computes last resource duration
-                if (!is_null($resourceConnection)) {
-                    $this->computeConnectionDuration($resourceConnection, $dateLog);
-                }
-                // Computes last admin tool duration
-                if (!is_null($adminToolConnection)) {
-                    $this->computeConnectionDuration($adminToolConnection, $dateLog);
-                }
-                // Computes last workspace duration if opening desktop tool
-                if (is_null($logWorkspace)) {
+                    // Computes duration for the most recent workspace connection (with no duration)
+                    // for the current user's session
                     $workspaceConnection = $this->getComputableWorkspace($user);
 
                     if (!is_null($workspaceConnection)) {
-                        $this->computeConnectionDuration($workspaceConnection, $dateLog);
+                        // Ignores log if previous workspace entering log and this one are associated to the same workspace
+                        // for the current session
+                        if ($workspaceConnection->getWorkspace() === $logWorkspace) {
+                            break;
+                        } else {
+                            $this->computeConnectionDuration($workspaceConnection, $dateLog);
+                        }
                     }
-                }
-                // Computes last tool duration
-                if (!is_null($toolConnection)) {
-                    // Ignores log if previous tool opening log and this one are associated to the same tool for the current session
-                    if (((is_null($toolConnection->getWorkspace()) && is_null($logWorkspace)) || $toolConnection->getWorkspace() === $logWorkspace) &&
-                        $toolConnection->getToolName() === $logToolName
-                    ) {
-                        break;
-                    } else {
-                        $this->computeConnectionDuration($toolConnection, $dateLog);
-                    }
-                }
-                // Creates tool log for current connection
-                $this->createLogConnectTool($user, $logToolName, $dateLog, $logWorkspace);
+                    // Creates workspace log for current connection
+                    $this->createLogConnectWorkspace($user, $logWorkspace, $dateLog);
 
-                $this->om->endFlushSuite();
-                break;
-            /*
-             * When opening resource, computes duration for :
-             * - last tool
-             * - last admin tool
-             * - last resource
-             */
-            case LogResourceReadEvent::ACTION:
-                $this->om->startFlushSuite();
+                    $this->om->endFlushSuite();
+                    break;
+                /*
+                 * When opening tool, computes duration for :
+                 * - last resource
+                 * - last admin tool
+                 * - last tool
+                 */
+                case LogWorkspaceToolReadEvent::ACTION:
+                case LogDesktopToolReadEvent::ACTION:
+                    $this->om->startFlushSuite();
 
-                $logResourceNode = $log->getResourceNode();
-                $details = $log->getDetails();
-                $embedded = $details && isset($details['embedded']) ? $details['embedded'] : false;
+                    $logWorkspace = $log->getWorkspace();
+                    $logToolName = $log->getToolName();
 
-                if (!$embedded) {
-                    // Computes duration for the most recent resource opening (with no duration)
+                    // Computes duration for the most recent tool connection (with no duration)
                     // for the current user's session
-                    $resourceConnection = $this->getComputableLogResource($user);
                     $toolConnection = $this->getComputableLogTool($user);
+                    $resourceConnection = $this->getComputableLogResource($user);
                     $adminToolConnection = $this->getComputableLogAdminTool($user);
 
-                    // Computes last workspace tool duration
-                    if (!is_null($toolConnection)) {
-                        $this->computeConnectionDuration($toolConnection, $dateLog);
+                    // Computes last resource duration
+                    if (!is_null($resourceConnection)) {
+                        $this->computeConnectionDuration($resourceConnection, $dateLog);
                     }
                     // Computes last admin tool duration
                     if (!is_null($adminToolConnection)) {
                         $this->computeConnectionDuration($adminToolConnection, $dateLog);
                     }
-                    // Computes last resource duration
-                    if (!is_null($resourceConnection)) {
-                        // Ignores log if previous resource opening log and this one are associated to the same resource
-                        // for the current session
-                        if ($resourceConnection->getResource() === $logResourceNode) {
-                            break;
-                        } else {
-                            $this->computeConnectionDuration($resourceConnection, $dateLog);
+                    // Computes last workspace duration if opening desktop tool
+                    if (is_null($logWorkspace)) {
+                        $workspaceConnection = $this->getComputableWorkspace($user);
+
+                        if (!is_null($workspaceConnection)) {
+                            $this->computeConnectionDuration($workspaceConnection, $dateLog);
                         }
                     }
-                }
-                // Creates resource log for current connection
-                $this->createLogConnectResource($user, $logResourceNode, $dateLog, $embedded);
-
-                $this->om->endFlushSuite();
-                break;
-            /*
-             * When opening admin tool, computes duration for :
-             * - last resource
-             * - last tool
-             * - last admin tool
-             */
-            case LogAdminToolReadEvent::ACTION:
-                $this->om->startFlushSuite();
-
-                $logToolName = $log->getToolName();
-
-                // Computes duration for the most recent admin tool connection (with no duration)
-                // for the current user's session
-                $adminToolConnection = $this->getComputableLogAdminTool($user);
-                $toolConnection = $this->getComputableLogTool($user);
-                $resourceConnection = $this->getComputableLogResource($user);
-                $workspaceConnection = $this->getComputableWorkspace($user);
-
-                // Computes last workspace duration
-                if (!is_null($workspaceConnection)) {
-                    $this->computeConnectionDuration($workspaceConnection, $dateLog);
-                }
-                // Computes last resource duration
-                if (!is_null($resourceConnection)) {
-                    $this->computeConnectionDuration($resourceConnection, $dateLog);
-                }
-                // Computes last tool duration
-                if (!is_null($toolConnection)) {
-                    $this->computeConnectionDuration($toolConnection, $dateLog);
-                }
-                // Computes last admin tool duration
-                if (!is_null($adminToolConnection)) {
-                    // Ignores log if previous admin tool opening log and this one are associated to the same admin tool
-                    // for the current session
-                    if ($adminToolConnection->getToolName() === $logToolName) {
-                        break;
-                    } else {
-                        $this->computeConnectionDuration($adminToolConnection, $dateLog);
+                    // Computes last tool duration
+                    if (!is_null($toolConnection)) {
+                        // Ignores log if previous tool opening log and this one are associated to the same tool for the current session
+                        if (((is_null($toolConnection->getWorkspace()) && is_null($logWorkspace)) || $toolConnection->getWorkspace() === $logWorkspace) &&
+                            $toolConnection->getToolName() === $logToolName
+                        ) {
+                            break;
+                        } else {
+                            $this->computeConnectionDuration($toolConnection, $dateLog);
+                        }
                     }
-                }
-                // Creates admin tool log for current connection
-                $this->createLogConnectAdminTool($user, $logToolName, $dateLog);
+                    // Creates tool log for current connection
+                    $this->createLogConnectTool($user, $logToolName, $dateLog, $logWorkspace);
 
-                $this->om->endFlushSuite();
-                break;
+                    $this->om->endFlushSuite();
+                    break;
+                /*
+                 * When opening resource, computes duration for :
+                 * - last tool
+                 * - last admin tool
+                 * - last resource
+                 */
+                case LogResourceReadEvent::ACTION:
+                    $this->om->startFlushSuite();
+
+                    $logResourceNode = $log->getResourceNode();
+                    $details = $log->getDetails();
+                    $embedded = $details && isset($details['embedded']) ? $details['embedded'] : false;
+
+                    if (!$embedded) {
+                        // Computes duration for the most recent resource opening (with no duration)
+                        // for the current user's session
+                        $resourceConnection = $this->getComputableLogResource($user);
+                        $toolConnection = $this->getComputableLogTool($user);
+                        $adminToolConnection = $this->getComputableLogAdminTool($user);
+
+                        // Computes last workspace tool duration
+                        if (!is_null($toolConnection)) {
+                            $this->computeConnectionDuration($toolConnection, $dateLog);
+                        }
+                        // Computes last admin tool duration
+                        if (!is_null($adminToolConnection)) {
+                            $this->computeConnectionDuration($adminToolConnection, $dateLog);
+                        }
+                        // Computes last resource duration
+                        if (!is_null($resourceConnection)) {
+                            // Ignores log if previous resource opening log and this one are associated to the same resource
+                            // for the current session
+                            if ($resourceConnection->getResource() === $logResourceNode) {
+                                break;
+                            } else {
+                                $this->computeConnectionDuration($resourceConnection, $dateLog);
+                            }
+                        }
+                    }
+                    // Creates resource log for current connection
+                    $this->createLogConnectResource($user, $logResourceNode, $dateLog, $embedded);
+
+                    $this->om->endFlushSuite();
+                    break;
+                /*
+                 * When opening admin tool, computes duration for :
+                 * - last resource
+                 * - last tool
+                 * - last admin tool
+                 */
+                case LogAdminToolReadEvent::ACTION:
+                    $this->om->startFlushSuite();
+
+                    $logToolName = $log->getToolName();
+
+                    // Computes duration for the most recent admin tool connection (with no duration)
+                    // for the current user's session
+                    $adminToolConnection = $this->getComputableLogAdminTool($user);
+                    $toolConnection = $this->getComputableLogTool($user);
+                    $resourceConnection = $this->getComputableLogResource($user);
+                    $workspaceConnection = $this->getComputableWorkspace($user);
+
+                    // Computes last workspace duration
+                    if (!is_null($workspaceConnection)) {
+                        $this->computeConnectionDuration($workspaceConnection, $dateLog);
+                    }
+                    // Computes last resource duration
+                    if (!is_null($resourceConnection)) {
+                        $this->computeConnectionDuration($resourceConnection, $dateLog);
+                    }
+                    // Computes last tool duration
+                    if (!is_null($toolConnection)) {
+                        $this->computeConnectionDuration($toolConnection, $dateLog);
+                    }
+                    // Computes last admin tool duration
+                    if (!is_null($adminToolConnection)) {
+                        // Ignores log if previous admin tool opening log and this one are associated to the same admin tool
+                        // for the current session
+                        if ($adminToolConnection->getToolName() === $logToolName) {
+                            break;
+                        } else {
+                            $this->computeConnectionDuration($adminToolConnection, $dateLog);
+                        }
+                    }
+                    // Creates admin tool log for current connection
+                    $this->createLogConnectAdminTool($user, $logToolName, $dateLog);
+
+                    $this->om->endFlushSuite();
+                    break;
+            }
         }
     }
 
