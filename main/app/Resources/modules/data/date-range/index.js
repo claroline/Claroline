@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {DateRangeGroup} from '#/main/core/layout/form/components/group/date-range-group.jsx'
 
@@ -23,7 +23,7 @@ const dataType = {
    *
    * @return {boolean}
    */
-  validate: (value) => {
+  validate: () => {
     // it's an array of strings
     // it contains two valid dates or null
     // start < end

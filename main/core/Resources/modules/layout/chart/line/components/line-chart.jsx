@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { implementPropTypes } from '#/main/core/scaffolding/prop-types'
+import { implementPropTypes } from '#/main/app/prop-types'
 import {AxisChart as ChartTypes} from '#/main/core/layout/chart/prop-types'
 import {AxisChart} from '#/main/core/layout/chart/components/axis-chart.jsx'
 import {

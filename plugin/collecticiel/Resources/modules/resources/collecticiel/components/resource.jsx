@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {ResourcePage} from '#/main/core/resource/containers/page'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 

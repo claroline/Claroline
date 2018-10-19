@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {constants as listConst} from '#/main/app/content/list/constants'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {PostCard} from '#/plugin/blog/resources/blog/post/components/post'

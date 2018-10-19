@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 const Editor = () =>
   <div className="editor-content alert alert-info">

@@ -11,7 +11,7 @@ import {
   Routes
 } from '#/main/app/router'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {actions as logActions} from  '#/main/core/layout/logs/actions'
 import {
   PageActions,

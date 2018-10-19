@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {Grid, Row, Col} from 'react-bootstrap'
 import {merge} from 'lodash'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {LineChart} from '#/main/core/layout/chart/line/components/line-chart'
 import {actions} from '#/main/core/administration/analytics/actions'
 import {DashboardCard} from '#/main/core/layout/dashboard/index'

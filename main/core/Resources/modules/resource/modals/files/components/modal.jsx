@@ -9,7 +9,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 
 import {makeId} from '#/main/core/scaffolding/id'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {FileGroup} from '#/main/core/layout/form/components/group/file-group'
 

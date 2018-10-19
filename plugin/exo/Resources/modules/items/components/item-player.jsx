@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {Metadata as ItemMetadata} from '#/plugin/exo/items/components/metadata.jsx'
 // import {Hint} from '#/plugin/exo/items/components/hint.jsx'
 
-import {tex, transChoice} from '#/main/core/translation'
+import {tex, transChoice} from '#/main/app/intl/translation'
 
 const UsedHint = props =>
   <div className="well well-sm used-hint">
@@ -13,9 +13,7 @@ const UsedHint = props =>
 
     {props.penalty > 0 &&
       <small className="text-danger hint-penalty-info">
-        &nbsp;(
-          {transChoice('hint_penalty', props.penalty, {count: props.penalty}, 'quiz')}
-        )
+        &nbsp;({transChoice('hint_penalty', props.penalty, {count: props.penalty}, 'quiz')})
       </small>
     }
   </div>
@@ -36,9 +34,7 @@ const Hint = props =>
 
     {props.penalty > 0 &&
       <small className="text-danger hint-penalty-info">
-        &nbsp;(
-          {transChoice('hint_penalty', props.penalty, {count: props.penalty}, 'quiz')}
-        )
+        &nbsp;({transChoice('hint_penalty', props.penalty, {count: props.penalty}, 'quiz')})
       </small>
     }
   </button>

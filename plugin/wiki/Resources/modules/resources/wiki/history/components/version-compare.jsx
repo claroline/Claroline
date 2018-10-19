@@ -2,7 +2,7 @@ import React from 'react'
 import {Row, Col} from 'react-bootstrap'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {Version} from '#/plugin/wiki/resources/wiki/history/components/version'
 import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'
 

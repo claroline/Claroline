@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 //import {SelectGroup} from '#/main/core/layout/form/components/group/select-group.jsx'
 import {EnumPlusSearch} from '#/main/app/data/enum-plus/components/search.jsx'

@@ -6,7 +6,7 @@ import isEmpty from 'lodash/isEmpty'
 import omit from 'lodash/omit'
 import set from 'lodash/set'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {DataFormSection as DataFormSectionTypes} from '#/main/app/content/form/prop-types'
 import {FormData} from '#/main/app/content/form/components/data'

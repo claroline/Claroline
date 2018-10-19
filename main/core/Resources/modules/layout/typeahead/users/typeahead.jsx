@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import cloneDeep from 'lodash/cloneDeep'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {url} from '#/main/app/api'
 
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'

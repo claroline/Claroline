@@ -1,6 +1,6 @@
 import tinymce from 'tinymce/tinymce'
 
-import {asset} from '#/main/core/scaffolding/asset'
+import {asset} from '#/main/app/config/asset'
 
 // Most of this is copy-pasted from original plugin only to fix template URL.
 // TODO : either make tinymce-codemirror work without this, or implement our own plugin.

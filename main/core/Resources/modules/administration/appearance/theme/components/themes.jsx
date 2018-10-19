@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 
-import {trans, transChoice} from '#/main/core/translation'
+import {trans, transChoice} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {DataCard} from '#/main/core/data/components/data-card'
 

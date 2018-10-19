@@ -1,5 +1,4 @@
-import {loadFile} from '#/main/core/scaffolding/loader/file'
-import {asset} from '#/main/core/scaffolding/asset'
+import {asset} from '#/main/app/config/asset'
 
 /**
  * This class was copied from BazingaJsTranslationBundle
@@ -359,11 +358,28 @@ function has_domain(locale, domain) {
 function load_domain(locale, domain) {
 
   if (!has_domain(locale, domain) && Translator.loaded_domains.indexOf(domain) === -1) {
-    loadFile(asset(`js/translations/${domain}/${locale}.js`))
+    load_domain_file(asset(`js/translations/${domain}/${locale}.js`))
   }
 
   if (Translator.loaded_domains.indexOf(domain) === -1) {
     Translator.loaded_domains.push(domain)
+  }
+}
+
+function load_domain_file(file) {
+  // get some kind of XMLHttpRequest
+  const xhrObj = new XMLHttpRequest()
+
+  // open and send a synchronous request
+  xhrObj.open('GET', file, false)
+  xhrObj.send('')
+
+  if (xhrObj.status === 200) {
+    try{
+      eval(xhrObj.responseText)
+    } catch (e) {
+      invariant(false, e)
+    }
   }
 }
 

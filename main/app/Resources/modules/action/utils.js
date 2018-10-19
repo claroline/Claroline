@@ -1,6 +1,6 @@
 import isEmpty from 'lodash/isEmpty'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {MENU_BUTTON} from '#/main/app/buttons'
 
 const GROUP_SEPARATOR  = '|'

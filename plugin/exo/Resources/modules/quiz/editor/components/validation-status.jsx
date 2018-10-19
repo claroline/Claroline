@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
 
 const ValidationStatus = props =>

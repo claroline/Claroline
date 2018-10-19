@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {url} from '#/main/app/api'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {UserAvatar} from '#/main/core/user/components/avatar'
 

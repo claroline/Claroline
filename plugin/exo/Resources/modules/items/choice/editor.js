@@ -3,7 +3,7 @@ import zipObject from 'lodash/zipObject'
 import set from 'lodash/set'
 
 import {makeActionCreator} from '#/main/app/store/actions'
-import {tex, trans} from '#/main/core/translation'
+import {tex, trans} from '#/main/app/intl/translation'
 import {notBlank} from '#/main/core/validation'
 
 import {ITEM_CREATE} from '#/plugin/exo/quiz/editor/actions'

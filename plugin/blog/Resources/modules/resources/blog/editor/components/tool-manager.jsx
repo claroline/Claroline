@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {ToolConfig} from '#/plugin/blog/resources/blog/editor/components/tool-config.jsx'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T} from 'prop-types'
 import differenceBy from 'lodash/differenceBy'
 import {selectors} from '#/plugin/blog/resources/blog/store'

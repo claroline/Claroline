@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import {actions as formActions} from '#/main/app/content/form/store'
 
 import {makeId} from '#/main/core/scaffolding/id'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {select as workspaceSelect} from '#/main/core/workspace/selectors'
 import {
   PageContainer,

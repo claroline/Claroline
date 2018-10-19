@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import Popover from 'react-bootstrap/lib/Popover'
 
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 import {ColorPicker} from '#/main/core/layout/form/components/field/color-picker.jsx'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'

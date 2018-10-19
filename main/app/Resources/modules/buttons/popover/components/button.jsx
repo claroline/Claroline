@@ -1,7 +1,7 @@
 import React from 'react'
 import omit from 'lodash/omit'
 
-import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {PopoverOverlay} from '#/main/app/overlay/popover/components/overlay'
 
 import {Button as ButtonTypes} from '#/main/app/buttons/prop-types'

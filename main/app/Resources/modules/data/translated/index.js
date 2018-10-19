@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {getLocale} from '#/main/app/intl/locale'
 
 import {TranslatedGroup} from '#/main/core/layout/form/components/group/translated-group'

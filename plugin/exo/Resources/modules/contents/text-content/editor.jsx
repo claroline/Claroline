@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group.jsx'
 import {actions} from './editor'
 

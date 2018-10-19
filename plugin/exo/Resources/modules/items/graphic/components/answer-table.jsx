@@ -5,7 +5,7 @@ import tinycolor from 'tinycolor2'
 import Popover from 'react-bootstrap/lib/Popover'
 import Overlay from 'react-bootstrap/lib/Overlay'
 
-import {transChoice} from '#/main/core/translation'
+import {transChoice} from '#/main/app/intl/translation'
 
 import {SHAPE_RECT} from './../enums'
 

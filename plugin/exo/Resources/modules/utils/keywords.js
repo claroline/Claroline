@@ -1,4 +1,4 @@
-import {tex, transChoice} from '#/main/core/translation'
+import {tex, transChoice} from '#/main/app/intl/translation'
 import {notBlank, number, chain} from '#/main/core/validation'
 
 import {makeId} from './utils'

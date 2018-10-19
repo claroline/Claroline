@@ -1,5 +1,5 @@
-import {trans} from '#/main/core/translation'
-import {isValidDate, displayDate, apiDate} from '#/main/core/scaffolding/date'
+import {trans} from '#/main/app/intl/translation'
+import {isValidDate, displayDate, apiDate} from '#/main/app/intl/date'
 
 import {DateGroup} from '#/main/core/layout/form/components/group/date-group'
 import {DateSearch} from '#/main/app/data/date/components/search'
@@ -37,11 +37,10 @@ const dataType = {
    * Validates input value for a date.
    *
    * @param {string} value
-   * @param {object} options
    *
    * @return {boolean}
    */
-  validate: (value, options = {}) => typeof value === 'string' && isValidDate(value),
+  validate: (value) => typeof value === 'string' && isValidDate(value),
 
   components: {
     form: DateGroup,

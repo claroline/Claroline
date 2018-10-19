@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import classes from 'classnames'
 import Panel from 'react-bootstrap/lib/Panel'
 
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
 import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box.jsx'
@@ -118,8 +118,10 @@ PaperComponent.propTypes = {
     number: T.number.isRequired,
     score: T.number,
     finished: T.bool.isRequired,
-    structure: T.object.isRequired
+    structure: T.object.isRequired,
+    answers: T.array
   }),
+  numbering: T.string,
   showExpectedAnswers: T.bool.isRequired,
   showStatistics: T.bool.isRequired,
   allPapersStatistics: T.bool.isRequired,

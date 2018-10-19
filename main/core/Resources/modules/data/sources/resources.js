@@ -1,7 +1,7 @@
 
 import {ResourceCard} from '#/main/core/resource/data/components/resource-card'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {URL_BUTTON} from '#/main/app/buttons'
 
 import {getTypes} from '#/main/core/resource/utils'

@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
-import {trans, tex} from '#/main/core/translation'
+import {trans, tex} from '#/main/app/intl/translation'
 import {registry} from '#/main/app/modals/registry'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group'

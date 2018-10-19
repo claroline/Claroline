@@ -1,7 +1,7 @@
 import get from 'lodash/get'
 
 import {number} from '#/main/app/intl'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 import {isAuthenticated} from '#/main/core/user/current'
 

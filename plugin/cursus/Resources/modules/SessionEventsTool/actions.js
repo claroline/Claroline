@@ -1,7 +1,7 @@
 import {makeActionCreator} from '#/main/app/store/actions'
 
 import {API_REQUEST, url} from '#/main/app/api'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {
   actions as listActions,
   select as listSelect

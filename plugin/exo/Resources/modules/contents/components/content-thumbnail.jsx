@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import classes from 'classnames'
 
 import {makeSortable} from './../../utils/sortable'
-import {trans, tex} from '#/main/core/translation'
+import {trans, tex} from '#/main/app/intl/translation'
 import {ValidationStatus} from './../../quiz/editor/components/validation-status.jsx'
 import {getContentDefinition} from './../content-types'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'

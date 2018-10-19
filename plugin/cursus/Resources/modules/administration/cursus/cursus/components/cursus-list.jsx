@@ -1,6 +1,6 @@
 import {LINK_BUTTON} from '#/main/app/buttons'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {CursusCard} from '#/plugin/cursus/administration/cursus/cursus/data/components/cursus-card'
 

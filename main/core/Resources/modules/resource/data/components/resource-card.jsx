@@ -2,9 +2,9 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {trans, transChoice} from '#/main/core/translation'
-import {asset} from '#/main/core/scaffolding/asset'
-import {displayDate} from '#/main/core/scaffolding/date'
+import {trans, transChoice} from '#/main/app/intl/translation'
+import {asset} from '#/main/app/config/asset'
+import {displayDate} from '#/main/app/intl/date'
 
 import {DataCard} from '#/main/core/data/components/data-card'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'

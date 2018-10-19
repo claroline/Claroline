@@ -4,7 +4,7 @@ import {Reported} from '#/plugin/blog/resources/blog/moderation/components/repor
 import {UnpublishedPosts} from '#/plugin/blog/resources/blog/moderation/components/unpublished-posts.jsx'
 import {UnpublishedComments} from '#/plugin/blog/resources/blog/moderation/components/unpublished-comments.jsx'
 import {Routes} from '#/main/app/router'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {NavLink} from '#/main/app/router'
 
 const ModerationComponent = () =>

@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {GroupsDisplay} from '#/main/core/data/types/groups/components/display'
 import {GroupsGroup} from '#/main/core/data/types/groups/components/group'

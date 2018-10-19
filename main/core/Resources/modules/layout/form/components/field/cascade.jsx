@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldType} from '#/main/core/layout/form/prop-types'
 import {Select} from '#/main/core/layout/form/components/field/select.jsx'
 

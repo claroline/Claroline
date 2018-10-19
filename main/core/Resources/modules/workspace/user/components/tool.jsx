@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {currentUser} from '#/main/core/user/current'
 import {TabbedPageContainer} from '#/main/core/layout/tabs'
 

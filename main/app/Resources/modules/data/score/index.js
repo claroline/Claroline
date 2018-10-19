@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {chain, number, inRange} from '#/main/core/validation'
 
 import {ScoreForm} from '#/main/app/data/score/components/form'

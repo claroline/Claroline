@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import cloneDeep from 'lodash/cloneDeep'
 
 import {makeId} from '#/main/core/scaffolding/id'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {FormProp} from '#/main/app/content/form/components/prop'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
 

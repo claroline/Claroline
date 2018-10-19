@@ -1,5 +1,5 @@
 import {notBlank, notEmpty, number, gteZero, gtZero, chain, setIfError} from '#/main/core/validation'
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 
 import {getDefinition} from '#/plugin/exo/items/item-types'
 import {getContentDefinition} from '#/plugin/exo/contents/content-types'

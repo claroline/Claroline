@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {line, area} from 'd3-shape'
-import {implementPropTypes} from '#/main/core/scaffolding/prop-types'
+import {implementPropTypes} from '#/main/app/prop-types'
 import {DataSeries as DataSeriesTypes} from '#/main/core/layout/chart/prop-types'
 import {Path} from '#/main/core/layout/chart/line/components/path.jsx'
 

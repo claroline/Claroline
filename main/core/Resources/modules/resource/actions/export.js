@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {DOWNLOAD_BUTTON} from '#/main/app/buttons'
 import {url} from '#/main/app/api'
 

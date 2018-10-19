@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import Popover from 'react-bootstrap/lib/Popover'
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 import {utils} from './utils/utils'
 
 function getPopoverPosition(connectionClass, id){

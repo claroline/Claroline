@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {Event} from '#/plugin/agenda/components/event.jsx'

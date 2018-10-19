@@ -1,6 +1,6 @@
 import angular from 'angular/index'
 
-import {getApiFormat} from '#/main/core/scaffolding/date'
+import {getApiFormat} from '#/main/app/intl/date'
 
 import 'angular-route'
 import 'angular-loading-bar'
@@ -8,7 +8,7 @@ import 'angular-strap'
 import '#/main/core/innova/angular-translation'
 import '#/main/core/api/router/module'
 import '#/main/core/api/authentication/module'
-import '#/main/core/translation/module'
+import '#/main/app/intl/translation/module'
 
 import './dashboards/module'
 import './dashboard/module'

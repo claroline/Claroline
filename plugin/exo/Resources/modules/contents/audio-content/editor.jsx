@@ -1,13 +1,14 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {asset} from '#/main/core/scaffolding/asset'
+import {asset} from '#/main/app/config/asset'
 
 export const AudioContent = (props) =>
   <div className="audio-item-content">
     {(props.item.data || props.item.url) &&
       <audio controls>
-        <source src={(props.item.data && asset(props.item.data)) || (props.item.url && asset(props.item.url)) || ''}
-                type={props.item.type}
+        <source
+          src={(props.item.data && asset(props.item.data)) || (props.item.url && asset(props.item.url)) || ''}
+          type={props.item.type}
         />
       </audio>
     }

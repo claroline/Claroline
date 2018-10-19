@@ -1,7 +1,7 @@
 import {url} from '#/main/app/api'
 import {URL_BUTTON} from '#/main/app/buttons'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {AnnouncementCard} from '#/plugin/announcement/data/components/announcement-card'
 

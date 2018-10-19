@@ -7,7 +7,7 @@ import {select as listSelect} from '#/main/app/content/list/store'
 import {DOWNLOAD_BUTTON} from '#/main/app/buttons'
 import {Routes} from '#/main/app/router'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {
   PageActions,
   MoreAction

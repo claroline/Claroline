@@ -4,7 +4,7 @@ import invariant from 'invariant'
 import {makeId} from '#/main/core/scaffolding/id'
 import {url} from '#/main/app/api'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {MODAL_RESOURCE_EXPLORER} from '#/main/core/resource/modals/explorer'
 

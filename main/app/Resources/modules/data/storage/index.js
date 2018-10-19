@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {StorageGroup} from '#/main/core/layout/form/components/group/storage-group'
 

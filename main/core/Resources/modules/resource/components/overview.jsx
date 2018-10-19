@@ -4,7 +4,7 @@ import classes from 'classnames'
 import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {constants} from '#/main/core/resource/constants'
 import {HtmlText} from '#/main/core/layout/components/html-text'

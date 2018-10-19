@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import {merge} from 'lodash'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {User} from '#/main/core/user/prop-types'
 import {actions} from '#/main/core/user/tracking/store'
 import {ResourceUserEvaluation} from '#/main/core/user/tracking/prop-types'

@@ -4,7 +4,7 @@ import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {Heading} from '#/main/core/layout/components/heading'
 
 import {FormActions} from '#/main/app/content/form/components/actions'

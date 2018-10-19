@@ -1,6 +1,6 @@
 import get from 'lodash/get'
 
-import {asset} from '#/main/core/scaffolding/asset'
+import {asset} from '#/main/app/config/asset'
 
 function computeStyles(widget) {
   const styles = {}

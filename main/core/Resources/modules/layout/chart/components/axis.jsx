@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {select} from 'd3-selection'
 import {axisLeft, axisBottom} from 'd3-axis'
 import {timeDay} from 'd3-time'
-import {dateToDisplayFormat} from '#/main/core/scaffolding/date'
+import {dateToDisplayFormat} from '#/main/app/intl/date'
 
 import {
   AXIS_TYPE_X,

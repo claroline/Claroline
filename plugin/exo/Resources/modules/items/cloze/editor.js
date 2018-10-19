@@ -4,7 +4,7 @@ import invariant from 'invariant'
 
 import {makeActionCreator} from '#/main/app/store/actions'
 import {notBlank} from '#/main/core/validation'
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 
 import {Cloze as component} from './editor.jsx'
 import {makeId} from './../../utils/utils'

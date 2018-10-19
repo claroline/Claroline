@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {withRouter} from '#/main/app/router'
 import {url} from '#/main/app/api'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
 

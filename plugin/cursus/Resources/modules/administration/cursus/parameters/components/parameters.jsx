@@ -6,7 +6,7 @@ import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {actions} from '#/plugin/cursus/administration/cursus/parameters/store'
 import {Parameters as ParametersType} from '#/plugin/cursus/administration/cursus/prop-types'

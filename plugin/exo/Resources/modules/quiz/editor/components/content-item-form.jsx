@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group'
 import {TextGroup} from '#/main/core/layout/form/components/group/text-group'

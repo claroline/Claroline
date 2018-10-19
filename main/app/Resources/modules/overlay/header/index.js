@@ -6,7 +6,7 @@
  * It will be removed when the full app container will be available.
  */
 
-import {bootstrap} from '#/main/app/bootstrap'
+import {bootstrap} from '#/main/app/dom/bootstrap'
 
 import {Header} from '#/main/app/overlay/header/containers/header'
 import {reducer} from '#/main/app/overlay/header/store'

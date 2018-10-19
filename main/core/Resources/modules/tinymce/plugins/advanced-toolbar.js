@@ -1,6 +1,6 @@
 import tinymce from 'tinymce/tinymce'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 /**
  * Finds the advanced toolbar in the rendered theme.

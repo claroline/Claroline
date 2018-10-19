@@ -1,6 +1,8 @@
 {
   "webpack": {
     "entry": {
+      "polyfills": "polyfills",
+      "translator": "intl/translation/browser",
       "header": "overlay/header"
     }
   }

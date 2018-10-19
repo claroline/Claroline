@@ -1,4 +1,4 @@
-import {bootstrap} from '#/main/app/bootstrap'
+import {bootstrap} from '#/main/app/dom/bootstrap'
 
 import {App} from '#/plugin/team/tools/team'
 

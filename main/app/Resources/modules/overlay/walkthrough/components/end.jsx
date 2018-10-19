@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {toKey} from '#/main/core/scaffolding/text/utils'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {Popover} from '#/main/app/overlay/popover/components/popover'

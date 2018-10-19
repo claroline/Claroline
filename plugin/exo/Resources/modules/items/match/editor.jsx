@@ -4,7 +4,7 @@ import Popover from 'react-bootstrap/lib/Popover'
 import classes from 'classnames'
 import get from 'lodash/get'
 
-import {tex, trans} from '#/main/core/translation'
+import {tex, trans} from '#/main/app/intl/translation'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea'
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'

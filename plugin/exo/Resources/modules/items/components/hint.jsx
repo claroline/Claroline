@@ -1,7 +1,7 @@
 import React, {Component}  from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {tex, transChoice} from '#/main/core/translation'
+import {tex, transChoice} from '#/main/app/intl/translation'
 
 class Hint extends Component {
   constructor(props) {

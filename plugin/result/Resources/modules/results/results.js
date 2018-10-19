@@ -4,7 +4,7 @@ import 'ng-file-upload'
 import listTemplate from './list.component.html'
 import controller from './list.component.js'
 import service from './results.service.js'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 angular
   .module('ResultModule', [

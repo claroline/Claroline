@@ -6,7 +6,7 @@ import {Button} from '#/main/app/action/components/button'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {selectors} from '#/main/core/modals/groups/store'
 import {GroupList} from '#/main/core/administration/user/group/components/group-list'
 import {Group as GroupType} from '#/main/core/user/prop-types'

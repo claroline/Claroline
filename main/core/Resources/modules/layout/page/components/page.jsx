@@ -1,8 +1,8 @@
 import React from 'react'
 import classes from 'classnames'
 
-import {asset} from '#/main/core/scaffolding/asset'
-import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
+import {asset} from '#/main/app/config/asset'
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {Page as PageTypes} from '#/main/core/layout/page/prop-types'
 
 const PageWrapper = props => !props.embedded ?

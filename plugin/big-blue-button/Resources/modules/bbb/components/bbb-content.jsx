@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {actions} from '../actions'
 
 class BBBContent extends Component {

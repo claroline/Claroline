@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {Option} from '#/main/core/layout/select-plus/components/option.jsx'
 import {Optgroup}  from '#/main/core/layout/select-plus/components/optgroup.jsx'
 import {searchChoice, filterChoices} from '#/main/core/layout/select-plus/utils'

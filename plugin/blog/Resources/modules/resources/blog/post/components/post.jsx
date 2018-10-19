@@ -8,8 +8,8 @@ import get from 'lodash/get'
 // TODO : remove me
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar'
 
-import {trans, transChoice} from '#/main/core/translation'
-import {displayDate} from '#/main/core/scaffolding/date'
+import {trans, transChoice} from '#/main/app/intl/translation'
+import {displayDate} from '#/main/app/intl/date'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 import {hasPermission} from '#/main/core/resource/permissions'
 import {selectors as resourceSelect} from '#/main/core/resource/store'

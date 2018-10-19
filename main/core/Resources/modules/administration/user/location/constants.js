@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 export const TYPE_DEPARTMENT = 1
 export const TYPE_USER = 2

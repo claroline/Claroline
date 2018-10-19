@@ -1,4 +1,4 @@
-import {bootstrap} from '#/main/app/bootstrap'
+import {bootstrap} from '#/main/app/dom/bootstrap'
 
 import {ScheduledTaskTool} from '#/main/core/administration/scheduled-task/components/tool.jsx'
 import {reducer}           from '#/main/core/administration/scheduled-task/reducer'

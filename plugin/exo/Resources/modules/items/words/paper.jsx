@@ -2,7 +2,7 @@ import React from 'react'
 import classes from 'classnames'
 import {PropTypes as T} from 'prop-types'
 
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 import {Highlight} from './utils/highlight.jsx'
 import {Feedback} from '../components/feedback-btn.jsx'
 import {SolutionScore} from '../components/score.jsx'
@@ -15,12 +15,10 @@ const AnswerTable = (props) => {
       {props.solutions.map(solution =>
         <div
           key={solution.text}
-          className={classes(
-            'word-item answer-item',
-            {
-              'selected-answer': solution.score > 0
-            }
-        )}>
+          className={classes('word-item answer-item', {
+            'selected-answer': solution.score > 0
+          })}
+        >
           <span className="word-label">{solution.text}</span>
           <Feedback
             id={`${solution.text}-feedback`}
@@ -47,12 +45,10 @@ const AnswerStatsTable = (props) => {
       {props.solutions.map(solution =>
         <div
           key={solution.text}
-          className={classes(
-            'word-item answer-item',
-            {
-              'selected-answer': solution.score > 0
-            }
-        )}>
+          className={classes('word-item answer-item', {
+            'selected-answer': solution.score > 0
+          })}
+        >
           <span className="word-label">{solution.text}</span>
           <AnswerStats stats={{
             value: props.stats.words[solution.text] ? props.stats.words[solution.text] : 0,

@@ -8,7 +8,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {getPlainText} from '#/main/app/data/html/utils'
 
-import {tex, trans, transChoice} from '#/main/core/translation'
+import {tex, trans, transChoice} from '#/main/app/intl/translation'
 import {
   PageContainer,
   PageHeader,

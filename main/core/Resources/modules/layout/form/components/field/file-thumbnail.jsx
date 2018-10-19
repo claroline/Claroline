@@ -1,8 +1,8 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {asset} from '#/main/core/scaffolding/asset'
-import {trans} from '#/main/core/translation'
+import {asset} from '#/main/app/config/asset'
+import {trans} from '#/main/app/intl/translation'
 
 const AudioThumbnail = props =>
   <div className="audio-file-thumbnail">

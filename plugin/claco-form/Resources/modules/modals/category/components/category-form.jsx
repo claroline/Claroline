@@ -8,7 +8,7 @@ import omit from 'lodash/omit'
 
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
 import {ColorPicker} from '#/main/core/layout/form/components/field/color-picker.jsx'
 

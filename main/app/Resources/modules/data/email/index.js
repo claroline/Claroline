@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {chain, string, email} from '#/main/core/validation'
 
 import {EmailLink} from '#/main/core/layout/button/components/email-link.jsx'

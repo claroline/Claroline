@@ -1,5 +1,5 @@
 import React from 'react'
-import { implementPropTypes } from '#/main/core/scaffolding/prop-types'
+import { implementPropTypes } from '#/main/app/prop-types'
 import {DataSeries as DataSeriesTypes} from '#/main/core/layout/chart/prop-types'
 
 import {Bar} from '#/main/core/layout/chart/bar/components/bar.jsx'

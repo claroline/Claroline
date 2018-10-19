@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 const SCORM_12 = 'scorm_12'
 const SCORM_2004 = 'scorm_2004'

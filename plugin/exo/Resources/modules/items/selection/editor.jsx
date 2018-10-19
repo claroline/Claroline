@@ -4,7 +4,7 @@ import classes from 'classnames'
 import get from 'lodash/get'
 import Popover from 'react-bootstrap/lib/Popover'
 
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
 

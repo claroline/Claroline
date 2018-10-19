@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {DownloadLink} from '#/main/core/layout/button/components/download-link'
 import {FileGroup} from '#/main/core/layout/form/components/group/file-group'

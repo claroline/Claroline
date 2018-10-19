@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 const POST_EDIT_FORM_NAME = 'post_edit'
 const OPTIONS_EDIT_FORM_NAME = 'blog.data.options'

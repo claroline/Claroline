@@ -14,7 +14,7 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {FormProp} from '#/main/app/content/form/components/prop'
 
 import {currentUser} from '#/main/core/user/current'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'

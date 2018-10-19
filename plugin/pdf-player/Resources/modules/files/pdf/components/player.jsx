@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {PDFJS} from 'pdfjs-dist/build/pdf.combined'
 
-import {transChoice} from '#/main/core/translation'
+import {transChoice} from '#/main/app/intl/translation'
 import {Pdf as PdfTypes} from '#/plugin/pdf-player/files/pdf/prop-types'
 
 class PdfPlayer extends Component {

@@ -9,7 +9,7 @@ import Tab from 'react-bootstrap/lib/Tab'
 import Tabs from 'react-bootstrap/lib/Tabs'
 
 import {param} from '#/main/app/config'
-import {trans}  from '#/main/core/translation'
+import {trans}  from '#/main/app/intl/translation'
 import {PopoverButton} from '#/main/app/buttons/popover/components/button'
 
 import {

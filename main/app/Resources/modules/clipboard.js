@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 function copy(toCopy) {
   let textArea = document.createElement('textarea')

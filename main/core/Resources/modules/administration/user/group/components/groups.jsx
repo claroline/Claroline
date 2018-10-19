@@ -7,7 +7,7 @@ import {actions} from '#/main/core/administration/user/group/actions'
 
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 
 const GroupsList = props =>

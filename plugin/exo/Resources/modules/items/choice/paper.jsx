@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 
 import {SCORE_FIXED, SCORE_RULES} from '#/plugin/exo/quiz/enums'
 import {utils} from '#/plugin/exo/items/choice/utils/utils'

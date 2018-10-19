@@ -1,6 +1,6 @@
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {
   WALKTHROUGH_START,

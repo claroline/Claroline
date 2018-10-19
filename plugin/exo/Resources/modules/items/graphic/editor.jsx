@@ -2,8 +2,8 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
-import {asset} from '#/main/core/scaffolding/asset'
-import {tex} from '#/main/core/translation'
+import {asset} from '#/main/app/config/asset'
+import {tex} from '#/main/app/intl/translation'
 import {makeDroppable} from './../../utils/dragAndDrop'
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
 import {ImageInput} from './components/image-input.jsx'
@@ -179,6 +179,7 @@ export class Graphic extends Component {
             warnOnly={!this.props.validating}
           />
         }
+
         <div className="top-controls">
           <ImageInput onSelect={file => this.onSelectImage(file)}/>
           <ModeSelector
@@ -186,6 +187,7 @@ export class Graphic extends Component {
             onChange={mode => this.props.onChange(actions.selectMode(mode))}
           />
         </div>
+
         {this.props.item._popover.open &&
           <AreaPopover
             left={this.props.item._popover.left}
@@ -211,50 +213,50 @@ export class Graphic extends Component {
           />
         }
 
-          <div className="img-dropzone">
-            <div className="img-widget">
-              <AnswerDropZone onDrop={(item, props, offset) => {
-                if (item.item.type === TYPE_AREA_RESIZER) {
-                  this.props.onChange(
-                    actions.resizeArea(item.item.areaId, item.item.position, offset.x, offset.y)
-                  )
-                } else {
-                  this.props.onChange(actions.moveArea(item.id, offset.x, offset.y))
-                }
-              }}>
-                <div>
-                  <div className="img-container" ref={el => this.imgContainer = el}/>
-                  <ResizeDragLayer
-                    canDrag={!this.props.item._popover.open}
-                    areas={this.props.item.solutions.map(
-                      solution => this.getClientArea(solution.area)
-                    )}
-                  />
-                  {this.props.item.solutions.map(solution =>
-                    <AnswerAreaDraggable
-                      key={solution.area.id}
-                      id={solution.area.id}
-                      color={solution.area.color}
-                      shape={solution.area.shape}
-                      selected={this.props.item._mode === MODE_SELECT && solution._selected}
-                      onSelect={id => this.props.onChange(actions.selectArea(id))}
-                      onDelete={id => this.props.onChange(actions.deleteArea(id))}
-                      canDrag={!this.props.item._popover.open
-                        || this.props.item._popover.areaId !== solution.area.id}
-                      togglePopover={(areaId, left, top) => {
-                        const hasPopover = this.props.item._popover.open
-                          && this.props.item._popover.areaId === solution.area.id
-                        this.props.onChange(
-                          actions.togglePopover(areaId, left, top, !hasPopover)
-                        )
-                      }}
-                      geometry={this.getClientArea(solution.area)}
-                    />
+        <div className="img-dropzone">
+          <div className="img-widget">
+            <AnswerDropZone onDrop={(item, props, offset) => {
+              if (item.item.type === TYPE_AREA_RESIZER) {
+                this.props.onChange(
+                  actions.resizeArea(item.item.areaId, item.item.position, offset.x, offset.y)
+                )
+              } else {
+                this.props.onChange(actions.moveArea(item.id, offset.x, offset.y))
+              }
+            }}>
+              <div>
+                <div className="img-container" ref={el => this.imgContainer = el}/>
+                <ResizeDragLayer
+                  canDrag={!this.props.item._popover.open}
+                  areas={this.props.item.solutions.map(
+                    solution => this.getClientArea(solution.area)
                   )}
-                </div>
-              </AnswerDropZone>
-            </div>
+                />
+                {this.props.item.solutions.map(solution =>
+                  <AnswerAreaDraggable
+                    key={solution.area.id}
+                    id={solution.area.id}
+                    color={solution.area.color}
+                    shape={solution.area.shape}
+                    selected={this.props.item._mode === MODE_SELECT && solution._selected}
+                    onSelect={id => this.props.onChange(actions.selectArea(id))}
+                    onDelete={id => this.props.onChange(actions.deleteArea(id))}
+                    canDrag={!this.props.item._popover.open
+                      || this.props.item._popover.areaId !== solution.area.id}
+                    togglePopover={(areaId, left, top) => {
+                      const hasPopover = this.props.item._popover.open
+                        && this.props.item._popover.areaId === solution.area.id
+                      this.props.onChange(
+                        actions.togglePopover(areaId, left, top, !hasPopover)
+                      )
+                    }}
+                    geometry={this.getClientArea(solution.area)}
+                  />
+                )}
+              </div>
+            </AnswerDropZone>
           </div>
+        </div>
       </div>
     )
   }

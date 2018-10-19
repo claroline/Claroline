@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {RoleList} from '#/main/core/workspace/user/role/components/role-list.jsx'
 

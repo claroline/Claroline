@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
 
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 
 import {NumberGroup} from '#/main/core/layout/form/components/group/number-group.jsx'
 import {RadiosGroup} from '#/main/core/layout/form/components/group/radios-group.jsx'

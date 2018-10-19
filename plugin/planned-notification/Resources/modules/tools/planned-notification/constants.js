@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 const WORKSPACE_REGISTRATION_USER = 'workspace-role-subscribe_user'
 const WORKSPACE_REGISTRATION_GROUP = 'workspace-role-subscribe_group'

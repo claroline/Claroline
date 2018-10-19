@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {constants} from '#/plugin/cursus/administration/cursus/constants'
 import {SessionEvent as SessionEventType} from '#/plugin/cursus/administration/cursus/prop-types'

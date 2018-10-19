@@ -2,7 +2,7 @@ import isEmpty from 'lodash/isEmpty'
 import set from 'lodash/set'
 import moment from 'moment'
 
-import {trans, tval} from '#/main/core/translation'
+import {trans, tval} from '#/main/app/intl/translation'
 import {IPv4} from '#/main/core/scaffolding/ip'
 
 // TODO : break me

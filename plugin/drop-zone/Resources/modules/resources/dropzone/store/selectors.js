@@ -1,7 +1,7 @@
 import {createSelector} from 'reselect'
 
-import {trans} from '#/main/core/translation'
-import {now} from '#/main/core/scaffolding/date'
+import {trans} from '#/main/app/intl/translation'
+import {now} from '#/main/app/intl/date'
 import {currentUser} from '#/main/core/user/current'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 

@@ -3,7 +3,7 @@ import invariant from 'invariant'
 
 import {makeId} from '#/main/core/scaffolding/id'
 import {url} from '#/main/app/api'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {MODAL_TINYMCE_UPLOAD} from '#/main/core/tinymce/modals/upload'
 

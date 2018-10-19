@@ -1,5 +1,5 @@
 import cloneDeep from 'lodash/cloneDeep'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {LINK_BUTTON} from '#/main/app/buttons'
 

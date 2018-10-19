@@ -1,5 +1,5 @@
 import React from 'react'
-import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 
 import merge from 'lodash/merge'
 

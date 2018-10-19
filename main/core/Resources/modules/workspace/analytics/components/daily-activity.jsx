@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {Heading} from '#/main/core/layout/components/heading'
 import {LineChart} from '#/main/core/layout/chart/line/components/line-chart'
 

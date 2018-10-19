@@ -6,7 +6,7 @@ import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {selectors} from '#/plugin/bibliography/resources/book-reference/store'
 

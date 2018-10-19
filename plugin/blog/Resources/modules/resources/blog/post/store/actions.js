@@ -1,7 +1,7 @@
 import {API_REQUEST} from '#/main/app/api'
 import {makeActionCreator} from '#/main/app/store/actions'
 import {constants} from '#/plugin/blog/resources/blog/constants.js'
-import {getApiFormat} from '#/main/core/scaffolding/date'
+import {getApiFormat} from '#/main/app/intl/date'
 import moment from 'moment'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {actions as blogActions} from '#/plugin/blog/resources/blog/store/actions'

@@ -4,7 +4,7 @@ import uniq from 'lodash/uniq'
 
 import {select as quizSelect} from '#/plugin/exo/quiz/selectors'
 
-import {tex, trans} from '#/main/core/translation'
+import {tex, trans} from '#/main/app/intl/translation'
 
 import {TYPE_QUIZ, TYPE_STEP} from './../enums'
 

@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {param} from '#/main/app/config'
 import {currentUser} from '#/main/core/user/current'
 

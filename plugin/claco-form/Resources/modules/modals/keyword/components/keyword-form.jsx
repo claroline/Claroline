@@ -7,7 +7,7 @@ import omit from 'lodash/omit'
 import {url} from '#/main/app/api'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
 import {Keyword as KeywordType} from '#/plugin/claco-form/resources/claco-form/prop-types'

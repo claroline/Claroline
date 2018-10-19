@@ -5,7 +5,7 @@ import {PropTypes as T} from 'prop-types'
 import moment from 'moment'
 
 import {withModal} from '#/main/app/overlay/modal/withModal'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {actions} from '../actions'
 import {selectors} from '../selectors'
 import {registrationTypes, registrationStatus} from '../enums'

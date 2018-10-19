@@ -1,4 +1,4 @@
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 
 // TODO : migrate select options formats
 

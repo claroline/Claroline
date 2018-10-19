@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 const SORT_DISPLAY_OLDER_TO_NEWER = 1
 const SORT_DISPLAY_NEWER_TO_OLDER= -1

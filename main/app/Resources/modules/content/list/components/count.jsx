@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {transChoice} from '#/main/core/translation'
+import {transChoice} from '#/main/app/intl/translation'
 
 const ListCount = props =>
   <div className="count">

@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
 import {makeId} from '#/main/core/scaffolding/id'
-import {trans, transChoice} from '#/main/core/translation'
+import {trans, transChoice} from '#/main/app/intl/translation'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'

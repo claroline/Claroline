@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import classes from 'classnames'
 import has from 'lodash/has'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {Routes, withRouter} from '#/main/app/router'
 import {Heading} from '#/main/core/layout/components/heading'

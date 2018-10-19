@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {transChoice} from '#/main/core/translation'
+import {transChoice} from '#/main/app/intl/translation'
 
 const ScoreBox = props => {
   let userScore = props.score

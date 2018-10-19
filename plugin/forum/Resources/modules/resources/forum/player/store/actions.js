@@ -1,6 +1,6 @@
 import merge from 'lodash/merge'
 
-import {now} from '#/main/core/scaffolding/date'
+import {now} from '#/main/app/intl/date'
 import {currentUser} from '#/main/core/user/current'
 import {makeId} from '#/main/core/scaffolding/id'
 import {makeActionCreator} from '#/main/app/store/actions'

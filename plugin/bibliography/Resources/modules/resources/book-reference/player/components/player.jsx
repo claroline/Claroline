@@ -6,7 +6,7 @@ import {Row, Col} from 'react-bootstrap'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {DetailsData} from '#/main/app/content/details/containers/data'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {selectors} from '#/plugin/bibliography/resources/book-reference/store'
 

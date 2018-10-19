@@ -1,8 +1,8 @@
 import cloneDeep from 'lodash/cloneDeep'
 import shajs from 'sha.js'
 
-import {trans} from '#/main/core/translation'
-import {isValidDate} from '#/main/core/scaffolding/date'
+import {trans} from '#/main/app/intl/translation'
+import {isValidDate} from '#/main/app/intl/date'
 import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
 

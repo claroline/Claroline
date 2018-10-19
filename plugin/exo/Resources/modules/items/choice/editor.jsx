@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import classes from 'classnames'
 
-import {trans, tex} from '#/main/core/translation'
+import {trans, tex} from '#/main/app/intl/translation'
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'

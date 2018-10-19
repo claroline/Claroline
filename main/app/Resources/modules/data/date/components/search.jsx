@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataSearch as DataSearchTypes} from '#/main/app/data/prop-types'
 
 import {CalendarPicker} from '#/main/core/layout/calendar/components/picker.jsx'

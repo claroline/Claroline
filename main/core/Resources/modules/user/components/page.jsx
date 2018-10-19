@@ -1,7 +1,7 @@
 import React from 'react'
 import classes from 'classnames'
 
-import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 
 import {Page as PageTypes} from '#/main/core/layout/page/prop-types'
 import {PageContent, PageContainer} from '#/main/core/layout/page'

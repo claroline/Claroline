@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {DateGroup} from '#/main/core/layout/form/components/group/date-group'
 
 const Search = props =>

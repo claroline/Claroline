@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {ChoiceGroup} from '#/main/core/layout/form/components/group/choice-group'
 import {ChoiceSearch} from '#/main/app/data/choice/components/search'

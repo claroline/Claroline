@@ -6,7 +6,7 @@ import {selectors as formSelectors} from '#/main/app/content/form/store/selector
 import {FormData} from '#/main/app/content/form/containers/data'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {select as workspaceSelect} from '#/main/core/workspace/selectors'
 
 import {selectors} from '#/plugin/team/tools/team/store'

@@ -5,7 +5,7 @@ import isEmpty from 'lodash/isEmpty'
 // todo : remove me
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {withRouter} from '#/main/app/router'

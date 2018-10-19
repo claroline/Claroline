@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import {withRouter} from 'react-router-dom'
 import classes from 'classnames'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {actions} from '../actions'
 
 class CompetencyView extends Component {
@@ -109,14 +109,11 @@ class CompetencyView extends Component {
                   <div className="level">
                     {this.props.competencies && [...Array(this.props.competencies[this.props.competency.id].nbLevels)].map((x, index) =>
                       <span
-                          key={index}
-                          className={classes(
-                            'level-icon',
-                            {
-                              'current-level-icon': this.props.currentLevel === index,
-                              'extra-level': !this.isRequiredLevel(this.props.competencies[this.props.competency.id], index)
-                            }
-                          )}
+                        key={index}
+                        className={classes('level-icon', {
+                          'current-level-icon': this.props.currentLevel === index,
+                          'extra-level': !this.isRequiredLevel(this.props.competencies[this.props.competency.id], index)
+                        })}
                       >
                         <i
                           className={`

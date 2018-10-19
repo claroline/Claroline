@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {
   createListDefinition,
@@ -36,27 +36,27 @@ const TreeDataItemContent = props =>
     'data-tree-leaf': !props.hasChildren
   })}>
     {props.hasChildren &&
-    <button
-      type="button"
-      className="btn btn-tree-toggle"
-      onClick={props.toggle}
-    >
+      <button
+        type="button"
+        className="btn btn-tree-toggle"
+        onClick={props.toggle}
+      >
         <span className={classes('fa fa-fw', {
           'fa-plus': !props.expanded,
           'fa-minus': props.expanded
         })} />
-    </button>
+      </button>
     }
 
     <div className="data-tree-item-content">
       <div className="data-tree-item-label">
         {props.onSelect &&
-        <input
-          type="checkbox"
-          className="data-tree-item-select"
-          checked={props.selected}
-          onChange={props.onSelect}
-        />
+          <input
+            type="checkbox"
+            className="data-tree-item-select"
+            checked={props.selected}
+            onChange={props.onSelect}
+          />
         }
 
         <ListPrimaryAction
@@ -66,7 +66,7 @@ const TreeDataItemContent = props =>
         >
           {props.computedData.title}
           {props.computedData.subtitle &&
-          <small key="item-subtitle">{props.computedData.subtitle}</small>
+            <small key="item-subtitle">{props.computedData.subtitle}</small>
           }
         </ListPrimaryAction>
 
@@ -86,10 +86,10 @@ const TreeDataItemContent = props =>
       </div>
 
       {0 < props.actions.length &&
-      <ListActions
-        id={`actions-${props.data.id}`}
-        actions={props.actions}
-      />
+        <ListActions
+          id={`actions-${props.data.id}`}
+          actions={props.actions}
+        />
       }
 
       {props.connectDragSource && props.connectDragSource(
@@ -250,10 +250,10 @@ class TreeData extends Component {
               className="btn btn-tree-toggle"
               onClick={() => true}
             >
-                <span className={classes('fa fa-fw', {
-                  'fa-plus': !this.state.expanded,
-                  'fa-minus': this.state.expanded
-                })} />
+              <span className={classes('fa fa-fw', {
+                'fa-plus': !this.state.expanded,
+                'fa-minus': this.state.expanded
+              })} />
             </button>
 
             {this.props.selection &&
@@ -289,8 +289,8 @@ class TreeData extends Component {
                 selected={this.props.selection ? this.props.selection.current : []}
                 onSelect={
                   this.props.selection ? () => {
-                      this.props.selection.toggle(row, !isRowSelected(row, this.props.selection ? this.props.selection.current : []))
-                    }: undefined
+                    this.props.selection.toggle(row, !isRowSelected(row, this.props.selection ? this.props.selection.current : []))
+                  } : undefined
                 }
                 card={this.props.card}
 

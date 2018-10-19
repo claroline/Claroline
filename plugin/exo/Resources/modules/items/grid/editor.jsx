@@ -5,7 +5,7 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import Overlay from 'react-bootstrap/lib/Overlay'
 
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
 import {Radios} from '#/main/core/layout/form/components/field/radios.jsx'
 import {SUM_CELL, SUM_COL, SUM_ROW, actions} from './editor'
@@ -400,7 +400,8 @@ GridTable.propTypes = {
   removeRow: T.func.isRequired,
   removeColumn: T.func.isRequired,
   openPopover: T.func.isRequired,
-  closePopover: T.func.isRequired
+  closePopover: T.func.isRequired,
+  onChange: T.func.isRequired
 }
 
 const Grid = props =>

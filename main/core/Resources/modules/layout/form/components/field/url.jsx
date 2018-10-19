@@ -1,8 +1,8 @@
 import React from 'react'
 import classes from 'classnames'
 
-import {trans} from '#/main/core/translation'
-import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
+import {trans} from '#/main/app/intl/translation'
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {copy} from '#/main/app/clipboard'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T} from 'prop-types'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'

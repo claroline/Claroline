@@ -1,9 +1,9 @@
 import React from 'react'
 import classes from 'classnames'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
-import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, MENU_BUTTON} from '#/main/app/buttons'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'

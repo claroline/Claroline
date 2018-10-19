@@ -4,7 +4,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {url} from '#/main/app/api'
 import {Toolbar} from '#/main/app/overlay/toolbar/components/toolbar'
 import {ASYNC_BUTTON, CALLBACK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'

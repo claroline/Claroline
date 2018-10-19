@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {url} from '#/main/app/api'
 import {PropTypes as T} from 'prop-types'
 import {selectors} from '#/plugin/blog/resources/blog/store'

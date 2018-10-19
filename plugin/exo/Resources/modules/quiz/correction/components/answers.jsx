@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import classes from 'classnames'
 
-import {trans, tex} from '#/main/core/translation'
+import {trans, tex} from '#/main/app/intl/translation'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {actions} from './../actions'
 import {selectors as correctionSelectors} from './../selectors'

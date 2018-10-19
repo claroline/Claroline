@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import classes from 'classnames'
 
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 import {select} from '../selectors'
 import {Feedback} from '../../components/feedback-btn.jsx'
 import {SolutionScore} from '../../components/score.jsx'

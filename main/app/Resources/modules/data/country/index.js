@@ -1,4 +1,4 @@
-import {trans, tval} from '#/main/core/translation'
+import {trans, tval} from '#/main/app/intl/translation'
 import {chain, string} from '#/main/core/validation'
 
 import {constants as intlConstants} from '#/main/app/intl/constants'

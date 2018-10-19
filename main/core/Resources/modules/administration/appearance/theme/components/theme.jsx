@@ -6,7 +6,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import isEmpty from 'lodash/isEmpty'
 import set from 'lodash/set'
 
-import {trans, transChoice} from '#/main/core/translation'
+import {trans, transChoice} from '#/main/app/intl/translation'
 
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 

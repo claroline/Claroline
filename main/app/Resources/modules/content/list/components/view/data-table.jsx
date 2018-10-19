@@ -4,7 +4,7 @@ import get from 'lodash/get'
 import merge from 'lodash/merge'
 import isEmpty from 'lodash/isEmpty'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {Await} from '#/main/app/components/await'
 import {getType} from '#/main/app/data'
 import {getPrimaryAction, getActions, isRowSelected} from '#/main/app/content/list/utils'

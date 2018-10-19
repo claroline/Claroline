@@ -7,7 +7,7 @@
  * (only the component will be kept)
  */
 
-import {bootstrap} from '#/main/app/bootstrap'
+import {bootstrap} from '#/main/app/dom/bootstrap'
 import {makeReducer} from '#/main/app/store/reducer'
 
 import {AdministrationToolbar} from '#/main/core/administration/components/toolbar'

@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {stripDiacritics} from '#/main/core/scaffolding/text/strip-diacritics'
 import {clone} from 'lodash'
 

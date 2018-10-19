@@ -4,7 +4,7 @@ import classes from 'classnames'
 
 import {Button as ButtonTypes} from '#/main/app/buttons/prop-types'
 import {Button} from '#/main/app/action'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {Redirect as RedirectTypes} from '#/main/app/router/prop-types'
 import {Router, Routes, NavLink, withRouter} from '#/main/app/router'
 

@@ -4,7 +4,7 @@ import {url} from '#/main/app/api'
 import {number} from '#/main/app/intl'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 const action = (resourceNodes, nodesRefresher) => ({
   name: 'publish',

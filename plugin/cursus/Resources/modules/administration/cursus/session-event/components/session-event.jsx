@@ -11,7 +11,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {MODAL_DATA_LIST} from '#/main/app/modals/list'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {SessionEvent as SessionEventType} from '#/plugin/cursus/administration/cursus/prop-types'
 import {SessionList} from '#/plugin/cursus/administration/cursus/session/components/session-list'

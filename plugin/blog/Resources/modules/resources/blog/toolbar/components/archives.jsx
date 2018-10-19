@@ -6,8 +6,8 @@ import isEmpty from 'lodash/isEmpty'
 // todo : use claroline abstraction instead
 import moment from 'moment'
 
-import {getApiFormat} from '#/main/core/scaffolding/date'
-import {trans} from '#/main/core/translation'
+import {getApiFormat} from '#/main/app/intl/date'
+import {trans} from '#/main/app/intl/translation'
 import {actions as listActions} from '#/main/app/content/list/store'
 import {actions as postActions} from '#/plugin/blog/resources/blog/post/store'
 import {Section, Sections} from '#/main/core/layout/components/sections'

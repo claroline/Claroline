@@ -2,7 +2,7 @@ import {connect as baseConnect} from 'react-redux'
 import invariant from 'invariant'
 import isEqual from 'lodash/isEqual'
 
-import {trans, transChoice} from '#/main/core/translation'
+import {trans, transChoice} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {actions as listActions} from '#/main/app/content/list/store/actions'

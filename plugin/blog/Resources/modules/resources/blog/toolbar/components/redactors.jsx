@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {UrlButton} from '#/main/app/buttons/url/components/button'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 import {selectors} from '#/plugin/blog/resources/blog/store'

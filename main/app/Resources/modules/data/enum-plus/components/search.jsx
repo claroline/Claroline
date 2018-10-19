@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataSearch as DataSearchTypes} from '#/main/app/data/prop-types'
 import {Select} from '#/main/core/layout/select-plus/components/select.jsx'
 

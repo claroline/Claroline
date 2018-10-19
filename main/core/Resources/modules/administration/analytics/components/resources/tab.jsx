@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {schemeCategory20c} from 'd3-scale'
 import {Grid, Row, Col} from 'react-bootstrap'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {PieChart} from '#/main/core/layout/chart/pie/components/pie-chart.jsx'
 import {actions} from '#/main/core/administration/analytics/actions'
 import {DashboardTable, DashboardCard} from '#/main/core/layout/dashboard/index'

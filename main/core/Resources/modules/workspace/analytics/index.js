@@ -1,4 +1,4 @@
-import {bootstrap} from '#/main/app/bootstrap'
+import {bootstrap} from '#/main/app/dom/bootstrap'
 
 import {DashboardTool} from '#/main/core/workspace/analytics/components/tool'
 import {reducer} from '#/main/core/workspace/analytics/reducer'

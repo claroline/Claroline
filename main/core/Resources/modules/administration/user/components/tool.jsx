@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {TabbedPageContainer} from '#/main/core/layout/tabs'
 import {currentUser} from '#/main/core/user/current'
 import {isAdmin} from  '#/main/core/workspace/user/restrictions'

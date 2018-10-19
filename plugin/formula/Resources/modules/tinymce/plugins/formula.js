@@ -1,7 +1,7 @@
 import tinymce from 'tinymce/tinymce'
 
 import {url} from '#/main/app/api'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 const buildFrame = editor => {
   let currentNode = editor.selection.getNode()

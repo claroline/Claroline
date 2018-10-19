@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 
 const FontSize = props =>

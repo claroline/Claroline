@@ -1,11 +1,13 @@
+/* eslint-ignore react/no-string-refs, react/no-find-dom-node, react/no-string-refs */
+
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
 import classes from 'classnames'
 import uniqueId from 'lodash/uniqueId'
 import Overlay from 'react-bootstrap/lib/Overlay'
 
-import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
-import {trans} from '#/main/core/translation'
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
+import {trans} from '#/main/app/intl/translation'
 import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
 
 import {Calendar} from '#/main/core/layout/calendar/components/calendar.jsx'
@@ -48,7 +50,7 @@ class CalendarPicker extends Component {
   }
 
   toggle() {
-    this.setState({ open: !this.state.open });
+    this.setState({ open: !this.state.open })
   }
 
   onChange(value) {

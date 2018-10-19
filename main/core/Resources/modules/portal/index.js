@@ -1,4 +1,4 @@
-import {bootstrap} from '#/main/app/bootstrap'
+import {bootstrap} from '#/main/app/dom/bootstrap'
 
 import {reducer} from '#/main/core/portal/reducer'
 import {Portal} from '#/main/core/portal/components/portal'

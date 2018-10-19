@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 import {DataCardHeader} from '#/main/core/data/components/data-card'
 import {LineChart} from '#/main/core/layout/chart/line/components/line-chart'

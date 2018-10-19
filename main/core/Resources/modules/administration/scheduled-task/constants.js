@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 const TASK_TYPE_MAIL = 'email'
 const TASK_TYPE_MESSAGE = 'message'

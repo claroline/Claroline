@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {URL_BUTTON} from '#/main/app/buttons'
 import {ResourceExplorer} from '#/main/core/resource/explorer/containers/explorer'
 import {getActions} from '#/main/core/resource/utils'

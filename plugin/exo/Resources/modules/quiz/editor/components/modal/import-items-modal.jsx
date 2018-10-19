@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import omit from 'lodash/omit'
 
-import {tex, trans} from '#/main/core/translation'
+import {tex, trans} from '#/main/app/intl/translation'
 import {API_REQUEST, url} from '#/main/app/api'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {registry} from '#/main/app/modals/registry'

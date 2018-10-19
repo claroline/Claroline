@@ -1,6 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {displayDate} from '#/main/core/scaffolding/date'
+import {displayDate} from '#/main/app/intl/date'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 
 const Version = props =>

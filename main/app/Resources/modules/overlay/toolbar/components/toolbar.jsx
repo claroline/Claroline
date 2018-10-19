@@ -10,7 +10,7 @@ import {ModalOverlay} from '#/main/app/overlay/modal/containers/overlay'
 import {AlertOverlay} from '#/main/app/overlay/alert/containers/overlay'
 import {WalkthroughOverlay} from '#/main/app/overlay/walkthrough/containers/overlay'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {toKey} from '#/main/core/scaffolding/text/utils'
 import {Button} from '#/main/app/action/components/button'
 import {MENU_BUTTON, URL_BUTTON} from '#/main/app/buttons'

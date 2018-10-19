@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {TabbedPageContainer} from '#/main/core/layout/tabs'
 import {LogTab, LogTabActions} from '#/main/core/workspace/logs/log/components/log-tab'
 import {ConnectionTab, ConnectionTabActions} from '#/main/core/workspace/logs/connection/components/connection-tab'

@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import get from 'lodash/get'
 
 import {theme} from '#/main/app/config'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {Await} from '#/main/app/components/await'
 import {FormData} from '#/main/app/content/form/containers/data'
 

@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import Panel from 'react-bootstrap/lib/Panel'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {getContentDefinition} from './../../../contents/content-types'
 
 const ContentHeaderPreview = props =>

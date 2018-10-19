@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {number, fileSize} from '#/main/app/intl'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {CountGauge} from '#/main/core/layout/gauge/components/count-gauge'
 
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'

@@ -4,7 +4,7 @@ import classes from 'classnames'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {Page} from '#/main/app/page/components/page'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 

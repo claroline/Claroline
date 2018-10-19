@@ -5,7 +5,7 @@ import classes from 'classnames'
 import isEqual from 'lodash/isEqual'
 import uniq from 'lodash/uniq'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 
 // todo : enhance implementation (make it more generic)

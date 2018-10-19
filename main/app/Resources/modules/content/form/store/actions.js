@@ -3,7 +3,7 @@ import set from 'lodash/set'
 
 import {makeInstanceAction, makeInstanceActionCreator} from '#/main/app/store/actions'
 
-import {tval} from '#/main/core/translation'
+import {tval} from '#/main/app/intl/translation'
 import {API_REQUEST} from '#/main/app/api'
 import {actions as alertActions} from '#/main/app/overlay/alert/store'
 import {constants as alertConstants} from '#/main/app/overlay/alert/constants'

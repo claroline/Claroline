@@ -1,4 +1,4 @@
-import {bootstrap} from '#/main/app/bootstrap'
+import {bootstrap} from '#/main/app/dom/bootstrap'
 
 import {reducer} from '#/main/core/workspace/list/reducer'
 import {Workspaces} from '#/main/core/workspace/list/components/list.jsx'

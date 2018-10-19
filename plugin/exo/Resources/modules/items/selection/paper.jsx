@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 
 import {PaperTabs} from '../components/paper-tabs.jsx'
 import {SelectionText} from './utils/selection-text.jsx'

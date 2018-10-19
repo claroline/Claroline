@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 export const registrationTypes = [
   trans('event_registration_automatic', {}, 'cursus'),

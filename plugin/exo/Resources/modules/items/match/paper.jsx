@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 import Tab from 'react-bootstrap/lib/Tab'
 import Nav from 'react-bootstrap/lib/Nav'
 import Popover from 'react-bootstrap/lib/Popover'

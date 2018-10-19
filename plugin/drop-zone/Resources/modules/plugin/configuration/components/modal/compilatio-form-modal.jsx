@@ -5,7 +5,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {TextGroup}  from '#/main/core/layout/form/components/group/text-group.jsx'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 
 import {actions} from '#/plugin/drop-zone/plugin/configuration/actions'

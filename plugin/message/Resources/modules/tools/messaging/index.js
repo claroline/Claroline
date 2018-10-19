@@ -1,6 +1,6 @@
 import {Messaging} from '#/plugin/message/tools/messaging/components/messaging'
 
-import {bootstrap} from '#/main/app/bootstrap'
+import {bootstrap} from '#/main/app/dom/bootstrap'
 
 import {reducer} from '#/plugin/message/tools/messaging/store'
 

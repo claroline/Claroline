@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 import {SummarizedContent} from '#/main/app/content/summary/components/content'
 import {LINK_BUTTON} from '#/main/app/buttons'

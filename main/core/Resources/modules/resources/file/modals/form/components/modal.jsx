@@ -5,7 +5,7 @@ import omit from 'lodash/omit'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {FormData} from '#/main/app/content/form/components/data'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {selectors} from '#/main/core/resources/file/modals/form/store'
 

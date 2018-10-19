@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import { implementPropTypes } from '#/main/core/scaffolding/prop-types'
+import { implementPropTypes } from '#/main/app/prop-types'
 import {Chart as ChartTypes} from '#/main/core/layout/chart/prop-types'
 import {Chart} from '#/main/core/layout/chart/components/chart.jsx'
 import {DataSeries} from '#/main/core/layout/chart/pie/components/data-series.jsx'

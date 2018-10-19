@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import classes from 'classnames'
 
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
@@ -21,9 +21,9 @@ class Item extends Component {
   render(){
     return(
       <div className={classes(
-          'answer-item choice-item',
-          this.props.choice._score > 0 ? 'expected-answer' : 'unexpected-answer'
-        )}>
+        'answer-item choice-item',
+        this.props.choice._score > 0 ? 'expected-answer' : 'unexpected-answer'
+      )}>
         <div className="text-fields">
           <Textarea
             id={`choice-${this.props.choice.id}-data`}
@@ -88,10 +88,12 @@ const Boolean = props => {
         </button>
         <ul className="dropdown-menu" aria-labelledby={`choice-drop-down-${props.item.id}`}>
           {utils.getDefaultPairs().map((pair, index) =>
-            <li key={`pair-${index}`}
+            <li
+              key={`pair-${index}`}
               onClick={() => props.onChange(
-              actions.updateChoices(pair)
-            )}>
+                actions.updateChoices(pair)
+              )}
+            >
               <a role="menuitem">{`${pair.labelA} / ${pair.labelB}`}</a>
             </li>
           )}

@@ -9,7 +9,7 @@ import Panel from 'react-bootstrap/lib/Panel'
 import {Metadata as ItemMetadata} from './../../../items/components/metadata.jsx'
 import {NUMBERING_NONE} from './../../../quiz/enums'
 import {getNumbering} from './../../../utils/numbering'
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 
 const Statistics = props =>
   <div>
@@ -50,6 +50,8 @@ const Statistics = props =>
   </div>
 
 Statistics.propTypes = {
+  numbering: T.string,
+  allPapersStatistics: T.bool,
   papers: T.object.isRequired,
   steps: T.object.isRequired,
   items: T.object.isRequired,

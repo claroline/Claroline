@@ -1,8 +1,8 @@
 import React from 'react'
 import classes from 'classnames'
 
-import {trans} from '#/main/core/translation'
-import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
+import {trans} from '#/main/app/intl/translation'
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DropdownButton, MenuItem} from '#/main/core/layout/components/dropdown'
 import {Checkbox} from '#/main/core/layout/form/components/field/checkbox'
 

@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 class Option extends Component {
   constructor(props) {

@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {asset} from '#/main/core/scaffolding/asset'
+import {asset} from '#/main/app/config/asset'
 import {DataCard} from '#/main/core/data/components/data-card'
 
 import {Course as CourseType} from '#/plugin/cursus/administration/cursus/prop-types'

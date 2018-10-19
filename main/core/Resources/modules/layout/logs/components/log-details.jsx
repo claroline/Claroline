@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import {Row, Col} from 'react-bootstrap'
 import {isArray} from 'lodash'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 
 const DetailsField = (props) =>

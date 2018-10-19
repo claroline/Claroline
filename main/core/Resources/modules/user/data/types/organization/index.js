@@ -1,6 +1,6 @@
 import {OrganizationGroup} from '#/main/core/user/data/types/organization/components/form-group'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 const dataType = {
   name: 'organization',

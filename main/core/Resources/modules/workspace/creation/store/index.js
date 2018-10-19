@@ -1,4 +1,4 @@
-import {combineReducers} from '#/main/core/scaffolding/reducer'
+import {combineReducers} from '#/main/app/store/reducer'
 import {reducer as logReducer} from '#/main/core/workspace/creation/components/log/reducer'
 
 

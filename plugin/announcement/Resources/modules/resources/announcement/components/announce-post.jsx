@@ -2,8 +2,8 @@ import React from 'react'
 import classes from 'classnames'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {trans} from '#/main/core/translation'
-import {displayDate} from '#/main/core/scaffolding/date'
+import {trans} from '#/main/app/intl/translation'
+import {displayDate} from '#/main/app/intl/date'
 
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {Button} from '#/main/app/action/components/button'

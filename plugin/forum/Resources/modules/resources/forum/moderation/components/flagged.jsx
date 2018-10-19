@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {Routes} from '#/main/app/router'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {FlaggedMessages} from '#/plugin/forum/resources/forum/moderation/components/flagged-messages'
 import {FlaggedSubjects} from '#/plugin/forum/resources/forum/moderation/components/flagged-subjects'

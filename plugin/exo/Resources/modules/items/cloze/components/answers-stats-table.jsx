@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import {AnswerStats} from './../../components/stats.jsx'
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 import {utils} from './../utils/utils'
 
 const AnswerStatsTable = props =>

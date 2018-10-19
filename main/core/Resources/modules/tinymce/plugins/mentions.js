@@ -3,8 +3,8 @@ import invariant from 'invariant'
 import tinymce from 'tinymce/tinymce'
 
 import {url} from '#/main/app/api'
-import {trans} from '#/main/core/translation'
-import {asset} from '#/main/core/scaffolding/asset'
+import {trans} from '#/main/app/intl/translation'
+import {asset} from '#/main/app/config/asset'
 
 const AutoComplete = function (editor) {
   this.editor = editor

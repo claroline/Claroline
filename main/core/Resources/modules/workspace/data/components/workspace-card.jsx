@@ -1,8 +1,8 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {trans} from '#/main/core/translation'
-import {asset} from '#/main/core/scaffolding/asset'
+import {trans} from '#/main/app/intl/translation'
+import {asset} from '#/main/app/config/asset'
 
 import {DataCard} from '#/main/core/data/components/data-card'
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'

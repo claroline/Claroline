@@ -4,7 +4,7 @@ import get from 'lodash/get'
 import sum from 'lodash/sum'
 import times from 'lodash/times'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 const WidgetForm = props =>

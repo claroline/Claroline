@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 import {Feedback} from '../components/feedback-btn.jsx'
 import {SolutionScore} from '../components/score.jsx'
 import {AnswerStats} from '../components/stats.jsx'
@@ -22,15 +22,15 @@ export const BooleanPaper = props => {
           {props.item.solutions.map(solution =>
             <div key={solution.id} className="col-md-6">
               <div className={classes(
-                  'answer-item choice-item',
-                  utils.getAnswerClass(solution, props.answer)
-                )}>
+                'answer-item choice-item',
+                utils.getAnswerClass(solution, props.answer)
+              )}>
                 {solution.id === props.answer &&
                   <WarningIcon className="pull-left" valid={solution.score > 0}/>
                 }
 
                 {solution.id === props.answer &&
-                <span className="pull-right">
+                  <span className="pull-right">
                     <Feedback
                       id={`${solution.id}-feedback`}
                       feedback={solution.feedback}
@@ -52,10 +52,9 @@ export const BooleanPaper = props => {
           {props.item.solutions.map(solution =>
             <div key={solution.id} className="col-md-6">
               <div className={classes(
-                  'answer-item choice-item',
-                   solution.score > 0 ? 'selected-answer' : null
-                )}>
-
+                'answer-item choice-item',
+                solution.score > 0 ? 'selected-answer' : null
+              )}>
                 <span className="pull-right">
                   <Feedback
                     id={`${solution.id}-feedback`}
@@ -77,10 +76,9 @@ export const BooleanPaper = props => {
           {props.item.solutions.map(solution =>
             <div key={solution.id} className="col-md-4">
               <div className={classes(
-                  'answer-item choice-item',
-                   solution.score > 0 ? 'selected-answer' : null
-                )}>
-
+                'answer-item choice-item',
+                solution.score > 0 ? 'selected-answer' : null
+              )}>
                 <span className="pull-right">
                   <AnswerStats stats={{
                     value: props.stats.choices[solution.id] ? props.stats.choices[solution.id] : 0,

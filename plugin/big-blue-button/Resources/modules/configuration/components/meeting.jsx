@@ -1,6 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {trans, t} from '#/main/core/translation'
+import {trans, t} from '#/main/app/intl/translation'
 
 export const Meeting = props =>
   <div className="bbb-meeting panel panel-default">

@@ -4,7 +4,7 @@ import zipObject from 'lodash/zipObject'
 import set from 'lodash/set'
 
 import {makeActionCreator} from '#/main/app/store/actions'
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 import {notBlank} from '#/main/core/validation'
 
 import {ITEM_CREATE} from './../../quiz/editor/actions'

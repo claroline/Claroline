@@ -4,7 +4,7 @@ import classes from 'classnames'
 import tinycolor from 'tinycolor2'
 import {SHAPE_RECT} from './../enums'
 import {AnswerStats} from './../../components/stats.jsx'
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 
 export const AnswerStatsTable = props =>
   <div className="answers-table">

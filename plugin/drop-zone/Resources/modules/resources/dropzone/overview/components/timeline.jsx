@@ -2,8 +2,8 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {displayDate} from '#/main/core/scaffolding/date'
-import {trans} from '#/main/core/translation'
+import {displayDate} from '#/main/app/intl/date'
+import {trans} from '#/main/app/intl/translation'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 
 // todo display period dates

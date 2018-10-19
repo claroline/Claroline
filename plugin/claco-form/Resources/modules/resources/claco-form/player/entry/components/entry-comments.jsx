@@ -8,7 +8,7 @@ import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 
 import {currentUser} from '#/main/core/user/current'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {UserMessage} from '#/main/core/user/message/components/user-message'
 import {UserMessageForm} from '#/main/core/user/message/components/user-message-form'
 

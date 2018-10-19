@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {makeId} from '#/main/core/scaffolding/id'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {SelectInput} from '#/main/core/layout/form/components/field/select-input.jsx'
 
 const EntryDataList = props =>

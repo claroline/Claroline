@@ -1,5 +1,5 @@
 import {makeReducer} from '#/main/app/store/reducer'
-import {getApiFormat} from '#/main/core/scaffolding/date'
+import {getApiFormat} from '#/main/app/intl/date'
 
 import {update, makeId} from './../../utils/utils'
 import {isQuestionType} from './../../items/item-types'

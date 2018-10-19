@@ -1,14 +1,14 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {asset} from '#/main/core/scaffolding/asset'
+import {asset} from '#/main/app/config/asset'
 import {POINTER_CORRECT, POINTER_WRONG, SHAPE_RECT} from './enums'
 import {findArea} from './player'
 import {PaperTabs} from '../components/paper-tabs.jsx'
 import {PointableImage} from './components/pointable-image.jsx'
 import {AnswerTable} from './components/answer-table.jsx'
 import {AnswerStatsTable} from './components/answer-stats-table.jsx'
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 
 export const GraphicPaper = props => {
   const pointedAreas = props.item.solutions

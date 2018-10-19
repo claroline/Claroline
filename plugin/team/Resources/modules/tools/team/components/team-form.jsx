@@ -9,7 +9,7 @@ import {ListData} from '#/main/app/content/list/containers/data'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {MODAL_DATA_LIST} from '#/main/app/modals/list'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {select as workspaceSelect} from '#/main/core/workspace/selectors'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {UserList} from '#/main/core/administration/user/user/components/user-list'

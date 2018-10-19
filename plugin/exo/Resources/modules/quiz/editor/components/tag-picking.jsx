@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
 
-import {trans, tex} from '#/main/core/translation'
+import {trans, tex} from '#/main/app/intl/translation'
 
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
 import {ContentHelp} from '#/main/app/content/components/help'

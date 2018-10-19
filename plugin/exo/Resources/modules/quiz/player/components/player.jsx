@@ -13,7 +13,7 @@ import {Timer} from '#/main/core/layout/gauge/components/timer'
 import {ProgressBar} from '#/main/core/layout/components/progress-bar'
 import {ScoreGauge} from '#/main/core/layout/evaluation/components/score-gauge'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {getDefinition, isQuestionType} from '#/plugin/exo/items/item-types'
 import {getContentDefinition} from '#/plugin/exo/contents/content-types'
 import selectQuiz from '#/plugin/exo/quiz/selectors'

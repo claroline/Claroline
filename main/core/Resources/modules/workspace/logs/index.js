@@ -1,4 +1,4 @@
-import {bootstrap} from '#/main/app/bootstrap'
+import {bootstrap} from '#/main/app/dom/bootstrap'
 
 import {LogTool} from '#/main/core/workspace/logs/components/tool'
 import {reducer} from '#/main/core/workspace/logs/reducer'

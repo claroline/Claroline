@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {PLATFORM_ROLE} from '#/main/core/user/role/constants'
 

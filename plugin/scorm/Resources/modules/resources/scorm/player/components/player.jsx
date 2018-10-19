@@ -4,8 +4,8 @@ import {connect} from 'react-redux'
 
 import {SummarizedContent} from '#/main/app/content/summary/components/content'
 
-import {trans} from '#/main/core/translation'
-import {asset} from '#/main/core/scaffolding/asset'
+import {trans} from '#/main/app/intl/translation'
+import {asset} from '#/main/app/config/asset'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 
 import {Scorm as ScormType, Sco as ScoType} from '#/plugin/scorm/resources/scorm/prop-types'

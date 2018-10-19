@@ -1,4 +1,4 @@
-import {bootstrap} from '#/main/app/bootstrap'
+import {bootstrap} from '#/main/app/dom/bootstrap'
 
 import {reducer} from '#/plugin/agenda/reducer'
 import {Agenda} from '#/plugin/agenda/components/agenda.jsx'

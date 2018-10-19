@@ -6,7 +6,7 @@ import isEmpty from 'lodash/isEmpty'
 import Panel from 'react-bootstrap/lib/Panel'
 import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 
-import {tex, trans} from '#/main/core/translation'
+import {tex, trans} from '#/main/app/intl/translation'
 import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {makeItemPanelKey, makeStepPropPanelKey} from './../../../utils/utils'

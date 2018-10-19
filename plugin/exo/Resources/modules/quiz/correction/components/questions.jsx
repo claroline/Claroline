@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 import {selectors as correctionSelectors} from './../selectors'
 import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
 

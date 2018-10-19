@@ -1,7 +1,7 @@
 import React from 'react'
 import classes from 'classnames'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {MODAL_BUTTON} from '#/main/app/buttons'
 
 import {getSimpleAccessRule, hasCustomRules} from '#/main/core/resource/rights'

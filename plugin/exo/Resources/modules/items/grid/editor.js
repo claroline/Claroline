@@ -7,7 +7,7 @@ import {ITEM_CREATE} from './../../quiz/editor/actions'
 import {SCORE_SUM, SCORE_FIXED} from './../../quiz/enums'
 import {makeActionCreator} from '#/main/app/store/actions'
 import {makeId} from './../../utils/utils'
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 import {Grid as component} from './editor.jsx'
 import {utils} from './utils/utils'
 

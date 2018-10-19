@@ -6,7 +6,7 @@ import '#/main/core/tinymce/themes'
 
 import {url} from '#/main/app/api'
 import {makeId} from '#/main/core/scaffolding/id'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {locale} from '#/main/app/intl/locale'
 import {asset, param, theme} from '#/main/app/config'
 import {url as urlValidator} from '#/main/core/validation'

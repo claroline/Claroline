@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import merge from 'lodash/merge'
 import set from 'lodash/set'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {getType} from '#/main/app/data'
 import {FormDataModal} from '#/main/app/modals/form/components/data'
 

@@ -5,7 +5,7 @@ import times from 'lodash/times'
 import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 import {MODAL_ALERT} from '#/main/app/modals/alert'
 
 import select from '#/plugin/exo/quiz/editor/selectors'

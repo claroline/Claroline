@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {TreeData} from '#/main/app/content/tree/containers/data'
 import {OrganizationList} from '#/main/core/administration/user/organization/components/organization-list'
 

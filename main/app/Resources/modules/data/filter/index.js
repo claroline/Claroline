@@ -1,4 +1,4 @@
-import {tval} from '#/main/core/translation'
+import {tval} from '#/main/app/intl/translation'
 
 import {FilterGroup} from '#/main/app/data/filter/components/group'
 import {FilterInput} from '#/main/app/data/filter/components/input'

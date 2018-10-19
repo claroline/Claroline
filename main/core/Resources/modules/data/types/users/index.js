@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {UsersDisplay} from '#/main/core/data/types/users/components/display'
 import {UsersGroup} from '#/main/core/data/types/users/components/group'

@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
 
-import {t, trans} from '#/main/core/translation'
+import {t, trans} from '#/main/app/intl/translation'
 import {currentUser} from '#/main/core/user/current'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'

@@ -6,7 +6,7 @@ import uniqBy from 'lodash/uniqBy'
 import {url} from '#/main/app/api'
 import {param} from '#/main/app/config'
 import {getApps} from '#/main/app/plugins'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 

@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {isQuestionType} from './../../../items/item-types'
 
-import {trans, tex} from '#/main/core/translation'
+import {trans, tex} from '#/main/app/intl/translation'
 
 // TODO : replace all button by #/main/app/action/components/button
 

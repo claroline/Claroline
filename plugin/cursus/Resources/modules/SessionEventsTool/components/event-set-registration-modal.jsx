@@ -6,7 +6,7 @@ import moment from 'moment'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {registry} from '#/main/app/modals/registry'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {actions} from '../actions'
 import {selectors} from '../selectors'

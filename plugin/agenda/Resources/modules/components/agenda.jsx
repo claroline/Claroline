@@ -5,9 +5,9 @@ import $ from 'jquery'
 import cloneDeep from 'lodash/cloneDeep'
 
 import {url} from '#/main/app/api/router'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
-import {getApiFormat} from '#/main/core/scaffolding/date'
+import {getApiFormat} from '#/main/app/intl/date'
 
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {actions} from '#/plugin/agenda/actions'

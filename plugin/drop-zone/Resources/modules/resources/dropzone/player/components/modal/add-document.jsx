@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {registry} from '#/main/app/modals/registry'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {FormDataModal} from '#/main/app/modals/form/components/data'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 

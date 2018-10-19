@@ -1,5 +1,5 @@
 import React from 'react'
-import {bootstrap} from '#/main/app/bootstrap'
+import {bootstrap} from '#/main/app/dom/bootstrap'
 import {
   mainReducers,
   configReducers,

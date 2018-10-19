@@ -1,6 +1,6 @@
 import merge from 'lodash/merge'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 // temp
 // todo : replace by a better code later if we keep iFrame compatibility

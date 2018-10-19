@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {isAuthenticated, currentUser} from '#/main/core/user/current'
 import {hasPermission} from '#/main/core/user/permissions'
 

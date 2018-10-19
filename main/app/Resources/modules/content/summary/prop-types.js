@@ -1,7 +1,7 @@
 import {PropTypes as T} from 'prop-types'
 import merge from 'lodash/merge'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {Action} from '#/main/app/action/prop-types'
 
 const Summary = {

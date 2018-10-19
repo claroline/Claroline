@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import times from 'lodash/times'
 
-import {trans, transChoice} from '#/main/core/translation'
+import {trans, transChoice} from '#/main/app/intl/translation'
 import {CallbackButton, CALLBACK_BUTTON} from '#/main/app/buttons/callback'
 import {MenuButton} from '#/main/app/buttons/menu/components/button'
 

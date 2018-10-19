@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 

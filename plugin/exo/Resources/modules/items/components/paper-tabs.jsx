@@ -4,7 +4,7 @@ import Tab from 'react-bootstrap/lib/Tab'
 import Nav from 'react-bootstrap/lib/Nav'
 import NavItem from 'react-bootstrap/lib/NavItem'
 
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 
 export class PaperTabs extends Component {
   constructor(props) {

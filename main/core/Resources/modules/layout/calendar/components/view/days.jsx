@@ -3,7 +3,7 @@ import classes from 'classnames'
 import moment from 'moment'
 import times from 'lodash/times'
 
-import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 
 import {CalendarView as CalendarViewTypes} from '#/main/core/layout/calendar/prop-types'

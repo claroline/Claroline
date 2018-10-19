@@ -5,7 +5,7 @@ import omit from 'lodash/omit'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {UserList} from '#/main/core/administration/user/user/components/user-list'
 
 import {selectors} from '#/plugin/announcement/resources/announcement/store/selectors'

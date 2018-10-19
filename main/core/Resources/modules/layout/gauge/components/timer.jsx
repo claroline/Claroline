@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import moment from 'moment'
 
-import {PropTypes as T} from '#/main/core/scaffolding/prop-types'
-import {computeElapsedTime} from '#/main/core/scaffolding/date'
+import {PropTypes as T} from '#/main/app/prop-types'
+import {computeElapsedTime} from '#/main/app/intl/date'
 
 import{CountGauge} from '#/main/core/layout/gauge/components/count-gauge'
 

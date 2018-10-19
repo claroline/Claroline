@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 
-import {trans} from '#/main/core/translation'
-import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
+import {trans} from '#/main/app/intl/translation'
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'

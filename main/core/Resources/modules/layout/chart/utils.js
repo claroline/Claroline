@@ -1,7 +1,7 @@
 import {max, min, extent} from 'd3-array'
 import {scaleLinear, scaleBand, scaleTime} from 'd3-scale'
 import {isEmpty, zipWith} from 'lodash'
-import {apiToDateObject, getApiFormat, isValidDate} from '#/main/core/scaffolding/date'
+import {apiToDateObject, getApiFormat, isValidDate} from '#/main/app/intl/date'
 import {
   AXIS_TYPE_X,
   AXIS_TYPE_Y,

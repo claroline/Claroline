@@ -4,7 +4,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import sum from 'lodash/sum'
 import times from 'lodash/times'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {toKey} from '#/main/core/scaffolding/text/utils'
 import {Button} from '#/main/app/action/components/button'
 import {MODAL_BUTTON} from '#/main/app/buttons'

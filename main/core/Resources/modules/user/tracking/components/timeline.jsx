@@ -4,9 +4,9 @@ import classes from 'classnames'
 
 import {url} from '#/main/app/api'
 
-import {asset} from '#/main/core/scaffolding/asset'
-import {trans} from '#/main/core/translation'
-import {displayDate} from '#/main/core/scaffolding/date'
+import {asset} from '#/main/app/config/asset'
+import {trans} from '#/main/app/intl/translation'
+import {displayDate} from '#/main/app/intl/date'
 import {constants} from '#/main/core/user/tracking/constants'
 import {ResourceIcon} from '#/main/core/resource/components/icon'
 import {ScoreGauge} from '#/main/core/layout/evaluation/components/score-gauge.jsx'

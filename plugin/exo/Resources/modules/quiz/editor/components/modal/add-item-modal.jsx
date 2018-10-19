@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import omit from 'lodash/omit'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {registry} from '#/main/app/modals/registry'
 import {listItemMimeTypes, getDefinition} from './../../../../items/item-types'
 import {Icon as ItemIcon} from './../../../../items/components/icon.jsx'

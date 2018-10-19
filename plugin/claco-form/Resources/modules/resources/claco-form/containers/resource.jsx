@@ -5,7 +5,7 @@ import {actions as formActions} from '#/main/app/content/form/store/actions'
 
 import {currentUser} from '#/main/core/user/current'
 import {makeId} from '#/main/core/scaffolding/id'
-import {now} from '#/main/core/scaffolding/date'
+import {now} from '#/main/app/intl/date'
 
 import {reducer, selectors} from '#/plugin/claco-form/resources/claco-form/store'
 import {actions as entryActions} from '#/plugin/claco-form/resources/claco-form/player/entry/store'

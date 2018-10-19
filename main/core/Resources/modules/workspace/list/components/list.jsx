@@ -6,7 +6,7 @@ import {ListData} from '#/main/app/content/list/containers/data'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {WorkspaceList} from '#/main/core/workspace/list/components/workspace-list'
 import {actions} from '#/main/core/workspace/list/actions'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {constants as listConst} from '#/main/app/content/list/constants'
 import {currentUser} from '#/main/core/user/current'
 

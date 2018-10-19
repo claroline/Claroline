@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {isAuthenticated} from '#/main/core/user/current'
 
 const action = () => ({

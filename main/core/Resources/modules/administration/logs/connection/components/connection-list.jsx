@@ -1,6 +1,6 @@
 import {LINK_BUTTON} from '#/main/app/buttons'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {convertTimestampToString} from '#/main/core/logs/utils'
 import {LogConnectPlatformCard} from '#/main/core/logs/data/components/log-connect-platform-card'

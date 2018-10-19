@@ -4,7 +4,7 @@ import get from 'lodash/get'
 import merge from 'lodash/merge'
 
 import {Await} from '#/main/app/components/await'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group'
 import {getType} from '#/main/app/data'
 

@@ -2,9 +2,9 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {UserMicro} from '#/main/core/user/components/micro'
-import {displayDate} from '#/main/core/scaffolding/date'
+import {displayDate} from '#/main/app/intl/date'
 
 // todo : move in content base components
 

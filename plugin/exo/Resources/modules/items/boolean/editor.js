@@ -2,7 +2,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import zipObject from 'lodash/zipObject'
 
 import {makeActionCreator} from '#/main/app/store/actions'
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 import {notBlank} from '#/main/core/validation'
 
 import {ITEM_CREATE} from './../../quiz/editor/actions'

@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {chain, string} from '#/main/core/validation'
 
 import {TextGroup} from '#/main/core/layout/form/components/group/text-group'

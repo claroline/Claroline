@@ -4,7 +4,7 @@ import fill from 'lodash/fill'
 import sum from 'lodash/sum'
 import times from 'lodash/times'
 
-import {transChoice} from '#/main/core/translation'
+import {transChoice} from '#/main/app/intl/translation'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 
 const LayoutPreview = props => {

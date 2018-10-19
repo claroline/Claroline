@@ -2,9 +2,9 @@ import React, {Component} from 'react'
 import moment from 'moment'
 import padStart from 'lodash/padStart'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {isValidDate, getApiFormat} from '#/main/core/scaffolding/date'
+import {isValidDate, getApiFormat} from '#/main/app/intl/date'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 
 import {Calendar as CalendarTypes} from '#/main/core/layout/calendar/prop-types'

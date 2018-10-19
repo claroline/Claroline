@@ -2,7 +2,7 @@ import {shuffle, sampleSize} from 'lodash/collection'
 import moment from 'moment'
 import cloneDeep from 'lodash/cloneDeep'
 
-import {tex} from '#/main/core/translation'
+import {tex} from '#/main/app/intl/translation'
 
 import {makeId} from './../../utils/utils'
 import defaults from './../defaults'

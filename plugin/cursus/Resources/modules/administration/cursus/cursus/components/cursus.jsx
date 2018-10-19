@@ -2,7 +2,7 @@ import React from 'react'
 
 import {TreeData} from '#/main/app/content/tree/containers/data'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {CursusList} from '#/plugin/cursus/administration/cursus/cursus/components/cursus-list'
 

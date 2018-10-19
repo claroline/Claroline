@@ -11,9 +11,9 @@ import {MODAL_DATA_LIST} from '#/main/app/modals/list'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {makeId} from '#/main/core/scaffolding/id'
-import {now, nowAdd} from '#/main/core/scaffolding/date'
+import {now, nowAdd} from '#/main/app/intl/date'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {OrganizationList} from '#/main/core/administration/user/organization/components/organization-list'
 

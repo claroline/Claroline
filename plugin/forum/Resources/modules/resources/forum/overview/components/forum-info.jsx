@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {MetricCard} from '#/main/core/layout/components/metric-card'
 
 const ForumInfo = (props) =>

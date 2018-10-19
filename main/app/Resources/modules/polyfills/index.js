@@ -7,7 +7,7 @@
  * NB. You never have to require this module manually.
  */
 
-import '#/main/core/scaffolding/shim/core-js'
-import '#/main/core/scaffolding/shim/modernizr'
-import '#/main/core/scaffolding/shim/svg4everybody'
-import '#/main/core/scaffolding/shim/whatwg-fetch'
+import '#/main/app/polyfills/core-js'
+import '#/main/app/polyfills/modernizr'
+import '#/main/app/polyfills/svg4everybody'
+import '#/main/app/polyfills/whatwg-fetch'

@@ -1,6 +1,6 @@
 import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 export const CONFIGURATION_UPDATE = 'CONFIGURATION_UPDATE'
 export const CONFIGURATION_MESSAGE_RESET = 'CONFIGURATION_MESSAGE_RESET'

@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {ResourceCell} from '#/main/core/data/types/resource/components/cell'
 import {ResourceFilter} from '#/main/core/data/types/resource/components/filter'

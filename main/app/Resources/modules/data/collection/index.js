@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {chain, array, lengthInRange} from '#/main/core/validation'
 import {validateProp} from '#/main/app/content/form/validator'
 

@@ -5,7 +5,7 @@ import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
 
 import {withRouter} from '#/main/app/router'
-import {trans, transChoice} from '#/main/core/translation'
+import {trans, transChoice} from '#/main/app/intl/translation'
 import {currentUser} from '#/main/core/user/current'
 import {Button} from '#/main/app/action/components/button'
 import {LINK_BUTTON} from '#/main/app/buttons'

@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {User as UserTypes} from '#/main/core/user/prop-types'
 import {OverlayStack} from '#/main/app/overlay/containers/stack'

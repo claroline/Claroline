@@ -1,4 +1,4 @@
-import {bootstrap} from '#/main/app/bootstrap'
+import {bootstrap} from '#/main/app/dom/bootstrap'
 
 import {reducer} from '#/plugin/planned-notification/tools/planned-notification/reducer'
 import {PlannedNotificationTool} from '#/plugin/planned-notification/tools/planned-notification/components/tool'

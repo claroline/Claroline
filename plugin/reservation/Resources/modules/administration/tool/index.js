@@ -1,4 +1,4 @@
-import {bootstrap} from '#/main/app/bootstrap'
+import {bootstrap} from '#/main/app/dom/bootstrap'
 import {registerModals} from '#/main/core/layout/modal'
 
 import {reducer} from '#/plugin/reservation/administration/tool/reducer'

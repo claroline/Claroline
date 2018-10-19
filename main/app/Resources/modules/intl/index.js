@@ -3,14 +3,32 @@
  * Manages the internationalization/localization of the User Interface.
  */
 
-import {locale} from '#/main/app/intl/locale'
 import {
-  number,
-  fileSize
-} from '#/main/app/intl/number'
+  getApiFormat,
+  getDisplayFormat,
+  isValidDate,
+  apiDate,
+  displayDate,
+  now
+} from '#/main/app/intl/date'
+import {locale} from '#/main/app/intl/locale'
+import {number, fileSize} from '#/main/app/intl/number'
+import {trans, transChoice} from '#/main/app/intl/translation'
 
 export {
+  // dates
+  getApiFormat,
+  getDisplayFormat,
+  isValidDate,
+  apiDate,
+  displayDate,
+  now,
+  // locale
   locale,
+  // number
   number,
-  fileSize
+  fileSize,
+  // translator
+  trans,
+  transChoice
 }

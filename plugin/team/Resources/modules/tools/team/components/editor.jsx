@@ -7,7 +7,7 @@ import {actions as formActions} from '#/main/app/content/form/store'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {TeamParams as TeamParamsType} from '#/plugin/team/tools/team/prop-types'
 

@@ -1,4 +1,4 @@
-import {bootstrap} from '#/main/app/bootstrap'
+import {bootstrap} from '#/main/app/dom/bootstrap'
 
 import {reducer} from '#/main/core/user/contact/store/reducer'
 import {Tool} from '#/main/core/user/contact/components/tool'

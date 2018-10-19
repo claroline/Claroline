@@ -1,4 +1,4 @@
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 
 // review types
 const REVIEW_TYPE_MANAGER = 'manager'

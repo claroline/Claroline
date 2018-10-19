@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import merge from 'lodash/merge'
 
-import {trans} from '#/main/core/translation'
+import {trans} from '#/main/app/intl/translation'
 import {Await} from '#/main/app/components/await'
 import {getType} from '#/main/app/data'
 import {getPropDefinition} from '#/main/app/content/list/utils'

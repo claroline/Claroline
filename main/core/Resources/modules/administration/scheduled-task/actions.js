@@ -1,6 +1,6 @@
 import {url} from '#/main/app/api'
 
-import {now} from '#/main/core/scaffolding/date'
+import {now} from '#/main/app/intl/date'
 import {API_REQUEST} from '#/main/app/api'
 import {actions as formActions} from '#/main/app/content/form/store'
 import {actions as listActions} from '#/main/app/content/list/store'
