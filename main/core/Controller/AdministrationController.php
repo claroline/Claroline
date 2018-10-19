@@ -72,6 +72,7 @@ class AdministrationController extends Controller
      * Opens the administration index.
      *
      * @EXT\Route("/", name="claro_admin_index")
+     * @EXT\Route("/", name="claro_admin_open")
      *
      * @throws AccessDeniedException
      *

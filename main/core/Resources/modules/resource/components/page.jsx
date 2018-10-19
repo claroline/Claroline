@@ -5,7 +5,6 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {Page} from '#/main/app/page/components/page'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
 import {
@@ -13,7 +12,8 @@ import {
   UserEvaluation as UserEvaluationTypes
 } from '#/main/core/resource/prop-types'
 import {getActions, getToolbar} from '#/main/core/resource/utils'
-
+import {ToolPage} from '#/main/core/tool/containers/page'
+import {ResourceIcon} from '#/main/core/resource/components/icon'
 import {ResourceRestrictions} from '#/main/core/resource/components/restrictions'
 import {UserProgression} from '#/main/core/resource/components/user-progression'
 
@@ -47,21 +47,28 @@ class ResourcePage extends Component {
 
   render() {
     return (
-      <Page
+      <ToolPage
         className={classes('resource-page', `${this.props.resourceNode.meta.type}-page`)}
         styles={this.props.styles}
         embedded={this.props.embedded}
         showHeader={this.props.embedded ? this.props.showHeader : true}
         fullscreen={this.state.fullscreen}
         title={this.props.resourceNode.name}
+        path={this.props.resourceNode.path.map(ancestorNode => ({
+          label: ancestorNode.name,
+          target: ['claro_resource_show_short', {id: ancestorNode.id}]
+        }))}
         poster={this.props.resourceNode.poster ? this.props.resourceNode.poster.url : undefined}
-        icon={get(this.props.resourceNode, 'display.showIcon') && this.props.userEvaluation &&
+        icon={get(this.props.resourceNode, 'display.showIcon') && (this.props.userEvaluation ?
           <UserProgression
             userEvaluation={this.props.userEvaluation}
             width={70}
             height={70}
+          /> :
+          <ResourceIcon
+            mimeType={this.props.resourceNode.meta.mimeType}
           />
-        }
+        )}
         toolbar={getToolbar(this.props.primaryAction, true)}
         actions={getActions([this.props.resourceNode], {
           update: (resourceNodes) => {
@@ -95,7 +102,6 @@ class ResourcePage extends Component {
           ])
         })}
       >
-        {/* {this.props.loaded &&*/}
         {!isEmpty(this.props.accessErrors) &&
           <ResourceRestrictions
             errors={this.props.accessErrors}
@@ -108,7 +114,7 @@ class ResourcePage extends Component {
         {this.props.loaded && isEmpty(this.props.accessErrors) &&
           this.props.children
         }
-      </Page>
+      </ToolPage>
     )
   }
 }

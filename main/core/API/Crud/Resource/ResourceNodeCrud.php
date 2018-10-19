@@ -3,10 +3,8 @@
 namespace Claroline\CoreBundle\API\Crud\Resource;
 
 use Claroline\AppBundle\Event\Crud\CreateEvent;
-use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -22,26 +20,19 @@ class ResourceNodeCrud
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /** @var ResourceManager */
-    private $resourceManager;
-
     /**
      * ResourceNodeCrud constructor.
      *
      * @DI\InjectParams({
-     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
-     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager")
+     *     "tokenStorage" = @DI\Inject("security.token_storage")
      * })
      *
      * @param TokenStorageInterface $tokenStorage
-     * @param ResourceManager       $resourceManager
      */
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        ResourceManager $resourceManager)
+        TokenStorageInterface $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;
-        $this->resourceManager = $resourceManager;
     }
 
     /**
@@ -63,20 +54,5 @@ class ResourceNodeCrud
         }
 
         return $resourceNode;
-    }
-
-    /**
-     * @DI\Observe("crud_pre_update_object_claroline_corebundle_entity_resource_resource_node")
-     *
-     * @param UpdateEvent $event
-     */
-    public function preUpdate(UpdateEvent $event)
-    {
-        /*$workspace = $event->getObject();
-        $root = $this->resourceManager->getWorkspaceRoot($workspace);
-        $root->setName($workspace->getName());*/
-
-        /*$this->om->persist($root);
-        $this->om->flush();*/
     }
 }

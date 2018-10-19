@@ -12,7 +12,7 @@ services:
         arguments:
             - "@file_locator"
             - "@claroline.manager.theme_manager"
-            - %kernel.root_dir%/Resources
+            - "%kernel.root_dir%/Resources"
 
     claroline.captcha_extension:
         arguments:

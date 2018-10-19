@@ -1,11 +1,11 @@
 .page-container {
     display: flex; // this permits to have the .page component to fill the available height
-    margin-top: @component-margin-bottom; // add spacing with header
+    //margin-top: @component-margin-bottom; // add spacing with header
 }
 
-.breadcrumb + .page-container {
+/*.breadcrumb + .page-container {
     margin-top: 0; // reset spacing (it's added by the breadcrumb)
-}
+}*/
 
 .page {
     flex: 1;
@@ -98,6 +98,11 @@
     width: 70px;
     height: 70px;
     margin: 0 15px 10px;
+
+    > * {
+        max-width: 100%;
+        max-height: 100%;
+    }
 }
 
 .page-title {
@@ -214,11 +219,6 @@
     flex: 1 0 auto; // only specifying flex property here make the item fill the remaining space in its parent
     padding: 0 floor(@grid-gutter-width / 2);
     margin-bottom: 20px;
-
-    &.content-centered {
-        align-items: center;
-        justify-content: center;
-    }
 }
 
 .tabbed-page {

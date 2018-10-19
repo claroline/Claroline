@@ -28,7 +28,6 @@ class ThumbnailCreator
     private $isFfmpegLoaded;
     private $ut;
     private $fs;
-    private $fileUtilities;
 
     /**
      * @DI\InjectParams({
@@ -111,7 +110,7 @@ class ThumbnailCreator
         }
         // Replace png with new extension
         $destinationPath = preg_replace('/.png$/', ".{$extension}", trim($destinationPath));
-        if ($extension === 'svg') {
+        if ('svg' === $extension) {
             $this->fs->copy($originalPath, $destinationPath);
 
             return $destinationPath;
@@ -145,16 +144,6 @@ class ThumbnailCreator
 
         $thumbWidth = $newWidth;
         $thumbHeight = $newHeight;
-
-        /*if ($oldX > $oldY) {
-            $thumbWidth = $newWidth;
-            $thumbHeight = $oldY * ($newHeight / $oldX);
-        } else {
-            if ($oldX <= $oldY) {
-                $thumbWidth = $oldX * ($newWidth / $oldY);
-                $thumbHeight = $newHeight;
-            }
-        }*/
 
         //white background
         $dstImg = imagecreatetruecolor($thumbWidth, $thumbHeight);
@@ -201,8 +190,8 @@ class ThumbnailCreator
             $dir = $this->thumbnailDir.$ds.$filename;
         }
 
-        if ($extension === 'svg') {
-            if ($stampExtension === 'svg') {
+        if ('svg' === $extension) {
+            if ('svg' === $stampExtension) {
                 // Add all elements of $stamp to $im
                 $stampDocument = $stamp->getDocument();
                 $imDocument = $im->getDocument();
@@ -224,7 +213,7 @@ class ThumbnailCreator
             $this->fs->dumpFile($dir, $im);
         } else {
             try {
-                if ($stampExtension === 'svg') {
+                if ('svg' === $stampExtension) {
                     $stamp = $stamp->toRasterImage(imagesx($im), imagesy($im));
                 }
                 imagecopy($im, $stamp, 0, imagesy($im) - imagesy($stamp), 0, 0, imagesx($stamp), imagesy($stamp));
@@ -252,7 +241,7 @@ class ThumbnailCreator
             throw new FileNotFoundException("File not found: '${url}'");
         }
         $extension = $this->getImageExtensionFromUrl($url);
-        if ($extension === 'svg') {
+        if ('svg' === $extension) {
             $image = SVGImage::fromFile($url);
 
             return [$image, $extension];
@@ -283,7 +272,7 @@ class ThumbnailCreator
         $mimeType = mime_content_type($url);
         $fileExtension = pathinfo($url, PATHINFO_EXTENSION);
         // If mimetype is svg or fileExtension is svg then return svg
-        if ($mimeType === 'image/svg+xml' || $fileExtension === 'svg') {
+        if ('image/svg+xml' === $mimeType || 'svg' === $fileExtension) {
             return 'svg';
         }
         // Try to guess image type

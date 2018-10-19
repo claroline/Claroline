@@ -547,20 +547,6 @@ class WorkspaceRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findWorkspaceByCode($workspaceCode, $executeQuery = true)
-    {
-        $dql = '
-            SELECT w
-            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-            WHERE w.code = :workspaceCode
-        ';
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('workspaceCode', $workspaceCode);
-
-        return $executeQuery ? $query->getOneOrNullResult() : $query;
-    }
-
     public function findWorkspaceCodesWithPrefix($prefix, $executeQuery = true)
     {
         $dql = '

@@ -2,13 +2,13 @@ import React from 'react'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {Page} from '#/main/app/page/components/page'
+import {PageFull} from '#/main/app/page/components/full'
 
 import {MessagesNav} from '#/plugin/message/tools/messaging/components/messages-nav'
 import {Messages} from '#/plugin/message/tools/messaging/components/messages'
 
 const Messaging = () =>
-  <Page
+  <PageFull
     title={trans('messaging', {}, 'tools')}
     toolbar="send | more"
     actions={[
@@ -35,7 +35,7 @@ const Messaging = () =>
         <Messages/>
       </div>
     </div>
-  </Page>
+  </PageFull>
 
 
 export {

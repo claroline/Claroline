@@ -159,8 +159,9 @@ class WorkspaceSerializer
                     'export' => $this->authorization->isGranted('EXPORT', $workspace),
                 ],
                 'meta' => $this->getMeta($workspace, $options),
-                'opening' => $this->getOpening($workspace, $options),
+                'opening' => $this->getOpening($workspace),
                 'display' => $this->getDisplay($workspace),
+                'breadcrumb' => $this->getBreadcrumb($workspace),
                 'restrictions' => $this->getRestrictions($workspace),
                 'registration' => $this->getRegistration($workspace),
                 'notifications' => $this->getNotifications($workspace),
@@ -264,7 +265,7 @@ class WorkspaceSerializer
      */
     private function getDisplay(Workspace $workspace)
     {
-        $options = $this->workspaceManager->getWorkspaceOptions($workspace)->getDetails();
+        $options = $workspace->getOptions()->getDetails();
 
         $openResource = null;
         if (isset($options['workspace_opening_resource']) && $options['workspace_opening_resource']) {
@@ -280,8 +281,17 @@ class WorkspaceSerializer
         return [
             'color' => !empty($options['background_color']) ? $options['background_color'] : null,
             'showTools' => !isset($options['hide_tools_menu']) || !$options['hide_tools_menu'],
-            'showBreadcrumbs' => !isset($options['hide_breadcrumb']) || !$options['hide_breadcrumb'],
             'openResource' => $openResource,
+        ];
+    }
+
+    private function getBreadcrumb(Workspace $workspace)
+    {
+        $options = $workspace->getOptions();
+
+        return [
+            'displayed' => $options->getShowBreadcrumb(),
+            'items' => $options->getBreadcrumbItems(),
         ];
     }
 
@@ -415,17 +425,17 @@ class WorkspaceSerializer
             }
         }
 
+        $workspaceOptions = $workspace->getOptions();
         if (isset($data['display']) || isset($data['opening'])) {
-            $workspaceOptions = $this->workspaceManager->getWorkspaceOptions($workspace);
             $details = $workspaceOptions->getDetails();
 
             if (empty($details)) {
                 $details = [];
             }
+
             if (isset($data['display'])) {
                 $details['background_color'] = !empty($data['display']['color']) ? $data['display']['color'] : null;
                 $details['hide_tools_menu'] = isset($data['display']['showTools']) ? !$data['display']['showTools'] : true;
-                $details['hide_breadcrumb'] = isset($data['display']['showBreadcrumbs']) ? !$data['display']['showBreadcrumbs'] : true;
                 $details['use_workspace_opening_resource'] = !empty($data['display']['openResource']);
                 $details['workspace_opening_resource'] = !empty($data['display']['openResource']) && !empty($data['display']['openResource']['autoId']) ?
                     $data['display']['openResource']['autoId'] :
@@ -448,6 +458,16 @@ class WorkspaceSerializer
                 }
             }
             $workspaceOptions->setDetails($details);
+        }
+
+        if (isset($data['breadcrumb'])) {
+            if (isset($data['breadcrumb']['displayed'])) {
+                $workspaceOptions->setShowBreadcrumb($data['breadcrumb']['displayed']);
+            }
+
+            if (isset($data['breadcrumb']['items'])) {
+                $workspaceOptions->setBreadcrumbItems($data['breadcrumb']['items']);
+            }
         }
 
         return $workspace;

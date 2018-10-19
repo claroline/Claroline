@@ -13,7 +13,6 @@ namespace Claroline\RssReaderBundle\Listener;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
-use Claroline\CoreBundle\Event\CopyWidgetConfigurationEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\RssReaderBundle\Entity\Config;
 use Claroline\RssReaderBundle\Form\ConfigType;

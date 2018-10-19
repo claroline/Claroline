@@ -13,12 +13,11 @@ const DirectoryResource = () =>
     <Routes
       routes={[
         {
-          path: '/',
-          exact: true,
-          component: DirectoryPlayer
-        }, {
           path: '/edit',
           component: DirectoryEditor
+        }, {
+          path: '/:id?', // declared last to avoid catching /edit as an id
+          component: DirectoryPlayer
         }
       ]}
     />

@@ -31,8 +31,8 @@ const AnnouncementCard = (props) =>
         }}
       >
         {props.data.author ?
-          <UserMicro name={props.meta.author} /> :
-          <UserMicro {...props.meta.creator} />
+          <UserMicro name={props.data.meta.author} /> :
+          <UserMicro {...props.data.meta.creator} />
         }
 
         {props.meta.publishedAt ?

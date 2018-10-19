@@ -482,7 +482,6 @@
     "filter_by": "Filter by",
     "filter_from": "Filter from",
     "filters": "Filters",
-    "find_workspaces": "All public workspaces",
     "finished": "Finished",
     "firstName": "First name",
     "first_name": "First name",
@@ -1711,5 +1710,7 @@
     "intermediate": "Intermediate",
     "hard": "Hard",
     "expert": "Expert",
-    "border": "Border"
+    "border": "Border",
+    "breadcrumb": "Breadcrumb",
+    "current_workspace": "Current workspace"
 }

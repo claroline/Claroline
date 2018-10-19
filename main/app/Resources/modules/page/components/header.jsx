@@ -59,6 +59,8 @@ const PageHeader = props =>
       </div>
     }
 
+    {props.children}
+
     {(!isEmpty(props.actions) || props.actions instanceof Promise) &&
       <Toolbar
         className="page-actions"
@@ -86,7 +88,14 @@ PageHeader.propTypes = {
     T.shape(
       PromisedActionTypes.propTypes
     )
-  ])
+  ]),
+
+  /**
+   * Custom children.
+   *
+   * Add your custom component here.
+   */
+  children: T.node
 }
 
 PageHeader.defaultProps = {

@@ -1,21 +1,21 @@
 import React from 'react'
-import {WorkspaceForm} from '#/main/core/workspace/creation/components/form.jsx'
+
 import {Routes} from '#/main/app/router'
 
-const CreationForm = props => {
+import {WorkspaceForm} from '#/main/core/workspace/creation/components/form'
 
-  let steps = [
-    {
-      path: '/workspaces/creation/form',
-      title: 'form',
-      component: WorkspaceForm,
-      onEnter: props.createForm
-    }
-  ]
+const CreationForm = props =>
+  <Routes
+    routes={[
+      {
+        path: '/workspaces/creation/form',
+        title: 'form',
+        component: WorkspaceForm,
+        onEnter: props.createForm
+      }
+    ]}
+  />
 
-  return (
-    <Routes routes={steps}/>
-  )
+export {
+  CreationForm
 }
-
-export {CreationForm}

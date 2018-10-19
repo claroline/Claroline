@@ -1,21 +1,11 @@
-import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {CreationForm} from '#/main/core/workspace/creation/components/creation.jsx'
 
-class WorkspaceCreationContainer extends Component {
-  constructor(props) {
-    super(props)
-  }
-
-  render() {
-    return (<CreationForm></CreationForm>)
-  }
-}
-
+import {CreationForm} from '#/main/core/workspace/creation/components/creation'
 
 const ConnectedWorkspaceCreationContainer = connect(
-  null, null
-)(WorkspaceCreationContainer)
+  null,
+  null
+)(CreationForm)
 
 export {
   ConnectedWorkspaceCreationContainer as WorkspaceCreation

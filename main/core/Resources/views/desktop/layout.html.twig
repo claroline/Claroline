@@ -2,6 +2,12 @@
 
 {% block title %}{{ 'desktop' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
+{#
+    Make sure old tools do not render their breadcrumb.
+    This will be removed when all react tools will manage teir breadcrumb properly.
+#}
+{% block breadcrumb %}{% endblock %}
+
 {% block content %}
     {% block section_panel %}
         <div class="panel panel-default">

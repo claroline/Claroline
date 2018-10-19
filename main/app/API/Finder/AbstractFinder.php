@@ -35,6 +35,7 @@ abstract class AbstractFinder implements FinderInterface
      * })
      *
      * @param ObjectManager $om
+     * @param EntityManager $em
      */
     public function setObjectManager(ObjectManager $om, EntityManager $em)
     {

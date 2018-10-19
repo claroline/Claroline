@@ -8,7 +8,6 @@ import {PageActions, PageAction} from '#/main/core/layout/page/components/page-a
 import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {Workspace}  from '#/main/core/administration/workspace/workspace/components/workspace'
-//import {CreationForm as WorkspaceCreation} from '#/main/core/workspace/creation/components/creation'
 import {WorkspaceForm as WorkspaceCreation} from '#/main/core/workspace/creation/components/form'
 import {Workspaces} from '#/main/core/administration/workspace/workspace/components/workspaces'
 import {actions}    from '#/main/core/administration/workspace/workspace/actions'
@@ -19,9 +18,8 @@ const WorkspaceTabActions = () =>
       type={LINK_BUTTON}
       icon="fa fa-plus"
       label={trans('add_workspace')}
-      target="/workspaces/creation/form"
+      target="/workspaces/new"
       primary={true}
-      // disabled={}
     />
   </PageActions>
 
@@ -37,7 +35,7 @@ const WorkspaceTabComponent = props =>
         component: Workspace,
         onEnter: (params) => props.openForm(params.id)
       }, {
-        path: '/workspaces/creation/form',
+        path: '/workspaces/new',
         component: WorkspaceCreation,
         onEnter: () => props.openForm()
       }

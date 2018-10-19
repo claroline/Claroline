@@ -1,11 +1,8 @@
-import {combineReducers} from '#/main/app/store/reducer'
-import {reducer as logReducer} from '#/main/core/workspace/creation/components/log/reducer'
 
-
-const reducer = combineReducers({
-  log: logReducer
-})
+import {actions} from '#/main/core/workspace/creation/store/actions'
+import {reducer} from '#/main/core/workspace/creation/store/reducer'
 
 export {
+  actions,
   reducer
 }

@@ -30,10 +30,10 @@ use Claroline\CoreBundle\Entity\Workspace\WorkspaceFavourite;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRecent;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
+use Claroline\CoreBundle\Library\Security\Token\ViewAsToken;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Transfert\Resolver;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
-use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRecentRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
@@ -60,8 +60,6 @@ class WorkspaceManager
     private $roleManager;
     /** @var ResourceManager */
     private $resourceManager;
-    /** @var RoleRepository */
-    private $roleRepo;
     /** @var UserRepository */
     private $userRepo;
     /** @var WorkspaceRepository */
@@ -118,7 +116,6 @@ class WorkspaceManager
         $this->sut = $sut;
         $this->om = $om;
         $this->dispatcher = $dispatcher;
-        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\Workspace');
         $this->workspaceOptionsRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceOptions');
@@ -486,17 +483,6 @@ class WorkspaceManager
     }
 
     /**
-     * @param User     $user
-     * @param string[] $roleNames
-     *
-     * @return Workspace[]
-     */
-    public function getWorkspacesByUserAndRoleNames(User $user, array $roleNames)
-    {
-        return $this->workspaceRepo->findByUserAndRoleNames($user, $roleNames);
-    }
-
-    /**
      * Returns an array containing.
      *
      * @param User  $user
@@ -557,25 +543,6 @@ class WorkspaceManager
     }
 
     /**
-     * @param Workspace $workspace
-     * @param Role[]    $roles
-     * @param int       $orderedToolType
-     *
-     * @return Workspace[]
-     */
-    public function getWorkspaceByWorkspaceAndRoles(
-        Workspace $workspace,
-        array $roles,
-        $orderedToolType = 0
-    ) {
-        return $this->workspaceRepo->findWorkspaceByWorkspaceAndRoles(
-            $workspace,
-            $roles,
-            $orderedToolType
-        );
-    }
-
-    /**
      * @param User $user
      *
      * @return Workspace[]
@@ -611,18 +578,6 @@ class WorkspaceManager
             'workspace' => $workspace,
             'user' => $user,
         ]);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     *
-     * @return \Claroline\CoreBundle\Entity\User|null
-     */
-    public function findPersonalUser(Workspace $workspace)
-    {
-        $user = $this->userRepo->findBy(['personalWorkspace' => $workspace]);
-
-        return (1 === count($user)) ? $user[0] : null;
     }
 
     public function addUserQueue(Workspace $workspace, User $user)
@@ -730,7 +685,6 @@ class WorkspaceManager
                     //if the workspace doesn't exists, create it...
                     $workspace = new Workspace();
                     $workspace->setName($name);
-                    $workspace->setGuid(uniqid('', true));
                     $create = true;
                 }
                 $this->rename($workspace, $name);
@@ -741,7 +695,6 @@ class WorkspaceManager
                 $workspace = new Workspace();
                 $workspace->setName($name);
                 $created[] = $name;
-                $workspace->setGuid(uniqid('', true));
                 $create = true;
             }
 
@@ -807,12 +760,6 @@ class WorkspaceManager
             $logger(count($updated).' workspace updated ('.implode(',', $updated).')');
             $logger(count($created).' workspace created ('.implode(',', $created).')');
         }
-    }
-
-    public function getWorkspaceByCode($workspaceCode, $executeQuery = true)
-    {
-        return $this->workspaceRepo
-            ->findWorkspaceByCode($workspaceCode, $executeQuery);
     }
 
     /**
@@ -1189,6 +1136,8 @@ class WorkspaceManager
         $this->duplicateWorkspaceOptions($workspace, $newWorkspace);
         $this->duplicateWorkspaceRoles($workspace, $newWorkspace, $user);
         $baseRoot = $this->duplicateRoot($workspace, $newWorkspace, $user);
+
+        /** @var ResourceNode[] $resourceNodes */
         $resourceNodes = $this->resourceManager->getWorkspaceRoot($workspace)->getChildren()->toArray();
         $toCopy = [];
 
@@ -1227,7 +1176,7 @@ class WorkspaceManager
 
         //workspace needs to be flushed with the new implementation
         $this->om->forceFlush();
-        $this->duplicateOrderedTools($workspace, $newWorkspace, $resourceInfo);
+        $this->duplicateOrderedTools($workspace, $newWorkspace);
         $this->om->endFlushSuite();
 
         $homeTabs = $this->container->get('claroline.manager.home_tab_manager')->getHomeTabByWorkspace($workspace);
@@ -1335,6 +1284,8 @@ class WorkspaceManager
         /*** Sets previous and next for each copied resource ***/
         $this->linkResourcesArray($copies);
         $this->om->endFlushSuite();
+
+        return $resourcesErrors;
     }
 
     /**
@@ -1342,7 +1293,8 @@ class WorkspaceManager
      */
     public function linkResourcesArray(array $resources)
     {
-        for ($i = 1; $i < count($resources); ++$i) {
+        $countResources = count($resources);
+        for ($i = 1; $i < $countResources; ++$i) {
             $node = $resources[$i]->getResourceNode();
             $node->setIndex($i);
             $this->om->persist($node);
@@ -1373,10 +1325,7 @@ class WorkspaceManager
                 $right->getCreatableResourceTypes()->toArray()
             );
             if ($role->getWorkspace()) {
-                if (
-                isset($workspaceRoles[$key]) &&
-                !empty($workspaceRoles[$key])
-                ) {
+                if (isset($workspaceRoles[$key]) && !empty($workspaceRoles[$key])) {
                     $usedRole = $copy->getWorkspace()->getGuid() === $workspaceRoles[$key]->getWorkspace()->getGuid() ?
                       $workspaceRoles[$key] : $role;
                     if (!in_array($usedRole->getTranslationKey(), $usedRoles)) {
@@ -1408,7 +1357,7 @@ class WorkspaceManager
      * @param Workspace $source
      * @param Workspace $workspace
      */
-    public function duplicateOrderedTools(Workspace $source, Workspace $workspace, $resourceInfos = ['copies' => []])
+    public function duplicateOrderedTools(Workspace $source, Workspace $workspace)
     {
         $this->log('Duplicating tools...');
         $orderedTools = $source->getOrderedTools();
@@ -1478,6 +1427,7 @@ class WorkspaceManager
             // Updates target of resource widgets
             foreach ($homeTabSerialized['widgets'] as $wKey => $widgetContainer) {
                 foreach ($widgetContainer['contents'] as $cKey => $widget) {
+                    // TODO : use eventing to manage custom widgets copy process
                     if ('resource' === $widget['type'] &&
                         isset($widget['parameters']['resource']['id']) &&
                         isset($resourcesMapping[$widget['parameters']['resource']['id']])

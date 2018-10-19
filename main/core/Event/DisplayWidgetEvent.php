@@ -15,6 +15,9 @@ use Claroline\AppBundle\Event\DataConveyorEventInterface;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Symfony\Component\EventDispatcher\Event;
 
+/**
+ * @deprecated
+ */
 class DisplayWidgetEvent extends Event implements DataConveyorEventInterface
 {
     protected $content;

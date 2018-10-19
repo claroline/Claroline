@@ -3,8 +3,10 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
-import {PageContainer, PageHeader, PageContent, PageActions, PageAction} from '#/main/core/layout/page'
+import {PageSimple} from '#/main/app/page/components/simple'
+import {PageHeader, PageContent, PageActions, PageAction} from '#/main/core/layout/page'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {getToolPath, showToolBreadcrumb} from '#/main/core/tool/utils'
 
 import {WidgetContainer as WidgetContainerTypes} from '#/main/core/widget/prop-types'
 import {WidgetGrid} from '#/main/core/widget/player/components/grid'
@@ -14,7 +16,14 @@ import {selectors as playerSelectors} from '#/main/core/tools/home/player/store'
 import {Tabs} from '#/main/core/tools/home/components/tabs'
 
 const PlayerComponent = props =>
-  <PageContainer>
+  <PageSimple
+    className="home-tool"
+    showBreadCrumb={showToolBreadcrumb(props.context.type, props.context.data)}
+    path={[].concat(getToolPath('home', props.context.type, props.context.data), props.currentTab ? [{
+      label: props.currentTab.title,
+      target: '/' // this don't work but it's never used as current tab is always last for now
+    }] : [])}
+  >
     <PageHeader
       className={props.currentTab.centerTitle ? 'text-center' : ''}
       title={props.currentTab ? props.currentTab.longTitle : ('desktop' === props.context.type ? trans('desktop') : props.context.data.name)}
@@ -47,7 +56,7 @@ const PlayerComponent = props =>
         widgets={props.widgets}
       />
     </PageContent>
-  </PageContainer>
+  </PageSimple>
 
 PlayerComponent.propTypes = {
   context: T.object.isRequired,

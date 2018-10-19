@@ -53,13 +53,13 @@ class ResourceNodeSerializer
      * ResourceNodeManager constructor.
      *
      * @DI\InjectParams({
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "fileSerializer"  = @DI\Inject("claroline.serializer.public_file"),
-     *     "userSerializer"  = @DI\Inject("claroline.serializer.user"),
-     *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
-     *     "newRightsManager"   = @DI\Inject("claroline.manager.optimized_rights_manager"),
-     *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager")
+     *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
+     *     "eventDispatcher"  = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "fileSerializer"   = @DI\Inject("claroline.serializer.public_file"),
+     *     "userSerializer"   = @DI\Inject("claroline.serializer.user"),
+     *     "maskManager"      = @DI\Inject("claroline.manager.mask_manager"),
+     *     "newRightsManager" = @DI\Inject("claroline.manager.optimized_rights_manager"),
+     *     "rightsManager"    = @DI\Inject("claroline.manager.rights_manager")
      * })
      *
      * @param ObjectManager          $om
@@ -102,6 +102,7 @@ class ResourceNodeSerializer
             'id' => $resourceNode->getUuid(),
             'autoId' => $resourceNode->getId(), // TODO : remove me
             'name' => $resourceNode->getName(),
+            'path' => $resourceNode->getAncestors(),
             'meta' => $this->serializeMeta($resourceNode, $options),
             'permissions' => $this->rightsManager->getCurrentPermissionArray($resourceNode),
             'poster' => $this->serializePoster($resourceNode),
@@ -129,6 +130,7 @@ class ResourceNodeSerializer
             ]);
         }
 
+        // TODO : remove me. Can be retrieved from `path`
         $parent = $resourceNode->getParent();
         if (!empty($parent)) {
             $serializedNode['parent'] = [

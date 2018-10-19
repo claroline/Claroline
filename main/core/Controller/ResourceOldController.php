@@ -63,30 +63,6 @@ class ResourceOldController extends Controller
     }
 
     /**
-     * Renders a resource application. Used for old links compatibility.
-     *
-     * @EXT\Route("/open/{node}", name="claro_resource_open_short")
-     * @EXT\Route("/open/{resourceType}/{node}", name="claro_resource_open")
-     * @EXT\Method("GET")
-     * @EXT\ParamConverter(
-     *     "resourceNode",
-     *     class="ClarolineCoreBundle:Resource\ResourceNode",
-     *     options={"mapping": {"node": "id"}}
-     * )
-     * @EXT\Template("ClarolineCoreBundle:resource:show.html.twig")
-     *
-     * @param ResourceNode $resourceNode
-     *
-     * @return array
-     */
-    public function openAction(ResourceNode $resourceNode)
-    {
-        return [
-            'resourceNode' => $resourceNode,
-        ];
-    }
-
-    /**
      * @EXT\Route(
      *     "/logs/{node}",
      *     name="claro_resource_logs",
@@ -126,7 +102,7 @@ class ResourceOldController extends Controller
     public function renderBreadcrumbsAction(ResourceNode $node)
     {
         return [
-            'ancestors' => $this->resourceManager->getAncestors($node),
+            'ancestors' => $node->getAncestors(),
             'workspaceId' => $node->getWorkspace(),
         ];
     }

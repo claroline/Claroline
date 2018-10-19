@@ -1,16 +1,5 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
-{# Checks if we need to hide the breadcrumb #}
-{% if workspace is defined and
-    workspace is not null and
-    workspace.getOptions() is not empty and
-    workspace.getOptions().getDetails() is not empty and
-    workspace.getOptions().getDetails()['hide_breadcrumb'] is defined and
-    workspace.getOptions().getDetails()['hide_breadcrumb']
-%}
-    {% set hideBreadcrumb = true %}
-{% endif %}
-
 {% block claroline_danger %}
     {{ parent() }}
 
@@ -21,14 +10,14 @@
     {% endif %}
 {% endblock %}
 
+{#
+    Make sure old tools do not render their breadcrumb.
+    This will be removed when all react tools will manage teir breadcrumb properly.
+#}
+{% block breadcrumb %}{% endblock %}
+
 {% block title %}
     {{ workspace.name }}
-{% endblock %}
-
-{% block breadcrumb %}
-    {% if breadcrumb is defined %}
-        {{ breadcrumb }}
-    {% endif %}
 {% endblock %}
 
 {% block leftbar %}
@@ -52,16 +41,4 @@
 
     {# Workspace toolbar #}
     <script src="{{ hotAsset('claroline-distribution-main-core-workspace-toolbar') }}"></script>
-{% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-
-    {% if workspace is defined and workspace is not null and workspace.backgroundColor is not null %}
-    <style type="text/css">
-        body {
-            background-color: {{ workspace.getOptions().getDetails()['background_color'] }};
-        }
-    </style>
-    {% endif %}
 {% endblock %}

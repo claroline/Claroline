@@ -541,7 +541,7 @@ class ImportCsvManager
             } else {
                 $wsCode = $lineDatas['ws_code'];
                 $roleName = $lineDatas['role_name'];
-                $workspace = $this->workspaceManager->getWorkspaceByCode($wsCode);
+                $workspace = $this->workspaceManager->getOneByCode($wsCode);
 
                 if (is_null($workspace)) {
                     $logs[] = "[$lineNb] $workspaceTxt [$wsCode] $nonExistentTxt";
@@ -600,7 +600,7 @@ class ImportCsvManager
             } else {
                 $wsCode = $lineDatas['ws_code'];
                 $roleName = $lineDatas['role_name'];
-                $workspace = $this->workspaceManager->getWorkspaceByCode($wsCode);
+                $workspace = $this->workspaceManager->getOneByCode($wsCode);
 
                 if (is_null($workspace)) {
                     $logs[] = "[$lineNb] $workspaceTxt [$wsCode] $nonExistentTxt";
@@ -664,7 +664,7 @@ class ImportCsvManager
                 $wsCode = $lineDatas['ws_code'];
                 $roleName = $lineDatas['role_name'];
                 $user = $this->userManager->getOneUserByUsername($username);
-                $workspace = $this->workspaceManager->getWorkspaceByCode($wsCode);
+                $workspace = $this->workspaceManager->getOneByCode($wsCode);
 
                 if (is_null($user) || is_null($workspace)) {
                     if (is_null($user)) {
@@ -734,7 +734,7 @@ class ImportCsvManager
                 $wsCode = $lineDatas['workspace_code'];
                 $roleName = $lineDatas['role_name'];
                 $user = $this->userManager->getOneUserByUsername($username);
-                $workspace = $this->workspaceManager->getWorkspaceByCode($wsCode);
+                $workspace = $this->workspaceManager->getOneByCode($wsCode);
 
                 if (is_null($user) || is_null($workspace)) {
                     if (is_null($user)) {
@@ -804,7 +804,7 @@ class ImportCsvManager
                 $wsCode = $lineDatas['ws_code'];
                 $roleName = $lineDatas['role_name'];
                 $group = $this->groupManager->getGroupByName($groupName);
-                $workspace = $this->workspaceManager->getWorkspaceByCode($wsCode);
+                $workspace = $this->workspaceManager->getOneByCode($wsCode);
 
                 if (is_null($group) || is_null($workspace)) {
                     if (is_null($group)) {
@@ -875,7 +875,7 @@ class ImportCsvManager
                 $wsCode = $lineDatas['ws_code'];
                 $roleName = $lineDatas['role_name'];
                 $group = $this->groupManager->getGroupByName($groupName);
-                $workspace = $this->workspaceManager->getWorkspaceByCode($wsCode);
+                $workspace = $this->workspaceManager->getOneByCode($wsCode);
 
                 if (is_null($group) || is_null($workspace)) {
                     if (is_null($group)) {
@@ -934,7 +934,7 @@ class ImportCsvManager
                 $logs[] = $lineDatas['error'];
             } else {
                 $wsCode = $lineDatas[1];
-                $workspace = $this->workspaceManager->getWorkspaceByCode($wsCode);
+                $workspace = $this->workspaceManager->getOneByCode($wsCode);
 
                 if (is_null($workspace)) {
                     $workspaces[] = $lineDatas;

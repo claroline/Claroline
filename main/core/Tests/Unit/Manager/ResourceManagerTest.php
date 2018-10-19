@@ -278,23 +278,6 @@ class ResourceManagerTest extends MockeryTestCase
         $this->assertEquals($result, $expectedResult);
     }
 
-    public function testBuildSearchArray()
-    {
-        $queryParameters = [
-            'name' => 'name',
-            'types' => ['directory'],
-            'randomstuff' => 'notgonnabehere',
-        ];
-
-        $expectedResult = [
-            'name' => 'name',
-            'types' => ['directory'],
-        ];
-
-        $result = $this->getManager()->buildSearchArray($queryParameters);
-        $this->assertEquals($result, $expectedResult);
-    }
-
     /**
      * @dataProvider insertBeforeProvider
      */

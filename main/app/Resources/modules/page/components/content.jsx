@@ -6,7 +6,7 @@ import classes from 'classnames'
  * Content of the current page.
  */
 const PageContent = props =>
-  <div className={classes('page-content', props.className, {
+  <div role="presentation" className={classes('page-content', props.className, {
     'page-content-shift': props.headerSpacer
   })}>
     {props.children}
@@ -23,7 +23,7 @@ PageContent.propTypes = {
 }
 
 PageContent.defaultProps = {
-  headerSpacer: true
+  headerSpacer: false
 }
 
 export {

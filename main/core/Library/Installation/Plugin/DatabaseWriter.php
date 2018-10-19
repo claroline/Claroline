@@ -55,7 +55,6 @@ class DatabaseWriter
     private $mm;
     private $fileSystem;
     private $kernelRootDir;
-    private $modifyTemplate = false;
     private $toolManager;
     private $toolMaskManager;
     private $iconSetManager;
@@ -345,7 +344,7 @@ class DatabaseWriter
      */
     private function updateResourceType($resourceConfiguration, Plugin $plugin, PluginBundleInterface $pluginBundle)
     {
-        $this->log('Update resource type '.$resourceConfiguration['name']);
+        $this->log('Update the resource type : "'.$resourceConfiguration['name'].'".');
 
         $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findOneBy(['name' => $resourceConfiguration['name']]);
@@ -536,11 +535,12 @@ class DatabaseWriter
             ->getRepository('ClarolineCoreBundle:Resource\MenuAction')
             ->findBy(['name' => $action['name'], 'resourceType' => $resourceType]);
 
-        if (count($resourceActions) > 1) {
+        $countResources = count($resourceActions);
+        if ($countResources > 1) {
             //keep the first one, remove the rest and then flush
             $this->log('Removing superfluous masks...', LogLevel::ERROR);
 
-            for ($i = 1; $i < count($resourceActions); ++$i) {
+            for ($i = 1; $i < $countResources; ++$i) {
                 $this->em->remove($resourceActions[$i]);
             }
 
@@ -736,7 +736,8 @@ class DatabaseWriter
      */
     private function persistTool($toolConfiguration, Plugin $plugin, Tool $tool)
     {
-        $this->log('Update tool '.$toolConfiguration['name']);
+        $this->log('Update the tool : "'.$toolConfiguration['name'].'".');
+
         $tool->setName($toolConfiguration['name']);
         $tool->setDisplayableInDesktop($toolConfiguration['is_displayable_in_desktop']);
         $tool->setDisplayableInWorkspace($toolConfiguration['is_displayable_in_workspace']);
@@ -819,7 +820,7 @@ class DatabaseWriter
      */
     private function persistAdminTool($adminToolConfiguration, Plugin $plugin, AdminTool $adminTool)
     {
-        $this->log('Update admin tool '.$adminToolConfiguration['name']);
+        $this->log('Update the administration tool : "'.$adminToolConfiguration['name'].'".');
         $adminTool->setName($adminToolConfiguration['name']);
         $adminTool->setClass($adminToolConfiguration['class']);
         $adminTool->setPlugin($plugin);

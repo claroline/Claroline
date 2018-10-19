@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Library\Security\Utilities;
+use Claroline\CoreBundle\Manager\Exception\ResourceNotFoundException;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -34,6 +35,9 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
+ * Manages platform resources.
+ * ATTENTION. be careful if you change routes order.
+ *
  * @EXT\Route("/resources", options={"expose"=true})
  */
 class ResourceController
@@ -113,51 +117,6 @@ class ResourceController
     }
 
     /**
-     * First method so it doesn't go into the "get" method.
-     *
-     * @EXT\Route(
-     *     "/download",
-     *     name="claro_resource_download",
-     *     options={"expose"=true},
-     *     defaults ={"forceArchive"=false}
-     * )
-     * @EXT\Route(
-     *     "/download/{forceArchive}",
-     *     name="claro_resource_download",
-     *     options={"expose"=true},
-     *     requirements={"forceArchive" = "^(true|false|0|1)$"},
-     * )
-     *
-     * @param bool    $forceArchive
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function downloadAction($forceArchive = false, Request $request)
-    {
-        $ids = $request->query->get('ids');
-        $nodes = $this->om->findList(ResourceNode::class, 'uuid', $ids);
-
-        $collection = new ResourceCollection($nodes);
-
-        if (!$this->authorization->isGranted('EXPORT', $collection)) {
-            throw new ResourceAccessException($collection->getErrorsForDisplay(), $collection->getResources());
-        }
-
-        $data = $this->manager->download($nodes, $forceArchive);
-
-        $file = $data['file'] ?: tempnam('tmp', 'tmp');
-        $fileName = $data['name'];
-        $response = new BinaryFileResponse($file);
-        $response->setContentDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            null === $fileName ? $response->getFile()->getFilename() : $fileName
-        );
-
-        return $response;
-    }
-
-    /**
      * Renders a resource application.
      *
      * @EXT\Route("/show/{id}", name="claro_resource_show_short")
@@ -165,12 +124,20 @@ class ResourceController
      * @EXT\Method("GET")
      * @EXT\Template()
      *
-     * @param ResourceNode $resourceNode
+     * @param int|string $id - the id of the target node (we don't use ParamConverter to support ID and UUID)
      *
      * @return array
+     *
+     * @throws ResourceNotFoundException
      */
-    public function showAction(ResourceNode $resourceNode)
+    public function showAction($id)
     {
+        /** @var ResourceNode $resourceNode */
+        $resourceNode = $this->om->find(ResourceNode::class, $id);
+        if (!$resourceNode) {
+            throw new ResourceNotFoundException();
+        }
+
         if ('shortcut' === $resourceNode->getResourceType()->getName()) {
             $shortcut = $this->manager->getResourceFromNode($resourceNode);
             $resourceNode = $shortcut->getTarget();
@@ -182,37 +149,23 @@ class ResourceController
     }
 
     /**
-     * Gets a resource.
+     * Renders a resource application. Used for old links compatibility.
      *
-     * @EXT\Route("/{id}", name="claro_resource_load_short")
-     * @EXT\Route("/{type}/{id}", name="claro_resource_load")
-     * @EXT\Route("/{type}/{id}/embedded/{embedded}", name="claro_resource_load_embedded")
+     * @EXT\Route("/open/{node}", name="claro_resource_open_short")
+     * @EXT\Route("/open/{resourceType}/{node}", name="claro_resource_open")
      * @EXT\Method("GET")
+     * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"node": "id"}})
+     * @EXT\Template("ClarolineCoreBundle:resource:show.html.twig")
      *
      * @param ResourceNode $resourceNode
-     * @param int          $embedded
      *
-     * @return JsonResponse
+     * @return array
      */
-    public function getAction(ResourceNode $resourceNode, $embedded = 0)
+    public function openAction(ResourceNode $resourceNode)
     {
-        // gets the current user roles to check access restrictions
-        $userRoles = $this->security->getRoles($this->tokenStorage->getToken());
-
-        $accessErrors = $this->restrictionsManager->getErrors($resourceNode, $userRoles);
-        if (empty($accessErrors) || $this->manager->isManager($resourceNode)) {
-            $loaded = $this->manager->load($resourceNode, intval($embedded) ? true : false);
-
-            return new JsonResponse(
-                array_merge([
-                    // append access restrictions to the loaded node
-                    // if any to let know the manager that other user can not enter the resource
-                    'accessErrors' => $accessErrors,
-                ], $loaded)
-            );
-        }
-
-        return new JsonResponse($accessErrors, 403);
+        return [
+            'resourceNode' => $resourceNode,
+        ];
     }
 
     /**
@@ -239,6 +192,164 @@ class ResourceController
                 'resource' => $this->manager->getResourceFromNode($resourceNode),
             ])
         );
+    }
+
+    /**
+     * Downloads a list of Resources.
+     *
+     * @EXT\Route(
+     *     "/download",
+     *     name="claro_resource_download",
+     *     defaults ={"forceArchive"=false}
+     * )
+     * @EXT\Route(
+     *     "/download/{forceArchive}",
+     *     name="claro_resource_download",
+     *     requirements={"forceArchive" = "^(true|false|0|1)$"},
+     * )
+     *
+     * @param bool    $forceArchive
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function downloadAction($forceArchive = false, Request $request)
+    {
+        $ids = $request->query->get('ids');
+        $nodes = $this->om->findList(ResourceNode::class, 'uuid', $ids);
+
+        $collection = new ResourceCollection($nodes);
+
+        if (!$this->authorization->isGranted('EXPORT', $collection)) {
+            throw new ResourceAccessException($collection->getErrorsForDisplay(), $collection->getResources());
+        }
+
+        $data = $this->manager->download($nodes, $forceArchive);
+
+        $file = $data['file'] ?: tempnam('tmp', 'tmp');
+        $fileName = $data['name'];
+        $response = new BinaryFileResponse($file);
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            null === $fileName ? $response->getFile()->getFilename() : $fileName
+        );
+
+        return $response;
+    }
+
+    /**
+     * Submit access code.
+     *
+     * @EXT\Route("/unlock/{id}", name="claro_resource_unlock")
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
+     *
+     * @param ResourceNode $resourceNode
+     * @param Request      $request
+     *
+     * @return JsonResponse
+     */
+    public function unlockAction(ResourceNode $resourceNode, Request $request)
+    {
+        $this->restrictionsManager->unlock($resourceNode, json_decode($request->getContent(), true)['code']);
+
+        return new JsonResponse(null, 204);
+    }
+
+    /**
+     * Executes an action on a collection of resources.
+     *
+     * @EXT\Route("/collection/{action}", name="claro_resource_collection_action")
+     *
+     * @param string  $action
+     * @param Request $request
+     *
+     * @return JsonResponse
+     *
+     * @throws NotFoundHttpException
+     */
+    public function executeCollectionAction($action, Request $request)
+    {
+        $ids = $request->query->get('ids');
+
+        /** @var ResourceNode[] $resourceNodes */
+        $resourceNodes = $this->om->findList(ResourceNode::class, 'uuid', $ids);
+        $responses = [];
+
+        // read request and get user query
+        $parameters = $request->query->all();
+        $content = null;
+
+        if (!empty($request->getContent())) {
+            $content = json_decode($request->getContent(), true);
+        }
+        $files = $request->files->all();
+
+        $this->om->startFlushSuite();
+
+        foreach ($resourceNodes as $resourceNode) {
+            // check the requested action exists
+            if (!$this->actionManager->support($resourceNode, $action, $request->getMethod())) {
+                // undefined action
+                throw new NotFoundHttpException(
+                    sprintf('The action %s with method [%s] does not exist for resource type %s.', $action, $request->getMethod(), $resourceNode->getResourceType()->getName())
+                );
+            }
+
+            // check current user rights
+            $this->checkAccess($this->actionManager->get($resourceNode, $action), [$resourceNode]);
+
+            // dispatch action event
+            $responses[] = $this->actionManager->execute($resourceNode, $action, $parameters, $content, $files);
+        }
+
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(array_map(function (Response $response) {
+            return json_decode($response->getContent(), true);
+        }, $responses));
+    }
+
+    /**
+     * Gets a resource.
+     *
+     * @EXT\Route("/{id}", name="claro_resource_load_short")
+     * @EXT\Route("/{type}/{id}", name="claro_resource_load")
+     * @EXT\Route("/{type}/{id}/embedded/{embedded}", name="claro_resource_load_embedded")
+     * @EXT\Method("GET")
+     *
+     * @param int|string $id       - the id of the target node (we don't use ParamConverter to support ID and UUID)
+     * @param int        $embedded
+     *
+     * @return JsonResponse
+     *
+     * @throws ResourceNotFoundException
+     */
+    public function getAction($id, $embedded = 0)
+    {
+        /** @var ResourceNode $resourceNode */
+        $resourceNode = $this->om->find(ResourceNode::class, $id);
+        if (!$resourceNode) {
+            throw new ResourceNotFoundException();
+        }
+
+        // gets the current user roles to check access restrictions
+        $userRoles = $this->security->getRoles($this->tokenStorage->getToken());
+
+        $accessErrors = $this->restrictionsManager->getErrors($resourceNode, $userRoles);
+        if (empty($accessErrors) || $this->manager->isManager($resourceNode)) {
+            $loaded = $this->manager->load($resourceNode, intval($embedded) ? true : false);
+
+            return new JsonResponse(
+                array_merge([
+                    // append access restrictions to the loaded node
+                    // if any to let know the manager that other user can not enter the resource
+                    'accessErrors' => $accessErrors,
+                ], $loaded)
+            );
+        }
+
+        return new JsonResponse($accessErrors, 403);
     }
 
     /**
@@ -280,80 +391,6 @@ class ResourceController
 
         // dispatch action event
         return $this->actionManager->execute($resourceNode, $action, $parameters, $content, $files);
-    }
-
-    /**
-     * Executes an action on a collection of resources.
-     *
-     * @EXT\Route(
-     *     "/resources/collection/action/{action}",
-     *     name="claro_resource_collection_action"
-     * )
-     *
-     * @param string  $action
-     * @param Request $request
-     *
-     * @return JsonResponse
-     *
-     * @throws NotFoundHttpException
-     */
-    public function executeCollectionAction($action, Request $request)
-    {
-        $ids = $request->query->get('ids');
-        $resourceNodes = $this->om->findList('Claroline\CoreBundle\Entity\Resource\ResourceNode', 'uuid', $ids);
-        $responses = [];
-
-        // read request and get user query
-        $parameters = $request->query->all();
-        $content = null;
-
-        if (!empty($request->getContent())) {
-            $content = json_decode($request->getContent(), true);
-        }
-        $files = $request->files->all();
-
-        $this->om->startFlushSuite();
-
-        foreach ($resourceNodes as $resourceNode) {
-            // check the requested action exists
-            if (!$this->actionManager->support($resourceNode, $action, $request->getMethod())) {
-                // undefined action
-                throw new NotFoundHttpException(
-                    sprintf('The action %s with method [%s] does not exist for resource type %s.', $action, $request->getMethod(), $resourceNode->getResourceType()->getName())
-                );
-            }
-
-            // check current user rights
-            $this->checkAccess($this->actionManager->get($resourceNode, $action), [$resourceNode]);
-
-            // dispatch action event
-            $responses[] = $this->actionManager->execute($resourceNode, $action, $parameters, $content, $files);
-        }
-
-        $this->om->endFlushSuite();
-
-        return new JsonResponse(array_map(function (Response $response) {
-            return json_decode($response->getContent(), true);
-        }, $responses));
-    }
-
-    /**
-     * Submit access code.
-     *
-     * @EXT\Route("resource/{id}/unlock", name="claro_resource_unlock")
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
-     *
-     * @param ResourceNode $resourceNode
-     * @param Request      $request
-     *
-     * @return JsonResponse
-     */
-    public function unlockAction(ResourceNode $resourceNode, Request $request)
-    {
-        $this->restrictionsManager->unlock($resourceNode, json_decode($request->getContent(), true)['code']);
-
-        return new JsonResponse(null, 204);
     }
 
     /**

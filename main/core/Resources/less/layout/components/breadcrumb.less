@@ -1,12 +1,11 @@
 .breadcrumb {
-    // todo find better
-    padding: @component-margin-bottom floor(@grid-gutter-width / 2) 0;
-
-    margin-bottom: @breadcrumb-margin-bottom;
-    .box-shadow(@breadcrumb-box-shadow);
-
+    margin: @breadcrumb-margin-vertical @breadcrumb-margin-horizontal;
     font-size: @breadcrumb-font-size;
     text-transform: @breadcrumb-text-transform;
+
+    .box-shadow(@breadcrumb-box-shadow);
+    .border-radius(@breadcrumb-border-radius);
+
 
     > li {
         + li:before {

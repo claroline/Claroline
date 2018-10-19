@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Workspace;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -19,54 +20,93 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class WorkspaceOptions
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use Id;
 
     /**
-     * @ORM\OneToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
-     *     mappedBy="options"
-     * )
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace", mappedBy="options")
      * @ORM\JoinColumn(name="workspace_id", onDelete="CASCADE")
+     *
+     * @var Workspace
      */
-    protected $workspace;
+    private $workspace;
 
     /**
+     * The options of the workspace.
+     *
      * @ORM\Column(type="json_array", nullable=true)
+     *
+     * @var array
+     *
+     * @todo split into multiple columns
      */
-    protected $details;
+    private $details = [];
 
-    public function getId()
-    {
-        return $this->id;
-    }
+    /**
+     * The list of items to display in the Workspace when shown.
+     *
+     * @ORM\Column(type="json_array", nullable=true)
+     *
+     * @var array
+     */
+    private $breadcrumbItems = ['desktop', 'workspaces', 'current', 'tool'];
 
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
+    /**
+     * Get workspace.
+     *
+     * @return Workspace
+     */
     public function getWorkspace()
     {
         return $this->workspace;
     }
 
+    /**
+     * Set workspace.
+     *
+     * @param Workspace $workspace
+     */
     public function setWorkspace(Workspace $workspace)
     {
         $this->workspace = $workspace;
     }
 
+    /**
+     * Get all Workspace options.
+     *
+     * @return array
+     */
     public function getDetails()
     {
         return $this->details;
     }
 
-    public function setDetails($details)
+    /**
+     * Set all workspace options.
+     *
+     * @param array $details
+     */
+    public function setDetails(array $details)
     {
         $this->details = $details;
+    }
+
+    public function getShowBreadcrumb()
+    {
+        return !isset($this->details['hide_breadcrumb']) || !$this->details['hide_breadcrumb'];
+    }
+
+    public function setShowBreadcrumb(bool $show)
+    {
+        $this->details['hide_breadcrumb'] = !$show;
+    }
+
+    public function getBreadcrumbItems()
+    {
+        return $this->breadcrumbItems;
+    }
+
+    public function setBreadcrumbItems(array $items)
+    {
+        $this->breadcrumbItems = $items;
     }
 }

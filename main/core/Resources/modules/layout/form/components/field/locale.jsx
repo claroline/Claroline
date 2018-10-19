@@ -23,7 +23,7 @@ const Locale = props =>
         })}
         onClick={() => props.onChange(locale)}
       >
-        <LocaleFlag locale={props.value} />
+        <LocaleFlag locale={locale} />
       </TooltipButton>
     )}
   </div>

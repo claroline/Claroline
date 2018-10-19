@@ -10,7 +10,11 @@ export const App = () => ({
   component: ResourcesTool,
   store: reducer,
   initialData: initialData => ({
-    context: initialData.context,
+    tool: {
+      icon: 'folder',
+      name: 'resource_manager',
+      context: initialData.context
+    },
     resourceManager: {
       root: initialData.root,
       directories: initialData.root ? [initialData.root] : []

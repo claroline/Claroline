@@ -16,7 +16,6 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\UserOptions;
@@ -57,9 +56,7 @@ class UserManager
     private $roleManager;
     private $strictEventDispatcher;
     private $tokenStorage;
-    private $transferManager;
     private $translator;
-    private $uploadsDirectory;
     private $validator;
     private $workspaceManager;
     /** @var UserRepository */
@@ -79,7 +76,6 @@ class UserManager
      *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
      *     "strictEventDispatcher"  = @DI\Inject("claroline.event.event_dispatcher"),
      *     "tokenStorage"           = @DI\Inject("security.token_storage"),
-     *     "transferManager"        = @DI\Inject("claroline.manager.transfer_manager"),
      *     "translator"             = @DI\Inject("translator"),
      *     "validator"              = @DI\Inject("validator"),
      *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager")
@@ -95,7 +91,6 @@ class UserManager
      * @param RoleManager                  $roleManager
      * @param StrictDispatcher             $strictEventDispatcher
      * @param TokenStorageInterface        $tokenStorage
-     * @param TransferManager              $transferManager
      * @param TranslatorInterface          $translator
      * @param TraceableValidator           $validator
      * @param WorkspaceManager             $workspaceManager
@@ -111,7 +106,6 @@ class UserManager
         RoleManager $roleManager,
         StrictDispatcher $strictEventDispatcher,
         TokenStorageInterface $tokenStorage,
-        TransferManager $transferManager,
         TranslatorInterface $translator,
         ValidatorInterface $validator,
         WorkspaceManager $workspaceManager)
@@ -126,7 +120,6 @@ class UserManager
         $this->roleManager = $roleManager;
         $this->strictEventDispatcher = $strictEventDispatcher;
         $this->tokenStorage = $tokenStorage;
-        $this->transferManager = $transferManager;
         $this->translator = $translator;
         $this->validator = $validator;
         $this->workspaceManager = $workspaceManager;
@@ -615,7 +608,7 @@ class UserManager
     {
         $locale = $this->platformConfigHandler->getParameter('locale_language');
         $this->translator->setLocale($locale);
-        $created = $this->workspaceManager->getWorkspaceByCode($user->getUsername());
+        $created = $this->workspaceManager->getOneByCode($user->getUsername());
         if ($created) {
             $code = $user->getUsername().'~'.uniqid();
         } else {
@@ -753,48 +746,12 @@ class UserManager
     }
 
     /**
-     * @param int    $page
-     * @param int    $max
-     * @param string $orderedBy
-     * @param string $order
-     *
-     * @todo use finder instead
-     * @todo REMOVE ME
-     *
-     * @return Pagerfanta
-     */
-    public function getAllUsers($page, $max = 20, $orderedBy = 'id', $order = null)
-    {
-        $query = $this->userRepo->findAll(false, $orderedBy, $order);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
      * @todo use finder instead
      * @todo REMOVE ME
      */
     public function getAll()
     {
         return $this->userRepo->findAll();
-    }
-
-    /**
-     * @param string $search
-     * @param int    $page
-     * @param int    $max
-     * @param string $orderedBy
-     *
-     * @todo use finder instead
-     * @todo REMOVE ME
-     *
-     * @return Pagerfanta
-     */
-    public function getUsersByName($search, $page, $max = 20, $orderedBy = 'id')
-    {
-        $query = $this->userRepo->findByName($search, false, $orderedBy);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
     /**
@@ -834,24 +791,6 @@ class UserManager
         } else {
             return  $this->userRepo->findUsersByWorkspaces($workspaces);
         }
-    }
-
-    /**
-     * @param Workspace $workspace
-     * @param string    $search
-     * @param int       $page
-     * @param int       $max
-     *
-     * @todo use finder instead
-     * @todo REMOVE ME
-     *
-     * @return Pagerfanta
-     */
-    public function getAllUsersByWorkspaceAndName(Workspace $workspace, $search, $page, $max = 20)
-    {
-        $query = $this->userRepo->findAllByWorkspaceAndName($workspace, $search, false);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
     /**
@@ -934,39 +873,6 @@ class UserManager
         return $user;
     }
 
-    /**
-     * @param Role[] $roles
-     * @param int    $page
-     * @param int    $max
-     * @param string $orderedBy
-     * @param null   $order
-     *
-     * @todo use finder instead
-     * @todo REMOVE ME
-     *
-     * @return \Pagerfanta\Pagerfanta
-     */
-    public function getByRolesIncludingGroups(array $roles, $page = 1, $max = 20, $orderedBy = 'id', $order = null)
-    {
-        $res = $this->userRepo->findByRolesIncludingGroups($roles, true, $orderedBy, $order);
-
-        return $this->pagerFactory->createPager($res, $page, $max);
-    }
-
-    /**
-     * @param Role[] $roles
-     *
-     * @todo use finder instead
-     * @todo REMOVE ME
-     *
-     * @return array
-     */
-    public function getUsersByRolesIncludingGroups(
-        array $roles
-    ) {
-        return $this->userRepo->findUsersByRolesIncludingGroups($roles);
-    }
-
     /*
      * I don't want to break the old pager which is oddly written
      */
@@ -978,25 +884,6 @@ class UserManager
     public function getUsersExcludingRoles(array $roles, $offset = null, $limit = null)
     {
         return $this->userRepo->findUsersExcludingRoles($roles, $offset, $limit);
-    }
-
-    /**
-     * @param Role[] $roles
-     * @param string $search
-     * @param int    $page
-     * @param int    $max
-     * @param string $orderedBy
-     *
-     * @todo use finder instead
-     * @todo REMOVE ME
-     *
-     * @return \Pagerfanta\Pagerfanta
-     */
-    public function getByRolesAndNameIncludingGroups(array $roles, $search, $page = 1, $max = 20, $orderedBy = 'id', $direction = null)
-    {
-        $res = $this->userRepo->findByRolesAndNameIncludingGroups($roles, $search, true, $orderedBy, $direction);
-
-        return $this->pagerFactory->createPager($res, $page, $max);
     }
 
     /**
@@ -1070,26 +957,6 @@ class UserManager
         $this->objectManager->flush();
     }
 
-    public function toArrayForPicker($users)
-    {
-        $resultArray = [];
-
-        $resultArray['users'] = [];
-        if (count($users) > 0) {
-            /** @var User $user */
-            foreach ($users as $user) {
-                $userArray = [];
-                $userArray['id'] = $user->getId();
-                $userArray['name'] = $user->getFirstName().' '.$user->getLastName();
-                $userArray['email'] = $user->getEmail();
-                $userArray['avatar'] = $user->getPicture();
-                array_push($resultArray['users'], $userArray);
-            }
-        }
-
-        return $resultArray;
-    }
-
     /**
      * @param User $user
      *
@@ -1132,44 +999,6 @@ class UserManager
         $user->setInitDate(new \DateTime());
         $this->objectManager->persist($user);
         $this->objectManager->flush();
-    }
-
-    public function getUsersWithRights(
-        ResourceNode $node,
-        $orderedBy = 'firstName',
-        $order = 'ASC',
-        $page = 1,
-        $max = 50,
-        $executeQuery = true
-    ) {
-        $users = $this->userRepo
-            ->findUsersWithRights($node, $orderedBy, $order, $executeQuery);
-
-        return $executeQuery ?
-            $this->pagerFactory->createPagerFromArray($users, $page, $max) :
-            $this->pagerFactory->createPager($users, $page, $max);
-    }
-
-    public function getSearchedUsersWithRights(
-        ResourceNode $node,
-        $search = '',
-        $orderedBy = 'firstName',
-        $order = 'ASC',
-        $page = 1,
-        $max = 50,
-        $executeQuery = true
-    ) {
-        $users = $this->userRepo->findSearchedUsersWithRights(
-            $node,
-            $search,
-            $orderedBy,
-            $order,
-            $executeQuery
-        );
-
-        return $executeQuery ?
-            $this->pagerFactory->createPagerFromArray($users, $page, $max) :
-            $this->pagerFactory->createPager($users, $page, $max);
     }
 
     public function getOneUserByUsername($username, $executeQuery = true)
@@ -1293,70 +1122,6 @@ class UserManager
         $this->persistUserOptions($options);
 
         return $options;
-    }
-
-    public function getUsersForUserPicker(
-        User $user,
-        $search = '',
-        $withAllUsers = false,
-        $withUsername = true,
-        $withMail = false,
-        $withCode = false,
-        $page = 1,
-        $max = 50,
-        $orderedBy = 'lastName',
-        $order = 'ASC',
-        array $searchedWorkspaces = [],
-        array $searchedRoles = [],
-        array $searchedGroups = [],
-        array $excludedUsers = [],
-        array $forcedUsers = [],
-        array $forcedGroups = [],
-        array $forcedRoles = [],
-        array $forcedWorkspaces = [],
-        $withAdminOrgas = false
-    ) {
-        if (count($searchedRoles) > 0 ||
-            count($searchedGroups) > 0 ||
-            count($searchedWorkspaces) > 0) {
-            $roles = $searchedRoles;
-            $groups = $searchedGroups;
-            $workspaces = $searchedWorkspaces;
-        } else {
-            $roles = $withAllUsers ?
-                [] :
-                $this->generateRoleRestrictions($user);
-            $groups = $withAllUsers ?
-                [] :
-                $this->generateGroupRestrictions($user);
-            $workspaces = $withAllUsers ?
-                [] :
-                $this->generateWorkspaceRestrictions($user);
-        }
-        $withOrgas = !$user->hasRole('ROLE_ADMIN') && !$withAllUsers && $withAdminOrgas;
-        $forcedOrganizations = $withOrgas ? $user->getAdministratedOrganizations()->toArray() : [];
-
-        $userQuery = $this->userRepo->findUsersForUserPicker(
-            $search,
-            $withUsername,
-            $withMail,
-            $withCode,
-            $orderedBy,
-            $order,
-            $roles,
-            $groups,
-            $workspaces,
-            $excludedUsers,
-            $forcedUsers,
-            $forcedGroups,
-            $forcedRoles,
-            $forcedWorkspaces,
-            $withOrgas,
-            $forcedOrganizations,
-            false
-        );
-
-        return $this->pagerFactory->createPager($userQuery, $page, $max);
     }
 
     public function getAllVisibleUsersIdsForUserPicker(User $user)
@@ -1506,40 +1271,6 @@ class UserManager
     public function getLogger()
     {
         return $this->logger;
-    }
-
-    /**
-     * @param string $search
-     * @param int    $page
-     * @param int    $max
-     *
-     * @return \Pagerfanta\Pagerfanta;
-     */
-    public function getAllUsersBySearch($page, $search, $max = 20)
-    {
-        $users = $this->userRepo->findAllUserBySearch($search);
-
-        return $this->pagerFactory->createPagerFromArray($users, $page, $max);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace[] $workspaces
-     * @param int                                                $page
-     * @param string                                             $search
-     * @param int                                                $max
-     *
-     * @return \Pagerfanta\Pagerfanta
-     */
-    public function getUsersByWorkspacesAndSearch(
-        array $workspaces,
-        $page,
-        $search,
-        $max = 20
-    ) {
-        $users = $this->userRepo
-            ->findUsersByWorkspacesAndSearch($workspaces, $search);
-
-        return $this->pagerFactory->createPagerFromArray($users, $page, $max);
     }
 
     public function getResourceManagerDisplayMode($index)

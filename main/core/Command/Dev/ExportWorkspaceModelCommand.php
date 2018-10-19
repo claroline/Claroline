@@ -71,7 +71,7 @@ class ExportWorkspaceModelCommand extends ContainerAwareCommand
         $transferManager->setLogger($consoleLogger);
 
         if ($code) {
-            $workspaces[] = $this->getContainer()->get('claroline.manager.workspace_manager')->getWorkspaceByCode($code);
+            $workspaces[] = $this->getContainer()->get('claroline.manager.workspace_manager')->getOneByCode($code);
         }
 
         if ($input->getOption('personal')) {

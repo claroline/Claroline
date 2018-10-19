@@ -29,6 +29,7 @@ class AdminToolSerializer
     {
         $serialized = [
             'id' => $tool->getUuid(),
+            'icon' => $tool->getClass(),
             'name' => $tool->getName(),
         ];
 

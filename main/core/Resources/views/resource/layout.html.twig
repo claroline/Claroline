@@ -19,30 +19,6 @@
     {% endspaceless %}
 {% endblock %}
 
-{% block breadcrumb %}
-    {# Create resource breadcrumb #}
-    {% if not has_role('ROLE_ANONYMOUS') %}
-        <ul class="breadcrumb">
-            {% if workspace is defined and workspace != null %}
-                <li>
-                    {# we're finding wich is the workspace we want to display here #}
-                    <a href="{{ path('claro_workspace_open_tool', {toolName: 'home', workspaceId: workspace.id }) }}">
-                        {{ workspace.name ~ ' (' ~ workspace.code ~ ') ' }}
-                    </a>
-                </li>
-
-                {{ render(controller("ClarolineCoreBundle:ResourceOld:renderBreadcrumbs", {
-                    'node': resourceNode
-                })) }}
-            {% endif %}
-
-            {% block resourceBreadcrumb %}
-                <li class="active">{{ resourceNode.name }}</li>
-            {% endblock %}
-        </ul>
-    {% endif %}
-{% endblock %}
-
 {% block content %}
 
 {% endblock %}

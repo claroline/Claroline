@@ -11,16 +11,15 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\InjectParams;
-use JMS\DiExtraBundle\Annotation\Service;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * @Service("claroline.manager.locale_manager")
+ * @DI\Service("claroline.manager.locale_manager")
  */
 class LocaleManager
 {
@@ -32,11 +31,17 @@ class LocaleManager
     private $configHandler;
 
     /**
-     * @InjectParams({
-     *     "configHandler"  = @Inject("claroline.config.platform_config_handler"),
-     *     "userManager"    = @Inject("claroline.manager.user_manager"),
-     *     "tokenStorage"   = @Inject("security.token_storage")
+     * LocaleManager constructor.
+     *
+     * @DI\InjectParams({
+     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "userManager"   = @DI\Inject("claroline.manager.user_manager"),
+     *     "tokenStorage"  = @DI\Inject("security.token_storage")
      * })
+     *
+     * @param PlatformConfigurationHandler $configHandler
+     * @param UserManager                  $userManager
+     * @param TokenStorageInterface        $tokenStorage
      */
     public function __construct(
         PlatformConfigurationHandler $configHandler,
@@ -53,7 +58,7 @@ class LocaleManager
     /**
      * Get a list of available languages in the platform.
      *
-     * @param $path The path of translations files
+     * @param string $path The path of translations files
      *
      * @return array
      */
@@ -85,7 +90,7 @@ class LocaleManager
     /**
      * Get a list of available languages in the platform.
      *
-     * @param $path The path of translations files
+     * @param string $path The path of translations files
      *
      * @return array
      */
@@ -161,52 +166,16 @@ class LocaleManager
     }
 
     /**
-     * @deprecated
-     *
-     * @return array
-     */
-    public function getLocaleListForSelect()
-    {
-        $locales = $this->retrieveAvailableLocales();
-        $labels = $this->getLocalesLabels();
-        $keys = array_keys($labels);
-        $data = [];
-
-        foreach ($locales as $locale) {
-            if (in_array($locale, $keys)) {
-                $data[] = ['value' => $locale, 'label' => $labels[$locale]];
-            }
-        }
-
-        return $data;
-    }
-
-    /**
-     * @deprecated
-     *
-     * @return array
-     */
-    public function getLocalesLabels()
-    {
-        return [
-            'fr' => 'Français',
-            'en' => 'English',
-            'nl' => 'Nederlands',
-            'es' => 'Español',
-            'it' => 'Italiano',
-            'de' => 'Deutsch',
-        ];
-    }
-
-    /**
      * Get Current User.
      *
-     * @return mixed Claroline\CoreBundle\Entity\User or null
+     * @return User|null
      */
     private function getCurrentUser()
     {
         if (is_object($token = $this->tokenStorage->getToken()) && is_object($user = $token->getUser())) {
             return $user;
         }
+
+        return null;
     }
 }

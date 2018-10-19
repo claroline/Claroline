@@ -1,20 +1,7 @@
-{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
-
 {% if 'desktop' == context.type %}
     {% set layout = 'ClarolineCoreBundle:desktop:layout.html.twig' %}
-    {% set breadcrumb = macros.breadcrumbs([{
-        'name': 'desktop'|trans({}, 'platform'),
-        'href': path('claro_desktop_open')
-    }, {
-        'name': 'home'|trans({}, 'tools'),
-        'href': ''
-    }]) %}
 {% else %}
     {% set layout = 'ClarolineCoreBundle:workspace:layout.html.twig' %}
-    {% set breadcrumb = macros.workspaceBreadcrumbs(workspace, [{
-        'name': 'home'|trans({}, 'tools'),
-        'href': ''
-    }]) %}
 {% endif %}
 
 {% extends layout %}

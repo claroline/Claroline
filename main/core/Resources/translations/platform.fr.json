@@ -489,7 +489,6 @@
     "filter_by": "Filtrer sur",
     "filter_from": "Filtrer à partir du",
     "filters": "Filtres",
-    "find_workspaces": "Tous les espaces d'activités publics",
     "finished": "Terminé",
     "firstName": "Prénom",
     "first_name": "Prénom",
@@ -1694,7 +1693,7 @@
     "directories": "Dossiers",
     "restrict_hidden": "Cacher",
     "restrict_hidden_help": "L'élément sera toujours accessible mais les utilisateurs ne le verront plus dans les listes.",
-    "showBreadcrumbs": "Afficher le fil d'ariane",
+    "showBreadcrumbs": "Afficher le fil d'Ariane",
     "showTools": "Afficher le menu d'outils aux utilisateurs",
     "opening_parameters": "Paramètres d'ouverture",
     "enable_notifications": "Activer les notifications",
@@ -1744,5 +1743,7 @@
     "intermediate": "Intermédiaire",
     "hard": "Difficile",
     "expert": "Expert",
-    "border": "Bordure"
+    "border": "Bordure",
+    "breadcrumb": "Fil d'Ariane",
+    "current_workspace": "Espace d'activités courant"
 }

@@ -81,7 +81,7 @@ const WorkspacesMenu = props =>
       <Button
         type={URL_BUTTON}
         icon="fa fa-fw fa-book"
-        label={trans('find_workspaces')}
+        label={trans('public_workspaces')}
         target={['claro_workspace_list']}
       />
     </li>
@@ -96,7 +96,7 @@ const WorkspacesMenu = props =>
         primary={true}
         icon="fa fa-fw fa-plus"
         label={trans('create_workspace')}
-        target={url(['claro_admin_open_tool', {'toolName': 'workspace_management'}])+'#/workspaces/creation/form'}
+        target={url(['claro_admin_open_tool', {'toolName': 'workspace_management'}])+'#/workspaces/new'}
       />
     </li>
     }

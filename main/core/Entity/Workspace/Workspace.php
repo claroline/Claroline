@@ -359,6 +359,7 @@ class Workspace
         $this->orderedTools = new ArrayCollection();
         $this->organizations = new ArrayCollection();
         $this->workspaceModel = null;
+        $this->options = new WorkspaceOptions();
     }
 
     public function __toString()

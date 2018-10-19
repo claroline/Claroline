@@ -1,10 +1,9 @@
-import {API_REQUEST} from '#/main/app/api'
 import {makeActionCreator} from '#/main/app/store/actions'
-
-import {url} from '#/main/app/api'
+import {API_REQUEST, url} from '#/main/app/api'
 
 export const LOAD_MODEL = 'LOAD_MODEL'
 export const LOAD_CURRENT = 'LOAD_CURRENT'
+export const LOG_REFRESH = 'LOG_REFRESH'
 
 export const actions = {}
 
@@ -50,3 +49,18 @@ actions.copyBase = (modelId, data) => ({
     }
   }
 })
+
+// logs
+actions.refresh = makeActionCreator(LOG_REFRESH, 'content')
+actions.reset =  makeActionCreator(LOG_REFRESH)
+
+actions.load = (file) => {
+  return {
+    [API_REQUEST]: {
+      url: ['apiv2_logger_get', {subdir: 'workspace', name: file}],
+      success: (response, dispatch) => {
+        dispatch(actions.refresh(response))
+      }
+    }
+  }
+}

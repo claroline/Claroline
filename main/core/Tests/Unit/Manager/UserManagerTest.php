@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Query;
 
 class UserManagerTest extends MockeryTestCase
 {
@@ -238,40 +237,6 @@ class UserManagerTest extends MockeryTestCase
             ->with($user);
 
         $this->getManager()->refreshUser($user);
-    }
-
-    public function testGetAllUsers()
-    {
-        $em = $this->mock('Doctrine\ORM\EntityManager');
-        $query = new Query($em);
-
-        $this->userRepo->shouldReceive('findAll')
-            ->with(false, 'id')
-            ->once()
-            ->andReturn($query);
-        $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1, 20)
-            ->once()
-            ->andReturn('pager');
-
-        $this->assertEquals('pager', $this->getManager()->getAllUsers(1));
-    }
-
-    public function testGetUsersByName()
-    {
-        $em = $this->mock('Doctrine\ORM\EntityManager');
-        $query = new Query($em);
-
-        $this->userRepo->shouldReceive('findByName')
-            ->with('search', false, 'id')
-            ->once()
-            ->andReturn($query);
-        $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1, 20)
-            ->once()
-            ->andReturn('pager');
-
-        $this->assertEquals('pager', $this->getManager()->getUsersByName('search', 1));
     }
 
     public function testGetNbUsers()

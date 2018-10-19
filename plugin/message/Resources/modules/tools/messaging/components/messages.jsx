@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
-import {withRouter, Routes} from '#/main/app/router'
+import {Routes, withRouter} from '#/main/app/router'
 import {actions as listActions} from '#/main/app/content/list/store'
 import {actions as formActions} from '#/main/app/content/form/store'
 

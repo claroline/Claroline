@@ -7,8 +7,8 @@ import {trans} from '#/main/app/intl/translation'
 import {makeId} from '#/main/core/scaffolding/id'
 import {withRouter} from '#/main/app/router'
 import {currentUser} from '#/main/core/user/current'
+import {PageSimple} from '#/main/app/page/components/simple'
 import {
-  PageContainer,
   PageHeader,
   PageContent,
   PageGroupActions,
@@ -20,6 +20,7 @@ import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {CALLBACK_BUTTON, MODAL_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {MODAL_WALKTHROUGHS} from '#/main/app/overlay/walkthrough/modals/walkthroughs'
 
+import {getToolPath, showToolBreadcrumb} from '#/main/core/tool/utils'
 import {getWalkthroughs} from '#/main/core/tools/home/walkthroughs'
 import {WidgetContainer as WidgetContainerTypes} from '#/main/core/widget/prop-types'
 import {Tab as TabTypes} from '#/main/core/tools/home/prop-types'
@@ -30,8 +31,13 @@ import {Tabs} from '#/main/core/tools/home/components/tabs'
 import {TabEditor} from '#/main/core/tools/home/editor/components/tab'
 
 const EditorComponent = props =>
-  <PageContainer
+  <PageSimple
     className="home-tool"
+    showBreadCrumb={showToolBreadcrumb(props.context.type, props.context.data)}
+    path={[].concat(getToolPath('home', props.context.type, props.context.data), props.currentTab ? [{
+      label: props.currentTab.title,
+      target: '/' // this don't work but it's never used as current tab is always last for now
+    }] : [])}
   >
     <PageHeader
       alignTitle={true === props.currentTab.centerTitle ? 'center' : 'left'}
@@ -104,7 +110,7 @@ const EditorComponent = props =>
         setErrors={props.setErrors}
       />
     </PageContent>
-  </PageContainer>
+  </PageSimple>
 
 EditorComponent.propTypes = {
   context: T.object.isRequired,

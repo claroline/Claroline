@@ -2,6 +2,8 @@
 
 namespace UJM\ExoBundle\Library\Model;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Gives an entity the ability to have a feedback.
  */

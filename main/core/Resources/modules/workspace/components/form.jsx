@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {url} from '#/main/app/api'
@@ -136,24 +137,44 @@ const WorkspaceFormComponent = (props) =>
             name: 'thumbnail',
             type: 'image',
             label: trans('thumbnail')
-          },
-          {
+          }, {
             name: 'poster',
             type: 'image',
             label: trans('poster')
-          },
-          {
-            name: 'display.color',
-            type: 'color',
-            label: trans('color')
-          }, {
-            name: 'display.showBreadcrumbs',
-            type: 'boolean',
-            label: trans('showBreadcrumbs')
           }, {
             name: 'display.showTools',
             type: 'boolean',
             label: trans('showTools')
+          }
+        ]
+      }, {
+        icon: 'fa fa-fw fa-map-signs',
+        title: trans('breadcrumb'),
+        fields: [
+          {
+            name: 'breadcrumb.displayed',
+            type: 'boolean',
+            label: trans('showBreadcrumbs'),
+            linked: [
+              {
+                name: 'breadcrumb.items',
+                type: 'choice',
+                label: trans('breadcrumb_items'),
+                displayed: (workspace) => get(workspace, 'breadcrumb.displayed') || false,
+                required: true,
+                options: {
+                  choices: {
+                    desktop: trans('desktop'),
+                    workspaces: trans('workspace_list'),
+                    current: trans('current_workspace'),
+                    tool: trans('tool')
+                  },
+                  inline: false,
+                  condensed: false,
+                  multiple: true
+                }
+              }
+            ]
           }
         ]
       }, {

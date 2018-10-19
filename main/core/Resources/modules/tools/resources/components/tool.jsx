@@ -3,8 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
-import {Page} from '#/main/app/page/components/page'
 import {URL_BUTTON} from '#/main/app/buttons'
+import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {ResourceExplorer} from '#/main/core/resource/explorer/containers/explorer'
@@ -13,10 +13,13 @@ import {getActions, getToolbar} from '#/main/core/resource/utils'
 import {actions as explorerActions, selectors as explorerSelectors} from '#/main/core/resource/explorer/store'
 import {selectors} from '#/main/core/tools/resources/store'
 
-const Tool = props =>
-  <Page
-    title={trans('resources', {}, 'tools')}
+const ResourcesToolComponent = props =>
+  <ToolPage
     subtitle={props.current && props.current.name}
+    path={props.current ? props.current.path.map(ancestorNode => ({
+      label: ancestorNode.name,
+      target: ['claro_resource_show_short', {id: ancestorNode.id}]
+    })) : []}
     toolbar={getToolbar('add')}
     actions={props.current && getActions([props.current], {
       add: props.addNodes,
@@ -29,7 +32,6 @@ const Tool = props =>
       primaryAction={(resourceNode) => ({ // todo : use resource default action
         type: URL_BUTTON,
         label: trans('open', {}, 'actions'),
-        //disabled: !hasPermission('open', resourceNode),
         target: [ 'claro_resource_show', {
           type: resourceNode.meta.type,
           id: resourceNode.id
@@ -41,9 +43,9 @@ const Tool = props =>
         delete: props.deleteNodes
       }, true)}
     />
-  </Page>
+  </ToolPage>
 
-Tool.propTypes = {
+ResourcesToolComponent.propTypes = {
   current: T.shape(
     ResourceNodeTypes.propTypes
   ),
@@ -69,7 +71,7 @@ const ResourcesTool = connect(
       dispatch(explorerActions.deleteNodes(selectors.STORE_NAME, resourceNodes))
     }
   })
-)(Tool)
+)(ResourcesToolComponent)
 
 export {
   ResourcesTool

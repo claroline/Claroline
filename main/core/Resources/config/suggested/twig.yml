@@ -1,11 +1,12 @@
 twig:
-    debug:            %kernel.debug%
-    strict_variables: %kernel.debug%
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+
     globals:
-      chosenRangeKeys: %chosenRangeKeys%
-      uploadsDir: %claroline.param.uploads_directory%
-      config: '@claroline.config.platform_config_handler'
-      token_storage: '@security.token_storage'
+      uploadsDir:     "%claroline.param.uploads_directory%"
+      config:         '@claroline.config.platform_config_handler'
+      token_storage:  '@security.token_storage'
+
     form_themes:
       - 'ClarolineCoreBundle:form:two_level_select.html.twig'
       - 'ClarolineCoreBundle:form:simple_auto_complete.html.twig'

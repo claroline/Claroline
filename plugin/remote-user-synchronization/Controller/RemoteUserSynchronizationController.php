@@ -252,7 +252,7 @@ class RemoteUserSynchronizationController extends Controller
         $validToken = $this->remoteUserTokenManager->checkRemoteUserToken($user, $token);
 
         if ($validToken) {
-            $workspace = empty($workspaceCode) ? null : $this->workspaceManager->getWorkspaceByCode($workspaceCode);
+            $workspace = empty($workspaceCode) ? null : $this->workspaceManager->getOneByCode($workspaceCode);
             $userToken = new UserToken($user);
             $this->tokenStorage->setToken($userToken);
 
@@ -285,7 +285,7 @@ class RemoteUserSynchronizationController extends Controller
         foreach ($currentRoles as $role) {
             $index = array_search($role, $newRoles, true);
 
-            if ($index === false) {
+            if (false === $index) {
                 $rolesToDissociate[] = $role;
             } else {
                 unset($newRoles[$index]);

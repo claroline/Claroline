@@ -1,8 +1,6 @@
 {% extends 'ClarolineCoreBundle:desktop:layout.html.twig' %}
 
-{% block title %}
-    {{ 'my_contacts' | trans({}, 'tools') | striptags | raw }}
-{% endblock %}
+{% block title %}{{ 'my_contacts' | trans({}, 'tools') | striptags | raw }}{% endblock %}
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{

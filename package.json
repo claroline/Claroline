@@ -25,7 +25,7 @@
     "jquery-ui-dist": "1.12.1",
     "jsplumb": "^2.2.11",
     "lodash": "^4.16.1",
-    "mathjax": "2.6.1",
+    "mathjax": "^2.7.4",
     "modernizr": "^3.3.1",
     "moment": "^2.15.1",
     "pdfjs-dist": "1.4.133",

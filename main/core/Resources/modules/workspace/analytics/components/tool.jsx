@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {Page} from '#/main/app/page/components/page'
+import {PageFull} from '#/main/app/page/components/full'
 
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 import {WorkspaceMetrics} from '#/main/core/workspace/components/metrics'
@@ -23,7 +23,7 @@ class Tool extends Component {
 
   render() {
     return (
-      <Page title={trans('dashboard', {}, 'tools')}>
+      <PageFull title={trans('dashboard', {}, 'tools')}>
         <WorkspaceMetrics
           workspace={this.props.workspace}
         />
@@ -35,7 +35,7 @@ class Tool extends Component {
         {this.props.dashboard.loaded &&
           <Resources resourceTypes={this.props.dashboard.data.resourceTypes} />
         }
-      </Page>
+      </PageFull>
     )
   }
 }

@@ -27,6 +27,9 @@ const Workspace = {
         ResourceNode.propTypes
       )
     }),
+    breadcrumb: T.shape({
+      displayed: T.bool
+    }),
     registration: T.shape({
       validation: T.bool,
       selfRegistration: T.bool,
@@ -63,9 +66,12 @@ const Workspace = {
       target: 'home'
     },
     display: {
-      showBreadcrumbs: true,
       showTools: true,
       openResource: null
+    },
+    breadcrumb: {
+      displayed: true,
+      items: ['desktop', 'workspaces', 'current', 'tool']
     },
     registration: {
       validation: false,

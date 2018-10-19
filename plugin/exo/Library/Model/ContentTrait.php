@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Library\Model;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Gives an entity the ability to hold a content (either by using a ResourceNode or by using raw data).

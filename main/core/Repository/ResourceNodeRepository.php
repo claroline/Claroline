@@ -15,7 +15,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Repository\Exception\UnknownFilterException;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\QueryBuilder;
 use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
@@ -111,9 +110,9 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
     /**
      * Returns the immediate children of a resource that are openable by any of the given roles.
      *
-     * @param ResourceNode $parent The id of the parent of the requested children
-     * @param array        $roles  [string] $roles  An array of roles
-     * @param User         $user   the user opening
+     * @param ResourceNode $parent           The id of the parent of the requested children
+     * @param array        $roles            [string] $roles  An array of roles
+     * @param User         $user             the user opening
      * @param bool         $withLastOpenDate with the last openend node (with the last opened date)
      * @param bool         $canAdministrate
      *
@@ -129,7 +128,7 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
             $user = 'anon.';
         }
 
-        if (count($roles) === 0) {
+        if (0 === count($roles)) {
             throw new \RuntimeException('Roles cannot be empty');
         }
 
@@ -189,7 +188,7 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
         //now we get the last open date for nodes.
         //We can't do one request because of the left join + max combination
 
-        if ($withLastOpenDate && $user !== 'anon.') {
+        if ($withLastOpenDate && 'anon.' !== $user) {
             $this->builder->selectAsArray(false, true)
                 ->whereParentIs($parent)
                 ->addLastOpenDate($user)
@@ -266,56 +265,6 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
     }
 
     /**
-     * Returns the ancestors of a resource, including the resource itself.
-     *
-     * @param ResourceNode $resource
-     *
-     * @return array[array] An array of resources represented as arrays
-     */
-    public function findAncestors(ResourceNode $resource)
-    {
-        // No need to access DB to get ancestors as they are given by the materialized path.
-        $regex = '/-(\d+)'.ResourceNode::PATH_SEPARATOR.'/';
-        $parts = preg_split($regex, $resource->getPath(), -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-        $ancestors = [];
-        $currentPath = '';
-
-        for ($i = 0, $count = count($parts); $i < $count; $i += 2) {
-            $ancestor = [];
-            $currentPath = $currentPath.$parts[$i].'-'.$parts[$i + 1].'`';
-            $ancestor['path'] = $currentPath;
-            $ancestor['name'] = $parts[$i];
-            $ancestor['id'] = (int) $parts[$i + 1];
-            $ancestors[] = $ancestor;
-        }
-
-        return $ancestors;
-    }
-
-    /**
-     * Returns the resources matching a set of given criterias. If an array
-     * of roles is passed, only the resources that can be opended by any of
-     * these roles are matched.
-     * WARNING: the recursive search is far from being optimized.
-     *
-     * @param array $criteria An array of search filters
-     * @param array $roles    An array of user's roles
-     *
-     * @return array[array] An array of resources represented as arrays
-     */
-    public function findByCriteria(array $criteria, array $roles = null)
-    {
-        $this->builder->selectAsArray();
-        $this->addFilters($this->builder, $criteria, $roles);
-        $dql = $this->builder->orderByPath()->getDql();
-        $query = $this->_em->createQuery($dql);
-        $query->setParameters($this->builder->getParameters());
-        $resources = $query->getResult();
-
-        return $resources;
-    }
-
-    /**
      * Returns an array of different file types with the number of resources that
      * belong to this type.
      *
@@ -331,7 +280,7 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
             ->groupBy('resource.mimeType')
             ->orderBy('total', 'DESC');
 
-        if ($organizations !== null) {
+        if (null !== $organizations) {
             $qb->leftJoin('resource.workspace', 'ws')
                 ->leftJoin('ws.organizations', 'orgas')
                 ->andWhere('orgas IN (:organizations)')
@@ -370,7 +319,7 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
      */
     public function findWorkspaceInfoByIds(array $nodesIds)
     {
-        if (count($nodesIds) === 0) {
+        if (0 === count($nodesIds)) {
             throw new \InvalidArgumentException('Resource ids array cannot be empty');
         }
 
@@ -476,39 +425,6 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
         return $resultArray;
     }
 
-    private function addFilters(ResourceQueryBuilder $builder, array $criteria, array $roles = null)
-    {
-        if ($roles) {
-            if (!in_array('ROLE_ADMIN', $roles)) {
-                //this should handle the workspace manager filter
-                $builder->whereHasRoleIn($roles);
-            }
-        }
-
-        $filterMethodMap = [
-            'types' => 'whereTypeIn',
-            'roots' => 'whereRootIn',
-            'dateFrom' => 'whereDateFrom',
-            'dateTo' => 'whereDateTo',
-            'name' => 'whereNameLike',
-            'isExportable' => 'whereIsExportable',
-            'active' => 'whereActiveIs',
-        ];
-        $allowedFilters = array_keys($filterMethodMap);
-
-        foreach ($criteria as $filter => $value) {
-            if ($value !== null) {
-                if (in_array($filter, $allowedFilters)) {
-                    $builder->{$filterMethodMap[$filter]}($value);
-                } else {
-                    throw new UnknownFilterException("Unknown filter '{$filter}'");
-                }
-            }
-        }
-
-        return $builder;
-    }
-
     /**
      * Executes a DQL query and returns resources as entities or arrays.
      * If it returns arrays, it add a "pathfordisplay" field to each item.
@@ -588,10 +504,10 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
         if (in_array('ROLE_USURPATE_WORKSPACE_ROLE', $roles)) {
             $user = 'anon.';
         }
-        if (count($roles) === 0) {
+        if (0 === count($roles)) {
             throw new \RuntimeException('Roles cannot be empty');
         }
-        if (count($ids) === 0) {
+        if (0 === count($ids)) {
             throw new \RuntimeException('List of id cannot be empty');
         }
         $this->builder->selectAsArray(true)

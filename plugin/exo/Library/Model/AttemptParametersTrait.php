@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Library\Model;
 
+use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Library\Options\Picking;
 use UJM\ExoBundle\Library\Options\Recurrence;
 

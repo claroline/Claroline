@@ -161,62 +161,6 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
         $this->assertEquals('dir_5', $roots[1]['name']);
     }
 
-    public function testFindAncestors()
-    {
-        $ancestors = self::$repo->findAncestors(self::get('dir_4')->getResourceNode());
-        $this->assertEquals(3, count($ancestors));
-        $this->assertEquals('dir_1', $ancestors[0]['name']);
-        $this->assertEquals('dir_3', $ancestors[1]['name']);
-        $this->assertEquals('dir_4', $ancestors[2]['name']);
-    }
-
-    /**
-     * @expectedException \Claroline\CoreBundle\Repository\Exception\UnknownFilterException
-     */
-    public function testFindByCriteriaThrowsAnExceptionOnUnknownFilter()
-    {
-        self::$repo->findByCriteria(['foo' => 'bar']);
-    }
-
-    public function testFindByCriteria()
-    {
-        $this->markTestSkipped('Fix me !');
-
-        $resources = self::$repo->findByCriteria([]);
-        $this->assertEquals(9, count($resources));
-
-        $resources = self::$repo->findByCriteria(['types' => ['t_file']]);
-        $this->assertEquals(1, count($resources));
-
-        $resources = self::$repo->findByCriteria(
-            ['roots' => [self::get('dir_1')->getResourceNode()->getPath()]]
-        );
-        $this->assertEquals(7, count($resources));
-
-        $resources = self::$repo->findByCriteria(['dateFrom' => self::$time]);
-        $this->assertEquals(7, count($resources));
-
-        $resources = self::$repo->findByCriteria(['dateTo' => self::$time]);
-        $this->assertEquals(2, count($resources));
-
-        $resources = self::$repo->findByCriteria(['name' => '_1']);
-        $this->assertEquals(2, count($resources));
-
-        $resources = self::$repo->findByCriteria(['isExportable' => true]);
-        $this->assertEquals(6, count($resources));
-    }
-
-    public function testFindByCriteriaWithRoles()
-    {
-        $resources = self::$repo->findByCriteria([], ['ROLE_2']);
-        $this->assertEquals(2, count($resources));
-
-        $this->markTestIncomplete('Queries with more than one role make mysql randomly slow');
-
-        $resources = self::$repo->findByCriteria([], self::get('john')->getRoles());
-        $this->assertEquals(3, count($resources));
-    }
-
     public function testFindMimeTypesWithMostResources()
     {
         $mimeTypes = self::$repo->findMimeTypesWithMostResources(10);
