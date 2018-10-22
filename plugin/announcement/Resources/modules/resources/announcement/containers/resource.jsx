@@ -9,7 +9,6 @@ import {actions, reducer, selectors} from '#/plugin/announcement/resources/annou
 const AnnouncementResource = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     state => ({
-      aggregateId: selectors.aggregateId(state),
       posts: selectors.posts(state),
       roles: selectors.workspaceRoles(state)
     }),

@@ -7,12 +7,13 @@ import {asset} from '#/main/app/config/asset'
 import {displayDate} from '#/main/app/intl/date'
 
 import {DataCard} from '#/main/core/data/components/data-card'
+import {UserMicro} from '#/main/core/user/components/micro'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {ResourceIcon} from '#/main/core/resource/components/icon'
 import {getSimpleAccessRule} from '#/main/core/resource/rights'
 import {hasPermission} from '#/main/core/resource/permissions'
 
-import {UserMicro} from '#/main/core/user/components/micro'
+// TODO : make footer generic
 
 const ResourceCard = props => {
   // computes simplified version of node rights

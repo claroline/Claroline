@@ -65,7 +65,6 @@ const AnnouncementResource = props =>
   </ResourcePage>
 
 AnnouncementResource.propTypes = {
-  aggregateId: T.string.isRequired,
   posts: T.arrayOf(
     T.shape(AnnouncementTypes.propTypes)
   ).isRequired,

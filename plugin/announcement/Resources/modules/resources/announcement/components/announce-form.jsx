@@ -55,6 +55,19 @@ const AnnounceFormComponent = props =>
           }
         ]
       }, {
+        icon: 'fa fa-fw fa-desktop',
+        title: trans('display_parameters'),
+        fields: [
+          {
+            name: 'poster',
+            label: trans('poster'),
+            type: 'image',
+            options: {
+              ratio: '3:1'
+            }
+          }
+        ]
+      }, {
         icon: 'fa fa-fw fa-key',
         title: trans('access_restrictions'),
         fields: [
