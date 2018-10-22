@@ -21,6 +21,7 @@ plugin:
         class: trophy
         is_displayable_in_workspace: false
         is_displayable_in_desktop: true
+        desktop_category: user
 
     admin_tools:
       - name: badges_management

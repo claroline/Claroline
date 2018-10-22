@@ -11,50 +11,73 @@
 
 namespace Claroline\CoreBundle\Listener\Tool;
 
+use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\API\ToolsOptions;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Manager\ToolManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\HttpKernel;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\Templating\EngineInterface;
-
-// TODO : do not redirect to a controller, directly renders the tool template
+use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @DI\Service()
  */
 class ToolListener
 {
-    private $httpKernel;
+    /** @var FinderProvider */
+    private $finder;
+
+    /** @var ObjectManager */
+    private $om;
+
+    /** @var SerializerProvider */
+    private $serializer;
+
+    /** @var TwigEngine */
     private $templating;
-    private $request;
+
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
+    /** @var ToolManager */
     private $toolManager;
 
     /**
      * ToolListener constructor.
      *
      * @DI\InjectParams({
-     *     "httpKernel"       = @DI\Inject("http_kernel"),
-     *     "templating"       = @DI\Inject("templating"),
-     *     "requestStack"     = @DI\Inject("request_stack"),
-     *     "toolManager"      = @DI\Inject("claroline.manager.tool_manager")
+     *     "finder"       = @DI\Inject("claroline.api.finder"),
+     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
+     *     "serializer"   = @DI\Inject("claroline.api.serializer"),
+     *     "templating"   = @DI\Inject("templating"),
+     *     "tokenStorage" = @DI\Inject("security.token_storage"),
+     *     "toolManager"  = @DI\Inject("claroline.manager.tool_manager")
      * })
      *
-     * @param HttpKernel      $httpKernel
-     * @param EngineInterface $templating
-     * @param RequestStack    $requestStack
-     * @param ToolManager     $toolManager
+     * @param FinderProvider        $finder
+     * @param ObjectManager         $om
+     * @param SerializerProvider    $serializer
+     * @param TwigEngine            $templating
+     * @param TokenStorageInterface $tokenStorage
+     * @param ToolManager           $toolManager
      */
     public function __construct(
-        HttpKernel $httpKernel,
-        EngineInterface $templating,
-        RequestStack $requestStack,
+        FinderProvider $finder,
+        ObjectManager $om,
+        SerializerProvider $serializer,
+        TwigEngine $templating,
+        TokenStorageInterface $tokenStorage,
         ToolManager $toolManager
     ) {
-        $this->httpKernel = $httpKernel;
+        $this->finder = $finder;
+        $this->om = $om;
+        $this->serializer = $serializer;
         $this->templating = $templating;
-        $this->request = $requestStack->getMasterRequest();
+        $this->tokenStorage = $tokenStorage;
         $this->toolManager = $toolManager;
     }
 
@@ -65,37 +88,46 @@ class ToolListener
      */
     public function onDisplayDesktopParameters(DisplayToolEvent $event)
     {
-        $desktopTools = $this->toolManager->getToolByCriterias([
-            'isConfigurableInDesktop' => true,
-            'isDisplayableInDesktop' => true,
-        ]);
+        $user = $this->tokenStorage->getToken()->getUser();
 
+        if ('anon.' === $user) {
+            throw new AccessDeniedException();
+        }
+        $toolsRolesConfig = $this->toolManager->getUserDesktopToolsConfiguration($user);
+        $desktopTools = $this->finder->get(Tool::class)->find(
+            ['isDisplayableInDesktop' => true],
+            ['property' => 'name', 'direction' => 1]
+        );
         $tools = [];
+
         foreach ($desktopTools as $desktopTool) {
             $toolName = $desktopTool->getName();
 
-            if ('home' !== $toolName && 'parameters' !== $toolName) {
+            if (!in_array($toolName, ToolsOptions::EXCLUDED_TOOLS)) {
                 $tools[] = $desktopTool;
             }
         }
+        $orderedTools = $this->toolManager->computeUserOrderedTools($user, $toolsRolesConfig);
+        $toolsConfig = [];
 
-        if (count($tools) > 1) {
-            $event->setContent(
-                $this->templating->render(
-                    'ClarolineCoreBundle:Tool\desktop\parameters:parameters.html.twig',
-                    ['tools' => $tools]
-                )
-            );
+        foreach ($orderedTools as $orderedTool) {
+            $toolName = $orderedTool->getTool()->getName();
+            $toolsConfig[$toolName] = [
+                'visible' => $orderedTool->isVisibleInDesktop(),
+                'locked' => $orderedTool->isLocked(),
+            ];
         }
 
-        //otherwise only parameters exists so we return the parameters page.
-        $subRequest = $this->request->duplicate([], null, [
-            '_controller' => 'ClarolineCoreBundle:Tool\DesktopParameters:desktopParametersMenu',
-        ]);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-
         $event->setContent(
-            $response->getContent()
+            $this->templating->render(
+                'ClarolineCoreBundle:tool\desktop\parameters:parameters.html.twig',
+                [
+                    'tools' => array_map(function (Tool $tool) {
+                        return $this->serializer->serialize($tool);
+                    }, $tools),
+                    'toolsConfig' => 0 < count($toolsConfig) ? $toolsConfig : new \stdClass(),
+                ]
+            )
         );
     }
 }

@@ -128,6 +128,36 @@ const RoleForm = props =>
         </FormSection>
       }
 
+      {PLATFORM_ROLE === props.role.type &&
+        <FormSection
+          icon="fa fa-fw fa-wrench"
+          title={trans('desktop_tools')}
+        >
+          <div className="list-group" fill={true}>
+            {Object.keys(props.role.desktopTools || {}).map(toolName =>
+              <div
+                key={toolName}
+                className="list-group-item"
+              >
+                <b>{trans(toolName, {}, 'tools')}</b>
+                <Checkbox
+                  id={`${toolName}-visible`}
+                  label={trans('visible')}
+                  checked={props.role.desktopTools[toolName]['visible']}
+                  onChange={checked => props.updateProp(`desktopTools.${toolName}.visible`, checked)}
+                />
+                <Checkbox
+                  id={`${toolName}-locked`}
+                  label={trans('locked')}
+                  checked={props.role.desktopTools[toolName]['locked']}
+                  onChange={checked => props.updateProp(`desktopTools.${toolName}.locked`, checked)}
+                />
+              </div>
+            )}
+          </div>
+        </FormSection>
+      }
+
       <FormSection
         className="embedded-list-section"
         icon="fa fa-fw fa-user"

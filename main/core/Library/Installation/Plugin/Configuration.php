@@ -339,6 +339,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('is_configurable_in_desktop')->defaultValue(false)->end()
                         ->scalarNode('is_locked_for_admin')->defaultValue(false)->end()
                         ->scalarNode('is_anonymous_excluded')->defaultValue(true)->end()
+                        ->scalarNode('desktop_category')->end()
                         ->arrayNode('tool_rights')
                             ->prototype('array')
                                 ->children()

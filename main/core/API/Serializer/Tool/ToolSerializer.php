@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\API\Serializer\Workspace;
+namespace Claroline\CoreBundle\API\Serializer\Tool;
 
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use JMS\DiExtraBundle\Annotation as DI;

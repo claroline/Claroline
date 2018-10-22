@@ -5,6 +5,7 @@ plugin:
           is_displayable_in_workspace: true
           is_displayable_in_desktop: true
           class: calendar-o
+          desktop_category: user
 
     data_sources:
         - name: events

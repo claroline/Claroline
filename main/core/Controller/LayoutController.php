@@ -14,9 +14,10 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\API\ToolsOptions;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
-use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\InjectJavascriptEvent;
@@ -160,23 +161,46 @@ class LayoutController extends Controller
 
         $workspaces = [];
         $personalWs = null;
+        $orderedTools = [];
+
         if ($user instanceof User) {
             $personalWs = $user->getPersonalWorkspace();
             $workspaces = $this->workspaceManager->getRecentWorkspaceForUser($user, $this->utils->getRoles($token));
-        }
 
-        $lockedOrderedTools = $this->toolManager->getOrderedToolsLockedByAdmin(1);
-        $adminTools = [];
-        $excludedTools = [];
+            $session = $request->getSession();
 
-        foreach ($lockedOrderedTools as $lockedOrderedTool) {
-            $lockedTool = $lockedOrderedTool->getTool();
-
-            if ($lockedOrderedTool->isVisibleInDesktop()) {
-                $adminTools[] = $lockedTool;
+            // Only computes tools configured by admin one time by session
+            if (is_null($session->get('ordered_tools-computed-'.$user->getUuid()))) {
+                $toolsRolesConfig = $this->toolManager->getUserDesktopToolsConfiguration($user);
+                $orderedTools = $this->toolManager->computeUserOrderedTools($user, $toolsRolesConfig);
+                $session->set('ordered_tools-computed-'.$user->getUuid(), true);
+            } else {
+                $orderedTools = $this->toolManager->getOrderedToolsByUser($user);
             }
-            $excludedTools[] = $lockedTool;
         }
+
+        $tools = array_filter($orderedTools, function (OrderedTool $ot) {
+            $tool = $ot->getTool();
+
+            return $ot->isVisibleInDesktop() &&
+                !in_array($tool->getName(), ToolsOptions::EXCLUDED_TOOLS) &&
+                ToolsOptions::TOOL_CATEGORY === $tool->getDesktopCategory();
+        });
+        $userTools = array_filter($orderedTools, function (OrderedTool $ot) {
+            $tool = $ot->getTool();
+
+            return $ot->isVisibleInDesktop() &&
+                !in_array($tool->getName(), ToolsOptions::EXCLUDED_TOOLS) &&
+                ToolsOptions::USER_CATEGORY === $tool->getDesktopCategory();
+        });
+        $notificationTools = array_filter($orderedTools, function (OrderedTool $ot) {
+            $tool = $ot->getTool();
+
+            return $ot->isVisibleInDesktop() &&
+                !in_array($tool->getName(), ToolsOptions::EXCLUDED_TOOLS) &&
+                ToolsOptions::NOTIFICATION_CATEGORY === $tool->getDesktopCategory();
+        });
+
         // current context (desktop, index or workspace)
         $current = 'home';
 
@@ -237,28 +261,35 @@ class LayoutController extends Controller
                 ];
             }, $this->toolManager->getAdminToolsByRoles($token->getRoles())),
 
-            'userTools' => array_map(function (Tool $tool) {
-                return [
-                    'icon' => $tool->getClass(),
-                    'name' => $tool->getName(),
-                    'open' => ['claro_desktop_open_tool', ['toolName' => $tool->getName()]],
-                ];
-            }, $token->getUser() instanceof User ?
-              $this->toolManager->getDisplayedDesktopOrderedTools($token->getUser(), 1, $excludedTools)
-              :
-              []
-            ),
+            'userTools' => array_map(function (OrderedTool $orderedTool) {
+                $tool = $orderedTool->getTool();
 
-            'tools' => array_map(function (Tool $tool) {
                 return [
                     'icon' => $tool->getClass(),
                     'name' => $tool->getName(),
                     'open' => ['claro_desktop_open_tool', ['toolName' => $tool->getName()]],
                 ];
-            }, $token->getUser() instanceof User ?
-            $this->toolManager->getDisplayedDesktopOrderedTools($token->getUser(), 0, $excludedTools)
-            : []
-          ),
+            }, array_values($userTools)),
+
+            'tools' => array_map(function (OrderedTool $orderedTool) {
+                $tool = $orderedTool->getTool();
+
+                return [
+                    'icon' => $tool->getClass(),
+                    'name' => $tool->getName(),
+                    'open' => ['claro_desktop_open_tool', ['toolName' => $tool->getName()]],
+                ];
+            }, array_values($tools)),
+
+            'notificationTools' => array_map(function (OrderedTool $orderedTool) {
+                $tool = $orderedTool->getTool();
+
+                return [
+                    'icon' => $tool->getClass(),
+                    'name' => $tool->getName(),
+                    'open' => ['claro_desktop_open_tool', ['toolName' => $tool->getName()]],
+                ];
+            }, array_values($notificationTools)),
         ];
     }
 

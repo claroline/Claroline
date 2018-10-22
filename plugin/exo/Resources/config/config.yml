@@ -19,3 +19,4 @@ plugin:
           is_displayable_in_workspace: false
           is_displayable_in_desktop: true
           class: database
+          desktop_category: tool

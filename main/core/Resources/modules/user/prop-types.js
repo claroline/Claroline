@@ -57,7 +57,8 @@ const Role = {
     restrictions: T.shape({
       maxUsers: T.number
     }),
-    adminTools: T.object
+    adminTools: T.object,
+    desktopTools: T.object
   },
   defaultProps: {
 

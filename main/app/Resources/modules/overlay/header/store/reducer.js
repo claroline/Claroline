@@ -13,6 +13,7 @@ const reducer = {
   display: makeReducer({}),
   tools: makeReducer([]),
   userTools: makeReducer([]),
+  notificationTools: makeReducer([]),
   administration: makeReducer([])
 }
 

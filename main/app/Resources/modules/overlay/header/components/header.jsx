@@ -225,6 +225,7 @@ const Header = props =>
     {props.authenticated &&
       <HeaderNotifications
         count={props.count}
+        tools={props.notificationTools}
       />
     }
 
@@ -302,6 +303,7 @@ Header.propTypes = {
   currentLocation: T.string.isRequired,
   tools: T.array,
   userTools: T.array,
+  notificationTools: T.array,
   administration: T.array,
 
   workspaces: T.shape({
@@ -327,6 +329,7 @@ Header.defaultProps = {
   currentUser: null,
   tools: [],
   userTools: [],
+  notificationTools: [],
   administration: [],
   registration: false,
   maintenance: false

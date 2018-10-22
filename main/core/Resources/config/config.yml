@@ -240,6 +240,7 @@ plugin:
           is_exportable: true
           is_locked_for_admin: false
           is_anonymous_excluded: false
+          desktop_category: user
 
         - name: logs
           class: line-chart
@@ -288,6 +289,7 @@ plugin:
           is_exportable: false
           is_locked_for_admin: false
           is_anonymous_excluded: true
+          desktop_category: user
 
     themes:
         - name: Claroline

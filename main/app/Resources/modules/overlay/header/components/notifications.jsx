@@ -19,17 +19,16 @@ const NotificationsMenu = props =>
         label={trans('show-notifications', {}, 'actions')}
         target={['icap_notification_view']}
       />
-      <Button
-        type={URL_BUTTON}
-        icon="fa fa-fw fa-envelope"
-        subscript={0 !== props.count.messages ? {
-          type: 'label',
-          status: 'primary',
-          value: 100 > props.count.messages ? props.count.messages : '99+'
-        } : undefined}
-        label={trans('show-messages', {}, 'actions')}
-        target={['claro_desktop_open_tool', {toolName: 'messaging'}]}
-      />
+
+      {props.tools.map((tool) =>
+        <Button
+          key={tool.name}
+          type={URL_BUTTON}
+          icon={`fa fa-fw fa-${tool.icon}`}
+          label={trans(tool.name, {}, 'tools')}
+          target={tool.open}
+        />
+      )}
     </li>
   </ul>
 
@@ -37,7 +36,8 @@ NotificationsMenu.propTypes = {
   count: T.shape({
     notifications: T.number,
     messages: T.number
-  })
+  }),
+  tools: T.array.isRequired
 }
 
 const HeaderNotifications = props => {
@@ -58,6 +58,7 @@ const HeaderNotifications = props => {
       menu={
         <NotificationsMenu
           count={props.count}
+          tools={props.tools}
         />
       }
     />
@@ -69,7 +70,12 @@ HeaderNotifications.propTypes = {
   count: T.shape({
     notifications: T.number,
     messages: T.number
-  })
+  }),
+  tools: T.array
+}
+
+HeaderNotifications.defaultProps = {
+  tools: []
 }
 
 

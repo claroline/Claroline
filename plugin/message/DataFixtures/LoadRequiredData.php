@@ -11,6 +11,7 @@
 
 namespace Claroline\MessageBundle\DataFixtures;
 
+use Claroline\AppBundle\API\ToolsOptions;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Doctrine\Common\DataFixtures\AbstractFixture;
@@ -53,6 +54,7 @@ class LoadRequiredData extends AbstractFixture implements ContainerAwareInterfac
                 $messageTool->setDisplayableInWorkspace(false);
                 $messageTool->setDisplayableInDesktop(true);
                 $messageTool->setPlugin($messagePlugin);
+                $messageTool->setDesktopCategory(ToolsOptions::NOTIFICATION_CATEGORY);
                 $om->persist($messageTool);
                 $adminMessageOt = new OrderedTool();
                 $adminMessageOt->setName('message');

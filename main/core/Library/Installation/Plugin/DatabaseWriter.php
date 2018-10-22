@@ -756,6 +756,9 @@ class DatabaseWriter
         } else {
             $tool->setClass('wrench');
         }
+        if (isset($toolConfiguration['desktop_category'])) {
+            $tool->setDesktopCategory("{$toolConfiguration['desktop_category']}");
+        }
 
         $this->toolManager->create($tool);
         $this->persistCustomToolRights($toolConfiguration['tool_rights'], $tool);

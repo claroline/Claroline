@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Workspace;
 
+use Claroline\CoreBundle\API\Serializer\Tool\ToolSerializer;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use JMS\DiExtraBundle\Annotation as DI;
 

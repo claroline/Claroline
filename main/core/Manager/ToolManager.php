@@ -45,6 +45,7 @@ class ToolManager
     private $toolRepo;
     /** @var UserRepository */
     private $userRepo;
+    private $toolRoleRepo;
 
     private $adminToolRepo;
     /** @var ClaroUtilities */
@@ -83,6 +84,7 @@ class ToolManager
         $this->orderedToolRepo = $om->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
         $this->toolRepo = $om->getRepository('ClarolineCoreBundle:Tool\Tool');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->toolRoleRepo = $om->getRepository('ClarolineCoreBundle:Tool\ToolRole');
         $this->adminToolRepo = $om->getRepository('ClarolineCoreBundle:Tool\AdminTool');
         $this->pwsToolConfigRepo = $om->getRepository('ClarolineCoreBundle:Tool\PwsToolConfig');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
@@ -1237,6 +1239,100 @@ class ToolManager
             } else {
                 $exitingWorkspaces[$toolId] = [];
                 $exitingWorkspaces[$toolId][$workspaceId] = true;
+            }
+        }
+        $this->om->flush();
+    }
+
+    public function getUserDesktopToolsConfiguration(User $user)
+    {
+        $roles = array_filter($user->getEntityRoles(), function (Role $role) {
+            return Role::PLATFORM_ROLE === $role->getType();
+        });
+
+        return $this->getDesktopToolsConfiguration($roles);
+    }
+
+    public function getDesktopToolsConfiguration(array $roles)
+    {
+        $config = [];
+        $isAdmin = 0 < count(array_filter($roles, function (Role $role) {
+            return 'ROLE_ADMIN' === $role->getName();
+        }));
+
+        if (!$isAdmin) {
+            foreach ($roles as $role) {
+                $toolsConfigs = $this->toolRoleRepo->findBy(['role' => $role]);
+
+                foreach ($toolsConfigs as $toolConfig) {
+                    $toolName = $toolConfig->getTool()->getName();
+
+                    if (!isset($config[$toolName])) {
+                        $config[$toolName] = [
+                            'visible' => $toolConfig->isVisible(),
+                            'locked' => $toolConfig->isLocked(),
+                        ];
+                    } else {
+                        if ($toolConfig->isVisible()) {
+                            $config[$toolName]['visible'] = true;
+                        }
+                        if ($toolConfig->isLocked()) {
+                            $config[$toolName]['locked'] = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $config;
+    }
+
+    public function computeUserOrderedTools(User $user, array $config)
+    {
+        $orderedTools = [];
+        $desktopTools = $this->toolRepo->findBy(['isDisplayableInDesktop' => true]);
+
+        foreach ($desktopTools as $tool) {
+            $toolName = $tool->getName();
+            $orderedTool = $this->orderedToolRepo->findOneBy(['user' => $user, 'tool' => $tool, 'type' => 0]);
+
+            if (is_null($orderedTool)) {
+                $orderedTool = new OrderedTool();
+                $orderedTool->setTool($tool);
+                $orderedTool->setUser($user);
+                $orderedTool->setType(0);
+                $orderedTool->setOrder(1);
+                $orderedTool->setName($toolName);
+            }
+            if (isset($config[$toolName])) {
+                if ($config[$toolName]['locked']) {
+                    $orderedTool->setLocked(true);
+                    $orderedTool->setVisibleInDesktop($config[$toolName]['visible']);
+                } else {
+                    $orderedTool->setLocked(false);
+                }
+            }
+            $this->om->persist($orderedTool);
+            $orderedTools[] = $orderedTool;
+        }
+        $this->om->flush();
+
+        return $orderedTools;
+    }
+
+    public function saveUserOrderedTools(User $user, array $config)
+    {
+        foreach ($config as $toolName => $data) {
+            $tool = $this->toolRepo->findOneBy(['name' => $toolName]);
+
+            if ($tool) {
+                $orderedTool = $this->orderedToolRepo->findOneBy(['user' => $user, 'tool' => $tool, 'type' => 0]);
+
+                if ($orderedTool) {
+                    $orderedTool->setVisibleInDesktop($data['visible']);
+                    $orderedTool->setLocked($data['locked']);
+                    $this->om->persist($orderedTool);
+                }
             }
         }
         $this->om->flush();

@@ -8,6 +8,7 @@ const administration = (state) => state.administration
 const current = (state) => state.current
 const tools = (state) => state.tools
 const userTools = (state) => state.userTools
+const notificationTools = (state) => state.notificationTools
 const workspaces = (state) => state.workspaces
 const count = (state) => state.notifications.count
 
@@ -85,6 +86,7 @@ export const selectors = {
   current,
   tools,
   userTools,
+  notificationTools,
   workspaces,
   count,
   personalWorkspace,

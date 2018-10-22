@@ -22,6 +22,7 @@ const Header = connect(
     administration: selectors.administration(state),
     tools: selectors.tools(state),
     userTools: selectors.userTools(state),
+    notificationTools: selectors.notificationTools(state),
     maintenance: selectors.maintenance(state),
     currentLocation: selectors.current(state),
     redirectHome: selectors.redirectHome(state)

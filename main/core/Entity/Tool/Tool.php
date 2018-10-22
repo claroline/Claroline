@@ -136,6 +136,10 @@ class Tool
      * )
      */
     protected $pwsToolConfig;
+    /**
+     * @ORM\Column(name="desktop_category", nullable=true)
+     */
+    protected $desktopCategory;
 
     public function __construct()
     {
@@ -343,6 +347,16 @@ class Tool
     public function getPwsToolConfig()
     {
         return $this->pwsToolConfig;
+    }
+
+    public function getDesktopCategory()
+    {
+        return $this->desktopCategory;
+    }
+
+    public function setDesktopCategory($desktopCategory)
+    {
+        $this->desktopCategory = $desktopCategory;
     }
 
     public function __toString()
