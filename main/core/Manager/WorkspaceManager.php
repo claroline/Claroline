@@ -38,6 +38,7 @@ use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRecentRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Doctrine\Common\Persistence\ObjectRepository;
+use Innova\PathBundle\Entity\Path\Path;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -1195,27 +1196,24 @@ class WorkspaceManager
             $toCopy[$resourceNode->getId()] = $resourceNode;
         }
 
+        // FIXME
+        // Mega hack to avoid copying path resources 2 times
+        // This must be managed through eventing
         foreach ($resourceNodes as $resourceNode) {
-            if ('activity' === $resourceNode->getResourceType()->getName() && $this->resourceManager->getResourceFromNode($resourceNode)) {
-                $primRes = $this->resourceManager->getResourceFromNode($resourceNode)->getPrimaryResource();
-                $parameters = $this->resourceManager->getResourceFromNode($resourceNode)->getParameters();
-                if ($primRes) {
-                    unset($toCopy[$primRes->getId()]);
-                    $ancestors = $this->resourceManager->getAncestors($primRes);
-                    foreach ($ancestors as $ancestor) {
-                        unset($toCopy[$ancestor['id']]);
-                    }
-                }
-                if ($parameters) {
-                    foreach ($parameters->getSecondaryResources() as $secRes) {
-                        unset($toCopy[$secRes->getId()]);
-                        $ancestors = $this->resourceManager->getAncestors($secRes);
-                        foreach ($ancestors as $ancestor) {
-                            unset($toCopy[$ancestor['id']]);
+            if ('innova_path' === $resourceNode->getResourceType()->getName()) {
+                /** @var Path $path */
+                $path = $this->resourceManager->getResourceFromNode($resourceNode);
+                if ($path) {
+                    foreach ($path->getSteps() as $step) {
+                        if ($step->getResource()) {
+                            $toCopy[$step->getResource()->getId()] = $step->getResource();
+                        }
+
+                        foreach ($step->getSecondaryResources() as $secondaryResource) {
+                            $toCopy[$secondaryResource->getResource()->getId()] = $secondaryResource->getResource();
                         }
                     }
                 }
-                unset($toCopy[$resourceNode->getId()]);
             }
         }
 
@@ -1303,29 +1301,25 @@ class WorkspaceManager
         foreach ($resourceNodes as $resourceNode) {
             try {
                 $this->log('Duplicating '.$resourceNode->getName().' - '.$resourceNode->getId().' - from type '.$resourceNode->getResourceType()->getName().' into '.$rootNode->getName());
-                //activities will be removed anyway
-                //$bypass = ['activity'];
-                $bypass = [];
-                if (!in_array($resourceNode->getResourceType()->getName(), $bypass)) {
-                    $this->log('Firing resourcemanager copy method for '.$resourceNode->getName());
-                    $copy = $this->resourceManager->copy(
-                      $resourceNode,
-                      $rootNode,
-                      $user,
-                      false,
-                      false
-                  );
-                    if ($copy) {
-                        $copy->getResourceNode()->setIndex($resourceNode->getIndex());
-                        $this->om->persist($copy->getResourceNode());
-                        $resourceInfos['copies'][] = ['original' => $resourceNode, 'copy' => $copy->getResourceNode()];
-                        /*** Copies rights ***/
-                        $this->duplicateRights(
-                            $resourceNode,
-                            $copy->getResourceNode(),
-                            $workspaceRoles
-                        );
-                    }
+
+                $copy = $this->resourceManager->copy(
+                    $resourceNode,
+                    $rootNode,
+                    $user,
+                    false,
+                    false
+                );
+
+                if ($copy) {
+                    $copy->getResourceNode()->setIndex($resourceNode->getIndex());
+                    $this->om->persist($copy->getResourceNode());
+                    $resourceInfos['copies'][] = ['original' => $resourceNode, 'copy' => $copy->getResourceNode()];
+                    /*** Copies rights ***/
+                    $this->duplicateRights(
+                        $resourceNode,
+                        $copy->getResourceNode(),
+                        $workspaceRoles
+                    );
                 }
             } catch (NotPopulatedEventException $e) {
                 $resourcesErrors[] = [
