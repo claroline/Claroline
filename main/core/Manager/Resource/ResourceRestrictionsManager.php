@@ -67,6 +67,14 @@ class ResourceRestrictionsManager
             && $this->isIpAuthorized($resourceNode);
     }
 
+    /**
+     * Gets the list of access error for a resource and a user roles.
+     *
+     * @param ResourceNode $resourceNode
+     * @param array        $userRoles
+     *
+     * @return array
+     */
     public function getErrors(ResourceNode $resourceNode, array $userRoles): array
     {
         if (!$this->isGranted($resourceNode, $userRoles)) {
@@ -138,7 +146,7 @@ class ResourceRestrictionsManager
      */
     public function isEnded(ResourceNode $resourceNode): bool
     {
-        return !empty($resourceNode->getAccessibleUntil()) && $resourceNode->getAccessibleUntil() > new \DateTime();
+        return !empty($resourceNode->getAccessibleUntil()) && $resourceNode->getAccessibleUntil() <= new \DateTime();
     }
 
     /**

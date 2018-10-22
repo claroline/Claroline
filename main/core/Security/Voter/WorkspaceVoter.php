@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Security\Voter;
 
 use Claroline\AppBundle\Security\ObjectCollection;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Security\Token\ViewAsToken;
 use Claroline\CoreBundle\Security\PlatformRoles;
@@ -69,9 +68,11 @@ class WorkspaceVoter extends AbstractVoter
     //workspace creator handling ?
     private function checkCreation(TokenInterface $token)
     {
-        return $this->hasAdminToolAccess($token, 'workspace_management') || $this->isWorkspaceCreator($token) ?
-             VoterInterface::ACCESS_GRANTED :
-             VoterInterface::ACCESS_DENIED;
+        if ($this->hasAdminToolAccess($token, 'workspace_management') || $this->isWorkspaceCreator($token)) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        return VoterInterface::ACCESS_DENIED;
     }
 
     private function checkEdit($token, Workspace $workspace)

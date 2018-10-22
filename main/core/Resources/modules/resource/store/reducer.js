@@ -5,6 +5,7 @@ import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 
 import {
   RESOURCE_LOAD,
+  RESOURCE_SET_LOADED,
   RESOURCE_UPDATE_NODE,
   USER_EVALUATION_UPDATE,
   RESOURCE_RESTRICTIONS_DISMISS,
@@ -14,7 +15,7 @@ import {
 
 const reducer = {
   loaded: makeReducer(false, {
-    [RESOURCE_LOAD]: () => true
+    [RESOURCE_SET_LOADED]: () => true
   }),
 
   accessErrors: combineReducers({
