@@ -53,6 +53,11 @@ class LogPostMessageEvent extends LogGenericEvent implements NotifiableInterface
                     'lastName' => $message->getCreator()->getLastName(),
                     'firstName' => $message->getCreator()->getFirstName(),
                 ],
+                'workspace' => [
+                    'id' => $node->getWorkspace()->getId(),
+                    'name' => $node->getWorkspace()->getName(),
+                    'code' => $node->getWorkspace()->getCode(),
+                ],
             ],
             null,
             null,

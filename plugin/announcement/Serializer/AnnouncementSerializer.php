@@ -6,12 +6,14 @@ use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
+use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -30,6 +32,9 @@ class AnnouncementSerializer
     /** @var UserSerializer */
     private $userSerializer;
 
+    /** @var PublicFileSerializer */
+    private $publicFileSerializer;
+
     /** @var ObjectManager */
     private $om;
 
@@ -37,31 +42,41 @@ class AnnouncementSerializer
     /** @var RoleRepository */
     private $roleRepo;
 
+    /** @var FileUtilities */
+    private $fileUt;
+
     /**
      * AnnouncementSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "tokenStorage"   = @DI\Inject("security.token_storage"),
-     *     "userSerializer" = @DI\Inject("claroline.serializer.user"),
-     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "wsSerializer"   = @DI\Inject("claroline.serializer.workspace")
+     *     "tokenStorage"         = @DI\Inject("security.token_storage"),
+     *     "userSerializer"       = @DI\Inject("claroline.serializer.user"),
+     *     "om"                   = @DI\Inject("claroline.persistence.object_manager"),
+     *     "publicFileSerializer" = @DI\Inject("claroline.serializer.public_file"),
+     *     "fileUt"               = @DI\Inject("claroline.utilities.file"),
+     *     "wsSerializer"         = @DI\Inject("claroline.serializer.workspace")
      * })
      *
      * @param TokenStorageInterface $tokenStorage
      * @param UserSerializer        $userSerializer
      * @param ObjectManager         $om
      * @param WorkspaceSerializer   $wsSerializer
+     * @param FileUtilities         $fileUt
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         UserSerializer $userSerializer,
         ObjectManager $om,
-        WorkspaceSerializer $wsSerializer
+        WorkspaceSerializer $wsSerializer,
+        PublicFileSerializer $publicFileSerializer,
+        FileUtilities $fileUt
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->userSerializer = $userSerializer;
         $this->om = $om;
+        $this->fileUt = $fileUt;
         $this->wsSerializer = $wsSerializer;
+        $this->publicFileSerializer = $publicFileSerializer;
 
         $this->aggregateRepo = $om->getRepository('ClarolineAnnouncementBundle:AnnouncementAggregate');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
@@ -104,7 +119,7 @@ class AnnouncementSerializer
             }, $announce->getRoles()),
             'poster' => $announce->getPoster() && $this->om->getRepository(PublicFile::class)->findOneBy([
                   'url' => $announce->getPoster(),
-              ]) ? $this->serializer->serialize(
+              ]) ? $this->publicFileSerializer->serialize(
                 $this->om->getRepository(PublicFile::class)->findOneBy([
                     'url' => $announce->getPoster(),
               ])
@@ -180,9 +195,10 @@ class AnnouncementSerializer
         }
 
         if (isset($data['poster']) && isset($data['poster']['id'])) {
-            $poster = $this->serializer->deserialize(
-                PublicFile::class,
-                $data['poster']
+            $publicFile = $this->om->getRepository(PublicFile::class)->find($data['poster']['id']);
+            $poster = $this->publicFileSerializer->deserialize(
+                $data['poster'],
+                $publicFile
             );
             $announce->setPoster($data['poster']['url']);
             $this->fileUt->createFileUse(
