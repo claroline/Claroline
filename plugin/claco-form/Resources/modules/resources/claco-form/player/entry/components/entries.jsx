@@ -15,7 +15,7 @@ import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/core/resource/permissions'
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
-import {DataCard} from '#/main/core/data/components/data-card'
+import {DataCard} from '#/main/app/content/card/components/data'
 import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
 
 import {selectors} from '#/plugin/claco-form/resources/claco-form/store'

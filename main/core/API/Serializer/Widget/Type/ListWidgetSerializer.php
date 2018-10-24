@@ -48,7 +48,8 @@ class ListWidgetSerializer
             'columns' => $widget->getDisplayedColumns(),
             'availableColumns' => $widget->getAvailableColumns(),
 
-            // grid config (todo)
+            // grid config
+            'card' => $widget->getCard(),
         ];
     }
 
@@ -80,7 +81,8 @@ class ListWidgetSerializer
         $this->sipe('columns', 'setDisplayedColumns', $data, $widget);
         $this->sipe('availableColumns', 'setAvailableColumns', $data, $widget);
 
-        // grid config (todo)
+        // grid config
+        $this->sipe('card', 'setCard', $data, $widget);
 
         return $widget;
     }

@@ -5,7 +5,7 @@ import {withRouter} from 'react-router-dom'
 
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-import {DataCard} from '#/main/core/data/components/data-card'
+import {DataCard} from '#/main/app/content/card/components/data'
 
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'

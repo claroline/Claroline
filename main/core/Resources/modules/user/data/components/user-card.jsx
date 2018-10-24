@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {asset} from '#/main/app/config/asset'
 import {displayDate} from '#/main/app/intl/date'
 
-import {DataCard} from '#/main/core/data/components/data-card'
+import {DataCard} from '#/main/app/content/card/components/data'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 import {User as UserTypes} from '#/main/core/user/prop-types'
 

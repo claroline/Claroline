@@ -1,0 +1,65 @@
+import {PropTypes as T} from 'prop-types'
+
+import {Action, PromisedAction} from '#/main/app/action/prop-types'
+
+/**
+ * Definition of card data.
+ *
+ * @type {object}
+ */
+const DataCard = {
+  propTypes: {
+    id: T.string.isRequired,
+    size: T.oneOf(['sm', 'lg']),
+    orientation: T.oneOf(['col', 'row']),
+    className: T.string,
+    poster: T.string,
+    icon: T.oneOfType([T.string, T.element]).isRequired,
+    title: T.string.isRequired,
+    subtitle: T.string,
+    contentText: T.string,
+    display: T.shape({
+      icon: T.bool,
+      flags: T.bool,
+      description: T.bool,
+      footer: T.bool
+    }),
+    flags: T.arrayOf(
+      T.arrayOf(T.oneOfType([T.string, T.number]))
+    ),
+    primaryAction: T.shape(
+      Action.propTypes
+    ),
+    actions: T.oneOfType([
+      // a regular array of actions
+      T.arrayOf(T.shape(
+        Action.propTypes
+      )),
+      // a promise that will resolve a list of actions
+      T.shape(
+        PromisedAction.propTypes
+      )
+    ]),
+
+    footer: T.node,
+    // ATTENTION : use it will caution because it can break grid displays
+    children: T.node
+  },
+  defaultProps: {
+    size: 'sm',
+    orientation: 'row',
+    level: 2,
+    actions: [],
+    flags: [],
+    display: {
+      icon: true,
+      flags: true,
+      description: true,
+      footer: true
+    }
+  }
+}
+
+export {
+  DataCard
+}

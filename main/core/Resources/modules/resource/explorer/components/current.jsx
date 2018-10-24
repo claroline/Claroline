@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
+import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
@@ -52,6 +53,25 @@ class CurrentDirectory extends Component {
     return []
   }
 
+  computeCard() {
+    const baseCard = get(this.state, 'source.parameters.card')
+    if (baseCard) {
+      if (get(this.props.listConfiguration, 'card')) {
+        // append custom configuration to the card
+        const ConfiguredCard = props => React.createElement(baseCard, merge({}, props, {
+          display: get(this.props.listConfiguration, 'card')
+        }))
+
+        return ConfiguredCard
+      } else {
+        return baseCard
+      }
+    }
+
+    // no card defined
+    return undefined
+  }
+
   render() {
     return (
       <ListData
@@ -75,7 +95,7 @@ class CurrentDirectory extends Component {
         actions={this.props.actions}
 
         definition={this.computeDefinition()}
-        card={get(this.state, 'source.parameters.card')}
+        card={this.computeCard()}
         display={{
           current: this.props.listConfiguration.display || listConst.DISPLAY_TILES_SM,
           available: this.props.listConfiguration.availableDisplays

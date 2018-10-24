@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
+import merge from 'lodash/merge'
 
 import {ListData} from '#/main/app/content/list/containers/data'
 import {getSource} from '#/main/app/data'
@@ -41,6 +43,25 @@ class ListWidget extends Component {
     return []
   }
 
+  computeCard() {
+    const baseCard = get(this.state, 'source.parameters.card')
+    if (baseCard) {
+      if (get(this.props, 'card')) {
+        // append custom configuration to the card
+        const ConfiguredCard = props => React.createElement(baseCard, merge({}, props, {
+          display: get(this.props, 'card')
+        }))
+
+        return ConfiguredCard
+      } else {
+        return baseCard
+      }
+    }
+
+    // no card defined
+    return undefined
+  }
+
   render() {
     if (!this.state.source) {
       return null
@@ -59,7 +80,7 @@ class ListWidget extends Component {
         }}
         primaryAction={this.state.source.parameters.primaryAction}
         definition={this.computeDefinition()}
-        card={this.state.source.parameters.card}
+        card={this.computeCard()}
         display={{
           current: this.props.display,
           available: this.props.availableDisplays

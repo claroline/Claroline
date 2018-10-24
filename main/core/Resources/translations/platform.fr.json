@@ -1745,5 +1745,10 @@
     "expert": "Expert",
     "border": "Bordure",
     "breadcrumb": "Fil d'Ariane",
-    "current_workspace": "Espace d'activités courant"
+    "current_workspace": "Espace d'activités courant",
+    "card_show_icon": "Afficher l'icône",
+    "card_show_flags": "Afficher les icônes de statut",
+    "card_show_description": "Afficher la description [Liste détaillée / Grille large]",
+    "card_show_footer": "Afficher les meta-données [Liste détaillée / Grille large]",
+    "card_show_footer_help": "Les meta-données affichées dépendent des éléments listés. Il s'agit le plus souvent des dates de création/modification ou de l'auteur."
 }

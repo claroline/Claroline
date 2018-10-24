@@ -11,7 +11,7 @@ import {
   getFilterableProps,
   isRowSelected
 } from '#/main/app/content/list/utils'
-import {DataCard as DataCardTypes} from '#/main/app/data/prop-types'
+import {DataCard as DataCardTypes} from '#/main/app/content/card/prop-types'
 import {
   DataListProperty as DataListPropertyTypes,
   DataListSelection as DataListSelectionTypes,

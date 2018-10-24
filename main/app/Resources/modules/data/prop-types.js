@@ -1,7 +1,5 @@
 import {PropTypes as T} from 'prop-types'
 
-import {Action, PromisedAction} from '#/main/app/action/prop-types'
-
 import {constants} from '#/main/app/data/constants'
 
 /**
@@ -176,57 +174,10 @@ const DataSearch = {
   defaultProps: {}
 }
 
-/**
- * Definition of card data.
- *
- * @type {object}
- *
- * @todo move elsewhere
- */
-const DataCard = {
-  propTypes: {
-    id: T.string.isRequired,
-    size: T.oneOf(['sm', 'lg']),
-    orientation: T.oneOf(['col', 'row']),
-    className: T.string,
-    poster: T.string,
-    icon: T.oneOfType([T.string, T.element]).isRequired,
-    title: T.string.isRequired,
-    subtitle: T.string,
-    contentText: T.string,
-    flags: T.arrayOf(
-      T.arrayOf(T.oneOfType([T.string, T.number]))
-    ),
-    primaryAction: T.shape(
-      Action.propTypes
-    ),
-    actions: T.oneOfType([
-      // a regular array of actions
-      T.arrayOf(T.shape(
-        Action.propTypes
-      )),
-      // a promise that will resolve a list of actions
-      T.shape(
-        PromisedAction.propTypes
-      )
-    ]),
-
-    footer: T.node
-  },
-  defaultProps: {
-    size: 'sm',
-    orientation: 'row',
-    level: 2,
-    actions: [],
-    flags: []
-  }
-}
-
 export {
   DataType,
   DataProperty,
   DataCell,
   DataDetails,
-  DataCard,
   DataSearch
 }

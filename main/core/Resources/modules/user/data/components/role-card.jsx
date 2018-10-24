@@ -4,7 +4,7 @@ import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
 import {CompositeIcon} from '#/main/app/icon/font'
-import {DataCard} from '#/main/core/data/components/data-card'
+import {DataCard} from '#/main/app/content/card/components/data'
 
 import {constants} from '#/main/core/user/role/constants'
 import {Role as RoleTypes} from '#/main/core/user/prop-types'

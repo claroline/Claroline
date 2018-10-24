@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {asset} from '#/main/app/config/asset'
 import {getPlainText} from '#/main/app/data/html/utils'
 import {displayDate} from '#/main/app/intl/date'
-import {DataCard} from '#/main/core/data/components/data-card'
+import {DataCard} from '#/main/app/content/card/components/data'
 import {ResourceIcon} from '#/main/core/resource/components/icon'
 import {UserMicro} from '#/main/core/user/components/micro'
 

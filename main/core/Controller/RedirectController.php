@@ -20,6 +20,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 /**
  * This controller is used to do some redirects/route alias. It's not always possible to do it
  * in the concerned controller because path do have prefixes we want to remove/override sometimes.
+ *
+ * @EXT\Route("/", options={"expose"=true})
  */
 class RedirectController extends Controller
 {
@@ -59,11 +61,7 @@ class RedirectController extends Controller
     }
 
     /**
-     * @EXT\Route(
-     *     "ws/{slug}/subscription",
-     *     name="claro_workspace_subscription_url_generate",
-     *     options={"expose"=true}
-     * )
+     * @EXT\Route("ws/{slug}/subscription", name="claro_workspace_subscription_url_generate")
      * @EXT\ParamConverter("workspace", options={"mapping": {"slug": "slug"}})
      *
      * @param Workspace $workspace

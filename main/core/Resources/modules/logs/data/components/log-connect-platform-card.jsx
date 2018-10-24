@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {asset} from '#/main/app/config/asset'
-import {DataCard} from '#/main/core/data/components/data-card'
+import {DataCard} from '#/main/app/content/card/components/data'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 import {convertTimestampToString} from '#/main/core/logs/utils'
 import {LogConnectPlatform as LogConnectPlatformType} from '#/main/core/logs/prop-types'

@@ -1658,7 +1658,7 @@
     "directories": "Directories",
     "restrict_hidden": "Hide",
     "restrict_hidden_help": "The item will still be accessible but users will no longer see it in the lists.",
-    "showBreadcrumbs": "Display breadcrumbs",
+    "showBreadcrumbs": "Display breadcrumb",
     "showTools": "Display tools menu to users",
     "workspace_opening": "Opening parameters",
     "enable_notifications": "Enable notifications",
@@ -1712,5 +1712,10 @@
     "expert": "Expert",
     "border": "Border",
     "breadcrumb": "Breadcrumb",
-    "current_workspace": "Current workspace"
+    "current_workspace": "Current workspace",
+    "card_show_icon": "Display icon",
+    "card_show_flags": "Display statuses icons",
+    "card_show_description": "Display description [Detailed list / Large grid]",
+    "card_show_footer": "Display metadata [Detailed list / Large grid]",
+    "card_show_footer_help": "The displayed metadata depend on the listed items. It usually contains creation/modification dates or author."
 }

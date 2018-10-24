@@ -2,7 +2,7 @@ import React from 'react'
 
 import {getPlainText} from '#/main/app/data/html/utils'
 
-import {DataCard} from '#/main/core/data/components/data-card'
+import {DataCard} from '#/main/app/content/card/components/data'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 
 const PostCard = (props) =>

@@ -117,6 +117,21 @@ trait ListParameters
     private $displayedColumns = [];
 
     /**
+     * The configuration of the card.
+     * Format: [
+     *   'icon' => false,
+     *   'flags' => false,
+     *   'description' => false,
+     *   'footer' => false,
+     * ].
+     *
+     * @ORM\Column(type="json")
+     *
+     * @var array
+     */
+    private $card = [];
+
+    /**
      * Is list filterable ?
      *
      * @return bool
@@ -406,5 +421,25 @@ trait ListParameters
     public function setDisplayedColumns(array $displayedColumns)
     {
         $this->displayedColumns = $displayedColumns;
+    }
+
+    /**
+     * Get the card configuration.
+     *
+     * @return array
+     */
+    public function getCard()
+    {
+        return $this->card;
+    }
+
+    /**
+     * Set the card configuration.
+     *
+     * @param array $card
+     */
+    public function setCard(array $card)
+    {
+        $this->card = $card;
     }
 }

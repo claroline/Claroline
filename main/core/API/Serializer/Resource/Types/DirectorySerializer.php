@@ -56,7 +56,8 @@ class DirectorySerializer
                 'columns' => $directory->getDisplayedColumns(),
                 'availableColumns' => $directory->getAvailableColumns(),
 
-                // grid config (todo)
+                // grid config
+                'card' => $directory->getCard(),
             ],
         ];
     }
@@ -100,6 +101,9 @@ class DirectorySerializer
         // table config
         $this->sipe('list.columns', 'setDisplayedColumns', $data, $directory);
         $this->sipe('list.availableColumns', 'setAvailableColumns', $data, $directory);
+
+        // grid config
+        $this->sipe('list.card', 'setCard', $data, $directory);
 
         return $directory;
     }

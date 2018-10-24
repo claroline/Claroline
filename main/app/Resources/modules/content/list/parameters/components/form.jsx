@@ -23,6 +23,13 @@ const isSortable = (parameters) => parameters.sortable || !isEmpty(parameters.av
 const isMultiDisplays = (parameters) => parameters.enableDisplays || !isEmpty(parameters.availableDisplays)
 const isColumnsFilterable = (parameters) => parameters.columnsFilterable || !isEmpty(parameters.availableColumns)
 
+const hasLargeCard = (parameters) => {
+  const availableDisplays = get(parameters, 'availableDisplays') || []
+
+  return !!availableDisplays
+    .find(displayMode => constants.DISPLAY_MODES[displayMode].options.useCard && 'lg' === constants.DISPLAY_MODES[displayMode].options.size)
+}
+
 const ListForm = props => {
   const definition = createListDefinition(get(props.list, 'definition') || [])
 
@@ -417,7 +424,26 @@ const ListForm = props => {
             return !!availableDisplays.find(displayMode => constants.DISPLAY_MODES[displayMode].options.useCard)
           },
           fields: [
-
+            {
+              name: 'card.icon',
+              label: trans('card_show_icon'),
+              type: 'boolean'
+            }, {
+              name: 'card.flags',
+              label: trans('card_show_flags'),
+              type: 'boolean'
+            }, {
+              name: 'card.description',
+              label: trans('card_show_description'),
+              type: 'boolean',
+              displayed: hasLargeCard
+            }, {
+              name: 'card.footer',
+              label: trans('card_show_footer'),
+              type: 'boolean',
+              displayed: hasLargeCard,
+              help: trans('card_show_footer_help')
+            }
           ]
         }
       ]}
