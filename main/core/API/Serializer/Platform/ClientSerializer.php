@@ -138,6 +138,7 @@ class ClientSerializer
                 'url' => $logo->getUrl(),
                 'colorized' => 'image/svg+xml' === $logo->getMimeType(),
             ] : null,
+            'logo_redirect_home' => $this->config->getParameter('logo_redirect_home'),
             'name' => $this->config->getParameter('name'),
             'secondaryName' => $this->config->getParameter('secondary_name'),
             'description' => null, // the one for the current locale

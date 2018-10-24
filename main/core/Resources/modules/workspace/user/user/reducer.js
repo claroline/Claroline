@@ -7,7 +7,9 @@ import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 
 const reducer = combineReducers({
   picker: makeListReducer('users.picker'),
-  list: makeListReducer('users.list', {}, {
+  list: makeListReducer('users.list', {
+    sortBy: {property: 'created', direction: -1}
+  }, {
     invalidated: makeReducer(false, {
       [FORM_SUBMIT_SUCCESS+'/users.current']: () => true // todo : find better
     })

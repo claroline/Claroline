@@ -14,7 +14,9 @@ const reducer = {
   }),
   teamParamsForm: makeFormReducer('teamParamsForm'),
   teams: combineReducers({
-    list: makeListReducer('teams.list', {}, {
+    list: makeListReducer('teams.list', {
+      sortBy: {property: 'id', direction: -1}
+    }, {
       invalidated: makeReducer(false, {
         [FORM_SUBMIT_SUCCESS+'/teams.current']: () => true,
         [FORM_SUBMIT_SUCCESS+'/teams.multiple']: () => true

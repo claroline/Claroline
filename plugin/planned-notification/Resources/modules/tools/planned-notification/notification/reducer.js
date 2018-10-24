@@ -7,7 +7,9 @@ import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 
 const reducer = combineReducers({
   rolesPicker: makeListReducer('notifications.rolesPicker'),
-  list: makeListReducer('notifications.list', {}, {
+  list: makeListReducer('notifications.list', {
+    sortBy: {property: 'id', direction: -1}
+  }, {
     invalidated: makeReducer(false, {
       [FORM_SUBMIT_SUCCESS+'/notifications.current']: () => true
     })

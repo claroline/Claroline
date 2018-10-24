@@ -7,7 +7,9 @@ import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 
 const reducer = combineReducers({
   picker: makeListReducer('messages.picker'),
-  list: makeListReducer('messages.list', {}, {
+  list: makeListReducer('messages.list', {
+    sortBy: {property: 'id', direction: -1}
+  }, {
     invalidated: makeReducer(false, {
       [FORM_SUBMIT_SUCCESS+'/messages.current']: () => true
     })

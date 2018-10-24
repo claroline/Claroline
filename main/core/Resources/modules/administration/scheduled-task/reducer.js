@@ -5,7 +5,9 @@ import {makeListReducer} from '#/main/app/content/list/store'
 const reducer = {
   isCronConfigured: makeReducer(false, {}),
   picker: makeListReducer('picker'),
-  tasks: makeListReducer('tasks'),
+  tasks: makeListReducer('tasks', {
+    sortBy: {property: 'scheduledDate', direction: -1}
+  }),
   task: makeFormReducer('task', {}, {
     users: makeListReducer('task.users')
   })

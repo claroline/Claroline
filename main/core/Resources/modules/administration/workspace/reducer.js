@@ -16,7 +16,8 @@ const reducer = {
       filters: [
         {property: 'meta.personal', value: false},
         {property: 'meta.model', value: false}
-      ]
+      ],
+      sortBy: {property: 'created', direction: -1}
     }, {
       invalidated: makeReducer(false, {
         [FORM_SUBMIT_SUCCESS+'/workspaces.current']: () => true
