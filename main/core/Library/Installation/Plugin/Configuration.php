@@ -270,7 +270,7 @@ class Configuration implements ConfigurationInterface
                         ->booleanNode('exportable')->defaultFalse()->end()
                         ->arrayNode('context')
                             ->prototype('scalar')->end()
-                            ->defaultValue(['desktop', 'workspace'])
+                            ->defaultValue(['desktop', 'workspace', 'home'])
                         ->end()
                         ->arrayNode('tags')
                             ->prototype('scalar')->end()

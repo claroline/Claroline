@@ -16,5 +16,5 @@ plugin:
     data_sources:
         - name: forum_messages
           type: list
-          context: [workspace, desktop]
+          context: [workspace, desktop, home]
           tags: [resources, community]

@@ -51,6 +51,8 @@ class ForumSource
 
         if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {
             $options['hiddenFilters']['workspace'] = $event->getWorkspace()->getUuid();
+        } elseif (DataSource::CONTEXT_HOME === $event->getContext()) {
+            $options['hiddenFilters']['anonymous'] = true;
         }
         $event->setData(
             $this->finder->search(Message::class, $options)

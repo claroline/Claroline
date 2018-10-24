@@ -72,10 +72,12 @@ class ResourceSource
         $options['hiddenFilters']['active'] = true;
         $options['hiddenFilters']['resourceTypeEnabled'] = true;
 
-        $roles = array_map(
-            function ($role) { return $role->getRole(); },
-            $this->tokenStorage->getToken()->getRoles()
-        );
+        $roles = DataSource::CONTEXT_HOME === $event->getContext() ?
+            ['ROLE_ANONYMOUS'] :
+            array_map(
+                function ($role) { return $role->getRole(); },
+                $this->tokenStorage->getToken()->getRoles()
+            );
 
         if (!in_array('ROLE_ADMIN', $roles)) {
             $options['hiddenFilters']['roles'] = $roles;

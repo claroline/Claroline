@@ -104,11 +104,13 @@ class HomeController extends AbstractApiController
 
         // retrieve existing tabs for the context to remove deleted ones
         /** @var HomeTab[] $installedTabs */
-        $installedTabs = $this->finder->fetch(HomeTab::class, 'desktop' === $context ? [
-            'user' => $contextId,
-        ] : [
-            $context => $contextId,
-        ]);
+        $installedTabs = HomeTab::TYPE_HOME === $context ?
+            $this->finder->fetch(HomeTab::class, ['type' => HomeTab::TYPE_HOME]) :
+            $this->finder->fetch(HomeTab::class, 'desktop' === $context ? [
+                'user' => $contextId,
+            ] : [
+                $context => $contextId,
+            ]);
 
         // do not delete tabs set by the administration tool
         $installedTabs = array_filter($installedTabs, function (HomeTab $tab) {

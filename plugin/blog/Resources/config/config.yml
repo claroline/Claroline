@@ -23,7 +23,7 @@ plugin:
     data_sources:
         - name: blog_posts
           type: list
-          context: [workspace, desktop]
+          context: [workspace, desktop, home]
           tags: [resources, community]
 
     #widgets:

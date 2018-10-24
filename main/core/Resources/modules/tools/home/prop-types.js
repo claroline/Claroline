@@ -5,7 +5,7 @@ import {Widget} from '#/main/core/widget/prop-types'
 const Tab = {
   propTypes: {
     id: T.string.isRequired,
-    type: T.oneOf(['workspace', 'admin_desktop', 'desktop', 'administration']),
+    type: T.oneOf(['workspace', 'admin_desktop', 'desktop', 'administration', 'home']),
     title: T.string.isRequired,
     longTitle: T.string,
     centerTitle: T.bool.isRequired,

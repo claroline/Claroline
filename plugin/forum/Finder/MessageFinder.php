@@ -91,6 +91,15 @@ class MessageFinder extends AbstractFinder
                     $qb->andWhere("w.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
+                case 'anonymous':
+                    $qb->join('obj.subject', 'sf');
+                    $qb->join('sf.forum', 'forum');
+                    $qb->join('forum.resourceNode', 'node');
+                    $qb->join('node.rights', 'rights');
+                    $qb->join('rights.role', 'role');
+                    $qb->andWhere("role.name = 'ROLE_ANONYMOUS'");
+                    $qb->andWhere('rights.mask > 0');
+                    break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
             }

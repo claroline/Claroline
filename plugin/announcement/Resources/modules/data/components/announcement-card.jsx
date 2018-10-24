@@ -30,13 +30,13 @@ const AnnouncementCard = (props) =>
           justifyContent: 'space-between'
         }}
       >
-        {props.data.author ?
+        {props.data.meta.author ?
           <UserMicro name={props.data.meta.author} /> :
           <UserMicro {...props.data.meta.creator} />
         }
 
-        {props.meta.publishedAt ?
-          trans('published_at', {date: displayDate(props.meta.publishedAt, false, true)}) : trans('not_published')
+        {props.data.meta.publishedAt ?
+          trans('published_at', {date: displayDate(props.data.meta.publishedAt, false, true)}) : trans('not_published')
         }
       </span>
     }

@@ -151,6 +151,8 @@ class PlatformDefaults implements ParameterProviderInterface
                 'registration.waitingForRegistration',
             ],
             'logo_redirect_home' => true,
+            'home_redirection_type' => null,
+            'home_redirection_url' => null,
         ];
     }
 }

@@ -30,6 +30,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Templating\EngineInterface;
 
@@ -50,6 +51,8 @@ class HomeController extends AbstractApiController
     private $manager;
     /** @var HomeService */
     private $homeService;
+    /** @var UrlGeneratorInterface */
+    private $router;
 
     /**
      * HomeController constructor.
@@ -60,7 +63,8 @@ class HomeController extends AbstractApiController
      *     "formFactory"   = @DI\Inject("form.factory"),
      *     "config"        = @DI\Inject("claroline.config.platform_config_handler"),
      *     "manager"       = @DI\Inject("claroline.manager.home_manager"),
-     *     "homeService"   = @DI\Inject("claroline.common.home_service")
+     *     "homeService"   = @DI\Inject("claroline.common.home_service"),
+     *     "router"        = @DI\Inject("router")
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
@@ -69,6 +73,7 @@ class HomeController extends AbstractApiController
      * @param PlatformConfigurationHandler  $config
      * @param HomeManager                   $manager
      * @param HomeService                   $homeService
+     * @param UrlGeneratorInterface         $router
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -76,7 +81,8 @@ class HomeController extends AbstractApiController
         FormFactory $formFactory,
         PlatformConfigurationHandler $config,
         HomeManager $manager,
-        HomeService $homeService
+        HomeService $homeService,
+        UrlGeneratorInterface $router
     ) {
         $this->authorization = $authorization;
         $this->templating = $templating;
@@ -84,6 +90,7 @@ class HomeController extends AbstractApiController
         $this->config = $config;
         $this->manager = $manager;
         $this->homeService = $homeService;
+        $this->router = $router;
     }
 
     /**
@@ -124,8 +131,20 @@ class HomeController extends AbstractApiController
     {
         $typeEntity = $this->manager->getType($type);
 
-        if ($url = $this->config->getParameter('home_redirection_url')) {
-            return new RedirectResponse($url);
+        $homeType = $this->config->getParameter('home_redirection_type');
+
+        switch ($homeType) {
+            case 'url':
+                $url = $this->config->getParameter('home_redirection_url');
+
+                if ($url) {
+                    return new RedirectResponse($url);
+                }
+                break;
+            case 'login':
+                return new RedirectResponse($this->router->generate('claro_security_login'));
+            case 'new':
+                return new RedirectResponse($this->router->generate('apiv2_home'));
         }
 
         if (is_null($typeEntity)) {

@@ -25,7 +25,8 @@
       "tools-admin-logs": "administration/logs",
       "tools-admin-analytics": "administration/analytics",
       "resource": "resource/bootstrap",
-      "desktop-parameters-tool": "tools/desktop-parameters"
+      "desktop-parameters-tool": "tools/desktop-parameters",
+      "home": "home/bootstrap"
     }
   },
 
