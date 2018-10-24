@@ -24,7 +24,6 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\ExportResourceException;
@@ -1578,48 +1577,6 @@ class ResourceManager
         );
 
         return $publicDir;
-    }
-
-    /**
-     * Returns the list of file upload destination choices.
-     *
-     * @param Workspace $workspace
-     *
-     * @return array
-     */
-    public function getDefaultUploadDestinations(Workspace $workspace = null)
-    {
-        /** @var User $user */
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
-        if ('anon.' === $user) {
-            return [];
-        }
-
-        $pws = $user->getPersonalWorkspace();
-        $defaults = [];
-
-        if ($pws) {
-            $defaults = array_merge(
-                $defaults,
-                $this->directoryRepo->findDefaultUploadDirectories($pws)
-            );
-        }
-
-        if ($workspace) {
-            $directories = array_filter($this->directoryRepo->findDefaultUploadDirectories($workspace), function (ResourceNode $node) {
-                $collection = new ResourceCollection([$node]);
-                $collection->setAttributes(['type' => 'file']);
-
-                return $this->container->get('security.authorization_checker')->isGranted('CREATE', $collection);
-            });
-
-            $defaults = array_merge(
-                $defaults,
-                $directories
-            );
-        }
-
-        return $defaults;
     }
 
     public function getLastIndex(ResourceNode $parent)

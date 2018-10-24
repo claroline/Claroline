@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\API\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
@@ -73,6 +74,11 @@ class ResourceNodeFinder extends AbstractFinder
                     $qb->setParameter('published', $filterValue);
                     break;
                 case 'meta.type':
+                case 'meta.uploadDestination':
+                    $qb->andWhere("ort.name = 'directory'");
+                    $qb->join(Directory::class, 'dir', 'WITH', 'dir.resourceNode = obj.id');
+                    $qb->andWhere('dir.uploadDestination = true');
+                    break;
                 case 'resourceType':
                     if (is_array($filterValue)) {
                         $qb->andWhere('ort.name IN (:resourceType)');

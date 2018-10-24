@@ -11,19 +11,17 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\AbstractApiController;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
-use Claroline\CoreBundle\Library\Utilities\MimeTypeGuesser;
-use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -46,74 +44,68 @@ class FileController extends AbstractApiController
 
     /** @var SessionInterface */
     private $session;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
     /** @var ObjectManager */
     private $om;
     /** @var string */
     private $fileDir;
     /** @var SerializerProvider */
     private $serializer;
-    /** @var FileManager */
-    private $fileManager;
-    /** @var MimeTypeGuesser */
-    private $mimeTypeGuesser;
     /** @var ResourceManager */
     private $resourceManager;
     /** @var RoleManager */
     private $roleManager;
     /** @var FileUtilities */
     private $fileUtils;
+    /** @var FinderProvider */
+    private $finder;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
 
     /**
      * FileController constructor.
      *
      * @DI\InjectParams({
      *     "session"         = @DI\Inject("session"),
-     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "fileDir"         = @DI\Inject("%claroline.param.files_directory%"),
      *     "serializer"      = @DI\Inject("claroline.api.serializer"),
-     *     "fileManager"     = @DI\Inject("claroline.manager.file_manager"),
-     *     "mimeTypeGuesser" = @DI\Inject("claroline.utilities.mime_type_guesser"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
-     *     "fileUtils"       = @DI\Inject("claroline.utilities.file")
+     *     "fileUtils"       = @DI\Inject("claroline.utilities.file"),
+     *     "finder"          = @DI\Inject("claroline.api.finder"),
+     *     "tokenStorage"    = @DI\Inject("security.token_storage")
      * })
      *
      * @param SessionInterface      $session
-     * @param TokenStorageInterface $tokenStorage
      * @param ObjectManager         $om
      * @param string                $fileDir
      * @param SerializerProvider    $serializer
-     * @param FileManager           $fileManager
-     * @param MimeTypeGuesser       $mimeTypeGuesser
      * @param ResourceManager       $resourceManager
      * @param RoleManager           $roleManager
      * @param FileUtilities         $fileUtils
+     * @param FinderProvider        $finder
+     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(
         SessionInterface $session,
-        TokenStorageInterface $tokenStorage,
         ObjectManager $om,
         $fileDir,
         SerializerProvider $serializer,
-        FileManager $fileManager,
-        MimeTypeGuesser $mimeTypeGuesser,
         ResourceManager $resourceManager,
         RoleManager $roleManager,
-        FileUtilities $fileUtils
+        FileUtilities $fileUtils,
+        FinderProvider $finder,
+        TokenStorageInterface $tokenStorage
     ) {
-        $this->session = $session;
         $this->tokenStorage = $tokenStorage;
+        $this->session = $session;
         $this->om = $om;
         $this->fileDir = $fileDir;
         $this->serializer = $serializer;
-        $this->fileManager = $fileManager;
-        $this->mimeTypeGuesser = $mimeTypeGuesser;
         $this->resourceManager = $resourceManager;
         $this->roleManager = $roleManager;
         $this->fileUtils = $fileUtils;
+        $this->finder = $finder;
     }
 
     /**
@@ -154,9 +146,19 @@ class FileController extends AbstractApiController
      */
     public function listTinyMceDestinationsAction(Workspace $workspace = null)
     {
-        return new JsonResponse(array_map(function (Directory $directory) {
-            return $this->serializer->serialize($directory->getResourceNode(), [Options::SERIALIZE_MINIMAL]);
-        }, $this->resourceManager->getDefaultUploadDestinations($workspace)));
+        $data = $this->finder->search(
+          ResourceNode::class, [
+            'filters' => [
+                'meta.uploadDestination' => true,
+                'roles' => array_map(function ($role) {
+                    return $role->getRole();
+                }, $this->tokenStorage->getToken()->getRoles()),
+            ],
+          ],
+          [Options::SERIALIZE_MINIMAL]
+        );
+
+        return new JsonResponse($data['data']);
     }
 
     /**

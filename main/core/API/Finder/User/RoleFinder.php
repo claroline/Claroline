@@ -51,7 +51,7 @@ class RoleFinder extends AbstractFinder
 
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Role';
+        return Role::class;
     }
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
