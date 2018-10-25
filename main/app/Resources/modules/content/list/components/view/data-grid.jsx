@@ -100,7 +100,7 @@ const DataGridSort = props =>
       type="button"
       className="btn btn-link"
       disabled={!props.current.property}
-      onClick={() => !props.current.property && props.updateSort(props.current.property)}
+      onClick={() => props.current.property && props.updateSort(props.current.property)}
     >
       <span className={classes('fa fa-fw', {
         'fa-sort'     :  0 === props.current.direction || !props.current.direction,

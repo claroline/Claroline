@@ -71,7 +71,7 @@ actions.changeDirectory = (explorerName, directoryId = null) => (dispatch, getSt
     dispatch(actions.setCurrentConfiguration(explorerName, null, filters))
 
     // Load the list of resource for the current directory
-    dispatch(listActions.fetchData(explorerName +'.resources', ['apiv2_resource_list']))
+    dispatch(listActions.fetchData(explorerName +'.resources', ['apiv2_resource_list'], true))
 
     // Load summary directories if not already done
     const directories = selectors.directories(selectors.explorer(getState(), explorerName))
@@ -108,7 +108,7 @@ actions.fetchCurrentDirectory = (explorerName, directoryId, filters = []) => ({
       dispatch(actions.setCurrentConfiguration(explorerName, response.directory, filters))
 
       // Load the list of resource for the current directory
-      dispatch(listActions.fetchData(explorerName +'.resources', ['apiv2_resource_list', {parent: directoryId}]))
+      dispatch(listActions.fetchData(explorerName +'.resources', ['apiv2_resource_list', {parent: directoryId}], true))
     }
   }
 })
@@ -234,8 +234,8 @@ actions.invalidateCurrentResources = (explorerName, updatedNodes) => (dispatch, 
 
   if (current && -1 !== updatedNodes.findIndex(node => node.parent && current.id === node.parent.id)) {
     // we are inside a directory and one of the child have changed
-    dispatch(listActions.fetchData(explorerName +'.resources', ['apiv2_resource_list', {parent: current.id}]))
+    dispatch(listActions.fetchData(explorerName +'.resources', ['apiv2_resource_list', {parent: current.id}], true))
   } else if (-1 !== updatedNodes.findIndex(node => !!node.parent)) {
-    dispatch(listActions.fetchData(explorerName +'.resources', ['apiv2_resource_list']))
+    dispatch(listActions.fetchData(explorerName +'.resources', ['apiv2_resource_list'], true))
   }
 }
