@@ -202,8 +202,13 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
         $this->container->get('claroline.installation.refresher')->installAssets();
         $this->log('Updating resource icons...');
 
-        $this->container->get('claroline.manager.icon_set_manager')->setLogger($this->logger);
-        $this->container->get('claroline.manager.icon_set_manager')->addDefaultIconSets();
+        try {
+            $this->container->get('claroline.manager.icon_set_manager')->setLogger($this->logger);
+            $this->container->get('claroline.manager.icon_set_manager')->addDefaultIconSets();
+        } catch (\Exception $e) {
+            $this->log('Failed to update icons..');
+        }
+
         $om = $this->container->get('claroline.persistence.object_manager');
         $workspaceManager = $this->container->get('claroline.manager.workspace_manager');
         $workspaceManager->setLogger($this->logger);
