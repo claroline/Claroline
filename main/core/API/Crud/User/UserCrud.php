@@ -75,6 +75,11 @@ class UserCrud
         $this->toolManager->addRequiredToolsToUser($user, 0);
         $this->toolManager->addRequiredToolsToUser($user, 1);
         $roleUser = $this->roleManager->getRoleByName(PlatformRoles::USER);
+
+        if (!$roleUser) {
+            throw new \Exception('ROLE_USER does not exists');
+        }
+
         $user->addRole($roleUser);
         $this->roleManager->createUserRole($user);
 

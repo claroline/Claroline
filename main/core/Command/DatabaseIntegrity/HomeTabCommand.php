@@ -10,6 +10,7 @@ namespace Claroline\CoreBundle\Command\DatabaseIntegrity;
 
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Entity\Tab\HomeTabConfig;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -49,6 +50,41 @@ class HomeTabCommand extends ContainerAwareCommand
 
             $manager->persist($desktopHomeTabConfig);
             $manager->flush();
+        }
+
+        $workspaces = $container->get('claroline.persistence.object_manager')->getRepository(Workspace::class)->findAll();
+
+        $output->writeln(count($workspaces).' found');
+        $i = 1;
+
+        //todo: le faire en sql pour aller plus vite
+        foreach ($workspaces as $workspace) {
+            $output->writeln('Workspace '.$i.' :');
+
+            $tabs = $finder->fetch(HomeTab::class, ['workspace' => $workspace->getUuid()]);
+
+            if (0 === count($tabs)) {
+                $output->writeln('No tabs found... restoring default.');
+                $infoName = $translator->trans('informations', [], 'platform');
+
+                $workspaceTab = new HomeTab();
+                $workspaceTab->setType(HomeTab::TYPE_WORKSPACE);
+                $workspaceTab->setWorkspace($workspace);
+                $manager->persist($workspaceTab);
+
+                $workspaceTabConfig = new HomeTabConfig();
+                $workspaceTabConfig->setHomeTab($workspaceTab);
+                $workspaceTabConfig->setType(HomeTab::TYPE_WORKSPACE);
+                $workspaceTabConfig->setVisible(true);
+                $workspaceTabConfig->setLocked(true);
+                $workspaceTabConfig->setTabOrder(1);
+                $workspaceTabConfig->setName($infoName);
+                $workspaceTabConfig->setLongTitle($infoName);
+
+                $manager->persist($workspaceTabConfig);
+                $manager->flush();
+            }
+            ++$i;
         }
     }
 }

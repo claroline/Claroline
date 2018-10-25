@@ -88,21 +88,25 @@ class WebResourceManager
      */
     public function getHTMLFiles($directory)
     {
-        $dir = new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS | RecursiveDirectoryIterator::NEW_CURRENT_AND_KEY);
-        $files = new \RecursiveIteratorIterator($dir);
+        try {
+            $dir = new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS | RecursiveDirectoryIterator::NEW_CURRENT_AND_KEY);
+            $files = new \RecursiveIteratorIterator($dir);
 
-        $allowedExtensions = ['htm', 'html'];
+            $allowedExtensions = ['htm', 'html'];
 
-        $list = [];
-        foreach ($files as $file) {
-            if (in_array($file->getExtension(), $allowedExtensions)) {
-                // HTML File found
-                $relativePath = str_replace($directory, '', $file->getPathname());
-                $list[] = ltrim($relativePath, '\\/');
+            $list = [];
+            foreach ($files as $file) {
+                if (in_array($file->getExtension(), $allowedExtensions)) {
+                    // HTML File found
+                    $relativePath = str_replace($directory, '', $file->getPathname());
+                    $list[] = ltrim($relativePath, '\\/');
+                }
             }
-        }
 
-        return $list;
+            return $list;
+        } catch (\Exception $e) {
+            return [];
+        }
     }
 
     /**

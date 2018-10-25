@@ -679,6 +679,13 @@ class ResourceManager
         $withDirectoryContent = true,
         array $rights = []
     ) {
+        $check = ['activity', 'claroline_scorm_12', 'claroline_scorm_2004'];
+
+        if (in_array($node->getResourceType()->getName(), $check)) {
+            return;
+        }
+
+        $withDirectoryContent = true;
         $this->log("Copying {$node->getName()} from type {$node->getResourceType()->getName()}");
         $resource = $this->getResourceFromNode($node);
         $env = $this->container->get('kernel')->getEnvironment();
@@ -714,12 +721,15 @@ class ResourceManager
         if ('directory' === $node->getResourceType()->getName() &&
             $withDirectoryContent) {
             $i = 1;
+            $this->log('Copying '.count($node->getChildren()->toArray()).' resources for directory '.$node->getName());
 
             foreach ($node->getChildren() as $child) {
-                if ($child->isActive()) {
-                    $this->copy($child, $newNode, $user, $i, $withRights, $withDirectoryContent, $rights);
-                    ++$i;
-                }
+                $this->log('Loop for  '.$child->getName().':'.$child->getResourceType()->getName());
+
+                //              if ($child->isActive()) {
+                $this->copy($child, $newNode, $user, $i, $withRights, $withDirectoryContent, $rights);
+                ++$i;
+                //             }
             }
         }
 
