@@ -11,7 +11,6 @@ use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
-use Claroline\ForumBundle\Finder\MessageFinder;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -23,6 +22,14 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class SubjectSerializer
 {
     use SerializerTrait;
+
+    private $serializerProvider;
+    private $container;
+    private $fileUt;
+    private $eventDispatcher;
+    private $om;
+
+    private $messageRepo;
 
     public function getClass()
     {
@@ -51,26 +58,29 @@ class SubjectSerializer
      *     "container"       = @DI\Inject("service_container"),
      *     "fileUt"          = @DI\Inject("claroline.utilities.file"),
      *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
-     *     "messageFinder"   = @DI\Inject("claroline.api.finder.forum_message"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
-     * @param SerializerProvider $serializer
+     * @param SerializerProvider       $provider
+     * @param ContainerInterface       $container
+     * @param FileUtilities            $fileUt
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param ObjectManager            $om
      */
     public function __construct(
         SerializerProvider $provider,
         ContainerInterface $container,
         FileUtilities $fileUt,
         EventDispatcherInterface $eventDispatcher,
-        MessageFinder $messageFinder,
         ObjectManager $om
     ) {
         $this->serializerProvider = $provider;
         $this->container = $container;
         $this->fileUt = $fileUt;
         $this->eventDispatcher = $eventDispatcher;
-        $this->messageFinder = $messageFinder;
         $this->om = $om;
+
+        $this->messageRepo = $om->getRepository(Message::class);
     }
 
     /**
@@ -83,8 +93,8 @@ class SubjectSerializer
      */
     public function serialize(Subject $subject, array $options = [])
     {
-        $first = $this->messageFinder->findOneBy([
-          'subject' => $subject->getId(),
+        $first = $this->messageRepo->findOneBy([
+          'subject' => $subject,
           'first' => true,
         ]);
 
@@ -143,8 +153,8 @@ class SubjectSerializer
      */
     public function deserialize($data, Subject $subject, array $options = [])
     {
-        $first = $this->messageFinder->findOneBy([
-          'subject' => $subject->getId(),
+        $first = $this->messageRepo->findOneBy([
+          'subject' => $subject,
           'first' => true,
         ]);
 
@@ -153,6 +163,7 @@ class SubjectSerializer
         $this->sipe('meta.sticky', 'setSticked', $data, $subject);
         $this->sipe('meta.closed', 'setClosed', $data, $subject);
         $this->sipe('meta.flagged', 'setFlagged', $data, $subject);
+        $this->sipe('meta.moderation', 'setModerated', $data, $subject);
 
         if (isset($data['content'])) {
             if (!$first) {

@@ -9,6 +9,11 @@ const forum = createSelector(
   (resource) => resource.forum
 )
 
+const isValidatedUser = createSelector(
+  [resource],
+  (resource) => resource.isValidatedUser
+)
+
 const subjects = createSelector(
   [resource],
   (resource) => resource.subjects
@@ -107,6 +112,7 @@ export const select = {
   STORE_NAME,
   resource,
   forum,
+  isValidatedUser,
   subject,
   messages,
   totalResults,

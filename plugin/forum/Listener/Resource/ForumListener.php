@@ -20,7 +20,9 @@ use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
+use Claroline\ForumBundle\Manager\Manager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @DI\Service
@@ -39,6 +41,12 @@ class ForumListener
     /** @var ResourceEvaluationManager */
     private $evaluationManager;
 
+    /** @var Manager */
+    private $manager;
+
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
     /**
      * ForumListener constructor.
      *
@@ -46,24 +54,32 @@ class ForumListener
      *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
      *     "serializer"        = @DI\Inject("claroline.api.serializer"),
      *     "crud"              = @DI\Inject("claroline.api.crud"),
-     *     "evaluationManager" = @DI\Inject("claroline.manager.resource_evaluation_manager")
+     *     "evaluationManager" = @DI\Inject("claroline.manager.resource_evaluation_manager"),
+     *     "manager"           = @DI\Inject("claroline.manager.forum_manager"),
+     *     "tokenStorage"      = @DI\Inject("security.token_storage")
      * })
      *
      * @param ObjectManager             $om
      * @param SerializerProvider        $serializer
      * @param Crud                      $crud
      * @param ResourceEvaluationManager $evaluationManager
+     * @param Manager                   $manager
+     * @param TokenStorageInterface     $tokenStorage
      */
     public function __construct(
         ObjectManager $om,
         SerializerProvider $serializer,
         Crud $crud,
-        ResourceEvaluationManager $evaluationManager
+        ResourceEvaluationManager $evaluationManager,
+        Manager $manager,
+        TokenStorageInterface $tokenStorage
     ) {
         $this->om = $om;
         $this->serializer = $serializer;
         $this->crud = $crud;
         $this->evaluationManager = $evaluationManager;
+        $this->manager = $manager;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -75,8 +91,18 @@ class ForumListener
      */
     public function onOpen(LoadResourceEvent $event)
     {
+        $forum = $event->getResource();
+        $user = $this->tokenStorage->getToken()->getUser();
+        $isValidatedUser = false;
+
+        if ('anon.' !== $user) {
+            $validationUser = $this->manager->getValidationUser($user, $forum);
+            $isValidatedUser = $validationUser->getAccess();
+        }
+
         $event->setData([
-            'forum' => $this->serializer->serialize($event->getResource()),
+            'forum' => $this->serializer->serialize($forum),
+            'isValidatedUser' => $isValidatedUser,
         ]);
 
         $event->stopPropagation();

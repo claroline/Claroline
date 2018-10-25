@@ -44,8 +44,8 @@ class MessageCommentsComponent extends Component {
   createNewComment(messageId, comment) {
     this.props.createComment(messageId, comment, this.props.forum.moderation)
     this.setState({showNewCommentForm: null})
-    if (this.props.forum.moderation === 'PRIOR_ALL' ||
-    this.props.forum.moderation === 'PRIOR_ONCE' ) {
+
+    if (this.props.forum.moderation === 'PRIOR_ALL' || (this.props.forum.moderation === 'PRIOR_ONCE' && !this.props.isValidatedUser)) {
       this.props.showModal(MODAL_ALERT, {
         title: trans('moderated_posts', {}, 'forum'),
         message: trans('moderated_posts_explanation', {}, 'forum'),
@@ -88,22 +88,22 @@ class MessageCommentsComponent extends Component {
                       {
                         icon: 'fa fa-fw fa-pencil',
                         label: trans('edit'),
-                        displayed: (comment.meta.creator.id === authenticatedUser.id) && !get(this.props.subject, 'meta.closed'),
+                        displayed: authenticatedUser && (comment.meta.creator.id === authenticatedUser.id) && !get(this.props.subject, 'meta.closed'),
                         action: () => this.setState({showCommentForm: comment.id})
                       }, {
                         icon: 'fa fa-fw fa-flag-o',
                         label: trans('flag', {}, 'forum'),
-                        displayed: (comment.meta.creator.id !== authenticatedUser.id) && !comment.meta.flagged,
+                        displayed: authenticatedUser && (comment.meta.creator.id !== authenticatedUser.id) && !comment.meta.flagged,
                         action: () => this.props.flag(comment, this.props.subject.id)
                       }, {
                         icon: 'fa fa-fw fa-flag',
                         label: trans('unflag', {}, 'forum'),
-                        displayed: (comment.meta.creator.id !== authenticatedUser.id) && comment.meta.flagged,
+                        displayed: authenticatedUser && (comment.meta.creator.id !== authenticatedUser.id) && comment.meta.flagged,
                         action: () => this.props.unFlag(comment, this.props.subject.id)
                       }, {
                         icon: 'fa fa-fw fa-trash-o',
                         label: trans('delete'),
-                        displayed: comment.meta.creator.id === authenticatedUser.id || this.props.moderator,
+                        displayed: authenticatedUser && (comment.meta.creator.id === authenticatedUser.id || this.props.moderator),
                         action: () => this.deleteComment(comment.id),
                         dangerous: true
                       }
@@ -176,16 +176,19 @@ MessageCommentsComponent.propTypes = {
   createComment: T.func.isRequired,
   showModal: T.func,
   bannedUser: T.bool.isRequired,
-  moderator: T.bool.isRequired
+  moderator: T.bool.isRequired,
+  isValidatedUser: T.bool.isRequired
 }
 
 MessageCommentsComponent.defaultProps = {
-  bannedUser: true
+  bannedUser: true,
+  isValidatedUser: false
 }
 
 const MessageComments =  withModal(connect(
   state => ({
     forum: select.forum(state),
+    isValidatedUser: select.isValidatedUser(state),
     subject: select.subject(state),
     bannedUser: select.bannedUser(state),
     moderator: select.moderator(state)

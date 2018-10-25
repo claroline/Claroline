@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
 import {withRouter} from '#/main/app/router'
+import {withModal} from '#/main/app/overlay/modal/withModal'
 import {trans} from '#/main/app/intl/translation'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 import {User as UserTypes} from '#/main/core/user/prop-types'
@@ -88,14 +89,13 @@ const SubjectFormComponent = (props) => {
       props.editSubject(forumId, subjectId)
     }
     else if (!props.moderator &&
-      props.forum.moderation === 'PRIOR_ALL' ||
-      props.forum.moderation === 'PRIOR_ONCE') {
-      props.createModeratedSubject(forumId, subjectId, props.forum.moderation)
+      (props.forum.moderation === 'PRIOR_ALL' || (props.forum.moderation === 'PRIOR_ONCE' && !props.isValidatedUser))) {
       props.showModal(MODAL_ALERT, {
         title: trans('moderated_posts', {}, 'forum'),
         message: trans('moderated_posts_explanation', {}, 'forum'),
         type: 'info'
       })
+      props.createModeratedSubject(forumId, subjectId, props.forum.moderation)
     } else {
       props.createSubject(forumId, subjectId)
     }
@@ -174,14 +174,15 @@ const SubjectFormComponent = (props) => {
 }
 
 
-const SubjectForm = withRouter(connect(
+const SubjectForm = withRouter(withModal(connect(
   state => ({
     workspace: resourceSelectors.workspace(state),
     bannedUser: select.bannedUser(state),
     subject: formSelect.data(formSelect.form(state, `${select.STORE_NAME}.subjects.form`)),
     editingSubject: select.editingSubject(state),
     forum: select.forum(state),
-    moderator: select.moderator(state)
+    moderator: select.moderator(state),
+    isValidatedUser: select.isValidatedUser(state)
   }),
   (dispatch, ownProps) => ({
     editSubject(forumId, subjectId) {
@@ -200,7 +201,7 @@ const SubjectForm = withRouter(connect(
       })
     }
   })
-)(SubjectFormComponent))
+)(SubjectFormComponent)))
 
 export {
   SubjectForm

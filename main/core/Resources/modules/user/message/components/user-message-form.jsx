@@ -35,7 +35,7 @@ class UserMessageForm extends Component {
         'user-message-left': 'left' === this.props.position,
         'user-message-right': 'right' === this.props.position
       })}>
-        {'left' === this.props.position &&
+        {'left' === this.props.position && this.props.user &&
           <UserAvatar picture={this.props.user.picture} alt={false} />
         }
 
@@ -85,7 +85,7 @@ class UserMessageForm extends Component {
           </button>
         </div>
 
-        {'right' === this.props.position &&
+        {'right' === this.props.position && this.props.user &&
           <UserAvatar picture={this.props.user.picture} alt={false} />
         }
       </div>

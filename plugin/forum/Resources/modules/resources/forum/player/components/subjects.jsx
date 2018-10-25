@@ -24,7 +24,7 @@ const SubjectsList = props =>
       }}
       delete={{
         url: ['apiv2_forum_subject_delete_bulk'],
-        displayed: (rows) => (rows[0].meta.creator.id === authenticatedUser.id) || props.moderator
+        displayed: (rows) => authenticatedUser && ((rows[0].meta.creator.id === authenticatedUser.id) || props.moderator)
       }}
       primaryAction={(subject) => ({
         type: LINK_BUTTON,
@@ -137,7 +137,7 @@ const SubjectsList = props =>
           label: trans('edit'),
           target: '/subjects/form/'+rows[0].id,
           scope: ['object'],
-          displayed: rows[0].meta.creator.id === authenticatedUser.id
+          displayed: authenticatedUser && rows[0].meta.creator.id === authenticatedUser.id
         }, {
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-thumb-tack',
@@ -154,14 +154,14 @@ const SubjectsList = props =>
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-flag-o',
           label: trans('flag', {}, 'forum'),
-          displayed: !rows[0].meta.flagged && (rows[0].meta.creator.id !== authenticatedUser.id),
+          displayed: !rows[0].meta.flagged && authenticatedUser && rows[0].meta.creator.id !== authenticatedUser.id,
           callback: () => props.flagSubject(rows[0]),
           scope: ['object']
         }, {
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-flag',
           label: trans('unflag', {}, 'forum'),
-          displayed: rows[0].meta.flagged && rows[0].meta.creator.id !== authenticatedUser.id,
+          displayed: rows[0].meta.flagged && authenticatedUser && rows[0].meta.creator.id !== authenticatedUser.id,
           callback: () => props.unFlagSubject(rows[0]),
           scope: ['object']
         }, {
@@ -169,13 +169,13 @@ const SubjectsList = props =>
           icon: 'fa fa-fw fa-times-circle',
           label: trans('close_subject', {}, 'forum'),
           callback: () => props.closeSubject(rows[0]),
-          displayed: !rows[0].meta.closed && (rows[0].meta.creator.id === authenticatedUser.id || props.moderator)
+          displayed: !rows[0].meta.closed && authenticatedUser && (rows[0].meta.creator.id === authenticatedUser.id || props.moderator)
         }, {
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-check-circle',
           label: trans('open_subject', {}, 'forum'),
           callback: () => props.unCloseSubject(rows[0]),
-          displayed: rows[0].meta.closed && (rows[0].meta.creator.id === authenticatedUser.id || props.moderator)
+          displayed: rows[0].meta.closed && authenticatedUser && (rows[0].meta.creator.id === authenticatedUser.id || props.moderator)
         }
       ]}
       card={(props) =>

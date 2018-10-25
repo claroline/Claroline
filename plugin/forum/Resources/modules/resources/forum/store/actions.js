@@ -19,7 +19,6 @@ actions.fetchLastMessages = (forum) => ({
   }
 })
 
-
 actions.validatePost = (message, subjectId, formName) => ({
   [API_REQUEST]: {
     url: ['apiv2_forum_subject_message_update', {message: message.id, subject: subjectId}],
@@ -28,7 +27,20 @@ actions.validatePost = (message, subjectId, formName) => ({
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(listActions.invalidateData(select.STORE_NAME+formName))
+      dispatch(listActions.invalidateData(select.STORE_NAME+'.'+formName))
+    }
+  }
+})
+
+actions.validateSubject = (subject, formName) => ({
+  [API_REQUEST]: {
+    url: ['apiv2_forum_subject_update', {id: subject.id}],
+    request: {
+      body: JSON.stringify(Object.assign({}, subject, {meta: {moderation:'NONE'}})),
+      method: 'PUT'
+    },
+    success: (data, dispatch) => {
+      dispatch(listActions.invalidateData(select.STORE_NAME+'.'+formName))
     }
   }
 })
@@ -41,6 +53,7 @@ actions.unLockUser = (userId, forumId) => ({
     },
     success: (data, dispatch) => {
       dispatch(listActions.invalidateData(select.STORE_NAME+'.moderation.blockedMessages'))
+      dispatch(listActions.invalidateData(select.STORE_NAME+'.moderation.blockedSubjects'))
     }
   }
 })

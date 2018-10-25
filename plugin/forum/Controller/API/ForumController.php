@@ -6,8 +6,11 @@ use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\ForumBundle\Entity\Forum;
+use Claroline\ForumBundle\Entity\Message;
+use Claroline\ForumBundle\Entity\Subject;
+use Claroline\ForumBundle\Manager\Manager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -16,6 +19,23 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ForumController extends AbstractCrudController
 {
+    /* @var Manager */
+    protected $manager;
+
+    /**
+     * ForumController constructor.
+     *
+     * @DI\InjectParams({
+     *     "manager" = @DI\Inject("claroline.manager.forum_manager")
+     * })
+     *
+     * @param Manager $manager
+     */
+    public function __construct(Manager $manager)
+    {
+        $this->manager = $manager;
+    }
+
     public function getName()
     {
         return 'forum';
@@ -51,7 +71,7 @@ class ForumController extends AbstractCrudController
         return new JsonResponse(
             $this->finder->search('Claroline\ForumBundle\Entity\Subject', array_merge(
                 $request->query->all(),
-                ['hiddenFilters' => ['forum' => [$id], 'moderation' => Forum::VALIDATE_NONE]]
+                ['hiddenFilters' => ['forum' => [$id], 'moderation' => false]]
             ))
         );
     }
@@ -59,7 +79,7 @@ class ForumController extends AbstractCrudController
     /**
      * @EXT\Route("/{id}/subject")
      * @EXT\Method({"POST", "PUT"})
-     * @ParamConverter("forum", options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("forum", options={"mapping": {"id": "uuid"}})
      *
      * @ApiDoc(
      *     description="Create a subject in a forum",
@@ -71,17 +91,16 @@ class ForumController extends AbstractCrudController
      *     }
      * )
      *
-     * @param string  $id
-     * @param string  $class
+     * @param Forum   $forum
      * @param Request $request
      *
      * @return JsonResponse
      */
     public function createSubjectAction(Forum $forum, Request $request)
     {
-        $forum = $this->serializer->serialize($forum);
+        $serializedForum = $this->serializer->serialize($forum);
         $data = $this->decodeRequest($request);
-        $data['forum'] = $forum;
+        $data['forum'] = $serializedForum;
         $object = $this->crud->create(
             'Claroline\ForumBundle\Entity\Subject',
             $data,
@@ -105,14 +124,39 @@ class ForumController extends AbstractCrudController
      * @EXT\Method("PATCH")
      * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
+     *
+     * @param User  $user
+     * @param Forum $forum
+     *
+     * @return JsonResponse
      */
     public function unlockAction(User $user, Forum $forum)
     {
-        $om = $this->container->get('claroline.persistence.object_manager');
-        $user = $this->container->get('claroline.manager.forum_manager')->getValidationUser($user, $forum);
-        $user->setAccess(true);
-        $om->persist($user);
-        $om->flush();
+        // unlock user
+        $validationUser = $this->manager->getValidationUser($user, $forum);
+        $validationUser->setAccess(true);
+        $this->om->persist($validationUser);
+
+        $filters = [
+            'forum' => $forum->getUuid(),
+            'creatorId' => $user->getUuid(),
+            'moderation' => true,
+        ];
+        // validate all moderated subjects for this user and forum
+        $subjects = $this->finder->get(Subject::class)->find($filters);
+
+        foreach ($subjects as $subject) {
+            $subject->setModerated(Forum::VALIDATE_NONE);
+            $this->om->persist($subject);
+        }
+        // validate all moderated messages for this user and forum
+        $messages = $this->finder->get(Message::class)->find($filters);
+
+        foreach ($messages as $message) {
+            $message->setModerated(Forum::VALIDATE_NONE);
+            $this->om->persist($message);
+        }
+        $this->om->flush();
 
         return new JsonResponse(true);
     }
@@ -122,14 +166,18 @@ class ForumController extends AbstractCrudController
      * @EXT\Method("PATCH")
      * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
+     *
+     * @param User  $user
+     * @param Forum $forum
+     *
+     * @return JsonResponse
      */
     public function lockAction(User $user, Forum $forum)
     {
-        $om = $this->container->get('claroline.persistence.object_manager');
-        $user = $this->container->get('claroline.manager.forum_manager')->getValidationUser($user, $forum);
-        $user->setAccess(false);
-        $om->persist($user);
-        $om->flush();
+        $validationUser = $this->manager->getValidationUser($user, $forum);
+        $validationUser->setAccess(false);
+        $this->om->persist($validationUser);
+        $this->om->flush();
 
         return new JsonResponse(true);
     }
@@ -139,14 +187,18 @@ class ForumController extends AbstractCrudController
      * @EXT\Method("PATCH")
      * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
+     *
+     * @param User  $user
+     * @param Forum $forum
+     *
+     * @return JsonResponse
      */
     public function banAction(User $user, Forum $forum)
     {
-        $om = $this->container->get('claroline.persistence.object_manager');
-        $user = $this->container->get('claroline.manager.forum_manager')->getValidationUser($user, $forum);
-        $user->setBanned(true);
-        $om->persist($user);
-        $om->flush();
+        $validationUser = $this->manager->getValidationUser($user, $forum);
+        $validationUser->setBanned(true);
+        $this->om->persist($validationUser);
+        $this->om->flush();
 
         return new JsonResponse(true);
     }
@@ -156,14 +208,18 @@ class ForumController extends AbstractCrudController
      * @EXT\Method("PATCH")
      * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
+     *
+     * @param User  $user
+     * @param Forum $forum
+     *
+     * @return JsonResponse
      */
     public function unbanAction(User $user, Forum $forum)
     {
-        $om = $this->container->get('claroline.persistence.object_manager');
-        $user = $this->container->get('claroline.manager.forum_manager')->getValidationUser($user, $forum);
-        $user->setBanned(false);
-        $om->persist($user);
-        $om->flush();
+        $validationUser = $this->manager->getValidationUser($user, $forum);
+        $validationUser->setBanned(false);
+        $this->om->persist($validationUser);
+        $this->om->flush();
 
         return new JsonResponse(true);
     }
@@ -173,14 +229,18 @@ class ForumController extends AbstractCrudController
      * @EXT\Method("PATCH")
      * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
+     *
+     * @param User  $user
+     * @param Forum $forum
+     *
+     * @return JsonResponse
      */
     public function notifyAction(User $user, Forum $forum)
     {
-        $om = $this->container->get('claroline.persistence.object_manager');
-        $user = $this->container->get('claroline.manager.forum_manager')->getValidationUser($user, $forum);
-        $user->setNotified(true);
-        $om->persist($user);
-        $om->flush();
+        $validationUser = $this->manager->getValidationUser($user, $forum);
+        $validationUser->setNotified(true);
+        $this->om->persist($validationUser);
+        $this->om->flush();
 
         return new JsonResponse(true);
     }
@@ -190,20 +250,24 @@ class ForumController extends AbstractCrudController
      * @EXT\Method("PATCH")
      * @EXT\ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
+     *
+     * @param User  $user
+     * @param Forum $forum
+     *
+     * @return JsonResponse
      */
     public function unnotifyAction(User $user, Forum $forum)
     {
-        $om = $this->container->get('claroline.persistence.object_manager');
-        $user = $this->container->get('claroline.manager.forum_manager')->getValidationUser($user, $forum);
-        $user->setNotified(false);
-        $om->persist($user);
-        $om->flush();
+        $validationUser = $this->manager->getValidationUser($user, $forum);
+        $validationUser->setNotified(false);
+        $this->om->persist($validationUser);
+        $this->om->flush();
 
         return new JsonResponse(true);
     }
 
     public function getClass()
     {
-        return "Claroline\ForumBundle\Entity\Forum";
+        return Forum::class;
     }
 }

@@ -65,6 +65,11 @@ class MessageFinder extends AbstractFinder
                     $qb->andWhere("creator.username LIKE :{$filterName}");
                     $qb->setParameter($filterName, '%'.$filterValue.'%');
                     break;
+                case 'creatorId':
+                    $qb->join('obj.creator', 'creator');
+                    $qb->andWhere("creator.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
                 case 'createdAfter':
                     $qb->andWhere("obj.creationDate >= :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);

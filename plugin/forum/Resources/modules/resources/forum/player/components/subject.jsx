@@ -55,9 +55,9 @@ class SubjectComponent extends Component {
 
   createMessage(subjectId, content) {
     this.props.createMessage(subjectId, content, this.props.forum.moderation)
+
     if (!this.props.moderator &&
-      this.props.forum.moderation === 'PRIOR_ALL' ||
-    this.props.forum.moderation === 'PRIOR_ONCE') {
+      (this.props.forum.moderation === 'PRIOR_ALL' || (this.props.forum.moderation === 'PRIOR_ONCE' && !this.props.isValidatedUser))) {
       this.props.showModal(MODAL_ALERT, {
         title: trans('moderated_posts', {}, 'forum'),
         message: trans('moderated_posts_explanation', {}, 'forum'),
@@ -156,7 +156,7 @@ class SubjectComponent extends Component {
               {
                 icon: 'fa fa-fw fa-pencil',
                 label: trans('edit'),
-                displayed: get(this.props.subject, 'meta.creator.id', false) === authenticatedUser.id,
+                displayed: authenticatedUser && get(this.props.subject, 'meta.creator.id', false) === authenticatedUser.id,
                 action: () => this.editSubject(this.props.subject.id)
               }, {
                 icon: 'fa fa-fw fa-thumb-tack',
@@ -171,27 +171,27 @@ class SubjectComponent extends Component {
               }, {
                 icon: 'fa fa-fw fa-times-circle',
                 label: trans('close_subject', {}, 'forum'),
-                displayed: !(get(this.props.subject, 'meta.closed', true)) && (get(this.props.subject, 'meta.creator.id', false) === authenticatedUser.id || this.props.moderator),
+                displayed: !(get(this.props.subject, 'meta.closed', true)) && authenticatedUser && (get(this.props.subject, 'meta.creator.id', false) === authenticatedUser.id || this.props.moderator),
                 action: () => this.props.closeSubject(this.props.subject)
               }, {
                 icon: 'fa fa-fw fa-check-circle',
                 label: trans('open_subject', {}, 'forum'),
-                displayed: (get(this.props.subject, 'meta.closed', false)) && (get(this.props.subject, 'meta.creator.id', false) === authenticatedUser.id || this.props.moderator),
+                displayed: (get(this.props.subject, 'meta.closed', false)) && authenticatedUser && (get(this.props.subject, 'meta.creator.id', false) === authenticatedUser.id || this.props.moderator),
                 action: () => this.props.unCloseSubject(this.props.subject)
               }, {
                 icon: 'fa fa-fw fa-flag-o',
                 label: trans('flag', {}, 'forum'),
-                displayed: (get(this.props.subject, 'meta.creator.id') !== authenticatedUser.id) && !(get(this.props.subject, 'meta.flagged', true)),
+                displayed: authenticatedUser && (get(this.props.subject, 'meta.creator.id') !== authenticatedUser.id) && !(get(this.props.subject, 'meta.flagged', true)),
                 action: () => this.props.flagSubject(this.props.subject)
               }, {
                 icon: 'fa fa-fw fa-flag',
                 label: trans('unflag', {}, 'forum'),
-                displayed: (get(this.props.subject, 'meta.creator.id') !== authenticatedUser.id) && (get(this.props.subject, 'meta.flagged', false)),
+                displayed: authenticatedUser && (get(this.props.subject, 'meta.creator.id') !== authenticatedUser.id) && (get(this.props.subject, 'meta.flagged', false)),
                 action: () => this.props.unFlagSubject(this.props.subject)
               }, {
                 icon: 'fa fa-fw fa-trash-o',
                 label: trans('delete'),
-                displayed: get(this.props.subject, 'meta.creator.id') === authenticatedUser.id || this.props.moderator,
+                displayed: authenticatedUser && get(this.props.subject, 'meta.creator.id') === authenticatedUser.id || this.props.moderator,
                 action: () => this.deleteSubject(this.props.subject.id),
                 dangerous: true
               }
@@ -222,22 +222,22 @@ class SubjectComponent extends Component {
                           {
                             icon: 'fa fa-fw fa-pencil',
                             label: trans('edit'),
-                            displayed: message.meta.creator.id === authenticatedUser.id  && !(get(this.props.subject, 'meta.closed', true)),
+                            displayed: authenticatedUser && (message.meta.creator.id === authenticatedUser.id)  && !(get(this.props.subject, 'meta.closed', true)),
                             action: () => this.setState({showMessageForm: message.id})
                           }, {
                             icon: 'fa fa-fw fa-flag-o',
                             label: trans('flag', {}, 'forum'),
-                            displayed: (message.meta.creator.id !== authenticatedUser.id) && !message.meta.flagged,
+                            displayed: authenticatedUser && (message.meta.creator.id !== authenticatedUser.id) && !message.meta.flagged,
                             action: () => this.props.flag(message, this.props.subject.id)
                           }, {
                             icon: 'fa fa-fw fa-flag',
                             label: trans('unflag', {}, 'forum'),
-                            displayed: (message.meta.creator.id !== authenticatedUser.id) && message.meta.flagged,
+                            displayed: authenticatedUser && (message.meta.creator.id !== authenticatedUser.id) && message.meta.flagged,
                             action: () => this.props.unFlag(message, this.props.subject.id)
                           }, {
                             icon: 'fa fa-fw fa-trash-o',
                             label: trans('delete'),
-                            displayed:  message.meta.creator.id === authenticatedUser.id || this.props.moderator,
+                            displayed:  authenticatedUser && (message.meta.creator.id === authenticatedUser.id || this.props.moderator),
                             action: () => this.deleteMessage(message.id),
                             dangerous: true
                           }
@@ -316,17 +316,20 @@ SubjectComponent.propTypes = {
   toggleSort: T.func.isRequired,
   history: T.object.isRequired,
   bannedUser: T.bool.isRequired,
-  moderator: T.bool.isRequired
+  moderator: T.bool.isRequired,
+  isValidatedUser: T.bool.isRequired
 }
 
 SubjectComponent.defaultProps = {
   bannedUser: true,
+  isValidatedUser: false,
   moderatedMessages: []
 }
 
 const Subject =  withRouter(withModal(connect(
   state => ({
     forum: select.forum(state),
+    isValidatedUser: select.isValidatedUser(state),
     subject: select.subject(state),
     subjectForm: formSelect.data(formSelect.form(state, `${select.STORE_NAME}.subjects.form`)),
     editingSubject: select.editingSubject(state),

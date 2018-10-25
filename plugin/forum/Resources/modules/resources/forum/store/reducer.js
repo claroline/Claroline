@@ -27,6 +27,9 @@ const reducer = combineReducers({
       return newState
     }
   }),
+  isValidatedUser: makeReducer({}, {
+    [RESOURCE_LOAD]: (state, action) => action.resourceData.isValidatedUser
+  }),
   lastMessages: overviewReducer,
   moderation: moderationReducer,
   forumForm: editorReducer,

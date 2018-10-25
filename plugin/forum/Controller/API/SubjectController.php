@@ -192,15 +192,15 @@ class SubjectController extends AbstractCrudController
     public function getBlockedSubjectsAction(Request $request, Forum $forum)
     {
         return new JsonResponse(
-        $this->finder->search($this->getClass(), array_merge(
+            $this->finder->search($this->getClass(), array_merge(
                 $request->query->all(),
                 ['hiddenFilters' => ['moderation' => true, 'forum' => $forum->getUuid()]]
             ))
-      );
+        );
     }
 
     public function getClass()
     {
-        return "Claroline\ForumBundle\Entity\Subject";
+        return Subject::class;
     }
 }

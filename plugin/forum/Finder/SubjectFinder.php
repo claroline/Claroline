@@ -13,6 +13,7 @@ namespace Claroline\ForumBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\ForumBundle\Entity\Forum;
+use Claroline\ForumBundle\Entity\Subject;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -24,45 +25,64 @@ class SubjectFinder extends AbstractFinder
 {
     public function getClass()
     {
-        return 'Claroline\ForumBundle\Entity\Subject';
+        return Subject::class;
     }
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
     {
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
-              case 'forum':
-                $qb->leftJoin('obj.forum', 'forum');
-                $qb->andWhere($qb->expr()->orX(
-                    $qb->expr()->eq('forum.id', ':'.$filterName),
-                    $qb->expr()->eq('forum.uuid', ':'.$filterName)
-                ));
-                $qb->setParameter($filterName, $filterValue);
-                break;
-              case 'createdAfter':
-                $qb->andWhere("obj.creationDate >= :{$filterName}");
-                $qb->setParameter($filterName, $filterValue);
-                break;
-              case 'createdBefore':
-                $qb->andWhere("obj.creationDate <= :{$filterName}");
-                $qb->setParameter($filterName, $filterValue);
-                break;
-              case 'creator':
-                $qb->leftJoin('obj.creator', 'creator');
-                $qb->andWhere("creator.username LIKE :{$filterName}");
-                $qb->setParameter($filterName, '%'.$filterValue.'%');
-                break;
-              case 'tags':
-                $qb->andWhere("obj.uuid IN (
-                  SELECT to.objectId
-                  FROM Claroline\TagBundle\Entity\TaggedObject to
-                  LEFT JOIN to.tag t
-                  WHERE UPPER(t.name) LIKE :tagFilter
-                )");
-                $qb->setParameter('tagFilter', '%'.strtoupper($filterValue).'%');
-                break;
-              default:
-                $this->setDefaults($qb, $filterName, $filterValue);
+                case 'forum':
+                    $qb->leftJoin('obj.forum', 'forum');
+                    $qb->andWhere($qb->expr()->orX(
+                        $qb->expr()->eq('forum.id', ':'.$filterName),
+                        $qb->expr()->eq('forum.uuid', ':'.$filterName)
+                    ));
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+                case 'createdAfter':
+                    $qb->andWhere("obj.creationDate >= :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+                case 'createdBefore':
+                    $qb->andWhere("obj.creationDate <= :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+                case 'creator':
+                    $qb->leftJoin('obj.creator', 'creator');
+                    $qb->andWhere("creator.username LIKE :{$filterName}");
+                    $qb->setParameter($filterName, '%'.$filterValue.'%');
+                    break;
+                case 'creatorId':
+                    $qb->join('obj.creator', 'creator');
+                    $qb->andWhere("creator.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+                case 'tags':
+                    $qb->andWhere("obj.uuid IN (
+                        SELECT to.objectId
+                        FROM Claroline\TagBundle\Entity\TaggedObject to
+                        LEFT JOIN to.tag t
+                        WHERE UPPER(t.name) LIKE :tagFilter
+                    )");
+                    $qb->setParameter('tagFilter', '%'.strtoupper($filterValue).'%');
+                    break;
+                case 'moderation':
+                    if ($filterValue) {
+                        $qb->andWhere($qb->expr()->orX(
+                            $qb->expr()->eq('obj.moderation', ':prior_once'),
+                            $qb->expr()->eq('obj.moderation', ':prior_all')
+                        ));
+
+                        $qb->setParameter('prior_once', Forum::VALIDATE_PRIOR_ONCE);
+                        $qb->setParameter('prior_all', Forum::VALIDATE_PRIOR_ALL);
+                    } else {
+                        $qb->andWhere('obj.moderation = :filter_none');
+                        $qb->setParameter('filter_none', Forum::VALIDATE_NONE);
+                    }
+                    break;
+                default:
+                    $this->setDefaults($qb, $filterName, $filterValue);
             }
         }
 
@@ -95,38 +115,38 @@ class SubjectFinder extends AbstractFinder
     public function getFilters()
     {
         return [
-          'forum' => [
-            'type' => ['integer', 'string'],
-            'description' => 'The parent forum id (int) or uuid (string)',
-          ],
-          'title' => [
-            'type' => 'string',
-            'description' => 'The subject content',
-          ],
-          'creationDate' => [
-            'type' => 'datetime',
-            'description' => 'The creation date',
-          ],
-          'updated' => [
-            'type' => 'datetime',
-            'description' => 'The last update date',
-          ],
-          'author' => [
-            'type' => 'string',
-            'description' => 'the author name',
-          ],
-          'sticked' => [
-            'type' => 'boolean',
-            'description' => 'is the subject sticked',
-          ],
-          'closed' => [
-            'type' => 'boolean',
-            'description' => 'is the subject closed',
-          ],
-          'viewCount' => [
-            'type' => 'integer',
-            'description' => 'The number of views',
-          ],
+            'forum' => [
+                'type' => ['integer', 'string'],
+                'description' => 'The parent forum id (int) or uuid (string)',
+            ],
+            'title' => [
+                'type' => 'string',
+                'description' => 'The subject content',
+            ],
+            'creationDate' => [
+                'type' => 'datetime',
+                'description' => 'The creation date',
+            ],
+            'updated' => [
+                'type' => 'datetime',
+                'description' => 'The last update date',
+            ],
+            'author' => [
+                'type' => 'string',
+                'description' => 'the author name',
+            ],
+            'sticked' => [
+                'type' => 'boolean',
+                'description' => 'is the subject sticked',
+            ],
+            'closed' => [
+                'type' => 'boolean',
+                'description' => 'is the subject closed',
+            ],
+            'viewCount' => [
+                'type' => 'integer',
+                'description' => 'The number of views',
+            ],
         ];
     }
 }
