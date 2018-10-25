@@ -21,7 +21,10 @@ class WidgetContentFormComponent extends Component {
   }
 
   render() {
-    const widget = getWidget(this.props.instance.type)
+    let widget
+    if (this.props.instance && this.props.instance.type) {
+      widget = getWidget(this.props.instance.type)
+    }
 
     return (
       <FormData

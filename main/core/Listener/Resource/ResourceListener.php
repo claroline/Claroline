@@ -78,6 +78,9 @@ class ResourceListener
         $subEvent = $this->lifecycleManager->load($resourceNode);
 
         $event->setData(array_merge([
+            // we need the full workspace object for some rendering config
+            // (we only have access to the minimal version of the WS in the node)
+            'workspace' => $resourceNode->getWorkspace() ? $this->serializer->serialize($resourceNode->getWorkspace()) : null,
             'resourceNode' => $this->serializer->serialize($resourceNode),
             'managed' => $this->manager->isManager($resourceNode),
             'userEvaluation' => null, // todo flag evaluated resource types and auto load Evaluation if any
