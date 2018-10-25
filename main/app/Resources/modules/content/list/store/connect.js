@@ -66,9 +66,9 @@ function mapDispatchToProps(dispatch, ownProps) {
   // based on the enabled features.
   return {
     // async
-    fetchData(url) {
+    fetchData(url, invalidate = false) {
       // return the async promise
-      return dispatch(listActions.fetchData(ownProps.name, url))
+      return dispatch(listActions.fetchData(ownProps.name, url, invalidate))
     },
     invalidateData() {
       dispatch(listActions.invalidateData(ownProps.name))
@@ -131,8 +131,12 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
         // call original action
         func.apply(null, args)
 
-        // refresh list
-        dispatchProps.invalidateData()
+        // refresh list (I'm not sure I should do that)
+        if (ownProps.fetch.autoload) {
+          dispatchProps.invalidateData()
+        } {
+          dispatchProps.fetchData(ownProps.fetch.url, true)
+        }
       }
     }
 

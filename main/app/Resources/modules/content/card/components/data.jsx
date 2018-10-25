@@ -1,5 +1,6 @@
 import React from 'react'
 import classes from 'classnames'
+import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
@@ -34,9 +35,9 @@ const CardAction = props => {
 
 CardAction.propTypes = {
   className: T.string,
-  action: T.shape(
-    ActionTypes.propTypes
-  ),
+  action: T.shape(merge({}, ActionTypes.propTypes, {
+    label: T.node // make label optional
+  })),
   children: T.any.isRequired
 }
 
@@ -83,15 +84,18 @@ const CardHeader = props =>
   </div>
 
 CardHeader.propTypes = {
-  id: T.string.isRequired,
+  id: T.oneOfType([
+    T.string,
+    T.number
+  ]).isRequired,
   icon: T.oneOfType([T.string, T.element]),
   poster: T.string,
   flags: T.arrayOf(
     T.arrayOf(T.oneOfType([T.string, T.number]))
   ),
-  action: T.shape(
-    ActionTypes.propTypes
-  )
+  action: T.shape(merge({}, ActionTypes.propTypes, {
+    label: T.node // make label optional
+  }))
 }
 
 /**

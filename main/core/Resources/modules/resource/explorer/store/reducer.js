@@ -186,9 +186,9 @@ function makeResourceExplorerReducer(explorerName, initialState = {}, customRedu
      * The list of resources for the current directory.
      */
     resources: makeListReducer(`${explorerName}.resources`, {}, {
-      invalidated: makeReducer(false, {
+      /*invalidated: makeReducer(false, {
         [`${EXPLORER_SET_CURRENT_ID}/${explorerName}`]: () => true
-      }),
+      }),*/
       selected: makeReducer(false, {
         [`${EXPLORER_SET_CURRENT_ID}/${explorerName}`]: () => []
       }),

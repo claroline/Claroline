@@ -1,6 +1,9 @@
 import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
 
+import {constants as toolConst} from '#/main/core/tool/constants'
+import {actions as toolActions} from '#/main/core/tool/store/actions'
+
 import {selectors} from '#/main/core/resource/store/selectors'
 
 // actions
@@ -23,6 +26,16 @@ actions.fetchResource = (resourceNode, embedded = false) => ({
   [API_REQUEST]: {
     url: ['claro_resource_load_embedded', {type: resourceNode.meta.type, id: resourceNode.id, embedded: embedded ? 1 : 0}],
     success: (response, dispatch) => {
+      // change the resource tool context if there is a workspace
+      if (response.workspace) {
+        // move to workspace
+        dispatch(toolActions.setContext(toolConst.TOOL_WORKSPACE, response.workspace))
+      } else {
+        // move to desktop
+        dispatch(toolActions.setContext(toolConst.TOOL_DESKTOP))
+      }
+
+      // load resource data inside the store
       dispatch(actions.loadResource(response))
 
       // mark the resource as loaded

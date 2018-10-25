@@ -10,7 +10,6 @@ export const App = () => ({
   store: reducer,
   initialData: (initialData) => Object.assign({}, initialData, {
     tool: {
-      icon: 'folder',
       name: 'resource_manager',
       context: {
         type: get(initialData, 'resourceNode.workspace') ? constants.TOOL_WORKSPACE : constants.TOOL_DESKTOP,

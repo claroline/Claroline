@@ -49,8 +49,12 @@ export const LIST_DATA_INVALIDATE = 'LIST_DATA_INVALIDATE'
 
 actions.loadData = makeInstanceActionCreator(LIST_DATA_LOAD, 'data', 'total')
 actions.invalidateData = makeInstanceActionCreator(LIST_DATA_INVALIDATE)
-actions.fetchData = (listName, target) => (dispatch, getState) => {
+actions.fetchData = (listName, target, invalidate = false) => (dispatch, getState) => {
   const listState = listSelect.list(getState(), listName)
+
+  if (invalidate) {
+    dispatch(actions.invalidateData(listName))
+  }
 
   // todo use ACTION_REFRESH type if we reload because of invalidation
 

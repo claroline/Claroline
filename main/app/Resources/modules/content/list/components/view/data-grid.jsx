@@ -1,5 +1,6 @@
 import React from 'react'
 import classes from 'classnames'
+import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
@@ -46,9 +47,9 @@ DataGridItem.propTypes = {
   orientation: T.string.isRequired,
   row: T.object.isRequired,
 
-  primaryAction: T.shape(
-    ActionTypes.propTypes
-  ),
+  primaryAction: T.shape(merge({}, ActionTypes.propTypes, {
+    label: T.node // make label optional
+  })),
 
   actions: T.oneOfType([
     // a regular array of actions
@@ -99,7 +100,7 @@ const DataGridSort = props =>
       type="button"
       className="btn btn-link"
       disabled={!props.current.property}
-      onClick={() => !props.current.property && props.updateSort(props.current.property)}
+      onClick={() => props.current.property && props.updateSort(props.current.property)}
     >
       <span className={classes('fa fa-fw', {
         'fa-sort'     :  0 === props.current.direction || !props.current.direction,
