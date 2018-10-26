@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Entity\Widget\Widget;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @EXT\Route("/")
@@ -35,6 +36,8 @@ class HomeController extends AbstractApiController
     private $om;
     /** @var SerializerProvider */
     private $serializer;
+    /** @var TranslatorInterface */
+    private $translator;
 
     /**
      * HomeController constructor.
@@ -43,24 +46,28 @@ class HomeController extends AbstractApiController
      *     "authorization" = @DI\Inject("security.authorization_checker"),
      *     "finder"        = @DI\Inject("claroline.api.finder"),
      *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer"    = @DI\Inject("claroline.api.serializer")
+     *     "serializer"    = @DI\Inject("claroline.api.serializer"),
+     *     "translator"    = @DI\Inject("translator")
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param FinderProvider                $finder
      * @param ObjectManager                 $om
      * @param SerializerProvider            $serializer
+     * @param TranslatorInterface           $translator
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         FinderProvider $finder,
         ObjectManager $om,
-        SerializerProvider $serializer
+        SerializerProvider $serializer,
+        TranslatorInterface $translator
     ) {
         $this->authorization = $authorization;
         $this->finder = $finder;
         $this->om = $om;
         $this->serializer = $serializer;
+        $this->translator = $translator;
     }
 
     /**
@@ -96,6 +103,8 @@ class HomeController extends AbstractApiController
             $this->om->persist($defaultTab);
             $defaultHomeTabConfig = new HomeTabConfig();
             $defaultHomeTabConfig->setHomeTab($defaultTab);
+            $defaultHomeTabConfig->setName($this->translator->trans('home', [], 'platform'));
+            $defaultHomeTabConfig->setLongTitle($this->translator->trans('home', [], 'platform'));
             $defaultHomeTabConfig->setLocked(true);
             $defaultHomeTabConfig->setTabOrder(0);
             $this->om->persist($defaultHomeTabConfig);
