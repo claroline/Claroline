@@ -11,15 +11,19 @@
 
 namespace Claroline\WebResourceBundle\Listener;
 
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
+use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\WebResourceBundle\Manager\WebResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @DI\Service("claroline.listener.web_resource_listener")
@@ -38,6 +42,9 @@ class WebResourceListener
     /** @var WebResourceManager */
     private $webResourceManager;
 
+    /** @var ResourceManager */
+    private $resourceManager;
+
     /**
      * WebResourceListener constructor.
      *
@@ -45,24 +52,31 @@ class WebResourceListener
      *     "filesDir"           = @DI\Inject("%claroline.param.files_directory%"),
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "uploadDir"          = @DI\Inject("%claroline.param.uploads_directory%"),
-     *     "webResourceManager" = @DI\Inject("claroline.manager.web_resource_manager")
+     *     "serializer"         = @DI\Inject("claroline.api.serializer"),
+     *     "webResourceManager" = @DI\Inject("claroline.manager.web_resource_manager"),
+     *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager")
      * })
      *
      * @param string             $filesDir
      * @param ObjectManager      $om
      * @param string             $uploadDir
+     * @param ResourceManager    $resourceManager
      * @param WebResourceManager $webResourceManager
      */
     public function __construct(
         $filesDir,
         ObjectManager $om,
         $uploadDir,
-        WebResourceManager $webResourceManager
+        WebResourceManager $webResourceManager,
+        ResourceManager $resourceManager,
+        SerializerProvider $serializer
     ) {
         $this->filesDir = $filesDir;
         $this->om = $om;
         $this->uploadDir = $uploadDir;
         $this->webResourceManager = $webResourceManager;
+        $this->serializer = $serializer;
+        $this->resourceManager = $resourceManager;
     }
 
     /**
@@ -80,8 +94,15 @@ class WebResourceListener
         $workspace = $resource->getResourceNode()->getWorkspace();
         $unzippedPath = $this->uploadDir.$ds.'webresource'.$ds.$workspace->getUuid();
         $srcPath = 'uploads'.$ds.'webresource'.$ds.$workspace->getUuid().$ds.$hash;
+
+        if (!is_dir($srcPath)) {
+            $this->webResourceManager->unzip($hash, $workspace);
+        }
+
         $event->setData([
-          'path' => $srcPath.$ds.$this->webResourceManager->guessRootFileFromUnzipped($unzippedPath.$ds.$hash),
+          'path' => rtrim($srcPath.$ds.$this->webResourceManager->guessRootFileFromUnzipped($unzippedPath.$ds.$hash), '/'),
+          // common file data
+          'file' => $this->serializer->serialize($resource),
         ]);
 
         $event->stopPropagation();
@@ -199,5 +220,28 @@ class WebResourceListener
             }
         }
         rmdir($dirPath);
+    }
+
+    /**
+     * Changes actual file associated to File resource.
+     *
+     * @DI\Observe("resource.claroline_web_resource.change_file")
+     *
+     * @param ResourceActionEvent $event
+     */
+    public function onFileChange(ResourceActionEvent $event)
+    {
+        $parameters = $event->getData();
+        $node = $event->getResourceNode();
+
+        $resource = $this->resourceManager->getResourceFromNode($node);
+
+        if ($resource) {
+            $resource->setHashName($parameters['file']['hashName']);
+            $this->om->persist($resource);
+            $this->om->flush();
+        }
+
+        $event->setResponse(new JsonResponse($this->serializer->serialize($node)));
     }
 }

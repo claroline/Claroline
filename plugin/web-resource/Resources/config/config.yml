@@ -9,3 +9,9 @@ plugin:
       exportable: false
       activity_rules:
         - action: resource-read
+      actions:
+          # Edits the underlying resource file
+          - name: change_file
+            decoder: edit
+            group: management
+            api: [POST, PUT]
