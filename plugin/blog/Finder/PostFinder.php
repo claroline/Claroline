@@ -98,7 +98,7 @@ class PostFinder extends AbstractFinder
                     $qb->join('node.rights', 'rights');
                     $qb->join('rights.role', 'role');
                     $qb->andWhere("role.name = 'ROLE_ANONYMOUS'");
-                    $qb->andWhere('rights.mask > 0');
+                    $qb->andWhere('BIT_AND(rights.mask, 1) = 1');
                     break;
                 default:
                     if (is_string($filterValue)) {
