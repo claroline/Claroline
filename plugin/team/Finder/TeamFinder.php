@@ -66,6 +66,12 @@ class TeamFinder extends AbstractFinder
                     }
                     $qb->orderBy('m.lastName', $sortByDirection);
                     break;
+                case 'countUsers':
+                    $qb->select('obj, COUNT(users.id) AS HIDDEN mycount');
+                    $qb->leftJoin('obj.users', 'users');
+                    $qb->orderBy('mycount', $sortByDirection);
+                    $qb->groupBy('users');
+                    break;
             }
         }
 
