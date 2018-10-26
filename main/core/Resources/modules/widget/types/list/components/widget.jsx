@@ -9,6 +9,8 @@ import {getSource} from '#/main/app/data'
 
 import {selectors} from '#/main/core/widget/types/list/store'
 
+// todo : implement actions
+
 class ListWidget extends Component {
   constructor(props) {
     super(props)

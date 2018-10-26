@@ -10,6 +10,7 @@ import classes from 'classnames'
  */
 const HtmlText = props =>
   <div
+    {...props}
     className={classes('text-html-content', props.className)}
     dangerouslySetInnerHTML={{ __html: props.children }}
   />

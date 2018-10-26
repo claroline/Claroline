@@ -1,6 +1,9 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+
+import {HtmlText} from '#/main/core/layout/components/html-text'
+
 import {Feedback} from '../components/feedback-btn.jsx'
 import {WarningIcon} from './utils/warning-icon.jsx'
 import {utils} from './utils/utils'
@@ -10,11 +13,13 @@ const OrderingFeedback = props =>  {
   return (
     <div className="ordering-paper">
       <div className="row">
-        <div className={classes(
-            {'horizontal': props.item.direction === DIRECTION_HORIZONTAL},
-            {'col-md-12': props.item.mode === MODE_INSIDE},
-            {'col-md-6': props.item.direction === DIRECTION_VERTICAL && props.item.mode === MODE_BESIDE}
-          )}>
+        <div
+          className={classes({
+            'horizontal': props.item.direction === DIRECTION_HORIZONTAL,
+            'col-md-12': props.item.mode === MODE_INSIDE,
+            'col-md-6': props.item.direction === DIRECTION_VERTICAL && props.item.mode === MODE_BESIDE
+          })}
+        >
           {props.item.mode === MODE_INSIDE ?
             props.answer.map((a) =>
               <div key={a.itemId} className={classes(
@@ -22,7 +27,10 @@ const OrderingFeedback = props =>  {
                   utils.answerIsValid(a, props.item.solutions) ? 'text-success positive-score' : 'text-danger negative-score'
                 )}>
                 <WarningIcon valid={utils.answerIsValid(a, props.item.solutions)}/>
-                <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === a.itemId).data}}/>
+                <HtmlText className="item-data">
+                  {props.item.items.find(item => item.id === a.itemId).data}
+                </HtmlText>
+
                 <Feedback
                   id={`oredering-answer-${a.itemId}-feedback`}
                   feedback={props.item.solutions.find(solution => solution.itemId === a.itemId).feedback}
@@ -36,7 +44,9 @@ const OrderingFeedback = props =>  {
                   solution.score > 0 ? 'text-danger negative-score' : 'text-success positive-score'
                 )}>
                 <WarningIcon valid={solution.score < 1}/>
-                <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === solution.itemId).data}}/>
+                <HtmlText className="item-data">
+                  {props.item.items.find(item => item.id === solution.itemId).data}
+                </HtmlText>
                 {solution.score > 0 &&
                   <Feedback
                     id={`oredering-solution-${solution.itemId}-feedback`}
@@ -55,7 +65,9 @@ const OrderingFeedback = props =>  {
                   utils.answerIsValid(a, props.item.solutions) ? 'text-success positive-score' : 'text-danger negative-score'
                 )}>
                 <WarningIcon valid={utils.answerIsValid(a, props.item.solutions)}/>
-                <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === a.itemId).data}}/>
+                <HtmlText className="item-data">
+                  {props.item.items.find(item => item.id === a.itemId).data}
+                </HtmlText>
                 <Feedback
                   id={`oredering-answer-${a.itemId}-feedback`}
                   feedback={props.item.solutions.find(solution => solution.itemId === a.itemId).feedback}
@@ -74,7 +86,9 @@ const OrderingFeedback = props =>  {
                   utils.answerIsValid(a, props.item.solutions) ? 'text-success positive-score' : 'text-danger negative-score'
                 )}>
                 <WarningIcon valid={utils.answerIsValid(a, props.item.solutions)}/>
-                <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === a.itemId).data}}/>
+                <HtmlText className="item-data">
+                  {props.item.items.find(item => item.id === a.itemId).data}
+                </HtmlText>
                 <Feedback
                   id={`oredering-answer-${a.itemId}-feedback`}
                   feedback={props.item.solutions.find(solution => solution.itemId === a.itemId).feedback}

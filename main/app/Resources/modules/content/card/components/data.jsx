@@ -111,9 +111,9 @@ const DataCard = props =>
   })}>
     <CardHeader
       id={props.id}
-      icon={props.display.icon ? props.icon : undefined}
+      icon={-1 !== props.display.indexOf('icon') ? props.icon : undefined}
       poster={props.poster}
-      flags={props.display.flags ? props.flags : []}
+      flags={-1 !== props.display.indexOf('flags') ? props.flags : []}
       action={props.primaryAction}
     />
 
@@ -127,12 +127,12 @@ const DataCard = props =>
         className="data-card-title"
       >
         {props.title}
-        {props.subtitle &&
+        {-1 !== props.display.indexOf('subtitle') && props.subtitle &&
           <small>{props.subtitle}</small>
         }
       </Heading>
 
-      {'sm' !== props.size && props.display.description && props.contentText &&
+      {'sm' !== props.size && -1 !== props.display.indexOf('description') && props.contentText &&
         <div key="data-card-description" className="data-card-description">
           {getPlainText(props.contentText)}
         </div>
@@ -140,7 +140,7 @@ const DataCard = props =>
 
       {props.children}
 
-      {'sm' !== props.size && props.display.footer && props.footer &&
+      {'sm' !== props.size && -1 !== props.display.indexOf('footer') && props.footer &&
         <div key="data-card-footer" className="data-card-footer">
           {props.footer}
         </div>

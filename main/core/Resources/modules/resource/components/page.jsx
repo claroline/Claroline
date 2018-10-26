@@ -54,10 +54,11 @@ class ResourcePage extends Component {
         showHeader={this.props.embedded ? this.props.showHeader : true}
         fullscreen={this.state.fullscreen}
         title={this.props.resourceNode.name}
-        path={this.props.resourceNode.path.map(ancestorNode => ({
+        subtitle={this.props.subtitle}
+        path={[].concat(this.props.resourceNode.path.map(ancestorNode => ({
           label: ancestorNode.name,
           target: ['claro_resource_show_short', {id: ancestorNode.id}]
-        }))}
+        })), this.props.path)}
         poster={this.props.resourceNode.poster ? this.props.resourceNode.poster.url : undefined}
         icon={get(this.props.resourceNode, 'display.showIcon') && (this.props.userEvaluation ?
           <UserProgression
@@ -124,6 +125,11 @@ ResourcePage.propTypes = {
   embedded: T.bool,
   showHeader: T.bool,
   managed: T.bool.isRequired,
+  subtitle: T.string,
+  path: T.arrayOf(T.shape({
+    label: T.string.isRequired,
+    target: T.string.isRequired
+  })),
   
   /**
    * The current resource node.
@@ -154,6 +160,10 @@ ResourcePage.propTypes = {
   )),
   styles: T.arrayOf(T.string),
   children: T.node.isRequired
+}
+
+ResourcePage.defaultProps = {
+  path: []
 }
 
 export {

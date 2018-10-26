@@ -4,6 +4,7 @@ import classes from 'classnames'
 
 import {tex} from '#/main/app/intl/translation'
 
+import {HtmlText} from '#/main/core/layout/components/html-text'
 import {SCORE_FIXED, SCORE_RULES} from '#/plugin/exo/quiz/enums'
 import {utils} from '#/plugin/exo/items/choice/utils/utils'
 import {Feedback} from '#/plugin/exo/items/components/feedback-btn.jsx'
@@ -42,10 +43,9 @@ export const ChoicePaper = props => {
                 />
               }
 
-              <div
-                className="choice-item-content"
-                dangerouslySetInnerHTML={{__html: utils.getChoiceById(props.item.choices, solution.id).data}}
-              />
+              <HtmlText className="choice-item-content">
+                {utils.getChoiceById(props.item.choices, solution.id).data}
+              </HtmlText>
 
               <div className="choice-item-feedback">
                 <Feedback
@@ -83,10 +83,9 @@ export const ChoicePaper = props => {
                 disabled
               />
 
-              <div
-                className="choice-item-content"
-                dangerouslySetInnerHTML={{__html: utils.getChoiceById(props.item.choices, solution.id).data}}
-              />
+              <HtmlText className="choice-item-content">
+                {utils.getChoiceById(props.item.choices, solution.id).data}
+              </HtmlText>
 
               <div className="choice-item-feedback">
                 <Feedback
@@ -114,10 +113,9 @@ export const ChoicePaper = props => {
                 }
               )}
             >
-              <div
-                className="choice-item-content"
-                dangerouslySetInnerHTML={{__html: utils.getChoiceById(props.item.choices, solution.id).data}}
-              />
+              <HtmlText className="choice-item-content">
+                {utils.getChoiceById(props.item.choices, solution.id).data}
+              </HtmlText>
 
               <AnswerStats stats={{
                 value: props.stats.choices[solution.id] ?

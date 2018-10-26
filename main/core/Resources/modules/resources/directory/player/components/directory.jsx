@@ -8,7 +8,7 @@ import {ResourceExplorer} from '#/main/core/resource/explorer/containers/explore
 import {getActions} from '#/main/core/resource/utils'
 
 import {actions as explorerActions} from '#/main/core/resource/explorer/store'
-import {selectors} from '#/main/core/resources/directory/player/store'
+import {selectors} from '#/main/core/resources/directory/store'
 
 // TODO : fix reloading at resource creation
 

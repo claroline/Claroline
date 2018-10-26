@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
+import merge from 'lodash/merge'
 import union from 'lodash/union'
 
 import {trans} from '#/main/app/intl/translation'
@@ -315,6 +316,10 @@ const ListForm = props => {
           title: trans('results'),
           fields: [
             {
+              name: 'actions',
+              label: trans('list_display_actions'),
+              type: 'boolean'
+            }, {
               name: 'count',
               label: trans('list_display_count'),
               type: 'boolean'
@@ -418,31 +423,32 @@ const ListForm = props => {
           icon: 'fa fa-fw fa-th-large',
           title: trans('cards'),
           subtitle: trans('grid_modes'),
+          // display card configuration only if there is a grid view enabled
           displayed: (parameters) => {
             const availableDisplays = get(parameters, 'availableDisplays') || []
 
-            return !!availableDisplays.find(displayMode => constants.DISPLAY_MODES[displayMode].options.useCard)
+            return constants.DISPLAY_MODES[parameters.display].options.useCard
+              || !!availableDisplays.find(displayMode => constants.DISPLAY_MODES[displayMode].options.useCard)
           },
           fields: [
             {
-              name: 'card.icon',
-              label: trans('card_show_icon'),
-              type: 'boolean'
-            }, {
-              name: 'card.flags',
-              label: trans('card_show_flags'),
-              type: 'boolean'
-            }, {
-              name: 'card.description',
-              label: trans('card_show_description'),
-              type: 'boolean',
-              displayed: hasLargeCard
-            }, {
-              name: 'card.footer',
-              label: trans('card_show_footer'),
-              type: 'boolean',
-              displayed: hasLargeCard,
-              help: trans('card_show_footer_help')
+              name: 'card.display',
+              label: trans('card_display_items'),
+              type: 'choice',
+              options: {
+                condensed: false,
+                inline: false,
+                multiple: true,
+                choices: merge({
+                  actions: trans('card_actions'),
+                  icon: trans('card_icon'),
+                  flags: trans('card_flags'),
+                  subtitle: trans('card_subtitle')
+                }, hasLargeCard(props.parameters) ? {
+                  description: trans('card_description'),
+                  footer: trans('card_footer')
+                } : {})
+              }
             }
           ]
         }

@@ -5,6 +5,7 @@ import tinycolor from 'tinycolor2'
 import Popover from 'react-bootstrap/lib/Popover'
 import Overlay from 'react-bootstrap/lib/Overlay'
 
+import {HtmlText} from '#/main/core/layout/components/html-text'
 import {transChoice} from '#/main/app/intl/translation'
 
 import {SHAPE_RECT} from './../enums'
@@ -36,7 +37,7 @@ class HoverFeedback extends Component {
             id={this.props.id}
             className="feedback-popover"
           >
-            <span dangerouslySetInnerHTML={{ __html: this.props.feedback}}/>
+            <HtmlText>{this.props.feedback}</HtmlText>
           </Popover>
         </Overlay>
       </span>

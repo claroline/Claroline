@@ -3,7 +3,7 @@ import {makeReducer} from '#/main/app/store/reducer'
 import {makeResourceExplorerReducer} from '#/main/core/resource/explorer/store/reducer'
 import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
-import {selectors} from '#/main/core/resources/directory/player/store/selectors'
+import {selectors} from '#/main/core/resources/directory/store/selectors'
 
 const reducer = {
   directoryExplorer: makeResourceExplorerReducer(selectors.EXPLORER_NAME, {}, {

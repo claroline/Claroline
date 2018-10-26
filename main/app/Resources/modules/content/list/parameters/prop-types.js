@@ -5,6 +5,7 @@ import {constants as listConstants} from '#/main/app/content/list/constants'
 const ListParameters = {
   propTypes: {
     count: T.bool,
+    actions: T.bool,
 
     // display feature
     display: T.string,

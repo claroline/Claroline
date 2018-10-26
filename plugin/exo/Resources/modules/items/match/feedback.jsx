@@ -2,7 +2,10 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import Popover from 'react-bootstrap/lib/Popover'
+
 import {tex} from '#/main/app/intl/translation'
+import {HtmlText} from '#/main/core/layout/components/html-text'
+
 import {utils} from './utils/utils'
 
 function getPopoverPosition(connectionClass, id){
@@ -27,7 +30,9 @@ export const MatchLinkPopover = props =>
     )}>
     </span>
     {props.solution.feedback &&
-      <div className="match-association-feedback" dangerouslySetInnerHTML={{__html: props.solution.feedback}}/>
+      <HtmlText className="match-association-feedback">
+        {props.solution.feedback}
+      </HtmlText>
     }
   </Popover>
 
@@ -38,12 +43,12 @@ MatchLinkPopover.propTypes = {
 }
 
 const MatchItem = props =>
-  <div
+  <HtmlText
     id={`${props.type}_${props.item.id}`}
     className={classes('answer-item match-item', props.type)}
-    dangerouslySetInnerHTML={{__html: props.item.data}}
   >
-  </div>
+    {props.item.data}
+  </HtmlText>
 
 MatchItem.propTypes = {
   type: T.string.isRequired,

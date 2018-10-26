@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
+import {HtmlText} from '#/main/core/layout/components/html-text'
 import {ObjectsPlayer} from './item-objects.jsx'
 
 export const Metadata = props =>
@@ -11,12 +12,12 @@ export const Metadata = props =>
       }
 
       {props.item.content && !props.isContentItem &&
-        <span className="item-content" dangerouslySetInnerHTML={{__html: props.item.content}} />
+        <HtmlText className="item-content">{props.item.content}</HtmlText>
       }
     </div>
 
     {props.item.description &&
-      <div className="item-description" dangerouslySetInnerHTML={{__html: props.item.description}}></div>
+      <HtmlText className="item-description">{props.item.description}</HtmlText>
     }
 
     {props.item.objects && 0 !== props.item.objects.length &&
