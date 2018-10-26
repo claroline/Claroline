@@ -8,6 +8,7 @@ import {trans} from '#/main/app/intl/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {ListData} from '#/main/app/content/list/containers/data'
+import {SelectGroup} from '#/main/core/layout/form/components/group/select-group'
 import {Checkbox} from '#/main/core/layout/form/components/field/checkbox'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
@@ -135,24 +136,18 @@ const RoleForm = props =>
         >
           <div className="list-group" fill={true}>
             {Object.keys(props.role.desktopTools || {}).map(toolName =>
-              <div
+              <SelectGroup
                 key={toolName}
                 className="list-group-item"
-              >
-                <b>{trans(toolName, {}, 'tools')}</b>
-                <Checkbox
-                  id={`${toolName}-visible`}
-                  label={trans('visible')}
-                  checked={props.role.desktopTools[toolName]['visible']}
-                  onChange={checked => props.updateProp(`desktopTools.${toolName}.visible`, checked)}
-                />
-                <Checkbox
-                  id={`${toolName}-locked`}
-                  label={trans('locked')}
-                  checked={props.role.desktopTools[toolName]['locked']}
-                  onChange={checked => props.updateProp(`desktopTools.${toolName}.locked`, checked)}
-                />
-              </div>
+                id={toolName}
+                label={trans(toolName, {}, 'tools')}
+                value={props.role.desktopTools[toolName]}
+                choices={{
+                  forced: trans('force_display'),
+                  hidden: trans('do_not_display')
+                }}
+                onChange={value => props.updateProp(`desktopTools.${toolName}`, value)}
+              />
             )}
           </div>
         </FormSection>

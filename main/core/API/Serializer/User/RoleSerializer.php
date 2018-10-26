@@ -231,20 +231,14 @@ class RoleSerializer
             $toolName = $toolRole->getTool()->getName();
 
             if (!in_array($toolName, ToolsOptions::EXCLUDED_TOOLS)) {
-                $configs[$toolName] = [
-                    'visible' => $toolRole->isVisible(),
-                    'locked' => $toolRole->isLocked(),
-                ];
+                $configs[$toolName] = $toolRole->getDisplay();
             }
         }
         foreach ($desktopTools as $desktopTool) {
             $toolName = $desktopTool->getName();
 
             if (!in_array($toolName, ToolsOptions::EXCLUDED_TOOLS) && !isset($configs[$toolName])) {
-                $configs[$toolName] = [
-                    'visible' => false,
-                    'locked' => false,
-                ];
+                $configs[$toolName] = null;
             }
         }
 
@@ -370,8 +364,7 @@ class RoleSerializer
                         $toolRole->setTool($tool);
                         $toolRole->setRole($role);
                     }
-                    $toolRole->setVisible($toolData['visible']);
-                    $toolRole->setLocked($toolData['locked']);
+                    $toolRole->setDisplay($toolData);
                     $this->om->persist($toolRole);
                 }
             }

@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Tool\ToolRole;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
@@ -1256,30 +1257,16 @@ class ToolManager
     public function getDesktopToolsConfiguration(array $roles)
     {
         $config = [];
-        $isAdmin = 0 < count(array_filter($roles, function (Role $role) {
-            return 'ROLE_ADMIN' === $role->getName();
-        }));
 
-        if (!$isAdmin) {
-            foreach ($roles as $role) {
-                $toolsConfigs = $this->toolRoleRepo->findBy(['role' => $role]);
+        foreach ($roles as $role) {
+            $toolsConfigs = $this->toolRoleRepo->findBy(['role' => $role]);
 
-                foreach ($toolsConfigs as $toolConfig) {
-                    $toolName = $toolConfig->getTool()->getName();
+            foreach ($toolsConfigs as $toolConfig) {
+                $toolName = $toolConfig->getTool()->getName();
+                $display = $toolConfig->getDisplay();
 
-                    if (!isset($config[$toolName])) {
-                        $config[$toolName] = [
-                            'visible' => $toolConfig->isVisible(),
-                            'locked' => $toolConfig->isLocked(),
-                        ];
-                    } else {
-                        if ($toolConfig->isVisible()) {
-                            $config[$toolName]['visible'] = true;
-                        }
-                        if ($toolConfig->isLocked()) {
-                            $config[$toolName]['locked'] = false;
-                        }
-                    }
+                if (!isset($config[$toolName]) || is_null($config[$toolName]) || ToolRole::FORCED === $display) {
+                    $config[$toolName] = $display;
                 }
             }
         }
@@ -1305,12 +1292,20 @@ class ToolManager
                 $orderedTool->setName($toolName);
             }
             if (isset($config[$toolName])) {
-                if ($config[$toolName]['locked']) {
-                    $orderedTool->setLocked(true);
-                    $orderedTool->setVisibleInDesktop($config[$toolName]['visible']);
-                } else {
-                    $orderedTool->setLocked(false);
+                switch ($config[$toolName]) {
+                    case ToolRole::FORCED:
+                        $orderedTool->setVisibleInDesktop(true);
+                        $orderedTool->setLocked(true);
+                        break;
+                    case ToolRole::HIDDEN:
+                        $orderedTool->setVisibleInDesktop(false);
+                        $orderedTool->setLocked(true);
+                        break;
+                    default:
+                        $orderedTool->setLocked(false);
                 }
+            } else {
+                $orderedTool->setLocked(false);
             }
             $this->om->persist($orderedTool);
             $orderedTools[] = $orderedTool;

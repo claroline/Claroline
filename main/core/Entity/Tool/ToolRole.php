@@ -26,6 +26,9 @@ class ToolRole
 {
     use UuidTrait;
 
+    const FORCED = 'forced';
+    const HIDDEN = 'hidden';
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -50,14 +53,9 @@ class ToolRole
     protected $role;
 
     /**
-     * @ORM\Column(name="visible", type="boolean")
+     * @ORM\Column(name="display", nullable=true)
      */
-    protected $visible = false;
-
-    /**
-     * @ORM\Column(name="locked", type="boolean")
-     */
-    protected $locked = false;
+    protected $display;
 
     /**
      * @ORM\Column(name="tool_order", type="integer", nullable=true)
@@ -107,35 +105,19 @@ class ToolRole
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isVisible()
+    public function getDisplay()
     {
-        return $this->visible;
+        return $this->display;
     }
 
     /**
-     * @param bool $visible
+     * @param string $display
      */
-    public function setVisible($visible)
+    public function setDisplay($display)
     {
-        $this->visible = $visible;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isLocked()
-    {
-        return $this->locked;
-    }
-
-    /**
-     * @param bool $locked
-     */
-    public function setLocked($locked)
-    {
-        $this->locked = $locked;
+        $this->display = $display;
     }
 
     /**
