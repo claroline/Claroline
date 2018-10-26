@@ -7,7 +7,8 @@ import {Player} from '#/plugin/url/resources/url/player/components/player'
 import {Editor} from '#/plugin/url/resources/url/editor/components/editor'
 
 const UrlResource = () =>
-  <ResourcePage>
+  <ResourcePage
+    styles={['claroline-distribution-main-core-iframe']}>
     <Routes
       routes={[
         {

@@ -1,4 +1,4 @@
-import {UrlCreation} from '#/plugin/url/resources/url/components/creation'
+import {UrlCreation} from '#/plugin/url/resources/url/containers/creation'
 import {UrlResource} from '#/plugin/url/resources/url/containers/resource'
 
 /**

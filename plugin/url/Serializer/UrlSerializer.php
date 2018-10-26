@@ -19,6 +19,8 @@ class UrlSerializer
         return [
             'id' => $url->getId(),
             'url' => $url->getUrl(),
+            'mode' => null !== $url->getMode() && '' !== $url->getMode() ? $url->getMode() : 'redirect',
+            'ratio' => $url->getRatio() ? $url->getRatio() : 56.25,
         ];
     }
 
@@ -30,6 +32,8 @@ class UrlSerializer
     public function deserialize($data, Url $url)
     {
         $this->sipe('url', 'setUrl', $data, $url);
+        $this->sipe('mode', 'setMode', $data, $url);
+        $this->sipe('ratio', 'setRatio', $data, $url);
 
         return $url;
     }

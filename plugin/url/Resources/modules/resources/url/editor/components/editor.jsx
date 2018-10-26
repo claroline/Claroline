@@ -5,6 +5,8 @@ import {trans} from '#/main/app/intl/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {selectors} from '#/plugin/url/resources/url/editor/store'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {constants} from '#/plugin/scorm/resources/scorm/constants'
+import {actions as formActions} from '#/main/app/content/form/store/actions'
 
 const UrlForm = props =>
   <FormData
@@ -27,6 +29,41 @@ const UrlForm = props =>
             label: trans('url'),
             type: 'url',
             required: true
+          },
+          {
+            name: 'mode',
+            label: trans('mode'),
+            type: 'choice',
+            required: true,
+            options: {
+              choices: {
+                'iframe': 'iframe',
+                'redirect': 'redirect',
+                'tab': 'tab'
+              }
+            }
+          },
+          {
+            name: 'ratioList',
+            type: 'choice',
+            displayed: url => url.mode === 'iframe',
+            label: trans('display_ratio_list', {}, 'scorm'),
+            options: {
+              multiple: false,
+              condensed: false,
+              choices: constants.DISPLAY_RATIO_LIST
+            },
+            onChange: (ratio) => props.updateProp('ratio', parseFloat(ratio))
+          }, {
+            name: 'ratio',
+            type: 'number',
+            displayed: url => url.mode === 'iframe',
+            label: trans('display_ratio', {}, 'scorm'),
+            options: {
+              min: 0,
+              unit: '%'
+            },
+            onChange: () => props.updateProp('ratioList', null)
           }
         ]
       }
@@ -36,12 +73,18 @@ const UrlForm = props =>
 UrlForm.propTypes = {
   url: T.shape({
     'id': T.number.isRequired
-  }).isRequired
+  }).isRequired,
+  updateProp: T.func.isRequired
 }
 
 const Editor = connect(
   (state) => ({
     url: selectors.url(state)
+  }),
+  (dispatch) => ({
+    updateProp(propName, propValue) {
+      dispatch(formActions.updateProp(selectors.FORM_NAME, propName, propValue))
+    }
   })
 )(UrlForm)
 

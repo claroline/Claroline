@@ -34,7 +34,8 @@
     "entry": {
       "home-tool": "tools/home.less",
       "theme-management": "tools/theme-management.less",
-      "portal": "portal/portal.less"
+      "portal": "portal/portal.less",
+      "iframe": "iframe/iframe.less"
     }
   }
 }
