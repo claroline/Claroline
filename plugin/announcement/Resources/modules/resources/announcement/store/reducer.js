@@ -99,7 +99,7 @@ const reducer = combineReducers({
       })
     })
   }),
-  workspaceRoles: makeReducer({}, {
+  workspaceRoles: makeReducer([], {
     [RESOURCE_LOAD]: (state, action) => action.resourceData.workspaceRoles
   })
 })

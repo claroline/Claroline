@@ -165,16 +165,16 @@ class MatchPlayer extends Component {
       <div id={`match-question-player-${this.props.item.id}`} className="match-player match-items row" ref={(el) => { this.container = el }}>
         <div className="item-col col-md-5 col-sm-5 col-xs-5">
           <ul className="match-items-list">
-          {this.state.firstSet.map((item) =>
-            <li key={'source_' + item.id}>
-              <MatchItem
-                onChange={this.props.onChange}
-                onMount={(type, id) => this.itemDidMount(type, id)}
-                item={item}
-                type="source"
-              />
-            </li>
-          )}
+            {this.state.firstSet.map((item) =>
+              <li key={'source_' + item.id}>
+                <MatchItem
+                  onChange={this.props.onChange}
+                  onMount={(type, id) => this.itemDidMount(type, id)}
+                  item={item}
+                  type="source"
+                />
+              </li>
+            )}
           </ul>
         </div>
 
@@ -182,16 +182,16 @@ class MatchPlayer extends Component {
 
         <div className="item-col col-md-5 col-sm-5 col-xs-5">
           <ul className="match-items-list">
-          {this.state.secondSet.map((item) =>
-            <li key={'target_' + item.id}>
-              <MatchItem
-                onChange={this.props.onChange}
-                onMount={(type, id) => this.itemDidMount(type, id)}
-                item={item}
-                type="target"
-              />
-            </li>
-          )}
+            {this.state.secondSet.map((item) =>
+              <li key={'target_' + item.id}>
+                <MatchItem
+                  onChange={this.props.onChange}
+                  onMount={(type, id) => this.itemDidMount(type, id)}
+                  item={item}
+                  type="target"
+                />
+              </li>
+            )}
           </ul>
         </div>
       </div>

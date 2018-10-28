@@ -167,9 +167,10 @@ const MenuButton = props => {
       align={props.menu.align}
       className={props.containerClassName}
       disabled={(isStandard && !hasActions) || props.disabled}
+      onToggle={props.onToggle}
     >
       <CallbackButton
-        {...omit(props, 'menu', 'containerClassName')}
+        {...omit(props, 'menu', 'containerClassName', 'onToggle')}
         className={classes('dropdown-toggle', props.className)}
         bsRole="toggle"
         callback={() => true}
@@ -188,6 +189,7 @@ const MenuButton = props => {
 
 implementPropTypes(MenuButton, ButtonTypes, {
   id: T.string.isRequired,
+  onToggle: T.func,
   containerClassName: T.string, // permits to add a custom class to the wrapping .dropdown element
   menu: T.oneOfType([
     // a custom menu component

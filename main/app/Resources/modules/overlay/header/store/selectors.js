@@ -5,27 +5,11 @@ import {param} from '#/main/app/config'
 import {currentUser} from '#/main/core/user/current'
 
 const administration = (state) => state.administration
-const current = (state) => state.current
+const context = (state) => state.context
 const tools = (state) => state.tools
 const userTools = (state) => state.userTools
 const notificationTools = (state) => state.notificationTools
-const workspaces = (state) => state.workspaces
 const count = (state) => state.notifications.count
-
-const personalWorkspace = createSelector(
-  [workspaces],
-  (workspaces) => workspaces.personal
-)
-
-const currentWorkspace = createSelector(
-  [workspaces],
-  (workspaces) => workspaces.current
-)
-
-const workspacesHistory = createSelector(
-  [workspaces],
-  (workspaces) => workspaces.history
-)
 
 const display = (state) => state.display
 
@@ -83,15 +67,11 @@ const maintenance = () => param('maintenance')
 
 export const selectors = {
   administration,
-  current,
+  context,
   tools,
   userTools,
   notificationTools,
-  workspaces,
   count,
-  personalWorkspace,
-  currentWorkspace,
-  workspacesHistory,
   logo,
   redirectHome,
   title,

@@ -9,9 +9,9 @@ import {Button} from '#/main/app/action/components/button'
 import {URL_BUTTON} from '#/main/app/buttons'
 import {MenuButton} from '#/main/app/buttons/menu/components/button'
 
-const WorkspacesMenu = props =>
+const WorkspacesDropdown = props =>
   <ul className="app-workspaces dropdown-menu">
-    {'home' !== props.currentLocation &&
+    {'home' !== props.context.type &&
     <li role="presentation">
       <Button
         type={URL_BUTTON}
@@ -21,7 +21,7 @@ const WorkspacesMenu = props =>
       />
     </li>
     }
-    {('desktop' !== props.currentLocation && props.currentUser.id) &&
+    {('desktop' !== props.context.type && props.user.id) &&
     <li role="presentation">
       <Button
         type={URL_BUTTON}
@@ -33,40 +33,40 @@ const WorkspacesMenu = props =>
     }
     {/* personal workspace */}
     {props.personal &&
-      <li role="presentation" key ={props.personal.id}>
-        <Button
-          type={URL_BUTTON}
-          icon="fa fa-fw fa-book"
-          label={props.personal.name}
-          target={['claro_workspace_open', {'workspaceId': props.personal.id}]}
-        />
-      </li>
+    <li role="presentation" key ={props.personal.id}>
+      <Button
+        type={URL_BUTTON}
+        icon="fa fa-fw fa-book"
+        label={props.personal.name}
+        target={['claro_workspace_open', {'workspaceId': props.personal.id}]}
+      />
+    </li>
     }
 
     <li role="presentation" className="divider"/>
     {0 !== props.history.length &&
-      <li role="presentation" className="dropdown-header">{trans('history')}</li>
+    <li role="presentation" className="dropdown-header">{trans('history')}</li>
     }
-    {0 !== props.history.length &&
-      props.history.map((ws) =>
-        <li role="presentation" key ={ws.id}>
-          <Button
-            type={URL_BUTTON}
-            icon="fa fa-fw fa-book"
-            label={ws.name}
-            target={['claro_workspace_open', {'workspaceId': ws.id}]}
-          />
-        </li>
-      )
+    {0 !== props.history.length && props.history.map((ws) =>
+      <li role="presentation" key ={ws.id}>
+        <Button
+          type={URL_BUTTON}
+          icon="fa fa-fw fa-book"
+          label={ws.name}
+          target={['claro_workspace_open', {'workspaceId': ws.id}]}
+        />
+      </li>
+    )}
+
+    {0 !== props.history.length && !props.user.id &&
+    <li role="presentation" className="divider"/>
     }
-    {0 !== props.history.length && !props.currentUser.id &&
-      <li role="presentation" className="divider"/>
+    {props.user.id &&
+    <li role="presentation" className="divider"/>
     }
-    {props.currentUser.id &&
-      <li role="presentation" className="divider"/>
-    }
+
     {/* user workspaces */}
-    {props.currentUser.id &&
+    {props.user.id &&
     <li role="presentation">
       <Button
         type={URL_BUTTON}
@@ -76,6 +76,7 @@ const WorkspacesMenu = props =>
       />
     </li>
     }
+
     {/* public workspaces */}
     <li role="presentation">
       <Button
@@ -85,6 +86,7 @@ const WorkspacesMenu = props =>
         target={['claro_workspace_list']}
       />
     </li>
+
     {/* create new workspace */}
     {props.creatable &&
     <li role="presentation" className="divider"/>
@@ -102,55 +104,81 @@ const WorkspacesMenu = props =>
     }
   </ul>
 
-const HeaderWorkspaces = props =>
-  <MenuButton
-    id="app-workspaces-menu"
-    className="app-header-item app-header-btn"
-    containerClassName="app-header-workspaces"
-    menu={
-      <WorkspacesMenu
-        personal={props.personal}
-        current={props.current}
-        history={props.history}
-        creatable={props.creatable}
-        currentLocation={props.currentLocation}
-        currentUser={props.currentUser}
-      />
-    }
-  >
-    <div className="header-workspaces">
-      <span className={classes('icon-with-text-right', {
-        'fa fa-fw fa-home':   'home' === props.currentLocation,
-        'fa fa-fw fa-atlas':  'desktop' === props.currentLocation,
-        'fa fa-fw fa-book':   'workspace' === props.currentLocation,
-        'fa fa-fw fa-cogs':   'administration'=== props.currentLocation
-      })}/>
-      {'workspace' === props.currentLocation ? props.current.name : trans(props.currentLocation)}
-    </div>
-    <span className="fa fa-fw fa-caret-down icon-with-text-left" />
-  </MenuButton>
+WorkspacesDropdown.propTypes = {
+  context: T.shape({
+    type: T.oneOf(['home', 'desktop', 'administration', 'workspace']).isRequired, // TODO : use constants
+    data: T.shape({
+      name: T.string.isRequired
+    })
+  }).isRequired,
+  user: T.shape(
+    UserTypes.propTypes
+  ).isRequired,
 
-HeaderWorkspaces.propTypes = {
   personal: T.shape({
-
-  }),
-  current: T.shape({
+    id: T.number.isRequired,
     name: T.string
   }),
   history: T.arrayOf(T.shape({
 
   })),
-  currentLocation: T.string.isRequired,
-  creatable: T.bool.isRequired,
-  currentUser: T.shape(
-    UserTypes.propTypes
-  ).isRequired
+  creatable: T.bool.isRequired
 }
 
-HeaderWorkspaces.defaultProps = {
+const WorkspacesMenu = props =>
+  <MenuButton
+    id="app-workspaces-menu"
+    className="app-header-item app-header-btn"
+    containerClassName="app-header-workspaces"
+    onToggle={(isOpened) => {
+      if (isOpened) {
+        props.loadMenu()
+      }
+    }}
+    menu={
+      <WorkspacesDropdown
+        context={props.context}
+        user={props.user}
+        personal={props.personal}
+        history={props.history}
+        creatable={props.creatable}
+      />
+    }
+  >
+    <div className="header-workspaces">
+      <span className={classes('fa fa-fw icon-with-text-right', {
+        'fa-home' : 'home' === props.context.type,
+        'fa-atlas': 'desktop' === props.context.type,
+        'fa-book' : 'workspace' === props.context.type,
+        'fa-cogs' : 'administration'=== props.context.type
+      })}/>
+      {'workspace' === props.context.type ? props.context.data.name : trans(props.context.type)}
+    </div>
+    <span className="fa fa-fw fa-caret-down icon-with-text-left" />
+  </MenuButton>
 
+WorkspacesMenu.propTypes = {
+  context: T.shape({
+    type: T.oneOf(['home', 'desktop', 'administration', 'workspace']).isRequired, // TODO : use constants
+    data: T.shape({
+      name: T.string.isRequired
+    })
+  }).isRequired,
+  user: T.shape(
+    UserTypes.propTypes
+  ).isRequired,
+
+  personal: T.shape({
+    id: T.number.isRequired,
+    name: T.string
+  }),
+  history: T.arrayOf(T.shape({
+
+  })),
+  creatable: T.bool.isRequired,
+  loadMenu: T.func.isRequired
 }
 
 export {
-  HeaderWorkspaces
+  WorkspacesMenu
 }

@@ -23,9 +23,9 @@ const OrderingFeedback = props =>  {
           {props.item.mode === MODE_INSIDE ?
             props.answer.map((a) =>
               <div key={a.itemId} className={classes(
-                  'item',
-                  utils.answerIsValid(a, props.item.solutions) ? 'text-success positive-score' : 'text-danger negative-score'
-                )}>
+                'item',
+                utils.answerIsValid(a, props.item.solutions) ? 'text-success positive-score' : 'text-danger negative-score'
+              )}>
                 <WarningIcon valid={utils.answerIsValid(a, props.item.solutions)}/>
                 <HtmlText className="item-data">
                   {props.item.items.find(item => item.id === a.itemId).data}
@@ -40,9 +40,9 @@ const OrderingFeedback = props =>  {
             :
             props.item.solutions.filter(solution => undefined === props.answer.find(answer => answer.itemId === solution.itemId)).map((solution) =>
               <div key={solution.itemId} className={classes(
-                  'item',
-                  solution.score > 0 ? 'text-danger negative-score' : 'text-success positive-score'
-                )}>
+                'item',
+                solution.score > 0 ? 'text-danger negative-score' : 'text-success positive-score'
+              )}>
                 <WarningIcon valid={solution.score < 1}/>
                 <HtmlText className="item-data">
                   {props.item.items.find(item => item.id === solution.itemId).data}
@@ -61,9 +61,9 @@ const OrderingFeedback = props =>  {
           <div className="col-md-6 answer-zone">
             {props.answer.map((a) =>
               <div key={a.itemId} className={classes(
-                  'item',
-                  utils.answerIsValid(a, props.item.solutions) ? 'text-success positive-score' : 'text-danger negative-score'
-                )}>
+                'item',
+                utils.answerIsValid(a, props.item.solutions) ? 'text-success positive-score' : 'text-danger negative-score'
+              )}>
                 <WarningIcon valid={utils.answerIsValid(a, props.item.solutions)}/>
                 <HtmlText className="item-data">
                   {props.item.items.find(item => item.id === a.itemId).data}
@@ -82,9 +82,9 @@ const OrderingFeedback = props =>  {
           <div className="col-md-12 answer-zone horizontal">
             {props.answer.map((a) =>
               <div key={a.itemId} className={classes(
-                  'item',
-                  utils.answerIsValid(a, props.item.solutions) ? 'text-success positive-score' : 'text-danger negative-score'
-                )}>
+                'item',
+                utils.answerIsValid(a, props.item.solutions) ? 'text-success positive-score' : 'text-danger negative-score'
+              )}>
                 <WarningIcon valid={utils.answerIsValid(a, props.item.solutions)}/>
                 <HtmlText className="item-data">
                   {props.item.items.find(item => item.id === a.itemId).data}

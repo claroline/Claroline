@@ -1,6 +1,5 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
@@ -14,170 +13,9 @@ import {HeaderNotifications} from '#/main/app/overlay/header/components/notifica
 import {HeaderTitle} from '#/main/app/overlay/header/components/title'
 import {HeaderTools} from '#/main/app/overlay/header/components/tools'
 import {HeaderUser} from '#/main/app/overlay/header/components/user'
-import {HeaderWorkspaces} from '#/main/app/overlay/header/components/workspaces'
+import {HeaderMain} from '#/main/app/overlay/header/components/main'
 
-function getWalkthrough(tools = [], administration = [], authenticated = false, display = {}) {
-  const walkthrough = [
-    // Intro
-    {
-      highlight: ['.app-header-container'],
-      content: {
-        title: trans('header.intro.title', {}, 'walkthrough'),
-        message: trans('header.intro.message', {}, 'walkthrough')
-      },
-      position: {
-        target: '.app-header-container',
-        placement: 'bottom'
-      }
-    }
-  ]
-
-  // Tools
-  if (0 !== tools.length) {
-    walkthrough.push({
-      highlight: ['#app-tools'],
-      content: {
-        title: trans('desktop_tools', {}, 'walkthrough'),
-        message: trans('header.tools_group.message', {}, 'walkthrough')
-      },
-      position: {
-        target: '#app-tools',
-        placement: 'bottom'
-      },
-      requiredInteraction: {
-        type: 'click',
-        target: '#app-tools',
-        message: trans('header.tools_group.action', {}, 'walkthrough')
-      }
-    })
-
-    // help for each tool
-    tools.map(tool => walkthrough.push({
-      highlight: [`#app-tools-${tool.name}`],
-      content: {
-        icon: `fa fa-${tool.icon}`,
-        title: trans('tool', {toolName: trans(tool.name, {}, 'tools')}, 'walkthrough'),
-        message: trans(`header.tools.${tool.name}.message`, {}, 'walkthrough'),
-        link: trans(`header.tools.${tool.name}.documentation`, {}, 'walkthrough')
-      },
-      position: {
-        target: `#app-tools-${tool.name}`,
-        placement: 'right'
-      }
-    }))
-  }
-
-  // Workspaces
-  walkthrough.push({
-    highlight: ['#app-workspaces-menu'],
-    content: {
-      title: trans('header.workspaces_menu.title', {}, 'walkthrough'),
-      message: trans('header.workspaces_menu.message', {}, 'walkthrough')
-    },
-    position: {
-      target: '#app-workspaces-menu',
-      placement: 'bottom'
-    }/*,
-     requiredInteraction: {
-     type: 'click',
-     target: '#app-workspaces-menu',
-     message: trans('header.workspaces_menu.action', {}, 'walkthrough')
-     }*/
-
-  })
-
-  // Administration
-  if (0 !== administration.length) {
-    walkthrough.push({
-      highlight: ['#app-administration'],
-      content: {
-        title: trans('administration_tools', {}, 'walkthrough'),
-        message: trans('header.administration_group.message', {}, 'walkthrough')
-      },
-      position: {
-        target: '#app-administration',
-        placement: 'bottom'
-      }/*,
-      requiredInteraction: {
-        type: 'click',
-        target: '#app-administration',
-        message: trans('header.administration_group.action', {}, 'walkthrough')
-      }*/
-    })
-
-    // help for each tool
-    // TODO : enable when
-    /*administration.map(tool => walkthrough.push({
-      highlight: [`#app-administration-${tool.name}`],
-      content: {
-        icon: `fa fa-${tool.icon}`,
-        title: trans('tool', {toolName: trans(tool.name, {}, 'tools')}, 'walkthrough'),
-        message: trans(`header.administration.${tool.name}.message`, {}, 'walkthrough'),
-        link: trans(`header.administration.${tool.name}.documentation`, {}, 'walkthrough')
-      },
-      position: {
-        target: `#app-administration-${tool.name}`,
-        placement: 'left'
-      }
-    }))*/
-  }
-
-  if (authenticated) {
-    // Notifications
-    walkthrough.push({
-      highlight: ['#app-notifications-menu'],
-      content: {
-        title: trans('header.notifications.title', {}, 'walkthrough'),
-        message: trans('header.notifications.message', {}, 'walkthrough')
-      },
-      position: {
-        target: '#app-administration',
-        placement: 'bottom'
-      }/*,
-       requiredInteraction: {
-       type: 'click',
-       target: '#app-notifications-menu',
-       message: trans('header.app-notifications-menu.action', {}, 'walkthrough')
-       }*/
-    })
-
-    // User menu
-    walkthrough.push({
-      highlight: ['#authenticated-user-menu'],
-      content: {
-        title: trans('header.user_menu.title', {}, 'walkthrough'),
-        message: trans('header.user_menu.message', {}, 'walkthrough')
-      },
-      position: {
-        target: '#app-administration',
-        placement: 'bottom'
-      }/*,
-      requiredInteraction: {
-        type: 'click',
-        target: '#authenticated-user-menu',
-        message: trans('header.user_menu.action', {}, 'walkthrough')
-      }*/
-    })
-  } else {
-    // TODO : anonymous user menu doc
-  }
-
-  // Locale menu
-  if (get(display, 'locale')) {
-    walkthrough.push({
-      highlight: ['#app-locale-select'],
-      content: {
-        message: trans('header.locale.message', {}, 'walkthrough')
-      },
-      position: {
-        target: '#app-locale-select',
-        placement: 'bottom'
-      }
-    })
-  }
-
-  return walkthrough
-}
+import {getWalkthrough} from '#/main/app/overlay/header/walkthroughs/menus'
 
 const Header = props =>
   <header className="app-header">
@@ -205,11 +43,10 @@ const Header = props =>
       />
     }
 
-    <HeaderWorkspaces
-      {...props.workspaces}
-      label={trans('history')}
-      currentLocation={props.currentLocation}
-      currentUser={props.currentUser}
+    <HeaderMain
+      authenticated={props.authenticated}
+      context={props.context}
+      user={props.currentUser}
     />
 
     {0 !== props.administration.length &&
@@ -261,7 +98,6 @@ const Header = props =>
           displayed: props.authenticated
         }
       ]}
-      currentLocation={props.currentLocation}
     />
 
     {props.display.locale &&
@@ -274,6 +110,14 @@ const Header = props =>
   </header>
 
 Header.propTypes = {
+  /**
+   * The current context of the app.
+   */
+  context: T.shape({
+    type: T.oneOf(['home', 'desktop', 'administration', 'workspace']).isRequired, // TODO : use constants
+    data: T.object
+  }).isRequired,
+
   locale: T.shape({
     current: T.string.isRequired,
     available: T.arrayOf(T.string).isRequired
@@ -300,29 +144,16 @@ Header.propTypes = {
     messages: T.number
   }),
   authenticated: T.bool.isRequired,
-  currentLocation: T.string.isRequired,
   tools: T.array,
   userTools: T.array,
   notificationTools: T.array,
   administration: T.array,
-
-  workspaces: T.shape({
-    personal: T.shape({
-
-    }),
-    current: T.shape({
-
-    }),
-    history: T.arrayOf(T.shape({
-
-    }))
-  }).isRequired,
-
   loginUrl: T.string.isRequired,
   helpUrl: T.string,
   registrationUrl: T.string,
   maintenance: T.bool,
-  redirectHome: T.bool.isRequired
+  redirectHome: T.bool.isRequired,
+  startWalkthrough: T.func.isRequired
 }
 
 Header.defaultProps = {
