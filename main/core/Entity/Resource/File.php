@@ -30,6 +30,11 @@ class File extends AbstractResource
     protected $hashName;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $autoDownload = false;
+
+    /**
      * Returns the file size.
      *
      * @return int
@@ -67,6 +72,16 @@ class File extends AbstractResource
         }
 
         return round($this->size / 1099511627776, 2).' TB';
+    }
+
+    public function setAutoDownload($autoDownload)
+    {
+        $this->autoDownload = $autoDownload;
+    }
+
+    public function getAutoDownload()
+    {
+        return $this->autoDownload;
     }
 
     /**

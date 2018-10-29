@@ -26,6 +26,12 @@ class Player extends Component {
   }
 
   render() {
+
+    //bad
+    if (this.props.file.autoDownload) {
+      window.location.href = url(['claro_resource_download', {ids: [this.props.resourceNode.id]}])
+    }
+
     return (
       <Await
         for={getFile(this.props.mimeType)}

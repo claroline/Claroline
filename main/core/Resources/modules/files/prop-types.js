@@ -4,10 +4,12 @@ const File = {
   propTypes: {
     hashName: T.string.isRequired,
     size: T.number.isRequired,
-    url: T.string.isRequired
+    url: T.string.isRequired,
+    autoDownload: T.bool.isRequired
   },
   defaultProps: {
-    size: 0
+    size: 0,
+    autoDownload: false
   }
 }
 

@@ -1,15 +1,10 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
-import get from 'lodash/get'
 
-import {theme} from '#/main/app/config'
 import {trans} from '#/main/app/intl/translation'
-import {Await} from '#/main/app/components/await'
 import {FormData} from '#/main/app/content/form/containers/data'
-
-import {getFile} from '#/main/core/files'
-import {selectors} from '#/main/core/resources/file/editor/store'
+import {selectors} from '#/main/core/resources/file/editor/store/selectors'
 
 // TODO : find a way to make this kind of component generic (duplicated for all apps coming from dynamic loading)
 // TODO : find a way to reuse file creation form component
@@ -25,45 +20,28 @@ class Editor extends Component {
   }
 
   render() {
+    //bad.
     return (
       <FormData
         level={5}
         name={selectors.FORM_NAME}
+        buttons={true}
+        target={['apiv2_resource_file_update', {id: this.props.file.id}]}
         sections={[
           {
             title: trans('general'),
             primary: true,
             fields: [
               {
-                name: 'file',
-                label: trans('file'),
-                type: 'file',
-                required: true,
-                options: {
-                  //unzippable: true
-                }
+                name: 'autoDownload',
+                label: trans('auto_download'),
+                type: 'boolean',
+                required: true
               }
             ]
           }
         ]}
       >
-        <Await
-          for={getFile(this.props.mimeType)}
-          then={module => this.setState({
-            fileEditor: get(module, 'fileType.components.editor') || null,
-            fileStyles: get(module, 'fileType.styles') || null
-          })}
-        >
-          <div>
-            {this.state.fileEditor && React.createElement(this.state.fileEditor, {
-              file: this.props.file
-            })}
-
-            {this.state.fileStyles &&
-              <link rel="stylesheet" type="text/css" href={theme(this.state.fileStyles)} />
-            }
-          </div>
-        </Await>
       </FormData>
     )
   }
@@ -72,7 +50,7 @@ class Editor extends Component {
 Editor.propTypes = {
   mimeType: T.string.isRequired,
   file: T.shape({
-
+    id: T.number.isRequired
   }).isRequired
 }
 

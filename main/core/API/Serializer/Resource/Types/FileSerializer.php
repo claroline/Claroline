@@ -45,6 +45,7 @@ class FileSerializer
             'id' => $file->getId(),
             'hashName' => $file->getHashName(),
             'size' => $file->getSize(),
+            'autoDownload' => $file->getAutoDownload(),
 
             // We generate URL here because the stream API endpoint uses ResourceNode ID,
             // but the new api only contains the ResourceNode UUID.
@@ -60,5 +61,6 @@ class FileSerializer
     {
         $this->sipe('size', 'setSize', $data, $file);
         $this->sipe('hashName', 'setHashName', $data, $file);
+        $this->sipe('autoDownload', 'setAutoDownload', $data, $file);
     }
 }

@@ -143,6 +143,8 @@ class ResourceController
             $resourceNode = $shortcut->getTarget();
         }
 
+        //not pretty, but might want on some case to download files instead ?
+
         return [
             'resourceNode' => $resourceNode,
         ];

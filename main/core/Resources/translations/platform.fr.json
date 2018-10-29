@@ -1752,5 +1752,6 @@
     "card_show_flags": "Afficher les icônes de statut",
     "card_show_description": "Afficher la description [Liste détaillée / Grille large]",
     "card_show_footer": "Afficher les meta-données [Liste détaillée / Grille large]",
+    "auto_download": "Télécharger automatiquement",
     "card_show_footer_help": "Les meta-données affichées dépendent des éléments listés. Il s'agit le plus souvent des dates de création/modification ou de l'auteur."
 }

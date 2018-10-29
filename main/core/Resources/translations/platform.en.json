@@ -1714,6 +1714,7 @@
     "expert": "Expert",
     "border": "Border",
     "breadcrumb": "Breadcrumb",
+    "auto_download": "Download automatically",
     "current_workspace": "Current workspace",
     "card_show_icon": "Display icon",
     "card_show_flags": "Display statuses icons",
