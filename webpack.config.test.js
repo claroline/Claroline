@@ -33,8 +33,8 @@ Encore
     options.compress = false
     options.beautify = false
   })
+  .addPlugin(plugins.vendorDistributionShortcut())
   .addPlugin(plugins.distributionShortcut())
-  .addPlugin(plugins.configShortcut())
   .addPlugin(plugins.rethrowCompilationErrors())
   // we can not use CommonChunksPlugin (nor DLLs) in test env
   // @see https://github.com/webpack-contrib/karma-webpack/issues/24

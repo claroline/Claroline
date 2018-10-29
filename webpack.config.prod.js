@@ -36,6 +36,7 @@ Encore
     options.beautify = true
   })
   .addPlugin(plugins.assetsInfoFile())
+  .addPlugin(plugins.vendorDistributionShortcut())
   .addPlugin(plugins.distributionShortcut())
   .addPlugin(plugins.scaffoldingDllReference())
   .addPlugin(plugins.reactDllReference())

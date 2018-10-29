@@ -37,6 +37,7 @@ Encore
   })
   .addPlugin(plugins.circularDependencies())
   .addPlugin(plugins.assetsInfoFile())
+  .addPlugin(plugins.vendorDistributionShortcut())
   .addPlugin(plugins.distributionShortcut())
   .addPlugin(plugins.scaffoldingDllReference())
   .addPlugin(plugins.reactDllReference())
