@@ -810,9 +810,14 @@ class ResourceManager
             $resource = $this->getResourceFromNode($node);
             /*
              * resChild can be null if a shortcut was removed
+             *
+             * activities must be ignored atm
              */
+
+            $ignore = ['activity'];
+
             if (null !== $resource) {
-                if (!$softDelete) {
+                if (!$softDelete && !in_array($node->getResourceType()->getName(), $ignore)) {
                     $event = $this->dispatcher->dispatch(
                         "delete_{$node->getResourceType()->getName()}",
                         'Resource\DeleteResource',
@@ -1307,12 +1312,12 @@ class ResourceManager
      */
     public function getResourceFromNode(ResourceNode $node)
     {
-        /* @var AbstractResource $resource */
-        if (class_exists($node->getClass())) {
+        try {
+            /* @var AbstractResource $resource */
             $resource = $this->om->getRepository($node->getClass())->findOneBy(['resourceNode' => $node]);
 
             return $resource;
-        } else {
+        } catch (\Exception $e) {
             $this->log('class '.$node->getClass().' doesnt exists', 'error');
         }
     }
