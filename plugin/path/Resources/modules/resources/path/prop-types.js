@@ -30,7 +30,7 @@ const Step = {
     })
   },
   defaultProps: {
-    showResourceHeader: true,
+    showResourceHeader: false,
     secondaryResources: [],
     inheritedResources: [],
     children: []

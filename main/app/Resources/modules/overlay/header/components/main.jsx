@@ -19,25 +19,28 @@ class HeaderMain extends Component {
   render() {
     return (
       <div className="app-header-main">
-        <Await
-          for={getMenu('workspaces')}
-          then={(menu) => this.setState({menu: menu.default})}
-          placeholder={
-            <span className="fa fa-fw fa-spinner fa-spin" />
-          }
-        >
-          {this.state.menu && React.createElement(this.state.menu, {
-            context: this.props.context,
-            authenticated: this.props.authenticated,
-            user: this.props.user
-          })}
-        </Await>
+        {this.props.menu &&
+          <Await
+            for={getMenu(this.props.menu)}
+            then={(menu) => this.setState({menu: menu.default})}
+            placeholder={
+              <span className="fa fa-fw fa-spinner fa-spin" />
+            }
+          >
+            {this.state.menu && React.createElement(this.state.menu, {
+              context: this.props.context,
+              authenticated: this.props.authenticated,
+              user: this.props.user
+            })}
+          </Await>
+        }
       </div>
     )
   }
 }
 
 HeaderMain.propTypes = {
+  menu: T.string,
   context: T.shape({
     type: T.oneOf(['home', 'desktop', 'administration', 'workspace']).isRequired, // TODO : use constants
     data: T.shape({

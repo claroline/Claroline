@@ -78,6 +78,7 @@ class PlatformDefaults implements ParameterProviderInterface
             'footer_login' => false,
             'footer_workspaces' => false,
             'header_locale' => true,
+            'header_menu' => 'workspaces',
             'portfolio_url' => null,
             'max_storage_size' => Workspace::DEFAULT_MAX_STORAGE_SIZE,
             'max_upload_resources' => Workspace::DEFAULT_MAX_FILE_COUNT,

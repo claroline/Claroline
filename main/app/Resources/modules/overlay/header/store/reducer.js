@@ -3,6 +3,7 @@ import {makeReducer} from '#/main/app/store/reducer'
 // TODO : this should be moved in the the main app store when available
 
 const reducer = {
+  mainMenu: makeReducer(null),
   context: makeReducer({}),
   display: makeReducer({}),
   tools: makeReducer([]),

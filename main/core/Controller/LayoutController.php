@@ -213,6 +213,7 @@ class LayoutController extends Controller
         // I think we will need to merge this with the default platform config object
         // this can be done when the top bar will be moved in the main react app
         return [
+            'mainMenu' => $this->configHandler->getParameter('header_menu'),
             'context' => [
                 'type' => $current,
                 'data' => $workspace ? $this->serializer->serialize($workspace, [Options::SERIALIZE_MINIMAL]) : null,

@@ -46,6 +46,15 @@ class ResourcePage extends Component {
   }
 
   render() {
+    // remove workspace root from path (it's already known by the breadcrumb)
+    // find a better way to handle this
+    let ancestors
+    if (this.props.resourceNode.workspace) {
+      ancestors = this.props.resourceNode.path.slice(1)
+    } else {
+      ancestors = this.props.resourceNode.path.slice(0)
+    }
+
     return (
       <ToolPage
         className={classes('resource-page', `${this.props.resourceNode.meta.type}-page`)}
@@ -55,7 +64,7 @@ class ResourcePage extends Component {
         fullscreen={this.state.fullscreen}
         title={this.props.resourceNode.name}
         subtitle={this.props.subtitle}
-        path={[].concat(this.props.resourceNode.path.map(ancestorNode => ({
+        path={[].concat(ancestors.map(ancestorNode => ({
           label: ancestorNode.name,
           target: ['claro_resource_show_short', {id: ancestorNode.id}]
         })), this.props.path)}

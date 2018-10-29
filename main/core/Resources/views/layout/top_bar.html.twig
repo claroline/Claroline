@@ -1,6 +1,7 @@
 {% block topBar %}
     <div
         class="app-header-container"
+        data-main-menu="{{ mainMenu | json_encode | raw | escape }}"
         data-context="{{ context | json_encode | raw | escape }}"
         data-display="{{ display | json_encode | raw | escape }}"
         data-administration="{{ administration | json_encode | raw | escape }}"

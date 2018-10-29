@@ -44,6 +44,7 @@ const Header = props =>
     }
 
     <HeaderMain
+      menu={props.mainMenu}
       authenticated={props.authenticated}
       context={props.context}
       user={props.currentUser}
@@ -110,6 +111,8 @@ const Header = props =>
   </header>
 
 Header.propTypes = {
+  mainMenu: T.string,
+
   /**
    * The current context of the app.
    */

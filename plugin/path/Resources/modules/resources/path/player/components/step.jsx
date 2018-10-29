@@ -207,7 +207,7 @@ const Step = props =>
 implementPropTypes(Step, StepTypes, {
   fullWidth: T.bool.isRequired,
   numbering: T.string,
-  showHeader: T.bool.isRequired,
+  showResourceHeader: T.bool.isRequired,
   manualProgressionAllowed: T.bool.isRequired,
   updateProgression: T.func.isRequired,
   enableNavigation: T.func.isRequired,

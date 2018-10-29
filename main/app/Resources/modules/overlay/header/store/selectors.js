@@ -4,6 +4,7 @@ import {trans} from '#/main/app/intl/translation'
 import {param} from '#/main/app/config'
 import {currentUser} from '#/main/core/user/current'
 
+const mainMenu = (state) => state.mainMenu
 const administration = (state) => state.administration
 const context = (state) => state.context
 const tools = (state) => state.tools
@@ -66,6 +67,7 @@ const registrationUrl = createSelector(
 const maintenance = () => param('maintenance')
 
 export const selectors = {
+  mainMenu,
   administration,
   context,
   tools,
