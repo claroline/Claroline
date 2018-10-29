@@ -1,35 +1,34 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
+import {HtmlText} from '#/main/core/layout/components/html-text'
 import {tex} from '#/main/app/intl/translation'
 import {PaperTabs} from '../components/paper-tabs.jsx'
 import {Feedback} from '../components/feedback-btn.jsx'
 
-export const OpenPaper = props => {
-  return (
-    <PaperTabs
-      id={props.item.id}
-      showYours={props.showYours}
-      yours={
-        <div className="open-paper">
-          {props.feedback &&
-            <div className="pull-right">
-              <Feedback
-                id={props.item.id}
-                feedback={props.feedback}
-              />
-            </div>
-          }
-
-          {props.answer && 0 !== props.answer.length ?
-            <div dangerouslySetInnerHTML={{__html: props.answer}} />
-            : <div className="no-answer">{tex('no_answer')}</div>
-          }
+export const OpenPaper = props =>
+  <PaperTabs
+    id={props.item.id}
+    showYours={props.showYours}
+    yours={
+      <div className="open-paper">
+        {props.feedback &&
+        <div className="pull-right">
+          <Feedback
+            id={props.item.id}
+            feedback={props.feedback}
+          />
         </div>
-      }
-    />
-  )
-}
+        }
+
+        {props.answer && 0 !== props.answer.length ?
+          <HtmlText>{props.answer}</HtmlText>
+          :
+          <div className="no-answer">{tex('no_answer')}</div>
+        }
+      </div>
+    }
+  />
 
 OpenPaper.propTypes = {
   item: T.shape({

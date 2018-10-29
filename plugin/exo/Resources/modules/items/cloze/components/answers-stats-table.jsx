@@ -1,6 +1,8 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+
+import {HtmlText} from '#/main/core/layout/components/html-text'
 import {AnswerStats} from './../../components/stats.jsx'
 import {tex} from '#/main/app/intl/translation'
 import {utils} from './../utils/utils'
@@ -15,7 +17,7 @@ const AnswerStatsTable = props =>
 
       return (
         <div key={idx} className={classes('answer-item', {'selected-answer': answer.score > 0})}>
-          <div dangerouslySetInnerHTML={{__html: answer.text}}></div>
+          <HtmlText>{answer.text}</HtmlText>
           <div>
             <AnswerStats stats={{
               value: props.stats.holes[props.solution.holeId] && props.stats.holes[props.solution.holeId][key] ?

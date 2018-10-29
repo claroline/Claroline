@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import shuffle from 'lodash/shuffle'
 
+import {HtmlText} from '#/main/core/layout/components/html-text'
 import {utils} from './utils/utils'
 
 /* If any previous answer draw them */
@@ -27,10 +28,12 @@ class MatchItem extends Component{
 
   render() {
     return (
-      <div
-        className={classes('answer-item match-item', this.props.type)} id={this.props.type + '_' + this.props.item.id}
-        dangerouslySetInnerHTML={{__html: this.props.item.data}}
-      />
+      <HtmlText
+        id={this.props.type + '_' + this.props.item.id}
+        className={classes('answer-item match-item', this.props.type)}
+      >
+        {this.props.item.data}
+      </HtmlText>
     )
   }
 }
@@ -159,9 +162,9 @@ class MatchPlayer extends Component {
 
   render() {
     return (
-        <div id={`match-question-player-${this.props.item.id}`} className="match-player match-items row" ref={(el) => { this.container = el }}>
-          <div className="item-col col-md-5 col-sm-5 col-xs-5">
-            <ul className="match-items-list">
+      <div id={`match-question-player-${this.props.item.id}`} className="match-player match-items row" ref={(el) => { this.container = el }}>
+        <div className="item-col col-md-5 col-sm-5 col-xs-5">
+          <ul className="match-items-list">
             {this.state.firstSet.map((item) =>
               <li key={'source_' + item.id}>
                 <MatchItem
@@ -172,13 +175,13 @@ class MatchPlayer extends Component {
                 />
               </li>
             )}
-            </ul>
-          </div>
+          </ul>
+        </div>
 
-          <div className="divide-col col-md-2 col-sm-2 col-xs-2" />
+        <div className="divide-col col-md-2 col-sm-2 col-xs-2" />
 
-          <div className="item-col col-md-5 col-sm-5 col-xs-5">
-            <ul className="match-items-list">
+        <div className="item-col col-md-5 col-sm-5 col-xs-5">
+          <ul className="match-items-list">
             {this.state.secondSet.map((item) =>
               <li key={'target_' + item.id}>
                 <MatchItem
@@ -189,9 +192,9 @@ class MatchPlayer extends Component {
                 />
               </li>
             )}
-            </ul>
-          </div>
+          </ul>
         </div>
+      </div>
     )
   }
 }

@@ -4,6 +4,7 @@ import classes from 'classnames'
 
 import {mount, unmount} from '#/main/app/mount'
 
+import {constants} from '#/main/core/tool/constants'
 import {App} from '#/main/core/resource'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 
@@ -32,6 +33,13 @@ class ResourceEmbedded extends Component {
     const ResourceApp = new App()
 
     mount(this.mountNode, ResourceApp.component, ResourceApp.store, {
+      tool: {
+        name: 'resource_manager',
+        context: {
+          type: resourceNode.workspace ? constants.TOOL_WORKSPACE : constants.TOOL_DESKTOP,
+          data: resourceNode.workspace || null
+        }
+      },
       resourceNode: resourceNode,
       embedded: true,
       showHeader: showHeader,

@@ -30,7 +30,7 @@ trait ListParameters
      *
      * @var bool
      */
-    private $paginated = false;
+    private $paginated = true;
 
     /**
      * @ORM\Column(type="boolean")
@@ -45,6 +45,13 @@ trait ListParameters
      * @var bool
      */
     private $count = false;
+
+    /**
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    private $actions = true;
 
     /**
      * @ORM\Column(nullable=true)
@@ -86,7 +93,7 @@ trait ListParameters
      *
      * @var array
      */
-    private $availableDisplays = ['table', 'table-sm', 'tiles', 'tiles-sm', 'list', 'list-sm'];
+    private $availableDisplays = ['tiles-sm'];
 
     /**
      * @ORM\Column(type="json_array")
@@ -118,12 +125,6 @@ trait ListParameters
 
     /**
      * The configuration of the card.
-     * Format: [
-     *   'icon' => false,
-     *   'flags' => false,
-     *   'description' => false,
-     *   'footer' => false,
-     * ].
      *
      * @ORM\Column(type="json")
      *
@@ -210,7 +211,7 @@ trait ListParameters
     /**
      * @return bool
      */
-    public function getCount()
+    public function hasCount(): bool
     {
         return $this->count;
     }
@@ -218,9 +219,25 @@ trait ListParameters
     /**
      * @param bool $count
      */
-    public function setCount($count)
+    public function setCount(bool $count)
     {
         $this->count = $count;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasActions(): bool
+    {
+        return $this->actions;
+    }
+
+    /**
+     * @param bool $actions
+     */
+    public function setActions(bool $actions)
+    {
+        $this->actions = $actions;
     }
 
     /**

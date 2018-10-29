@@ -3,6 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import ReactDOM from 'react-dom'
 import classes from 'classnames'
 
+import {HtmlText} from '#/main/core/layout/components/html-text'
+
 export class ClozeText extends Component {
   componentDidMount() {
     this.renderHoles()
@@ -42,7 +44,9 @@ export class ClozeText extends Component {
     })
 
     return (
-      <div className={classes('cloze-text', this.props.className)} dangerouslySetInnerHTML={{__html: parsedHtml}} />
+      <HtmlText className={classes('cloze-text', this.props.className)}>
+        {parsedHtml}
+      </HtmlText>
     )
   }
 }

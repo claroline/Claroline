@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import omit from 'lodash/omit'
 
 /**
  * Interprets and displays HTML content.
@@ -10,6 +11,7 @@ import classes from 'classnames'
  */
 const HtmlText = props =>
   <div
+    {...omit(props, 'children')}
     className={classes('text-html-content', props.className)}
     dangerouslySetInnerHTML={{ __html: props.children }}
   />

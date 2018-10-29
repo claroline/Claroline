@@ -2,6 +2,7 @@ import React, {Component}  from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {tex, transChoice} from '#/main/app/intl/translation'
+import {HtmlText} from '#/main/core/layout/components/html-text'
 
 class Hint extends Component {
   constructor(props) {
@@ -25,8 +26,9 @@ class Hint extends Component {
             </span>
           }
         </header>
+
         {this.state.showContent && this.props.content &&
-          <div className="hint-content" dangerouslySetInnerHTML={{__html: this.props.content}}></div>
+          <HtmlText className="hint-content">{this.props.content}</HtmlText>
         }
       </article>
     )

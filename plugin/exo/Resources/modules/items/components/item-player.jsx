@@ -4,12 +4,15 @@ import {PropTypes as T} from 'prop-types'
 import {Metadata as ItemMetadata} from '#/plugin/exo/items/components/metadata.jsx'
 // import {Hint} from '#/plugin/exo/items/components/hint.jsx'
 
+import {HtmlText} from '#/main/core/layout/components/html-text'
 import {tex, transChoice} from '#/main/app/intl/translation'
 
 const UsedHint = props =>
   <div className="well well-sm used-hint">
     <span className="fa fa-fw fa-lightbulb-o" />
-    <span className="hint-text" dangerouslySetInnerHTML={{__html: props.value}} />
+    <HtmlText className="hint-text">
+      {props.value}
+    </HtmlText>
 
     {props.penalty > 0 &&
       <small className="text-danger hint-penalty-info">

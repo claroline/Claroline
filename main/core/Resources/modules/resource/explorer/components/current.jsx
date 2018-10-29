@@ -92,7 +92,7 @@ class CurrentDirectory extends Component {
             }
           }
         }}
-        actions={this.props.actions}
+        actions={get(this.props.listConfiguration, 'actions') ? this.props.actions : undefined}
 
         definition={this.computeDefinition()}
         card={this.computeCard()}

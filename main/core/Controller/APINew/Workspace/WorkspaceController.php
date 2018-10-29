@@ -23,6 +23,7 @@ use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
@@ -33,6 +34,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -46,33 +49,55 @@ class WorkspaceController extends AbstractCrudController
     use HasUsersTrait;
     use HasGroupsTrait;
 
+    private $tokenStorage;
+    private $authorization;
     protected $resourceManager;
     protected $translator;
     protected $roleManager;
     protected $workspaceManager;
+    private $utils;
+    private $logDir;
 
     /**
+     * WorkspaceController constructor.
+     *
      * @DI\InjectParams({
+     *     "tokenStorage"     = @DI\Inject("security.token_storage"),
+     *     "authorization"    = @DI\Inject("security.authorization_checker"),
      *     "resourceManager"  = @DI\Inject("claroline.manager.resource_manager"),
      *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
      *     "translator"       = @DI\Inject("translator"),
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "utils"               = @DI\Inject("claroline.security.utilities"),
      *     "logDir"           = @DI\Inject("%claroline.param.workspace_log_dir%")
      * })
      *
-     * @param ResourceManager $resourceManager
+     * @param TokenStorageInterface         $tokenStorage
+     * @param AuthorizationCheckerInterface $authorization
+     * @param ResourceManager               $resourceManager
+     * @param TranslatorInterface           $translator
+     * @param RoleManager                   $roleManager
+     * @param WorkspaceManager              $workspaceManager
+     * @param Utilities                     $utils
+     * @param string                        $logDir
      */
     public function __construct(
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization,
         ResourceManager $resourceManager,
         TranslatorInterface $translator,
         RoleManager $roleManager,
         WorkspaceManager $workspaceManager,
+        Utilities $utils,
         $logDir
     ) {
+        $this->tokenStorage = $tokenStorage;
+        $this->authorization = $authorization;
         $this->resourceManager = $resourceManager;
         $this->translator = $translator;
         $this->roleManager = $roleManager;
         $this->workspaceManager = $workspaceManager;
+        $this->utils = $utils;
         $this->logDir = $logDir;
     }
 
@@ -97,6 +122,7 @@ class WorkspaceController extends AbstractCrudController
             $modelId = 0;
         }
 
+        /** @var Workspace $workspace */
         $workspace = $this->crud->create(
             $class,
             $data,
@@ -149,6 +175,39 @@ class WorkspaceController extends AbstractCrudController
           [Options::WORKSPACE_MODEL] : [];
 
         return parent::copyBulkAction($request, $class);
+    }
+
+    /**
+     * Gets the main workspace menu for the current user.
+     *
+     * @Route("/menu", name="apiv2_workspace_menu")
+     * @Method("GET")
+     *
+     * @return JsonResponse
+     */
+    public function menuAction()
+    {
+        $workspaces = [];
+        $personalWs = null;
+
+        $user = null;
+        $token = $this->tokenStorage->getToken();
+        if ($token) {
+            $user = $token->getUser();
+        }
+
+        if ($user instanceof User) {
+            $personalWs = $user->getPersonalWorkspace();
+            $workspaces = $this->workspaceManager->getRecentWorkspaceForUser($user, $this->utils->getRoles($token));
+        }
+
+        return new JsonResponse([
+            'creatable' => $this->authorization->isGranted('CREATE', new Workspace()),
+            'personal' => $personalWs ? $this->serializer->serialize($personalWs, [Options::SERIALIZE_MINIMAL]) : null,
+            'history' => array_map(function (Workspace $workspace) {
+                return $this->serializer->serialize($workspace, [Options::SERIALIZE_MINIMAL]);
+            }, $workspaces),
+        ]);
     }
 
     /**
@@ -577,7 +636,7 @@ class WorkspaceController extends AbstractCrudController
     protected function getRequirements()
     {
         return [
-          'get' => ['id' => '^(?!.*(schema|copy|parameters|find|doc|\/)).*'],
+          'get' => ['id' => '^(?!.*(schema|copy|parameters|find|doc|menu\/)).*'],
         ];
     }
 

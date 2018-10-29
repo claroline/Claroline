@@ -4,6 +4,8 @@ import classes from 'classnames'
 import Popover from 'react-bootstrap/lib/Popover'
 import Overlay from 'react-bootstrap/lib/Overlay'
 
+import {HtmlText} from '#/main/core/layout/components/html-text'
+
 import {POINTER_PLACED, POINTER_CORRECT, POINTER_WRONG} from './../enums'
 
 const POINTER_WIDTH = 32
@@ -81,7 +83,7 @@ export class Pointer extends Component {
                 id={`${this.props.x}${this.props.y}`}
                 className="feedback-popover"
               >
-                <span dangerouslySetInnerHTML={{ __html: this.props.feedback}}/>
+                <HtmlText>{this.props.feedback}</HtmlText>
               </Popover>
             </Overlay>
           </span>

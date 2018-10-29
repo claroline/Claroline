@@ -1,20 +1,17 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-export class TextContentThumbnail extends Component {
-  render() {
-    return (
-      <div className="text-content-thumbnail">
-        {this.props.data &&
-          <div dangerouslySetInnerHTML={{ __html: this.props.data }}>
-          </div>
-        }
-      </div>
-    )
-  }
-}
+import {HtmlText} from '#/main/core/layout/components/html-text'
+
+const TextContentThumbnail = props =>
+  <HtmlText className="text-content-thumbnail">
+    {props.data}
+  </HtmlText>
 
 TextContentThumbnail.propTypes = {
-  data: T.string,
-  type: T.string.isRequired
+  data: T.string
+}
+
+export {
+  TextContentThumbnail
 }

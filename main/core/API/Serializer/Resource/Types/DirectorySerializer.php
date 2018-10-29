@@ -34,7 +34,8 @@ class DirectorySerializer
             // resource list config
             // todo : big c/c from Claroline\CoreBundle\API\Serializer\Widget\Type\ListWidgetSerializer
             'list' => [
-                'count' => $directory->getCount(),
+                'actions' => $directory->hasActions(),
+                'count' => $directory->hasCount(),
                 // display feature
                 'display' => $directory->getDisplay(),
                 'availableDisplays' => $directory->getAvailableDisplays(),
@@ -80,6 +81,7 @@ class DirectorySerializer
         // resource list config
         // todo : big c/c from Claroline\CoreBundle\API\Serializer\Widget\Type\ListWidgetSerializer
         $this->sipe('list.count', 'setCount', $data, $directory);
+        $this->sipe('list.actions', 'setActions', $data, $directory);
 
         // display feature
         $this->sipe('list.display', 'setDisplay', $data, $directory);

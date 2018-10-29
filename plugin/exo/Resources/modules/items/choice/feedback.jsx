@@ -2,13 +2,13 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
+import {HtmlText} from '#/main/core/layout/components/html-text'
 import {utils} from './utils/utils'
 import {Feedback} from '../components/feedback-btn.jsx'
 import {WarningIcon} from './utils/warning-icon.jsx'
 
-export const ChoiceFeedback = props => {
-  return (
-    <div className="choice-feedback">
+const ChoiceFeedback = props =>
+  <div className="choice-feedback">
     {props.item.solutions.map(solution =>
       <label
         key={utils.answerId(solution.id)}
@@ -28,10 +28,9 @@ export const ChoiceFeedback = props => {
           />
         }
 
-        <div
-          className="choice-item-content"
-          dangerouslySetInnerHTML={{__html: utils.getChoiceById(props.item.choices, solution.id).data}}
-        ></div>
+        <HtmlText className="choice-item-content">
+          {utils.getChoiceById(props.item.choices, solution.id).data}
+        </HtmlText>
 
         {utils.isSolutionChecked(solution, props.answer) &&
           <div className="choice-item-feedback">
@@ -44,7 +43,6 @@ export const ChoiceFeedback = props => {
       </label>
     )}
   </div>
-)}
 
 ChoiceFeedback.propTypes = {
   item: T.shape({
@@ -59,4 +57,8 @@ ChoiceFeedback.propTypes = {
     description: T.string
   }).isRequired,
   answer: T.array
+}
+
+export {
+  ChoiceFeedback
 }

@@ -2,11 +2,12 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {tex} from '#/main/app/intl/translation'
+import {HtmlText} from '#/main/core/layout/components/html-text'
 
-export const OpenFeedback = props =>
+const OpenFeedback = props =>
   <div className="open-feedback">
     {props.answer && 0 !== props.answer.length ?
-      <div dangerouslySetInnerHTML={{__html: props.answer}} />
+      <HtmlText>{props.answer}</HtmlText>
       :
       <div className="no-answer">{tex('no_answer')}</div>
     }
@@ -18,4 +19,8 @@ OpenFeedback.propTypes = {
 
 OpenFeedback.defaultProps = {
   answer: ''
+}
+
+export {
+  OpenFeedback
 }

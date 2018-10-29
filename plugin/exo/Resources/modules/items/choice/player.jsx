@@ -4,6 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import shuffle from 'lodash/shuffle'
 import classes from 'classnames'
 
+import {HtmlText} from '#/main/core/layout/components/html-text'
 import {getNumbering} from './../../utils/numbering'
 import {NUMBERING_NONE} from './../../quiz/enums'
 
@@ -47,7 +48,7 @@ export class ChoicePlayer extends Component {
           >
             {this.props.item.numbering !== NUMBERING_NONE &&
               <span>
-                {getNumbering(this.props.item.numbering, idx)}) {"\u00a0"} {/*non breaking whitespace */}
+                {getNumbering(this.props.item.numbering, idx)}) {'\u00a0'} {/*non breaking whitespace */}
               </span>
             }
             <input
@@ -63,10 +64,9 @@ export class ChoicePlayer extends Component {
               ))}
             />
 
-            <div
-              className="choice-item-content"
-              dangerouslySetInnerHTML={{__html: choice.data}}
-            ></div>
+            <HtmlText className="choice-item-content">
+              {choice.data}
+            </HtmlText>
           </label>
         )}
       </div>

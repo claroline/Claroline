@@ -5,7 +5,8 @@
     width: 100%;
     top: 0;
     bottom: 0;
-    background: @top-bar-bg;
+    background: @toolbar-bg;
+    color: @toolbar-color;
 
     // temp : will be removed when sidebar will be in the main react app
     // as it will use the standard flying alerts
@@ -61,11 +62,11 @@
         padding: floor(@grid-gutter-width / 2);
         line-height: 1;
         text-align: center;
-        color: @top-bar-link-color;
-        text-shadow: 0 0 3px rgba(0,0,0,0.75);
+        color: @toolbar-link-color;
+        text-shadow: @toolbar-link-shadow;
 
         .fa {
-            font-size: 22px;
+            font-size: @toolbar-font-size;
         }
 
         .label {
@@ -74,13 +75,28 @@
             right: floor(@grid-gutter-width / 4);
         }
 
-        &:hover {
-            color: @top-bar-link-hover-color;
-            background: @top-bar-link-hover-bg;
+        &:hover,
+        &:focus {
+            color: @toolbar-link-hover-color;
+            background: @toolbar-link-hover-bg;
         }
 
-        &:focus {
-            color: @top-bar-link-active-color;
+        &.active {
+            &,
+            &:hover,
+            &:focus {
+                color: @toolbar-link-active-color;
+                background-color: @toolbar-link-active-bg;
+            }
+        }
+
+        &.disabled {
+            &,
+            &:hover,
+            &:focus {
+                color: @toolbar-link-disabled-color;
+                background-color: @toolbar-link-disabled-bg;
+            }
         }
 
         &.danger {
@@ -95,11 +111,6 @@
                 color: white;
                 background: @brand-danger;
             }
-        }
-
-        &.active {
-            color: @top-bar-link-active-color; // todo : use var
-            background: @brand-primary;
         }
     }
 

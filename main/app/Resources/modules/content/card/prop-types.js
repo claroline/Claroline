@@ -22,12 +22,13 @@ const DataCard = {
     title: T.string.isRequired,
     subtitle: T.string,
     contentText: T.string,
-    display: T.shape({
-      icon: T.bool,
-      flags: T.bool,
-      description: T.bool,
-      footer: T.bool
-    }),
+    display: T.arrayOf(T.oneOf([
+      'icon',
+      'flags',
+      'subtitle',
+      'description',
+      'footer'
+    ])),
     flags: T.arrayOf(
       T.arrayOf(T.oneOfType([T.string, T.number]))
     ),
@@ -55,12 +56,13 @@ const DataCard = {
     level: 2,
     actions: [],
     flags: [],
-    display: {
-      icon: true,
-      flags: true,
-      description: true,
-      footer: true
-    }
+    display: [
+      'icon',
+      'flags',
+      'subtitle',
+      'description',
+      'footer'
+    ]
   }
 }
 

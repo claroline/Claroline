@@ -1,8 +1,10 @@
 import React, {Component} from 'react'
-import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
-import {Grid, Row, Col} from 'react-bootstrap'
+import {connect} from 'react-redux'
 import {merge} from 'lodash'
+
+// todo : remove me
+import {Grid, Row, Col} from 'react-bootstrap'
 
 import {trans} from '#/main/app/intl/translation'
 import {LineChart} from '#/main/core/layout/chart/line/components/line-chart'

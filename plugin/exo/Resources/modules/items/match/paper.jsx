@@ -6,6 +6,9 @@ import Tab from 'react-bootstrap/lib/Tab'
 import Nav from 'react-bootstrap/lib/Nav'
 import Popover from 'react-bootstrap/lib/Popover'
 import NavItem from 'react-bootstrap/lib/NavItem'
+
+import {HtmlText} from '#/main/core/layout/components/html-text'
+
 import {Feedback} from '../components/feedback-btn.jsx'
 import {SolutionScore} from '../components/score.jsx'
 import {AnswerStats} from '../components/stats.jsx'
@@ -32,12 +35,15 @@ export const MatchLinkPopover = props =>
       {'fa-times text-danger' : props.solution.score <= 0 }
     )}>
     </div>
+
     {props.showScore &&
       <SolutionScore score={props.solution.score} />
     }
 
     {props.solution.feedback &&
-      <div className="match-association-feedback" dangerouslySetInnerHTML={{__html: props.solution.feedback}}/>
+      <HtmlText className="match-association-feedback">
+        {props.solution.feedback}
+      </HtmlText>
     }
   </Popover>
 
@@ -48,11 +54,12 @@ MatchLinkPopover.propTypes = {
 }
 
 const MatchItem = props =>
-  <div
+  <HtmlText
     id={`${props.selectedTab}_${props.type}_${props.item.id}`}
     className={classes('match-item answer-item', props.type)}
-    dangerouslySetInnerHTML={{__html: props.item.data}}
-  />
+  >
+    {props.item.data}
+  </HtmlText>
 
 MatchItem.propTypes = {
   type: T.string.isRequired,
@@ -173,17 +180,17 @@ export class MatchPaper extends Component
           <Nav bsStyle="tabs">
             {this.props.showYours &&
               <NavItem eventKey="first" onSelect={() => this.handleSelect('first')}>
-                <span className="fa fa-fw fa-user"></span> {tex('your_answer')}
+                <span className="fa fa-fw fa-user" /> {tex('your_answer')}
               </NavItem>
             }
             {this.props.showExpected &&
               <NavItem eventKey="second" onSelect={() => this.handleSelect('second')}>
-                <span className="fa fa-fw fa-check"></span> {tex('expected_answer')}
+                <span className="fa fa-fw fa-check" /> {tex('expected_answer')}
               </NavItem>
             }
             {this.props.showStats &&
               <NavItem eventKey="third" onSelect={() => this.handleSelect('third')}>
-                <span className="fa fa-fw fa-bar-chart"></span> {tex('stats')}
+                <span className="fa fa-fw fa-bar-chart" /> {tex('stats')}
               </NavItem>
             }
           </Nav>
@@ -191,7 +198,7 @@ export class MatchPaper extends Component
             <Tab.Content animation>
               <Tab.Pane eventKey="first">
                 <span className="help-block">
-                  <span className="fa fa-info-circle"></span>{tex('match_player_click_link_help')}
+                  <span className="fa fa-info-circle" />{tex('match_player_click_link_help')}
                 </span>
                 <div id={`match-question-paper-${this.props.item.id}-first`} className="match-items row">
                   <div className="item-col col-md-5 col-sm-5 col-xs-5">
@@ -235,7 +242,7 @@ export class MatchPaper extends Component
               {this.props.showExpected &&
                 <Tab.Pane eventKey="second">
                   <span className="help-block" style={{visibility:'hidden'}} >
-                    <span className="fa fa-info-circle"></span>{tex('match_player_click_link_help')}
+                    <span className="fa fa-info-circle" />{tex('match_player_click_link_help')}
                   </span>
                   <div id={`match-question-paper-${this.props.item.id}-second`} className="match-items row">
                     <div className="item-col col-md-5 col-sm-5 col-xs-5">
@@ -278,15 +285,23 @@ export class MatchPaper extends Component
                           )}
                         >
                           <div className="sets">
-                            <div className="item-content" dangerouslySetInnerHTML={{__html: utils.getSolutionData(solution.firstId, this.props.item.firstSet)}} />
-                            <span className="fa fa-fw fa-chevron-left"></span>
-                            <span className="fa fa-fw fa-chevron-right"></span>
-                            <div className="item-content" dangerouslySetInnerHTML={{__html: utils.getSolutionData(solution.secondId, this.props.item.secondSet)}} />
+                            <HtmlText className="item-content">
+                              {utils.getSolutionData(solution.firstId, this.props.item.firstSet)}
+                            </HtmlText>
+
+                            <span className="fa fa-fw fa-chevron-left" />
+                            <span className="fa fa-fw fa-chevron-right" />
+
+                            <HtmlText className="item-content">
+                              {utils.getSolutionData(solution.secondId, this.props.item.secondSet)}
+                            </HtmlText>
                           </div>
+
                           <Feedback
                             id={`answer-${solution.firstId}-${solution.secondId}-feedback`}
                             feedback={solution.feedback}
                           />
+
                           {this.props.showScore &&
                             <SolutionScore score={solution.score}/>
                           }
@@ -310,10 +325,16 @@ export class MatchPaper extends Component
                           )}
                         >
                           <div className="sets">
-                            <div className="item-content" dangerouslySetInnerHTML={{__html: utils.getSolutionData(solution.firstId, this.props.item.firstSet)}} />
-                            <span className="fa fa-fw fa-chevron-left"></span>
-                            <span className="fa fa-fw fa-chevron-right"></span>
-                            <div className="item-content" dangerouslySetInnerHTML={{__html: utils.getSolutionData(solution.secondId, this.props.item.secondSet)}} />
+                            <HtmlText className="item-content">
+                              {utils.getSolutionData(solution.firstId, this.props.item.firstSet)}
+                            </HtmlText>
+
+                            <span className="fa fa-fw fa-chevron-left" />
+                            <span className="fa fa-fw fa-chevron-right" />
+
+                            <HtmlText className="item-content">
+                              {utils.getSolutionData(solution.secondId, this.props.item.secondSet)}
+                            </HtmlText>
                           </div>
 
                           <AnswerStats stats={{
@@ -334,10 +355,16 @@ export class MatchPaper extends Component
                               className='answer-item'
                             >
                               <div className="sets">
-                                <div className="item-content" dangerouslySetInnerHTML={{__html: first.data}} />
-                                <span className="fa fa-fw fa-chevron-left"></span>
-                                <span className="fa fa-fw fa-chevron-right"></span>
-                                <div className="item-content" dangerouslySetInnerHTML={{__html: second.data}} />
+                                <HtmlText className="item-content">
+                                  {first.data}
+                                </HtmlText>
+
+                                <span className="fa fa-fw fa-chevron-left" />
+                                <span className="fa fa-fw fa-chevron-right" />
+
+                                <HtmlText className="item-content">
+                                  {second.data}
+                                </HtmlText>
                               </div>
 
                               <AnswerStats stats={{

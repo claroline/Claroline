@@ -153,7 +153,7 @@ ClacoFormResource.propTypes = {
   canEdit: T.bool.isRequired,
   canAddEntry: T.bool.isRequired,
   canSearchEntry: T.bool.isRequired,
-  defaultHome: T.string.isRequired,
+  defaultHome: T.string,
   resetForm: T.func.isRequired,
   openEntryForm: T.func.isRequired,
   resetEntryForm: T.func.isRequired,

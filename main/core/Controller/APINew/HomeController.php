@@ -79,6 +79,8 @@ class HomeController extends AbstractApiController
      * @EXT\Template("ClarolineCoreBundle:home:new_home.html.twig")
      *
      * @return array
+     *
+     * @todo : move me. No template rendering in API controllers
      */
     public function newHomeAction()
     {

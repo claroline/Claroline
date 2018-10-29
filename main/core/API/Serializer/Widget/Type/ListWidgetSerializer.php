@@ -25,7 +25,8 @@ class ListWidgetSerializer
         return [
             'maxResults' => $widget->getMaxResults(),
 
-            'count' => $widget->getCount(),
+            'actions' => $widget->hasActions(),
+            'count' => $widget->hasCount(),
 
             // display feature
             'display' => $widget->getDisplay(),
@@ -59,6 +60,7 @@ class ListWidgetSerializer
 
         // todo : find a way to merge with directory serializer
         $this->sipe('count', 'setCount', $data, $widget);
+        $this->sipe('actions', 'setActions', $data, $widget);
 
         // display feature
         $this->sipe('display', 'setDisplay', $data, $widget);
