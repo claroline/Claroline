@@ -5,9 +5,9 @@ import {currentUser} from '#/main/core/user/current'
 
 export const actions = {}
 
-actions.register = (workspace) => ({
+actions.register = (workspaces) => ({
   [API_REQUEST]: {
-    url: url(['apiv2_workspace_register', {workspace: workspace.uuid, user: currentUser().id}]),
+    url: url(['apiv2_workspace_register', {user: currentUser().id}], {workspaces: workspaces.map(workspace => workspace.id)}),
     request: {
       method: 'PATCH'
     },
@@ -15,9 +15,9 @@ actions.register = (workspace) => ({
   }
 })
 
-actions.unregister = (workspace) => ({
+actions.unregister = (workspaces) => ({
   [API_REQUEST]: {
-    url: url(['apiv2_workspace_unregister', {workspace: workspace.uuid, user: currentUser().id}]),
+    url: url(['apiv2_workspace_unregister', {user: currentUser().id}], {workspaces: workspaces.map(workspace => workspace.id)}),
     request: {
       method: 'DELETE'
     },

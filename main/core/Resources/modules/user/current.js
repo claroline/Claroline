@@ -34,11 +34,20 @@ function currentUser() {
   return user
 }
 
+function isAdmin() {
+  user = currentUser()
+
+  const found = user.roles.find(role => role.name === 'ROLE_ADMIN')
+
+  return found !== undefined
+}
+
 function isAuthenticated() {
   return !isEmpty(currentUser())
 }
 
 export {
   currentUser,
+  isAdmin,
   isAuthenticated
 }

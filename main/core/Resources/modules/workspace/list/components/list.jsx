@@ -8,7 +8,7 @@ import {WorkspaceList} from '#/main/core/workspace/list/components/workspace-lis
 import {actions} from '#/main/core/workspace/list/actions'
 import {trans} from '#/main/app/intl/translation'
 import {constants as listConst} from '#/main/app/content/list/constants'
-import {currentUser} from '#/main/core/user/current'
+import {currentUser, isAdmin} from '#/main/core/user/current'
 
 import {PageContainer, PageHeader,PageContent} from '#/main/core/layout/page/index'
 
@@ -43,12 +43,12 @@ const WorkspacesList = props => {
               type: CALLBACK_BUTTON,
               icon: 'fa fa-fw fa-book',
               label: trans('register'),
-              displayed: currentUser && rows[0].registration.selfRegistration && !rows[0].permissions['open'] && !rows[0].registration.waitingForRegistration,
-              scope: ['object'],
-              callback: () => props.register(rows[0]),
+              displayed: currentUser && (rows[0].registration.selfRegistration || isAdmin()) && !rows[0].registered && !rows[0].registration.waitingForRegistration,
+              scope: ['object', 'collection'],
+              callback: () => props.register(rows),
               confirm: {
                 title: trans('register'),
-                message: rows[0].registration.validation ? trans('workspace_awaiting_validation'): trans('register_to_a_public_workspace')
+                message: trans('register_to_a_public_workspace')
               }
             },
             {
@@ -56,9 +56,9 @@ const WorkspacesList = props => {
               icon: 'fa fa-fw fa-book',
               label: trans('unregister'),
               dangerous: true,
-              displayed: currentUser && rows[0].registration.selfUnregistration && rows[0].permissions['open'],
-              scope: ['object'],
-              callback: () => props.unregister(rows[0]),
+              displayed: currentUser && (rows[0].registration.selfUnregistration || isAdmin()) && rows[0].registered,
+              scope: ['object', 'collection'],
+              callback: () => props.unregister(rows),
               confirm: {
                 title: trans('unregister'),
                 message: trans('unregister_from_a_workspace')
@@ -83,11 +83,11 @@ const Workspaces = connect(
     parameters: state.parameters
   }),
   dispatch => ({
-    register(workspace) {
-      dispatch(actions.register(workspace))
+    register(workspaces) {
+      dispatch(actions.register(workspaces))
     },
-    unregister(workspace) {
-      dispatch(actions.unregister(workspace))
+    unregister(workspaces) {
+      dispatch(actions.unregister(workspaces))
     }
   })
 )(WorkspacesList)

@@ -158,6 +158,7 @@ class WorkspaceSerializer
                     'administrate' => $this->authorization->isGranted('EDIT', $workspace),
                     'export' => $this->authorization->isGranted('EXPORT', $workspace),
                 ],
+                'registered' => $this->isRegistered($workspace),
                 'meta' => $this->getMeta($workspace, $options),
                 'opening' => $this->getOpening($workspace),
                 'display' => $this->getDisplay($workspace),
@@ -192,6 +193,17 @@ class WorkspaceSerializer
         }
 
         return $serialized;
+    }
+
+    private function isRegistered(Workspace $workspace)
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if ($user instanceof User) {
+            return $this->workspaceManager->isRegistered($user, $workspace);
+        }
+
+        return false;
     }
 
     /**

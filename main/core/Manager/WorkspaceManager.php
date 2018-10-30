@@ -1018,6 +1018,23 @@ class WorkspaceManager
         $this->om->endFlushSuite();
     }
 
+    //this is not a very effective method =/
+    public function isRegistered(User $user, Workspace $workspace)
+    {
+        $userRoles = $user->getRoles();
+        $workspaceRoles = $workspace->getRoles();
+
+        foreach ($userRoles as $userRole) {
+            foreach ($workspaceRoles as $workspaceRole) {
+                if ($workspaceRole->getName() === $userRole) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public function isManager(Workspace $workspace, TokenInterface $token)
     {
         if (!$token->getUser() instanceof User) {

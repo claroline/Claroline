@@ -582,39 +582,48 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{workspace}/unregister/{user}", name="apiv2_workspace_unregister")
+     * @Route("/unregister/{user}", name="apiv2_workspace_unregister")
      * @Method("DELETE")
      * @ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
-     * @ParamConverter("workspace", class = "ClarolineCoreBundle:Workspace\Workspace",  options={"mapping": {"workspace": "uuid"}})
      */
-    public function unregisterAction(Workspace $workspace, User $user)
+    public function unregisterAction(User $user, Request $request)
     {
-        $this->workspaceManager->unregister($user, $workspace);
+        $workspaces = $this->decodeQueryParam($request, 'Claroline\CoreBundle\Entity\Workspace\Workspace', 'workspaces');
 
-        return new JsonResponse($this->serializer->serialize($workspace));
+        foreach ($workspaces as $workspace) {
+            $this->workspaceManager->unregister($user, $workspace);
+        }
+
+        return new JsonResponse(array_map(function (Workspace $workspace) {
+            return $this->serializer->serialize($workspace);
+        }, $workspaces));
     }
 
     /**
-     * @Route("/{workspace}/register/{user}", name="apiv2_workspace_register")
+     * @Route("/register/{user}", name="apiv2_workspace_register")
      * @Method("PATCH")
      * @ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
-     * @ParamConverter("workspace", class = "ClarolineCoreBundle:Workspace\Workspace",  options={"mapping": {"workspace": "uuid"}})
      */
-    public function registerAction(Workspace $workspace, User $user)
+    public function registerAction(User $user, Request $request)
     {
         // If user is admin or registration validation is disabled, subscribe user
         //see WorkspaceParametersController::userSubscriptionAction
+        $workspaces = $this->decodeQueryParam($request, 'Claroline\CoreBundle\Entity\Workspace\Workspace', 'workspaces');
 
-        if ($this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN') || !$workspace->getRegistrationValidation()) {
-            $this->workspaceManager->addUserAction($workspace, $user);
-        } else {
-            // Otherwise add user to validation queue if not already there
-            if (!$this->workspaceManager->isUserInValidationQueue($workspace, $user)) {
-                $this->workspaceManager->addUserQueue($workspace, $user);
+        foreach ($workspaces as $workspace) {
+            if ($this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN') || !$workspace->getRegistrationValidation()) {
+                $this->workspaceManager->addUserAction($workspace, $user);
+            } else {
+                // Otherwise add user to validation queue if not already there
+                if (!$this->workspaceManager->isUserInValidationQueue($workspace, $user)) {
+                    $this->workspaceManager->addUserQueue($workspace, $user);
+                }
             }
         }
 
-        return new JsonResponse($this->serializer->serialize($workspace));
+        return new JsonResponse(array_map(function (Workspace $workspace) {
+            return $this->serializer->serialize($workspace);
+        }, $workspaces));
     }
 
     /**
