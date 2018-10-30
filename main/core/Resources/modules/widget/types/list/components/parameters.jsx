@@ -67,13 +67,15 @@ class ListWidgetParameters extends Component {
           }
         ]}
       >
-        <ListForm
-          level={5}
-          name={this.props.name}
-          dataPart="parameters"
-          list={this.state.parameters}
-          parameters={this.props.instance.parameters}
-        />
+        {this.state.parameters &&
+          <ListForm
+            level={5}
+            name={this.props.name}
+            dataPart="parameters"
+            list={this.state.parameters}
+            parameters={this.props.instance.parameters}
+          />
+        }
       </FormData>
     )
   }

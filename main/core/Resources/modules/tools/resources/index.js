@@ -11,7 +11,6 @@ export const App = () => ({
   store: reducer,
   initialData: initialData => ({
     tool: {
-      icon: 'folder',
       name: 'resource_manager',
       context: initialData.context
     },

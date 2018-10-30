@@ -3,7 +3,6 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
-import {User as UserTypes} from '#/main/core/user/prop-types'
 import {OverlayStack} from '#/main/app/overlay/containers/stack'
 import {WalkthroughOverlay} from '#/main/app/overlay/walkthrough/containers/overlay'
 
@@ -139,9 +138,16 @@ Header.propTypes = {
   /**
    * The currently logged user.
    */
-  currentUser: T.shape(
-    UserTypes.propTypes
-  ),
+  currentUser: T.shape({
+    id: T.string,
+    name: T.string,
+    username: T.string,
+    publicUrl: T.string,
+    picture: T.shape({
+      url: T.string.isRequired
+    }),
+    roles: T.array
+  }),
   count: T.shape({
     notifications: T.number,
     messages: T.number

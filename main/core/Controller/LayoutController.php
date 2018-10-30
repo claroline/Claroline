@@ -45,15 +45,25 @@ class LayoutController extends Controller
 {
     use PermissionCheckerTrait;
 
+    /** @var StrictDispatcher */
     private $dispatcher;
+    /** @var RoleManager */
     private $roleManager;
+    /** @var WorkspaceManager */
     private $workspaceManager;
+    /** @var NotificationManager */
     private $notificationManager;
+    /** @var TokenStorageInterface */
     private $tokenStorage;
+    /** @var Utilities */
     private $utils;
+    /** @var PlatformConfigurationHandler */
     private $configHandler;
+    /** @var ToolManager */
     private $toolManager;
+    /** @var SerializerProvider */
     private $serializer;
+    /** @var FinderProvider */
     private $finder;
 
     /**
@@ -69,7 +79,7 @@ class LayoutController extends Controller
      *     "toolManager"         = @DI\Inject("claroline.manager.tool_manager"),
      *     "dispatcher"          = @DI\Inject("claroline.event.event_dispatcher"),
      *     "serializer"          = @DI\Inject("claroline.api.serializer"),
-     *     "finder"          = @DI\Inject("claroline.api.finder")
+     *     "finder"              = @DI\Inject("claroline.api.finder")
      * })
      *
      * @param RoleManager                  $roleManager
@@ -213,6 +223,7 @@ class LayoutController extends Controller
         // I think we will need to merge this with the default platform config object
         // this can be done when the top bar will be moved in the main react app
         return [
+            //'isImpersonated' => $this->isImpersonated(),
             'mainMenu' => $this->configHandler->getParameter('header_menu'),
             'context' => [
                 'type' => $current,
@@ -228,7 +239,7 @@ class LayoutController extends Controller
 
             'notifications' => [
                 'count' => [
-                  'notifications' => $token->getUser() instanceof User ? $this->notificationManager->countUnviewedNotifications($token->getUser()) : '',
+                  'notifications' => $token->getUser() instanceof User ? $this->notificationManager->countUnviewedNotifications($token->getUser()) : 0,
                   'messages' => $token->getUser() instanceof User ? $this->finder->fetch(
                     Message::class,
                     ['removed' => false, 'read' => false, 'sent' => false],
@@ -236,13 +247,10 @@ class LayoutController extends Controller
                     0,
                     -1,
                     true
-                  ) : '',
+                  ) : 0,
                 ],
                 'refreshDelay' => $this->configHandler->getParameter('notifications_refresh_delay'),
             ],
-
-            //'isImpersonated' => $this->isImpersonated(),
-            //'homeMenu' => $homeMenu,
             'administration' => array_map(function (AdminTool $tool) {
                 return [
                     'icon' => $tool->getClass(),

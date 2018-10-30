@@ -31,14 +31,16 @@ class RedirectController extends Controller
      * @EXT\Route("/resource/open/{node}", name="claro_resource_open_short")
      * @EXT\Route("/resource/open/{resourceType}/{node}", name="claro_resource_open")
      * @EXT\Method("GET")
-     * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"node": "id"}})
      *
-     * @param ResourceNode $resourceNode
+     * @param string|int $node
      *
      * @return RedirectResponse
      */
-    public function openResourceAction(ResourceNode $resourceNode)
+    public function openResourceAction($node)
     {
+        /** @var ResourceNode $resourceNode */
+        $resourceNode = $this->container->get('claroline.persistence.object_manager')->find(ResourceNode::class, $node);
+
         return $this->redirectToRoute('claro_resource_show', [
             'id' => $resourceNode->getUuid(),
         ]);

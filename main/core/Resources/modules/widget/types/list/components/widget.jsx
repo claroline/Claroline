@@ -48,10 +48,10 @@ class ListWidget extends Component {
   computeCard() {
     const baseCard = get(this.state, 'source.parameters.card')
     if (baseCard) {
-      if (get(this.props, 'card')) {
+      if (get(this.props, 'card.display')) {
         // append custom configuration to the card
         const ConfiguredCard = props => React.createElement(baseCard, merge({}, props, {
-          display: get(this.props, 'card')
+          display: get(this.props, 'card.display')
         }))
 
         return ConfiguredCard
