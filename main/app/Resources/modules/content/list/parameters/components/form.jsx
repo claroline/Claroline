@@ -427,7 +427,7 @@ const ListForm = props => {
           displayed: (parameters) => {
             const availableDisplays = get(parameters, 'availableDisplays') || []
 
-            return constants.DISPLAY_MODES[parameters.display].options.useCard
+            return (parameters.display && constants.DISPLAY_MODES[parameters.display].options.useCard)
               || !!availableDisplays.find(displayMode => constants.DISPLAY_MODES[displayMode].options.useCard)
           },
           fields: [
@@ -440,7 +440,6 @@ const ListForm = props => {
                 inline: false,
                 multiple: true,
                 choices: merge({
-                  actions: trans('card_actions'),
                   icon: trans('card_icon'),
                   flags: trans('card_flags'),
                   subtitle: trans('card_subtitle')

@@ -10,7 +10,6 @@ import {MenuButton} from '#/main/app/buttons/menu/components/button'
 
 import {UserAvatar} from '#/main/core/user/components/avatar'
 import {constants as roleConstants} from '#/main/core/user/role/constants'
-import {User as UserTypes} from '#/main/core/user/prop-types'
 
 // TODO : add user poster when available
 
@@ -108,9 +107,16 @@ UserMenu.propTypes = {
   actions: T.array.isRequired,
   login: T.string.isRequired,
   registration: T.string,
-  currentUser: T.shape(
-    UserTypes.propTypes
-  ).isRequired
+  currentUser: T.shape({
+    id: T.string,
+    name: T.string,
+    username: T.string,
+    publicUrl: T.string,
+    picture: T.shape({
+      url: T.string.isRequired
+    }),
+    roles: T.array
+  }).isRequired
 }
 
 const HeaderUser = props =>
@@ -142,9 +148,16 @@ HeaderUser.propTypes = {
   )),
   registration: T.string,
   authenticated: T.bool.isRequired,
-  currentUser: T.shape(
-    UserTypes.propTypes
-  ).isRequired
+  currentUser: T.shape({
+    id: T.string,
+    name: T.string,
+    username: T.string,
+    publicUrl: T.string,
+    picture: T.shape({
+      url: T.string.isRequired
+    }),
+    roles: T.array
+  }).isRequired
 }
 
 HeaderUser.defaultProps = {

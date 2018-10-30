@@ -28,6 +28,7 @@
 
 @images-path: "images/";
 
+
 // -
 // Z-indexes
 // ---
@@ -41,6 +42,7 @@
 @zindex-flying-alerts: @zindex-modal + 10;
 
 @zindex-walkthrough:   @zindex-modal + 20;
+
 
 // -
 // Application
@@ -85,7 +87,7 @@
 
 
 // -
-// Loader
+// Old loader (no longer used in new UIs)
 // ---
 
 @loader-bg:            @label-primary-bg;
@@ -101,13 +103,19 @@
 // Breadcrumb
 // ---
 
-@breadcrumb-margin-vertical:   0;
-@breadcrumb-margin-horizontal: 0;
-@breadcrumb-border-radius:     0;
-@breadcrumb-box-shadow:        none;
-@breadcrumb-font-size:         @font-size-small;
-@breadcrumb-text-transform:    inherit;
+@breadcrumb-margin-vertical:    0;
+@breadcrumb-margin-horizontal:  0;
+@breadcrumb-border-radius:      0;
+@breadcrumb-box-shadow:         none;
+@breadcrumb-font-size:          @font-size-small;
+@breadcrumb-line-height:        @line-height-base;
+@breadcrumb-text-transform:     inherit;
+@breadcrumb-inner-border-size:  1;
+@breadcrumb-inner-border-color: #bbb;
 
+//@breadcrumb-link-bg:            #EAEAEA;
+@breadcrumb-link-color:         #777;
+@breadcrumb-link-hover-color:   #333;
 
 // -
 // Toolbars

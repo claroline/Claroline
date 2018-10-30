@@ -1,4 +1,5 @@
 .breadcrumb {
+    padding: 0;
     margin: @breadcrumb-margin-vertical @breadcrumb-margin-horizontal;
     font-size: @breadcrumb-font-size;
     text-transform: @breadcrumb-text-transform;
@@ -8,11 +9,52 @@
 
 
     > li {
-        + li:before {
-            // by default, bootstrap adds a nbsp after the separator
-            // this is not needed because there is an horizontal padding
-            // and this breaks the display (the space after the separator is larger than the one before)
-            content: "@{breadcrumb-separator}";
+        line-height: @line-height-base;
+        padding: @breadcrumb-padding-vertical @breadcrumb-padding-horizontal;
+        position: relative;
+
+        a {
+            color: @breadcrumb-link-color;
+            font-weight: bold;
+
+            &:hover,
+            &:focus {
+                color: @breadcrumb-link-hover-color;
+            }
+        }
+
+        &:before,
+        &:after {
+            position: absolute;
+            content: " " !important; // make sure to override default bootstrap behavior
+        }
+
+        &:not(.active) {
+            @breadcrumb-arrow-size: floor((@breadcrumb-padding-vertical*2 + @breadcrumb-line-height*@breadcrumb-font-size)/2);
+
+            margin-right: @breadcrumb-arrow-size + @breadcrumb-inner-border-size;
+
+            // Create arrows
+            &:before,
+            &:after {
+                top: 50%;
+                left: 100%;
+                border: solid transparent;
+                height: 0;
+                width: 0;
+            }
+
+            &:before {
+                margin-top: -(@breadcrumb-arrow-size + @breadcrumb-inner-border-size);
+                border-width: @breadcrumb-arrow-size + @breadcrumb-inner-border-size;
+                border-left-color: @breadcrumb-inner-border-color;
+            }
+
+            &:after {
+                margin-top: -(@breadcrumb-arrow-size);
+                border-width: @breadcrumb-arrow-size;
+                border-left-color: @breadcrumb-bg;
+            }
         }
     }
 }

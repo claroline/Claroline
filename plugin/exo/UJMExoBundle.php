@@ -25,6 +25,7 @@ class UJMExoBundle extends DistributionPluginBundle
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
+
         $container->addCompilerPass(new ItemDefinitionsPass());
     }
 }

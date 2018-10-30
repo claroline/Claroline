@@ -56,10 +56,10 @@ class CurrentDirectory extends Component {
   computeCard() {
     const baseCard = get(this.state, 'source.parameters.card')
     if (baseCard) {
-      if (get(this.props.listConfiguration, 'card')) {
+      if (get(this.props.listConfiguration, 'card.display')) {
         // append custom configuration to the card
         const ConfiguredCard = props => React.createElement(baseCard, merge({}, props, {
-          display: get(this.props.listConfiguration, 'card')
+          display: get(this.props.listConfiguration, 'card.display')
         }))
 
         return ConfiguredCard
@@ -101,6 +101,7 @@ class CurrentDirectory extends Component {
           available: this.props.listConfiguration.availableDisplays
         }}
         count={isEmpty(this.props.listConfiguration) || this.props.listConfiguration.count}
+        selectable={!!get(this.props.listConfiguration, 'actions')}
         filterable={isEmpty(this.props.listConfiguration) || !isEmpty(this.props.listConfiguration.availableFilters)}
         sortable={isEmpty(this.props.listConfiguration) || !isEmpty(this.props.listConfiguration.availableSort)}
         paginated={isEmpty(this.props.listConfiguration) || this.props.listConfiguration.paginated}
