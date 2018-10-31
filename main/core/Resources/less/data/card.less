@@ -89,8 +89,6 @@
     text-align: center;
     background: @data-card-header-bg;
     border-color: @data-card-inner-border;
-
-    .border-radius(@data-card-border-radius @data-card-border-radius 0 0);
 }
 
 .data-card-icon {
@@ -149,8 +147,6 @@
     flex-direction: column;
     align-items: stretch;
     text-align: left;
-
-    .border-radius(0 0 @data-card-border-radius @data-card-border-radius);
 }
 
 .data-card-description {
@@ -262,6 +258,8 @@
     .data-card-header {
         border-bottom-width: 1px;
         border-bottom-style: solid;
+
+        .border-radius(@data-card-border-radius @data-card-border-radius 0 0);
     }
 
     &.data-card-poster {
@@ -272,6 +270,8 @@
 
     .data-card-content {
         flex: 1 0 auto;
+
+        .border-radius(0 0 @data-card-border-radius @data-card-border-radius);
     }
 
     .data-card-description {
@@ -288,10 +288,14 @@
         min-width: 40%;
         border-right-width: 1px;
         border-right-style: solid;
+
+        .border-radius(@data-card-border-radius 0 0 @data-card-border-radius);
     }
 
     .data-card-content {
         flex: 1 0 0;
         max-width: 60%;
+
+        .border-radius(0 @data-card-border-radius @data-card-border-radius 0);
     }
 }

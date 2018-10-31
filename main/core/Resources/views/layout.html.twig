@@ -26,7 +26,7 @@
     {% if (hideTopBar is not defined or not hideTopBar) and not has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
         {% block topBarRender %}
             {% if workspace is defined and workspace is not null %}
-                {{ render(controller('ClarolineCoreBundle:Layout:topBar', {'workspaceId': workspace.id, request: app.request})) }}
+                {{ render(controller('ClarolineCoreBundle:Layout:topBar', {request: app.request, workspace: workspace})) }}
             {% else %}
                 {{ render(controller('ClarolineCoreBundle:Layout:topBar', {request: app.request})) }}
             {% endif %}
@@ -82,7 +82,7 @@
 
             {% if hideFooter is not defined or not hideFooter %}
                 {% block footer %}
-                    {{ render(controller('ClarolineCoreBundle:Layout:footer')) }}
+                    {{ render(controller('ClarolineCoreBundle:Layout:footer', {request: app.request})) }}
                 {% endblock%}
             {% endif %}
         </div>

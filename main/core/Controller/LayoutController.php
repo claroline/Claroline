@@ -30,7 +30,6 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\MessageBundle\Entity\Message;
 use Icap\NotificationBundle\Manager\NotificationManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -70,6 +69,7 @@ class LayoutController extends Controller
      * LayoutController constructor.
      *
      * @DI\InjectParams({
+     *     "templating"          = @DI\Inject("templating"),
      *     "roleManager"         = @DI\Inject("claroline.manager.role_manager"),
      *     "workspaceManager"    = @DI\Inject("claroline.manager.workspace_manager"),
      *     "notificationManager" = @DI\Inject("icap.notification.manager"),
@@ -120,9 +120,7 @@ class LayoutController extends Controller
     /**
      * Renders the platform footer.
      *
-     * @EXT\Template()
-     *
-     * @return array
+     * @return Response
      */
     public function footerAction()
     {
@@ -133,35 +131,29 @@ class LayoutController extends Controller
         $selfRegistration = $this->configHandler->getParameter('allow_self_registration') &&
             $this->roleManager->validateRoleInsert(new User(), $roleUser);
 
-        return [
+        return $this->render('ClarolineCoreBundle:layout:footer.html.twig', [
             'footerMessage' => $this->configHandler->getParameter('footer'),
             'footerLogin' => $this->configHandler->getParameter('footer_login'),
             'footerWorkspaces' => $this->configHandler->getParameter('footer_workspaces'),
             'headerLocale' => $this->configHandler->getParameter('header_locale'),
             'coreVersion' => $version,
             'selfRegistration' => $selfRegistration,
-        ];
+        ]);
     }
 
     /**
-     * Renders the platform top bar. Its content depends on the user status
-     * (anonymous/logged, profile, etc.) and the platform options (e.g. self-
-     * registration allowed/prohibited).
+     * Renders the platform top bar.
+     * Its content depends on the user status (anonymous/logged, profile, etc.)
+     * and the platform options (e.g. self-registration allowed/prohibited).
      *
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true},
-     *      converter="strict_id"
-     * )
-     * @EXT\Template()
-     *
-     * @param Workspace $workspace
      * @param Request   $request
+     * @param Workspace $workspace
      *
-     * @return array
+     * @return Response
+     *
+     * @todo simplify me
      */
-    public function topBarAction(Workspace $workspace = null, Request $request)
+    public function topBarAction(Request $request, Workspace $workspace = null)
     {
         $user = null;
         $token = $this->tokenStorage->getToken();
@@ -222,7 +214,7 @@ class LayoutController extends Controller
 
         // I think we will need to merge this with the default platform config object
         // this can be done when the top bar will be moved in the main react app
-        return [
+        return $this->render('ClarolineCoreBundle:layout:top_bar.html.twig', [
             //'isImpersonated' => $this->isImpersonated(),
             'mainMenu' => $this->configHandler->getParameter('header_menu'),
             'context' => [
@@ -288,15 +280,13 @@ class LayoutController extends Controller
                     'open' => ['claro_desktop_open_tool', ['toolName' => $tool->getName()]],
                 ];
             }, array_values($notificationTools)),
-        ];
+        ]);
     }
 
     /**
      * Renders the warning bar when a workspace role is impersonated.
      *
-     * @EXT\Template()
-     *
-     * @return array
+     * @return Response
      */
     public function renderWarningImpersonationAction()
     {
@@ -333,20 +323,21 @@ class LayoutController extends Controller
             }
         }
 
-        return [
+        return $this->render('ClarolineCoreBundle:layout:render_warning_impersonation.html.twig', [
             'isImpersonated' => $this->isImpersonated(),
             'workspace' => $workspaceName,
             'role' => $roleName,
-        ];
+        ]);
     }
 
-    //not routed
     public function injectJavascriptAction()
     {
         /** @var InjectJavascriptEvent $event */
         $event = $this->dispatcher->dispatch('inject_javascript_layout', InjectJavascriptEvent::class);
 
-        return new Response($event->getContent());
+        return new Response(
+            $event->getContent()
+        );
     }
 
     private function isImpersonated()
