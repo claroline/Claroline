@@ -1926,53 +1926,6 @@ class SurveyController extends Controller
         return new Response('success', 200);
     }
 
-    /**
-     * @EXT\Route(
-     *     "course/sessions/group/{group}/type/{type}/register",
-     *     name="claro_cursus_sessions_register_group",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter(
-     *     "sessions",
-     *      class="ClarolineCursusBundle:CourseSession",
-     *      options={"multipleIds" = true, "name" = "sessionsIds"}
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     */
-    public function sessionsRegisterGroupAction(Group $group, $type, array $sessions)
-    {
-        $this->checkToolAccess();
-        $results = $this->cursusManager->registerGroupToSessions($sessions, $group, $type);
-
-        if ('failed' === $results['status']) {
-            $datas = $results['datas'];
-            $sessionFlashBag = $this->session->getFlashBag();
-
-            foreach ($datas as $data) {
-                $sessionFlashBag->add(
-                    'error',
-                    $this->translator->trans(
-                        'session_not_enough_place_msg',
-                        [
-                            '%courseTitle%' => $data['courseTitle'],
-                            '%courseCode%' => $data['courseCode'],
-                            '%sessionName%' => $data['sessionName'],
-                            '%remainingPlaces%' => $data['remainingPlaces'],
-                        ],
-                        'cursus'
-                    )
-                );
-            }
-        }
-
-        return new RedirectResponse(
-            $this->router->generate(
-                'claro_cursus_group_sessions_management',
-                ['group' => $group->getId()]
-            )
-        );
-    }
-
     private function showTypedQuestionResults(
         Survey $survey,
         Question $question,
