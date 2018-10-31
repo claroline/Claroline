@@ -204,7 +204,7 @@ class ApiLoader extends Loader
 
     private function makeRouteMap($controller, RouteCollection $routes, $prefix, array $ignore)
     {
-        $defaults = self::DEFAULT_MAP;
+        $defaults = [];
 
         foreach ($ignore as $ignored) {
             unset($defaults[$ignored]);
@@ -233,7 +233,7 @@ class ApiLoader extends Loader
             }
         }
 
-        return $defaults;
+        return array_merge($defaults, self::DEFAULT_MAP);
     }
 
     //@see http://stackoverflow.com/questions/1589468/convert-camelcase-to-under-score-case-in-php-autoload
