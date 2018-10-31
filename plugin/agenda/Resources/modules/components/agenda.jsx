@@ -51,12 +51,9 @@ const form = [
       required: true
     }, {
       name: 'description',
-      type: 'string',
+      type: 'html',
       label: trans('description'),
-      required: true,
-      options: {
-        long: true
-      }
+      required: true
     }]
   },
   {

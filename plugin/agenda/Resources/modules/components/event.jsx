@@ -3,14 +3,13 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import moment from 'moment'
+import {HtmlText} from '#/main/core/layout/components/html-text'
 
 const EventPropLi = props =>
   <li className="list-group-item"> {trans(props.label, {}, 'agenda')} <span className="value"> {props.value} </span></li>
 
 const Description = props =>
-  <div className="well">
-    {props.description}
-  </div>
+  <HtmlText>{props.description}</HtmlText>
 
 const Task = props =>
   <div>
