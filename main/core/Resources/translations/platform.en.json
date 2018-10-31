@@ -714,6 +714,7 @@
     "merge": "Merge",
     "merge_accounts": "Merge selected accounts",
     "merge_confirmation": "Merging account process will result in keeping user: %username% account. Do you still want to proceed?",
+    "messages": "Messages",
     "meta_tag_paste": "Paste the meta tag provided by Google Webmaster here",
     "method_of_work": "Method of work",
     "min_text_length": "Minimum length of the text",

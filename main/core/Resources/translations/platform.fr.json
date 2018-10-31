@@ -727,6 +727,7 @@
     "merge": "Fusionner",
     "merge_accounts": "Fusionner les comptes sélectionnés",
     "merge_confirmation": "La fusion de comptes va conserver le compte de l'utilisateur %username%. Souhaitez-vous continuer ?",
+    "messages": "Messages",
     "meta_tag_paste": "Collez ici la balise meta fournie par Google Webmaster.",
     "method_of_work": "Modalités de travail",
     "min_text_length": "Longueur minimale du texte",

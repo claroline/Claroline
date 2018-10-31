@@ -26,7 +26,8 @@
       "tools-admin-analytics": "administration/analytics",
       "resource": "resource/bootstrap",
       "desktop-parameters-tool": "tools/desktop-parameters",
-      "home": "home/bootstrap"
+      "home": "home/bootstrap",
+      "progression-tool": "tools/progression/bootstrap"
     }
   },
 

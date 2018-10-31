@@ -1,6 +1,7 @@
 {
     "agenda": "Agenda",
     "analytics": "Tableau de bord",
+    "data_transfer": "Import/Export de données",
     "desktop_and_home": "Bureau et accueil",
     "desktop_tools": "Outils du bureau",
     "home": "Accueil",
@@ -15,6 +16,7 @@
     "platform_logs": "Suivi de la plateforme",
     "platform_parameters": "Paramètres de la plateforme",
     "platform_plugins": "Plugins de la plateforme",
+    "progression": "Progression",
     "registration_to_workspace": "Inscription à des espaces d'activités",
     "resource_manager": "Ressources",
     "resources": "Ressources",
@@ -23,6 +25,5 @@
     "user_management": "Gestion des utilisateurs",
     "users": "Utilisateurs",
     "workspace_management": "Gestion des espaces d'activités",
-    "data_transfer": "Import/Export de données",
     "users_management": "Gestion des utilisateurs"
 }

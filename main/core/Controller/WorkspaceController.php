@@ -187,6 +187,8 @@ class WorkspaceController
 
         $hasManagerAccess = $this->workspaceManager->isManager($workspace, $this->tokenStorage->getToken());
         $hideToolsMenu = $this->workspaceManager->isToolsMenuHidden($workspace);
+        $this->toolManager->addMissingWorkspaceTools($workspace);
+
         if ($hasManagerAccess || !$hideToolsMenu) {
             // load tool list
             if ($hasManagerAccess) {

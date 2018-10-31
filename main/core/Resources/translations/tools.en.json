@@ -1,6 +1,7 @@
 {
     "agenda": "Agenda",
     "analytics": "Dashboard",
+    "data_transfer": "Data import/export",
     "desktop_and_home": "Desktop and home",
     "desktop_tools": "Desktop tools",
     "home": "Home",
@@ -15,6 +16,7 @@
     "platform_logs": "Platform logs",
     "platform_parameters": "Platform parameters",
     "platform_plugins": "Platform plugins",
+    "progression": "Progression",
     "registration_to_workspace": "Registration to workspaces",
     "resource_manager": "Resources",
     "resources": "Resources",
@@ -23,6 +25,5 @@
     "user_management": "Users management",
     "users": "Users",
     "workspace_management": "Workspaces management",
-    "data_transfer": "Data import/export",
     "users_management": "Users management"
 }
