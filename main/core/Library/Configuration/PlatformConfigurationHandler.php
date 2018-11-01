@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Configuration;
 
+use Claroline\AppBundle\API\Utils\ArrayUtils;
 use JMS\DiExtraBundle\Annotation as DI;
 use RuntimeException;
 use Symfony\Component\Yaml\Yaml;
@@ -44,15 +45,12 @@ class PlatformConfigurationHandler
         $this->configFile = $configFile;
         $this->parameters = $this->mergeParameters();
         $this->lockedParameters = $this->generateLockedParameters($lockedConfigFile);
+        $this->arrayUtils = new ArrayUtils();
     }
 
     public function hasParameter($parameter)
     {
-        if (array_key_exists($parameter, $this->parameters)) {
-            return true;
-        }
-
-        return false;
+        return $this->arrayUtils->has($this->parameters, $parameter);
     }
 
     /**
@@ -63,7 +61,7 @@ class PlatformConfigurationHandler
     public function getParameter($parameter)
     {
         if ($this->hasParameter($parameter)) {
-            return $this->parameters[$parameter];
+            return $this->arrayUtils->get($this->parameters, $parameter);
         }
 
         return null;
@@ -81,7 +79,7 @@ class PlatformConfigurationHandler
 
     public function setParameter($parameter, $value)
     {
-        $this->parameters[$parameter] = $value;
+        $this->arrayUtils->set($this->parameters, $parameter, $value);
         $this->saveParameters();
     }
 

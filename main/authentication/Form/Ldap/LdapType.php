@@ -75,7 +75,7 @@ class LdapType extends AbstractType
 
     public function getName()
     {
-        return 'platform_parameters_form';
+        return 'main_settings_form';
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -151,6 +151,14 @@ class PlatformDefaults implements ParameterProviderInterface
                 'registration.selfRegistration',
                 'registration.waitingForRegistration',
             ],
+            'maintenance' => [
+              'enable' => false,
+              'message' => null,
+            ],
+            'security' => [
+              'disabled_admin_tools' => [
+              ],
+            ],
             'logo_redirect_home' => true,
             'home_redirection_type' => null,
             'home_redirection_url' => null,

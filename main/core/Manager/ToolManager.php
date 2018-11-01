@@ -757,7 +757,17 @@ class ToolManager
      */
     public function getAdminToolsByRoles(array $roles)
     {
-        return $this->om->getRepository('Claroline\CoreBundle\Entity\Tool\AdminTool')->findByRoles($roles);
+        $disabled = $this->container->get('claroline.config.platform_config_handler')->getParameter('security.disabled_admin_tools');
+        $tools = $this->om->getRepository('Claroline\CoreBundle\Entity\Tool\AdminTool')->findByRoles($roles);
+        $allowed = [];
+
+        foreach ($tools as $tool) {
+            if (!in_array($tool->getName(), $disabled)) {
+                $allowed[] = $tool;
+            }
+        }
+
+        return $allowed;
     }
 
     public function getToolById($id)

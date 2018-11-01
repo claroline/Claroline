@@ -24,7 +24,7 @@ class DropzoneToolVoter extends AbstractVoter
 {
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
-        return $this->hasAdminToolAccess($token, 'platform_parameters') ?
+        return $this->hasAdminToolAccess($token, 'main_settings') ?
             VoterInterface::ACCESS_GRANTED :
             VoterInterface::ACCESS_DENIED;
     }

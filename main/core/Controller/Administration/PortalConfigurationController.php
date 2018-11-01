@@ -24,7 +24,7 @@ class PortalConfigurationController extends Controller
     /**
      * @EXT\Route("/parameters", name="claro_admin_portal_parameters")
      * @EXT\Template("ClarolineCoreBundle:administration/portal:index.html.twig")
-     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

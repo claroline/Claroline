@@ -149,8 +149,14 @@ plugin:
 #          class: Claroline\CoreBundle\Entity\Resource\Activity
 
     admin_tools:
-        - name: platform_parameters
+        - name: main_settings
           class: cog
+
+        - name: technical_settings
+          class: wrench
+
+        - name: appearance_settings
+          class: paint-brush
 
         - name: user_management
           class: user

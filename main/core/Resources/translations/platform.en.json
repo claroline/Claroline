@@ -1684,5 +1684,15 @@
     "card_flags": "Statuses icons",
     "card_subtitle": "Second title",
     "card_description": "Description [Detailed list / Large grid]",
-    "card_footer": "Metadata [Detailed list / Large grid]"
+    "card_footer": "Metadata [Detailed list / Large grid]",
+    "default_admin": "Default administrator",
+    "security": "Security",
+    "PDF": "PDF",
+    "limits": "Limits",
+    "e-mail": "E-mail",
+    "sessions": "Sessions",
+    "synchronization": "Synchronization",
+    "internet": "Internet",
+    "ssl": "Ssl",
+    "icons": "Icons"
 }

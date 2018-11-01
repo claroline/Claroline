@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Class CasController.
  *
  * @DI\Tag("security.secure_service")
- * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+ * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
  */
 class CasConfigurationController extends Controller
 {

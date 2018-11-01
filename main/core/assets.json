@@ -3,9 +3,11 @@
     "entry": {
       "tinymce": "tinymce/browser",
       "user-management": "administration/user",
+      "main-settings": "administration/parameters/main/bootstrap",
+      "technical-settings": "administration/parameters/technical/bootstrap",
+      "appearance-settings": "administration/parameters/appearance/bootstrap",
       "workspace-management": "administration/workspace",
       "workspace-list": "workspace/list",
-      "theme-management": "administration/appearance/theme",
       "transfer-management": "administration/transfer",
       "portal": "portal",
       "scheduled-task-management": "administration/scheduled-task",

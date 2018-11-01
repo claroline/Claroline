@@ -25,10 +25,6 @@ claro_locale:
     resource: "@ClarolineCoreBundle/Controller/LocaleController.php"
     type: annotation
 
-claro_theme:
-    resource: "@ClarolineCoreBundle/Controller/Administration/ThemeController.php"
-    type: annotation
-
 claro_content_typeerror:
     path: /content/typeerror
     options: { expose: true }
@@ -52,6 +48,10 @@ claro_content_link:
 
 claro_authentication:
     resource: "@ClarolineCoreBundle/Controller/AuthenticationController.php"
+    type: annotation
+
+claro_maintenance:
+    resource: "@ClarolineCoreBundle/Controller/MaintenanceController.php"
     type: annotation
 
 claro_log:
@@ -118,9 +118,9 @@ claro_file:
     type: annotation
     prefix: file
 
-claro_admin_parameters:
-    prefix: admin/parameters
-    resource: "@ClarolineCoreBundle/Controller/Administration/ParametersController.php"
+claro_admin_settings_main:
+    prefix: admin/settings
+    resource: "@ClarolineCoreBundle/Controller/Administration/SettingsController.php"
     type: annotation
 
 claro_admin_oauth:

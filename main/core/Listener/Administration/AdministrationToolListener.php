@@ -38,15 +38,39 @@ class AdministrationToolListener
     }
 
     /**
-     * @DI\Observe("administration_tool_platform_parameters")
+     * @DI\Observe("administration_tool_main_settings")
      *
      * @param OpenAdministrationToolEvent $event
      */
-    public function onOpenPlatformParameters(OpenAdministrationToolEvent $event)
+    public function onOpenPlatformMainSettings(OpenAdministrationToolEvent $event)
     {
         $this->redirect([
-            '_controller' => 'ClarolineCoreBundle:Administration/Parameters:index',
+            '_controller' => 'ClarolineCoreBundle:Administration/Settings:main',
         ], $event);
+    }
+
+    /**
+     * @DI\Observe("administration_tool_technical_settings")
+     *
+     * @param OpenAdministrationToolEvent $event
+     */
+    public function onOpenPlatformTechnicalSettings(OpenAdministrationToolEvent $event)
+    {
+        $this->redirect([
+                '_controller' => 'ClarolineCoreBundle:Administration/Settings:technical',
+            ], $event);
+    }
+
+    /**
+     * @DI\Observe("administration_tool_appearance_settings")
+     *
+     * @param OpenAdministrationToolEvent $event
+     */
+    public function onOpenPlatformAppearanceSettings(OpenAdministrationToolEvent $event)
+    {
+        $this->redirect([
+                '_controller' => 'ClarolineCoreBundle:Administration/Settings:appearance',
+            ], $event);
     }
 
     /**

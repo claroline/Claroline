@@ -1,0 +1,48 @@
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
+import {connect} from 'react-redux'
+
+import {Router, Routes} from '#/main/app/router'
+
+import {Themes} from '#/main/core/administration/parameters/appearance/components/theme/components/themes.jsx'
+import {Theme} from '#/main/core/administration/parameters/appearance/components/theme/components/theme.jsx'
+import {actions} from '#/main/core/administration/parameters/appearance/components/theme/actions'
+
+const Tool = props =>
+  <Router>
+    <Routes
+      routes={[
+        {
+          path: '/themes',
+          component: Themes,
+          exact: true
+        }, {
+          path: '/themes/:id',
+          component: Theme,
+          onEnter: (params) => props.editTheme(params.id),
+          onLeave: props.resetTheme
+        }
+      ]}
+    />
+  </Router>
+
+Tool.propTypes = {
+  editTheme: T.func.isRequired,
+  resetTheme: T.func.isRequired
+}
+
+const ThemeTool = connect(
+  null,
+  dispatch => ({
+    editTheme(id) {
+      dispatch(actions.editTheme(id))
+    },
+    resetTheme() {
+      dispatch(actions.resetThemeForm())
+    }
+  })
+)(Tool)
+
+export {
+  ThemeTool
+}

@@ -4,9 +4,11 @@ namespace Claroline\CoreBundle\API\Serializer;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfiguration;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -48,6 +50,7 @@ class ParametersSerializer
         $this->config = $config;
         $this->serializer = $serializer;
         $this->finder = $finder;
+        $this->arrayUtils = new ArrayUtils();
     }
 
     /**
@@ -65,6 +68,12 @@ class ParametersSerializer
     public function serialize(array $options = [])
     {
         $parameters = $this->config->getParameters();
+
+        $platformInitDate = new \DateTime();
+        $platformInitDate->setTimeStamp($parameters['platform_init_date']);
+
+        $platformLimitDate = new \DateTime();
+        $platformLimitDate->setTimeStamp($parameters['platform_limit_date']);
 
         $serialized = [
             'display' => [
@@ -116,8 +125,8 @@ class ParametersSerializer
             'security' => [
                 'form_captcha' => $parameters['form_captcha'],
                 'form_honeypot' => $parameters['form_honeypot'],
-                'platform_limit_date' => $parameters['platform_limit_date'],
-                'platform_init_date' => $parameters['platform_init_date'],
+                'platform_limit_date' => DateNormalizer::normalize($platformLimitDate),
+                'platform_init_date' => DateNormalizer::normalize($platformInitDate),
                 'cookie_lifetime' => $parameters['cookie_lifetime'],
                 'account_duration' => $parameters['account_duration'],
                 'default_root_anon_id' => $parameters['default_root_anon_id'],
@@ -207,6 +216,10 @@ class ParametersSerializer
                 'roles_confidential' => $parameters['profile_roles_confidential'],
                 'roles_locked' => $parameters['profile_roles_locked'],
                 'roles_edition' => $parameters['profile_roles_edition'],
+            ],
+            'maintenance' => [
+                'enable' => $parameters['maintenance']['enable'],
+                'message' => $parameters['maintenance']['message'],
             ],
         ];
 
@@ -342,7 +355,17 @@ class ParametersSerializer
             $this->deserializeProfile($parameters, $data);
         }
 
+        if (isset($data['maintenance'])) {
+            $this->deserializeMaintenance($parameters, $data);
+        }
+
         return new PlatformConfiguration($parameters);
+    }
+
+    public function deserializeMaintenance(array &$parameters, array $data)
+    {
+        $this->buildParameter('maintenance.enable', 'maintenance.enable', $parameters, $data);
+        $this->buildParameter('maintenance.message', 'maintenance.message', $parameters, $data);
     }
 
     public function deserializeDisplay(array &$parameters, array $data)
@@ -402,10 +425,20 @@ class ParametersSerializer
     public function deserializeSecurity(array &$parameters, array $data)
     {
         if (isset($data['security'])) {
+            if (isset($data['security']) && isset($data['security']['platform_limit_date'])) {
+                $limitDate = DateNormalizer::denormalize($data['security']['platform_limit_date']);
+                $limitDate = $limitDate->getTimeStamp();
+                $parameters['platform_limit_date'] = $limitDate;
+            }
+
+            if (isset($data['security']) && isset($data['security']['platform_init_date'])) {
+                $limitDate = DateNormalizer::denormalize($data['security']['platform_init_date']);
+                $limitDate = $limitDate->getTimeStamp();
+                $parameters['platform_init_date'] = $limitDate;
+            }
+
             $this->buildParameter('security.form_captcha', 'form_captcha', $parameters, $data);
             $this->buildParameter('security.form_honeypot', 'form_honeypot', $parameters, $data);
-            $this->buildParameter('security.platform_limit_date', 'platform_limit_date', $parameters, $data);
-            $this->buildParameter('security.platform_init_date', 'platform_init_date', $parameters, $data);
             $this->buildParameter('security.cookie_lifetime', 'cookie_lifetime', $parameters, $data);
             $this->buildParameter('security.account_duration', 'account_duration', $parameters, $data);
             $this->buildParameter('security.default_root_anon_id', 'default_root_anon_id', $parameters, $data);
@@ -518,17 +551,6 @@ class ParametersSerializer
 
     private function buildParameter($serializedPath, $parametersPath, array &$parameters, array $data)
     {
-        $value = $data;
-        $keys = explode('.', $serializedPath);
-        foreach ($keys as $key) {
-            if (isset($value[$key])) {
-                $value = $value[$key];
-            } else {
-                //no key = keep old value and don't do anything
-                return;
-            }
-        }
-
-        $parameters[$parametersPath] = $value;
+        $this->arrayUtils->set($parameters, $parametersPath, $this->arrayUtils->get($data, $serializedPath));
     }
 }

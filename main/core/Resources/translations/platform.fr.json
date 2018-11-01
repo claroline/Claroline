@@ -1717,5 +1717,15 @@
     "card_flags": "Icônes de statut",
     "card_subtitle": "Second titre",
     "card_description": "Description [Liste détaillée / Grille large]",
-    "card_footer": "Meta-données [Liste détaillée / Grille large]"
+    "card_footer": "Meta-données [Liste détaillée / Grille large]",
+    "default_admin": "Administrateur par défaut",
+    "security": "Sécurité",
+    "PDF": "PDF",
+    "limits": "Limites",
+    "e-mail": "E-mail",
+    "sessions": "Sessions",
+    "synchronization": "Synchronization",
+    "internet": "Internet",
+    "ssl": "Ssl",
+    "icons": "Icones"
 }

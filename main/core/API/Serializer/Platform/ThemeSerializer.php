@@ -50,6 +50,7 @@ class ThemeSerializer
         return [
             'id' => $theme->getUuid(),
             'name' => $theme->getName(),
+            'normalizedName' => str_replace(' ', '-', strtolower($theme->getName())),
             'current' => $theme->getNormalizedName() === str_replace(' ', '-', strtolower($this->config->getParameter('theme'))),
             'meta' => [
                 'description' => $theme->getDescription(),

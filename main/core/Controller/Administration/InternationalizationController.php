@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * @EXT\Route("/internationalization")
  *
  * @DI\Tag("security.secure_service")
- * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+ * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
  */
 class InternationalizationController extends Controller
 {

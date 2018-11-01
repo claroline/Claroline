@@ -21,6 +21,8 @@ use Claroline\CoreBundle\Manager\Exception\FriendRequestException;
 use Claroline\CoreBundle\Manager\OauthManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
@@ -61,7 +63,7 @@ class OauthController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Template("ClarolineCoreBundle:administration:oauth\list.html.twig")
-     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
      *
      * @return Response
      */
@@ -85,7 +87,7 @@ class OauthController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Template("ClarolineCoreBundle:administration:oauth\clients.html.twig")
-     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
      *
      * @return Response
      */
@@ -105,7 +107,7 @@ class OauthController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Template("ClarolineCoreBundle:administration:oauth\modal_create_form.html.twig")
-     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
      *
      * @return Response
      */
@@ -123,7 +125,7 @@ class OauthController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Template("ClarolineCoreBundle:administration:oauth\modal_edit_form.html.twig")
-     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
      *
      * @return Response
      */
@@ -141,7 +143,7 @@ class OauthController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Template("ClarolineCoreBundle:administration:oauth\modal_create_form.html.twig")
-     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
      *
      * @return Response
      */
@@ -178,7 +180,7 @@ class OauthController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Template("ClarolineCoreBundle:administration:oauth\modal_edit_form.html.twig")
-     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
      *
      * @return Response
      */
@@ -213,7 +215,7 @@ class OauthController extends Controller
      *     name="oauth_client_remove",
      *     options = {"expose"=true}
      * )
-     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
      *
      * @return Response
      */
@@ -233,7 +235,7 @@ class OauthController extends Controller
      * )
      *
      * @EXT\Template("ClarolineCoreBundle:administration:oauth\request_friend_form.html.twig")
-     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
      *
      * @return Response
      */
@@ -251,7 +253,7 @@ class OauthController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Template("ClarolineCoreBundle:administration:oauth\request_friend_form.html.twig")
-     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
      *
      * @return Response
      */
@@ -295,7 +297,7 @@ class OauthController extends Controller
      *     name="oauth_request_friend_remove",
      *     options = {"expose"=true}
      * )
-     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
      *
      * @return Response
      */
@@ -313,7 +315,7 @@ class OauthController extends Controller
      *     name="oauth_pending_friend_remove",
      *     options = {"expose"=true}
      * )
-     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
      *
      * @return Response
      */
@@ -341,8 +343,8 @@ class OauthController extends Controller
         //uncomment this for debugging puroposes...
 
         if ('dev' === $this->container->get('kernel')->getEnvironment()) {
-            $fileLogger = new \Monolog\Logger('claroline.debug.log');
-            $fileLogger->pushHandler(new \Monolog\Handler\StreamHandler($logFile));
+            $fileLogger = new Logger('claroline.debug.log');
+            $fileLogger->pushHandler(new StreamHandler($logFile));
             $fileLogger->addInfo(var_export($this->oauthManager->isAutoCreated($host), true));
         }
 
@@ -361,7 +363,7 @@ class OauthController extends Controller
      *     name="oauth_friends_accept",
      *     options = {"expose"=true}
      * )
-     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
      *
      * @return Response
      */
@@ -384,7 +386,7 @@ class OauthController extends Controller
     public function receiveOauthDataAction($id, $secret, $name)
     {
         $friendRequest = $this->oauthManager->findFriendRequestByName($name);
-        $access = $this->oauthManager->connect($friendRequest->getHost(), $id, $secret, $friendRequest);
+        $this->oauthManager->connect($friendRequest->getHost(), $id, $secret, $friendRequest);
 
         return new JsonResponse('done');
     }
@@ -413,7 +415,7 @@ class OauthController extends Controller
      * )
      *
      * @EXT\Template("ClarolineCoreBundle:administration/oauth:friend_authentication_form.html.twig")
-     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
      *
      * @return Response
      */
@@ -432,7 +434,7 @@ class OauthController extends Controller
      * )
      *
      * @EXT\Template("ClarolineCoreBundle:administration:oauth\friend_authentication_form.html.twig")
-     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
      *
      * @return Response
      */
@@ -447,8 +449,6 @@ class OauthController extends Controller
 
             return new JsonResponse('done');
         }
-
-        //throw new \Exception($form->getErrorsAsString());
 
         return ['form' => $form->createView(), 'friend' => $friend];
     }

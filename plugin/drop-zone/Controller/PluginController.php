@@ -21,7 +21,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class PluginController extends Controller
 {
     /**
-     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
      * @EXT\Route("/plugin/configure", name="claro_dropzone_plugin_configure")
      * @EXT\Template()
      */

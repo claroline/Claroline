@@ -139,7 +139,7 @@ class BBBController extends Controller
     }
 
     /**
-     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
      * @EXT\Route(
      *     "/plugin/configuration/form",
      *     name="claro_bbb_plugin_configuration_form",
@@ -165,7 +165,7 @@ class BBBController extends Controller
     }
 
     /**
-     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
      * @EXT\Route(
      *     "/plugin/configuration/save",
      *     name="claro_bbb_plugin_configuration_save",
@@ -188,7 +188,7 @@ class BBBController extends Controller
     }
 
     /**
-     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
      * @EXT\Route(
      *     "/plugin/configuration/meetings/list",
      *     name="claro_bbb_plugin_configuration_meetings_list",

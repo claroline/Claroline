@@ -25,5 +25,7 @@
     "user_management": "Users management",
     "users": "Users",
     "workspace_management": "Workspaces management",
-    "users_management": "Users management"
+    "main_settings": "Main settings",
+    "technical_settings": "Technical settings",
+    "appearance_settings": "Appearance"
 }

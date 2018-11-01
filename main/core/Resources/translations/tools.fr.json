@@ -25,5 +25,7 @@
     "user_management": "Gestion des utilisateurs",
     "users": "Utilisateurs",
     "workspace_management": "Gestion des espaces d'activités",
-    "users_management": "Gestion des utilisateurs"
+    "main_settings": "Paramètres généraux",
+    "technical_settings": "Paramètres techniques",
+    "appearance_settings": "Apparence"
 }

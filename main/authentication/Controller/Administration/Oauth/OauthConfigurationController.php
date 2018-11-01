@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @DI\Tag("security.secure_service")
- * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+ * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
  */
 class OauthConfigurationController extends Controller
 {
@@ -68,16 +68,16 @@ class OauthConfigurationController extends Controller
                 $service.'_client_active' => $form['client_active']->getData(),
             ];
 
-            if ($service !== 'linkedin') {
+            if ('linkedin' !== $service) {
                 $data[$service.'_client_force_reauthenticate'] = $form['client_force_reauthenticate']->getData();
             }
 
-            if ($service === 'office_365') {
+            if ('office_365' === $service) {
                 $clientTenandDomain = $form['client_tenant_domain']->getData();
-                $data[$service.'_client_domain'] = $clientTenandDomain === null ? '' : $clientTenandDomain;
+                $data[$service.'_client_domain'] = null === $clientTenandDomain ? '' : $clientTenandDomain;
             }
 
-            if ($service === 'generic') {
+            if ('generic' === $service) {
                 $data[$service.'_authorization_url'] = $form['authorization_url']->getData();
                 $data[$service.'_access_token_url'] = $form['access_token_url']->getData();
                 $data[$service.'_infos_url'] = $form['infos_url']->getData();
@@ -93,7 +93,7 @@ class OauthConfigurationController extends Controller
                 $data[$service.'_client_secret']
             );
 
-            if (count($errors) === 0) {
+            if (0 === count($errors)) {
                 $this->configHandler->setParameters($data);
                 $this->cacheManager->refresh();
 

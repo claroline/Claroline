@@ -64,11 +64,13 @@ trait SerializerTrait
             $this->arrayUtils = new ArrayUtils();
         }
 
-        try {
-            $value = $this->arrayUtils->get($data, $prop);
+        if ($data) {
+            try {
+                $value = $this->arrayUtils->get($data, $prop);
 
-            $object->{$setter}($value);
-        } catch (\Exception $e) {
+                $object->{$setter}($value);
+            } catch (\Exception $e) {
+            }
         }
     }
 

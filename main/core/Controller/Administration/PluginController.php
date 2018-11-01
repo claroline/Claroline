@@ -19,7 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * @DI\Tag("security.secure_service")
- * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+ * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
  */
 class PluginController extends Controller
 {

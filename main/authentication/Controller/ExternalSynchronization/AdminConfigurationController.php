@@ -29,7 +29,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  * Class ExternalUserGroupSynchronizationAdminController.
  *
  * @DI\Tag("security.secure_service")
- * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+ * @SEC\PreAuthorize("canOpenAdminTool('main_settings')")
  */
 class AdminConfigurationController extends Controller
 {

@@ -37,7 +37,14 @@ const Parameters = (props) => {
               calculated: () => url(['claro_user_registration', {}, true]),
               required: true,
               disabled: true
-            }, {
+            },
+            {
+              name: 'security.account_duration',
+              type: 'number',
+              label: trans('account_duration'),
+              required: false
+            },
+            {
               name: 'registration.self',
               type: 'boolean',
               label: trans('activate_self_registration'),
@@ -160,10 +167,6 @@ const Parameters = (props) => {
               name: 'security.form_captcha',
               type: 'boolean',
               label: trans('display_captcha')
-            }, {
-              name: 'security.form_honeypot',
-              type: 'boolean',
-              label: trans('use_honeypot')
             }, {
               name: 'security.anonymous_public_profile',
               type: 'boolean',
