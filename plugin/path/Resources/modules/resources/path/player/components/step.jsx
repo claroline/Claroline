@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
@@ -51,59 +51,6 @@ ManualProgression.propTypes = {
   status: T.string.isRequired,
   stepId: T.string.isRequired,
   updateProgression: T.func.isRequired
-}
-
-class PrimaryResource extends Component {
-  constructor(props) {
-    super(props)
-
-    this.resize = this.resize.bind(this)
-  }
-
-  /**
-   * Resize the iFrame when DOM is modified.
-   *
-   * @param {object} e - The JS Event Object
-   */
-  resize(e) {
-    if (typeof e.data === 'string' && e.data.indexOf('documentHeight:') > -1) {
-      // Split string from identifier
-      const height = e.data.split('documentHeight:')[1]
-
-      this.iframe.height = parseInt(height)
-    }
-  }
-
-  componentDidMount() {
-    if (!this.props.height) {
-      window.addEventListener('message', this.resize)
-    }
-  }
-
-  componentWillUnmount() {
-    if (!this.props.height) {
-      window.removeEventListener('message', this.resize)
-    }
-  }
-
-  render() {
-    return (
-      <iframe
-        className="step-primary-resource"
-        id="embeddedActivity"
-        ref={el => this.iframe = el}
-        height={this.props.height}
-        src={url(['claro_resource_open', {node: this.props.id, resourceType: this.props.type}], {iframe: 1})}
-        allowFullScreen={true}
-      />
-    )
-  }
-}
-
-PrimaryResource.propTypes = {
-  id: T.number.isRequired,
-  type: T.string.isRequired,
-  height: T.number
 }
 
 const SecondaryResources = props =>
@@ -173,7 +120,7 @@ const Step = props =>
             </div>
           }
 
-          {props.primaryResource && (-1 !== constants.AVAILABLE_EMBEDDED_RESOURCES.indexOf(props.primaryResource.meta.type)) &&
+          {props.primaryResource &&
             <ResourceEmbedded
               className="step-primary-resource"
               resourceNode={props.primaryResource}
@@ -184,10 +131,6 @@ const Step = props =>
               }}
               onResourceClose={props.onEmbeddedResourceClose}
             />
-          }
-
-          {props.primaryResource && (-1 === constants.AVAILABLE_EMBEDDED_RESOURCES.indexOf(props.primaryResource.meta.type)) &&
-            <PrimaryResource id={props.primaryResource.autoId} type={props.primaryResource.meta.type} height={props.display.height} />
           }
         </div>
       }

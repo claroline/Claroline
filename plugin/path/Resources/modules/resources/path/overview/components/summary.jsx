@@ -1,13 +1,18 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
+import {LinkButton} from '#/main/app/buttons/link/components/button'
+
 import {Step as StepTypes} from '#/plugin/path/resources/path/prop-types'
 
 const SummaryStep = props =>
   <li>
-    <a className="summary-link" href={`#/play/${props.step.id}`} role="link">
+    <LinkButton
+      className="summary-link"
+      target={`/play/${props.step.id}`}
+    >
       {props.step.title}
-    </a>
+    </LinkButton>
 
     {0 !== props.step.children.length &&
       <ul>
