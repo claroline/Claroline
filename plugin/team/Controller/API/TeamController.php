@@ -100,7 +100,7 @@ class TeamController extends AbstractCrudController
     /**
      * @EXT\Route(
      *     "/workspace/{workspace}/teams/list",
-     *     name="apiv2_team_list"
+     *     name="apiv2_workspace_team_list"
      * )
      * @EXT\ParamConverter(
      *     "workspace",

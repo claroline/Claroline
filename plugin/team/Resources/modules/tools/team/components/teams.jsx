@@ -21,7 +21,7 @@ const TeamsComponent = props =>
       target: `/teams/${row.id}`
     })}
     fetch={{
-      url: ['apiv2_team_list', {workspace: props.workspaceId}],
+      url: ['apiv2_workspace_team_list', {workspace: props.workspaceId}],
       autoload: true
     }}
     definition={[

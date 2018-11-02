@@ -205,11 +205,6 @@ class ApiLoader extends Loader
     private function makeRouteMap($controller, RouteCollection $routes, $prefix, array $ignore)
     {
         $defaults = [];
-
-        foreach ($ignore as $ignored) {
-            unset($defaults[$ignored]);
-        }
-
         $traits = class_uses($controller);
 
         foreach ($traits as $trait) {
@@ -231,6 +226,10 @@ class ApiLoader extends Loader
                     }
                 }
             }
+        }
+
+        foreach ($ignore as $ignored) {
+            unset($defaults[$ignored]);
         }
 
         return array_merge($defaults, self::DEFAULT_MAP);
