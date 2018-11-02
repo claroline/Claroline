@@ -1,9 +1,9 @@
 {
   "evaluation_unknown_status": "Nous ne connaissons pas votre progression dans cette évaluation.",
-  "evaluation_not_attempted_status": "Vous n'avez pas commencé l'évaluation.",
-  "evaluation_incomplete_status": "Vous n'avez pas commencé l'évaluation.",
+  "evaluation_not_attempted_status": "Vous n'avez pas commencé.",
+  "evaluation_incomplete_status": "Vous n'avez pas commencé.",
 
-  "evaluation_completed_status": "Vous avez terminé l'évaluation.",
+  "evaluation_completed_status": "Vous avez terminé.",
   "evaluation_completed_feedback": "",
   "evaluation_completed_feedback_msg": "",
 
