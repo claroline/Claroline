@@ -47,7 +47,7 @@ class ArrayUtils
         $parts = explode('.', $keys);
         $key = array_shift($parts);
 
-        if (array_key_exists($key, $object) || isset($object[$key])) {
+        if (isset($object[$key])) {
             if (!empty($parts)) {
                 return $this->get($object[$key], implode('.', $parts));
             }
@@ -55,6 +55,9 @@ class ArrayUtils
             return $object[$key];
         }
 
+        if (array_key_exists($key, $object)) {
+            return null;
+        }
         throw new \Exception("Key `{$keys}` doesn't exist for array keys [".implode(',', array_keys($object)).']');
     }
 
