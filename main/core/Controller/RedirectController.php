@@ -43,6 +43,7 @@ class RedirectController extends Controller
 
         return $this->redirectToRoute('claro_resource_show', [
             'id' => $resourceNode->getUuid(),
+            'type' => $resourceNode->getResourceType()->getId(),
         ]);
     }
 
