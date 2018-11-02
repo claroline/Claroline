@@ -87,28 +87,34 @@ class ViewAsListener
                     $this->tokenStorage->setToken($token);
                 }
             } else {
-                $guid = substr($viewAs, strripos($viewAs, '_') + 1);
                 $baseRole = substr($viewAs, 0, strripos($viewAs, '_'));
+                $role = $this->roleManager->getRoleByName($viewAs);
 
-                if ($this->authorization->isGranted('ROLE_WS_MANAGER_'.$guid)) {
-                    if ('ROLE_ANONYMOUS' === $baseRole) {
-                        throw new \Exception('No implementation yet');
-                    } else {
-                        $role = $this->roleManager->getRoleByName($viewAs);
+                if (null === $role) {
+                    throw new \Exception("The role {$viewAs} does not exists");
+                }
 
-                        if (null === $role) {
-                            throw new \Exception("The role {$viewAs} does not exists");
-                        }
+                $managerRole = $this->roleManager->getManagerRole($role->getWorkspace());
 
-                        $token = new ViewAsToken(
+                $tokenRoles = array_map(function ($role) {
+                    return $role->getRole();
+                }, $this->tokenStorage->getToken()->getRoles());
+
+                if (!in_array('ROLE_USURPATE_WORKSPACE_ROLE', $tokenRoles)) {
+                    if ($this->authorization->isGranted($managerRole->getName())) {
+                        if ('ROLE_ANONYMOUS' === $baseRole) {
+                            throw new \Exception('No implementation yet');
+                        } else {
+                            $token = new ViewAsToken(
                           ['ROLE_USER', $viewAs, 'ROLE_USURPATE_WORKSPACE_ROLE']
                         );
-                        $token->setUser($this->userManager->getDefaultClarolineUser());
-                        $token->setAttribute('user_uuid', $this->tokenStorage->getToken()->getUser()->getUuid());
-                        $this->tokenStorage->setToken($token);
+                            $token->setUser($this->userManager->getDefaultClarolineUser());
+                            $token->setAttribute('user_uuid', $this->tokenStorage->getToken()->getUser()->getUuid());
+                            $this->tokenStorage->setToken($token);
+                        }
+                    } else {
+                        throw new AccessDeniedException();
                     }
-                } else {
-                    throw new AccessDeniedException();
                 }
             }
         }
