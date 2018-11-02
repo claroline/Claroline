@@ -22,7 +22,7 @@ class DateRangeNormalizer
      */
     public static function normalize(\DateTime $startDate = null, \DateTime $endDate = null)
     {
-        if (!empty($startDate) && !empty($endDate)) {
+        if (!empty($startDate) || !empty($endDate)) {
             return [
                 DateNormalizer::normalize($startDate),
                 DateNormalizer::normalize($endDate),
