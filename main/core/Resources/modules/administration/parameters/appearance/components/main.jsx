@@ -40,17 +40,17 @@ const MainComponent = props =>
             type: 'boolean',
             label: trans('show_workspace_menu_at_footer', {}, 'home'),
             required: false
-          },/*
-          {
-            name: 'display.header_locale',
-            type: 'boolean',
-            label: trans('header_locale'),
-            required: false
-          },*/
+          },
           {
             name: 'display.name_active',
             type: 'boolean',
             label: trans('show_name_in_top_bar'),
+            required: false
+          },
+          {
+            name: 'display.logo',
+            type: 'file',
+            label: trans('logo'),
             required: false
           },
           {

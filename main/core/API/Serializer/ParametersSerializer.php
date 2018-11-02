@@ -371,7 +371,7 @@ class ParametersSerializer
     public function deserializeDisplay(array &$parameters, array $data)
     {
         $this->buildParameter('display.footer', 'footer', $parameters, $data);
-        $this->buildParameter('display.logo', 'logo', $parameters, $data);
+        $this->buildParameter('display.logo.url', 'logo', $parameters, $data);
         $this->buildParameter('display.theme', 'theme', $parameters, $data);
         $this->buildParameter('display.home_menu', 'home_menu', $parameters, $data);
         $this->buildParameter('display.footer_login', 'footer_login', $parameters, $data);
