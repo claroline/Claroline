@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Command;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
 use Doctrine\Common\Util\ClassUtils;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -50,6 +51,12 @@ class UpdateRichTextCommand extends ContainerAwareCommand
                'a',
                InputOption::VALUE_NONE,
                'When set to true, all entities'
+           )
+           ->addOption(
+               'regex',
+               'r',
+               InputOption::VALUE_NONE,
+               'When set to true, use regex'
            );
     }
 
@@ -82,15 +89,29 @@ class UpdateRichTextCommand extends ContainerAwareCommand
         $classes = $input->getArgument('classes');
         $entities = [];
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $escaped = addcslashes($toMatch, '%_');
+        $search = '%'.addcslashes($toMatch, '%_').'%';
 
         foreach ($classes as $class) {
             foreach ($parsable[$class] as $property) {
-                $data = $em->getRepository($class)->createQueryBuilder('e')
-                  ->where("e.{$property} LIKE :str")
-                  ->setParameter('str', "%{$escaped}%")
-                  ->getQuery()
-                  ->getResult();
+                if ($input->getOption('regex')) {
+                    $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+                    $metadata = $em->getClassMetadata($class);
+
+                    $tableName = $metadata->getTableName();
+                    $columnName = $metadata->getColumnName($property);
+                    $sql = 'SELECT * from '.$tableName.' WHERE '.$columnName." RLIKE '{$toMatch}'";
+                    $output->writeln($sql);
+                    $rsm = new ResultSetMappingBuilder($em);
+                    $rsm->addRootEntityFromClassMetadata($class, '');
+                    $query = $em->createNativeQuery($sql, $rsm);
+                    $data = $query->getResult();
+                } else {
+                    $data = $em->getRepository($class)->createQueryBuilder('e')
+                      ->where("e.{$property} LIKE :str")
+                      ->setParameter('str', $search)
+                      ->getQuery()
+                      ->getResult();
+                }
 
                 if ($data) {
                     $entities = array_merge($entities, $data);
@@ -133,7 +154,13 @@ class UpdateRichTextCommand extends ContainerAwareCommand
                 }
 
                 if ($continue) {
-                    $text = str_replace($toMatch, $toReplace, $text);
+                    if ($input->getOption('regex')) {
+                        $escapedMatcher = str_replace('#', '\#', $toMatch);
+                        $text = preg_replace('#'.$escapedMatcher.'#', $toReplace, $text);
+                    } else {
+                        $text = str_replace($toMatch, $toReplace, $text);
+                    }
+
                     $func = 'set'.ucfirst($property);
                     $entity->$func($text);
                     $em->persist($entity);
