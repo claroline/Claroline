@@ -37,6 +37,7 @@ class ListWidgetSerializer
             'availableSort' => $widget->getAvailableSort(),
 
             // filter feature
+            'searchMode' => $widget->getSearchMode(),
             'filters' => $widget->getFilters(),
             'availableFilters' => $widget->getAvailableFilters(),
 
@@ -74,6 +75,7 @@ class ListWidgetSerializer
         $this->sipe('availableSort', 'setAvailableSort', $data, $widget);
 
         // filter feature
+        $this->sipe('searchMode', 'setSearchMode', $data, $widget);
         $this->sipe('filters', 'setFilters', $data, $widget);
         $this->sipe('availableFilters', 'setAvailableFilters', $data, $widget);
 

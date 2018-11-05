@@ -3,6 +3,8 @@ import merge from 'lodash/merge'
 
 import {DataProperty} from '#/main/app/data/prop-types'
 
+import {constants as searchConst} from '#/main/app/content/search/constants'
+
 /**
  * Definition of a data object property.
  *
@@ -65,6 +67,19 @@ const DataListProperty = {
 }
 
 /**
+ * Definition of the selection feature.
+ *
+ * @type {object}
+ */
+const DataListSelection = {
+  propTypes: {
+    current: T.array.isRequired,
+    toggle: T.func.isRequired,
+    toggleAll: T.func.isRequired
+  }
+}
+
+/**
  * Definition of a list view (eg. table, grid)
  *
  * @type {object}
@@ -83,11 +98,9 @@ const DataListView = {
       }).isRequired,
       updateSort: T.func.isRequired
     }),
-    selection: T.shape({
-      current: T.array.isRequired,
-      toggle: T.func.isRequired,
-      toggleAll: T.func.isRequired
-    }),
+    selection: T.shape(
+      DataListSelection.propTypes
+    ),
 
     /**
      * Data primary action (aka open/edit action for rows in most cases).
@@ -99,32 +112,21 @@ const DataListView = {
 }
 
 /**
- * Definition of the selection feature.
- *
- * @type {object}
- */
-const DataListSelection = {
-  propTypes: {
-    current: T.array.isRequired,
-    toggle: T.func.isRequired,
-    toggleAll: T.func.isRequired
-  }
-}
-
-/**
  * Definition of the search feature.
  *
  * @type {object}
  */
-const DataListSearch = {
+const DataListSearch = { // todo : reuse the one from search module
   propTypes: {
+    mode: T.oneOf(Object.keys(searchConst.SEARCH_TYPES)).isRequired,
     current: T.arrayOf(T.shape({
       property: T.string.isRequired,
       locked: T.bool,
       value: T.any
     })).isRequired,
     addFilter: T.func.isRequired,
-    removeFilter: T.func.isRequired
+    removeFilter: T.func.isRequired,
+    resetFilters: T.func.isRequired
   }
 }
 
@@ -133,7 +135,7 @@ const DataListSearch = {
  *
  * @type {object}
  */
-const DataListPagination = {
+const DataListPagination = { // todo : reuse the one from pagination module
   propTypes: {
     current: T.number,
     pageSize: T.number.isRequired,

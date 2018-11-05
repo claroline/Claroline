@@ -1,6 +1,7 @@
 import {PropTypes as T} from 'prop-types'
 
 import {constants as listConstants} from '#/main/app/content/list/constants'
+import {constants as searchConstants} from '#/main/app/content/search/constants'
 
 const ListParameters = {
   propTypes: {
@@ -16,6 +17,9 @@ const ListParameters = {
     availableSort: T.arrayOf(T.string),
 
     // filter feature
+    searchMode: T.oneOf(
+      Object.keys(searchConstants.SEARCH_TYPES)
+    ),
     filters: T.arrayOf(T.shape({
       property: T.string.isRequired,
       value: T.any,
@@ -50,6 +54,7 @@ const ListParameters = {
     availableSort: [],
 
     // filter feature
+    searchMode: searchConstants.DEFAULT_SEARCH_TYPE,
     availableFilters: [],
 
     // pagination feature

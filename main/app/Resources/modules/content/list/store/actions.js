@@ -1,29 +1,25 @@
-import invariant from 'invariant'
-
 import {url} from '#/main/app/api'
-import {makeInstanceAction, makeInstanceActionCreator} from '#/main/app/store/actions'
+import {makeInstanceActionCreator} from '#/main/app/store/actions'
 
 import {API_REQUEST} from '#/main/app/api'
 import {select as listSelect} from '#/main/app/content/list/store/selectors'
 
+import {actions as paginationActions} from '#/main/app/content/pagination/store/actions'
+import {actions as searchActions} from '#/main/app/content/search/store/actions'
+
 export const actions = {}
 
-// filters
-export const LIST_FILTER_ADD    = 'LIST_FILTER_ADD'
-export const LIST_FILTER_REMOVE = 'LIST_FILTER_REMOVE'
+// filters (remap default search action for retro-compatibility)
+// maybe remove it later
+actions.addFilter = searchActions.addFilter
+actions.removeFilter = searchActions.removeFilter
+actions.resetFilters = searchActions.resetFilters
 
-actions.addFilter = (listName, property, value, locked = false) => {
-  invariant(property, 'property is required.')
-  invariant(value !== undefined && value !== null, 'value is required.')
 
-  return ({
-    type: makeInstanceAction(LIST_FILTER_ADD, listName),
-    property,
-    value,
-    locked
-  })
-}
-actions.removeFilter = makeInstanceActionCreator(LIST_FILTER_REMOVE, 'filter')
+// pagination (remap default pagination action for retro-compatibility)
+// maybe remove it later
+actions.changePage     = paginationActions.changePage
+actions.updatePageSize = paginationActions.updatePageSize
 
 
 // sorting
@@ -91,11 +87,3 @@ actions.deleteData = (listName, target, items) => ({
     }
   }
 })
-
-
-// pagination
-export const LIST_PAGE_SIZE_UPDATE = 'LIST_PAGE_SIZE_UPDATE'
-export const LIST_PAGE_CHANGE      = 'LIST_PAGE_CHANGE'
-
-actions.changePage     = makeInstanceActionCreator(LIST_PAGE_CHANGE, 'page')
-actions.updatePageSize = makeInstanceActionCreator(LIST_PAGE_SIZE_UPDATE, 'pageSize')

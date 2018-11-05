@@ -105,8 +105,6 @@ const WorkspacesList = props =>
 WorkspacesList.propTypes = {
   copyWorkspaces: T.func.isRequired,
   deleteWorkspaces: T.func.isRequired,
-  registerUsers: T.func.isRequired,
-  registerGroups: T.func.isRequired,
   loadRoles: T.func.isRequired,
   showRolesModal: T.func.isRequired
 }

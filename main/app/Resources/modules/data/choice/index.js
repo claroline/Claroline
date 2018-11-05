@@ -1,4 +1,4 @@
-import {trans} from '#/main/app/intl/translation'
+import {trans, tval} from '#/main/app/intl/translation'
 
 import {ChoiceGroup} from '#/main/core/layout/form/components/group/choice-group'
 import {ChoiceSearch} from '#/main/app/data/choice/components/search'
@@ -36,7 +36,7 @@ const dataType = {
       required: true
     }
   ],
-  parse: (display, options) => Object.keys(options.choices).find(enumValue => display === options.choices[enumValue]),
+  parse: (display, options) => Object.keys(options.choices).find(enumValue => display === enumValue || display === options.choices[enumValue]),
   render: (raw, options) => {
     if (Array.isArray(raw)) {
       return raw.map(value => options.choices[value]).join(', ')
@@ -44,7 +44,12 @@ const dataType = {
       return options.choices[raw]
     }
   },
-  validate: (value, options) => !!options.choices[value],
+  validate: (value, options) => {
+    const choices = options.choices || {}
+    if (!choices.hasOwnProperty(value)) {
+      return tval('This value is invalid.')
+    }
+  },
   components: {
     search: ChoiceSearch,
     form: ChoiceGroup

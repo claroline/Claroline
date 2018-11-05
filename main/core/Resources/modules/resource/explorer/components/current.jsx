@@ -100,6 +100,7 @@ class CurrentDirectory extends Component {
           current: this.props.listConfiguration.display || listConst.DISPLAY_TILES_SM,
           available: this.props.listConfiguration.availableDisplays
         }}
+        searchMode={get(this.props.listConfiguration, 'searchMode') || undefined}
         count={isEmpty(this.props.listConfiguration) || this.props.listConfiguration.count}
         selectable={!!get(this.props.listConfiguration, 'actions')}
         filterable={isEmpty(this.props.listConfiguration) || !isEmpty(this.props.listConfiguration.availableFilters)}

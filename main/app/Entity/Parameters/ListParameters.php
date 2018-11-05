@@ -84,7 +84,7 @@ trait ListParameters
     /**
      * @ORM\Column()
      *
-     * @var array
+     * @var string
      */
     private $display = 'tiles-sm';
 
@@ -94,6 +94,13 @@ trait ListParameters
      * @var array
      */
     private $availableDisplays = ['tiles-sm'];
+
+    /**
+     * @ORM\Column(nullable=true)
+     *
+     * @var string
+     */
+    private $searchMode = null;
 
     /**
      * @ORM\Column(type="json_array")
@@ -369,6 +376,26 @@ trait ListParameters
     public function setAvailableDisplays(array $availableDisplays)
     {
         $this->availableDisplays = $availableDisplays;
+    }
+
+    /**
+     * Get search mode.
+     *
+     * @return string
+     */
+    public function getSearchMode()
+    {
+        return $this->searchMode;
+    }
+
+    /**
+     * Set search mode.
+     *
+     * @param string $searchMode
+     */
+    public function setSearchMode($searchMode)
+    {
+        $this->searchMode = $searchMode;
     }
 
     /**

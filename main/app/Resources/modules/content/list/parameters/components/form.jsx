@@ -8,6 +8,7 @@ import union from 'lodash/union'
 import {trans} from '#/main/app/intl/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
 
+import {constants as searchConst} from '#/main/app/content/search/constants'
 import {
   createListDefinition,
   getDisplayableProps,
@@ -184,6 +185,16 @@ const ListForm = props => {
               },
               linked: [
                 {
+                  name: 'searchMode',
+                  label: trans('list_search_mode'),
+                  type: 'choice',
+                  required: true,
+                  displayed: isFilterable,
+                  options: {
+                    condensed: true,
+                    choices: searchConst.SEARCH_TYPES
+                  }
+                }, {
                   name: 'availableFilters',
                   label: trans('list_available_filters'),
                   type: 'choice',

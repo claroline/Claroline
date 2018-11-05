@@ -5,10 +5,9 @@ import merge from 'lodash/merge'
 
 import {makeInstanceReducer, reduceReducers, combineReducers} from '#/main/app/store/reducer'
 
-import {constants as paginationConst} from '#/main/app/content/pagination/constants'
+import {reducer as paginationReducer} from '#/main/app/content/pagination/store/reducer'
+import {reducer as searchReducer} from '#/main/app/content/search/store/reducer'
 import {
-  LIST_FILTER_ADD,
-  LIST_FILTER_REMOVE,
   LIST_SORT_UPDATE,
   LIST_SORT_DIRECTION_UPDATE,
   LIST_RESET_SELECT,
@@ -16,9 +15,7 @@ import {
   LIST_TOGGLE_SELECT_ALL,
   LIST_DATA_INVALIDATE,
   LIST_DATA_LOAD,
-  LIST_DATA_DELETE,
-  LIST_PAGE_CHANGE,
-  LIST_PAGE_SIZE_UPDATE
+  LIST_DATA_DELETE
 } from '#/main/app/content/list/store/actions'
 
 const defaultState = {
@@ -26,16 +23,11 @@ const defaultState = {
   invalidated: false,
   data: [],
   totalResults: 0,
-  filters: [],
   sortBy: {
     property: null,
     direction: 0
   },
-  selected: [],
-  page: 0,
-  // fixme : this should be -1, otherwise it will break if paginated=false
-  // but if I change it know, it will make -1 the default for all list in app
-  pageSize: paginationConst.DEFAULT_PAGE_SIZE
+  selected: []
 }
 
 /**
@@ -74,38 +66,6 @@ const dataReducer = makeInstanceReducer(defaultState.data, {
 const totalResultsReducer = makeInstanceReducer(defaultState.totalResults, {
   [LIST_DATA_LOAD]: (state, action) => action.total,
   [LIST_DATA_DELETE]: (state, action) => state - action.items.length
-})
-
-/**
- * Reduces list filters.
- */
-const filtersReducer = makeInstanceReducer(defaultState.filters, {
-  [LIST_FILTER_ADD]: (state, action) => {
-    const newFilters = cloneDeep(state)
-
-    const existingFilter = newFilters.find(filter => filter.property === action.property)
-    if (existingFilter) {
-      existingFilter.value = action.value
-    } else {
-      newFilters.push({
-        property: action.property,
-        value: action.value,
-        locked: action.locked
-      })
-    }
-
-    return newFilters
-  },
-
-  [LIST_FILTER_REMOVE]: (state, action) => {
-    const newFilters = state.slice(0)
-    const pos = state.indexOf(action.filter)
-    if (-1 !== pos) {
-      newFilters.splice(pos, 1)
-    }
-
-    return newFilters
-  }
 })
 
 /**
@@ -177,64 +137,16 @@ const selectedReducer = makeInstanceReducer(defaultState.selected, {
   }
 })
 
-/**
- * Reduces list current page.
- */
-const pageReducer = makeInstanceReducer(defaultState.page, {
-  /**
-   * Changes the current page.
-   *
-   * @param {Object} state
-   * @param {Object} action
-   *
-   * @returns {Object}
-   */
-  [LIST_PAGE_CHANGE]: (state, action) => action.page,
-
-  /**
-   * Resets current page on page size changes.
-   *
-   * @todo find a better way to handle this
-   *
-   * @returns {Object}
-   */
-  [LIST_PAGE_SIZE_UPDATE]: () => 0,
-
-  /**
-   * Resets current page on filter add.
-   *
-   * @todo find a better way to handle this
-   *
-   * @returns {Object}
-   */
-  [LIST_FILTER_ADD]: () => 0
-})
-
-/**
- * Reduces list page size.
- */
-const pageSizeReducer = makeInstanceReducer(defaultState.pageSize, {
-  /**
-   * Changes the page size.
-   *
-   * @param {Object} state
-   * @param {Object} action
-   *
-   * @returns {Object}
-   */
-  [LIST_PAGE_SIZE_UPDATE]: (state, action) => action.pageSize
-})
-
 const baseReducer = {
   loaded: loadedReducer,
   invalidated: invalidatedReducer,
   data: dataReducer,
   totalResults: totalResultsReducer,
-  filters: filtersReducer,
   sortBy: sortByReducer,
   selected: selectedReducer,
-  page: pageReducer,
-  pageSize: pageSizeReducer
+
+  filters: searchReducer,
+  pagination: paginationReducer
 }
 
 /**
@@ -255,8 +167,6 @@ const baseReducer = {
  * @returns {function}
  */
 function makeListReducer(listName, initialState = {}, customReducer = {}) {
-  //const reducer = {}
-
   const listState = merge({}, defaultState, initialState)
 
   // generates the list store by merging base reducers and app ones

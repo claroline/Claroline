@@ -167,6 +167,7 @@ const DataDetails = {
 
 const DataSearch = {
   propTypes: {
+    placeholder: T.string,
     search: T.any,
     isValid: T.bool.isRequired,
     updateSearch: T.func.isRequired

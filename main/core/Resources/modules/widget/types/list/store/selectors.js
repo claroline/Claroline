@@ -19,6 +19,11 @@ const availableDisplays = createSelector(
   (parameters) => parameters.availableDisplays || []
 )
 
+const searchMode = createSelector(
+  [contentSelectors.parameters],
+  (parameters) => parameters.searchMode
+)
+
 const availableFilters = createSelector(
   [contentSelectors.parameters],
   (parameters) => parameters.availableFilters || []
@@ -86,6 +91,7 @@ export const selectors = {
   pageSize,
   availablePageSizes,
   availableDisplays,
+  searchMode,
   availableFilters,
   filters,
   sorting,

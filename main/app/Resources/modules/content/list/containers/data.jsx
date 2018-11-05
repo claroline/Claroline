@@ -4,6 +4,7 @@ import isEqual from 'lodash/isEqual'
 
 import {makeCancelable} from '#/main/app/api'
 
+import {constants as searchConst} from '#/main/app/content/search/constants'
 import {connect} from '#/main/app/content/list/store'
 import {DataListProperty as DataListPropertyTypes} from '#/main/app/content/list/prop-types'
 import {ListData as ListDataComponent} from '#/main/app/content/list/components/data'
@@ -137,6 +138,8 @@ ListData.propTypes = {
    */
   card: T.func,
 
+  searchMode: T.string,
+
   // The features to render for the ListData.
   // NB. by default all features are enabled,
   // so use this props to disable the ones you don't want.
@@ -148,6 +151,7 @@ ListData.propTypes = {
 }
 
 ListData.defaultProps = {
+  searchMode: searchConst.DEFAULT_SEARCH_TYPE,
   filterable: true,
   sortable  : true,
   selectable: true,

@@ -2,7 +2,7 @@ import merge from 'lodash/merge'
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
 import {LOAD_LOG, RESET_LOG, LOAD_CHART_DATA} from '#/main/core/layout/logs/actions'
-import {LIST_FILTER_ADD, LIST_FILTER_REMOVE} from '#/main/app/content/list/store/actions'
+import {SEARCH_FILTER_ADD, SEARCH_FILTER_REMOVE} from '#/main/app/content/search/store/actions'
 
 const defaultState = {
   logs: {},
@@ -47,8 +47,8 @@ const makeLogReducer = (initialState = {}, customReducer = {}) => {
     actions: makeReducer(listState.actions, {}),
     chart: combineReducers({
       invalidated: makeReducer(listState.chart.invalidated, {
-        [LIST_FILTER_ADD+'/logs'] : () => true,
-        [LIST_FILTER_REMOVE+'/logs'] : () => true,
+        [SEARCH_FILTER_ADD+'/logs'] : () => true,
+        [SEARCH_FILTER_REMOVE+'/logs'] : () => true,
         [LOAD_CHART_DATA] : () => false
       }),
       data: makeReducer(listState.chart.data, {

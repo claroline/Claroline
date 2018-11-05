@@ -1,6 +1,6 @@
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
-import {LIST_FILTER_ADD, LIST_FILTER_REMOVE} from '#/main/app/content/list/store/actions'
+import {SEARCH_FILTER_ADD, SEARCH_FILTER_REMOVE} from '#/main/app/content/search/store/actions'
 import {reducer as editorReducer} from '#/plugin/blog/resources/blog/editor/store'
 import {reducer as postReducer} from '#/plugin/blog/resources/blog/post/store'
 import {reducer as commentReducer} from '#/plugin/blog/resources/blog/comment/store'
@@ -12,13 +12,13 @@ import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
 const reducer = combineReducers({
   calendarSelectedDate: makeReducer('', {
-    [LIST_FILTER_ADD + '/' + selectors.STORE_NAME + '.posts']: (state, action) => {
+    [SEARCH_FILTER_ADD + '/' + selectors.STORE_NAME + '.posts']: (state, action) => {
       if(action.property === 'publicationDate'){
         return action.value
       }
       return state
     },
-    [LIST_FILTER_REMOVE + '/' + selectors.STORE_NAME + '.posts']: (state, action) => {
+    [SEARCH_FILTER_REMOVE + '/' + selectors.STORE_NAME + '.posts']: (state, action) => {
       if(action.filter.property === 'publicationDate'){
         return null
       }

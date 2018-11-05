@@ -45,6 +45,7 @@ class DirectorySerializer
                 'availableSort' => $directory->getAvailableSort(),
 
                 // filter feature
+                'searchMode' => $directory->getSearchMode(),
                 'filters' => $directory->getFilters(),
                 'availableFilters' => $directory->getAvailableFilters(),
 
@@ -95,6 +96,7 @@ class DirectorySerializer
         $this->sipe('list.availableSort', 'setAvailableSort', $data, $directory);
 
         // filter feature
+        $this->sipe('list.searchMode', 'setSearchMode', $data, $directory);
         $this->sipe('list.filters', 'setFilters', $data, $directory);
         $this->sipe('list.availableFilters', 'setAvailableFilters', $data, $directory);
 

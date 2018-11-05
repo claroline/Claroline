@@ -88,6 +88,7 @@ class ListWidget extends Component {
           available: this.props.availableDisplays
         }}
         count={this.props.count}
+        searchMode={this.props.searchMode}
         filterable={!isEmpty(this.props.availableFilters)}
         sortable={!isEmpty(this.props.availableSort)}
         selectable={false}
@@ -105,6 +106,7 @@ ListWidget.propTypes = {
   display: T.string.isRequired,
   count: T.bool.isRequired,
   paginated: T.bool.isRequired,
+  searchMode: T.string,
   availableDisplays: T.arrayOf(T.string).isRequired,
   availableFilters: T.arrayOf(T.string).isRequired,
   availableSort: T.arrayOf(T.string).isRequired,

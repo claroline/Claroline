@@ -12,28 +12,34 @@ const SearchInput = props => {
 
   if (props.definition.components.search) {
     return React.createElement(props.definition.components.search, merge({}, props.options, {
+      placeholder: props.placeholder,
       search: props.currentSearch,
       isValid: isValidSearch,
-      updateSearch: props.updateSearch
+      disabled: props.disabled,
+      updateSearch: (value) => props.updateSearch(props.definition.parse(value, props.options))
     }))
   }
 
   return (
     <input
       type="text"
-      className="form-control input-sm"
+      className="data-filter form-control input-sm"
       value={props.currentSearch || ''}
-      onChange={(e) => props.updateSearch(e.target.value)}
+      placeholder={props.placeholder}
+      disabled={props.disabled}
+      onChange={(e) => props.updateSearch(props.definition.parse(e.target.value, props.options))}
     />
   )
 }
 
 SearchInput.propTypes = {
+  placeholder: T.string,
   definition: T.shape(
     DataTypeTypes.propTypes
   ).isRequired,
   options: T.object,
   currentSearch: T.any,
+  disabled: T.bool,
   updateSearch: T.func.isRequired
 }
 
@@ -67,9 +73,15 @@ class SearchProp extends Component {
 // todo : use the one defined in prop-types
 SearchProp.propTypes = {
   type: T.string,
+  placeholder: T.string,
   options: T.object,
   currentSearch: T.any,
+  disabled: T.bool,
   updateSearch: T.func.isRequired
+}
+
+SearchProp.defaultProps = {
+  disabled: false
 }
 
 export {

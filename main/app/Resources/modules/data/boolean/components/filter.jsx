@@ -1,6 +1,11 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
+
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
+import {DataSearch as DataSearchTypes} from '#/main/app/data/prop-types'
+
+import {trans} from '#/main/app/intl/translation'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {parseBool} from '#/main/app/data/boolean/utils'
 
@@ -8,37 +13,37 @@ const BooleanFilter = (props) => {
   const searchValue = parseBool(props.search, true)
 
   return (
-    <span className="boolean-filter">
-      <button
-        type="button"
-        className={classes('btn btn-sm', {
-          'btn-filter': !props.isValid || !searchValue,
-          'btn-primary': props.isValid && searchValue
-        })}
-        onClick={() => props.updateSearch(true)}
-      >
-        <span className="fa fa-fw fa-check" />
-      </button>
+    <span className="data-filter boolean-filter">
+      <Button
+        className="btn btn-filter"
+        type={CALLBACK_BUTTON}
+        icon="fa fa-fw fa-check"
+        label={trans('yes')}
+        tooltip="bottom"
+        callback={() => props.updateSearch(true)}
+        primary={props.isValid && searchValue}
+        disabled={props.disabled}
+        size="sm"
+      />
 
-      <button
-        type="button"
-        className={classes('btn btn-sm', {
-          'btn-filter': !props.isValid || searchValue,
-          'btn-primary': props.isValid && !searchValue
-        })}
-        onClick={() => props.updateSearch(false)}
-      >
-        <span className="fa fa-fw fa-times" />
-      </button>
+      <Button
+        className="btn btn-filter"
+        type={CALLBACK_BUTTON}
+        icon="fa fa-fw fa-times"
+        label={trans('no')}
+        tooltip="bottom"
+        callback={() => props.updateSearch(false)}
+        primary={props.isValid && !searchValue}
+        disabled={props.disabled}
+        size="sm"
+      />
     </span>
   )
 }
 
-BooleanFilter.propTypes = {
-  search: T.oneOfType([T.string, T.bool]),
-  isValid: T.bool.isRequired,
-  updateSearch: T.func.isRequired
-}
+implementPropTypes(BooleanFilter, DataSearchTypes, {
+  search: T.oneOfType([T.string, T.bool])
+})
 
 export {
   BooleanFilter

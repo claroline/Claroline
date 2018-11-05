@@ -81,6 +81,9 @@ function mapDispatchToProps(dispatch, ownProps) {
     removeFilter(filter) {
       dispatch(listActions.removeFilter(ownProps.name, filter))
     },
+    resetFilters(filters = []) {
+      dispatch(listActions.resetFilters(ownProps.name, filters))
+    },
 
     // sorting
     updateSort(property) {
@@ -215,9 +218,11 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 
   if (ownProps.filterable) {
     props.filters = {
+      mode: ownProps.searchMode,
       current: stateProps.filters,
       addFilter: asyncDecorator(dispatchProps.addFilter),
-      removeFilter: asyncDecorator(dispatchProps.removeFilter)
+      removeFilter: asyncDecorator(dispatchProps.removeFilter),
+      resetFilters: asyncDecorator(dispatchProps.resetFilters)
     }
   }
 

@@ -42,6 +42,7 @@ const ListWidget = connect(
     pageSize: selectors.pageSize(state),
     availablePageSizes: selectors.availablePageSizes(state),
 
+    searchMode: selectors.searchMode(state),
     filters: selectors.filters(state),
     availableFilters: selectors.availableFilters(state),
     sorting: selectors.sorting(state),

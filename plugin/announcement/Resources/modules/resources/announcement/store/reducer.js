@@ -3,7 +3,6 @@ import cloneDeep from 'lodash/cloneDeep'
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
-import {LIST_FILTER_ADD} from '#/main/app/content/list/store/actions'
 
 import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
@@ -94,8 +93,7 @@ const reducer = combineReducers({
   selected: combineReducers({
     list: makeListReducer(selectors.STORE_NAME+'.selected.list', {}, {
       invalidated: makeReducer(false, {
-        ['MODAL_HIDE']: () => true, // todo : find better
-        [LIST_FILTER_ADD+'/selected.list']: () => true // todo : find better
+        ['MODAL_HIDE']: () => true // todo : find better
       })
     })
   }),

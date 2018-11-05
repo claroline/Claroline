@@ -1,5 +1,7 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
+
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
+import {DataSearch as DataSearchTypes} from '#/main/app/data/prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
@@ -10,15 +12,15 @@ import {MODAL_RESOURCE_EXPLORER} from '#/main/core/resource/modals/explorer'
 // TODO : reuse explorer config (title, root, filters, etc.)
 
 const ResourceFilter = (props) =>
-  <span className="resource-filter">
+  <span className="data-filter resource-filter">
     {props.search}
 
     <Button
-      className="btn-filter"
+      className="btn btn-filter"
       type={MODAL_BUTTON}
       tooltip="left"
-      icon="fa fa-folder"
-      label={trans('select_resource')}
+      icon="fa fa-fw fa-folder"
+      label={props.placeholder || trans('select_resource')}
       size="sm"
       modal={[MODAL_RESOURCE_EXPLORER, {
         selectAction: (selected) => ({
@@ -26,18 +28,17 @@ const ResourceFilter = (props) =>
           callback: () => props.updateSearch(selected[0].autoId)
         })
       }]}
+      disabled={props.disabled}
     />
   </span>
 
-ResourceFilter.propTypes = {
+implementPropTypes(ResourceFilter, DataSearchTypes, {
   /*search: T.shape({
-    id: T.string.isRequired,
-    name: T.string.isRequired
-  }),*/
-  search: T.string,
-  isValid: T.bool.isRequired,
-  updateSearch: T.func.isRequired
-}
+   id: T.string.isRequired,
+   name: T.string.isRequired
+   }),*/
+  search: T.string
+})
 
 export {
   ResourceFilter

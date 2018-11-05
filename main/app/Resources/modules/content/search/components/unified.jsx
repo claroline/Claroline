@@ -27,9 +27,9 @@ class CurrentFilter extends Component {
       >
         {this.state.definition &&
           <div className="search-filter">
-            <span className="search-filter-prop">
-              {this.props.label}
-            </span>
+              <span className="search-filter-prop">
+                {this.props.label}
+              </span>
 
             <span className="search-filter-value">
               {this.state.definition.render(this.props.value, this.props.options)}
@@ -40,7 +40,7 @@ class CurrentFilter extends Component {
                   <span className="sr-only">{trans('list_remove_filter')}</span>
                 </button>
               }
-            </span>
+              </span>
           </div>
         }
       </Await>
@@ -224,7 +224,7 @@ FiltersList.defaultProps = {
  * @param props
  * @constructor
  */
-class ListSearch extends Component {
+class SearchUnified extends Component {
   constructor(props) {
     super(props)
 
@@ -257,7 +257,7 @@ class ListSearch extends Component {
 
   render() {
     return (
-      <div className={classes('list-search', {
+      <div className={classes('list-search search-unified', {
         open: this.state.currentSearch
       })}>
         <div className="search-filters">
@@ -295,7 +295,7 @@ class ListSearch extends Component {
         {this.state.currentSearch &&
           <FiltersList
             available={this.props.available.filter(availableFilter =>
-              // removes locked filters
+                // removes locked filters
               -1 === this.props.current.findIndex(currentFilter => (currentFilter.property === availableFilter.name || currentFilter.property === availableFilter.alias) && currentFilter.locked)
             )}
             currentSearch={this.state.currentSearch}
@@ -307,7 +307,7 @@ class ListSearch extends Component {
   }
 }
 
-ListSearch.propTypes = {
+SearchUnified.propTypes = {
   disabled: T.bool,
   available: T.arrayOf(T.shape({
     name: T.string.isRequired,
@@ -322,10 +322,10 @@ ListSearch.propTypes = {
   removeFilter: T.func.isRequired
 }
 
-ListSearch.defaultProps = {
+SearchUnified.defaultProps = {
   disabled: false
 }
 
 export {
-  ListSearch
+  SearchUnified
 }

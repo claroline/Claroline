@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {ListColumns} from '#/main/app/content/list/components/columns'
 import {ListDisplay} from '#/main/app/content/list/components/display'
-import {ListSearch} from '#/main/app/content/list/components/search'
+import {Search} from '#/main/app/content/search/components/search'
 import {constants} from '#/main/app/content/list/constants'
 import {DataListProperty} from '#/main/app/content/list/prop-types'
 
@@ -16,7 +16,7 @@ import {DataListProperty} from '#/main/app/content/list/prop-types'
 const ListHeader = props =>
   <div className="list-header">
     {props.filters &&
-      <ListSearch
+      <Search
         {...props.filters}
         disabled={props.disabled}
       />
@@ -60,6 +60,7 @@ ListHeader.propTypes = {
   }),
 
   filters: T.shape({
+    mode: T.string.isRequired,
     current: T.arrayOf(T.shape({
       property: T.string.isRequired,
       value: T.any
