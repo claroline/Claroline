@@ -228,11 +228,13 @@ class ApiLoader extends Loader
             }
         }
 
+        $mapping = array_merge($defaults, self::DEFAULT_MAP);
+
         foreach ($ignore as $ignored) {
-            unset($defaults[$ignored]);
+            unset($mapping[$ignored]);
         }
 
-        return array_merge($defaults, self::DEFAULT_MAP);
+        return $mapping;
     }
 
     //@see http://stackoverflow.com/questions/1589468/convert-camelcase-to-under-score-case-in-php-autoload
