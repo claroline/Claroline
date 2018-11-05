@@ -317,6 +317,11 @@ trait ListParameters
      */
     public function getAvailablePageSizes()
     {
+        //in case it was null after migration or bug
+        if (!$this->availablePageSizes) {
+            return [];
+        }
+
         return $this->availablePageSizes;
     }
 
@@ -347,6 +352,12 @@ trait ListParameters
      */
     public function getAvailableDisplays()
     {
+        //in case it was null after migration or bug
+
+        if (!$this->availableDisplays) {
+            return [];
+        }
+
         return $this->availableDisplays;
     }
 
@@ -387,6 +398,11 @@ trait ListParameters
      */
     public function getAvailableFilters()
     {
+        //in case it was null after migration or bug
+        if (!$this->availableFilters) {
+            return [];
+        }
+
         return $this->availableFilters;
     }
 
@@ -407,6 +423,11 @@ trait ListParameters
      */
     public function getAvailableColumns()
     {
+        //in case it was null after migration or bug
+        if (!$this->availableColumns) {
+            return [];
+        }
+
         return $this->availableColumns;
     }
 
@@ -427,6 +448,11 @@ trait ListParameters
      */
     public function getDisplayedColumns()
     {
+        //in case it was null after migration or bug
+        if (!$this->displayedColumns) {
+            return [];
+        }
+
         return $this->displayedColumns;
     }
 
@@ -447,6 +473,11 @@ trait ListParameters
      */
     public function getCard()
     {
+        //in case it was null after migration or bug
+        if (!$this->card) {
+            return [];
+        }
+
         return $this->card;
     }
 
