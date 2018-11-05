@@ -1,13 +1,10 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {PropTypes as T} from 'prop-types'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl/translation'
-import {selectors} from '#/main/core/administration/parameters/appearance/store/selectors'
 
-//todo add logo
-const MainComponent = props =>
+const FooterComponent = () =>
   <FormData
     name="parameters"
     target={['apiv2_parameters_update']}
@@ -19,8 +16,8 @@ const MainComponent = props =>
     }}
     sections={[
       {
-        icon: 'fa fa-fw fa-user-plus',
-        title: trans('main'),
+        icon: 'fa fa-fw fa-copyright',
+        title: trans('footer'),
         defaultOpened: true,
         fields: [
           {
@@ -40,29 +37,6 @@ const MainComponent = props =>
             type: 'boolean',
             label: trans('show_workspace_menu_at_footer', {}, 'home'),
             required: false
-          },
-          {
-            name: 'display.name_active',
-            type: 'boolean',
-            label: trans('show_name_in_top_bar'),
-            required: false
-          },
-          {
-            name: 'display.logo',
-            type: 'file',
-            label: trans('logo'),
-            required: false
-          },
-          {
-            name: 'display.theme',
-            type: 'choice',
-            label: trans('theme'),
-            required: true,
-            options: {
-              multiple: false,
-              condensed: true,
-              choices: props.themeChoices
-            }
           }
         ]
       }
@@ -70,17 +44,14 @@ const MainComponent = props =>
   />
 
 
-MainComponent.propTypes = {
-  themeChoices: T.object.isRequired
+FooterComponent.propTypes = {
 }
 
-const Main = connect(
-  (state) => ({
-    themeChoices: selectors.themeChoices(state)
-  }),
+const Footer = connect(
+  () => ({ }),
   () => ({ })
-)(MainComponent)
+)(FooterComponent)
 
 export {
-  Main
+  Footer
 }

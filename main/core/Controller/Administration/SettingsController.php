@@ -13,6 +13,8 @@ namespace Claroline\CoreBundle\Controller\Administration;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
+use Claroline\CoreBundle\Entity\Icon\IconSetTypeEnum;
+use Claroline\CoreBundle\Manager\IconSetManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\PortalManager;
 use Claroline\CoreBundle\Manager\Theme\ThemeManager;
@@ -31,12 +33,13 @@ class SettingsController extends Controller
      * SettingsController constructor.
      *
      * @DI\InjectParams({
-     *     "serializer"    = @DI\Inject("claroline.serializer.parameters"),
-     *     "localeManager" = @DI\Inject("claroline.manager.locale_manager"),
-     *     "portalManager" = @DI\Inject("claroline.manager.portal_manager"),
-     *     "finder"        = @DI\Inject("claroline.api.finder"),
-     *     "translator" = @DI\Inject("translator"),
-     *     "themeManager"  = @DI\Inject("claroline.manager.theme_manager")
+     *     "serializer"     = @DI\Inject("claroline.serializer.parameters"),
+     *     "localeManager"  = @DI\Inject("claroline.manager.locale_manager"),
+     *     "portalManager"  = @DI\Inject("claroline.manager.portal_manager"),
+     *     "finder"         = @DI\Inject("claroline.api.finder"),
+     *     "translator"     = @DI\Inject("translator"),
+     *     "iconSetManager" = @DI\Inject("claroline.manager.icon_set_manager"),
+     *     "themeManager"   = @DI\Inject("claroline.manager.theme_manager")
      * })
      *
      * @param SettingsController $serializer
@@ -47,7 +50,8 @@ class SettingsController extends Controller
         PortalManager $portalManager,
         FinderProvider $finder,
         ThemeManager $themeManager,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        IconSetManager $iconSetManager
     ) {
         $this->serializer = $serializer;
         $this->localeManager = $localeManager;
@@ -55,6 +59,7 @@ class SettingsController extends Controller
         $this->finder = $finder;
         $this->themeManager = $themeManager;
         $this->translator = $translator;
+        $this->iconSetManager = $iconSetManager;
     }
 
     /**
@@ -103,9 +108,17 @@ class SettingsController extends Controller
      */
     public function appearanceAction()
     {
+        $iconSets = $this->iconSetManager->listIconSetsByType(IconSetTypeEnum::RESOURCE_ICON_SET);
+        $iconSetChoices = [];
+
+        foreach ($iconSets as $set) {
+            $iconSetChoices[$set->getName()] = $set->getName();
+        }
+
         return [
             'parameters' => $this->serializer->serialize(),
             'isReadOnly' => !$this->themeManager->isThemeDirWritable(),
+            'iconSetChoices' => $iconSetChoices,
             'themes' => $this->finder->search(
                 'Claroline\CoreBundle\Entity\Theme\Theme', [
                     'limit' => -1,

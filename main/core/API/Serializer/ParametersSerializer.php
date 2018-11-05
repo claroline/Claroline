@@ -85,7 +85,9 @@ class ParametersSerializer
                 'footer_workspaces' => $parameters['footer_workspaces'],
                 'header_locale' => $parameters['header_locale'],
                 'resource_icon_set' => $parameters['resource_icon_set'],
+                'logo_redirect_home' => $parameters['logo_redirect_home'],
                 'name' => $parameters['name'],
+                'secondary_name' => $parameters['secondary_name'],
                 'name_active' => $parameters['name_active'],
             ],
             'mailer' => [
@@ -103,6 +105,10 @@ class ParametersSerializer
             'ssl' => [
                 'enabled' => $parameters['ssl_enabled'],
                 'version' => $parameters['ssl_version_value'],
+            ],
+            'home' => [
+              'redirection_type' => $parameters['home_redirection_type'],
+              'redirection_url' => $parameters['home_redirection_url'],
             ],
             'server' => [
                 'tmp_dir' => $parameters['tmp_dir'],
@@ -289,6 +295,10 @@ class ParametersSerializer
             $this->deserializeServer($parameters, $data);
         }
 
+        if (isset($data['home'])) {
+            $this->deserializeHome($parameters, $data);
+        }
+
         if (isset($data['session'])) {
             $this->deserializeSession($parameters, $data);
         }
@@ -362,6 +372,12 @@ class ParametersSerializer
         return new PlatformConfiguration($parameters);
     }
 
+    public function deserializeHome(array &$parameters, array $data)
+    {
+        $this->buildParameter('home.redirection_type', 'home_redirection_type', $parameters, $data);
+        $this->buildParameter('home.redirection_url', 'home_redirection_url', $parameters, $data);
+    }
+
     public function deserializeMaintenance(array &$parameters, array $data)
     {
         $this->buildParameter('maintenance.enable', 'maintenance.enable', $parameters, $data);
@@ -380,6 +396,7 @@ class ParametersSerializer
         $this->buildParameter('display.resource_icon_set', 'resource_icon_set', $parameters, $data);
         $this->buildParameter('display.name', 'name', $parameters, $data);
         $this->buildParameter('display.name_active', 'name_active', $parameters, $data);
+        $this->buildParameter('display.logo_redirect_home', 'logo_redirect_home', $parameters, $data);
     }
 
     public function deserializeMailer(array &$parameters, array $data)

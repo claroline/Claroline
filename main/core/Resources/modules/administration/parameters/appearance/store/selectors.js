@@ -9,6 +9,9 @@ const themeChoices = (state) => {
   return choices
 }
 
+const iconSetChoices = (state) => state. iconSetChoices
+
 export const selectors = {
-  themeChoices
+  themeChoices,
+  iconSetChoices
 }

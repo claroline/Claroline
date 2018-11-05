@@ -3,9 +3,10 @@ import {connect} from 'react-redux'
 
 import {withRouter, Routes} from '#/main/app/router'
 
-import {Main} from '#/main/core/administration/parameters/appearance/components/main'
+import {Footer} from '#/main/core/administration/parameters/appearance/components/footer'
+import {Header} from '#/main/core/administration/parameters/appearance/components/header'
 import {Icons} from '#/main/core/administration/parameters/appearance/components/icons'
-import {ThemeTool as Themes} from '#/main/core/administration/parameters/appearance/components/theme/components/tool'
+//import {ThemeTool as Themes} from '#/main/core/administration/parameters/appearance/components/theme/components/tool'
 
 
 const SettingsComponent = () =>
@@ -15,19 +16,24 @@ const SettingsComponent = () =>
     ]}
     routes={[
       {
-        path: '/main',
+        path: '/header',
         exact: true,
-        component: Main
+        component: Header
+      },
+      {
+        path: '/footer',
+        exact: true,
+        component: Footer
       },
       {
         path: '/icons',
         exact: true,
         component: Icons
-      }, {
+      }/*, {
         path: '/themes',
         exact: true,
         component: Themes
-      }
+      }*/
     ]}
   />
 

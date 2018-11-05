@@ -110,6 +110,32 @@ const Parameters = (props) => {
                 min: 0,
                 unit: trans('days')
               }
+            },
+            {
+              name: 'authentication.redirect_after_login_option',
+              type: 'choice',
+              label: trans('redirect_after_login_option'),
+              options: {
+                multiple: false,
+                condensed: false,
+                choices: {
+                  'DESKTOP': 'DESKTOP',
+                  'URL': 'URL',
+                  'WORKSPACE_TAG': 'WORKSPACE_TAG',
+                  'LAST': 'LAST'
+                }
+              }, linked: [{
+                name: 'authentication.redirect_after_login_url',
+                type: 'string',
+                label: trans('redirect_after_login_url'),
+                displayed: (data) => data.authentication.redirect_after_login_option === 'URL',
+                hideLabel: true
+              }]
+            },
+            {
+              name: 'registration.auto_logging',
+              type: 'boolean',
+              label: trans('auto_logging_after_registration')
             }
           ]
         }, {

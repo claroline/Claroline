@@ -1728,5 +1728,11 @@
     "synchronization": "Synchronization",
     "internet": "Internet",
     "ssl": "Ssl",
-    "icons": "Icones"
+    "icons": "Icones",
+    "identification": "Identification",
+    "secondary_name": "Nom secondaire",
+    "home_redirection_type": "Type de redirection de l'accueil",
+    "auto_logging_after_registration": "Connexion automatique après l'inscription",
+    "logo_redirect_home": "Home redirection when clicking on logo",
+    "header_locale": "Change language in header"
 }

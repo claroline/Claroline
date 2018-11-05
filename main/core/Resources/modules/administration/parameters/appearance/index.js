@@ -12,7 +12,8 @@ export const App = () => ({
       },
       themes: {
         data: initialData.themes.data
-      }
+      },
+      iconSetChoices: initialData.iconSetChoices
     }
   }
 })

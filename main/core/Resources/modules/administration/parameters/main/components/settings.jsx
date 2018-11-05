@@ -3,7 +3,8 @@ import {connect} from 'react-redux'
 
 import {withRouter, Routes} from '#/main/app/router'
 
-import {Main} from '#/main/core/administration/parameters/main/components/main'
+import {Home} from '#/main/core/administration/parameters/main/components/home'
+import {Identification} from '#/main/core/administration/parameters/main/components/identification'
 import {I18n} from '#/main/core/administration/parameters/main/components/i18n'
 import {Plugins} from '#/main/core/administration/parameters/main/components/plugins'
 import {Portal} from '#/main/core/administration/parameters/main/components/portal'
@@ -16,9 +17,14 @@ const SettingsComponent = () =>
     ]}
     routes={[
       {
-        path: '/main',
+        path: '/identification',
         exact: true,
-        component: Main
+        component: Identification
+      },
+      {
+        path: '/home',
+        exact: true,
+        component: Home
       },
       {
         path: '/i18n',

@@ -48,7 +48,7 @@ class ArrayUtils
         $key = array_shift($parts);
 
         if (isset($object[$key])) {
-            if (!empty($parts)) {
+            if (!empty($parts) && is_array($object[$key])) {
                 return $this->get($object[$key], implode('.', $parts));
             }
 

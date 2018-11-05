@@ -55,7 +55,7 @@ class PlatformDefaults implements ParameterProviderInterface
             'mailer_auth_mode' => null,
             'mailer_api_key' => null,
             'mailer_tag' => null,
-            'terms_of_service' => true,
+            'terms_of_service' => false,
             'google_meta_tag' => null,
             'redirect_after_login_option' => self::DEFAULT_REDIRECT_OPTION,
             'redirect_after_login_url' => null,
@@ -77,7 +77,7 @@ class PlatformDefaults implements ParameterProviderInterface
             'home_menu' => null,
             'footer_login' => false,
             'footer_workspaces' => false,
-            'header_locale' => true,
+            'header_locale' => false,
             'header_menu' => 'workspaces',
             'portfolio_url' => null,
             'max_storage_size' => Workspace::DEFAULT_MAX_STORAGE_SIZE,
@@ -157,6 +157,7 @@ class PlatformDefaults implements ParameterProviderInterface
             ],
             'security' => [
               'disabled_admin_tools' => [
+                'technical_settings',
               ],
             ],
             'logo_redirect_home' => true,
