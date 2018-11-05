@@ -49,7 +49,9 @@ const ClacoFormResource = withReducer(selectors.STORE_NAME, reducer)(
         dispatch(formActions.resetForm(selectors.STORE_NAME+'.entries.current', {}, true))
       },
       loadEntryUser(entryId) {
-        dispatch(entryActions.loadEntryUser(entryId))
+        if (authenticatedUser) {
+          dispatch(entryActions.loadEntryUser(entryId))
+        }
       },
       resetEntryUser() {
         dispatch(entryActions.resetEntryUser())

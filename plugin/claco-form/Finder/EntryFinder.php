@@ -12,7 +12,6 @@
 namespace Claroline\ClacoFormBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
@@ -57,7 +56,6 @@ class EntryFinder extends AbstractFinder
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param LocationManager               $locationManager
-     * @param ObjectManager                 $om
      * @param TokenStorageInterface         $tokenStorage
      * @param TranslatorInterface           $translator
      */

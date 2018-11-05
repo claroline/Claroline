@@ -96,7 +96,7 @@ const canSearchEntry = createSelector(
   resourceSelect.resourceNode,
   isAnon,
   params,
-  (resourceNode, isAnon, params) => hasPermission('edit', resourceNode) || !isAnon || params['search_enabled']
+  (resourceNode, isAnon, params) => hasPermission('edit', resourceNode) || !isAnon || (params && params['search_enabled'])
 )
 
 const isCurrentEntryOwner = createSelector(
@@ -158,7 +158,7 @@ const canEditCurrentEntry = createSelector(
   isCurrentEntryOwner,
   canManageCurrentEntry,
   (canAdministrate, params, isCurrentEntryOwner, canManageCurrentEntry) => {
-    return canAdministrate || (params['edition_enabled'] && isCurrentEntryOwner) || canManageCurrentEntry
+    return canAdministrate || (params && params['edition_enabled'] && isCurrentEntryOwner) || canManageCurrentEntry
   }
 )
 
