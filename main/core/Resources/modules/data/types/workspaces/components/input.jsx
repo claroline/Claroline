@@ -89,7 +89,7 @@ const WorkspacesInput = props => {
             })
           }]}
         >
-          <span className="fa fa-fw fa-workspace-plus icon-with-text-right" />
+          <span className="fa fa-fw fa-book-plus icon-with-text-right" />
           {trans('add_workspaces')}
         </ModalButton>
       </EmptyPlaceholder>
