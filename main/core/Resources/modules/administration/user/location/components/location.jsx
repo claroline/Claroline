@@ -44,7 +44,7 @@ const LocationForm = props =>
         title: trans('contact'),
         icon: 'fa fa-fw fa-address-card',
         fields: [
-          {name: 'phone', type: 'text', label: trans('phone')},
+          {name: 'phone', type: 'string', label: trans('phone')},
           {name: 'street', type: 'string', label: trans('street'), required: true},
           {name: 'boxNumber', type: 'string', label: trans('box_number')},
           {name: 'streetNumber', type: 'string', label: trans('street_number'), required: true},

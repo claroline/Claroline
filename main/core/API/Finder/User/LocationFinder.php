@@ -30,27 +30,32 @@ class LocationFinder extends AbstractFinder
     {
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
-              case 'address':
-                // address query goes here
-                $qb->andWhere($qb->expr()->orX(
-                    $qb->expr()->like('obj.pc', ':address'),
-                    $qb->expr()->like('obj.street', ':address'),
-                    $qb->expr()->like('obj.town', ':address'),
-                    $qb->expr()->like('obj.country', ':address'),
-                    $qb->expr()->eq('obj.streetNumber', ':number'),
-                    $qb->expr()->eq('obj.boxNumber', ':number')
-                ));
+                case 'organizations':
+                    $qb->join('obj.organizations', 'o');
+                    $qb->andWhere('o.uuid IN (:organizationIds)');
+                    $qb->setParameter('organizationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
+                    break;
+                case 'address':
+                    // address query goes here
+                    $qb->andWhere($qb->expr()->orX(
+                        $qb->expr()->like('obj.pc', ':address'),
+                        $qb->expr()->like('obj.street', ':address'),
+                        $qb->expr()->like('obj.town', ':address'),
+                        $qb->expr()->like('obj.country', ':address'),
+                        $qb->expr()->eq('obj.streetNumber', ':number'),
+                        $qb->expr()->eq('obj.boxNumber', ':number')
+                    ));
 
-                $qb->setParameter('address', '%'.$filterValue.'%');
-                $qb->setParameter('number', $filterValue);
+                    $qb->setParameter('address', '%'.$filterValue.'%');
+                    $qb->setParameter('number', $filterValue);
 
-                break;
+                    break;
 
-              default:
-                $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");
-                $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
+                default:
+                    $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");
+                    $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
 
-                break;
+                    break;
             }
         }
 
