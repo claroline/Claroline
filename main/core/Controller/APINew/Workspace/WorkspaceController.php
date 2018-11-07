@@ -133,27 +133,11 @@ class WorkspaceController extends AbstractCrudController
             return new JsonResponse($workspace, 400);
         }
 
-        $model = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $modelId]);
-
-        if (!$model) {
-            $model = $this->workspaceManager->getDefaultModel();
-        }
-
+        $model = $workspace->getWorkspaceModel();
         $logFile = $this->getLogFile($workspace);
         $logger = new JsonLogger($logFile);
         $this->workspaceManager->setLogger($logger);
-
-        $this->workspaceManager->duplicateWorkspaceRoles($model, $workspace, $workspace->getCreator());
-        $this->workspaceManager->duplicateOrderedTools($model, $workspace);
-        $rootNode = $this->workspaceManager->duplicateRoot($model, $workspace, $workspace->getCreator());
-        $resourceNodes = $this->resourceManager->getWorkspaceRoot($model)->getChildren()->toArray();
-        $workspaceRoles = $this->workspaceManager->getArrayRolesByWorkspace($workspace);
-        $resourceInfos = ['copies' => []];
-        $this->workspaceManager->duplicateResources($resourceNodes, $workspaceRoles, $workspace->getCreator(), $rootNode, $resourceInfos);
-        $homeTabs = $this->container->get('claroline.manager.home_tab_manager')->getHomeTabByWorkspace($model);
-
-        $this->workspaceManager->duplicateHomeTabs($workspace, $homeTabs, $resourceInfos);
-
+        $workspace = $this->workspaceManager->copy($model, $workspace, false);
         $logger->end();
 
         return new JsonResponse(

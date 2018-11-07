@@ -44,6 +44,7 @@ class WorkspaceComponent extends Component {
       <WorkspaceForm
         level={3}
         name="workspaces.current"
+        models={this.props.models}
         buttons={true}
         save={{
           type: 'callback',

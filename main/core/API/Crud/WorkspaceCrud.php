@@ -80,6 +80,7 @@ class WorkspaceCrud
         }
 
         $model = $workspace->getWorkspaceModel() ? $workspace->getWorkspaceModel() : $this->manager->getDefaultModel();
+        $workspace->setWorkspaceModel($model);
         $workspace = $this->manager->copy($model, $workspace, false);
 
         $this->om->endFlushSuite();

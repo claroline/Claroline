@@ -1121,7 +1121,9 @@ class WorkspaceManager
     {
         $newWorkspace->setGuid(uniqid('', true));
 
-        $newWorkspace->setModel($model);
+        if ($model) {
+            $newWorkspace->setModel($model);
+        }
         // create new name and code
         $ws = $this->getOneByCode($newWorkspace->getCode());
 

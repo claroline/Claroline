@@ -398,10 +398,12 @@ class WorkspaceSerializer
         }
 
         if (isset($data['extra']) && isset($data['extra']['model'])) {
-            $workspace->setWorkspaceModel($this->serializer->deserialize(
+            $model = $this->serializer->deserialize(
               'Claroline\CoreBundle\Entity\Workspace\Workspace',
-              $data['extra']['model']
-            ));
+              ['code' => $data['extra']['model']]
+            );
+
+            $workspace->setWorkspaceModel($model);
         }
 
         $this->sipe('uuid', 'setUuid', $data, $workspace);

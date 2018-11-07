@@ -22,8 +22,16 @@ const restrictStorage   = (workspace) => workspace.restrictions.enableMaxStorage
 
 // TODO : add tools
 
-const WorkspaceFormComponent = (props) =>
-  <FormData
+const WorkspaceFormComponent = (props) => {
+  let modelChoice = {}
+
+  if (props.models) {
+    props.models.data.forEach(model => {
+      modelChoice[model.code] = model.code
+    })
+  }
+
+  return (<FormData
     {...props}
     meta={true}
     sections={[
@@ -41,6 +49,16 @@ const WorkspaceFormComponent = (props) =>
             type: 'string',
             label: trans('code'),
             required: true
+          }, {
+            name: 'extra.model',
+            type: 'choice',
+            label: trans('model'),
+            options: {
+              choices: modelChoice,
+              multiple: false,
+              condensed: true
+            },
+            displayed: props.new
           }
         ]
       }, {
@@ -326,7 +344,8 @@ const WorkspaceFormComponent = (props) =>
     ]}
   >
     {props.children}
-  </FormData>
+  </FormData>)
+}
 
 WorkspaceFormComponent.propTypes = {
   workspace: T.shape(
@@ -334,7 +353,7 @@ WorkspaceFormComponent.propTypes = {
   ).isRequired,
   children: T.any,
   tools: T.array,
-
+  models: T.array,
   // from redux
   new: T.bool.isRequired,
   updateProp: T.func.isRequired
