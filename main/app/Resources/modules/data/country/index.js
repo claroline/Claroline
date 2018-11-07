@@ -2,8 +2,9 @@ import {trans, tval} from '#/main/app/intl/translation'
 import {chain, string} from '#/main/core/validation'
 
 import {constants as intlConstants} from '#/main/app/intl/constants'
-import {CountryGroup} from '#/main/core/layout/form/components/group/country-group.jsx'
-// todo add search
+import {CountryGroup} from '#/main/core/layout/form/components/group/country-group'
+import {CountryFilter} from '#/main/app/data/country/components/filter'
+
 
 const dataType = {
   name: 'country',
@@ -44,7 +45,8 @@ const dataType = {
     }
   }]),
   components: {
-    form: CountryGroup
+    form: CountryGroup,
+    search: CountryFilter
   }
 }
 
