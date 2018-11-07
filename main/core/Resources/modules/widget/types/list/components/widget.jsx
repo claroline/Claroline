@@ -1,11 +1,9 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import get from 'lodash/get'
-import isEmpty from 'lodash/isEmpty'
-import merge from 'lodash/merge'
 
-import {ListData} from '#/main/app/content/list/containers/data'
+import {ListSource} from '#/main/app/content/list/containers/source'
 import {getSource} from '#/main/app/data'
+import {ListParameters as ListParametersTypes} from '#/main/app/content/list/parameters/prop-types'
 
 import {selectors} from '#/main/core/widget/types/list/store'
 
@@ -26,51 +24,13 @@ class ListWidget extends Component {
     }))
   }
 
-  /**
-   * Creates the final list config based on the source definition
-   * and the widget configuration.
-   *
-   * @return {Array}
-   */
-  computeDefinition() {
-    if (this.state.source && this.state.source.parameters.definition) {
-      return this.state.source.parameters.definition.map(column => Object.assign({}, column, {
-        filterable : -1 !== this.props.availableFilters.indexOf(column.name),
-        sortable   : -1 !== this.props.availableSort.indexOf(column.name),
-        displayable: -1 !== this.props.availableColumns.indexOf(column.name),
-        displayed  : -1 !== this.props.displayedColumns.indexOf(column.name)
-      }))
-    }
-
-    return []
-  }
-
-  computeCard() {
-    const baseCard = get(this.state, 'source.parameters.card')
-    if (baseCard) {
-      if (get(this.props, 'card.display')) {
-        // append custom configuration to the card
-        const ConfiguredCard = props => React.createElement(baseCard, merge({}, props, {
-          display: get(this.props, 'card.display')
-        }))
-
-        return ConfiguredCard
-      } else {
-        return baseCard
-      }
-    }
-
-    // no card defined
-    return undefined
-  }
-
   render() {
     if (!this.state.source) {
       return null
     }
 
     return (
-      <ListData
+      <ListSource
         name={selectors.STORE_NAME}
         fetch={{
           url: ['apiv2_data_source', {
@@ -80,19 +40,8 @@ class ListWidget extends Component {
           }],
           autoload: true
         }}
-        primaryAction={this.state.source.parameters.primaryAction}
-        definition={this.computeDefinition()}
-        card={this.computeCard()}
-        display={{
-          current: this.props.display,
-          available: this.props.availableDisplays
-        }}
-        count={this.props.count}
-        searchMode={this.props.searchMode}
-        filterable={!isEmpty(this.props.availableFilters)}
-        sortable={!isEmpty(this.props.availableSort)}
-        selectable={false}
-        paginated={this.props.paginated}
+        source={this.state.source}
+        parameters={this.props.parameters}
       />
     )
   }
@@ -101,17 +50,9 @@ class ListWidget extends Component {
 ListWidget.propTypes = {
   source: T.string,
   context: T.object.isRequired,
-
-  // list configuration
-  display: T.string.isRequired,
-  count: T.bool.isRequired,
-  paginated: T.bool.isRequired,
-  searchMode: T.string,
-  availableDisplays: T.arrayOf(T.string).isRequired,
-  availableFilters: T.arrayOf(T.string).isRequired,
-  availableSort: T.arrayOf(T.string).isRequired,
-  displayedColumns: T.arrayOf(T.string).isRequired,
-  availableColumns: T.arrayOf(T.string).isRequired
+  parameters: T.shape(
+    ListParametersTypes.propTypes
+  )
 }
 
 export {

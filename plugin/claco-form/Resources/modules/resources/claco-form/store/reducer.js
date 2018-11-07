@@ -22,7 +22,7 @@ import {
   KEYWORDS_REMOVE
 } from '#/plugin/claco-form/resources/claco-form/editor/store/actions'
 import {reducer as editorReducer} from '#/plugin/claco-form/resources/claco-form/editor/store'
-import {reducer as entriesReducer} from '#/plugin/claco-form/resources/claco-form/player/entry/store'
+import {reducer as entriesReducer} from '#/plugin/claco-form/resources/claco-form/player/store'
 
 const messageReducer = makeReducer({}, {
   [MESSAGE_RESET]: () => {
@@ -118,17 +118,17 @@ const reducer = combineReducers({
   clacoFormForm: editorReducer,
   entries: entriesReducer,
   message: messageReducer,
-  canGeneratePdf: makeReducer({}, {
-    [RESOURCE_LOAD]: (state, action) => action.resourceData.canGeneratePdf || state,
+  canGeneratePdf: makeReducer(false, {
+    [RESOURCE_LOAD]: (state, action) => action.resourceData.canGeneratePdf || state
   }),
-  cascadeLevelMax: makeReducer({}, {
-    [RESOURCE_LOAD]: (state, action) => action.resourceData.cascadeLevelMax || state,
+  cascadeLevelMax: makeReducer(5, {
+    [RESOURCE_LOAD]: (state, action) => action.resourceData.cascadeLevelMax || state
   }),
   roles: makeReducer({}, {
-    [RESOURCE_LOAD]: (state, action) => action.resourceData.roles || state,
+    [RESOURCE_LOAD]: (state, action) => action.resourceData.roles || state
   }),
   myRoles: makeReducer({}, {
-    [RESOURCE_LOAD]: (state, action) => action.resourceData.myRoles || state,
+    [RESOURCE_LOAD]: (state, action) => action.resourceData.myRoles || state
   })
 })
 

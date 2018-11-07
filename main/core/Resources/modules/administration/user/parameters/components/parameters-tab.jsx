@@ -37,14 +37,12 @@ const Parameters = (props) => {
               calculated: () => url(['claro_user_registration', {}, true]),
               required: true,
               disabled: true
-            },
-            {
+            }, {
               name: 'security.account_duration',
               type: 'number',
               label: trans('account_duration'),
               required: false
-            },
-            {
+            }, {
               name: 'registration.self',
               type: 'boolean',
               label: trans('activate_self_registration'),
@@ -78,14 +76,6 @@ const Parameters = (props) => {
                 choices: roleEnum
               }
             }, {
-              name: 'locales.default',
-              type: 'locale',
-              label: trans('default_language'),
-              required: true,
-              options: {
-                onlyEnabled: true
-              }
-            }, {
               name: 'registration.validation',
               type: 'choice',
               label: trans('registration_mail_validation'),
@@ -101,16 +91,6 @@ const Parameters = (props) => {
           icon: 'fa fa-fw fa-sign-in',
           title: trans('login'),
           fields: [
-            // redirect
-            {
-              name: 'security.cookie_lifetime',
-              type: 'number',
-              label: trans('cookie_lifetime'),
-              options: {
-                min: 0,
-                unit: trans('days')
-              }
-            },
             {
               name: 'authentication.redirect_after_login_option',
               type: 'choice',
@@ -131,8 +111,7 @@ const Parameters = (props) => {
                 displayed: (data) => data.authentication.redirect_after_login_option === 'URL',
                 hideLabel: true
               }]
-            },
-            {
+            }, {
               name: 'registration.auto_logging',
               type: 'boolean',
               label: trans('auto_logging_after_registration')

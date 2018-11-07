@@ -32,24 +32,12 @@ const ListWidget = connect(
     source: contentSelectors.source(state),
     context: contentSelectors.context(state),
 
+    parameters: contentSelectors.parameters(state),
+
     // list configuration
-    count: selectors.count(state),
-
-    display: selectors.display(state),
-    availableDisplays: selectors.availableDisplays(state),
-
-    paginated: selectors.paginated(state),
     pageSize: selectors.pageSize(state),
-    availablePageSizes: selectors.availablePageSizes(state),
-
-    searchMode: selectors.searchMode(state),
     filters: selectors.filters(state),
-    availableFilters: selectors.availableFilters(state),
-    sorting: selectors.sorting(state),
-    availableSort: selectors.availableSort(state),
-
-    displayedColumns: selectors.displayedColumns(state),
-    availableColumns: selectors.availableColumns(state)
+    sorting: selectors.sorting(state)
   })
 )(Widget)
 

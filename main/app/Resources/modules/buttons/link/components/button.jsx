@@ -6,7 +6,8 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {
   NavLink,
   withRouter,
-  matchPath} from '#/main/app/router'
+  matchPath
+} from '#/main/app/router'
 
 import {Button as ButtonTypes} from '#/main/app/buttons/prop-types'
 

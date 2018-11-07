@@ -4,16 +4,19 @@ import {Tool} from '#/main/core/administration/parameters/appearance/components/
 export const App = () => ({
   component: Tool,
   store: reducer,
-  initialData: (initialData) => {
-    return {
-      parameters: {
-        data: initialData.parameters,
-        originalData: initialData.parameters
-      },
-      themes: {
-        data: initialData.themes.data
-      },
-      iconSetChoices: initialData.iconSetChoices
-    }
-  }
+  initialData: (initialData) => ({
+    tool: {
+      name: 'appearance_settings',
+      context: initialData.context
+    },
+
+    parameters: {
+      data: initialData.parameters,
+      originalData: initialData.parameters
+    },
+    themes: {
+      data: initialData.themes.data
+    },
+    iconSetChoices: initialData.iconSetChoices
+  })
 })

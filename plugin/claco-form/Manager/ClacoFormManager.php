@@ -80,6 +80,8 @@ class ClacoFormManager
     private $keywordRepo;
 
     /**
+     * ClacoFormManager constructor.
+     *
      * @DI\InjectParams({
      *     "authorization"   = @DI\Inject("security.authorization_checker"),
      *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
@@ -93,6 +95,18 @@ class ClacoFormManager
      *     "translator"      = @DI\Inject("translator"),
      *     "userManager"     = @DI\Inject("claroline.manager.user_manager")
      * })
+     *
+     * @param AuthorizationCheckerInterface $authorization
+     * @param EventDispatcherInterface      $eventDispatcher
+     * @param FacetManager                  $facetManager
+     * @param Filesystem                    $fileSystem
+     * @param string                        $filesDir
+     * @param MessageManager                $messageManager
+     * @param ObjectManager                 $om
+     * @param RouterInterface               $router
+     * @param TokenStorageInterface         $tokenStorage
+     * @param TranslatorInterface           $translator
+     * @param UserManager                   $userManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -118,6 +132,7 @@ class ClacoFormManager
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
         $this->userManager = $userManager;
+
         $this->categoryRepo = $om->getRepository('ClarolineClacoFormBundle:Category');
         $this->clacoFormRepo = $om->getRepository('ClarolineClacoFormBundle:ClacoForm');
         $this->commentRepo = $om->getRepository('ClarolineClacoFormBundle:Comment');

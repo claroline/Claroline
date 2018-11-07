@@ -1,12 +1,12 @@
 import React from 'react'
 
-import {PageFull} from '#/main/app/page/components/full'
+import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {Nav} from '#/main/core/administration/parameters/appearance/components/nav'
 import {Settings} from '#/main/core/administration/parameters/appearance/components/settings'
 
 const Tool = () =>
-  <PageFull>
+  <ToolPage>
     <div className="row">
       <div className="col-md-3">
         <Nav/>
@@ -15,8 +15,7 @@ const Tool = () =>
         <Settings/>
       </div>
     </div>
-  </PageFull>
-
+  </ToolPage>
 
 export {
   Tool

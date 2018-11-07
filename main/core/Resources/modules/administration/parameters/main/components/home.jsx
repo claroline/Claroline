@@ -1,10 +1,10 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import {FormData} from '#/main/app/content/form/containers/data'
-import {LINK_BUTTON} from '#/main/app/buttons'
-import {trans} from '#/main/app/intl/translation'
 
-const HomeComponent = () =>
+import {trans} from '#/main/app/intl/translation'
+import {LINK_BUTTON} from '#/main/app/buttons'
+import {FormData} from '#/main/app/content/form/containers/data'
+
+const Home = () =>
   <FormData
     name="parameters"
     target={['apiv2_parameters_update']}
@@ -28,11 +28,12 @@ const HomeComponent = () =>
               multiple: false,
               condensed: false,
               choices: {
-                'new': 'new',
-                'old': 'old',
-                'url': 'url'
+                new: trans('new'),
+                old: trans('old'),
+                url: trans('url')
               }
-            }, linked: [{
+            },
+            linked: [{
               name: 'home.redirection_url',
               type: 'string',
               label: trans('url'),
@@ -44,15 +45,6 @@ const HomeComponent = () =>
       }
     ]}
   />
-
-
-HomeComponent.propTypes = {
-}
-
-const Home = connect(
-  null,
-  () => ({ })
-)(HomeComponent)
 
 export {
   Home

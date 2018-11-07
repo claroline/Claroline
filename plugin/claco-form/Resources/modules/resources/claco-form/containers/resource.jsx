@@ -8,7 +8,7 @@ import {makeId} from '#/main/core/scaffolding/id'
 import {now} from '#/main/app/intl/date'
 
 import {reducer, selectors} from '#/plugin/claco-form/resources/claco-form/store'
-import {actions as entryActions} from '#/plugin/claco-form/resources/claco-form/player/entry/store'
+import {actions as entryActions} from '#/plugin/claco-form/resources/claco-form/player/store'
 import {ClacoFormResource as ClacoFormResourceComponent} from '#/plugin/claco-form/resources/claco-form/components/resource'
 
 const authenticatedUser = currentUser()

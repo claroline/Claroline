@@ -1,7 +1,6 @@
 import React from 'react'
-import {connect} from 'react-redux'
 
-import {withRouter, Routes} from '#/main/app/router'
+import {Routes} from '#/main/app/router'
 
 import {Home} from '#/main/core/administration/parameters/main/components/home'
 import {Identification} from '#/main/core/administration/parameters/main/components/identification'
@@ -10,7 +9,7 @@ import {Plugins} from '#/main/core/administration/parameters/main/components/plu
 import {Portal} from '#/main/core/administration/parameters/main/components/portal'
 import {Maintenance} from '#/main/core/administration/parameters/main/components/maintenance'
 
-const SettingsComponent = () =>
+const Settings = () =>
   <Routes
     redirect={[
       {from: '/', exact: true, to: '/received' }
@@ -45,15 +44,6 @@ const SettingsComponent = () =>
       }
     ]}
   />
-
-SettingsComponent.propTypes = {
-}
-
-const Settings = withRouter(connect(
-  () => ({ }),
-  () => ({ })
-)(SettingsComponent))
-
 
 export {
   Settings

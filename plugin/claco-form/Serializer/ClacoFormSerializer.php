@@ -74,8 +74,10 @@ class ClacoFormSerializer
     {
         $serialized = [
             'id' => $clacoForm->getUuid(),
-            'autoId' => $clacoForm->getId(),
             'template' => $clacoForm->getTemplate(),
+
+            // TODO : break into multiple sub object
+            // TODO : use camelCase
             'details' => [
                 'max_entries' => $clacoForm->getMaxEntries(),
                 'creation_enabled' => $clacoForm->isCreationEnabled(),
@@ -89,8 +91,8 @@ class ClacoFormSerializer
                 'random_start_date' => $clacoForm->getRandomStartDate(),
                 'random_end_date' => $clacoForm->getRandomEndDate(),
                 'search_enabled' => $clacoForm->getSearchEnabled(),
-                'search_column_enabled' => $clacoForm->isSearchColumnEnabled(),
-                'search_columns' => $clacoForm->getSearchColumns(),
+                //'search_column_enabled' => $clacoForm->isSearchColumnEnabled(),
+                //'search_columns' => $clacoForm->getSearchColumns(),
                 'display_metadata' => $clacoForm->getDisplayMetadata(),
                 'locked_fields_for' => $clacoForm->getLockedFieldsFor(),
                 'display_categories' => $clacoForm->getDisplayCategories(),
@@ -114,13 +116,47 @@ class ClacoFormSerializer
                 'display_keywords' => $clacoForm->getDisplayKeywords(),
                 'open_keywords' => $clacoForm->getOpenKeywords(),
                 'use_template' => $clacoForm->getUseTemplate(),
-                'default_display_mode' => $clacoForm->getDefaultDisplayMode(),
+                //'default_display_mode' => $clacoForm->getDefaultDisplayMode(),
                 'display_title' => $clacoForm->getDisplayTitle(),
                 'display_subtitle' => $clacoForm->getDisplaySubtitle(),
                 'display_content' => $clacoForm->getDisplayContent(),
                 'title_field_label' => $clacoForm->getTitleFieldLabel(),
-                'search_restricted' => $clacoForm->isSearchRestricted(),
-                'search_restricted_columns' => $clacoForm->getSearchRestrictedColumns(),
+                //'search_restricted' => $clacoForm->isSearchRestricted(),
+                //'search_restricted_columns' => $clacoForm->getSearchRestrictedColumns(),
+            ],
+
+            // entry list config
+            // todo : big c/c from Claroline\CoreBundle\API\Serializer\Widget\Type\ListWidgetSerializer
+            'list' => [
+                'actions' => $clacoForm->hasActions(),
+                'count' => $clacoForm->hasCount(),
+                // display feature
+                'display' => $clacoForm->getDisplay(),
+                'availableDisplays' => $clacoForm->getAvailableDisplays(),
+
+                // sort feature
+                'sorting' => $clacoForm->getSortBy(),
+                'availableSort' => $clacoForm->getAvailableSort(),
+
+                // filter feature
+                'searchMode' => $clacoForm->getSearchMode(),
+                'filters' => $clacoForm->getFilters(),
+                'availableFilters' => $clacoForm->getAvailableFilters(),
+
+                // pagination feature
+                'paginated' => $clacoForm->isPaginated(),
+                'pageSize' => $clacoForm->getPageSize(),
+                'availablePageSizes' => $clacoForm->getAvailablePageSizes(),
+
+                // table config
+                'columns' => $clacoForm->getDisplayedColumns(),
+                'availableColumns' => $clacoForm->getAvailableColumns(),
+
+                // grid config
+                'card' => [
+                    'display' => $clacoForm->getCard(),
+                    'mapping' => [], // TODO : grab custom ClacoForm config when standard list can handle it
+                ],
             ],
         ];
 
@@ -155,6 +191,7 @@ class ClacoFormSerializer
     {
         $this->sipe('details', 'setDetails', $data, $clacoForm);
 
+        // fields
         $oldFields = $clacoForm->getFields();
         $newFieldsUuids = [];
         $clacoForm->emptyFields();
@@ -183,6 +220,36 @@ class ClacoFormSerializer
             }
         }
         $this->om->endFlushSuite();
+
+        // entry list config
+        // todo : big c/c from Claroline\CoreBundle\API\Serializer\Widget\Type\ListWidgetSerializer
+        $this->sipe('list.count', 'setCount', $data, $clacoForm);
+        $this->sipe('list.actions', 'setActions', $data, $clacoForm);
+
+        // display feature
+        $this->sipe('list.display', 'setDisplay', $data, $clacoForm);
+        $this->sipe('list.availableDisplays', 'setAvailableDisplays', $data, $clacoForm);
+
+        // sort feature
+        $this->sipe('list.sorting', 'setSortBy', $data, $clacoForm);
+        $this->sipe('list.availableSort', 'setAvailableSort', $data, $clacoForm);
+
+        // filter feature
+        $this->sipe('list.searchMode', 'setSearchMode', $data, $clacoForm);
+        $this->sipe('list.filters', 'setFilters', $data, $clacoForm);
+        $this->sipe('list.availableFilters', 'setAvailableFilters', $data, $clacoForm);
+
+        // pagination feature
+        $this->sipe('list.paginated', 'setPaginated', $data, $clacoForm);
+        $this->sipe('list.pageSize', 'setPageSize', $data, $clacoForm);
+        $this->sipe('list.availablePageSizes', 'setAvailablePageSizes', $data, $clacoForm);
+
+        // table config
+        $this->sipe('list.columns', 'setDisplayedColumns', $data, $clacoForm);
+        $this->sipe('list.availableColumns', 'setAvailableColumns', $data, $clacoForm);
+
+        // grid config
+        $this->sipe('list.card.display', 'setCard', $data, $clacoForm);
 
         return $clacoForm;
     }

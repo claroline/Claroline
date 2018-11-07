@@ -57,6 +57,11 @@ const myEntriesCount = createSelector(
   (entries) => entries.myEntriesCount
 )
 
+const listConfiguration = createSelector(
+  [clacoForm],
+  (clacoForm) => clacoForm.list
+)
+
 const categories = createSelector(
   [clacoForm],
   (clacoForm) => clacoForm.categories
@@ -87,9 +92,14 @@ const usedCountries = createSelector(
   (entries) => entries.countries
 )
 
-const canAdministrate = createSelector(
+const canEdit = createSelector(
   resourceSelect.resourceNode,
   (resourceNode) => hasPermission('edit', resourceNode)
+)
+
+const canAdministrate = createSelector(
+  resourceSelect.resourceNode,
+  (resourceNode) => hasPermission('administrate', resourceNode)
 )
 
 const canSearchEntry = createSelector(
@@ -201,6 +211,13 @@ const isCategoryManager = createSelector(
   }
 )
 
+const canViewMetadata = createSelector(
+  [canEdit, params, isCategoryManager],
+  (canEdit, params, isCategoryManager) => canEdit
+  || 'all' === params.display_metadata
+  || ('manager' === params.display_metadata && isCategoryManager)
+)
+
 const canComment = createSelector(
   params,
   myRoles,
@@ -257,7 +274,9 @@ export const selectors = {
   isCurrentEntryManager,
   canManageCurrentEntry,
   canEditCurrentEntry,
+  canViewMetadata,
   canAddEntry,
+  canEdit,
   canOpenCurrentEntry,
   canAdministrate,
   isCategoryManager,
@@ -270,5 +289,6 @@ export const selectors = {
   entryUser,
   usedCountries,
   canGeneratePdf,
-  message
+  message,
+  listConfiguration
 }

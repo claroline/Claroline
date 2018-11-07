@@ -10,9 +10,10 @@ const DateSearch = props =>
     {props.isValid &&
       <span className="available-filter-value">{props.search}</span>
     }
-    &nbsp;
+
     <CalendarPicker
-      className="btn btn-sm btn-filter"
+      label={props.placeholder}
+      className="btn btn-sm btn-filter default"
       selected={props.isValid ? props.search : ''}
       onChange={props.updateSearch}
       minDate={props.minDate}

@@ -27,6 +27,10 @@ class Tool
 {
     use UuidTrait;
 
+    const ADMINISTRATION = 'administration';
+    const WORKSPACE = 'workspace';
+    const DESKTOP = 'desktop';
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")

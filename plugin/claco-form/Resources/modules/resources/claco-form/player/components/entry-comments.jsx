@@ -13,7 +13,7 @@ import {UserMessage} from '#/main/core/user/message/components/user-message'
 import {UserMessageForm} from '#/main/core/user/message/components/user-message-form'
 
 import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
-import {actions} from '#/plugin/claco-form/resources/claco-form/player/entry/store'
+import {actions} from '#/plugin/claco-form/resources/claco-form/player/store'
 
 const authenticatedUser = currentUser()
 

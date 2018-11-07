@@ -23,7 +23,7 @@ import {
   ENTRY_KEYWORD_ADD,
   ENTRY_KEYWORD_REMOVE,
   USED_COUNTRIES_LOAD
-} from '#/plugin/claco-form/resources/claco-form/player/entry/store/actions'
+} from '#/plugin/claco-form/resources/claco-form/player/store/actions'
 
 const reducer = combineReducers({
   list: makeListReducer(selectors.STORE_NAME+'.entries.list', {}, {

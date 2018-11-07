@@ -91,7 +91,7 @@ class CalendarPicker extends Component {
           >
             <span className={this.props.icon} aria-hidden="true" />
             <span className="sr-only">
-              {trans(this.state.open ? 'open_calendar':'close_calendar')}
+              {this.props.label || trans(this.state.open ? 'open_calendar':'close_calendar')}
             </span>
           </button>
         </TooltipElement>
@@ -124,6 +124,7 @@ class CalendarPicker extends Component {
 
 implementPropTypes(CalendarPicker, CalendarTypes, {
   // for button
+  label: T.string,
   className: T.string,
   icon: T.string,
   disabled: T.bool,

@@ -4,12 +4,15 @@ import {Tool} from '#/main/core/administration/parameters/technical/components/t
 export const App = () => ({
   component: Tool,
   store: reducer,
-  initialData: (initialData) => {
-    return {
-      parameters: {
-        data: initialData.parameters,
-        originalData: initialData.parameters
-      }
+  initialData: (initialData) => ({
+    tool: {
+      name: 'technical_settings',
+      context: initialData.context
+    },
+
+    parameters: {
+      data: initialData.parameters,
+      originalData: initialData.parameters
     }
-  }
+  })
 })

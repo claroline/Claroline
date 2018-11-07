@@ -11,8 +11,9 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
@@ -30,14 +31,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Field
 {
-    use UuidTrait;
-
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use Id;
+    use Uuid;
 
     /**
      * @ORM\ManyToOne(
@@ -45,43 +40,59 @@ class Field
      *     inversedBy="fields"
      * )
      * @ORM\JoinColumn(name="claco_form_id", nullable=false, onDelete="CASCADE")
+     *
+     * @var ClacoForm
      */
     protected $clacoForm;
 
     /**
      * @ORM\Column(name="field_name")
      * @Assert\NotBlank()
+     *
+     * @var string
      */
     protected $name;
 
     /**
      * @ORM\Column(name="field_type", type="integer")
+     *
+     * @var int
      */
     protected $type;
 
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacet")
      * @ORM\JoinColumn(name="field_facet_id", onDelete="CASCADE")
+     *
+     * @var FieldFacet
      */
     protected $fieldFacet;
 
     /**
      * @ORM\Column(name="required", type="boolean")
+     *
+     * @var bool
      */
     protected $required = false;
 
     /**
      * @ORM\Column(name="is_metadata", type="boolean")
+     *
+     * @var bool
      */
     protected $isMetadata = false;
 
     /**
      * @ORM\Column(name="locked", type="boolean", options={"default" = 0})
+     *
+     * @var bool
      */
     protected $locked = false;
 
     /**
      * @ORM\Column(name="locked_edition", type="boolean", options={"default" = 0})
+     *
+     * @var bool
      */
     protected $lockedEditionOnly = false;
 
@@ -90,43 +101,47 @@ class Field
      *     targetEntity="Claroline\ClacoFormBundle\Entity\FieldChoiceCategory",
      *     mappedBy="field"
      * )
+     *
+     * @var FieldChoiceCategory[]
      */
     protected $fieldChoiceCategories;
 
     /**
      * @ORM\Column(name="hidden", type="boolean", options={"default" = 0})
+     *
+     * @var bool
      */
     protected $hidden = false;
 
     /**
      * @ORM\Column(type="json_array", nullable=true)
+     *
+     * @var array
      */
-    protected $details;
+    protected $details = [];
 
     /**
      * @ORM\Column(name="field_order", type="integer", options={"default" = 1000})
+     *
+     * @var int
      */
     protected $order = 1000;
 
     /**
      * @ORM\Column(name="help", nullable=true)
+     *
+     * @var string
      */
     protected $help;
 
+    /**
+     * Field constructor.
+     */
     public function __construct()
     {
         $this->refreshUuid();
+
         $this->fieldChoiceCategories = new ArrayCollection();
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     public function getClacoForm()
@@ -186,6 +201,9 @@ class Field
         }
     }
 
+    /**
+     * @return FieldFacet
+     */
     public function getFieldFacet()
     {
         return $this->fieldFacet;

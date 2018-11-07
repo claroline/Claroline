@@ -1,8 +1,6 @@
 import {constants as intlConstants} from '#/main/app/intl/constants'
 
-const generateFieldKey = (id) => {
-  return  `%field_${id}%`
-}
+const generateFieldKey = (id) => `%field_${id}%`
 
 const getCountry = (value) => intlConstants.REGIONS[value] || null
 

@@ -4,14 +4,17 @@ import {Tool} from '#/main/core/administration/parameters/main/components/tool.j
 export const App = () => ({
   component: Tool,
   store: reducer,
-  initialData: (initialData) => {
-    return {
-      parameters: {
-        data: initialData.parameters,
-        originalData: initialData.parameters
-      },
-      availablesLocales: initialData.availablesLocales,
-      portalResources: initialData.portalResources
-    }
-  }
+  initialData: (initialData) => ({
+    tool: {
+      name: 'main_settings',
+      context: initialData.context
+    },
+
+    parameters: {
+      data: initialData.parameters,
+      originalData: initialData.parameters
+    },
+    availableLocales: initialData.availableLocales,
+    portalResources: initialData.portalResources
+  })
 })

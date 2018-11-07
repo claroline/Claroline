@@ -13,7 +13,12 @@ const LocaleGroup = props =>
 
 implementPropTypes(LocaleGroup, FormGroupWithFieldTypes, {
   // more precise value type
-  value: T.string
+  value: T.oneOfType([
+    T.string, // single locale
+    T.arrayOf(T.string) // multiple locales
+  ]),
+  available: T.arrayOf(T.string),
+  multiple: T.bool
 })
 
 export {

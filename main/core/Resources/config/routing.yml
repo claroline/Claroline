@@ -97,11 +97,6 @@ claro_admin:
     resource: "@ClarolineCoreBundle/Controller/AdministrationController.php"
     type: annotation
 
-claro_admin_portal_config:
-    resource: "@ClarolineCoreBundle/Controller/Administration/PortalConfigurationController.php"
-    prefix: admin/portal
-    type: annotation
-
 # todo : remove me
 claro_resource_old:
     resource: "@ClarolineCoreBundle/Controller/ResourceOldController.php"
@@ -118,19 +113,9 @@ claro_file:
     type: annotation
     prefix: file
 
-claro_admin_settings_main:
-    prefix: admin/settings
-    resource: "@ClarolineCoreBundle/Controller/Administration/SettingsController.php"
-    type: annotation
-
 claro_admin_oauth:
     resource: "@ClarolineCoreBundle/Controller/Administration/OauthController.php"
     prefix: admin/oauth
-    type: annotation
-
-claro_admin_i18n:
-    resource: "@ClarolineCoreBundle/Controller/Administration/InternationalizationController.php"
-    prefix: admin/i18n
     type: annotation
 
 claro_admin_plugin:

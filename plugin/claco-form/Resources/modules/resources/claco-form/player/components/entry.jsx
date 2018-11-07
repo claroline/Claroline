@@ -25,11 +25,11 @@ import {
   Entry as EntryType,
   EntryUser as EntryUserType
 } from '#/plugin/claco-form/resources/claco-form/prop-types'
-import {getCountry} from '#/plugin/claco-form/resources/claco-form/utils'
+import {getCountry, generateFieldKey} from '#/plugin/claco-form/resources/claco-form/utils'
 import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
-import {actions} from '#/plugin/claco-form/resources/claco-form/player/entry/store'
-import {EntryComments} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entry-comments'
-import {EntryMenu} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entry-menu'
+import {actions} from '#/plugin/claco-form/resources/claco-form/player/store'
+import {EntryComments} from '#/plugin/claco-form/resources/claco-form/player/components/entry-comments'
+import {EntryMenu} from '#/plugin/claco-form/resources/claco-form/player/components/entry-menu'
 
 const EntryActions = props =>
   <div className="entry-actions">
@@ -322,7 +322,7 @@ class EntryComponent extends Component {
           replacedField = ''
         }
       }
-      template = template.replace(`%field_${f.autoId}%`, replacedField)
+      template = template.replace(generateFieldKey(f.autoId), replacedField)
     })
     template += '<br/>'
 

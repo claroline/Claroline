@@ -27,5 +27,6 @@
     "workspace_management": "Gestion des espaces d'activités",
     "main_settings": "Paramètres généraux",
     "technical_settings": "Paramètres techniques",
-    "appearance_settings": "Apparence"
+    "appearance_settings": "Apparence",
+    "users_management": "Gestion des utilisateurs"
 }

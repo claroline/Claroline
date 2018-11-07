@@ -8,12 +8,13 @@ import {ResourcePage} from '#/main/core/resource/containers/page'
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 
 import {ClacoForm as ClacoFormType} from '#/plugin/claco-form/resources/claco-form/prop-types'
-import {ClacoFormMainMenu} from '#/plugin/claco-form/resources/claco-form/player/components/claco-form-main-menu'
+
+import {Overview} from '#/plugin/claco-form/resources/claco-form/overview/components/overview'
 import {Editor} from '#/plugin/claco-form/resources/claco-form/editor/components/editor'
 import {TemplateForm} from '#/plugin/claco-form/resources/claco-form/editor/template/components/template-form'
-import {Entries} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entries'
-import {EntryForm} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entry-form'
-import {Entry} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entry'
+import {Entries} from '#/plugin/claco-form/resources/claco-form/player/components/entries'
+import {EntryForm} from '#/plugin/claco-form/resources/claco-form/player/components/entry-form'
+import {Entry} from '#/plugin/claco-form/resources/claco-form/player/components/entry'
 
 function getHome(type) {
   switch (type) {
@@ -28,7 +29,7 @@ function getHome(type) {
 
     case 'menu':
     default:
-      return ClacoFormMainMenu
+      return Overview
   }
 }
 
@@ -39,7 +40,7 @@ const ClacoFormResource = props =>
       {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-home',
-        label: trans('main_menu', {}, 'clacoform'),
+        label: trans('show_overview'),
         target: '/menu'
       }, {
         type: LINK_BUTTON,
@@ -60,13 +61,15 @@ const ClacoFormResource = props =>
         icon: 'fa fa-fw fa-file-text-o',
         label: trans('template_management', {}, 'clacoform'),
         displayed: props.canEdit,
-        target: '/template'
+        target: '/template',
+        group: trans('management')
       }, {
         type: URL_BUTTON,
-        icon: 'fa fa-fw fa-upload',
+        icon: 'fa fa-fw fa-download',
         label: trans('export_all_entries', {}, 'clacoform'),
         displayed: props.canEdit,
-        target: ['claro_claco_form_entries_export', {clacoForm: props.clacoForm.id}]
+        target: ['claro_claco_form_entries_export', {clacoForm: props.clacoForm.id}],
+        group: trans('transfer')
       }
     ]}
   >
@@ -101,7 +104,7 @@ const ClacoFormResource = props =>
           }
         }, {
           path: '/menu',
-          component: ClacoFormMainMenu
+          component: Overview
         }, {
           path: '/edit',
           component: Editor,

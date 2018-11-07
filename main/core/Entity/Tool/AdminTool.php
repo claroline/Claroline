@@ -23,6 +23,8 @@ use Doctrine\ORM\Mapping as ORM;
  *      name="claro_admin_tools",
  *      uniqueConstraints={@ORM\UniqueConstraint(name="admin_tool_plugin_unique",columns={"name", "plugin_id"})}
  * )
+ *
+ * @todo merge with Tool entity
  */
 class AdminTool
 {

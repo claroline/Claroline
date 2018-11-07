@@ -23,9 +23,9 @@ const dataType = {
   render: (raw) => {
     if (raw) {
       if (Array.isArray(raw)) {
-        return raw.map(country => trans(`${country}`, {}, 'regions')).join(', ')
+        return raw.map(country => trans(`${country.toUpperCase()}`, {}, 'regions')).join(', ')
       } else {
-        return trans(`${raw}`, {}, 'regions')
+        return trans(`${raw.toUpperCase()}`, {}, 'regions')
       }
     }
 

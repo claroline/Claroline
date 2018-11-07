@@ -82,7 +82,6 @@ const Keyword = {
 const ClacoForm = {
   propTypes: {
     id: T.string.isRequired,
-    autoId: T.number.isRequired,
     details: T.shape({
       max_entries: T.number,
       creation_enabled: T.bool,

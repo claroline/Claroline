@@ -11,12 +11,14 @@ import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {ListData} from '#/main/app/content/list/containers/data'
+import {ListForm} from '#/main/app/content/list/parameters/containers/form'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
 import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
 import {ClacoForm as ClacoFormType} from '#/plugin/claco-form/resources/claco-form/prop-types'
 import {constants} from '#/plugin/claco-form/resources/claco-form/constants'
 import {actions} from '#/plugin/claco-form/resources/claco-form/editor/store'
+import entriesSource from '#/plugin/claco-form/data/sources/entries'
 import {MODAL_CATEGORY_FORM} from '#/plugin/claco-form/modals/category'
 import {MODAL_KEYWORD_FORM} from '#/plugin/claco-form/modals/keyword'
 
@@ -34,26 +36,6 @@ const generateDisplayList = (fields) => {
   })
 
   return displayList
-}
-
-const generateRestrictedList = (fields) => {
-  const restrictedList = {
-    type: trans('type'),
-    title: trans('title'),
-    status: trans('published'),
-    locked: trans('locked'),
-    createdAfter: trans('created_after'),
-    createdBefore: trans('created_before'),
-    user: trans('user'),
-    categories: trans('categories'),
-    keywords: trans('keywords', {}, 'clacoform')
-  }
-
-  fields.filter(f => !f.restrictions.hidden && ['file', 'date'].indexOf(f.type) === -1).map(field => {
-    restrictedList[field.id] = field.name
-  })
-
-  return restrictedList
 }
 
 const EditorComponent = props =>
@@ -238,50 +220,6 @@ const EditorComponent = props =>
                 label: trans('label_search_enabled', {}, 'clacoform'),
                 required: true
               }, {
-                name: 'details.search_column_enabled',
-                type: 'boolean',
-                label: trans('label_search_column_enabled', {}, 'clacoform'),
-                required: true
-              }, {
-                name: 'details.search_columns',
-                type: 'choice',
-                label: trans('label_search_columns', {}, 'clacoform'),
-                required: false,
-                options: {
-                  multiple: true,
-                  condensed: true,
-                  choices: generateDisplayList(props.clacoForm.fields)
-                }
-              }, {
-                name: 'details.search_restricted',
-                type: 'boolean',
-                label: trans('label_search_restricted', {}, 'clacoform'),
-                required: true,
-                linked: [
-                  {
-                    name: 'details.search_restricted_columns',
-                    type: 'choice',
-                    label: trans('label_search_restricted_columns', {}, 'clacoform'),
-                    required: false,
-                    displayed: props.clacoForm.details.search_restricted,
-                    options: {
-                      multiple: true,
-                      condensed: true,
-                      choices: generateRestrictedList(props.clacoForm.fields)
-                    }
-                  }
-                ]
-              }, {
-                name: 'details.default_display_mode',
-                type: 'choice',
-                label: trans('default_display_mode', {}, 'clacoform'),
-                required: true,
-                options: {
-                  noEmpty: true,
-                  condensed: true,
-                  choices: constants.DISPLAY_MODES_CHOICES
-                }
-              }, {
                 name: 'details.display_title',
                 type: 'choice',
                 label: trans('field_for_title', {}, 'clacoform'),
@@ -433,6 +371,14 @@ const EditorComponent = props =>
           }
         ]}
       >
+        <ListForm
+          level={3}
+          name={selectors.STORE_NAME+'.clacoFormForm'}
+          dataPart="list"
+          list={entriesSource(props.clacoForm, true, true, true, true).parameters}
+          parameters={props.clacoForm.list}
+        />
+
         <FormSections level={3}>
           <FormSection
             id="clacoform-categories"

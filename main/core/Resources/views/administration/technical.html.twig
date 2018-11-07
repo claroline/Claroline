@@ -1,0 +1,20 @@
+{% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ 'technical_settings' | trans({}, 'tools') | striptags | raw }}
+{% endblock %}
+
+{% block content %}
+    <div
+        class="page-container technical-settings-container"
+
+        data-context="{{ context | json_encode | raw | escape }}"
+        data-parameters="{{ parameters | json_encode | raw | escape }}"
+    ></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ hotAsset('dist/claroline-distribution-main-core-technical-settings.js') }}"></script>
+{% endblock %}

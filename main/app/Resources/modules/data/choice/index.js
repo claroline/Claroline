@@ -1,3 +1,5 @@
+import difference from 'lodash/difference'
+
 import {trans, tval} from '#/main/app/intl/translation'
 
 import {ChoiceGroup} from '#/main/core/layout/form/components/group/choice-group'
@@ -46,7 +48,13 @@ const dataType = {
   },
   validate: (value, options) => {
     const choices = options.choices || {}
-    if (!choices.hasOwnProperty(value)) {
+
+    if (options.multiple) {
+      const unknown = difference(value, Object.keys(choices))
+      if (0 !== unknown.length) {
+        return tval('This value is invalid.')
+      }
+    } else if (!choices.hasOwnProperty(value)) {
       return tval('This value is invalid.')
     }
   },

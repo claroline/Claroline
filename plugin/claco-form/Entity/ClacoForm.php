@@ -11,7 +11,8 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Parameters\ListParameters;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,17 +23,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ClacoForm extends AbstractResource
 {
-    use UuidTrait;
+    use Uuid;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    // entries list configuration
+    use ListParameters;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     *
+     * @var string
      */
     protected $template;
 
@@ -42,6 +41,8 @@ class ClacoForm extends AbstractResource
      *     mappedBy="clacoForm"
      * )
      * @ORM\OrderBy({"order" = "ASC"})
+     *
+     * @var Field[]
      */
     protected $fields;
 
@@ -50,6 +51,8 @@ class ClacoForm extends AbstractResource
      *     targetEntity="Claroline\ClacoFormBundle\Entity\Category",
      *     mappedBy="clacoForm"
      * )
+     *
+     * @var Category[]
      */
     protected $categories;
 
@@ -58,30 +61,28 @@ class ClacoForm extends AbstractResource
      *     targetEntity="Claroline\ClacoFormBundle\Entity\Keyword",
      *     mappedBy="clacoForm"
      * )
+     *
+     * @var Keyword[]
      */
     protected $keywords;
 
     /**
      * @ORM\Column(type="json_array", nullable=true)
+     *
+     * @var array
      */
     protected $details;
 
+    /**
+     * ClacoForm constructor.
+     */
     public function __construct()
     {
         $this->refreshUuid();
+
         $this->categories = new ArrayCollection();
         $this->fields = new ArrayCollection();
         $this->keywords = new ArrayCollection();
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    public function getId()
-    {
-        return $this->id;
     }
 
     public function getTemplate()
@@ -94,6 +95,11 @@ class ClacoForm extends AbstractResource
         $this->template = $template;
     }
 
+    /**
+     * Get fields.
+     *
+     * @return Field[]
+     */
     public function getFields()
     {
         return $this->fields->toArray();

@@ -26,8 +26,8 @@ import {
   Entry as EntryType,
   EntryUser as EntryUserType
 } from '#/plugin/claco-form/resources/claco-form/prop-types'
-import {actions} from '#/plugin/claco-form/resources/claco-form/player/entry/store'
-import {EntryFormData} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entry-form-data'
+import {actions} from '#/plugin/claco-form/resources/claco-form/player/store'
+import {EntryFormData} from '#/plugin/claco-form/resources/claco-form/player/components/entry-form-data'
 
 const authenticatedUser = currentUser()
 
