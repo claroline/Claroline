@@ -28,8 +28,9 @@ const isColumnsFilterable = (parameters) => parameters.columnsFilterable || !isE
 const hasLargeCard = (parameters) => {
   const availableDisplays = get(parameters, 'availableDisplays') || []
 
-  return !!availableDisplays
-    .find(displayMode => constants.DISPLAY_MODES[displayMode].options.useCard && 'lg' === constants.DISPLAY_MODES[displayMode].options.size)
+  return (parameters.display && constants.DISPLAY_MODES[parameters.display].options.useCard && 'lg' === constants.DISPLAY_MODES[parameters.display].options.size)
+    || !!availableDisplays
+      .find(displayMode => constants.DISPLAY_MODES[displayMode].options.useCard && 'lg' === constants.DISPLAY_MODES[displayMode].options.size)
 }
 
 const ListForm = props => {
