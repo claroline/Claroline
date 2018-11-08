@@ -47,7 +47,7 @@ function loadActions(resourceNodes, actions, nodesRefresher, absolute = false) {
   }, nodesRefresher)
 
   // get all actions declared
-  const asyncActions = getApps('actions')
+  const asyncActions = getApps('actions.resource')
 
   // only get implemented actions
   const implementedActions = actions.filter(action => undefined !== asyncActions[action.name])

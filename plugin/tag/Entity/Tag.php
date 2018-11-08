@@ -11,62 +11,121 @@
 
 namespace Claroline\TagBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\TagBundle\Repository\TagRepository")
- * @ORM\Table(name="claro_tagbundle_tag", uniqueConstraints={@ORM\UniqueConstraint(name="unique", columns={"tag_name", "user_id"})}))
+ * @ORM\Table(name="claro_tagbundle_tag", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="unique", columns={"tag_name", "user_id"})
+ * })
  */
 class Tag
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use Id;
+    use Uuid;
+
+    // meta
+    use Description;
 
     /**
+     * The name of the tag.
+     *
      * @ORM\Column(name="tag_name")
      * @Assert\NotBlank()
+     *
+     * @var string
      */
-    protected $name;
+    private $name;
 
     /**
+     * The display color of the tag.
+     *
+     * @ORM\Column(nullable=true)
+     *
+     * @var string
+     */
+    private $color;
+
+    /**
+     * The user who created the tag.
+     *
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User"
      * )
      * @ORM\JoinColumn(name="user_id", nullable=true, onDelete="CASCADE")
+     *
+     * @var User
      */
-    protected $user;
+    private $user;
 
-    public function getId()
+    /**
+     * Tag constructor.
+     */
+    public function __construct()
     {
-        return $this->id;
+        $this->refreshUuid();
     }
 
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
+    /**
+     * Get name.
+     *
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * Set name.
+     *
+     * @param string $name
+     */
     public function setName($name)
     {
         $this->name = $name;
     }
 
+    /**
+     * Get color.
+     *
+     * @return string
+     */
+    public function getColor()
+    {
+        return $this->color;
+    }
+
+    /**
+     * Set color.
+     *
+     * @param string $color
+     */
+    public function setColor($color)
+    {
+        $this->color = $color;
+    }
+
+    /**
+     * Get user.
+     *
+     * @return User
+     */
     public function getUser()
     {
         return $this->user;
     }
 
+    /**
+     * Set user.
+     *
+     * @param User|null $user
+     */
     public function setUser(User $user = null)
     {
         $this->user = $user;

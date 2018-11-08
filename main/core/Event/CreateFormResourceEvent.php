@@ -17,6 +17,8 @@ use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Event dispatched by the resource controller when a resource creation form is asked.
+ *
+ * @deprecated
  */
 class CreateFormResourceEvent extends Event implements DataConveyorEventInterface, MandatoryEventInterface
 {

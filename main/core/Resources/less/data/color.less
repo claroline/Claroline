@@ -1,0 +1,26 @@
+
+.color-cell {
+    padding: 0 !important;
+
+    > span {
+        display: block;
+        width: 100%;
+    }
+}
+
+// sizing variant
+.table .color-cell {
+    width: floor(@table-cell-padding*2 + @line-height-base*@font-size-base);
+
+    > span {
+        height: floor(@table-cell-padding*2 + @line-height-base*@font-size-base);
+    }
+}
+
+.table-condensed .color-cell {
+    width: floor(@table-condensed-cell-padding*2 + @line-height-base*@font-size-base);
+
+    > span {
+        height: floor(@table-condensed-cell-padding*2 + @line-height-base*@font-size-base);
+    }
+}

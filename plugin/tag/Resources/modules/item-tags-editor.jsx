@@ -47,7 +47,7 @@ const TagsTypeAhead = props => {
     <ul className="tags-dropdown-menu dropdown-menu">
       {props.isFetching &&
         <li className="tags-fetching text-center">
-          <span className="fa fa-fw fa-circle-o-notch fa-spin"></span>
+          <span className="fa fa-fw fa-circle-o-notch fa-spin" />
         </li>
       }
       {props.tags.map((tag, idx) =>

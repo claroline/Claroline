@@ -19,6 +19,18 @@ use Doctrine\ORM\EntityRepository;
 
 class TaggedObjectRepository extends EntityRepository
 {
+    public function countByTag(Tag $tag)
+    {
+        return $this->createQueryBuilder('t')
+            ->select('COUNT(t)')
+            ->where('t.tag = :tag')
+            ->setParameters([
+                'tag' => $tag,
+            ])
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     public function findAllTaggedObjects(
         User $user = null,
         $withPlatform = false,
@@ -215,103 +227,6 @@ class TaggedObjectRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('class', $class);
         $query->setParameter('ids', $ids);
-
-        return $query->getResult();
-    }
-
-    public function findTaggedResourcesByWorkspace(Workspace $workspace, $user = 'anon.', array $roleNames = ['ROLE_ANONYMOUS'])
-    {
-        $isManager = false;
-
-        foreach ($roleNames as $roleName) {
-            if ($roleName === 'ROLE_WS_MANAGER_'.$workspace->getGuid()) {
-                $isManager = true;
-                break;
-            }
-        }
-        $rightsTest = $isManager ?
-            '' :
-            'AND rrr.name IN (:roleNames)
-            AND BIT_AND(rr.mask, 1) = 1';
-
-        $dql = "
-            SELECT to
-            FROM Claroline\TagBundle\Entity\TaggedObject to
-            WHERE to.objectClass = :objectClass
-            AND to.objectId IN (
-                SELECT DISTINCT r.id
-                FROM Claroline\CoreBundle\Entity\Resource\ResourceNode r
-                JOIN r.creator c
-                LEFT JOIN r.workspace w
-                LEFT JOIN w.roles wr
-                LEFT JOIN r.rights rr
-                LEFT JOIN rr.role rrr
-                WHERE w = :workspace
-                AND r.active = :active
-                AND (
-                    c.id = :userId
-                    OR (
-                        r.published = true
-                        AND (r.accessibleFrom IS NULL OR r.accessibleFrom <= :currentdate)
-                        AND (r.accessibleUntil IS NULL OR r.accessibleUntil >= :currentdate)
-                    )
-                )
-                $rightsTest
-            )
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('objectClass', 'Claroline\CoreBundle\Entity\Resource\ResourceNode');
-        $query->setParameter('workspace', $workspace);
-        $query->setParameter('active', true);
-        $userId = ('anon.' === $user) ? -1 : $user->getId();
-        $query->setParameter('userId', $userId);
-        $currentDate = new \DateTime();
-
-        if (!$isManager) {
-            $query->setParameter('roleNames', $roleNames);
-        }
-        $query->setParameter('currentdate', $currentDate->format('Y-m-d H:i:s'));
-
-        return $query->getResult();
-    }
-
-    public function findTaggedResourcesByRoles($user = 'anon.', array $roleNames = ['ROLE_ANONYMOUS'])
-    {
-        $dql = "
-            SELECT to
-            FROM Claroline\TagBundle\Entity\TaggedObject to
-            WHERE to.objectClass = :objectClass
-            AND to.objectId IN (
-                SELECT DISTINCT r.id
-                FROM Claroline\CoreBundle\Entity\Resource\ResourceNode r
-                JOIN r.creator c
-                LEFT JOIN r.workspace w
-                LEFT JOIN w.roles wr
-                LEFT JOIN r.rights rr
-                LEFT JOIN rr.role rrr
-                WHERE r.active = :active
-                AND (
-                    c.id = :userId
-                    OR (
-                        r.published = true
-                        AND (r.accessibleFrom IS NULL OR r.accessibleFrom <= :currentdate)
-                        AND (r.accessibleUntil IS NULL OR r.accessibleUntil >= :currentdate)
-                    )
-                )
-                AND (
-                    (CONCAT('ROLE_WS_MANAGER_', w.guid) IN (:roleNames))
-                    OR (rrr.name IN (:roleNames) AND BIT_AND(rr.mask, 1) = 1)
-                )
-            )
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('objectClass', 'Claroline\CoreBundle\Entity\Resource\ResourceNode');
-        $query->setParameter('active', true);
-        $userId = ('anon.' === $user) ? -1 : $user->getId();
-        $query->setParameter('userId', $userId);
-        $query->setParameter('roleNames', $roleNames);
-        $currentDate = new \DateTime();
-        $query->setParameter('currentdate', $currentDate->format('Y-m-d H:i:s'));
 
         return $query->getResult();
     }

@@ -4,7 +4,9 @@ import {registry} from '#/main/app/plugins/registry'
 
 registry.add('lesson', {
   actions: {
-    'chapter' : () => { return import(/* webpackChunkName: "plugin-lesson-action-chapter" */ '#/plugin/lesson/resources/lesson/actions/chapter') }
+    resource: {
+      'chapter' : () => { return import(/* webpackChunkName: "plugin-lesson-action-chapter" */ '#/plugin/lesson/resources/lesson/actions/chapter') }
+    }
   },
 
   resources: {
