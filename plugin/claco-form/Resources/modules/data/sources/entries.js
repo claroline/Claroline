@@ -217,11 +217,24 @@ export default (clacoForm, canViewMetadata = false, canEdit = false, canAdminist
         // Fields defined in ClacoForm
         fields
           .filter(f => !f.restrictions.hidden && (!f.isMetadata || canViewMetadata))
-          .map(field => ({
-            name: field.id,
-            label: field.name,
-            type: field.type
-          }))
+          .map(field => {
+            const options = field.options ? Object.assign({}, field.options) : {}
+
+            // TODO : must use same format to avoid ugly remap
+            // change choices format to make it acceptable by ui components
+            if ('choice' === field.type) {
+              options.choices = options.choices.reduce((acc, choice) => Object.assign(acc, {
+                [choice.value]: choice.label
+              }), {})
+            }
+
+            return {
+              name: field.id,
+              label: field.name,
+              type: field.type,
+              options: options
+            }
+          })
       ),
       card: (props) => {
         const EntryCard = React.createElement(DataCard, Object.assign({}, props, {
