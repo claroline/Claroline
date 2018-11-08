@@ -6,7 +6,6 @@ import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 
 import {ListData} from '#/main/app/content/list/containers/data'
-import {constants as listConst} from '#/main/app/content/list/constants'
 import {createListDefinition} from '#/main/app/content/list/utils'
 import {ListParameters as ListParametersTypes} from '#/main/app/content/list/parameters/prop-types'
 
@@ -55,7 +54,7 @@ const ListSource = props => {
       definition={computedDefinition}
       card={computedCard}
       display={{
-        current: props.parameters.display || listConst.DISPLAY_TILES_SM,
+        current: props.parameters.display,
         available: props.parameters.availableDisplays
       }}
       searchMode={get(props.parameters, 'searchMode') || undefined}

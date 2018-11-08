@@ -26,12 +26,17 @@ const ResourceExplorer = props => {
     }
   }
 
+  let explorerConfiguration = props.currentConfiguration
+  if (isEmpty(explorerConfiguration)) {
+    explorerConfiguration = DirectoryTypes.defaultProps
+  }
+
   return (
     <SummarizedContent
       className="resources-explorer"
       summary={{
-        displayed: isEmpty(props.currentConfiguration) || props.currentConfiguration.display.showSummary,
-        opened: !isEmpty(props.currentConfiguration) && props.currentConfiguration.display.openSummary,
+        displayed: explorerConfiguration.display.showSummary,
+        opened: explorerConfiguration.display.openSummary,
         title: trans('directories'),
         links: props.directories.map(summaryLink)
       }}
@@ -51,7 +56,7 @@ const ResourceExplorer = props => {
                   primaryAction={props.primaryAction}
                   actions={props.actions}
                   currentId={props.currentId}
-                  listConfiguration={!isEmpty(props.currentConfiguration) ? props.currentConfiguration.list : undefined}
+                  listConfiguration={explorerConfiguration.list}
                 />
 
               return Current

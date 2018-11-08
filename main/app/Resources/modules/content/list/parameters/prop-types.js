@@ -34,9 +34,19 @@ const ListParameters = {
 
     // table config
     columns: T.arrayOf(T.string),
-    availableColumns: T.arrayOf(T.string)
+    availableColumns: T.arrayOf(T.string),
 
-    // grid config (todo)
+    // grid config
+    card: T.shape({
+      display: T.arrayOf(T.oneOf([
+        'icon',
+        'flags',
+        'subtitle',
+        'description',
+        'footer'
+      ])),
+      mapping: T.array
+    })
   },
   defaultProps: {
     // display feature
@@ -55,6 +65,7 @@ const ListParameters = {
 
     // filter feature
     searchMode: searchConstants.DEFAULT_SEARCH_TYPE,
+    filters: [],
     availableFilters: [],
 
     // pagination feature
@@ -63,7 +74,18 @@ const ListParameters = {
     availablePageSizes: listConstants.AVAILABLE_PAGE_SIZES,
 
     // table config
-    availableColumns: []
+    availableColumns: [],
+
+    // grid config
+    card: {
+      display: [
+        'icon',
+        'flags',
+        'subtitle',
+        'description',
+        'footer'
+      ]
+    }
   }
 }
 
