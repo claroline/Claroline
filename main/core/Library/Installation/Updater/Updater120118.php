@@ -16,6 +16,7 @@ class Updater120118 extends Updater
     {
         $this->logger = $logger;
         $this->conn = $container->get('doctrine.dbal.default_connection');
+        $this->container = $container;
     }
 
     public function postUpdate()
