@@ -67,6 +67,8 @@ class WorkspaceCrud
         $workspace = $this->manager->createWorkspace($event->getObject());
         $options = $event->getOptions();
         $user = $this->tokenStorage->getToken()->getUser();
+        $model = $workspace->getWorkspaceModel() ? $workspace->getWorkspaceModel() : $this->manager->getDefaultModel();
+        $workspace->setWorkspaceModel($model);
 
         if ($user instanceof User) {
             $workspace->setCreator($user);
@@ -79,8 +81,6 @@ class WorkspaceCrud
             return $workspace;
         }
 
-        $model = $workspace->getWorkspaceModel() ? $workspace->getWorkspaceModel() : $this->manager->getDefaultModel();
-        $workspace->setWorkspaceModel($model);
         $workspace = $this->manager->copy($model, $workspace, false);
 
         $this->om->endFlushSuite();

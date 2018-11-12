@@ -116,12 +116,6 @@ class WorkspaceController extends AbstractCrudController
     {
         $data = $this->decodeRequest($request);
 
-        if (isset($data['model'])) {
-            $modelId = $data['model'];
-        } else {
-            $modelId = 0;
-        }
-
         /** @var Workspace $workspace */
         $workspace = $this->crud->create(
             $class,
