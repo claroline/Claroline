@@ -116,7 +116,7 @@ class Updater120118 extends Updater
                     'account_duration' => $parameters['account_duration'],
                     'default_root_anon_id' => $parameters['default_root_anon_id'],
                     'anonymous_public_profile' => $parameters['anonymous_public_profile'],
-                    'disabled_admin_tools' => $parameters['security']['disabled_admin_tools'],
+                    'disabled_admin_tools' => ['technical_settings'],
                 ],
                 'tos' => [
                     'enabled' => $parameters['terms_of_service'],
