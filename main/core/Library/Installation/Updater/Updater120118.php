@@ -203,8 +203,8 @@ class Updater120118 extends Updater
                     'roles_edition' => $parameters['profile_roles_edition'],
                 ],
                 'maintenance' => [
-                    'enable' => $parameters['maintenance']['enable'],
-                    'message' => $parameters['maintenance']['message'],
+                    'enable' => false,
+                    'message' => 'change me',
                 ],
             ];
 
