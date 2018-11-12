@@ -1703,5 +1703,6 @@
     "home_redirection_type": "Home redirection type",
     "auto_logging_after_registration": "Auto logging after registration",
     "logo_redirect_home": "Rediriger vers l'accueil en cliquant sur le logo",
-    "header_locale": "Changer la langue dans le header"
+    "header_locale": "Changer la langue dans le header",
+    "search_and_filters": "Recherche & filtres"
 }

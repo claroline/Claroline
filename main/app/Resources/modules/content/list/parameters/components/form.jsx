@@ -150,8 +150,8 @@ const ListForm = props => {
           ]
         }, {
           id: 'list-filters',
-          icon: 'fa fa-fw fa-filter',
-          title: trans('filters'),
+          icon: 'fa fa-fw fa-search',
+          title: trans('search_and_filters'),
           fields: [
             {
               name: 'filters',
