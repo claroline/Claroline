@@ -21,8 +21,8 @@ const ListSource = props => {
     const columns = get(props.parameters, 'columns') || []
 
     computedDefinition = createListDefinition(definition).map(column => Object.assign({}, column, {
-      filterable : !!column.filterable  && -1 !== availableFilters.indexOf(column.name),
-      sortable   : !!column.sortable    && -1 !== availableSort.indexOf(column.name),
+      filterable : !!column.filterable  && -1 !== availableFilters.indexOf(column.alias || column.name),
+      sortable   : !!column.sortable    && -1 !== availableSort.indexOf(column.alias || column.name),
       displayable: !!column.displayable && -1 !== availableColumns.indexOf(column.name),
       displayed  : -1 !== columns.indexOf(column.name)
     }))

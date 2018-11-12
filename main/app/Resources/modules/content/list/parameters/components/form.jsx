@@ -58,12 +58,12 @@ const ListForm = props => {
 
   const filtersList = getFilterableProps(definition)
     .reduce(
-      (filterChoices, current) => Object.assign(filterChoices, {[current.name]: current.label}), {}
+      (filterChoices, current) => Object.assign(filterChoices, {[current.alias || current.name]: current.label}), {}
     )
 
   const sortList = getSortableProps(definition)
     .reduce(
-      (sortChoices, current) => Object.assign(sortChoices, {[current.name]: current.label}), {}
+      (sortChoices, current) => Object.assign(sortChoices, {[current.alias || current.name]: current.label}), {}
     )
 
   const columnsList = getDisplayableProps(definition)
@@ -238,10 +238,9 @@ const ListForm = props => {
                 }
               },
               options: {
-                choices: getSortableProps(definition)
-                  .reduce(
-                    (sortChoices, current) => Object.assign(sortChoices, {[current.name]: current.label}), {}
-                  ),
+                choices: getSortableProps(definition).reduce((sortChoices, current) => Object.assign(sortChoices, {
+                  [current.alias || current.name]: current.label}
+                ), {}),
                 multiple: false,
                 condensed: true
               },

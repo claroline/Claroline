@@ -10,6 +10,7 @@ import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Select} from '#/main/core/layout/form/components/field/select'
 
+import {getPropDefinition} from '#/main/app/content/list/utils'
 import {SearchProp} from '#/main/app/content/search/components/prop'
 
 const FilterInput = props => {
@@ -17,7 +18,7 @@ const FilterInput = props => {
 
   let searchProp = {}
   if (filter.property) {
-    searchProp = props.properties.find(prop => prop.name === filter.property) || {}
+    searchProp = getPropDefinition(filter.property, props.properties) || {}
   }
 
   return (
@@ -27,7 +28,9 @@ const FilterInput = props => {
           id={`${props.id}-property`}
           value={filter.property}
           onChange={(column) => props.onChange(Object.assign({}, filter, {property: column}))}
-          choices={props.properties.reduce((propList, current) => Object.assign(propList, {[current.name]: current.label}), {})}
+          choices={props.properties.reduce((propList, current) => Object.assign(propList, {
+            [current.alias || current.name]: current.label
+          }), {})}
           size={props.size}
         />
       </div>
@@ -66,8 +69,9 @@ implementPropTypes(FilterInput, FormFieldTypes, {
   }),
 
   // custom props
-  properties: T.arrayOf(T.shape({
+  properties: T.arrayOf(T.shape({ // TODO : use DataProp prop-types
     name: T.string.isRequired,
+    alias: T.string,
     label: T.string.isRequired,
     type: T.string.isRequired
   }))

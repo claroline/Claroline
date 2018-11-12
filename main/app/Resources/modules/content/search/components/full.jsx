@@ -4,6 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
+
 import {SearchProp} from '#/main/app/content/search/components/prop'
 
 class SearchFull extends Component {
@@ -75,9 +76,9 @@ class SearchFull extends Component {
             type={availableFilter.type}
             placeholder={availableFilter.label}
             options={availableFilter.options}
-            disabled={this.props.disabled || this.isFilterLocked(availableFilter.name)}
-            currentSearch={this.getFilterValue(availableFilter.name)}
-            updateSearch={(search) => this.updateFilter(availableFilter.name, search)}
+            disabled={this.props.disabled || this.isFilterLocked(availableFilter.alias || availableFilter.name)}
+            currentSearch={this.getFilterValue(availableFilter.alias || availableFilter.name)}
+            updateSearch={(search) => this.updateFilter(availableFilter.alias ? availableFilter.alias : availableFilter.name, search)}
           />
         )}
 
@@ -102,7 +103,8 @@ class SearchFull extends Component {
 
 SearchFull.propTypes = {
   disabled: T.bool,
-  available: T.arrayOf(T.shape({
+  available: T.arrayOf(T.shape({ // TODO : use DataProp prop-types
+    alias: T.string,
     name: T.string.isRequired,
     type: T.string.isRequired,
     options: T.object
