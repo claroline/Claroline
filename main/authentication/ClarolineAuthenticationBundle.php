@@ -42,11 +42,6 @@ class ClarolineAuthenticationBundle extends DistributionPluginBundle implements 
         return $config->addRoutingResource(__DIR__.'/Resources/config/routing.yml');
     }
 
-    public function getRequiredFixturesDirectory($environment)
-    {
-        return 'DataFixtures';
-    }
-
     public function suggestConfigurationFor(Bundle $bundle, $environment)
     {
         $config = new ConfigurationBuilder();

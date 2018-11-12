@@ -13,8 +13,6 @@ namespace Claroline\CoreBundle\Library\Configuration;
 
 use Claroline\AppBundle\API\Utils\ArrayUtils;
 use JMS\DiExtraBundle\Annotation as DI;
-use RuntimeException;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * @DI\Service("claroline.config.platform_config_handler")
@@ -31,20 +29,18 @@ class PlatformConfigurationHandler
      * PlatformConfigurationHandler constructor.
      *
      * @DI\InjectParams({
-     *     "configFile"       = @DI\Inject("%claroline.param.platform_options_file%"),
-     *     "lockedConfigFile" = @DI\Inject("%claroline.param.locked_platform_options_file%")
+     *     "configFile" = @DI\Inject("%claroline.param.platform_options%")
      * })
      *
      * @param string $configFile
      * @param string $lockedConfigFile
      */
-    public function __construct($configFile, $lockedConfigFile)
+    public function __construct($configFile)
     {
         $this->parameters = [];
         $this->defaultConfigs = [];
         $this->configFile = $configFile;
         $this->parameters = $this->mergeParameters();
-        $this->lockedParameters = $this->generateLockedParameters($lockedConfigFile);
         $this->arrayUtils = new ArrayUtils();
     }
 
@@ -56,12 +52,21 @@ class PlatformConfigurationHandler
     /**
      * @param string $parameter
      *
+     * @deprecated (use ParameterSerializer instead)
+     *
      * @return mixed
      */
     public function getParameter($parameter)
     {
         if ($this->hasParameter($parameter)) {
             return $this->arrayUtils->get($this->parameters, $parameter);
+        }
+
+        $mapping = new LegacyParametersMapping();
+        $legacyMapping = $mapping->getMapping();
+
+        if (array_key_exists($parameter, $legacyMapping)) {
+            return $this->arrayUtils->get($this->parameters, $legacyMapping[$parameter]);
         }
 
         return null;
@@ -79,40 +84,12 @@ class PlatformConfigurationHandler
 
     public function setParameter($parameter, $value)
     {
-        $this->arrayUtils->set($this->parameters, $parameter, $value);
-        $this->saveParameters();
-    }
-
-    public function removeParameter($parameter)
-    {
-        unset($this->parameters[$parameter]);
-        $this->saveParameters();
-    }
-
-    /**
-     * @param PlatformConfiguration|array $newParameters
-     */
-    public function setParameters($newParameters)
-    {
-        if (is_array($newParameters)) {
-            $parameters = $newParameters;
-        } else {
-            $parameters = $newParameters->getParameters();
-        }
-
-        $toMerge = [];
-        foreach ($parameters as $key => $value) {
-            if (!isset($this->lockedParameters[$key])) {
-                $toMerge[$key] = $value;
-            }
-        }
-        $this->parameters = array_merge($this->parameters, $toMerge);
-        $this->saveParameters();
+        throw new \Exception('use serializer instead');
     }
 
     public function isRedirectOption($option)
     {
-        return $this->parameters['redirect_after_login_option'] === $option;
+        return $this->getParameter('authentication.redirect_after_login_option') === $option;
     }
 
     public function addDefaultParameters(ParameterProviderInterface $config)
@@ -135,16 +112,6 @@ class PlatformConfigurationHandler
         $this->parameters = array_merge($newDefault, $this->parameters);
     }
 
-    public function getPlatformConfig()
-    {
-        return new PlatformConfiguration($this->parameters);
-    }
-
-    public function setPlatformConfig(PlatformConfiguration $config)
-    {
-        $this->setParameters($config->getParameters());
-    }
-
     protected function mergeParameters()
     {
         if (!file_exists($this->configFile) && false === @touch($this->configFile)) {
@@ -153,60 +120,17 @@ class PlatformConfigurationHandler
             );
         }
 
-        $configParameters = Yaml::parse(file_get_contents($this->configFile)) ?: [];
+        $parameters = json_decode(file_get_contents($this->configFile), true);
 
-        foreach ($configParameters as $parameter => $value) {
-            $this->parameters[$parameter] = $value;
+        if ($parameters) {
+            return array_merge($this->parameters, $parameters);
         }
 
         return $this->parameters;
-    }
-
-    protected function saveParameters()
-    {
-        if (!is_writable($this->configFile)) {
-            $exception = new UnwritableException();
-            $exception->setPath($this->configFile);
-
-            throw $exception;
-        }
-
-        ksort($this->parameters);
-        $parameters = Yaml::dump($this->parameters);
-        file_put_contents($this->configFile, $parameters);
-    }
-
-    protected function checkParameter($parameter)
-    {
-        if (!$this->hasParameter($parameter)) {
-            throw new RuntimeException(
-                "'{$parameter}' is not a parameter of the current platform configuration."
-            );
-        }
-    }
-
-    public function getLockedParameters()
-    {
-        return $this->lockedParameters;
     }
 
     public function getDefaultParameters()
     {
         return $this->parameters;
-    }
-
-    protected function generateLockedParameters($lockedConfigFile)
-    {
-        $lockedParameters = [];
-
-        if (file_exists($lockedConfigFile)) {
-            $lockedConfigParameters = Yaml::parse(file_get_contents($lockedConfigFile)) ?: [];
-
-            foreach ($lockedConfigParameters as $parameter => $value) {
-                $lockedParameters[$parameter] = $value;
-            }
-        }
-
-        return $lockedParameters;
     }
 }

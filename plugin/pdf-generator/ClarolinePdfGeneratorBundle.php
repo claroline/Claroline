@@ -22,11 +22,6 @@ class ClarolinePdfGeneratorBundle extends DistributionPluginBundle implements Co
         $container->addCompilerPass(new DynamicConfigPass());
     }
 
-    public function getRequiredFixturesDirectory($env)
-    {
-        return 'DataFixtures';
-    }
-
     public function suggestConfigurationFor(Bundle $bundle, $environment)
     {
         $config = new ConfigurationBuilder();

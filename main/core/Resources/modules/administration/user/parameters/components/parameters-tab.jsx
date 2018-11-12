@@ -20,7 +20,7 @@ const Parameters = (props) => {
     <FormData
       level={3}
       name="parameters"
-      target={['apiv2_user_parameters_update']}
+      target={['apiv2_parameters_update']}
       buttons={true}
       sections={[
         {
