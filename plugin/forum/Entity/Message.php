@@ -93,7 +93,7 @@ class Message extends AbstractMessage
 
     public function getModerated()
     {
-        return $this->moderation;
+        return $this->moderation ? $this->moderation : Forum::VALIDATE_NONE;
     }
 
     public function setParent(self $parent = null)

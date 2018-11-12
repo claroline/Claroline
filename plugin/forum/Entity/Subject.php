@@ -281,6 +281,6 @@ class Subject
 
     public function getModerated()
     {
-        return $this->moderation;
+        return $this->moderation ? $this->moderation : Forum::VALIDATE_NONE;
     }
 }

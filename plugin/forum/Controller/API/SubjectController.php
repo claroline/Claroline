@@ -158,7 +158,7 @@ class SubjectController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("forum/{forum}/subjects/list/flagged", name="apiv2_forum_subject_flagged_list")
+     * @EXT\Route("/forum/{forum}/subjects/list/flagged", name="apiv2_forum_subject_flagged_list")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
      *
@@ -179,7 +179,7 @@ class SubjectController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("forum/{forum}/subjects/list/blocked", name="apiv2_forum_subject_blocked_list")
+     * @EXT\Route("/forum/{forum}/subjects/list/blocked", name="apiv2_forum_subject_blocked_list")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
      *
