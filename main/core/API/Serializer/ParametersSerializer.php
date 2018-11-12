@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\ArrayUtils;
+use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -87,7 +88,7 @@ class ParametersSerializer
     public function serializeTos()
     {
         $result = $this->finder->search(
-            'Claroline\CoreBundle\Entity\Content',
+            Content::class,
             ['filters' => ['type' => 'termsOfService']],
             ['property' => 'content']
         )['data'];
@@ -105,7 +106,7 @@ class ParametersSerializer
     public function deserializeTos(array $data)
     {
         if (isset($data['tos'])) {
-            $contentTos = $this->finder->fetch('Claroline\CoreBundle\Entity\Content', ['type' => 'termsOfService'], [], 0, 10);
+            $contentTos = $this->finder->fetch(Content::class, ['type' => 'termsOfService'], [], 0, 10);
 
             if (0 === count($contentTos)) {
                 $contentTos = new Content();
@@ -114,7 +115,7 @@ class ParametersSerializer
                 $contentTos = $contentTos[0];
             }
 
-            $serializer = $this->serializer->get('Claroline\CoreBundle\Entity\Content');
+            $serializer = $this->serializer->get(Content::class);
             $serializer->deserialize($data['tos']['text'], $contentTos, ['property' => 'content']);
         }
     }
