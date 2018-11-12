@@ -3,8 +3,10 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
+import {selectors} from '#/main/core/administration/parameters/technical/store/selectors'
+import {PropTypes as T} from 'prop-types'
 
-const SecurityComponent = () =>
+const SecurityComponent = props =>
   <FormData
     name="parameters"
     target={['apiv2_parameters_update']}
@@ -37,6 +39,18 @@ const SecurityComponent = () =>
             type: 'string',
             label: trans('default_admin'),
             required: false
+          },
+          {
+            name: 'security.disabled_admin_tools',
+            type: 'choice',
+            label: trans('disabled_admin_tools'),
+            required: false,
+            options: {
+              choices: props.toolChoices,
+              multiple: true,
+              condensed: false,
+              inline: false
+            }
           }
         ]
       }
@@ -45,10 +59,13 @@ const SecurityComponent = () =>
 
 
 SecurityComponent.propTypes = {
+  toolChoices: T.object.isRequired
 }
 
 const Security = connect(
-  null,
+  (state) => ({
+    toolChoices: selectors.toolChoices(state)
+  }),
   () => ({ })
 )(SecurityComponent)
 

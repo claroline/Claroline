@@ -1735,7 +1735,8 @@
     "secondary_name": "Nom secondaire",
     "home_redirection_type": "Type de redirection de l'accueil",
     "auto_logging_after_registration": "Connexion automatique après l'inscription",
-    "logo_redirect_home": "Home redirection when clicking on logo",
-    "header_locale": "Change language in header",
-    "search_and_filters": "Search & filters"
+    "logo_redirect_home": "Rediriger à l'accueil en cliquant sur le logo",
+    "header_locale": "Changer la langue dans le header",
+    "search_and_filters": "Recherche & filters",
+    "disabled_admin_tools": "Outils admins désactivés"
 }

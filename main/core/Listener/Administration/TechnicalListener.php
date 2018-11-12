@@ -2,7 +2,9 @@
 
 namespace Claroline\CoreBundle\Listener\Administration;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -25,7 +27,8 @@ class TechnicalListener
      *
      * @DI\InjectParams({
      *     "templating" = @DI\Inject("templating"),
-     *     "serializer" = @DI\Inject("claroline.serializer.parameters")
+     *     "serializer" = @DI\Inject("claroline.serializer.parameters"),
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param TwigEngine           $templating
@@ -33,10 +36,12 @@ class TechnicalListener
      */
     public function __construct(
         TwigEngine $templating,
-        ParametersSerializer $serializer
+        ParametersSerializer $serializer,
+        ObjectManager $om
     ) {
         $this->templating = $templating;
         $this->serializer = $serializer;
+        $this->om = $om;
     }
 
     /**
@@ -54,6 +59,9 @@ class TechnicalListener
                     'type' => Tool::ADMINISTRATION,
                 ],
                 'parameters' => $this->serializer->serialize(),
+                'adminTools' => array_map(function (AdminTool $tool) {
+                    return $tool->getName();
+                }, $this->om->getRepository(AdminTool::class)->findAll()),
             ]
         );
 
