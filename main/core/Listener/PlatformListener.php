@@ -128,12 +128,12 @@ class PlatformListener
             }
 
             $now = time();
-            $minDate = $this->config->getParameter('platform_init_date');
-            $expirationDate = $this->config->getParameter('platform_limit_date');
+            $minDate = new \DateTime($this->config->getParameter('platform_init_date'));
+            $expirationDate = new \DateTime($this->config->getParameter('platform_limit_date'));
 
             if (!$isAdmin &&
                 !in_array($event->getRequest()->get('_route'), static::PUBLIC_ROUTES) &&
-                ($minDate > $now || $now > $expirationDate)
+                ($minDate->getTimeStamp() > $now || $now > $expirationDate->getTimeStamp())
             ) {
                 throw new HttpException(503, 'Platform is not available.');
             }
