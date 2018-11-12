@@ -128,7 +128,7 @@ class UserCrud
 
         if (null === $user->getMainOrganization()) {
             //we want a min organization
-            if ($token && $token->getUser() instanceof User) {
+            if ($token && $token->getUser() instanceof User && $token->getUser()->getMainOrganization()) {
                 $user->setMainOrganization($token->getUser()->getMainOrganization());
             } else {
                 $user->setMainOrganization($this->container->get('claroline.manager.organization.organization_manager')->getDefault());

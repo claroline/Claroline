@@ -52,6 +52,7 @@ class Updater120101 extends Updater
                 'footer_workspaces' => $parameters['footer_workspaces'],
                 'header_locale' => $parameters['header_locale'],
                 'resource_icon_set' => $parameters['resource_icon_set'],
+                'logo_redirect_home' => $parameters['logo_redirect_home'],
                 'name' => $parameters['name'],
                 'secondary_name' => $parameters['secondary_name'],
                 'name_active' => $parameters['name_active'],

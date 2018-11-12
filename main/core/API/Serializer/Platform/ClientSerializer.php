@@ -184,7 +184,7 @@ class ClientSerializer
 
         return [
             'current' => $locale,
-            'available' => $this->config->getParameter('locales'),
+            'available' => $this->config->getParameter('locales.available'),
         ];
     }
 

@@ -20,7 +20,7 @@ class CasAdaptiveClient extends AdaptiveClient
     public function __construct(array $options, $key, PlatformConfigurationHandler $platformConfigHandler)
     {
         // Change dynamically the ssl version for BeSimpleSsoBundle
-        $options[$key] = $platformConfigHandler->getParameter('ssl_version_value');
+        $options[$key] = $platformConfigHandler->getParameter('ssl.version');
         parent::__construct($options);
     }
 }
