@@ -1,8 +1,0 @@
-{
-  "webpack": {
-    "entry": {
-      "management": "administration/cursus/bootstrap",
-      "session-events-tool": "SessionEventsTool/index"
-    }
-  }
-}

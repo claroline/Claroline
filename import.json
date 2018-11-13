@@ -456,38 +456,6 @@
     "template": "plugin/competency/Resources/translations/widget.en.json"
   },
   {
-    "name": "cursus-cursus",
-    "vcs": "github",
-    "branch": "master",
-    "file_format": "json",
-    "filemask": "plugin/cursus/Resources/translations/cursus.*.json",
-    "template": "plugin/cursus/Resources/translations/cursus.en.json"
-  },
-  {
-    "name": "cursus-platform",
-    "vcs": "github",
-    "branch": "master",
-    "file_format": "json",
-    "filemask": "plugin/cursus/Resources/translations/platform.*.json",
-    "template": "plugin/cursus/Resources/translations/platform.en.json"
-  },
-  {
-    "name": "cursus-tools",
-    "vcs": "github",
-    "branch": "master",
-    "file_format": "json",
-    "filemask": "plugin/cursus/Resources/translations/tools.*.json",
-    "template": "plugin/cursus/Resources/translations/tools.en.json"
-  },
-  {
-    "name": "cursus-widget",
-    "vcs": "github",
-    "branch": "master",
-    "file_format": "json",
-    "filemask": "plugin/cursus/Resources/translations/widget.*.json",
-    "template": "plugin/cursus/Resources/translations/widget.en.json"
-  },
-  {
     "name": "dashboard-dashboard",
     "vcs": "github",
     "branch": "master",

@@ -46,12 +46,16 @@ fetch() {
     echo "Trying to fetch $1 dependencies from cache ($ARCHIVE)..."
 
     set +o errexit # allow curl failure
+    echo `curl -o $ARCHIVE -s -w "%{http_code}" "$REMOTE_HOST/cache/$ARCHIVE"`
     STATUS=`curl -o $ARCHIVE -s -w "%{http_code}" "$REMOTE_HOST/cache/$ARCHIVE"`
     set -e
+
+    echo "Status: $STATUS"
 
     if [ $STATUS = 200 ]
     then
         echo "Success, extracting..."
+
         tar -xzf "$ARCHIVE"
     else
         echo "Failure ($STATUS), executing $1..."

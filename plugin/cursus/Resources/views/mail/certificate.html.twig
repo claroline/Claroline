@@ -1,5 +1,0 @@
-<div>
-    {{ 'new_certificate_email'|trans({'%session_name%': session.getName()}, 'cursus')|raw }}
-    </br>
-    <a href="{{ url('claro_pdf_download', {'pdf': pdf.getGuid()}) }}"> {{ 'certificate'|trans({}, 'cursus') }} </a>
-</div>

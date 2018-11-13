@@ -1,8 +1,0 @@
-<div>
-  {{ 'new_certificates'|trans({}, 'cursus') }}
-  <ul>
-      {% for el in data %}
-          <li> <a href="{{ url('claro_pdf_download', {'pdf': el.pdf.getGuid()}) }}"> {{ el.user.getUsername() }}</a></li>
-      {% endfor %}
-  </ul>
-</div>
