@@ -1,8 +1,0 @@
-{
-    "access_denied": "U bent niet toegelaten deze webpagina te openen.",
-    "client_error %errorCode%": "Er is een fout gedetecteerd aan de klantzijde. Code fout: %errorCode%.",
-    "method_not_allowed": "Deze methode is niet toegestaan.",
-    "res_not_found": "Bron niet gevonden.",
-    "server_error %errorCode%": "Er is een fout gedetecteerd aan de serverzijde. Code fout:%errorCode%.",
-    "website_doesnt_exist %url%": "De website %url% bestaat niet."
-}

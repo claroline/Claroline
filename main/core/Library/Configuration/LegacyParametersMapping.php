@@ -87,7 +87,6 @@ class LegacyParametersMapping
             'google_geocoding_client_id' => 'geolocation.google.geocoding_client_id',
             'google_geocoding_signature' => 'geolocation.google.geocoding_signature',
             'google_geocoding_key' => 'geolocation.google.geocoding_key',
-            'portal_enabled_resources' => 'portal.enabled_resources',
             'ssl_enabled' => 'ssl.enabled',
             'ssl_version_value' => 'ssl.version',
             'enable_rich_text_file_import' => 'workspace.enable_rich_text_file_import',

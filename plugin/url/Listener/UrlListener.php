@@ -3,7 +3,6 @@
 namespace HeVinci\UrlBundle\Listener;
 
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
@@ -15,21 +14,40 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class UrlListener
 {
-    private $om;
-    private $serlaizer;
+    /** @var SerializerProvider */
+    private $serializer;
 
     /**
+     * UrlListener constructor.
+     *
      * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer"),
+     *     "serializer" = @DI\Inject("claroline.api.serializer")
      * })
+     *
+     * @param SerializerProvider $serializer
      */
-    public function __construct(
-        SerializerProvider $serializer,
-        ObjectManager $om
-    ) {
-        $this->om = $om;
+    public function __construct(SerializerProvider $serializer)
+    {
         $this->serializer = $serializer;
+    }
+
+    /**
+     * Loads an URL resource.
+     *
+     * @DI\Observe("resource.hevinci_url.load")
+     *
+     * @param LoadResourceEvent $event
+     */
+    public function onLoad(LoadResourceEvent $event)
+    {
+        /** @var Url $url */
+        $url = $event->getResource();
+
+        $event->setData([
+            'url' => $this->serializer->serialize($url),
+        ]);
+
+        $event->stopPropagation();
     }
 
     /**
@@ -39,7 +57,6 @@ class UrlListener
      */
     public function onDelete(DeleteResourceEvent $event)
     {
-        $this->om->remove($event->getResource());
         $event->stopPropagation();
     }
 
@@ -50,32 +67,15 @@ class UrlListener
      */
     public function onCopy(CopyResourceEvent $event)
     {
+        /** @var Url $resource */
         $resource = $event->getResource();
+
         $copy = new Url();
         $copy->setName($resource->getName());
         $copy->setUrl($resource->getUrl());
         $copy->setInternalUrl($resource->getInternalUrl());
 
         $event->setCopy($copy);
-        $event->stopPropagation();
-    }
-
-    /**
-     * Loads a Wiki resource.
-     *
-     * @DI\Observe("resource.hevinci_url.load")
-     *
-     * @param LoadResourceEvent $event
-     */
-    public function load(LoadResourceEvent $event)
-    {
-        /** @var Url $url */
-        $url = $event->getResource();
-
-        $event->setData([
-            'url' => $this->serializer->serialize($url),
-        ]);
-
         $event->stopPropagation();
     }
 }

@@ -131,11 +131,6 @@ claro_plugin_api:
     options:
         expose: true
 
-claro_portal:
-    resource: "@ClarolineCoreBundle/Controller/PortalController.php"
-    prefix: portal
-    type: annotation
-
 claro_client:
     resource: "@ClarolineCoreBundle/Controller/API/Admin/ClientController.php"
     type: annotation
