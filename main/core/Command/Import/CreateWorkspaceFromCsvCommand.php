@@ -23,9 +23,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-/**
- * Creates an user, optionaly with a specific role (default to simple user).
- */
 class CreateWorkspaceFromCsvCommand extends ContainerAwareCommand
 {
     use BaseCommandTrait;
