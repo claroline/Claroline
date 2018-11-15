@@ -9,18 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Event;
+namespace Claroline\CoreBundle\Event\Layout;
 
 use Symfony\Component\EventDispatcher\Event;
 
+/**
+ * An event dispatched when the application UI is rendered
+ * giving the chance to plugins to inject some custom javascript on any application page.
+ */
 class InjectJavascriptEvent extends Event
 {
-    private $content;
-
-    public function __construct()
-    {
-        $this->content = '';
-    }
+    private $content = '';
 
     public function addContent($content)
     {

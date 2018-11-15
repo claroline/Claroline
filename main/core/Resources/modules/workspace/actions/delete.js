@@ -20,7 +20,7 @@ export default (workspaces, refresher) => ({
   request: {
     url: url(
       ['claro_resource_collection_action', {action: 'delete'}],
-      {ids: resourceNodes.map(resourceNode => resourceNode.id)}
+      {ids: workspaces.map(workspace => workspace.id)}
     ),
     request: {
       method: 'DELETE'

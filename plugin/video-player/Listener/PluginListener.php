@@ -2,7 +2,7 @@
 
 namespace Claroline\VideoPlayerBundle\Listener;
 
-use Claroline\CoreBundle\Event\InjectJavascriptEvent;
+use Claroline\CoreBundle\Event\Layout\InjectJavascriptEvent;
 use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bridge\Twig\TwigEngine;
@@ -62,14 +62,14 @@ class PluginListener
     }
 
     /**
-     * @DI\Observe("inject_javascript_layout")
+     * @DI\Observe("layout.inject.javascript")
      *
      * @param InjectJavascriptEvent $event
      */
     public function onInjectJs(InjectJavascriptEvent $event)
     {
         $event->addContent(
-            $this->templating->render('ClarolineVideoPlayerBundle::scripts.html.twig', [])
+            $this->templating->render('ClarolineVideoPlayerBundle::scripts.html.twig')
         );
     }
 }

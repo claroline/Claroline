@@ -63,12 +63,6 @@ class TagController extends AbstractCrudController
      */
     public function removeObjectsAction($id, Request $request)
     {
-        /*$object = $this->find($class, $id);
-        $roles = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Role');
-        $this->crud->patch($object, 'role', Crud::COLLECTION_REMOVE, $roles);
-
-        return new JsonResponse(
-            $this->serializer->serialize($object)
-        );*/
+        // TODO : implement
     }
 }

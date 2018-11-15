@@ -1,6 +1,6 @@
 import React from 'react'
 
-const TagDisplay = props =>
+const TagDisplay = () =>
   <div>
 
   </div>

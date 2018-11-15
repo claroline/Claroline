@@ -161,7 +161,7 @@ class WorkspaceSerializer
 
                     // TODO
                     'register' => true,
-                    'unregister' => true
+                    'unregister' => true,
                 ],
                 'registered' => $this->isRegistered($workspace),
                 'meta' => $this->getMeta($workspace, $options),
