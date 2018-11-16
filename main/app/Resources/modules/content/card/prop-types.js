@@ -18,6 +18,7 @@ const DataCard = {
     orientation: T.oneOf(['col', 'row']),
     className: T.string,
     poster: T.string,
+    color: T.string,
     icon: T.oneOfType([T.string, T.element]).isRequired,
     title: T.string.isRequired,
     subtitle: T.string,

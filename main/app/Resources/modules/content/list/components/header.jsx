@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import isEmpty from 'lodash/isEmpty'
 
 import {ListColumns} from '#/main/app/content/list/components/columns'
 import {ListDisplay} from '#/main/app/content/list/components/display'
@@ -18,7 +19,7 @@ const ListHeader = props =>
     {props.filters &&
       <Search
         {...props.filters}
-        disabled={props.disabled}
+        disabled={props.disabled && isEmpty(props.filters.current)}
       />
     }
 

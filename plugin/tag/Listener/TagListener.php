@@ -13,8 +13,6 @@ namespace Claroline\TagBundle\Listener;
 
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
-use Claroline\CoreBundle\Menu\GroupAdditionalActionEvent;
-use Claroline\CoreBundle\Menu\WorkspaceAdditionalActionEvent;
 use Claroline\TagBundle\Manager\TagManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -207,75 +205,6 @@ class TagListener
             ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);
         $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("claroline_group_additional_action")
-     *
-     * @param \Claroline\CoreBundle\Menu\GroupAdditionalActionEvent $event
-     */
-    public function onGroupActionMenuRender(GroupAdditionalActionEvent $event)
-    {
-        $group = $event->getGroup();
-        $url = $this->router->generate(
-            'claro_tag_group_tag_form',
-            ['group' => $group->getId()]
-        );
-
-        $menu = $event->getMenu();
-        $menu->addChild(
-            $this->translator->trans('tag_action', [], 'tag'),
-            ['uri' => $url]
-        )->setExtra('icon', 'fa fa-tags')
-        ->setExtra('display', 'modal_form');
-
-        return $menu;
-    }
-
-    /**
-     * @DI\Observe("claroline_user_additional_action")
-     *
-     * @param \Claroline\CoreBundle\Menu\UserAdditionalActionEvent $event
-     */
-    public function onUserActionMenuRender(UserAdditionalActionEvent $event)
-    {
-        $user = $event->getUser();
-        $url = $this->router->generate(
-            'claro_tag_user_tag_form',
-            ['user' => $user->getId()]
-        );
-
-        $menu = $event->getMenu();
-        $menu->addChild(
-            $this->translator->trans('tag_action', [], 'tag'),
-            ['uri' => $url]
-        )->setExtra('icon', 'fa fa-tags')
-        ->setExtra('display', 'modal_form');
-
-        return $menu;
-    }
-
-    /**
-     * @DI\Observe("claroline_workspace_additional_action")
-     *
-     * @param \Claroline\CoreBundle\Menu\UserAdditionalActionEvent $event
-     */
-    public function onWorkspaceActionMenuRender(WorkspaceAdditionalActionEvent $event)
-    {
-        $workspace = $event->getWorkspace();
-        $url = $this->router->generate(
-            'claro_tag_workspace_tag_form',
-            ['workspace' => $workspace->getId()]
-        );
-
-        $menu = $event->getMenu();
-        $menu->addChild(
-            $this->translator->trans('tag_action', [], 'tag'),
-            ['uri' => $url]
-        )->setExtra('icon', 'fa fa-tags')
-        ->setExtra('display', 'modal_form');
-
-        return $menu;
     }
 
     /**

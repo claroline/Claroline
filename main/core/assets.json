@@ -9,7 +9,6 @@
       "workspace-management": "administration/workspace",
       "workspace-list": "workspace/list",
       "transfer-management": "administration/transfer",
-      "portal": "portal",
       "scheduled-task-management": "administration/scheduled-task",
       "user-registration": "user/registration",
       "user-profile": "user/profile",
@@ -37,7 +36,6 @@
     "entry": {
       "home-tool": "tools/home.less",
       "theme-management": "tools/theme-management.less",
-      "portal": "portal/portal.less",
       "iframe": "iframe/iframe.less"
     }
   }

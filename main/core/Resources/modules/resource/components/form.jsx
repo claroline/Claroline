@@ -65,13 +65,6 @@ const ResourceFormComponent = (props) =>
             options: {
               labelChecked: trans('resource_published', {}, 'resource')
             }
-          }, {
-            name: 'meta.portal',
-            label: trans('resource_portal_not_published', {}, 'resource'),
-            type: 'boolean',
-            options: {
-              labelChecked: trans('resource_portal_published', {}, 'resource')
-            }
           }
         ]
       }, {

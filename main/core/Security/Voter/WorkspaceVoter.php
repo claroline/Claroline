@@ -95,6 +95,11 @@ class WorkspaceVoter extends AbstractVoter
 
     private function checkView($token, Workspace $workspace)
     {
+        // disallow deleting default models
+        if (in_array($workspace->getCode(), ['default_personal', 'default_workspace'])) {
+            return VoterInterface::ACCESS_DENIED;
+        }
+
         if (!$this->isWorkspaceManaged($token, $workspace)) {
             return VoterInterface::ACCESS_DENIED;
         }

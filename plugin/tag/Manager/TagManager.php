@@ -12,9 +12,7 @@
 namespace Claroline\TagBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\TagBundle\Entity\Tag;
 use Claroline\TagBundle\Entity\TaggedObject;
@@ -263,14 +261,6 @@ class TagManager
         return $this->taggedObjectRepo->findTaggedWorkspaces($tag);
     }
 
-    public function removeTaggedObjectsByResourceAndTag(ResourceNode $resourceNode, Tag $tag)
-    {
-        $taggedObject = $this->getOneTaggedObjectByTagAndObject(
-                $tag, $resourceNode->getId(),
-                str_replace('Proxies\\__CG__\\', '', get_class($resourceNode)));
-        $this->deleteTaggedObject($taggedObject);
-    }
-
     public function removeTaggedObjectsByClassAndIds($class, array $ids)
     {
         if (!empty($class) && !empty($ids)) {
@@ -364,11 +354,6 @@ class TagManager
         return $this->tagRepo->findOneUserTagByName($user, $name);
     }
 
-    public function getTagsByObject($object, User $user = null, $withPlatform = false, $orderedBy = 'name', $order = 'ASC')
-    {
-        return $this->tagRepo->findTagsByObject($object, $user, $withPlatform, $orderedBy, $order);
-    }
-
     /******************************************
      * Access to TaggedObjectRepository methods *
      ******************************************/
@@ -417,23 +402,6 @@ class TagManager
     public function getOneTaggedObjectByTagNameAndObject($tagName, $objectId, $objectClass)
     {
         return $this->taggedObjectRepo->findOneTaggedObjectByTagNameAndObject($tagName, $objectId, $objectClass);
-    }
-
-    public function getTaggedObjectsByTags(array $tags, $orderedBy = 'name', $order = 'ASC', $withPager = false, $page = 1, $max = 50)
-    {
-        $objects = count($tags) > 0 ? $this->taggedObjectRepo->findTaggedObjectsByTags($tags, $orderedBy, $order) : [];
-
-        return $withPager ? $this->pagerFactory->createPagerFromArray($objects, $page, $max) : $objects;
-    }
-
-    public function getTaggedResourcesByWorkspace(Workspace $workspace, $user = 'anon.', array $roleNames = ['ROLE_ANONYMOUS'])
-    {
-        return $this->taggedObjectRepo->findTaggedResourcesByWorkspace($workspace, $user, $roleNames);
-    }
-
-    public function getTaggedResourcesByRoles($user = 'anon.', array $roleNames = ['ROLE_ANONYMOUS'])
-    {
-        return $this->taggedObjectRepo->findTaggedResourcesByRoles($user, $roleNames);
     }
 
     /**

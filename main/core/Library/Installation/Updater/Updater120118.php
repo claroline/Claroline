@@ -193,9 +193,6 @@ class Updater120118 extends Updater
                 'resource' => [
                     'soft_delete' => $parameters['resource_soft_delete'],
                 ],
-                'portal' => [
-                    'enabled_resources' => $parameters['portal_enabled_resources'],
-                ],
                 'country' => $parameters['country'],
                 'profile' => [
                     'roles_confidential' => $parameters['profile_roles_confidential'],

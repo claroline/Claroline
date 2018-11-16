@@ -14,7 +14,6 @@ export const App = () => ({
       data: initialData.parameters,
       originalData: initialData.parameters
     },
-    availableLocales: initialData.availableLocales,
-    portalResources: initialData.portalResources
+    availableLocales: initialData.availableLocales
   })
 })

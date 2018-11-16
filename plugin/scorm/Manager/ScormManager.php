@@ -586,7 +586,6 @@ class ScormManager
                 $newNode->setParent($node->getParent());
                 $newNode->setPathForCreationLog($node->getPathForCreationLog());
                 $newNode->setPublished($node->isPublished());
-                $newNode->setPublishedToPortal($node->isPublishedToPortal());
                 $newNode->setResourceType($scormType);
                 $newNode->setWorkspace($workspace);
 
@@ -787,7 +786,6 @@ class ScormManager
                 $newNode->setParent($node->getParent());
                 $newNode->setPathForCreationLog($node->getPathForCreationLog());
                 $newNode->setPublished($node->isPublished());
-                $newNode->setPublishedToPortal($node->isPublishedToPortal());
                 $newNode->setResourceType($scormType);
                 $newNode->setWorkspace($workspace);
 

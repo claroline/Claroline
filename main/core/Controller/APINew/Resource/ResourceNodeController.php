@@ -117,30 +117,6 @@ class ResourceNodeController extends AbstractCrudController
     }
 
     /**
-     * @EXT\Route("/portal", name="apiv2_portal_index")
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function portalSearchAction(Request $request)
-    {
-        $options = $request->query->all();
-
-        $options['hiddenFilters']['published'] = true;
-
-        // Limit the search to resource nodes published to portal
-        $options['hiddenFilters']['publishedToPortal'] = true;
-
-        // Limit the search to only the authorized resource types which can be displayed on the portal
-        $options['hiddenFilters']['resourceType'] = $this->container->get('claroline.manager.portal_manager')->getPortalEnabledResourceTypes();
-
-        return new JsonResponse(
-            $this->finder->search(ResourceNode::class, $options)
-        );
-    }
-
-    /**
      * @EXT\Route(
      *     "/{parent}/files",
      *     name="apiv2_resource_files_create"

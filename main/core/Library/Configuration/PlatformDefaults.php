@@ -45,9 +45,6 @@ class PlatformDefaults implements ParameterProviderInterface
               'roles_edition' => [],
             ],
             'country' => '-',
-            'portal' => [
-                'enabled_resources' => null,
-            ],
             'resource' => [
                 'soft_delete' => false,
             ],

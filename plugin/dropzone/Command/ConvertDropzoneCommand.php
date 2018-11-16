@@ -111,7 +111,6 @@ class ConvertDropzoneCommand extends ContainerAwareCommand
                 $newNode->setParent($node->getParent());
                 $newNode->setPathForCreationLog($node->getPathForCreationLog());
                 $newNode->setPublished($node->isPublished());
-                $newNode->setPublishedToPortal($node->isPublishedToPortal());
                 $newNode->setResourceType($dropzoneType);
                 $newNode->setWorkspace($node->getWorkspace());
 

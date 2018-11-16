@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import merge from 'lodash/merge'
 
 import {transChoice} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
@@ -27,9 +28,9 @@ const ListPrimaryAction = props => {
 
 ListPrimaryAction.propTypes = {
   className: T.string,
-  action: T.shape(
-    ActionTypes.propTypes
-  ),
+  action: T.shape(merge({}, ActionTypes.propTypes, {
+    label: T.node // make label optional
+  })),
   disabledWrapper: T.string,
   children: T.node.isRequired
 }

@@ -250,7 +250,6 @@ class ResourceNodeSerializer
             $meta = array_merge($meta, [
                 'authors' => $resourceNode->getAuthor(),
                 'license' => $resourceNode->getLicense(),
-                'portal' => $resourceNode->isPublishedToPortal(),
             ]);
         }
 
@@ -324,7 +323,6 @@ class ResourceNodeSerializer
 
         $this->sipe('meta.published', 'setPublished', $data, $resourceNode);
         $this->sipe('meta.description', 'setDescription', $data, $resourceNode);
-        $this->sipe('meta.portal', 'setPublishedToPortal', $data, $resourceNode);
         $this->sipe('meta.license', 'setLicense', $data, $resourceNode);
         $this->sipe('meta.authors', 'setAuthor', $data, $resourceNode);
 

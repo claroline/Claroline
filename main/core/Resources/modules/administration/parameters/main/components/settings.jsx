@@ -6,7 +6,6 @@ import {Home} from '#/main/core/administration/parameters/main/components/home'
 import {Identification} from '#/main/core/administration/parameters/main/components/identification'
 import {I18n} from '#/main/core/administration/parameters/main/components/i18n'
 import {Plugins} from '#/main/core/administration/parameters/main/components/plugins'
-import {Portal} from '#/main/core/administration/parameters/main/components/portal'
 import {Maintenance} from '#/main/core/administration/parameters/main/components/maintenance'
 
 const Settings = () =>
@@ -33,10 +32,6 @@ const Settings = () =>
         path: '/plugins',
         exact: true,
         component: Plugins
-      }, {
-        path: '/portal',
-        exact: true,
-        component: Portal
       }, {
         path: '/maintenance',
         exact: true,

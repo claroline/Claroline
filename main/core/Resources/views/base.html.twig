@@ -39,15 +39,6 @@
             {% endblock %}
         {% endspaceless %}</title>
 
-        {% block theme %}
-            {% if config.getParameter('theme_extending_default') %}
-                {# TODO : I think this should be removed (extend should be done in LESS) #}
-                <link rel="stylesheet" type="text/css" href="{{ themeAsset('bootstrap.css', 'claroline') }}" />
-            {% endif %}
-
-            <link rel="stylesheet" type="text/css" href="{{ themeAsset('bootstrap.css') }}" />
-        {% endblock %}
-
         {% block stylesheets %}{% endblock %}
 
         {% block favicon %}
