@@ -21,9 +21,7 @@ use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Exception\WorkspaceAccessException;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
-use Claroline\CoreBundle\Manager\TransferManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -32,7 +30,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -57,8 +54,6 @@ class WorkspaceController
     private $eventDispatcher;
     /** @var ResourceManager */
     private $resourceManager;
-    /** @var RoleManager */
-    private $roleManager;
     /** @var UrlGeneratorInterface */
     private $router;
     /** @var SessionInterface */
@@ -77,8 +72,6 @@ class WorkspaceController
     private $om;
     /** @var ParametersSerializer */
     private $parametersSerializer;
-    /** @var TransferManager */
-    private $transferManager;
 
     /**
      * WorkspaceController constructor.
@@ -87,7 +80,6 @@ class WorkspaceController
      *     "authorization"        = @DI\Inject("security.authorization_checker"),
      *     "eventDispatcher"      = @DI\Inject("event_dispatcher"),
      *     "resourceManager"      = @DI\Inject("claroline.manager.resource_manager"),
-     *     "roleManager"          = @DI\Inject("claroline.manager.role_manager"),
      *     "router"               = @DI\Inject("router"),
      *     "session"              = @DI\Inject("session"),
      *     "tokenStorage"         = @DI\Inject("security.token_storage"),
@@ -97,13 +89,11 @@ class WorkspaceController
      *     "workspaceManager"     = @DI\Inject("claroline.manager.workspace_manager"),
      *     "parametersSerializer" = @DI\Inject("claroline.serializer.parameters"),
      *     "om"                   = @DI\Inject("claroline.persistence.object_manager"),
-     *     "transferManager"      = @DI\Inject("claroline.manager.transfer_manager")
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param EventDispatcherInterface      $eventDispatcher
      * @param ResourceManager               $resourceManager
-     * @param RoleManager                   $roleManager
      * @param UrlGeneratorInterface         $router
      * @param SessionInterface              $session
      * @param TokenStorageInterface         $tokenStorage
@@ -113,13 +103,11 @@ class WorkspaceController
      * @param WorkspaceManager              $workspaceManager
      * @param ParametersSerializer          $parametersSerializer
      * @param ObjectManager                 $om
-     * @param TransferManager               $transferManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         EventDispatcherInterface $eventDispatcher,
         ResourceManager $resourceManager,
-        RoleManager $roleManager,
         UrlGeneratorInterface $router,
         SessionInterface $session,
         TokenStorageInterface $tokenStorage,
@@ -128,13 +116,11 @@ class WorkspaceController
         Utilities $utils,
         WorkspaceManager $workspaceManager,
         ParametersSerializer $parametersSerializer,
-        ObjectManager $om,
-        TransferManager $transferManager
+        ObjectManager $om
     ) {
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
         $this->resourceManager = $resourceManager;
-        $this->roleManager = $roleManager;
         $this->router = $router;
         $this->session = $session;
         $this->tokenStorage = $tokenStorage;
@@ -144,7 +130,6 @@ class WorkspaceController
         $this->workspaceManager = $workspaceManager;
         $this->parametersSerializer = $parametersSerializer;
         $this->om = $om;
-        $this->transferManager = $transferManager;
     }
 
     /**
@@ -328,33 +313,46 @@ class WorkspaceController
     }
 
     /**
-     * @EXT\Route("/{workspace}/export", name="claro_workspace_export")
+     * @EXT\Route("/{workspace}/denied", name="claro_workspace_denied")
+     * @EXT\Template
      *
      * @param Workspace $workspace
      *
-     * @return StreamedResponse
+     * @return Response
      */
-    public function exportAction(Workspace $workspace)
+    public function openDeniedAction(Workspace $workspace)
     {
-        $archive = $this->transferManager->export($workspace);
+        $user = $this->tokenStorage->getToken()->getUser();
 
-        $fileName = $workspace->getCode().'.zip';
-        $response = new StreamedResponse();
+        return [
+          'workspace' => $workspace,
+          'isInQueue' => $this->workspaceManager->isUserInValidationQueue($workspace, $user),
+        ];
+    }
 
-        $response->setCallBack(
-            function () use ($archive) {
-                readfile($archive);
+    /**
+     * @EXT\Route("/{workspace}/register/redirect", name="claro_workspace_register_redirect")
+     * @EXT\Template
+     *
+     * @param Workspace $workspace
+     *
+     * @return Response
+     */
+    public function registerAndRedirect(Workspace $workspace, Request $request)
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if ($workspace->getSelfRegistration()) {
+            if ($workspace->getRegistrationValidation()) {
+                $this->workspaceManager->addUserQueue($workspace, $user);
+            } else {
+                $this->workspaceManager->addUserAction($workspace, $user);
             }
-        );
 
-        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
-        $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.urlencode($fileName));
-        $response->headers->set('Content-Length', filesize($archive));
-        $response->headers->set('Content-Type', 'application/zip');
-        $response->headers->set('Connection', 'close');
-
-        return $response->send();
+            return $this->openAction($workspace->getId(), $request);
+        } else {
+            throw new \Exception('No self registration allowed');
+        }
     }
 
     private function isUsurpator(TokenInterface $token = null)

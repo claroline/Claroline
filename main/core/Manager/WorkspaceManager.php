@@ -614,21 +614,17 @@ class WorkspaceManager
     public function addUserAction(Workspace $workspace, User $user)
     {
         $role = $workspace->getDefaultRole();
-        $userRoles = $this->roleManager->getWorkspaceRolesForUser($user, $workspace);
+        $this->roleManager->associateRole($user, $role);
+        $this->dispatcher->dispatch(
+            'claroline_workspace_register_user',
+            'WorkspaceAddUser',
+            [$role, $user]
+        );
 
-        if (0 === count($userRoles)) {
-            $this->roleManager->associateRole($user, $role);
-            $this->dispatcher->dispatch(
-                'claroline_workspace_register_user',
-                'WorkspaceAddUser',
-                [$role, $user]
-            );
+        if ($user->getUuid() === $this->container->get('security.token_storage')->getToken()->getUser()->getUuid()) {
+            $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+            $this->container->get('security.token_storage')->setToken($token);
         }
-
-        // FIXME : you replace current user credentials by the added one, but why ?
-        // there is no reason to do this because it's not always the same user !!!
-        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-        $this->container->get('security.token_storage')->setToken($token);
 
         return $user;
     }

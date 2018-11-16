@@ -1,0 +1,23 @@
+{% extends 'ClarolineCoreBundle:workspace:layout.html.twig' %}
+
+{% block content %}
+    <div class="container">
+      {{ 'workspace_denied' | trans({'%workspace%': workspace.getName()}, 'platform') }}
+    </div>
+      {% if isInQueue %}
+      <div class="container">
+        {{ 'workspace_awaiting_validation' | trans({}, 'platform') }}
+      </div>
+    {% else %}
+      {% if workspace.getSelfRegistration() %}
+        <div class="container">
+          <a class="btn btn-primary" href="{{path('claro_workspace_register_redirect', {workspace: workspace.getId()})}}">{{ 'register' | trans({}, 'platform') }}</a>
+        </div>
+      {% else %}
+        <div class="container">
+          {{ 'workspace_private_registration' | trans({}, 'platform') }}
+        </div>
+
+      {% endif %}
+  {% endif %}
+{% endblock %}

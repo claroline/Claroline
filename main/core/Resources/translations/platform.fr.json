@@ -1738,5 +1738,7 @@
     "logo_redirect_home": "Rediriger à l'accueil en cliquant sur le logo",
     "header_locale": "Changer la langue dans le header",
     "search_and_filters": "Recherche & filters",
-    "disabled_admin_tools": "Outils admins désactivés"
+    "disabled_admin_tools": "Outils admins désactivés",
+    "workspace_denied": "L'espace d'activité %workspace% vous est inaccessible.",
+    "workspace_private_registration": "Cet espace d'activté requiert une inscription par un gestionnaire."
 }
