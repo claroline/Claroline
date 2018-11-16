@@ -4,5 +4,5 @@
 - [ ] add the possibility to override list translations
 - [ ] move grid inside another module
 - [ ] move table inside another module
-- [ ] move pagination
-- [ ] move search
+- [x] move pagination
+- [x] move search

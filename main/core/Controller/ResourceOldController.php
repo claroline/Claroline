@@ -93,21 +93,6 @@ class ResourceOldController extends Controller
     }
 
     /**
-     * @EXT\Template("ClarolineCoreBundle:resource:breadcrumbs.html.twig")
-     *
-     * @param ResourceNode $node
-     *
-     * @return array
-     */
-    public function renderBreadcrumbsAction(ResourceNode $node)
-    {
-        return [
-            'ancestors' => $node->getAncestors(),
-            'workspaceId' => $node->getWorkspace(),
-        ];
-    }
-
-    /**
      * Checks if the current user has the right to perform an action on a ResourceCollection.
      * Be careful, ResourceCollection may need some aditionnal parameters.
      *

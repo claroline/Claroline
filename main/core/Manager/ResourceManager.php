@@ -33,7 +33,6 @@ use Claroline\CoreBundle\Manager\Exception\ResourceTypeNotFoundException;
 use Claroline\CoreBundle\Manager\Exception\RightsException;
 use Claroline\CoreBundle\Manager\Exception\WrongClassException;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
-use Claroline\CoreBundle\Repository\DirectoryRepository;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
@@ -67,8 +66,6 @@ class ResourceManager
 
     /** @var RoleRepository */
     private $roleRepo;
-    /** @var DirectoryRepository */
-    private $directoryRepo;
     /** @var RoleManager */
     private $roleManager;
     /** @var StrictDispatcher */
@@ -138,7 +135,6 @@ class ResourceManager
         $this->resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
         $this->resourceNodeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
-        $this->directoryRepo = $om->getRepository('ClarolineCoreBundle:Resource\Directory');
     }
 
     public function getLogger()

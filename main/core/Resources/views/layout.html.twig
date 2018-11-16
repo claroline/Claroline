@@ -2,6 +2,12 @@
 
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 
+{% block stylesheets %}
+    {{ parent() }}
+
+    {% include 'ClarolineCoreBundle:layout:stylesheets.html.twig' %}
+{% endblock %}
+
 {% block javascripts_header %}
     {{ parent() }}
 

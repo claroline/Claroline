@@ -27,11 +27,6 @@ const Nav = () =>
         path: '/plugins'
       },
       {
-        icon: 'fa fa-fw fa-folder',
-        title: trans('portal'),
-        path: '/portal'
-      },
-      {
         icon: 'fa fa-fw fa-wrench',
         title: trans('maintenance'),
         path: '/maintenance'

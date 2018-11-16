@@ -7,6 +7,8 @@ import {registry} from '#/main/app/plugins/registry'
  */
 registry.add('favourite', {
   actions: {
-    'favourite': () => { return import(/* webpackChunkName: "favourite-action-favourite" */ '#/plugin/favourite/resource/actions/favourite') }
+    resource: {
+      'favourite': () => { return import(/* webpackChunkName: "favourite-action-favourite" */ '#/plugin/favourite/resource/actions/favourite') }
+    }
   }
 })

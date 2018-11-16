@@ -1,8 +1,8 @@
 import {url} from '#/main/app/api/router'
 
 import {API_REQUEST} from '#/main/app/api'
-import {actions as listActions} from '#/main/app/content/list/store'
-import {actions as formActions} from '#/main/app/content/form/store'
+import {actions as listActions} from '#/main/app/content/list/store/actions'
+import {actions as formActions} from '#/main/app/content/form/store/actions'
 
 import {User as UserTypes} from '#/main/core/user/prop-types'
 

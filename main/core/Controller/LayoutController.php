@@ -20,7 +20,8 @@ use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\InjectJavascriptEvent;
+use Claroline\CoreBundle\Event\Layout\InjectJavascriptEvent;
+use Claroline\CoreBundle\Event\Layout\InjectStylesheetEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -115,30 +116,6 @@ class LayoutController extends Controller
         $this->dispatcher = $dispatcher;
         $this->serializer = $serializer;
         $this->finder = $finder;
-    }
-
-    /**
-     * Renders the platform footer.
-     *
-     * @return Response
-     */
-    public function footerAction()
-    {
-        // TODO: find the lightest way to get that information
-        $version = $this->get('claroline.manager.version_manager')->getDistributionVersion();
-
-        $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
-        $selfRegistration = $this->configHandler->getParameter('allow_self_registration') &&
-            $this->roleManager->validateRoleInsert(new User(), $roleUser);
-
-        return $this->render('ClarolineCoreBundle:layout:footer.html.twig', [
-            'footerMessage' => $this->configHandler->getParameter('footer'),
-            'footerLogin' => $this->configHandler->getParameter('footer_login'),
-            'footerWorkspaces' => $this->configHandler->getParameter('footer_workspaces'),
-            'headerLocale' => $this->configHandler->getParameter('header_locale'),
-            'coreVersion' => $version,
-            'selfRegistration' => $selfRegistration,
-        ]);
     }
 
     /**
@@ -284,6 +261,30 @@ class LayoutController extends Controller
     }
 
     /**
+     * Renders the platform footer.
+     *
+     * @return Response
+     */
+    public function footerAction()
+    {
+        // TODO: find the lightest way to get that information
+        $version = $this->get('claroline.manager.version_manager')->getDistributionVersion();
+
+        $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
+        $selfRegistration = $this->configHandler->getParameter('allow_self_registration') &&
+            $this->roleManager->validateRoleInsert(new User(), $roleUser);
+
+        return $this->render('ClarolineCoreBundle:layout:footer.html.twig', [
+            'footerMessage' => $this->configHandler->getParameter('footer'),
+            'footerLogin' => $this->configHandler->getParameter('footer_login'),
+            'footerWorkspaces' => $this->configHandler->getParameter('footer_workspaces'),
+            'headerLocale' => $this->configHandler->getParameter('header_locale'),
+            'coreVersion' => $version,
+            'selfRegistration' => $selfRegistration,
+        ]);
+    }
+
+    /**
      * Renders the warning bar when a workspace role is impersonated.
      *
      * @return Response
@@ -333,7 +334,17 @@ class LayoutController extends Controller
     public function injectJavascriptAction()
     {
         /** @var InjectJavascriptEvent $event */
-        $event = $this->dispatcher->dispatch('inject_javascript_layout', InjectJavascriptEvent::class);
+        $event = $this->dispatcher->dispatch('layout.inject.javascript', InjectJavascriptEvent::class);
+
+        return new Response(
+            $event->getContent()
+        );
+    }
+
+    public function injectStylesheetAction()
+    {
+        /** @var InjectStylesheetEvent $event */
+        $event = $this->dispatcher->dispatch('layout.inject.stylesheet', InjectStylesheetEvent::class);
 
         return new Response(
             $event->getContent()

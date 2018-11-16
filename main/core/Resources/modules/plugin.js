@@ -17,29 +17,39 @@ registry.add('core', {
    * Provides actions for resources.
    */
   actions: {
-    // all resources
-    'about'    : () => { return import(/* webpackChunkName: "core-action-about" */     '#/main/core/resource/actions/about') },
-    'configure': () => { return import(/* webpackChunkName: "core-action-configure" */ '#/main/core/resource/actions/configure') },
-    'copy'     : () => { return import(/* webpackChunkName: "core-action-copy" */      '#/main/core/resource/actions/copy') },
-    'delete'   : () => { return import(/* webpackChunkName: "core-action-delete" */    '#/main/core/resource/actions/delete') },
-    'edit'     : () => { return import(/* webpackChunkName: "core-action-edit" */      '#/main/core/resource/actions/edit') },
-    'export'   : () => { return import(/* webpackChunkName: "core-action-export" */    '#/main/core/resource/actions/export') },
-    'logs'     : () => { return import(/* webpackChunkName: "core-action-logs" */      '#/main/core/resource/actions/logs') },
-    'move'     : () => { return import(/* webpackChunkName: "core-action-move" */      '#/main/core/resource/actions/move') },
-    'open'     : () => { return import(/* webpackChunkName: "core-action-open" */      '#/main/core/resource/actions/open') },
-    // 'notes'    : () => { return import(/* webpackChunkName: "core-action-notes" */     '#/main/core/resource/actions/notes') },
-    'publish'  : () => { return import(/* webpackChunkName: "core-action-publish" */   '#/main/core/resource/actions/publish') },
-    'rights'   : () => { return import(/* webpackChunkName: "core-action-rights" */    '#/main/core/resource/actions/rights') },
-    'unpublish': () => { return import(/* webpackChunkName: "core-action-unpublish" */ '#/main/core/resource/actions/unpublish') },
+    resource: {
+      // all resources
+      'about'    : () => { return import(/* webpackChunkName: "core-action-about" */     '#/main/core/resource/actions/about') },
+      'configure': () => { return import(/* webpackChunkName: "core-action-configure" */ '#/main/core/resource/actions/configure') },
+      'copy'     : () => { return import(/* webpackChunkName: "core-action-copy" */      '#/main/core/resource/actions/copy') },
+      'delete'   : () => { return import(/* webpackChunkName: "core-action-delete" */    '#/main/core/resource/actions/delete') },
+      'edit'     : () => { return import(/* webpackChunkName: "core-action-edit" */      '#/main/core/resource/actions/edit') },
+      'export'   : () => { return import(/* webpackChunkName: "core-action-export" */    '#/main/core/resource/actions/export') },
+      'logs'     : () => { return import(/* webpackChunkName: "core-action-logs" */      '#/main/core/resource/actions/logs') },
+      'move'     : () => { return import(/* webpackChunkName: "core-action-move" */      '#/main/core/resource/actions/move') },
+      'open'     : () => { return import(/* webpackChunkName: "core-action-open" */      '#/main/core/resource/actions/open') },
+      // 'notes'    : () => { return import(/* webpackChunkName: "core-action-notes" */     '#/main/core/resource/actions/notes') },
+      'publish'  : () => { return import(/* webpackChunkName: "core-action-publish" */   '#/main/core/resource/actions/publish') },
+      'rights'   : () => { return import(/* webpackChunkName: "core-action-rights" */    '#/main/core/resource/actions/rights') },
+      'unpublish': () => { return import(/* webpackChunkName: "core-action-unpublish" */ '#/main/core/resource/actions/unpublish') },
 
-    // directory resource
-    'add'       : () => { return import(/* webpackChunkName: "core-action-add" */       '#/main/core/resources/directory/actions/add') },
-    //'import'    : () => { return import(/* webpackChunkName: "core-action-import" */    '#/main/core/resources/directory/actions/import') },
-    'add_files' : () => { return import(/* webpackChunkName: "core-action-add-files" */ '#/main/core/resources/directory/actions/add-files') },
+      // directory resource
+      'add'       : () => { return import(/* webpackChunkName: "core-action-add" */       '#/main/core/resources/directory/actions/add') },
+      //'import'    : () => { return import(/* webpackChunkName: "core-action-import" */    '#/main/core/resources/directory/actions/import') },
+      'add_files' : () => { return import(/* webpackChunkName: "core-action-add-files" */ '#/main/core/resources/directory/actions/add-files') },
 
-    // file resource
-    //'download' : () => { return import(/* webpackChunkName: "resource-action-download" */       '#/main/core/resources/file/actions/download') },
-    'change_file' : () => { return import(/* webpackChunkName: "resource-action-change-file" */ '#/main/core/resources/file/actions/change-file') }
+      // file resource
+      //'download' : () => { return import(/* webpackChunkName: "resource-action-download" */       '#/main/core/resources/file/actions/download') },
+      'change_file' : () => { return import(/* webpackChunkName: "resource-action-change-file" */ '#/main/core/resources/file/actions/change-file') }
+    },
+
+    user: {
+
+    },
+
+    workspace: {
+
+    }
   },
 
   /**
@@ -54,10 +64,10 @@ registry.add('core', {
   tools: {},
 
   widgets: {
-    'list'  : () => { return import(/* webpackChunkName: "core-widget-list" */   '#/main/core/widget/types/list') },
-    'simple': () => { return import(/* webpackChunkName: "core-widget-simple" */ '#/main/core/widget/types/simple') },
+    'list'    : () => { return import(/* webpackChunkName: "core-widget-list" */     '#/main/core/widget/types/list') },
+    'simple'  : () => { return import(/* webpackChunkName: "core-widget-simple" */   '#/main/core/widget/types/simple') },
     'resource': () => { return import(/* webpackChunkName: "core-widget-resource" */ '#/main/core/widget/types/resource') },
-    'profile': () => { return import(/* webpackChunkName: "core-widget-profile" */ '#/main/core/widget/types/profile') }
+    'profile' : () => { return import(/* webpackChunkName: "core-widget-profile" */  '#/main/core/widget/types/profile') }
   },
 
   data: {

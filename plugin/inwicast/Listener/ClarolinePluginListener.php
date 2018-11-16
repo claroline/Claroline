@@ -11,13 +11,8 @@
 
 namespace Icap\InwicastBundle\Listener;
 
-use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Event\DisplayWidgetEvent;
-use Claroline\CoreBundle\Event\InjectJavascriptEvent;
-use Icap\InwicastBundle\Entity\Media;
-use Icap\InwicastBundle\Entity\MediaCenter;
-use Icap\InwicastBundle\Entity\MediacenterUser;
+use Claroline\CoreBundle\Event\Layout\InjectJavascriptEvent;
 use Icap\InwicastBundle\Exception\NoMediacenterException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -33,31 +28,14 @@ class ClarolinePluginListener
 
     private $templating;
 
-    //-------------------------------
-    // PLUGIN GENERAL SETTINGS
-    //-------------------------------
-
     /**
-     * @DI\Observe("inject_javascript_layout")
+     * ClarolinePluginListener constructor.
      *
-     * @param InjectJavascriptEvent $event
-     *
-     * @return string
-     */
-    public function onInjectJs(InjectJavascriptEvent $event)
-    {
-        $content = $this->templating->render(
-            'IcapInwicastBundle:inwicast:javascript_layout.html.twig',
-            []
-        );
-
-        $event->addContent($content);
-    }
-
-    /**
      * @DI\InjectParams({
-     *      "container"             = @DI\Inject("service_container")
+     *      "container" = @DI\Inject("service_container")
      * })
+     *
+     * @param ContainerInterface $container
      */
     public function __construct(
         ContainerInterface $container
@@ -66,91 +44,28 @@ class ClarolinePluginListener
         $this->templating = $container->get('templating');
     }
 
-    //-------------------------------
-    // WIDGET SERVICES
-    //-------------------------------
-
     /**
-     * @DI\Observe("widget_inwicast_claroline_plugin")
+     * @DI\Observe("layout.inject.javascript")
      *
-     * @param DisplayWidgetEvent $event
+     * @param InjectJavascriptEvent $event
+     *
+     * @return string
      */
-    public function onDisplay(DisplayWidgetEvent $event)
+    public function onInjectJs(InjectJavascriptEvent $event)
     {
-        // Get the Media entity from event
-        $widgetInstance = $event->getInstance();
-        $mediaManager = $this->getMediaManager();
-        $media = $mediaManager->getByWidget($widgetInstance);
-        if (!empty($media)) {
-            try {
-                $mediacenter = $this->getMediacenterManager()->getMediacenter();
-                //$loggedUser = $this->container->get("security.token_storage")->getToken()->getUser();
-                //$media = $mediaManager->getMediaInfo($media, $mediacenter, $loggedUser);
-                // Get video player
-                $event->setContent(
-                    $this->templating->render(
-                        'IcapInwicastBundle:Media:view.html.twig',
-                        ['media' => $media, 'mediacenter' => $mediacenter]
-                    )
-                );
-            } catch (NoMediacenterException $nme) {
-                $event->setContent(
-                    $this->templating->render(
-                        'IcapInwicastBundle:MediaCenter:error.html.twig'
-                    )
-                );
-            }
-        } else {
-            $event->setContent(
-                $this->templating->render(
-                    'IcapInwicastBundle:Media:noMedia.html.twig'
-                )
-            );
-        }
-
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("widget_inwicast_claroline_plugin_configuration")
-     */
-    public function onConfigure(ConfigureWidgetEvent $event)
-    {
-        // Get widget instance
-        $widgetInstance = $event->getInstance();
-        // Get mediacenter user from database
-        $loggedUser = $this->container->get('security.token_storage')->getToken()->getUser();
-        try {
-            $mediacenter = $this->getMediacenterManager()->getMediacenter();
-            $mediaManager = $this->getMediaManager();
-            $medialist = $mediaManager->getMediaListForUser($loggedUser, $mediacenter);
-            $media = $mediaManager->getByWidget($widgetInstance);
-            // Return form
-            $content = $this->templating->render(
-                'IcapInwicastBundle:Media:videosList.html.twig',
-                [
-                    'medialist' => $medialist,
-                    'widget' => $widgetInstance,
-                    'username' => $loggedUser->getUsername(),
-                    'mediacenter' => $mediacenter,
-                    'mediaRef' => (!empty($media)) ? $media->getMediaRef() : null,
-                ]
-            );
-        } catch (NoMediacenterException $nme) {
-            $content = $this->templating->render('IcapInwicastBundle:MediaCenter:error.html.twig');
-        }
-
-        // Return view to event (Claroline specification)
-        $event->setContent($content);
-        $event->stopPropagation();
+        $event->addContent(
+            $this->templating->render('IcapInwicastBundle:inwicast:javascript_layout.html.twig')
+        );
     }
 
     /**
      * @DI\Observe("open_tool_desktop_inwicast_portal")
+     *
+     * @param DisplayToolEvent $event
      */
     public function onToolOpen(DisplayToolEvent $event)
     {
-        // Get mediacenter user from database
+        // Get media center user from database
         $loggedUser = $this->container->get('security.token_storage')->getToken()->getUser();
         try {
             $mediacenter = $this->getMediacenterManager()->getMediacenter();
@@ -181,13 +96,5 @@ class ClarolinePluginListener
     private function getMediacenterUserManager()
     {
         return $this->container->get('inwicast.plugin.manager.mediacenteruser');
-    }
-
-    /**
-     * @return \Icap\InwicastBundle\Manager\MediaManager
-     */
-    private function getMediaManager()
-    {
-        return $this->container->get('inwicast.plugin.manager.media');
     }
 }

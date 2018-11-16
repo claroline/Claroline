@@ -1,5 +1,5 @@
 import {reducer} from '#/main/core/administration/parameters/appearance/store/reducer'
-import {Tool} from '#/main/core/administration/parameters/appearance/components/tool.jsx'
+import {Tool} from '#/main/core/administration/parameters/appearance/components/tool'
 
 export const App = () => ({
   component: Tool,

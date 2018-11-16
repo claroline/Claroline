@@ -47,41 +47,53 @@ CardAction.propTypes = {
  * @param props
  * @constructor
  */
-const CardHeader = props =>
-  <div className="data-card-header" style={props.poster && {
-    backgroundImage: 'url(' + props.poster + ')',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center'
-  }}>
-    {props.icon &&
-      <CardAction action={props.action} className="data-card-icon">
-        {typeof props.icon === 'string' ?
-          <span className={props.icon} /> :
-          props.icon
-        }
-      </CardAction>
+const CardHeader = props => {
+  let headerStyles
+  if (props.poster) {
+    headerStyles = {
+      backgroundImage: 'url(' + props.poster + ')',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
     }
+  } else if (props.color) {
+    headerStyles = {
+      background: props.color
+    }
+  }
 
-    {0 !== props.flags.length &&
-      <div className="data-card-flags">
-        {props.flags.map((flag, flagIndex) => flag &&
-          <TooltipElement
-            key={flagIndex}
-            id={`data-card-${props.id}-flag-${flagIndex}`}
-            tip={flag[1]}
-          >
-            {undefined !== flag[2] ?
-              <span className="data-card-flag">
-                {number(flag[2], true)}
-                <span className={flag[0]} />
-              </span> :
-              <span className={classes('data-card-flag', flag[0])} />
-            }
-          </TooltipElement>
-        )}
-      </div>
-    }
-  </div>
+  return (
+    <div className="data-card-header" style={headerStyles}>
+      {props.icon &&
+        <CardAction action={props.action} className="data-card-icon">
+          {typeof props.icon === 'string' ?
+            <span className={props.icon} /> :
+            props.icon
+          }
+        </CardAction>
+      }
+
+      {0 !== props.flags.length &&
+        <div className="data-card-flags">
+          {props.flags.map((flag, flagIndex) => flag &&
+            <TooltipElement
+              key={flagIndex}
+              id={`data-card-${props.id}-flag-${flagIndex}`}
+              tip={flag[1]}
+            >
+              {undefined !== flag[2] ?
+                <span className="data-card-flag">
+                  {number(flag[2], true)}
+                  <span className={flag[0]} />
+                </span> :
+                <span className={classes('data-card-flag', flag[0])} />
+              }
+            </TooltipElement>
+          )}
+        </div>
+      }
+    </div>
+  )
+}
 
 CardHeader.propTypes = {
   id: T.oneOfType([
@@ -90,6 +102,7 @@ CardHeader.propTypes = {
   ]).isRequired,
   icon: T.oneOfType([T.string, T.element]),
   poster: T.string,
+  color: T.string,
   flags: T.arrayOf(
     T.arrayOf(T.oneOfType([T.string, T.number]))
   ),
@@ -107,11 +120,12 @@ CardHeader.propTypes = {
 const DataCard = props =>
   <div className={classes(`data-card data-card-${props.orientation} data-card-${props.size}`, props.className, {
     'data-card-clickable': props.primaryAction && !props.primaryAction.disabled,
-    'data-card-poster': !!props.poster
+    'data-card-poster': !!props.poster || !!props.color
   })}>
     <CardHeader
       id={props.id}
       icon={-1 !== props.display.indexOf('icon') ? props.icon : undefined}
+      color={props.color}
       poster={props.poster}
       flags={-1 !== props.display.indexOf('flags') ? props.flags : []}
       action={props.primaryAction}
