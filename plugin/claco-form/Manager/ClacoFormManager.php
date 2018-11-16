@@ -1746,10 +1746,14 @@ class ClacoFormManager
             $now = new \DateTime();
 
             foreach ($data as $index => $entryData) {
-                $existingEntries = $this->entryRepo->findBy(['clacoForm' => $clacoForm, 'title' => $entryData['title']]);
+                $existingEntries = isset($entryData['title']) ?
+                    $this->entryRepo->findBy(['clacoForm' => $clacoForm, 'title' => $entryData['title']]) :
+                    null;
                 $lineNum = $index + 1;
 
-                if (0 === count($existingEntries)) {
+                if (is_null($existingEntries)) {
+                    $this->log("Entry from line {$lineNum} has no title or it is simply an empty line at the end of the file.", LogLevel::WARNING);
+                } elseif (0 === count($existingEntries)) {
                     $this->log("Importing entry from line {$lineNum}...");
                     $entry = new Entry();
                     $entry->setUser($user);
@@ -1782,6 +1786,19 @@ class ClacoFormManager
                                     if (isset($keywordsMapping[$keywordName])) {
                                         $entry->addKeyword($keywordsMapping[$keywordName]);
                                     }
+                                }
+                                break;
+                            case 'comments':
+                                $contents = explode('|', $value);
+
+                                foreach ($contents as $content) {
+                                    $comment = new Comment();
+                                    $comment->setEntry($entry);
+                                    $comment->setUser($user);
+                                    $comment->setContent($content);
+                                    $comment->setCreationDate($now);
+                                    $comment->setStatus(Comment::VALIDATED);
+                                    $this->om->persist($comment);
                                 }
                                 break;
                             default:

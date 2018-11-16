@@ -50,7 +50,8 @@ class CreateEntriesFromCsvCommand extends ContainerAwareCommand
         $resourceNodeRepo = $om->getRepository(ResourceNode::class);
 
         $file = $input->getArgument('csv_path');
-        $lines = str_getcsv(file_get_contents($file), PHP_EOL);
+        $content = str_replace(PHP_EOL, '<br/>', file_get_contents($file));
+        $lines = explode(';"<endofline>"<br/>', $content);
 
         $username = $input->getArgument('username');
         $user = $userRepo->findOneBy(['username' => $username]);
@@ -71,13 +72,13 @@ class CreateEntriesFromCsvCommand extends ContainerAwareCommand
         }
         if (1 < count($lines)) {
             $data = [];
-            $keys = explode(';', $lines[0]);
+            $keys = str_getcsv($lines[0], ';');
 
             foreach ($lines as $index => $line) {
                 if ($index > 0) {
                     $lineNum = $index + 1;
                     $lineData = [];
-                    $lineArray = explode(';', $line);
+                    $lineArray = str_getcsv($line, ';');
 
                     if (count($lineArray) > count($keys)) {
                         throw new \Exception("Line {$lineNum} has too many args.");
