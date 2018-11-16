@@ -116,7 +116,10 @@ class ParametersSerializer
             }
 
             $serializer = $this->serializer->get(Content::class);
-            $serializer->deserialize($data['tos']['text'], $contentTos, ['property' => 'content']);
+
+            if (isset($data['tos']['text'])) {
+                $serializer->deserialize($data['tos']['text'], $contentTos, ['property' => 'content']);
+            }
         }
     }
 }
