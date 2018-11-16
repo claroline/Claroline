@@ -146,10 +146,7 @@ class Updater120118 extends Updater
                     'users_csv_by_full_name' => $this->setParameter($parameters, 'workspace_users_csv_import_by_full_name'),
                     'send_mail_at_registration' => $this->setParameter($parameters, 'send_mail_at_workspace_registration'),
                     'enable_rich_text_file_import' => $this->setParameter($parameters, 'enable_rich_text_file_import'),
-                    'list' => [
-                      'default_mode' => $this->setParameter($parameters, 'workspace_list_default_mode'),
-                      'default_properties' => $this->setParameter($parameters, 'workspace_list_default_properties'),
-                    ],
+                    'list' => $this->setParameter($parameters, 'workspace.list'),
                 ],
                 'internet' => [
                     'domain_name' => $this->setParameter($parameters, 'domain_name'),
