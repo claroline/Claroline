@@ -1,4 +1,0 @@
-formalibre_presence_bundle:
-    resource: "@FormaLibrePresenceBundle/Controller/"
-    type:     annotation
-    prefix:   /
