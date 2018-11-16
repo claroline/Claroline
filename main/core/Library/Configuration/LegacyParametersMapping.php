@@ -67,7 +67,7 @@ class LegacyParametersMapping
             'max_upload_resources' => 'workspace.max_upload_resources',
             'max_workspace_users' => 'workspace.max_workspace_users',
             'confirm_send_datas' => 'statistics.confirmed',
-            'token' => 'security.token',
+            'token' => 'statistics.token',
             'country' => 'country',
             'datas_sending_url' => 'statistics.url',
             'auto_logging_after_registration' => 'registration.auto_logging',
