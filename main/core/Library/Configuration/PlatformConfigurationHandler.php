@@ -114,10 +114,9 @@ class PlatformConfigurationHandler
 
     protected function mergeParameters()
     {
-        if (!file_exists($this->configFile) && false === @touch($this->configFile)) {
-            throw new \Exception(
-                "Configuration file '{$this->configFile}' does not exits and cannot be created"
-            );
+        if (!file_exists($this->configFile)) {
+            $defaults = new PlatformDefaults();
+            file_put_contents($this->configFile, json_encode($defaults->getDefaultParameters(), JSON_PRETTY_PRINT));
         }
 
         $parameters = json_decode(file_get_contents($this->configFile), true);
