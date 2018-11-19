@@ -115,13 +115,13 @@ class PlatformDefaults implements ParameterProviderInterface
               'login_target_route' => 'claro_security_login',
             ],
             'registration' => [
-              '' => '/^[a-zA-Z0-9@\-_\.]*$/',
               'self' => false,
               'default_role' => 'ROLE_USER',
               'validation' => self::REGISTRATION_MAIL_VALIDATION_PARTIAL,
               'auto_logging' => false,
               'register_button_at_login' => false,
               'allow_workspace' => false,
+              'username_regex' => "/^[a-zA-Z0-9@\-_\.]*$/",
               'force_organization_creation' => false,
             ],
             'security' => [
@@ -133,7 +133,6 @@ class PlatformDefaults implements ParameterProviderInterface
               'account_duration' => null,
               'default_root_anon_id' => null,
               'anonymous_public_profile' => false,
-              'username_regex' => '/^[a-zA-Z0-9@\-_\.]*$/',
               'disabled_admin_tools' => [
               ],
             ],
@@ -175,7 +174,7 @@ class PlatformDefaults implements ParameterProviderInterface
             ],
             'ssl' => [
               'enabled' => false,
-              'version_value' => 3,
+              'version' => 3,
             ],
             'server' => [
               'tmp_dir' => sys_get_temp_dir(),

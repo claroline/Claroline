@@ -11,17 +11,17 @@
 
 namespace Claroline\AuthenticationBundle\Manager\Oauth;
 
-use Claroline\CoreBundle\Entity\User;
 use Claroline\AppBundle\Event\App\RefreshCacheEvent;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Security\Authenticator;
 use Claroline\AppBundle\Manager\CacheManager;
-use Claroline\CoreBundle\Manager\RegistrationManager;
-use Claroline\CoreBundle\Manager\UserManager;
-use Doctrine\ORM\EntityManager;
 use Claroline\AuthenticationBundle\Entity\Oauth\OauthUser;
 use Claroline\AuthenticationBundle\Model\Oauth\OauthConfiguration;
 use Claroline\AuthenticationBundle\Repository\Oauth\OauthUserRepository;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Security\Authenticator;
+use Claroline\CoreBundle\Manager\RegistrationManager;
+use Claroline\CoreBundle\Manager\UserManager;
+use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -123,7 +123,7 @@ class OauthManager
             );
             $event->addCacheParameter(
                 "is_{$service}_available",
-                (count($errors) === 0 && $this->isActive($service))
+                (0 === count($errors) && $this->isActive($service))
             );
         }
     }
@@ -162,18 +162,6 @@ class OauthManager
         $clientId = $this->platformConfigHandler->getParameter($service.'_client_id');
         $clientSecret = $this->platformConfigHandler->getParameter($service.'_client_secret');
         $clientTenantDomain = $this->platformConfigHandler->getParameter($service.'_client_domain');
-        // Compatibility with tool FormaLibreOfficeConnect
-        if ($service === 'office_365') {
-            if ($clientId === null) {
-                $clientId = $this->platformConfigHandler->getParameter('o365_client_id');
-            }
-            if ($clientSecret === null) {
-                $clientSecret = $this->platformConfigHandler->getParameter('o365_pw');
-            }
-            if ($clientTenantDomain === null) {
-                $clientTenantDomain = $this->platformConfigHandler->getParameter('o365_domain');
-            }
-        }
 
         $config = new OauthConfiguration(
             $clientId,
@@ -183,7 +171,7 @@ class OauthManager
             $clientTenantDomain
         );
 
-        if ($service === 'generic') {
+        if ('generic' === $service) {
             $config->setAuthorizationUrl($this->platformConfigHandler->getParameter($service.'_authorization_url'));
             $config->setAccessTokenUrl($this->platformConfigHandler->getParameter($service.'_access_token_url'));
             $config->setInfosUrl($this->platformConfigHandler->getParameter($service.'_infos_url'));
@@ -246,7 +234,7 @@ class OauthManager
     {
         $verifyPassword = false;
         $password = null;
-        if ($username === null) {
+        if (null === $username) {
             $verifyPassword = true;
             $username = $request->get('_username');
             $password = $request->get('_password');
@@ -274,7 +262,7 @@ class OauthManager
     {
         $isActive = $this->platformConfigHandler->getParameter($service.'_client_active');
         // Compatibility with tool FormaLibreOfficeConnect
-        if ($service === 'office_365' && $isActive === null) {
+        if ('office_365' === $service && null === $isActive) {
             $isActive = $this->platformConfigHandler->getParameter('o365_active');
         }
 
@@ -335,7 +323,7 @@ class OauthManager
         curl_exec($curlHandle); // execute the curl
         $respInfo = curl_getinfo($curlHandle);
         curl_close($curlHandle);
-        if ($respInfo['http_code'] !== 200) {
+        if (200 !== $respInfo['http_code']) {
             return ['error' => 'twitter_application_validation_error'];
         }
 

@@ -8,6 +8,7 @@
 
 namespace Claroline\CoreBundle\Command\DatabaseIntegrity;
 
+use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Entity\Tab\HomeTabConfig;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -15,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class HomeTabCommand extends ContainerAwareCommand
+class HomeTabCommand extends ContainerAwareCommand implements AdminCliCommand
 {
     protected function configure()
     {
@@ -41,7 +42,6 @@ class HomeTabCommand extends ContainerAwareCommand
 
             $desktopHomeTabConfig = new HomeTabConfig();
             $desktopHomeTabConfig->setHomeTab($desktopHomeTab);
-            $desktopHomeTabConfig->setType(HomeTab::TYPE_ADMIN_DESKTOP);
             $desktopHomeTabConfig->setVisible(true);
             $desktopHomeTabConfig->setLocked(false);
             $desktopHomeTabConfig->setTabOrder(1);
@@ -74,7 +74,6 @@ class HomeTabCommand extends ContainerAwareCommand
 
                 $workspaceTabConfig = new HomeTabConfig();
                 $workspaceTabConfig->setHomeTab($workspaceTab);
-                $workspaceTabConfig->setType(HomeTab::TYPE_WORKSPACE);
                 $workspaceTabConfig->setVisible(true);
                 $workspaceTabConfig->setLocked(true);
                 $workspaceTabConfig->setTabOrder(1);

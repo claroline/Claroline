@@ -42,6 +42,9 @@ class PlatformConfigurationHandler
         $this->configFile = $configFile;
         $this->parameters = $this->mergeParameters();
         $this->arrayUtils = new ArrayUtils();
+        //just in case init went wrong
+        $mapping = new LegacyParametersMapping();
+        $this->mapping = $mapping->getMapping();
     }
 
     public function hasParameter($parameter)
@@ -62,11 +65,22 @@ class PlatformConfigurationHandler
             return $this->arrayUtils->get($this->parameters, $parameter);
         }
 
-        $mapping = new LegacyParametersMapping();
-        $legacyMapping = $mapping->getMapping();
+        if (array_key_exists($parameter, $this->mapping) && $this->arrayUtils->has($this->parameters, $this->mapping[$parameter])) {
+            return $this->arrayUtils->get($this->parameters, $this->mapping[$parameter]);
+        }
 
-        if (array_key_exists($parameter, $legacyMapping)) {
-            return $this->arrayUtils->get($this->parameters, $legacyMapping[$parameter]);
+        //otherwise let's go default
+        $defaults = [];
+        foreach ($this->defaultConfigs as $default) {
+            $defaults = array_merge($default, $defaults);
+        }
+
+        if (array_key_exists($parameter, $defaults)) {
+            return $this->arrayUtils->get($defaults, $parameter);
+        }
+
+        if (array_key_exists($parameter, $this->mapping) && $this->arrayUtils->has($defaults, $this->mapping[$parameter])) {
+            return $this->arrayUtils->get($defaults, $this->mapping[$parameter]);
         }
 
         return null;
@@ -75,6 +89,11 @@ class PlatformConfigurationHandler
     public function getParameters()
     {
         return $this->parameters;
+    }
+
+    public function addLegacyMapping(LegacyParametersMappingInterface $mapping)
+    {
+        $this->mapping = array_merge($this->mapping, $mapping->getMapping());
     }
 
     public function getDefaultsConfigs()

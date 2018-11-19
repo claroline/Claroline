@@ -12,8 +12,13 @@
 namespace Claroline\CoreBundle\Library\Configuration;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use JMS\DiExtraBundle\Annotation as DI;
 
-class LegacyParametersMapping
+/**
+ * @DI\Service()
+ * @DI\Tag("claroline.configuration.mapping.legacy")
+ */
+class LegacyParametersMapping implements LegacyParametersMappingInterface
 {
     public function getMapping()
     {
@@ -55,7 +60,7 @@ class LegacyParametersMapping
             'platform_limit_date' => 'security.platform_limit_date', //1 june 2019
             'platform_init_date' => 'security.platform_init_date', //1 june 2014
             'account_duration' => 'security.account_duration',
-            'username_regex' => 'security.username_regex',
+            'username_regex' => 'registration.username_regex',
             'anonymous_public_profile' => 'security.anonymous_public_profile',
             'home_menu' => 'display.home_menu',
             'footer_login' => 'display.footer_login',

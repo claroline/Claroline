@@ -28,5 +28,9 @@ class PlatformConfigPass implements CompilerPassInterface
         foreach (array_keys($container->findTaggedServiceIds('claroline.configuration')) as $id) {
             $configHandler->addMethodCall('addDefaultParameters', [new Reference($id)]);
         }
+
+        foreach (array_keys($container->findTaggedServiceIds('claroline.configuration.mapping.legacy')) as $id) {
+            $configHandler->addMethodCall('AddLegacyMapping', [new Reference($id)]);
+        }
     }
 }

@@ -27,9 +27,10 @@ class PlatformDefaults implements ParameterProviderInterface
 
         foreach (OauthConfiguration::resourceOwners() as $resourceOwner) {
             $resourceOwnerStr = str_replace(' ', '_', strtolower($resourceOwner));
-            $parameters[$resourceOwnerStr.'_client_id'] = null;
-            $parameters[$resourceOwnerStr.'_client_secret'] = null;
-            $parameters[$resourceOwnerStr.'_client_active'] = null;
+            $parameters['external_authentication'][$resourceOwnerStr]['client_id'] = null;
+            $parameters['external_authentication'][$resourceOwnerStr]['client_secret'] = null;
+            $parameters['external_authentication'][$resourceOwnerStr]['client_active'] = null;
+            $parameters['external_authentication'][$resourceOwnerStr]['client_force_reauthenticate'] = null;
         }
 
         return $parameters;
