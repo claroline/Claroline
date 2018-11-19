@@ -34,6 +34,28 @@ class Directory extends AbstractResource
     private $uploadDestination = false;
 
     /**
+     * Directory constructor.
+     */
+    public function __construct()
+    {
+        // set some list configuration defaults
+        // can be done later in the resource.directory.create event
+        $this->count = true;
+        $this->card = ['icon', 'flags', 'subtitle', 'description', 'footer'];
+
+        $this->availableColumns = ['name', 'published', 'resourceType'];
+        $this->displayedColumns = ['name', 'published', 'resourceType'];
+
+        $this->filterable = true;
+        $this->searchMode = 'unified';
+        $this->availableFilters = ['name', 'published', 'resourceType'];
+
+        $this->sortable = true;
+        $this->sortBy = 'name';
+        $this->availableSort = ['name', 'resourceType'];
+    }
+
+    /**
      * @param bool $uploadDestination
      */
     public function setUploadDestination($uploadDestination)

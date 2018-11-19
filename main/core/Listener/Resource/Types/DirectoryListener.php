@@ -108,12 +108,10 @@ class DirectoryListener
         $data = $event->getData();
         $parent = $event->getResourceNode();
 
-        $attributes['type'] = $data['resourceNode']['meta']['type'];
-        $collection = new ResourceCollection([$parent]);
-        $collection->setAttributes($attributes);
-
         $add = $this->actionManager->get($parent, 'add');
 
+        // checks if the current user can add
+        $collection = new ResourceCollection([$parent], ['type' => $data['resourceNode']['meta']['type']]);
         if (!$this->actionManager->hasPermission($add, $collection)) {
             throw new ResourceAccessException($collection->getErrorsForDisplay(), $collection->getResources());
         }
@@ -152,10 +150,10 @@ class DirectoryListener
             // todo : initialize default rights
         }
 
-        // todo : dispatch creation event
-
         $this->om->persist($resource);
         $this->om->persist($resourceNode);
+
+        // todo : dispatch creation event
 
         $this->om->flush();
 

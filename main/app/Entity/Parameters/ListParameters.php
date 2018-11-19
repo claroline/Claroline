@@ -72,7 +72,7 @@ trait ListParameters
      *
      * @var int
      */
-    private $pageSize = 20;
+    private $pageSize = 15;
 
     /**
      * @ORM\Column(type="json_array")

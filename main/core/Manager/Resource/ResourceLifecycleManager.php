@@ -6,6 +6,8 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
+use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
@@ -19,6 +21,8 @@ use JMS\DiExtraBundle\Annotation as DI;
  * Centralizes events dispatched for resources integration.
  *
  * @DI\Service("claroline.manager.resource_lifecycle")
+ *
+ * @todo finish me
  */
 class ResourceLifecycleManager
 {
@@ -61,6 +65,14 @@ class ResourceLifecycleManager
 
     public function create(ResourceNode $resourceNode)
     {
+        /** @var CreateResourceEvent $event */
+        $event = $this->dispatcher->dispatch(
+            static::eventName('create', $resourceNode),
+            CreateResourceEvent::class,
+            [$this->getResourceFromNode($resourceNode)]
+        );
+
+        return $event;
     }
 
     public function rights(ResourceNode $resourceNode, $data)
@@ -150,7 +162,7 @@ class ResourceLifecycleManager
         return $event;
     }
 
-    public function evaluate($resourceUserEvaluation)
+    public function evaluate(ResourceUserEvaluation $resourceUserEvaluation)
     {
         /** @var ResourceEvaluationEvent $event */
         $event = $this->dispatcher->dispatch(

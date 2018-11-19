@@ -11,119 +11,45 @@
 
 namespace Claroline\CoreBundle\Event;
 
-use Claroline\AppBundle\Event\DataConveyorEventInterface;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Event dispatched by the resource controller when a resource creation is asked.
+ * Event dispatched when a resource creation is asked.
  */
-class CreateResourceEvent extends Event implements DataConveyorEventInterface
+class CreateResourceEvent extends Event
 {
-    private $parent;
-    private $formContent;
-    private $resourceType;
-    private $resources;
-    private $isPopulated = false;
-    private $process = true;
-    private $published = true;
-    private $encoding;
-
-    public function __construct($parent = null, $resourceType = null, $encoding = 'none')
-    {
-        $this->parent = $parent;
-        $this->resourceType = $resourceType;
-        $this->resources = [];
-        $this->encoding = $encoding;
-    }
+    /** @var AbstractResource */
+    private $resource;
 
     /**
-     * Sets the form content with validations errors (failure scenario).
+     * CreateResourceEvent constructor.
      *
-     * @param string $formContent
+     * @param AbstractResource $resource
      */
-    public function setErrorFormContent($formContent)
+    public function __construct(AbstractResource $resource)
     {
-        $this->isPopulated = true;
-        $this->formContent = $formContent;
+        $this->resource = $resource;
     }
 
     /**
-     * Returns the form content with validation errors.
+     * Gets the resource ResourceNode entity.
      *
-     * @return string
+     * @return ResourceNode
      */
-    public function getErrorFormContent()
+    public function getResourceNode()
     {
-        return $this->formContent;
+        return $this->resource->getResourceNode();
     }
 
-    public function setResourceType($resourceType)
+    public function getResource()
     {
-        $this->resourceType = $resourceType;
+        return $this->resource;
     }
 
-    /**
-     * Return the resource type (used by the file manager).
-     *
-     * @return string
-     */
-    public function getResourceType()
+    public function setResource(AbstractResource $resource)
     {
-        return $this->resourceType;
-    }
-
-    public function getResources()
-    {
-        return $this->resources;
-    }
-
-    public function setResources(array $resources)
-    {
-        $this->isPopulated = true;
-        $this->resources = $resources;
-    }
-
-    public function isPopulated()
-    {
-        return $this->isPopulated;
-    }
-
-    /**
-     * Required for the unzipping stuff.
-     */
-    public function setProcess($boolean)
-    {
-        $this->process = $boolean;
-    }
-
-    public function getProcess()
-    {
-        return $this->process;
-    }
-
-    public function setParent(ResourceNode $parent)
-    {
-        $this->parent = $parent;
-    }
-
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    public function setPublished($published)
-    {
-        $this->published = $published;
-    }
-
-    public function isPublished()
-    {
-        return $this->published;
-    }
-
-    public function getEncoding()
-    {
-        return $this->encoding;
+        $this->resource = $resource;
     }
 }
