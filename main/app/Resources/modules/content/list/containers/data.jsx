@@ -139,6 +139,7 @@ ListData.propTypes = {
   card: T.func,
 
   searchMode: T.string,
+  pageSizes: T.arrayOf(T.number),
 
   // The features to render for the ListData.
   // NB. by default all features are enabled,

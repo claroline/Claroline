@@ -17,8 +17,7 @@ const Row = props =>
       <div
         key={`indent-${props.item.id}-${key}`}
         className="progression-indent"
-      >
-      </div>
+      />
     )}
 
     <div className={classes('progression-row-content', {'root-content': 0 === props.item.level})}>

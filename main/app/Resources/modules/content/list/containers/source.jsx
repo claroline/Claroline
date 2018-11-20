@@ -58,6 +58,7 @@ const ListSource = props => {
         available: props.parameters.availableDisplays
       }}
       searchMode={get(props.parameters, 'searchMode') || undefined}
+      pageSizes={get(props.parameters, 'availablePageSizes') || undefined}
       count={isEmpty(props.parameters) || props.parameters.count}
       selectable={!!get(props.parameters, 'actions')}
       filterable={isEmpty(props.parameters) || !isEmpty(props.parameters.availableFilters)}

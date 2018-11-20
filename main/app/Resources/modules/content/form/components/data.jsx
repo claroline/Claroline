@@ -18,6 +18,8 @@ import {Form} from '#/main/app/content/form/components/form'
 import {FormProp} from '#/main/app/content/form/components/prop'
 import {FormGroup} from '#/main/app/content/form/components/group'
 
+// todo : add auto focus
+
 const AdvancedSection = props =>
   <ToggleableSet
     showText={props.showText}

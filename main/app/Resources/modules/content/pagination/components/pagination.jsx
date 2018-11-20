@@ -7,20 +7,27 @@ import {countPages} from '#/main/app/content/pagination/utils'
 import {PaginationPages} from '#/main/app/content/pagination/components/pages'
 import {PaginationSize} from '#/main/app/content/pagination/components/size'
 
-const Pagination = props =>
-  <nav className="pagination-container">
-    <PaginationPages
-      current={props.current}
-      pages={countPages(props.totalResults, props.pageSize)}
-      changePage={props.changePage}
-    />
+const Pagination = props => {
+  if (props.availableSizes[0] < props.totalResults) {
+    return (
+      <nav className="pagination-container">
+        <PaginationPages
+          current={props.current}
+          pages={countPages(props.totalResults, props.pageSize)}
+          changePage={props.changePage}
+        />
 
-    <PaginationSize
-      pageSize={props.pageSize}
-      availableSizes={props.availableSizes}
-      updatePageSize={props.updatePageSize}
-    />
-  </nav>
+        <PaginationSize
+          pageSize={props.pageSize}
+          availableSizes={props.availableSizes}
+          updatePageSize={props.updatePageSize}
+        />
+      </nav>
+    )
+  }
+
+  return null
+}
 
 Pagination.propTypes = {
   totalResults: T.number.isRequired,

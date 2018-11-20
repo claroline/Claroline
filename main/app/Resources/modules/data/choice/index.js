@@ -1,4 +1,4 @@
-import difference from 'lodash/difference'
+import differenceBy from 'lodash/differenceBy'
 
 import {trans, tval} from '#/main/app/intl/translation'
 
@@ -50,7 +50,7 @@ const dataType = {
     const choices = options.choices || {}
 
     if (options.multiple) {
-      const unknown = difference(value, Object.keys(choices))
+      const unknown = differenceBy(value, Object.keys(choices), (value) => value+'')
       if (0 !== unknown.length) {
         return tval('This value is invalid.')
       }

@@ -9,6 +9,8 @@ import {Heading} from '#/main/core/layout/components/heading'
 
 import {FormActions} from '#/main/app/content/form/components/actions'
 
+// todo : allow submit with enter
+
 const FormWrapper = props => props.embedded ?
   <fieldset id={props.id} className={classes('form data-form', props.className)}>
     {props.children}

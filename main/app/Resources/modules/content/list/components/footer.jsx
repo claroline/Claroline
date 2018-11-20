@@ -1,7 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {constants} from '#/main/app/content/list/constants'
 import {DataListPagination as DataListPaginationTypes} from '#/main/app/content/list/prop-types'
 
 import {ListCount} from '#/main/app/content/list/components/count'
@@ -13,7 +12,7 @@ const ListFooter = props =>
       <ListCount totalResults={props.totalResults} />
     }
 
-    {(props.pagination && constants.AVAILABLE_PAGE_SIZES[0] < props.totalResults) &&
+    {props.pagination &&
       <Pagination
         {...props.pagination}
         totalResults={props.totalResults}

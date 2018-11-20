@@ -245,6 +245,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     props.pagination = {
       pageSize: stateProps.pageSize,
       current: stateProps.currentPage,
+      availableSizes: ownProps.pageSizes,
       changePage: asyncDecorator(dispatchProps.changePage),
       updatePageSize: asyncDecorator(dispatchProps.updatePageSize)
     }
