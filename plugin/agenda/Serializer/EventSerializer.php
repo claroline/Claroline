@@ -3,6 +3,7 @@
 namespace Claroline\AgendaBundle\Serializer;
 
 use Claroline\AgendaBundle\Entity\Event;
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
@@ -57,7 +58,7 @@ class EventSerializer
             'durationEditable' => !$event->isTask() && false !== $event->isEditable(),
             'owner' => $this->serializer->serialize($event->getUser()),
             'description' => $event->getDescription(),
-            'workspace' => $event->getWorkspace() ? $this->serializer->serialize($event->getWorkspace()) : null,
+            'workspace' => $event->getWorkspace() ? $this->serializer->serialize($event->getWorkspace(), [Options::SERIALIZE_MINIMAL]) : null,
             'className' => 'event_'.$event->getId(),
             'editable' => $editable,
             'meta' => $this->serializeMeta($event),
