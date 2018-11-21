@@ -46,7 +46,7 @@ const UserMessage = props => {
           <div className="user-message-info">
             {props.user && props.user.name ?
 
-              props.user.name : trans('unknown')
+              props.user.name : trans('anonymous')
             }
 
             {props.date &&
