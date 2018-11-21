@@ -64,7 +64,7 @@ trait SerializerTrait
             $this->arrayUtils = new ArrayUtils();
         }
 
-        if ($data) {
+        if ($data && is_array($data)) {
             try {
                 $value = $this->arrayUtils->get($data, $prop);
 
