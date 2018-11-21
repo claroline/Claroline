@@ -1,7 +1,7 @@
 import {createSelector} from 'reselect'
 
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {hasPermission} from '#/main/core/resource/permissions'
+import {hasPermission} from '#/main/app/security'
 
 const STORE_NAME = 'resource'
 

@@ -17,7 +17,7 @@ import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {actions as toolbarActions} from '#/plugin/blog/resources/blog/toolbar/store'
 import {PostType} from '#/plugin/blog/resources/blog/post/components/prop-types'
 import {constants} from '#/plugin/blog/resources/blog/constants'
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 import {selectors} from '#/plugin/blog/resources/blog/store'
 
 const loggedUser = currentUser()

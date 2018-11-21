@@ -1,9 +1,9 @@
 import {trans} from '#/main/app/intl/translation'
 import {MODAL_BUTTON} from '#/main/app/buttons'
 
-import {isAuthenticated} from '#/main/core/user/current'
+import {isAuthenticated} from '#/main/app/security'
 
-const action = () => ({
+export default () => ({
   name: 'notes',
   type: MODAL_BUTTON,
   icon: 'fa fa-fw fa-sticky-note',
@@ -11,7 +11,3 @@ const action = () => ({
   displayed: isAuthenticated(),
   modal: []
 })
-
-export {
-  action
-}

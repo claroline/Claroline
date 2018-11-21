@@ -1,8 +1,8 @@
 import {trans} from '#/main/app/intl/translation'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
-import {isAuthenticated} from '#/main/core/user/current'
+import {isAuthenticated} from '#/main/app/security'
 
-const action = (resourceNodes) => ({ // todo collection
+export default (resourceNodes) => ({ // todo collection
   name: 'favourite',
   type: ASYNC_BUTTON,
   icon: 'fa fa-fw fa-star-o',
@@ -15,7 +15,3 @@ const action = (resourceNodes) => ({ // todo collection
     }
   }
 })
-
-export {
-  action
-}

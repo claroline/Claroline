@@ -20,18 +20,18 @@ const WorkspaceList = {
       label: trans('code'),
       displayed: true
     }, {
-      name: 'meta.model',
-      label: trans('model'),
-      type: 'boolean',
-      alias: 'model',
-      displayed: true
-    }, {
       name: 'meta.created',
       label: trans('creation_date'),
       type: 'date',
       alias: 'created',
       displayed: true,
       filterable: false
+    }, {
+      name: 'meta.model',
+      label: trans('model'),
+      type: 'boolean',
+      alias: 'model',
+      displayed: true
     }, {
       name: 'meta.personal',
       label: trans('personal_workspace'),

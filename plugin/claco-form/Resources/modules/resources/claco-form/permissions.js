@@ -1,4 +1,4 @@
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 
 function isEntryManager(entry) {
   const authenticatedUser = currentUser()

@@ -6,7 +6,7 @@ import merge from 'lodash/merge'
 import {trans} from '#/main/app/intl/translation'
 import {makeId} from '#/main/core/scaffolding/id'
 import {withRouter} from '#/main/app/router'
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 import {PageSimple} from '#/main/app/page/components/simple'
 import {
   PageHeader,

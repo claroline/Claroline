@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {withReducer} from '#/main/app/store/components/withReducer'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 import {makeId} from '#/main/core/scaffolding/id'
 import {now} from '#/main/app/intl/date'
 

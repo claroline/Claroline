@@ -26,6 +26,11 @@ const WorkspaceList = {
       displayed: true,
       filterable: false
     }, {
+      name: 'meta.model',
+      label: trans('model'),
+      type: 'boolean',
+      alias: 'model'
+    }, {
       name: 'meta.personal',
       label: trans('personal_workspace'),
       type: 'boolean',
@@ -45,6 +50,11 @@ const WorkspaceList = {
       label: trans('public_registration'),
       type: 'boolean',
       alias: 'selfRegistration'
+    }, {
+      name: 'registration.selfUnregistration',
+      label: trans('public_unregistration'),
+      type: 'boolean',
+      alias: 'selfUnregistration'
     }, {
       name: 'registration.waitingForRegistration',
       label: trans('pending'),

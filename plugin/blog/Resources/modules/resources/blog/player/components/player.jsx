@@ -7,7 +7,7 @@ import Row from 'react-bootstrap/lib/Row'
 import Col from 'react-bootstrap/lib/Col'
 
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {hasPermission} from '#/main/core/resource/permissions'
+import {hasPermission} from '#/main/app/security'
 import {RoutedPageContent} from '#/main/core/layout/router'
 
 import {actions as editorActions} from '#/plugin/blog/resources/blog/editor/store'

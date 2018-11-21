@@ -3,9 +3,9 @@ import get from 'lodash/get'
 import {number} from '#/main/app/intl'
 import {trans} from '#/main/app/intl/translation'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
-import {isAuthenticated} from '#/main/core/user/current'
+import {isAuthenticated} from '#/main/app/security'
 
-const action = (resourceNodes, nodesRefresher) => ({ // todo collection
+export default (resourceNodes, nodesRefresher) => ({ // todo collection
   name: 'like',
   type: ASYNC_BUTTON,
   icon: 'fa fa-fw fa-thumbs-o-up',
@@ -25,7 +25,3 @@ const action = (resourceNodes, nodesRefresher) => ({ // todo collection
     success: (response) => nodesRefresher.update([response])
   }
 })
-
-export {
-  action
-}

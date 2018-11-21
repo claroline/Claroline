@@ -1,7 +1,12 @@
 import {trans} from '#/main/app/intl/translation'
 import {URL_BUTTON} from '#/main/app/buttons'
 
-const action = (resourceNodes) => ({
+/**
+ * Opens a resource node.
+ *
+ * @param {Array}  resourceNodes  - the list of resource nodes on which we want to execute the action.
+ */
+export default (resourceNodes) => ({
   name: 'open',
   type: URL_BUTTON,
   label: trans('open', {}, 'actions'),
@@ -12,7 +17,3 @@ const action = (resourceNodes) => ({
     node: resourceNodes[0].id
   }]
 })
-
-export {
-  action
-}

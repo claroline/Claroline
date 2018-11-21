@@ -13,10 +13,10 @@ import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {FormProp} from '#/main/app/content/form/components/prop'
 
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {hasPermission} from '#/main/core/resource/permissions'
+import {hasPermission} from '#/main/app/security'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 

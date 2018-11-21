@@ -5,6 +5,8 @@ const CalendarView = {
     now: T.object.isRequired,
     selected: T.object,
 
+    showCurrent: T.bool,
+
     /**
      * The current displayed range.
      */
@@ -22,6 +24,9 @@ const CalendarView = {
     // methods
     changeView: T.func.isRequired,
     update: T.func.isRequired
+  },
+  defaultProps: {
+    showCurrent: true
   }
 }
 

@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {Await} from '#/main/app/components/await'
@@ -10,36 +10,28 @@ import {ResourceForm} from '#/main/core/resource/components/form'
 
 import {selectors} from '#/main/core/resource/modals/creation/store'
 
-class ResourceParameters extends Component {
-  constructor(props) {
-    super(props)
+const ResourceParameters = (props) =>
+  <div>
+    <ContentMeta meta={props.resourceNode.meta} />
 
-    this.state = {
-      customForm: null
-    }
-  }
+    <Await
+      for={getResource(props.resourceNode.meta.type)}
+      then={module => {
+        if (module.Creation) {
+          const creationApp = module.Creation()
 
-  render() {
-    return (
-      <div>
-        <ContentMeta meta={this.props.resourceNode.meta} />
+          return React.createElement(creationApp.component)
+        }
+      }}
+    />
 
-        <Await
-          for={getResource(this.props.resourceNode.meta.type)}
-          then={module => {
-            if (module.Creation) {
-              this.setState({customForm: module.Creation()})
-            }
-          }}
-        >
-          {this.state.customForm && React.createElement(this.state.customForm.component)}
-        </Await>
-
-        <ResourceForm level={5} meta={false} name={selectors.STORE_NAME} dataPart={selectors.FORM_NODE_PART} />
-      </div>
-    )
-  }
-}
+    <ResourceForm
+      level={5}
+      meta={false}
+      name={selectors.STORE_NAME}
+      dataPart={selectors.FORM_NODE_PART}
+    />
+  </div>
 
 ResourceParameters.propTypes = {
   resourceNode: T.shape(

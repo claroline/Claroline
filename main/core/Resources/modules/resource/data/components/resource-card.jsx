@@ -11,7 +11,7 @@ import {UserMicro} from '#/main/core/user/components/micro'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {ResourceIcon} from '#/main/core/resource/components/icon'
 import {getSimpleAccessRule} from '#/main/core/resource/rights'
-import {hasPermission} from '#/main/core/resource/permissions'
+import {hasPermission} from '#/main/app/security'
 
 // TODO : make footer generic
 

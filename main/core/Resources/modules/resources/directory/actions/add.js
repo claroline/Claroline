@@ -3,7 +3,7 @@ import {MODAL_BUTTON} from '#/main/app/buttons'
 
 import {MODAL_RESOURCE_CREATION} from '#/main/core/resource/modals/creation'
 
-const action = (resourceNodes, nodesRefresher) => ({
+export default (resourceNodes, nodesRefresher) => ({
   name: 'add',
   type: MODAL_BUTTON,
   label: trans('add_resource', {}, 'resource'),
@@ -15,8 +15,3 @@ const action = (resourceNodes, nodesRefresher) => ({
   }],
   displayed: resourceNodes[0].permissions.create.length > 0
 })
-
-
-export {
-  action
-}

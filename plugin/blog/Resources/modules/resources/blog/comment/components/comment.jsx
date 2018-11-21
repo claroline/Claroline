@@ -4,11 +4,11 @@ import {connect} from 'react-redux'
 import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
-import {hasPermission} from '#/main/core/resource/permissions'
+import {hasPermission} from '#/main/app/security'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 
 import {UserMessage} from '#/main/core/user/message/components/user-message'

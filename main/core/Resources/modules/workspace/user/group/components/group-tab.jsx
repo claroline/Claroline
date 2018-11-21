@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {matchPath, Routes, withRouter} from '#/main/app/router'
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 
 import {MODAL_DATA_LIST} from '#/main/app/modals/list'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
@@ -32,7 +32,7 @@ const GroupTabActionsComponent = props =>
       />
     }
 
-    {getPermissionLevel(currentUser(), props.workspace) === ADMIN &&
+    {getPermissionLevel(props.workspace) === ADMIN &&
       <PageAction
         type={LINK_BUTTON}
         icon="fa fa-pencil"

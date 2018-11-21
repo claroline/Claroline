@@ -5,7 +5,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
 
 import {actions} from '#/plugin/message/tools/messaging/store'

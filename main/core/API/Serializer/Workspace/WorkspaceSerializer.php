@@ -146,6 +146,13 @@ class WorkspaceSerializer
                     'url' => $workspace->getPoster(),
               ])
             ) : null,
+            'permissions' => [ // TODO it will decrease perfs, should be tested, but it is required in lists
+                'open' => $this->authorization->isGranted('OPEN', $workspace),
+                'delete' => $this->authorization->isGranted('DELETE', $workspace),
+                'configure' => $this->authorization->isGranted('EDIT', $workspace),
+                'administrate' => $this->authorization->isGranted('EDIT', $workspace),
+                'export' => $this->authorization->isGranted('EXPORT', $workspace),
+            ],
         ];
 
         if (!in_array(Options::REFRESH_UUID, $options)) {
@@ -157,17 +164,6 @@ class WorkspaceSerializer
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
-                'permissions' => [ // TODO it should be available in list mode too, but will decrease perfs, should be tested
-                    'open' => $this->authorization->isGranted('OPEN', $workspace),
-                    'delete' => $this->authorization->isGranted('DELETE', $workspace),
-                    'configure' => $this->authorization->isGranted('EDIT', $workspace),
-                    'administrate' => $this->authorization->isGranted('EDIT', $workspace),
-                    'export' => $this->authorization->isGranted('EXPORT', $workspace),
-
-                    // TODO
-                    'register' => true,
-                    'unregister' => true,
-                ],
                 'registered' => $this->isRegistered($workspace),
                 'meta' => $this->getMeta($workspace, $options),
                 'opening' => $this->getOpening($workspace),

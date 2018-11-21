@@ -3,7 +3,7 @@ import {MODAL_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl/translation'
 import {MODAL_FILE_FORM} from '#/main/core/resources/file/modals/form'
 
-const action = (resourceNodes) => ({
+export default (resourceNodes) => ({
   name: 'change_file',
   type: MODAL_BUTTON,
   icon: 'fa fa-fw fa-exchange-alt',
@@ -12,7 +12,3 @@ const action = (resourceNodes) => ({
     resourceNode: resourceNodes[0]
   }]
 })
-
-export {
-  action
-}

@@ -1,0 +1,54 @@
+/* global document */
+
+import isEmpty   from 'lodash/isEmpty'
+import invariant from 'invariant'
+
+/**
+ * Exposes the current logged user.
+ *
+ * NB. For now it's added in the data set of a DOM tag by Twig.
+ */
+
+let user = null
+let userLoaded = false // because for anonymous, currentUser stay null
+
+/**
+ * Loads configuration object from DOM anchor.
+ */
+function load() {
+  const userEl = document.querySelector('#current-user')
+
+  invariant(userEl, 'Can not find current user.')
+
+  user = userEl.dataset.user && 0 !== userEl.dataset.user.length ? JSON.parse(userEl.dataset.user) : null
+
+  userLoaded = true
+}
+
+
+function currentUser() {
+  if (!userLoaded) {
+    load()
+  }
+
+  return user
+}
+
+function isAdmin() {
+  const authenticated = currentUser()
+  if (authenticated) {
+    return !!authenticated.roles.find(role => role.name === 'ROLE_ADMIN')
+  }
+
+  return false
+}
+
+function isAuthenticated() {
+  return !isEmpty(currentUser())
+}
+
+export {
+  currentUser,
+  isAdmin,
+  isAuthenticated
+}

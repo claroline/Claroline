@@ -5,7 +5,7 @@ import {withReducer} from '#/main/app/store/components/withReducer'
 import {actions as formActions} from '#/main/app/content/form/store'
 import {actions as historyActions} from '#/plugin/wiki/resources/wiki/history/store'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {hasPermission} from '#/main/core/resource/permissions'
+import {hasPermission} from '#/main/app/security'
 
 import {Resource} from '#/plugin/wiki/resources/wiki/components/resource'
 import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'

@@ -1,14 +1,12 @@
 import React from 'react'
 
-import {trans} from '#/main/app/intl/translation'
+import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'
 
-import {ListData} from '#/main/app/content/list/containers/data.jsx'
-import {WorkspaceList} from '#/main/core/administration/workspace/workspace/components/workspace-list.jsx'
+import {WorkspaceList} from '#/main/core/workspace/list/components/workspace-list'
 
-/**
- * @constructor
- */
+// TODO : reuse workspace list configuration here
+
 const Workspace = () =>
   <ListData
     name="workspaces"
@@ -21,18 +19,7 @@ const Workspace = () =>
       current: listConst.DISPLAY_TILES_SM,
       available: Object.keys(listConst.DISPLAY_MODES)
     }}
-    definition={[
-      {
-        name: 'name',
-        label: trans('name'),
-        displayed: true,
-        primary: true
-      }, {
-        name: 'code',
-        label: trans('code'),
-        displayed: true
-      }
-    ]}
+    definition={WorkspaceList.definition}
     card={WorkspaceList.card}
   />
 

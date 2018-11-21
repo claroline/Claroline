@@ -51,11 +51,14 @@
     }
 }
 
-.list-primary-action {
+a.list-primary-action,
+button.list-primary-action {
     .button-link-variant(@link-color, @link-hover-color, @link-hover-decoration);
+}
 
+.list-primary-action {
+    text-align: inherit;
     display: block; // fill cell
-    text-align: left;
     width: 100%;
 }
 

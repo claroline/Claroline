@@ -1,8 +1,8 @@
 import {createSelector} from 'reselect'
 
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {hasPermission} from '#/main/core/resource/permissions'
+import {hasPermission} from '#/main/app/security'
 
 // TODO : there is possible code refactoring with editor/selectors.js
 

@@ -3,7 +3,13 @@ import get from 'lodash/get'
 import {trans} from '#/main/app/intl/translation'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 
-const action = (resourceNodes, nodesRefresher) => ({ // todo collection
+/**
+ * Restores some soft deleted resource nodes.
+ *
+ * @param {Array}  resourceNodes  - the list of resource nodes on which we want to execute the action.
+ * @param {object} nodesRefresher - an object containing methods to update context in response to action (eg. add, update, delete).
+ */
+export default (resourceNodes, nodesRefresher) => ({ // todo collection
   name: 'restore',
   type: ASYNC_BUTTON,
   icon: 'fa fa-fw fa-recycle',
@@ -26,7 +32,3 @@ const action = (resourceNodes, nodesRefresher) => ({ // todo collection
     success: () => nodesRefresher.update(resourceNodes)
   }
 })
-
-export {
-  action
-}

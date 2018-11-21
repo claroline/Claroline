@@ -4,7 +4,7 @@ import {withReducer} from '#/main/app/store/components/withReducer'
 
 import {DragNDropContext} from '#/main/app/overlay/dnd'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
-import {hasPermission} from '#/main/core/resource/permissions'
+import {hasPermission} from '#/main/app/security'
 
 import {QuizResource as QuizResourceComponent} from '#/plugin/exo/resources/quiz/components/resource'
 import {TYPE_QUIZ} from '#/plugin/exo/quiz/enums'

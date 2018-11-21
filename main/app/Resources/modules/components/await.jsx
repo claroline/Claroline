@@ -10,6 +10,7 @@ class Await extends Component {
 
     this.state = {
       status: 'pending',
+      result: null,
       error: null
     }
   }
@@ -37,17 +38,23 @@ class Await extends Component {
 
       this.pending.promise
         .then(
-          (results) => {
+          (resolved) => {
+            let result = null
             if (this.props.then) {
-              this.props.then(results)
+              result = this.props.then(resolved) || null
             }
 
-            this.setState({status: 'success'})
+            this.setState({
+              status: 'success',
+              result: result,
+              error: null
+            })
           },
           (error) => {
             if (typeof error !== 'object' || !error.isCanceled) {
               this.setState({
                 status: 'error',
+                result: null,
                 error: error
               })
 
@@ -71,7 +78,7 @@ class Await extends Component {
         return this.props.placeholder || null
 
       case 'success':
-        return this.props.children || null
+        return this.state.result
 
       case 'error':
         return (
@@ -96,13 +103,19 @@ Await.propTypes = {
     then: T.func.isRequired,
     catch: T.func.isRequired
   }),
+
+  /**
+   * A callback which will be called with the promised results.
+   * NB. The return value of this function will be rendered.
+   *
+   * @type {func}
+   */
   then: T.func,
 
   /**
    * The placeholder to display while waiting.
    */
-  placeholder: T.node,
-  children: T.node
+  placeholder: T.node
 }
 
 export {

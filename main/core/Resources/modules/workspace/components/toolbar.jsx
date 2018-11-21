@@ -4,6 +4,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
+import {hasPermission} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
 import {url} from '#/main/app/api'
 import {Toolbar} from '#/main/app/overlay/toolbar/components/toolbar'
@@ -12,7 +13,6 @@ import {ASYNC_BUTTON, CALLBACK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/ap
 import {actions as walkthroughActions} from '#/main/app/overlay/walkthrough/store'
 
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
-import {hasPermission} from '#/main/core/workspace/permissions'
 import {select} from '#/main/core/workspace/selectors'
 
 import {MODAL_WORKSPACE_ABOUT} from '#/main/core/workspace/modals/about'
@@ -23,6 +23,7 @@ class WorkspaceToolbarComponent extends Component {
   constructor(props) {
     super(props)
 
+    // TODO : reuse new workspace standard actions
     this.state = {
       openedTool: props.tools.find(tool => props.openedTool === tool.name),
       actions: [
@@ -32,7 +33,7 @@ class WorkspaceToolbarComponent extends Component {
           icon: 'fa fa-fw fa-street-view',
           label: trans('show-walkthrough', {}, 'actions'),
           callback: () => this.startWalkthrough()
-        }, {
+        }, { //
           name: 'about',
           type: MODAL_BUTTON,
           icon: 'fa fa-fw fa-info',
@@ -50,7 +51,7 @@ class WorkspaceToolbarComponent extends Component {
           modal: [MODAL_WORKSPACE_PARAMETERS, {
             workspace: props.workspace
           }]
-        }, {
+        }, { //
           name: 'impersonation',
           type: MODAL_BUTTON,
           icon: 'fa fa-fw fa-user-secret',
@@ -59,7 +60,7 @@ class WorkspaceToolbarComponent extends Component {
           modal: [MODAL_WORKSPACE_IMPERSONATION, {
             workspace: props.workspace
           }]
-        }, {
+        }, { //
           name: 'export',
           type: URL_BUTTON,
           icon: 'fa fa-fw fa-download',
@@ -67,7 +68,7 @@ class WorkspaceToolbarComponent extends Component {
           //displayed: hasPermission('export', props.workspace),
           displayed: false, //currently broken
           target: ['claro_workspace_export', {workspace: props.workspace.id}]
-        }, {
+        }, { //
           name: 'delete',
           type: ASYNC_BUTTON,
           icon: 'fa fa-fw fa-trash-o',

@@ -7,6 +7,8 @@ import {trans} from '#/main/app/intl/translation'
 import {url} from '#/main/app/api'
 import {actions} from './actions.js'
 
+// todo : replace by plugin/tag/data/tag/components/input
+
 const ItemTagsList = props => {
   return (
     <div className="item-tags-list">
@@ -42,31 +44,29 @@ ItemTag.propTypes = {
   removeTag: T.func.isRequired
 }
 
-const TagsTypeAhead = props => {
-  return (
-    <ul className="tags-dropdown-menu dropdown-menu">
-      {props.isFetching &&
-        <li className="tags-fetching text-center">
-          <span className="fa fa-fw fa-circle-o-notch fa-spin" />
-        </li>
-      }
-      {props.tags.map((tag, idx) =>
-        <li key={idx}>
-          <a
-            role="button"
-            href=""
-            onClick={(e) => {
-              e.preventDefault()
-              props.selectTag(tag)
-            }}
-          >
-            {tag}
-          </a>
-        </li>
-      )}
-    </ul>
-  )
-}
+const TagsTypeAhead = props =>
+  <ul className="tags-dropdown-menu dropdown-menu">
+    {props.isFetching &&
+      <li className="tags-fetching text-center">
+        <span className="fa fa-fw fa-circle-o-notch fa-spin" />
+      </li>
+    }
+
+    {props.tags.map((tag, idx) =>
+      <li key={idx}>
+        <a
+          role="button"
+          href=""
+          onClick={(e) => {
+            e.preventDefault()
+            props.selectTag(tag.name)
+          }}
+        >
+          {tag.name}
+        </a>
+      </li>
+    )}
+  </ul>
 
 TagsTypeAhead.propTypes = {
   tags: T.arrayOf(T.string),
@@ -90,12 +90,12 @@ class TagsEditor extends Component {
     if (value) {
       this.setState({isFetching: true})
 
-      fetch(url(['item_tags_search']) + '?search=' + value, {
+      fetch(url(['apiv2_tag_list'], {name: value}), {
         method: 'GET' ,
         credentials: 'include'
       })
         .then(response => response.json())
-        .then(results => this.setState({results: results, isFetching: false}))
+        .then(results => this.setState({results: results.data, isFetching: false}))
     } else {
       this.setState({results: [], isFetching: false})
     }
@@ -110,7 +110,10 @@ class TagsEditor extends Component {
       this.props.updateItemTags(this.props.item.id, tags)
     }
     this.updateCurrentTag('')
-    this.props.updateCallback()
+
+    if (this.props.updateCallback) {
+      this.props.updateCallback()
+    }
   }
 
   selectTag(tag) {
@@ -120,7 +123,10 @@ class TagsEditor extends Component {
       this.props.updateItemTags(this.props.item.id, tags)
     }
     this.updateCurrentTag('')
-    this.props.updateCallback()
+
+    if (this.props.updateCallback) {
+      this.props.updateCallback()
+    }
   }
 
   removeTag(tag) {
@@ -132,7 +138,9 @@ class TagsEditor extends Component {
       this.props.updateItemTags(this.props.item.id, tags)
     }
 
-    this.props.updateCallback()
+    if (this.props.updateCallback) {
+      this.props.updateCallback()
+    }
   }
 
   isTagPresent(tag) {
@@ -181,7 +189,7 @@ TagsEditor.propTypes = {
     tags: T.arrayOf(T.string)
   }).isRequired,
   updateItemTags: T.func.isRequired,
-  updateCallback: T.func.isRequired
+  updateCallback: T.func
 }
 
 function mapStateToProps() {

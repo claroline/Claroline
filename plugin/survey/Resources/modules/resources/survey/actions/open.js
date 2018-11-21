@@ -1,7 +1,7 @@
 import {trans} from '#/main/app/intl/translation'
 import {URL_BUTTON} from '#/main/app/buttons'
 
-const action = (resourceNodes) => ({
+export default (resourceNodes) => ({
   name: 'open_survey',
   type: URL_BUTTON,
   label: trans('open', {}, 'actions'),
@@ -11,7 +11,3 @@ const action = (resourceNodes) => ({
     node: resourceNodes[0].id
   }]
 })
-
-export {
-  action
-}

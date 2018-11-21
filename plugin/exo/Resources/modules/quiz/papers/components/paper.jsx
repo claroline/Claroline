@@ -6,7 +6,7 @@ import Panel from 'react-bootstrap/lib/Panel'
 
 import {tex} from '#/main/app/intl/translation'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {hasPermission} from '#/main/core/resource/permissions'
+import {hasPermission} from '#/main/app/security'
 import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box.jsx'
 
 import quizSelect from '#/plugin/exo/quiz/selectors'

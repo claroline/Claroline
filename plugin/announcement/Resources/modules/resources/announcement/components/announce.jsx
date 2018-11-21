@@ -7,7 +7,7 @@ import {trans} from '#/main/app/intl/translation'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {hasPermission} from '#/main/core/resource/permissions'
+import {hasPermission} from '#/main/app/security'
 
 import {actions, selectors} from '#/plugin/announcement/resources/announcement/store'
 import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'

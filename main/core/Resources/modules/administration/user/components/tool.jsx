@@ -2,8 +2,7 @@ import React from 'react'
 
 import {trans} from '#/main/app/intl/translation'
 import {TabbedPageContainer} from '#/main/core/layout/tabs'
-import {currentUser} from '#/main/core/user/current'
-import {isAdmin} from  '#/main/core/workspace/user/restrictions'
+import {isAdmin} from '#/main/app/security'
 
 // app sections
 import {ParametersTab} from '#/main/core/administration/user/parameters/components/parameters-tab'
@@ -50,21 +49,21 @@ const UserTool = () =>
         icon: 'fa fa-id-badge',
         title: trans('roles'),
         path: '/roles',
-        displayed: isAdmin(currentUser()),
+        displayed: isAdmin(),
         actions: RoleTabActions,
         content: RoleTab
       }, {
         icon: 'fa fa-id-card-o',
         title: trans('user_profile'),
         path: '/profile',
-        displayed: isAdmin(currentUser()),
+        displayed: isAdmin(),
         content: ProfileTab
       }, {
         icon: 'fa fa-cog',
         title: trans('parameters'),
         path: '/parameters',
         onlyIcon: true,
-        displayed: isAdmin(currentUser()),
+        displayed: isAdmin(),
         content: ParametersTab
       }
     ]}

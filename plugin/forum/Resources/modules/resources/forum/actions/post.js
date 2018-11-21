@@ -1,7 +1,7 @@
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
-const action = () => ({
+export default () => ({
   name: 'post',
   type: LINK_BUTTON,
   label: trans('create_subject', {}, 'forum'),
@@ -9,7 +9,3 @@ const action = () => ({
   primary: true,
   target: '/subjects/form'
 })
-
-export {
-  action
-}

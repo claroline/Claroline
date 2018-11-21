@@ -3,7 +3,7 @@ import {MODAL_BUTTON} from '#/main/app/buttons'
 
 import {MODAL_RESOURCE_FILES_CREATION} from '#/main/core/resource/modals/files'
 
-const action = (resourceNodes, nodesRefresher) => ({
+export default (resourceNodes, nodesRefresher) => ({
   name: 'add_files',
   type: MODAL_BUTTON,
   label: trans('add_files', {}, 'resource'),
@@ -15,7 +15,3 @@ const action = (resourceNodes, nodesRefresher) => ({
   }],
   displayed: resourceNodes[0].permissions.create.includes('file')
 })
-
-export {
-  action
-}

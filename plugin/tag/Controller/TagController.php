@@ -14,9 +14,12 @@ namespace Claroline\TagBundle\Controller;
 use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\TagBundle\Entity\TaggedObject;
+use Claroline\TagBundle\Manager\TagManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use User;
 
 /**
  * @ApiMeta(
@@ -26,6 +29,24 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class TagController extends AbstractCrudController
 {
+    /** @var TagManager */
+    private $manager;
+
+    /**
+     * TagController constructor.
+     *
+     * @DI\InjectParams({
+     *     "tagManager" = @DI\Inject("claroline.manager.tag_manager")
+     * })
+     *
+     * @param TagManager $tagManager
+     */
+    public function __construct(
+        TagManager $tagManager
+    ) {
+        $this->manager = $tagManager;
+    }
+
     public function getName()
     {
         return 'tag';
@@ -53,7 +74,31 @@ class TagController extends AbstractCrudController
     }
 
     /**
+     * Adds a taf to a collection of taggable objects.
+     * NB. If the tag does not exist, it will be created.
+     *
+     * @EXT\Route("/{tag}/object", name="apiv2_tag_add_objects")
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
+     * @EXT\Method("POST")
+     *
+     * @param string  $tag
+     * @param User    $user
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function addObjectsAction($tag, User $user, Request $request)
+    {
+        $taggedObjects = $this->manager->tagData([$tag], $this->decodeRequest($request), $user, true);
+
+        return new JsonResponse(
+            !empty($taggedObjects) ? $this->serializer->serialize($taggedObjects[0]->getTag()) : null
+        );
+    }
+
+    /**
      * @EXT\Route("/{id}/object", name="apiv2_tag_remove_objects")
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @EXT\Method("DELETE")
      *
      * @param string  $id
@@ -64,5 +109,6 @@ class TagController extends AbstractCrudController
     public function removeObjectsAction($id, Request $request)
     {
         // TODO : implement
+        return new JsonResponse(null, 204);
     }
 }

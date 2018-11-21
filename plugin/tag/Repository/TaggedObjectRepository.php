@@ -21,7 +21,7 @@ class TaggedObjectRepository extends EntityRepository
 {
     public function countByTag(Tag $tag)
     {
-        return $this->createQueryBuilder('t')
+        return (int) $this->createQueryBuilder('t')
             ->select('COUNT(t)')
             ->where('t.tag = :tag')
             ->setParameters([

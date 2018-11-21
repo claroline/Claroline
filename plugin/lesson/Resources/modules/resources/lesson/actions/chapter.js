@@ -2,7 +2,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {trans} from '#/main/app/intl/translation'
 
-const action = () => ({
+export default () => ({
   name: 'chapter',
   type: LINK_BUTTON,
   label: trans('chapter_creation', {}, 'icap_lesson'),
@@ -10,7 +10,3 @@ const action = () => ({
   primary: true,
   target: '/new'
 })
-
-export {
-  action
-}

@@ -8,7 +8,7 @@ import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {hasPermission} from '#/main/core/resource/permissions'
+import {hasPermission} from '#/main/app/security'
 
 import {actions, selectors} from '#/plugin/announcement/resources/announcement/store'
 import {AnnouncePost} from '#/plugin/announcement/resources/announcement/components/announce-post'

@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {withReducer} from '#/main/app/store/components/withReducer'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
-import {hasPermission} from '#/main/core/resource/permissions'
+import {hasPermission} from '#/main/app/security'
 
 import {PathResource as PathResourceComponent} from '#/plugin/path/resources/path/components/resource'
 import {reducer, selectors} from '#/plugin/path/resources/path/store'

@@ -13,9 +13,10 @@ namespace Claroline\TagBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\TagBundle\Entity\Tag;
 use Claroline\TagBundle\Entity\TaggedObject;
+use Claroline\TagBundle\Repository\TaggedObjectRepository;
+use Claroline\TagBundle\Repository\TagRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -23,21 +24,28 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class TagManager
 {
+    /** @var ObjectManager */
     private $om;
-    private $pagerFactory;
+
+    /** @var TaggedObjectRepository */
     private $taggedObjectRepo;
+
+    /** @var TagRepository */
     private $tagRepo;
 
     /**
+     * TagManager constructor.
+     *
      * @DI\InjectParams({
-     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
-     *     "pagerFactory" = @DI\Inject("claroline.pager.pager_factory")
+     *     "om" = @DI\Inject("claroline.persistence.object_manager")
      * })
+     *
+     * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $om, PagerFactory $pagerFactory)
-    {
+    public function __construct(
+        ObjectManager $om
+    ) {
         $this->om = $om;
-        $this->pagerFactory = $pagerFactory;
         $this->taggedObjectRepo = $om->getRepository('ClarolineTagBundle:TaggedObject');
         $this->tagRepo = $om->getRepository('ClarolineTagBundle:Tag');
     }
@@ -66,40 +74,27 @@ class TagManager
         $this->om->flush();
     }
 
-    public function tagExists($name)
+    private function getOrCreateTag($tagName, $user = null)
     {
-        $tag = $this->getOneTagByName($name);
-
-        return !is_null($tag);
-    }
-
-    public function getOrCreatePlatformTag($name)
-    {
-        $tag = $this->getUowScheduledTag($name);
+        // search for a platform tag first
+        $tag = $this->getUowScheduledTag($tagName);
         if (empty($tag)) {
-            $tag = $this->getOnePlatformTagByName($name);
+            $tag = $this->getOnePlatformTagByName($tagName);
         }
 
+        // search for a user tag
+        if (empty($tag) && !empty($user)) {
+            $tag = $this->getUowScheduledTag($tagName, $user);
+            if (empty($tag)) {
+                $tag = $this->getOneUserTagByName($user, $tagName);
+            }
+        }
+
+        // no tag found, we create a new one
         if (empty($tag)) {
             $tag = new Tag();
-            $tag->setName($name);
-            $this->persistTag($tag);
-        }
-
-        return $tag;
-    }
-
-    public function getOrCreateUserTag(User $user, $name)
-    {
-        $tag = $this->getUowScheduledTag($name, $user);
-        if (empty($tag)) {
-            $tag = $this->getOneUserTagByName($user, $name);
-        }
-
-        if (empty($tag)) {
-            $tag = new Tag();
+            $tag->setName($tagName);
             $tag->setUser($user);
-            $tag->setName($name);
             $this->persistTag($tag);
         }
 
@@ -151,8 +146,7 @@ class TagManager
             $tagsList = [];
 
             foreach ($uniqueTags as $tagName) {
-                $tag = is_null($user) ? $this->getOrCreatePlatformTag($tagName) : $this->getOrCreateUserTag($user, $tagName);
-                $tagsList[$tagName] = $tag;
+                $tagsList[$tagName] = $this->getOrCreateTag($tagName, $user);
             }
 
             foreach ($uniqueTags as $tagName) {
@@ -173,6 +167,7 @@ class TagManager
                     if (method_exists($object, '__toString')) {
                         $taggedObject->setObjectName((string) $object);
                     }
+
                     $this->persistTaggedObject($taggedObject);
                     $taggedObjects[] = $taggedObject;
                 }
@@ -183,6 +178,14 @@ class TagManager
         return $taggedObjects;
     }
 
+    /**
+     * @param string[]  $tags
+     * @param array     $data
+     * @param User|null $user
+     * @param bool      $replace
+     *
+     * @return TaggedObject[]
+     */
     public function tagData(array $tags, $data, User $user = null, $replace = false)
     {
         $taggedObjects = [];
@@ -198,8 +201,7 @@ class TagManager
         $tagsList = [];
 
         foreach ($uniqueTags as $tagName) {
-            $tag = is_null($user) ? $this->getOrCreatePlatformTag($tagName) : $this->getOrCreateUserTag($user, $tagName);
-            $tagsList[$tagName] = $tag;
+            $tagsList[$tagName] = $this->getOrCreateTag($tagName, $user);
         }
         $this->om->startFlushSuite();
 
@@ -256,11 +258,6 @@ class TagManager
         return count($roles) > 0 ? $this->taggedObjectRepo->findTaggedWorkspacesByRoles($tag, $roles, $orderedBy, $order) : [];
     }
 
-    public function getTaggedWorkspaces($tag)
-    {
-        return $this->taggedObjectRepo->findTaggedWorkspaces($tag);
-    }
-
     public function removeTaggedObjectsByClassAndIds($class, array $ids)
     {
         if (!empty($class) && !empty($ids)) {
@@ -292,58 +289,6 @@ class TagManager
      * Access to TagRepository methods *
      ***********************************/
 
-    public function getTags(
-        User $user = null,
-        $search = '',
-        $withPlatform = false,
-        $orderedBy = 'name',
-        $order = 'ASC',
-        $withPager = false,
-        $page = 1,
-        $max = 50,
-        $strictSearch = false
-    ) {
-        $tags = is_null($user) ?
-            $this->getPlatformTags($search, $orderedBy, $order, $withPager, $page, $max, $strictSearch) :
-            $this->getUserTags($user, $search, $withPlatform, $orderedBy, $order, $withPager, $page, $max, $strictSearch);
-
-        return $tags;
-    }
-
-    public function getPlatformTags(
-        $search = '',
-        $orderedBy = 'name',
-        $order = 'ASC',
-        $withPager = false,
-        $page = 1,
-        $max = 50,
-        $strictSearch = false
-    ) {
-        $tags = empty($search) ?
-            $this->tagRepo->findAllPlatformTags($orderedBy, $order) :
-            $this->tagRepo->findSearchedPlatformTags($search, $orderedBy, $order, $strictSearch);
-
-        return $withPager ? $this->pagerFactory->createPagerFromArray($tags, $page, $max) : $tags;
-    }
-
-    public function getUserTags(
-        User $user,
-        $search = '',
-        $withPlatform = false,
-        $orderedBy = 'name',
-        $order = 'ASC',
-        $withPager = false,
-        $page = 1,
-        $max = 50,
-        $strictSearch = false
-    ) {
-        $tags = empty($search) ?
-            $this->tagRepo->findAllUserTags($user, $withPlatform, $orderedBy, $order) :
-            $this->tagRepo->findSearchedUserTags($user, $search, $withPlatform, $orderedBy, $order, $strictSearch);
-
-        return $withPager ? $this->pagerFactory->createPagerFromArray($tags, $page, $max) : $tags;
-    }
-
     public function getOnePlatformTagByName($name)
     {
         return $this->tagRepo->findOnePlatformTagByName($name);
@@ -366,32 +311,29 @@ class TagManager
         $strictSearch = false,
         $orderedBy = 'name',
         $order = 'ASC',
-        $withPager = false,
-        $page = 1,
-        $max = 50,
         array $ids = []
     ) {
-        $objects = empty($search) ?
-            $this->taggedObjectRepo->findAllTaggedObjects(
+        if (empty($search)) {
+            return $this->taggedObjectRepo->findAllTaggedObjects(
                 $user,
                 $withPlatform,
                 $class,
                 $orderedBy,
                 $order,
-                $ids
-            ) :
-            $this->taggedObjectRepo->findSearchedTaggedObjects(
-                $search,
-                $user,
-                $withPlatform,
-                $class,
-                $orderedBy,
-                $order,
-                $strictSearch,
                 $ids
             );
+        }
 
-        return $withPager ? $this->pagerFactory->createPagerFromArray($objects, $page, $max) : $objects;
+        return $this->taggedObjectRepo->findSearchedTaggedObjects(
+            $search,
+            $user,
+            $withPlatform,
+            $class,
+            $orderedBy,
+            $order,
+            $strictSearch,
+            $ids
+        );
     }
 
     public function getOneTaggedObjectByTagAndObject(Tag $tag, $objectId, $objectClass)
@@ -402,28 +344,5 @@ class TagManager
     public function getOneTaggedObjectByTagNameAndObject($tagName, $objectId, $objectClass)
     {
         return $this->taggedObjectRepo->findOneTaggedObjectByTagNameAndObject($tagName, $objectId, $objectClass);
-    }
-
-    /**
-     * Find all content for a given user and the replace him by another.
-     *
-     * @param User $from
-     * @param User $to
-     *
-     * @return int
-     */
-    public function replaceTagUser(User $from, User $to)
-    {
-        $tags = $this->tagRepo->findByUser($from);
-
-        if (count($tags) > 0) {
-            foreach ($tags as $tag) {
-                $tag->setUser($to);
-            }
-
-            $this->om->flush();
-        }
-
-        return count($tags);
     }
 }

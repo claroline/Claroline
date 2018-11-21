@@ -1,21 +1,86 @@
-import React from 'react'
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
+import {trans, transChoice} from '#/main/app/intl/translation'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
+
+import {TagTypeahead} from '#/plugin/tag/components/typeahead'
+import {Tag as TagTypes} from '#/plugin/tag/data/types/tag/prop-types'
 
 const TagsModal = props =>
   <Modal
-    {...omit(props)}
+    {...omit(props, 'tags', 'objectClass', 'objects', 'update', 'loadTags', 'removeTag', 'addTag')}
+    icon="fa fa-fw fa-tags"
+    title={trans('tags', {}, 'tag')}
+    subtitle={1 === props.objects.length ?
+      props.objects[0].name
+      :
+      transChoice('count_elements', props.objects.length, {count: props.objects.length})
+    }
+    onEntering={() => props.loadTags(props.objectClass, props.objects)}
   >
+    <div className="modal-body">
+      <TagTypeahead
+        selectAction={(tagName) => ({
+          type: CALLBACK_BUTTON,
+          callback: () => props.addTag(props.objectClass, props.objects, {name: tagName})
+        })}
+      />
 
+      {0 === props.tags.length &&
+        <div className="no-item-info">{trans('no_tag', {}, 'tag')}</div>
+      }
+
+      {0 !== props.tags.length &&
+        <ul className="tags">
+          {props.tags.map(tag =>
+            <li key={tag.id} className="tag" style={{borderColor: tag.color}}>
+              <span className="tag-color" style={{backgroundColor: tag.color}} />
+
+              <div className="tag-meta">
+                {tag.name}
+
+                {tag.meta.description &&
+                  <p className="tag-description">{tag.meta.description}</p>
+                }
+              </div>
+
+              <Button
+                className="tag-action btn btn-link"
+                type={CALLBACK_BUTTON}
+                icon="fa fa-times"
+                label={trans('delete', {}, 'actions')}
+                tooltip="left"
+                callback={() => props.removeTag(props.objectClass, props.objects, tag)}
+              />
+            </li>
+          )}
+        </ul>
+      }
+    </div>
   </Modal>
 
 TagsModal.propTypes = {
+  objectClass: T.string.isRequired,
+  objects: T.arrayOf(T.shape({
+    id: T.oneOfType([T.string, T.number]).isRequired,
+    name: T.string.isRequired
+  })),
+  update: T.func,
 
+  tags: T.arrayOf(T.shape(
+    TagTypes.propTypes
+  )),
+  loadTags: T.func.isRequired,
+  removeTag: T.func.isRequired,
+  addTag: T.func.isRequired
 }
 
 TagsModal.defaultProps = {
-
+  tags: []
 }
 
 export {

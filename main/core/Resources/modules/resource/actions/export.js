@@ -2,7 +2,12 @@ import {trans} from '#/main/app/intl/translation'
 import {DOWNLOAD_BUTTON} from '#/main/app/buttons'
 import {url} from '#/main/app/api'
 
-const action = (resourceNodes) => ({ // todo collection
+/**
+ * Exports resource nodes.
+ *
+ * @param {Array}  resourceNodes  - the list of resource nodes on which we want to execute the action.
+ */
+export default (resourceNodes) => ({ // todo collection
   name: 'export',
   type: DOWNLOAD_BUTTON,
   icon: 'fa fa-fw fa-download',
@@ -14,7 +19,3 @@ const action = (resourceNodes) => ({ // todo collection
     )
   }
 })
-
-export {
-  action
-}

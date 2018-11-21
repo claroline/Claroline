@@ -1,9 +1,9 @@
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
-import {isAuthenticated} from '#/main/core/user/current'
+import {isAuthenticated} from '#/main/app/security'
 
-const action = (resourceNodes, nodesRefresher) => ({
+export default (resourceNodes, nodesRefresher) => ({
   name: 'unfollow',
   type: 'async',
   icon: 'fa fa-fw fa-bell-slash-o',
@@ -17,7 +17,3 @@ const action = (resourceNodes, nodesRefresher) => ({
     success: (response) => nodesRefresher.update(response)
   }
 })
-
-export {
-  action
-}

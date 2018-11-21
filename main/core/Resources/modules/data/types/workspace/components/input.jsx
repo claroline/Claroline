@@ -1,15 +1,38 @@
 import React from 'react'
 
-import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {ModalButton} from '#/main/app/buttons/modal/containers/button'
-
+import {trans} from '#/main/app/intl/translation'
+import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {Button} from '#/main/app/action/components/button'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+
 import {WorkspaceCard} from '#/main/core/workspace/data/components/workspace-card'
 import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
 import {MODAL_WORKSPACES_PICKER} from '#/main/core/modals/workspaces'
+
+const WorkspacesButton = props =>
+  <Button
+    className="btn"
+    style={{marginTop: 10}}
+    type={MODAL_BUTTON}
+    icon="fa fa-fw fa-book"
+    label={trans('select_a_workspace')}
+    primary={true}
+    modal={[MODAL_WORKSPACES_PICKER, {
+      url: ['apiv2_administrated_list'],
+      title: props.title,
+      selectAction: (selected) => ({
+        type: CALLBACK_BUTTON,
+        callback: () => props.onChange(selected[0])
+      })
+    }]}
+  />
+
+WorkspacesButton.propTypes = {
+  title: T.string,
+  onChange: T.func.isRequired
+}
 
 const WorkspaceInput = props => {
   if (props.value) {
@@ -26,30 +49,15 @@ const WorkspaceInput = props => {
               icon: 'fa fa-fw fa-trash-o',
               label: trans('delete', {}, 'actions'),
               dangerous: true,
-              callback: () => props.picker.handleSelect ?
-                props.onChange(props.picker.handleSelect(null)) :
-                props.onChange(null)
+              callback: () => props.onChange(null)
             }
           ]}
         />
-        <ModalButton
-          className="btn btn-workspaces-primary"
-          style={{marginTop: 10}}
-          primary={true}
-          modal={[MODAL_WORKSPACES_PICKER, {
-            title: props.picker.title,
-            confirmText: props.picker.confirmText,
-            selectAction: (selected) => ({
-              type: CALLBACK_BUTTON,
-              callback: () => props.picker.handleSelect ?
-                props.onChange(props.picker.handleSelect(selected[0])) :
-                props.onChange(selected[0])
-            })
-          }]}
-        >
-          <span className="fa fa-fw fa-book icon-with-text-right" />
-          {trans('select_a_workspace')}
-        </ModalButton>
+
+        <WorkspacesButton
+          {...props.picker}
+          onChange={props.onChange}
+        />
       </div>
     )
   } else {
@@ -59,23 +67,10 @@ const WorkspaceInput = props => {
         icon="fa fa-book"
         title={trans('no_workspace')}
       >
-        <ModalButton
-          className="btn btn-workspaces-primary"
-          primary={true}
-          modal={[MODAL_WORKSPACES_PICKER, {
-            title: props.picker.title,
-            confirmText: props.picker.confirmText,
-            selectAction: (selected) => ({
-              type: CALLBACK_BUTTON,
-              callback: () => props.picker.handleSelect ?
-                props.onChange(props.picker.handleSelect(selected[0])) :
-                props.onChange(selected[0])
-            })
-          }]}
-        >
-          <span className="fa fa-fw fa-book icon-with-text-right" />
-          {trans('select_a_workspace')}
-        </ModalButton>
+        <WorkspacesButton
+          {...props.picker}
+          onChange={props.onChange}
+        />
       </EmptyPlaceholder>
     )
   }
@@ -84,15 +79,12 @@ const WorkspaceInput = props => {
 implementPropTypes(WorkspaceInput, FormFieldTypes, {
   value: T.shape(WorkspaceType.propTypes),
   picker: T.shape({
-    title: T.string,
-    confirmText: T.string,
-    handleSelect: T.func
+    title: T.string
   })
 }, {
   value: null,
   picker: {
-    title: trans('workspace_selector'),
-    confirmText: trans('select', {}, 'actions')
+    title: trans('workspace_selector')
   }
 })
 

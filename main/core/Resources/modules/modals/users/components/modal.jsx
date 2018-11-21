@@ -2,11 +2,11 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
+import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {trans} from '#/main/app/intl/translation'
 import {selectors} from '#/main/core/modals/users/store'
 import {UserList} from '#/main/core/administration/user/user/components/user-list'
 import {User as UserType} from '#/main/core/user/prop-types'
@@ -14,11 +14,9 @@ import {User as UserType} from '#/main/core/user/prop-types'
 const UsersPickerModal = props => {
   const selectAction = props.selectAction(props.selected)
 
-  //apiv2_user_list_registerable = filter by current user organizations
   return (
     <Modal
-      {...omit(props, 'confirmText', 'selected', 'selectAction', 'resetSelect')}
-      className="users-picker-modal"
+      {...omit(props, 'selected', 'selectAction', 'resetSelect')}
       icon="fa fa-fw fa-user"
       bsSize="lg"
       onExiting={() => props.resetSelect()}
@@ -26,7 +24,7 @@ const UsersPickerModal = props => {
       <ListData
         name={selectors.STORE_NAME}
         fetch={{
-          url: ['apiv2_user_list_registerable'],
+          url: props.url,
           autoload: true
         }}
         definition={[
@@ -64,7 +62,7 @@ const UsersPickerModal = props => {
       />
 
       <Button
-        label={props.confirmText}
+        label={trans('select', {}, 'actions')}
         {...selectAction}
         className="modal-btn btn"
         primary={true}
@@ -76,8 +74,8 @@ const UsersPickerModal = props => {
 }
 
 UsersPickerModal.propTypes = {
+  url: T.oneOfType([T.string, T.array]),
   title: T.string,
-  confirmText: T.string,
   selectAction: T.func.isRequired,
   fadeModal: T.func.isRequired,
   selected: T.arrayOf(T.shape(UserType.propTypes)).isRequired,
@@ -85,8 +83,8 @@ UsersPickerModal.propTypes = {
 }
 
 UsersPickerModal.defaultProps = {
-  title: trans('user_selector'),
-  confirmText: trans('select', {}, 'actions')
+  url: ['apiv2_user_list_registerable'], // = filter by current user organizations
+  title: trans('user_selector')
 }
 
 export {

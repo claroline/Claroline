@@ -5,7 +5,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {DataCard} from '#/main/app/content/card/components/data'
 import {UserAvatar} from '#/main/core/user/components/avatar'
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 import {displayDate} from '#/main/app/intl/date'
 import {constants as intlConstants} from '#/main/app/intl/constants'
 

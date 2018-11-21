@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import {trans, tex} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {hasPermission} from '#/main/core/resource/permissions'
+import {hasPermission} from '#/main/app/security'
 import {UserEvaluation as UserEvaluationType} from '#/main/core/resource/prop-types'
 import {ResourceOverview} from '#/main/core/resource/components/overview'
 

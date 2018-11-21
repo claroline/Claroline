@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
@@ -74,32 +74,13 @@ DataCellContent.propTypes = {
   ).isRequired
 }
 
-class DataCell extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {definition: null}
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props.column.type !== nextProps.column.type) {
-      this.setState({definition: null})
-    }
-  }
-
-  render() {
-    return (
-      <Await
-        for={getType(this.props.column.type)}
-        then={typeDef => this.setState({definition: typeDef})}
-      >
-        {this.state.definition &&
-          <DataCellContent {...this.props} definition={this.state.definition} />
-        }
-      </Await>
-    )
-  }
-}
+const DataCell = props =>
+  <Await
+    for={getType(props.column.type)}
+    then={definition => (
+      <DataCellContent {...props} definition={definition} />
+    )}
+  />
 
 DataCell.propTypes = {
   rowData: T.object.isRequired,

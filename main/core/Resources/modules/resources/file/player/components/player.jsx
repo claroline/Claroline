@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import get from 'lodash/get'
@@ -12,46 +12,39 @@ import {selectors} from '#/main/core/resources/file/store'
 import {selectors as nodeSelectors} from '#/main/core/resource/store/selectors'
 import {url} from '#/main/app/api'
 
-// TODO : find a way to make this kind of component generic (duplicated for all apps coming from dynamic loading)
 // TODO : display a standard player with file info if no custom one
 
-class Player extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      filePlayer: null,
-      fileStyles: null
-    }
+const Player = (props) => {
+  // FIXME : ugly
+  if (props.file.autoDownload) {
+    window.location.href = url(['claro_resource_download', {ids: [props.resourceNode.id]}])
   }
 
-  render() {
+  return (
+    <Await
+      for={getFile(props.mimeType)}
+      then={module => {
+        if (get(module, 'fileType.components.player')) {
+          return (
+            <div>
+              {React.createElement(get(module, 'fileType.components.player'), {
+                file: props.file
+              })}
 
-    //bad
-    if (this.props.file.autoDownload) {
-      window.location.href = url(['claro_resource_download', {ids: [this.props.resourceNode.id]}])
-    }
+              {get(module, 'fileType.styles') &&
+                <link rel="stylesheet" type="text/css" href={theme(get(module, 'fileType.styles'))} />
+              }
+            </div>
+          )
+        }
 
-    return (
-      <Await
-        for={getFile(this.props.mimeType)}
-        then={module => this.setState({
-          filePlayer: get(module, 'fileType.components.player') ? get(module, 'fileType.components.player'): window.location.href = url(['claro_resource_download', {ids: [this.props.resourceNode.id]}]),
-          fileStyles: get(module, 'fileType.styles') || null
-        })}
-      >
-        <div>
-          {this.state.filePlayer && React.createElement(this.state.filePlayer, {
-            file: this.props.file
-          })}
+        // FIXME : ugly
+        window.location.href = url(['claro_resource_download', {ids: [props.resourceNode.id]}])
+      }}
+    >
 
-          {this.state.fileStyles &&
-            <link rel="stylesheet" type="text/css" href={theme(this.state.fileStyles)} />
-          }
-        </div>
-      </Await>
-    )
-  }
+    </Await>
+  )
 }
 
 Player.propTypes = {

@@ -1,5 +1,5 @@
 import {trans} from '#/main/app/intl/translation'
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 
 const authenticatedUser = currentUser()
 

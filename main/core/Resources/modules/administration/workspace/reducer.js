@@ -9,13 +9,11 @@ import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 
 import {reducer as creationReducer} from '#/main/core/workspace/creation/store'
 
-import {LOAD_ROLES} from '#/main/core/administration/workspace/workspace/actions'
 import {LOAD_ARCHIVE} from '#/main/core/workspace/creation/store/actions'
 
 const reducer = {
   workspaces: combineReducers({
     creation: creationReducer,
-    picker: makeListReducer('workspaces.picker'),
     list: makeListReducer('workspaces.list', {
       filters: [
         {property: 'meta.personal', value: false},
@@ -42,9 +40,6 @@ const reducer = {
           return workspace
         }
       })
-    }),
-    registerableRoles: makeReducer(['manager', 'collaborator'], {
-      [LOAD_ROLES] : (state, action) => action.roles
     })
   }),
   organizations: combineReducers({
@@ -52,10 +47,6 @@ const reducer = {
   }),
   managers: combineReducers({
     picker: makeListReducer('managers.picker')
-  }),
-  selected: combineReducers({
-    user: makeListReducer('selected.user'),
-    group: makeListReducer('selected.group')
   }),
   parameters: makeFormReducer('parameters'),
   tools: makeReducer([], {}),

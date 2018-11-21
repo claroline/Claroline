@@ -1,7 +1,7 @@
 import cloneDeep from 'lodash/cloneDeep'
 
 import {bootstrap} from '#/main/app/dom/bootstrap'
-import {hasPermission} from '#/main/core/resource/permissions'
+import {hasPermission} from '#/main/app/security'
 
 import {
   bbbReducers,

@@ -234,13 +234,15 @@ class Calendar extends Component {
   render() {
     return (
       <div className="calendar-container">
-        <CurrentDate
-          selected={this.state.selected || this.state.now}
-          time={this.props.time}
-          timeRange={this.state.timeRange}
-          update={this.update}
-          today={this.today}
-        />
+        {this.props.showCurrent &&
+          <CurrentDate
+            selected={this.state.selected || this.state.now}
+            time={this.props.time}
+            timeRange={this.state.timeRange}
+            update={this.update}
+            today={this.today}
+          />
+        }
 
         {this.renderView({
           now: this.state.now,

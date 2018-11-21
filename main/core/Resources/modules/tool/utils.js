@@ -3,7 +3,7 @@ import get from 'lodash/get'
 import {trans} from '#/main/app/intl/translation'
 
 import {constants} from '#/main/core/tool/constants'
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 
 /**
  * Gets the path of a tool based on its rendering context.

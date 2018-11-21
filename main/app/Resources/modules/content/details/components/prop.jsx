@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
@@ -43,46 +43,27 @@ DataDetailsField.propTypes = {
   ).isRequired
 }
 
-class DetailsProp extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {definition: null}
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props.type !== nextProps.type) {
-      this.setState({definition: null})
-    }
-  }
-
-  render() {
-    return (
-      <Await
-        for={getType(this.props.type)}
-        then={typeDef => this.setState({definition: typeDef})}
+const DetailsProp = props =>
+  <Await
+    for={getType(props.type)}
+    then={definition => (
+      <FormGroup
+        id={props.name}
+        label={definition.meta && !definition.meta.noLabel ? props.label : undefined}
+        hideLabel={props.hideLabel}
+        help={props.help}
       >
-        {this.state.definition &&
-          <FormGroup
-            id={this.props.name}
-            label={this.state.definition.meta && !this.state.definition.meta.noLabel ? this.props.label : undefined}
-            hideLabel={this.props.hideLabel}
-            help={this.props.help}
-          >
-            {this.props.render ?
-              this.props.render(this.props.data) :
-              <DataDetailsField
-                {...this.props}
-                definition={this.state.definition}
-                value={this.props.calculated ? this.props.calculated(this.props.data) : get(this.props.data, this.props.name)}
-              />
-            }
-          </FormGroup>
+        {props.render ?
+          props.render(props.data) :
+          <DataDetailsField
+            {...props}
+            definition={definition}
+            value={props.calculated ? props.calculated(props.data) : get(props.data, props.name)}
+          />
         }
-      </Await>
-    )
-  }
-}
+      </FormGroup>
+    )}
+  />
 
 export {
   DetailsProp

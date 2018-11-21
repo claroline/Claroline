@@ -1,7 +1,7 @@
 import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST, url} from '#/main/app/api'
 
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 
 const authenticatedUser = currentUser()
 

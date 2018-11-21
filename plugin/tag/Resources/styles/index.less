@@ -1,0 +1,52 @@
+
+@import "variables";
+@import "mixins";
+
+.tags {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    .tag {
+        display: flex;
+        justify-content: stretch;
+        border: 1px solid @gray-light;
+        margin-bottom: 10px;
+        border-radius: @border-radius-base;
+    }
+
+    .tag-color {
+        display: block;
+        width: 40px;
+        flex-shrink: 0;
+    }
+
+    .tag-meta {
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .tag-description {
+        width: 100%;
+        margin-top: 5px;
+        margin-bottom: 0;
+        font-size: small;
+        color: @text-muted;
+        font-style: italic;
+    }
+
+    .tag-action {
+        margin-left: auto;
+    }
+
+    .no-item-info {
+        font-style: italic;
+        text-align: center;
+    }
+}
+
+.tag-typehead {
+    margin-bottom: @component-margin-bottom;
+}

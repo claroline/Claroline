@@ -1,7 +1,7 @@
 import {trans} from '#/main/app/intl/translation'
 import {URL_BUTTON} from '#/main/app/buttons'
 
-const action = (resourceNodes) => ({ // TODO : collection
+export default (resourceNodes) => ({ // TODO : collection
   name: 'download',
   type: URL_BUTTON,
   icon: 'fa fa-fw fa-download',
@@ -12,7 +12,3 @@ const action = (resourceNodes) => ({ // TODO : collection
     id: resourceNodes[0].id
   }]
 })
-
-export {
-  action
-}

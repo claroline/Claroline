@@ -11,7 +11,7 @@ import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {MODAL_ALERT} from '#/main/app/modals/alert'
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as formActions} from '#/main/app/content/form/store/actions'

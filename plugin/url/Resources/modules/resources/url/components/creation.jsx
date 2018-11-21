@@ -21,8 +21,7 @@ const UrlForm = props =>
             label: trans('url'),
             type: 'url',
             required: true
-          },
-          {
+          }, {
             name: 'mode',
             label: trans('mode'),
             type: 'choice',
@@ -34,8 +33,7 @@ const UrlForm = props =>
                 'tab': 'tab'
               }
             }
-          },
-          {
+          }, {
             name: 'ratioList',
             type: 'choice',
             displayed: url => url && url.mode === 'iframe',
@@ -48,7 +46,7 @@ const UrlForm = props =>
             onChange: (ratio) => {
               props.updateProp('ratio', parseFloat(ratio))
             }
-          },{
+          }, {
             name: 'ratio',
             type: 'number',
             displayed: url => url && url.mode === 'iframe',

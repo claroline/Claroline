@@ -2,7 +2,7 @@ import {createSelector} from 'reselect'
 
 import {trans} from '#/main/app/intl/translation'
 import {now} from '#/main/app/intl/date'
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'

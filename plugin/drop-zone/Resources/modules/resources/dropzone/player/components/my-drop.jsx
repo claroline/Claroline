@@ -158,6 +158,7 @@ const MyDrop = connect(
               title: title,
               selectAction: (selected) => ({
                 type: 'callback',
+                label: trans('select', {}, 'actions'),
                 callback: () => callback(selected)
               })
             }))

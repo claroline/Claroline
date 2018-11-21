@@ -12,41 +12,28 @@ import {TooltipElement} from '#/main/core/layout/components/tooltip-element'
 
 // TODO : reuse #/main/app/content/search/components/prop
 
-class CurrentFilter extends Component {
-  constructor(props) {
-    super(props)
+const CurrentFilter = props =>
+  <Await
+    for={getType(props.type)}
+    then={(definition) => (
+      <div className="search-filter">
+        <span className="search-filter-prop">
+          {props.label}
+        </span>
 
-    this.state = {definition: null}
-  }
+        <span className="search-filter-value">
+        {definition.render(props.value, props.options)}
 
-  render() {
-    return (
-      <Await
-        for={getType(this.props.type)}
-        then={typeDef => this.setState({definition: typeDef})}
-      >
-        {this.state.definition &&
-          <div className="search-filter">
-              <span className="search-filter-prop">
-                {this.props.label}
-              </span>
-
-            <span className="search-filter-value">
-              {this.state.definition.render(this.props.value, this.props.options)}
-
-              {!this.props.locked &&
-                <button type="button" className="btn btn-link" onClick={this.props.remove}>
-                  <span className="fa fa-times"/>
-                  <span className="sr-only">{trans('list_remove_filter')}</span>
-                </button>
-              }
-              </span>
-          </div>
+        {!props.locked &&
+          <button type="button" className="btn btn-link" onClick={props.remove}>
+            <span className="fa fa-times"/>
+            <span className="sr-only">{trans('list_remove_filter')}</span>
+          </button>
         }
-      </Await>
-    )
-  }
-}
+        </span>
+      </div>
+    )}
+  />
 
 CurrentFilter.propTypes = {
   type: T.string.isRequired,
@@ -153,26 +140,13 @@ AvailableFilterContent.propTypes = {
   }).isRequired
 }
 
-class AvailableFilter extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {definition: null}
-  }
-
-  render() {
-    return (
-      <Await
-        for={getType(this.props.type)}
-        then={typeDef => this.setState({definition: typeDef})}
-      >
-        {this.state.definition &&
-          <AvailableFilterContent {...this.props} definition={this.state.definition} />
-        }
-      </Await>
-    )
-  }
-}
+const AvailableFilter = (props) =>
+  <Await
+    for={getType(props.type)}
+    then={(definition) => (
+      <AvailableFilterContent {...props} definition={definition} />
+    )}
+  />
 
 AvailableFilter.propTypes = {
   name: T.string.isRequired,

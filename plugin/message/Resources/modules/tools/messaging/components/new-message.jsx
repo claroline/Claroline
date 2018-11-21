@@ -8,7 +8,7 @@ import {UserAvatar} from '#/main/core/user/components/avatar'
 import {User as UserTypes} from '#/main/core/user/prop-types'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 

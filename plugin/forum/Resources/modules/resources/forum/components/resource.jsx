@@ -5,7 +5,7 @@ import get from 'lodash/get'
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 import {ResourcePage} from '#/main/core/resource/containers/page'
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
 import {Overview} from '#/plugin/forum/resources/forum/overview/components/overview'

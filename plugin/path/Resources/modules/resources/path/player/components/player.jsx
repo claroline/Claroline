@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 
 import {selectors} from '#/plugin/path/resources/path/store'

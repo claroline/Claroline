@@ -15,6 +15,7 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\CoreBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -54,9 +55,7 @@ class Tag
     /**
      * The user who created the tag.
      *
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User"
-     * )
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", nullable=true, onDelete="CASCADE")
      *
      * @var User
@@ -64,11 +63,22 @@ class Tag
     private $user;
 
     /**
+     * The list of objects with the tag.
+     *
+     * @ORM\OneToMany(targetEntity="Claroline\TagBundle\Entity\TaggedObject", mappedBy="tag")
+     *
+     * @var ArrayCollection|TaggedObject[]
+     */
+    private $taggedObjects;
+
+    /**
      * Tag constructor.
      */
     public function __construct()
     {
         $this->refreshUuid();
+
+        $this->taggedObjects = new ArrayCollection();
     }
 
     /**
@@ -129,5 +139,29 @@ class Tag
     public function setUser(User $user = null)
     {
         $this->user = $user;
+    }
+
+    /**
+     * Gets the list of objects with the tag.
+     *
+     * @return TaggedObject[]
+     */
+    public function getTaggedObjects()
+    {
+        return $this->taggedObjects;
+    }
+
+    public function addTagObject(TaggedObject $taggedObject)
+    {
+        if (!$this->taggedObjects->contains($taggedObject)) {
+            $this->taggedObjects->add($taggedObject);
+        }
+    }
+
+    public function removeTaggedObject(TaggedObject $taggedObject)
+    {
+        if ($this->taggedObjects->contains($taggedObject)) {
+            $this->taggedObjects->removeElement($taggedObject);
+        }
     }
 }

@@ -2,22 +2,21 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
+import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {trans} from '#/main/app/intl/translation'
 import {selectors} from '#/main/core/modals/workspaces/store'
 import {WorkspaceList} from '#/main/core/workspace/list/components/workspace-list'
 import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
 
-const WorkspacesPickerModal = props => {
+const WorkspacesModal = props => {
   const selectAction = props.selectAction(props.selected)
 
   return (
     <Modal
-      {...omit(props, 'confirmText', 'selected', 'selectAction', 'resetSelect')}
-      className="workspaces-picker-modal"
+      {...omit(props, 'selected', 'selectAction', 'resetSelect')}
       icon="fa fa-fw fa-books"
       bsSize="lg"
       onExiting={() => props.resetSelect()}
@@ -25,34 +24,16 @@ const WorkspacesPickerModal = props => {
       <ListData
         name={selectors.STORE_NAME}
         fetch={{
-          url: ['apiv2_administrated_list'],
+          url: props.url,
           autoload: true
         }}
-        definition={[
-          {
-            name: 'name',
-            type: 'string',
-            label: trans('name'),
-            displayed: true
-          }, {
-            name: 'code',
-            type: 'string',
-            label: trans('code'),
-            displayed: true
-          },
-          {
-            name: 'meta.personal',
-            label: trans('personal_workspace'),
-            type: 'boolean',
-            alias: 'personal'
-          }
-        ]}
+        definition={WorkspaceList.definition}
         card={WorkspaceList.card}
         display={props.display}
       />
 
       <Button
-        label={props.confirmText}
+        label={trans('select', {}, 'actions')}
         {...selectAction}
         className="modal-btn btn"
         primary={true}
@@ -63,20 +44,20 @@ const WorkspacesPickerModal = props => {
   )
 }
 
-WorkspacesPickerModal.propTypes = {
+WorkspacesModal.propTypes = {
+  url: T.oneOfType([T.string, T.array]),
   title: T.string,
-  confirmText: T.string,
   selectAction: T.func.isRequired,
   fadeModal: T.func.isRequired,
   selected: T.arrayOf(T.shape(WorkspaceType.propTypes)).isRequired,
   resetSelect: T.func.isRequired
 }
 
-WorkspacesPickerModal.defaultProps = {
-  title: trans('workspace_selector'),
-  confirmText: trans('select', {}, 'actions')
+WorkspacesModal.defaultProps = {
+  url: ['apiv2_administrated_list'],
+  title: trans('workspace_selector')
 }
 
 export {
-  WorkspacesPickerModal
+  WorkspacesModal
 }

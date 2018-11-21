@@ -9,4 +9,4 @@ plugin:
     - name: tags
       group: management
       decoder: administrate
-      api: [GET, POST, PUT, DELETE]
+      scope: [object, collection]

@@ -26,6 +26,7 @@ function openResourcePicker(editor) {
   editor.settings.showModal(MODAL_RESOURCE_EXPLORER, {
     selectAction: (selected) => ({
       type: CALLBACK_BUTTON,
+      label: trans('select', {}, 'actions'),
       callback: () => {
         selected.map((resourceNode, index) => {
           fetch(

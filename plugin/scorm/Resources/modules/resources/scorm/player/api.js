@@ -1,4 +1,4 @@
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 
 import {actions} from '#/plugin/scorm/resources/scorm/player/actions'
 

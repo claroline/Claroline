@@ -1,3 +1,4 @@
+import identity from 'lodash/identity'
 import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 import uniq from 'lodash/uniq'
@@ -10,7 +11,7 @@ import {trans} from '#/main/app/intl/translation'
 
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 
-import {hasPermission} from '#/main/core/resource/permissions'
+import {hasPermission} from '#/main/app/security'
 
 function getTypes() {
   return param('resourceTypes')
@@ -41,9 +42,9 @@ function getType(resourceNode) {
 function loadActions(resourceNodes, actions, nodesRefresher, absolute = false) {
   // adds default refresher actions
   const refresher = Object.assign({
-    add: (resourceNodes) => resourceNodes,
-    update: (resourceNodes) => resourceNodes,
-    delete: (resourceNodes) => resourceNodes
+    add: identity,
+    update: identity,
+    delete: identity
   }, nodesRefresher)
 
   // get all actions declared
@@ -59,9 +60,11 @@ function loadActions(resourceNodes, actions, nodesRefresher, absolute = false) {
     // generates action from loaded modules
     const realActions = {}
     loadedActions.map(actionModule => {
-      const generated = actionModule.action(resourceNodes, refresher)
+      const generated = actionModule.default(resourceNodes, refresher)
 
       if (absolute && LINK_BUTTON === generated.type) {
+        // TEMP : only required because of partial SPA, sometimes we need to boot another app.
+        // This will no longer be required when there will be only one react app.
         realActions[generated.name] = Object.assign({}, generated, {
           type: URL_BUTTON,
           target: url(['claro_resource_show', {

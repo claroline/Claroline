@@ -2,8 +2,8 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {isAuthenticated, currentUser} from '#/main/core/user/current'
-import {hasPermission} from '#/main/core/user/permissions'
+import {hasPermission} from '#/main/app/security'
+import {isAuthenticated, currentUser} from '#/main/app/security'
 
 import {MODAL_USER_PASSWORD, MODAL_USER_PUBLIC_URL, MODAL_USER_MESSAGE} from '#/main/core/user/modals'
 import {

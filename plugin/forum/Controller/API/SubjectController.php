@@ -4,7 +4,6 @@ namespace Claroline\ForumBundle\Controller\API;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
@@ -43,7 +42,6 @@ class SubjectController extends AbstractCrudController
      * )
      *
      * @param string  $id
-     * @param string  $class
      * @param Request $request
      *
      * @return JsonResponse
@@ -51,7 +49,7 @@ class SubjectController extends AbstractCrudController
     public function getMessagesAction($id, Request $request)
     {
         return new JsonResponse(
-          $this->finder->search('Claroline\ForumBundle\Entity\Message', array_merge(
+          $this->finder->search(Message::class, array_merge(
               $request->query->all(),
               ['hiddenFilters' => ['subject' => $id, 'parent' => null, 'first' => false]]
             ))
@@ -73,8 +71,7 @@ class SubjectController extends AbstractCrudController
      *     }
      * )
      *
-     * @param string  $id
-     * @param string  $class
+     * @param Subject $subject
      * @param Request $request
      *
      * @return JsonResponse
@@ -86,7 +83,7 @@ class SubjectController extends AbstractCrudController
         $data['subject'] = $subject;
 
         $object = $this->crud->create(
-            'Claroline\ForumBundle\Entity\Message',
+            Message::class,
             $data,
             $this->options['create']
         );
@@ -117,44 +114,15 @@ class SubjectController extends AbstractCrudController
      *     }
      * )
      *
-     * @param string  $id
-     * @param string  $class
+     * @param Subject $subject
+     * @param Message $message
      * @param Request $request
      *
      * @return JsonResponse
      */
     public function updateMessageAction(Subject $subject, Message $message, Request $request)
     {
-        return parent::updateAction($message->getUuid(), $request, 'Claroline\ForumBundle\Entity\Message');
-    }
-
-    /**
-     * @EXT\Route("/forum/{forum}/tag/{tag}", name="apiv2_search_subjects_tag")
-     * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
-     */
-    public function findByTagAction(Forum $forum, $tag)
-    {
-        $options = [
-            'tag' => $tag,
-            'strict' => false,
-            'class' => 'Claroline\ForumBundle\Entity\Subject',
-            'object_response' => true,
-        ];
-
-        $event = $this->container->get('event_dispatcher')
-            ->dispatch(
-              'claroline_retrieve_tagged_objects',
-              new GenericDataEvent($options)
-            );
-
-        $subjects = $event->getResponse();
-
-        return new JsonResponse(
-            array_map(function (Subject $subject) {
-                return $this->serializer->serialize($subject, $this->options['get']);
-            }, $subjects),
-            200
-        );
+        return parent::updateAction($message->getUuid(), $request, Message::class);
     }
 
     /**
@@ -162,13 +130,12 @@ class SubjectController extends AbstractCrudController
      * @EXT\Method("GET")
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
      *
-     * @param string  $id
-     * @param string  $class
+     * @param Forum   $forum
      * @param Request $request
      *
      * @return JsonResponse
      */
-    public function getFlaggedSubjectsAction(Request $request, Forum $forum)
+    public function getFlaggedSubjectsAction(Forum $forum, Request $request)
     {
         return new JsonResponse(
         $this->finder->search($this->getClass(), array_merge(
@@ -183,13 +150,12 @@ class SubjectController extends AbstractCrudController
      * @EXT\Method("GET")
      * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forum": "uuid"}})
      *
-     * @param string  $id
-     * @param string  $class
+     * @param Forum   $forum
      * @param Request $request
      *
      * @return JsonResponse
      */
-    public function getBlockedSubjectsAction(Request $request, Forum $forum)
+    public function getBlockedSubjectsAction(Forum $forum, Request $request)
     {
         return new JsonResponse(
             $this->finder->search($this->getClass(), array_merge(

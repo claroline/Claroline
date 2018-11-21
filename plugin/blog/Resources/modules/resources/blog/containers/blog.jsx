@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {withReducer} from '#/main/app/store/components/withReducer'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {hasPermission} from '#/main/core/resource/permissions'
+import {hasPermission} from '#/main/app/security'
 
 import {reducer, selectors} from '#/plugin/blog/resources/blog/store'
 import {Blog} from '#/plugin/blog/resources/blog/player/components/resource'

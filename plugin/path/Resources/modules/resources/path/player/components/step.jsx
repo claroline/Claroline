@@ -2,9 +2,8 @@ import React from 'react'
 import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
-import {url} from '#/main/app/api'
 import {asset} from '#/main/app/config/asset'
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DropdownButton, MenuItem} from '#/main/core/layout/components/dropdown'

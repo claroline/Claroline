@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import classes from 'classnames'
 import omit from 'lodash/omit'
 
@@ -55,33 +55,20 @@ implementPropTypes(StaticToolbar, ToolbarTypes, {
   actions: []
 })
 
-class PromisedToolbar extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      actions: []
+const PromisedToolbar = props =>
+  <Await
+    for={props.actions}
+    placeholder={
+      <div className={props.className}>
+        <span className={classes(`${props.className}-btn`, props.buttonName, 'default')}>
+          <span className="fa fa-fw fa-spinner fa-spin" />
+        </span>
+      </div>
     }
-  }
-
-  render() {
-    return (
-      <Await
-        for={this.props.actions}
-        then={actions => this.setState({actions: actions})}
-        placeholder={
-          <div className={this.props.className}>
-            <span className={classes(`${this.props.className}-btn`, this.props.buttonName, 'default')}>
-              <span className="fa fa-fw fa-spinner fa-spin" />
-            </span>
-          </div>
-        }
-      >
-        <StaticToolbar {...this.props} actions={this.state.actions} />
-      </Await>
-    )
-  }
-}
+    then={(resolvedActions) => (
+      <StaticToolbar {...props} actions={resolvedActions} />
+    )}
+  />
 
 implementPropTypes(PromisedToolbar, ToolbarTypes, {
   // a promise that will resolve a list of actions

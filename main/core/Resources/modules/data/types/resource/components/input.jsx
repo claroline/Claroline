@@ -31,6 +31,7 @@ const ResourceInput = props => {
               root: props.picker.root,
               selectAction: (selected) => ({
                 type: 'callback',
+                label: trans('select', {}, 'actions'),
                 callback: () => props.onChange(selected[0])
               })
             }]
@@ -93,6 +94,7 @@ const ResourceInput = props => {
             root: props.picker.root,
             selectAction: (selected) => ({
               type: CALLBACK_BUTTON,
+              label: trans('select', {}, 'actions'),
               callback: () => props.onChange(selected[0])
             })
           }]}

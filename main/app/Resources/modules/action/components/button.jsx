@@ -55,12 +55,12 @@ const Button = props => props.tooltip ?
     disabled={props.disabled}
   >
     <ButtonComponent
-      {...omit(props, 'tooltip', 'group', 'context', 'scope')}
+      {...omit(props, 'tooltip', 'group', 'context', 'scope', 'default')}
       hideLabel={true}
     />
   </TooltipElement> :
   <ButtonComponent
-    {...omit(props, 'tooltip', 'group', 'context', 'scope')}
+    {...omit(props, 'tooltip', 'group', 'context', 'scope', 'default')}
   />
 
 implementPropTypes(Button, ActionTypes, {

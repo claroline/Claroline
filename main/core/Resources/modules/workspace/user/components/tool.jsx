@@ -3,7 +3,6 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
-import {currentUser} from '#/main/core/user/current'
 import {TabbedPageContainer} from '#/main/core/layout/tabs'
 
 import {UserTab, UserTabActions} from '#/main/core/workspace/user/user/components/user-tab.jsx'
@@ -17,7 +16,7 @@ import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 import {READ_ONLY, MANAGER, ADMIN, getPermissionLevel} from  '#/main/core/workspace/user/restrictions'
 
 const Tool = (props) => {
-  const permLevel = getPermissionLevel(currentUser(), props.workspace)
+  const permLevel = getPermissionLevel(props.workspace)
 
   return (
     <TabbedPageContainer

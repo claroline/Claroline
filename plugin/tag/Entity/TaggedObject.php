@@ -72,7 +72,13 @@ class TaggedObject
      */
     public function setTag(Tag $tag)
     {
+        if ($this->tag) {
+            $this->tag->removeTaggedObject($this);
+        }
+
         $this->tag = $tag;
+
+        $this->tag->addTagObject($this);
     }
 
     /**

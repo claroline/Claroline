@@ -336,6 +336,7 @@ class WorkspaceController extends AbstractCrudController
      * @Method("DELETE")
      * @ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      *
+     * @param Request   $request
      * @param Workspace $workspace
      *
      * @return JsonResponse
@@ -364,6 +365,7 @@ class WorkspaceController extends AbstractCrudController
      * @Method("DELETE")
      * @ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      *
+     * @param Request   $request
      * @param Workspace $workspace
      *
      * @return JsonResponse
@@ -392,6 +394,7 @@ class WorkspaceController extends AbstractCrudController
      */
     public function deleteBulkAction(Request $request, $class)
     {
+        /** @var Workspace[] $workspaces */
         $workspaces = parent::decodeIdsString($request, 'Claroline\CoreBundle\Entity\Workspace\Workspace');
         $errors = [];
 
@@ -437,11 +440,13 @@ class WorkspaceController extends AbstractCrudController
      * @ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      *
      * @param Workspace $workspace
+     * @param Request   $request
      *
      * @return JsonResponse
      */
     public function listManagersAction(Workspace $workspace, Request $request)
     {
+        /** @var Role $role */
         $role = $this->container->get('claroline.manager.role_manager')->getManagerRole($workspace);
 
         return new JsonResponse($this->finder->search(
@@ -453,12 +458,34 @@ class WorkspaceController extends AbstractCrudController
 
     /**
      * @Route(
+     *    "/list",
+     *    name="apiv2_workspace_displayable_list"
+     * )
+     * @Method("GET")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function listDisplayableAction(Request $request)
+    {
+        return new JsonResponse($this->finder->search(
+            'Claroline\CoreBundle\Entity\Workspace\Workspace',
+            array_merge($request->query->all(), ['hiddenFilters' => ['displayable' => true, 'model' => false, 'sameOrganization' => true]]),
+            $this->getOptions()['list']
+        ));
+    }
+
+    /**
+     * For anonymous.
+     *
+     * @Route(
      *    "/list/registerable",
      *    name="apiv2_workspace_list_registerable"
      * )
      * @Method("GET")
      *
-     * For anonymous
+     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -466,25 +493,7 @@ class WorkspaceController extends AbstractCrudController
     {
         return new JsonResponse($this->finder->search(
             'Claroline\CoreBundle\Entity\Workspace\Workspace',
-            array_merge($request->query->all(), ['hiddenFilters' => ['displayable' => true, 'selfRegistration' => true]]),
-            $this->getOptions()['list']
-        ));
-    }
-
-    /**
-     * @Route(
-     *    "/list/registerable",
-     *    name="apiv2_workspace_displayable_list"
-     * )
-     * @Method("GET")
-     *
-     * @return JsonResponse
-     */
-    public function listDisplaybleAction(Request $request)
-    {
-        return new JsonResponse($this->finder->search(
-            'Claroline\CoreBundle\Entity\Workspace\Workspace',
-            array_merge($request->query->all(), ['hiddenFilters' => ['displayable' => true, 'model' => false, 'sameOrganization' => true]]),
+            array_merge($request->query->all(), ['hiddenFilters' => ['displayable' => true, 'model' => false, 'selfRegistration' => true]]),
             $this->getOptions()['list']
         ));
     }
@@ -496,7 +505,7 @@ class WorkspaceController extends AbstractCrudController
      * )
      * @Method("GET")
      *
-     * @param Workspace $workspace
+     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -516,6 +525,8 @@ class WorkspaceController extends AbstractCrudController
      * )
      * @Method("GET")
      *
+     * @param Request $request
+     *
      * @return JsonResponse
      */
     public function listAdministratedAction(Request $request)
@@ -533,6 +544,9 @@ class WorkspaceController extends AbstractCrudController
      *    name="apiv2_workspace_bulk_register_users"
      * )
      * @Method("PATCH")
+     *
+     * @param string  $role
+     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -560,7 +574,8 @@ class WorkspaceController extends AbstractCrudController
      * )
      * @Method("PATCH")
      *
-     * @param Workspace $workspace
+     * @param string  $role
+     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -588,12 +603,13 @@ class WorkspaceController extends AbstractCrudController
      * )
      * @Method("GET")
      *
-     * @param Workspace $workspace
+     * @param Request $request
      *
      * @return JsonResponse
      */
     public function getCommonRolesAction(Request $request)
     {
+        /** @var Workspace[] $workspaces */
         $workspaces = $this->decodeQueryParam($request, 'Claroline\CoreBundle\Entity\Workspace\Workspace', 'workspaces');
         $roles = [];
 
@@ -620,6 +636,11 @@ class WorkspaceController extends AbstractCrudController
      * @Route("/unregister/{user}", name="apiv2_workspace_unregister")
      * @Method("DELETE")
      * @ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
+     *
+     * @param User    $user
+     * @param Request $request
+     *
+     * @return JsonResponse
      */
     public function unregisterAction(User $user, Request $request)
     {
@@ -638,11 +659,17 @@ class WorkspaceController extends AbstractCrudController
      * @Route("/register/{user}", name="apiv2_workspace_register")
      * @Method("PATCH")
      * @ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
+     *
+     * @param User    $user
+     * @param Request $request
+     *
+     * @return JsonResponse
      */
     public function registerAction(User $user, Request $request)
     {
         // If user is admin or registration validation is disabled, subscribe user
         //see WorkspaceParametersController::userSubscriptionAction
+        /** @var Workspace[] $workspaces */
         $workspaces = $this->decodeQueryParam($request, 'Claroline\CoreBundle\Entity\Workspace\Workspace', 'workspaces');
 
         foreach ($workspaces as $workspace) {
@@ -662,7 +689,7 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
-     * @param Request $request
+     * @param Workspace $workspace
      *
      * @return string
      */

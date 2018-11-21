@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 
 import {select} from '#/plugin/forum/resources/forum/store/selectors'
 import {actions} from '#/plugin/forum/resources/forum/player/store/actions'

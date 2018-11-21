@@ -190,6 +190,7 @@ const Editor = withRouter(connect(
         current: current,
         selectAction: (selected) => ({
           type: CALLBACK_BUTTON,
+          label: trans('select', {}, 'actions'),
           callback: () => callback(selected)
         })
       }))

@@ -1,7 +1,11 @@
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
-const action = () => ({
+/**
+ * Opens the edition form of a resource.
+ * Permits to modify custom resource properties (to modify the node properties, it's the `configure` action).
+ */
+export default () => ({
   name: 'edit',
   type: LINK_BUTTON,
   icon: 'fa fa-fw fa-pencil',
@@ -9,7 +13,3 @@ const action = () => ({
   primary: true,
   target: '/edit'
 })
-
-export {
-  action
-}

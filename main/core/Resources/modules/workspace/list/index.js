@@ -1,16 +1,8 @@
-import {bootstrap} from '#/main/app/dom/bootstrap'
 
-import {reducer} from '#/main/core/workspace/list/reducer'
-import {Workspaces} from '#/main/core/workspace/list/components/list.jsx'
+import {Workspaces} from '#/main/core/workspace/list/components/list'
+import {reducer} from '#/main/core/workspace/list/store'
 
-// mount the react application
-bootstrap(
-  // app DOM container (also holds initial app data as data attributes)
-  '.workspaces-container',
-
-  // app main component
-  Workspaces,
-
-  // app store configuration
-  reducer
-)
+export const App = () => ({
+  component: Workspaces,
+  store: reducer
+})

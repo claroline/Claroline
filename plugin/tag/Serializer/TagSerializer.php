@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\TagBundle\Entity\Tag;
 use Claroline\TagBundle\Entity\TaggedObject;
 use Claroline\TagBundle\Repository\TaggedObjectRepository;
@@ -18,6 +19,9 @@ use JMS\DiExtraBundle\Annotation as DI;
 class TagSerializer
 {
     use SerializerTrait;
+
+    /** @var ObjectManager */
+    private $om;
 
     /** @var UserSerializer */
     private $userSerializer;
@@ -40,7 +44,9 @@ class TagSerializer
         ObjectManager $om,
         UserSerializer $userSerializer)
     {
+        $this->om = $om;
         $this->userSerializer = $userSerializer;
+
         $this->taggedObjectRepo = $om->getRepository(TaggedObject::class);
     }
 
@@ -93,6 +99,13 @@ class TagSerializer
         $this->sipe('name', 'setName', $data, $tag);
         $this->sipe('color', 'setColor', $data, $tag);
         $this->sipe('meta.description', 'setDescription', $data, $tag);
+
+        if (isset($data['meta']) && isset($data['meta']['creator'])) {
+            $user = $this->om->getRepository(User::class)->findBy(['uuid' => $data['meta']['creator']['id']]);
+            if ($user) {
+                $tag->setUser($user);
+            }
+        }
 
         return $tag;
     }

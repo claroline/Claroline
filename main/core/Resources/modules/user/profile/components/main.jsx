@@ -7,7 +7,7 @@ import {Routes} from '#/main/app/router'
 import {UserPageContainer} from '#/main/core/user/containers/page'
 import {User as UserTypes} from '#/main/core/user/prop-types'
 
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 import {selectors} from '#/main/app/content/details/store'
 import {select as profileSelect} from '#/main/core/user/profile/selectors'
 import {ProfileEdit} from '#/main/core/user/profile/editor/components/main'

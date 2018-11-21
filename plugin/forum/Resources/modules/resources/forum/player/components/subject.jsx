@@ -6,7 +6,7 @@ import get from 'lodash/get'
 
 import {withRouter} from '#/main/app/router'
 import {trans, transChoice} from '#/main/app/intl/translation'
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 import {Button} from '#/main/app/action/components/button'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {UserMessage} from '#/main/core/user/message/components/user-message'

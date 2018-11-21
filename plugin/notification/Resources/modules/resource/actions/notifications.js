@@ -1,7 +1,9 @@
 import {trans} from '#/main/app/intl/translation'
-import {isAuthenticated} from '#/main/core/user/current'
+import {isAuthenticated} from '#/main/app/security'
 
-const action = () => ({
+// TODO : implement
+
+export default () => ({
   name: 'notifications',
   type: 'modal',
   icon: 'fa fa-fw fa-bell',
@@ -9,7 +11,3 @@ const action = () => ({
   displayed: isAuthenticated(),
   modal: []
 })
-
-export {
-  action
-}

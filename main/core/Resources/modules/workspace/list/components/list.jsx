@@ -2,15 +2,15 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {ListData} from '#/main/app/content/list/containers/data'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {WorkspaceList} from '#/main/core/workspace/list/components/workspace-list'
-import {actions} from '#/main/core/workspace/list/actions'
 import {trans} from '#/main/app/intl/translation'
-import {constants as listConst} from '#/main/app/content/list/constants'
-import {currentUser, isAdmin} from '#/main/core/user/current'
-
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {currentUser, isAdmin} from '#/main/app/security'
 import {PageContainer, PageHeader,PageContent} from '#/main/core/layout/page/index'
+import {constants as listConst} from '#/main/app/content/list/constants'
+import {ListData} from '#/main/app/content/list/containers/data'
+
+import {WorkspaceList} from '#/main/core/workspace/list/components/workspace-list'
+import {actions} from '#/main/core/workspace/list/store'
 
 const WorkspacesList = props => {
   const definition = WorkspaceList.definition
@@ -22,7 +22,9 @@ const WorkspacesList = props => {
 
   return(
     <PageContainer>
-      <PageHeader>
+      <PageHeader
+        title={trans('workspaces')}
+      >
       </PageHeader>
       <PageContent>
         <ListData

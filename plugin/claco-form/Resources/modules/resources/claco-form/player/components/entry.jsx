@@ -12,7 +12,7 @@ import {DetailsData} from '#/main/app/content/details/containers/data'
 import {Button} from '#/main/app/action/components/button'
 
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {hasPermission} from '#/main/core/resource/permissions'
+import {hasPermission} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
 import {UserMicro} from '#/main/core/user/components/micro'

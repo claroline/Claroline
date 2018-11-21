@@ -5,12 +5,12 @@ import {withRouter} from '#/main/app/router'
 
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {actions} from '#/plugin/wiki/resources/wiki/history/store'
 import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {hasPermission} from '#/main/core/resource/permissions'
+import {hasPermission} from '#/main/app/security'
 
 const loggedUser = currentUser()
 

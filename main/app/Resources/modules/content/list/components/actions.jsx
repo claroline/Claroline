@@ -1,8 +1,10 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 
 import {transChoice} from '#/main/app/intl/translation'
+import {Await} from '#/main/app/components/await'
 import {Button} from '#/main/app/action/components/button'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {
@@ -10,27 +12,78 @@ import {
   PromisedAction as PromisedActionTypes
 } from '#/main/app/action/prop-types'
 
-const ListPrimaryAction = props => {
-  if (!props.action || props.action.disabled) {
+const StaticPrimaryAction = props => {
+  if (isEmpty(props.action) || props.action.disabled || (props.action.displayed !== undefined && !props.action.displayed)) {
     return React.createElement(props.disabledWrapper, {
       className: props.className
     }, props.children)
-  } else {
-    return (
-      <Button
-        {...props.action}
-        label={props.children}
-        className={props.className}
-      />
-    )
   }
+
+  return (
+    <Button
+      {...props.action}
+      icon={undefined}
+      label={props.children}
+      className={props.className}
+    />
+  )
 }
 
-ListPrimaryAction.propTypes = {
+StaticPrimaryAction.propTypes = {
   className: T.string,
   action: T.shape(merge({}, ActionTypes.propTypes, {
     label: T.node // make label optional
   })),
+  disabledWrapper: T.string,
+  children: T.node.isRequired
+}
+
+const ListPrimaryAction = props => {
+  if (props.action instanceof Promise) {
+    return (
+      <Await
+        for={props.action}
+        then={action => (
+          <StaticPrimaryAction
+            className={props.className}
+            action={action}
+            disabledWrapper={props.disabledWrapper}
+          >
+            {props.children}
+          </StaticPrimaryAction>
+        )}
+        placeholder={
+          React.createElement(props.disabledWrapper, {
+            className: props.className
+          }, props.children)
+        }
+      />
+    )
+  }
+
+  return (
+    <StaticPrimaryAction
+      className={props.className}
+      action={props.action}
+      disabledWrapper={props.disabledWrapper}
+    >
+      {props.children}
+    </StaticPrimaryAction>
+  )
+}
+
+ListPrimaryAction.propTypes = {
+  className: T.string,
+  action: T.oneOfType([
+    // a regular action
+    T.shape(merge({}, ActionTypes.propTypes, {
+      label: T.node // make label optional
+    })),
+    // a promise that will resolve a list of actions
+    T.shape(
+      PromisedActionTypes.propTypes
+    )
+  ]),
   disabledWrapper: T.string,
   children: T.node.isRequired
 }

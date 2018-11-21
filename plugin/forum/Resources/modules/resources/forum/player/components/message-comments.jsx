@@ -5,7 +5,7 @@ import get from 'lodash/get'
 
 
 import {trans, transChoice} from '#/main/app/intl/translation'
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {MODAL_ALERT} from '#/main/app/modals/alert'
 import {actions as listActions} from '#/main/app/content/list/store'

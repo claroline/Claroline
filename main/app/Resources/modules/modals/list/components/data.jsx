@@ -15,6 +15,7 @@ const ListDataModal = props =>
     {...omit(props, 'name', 'confirmText', 'fetch', 'card', 'onlyId', 'display', 'definition', 'handleSelect')}
     className="data-picker-modal"
     bsSize="lg"
+    onExiting={() => props.resetSelect()}
   >
     <ListData
       name={props.name}

@@ -97,20 +97,18 @@ class ResourcePage extends Component {
               //this.props.deleteNode(currentNode)
             }
           }
-        }).then((actions) => {
-          return [].concat(this.props.customActions || [], actions, [
-            {
-              name: 'fullscreen',
-              type: 'callback',
-              icon: classes('fa fa-fw', {
-                'fa-expand': !this.state.fullscreen,
-                'fa-compress': this.state.fullscreen
-              }),
-              label: trans(this.state.fullscreen ? 'fullscreen_off' : 'fullscreen_on'),
-              callback: this.toggleFullscreen.bind(this)
-            }
-          ])
-        })}
+        }).then((actions) => [].concat(this.props.customActions || [], actions, [
+          {
+            name: 'fullscreen',
+            type: 'callback',
+            icon: classes('fa fa-fw', {
+              'fa-expand': !this.state.fullscreen,
+              'fa-compress': this.state.fullscreen
+            }),
+            label: trans(this.state.fullscreen ? 'fullscreen_off' : 'fullscreen_on'),
+            callback: this.toggleFullscreen.bind(this)
+          }
+        ]))}
       >
         {!isEmpty(this.props.accessErrors) &&
           <ResourceRestrictions

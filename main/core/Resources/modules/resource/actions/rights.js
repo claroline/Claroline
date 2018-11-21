@@ -7,7 +7,13 @@ import {MODAL_BUTTON} from '#/main/app/buttons'
 import {getSimpleAccessRule, hasCustomRules} from '#/main/core/resource/rights'
 import {MODAL_RESOURCE_RIGHTS} from '#/main/core/resource/modals/rights'
 
-const action = (resourceNodes, nodesRefresher) => { // todo collection
+/**
+ * Displays a form to configure the rights of some resource nodes.
+ *
+ * @param {Array}  resourceNodes  - the list of resource nodes on which we want to execute the action.
+ * @param {object} nodesRefresher - an object containing methods to update context in response to action (eg. add, update, delete).
+ */
+export default (resourceNodes, nodesRefresher) => { // todo collection
   // computes simplified version of node rights
   let icon = 'fa-lock'
   let customRules = false
@@ -46,8 +52,4 @@ const action = (resourceNodes, nodesRefresher) => { // todo collection
       value: (<span className="fa fa-asterisk" />)
     } : undefined
   }
-}
-
-export {
-  action
 }

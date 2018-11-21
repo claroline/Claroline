@@ -1,8 +1,10 @@
 /**
  * Resource Explorer modal.
  *
- * Displays the resources explorer inside the modale.
+ * Displays the resources explorer inside the modal.
  */
+
+// TODO : move in #/main/core/modals/resources
 
 import {registry} from '#/main/app/modals/registry'
 

@@ -47,7 +47,7 @@ Here is an example of a call from a controller function to tag a workspace with 
 
 To fetch tagged objects, a "Claroline\CoreBundle\Event\GenericDataEvent" event has also to be dispatched.
 Event name must be "claroline_retrieve_tagged_objects".
-Event "datas" field must be an array defined as followed :
+Event "data" field must be an array defined as followed :
 
 array (
     'tag' => [String],             // Name of the tag

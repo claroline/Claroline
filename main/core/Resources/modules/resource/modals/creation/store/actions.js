@@ -1,7 +1,7 @@
 import merge from 'lodash/merge'
 
 import {makeId} from '#/main/core/scaffolding/id'
-import {currentUser} from '#/main/core/user/current'
+import {currentUser} from '#/main/app/security'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
