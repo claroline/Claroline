@@ -74,6 +74,12 @@ const form = [
       }
     },
     {
+      name: 'color',
+      type: 'color',
+      label: trans('color', {}, 'platform'),
+      required: false
+    },
+    {
       name: 'start',
       type: 'date',
       label: trans('form.start', {}, 'agenda'),

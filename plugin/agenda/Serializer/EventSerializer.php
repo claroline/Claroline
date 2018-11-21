@@ -110,6 +110,6 @@ class EventSerializer
 
     public function getClass()
     {
-        return 'Claroline\AgendaBundle\Entity\Event';
+        return Event::class;
     }
 }
