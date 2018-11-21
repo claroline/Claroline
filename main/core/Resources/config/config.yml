@@ -201,6 +201,11 @@ plugin:
           context: [workspace, desktop, home]
           tags: [resources]
 
+        - name: progression
+          class: Claroline\CoreBundle\Entity\Widget\Type\ProgressionWidget
+          context: [workspace]
+          tags: [resources]
+
     data_sources:
         - name: resources
           type: list

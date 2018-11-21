@@ -359,6 +359,7 @@
     "delete_users_confirm": "Do you really want to remove the users [ %user_list% ] ?",
     "deprecated": "Deprecated",
     "deprecated_resource_warning": "Warning ! This resource is deprecated and will be deleted in an upcoming version.",
+    "depth_in_resources_directories": "Depth in resources directories",
     "description": "Description",
     "desktop": "Desktop",
     "desktops": "Desktops",

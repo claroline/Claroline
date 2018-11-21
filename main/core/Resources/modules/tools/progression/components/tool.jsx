@@ -17,7 +17,7 @@ const ProgressionToolComponent = (props) =>
 
 ProgressionToolComponent.propTypes = {
   items: T.arrayOf(T.shape(ProgressionItemType.propTypes)),
-  levelMax: T.number.isRequired
+  levelMax: T.number
 }
 
 const ProgressionTool = connect(

@@ -64,10 +64,11 @@ registry.add('core', {
   tools: {},
 
   widgets: {
-    'list'    : () => { return import(/* webpackChunkName: "core-widget-list" */     '#/main/core/widget/types/list') },
-    'simple'  : () => { return import(/* webpackChunkName: "core-widget-simple" */   '#/main/core/widget/types/simple') },
-    'resource': () => { return import(/* webpackChunkName: "core-widget-resource" */ '#/main/core/widget/types/resource') },
-    'profile' : () => { return import(/* webpackChunkName: "core-widget-profile" */  '#/main/core/widget/types/profile') }
+    'list'       : () => { return import(/* webpackChunkName: "core-widget-list" */        '#/main/core/widget/types/list') },
+    'simple'     : () => { return import(/* webpackChunkName: "core-widget-simple" */      '#/main/core/widget/types/simple') },
+    'resource'   : () => { return import(/* webpackChunkName: "core-widget-resource" */    '#/main/core/widget/types/resource') },
+    'profile'    : () => { return import(/* webpackChunkName: "core-widget-profile" */     '#/main/core/widget/types/profile') },
+    'progression': () => { return import(/* webpackChunkName: "core-widget-progression" */ '#/main/core/widget/types/progression') }
   },
 
   data: {
