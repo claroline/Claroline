@@ -1,14 +1,13 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 import {SummarizedContent} from '#/main/app/content/summary/components/content'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
+import {ListParameters as ListParametersTypes} from '#/main/app/content/list/parameters/prop-types'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
-import {Directory as DirectoryTypes} from '#/main/core/resources/directory/prop-types'
 import {CurrentDirectory} from '#/main/core/resource/explorer/components/current'
 
 const ResourceExplorer = props => {
@@ -26,17 +25,12 @@ const ResourceExplorer = props => {
     }
   }
 
-  let explorerConfiguration = props.currentConfiguration
-  if (isEmpty(explorerConfiguration)) {
-    explorerConfiguration = DirectoryTypes.defaultProps
-  }
-
   return (
     <SummarizedContent
       className="resources-explorer"
       summary={{
-        displayed: explorerConfiguration.display.showSummary,
-        opened: explorerConfiguration.display.openSummary,
+        displayed: props.showSummary,
+        opened: props.openSummary,
         title: trans('directories'),
         links: props.directories.map(summaryLink)
       }}
@@ -56,7 +50,7 @@ const ResourceExplorer = props => {
                   primaryAction={props.primaryAction}
                   actions={props.actions}
                   currentId={props.currentId}
-                  listConfiguration={explorerConfiguration.list}
+                  listConfiguration={props.listConfiguration}
                 />
 
               return Current
@@ -75,20 +69,23 @@ ResourceExplorer.propTypes = {
     ResourceNodeTypes.propTypes
   ),
   currentId: T.string,
-  currentConfiguration: T.shape(
-    DirectoryTypes.propTypes
-  ),
+  listConfiguration: T.shape(
+    ListParametersTypes.propTypes
+  ).isRequired,
   directories: T.arrayOf(T.shape(
     ResourceNodeTypes.propTypes
   )),
   toggleDirectoryOpen: T.func.isRequired,
   changeDirectory: T.func.isRequired,
-  actions: T.func
+  actions: T.func,
+  showSummary: T.bool,
+  openSummary: T.bool
 }
 
 ResourceExplorer.defaultProps = {
-  currentConfiguration: {},
-  directories: []
+  directories: [],
+  showSummary: false,
+  openSummary: false
 }
 
 export {

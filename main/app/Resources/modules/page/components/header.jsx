@@ -67,8 +67,8 @@ const PageHeader = props =>
         tooltip="bottom"
         toolbar={props.toolbar}
         actions={props.actions}
+        disabled={props.disabled}
         scope="object"
-        topbar={true}
       />
     }
   </header>
@@ -78,6 +78,7 @@ PageHeader.propTypes = {
   subtitle: T.string,
   icon: T.oneOfType([T.string, T.element]),
   poster: T.string,
+  disabled: T.bool,
   toolbar: T.string,
   actions: T.oneOfType([
     // a regular array of actions

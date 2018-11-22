@@ -5,6 +5,7 @@ import {actions as listActions} from '#/main/app/content/list/store'
 import {selectors} from '#/main/core/resource/explorer/store/selectors'
 
 // actions
+export const EXPLORER_SET_LOADING = 'EXPLORER_SET_LOADING'
 export const EXPLORER_SET_ROOT = 'EXPLORER_SET_ROOT'
 export const EXPLORER_SET_CURRENT_ID = 'EXPLORER_SET_CURRENT_ID'
 export const EXPLORER_SET_CURRENT_NODE = 'EXPLORER_SET_CURRENT_NODE'
@@ -17,6 +18,7 @@ export const DIRECTORY_UPDATE = 'DIRECTORY_UPDATE'
 // actions creators
 export const actions = {}
 
+actions.setLoading = makeInstanceActionCreator(EXPLORER_SET_LOADING, 'loading')
 actions.setRoot = makeInstanceActionCreator(EXPLORER_SET_ROOT, 'root')
 actions.setCurrentId = makeInstanceActionCreator(EXPLORER_SET_CURRENT_ID, 'currentId')
 actions.setCurrentNode = makeInstanceActionCreator(EXPLORER_SET_CURRENT_NODE, 'current')
@@ -91,7 +93,7 @@ actions.fetchDirectories = (explorerName, parentId = null) => ({
         resourceType: 'directory'
       },
       sortBy: 'name',
-      //todo: lazy load instead
+      // todo: lazy load instead
       limit: 20
     }),
     success: (response, dispatch) => dispatch(actions.loadDirectories(explorerName, parentId, response.data || []))
@@ -101,6 +103,7 @@ actions.fetchDirectories = (explorerName, parentId = null) => ({
 actions.fetchCurrentDirectory = (explorerName, directoryId, filters = []) => ({
   [API_REQUEST]: {
     url: ['claro_resource_load_short', {id: directoryId}],
+    before: (dispatch) => dispatch(actions.setLoading(explorerName, true)),
     success: (response, dispatch) => {
       // load directory node
       dispatch(actions.setCurrentNode(explorerName, response.resourceNode))
@@ -109,7 +112,10 @@ actions.fetchCurrentDirectory = (explorerName, directoryId, filters = []) => ({
 
       // Load the list of resource for the current directory
       dispatch(listActions.fetchData(explorerName +'.resources', ['apiv2_resource_list', {parent: directoryId}], true))
-    }
+
+      dispatch(actions.setLoading(explorerName, false))
+    },
+    error: (errors, dispatch) => dispatch(actions.setLoading(explorerName, false))
   }
 })
 

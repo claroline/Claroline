@@ -4,8 +4,12 @@
     .embedded-list-variant();
 
     .list-header {
-        background: @modal-footer-bg;
         border-bottom: 1px solid @modal-header-border-color;
+
+        .list-search,
+        .list-options {
+            background: @modal-footer-bg;
+        }
     }
 
     .list-selected {

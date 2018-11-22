@@ -22,7 +22,7 @@ const PageBreadcrumb = props => {
             </UrlButton>
           </li>
           :
-          <li key={toKey(item.label)} className="active">{item.label}</li>
+          <li key={toKey(item.label)} className="active" role="presentation">{item.label}</li>
         )
       }
     </ul>

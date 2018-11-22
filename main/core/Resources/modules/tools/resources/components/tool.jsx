@@ -20,6 +20,7 @@ const ResourcesToolComponent = props =>
       label: ancestorNode.name,
       target: ['claro_resource_show_short', {id: ancestorNode.id}]
     })) : []}
+    disabled={props.loading}
     toolbar={getToolbar('add')}
     actions={props.current && getActions([props.current], {
       add: props.addNodes,
@@ -49,6 +50,7 @@ ResourcesToolComponent.propTypes = {
   current: T.shape(
     ResourceNodeTypes.propTypes
   ),
+  loading: T.bool.isRequired,
   addNodes: T.func.isRequired,
   updateNodes: T.func.isRequired,
   deleteNodes: T.func.isRequired
@@ -56,6 +58,7 @@ ResourcesToolComponent.propTypes = {
 
 const ResourcesTool = connect(
   state => ({
+    loading: explorerSelectors.loading(explorerSelectors.explorer(state, selectors.STORE_NAME)),
     current: explorerSelectors.currentNode(explorerSelectors.explorer(state, selectors.STORE_NAME))
   }),
   dispatch => ({

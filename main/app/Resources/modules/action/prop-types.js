@@ -86,6 +86,13 @@ const Toolbar = {
     className: T.string,
 
     /**
+     * Disables all the actions of the toolbar at once.
+     *
+     * @type {bool}
+     */
+    disabled: T.bool,
+
+    /**
      * The base class for buttons.
      *
      * @type {string}
@@ -132,6 +139,7 @@ const Toolbar = {
   },
   defaultProps: {
     className: 'toolbar',
+    disabled: false,
     tooltip: 'bottom'
   }
 }

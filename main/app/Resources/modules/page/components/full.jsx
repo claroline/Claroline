@@ -26,6 +26,7 @@ const PageFull = props =>
         icon={props.icon}
         poster={props.poster}
         toolbar={props.toolbar}
+        disabled={props.disabled}
         actions={props.actions}
       />
     }

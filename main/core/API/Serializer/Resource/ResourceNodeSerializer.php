@@ -135,7 +135,7 @@ class ResourceNodeSerializer
         if (!empty($parent)) {
             $serializedNode['parent'] = [
                 'id' => $parent->getUuid(),
-                'autoId' => $parent->getId(),
+                'autoId' => $parent->getId(), // TODO : remove me
                 'name' => $parent->getName(),
             ];
         }

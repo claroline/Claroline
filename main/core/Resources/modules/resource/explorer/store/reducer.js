@@ -9,6 +9,7 @@ import {makeListReducer} from '#/main/app/content/list/store'
 import {constants as listConst} from '#/main/app/content/list/constants'
 
 import {
+  EXPLORER_SET_LOADING,
   EXPLORER_SET_ROOT,
   EXPLORER_SET_CURRENT_ID,
   EXPLORER_SET_CURRENT_NODE,
@@ -47,6 +48,7 @@ function replaceDirectory(directories, newDir) {
 }
 
 const defaultState = {
+  loading: false,
   filters: [],
   root: null,
   currentId: null,
@@ -56,6 +58,10 @@ const defaultState = {
 }
 
 const baseReducer = {
+  loading: makeInstanceReducer(defaultState.loading, {
+    [EXPLORER_SET_LOADING]: (state, action) => action.loading
+  }),
+
   /**
    * A list of filters that needs to be applied to all the directories.
    */
