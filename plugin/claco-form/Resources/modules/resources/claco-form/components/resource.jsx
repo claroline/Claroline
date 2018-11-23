@@ -36,19 +36,13 @@ function getHome(type) {
 const ClacoFormResource = props =>
   <ResourcePage
     styles={['claroline-distribution-plugin-claco-form-resource']}
+    primaryAction="add-entry"
     customActions={[
       {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-home',
         label: trans('show_overview'),
         target: '/menu'
-      }, {
-        type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-plus',
-        label: trans('add_entry', {}, 'clacoform'),
-        displayed: props.canAddEntry,
-        target: '/entry/form',
-        exact: true
       }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-search',

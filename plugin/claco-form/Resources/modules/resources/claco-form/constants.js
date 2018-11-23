@@ -21,8 +21,6 @@ const CHOICE_ADD = 'add'
 const CHOICE_ALL = 'all'
 const CHOICE_NONE = 'none'
 
-const CHOICE_PUBLISHED = 'published'
-
 const CHOICE_DOWN = 'down'
 const CHOICE_UP = 'up'
 const CHOICE_BOTH = 'both'
@@ -36,12 +34,6 @@ const DEFAULT_HOME_CHOICES = {
   [CHOICE_RANDOM]: trans('random_mode', {}, 'clacoform'),
   [CHOICE_SEARCH]: trans('search_mode', {}, 'clacoform'),
   [CHOICE_ADD]: trans('entry_addition', {}, 'clacoform')
-}
-
-const DISPLAY_NB_ENTRIES_CHOICES = {
-  [CHOICE_ALL]: trans('choice_entry_all', {}, 'clacoform'),
-  [CHOICE_PUBLISHED]: trans('choice_entry_published', {}, 'clacoform'),
-  [CHOICE_NONE]: trans('no')
 }
 
 const MENU_POSITION_CHOICES = {
@@ -77,7 +69,6 @@ export const constants = {
   ENTRY_STATUS_PUBLISHED,
   ENTRY_STATUS_UNPUBLISHED,
   DEFAULT_HOME_CHOICES,
-  DISPLAY_NB_ENTRIES_CHOICES,
   MENU_POSITION_CHOICES,
   DISPLAY_METADATA_CHOICES,
   LOCKED_FIELDS_FOR_CHOICES,

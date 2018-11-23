@@ -14,6 +14,7 @@ namespace Claroline\ClacoFormBundle\Controller;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Comment;
 use Claroline\ClacoFormBundle\Entity\Entry;
@@ -36,14 +37,20 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
+/**
+ * @todo : break me into multiple files
+ */
 class ClacoFormController extends Controller
 {
+    use RequestDecoderTrait;
+
     private $apiManager;
     private $archiveDir;
     private $clacoFormManager;
@@ -345,6 +352,8 @@ class ClacoFormController extends Controller
     }
 
     /**
+     * Creates a comment.
+     *
      * @EXT\Route(
      *     "/claco/form/entry/{entry}/comment/create",
      *     name="claro_claco_form_entry_comment_create",
@@ -356,25 +365,27 @@ class ClacoFormController extends Controller
      *     options={"mapping": {"entry": "uuid"}}
      * )
      *
-     * Creates a comment
-     *
-     * @param Entry $entry
+     * @param Entry   $entry
+     * @param Request $request
      *
      * @return JsonResponse
      */
-    public function commentCreateAction(Entry $entry)
+    public function commentCreateAction(Entry $entry, Request $request)
     {
         $this->clacoFormManager->checkCommentCreationRight($entry);
-        $content = $this->request->request->get('commentData', false);
+
+        $decodedRequest = $this->decodeRequest($request);
         $authenticatedUser = $this->tokenStorage->getToken()->getUser();
         $user = 'anon.' !== $authenticatedUser ? $authenticatedUser : null;
-        $comment = $this->clacoFormManager->createComment($entry, $content, $user);
-        $serializedComment = $this->commentSerializer->serialize($comment);
 
-        return new JsonResponse($serializedComment, 200);
+        $comment = $this->clacoFormManager->createComment($entry, $decodedRequest['message'], $user);
+
+        return new JsonResponse($this->commentSerializer->serialize($comment), 200);
     }
 
     /**
+     * Edits a comment.
+     *
      * @EXT\Route(
      *     "/claco/form/entry/comment/{comment}/edit",
      *     name="claro_claco_form_entry_comment_edit",
@@ -387,20 +398,19 @@ class ClacoFormController extends Controller
      * )
      * @EXT\ParamConverter("user", converter="current_user")
      *
-     * Edits a comment
-     *
      * @param Comment $comment
+     * @param Request $request
      *
      * @return JsonResponse
      */
-    public function commentEditAction(Comment $comment)
+    public function commentEditAction(Comment $comment, Request $request)
     {
         $this->clacoFormManager->checkCommentEditionRight($comment);
-        $content = $this->request->request->get('commentData', false);
-        $comment = $this->clacoFormManager->editComment($comment, $content);
-        $serializedComment = $this->commentSerializer->serialize($comment);
 
-        return new JsonResponse($serializedComment, 200);
+        $decodedRequest = $this->decodeRequest($request);
+        $comment = $this->clacoFormManager->editComment($comment, $decodedRequest['message']);
+
+        return new JsonResponse($this->commentSerializer->serialize($comment), 200);
     }
 
     /**

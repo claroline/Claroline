@@ -31,6 +31,7 @@ import {actions} from '#/plugin/claco-form/resources/claco-form/player/store'
 import {EntryComments} from '#/plugin/claco-form/resources/claco-form/player/components/entry-comments'
 import {EntryMenu} from '#/plugin/claco-form/resources/claco-form/player/components/entry-menu'
 
+// TODO : use standard toolbar instead
 const EntryActions = props =>
   <div className="entry-actions">
     <div className="btn-group margin-right-sm" role="group">
@@ -270,17 +271,6 @@ class EntryComponent extends Component {
     this.props.saveEntryUser(entryUser)
   }
 
-  getFieldValue(fieldId) {
-    let value = ''
-    const fieldValue = this.props.entry.fieldValues &&  this.props.entry.fieldValues.find(fv => fv.field.id === fieldId)
-
-    if (fieldValue && fieldValue.fieldFacetValue) {
-      value = fieldValue.fieldFacetValue.value
-    }
-
-    return value
-  }
-
   generateTemplate() {
     let template = this.props.template
     template = template.replace('%clacoform_entry_title%', this.props.entry.title)
@@ -389,12 +379,12 @@ class EntryComponent extends Component {
   render() {
     return (
       this.props.canViewEntry || this.canShare() ?
-        <div>
+        <div className="entry">
           {['up', 'both'].indexOf(this.props.menuPosition) > -1 &&
             <EntryMenu />
           }
 
-          <div className="entry panel panel-default">
+          <div className="panel panel-default">
             <div className="panel-body">
               <h2 className="entry-title">{this.props.entry.title}</h2>
 

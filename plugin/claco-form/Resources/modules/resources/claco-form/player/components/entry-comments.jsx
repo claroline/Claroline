@@ -17,6 +17,8 @@ import {actions} from '#/plugin/claco-form/resources/claco-form/player/store'
 
 const authenticatedUser = currentUser()
 
+// TODO : make it a core component and reuse it here and in Blog (and everywhere we need comments)
+
 class EntryCommentsComponent extends Component {
   constructor(props) {
     super(props)
@@ -104,7 +106,7 @@ class EntryCommentsComponent extends Component {
             }
 
             {this.state.showNewCommentForm &&
-              <h4>{trans('add_comment', {}, 'clacoform')}</h4>
+              <h4 className="sr-only">{trans('add_comment', {}, 'clacoform')}</h4>
             }
 
             {this.state.showNewCommentForm &&
@@ -123,12 +125,12 @@ class EntryCommentsComponent extends Component {
 
         {this.state.opened && this.props.canViewComments &&
           <section className="comments-section">
-            <h4>{trans('all_comments', {}, 'clacoform')}</h4>
+            <h4 className="sr-only">{trans('all_comments', {}, 'clacoform')}</h4>
 
             {0 === comments.length &&
-            <div className="list-empty">
-              {trans('no_comment', {}, 'clacoform')}
-            </div>
+              <div className="list-empty">
+                {trans('no_comment', {}, 'clacoform')}
+              </div>
             }
 
             {comments.map((comment, commentIndex) =>

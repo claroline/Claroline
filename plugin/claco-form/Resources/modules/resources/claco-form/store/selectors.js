@@ -19,7 +19,7 @@ const isAnon = () => authenticatedUser === null
 
 const params = createSelector(
   [clacoForm],
-  (clacoForm) => clacoForm.details
+  (clacoForm) => clacoForm.details || {}
 )
 
 const fields = createSelector(
@@ -173,17 +173,13 @@ const canEditCurrentEntry = createSelector(
 )
 
 const canAddEntry = createSelector(
-  canAdministrate,
-  isAnon,
+  resourceSelect.resourceNode,
+  resourceSelect.managed,
   params,
   myEntriesCount,
-  (canAdministrate, isAnon, params, myEntriesCount) => {
-    return canAdministrate || (
-      params &&
-      params['creation_enabled'] &&
-      !(isAnon && params['max_entries'] > 0) &&
-      !(params['max_entries'] > 0 && myEntriesCount >= params['max_entries'])
-    )
+  (resourceNode, managed, params, myEntriesCount) => {
+    return managed
+      || (hasPermission('add-entry', resourceNode) && (!params.max_entries || myEntriesCount < params.max_entries))
   }
 )
 

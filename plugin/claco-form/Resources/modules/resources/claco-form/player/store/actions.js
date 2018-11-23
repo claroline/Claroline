@@ -6,6 +6,8 @@ import {API_REQUEST, url} from '#/main/app/api'
 import {actions as formActions} from '#/main/app/content/form/store'
 import {actions as listActions} from '#/main/app/content/list/store'
 
+import {selectors} from '#/plugin/claco-form/resources/claco-form/store/selectors'
+
 const ENTRIES_UPDATE = 'ENTRIES_UPDATE'
 const ENTRY_CREATED = 'ENTRY_CREATED'
 const CURRENT_ENTRY_LOAD = 'CURRENT_ENTRY_LOAD'
@@ -99,41 +101,29 @@ actions.downloadEntriesPdf = (entries) => () => {
   window.location.href = url(['claro_claco_form_entries_pdf_download', {ids: entries.map(e => e.id)}])
 }
 
-actions.createComment = (entryId, content) => (dispatch) => {
-  const formData = new FormData()
-  formData.append('commentData', content)
+// TODO : should send the whole comment object
+actions.createComment = (entryId, content) => ({
+  [API_REQUEST]: {
+    url: ['claro_claco_form_entry_comment_create', {entry: entryId}],
+    request: {
+      method: 'POST',
+      body: JSON.stringify({message: content})
+    },
+    success: (data, dispatch) => dispatch(actions.addEntryComment(data))
+  }
+})
 
-  dispatch({
-    [API_REQUEST]: {
-      url: ['claro_claco_form_entry_comment_create', {entry: entryId}],
-      request: {
-        method: 'POST',
-        body: formData
-      },
-      success: (data, dispatch) => {
-        dispatch(actions.addEntryComment(data))
-      }
-    }
-  })
-}
-
-actions.editComment = (commentId, content) => (dispatch) => {
-  const formData = new FormData()
-  formData.append('commentData', content)
-
-  dispatch({
-    [API_REQUEST]: {
-      url: ['claro_claco_form_entry_comment_edit', {comment: commentId}],
-      request: {
-        method: 'POST',
-        body: formData
-      },
-      success: (data, dispatch) => {
-        dispatch(actions.updateEntryComment(data))
-      }
-    }
-  })
-}
+// TODO : should send the whole comment object
+actions.editComment = (commentId, content) => ({
+  [API_REQUEST]: {
+    url: ['claro_claco_form_entry_comment_edit', {comment: commentId}],
+    request: {
+      method: 'POST',
+      body: JSON.stringify({message: content})
+    },
+    success: (data, dispatch) => dispatch(actions.updateEntryComment(data))
+  }
+})
 
 actions.deleteComment = (commentId) => ({
   [API_REQUEST]: {

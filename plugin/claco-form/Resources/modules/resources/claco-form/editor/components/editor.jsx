@@ -85,25 +85,17 @@ const EditorComponent = props =>
                   min: 0
                 }
               }, {
-                name: 'details.creation_enabled',
-                type: 'boolean',
-                label: trans('label_creation_enabled', {}, 'clacoform'),
-                required: true
-              }, {
                 name: 'details.edition_enabled',
                 type: 'boolean',
-                label: trans('label_edition_enabled', {}, 'clacoform'),
-                required: true
+                label: trans('label_edition_enabled', {}, 'clacoform')
               }, {
                 name: 'details.moderated',
                 type: 'boolean',
-                label: trans('label_moderated', {}, 'clacoform'),
-                required: true
+                label: trans('label_moderated', {}, 'clacoform')
               }, {
                 name: 'details.keywords_enabled',
                 type: 'boolean',
                 label: trans('label_keywords_enabled', {}, 'clacoform'),
-                required: true,
                 linked: [
                   {
                     name: 'details.new_keywords_enabled',
@@ -133,16 +125,6 @@ const EditorComponent = props =>
                   noEmpty: true,
                   condensed: true,
                   choices: constants.DEFAULT_HOME_CHOICES
-                }
-              }, {
-                name: 'details.display_nb_entries',
-                type: 'choice',
-                label: trans('label_display_nb_entries', {}, 'clacoform'),
-                required: true,
-                options: {
-                  noEmpty: true,
-                  condensed: true,
-                  choices: constants.DISPLAY_NB_ENTRIES_CHOICES
                 }
               }, {
                 name: 'details.menu_position',
@@ -294,14 +276,12 @@ const EditorComponent = props =>
                 name: 'details.comments_enabled',
                 type: 'boolean',
                 label: trans('label_comments_enabled', {}, 'clacoform'),
-                required: true,
                 linked: [
                   {
                     name: 'details.comments_roles',
                     type: 'choice',
                     label: trans('enable_comments_for_roles', {}, 'clacoform'),
                     displayed: props.clacoForm.details.comments_enabled,
-                    required: false,
                     options: {
                       multiple: true,
                       condensed: true,
@@ -322,48 +302,42 @@ const EditorComponent = props =>
                       condensed: true,
                       choices: constants.MODERATE_COMMENTS_CHOICES
                     }
-                  }, {
-                    name: 'details.display_comments',
-                    type: 'boolean',
-                    label: trans('label_display_comments', {}, 'clacoform'),
-                    displayed: props.clacoForm.details.comments_enabled,
-                    required: true,
-                    linked: [
-                      {
-                        name: 'details.comments_display_roles',
-                        type: 'choice',
-                        label: trans('display_comments_for_roles', {}, 'clacoform'),
-                        displayed: props.clacoForm.details.comments_enabled && props.clacoForm.details.display_comments,
-                        required: false,
-                        options: {
-                          multiple: true,
-                          condensed: true,
-                          choices: props.roles.reduce((acc, r) => {
-                            acc[r.name] = trans(r.translationKey)
+                  }
+                ]
+              }, {
+                name: 'details.display_comments',
+                type: 'boolean',
+                label: trans('label_display_comments', {}, 'clacoform'),
+                linked: [
+                  {
+                    name: 'details.comments_display_roles',
+                    type: 'choice',
+                    label: trans('display_comments_for_roles', {}, 'clacoform'),
+                    displayed: props.clacoForm.details.display_comments,
+                    options: {
+                      multiple: true,
+                      condensed: true,
+                      choices: props.roles.reduce((acc, r) => {
+                        acc[r.name] = trans(r.translationKey)
 
-                            return acc
-                          }, {})
-                        }
-                      }, {
-                        name: 'details.open_comments',
-                        type: 'boolean',
-                        label: trans('label_open_panel_by_default', {}, 'clacoform'),
-                        displayed: props.clacoForm.details.comments_enabled && props.clacoForm.details.display_comments,
-                        required: true
-                      }, {
-                        name: 'details.display_comment_author',
-                        type: 'boolean',
-                        label: trans('label_display_comment_author', {}, 'clacoform'),
-                        displayed: props.clacoForm.details.comments_enabled && props.clacoForm.details.display_comments,
-                        required: true
-                      }, {
-                        name: 'details.display_comment_date',
-                        type: 'boolean',
-                        label: trans('label_display_comment_date', {}, 'clacoform'),
-                        displayed: props.clacoForm.details.comments_enabled && props.clacoForm.details.display_comments,
-                        required: true
-                      }
-                    ]
+                        return acc
+                      }, {})
+                    }
+                  }, {
+                    name: 'details.open_comments',
+                    type: 'boolean',
+                    label: trans('label_open_panel_by_default', {}, 'clacoform'),
+                    displayed: props.clacoForm.details.display_comments
+                  }, {
+                    name: 'details.display_comment_author',
+                    type: 'boolean',
+                    label: trans('label_display_comment_author', {}, 'clacoform'),
+                    displayed: props.clacoForm.details.display_comments
+                  }, {
+                    name: 'details.display_comment_date',
+                    type: 'boolean',
+                    label: trans('label_display_comment_date', {}, 'clacoform'),
+                    displayed: props.clacoForm.details.display_comments
                   }
                 ]
               }

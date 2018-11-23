@@ -17,7 +17,7 @@ const OverviewComponent = props =>
         target="/entry/form"
       >
         <span className="action-icon fa fa-plus" />
-        <span className="action-label">{trans('add_entry', {}, 'clacoform')}</span>
+        <span className="action-label">{trans('add-entry', {}, 'actions')}</span>
       </LinkButton>
     }
 

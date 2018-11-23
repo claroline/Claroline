@@ -1,5 +1,5 @@
 /**
- * ClacoForm resource
+ * ClacoForm resource.
  */
 
 @import "./../variables.less";
@@ -53,27 +53,21 @@
     }
 }
 
+.entry {
+    .panel {
+        margin-bottom: 0;
+    }
 
-.claco-form-container {
+    .entry-title {
+        margin-top: 0;
+    }
+
     .comments-container {
         margin-top: @component-margin-bottom;
     }
 }
 
-.entry {
-    margin-bottom: 10px;
-
-    .entry-title {
-        margin-top: 0;
-    }
-}
-
-.entry-menu + .entry, // top menu
-.panel + .entry-menu { // bottom menu
-    margin-top: 10px;
-}
-
-    // same as announce
+// same as announce
 .entry-meta {
     display: flex;
     flex-direction: row;
@@ -138,11 +132,8 @@
     }
 }
 
-//.claco-form-main-menu,
 .entry-menu {
-    .btn + .btn {
-        margin-left: 5px;
-    }
+    text-align: right;
 }
 
 .form-group-align {
@@ -193,6 +184,6 @@
     padding: 10px;
 
     .form-group {
-        margin: 0px
+        margin: 0;
     }
 }

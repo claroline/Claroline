@@ -5,3 +5,6 @@ plugin:
         - class: Claroline\ClacoFormBundle\Entity\ClacoForm
           name: claroline_claco_form
           tags: [content, community]
+          actions:
+              - name: add-entry
+                decoder: add-entry

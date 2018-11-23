@@ -12,6 +12,8 @@ import {Checkbox} from '#/main/core/layout/form/components/field/checkbox'
 import {ResourceRights} from '#/main/core/resource/components/rights'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 
+// TODO : fix recursive condition
+
 const RightsModal = props =>
   <Modal
     {...omit(props, 'resourceNode', 'saveEnabled', 'save', 'updateRights', 'loadNode', 'updateNode', 'nodeForm')}
@@ -29,14 +31,16 @@ const RightsModal = props =>
       />
     }
 
-    <div>
-      <Checkbox
-        id={'recursive-node-' + props.resourceNode.id}
-        label={trans('apply_recursively_to_directories', {}, 'platform')}
-        checked={props.recursiveEnabled}
-        onChange={value => props.setRecursiveEnabled(value)}
-      />
-    </div>
+    {'directory' === props.resourceNode.meta.type &&
+      <div className="modal-body">
+        <Checkbox
+          id={'recursive-node-' + props.resourceNode.id}
+          label={trans('apply_recursively_to_directories', {}, 'platform')}
+          checked={props.recursiveEnabled}
+          onChange={value => props.setRecursiveEnabled(value)}
+        />
+      </div>
+    }
 
     <Button
       className="btn modal-btn"
