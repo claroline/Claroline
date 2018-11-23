@@ -25,6 +25,7 @@ const config = {
       editor.getContainer().parentNode.classList.remove('editor-fullscreen')
     )
   },
+  allow_script_urls: true,
   language: locale(),
   theme: 'modern',
   skin: false, // we provide it through theme system
