@@ -17,7 +17,7 @@
     "d3": "^4.4.0",
     "immutability-helper": "^2.0.0",
     "invariant": "^2.2.1",
-    "@fortawesome/fontawesome-free": "^5.3.1",
+    "@fortawesome/fontawesome-free": "^5.5.0",
     "fullcalendar": "^3.0.0",
     "jquery": "2.2.4",
     "jquery-option-tree": "git://github.com/jongilbraith/jquery-option-tree.git#502925496eea4becf88a0109fe51fc4af48b3691",
