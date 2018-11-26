@@ -136,7 +136,8 @@ abstract class AbstractFinder implements FinderInterface
     {
         //let doctrine do its stuff for the fist part
         $firstQb = $this->om->createQueryBuilder();
-        $firstQb->select('DISTINCT obj')->from($this->getClass(), 'obj');
+        $extraSelect = $options['count'] ? [] : $this->getExtraSelect();
+        $firstQb->select('DISTINCT obj', ...$extraSelect)->from($this->getClass(), 'obj');
         $build = $this->configureQueryBuilder($firstQb, $firstSearch);
         $firstQb = $build ? $build : $firstQb;
         //this is our first part of the union
@@ -146,12 +147,13 @@ abstract class AbstractFinder implements FinderInterface
 
         //new qb for the 2nd part
         $secQb = $this->om->createQueryBuilder();
-        $secQb->select('DISTINCT obj')->from($this->getClass(), 'obj');
+        $secQb->select('DISTINCT obj', ...$extraSelect)->from($this->getClass(), 'obj');
 
         $build = $this->configureQueryBuilder($secQb, $secondSearch);
         $secQb = $build ? $build : $secQb;
         //this is the second part of the union
         $secQ = $secQb->getQuery();
+
         $secSql = $this->getSql($secQ);
         $sql = $firstSql.' UNION '.$secSql;
 
@@ -172,8 +174,14 @@ abstract class AbstractFinder implements FinderInterface
     private function getSql(Query $query)
     {
         $sql = $query->getSql();
+        //we may find a way to turn the getExtraSelect() into something nice here but not many idea on how to do it.
+        //the qb getAllAliases() func doesn't return what's needed
         $sql = preg_replace('/ AS \S+/', ',', $sql);
         $sql = str_replace(', FROM', ' FROM', $sql);
+
+        foreach ($this->getAliases() as $property => $alias) {
+            $sql = str_replace(', '.$property, ', '.$property.' AS '.$alias, $sql);
+        }
 
         return $sql;
     }
@@ -233,6 +241,16 @@ abstract class AbstractFinder implements FinderInterface
     }
 
     public function getExtraFieldMapping()
+    {
+        return [];
+    }
+
+    public function getExtraSelect()
+    {
+        return [];
+    }
+
+    public function getAliases()
     {
         return [];
     }

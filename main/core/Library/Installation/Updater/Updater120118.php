@@ -111,7 +111,7 @@ class Updater120118 extends Updater
                 'security' => [
                     'form_captcha' => $this->getParameter($parameters, 'form_captcha'),
                     'form_honeypot' => $this->getParameter($parameters, 'form_honeypot'),
-                    'platform_limit_date' => DateNormalizer::normalize($platformLimitDate),
+                    'platform_limit_date' => '2119-06-30T03:01:01',
                     'platform_init_date' => DateNormalizer::normalize($platformInitDate),
                     'cookie_lifetime' => $this->getParameter($parameters, 'cookie_lifetime'),
                     'account_duration' => $this->getParameter($parameters, 'account_duration'),
