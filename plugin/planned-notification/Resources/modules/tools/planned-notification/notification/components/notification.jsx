@@ -13,7 +13,7 @@ import {
   WORKSPACE_REGISTRATION_GROUP
 } from '#/plugin/planned-notification/tools/planned-notification/constants'
 import {select} from '#/plugin/planned-notification/tools/planned-notification/selectors'
-import {Notification as NotificationTypes} from '#/plugin/planned-notification/tools/planned-notification/prop-types'
+import {Notification as NotificationType} from '#/plugin/planned-notification/tools/planned-notification/prop-types'
 
 const NotificationForm = props =>
   <FormData
@@ -52,7 +52,9 @@ const NotificationForm = props =>
                 label: trans('roles'),
                 type: 'workspace_roles',
                 required: false,
-                displayed: -1 < [WORKSPACE_REGISTRATION_USER, WORKSPACE_REGISTRATION_GROUP].indexOf(props.notification.parameters.action)
+                displayed: props.notification.parameters &&
+                  props.notification.parameters.action &&
+                  -1 < [WORKSPACE_REGISTRATION_USER, WORKSPACE_REGISTRATION_GROUP].indexOf(props.notification.parameters.action)
               }
             ]
           }, {
@@ -89,7 +91,7 @@ const NotificationForm = props =>
 NotificationForm.propTypes = {
   canEdit: T.bool.isRequired,
   new: T.bool.isRequired,
-  notification: T.shape(NotificationTypes.propTypes).isRequired
+  notification: T.shape(NotificationType.propTypes).isRequired
 }
 
 const Notification = connect(

@@ -11,45 +11,51 @@
 
 namespace Claroline\PlannedNotificationBundle\Controller\API;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\PlannedNotificationBundle\Entity\PlannedNotification;
+use Claroline\PlannedNotificationBundle\Manager\PlannedNotificationManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @ApiMeta(
- *     class="Claroline\PlannedNotificationBundle\Entity\PlannedNotification",
- *     ignore={"exist", "list", "copyBulk", "schema", "find"}
- * )
  * @EXT\Route("/plannednotification")
  */
 class PlannedNotificationController extends AbstractCrudController
 {
-    /* var FinderProvider */
-    protected $finder;
+    /* @var PlannedNotificationManager */
+    protected $manager;
 
     /**
      * PlannedNotificationController constructor.
      *
      * @DI\InjectParams({
-     *     "finder" = @DI\Inject("claroline.api.finder")
+     *     "manager" = @DI\Inject("claroline.manager.planned_notification_manager")
      * })
      *
-     * @param FinderProvider $finder
+     * @param PlannedNotificationManager $manager
      */
-    public function __construct(FinderProvider $finder)
+    public function __construct(PlannedNotificationManager $manager)
     {
-        $this->finder = $finder;
+        $this->manager = $manager;
     }
 
     public function getName()
     {
         return 'planned_notification';
+    }
+
+    public function getClass()
+    {
+        return PlannedNotification::class;
+    }
+
+    public function getIgnore()
+    {
+        return ['exist', 'copyBulk', 'schema', 'find', 'list'];
     }
 
     /**
@@ -111,5 +117,27 @@ class PlannedNotificationController extends AbstractCrudController
         $data = $this->finder->search('Claroline\CoreBundle\Entity\Role', $params, [Options::SERIALIZE_MINIMAL]);
 
         return new JsonResponse($data, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/manual/notifications/trigger",
+     *     name="apiv2_plannednotification_manual_notifications_trigger"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function manualNotificationsTriggerAction(Request $request)
+    {
+        $data = $this->decodeRequest($request);
+        $tasks = $this->manager->generateManualScheduledTasks($data);
+
+        if (0 < count($tasks)) {
+            return new JsonResponse();
+        } else {
+            return new JsonResponse(null, 422);
+        }
     }
 }

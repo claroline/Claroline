@@ -10,7 +10,7 @@ import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
 
 import {select} from '#/plugin/planned-notification/tools/planned-notification/selectors'
-import {Message as MessageTypes} from '#/plugin/planned-notification/tools/planned-notification/prop-types'
+import {Message as MessageType} from '#/plugin/planned-notification/tools/planned-notification/prop-types'
 
 // todo : maybe move it in core
 
@@ -48,7 +48,7 @@ const MessageFormGroupComponent = props =>
   </FormGroup>
 
 implementPropTypes(MessageFormGroupComponent, FormGroupWithFieldTypes, {
-  value: T.shape(MessageTypes.propTypes),
+  value: T.shape(MessageType.propTypes),
   workspace: T.shape({
     uuid: T.string.isRequired
   }).isRequired,

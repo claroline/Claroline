@@ -10,7 +10,7 @@ import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 
 import {select} from '#/plugin/planned-notification/tools/planned-notification/selectors'
-import {Role as RoleTypes} from '#/plugin/planned-notification/data/roles/prop-types'
+import {Role as RoleType} from '#/plugin/planned-notification/data/roles/prop-types'
 
 const Role = props =>
   <span className="role-item">
@@ -28,7 +28,7 @@ const Role = props =>
   </span>
 
 Role.propTypes = {
-  role: T.shape(RoleTypes.propTypes).isRequired,
+  role: T.shape(RoleType.propTypes).isRequired,
   canEdit: T.bool.isRequired,
   onDelete: T.func.isRequired
 }
@@ -78,7 +78,7 @@ const RolesFormGroupComponent = props =>
 
 implementPropTypes(RolesFormGroupComponent, FormGroupWithFieldTypes, {
   value: T.arrayOf(
-    T.shape(RoleTypes.propTypes)
+    T.shape(RoleType.propTypes)
   ),
   workspace: T.shape({
     uuid: T.string.isRequired

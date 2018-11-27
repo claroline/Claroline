@@ -43,6 +43,11 @@ class PlannedNotificationFinder extends AbstractFinder
                     $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
                     $rolesJoin = true;
                     break;
+                case 'message.title':
+                    $qb->join('obj.message', 'm');
+                    $qb->andWhere('UPPER(m.title) LIKE :messageTitle');
+                    $qb->setParameter('messageTitle', '%'.strtoupper($filterValue).'%');
+                    break;
                 default:
                     if (is_bool($filterValue)) {
                         $qb->andWhere("obj.{$filterName} = :{$filterName}");

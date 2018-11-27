@@ -66,11 +66,11 @@ const ScheduledTaskForm = props =>
           {
             name: 'data.object',
             type: 'string',
-            label: trans('message_form_object')
+            label: trans('object')
           }, {
             name: 'data.content',
             type: 'html',
-            label: trans('message_form_content'),
+            label: trans('content'),
             required: true,
             options: {
               minRows: 5

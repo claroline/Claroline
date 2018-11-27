@@ -7,6 +7,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data.jsx'
 
 import {select} from '#/plugin/planned-notification/tools/planned-notification/selectors'
+import {NotificationCard} from '#/plugin/planned-notification/tools/planned-notification/notification/data/components/notification-card'
 
 const NotificationsList = props =>
   <ListData
@@ -23,6 +24,15 @@ const NotificationsList = props =>
       url: ['apiv2_plannednotification_delete_bulk'],
       displayed: () => props.canEdit
     }}
+    actions={(rows) => [
+      {
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-edit',
+        label: trans('edit'),
+        scope: ['object'],
+        target: `/notifications/form/${rows[0].id}`
+      }
+    ]}
     definition={[
       {
         name: 'parameters.action',
@@ -31,6 +41,11 @@ const NotificationsList = props =>
         type: 'string',
         displayed: true,
         render: (row) => trans(row.parameters.action, {}, 'planned_notification')
+      }, {
+        name: 'message.title',
+        label: trans('message'),
+        type: 'string',
+        displayed: true
       }, {
         name: 'roles',
         label: trans('roles'),
@@ -57,6 +72,7 @@ const NotificationsList = props =>
         displayed: true
       }
     ]}
+    card={NotificationCard}
   />
 
 NotificationsList.propTypes = {

@@ -17,47 +17,47 @@ use Claroline\CoreBundle\Event\Log\LogRoleSubscribeEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\PlannedNotificationBundle\Manager\PlannedNotificationManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @DI\Service
  */
 class PlannedNotificationListener
 {
+    /** @var AuthorizationCheckerInterface */
+    private $authorization;
     /** @var PlannedNotificationManager */
     private $manager;
-    /** @var HttpKernelInterface */
-    private $httpKernel;
-    /** @var Request */
-    private $request;
+    /** @var TwigEngine */
+    private $templating;
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
     /**
      * @DI\InjectParams({
-     *     "manager"      = @DI\Inject("claroline.manager.planned_notification_manager"),
-     *     "httpKernel"   = @DI\Inject("http_kernel"),
-     *     "requestStack" = @DI\Inject("request_stack"),
-     *     "tokenStorage" = @DI\Inject("security.token_storage")
+     *     "authorization" = @DI\Inject("security.authorization_checker"),
+     *     "manager"       = @DI\Inject("claroline.manager.planned_notification_manager"),
+     *     "templating"    = @DI\Inject("templating"),
+     *     "tokenStorage"  = @DI\Inject("security.token_storage")
      * })
      *
-     * @param PlannedNotificationManager $manager
-     * @param HttpKernelInterface        $httpKernel
-     * @param RequestStack               $requestStack
-     * @param TokenStorageInterface      $tokenStorage
+     * @param AuthorizationCheckerInterface $authorization
+     * @param PlannedNotificationManager    $manager
+     * @param TwigEngine                    $templating
+     * @param TokenStorageInterface         $tokenStorage
      */
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
         PlannedNotificationManager $manager,
-        HttpKernelInterface $httpKernel,
-        RequestStack $requestStack,
+        TwigEngine $templating,
         TokenStorageInterface $tokenStorage
     ) {
+        $this->authorization = $authorization;
         $this->manager = $manager;
-        $this->httpKernel = $httpKernel;
-        $this->request = $requestStack->getCurrentRequest();
+        $this->templating = $templating;
         $this->tokenStorage = $tokenStorage;
     }
 
@@ -68,12 +68,18 @@ class PlannedNotificationListener
      */
     public function onWorkspaceToolOpen(DisplayToolEvent $event)
     {
-        $params = [];
-        $params['_controller'] = 'ClarolinePlannedNotificationBundle:PlannedNotificationTool:toolOpen';
-        $params['workspace'] = $event->getWorkspace()->getId();
-        $subRequest = $this->request->duplicate([], null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        $event->setContent($response->getContent());
+        $workspace = $event->getWorkspace();
+
+        if (!$this->authorization->isGranted(['claroline_planned_notification_tool', 'OPEN'], $workspace)) {
+            throw new AccessDeniedException();
+        }
+        $content = $this->templating->render(
+            'ClarolinePlannedNotificationBundle:planned_notification_tool:tool_open.html.twig', [
+                'workspace' => $workspace,
+                'canEdit' => $this->authorization->isGranted(['claroline_planned_notification_tool', 'EDIT'], $workspace),
+            ]
+        );
+        $event->setContent($content);
         $event->stopPropagation();
     }
 

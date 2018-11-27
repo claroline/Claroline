@@ -1,8 +1,3 @@
-claro_planned_notification_tool:
-    resource: "@ClarolinePlannedNotificationBundle/Controller/PlannedNotificationToolController.php"
-    type:     annotation
-    prefix:   /
-
 # JSON API
 claro_planned_notification_api:
     resource: "@ClarolinePlannedNotificationBundle/Controller/API/"

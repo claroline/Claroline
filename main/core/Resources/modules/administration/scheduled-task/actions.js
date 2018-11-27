@@ -26,7 +26,7 @@ actions.open = (formName, id = null) => (dispatch) => {
 
 actions.addUsers = (id, users) => ({
   [API_REQUEST]: {
-    url: url(['apiv2_scheduledtask_add_users', {id: id}, {ids: users}]),
+    url: url(['apiv2_scheduledtask_add_users', {id: id}], {ids: users}),
     request: {
       method: 'PATCH'
     },

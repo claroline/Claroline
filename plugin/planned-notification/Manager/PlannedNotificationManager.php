@@ -13,17 +13,18 @@ namespace Claroline\PlannedNotificationBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
+use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\PlannedNotificationBundle\Entity\Message;
 use Claroline\PlannedNotificationBundle\Entity\PlannedNotification;
 use Claroline\PlannedNotificationBundle\Repository\PlannedNotificationRepository;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("claroline.manager.planned_notification_manager")
@@ -39,14 +40,14 @@ class PlannedNotificationManager
     /** @var ScheduledTaskManager */
     private $scheduledTaskManager;
 
-    /** @var TranslatorInterface */
-    private $translator;
-
     /** @var LogRepository */
     private $logRepo;
 
     /** @var PlannedNotificationRepository */
     private $plannedNotificationRepo;
+
+    /** @var UserRepository */
+    private $userRepo;
 
     /**
      * PlannedNotificationManager constructor.
@@ -54,28 +55,25 @@ class PlannedNotificationManager
      * @DI\InjectParams({
      *     "mailManager"          = @DI\Inject("claroline.manager.mail_manager"),
      *     "om"                   = @DI\Inject("claroline.persistence.object_manager"),
-     *     "scheduledTaskManager" = @DI\Inject("claroline.manager.scheduled_task_manager"),
-     *     "translator"           = @DI\Inject("translator")
+     *     "scheduledTaskManager" = @DI\Inject("claroline.manager.scheduled_task_manager")
      * })
      *
      * @param MailManager          $mailManager
      * @param ObjectManager        $om
      * @param ScheduledTaskManager $scheduledTaskManager
-     * @param TranslatorInterface  $translator
      */
     public function __construct(
         MailManager $mailManager,
         ObjectManager $om,
-        ScheduledTaskManager $scheduledTaskManager,
-        TranslatorInterface $translator
+        ScheduledTaskManager $scheduledTaskManager
     ) {
         $this->mailManager = $mailManager;
         $this->om = $om;
         $this->scheduledTaskManager = $scheduledTaskManager;
-        $this->translator = $translator;
 
-        $this->logRepo = $om->getRepository('Claroline\CoreBundle\Entity\Log\Log');
-        $this->plannedNotificationRepo = $om->getRepository('Claroline\PlannedNotificationBundle\Entity\PlannedNotification');
+        $this->logRepo = $om->getRepository(Log::class);
+        $this->plannedNotificationRepo = $om->getRepository(PlannedNotification::class);
+        $this->userRepo = $om->getRepository(User::class);
     }
 
     /**
@@ -120,7 +118,7 @@ class PlannedNotificationManager
                     continue;
                 }
             }
-            $name = $this->translator->trans($notification->getAction(), [], 'planned_notification');
+            $name = $notification->getMessage()->getTitle();
 
             if (!empty($user)) {
                 $name .= ' ('.$user->getUsername().')';
@@ -178,5 +176,59 @@ class PlannedNotificationManager
         foreach ($messages as $message) {
             $this->mailManager->send($message->getTitle(), $message->getContent(), $users);
         }
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    public function generateManualScheduledTasks(array $data)
+    {
+        $tasks = [];
+        $date = isset($data['date']) ? new \DateTime($data['date']) : new \DateTime();
+        $notificationsData = isset($data['notifications']) ? $data['notifications'] : [];
+        $usersData = isset($data['users']) ? $data['users'] : [];
+
+        $this->om->startFlushSuite();
+
+        foreach ($notificationsData as $notification) {
+            foreach ($usersData as $user) {
+                $name = $notification['message']['title'];
+                $name .= ' ('.$user['username'].')';
+                $name .= ' [+'.$notification['parameters']['interval'].']';
+                $scheduledDate = clone $date;
+                $scheduledDate->add(new \DateInterval('P'.$notification['parameters']['interval'].'D'));
+
+                $data = [
+                    'name' => $name,
+                    'scheduledDate' => $scheduledDate->format('Y-m-d\TH:i:s'),
+                    'workspace' => [
+                        'id' => $notification['workspace']['id'],
+                    ],
+                    'data' => [
+                        'object' => $notification['message']['title'],
+                        'content' => $notification['message']['content'],
+                    ],
+                    'users' => [
+                        ['id' => $user['autoId']],
+                    ],
+                ];
+
+                if ($notification['parameters']['byMail']) {
+                    $data['type'] = 'email';
+                    $task = $this->scheduledTaskManager->create($data);
+                    $tasks[] = $task;
+                }
+                if ($notification['parameters']['byMessage']) {
+                    $data['type'] = 'message';
+                    $task = $this->scheduledTaskManager->create($data);
+                    $tasks[] = $task;
+                }
+            }
+        }
+        $this->om->endFlushSuite();
+
+        return $tasks;
     }
 }

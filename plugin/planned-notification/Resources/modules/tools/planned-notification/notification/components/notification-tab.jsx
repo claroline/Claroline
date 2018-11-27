@@ -13,6 +13,7 @@ import {WORKSPACE_REGISTRATION_USER} from '#/plugin/planned-notification/tools/p
 import {actions} from '#/plugin/planned-notification/tools/planned-notification/notification/actions'
 import {Notifications} from '#/plugin/planned-notification/tools/planned-notification/notification/components/notifications'
 import {Notification} from '#/plugin/planned-notification/tools/planned-notification/notification/components/notification'
+import {ManualNotification} from '#/plugin/planned-notification/tools/planned-notification/notification/components/manual-notification'
 
 const NotificationTabActions = () =>
   <PageActions>
@@ -22,6 +23,12 @@ const NotificationTabActions = () =>
       label={trans('create_planned_notification', {}, 'planned_notification')}
       target="/notifications/form"
       primary={true}
+    />
+    <PageAction
+      type={LINK_BUTTON}
+      icon="fa fa-calendar-alt"
+      label={trans('trigger_planned_notifications_manually', {}, 'planned_notification')}
+      target="/notifications/manual"
     />
   </PageActions>
 
@@ -37,6 +44,10 @@ const NotificationTabComponent = props =>
         component: Notification,
         onEnter: (params) => props.openForm(params.id, props.workspace),
         onLeave: () => props.openForm(null, props.workspace)
+      }, {
+        path: '/notifications/manual',
+        exact: true,
+        component: ManualNotification
       }
     ]}
   />
