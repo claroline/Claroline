@@ -50,6 +50,13 @@ const UsersPickerModal = props => {
             type: 'email',
             label: trans('email'),
             displayed: true
+          }, {
+            name: 'group_name',
+            type: 'string',
+            label: trans('group'),
+            displayed: false,
+            displayable: false,
+            sortable: false
           }
         ]}
         card={UserList.card}
