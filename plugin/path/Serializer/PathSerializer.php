@@ -253,7 +253,7 @@ class PathSerializer
     private function deserializeStep($data, array &$newStepsUuids = [], array $options = [])
     {
         $newStepsUuids[] = $data['id'];
-        $step = $this->stepRepo->findOneBy(['uuid' => $data['id']]);
+        $step = $this->stepRepo->findOneBy(['uuid' => $data['id']]); // TODO : don't call DB, retrieve it from $path
 
         if (empty($step)) {
             $step = new Step();

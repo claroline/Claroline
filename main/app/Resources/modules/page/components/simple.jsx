@@ -35,7 +35,7 @@ const PageSimple = props =>
       <PageBreadcrumb
         path={props.path}
         className={classes({
-          'sr-only': !props.showBreadcrumb
+          'sr-only': !props.showBreadcrumb || props.fullscreen
         })}
       />
     }

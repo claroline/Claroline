@@ -33,12 +33,12 @@ const ParametersForm = props =>
           {
             name: 'display.showOverview',
             type: 'boolean',
-            label: trans('show_overview', {}, 'path'),
+            label: trans('enable_overview'),
             linked: [
               {
                 name: 'display.description',
                 type: 'html',
-                label: trans('overview_message', {}, 'path'),
+                label: trans('overview_message'),
                 displayed: props.path.display.showOverview,
                 options: {
                   workspace: props.workspace

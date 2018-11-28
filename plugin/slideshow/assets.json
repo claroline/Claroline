@@ -1,0 +1,7 @@
+{
+  "styles": {
+    "entry": {
+      "slideshow-resource": "resources/slideshow.less"
+    }
+  }
+}

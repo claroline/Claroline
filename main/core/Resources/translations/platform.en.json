@@ -1698,5 +1698,9 @@
     "search_and_filters": "Search & filters",
     "disabled_admin_tools": "Admin tools disabled",
     "workspace_denied": "The workspace %workspace% is private.",
-    "workspace_private_registration": "An admin need to register you to this workspace."
+    "workspace_private_registration": "An admin need to register you to this workspace.",
+    "overview_message": "Welcome message",
+    "enable_overview": "Display home page",
+    "playback": "Playback",
+    "video": "Video"
 }

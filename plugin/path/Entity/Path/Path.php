@@ -2,8 +2,8 @@
 
 namespace Innova\PathBundle\Entity\Path;
 
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Parameters\SummaryParameters;
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -19,8 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Path extends AbstractResource
 {
-    use UuidTrait;
-
+    use Uuid;
     use SummaryParameters;
 
     /**

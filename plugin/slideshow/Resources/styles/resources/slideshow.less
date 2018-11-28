@@ -1,0 +1,33 @@
+/**
+ * Slideshow resource styles.
+ */
+
+@import "../variables";
+
+.slides {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: @component-margin-bottom;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.slide-preview {
+    flex: 0 1 20%;
+    margin: 5px;
+    position: relative;
+
+    .slide-actions {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    .btn {
+        padding: 4px;
+        border-radius: @thumbnail-border-radius;
+        border-bottom-right-radius: 0;
+        border-top-left-radius: 0;
+    }
+}

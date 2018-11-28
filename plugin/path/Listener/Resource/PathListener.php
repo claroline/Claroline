@@ -9,7 +9,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Innova\PathBundle\Entity\InheritedResource;
 use Innova\PathBundle\Entity\Path\Path;
@@ -18,14 +17,13 @@ use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Manager\UserProgressionManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Used to integrate Path to Claroline resource manager.
  *
- * @DI\Service("innova_path.listener.path")
+ * @DI\Service()
  */
 class PathListener
 {
@@ -107,32 +105,6 @@ class PathListener
                 $this->userProgressionManager->getUpdatedResourceUserEvaluation($path)
             ),
         ]);
-        $event->stopPropagation();
-    }
-
-    /**
-     * Fired when a ResourceNode of type Path is opened.
-     *
-     * @DI\Observe("open_innova_path")
-     *
-     * @param OpenResourceEvent $event
-     */
-    public function onOpen(OpenResourceEvent $event)
-    {
-        /** @var Path $path */
-        $path = $event->getResource();
-
-        $content = $this->templating->render(
-            'InnovaPathBundle:path:open.html.twig', [
-                '_resource' => $path,
-                'path' => $this->serializer->serialize($path),
-                'userEvaluation' => $this->serializer->serialize(
-                    $this->userProgressionManager->getUpdatedResourceUserEvaluation($path)
-                ),
-            ]
-        );
-
-        $event->setResponse(new Response($content));
         $event->stopPropagation();
     }
 

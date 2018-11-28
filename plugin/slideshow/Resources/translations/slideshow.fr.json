@@ -1,0 +1,12 @@
+{
+  "add_slide": "Ajouter une diapositive",
+  "auto_play": "Lancer le diaporama automatiquement",
+  "new_slide": "Nouvelle diapositive",
+  "no_slide": "Aucune diapositive.",
+  "show_controls": "Afficher la navigation",
+  "slide_delete_confirm": "Suppression d'une diapositive",
+  "slide_delete_message": "Êtes-vous sûr de vouloir supprimer cette diapositive ?",
+  "slide_duration": "Durée d'affichage des diapositives",
+  "slide_parameters": "Paramètres de la diapositive",
+  "slides": "Diapositives"
+}
