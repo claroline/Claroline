@@ -28,6 +28,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/user")
@@ -45,21 +47,41 @@ class UserController extends AbstractCrudController
      *
      * @DI\InjectParams({
      *    "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
-     *    "mailManager"     = @DI\Inject("claroline.manager.mail_manager")
+     *    "mailManager"     = @DI\Inject("claroline.manager.mail_manager"),
+     *    "authChecker"     = @DI\Inject("security.authorization_checker")
      * })
      *
      * @param StrictDispatcher $eventDispatcher
      * @param MailManager      $mailManager
      */
-    public function __construct(StrictDispatcher $eventDispatcher, MailManager $mailManager)
-    {
+    public function __construct(
+      StrictDispatcher $eventDispatcher,
+      MailManager $mailManager,
+      AuthorizationCheckerInterface $authChecker
+    ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->mailManager = $mailManager;
+        $this->authChecker = $authChecker;
     }
 
     public function getName()
     {
         return 'user';
+    }
+
+    /**
+     * @param Request $request
+     * @param string  $class
+     *
+     * @return JsonResponse
+     */
+    public function listAction(Request $request, $class)
+    {
+        if (!$this->authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw new AccessDeniedException('You need to authenticate first');
+        }
+
+        return parent::listAction($request, $class);
     }
 
     use HasRolesTrait;
