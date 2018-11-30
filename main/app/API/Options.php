@@ -55,6 +55,7 @@ final class Options
     const THROW_VALIDATION_EXCEPTION = 'throw_validation_exception';
     const NO_VALIDATE = 'no_validate'; //if validation is too long for huge csv
     const NO_PERMISSION_CHECK = 'no_permission_check';
+    const GENERATE_UUID = 'generate_uuid';
 
     //in user crud so the user can be logged automatically after creation
     //but it's probably not where the option should be located
@@ -75,7 +76,7 @@ final class Options
     const WORKSPACE_FETCH_ORDERED_TOOLS = 'workspace_fetch_ordered_tools';
     const WORKSPACE_FETCH_HOME = 'workspace_fetch_home';
     const WORKSPACE_FETCH_RESOURCES = 'workspace_fetch_resources';
-
+    const WORKSPACE_DESERIALIZE_ROLES = 'workspace_deserialize_roles';
     //for role
     const SERIALIZE_COUNT_USER = 'serialize_count_user';
     const SERIALIZE_ROLE_TOOLS_RIGHTS = 'serialize_role_tools_rights';
@@ -93,4 +94,6 @@ final class Options
 
     //for resource node
     const SKIP_RESOURCE_NOTIFICATION = 'skip_resource_notification';
+    const SERIALIZE_RESOURCE = 'serialize_resource';
+    const SERIALIZE_TOOL = 'serialize_tool';
 }

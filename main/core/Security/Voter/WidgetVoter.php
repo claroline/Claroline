@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Security\Voter;
 
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
-use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -89,7 +89,7 @@ class WidgetVoter implements VoterInterface
                     ->findDisplayedByRolesAndWorkspace($roleStrings, $workspace);
 
                 foreach ($tools as $tool) {
-                    if ($tool->getName() === 'parameters') {
+                    if ('parameters' === $tool->getName()) {
                         return VoterInterface::ACCESS_GRANTED;
                     }
                 }
@@ -97,7 +97,7 @@ class WidgetVoter implements VoterInterface
                 //else we need to check the masks (c/c from WorkspaceVoter)
                 $accesses = $this->wm->getAccesses($token, [$workspace], 'home', 'edit');
 
-                return isset($accesses[$workspace->getId()]) && $accesses[$workspace->getId()] === true ?
+                return isset($accesses[$workspace->getId()]) && true === $accesses[$workspace->getId()] ?
                     VoterInterface::ACCESS_GRANTED :
                     VoterInterface::ACCESS_DENIED;
             }

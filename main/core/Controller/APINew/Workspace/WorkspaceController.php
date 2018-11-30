@@ -16,22 +16,29 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Logger\JsonLogger;
+use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
+use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Security\Utilities;
+use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\Workspace\TransferManager;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -57,6 +64,8 @@ class WorkspaceController extends AbstractCrudController
     protected $workspaceManager;
     private $utils;
     private $logDir;
+    private $fileUtils;
+    private $toolManager;
 
     /**
      * WorkspaceController constructor.
@@ -66,10 +75,14 @@ class WorkspaceController extends AbstractCrudController
      *     "authorization"    = @DI\Inject("security.authorization_checker"),
      *     "resourceManager"  = @DI\Inject("claroline.manager.resource_manager"),
      *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
+     *     "toolManager"      = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"       = @DI\Inject("translator"),
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "utils"               = @DI\Inject("claroline.security.utilities"),
-     *     "logDir"           = @DI\Inject("%claroline.param.workspace_log_dir%")
+     *     "utils"            = @DI\Inject("claroline.security.utilities"),
+     *     "fileUtils"        = @DI\Inject("claroline.utilities.file"),
+     *     "importer"         = @DI\Inject("claroline.manager.workspace.transfer"),
+     *     "logDir"           = @DI\Inject("%claroline.param.workspace_log_dir%"),
+     *     "tempFileManager"  = @DI\Inject("claroline.manager.temp_file")
      * })
      *
      * @param TokenStorageInterface         $tokenStorage
@@ -78,7 +91,11 @@ class WorkspaceController extends AbstractCrudController
      * @param TranslatorInterface           $translator
      * @param RoleManager                   $roleManager
      * @param WorkspaceManager              $workspaceManager
+     * @param TransferManager               $importer
      * @param Utilities                     $utils
+     * @param FileUtilities                 $fileUtils
+     * @param ToolManager                   $toolManager
+     * @param TempFileManager               $tempFileManager
      * @param string                        $logDir
      */
     public function __construct(
@@ -87,18 +104,26 @@ class WorkspaceController extends AbstractCrudController
         ResourceManager $resourceManager,
         TranslatorInterface $translator,
         RoleManager $roleManager,
+        ToolManager $toolManager,
         WorkspaceManager $workspaceManager,
         Utilities $utils,
+        FileUtilities $fileUtils,
+        TransferManager $importer,
+        TempFileManager $tempFileManager,
         $logDir
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
+        $this->importer = $importer;
         $this->resourceManager = $resourceManager;
         $this->translator = $translator;
         $this->roleManager = $roleManager;
         $this->workspaceManager = $workspaceManager;
+        $this->toolManager = $toolManager;
         $this->utils = $utils;
         $this->logDir = $logDir;
+        $this->fileUtils = $fileUtils;
+        $this->tempFileManager = $tempFileManager;
     }
 
     public function getName()
@@ -115,6 +140,16 @@ class WorkspaceController extends AbstractCrudController
     public function createAction(Request $request, $class)
     {
         $data = $this->decodeRequest($request);
+
+        if (isset($data['archive'])) {
+            $workspace = $this->importer->create($data);
+            $this->toolManager->addMissingWorkspaceTools($workspace);
+
+            return new JsonResponse(
+                $this->serializer->serialize($workspace, $this->options['get']),
+                201
+            );
+        }
 
         /** @var Workspace $workspace */
         $workspace = $this->crud->create(
@@ -207,6 +242,28 @@ class WorkspaceController extends AbstractCrudController
             'Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue',
             array_merge($request->query->all(), ['hiddenFilters' => ['workspace' => $workspace->getUuid()]])
         ));
+    }
+
+    /**
+     * @Route(
+     *    "/{id}/export",
+     *    name="apiv2_workspace_export"
+     * )
+     * @Method("GET")
+     * @ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
+     *
+     * @param Request   $request
+     * @param Workspace $workspace
+     *
+     * @return JsonResponse
+     */
+    public function exportAction(Request $request, Workspace $workspace)
+    {
+        $pathArch = $this->importer->export($workspace);
+        $response = new BinaryFileResponse($pathArch);
+        $response->headers->set('Content-Type', 'application/zip');
+
+        return $response;
     }
 
     /**
@@ -651,6 +708,72 @@ class WorkspaceController extends AbstractCrudController
                 ]]
             ))
         );
+    }
+
+    /**
+     * @Route(
+     *    "/archive/upload",
+     *    name="apiv2_workspace_upload_archive"
+     * )
+     * @Method("POST")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function uploadArchiveAction(Request $request)
+    {
+        $files = $request->files->all();
+
+        foreach ($files as $file) {
+            $object = $this->crud->create(
+                PublicFile::class,
+                [],
+                ['file' => $file]
+            );
+        }
+
+        $zip = new \ZipArchive();
+        $zip->open($this->fileUtils->getPath($object));
+        $json = $zip->getFromName('workspace.json');
+        $zip->close();
+
+        $data = json_decode($json, true);
+        $data['archive'] = $this->serializer->serialize($object);
+
+        return new JsonResponse($data);
+    }
+
+    /**
+     * @Route(
+     *    "/archive/fetch",
+     *    name="apiv2_workspace_archive_fetch"
+     * )
+     * @Method("POST")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function fetchArchiveAction(Request $request)
+    {
+        $url = $request->request->get('url');
+
+        $file = file_get_contents($url);
+        $tmp = @tempnam('claro', '_zip');
+        file_put_contents($tmp, $file);
+        $file = new File($tmp);
+        $object = $this->fileUtils->createFile($file);
+        $archive = $this->serializer->serialize($object);
+        $zip = new \ZipArchive();
+        $zip->open($this->fileUtils->getPath($object));
+        $json = $zip->getFromName('workspace.json');
+        $zip->close();
+
+        $data = json_decode($json, true);
+        $data['archive'] = $archive;
+
+        return new JsonResponse($data);
     }
 
     public function getOptions()

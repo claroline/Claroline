@@ -5,7 +5,7 @@ namespace Claroline\DashboardBundle\Manager;
 use Claroline\CoreBundle\Entity\Log;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\DashboardBundle\Entity\Dashboard;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;

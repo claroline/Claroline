@@ -38,7 +38,7 @@ class FileSerializer
     /** @return string */
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Import\File';
+        return File::class;
     }
 
     /**

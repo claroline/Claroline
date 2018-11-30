@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Library\Security\Authenticator;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\SecurityTokenManager;
 use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\RemoteUserSynchronizationBundle\Library\Security\Token\UserToken;
 use Claroline\RemoteUserSynchronizationBundle\Manager\RemoteUserTokenManager;
 use JMS\DiExtraBundle\Annotation as DI;

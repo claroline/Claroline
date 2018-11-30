@@ -37,7 +37,7 @@ class UserManagerTest extends MockeryTestCase
         $this->userRepo = $this->mock('Claroline\CoreBundle\Repository\UserRepository');
         $this->roleManager = $this->mock('Claroline\CoreBundle\Manager\RoleManager');
         $this->mailManager = $this->mock('Claroline\CoreBundle\Manager\MailManager');
-        $this->workspaceManager = $this->mock('Claroline\CoreBundle\Manager\WorkspaceManager');
+        $this->workspaceManager = $this->mock('Claroline\CoreBundle\Manager\Workspace\WorkspaceManager');
         $this->toolManager = $this->mock('Claroline\CoreBundle\Manager\ToolManager');
         $this->strictDispatcher = $this->mock('Claroline\CoreBundle\Event\StrictDispatcher');
         $this->personalWsTemplateFile = 'template';

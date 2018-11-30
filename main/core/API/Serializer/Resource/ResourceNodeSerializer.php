@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\API\Serializer\Resource;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
@@ -12,6 +13,7 @@ use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\Resource\DecorateResourceNodeEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
@@ -49,6 +51,9 @@ class ResourceNodeSerializer
     /** @var MaskManager */
     private $maskManager;
 
+    /** @var SerializerProvider */
+    private $serializer;
+
     /**
      * ResourceNodeManager constructor.
      *
@@ -59,7 +64,8 @@ class ResourceNodeSerializer
      *     "userSerializer"   = @DI\Inject("claroline.serializer.user"),
      *     "maskManager"      = @DI\Inject("claroline.manager.mask_manager"),
      *     "newRightsManager" = @DI\Inject("claroline.manager.optimized_rights_manager"),
-     *     "rightsManager"    = @DI\Inject("claroline.manager.rights_manager")
+     *     "rightsManager"    = @DI\Inject("claroline.manager.rights_manager"),
+     *     "serializer"       = @DI\Inject("claroline.api.serializer")
      * })
      *
      * @param ObjectManager          $om
@@ -68,7 +74,8 @@ class ResourceNodeSerializer
      * @param UserSerializer         $userSerializer
      * @param MaskManager            $maskManager
      * @param OptimizedRightsManager $newRightsManager
-     * @param RightsManager          $rightsManager
+     * @param RightsManager          $rightsManager,
+     * @param SerializerProvider     $serializer
      */
     public function __construct(
         ObjectManager $om,
@@ -77,7 +84,8 @@ class ResourceNodeSerializer
         UserSerializer $userSerializer,
         MaskManager $maskManager,
         OptimizedRightsManager $newRightsManager,
-        RightsManager $rightsManager
+        RightsManager $rightsManager,
+        SerializerProvider $serializer
     ) {
         $this->om = $om;
         $this->eventDispatcher = $eventDispatcher;
@@ -86,6 +94,7 @@ class ResourceNodeSerializer
         $this->newRightsManager = $newRightsManager;
         $this->maskManager = $maskManager;
         $this->rightsManager = $rightsManager;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -99,8 +108,10 @@ class ResourceNodeSerializer
     public function serialize(ResourceNode $resourceNode, array $options = [])
     {
         $serializedNode = [
-            'id' => $resourceNode->getUuid(),
-            'autoId' => $resourceNode->getId(), // TODO : remove me
+            //also used for the export. It's not pretty.
+
+            'autoId' => $resourceNode->getId(),
+            'id' => $this->getUuid($resourceNode, $options),
             'name' => $resourceNode->getName(),
             'path' => $resourceNode->getAncestors(),
             'meta' => $this->serializeMeta($resourceNode, $options),
@@ -110,12 +121,12 @@ class ResourceNodeSerializer
             // TODO : it should not be available in minimal mode
             // for now I need it to compute simple access rights (for display)
             // we should compute simple access here to avoid exposing this big object
-            'rights' => $this->rightsManager->getRights($resourceNode),
+            'rights' => $this->rightsManager->getRights($resourceNode, $options),
         ];
 
         // TODO : it should not (I think) be available in minimal mode
         // for now I need it to compute rights
-        if (!empty($resourceNode->getWorkspace())) {
+        if ($resourceNode->getWorkspace() && !in_array(Options::REFRESH_UUID, $options)) {
             $serializedNode['workspace'] = [ // TODO : use workspace serializer with minimal option
                 'id' => $resourceNode->getWorkspace()->getUuid(),
                 'name' => $resourceNode->getWorkspace()->getName(),
@@ -140,13 +151,20 @@ class ResourceNodeSerializer
             ];
         }
 
+        if (in_array(Options::SERIALIZE_RESOURCE, $options)) {
+            $resource = $this->om->getRepository($resourceNode->getClass())->findOneBy(['resourceNode' => $resourceNode]);
+            $serializedNode['resource'] = $this->serializer->serialize($resource);
+        }
+
         if (in_array(Options::IS_RECURSIVE, $options)) {
-            $serializedNode['children'] = array_map(function (ResourceNode $node) {
-                return $this->serialize($node);
+            $serializedNode['children'] = array_map(function (ResourceNode $node) use ($options) {
+                return $this->serialize($node, $options);
             }, $resourceNode->getChildren()->toArray());
         }
 
-        return $this->decorate($resourceNode, $serializedNode, $options);
+        $serializedNode = $this->decorate($resourceNode, $serializedNode, $options);
+
+        return $serializedNode;
     }
 
     /**
@@ -248,8 +266,13 @@ class ResourceNodeSerializer
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $meta = array_merge($meta, [
+                'type' => $resourceNode->getResourceType()->getName(),
+                'mimeType' => $resourceNode->getMimeType(),
+                'description' => $resourceNode->getDescription(),
                 'authors' => $resourceNode->getAuthor(),
                 'license' => $resourceNode->getLicense(),
+                'published' => $resourceNode->isPublished(),
+                'active' => $resourceNode->isActive(),
             ]);
         }
 
@@ -288,6 +311,11 @@ class ResourceNodeSerializer
     public function deserialize(array $data, ResourceNode $resourceNode, array $options = [])
     {
         $this->sipe('name', 'setName', $data, $resourceNode);
+
+        if (isset($data['meta']['workspace'])) {
+            $workspace = $this->om->getRepository(Workspace::class)->findOneByUuid($data['meta']['workspace']['uuid']);
+            $resourceNode->setWorkspace($workspace);
+        }
 
         if (isset($data['poster']) && isset($data['poster']['url'])) {
             $resourceNode->setPoster($data['poster']['url']);
@@ -365,8 +393,16 @@ class ResourceNodeSerializer
 
             $recursive = in_array(Options::IS_RECURSIVE, $options) ? true : false;
 
-            /** @var Role $role */
-            $role = $this->om->getRepository(Role::class)->findOneBy(['name' => $right['name']]);
+            if (isset($right['name'])) {
+                $role = $this->om->getRepository(Role::class)->findOneBy(['name' => $right['name']]);
+            } else {
+                $role = $this->om->getRepository(Role::class)->findOneBy(
+                  [
+                    'translationKey' => $right['translationKey'],
+                    'workspace' => $resourceNode->getWorkspace()->getId(),
+                  ]
+                );
+            }
 
             //if we update (we need the id anyway)
             if ($resourceNode->getId()) {

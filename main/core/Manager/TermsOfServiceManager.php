@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -65,17 +66,17 @@ class TermsOfServiceManager
     public function getTermsOfService($translations = true)
     {
         if ($translations) {
-            return $this->contentManager->getTranslatedContent(array('type' => 'termsOfService'));
+            return $this->contentManager->getTranslatedContent(['type' => 'termsOfService']);
         }
 
-        return $this->contentManager->getContent(array('type' => 'termsOfService'));
+        return $this->contentManager->getContent(['type' => 'termsOfService']);
     }
 
     /**
      * Checks if terms are available in at least one language in a set of translated terms.
      *
-     * @param array $translatedTerms An associative array in which each key is a language code
-     *                               and each value an associative array with a "content" key.
+     * @param array $translatedTerms an associative array in which each key is a language code
+     *                               and each value an associative array with a "content" key
      *
      * @return bool
      */
@@ -93,12 +94,12 @@ class TermsOfServiceManager
     /**
      * Persists (creates/updates) terms of service in the database.
      *
-     * @param array $translatedTerms An associative array in which each key is a language code
-     *                               and each value an associative array with a "content" key.
+     * @param array $translatedTerms an associative array in which each key is a language code
+     *                               and each value an associative array with a "content" key
      */
     public function setTermsOfService(array $translatedTerms)
     {
-        $terms = $this->contentManager->getContent(array('type' => 'termsOfService'));
+        $terms = $this->contentManager->getContent(['type' => 'termsOfService']);
 
         if ($terms instanceof Content) {
             $this->contentManager->updateContent($terms, $translatedTerms);
@@ -109,7 +110,7 @@ class TermsOfServiceManager
 
     public function deleteTermsOfService($locale)
     {
-        $termsOfService = $this->contentManager->getContent(array('type' => 'termsOfService'));
+        $termsOfService = $this->contentManager->getContent(['type' => 'termsOfService']);
 
         if ($termsOfService instanceof Content) {
             $this->contentManager->deleteTranslation($locale, $termsOfService->getId());
@@ -120,7 +121,7 @@ class TermsOfServiceManager
     {
         $platformUrl = $this->configHandler->getParameter('platform_url');
 
-        if ($this->configHandler->getParameter('confirm_send_datas') === 'OK' && !is_null($platformUrl)) {
+        if ('OK' === $this->configHandler->getParameter('confirm_send_datas') && !is_null($platformUrl)) {
             $url = $this->configHandler->getParameter('datas_sending_url');
             $name = $this->configHandler->getParameter('name');
             $lang = $this->configHandler->getParameter('locale_language');
@@ -165,7 +166,7 @@ class TermsOfServiceManager
         $bundles = json_decode($jsonString, true);
 
         foreach ($bundles as $bundle) {
-            if (isset($bundle['name']) && $bundle['name'] === 'claroline/core-bundle') {
+            if (isset($bundle['name']) && 'claroline/core-bundle' === $bundle['name']) {
                 $version = $bundle['version'];
                 break;
             }

@@ -506,7 +506,7 @@ class WorkspaceManagerTest extends MockeryTestCase
             $stringMocked .= ']';
 
             return $this->mock(
-                'Claroline\CoreBundle\Manager\WorkspaceManager'.$stringMocked,
+                'Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'.$stringMocked,
                 [
                     $this->homeTabManager,
                     $this->roleManager,

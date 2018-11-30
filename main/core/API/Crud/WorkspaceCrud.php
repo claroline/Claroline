@@ -11,7 +11,8 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -26,6 +27,7 @@ class WorkspaceCrud
      *
      * @DI\InjectParams({
      *     "manager"         = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "userManager"     = @DI\Inject("claroline.manager.user_manager"),
      *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager")
@@ -35,11 +37,13 @@ class WorkspaceCrud
      */
     public function __construct(
       WorkspaceManager $manager,
+      UserManager $userManager,
       TokenStorageInterface $tokenStorage,
       ResourceManager $resourceManager,
       ObjectManager $om
     ) {
         $this->manager = $manager;
+        $this->userManager = $userManager;
         $this->tokenStorage = $tokenStorage;
         $this->resourceManager = $resourceManager;
         $this->om = $om;
@@ -66,7 +70,10 @@ class WorkspaceCrud
 
         $workspace = $this->manager->createWorkspace($event->getObject());
         $options = $event->getOptions();
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->tokenStorage->getToken() ?
+            $this->tokenStorage->getToken()->getUser() :
+            $this->userManager->getDefaultClarolineAdmin();
+
         $model = $workspace->getWorkspaceModel() ? $workspace->getWorkspaceModel() : $this->manager->getDefaultModel();
         $workspace->setWorkspaceModel($model);
 

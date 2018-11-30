@@ -14,10 +14,8 @@ namespace Claroline\CoreBundle;
 use Bazinga\Bundle\JsTranslationBundle\BazingaJsTranslationBundle;
 use Claroline\CoreBundle\DependencyInjection\Compiler\DoctrineEntityListenerPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\DynamicConfigPass;
-use Claroline\CoreBundle\DependencyInjection\Compiler\ImportersConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\MailingConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\PlatformConfigPass;
-use Claroline\CoreBundle\DependencyInjection\Compiler\RichTextFormatterConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\RouterPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\RuleConstraintsConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Factory\ApiFactory;
@@ -39,8 +37,6 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements AutoConfig
 
         $container->addCompilerPass(new PlatformConfigPass());
         $container->addCompilerPass(new DynamicConfigPass());
-        $container->addCompilerPass(new ImportersConfigPass());
-        $container->addCompilerPass(new RichTextFormatterConfigPass());
         $container->addCompilerPass(new DoctrineEntityListenerPass());
         $container->addCompilerPass(new RuleConstraintsConfigPass());
         $container->addCompilerPass(new RouterPass());

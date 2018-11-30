@@ -22,14 +22,16 @@ class FileSerializer
      * ResourceNodeManager constructor.
      *
      * @DI\InjectParams({
-     *     "router" = @DI\Inject("router")
+     *     "router"    = @DI\Inject("router"),
+     *     "filesDir" = @DI\Inject("%claroline.param.files_directory%")
      * })
      *
      * @param RouterInterface $router
      */
-    public function __construct(RouterInterface $router)
+    public function __construct(RouterInterface $router, $filesDir)
     {
         $this->router = $router;
+        $this->filesDir = $filesDir;
     }
 
     /**

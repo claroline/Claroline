@@ -59,15 +59,15 @@ class PublicFile
         $options = $event->getOptions();
         $tmpFile = $options['file'];
 
-        $fileName = empty($tmpFile->getClientOriginalName()) ?
+        $fileName = !method_exists($tmpFile, 'getClientOriginalName') || !$tmpFile->getClientOriginalName() ?
             $tmpFile->getFileName() :
             $tmpFile->getClientOriginalName();
         $directoryName = $this->fileUtils->getActiveDirectoryName();
         $size = filesize($tmpFile);
-        $mimeType = empty($tmpFile->getClientMimeType()) ?
+        $mimeType = !method_exists($tmpFile, 'getClientMimeType') || !$tmpFile->getClientMimeType() ?
             $tmpFile->getMimeType() :
             $tmpFile->getClientMimeType();
-        $extension = empty($tmpFile->getClientOriginalExtension()) ?
+        $extension = !method_exists($tmpFile, 'getClientOriginalExtension') || !$tmpFile->getClientOriginalExtension() ?
             $tmpFile->guessExtension() :
             $tmpFile->getClientOriginalExtension();
         $hashName = Uuid::uuid4()->toString().'.'.$extension;

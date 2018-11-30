@@ -11,86 +11,31 @@
 
 namespace Claroline\CoreBundle\Command\Dev;
 
-use Psr\Log\LogLevel;
+use Claroline\CoreBundle\Command\AdminCliCommand;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-class ExportWorkspaceModelCommand extends ContainerAwareCommand
+class ExportWorkspaceModelCommand extends ContainerAwareCommand implements AdminCliCommand
 {
     protected function configure()
     {
-        $this->setName('claroline:workspace:export_model')
-            ->setDescription('export workspace into archives');
+        $this->setName('claroline:workspace:archive')
+            ->setDescription('export workspace archive');
         $this->setDefinition(
             [
-                new InputArgument('export_directory', InputArgument::REQUIRED, 'The absolute path to the zip file.'),
-                new InputArgument('owner_username', InputArgument::REQUIRED, 'The user doing the action (because otherwise qti exo crashes)'),
                 new InputArgument('code', InputArgument::OPTIONAL, 'The workspace code'),
             ]
-        );
-        $this->addOption(
-            'personal',
-            'p',
-            InputOption::VALUE_NONE,
-            'When set to true, export all personal workspaces'
-        );
-        $this->addOption(
-            'standard',
-            'r',
-            InputOption::VALUE_NONE,
-            'When set to true, export all standard workspaces'
         );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $code = $input->getArgument('code');
-        $path = $input->getArgument('export_directory');
-        $username = $input->getArgument('owner_username');
-        //set the token for qti
-        $user = $this->getContainer()->get('claroline.manager.user_manager')->getUserByUsername($username);
-        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-        $this->getContainer()->get('security.token_storage')->setToken($token);
-
-        $workspaces = [];
-        $workspaceRepo = $this->getContainer()->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Workspace\Workspace');
-
-        $transferManager = $this->getContainer()->get('claroline.manager.transfer_manager');
-        $verbosityLevelMap = [
-                LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
-                LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
-                LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
-            ];
-        $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
-        $transferManager->setLogger($consoleLogger);
-
-        if ($code) {
-            $workspaces[] = $this->getContainer()->get('claroline.manager.workspace_manager')->getOneByCode($code);
-        }
-
-        if ($input->getOption('personal')) {
-            $workspaces = array_merge($workspaces, $workspaceRepo->findBy(['personal' => true]));
-        }
-
-        if ($input->getOption('standard')) {
-            $workspaces = array_merge($workspaces, $workspaceRepo->findBy(['personal' => false]));
-        }
-
-        $i = 0;
-        $count = count($workspaces);
-
-        foreach ($workspaces as $workspace) {
-            ++$i;
-            $expPath = $path.'/'.$workspace->getCode().'.zip';
-            $arch = $transferManager->export($workspace);
-            $output->writeln("<comment>Moving to export directory ($i/$count)</comment>");
-            rename($arch, $expPath);
-        }
+        $container = $this->getContainer();
+        $workspace = $container->get('doctrine.orm.entity_manager')->getRepository(Workspace::class)->findOneByCode($input->getArgument('code'));
+        $path = $container->get('claroline.manager.workspace.transfer')->export($workspace);
+        $output->writeln($path);
     }
 }

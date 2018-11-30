@@ -98,7 +98,7 @@ class HomeTabSerializer
             }
         }
 
-        return [
+        $data = [
             'id' => $this->getUuid($homeTab, $options),
             'title' => $homeTabConfig->getName(),
             'longTitle' => $homeTabConfig->getLongTitle(),
@@ -117,11 +117,16 @@ class HomeTabSerializer
                 'color' => $homeTabConfig->getColor(),
             ],
             'user' => $homeTab->getUser() ? $this->serializer->serialize($homeTab->getUser(), [Options::SERIALIZE_MINIMAL]) : null,
-            'workspace' => $homeTab->getWorkspace() ? $this->serializer->serialize($homeTab->getWorkspace(), [Options::SERIALIZE_MINIMAL]) : null,
             'widgets' => array_map(function ($container) use ($options) {
                 return $this->serializer->serialize($container, $options);
             }, $containers),
         ];
+
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $data['workspace'] = $homeTab->getWorkspace() ? $this->serializer->serialize($homeTab->getWorkspace(), [Options::SERIALIZE_MINIMAL]) : null;
+        }
+
+        return $data;
     }
 
     public function deserialize(array $data, HomeTab $homeTab, array $options = []): HomeTab

@@ -17,7 +17,7 @@ use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -131,8 +131,6 @@ class WorkspaceSerializer
     public function serialize(Workspace $workspace, array $options = [])
     {
         $serialized = [
-            'id' => $workspace->getId(),
-            'uuid' => $workspace->getUuid(), // todo: should be merged with `id`
             'name' => $workspace->getName(),
             'code' => $workspace->getCode(),
             'thumbnail' => $workspace->getThumbnail() && $this->om->getRepository(PublicFile::class)->findOneBy([
@@ -149,6 +147,13 @@ class WorkspaceSerializer
               ])
             ) : null,
         ];
+
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $serialized['uuid'] = $workspace->getUuid();
+            $serialized['id'] = $workspace->getId(); // TODO : remove me
+        } else {
+            $serialized['uuid'] = $this->getUuid($workspace, $options);
+        }
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
@@ -169,14 +174,24 @@ class WorkspaceSerializer
                 'display' => $this->getDisplay($workspace),
                 'breadcrumb' => $this->getBreadcrumb($workspace),
                 'restrictions' => $this->getRestrictions($workspace),
-                'registration' => $this->getRegistration($workspace),
+                'registration' => $this->getRegistration($workspace, $options),
                 'notifications' => $this->getNotifications($workspace),
             ]);
 
             if (!in_array(Options::SERIALIZE_LIST, $options)) {
-                $serialized['roles'] = array_map(function (Role $role) {
-                    return $this->serializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
-                }, array_values(array_unique(array_merge($this->workspaceManager->getRolesWithAccess($workspace), $workspace->getRoles()->toArray()))));
+                if (in_array(Options::REFRESH_UUID, $options)) {
+                    $serialized['roles'] = array_map(function (Role $role) {
+                        return [
+                          'translationKey' => $role->getTranslationKey(),
+                          'type' => $role->getType(),
+                        ];
+                    }, array_values(array_unique(array_merge($this->workspaceManager->getRolesWithAccess($workspace), $workspace->getRoles()->toArray()))));
+                } else {
+                    $serialized['roles'] = array_map(function (Role $role) {
+                        return $this->serializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
+                    }, array_values(array_unique(array_merge($this->workspaceManager->getRolesWithAccess($workspace), $workspace->getRoles()->toArray()))));
+                }
+
                 $serialized['managers'] = array_map(function (User $manager) {
                     return $this->serializer->serialize($manager, [Options::SERIALIZE_MINIMAL]);
                 }, $this->workspaceManager->getManagers($workspace));
@@ -189,7 +204,7 @@ class WorkspaceSerializer
         // maybe do the same for users one day
         if (in_array(Options::WORKSPACE_FETCH_GROUPS, $options)) {
             $groups = $this->om
-                ->getRepository('Claroline\CoreBundle\Entity\Group')
+                ->getRepository(Group::class)
                 ->findByWorkspace($workspace);
 
             $serialized['groups'] = array_map(function (Group $group) {
@@ -337,16 +352,27 @@ class WorkspaceSerializer
      *
      * @return array
      */
-    private function getRegistration(Workspace $workspace)
+    private function getRegistration(Workspace $workspace, array $options)
     {
+        if ($workspace->getDefaultRole()) {
+            if (!in_array(Options::REFRESH_UUID, $options)) {
+                $defaultRole = [
+                  'translationKey' => $workspace->getDefaultRole()->getTranslationKey(),
+                  'type' => $workspace->getDefaultRole()->getType(),
+                ];
+            } else {
+                $defaultRole = $this->serializer->serialize($workspace->getDefaultRole(), [Options::SERIALIZE_MINIMAL]);
+            }
+        } else {
+            $defaultRole = null;
+        }
+
         return [
             'validation' => $workspace->getRegistrationValidation(),
             'waitingForRegistration' => $workspace->getSelfRegistration() ? $this->waitingForRegistration($workspace) : false,
             'selfRegistration' => $workspace->getSelfRegistration(),
             'selfUnregistration' => $workspace->getSelfUnregistration(),
-            'defaultRole' => $workspace->getDefaultRole() ?
-              $this->serializer->serialize($workspace->getDefaultRole(), [Options::SERIALIZE_MINIMAL]) :
-              null,
+            'defaultRole' => $defaultRole,
         ];
     }
 
@@ -394,14 +420,6 @@ class WorkspaceSerializer
             );
         }
 
-        if (isset($data['registration']) && isset($data['registration']['defaultRole'])) {
-            $defaultRole = $this->serializer->deserialize(
-                'Claroline\CoreBundle\Entity\Role',
-                $data['registration']['defaultRole']
-            );
-            $workspace->setDefaultRole($defaultRole);
-        }
-
         if (isset($data['extra']) && isset($data['extra']['model'])) {
             $model = $this->serializer->deserialize(
               'Claroline\CoreBundle\Entity\Workspace\Workspace',
@@ -411,7 +429,13 @@ class WorkspaceSerializer
             $workspace->setWorkspaceModel($model);
         }
 
-        $this->sipe('uuid', 'setUuid', $data, $workspace);
+        //not sure if keep that. Might be troublesome later for rich texts
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $this->sipe('uuid', 'setUuid', $data, $workspace);
+        } else {
+            $workspace->refreshUuid();
+        }
+
         $this->sipe('code', 'setCode', $data, $workspace);
         $this->sipe('name', 'setName', $data, $workspace);
 
@@ -427,6 +451,14 @@ class WorkspaceSerializer
         $this->sipe('registration.validation', 'setRegistrationValidation', $data, $workspace);
         $this->sipe('registration.selfRegistration', 'setSelfRegistration', $data, $workspace);
         $this->sipe('registration.selfUnregistration', 'setSelfUnregistration', $data, $workspace);
+
+        if (isset($data['registration']) && isset($data['registration']['defaultRole'])) {
+            $defaultRole = $this->serializer->deserialize(
+                'Claroline\CoreBundle\Entity\Role',
+                $data['registration']['defaultRole']
+            );
+            $workspace->setDefaultRole($defaultRole);
+        }
 
         if (!empty($data['restrictions'])) {
             // TODO : store raw file size to avoid this
@@ -445,6 +477,7 @@ class WorkspaceSerializer
         }
 
         $workspaceOptions = $workspace->getOptions();
+
         if (isset($data['display']) || isset($data['opening'])) {
             $details = $workspaceOptions->getDetails();
 

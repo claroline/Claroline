@@ -28,7 +28,7 @@ class PublicFileSerializer
     /** @return string */
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\File\PublicFile';
+        return PublicFile::class;
     }
 
     /**

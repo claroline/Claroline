@@ -286,6 +286,11 @@ class FileUtilities
 
     public function getContents(PublicFile $file)
     {
-        return file_get_contents($this->filesDir.DIRECTORY_SEPARATOR.$file->getUrl());
+        return file_get_contents($this->getPath($file));
+    }
+
+    public function getPath(PublicFile $file)
+    {
+        return $this->filesDir.DIRECTORY_SEPARATOR.$file->getUrl();
     }
 }

@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\Entity\Workspace;
 
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\CoreBundle\Entity\Model\OrganizationsTrait;
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
@@ -33,7 +33,7 @@ class Workspace
 {
     use Poster;
     use OrganizationsTrait;
-    use UuidTrait;
+    use Uuid;
     use Thumbnail;
 
     const DEFAULT_MAX_STORAGE_SIZE = '1 TB';

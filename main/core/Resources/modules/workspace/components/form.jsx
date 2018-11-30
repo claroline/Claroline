@@ -13,6 +13,7 @@ import {
   actions as formActions,
   selectors as formSelect
 } from '#/main/app/content/form/store'
+import {actions} from '#/main/core/workspace/creation/store/actions'
 
 // easy selection for restrictions
 const restrictByDates   = (workspace) => workspace.restrictions.enableDates        || (workspace.restrictions.dates && 0 !== workspace.restrictions.dates.length)
@@ -61,7 +62,30 @@ const WorkspaceFormComponent = (props) => {
             displayed: props.new
           }
         ]
-      }, {
+      }, /*{
+        title: trans('archive'),
+        displayed: props.new,
+        fields: [
+          {
+            name: 'extra.archive.file',
+            type: 'file',
+            label: trans('file'),
+            onChange: (data) => {
+              props.loadArchive(data)
+            },
+            options: {
+              uploadUrl: ['apiv2_workspace_upload_archive']
+            }
+          }, {
+            name: 'extra.archive.url',
+            type: 'url',
+            label: trans('url'),
+            onChange: (data) => {
+              props.fetchArchive(data)
+            }
+          }
+        ]
+      }, */{
         icon: 'fa fa-fw fa-info',
         title: trans('information'),
         fields: [
@@ -372,6 +396,12 @@ const WorkspaceForm = connect(
   (dispatch, ownProps) =>({
     updateProp(propName, propValue) {
       dispatch(formActions.updateProp(ownProps.name, propName, propValue))
+    },
+    loadArchive(data) {
+      dispatch(actions.loadArchive(data))
+    },
+    fetchArchive(data) {
+      dispatch(actions.fetchArchive(data))
     }
   })
 )(WorkspaceFormComponent)

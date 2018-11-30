@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager\Resource;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
@@ -531,9 +532,9 @@ class RightsManager
         return $perms;
     }
 
-    public function getRights(ResourceNode $resourceNode)
+    public function getRights(ResourceNode $resourceNode, array $options = [])
     {
-        return array_map(function (ResourceRights $rights) use ($resourceNode) {
+        return array_map(function (ResourceRights $rights) use ($resourceNode, $options) {
             $role = $rights->getRole();
             $permissions = $this->maskManager->decodeMask($rights->getMask(), $resourceNode->getResourceType());
 
@@ -545,11 +546,16 @@ class RightsManager
                 );
             }
 
-            return [
-                'name' => $role->getName(),
+            $data = [
                 'translationKey' => $role->getTranslationKey(),
                 'permissions' => $permissions,
             ];
+
+            if (!in_array(Options::REFRESH_UUID, $options)) {
+                $data['name'] = $role->getName();
+            }
+
+            return $data;
         }, $resourceNode->getRights()->toArray());
     }
 

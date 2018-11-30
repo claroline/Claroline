@@ -56,6 +56,7 @@ class HomeTabCommand extends ContainerAwareCommand implements AdminCliCommand
 
         $output->writeln(count($workspaces).' found');
         $i = 1;
+        $j = 1;
 
         //todo: le faire en sql pour aller plus vite
         foreach ($workspaces as $workspace) {
@@ -81,9 +82,16 @@ class HomeTabCommand extends ContainerAwareCommand implements AdminCliCommand
                 $workspaceTabConfig->setLongTitle($infoName);
 
                 $manager->persist($workspaceTabConfig);
+                ++$j;
+            }
+
+            if (0 === $j % 500) {
                 $manager->flush();
+                $j = 1;
             }
             ++$i;
         }
+
+        $manager->flush();
     }
 }

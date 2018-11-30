@@ -37,7 +37,7 @@ class ResourceVoterTest extends MockeryTestCase
         $this->maskManager = $this->mock("Claroline\CoreBundle\Manager\Resource\MaskManager");
         $this->repository = $this->mock("Claroline\CoreBundle\Repository\ResourceRightsRepository");
         $this->resourceManager = $this->mock('Claroline\CoreBundle\Manager\ResourceManager');
-        $this->workspaceManager = $this->mock('Claroline\CoreBundle\Manager\WorkspaceManager');
+        $this->workspaceManager = $this->mock('Claroline\CoreBundle\Manager\Workspace\WorkspaceManager');
 
         $this->em->shouldReceive('getRepository')->once()->with('ClarolineCoreBundle:Resource\ResourceRights')
            ->andReturn($this->repository);
@@ -472,7 +472,7 @@ class ResourceVoterTest extends MockeryTestCase
 
     private function getVoter(array $mockedMethods = [])
     {
-        if (count($mockedMethods) === 0) {
+        if (0 === count($mockedMethods)) {
             return new ResourceVoter(
               $this->em,
               $this->translator,
