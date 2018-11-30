@@ -29,6 +29,7 @@ const QuizResource = DragNDropContext(
         hasOverview: select.hasOverview(state),
         papersAdmin: select.papersAdmin(state),
         docimologyAdmin: select.docimologyAdmin(state),
+        showStatistics: select.parameters(state).showStatistics,
         registeredUser: select.registered()
       }),
       (dispatch) => ({

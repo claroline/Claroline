@@ -15,9 +15,11 @@ import {utils as paperUtils} from './../../papers/utils'
 import {ScoreGauge} from './../../../components/score-gauge.jsx'
 
 const AttemptEnd = props => {
-  const showScore = paperUtils.showScore(props.admin, props.paper.finished, paperSelectors.showScoreAt(props.paper), paperSelectors.showCorrectionAt(props.paper), paperSelectors.correctionDate(props.paper))
-  const showCorrection = paperUtils.showCorrection(props.admin, props.paper.finished, paperSelectors.showCorrectionAt(props.paper), paperSelectors.correctionDate(props.paper))
+  const showScore = paperUtils.showScore(false, props.paper.finished, paperSelectors.showScoreAt(props.paper), paperSelectors.showCorrectionAt(props.paper), paperSelectors.correctionDate(props.paper))
+  const showCorrection = paperUtils.showCorrection(false, props.paper.finished, paperSelectors.showCorrectionAt(props.paper), paperSelectors.correctionDate(props.paper))
   const answers = Object.keys(props.answers).map(key => props.answers[key])
+  const hasMoreAttempts = (0 === props.maxAttempts || props.maxAttempts > props.userPaperCount) &&
+    (0 === props.maxAttemptsPerDay || props.maxAttemptsPerDay > props.userPaperDayCount)
 
   return (
     <div className="quiz-player attempt-end">
@@ -47,7 +49,7 @@ const AttemptEnd = props => {
             />
           }
 
-          {props.endNavigation &&
+          {props.endNavigation && hasMoreAttempts &&
             <Button
               type={LINK_BUTTON}
               className="btn btn-start btn-lg btn-block btn-primary"
@@ -71,7 +73,12 @@ AttemptEnd.propTypes = {
     finished: T.bool.isRequired
   }).isRequired,
   endMessage: T.string,
-  endNavigation: T.bool.isRequired
+  endNavigation: T.bool.isRequired,
+  showStatistics: T.bool.isRequired,
+  maxAttempts: T.number.isRequired,
+  maxAttemptsPerDay: T.number.isRequired,
+  userPaperCount: T.number.isRequired,
+  userPaperDayCount: T.number.isRequired
 }
 
 const ConnectedAttemptEnd = connect(
@@ -80,7 +87,12 @@ const ConnectedAttemptEnd = connect(
     paper: playerSelectors.paper(state),
     endMessage: playerSelectors.quizEndMessage(state),
     endNavigation: playerSelectors.quizEndNavigation(state),
-    answers: playerSelectors.answers(state)
+    answers: playerSelectors.answers(state),
+    showStatistics: quizSelectors.parameters(state).showStatistics,
+    maxAttempts: quizSelectors.parameters(state).maxAttempts,
+    maxAttemptsPerDay: quizSelectors.parameters(state).maxAttemptsPerDay,
+    userPaperCount: quizSelectors.meta(state).userPaperCount,
+    userPaperDayCount: quizSelectors.meta(state).userPaperDayCount
   })
 )(AttemptEnd)
 

@@ -70,10 +70,10 @@ class PaperRepository extends EntityRepository
      */
     public function countUserFinishedDayPapers(Exercise $exercise, User $user)
     {
-        $datetime = new \DateTime();
-        $timestamp = $datetime->getTimeStamp();
-        $today = strtotime('midnight', $timestamp);
-        $tomorrow = strtotime('tomorrow', $today) - 1;
+        $today = new \DateTime();
+        $today->setTime(0, 0);
+        $tomorrow = clone $today;
+        $tomorrow->add(new \DateInterval('P1D'));
 
         return (int) $this->getEntityManager()
           ->createQuery('
