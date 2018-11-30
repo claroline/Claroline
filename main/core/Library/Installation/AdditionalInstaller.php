@@ -192,6 +192,11 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
             $updater->setLogger($this->logger);
             $updater->saveConfigAsJson();
         }
+        if (version_compare($currentVersion, '12.2.00', '<')) {
+            $updater = new Updater\Updater120200($this->container, $this->logger);
+            $updater->setLogger($this->logger);
+            $updater->postUpdate();
+        }
 
         $termsOfServiceManager = $this->container->get('claroline.common.terms_of_service_manager');
         $termsOfServiceManager->sendDatas();

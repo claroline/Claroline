@@ -112,6 +112,7 @@ class ResourceQueryBuilder
         $this->selectClause =
             "SELECT DISTINCT{$eol}".
             "    node.id as id,{$eol}".
+            "    node.uuid as uuid,{$eol}".
             "    node.name as name,{$eol}".
             "    node.path as path,{$eol}".
             "    IDENTITY(node.parent) as parent_id,{$eol}".

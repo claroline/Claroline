@@ -21,6 +21,7 @@ use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
 use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -30,9 +31,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceNodeRepository")
  * @ORM\Table(name="claro_resource_node")
  * @Gedmo\Tree(type="materializedPath")
+ * @ORM\HasLifecycleCallbacks
  */
 class ResourceNode
 {
+    const PATH_SEPARATOR = '/';
     // identifiers
     use Id;
     use Uuid;
@@ -46,11 +49,6 @@ class ResourceNode
     // restrictions
     use AccessibleFrom;
     use AccessibleUntil;
-
-    /**
-     * @var string
-     */
-    const PATH_SEPARATOR = '`';
 
     /**
      * @var string
@@ -177,9 +175,17 @@ class ResourceNode
      * @Gedmo\TreePath(separator="`")
      * @ORM\Column(length=3000, nullable=true)
      *
-     * @todo this property shouldn't be nullable (is it due to materialized path strategy ?)
+     * @todo a virer
      */
     protected $path;
+
+    /**
+     * @var string
+     *
+     * nullable true because it's a new property and migrations/updaters were needed
+     * @ORM\Column(length=3000, nullable=true)
+     */
+    protected $materializedPath;
 
     /**
      * @var ArrayCollection|ResourceRights[]
@@ -537,7 +543,7 @@ class ResourceNode
      */
     public static function convertPathForDisplay($path)
     {
-        $pathForDisplay = preg_replace('/-\d+'.self::PATH_SEPARATOR.'/', ' / ', $path);
+        $pathForDisplay = preg_replace('/%([^\/]+)\//', ' / ', $path);
 
         if (null !== $pathForDisplay && strlen($pathForDisplay) > 0) {
             $pathForDisplay = substr_replace($pathForDisplay, '', -3);
@@ -875,17 +881,40 @@ class ResourceNode
     public function getAncestors()
     {
         // No need to access DB to get ancestors as they are given by the materialized path.
-        $parts = preg_split('/-(\d+)'.self::PATH_SEPARATOR.'/', $this->path, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        //I use \/ instead of PATH_SEPARATOR for escape purpose
+        $parts = preg_split('/%([^\/]+)\//', $this->materializedPath, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
         $ancestors = [];
         $countAncestors = count($parts);
         for ($i = 0; $i < $countAncestors; $i += 2) {
             $ancestors[] = [
-                'id' => (int) $parts[$i + 1],
+                'id' => $parts[$i + 1],
                 'name' => $parts[$i],
             ];
         }
 
         return $ancestors;
+    }
+
+    /**
+     * @ORM\PreFlush
+     */
+    public function preFlush(PreFlushEventArgs $args)
+    {
+        $entityManager = $args->getEntityManager();
+
+        $this->materializedPath = $this->makePath($this);
+        $entityManager->persist($this);
+    }
+
+    private function makePath(self $node, $path = '')
+    {
+        if ($node->getParent()) {
+            $path = $this->makePath($node->getParent(), $node->getName().'%'.$node->getUuid().SELF::PATH_SEPARATOR.$path);
+        } else {
+            $path = $node->getName().'%'.$node->getUuid().SELF::PATH_SEPARATOR.$path;
+        }
+
+        return $path;
     }
 }
