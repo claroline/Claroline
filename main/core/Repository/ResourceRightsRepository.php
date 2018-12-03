@@ -29,8 +29,9 @@ class ResourceRightsRepository extends EntityRepository
      */
     public function findMaximumRights(array $roles, ResourceNode $resource)
     {
-        if (count($roles) === 0) {
-            throw new \RuntimeException('Roles cannot be empty');
+        //add the role anonymous for everyone !
+        if (!in_array('ROLE_ANONYMOUS', $roles)) {
+            $roles[] = 'ROLE_ANONYMOUS';
         }
 
         $dql = '
@@ -43,13 +44,10 @@ class ResourceRightsRepository extends EntityRepository
         $index = 0;
 
         foreach ($roles as $key => $role) {
-            $dql .= $index !== 0 ? ' OR ' : '';
+            $dql .= 0 !== $index ? ' OR ' : '';
             $dql .= "resource.id = {$resource->getId()} AND role.name = :role{$key}";
             ++$index;
         }
-
-        //add the role anonymous for everyone !
-        $dql .= " OR  resource.id = {$resource->getId()} and role.name = 'ROLE_ANONYMOUS'";
 
         $query = $this->_em->createQuery($dql);
 
@@ -78,7 +76,7 @@ class ResourceRightsRepository extends EntityRepository
      */
     public function findCreationRights(array $roles, ResourceNode $node)
     {
-        if (count($roles) === 0) {
+        if (0 === count($roles)) {
             throw new \RuntimeException('Roles cannot be empty');
         }
 
@@ -93,7 +91,7 @@ class ResourceRightsRepository extends EntityRepository
         $index = 0;
 
         foreach ($roles as $key => $role) {
-            $dql .= $index !== 0 ? ' OR ' : '';
+            $dql .= 0 !== $index ? ' OR ' : '';
             $dql .= "resource.id = {$node->getId()} AND role.name = :role_{$key}";
             ++$index;
         }

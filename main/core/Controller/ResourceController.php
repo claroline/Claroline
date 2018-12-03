@@ -15,6 +15,8 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceRights;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Library\Security\Utilities;
@@ -22,6 +24,7 @@ use Claroline\CoreBundle\Manager\Exception\ResourceNotFoundException;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -32,6 +35,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
@@ -68,6 +72,9 @@ class ResourceController
 
     /** @var ObjectManager */
     private $om;
+
+    /** @var ResourceRightsRepository */
+    private $rightsRepo;
 
     /**
      * ResourceController constructor.
@@ -113,6 +120,7 @@ class ResourceController
         $this->actionManager = $actionManager;
         $this->restrictionsManager = $restrictionsManager;
         $this->om = $om;
+        $this->rightsRepo = $om->getRepository(ResourceRights::class);
         $this->authorization = $authorization;
     }
 
@@ -122,15 +130,17 @@ class ResourceController
      * @EXT\Route("/show/{id}", name="claro_resource_show_short")
      * @EXT\Route("/show/{type}/{id}", name="claro_resource_show")
      * @EXT\Method("GET")
+     * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=true})
      * @EXT\Template()
      *
-     * @param int|string $id - the id of the target node (we don't use ParamConverter to support ID and UUID)
+     * @param int|string $id          - the id of the target node (we don't use ParamConverter to support ID and UUID)
+     * @param User       $currentUser
      *
      * @return array
      *
      * @throws ResourceNotFoundException
      */
-    public function showAction($id)
+    public function showAction($id, User $currentUser = null)
     {
         /** @var ResourceNode $resourceNode */
         $resourceNode = $this->om->find(ResourceNode::class, $id);
@@ -138,12 +148,18 @@ class ResourceController
             throw new ResourceNotFoundException();
         }
 
+        // TODO : not pretty, but might want on some case to download files instead ?
+        // TODO : find a way to do it in the link plugin
         if ('shortcut' === $resourceNode->getResourceType()->getName()) {
             $shortcut = $this->manager->getResourceFromNode($resourceNode);
             $resourceNode = $shortcut->getTarget();
         }
 
-        //not pretty, but might want on some case to download files instead ?
+        // do a minimal security check to redirect user which are not authenticated if needed.
+        if (empty($currentUser) && 0 >= $this->rightsRepo->findMaximumRights([], $resourceNode)) {
+            // user is not authenticated and the current node is not opened to anonymous
+            throw new AccessDeniedException();
+        }
 
         return [
             'resourceNode' => $resourceNode,
