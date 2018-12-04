@@ -86,6 +86,26 @@ class PaperController extends AbstractController
     }
 
     /**
+     * Returns all the papers associated with an exercise.
+     *
+     * @EXT\Route("/papers/all", name="exercise_papers_all")
+     * @EXT\Method("GET")
+     *
+     * @param Exercise $exercise
+     *
+     * @return JsonResponse
+     */
+    public function listAllAction(Exercise $exercise)
+    {
+        $this->assertHasPermission('OPEN', $exercise);
+        $papers = $this->isAdmin($exercise) || $exercise->hasStatistics() ?
+            $this->paperManager->serializeExercisePapers($exercise, null) :
+            [];
+
+        return new JsonResponse($papers);
+    }
+
+    /**
      * Returns one paper.
      * Also includes the complete definition and solution of each question
      * associated with the exercise.

@@ -7,7 +7,7 @@ export const actions = {}
 actions.displayStatistics = () => {
   return (dispatch, getState) => {
     if (!paperSelectors.papersFetched(getState())) {
-      dispatch(paperActions.fetchPapers(paperSelectors.quizId(getState())))
+      dispatch(paperActions.fetchAllPapers(paperSelectors.quizId(getState())))
     }
   }
 }

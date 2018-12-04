@@ -131,7 +131,7 @@ const QuizResource = props =>
         }, {
           path: '/statistics',
           component: Statistics,
-          disabled: !props.papersAdmin,
+          disabled: !props.papersAdmin && !props.showStatistics,
           onEnter: () => props.statistics()
         }
       ]}

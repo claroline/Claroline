@@ -49,6 +49,16 @@ const AttemptEnd = props => {
             />
           }
 
+          {props.endNavigation && props.showStatistics &&
+            <Button
+              type={LINK_BUTTON}
+              className="btn btn-start btn-lg btn-block btn-primary"
+              icon="fa fa-fw fa-bar-chart"
+              label={tex('statistics')}
+              target="/statistics"
+            />
+          }
+
           {props.endNavigation && hasMoreAttempts &&
             <Button
               type={LINK_BUTTON}

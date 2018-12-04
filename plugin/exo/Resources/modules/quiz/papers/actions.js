@@ -28,6 +28,17 @@ actions.fetchPapers = quizId => ({
   }
 })
 
+actions.fetchAllPapers = quizId => ({
+  [API_REQUEST]: {
+    url: ['exercise_papers_all', {exerciseId: quizId}],
+    request: {method: 'GET'},
+    success: (data, dispatch) => {
+      dispatch(initPapers(normalize(data)))
+      dispatch(setPaperFetched())
+    }
+  }
+})
+
 actions.loadCurrentPaper = (paperId) => ({
   [API_REQUEST]: {
     url: ['apiv2_exopaper_get', {id: paperId}],

@@ -126,12 +126,14 @@ class ExerciseListener
         $user = $this->tokenStorage->getToken()->getUser();
 
         $canEdit = $this->authorization->isGranted('EDIT', new ResourceCollection([$exercise->getResourceNode()]));
+        $options = [Transfer::INCLUDE_METRICS];
+
+        if ($canEdit || $exercise->hasStatistics()) {
+            $options[] = Transfer::INCLUDE_SOLUTIONS;
+        }
 
         $event->setData([
-            'quiz' => $this->exerciseManager->serialize(
-                $exercise,
-                $canEdit ? [Transfer::INCLUDE_SOLUTIONS, Transfer::INCLUDE_METRICS] : [Transfer::INCLUDE_METRICS]
-            ),
+            'quiz' => $this->exerciseManager->serialize($exercise, $options),
             'userEvaluation' => 'anon.' === $user ?
                 null :
                 $this->serializer->serialize(
