@@ -160,6 +160,7 @@ class ClientSerializer
                 return $this->resourceTypeSerializer->serialize($resourceType);
             }, $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll()),
             'plugins' => $this->pluginManager->getEnabled(true),
+            'javascripts' => $this->config->getParameter('javascripts'),
         ];
     }
 

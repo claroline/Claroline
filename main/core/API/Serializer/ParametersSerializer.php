@@ -6,7 +6,9 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\ArrayUtils;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Content;
+use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -32,7 +34,8 @@ class ParametersSerializer
      *     "serializer"    = @DI\Inject("claroline.api.serializer"),
      *     "finder"        = @DI\Inject("claroline.api.finder"),
      *     "filePath"      = @DI\Inject("%claroline.param.platform_options%"),
-     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler")
+     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "om"            = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param PlatformConfigurationHandler $config
@@ -42,6 +45,7 @@ class ParametersSerializer
     public function __construct(
         SerializerProvider $serializer,
         FinderProvider $finder,
+        ObjectManager $om,
         PlatformConfigurationHandler $configHandler,
         $filePath
     ) {
@@ -50,6 +54,7 @@ class ParametersSerializer
         $this->arrayUtils = new ArrayUtils();
         $this->filePath = $filePath;
         $this->configHandler = $configHandler;
+        $this->om = $om;
     }
 
     public function serialize(array $options = [])
@@ -59,6 +64,8 @@ class ParametersSerializer
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $data['tos']['text'] = $this->serializeTos();
         }
+
+        $data['javascripts'] = $this->serializeJavascripts($data);
 
         return $data;
     }
@@ -74,6 +81,7 @@ class ParametersSerializer
     {
         $original = $data;
         $this->deserializeTos($data);
+        $data = $this->getJavascriptsData($data);
         unset($data['tos']['text']);
 
         $data = array_merge($this->serialize([Options::SERIALIZE_MINIMAL]), $data);
@@ -103,6 +111,19 @@ class ParametersSerializer
         }
     }
 
+    public function getJavascriptsData(array $data)
+    {
+        $javascripts = $data['javascripts'];
+        $data['javascripts'] = [];
+        //maybe validate its a real javascript file here
+
+        foreach ($javascripts as $javascript) {
+            $data['javascripts'][] = $javascript['url'];
+        }
+
+        return $data;
+    }
+
     public function deserializeTos(array $data)
     {
         if (isset($data['tos'])) {
@@ -121,5 +142,17 @@ class ParametersSerializer
                 $serializer->deserialize($data['tos']['text'], $contentTos, ['property' => 'content']);
             }
         }
+    }
+
+    public function serializeJavascripts(array $data)
+    {
+        $uploadedFiles = [];
+
+        foreach ($data['javascripts'] as $url) {
+            $file = $this->om->getRepository(PublicFile::class)->findOneByUrl($url);
+            $uploadedFiles[] = $this->serializer->serialize($file);
+        }
+
+        return $uploadedFiles;
     }
 }

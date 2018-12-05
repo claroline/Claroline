@@ -13,6 +13,7 @@ import {Security} from '#/main/core/administration/parameters/technical/componen
 import {Synchronization} from '#/main/core/administration/parameters/technical/components/synchronization'
 import {Token} from '#/main/core/administration/parameters/technical/components/token'
 import {Sessions} from '#/main/core/administration/parameters/technical/components/sessions'
+import {Javascripts} from '#/main/core/administration/parameters/technical/components/javascripts'
 
 const SettingsComponent = () =>
   <Routes
@@ -54,6 +55,10 @@ const SettingsComponent = () =>
         path: '/security',
         exact: true,
         component: Security
+      }, {
+        path: '/javascripts',
+        exact: true,
+        component: Javascripts
       }, {
         path: '/synchronization',
         exact: true,

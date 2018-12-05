@@ -40,6 +40,11 @@ const Nav = () =>
         path: '/sessions'
       },
       {
+        icon: 'fa fa-fw fa-file',
+        title: trans('javascripts'),
+        path: '/javascripts'
+      },
+      {
         icon: 'fa fa-fw fa-sync',
         title: trans('synchronization'),
         path: '/synchronization'

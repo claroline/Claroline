@@ -1735,5 +1735,9 @@
     "overview_message": "Message d'accueil",
     "enable_overview": "Afficher la page d'accueil",
     "playback": "Lecture",
-    "video": "Vidéo"
+    "video": "Vidéo",
+    "javascript": "Javascript",
+    "javascripts": "Javascripts",
+    "add_javascript": "Ajouter un javascript",
+    "no_javascript": "Aucun javascript"
 }

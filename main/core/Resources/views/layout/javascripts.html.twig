@@ -107,3 +107,7 @@
 </script>
 
 {{ render(controller('ClarolineCoreBundle:Layout:injectJavascript')) }}
+
+{% for file in platform_config()['javascripts'] %}
+    <script src="{{ asset(file) }}"></script>
+{% endfor %}

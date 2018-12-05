@@ -209,6 +209,7 @@ class PlatformDefaults implements ParameterProviderInterface
             //not documented, for the cli tool claroline:user:mailing
             'notifications_refresh_delay' => 12000, // in ms
             'is_cron_configured' => false,
+            'javascripts' => [],
         ];
     }
 }

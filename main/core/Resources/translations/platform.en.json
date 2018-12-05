@@ -1702,5 +1702,9 @@
     "overview_message": "Welcome message",
     "enable_overview": "Display home page",
     "playback": "Playback",
-    "video": "Video"
+    "video": "Video",
+    "javascript": "Javascript",
+    "javascripts": "Javascripts",
+    "add_javascript": "Add a javascript",
+    "no_javascript": "No javascript"
 }
