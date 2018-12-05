@@ -129,14 +129,14 @@ class PlatformListener
 
             $now = time();
             if (is_int($this->config->getParameter('platform_init_date'))) {
-                $minDate = new DateTime();
+                $minDate = new \DateTime();
                 $minDate->setTimestamp($this->config->getParameter('platform_init_date'));
             } else {
                 $minDate = new \DateTime($this->config->getParameter('platform_init_date'));
             }
 
             if (is_int($this->config->getParameter('platform_limit_date'))) {
-                $minDate = new DateTime();
+                $minDate = new \DateTime();
                 $minDate->setTimestamp($this->config->getParameter('platform_limit_date'));
             } else {
                 $expirationDate = new \DateTime($this->config->getParameter('platform_limit_date'));
