@@ -377,7 +377,7 @@ class ResourceNodeSerializer
     {
         // additional data might be required later (recursive)
         foreach ($rights as $right) {
-            $creationPerms = null;
+            $creationPerms = [];
             if (isset($right['permissions']['create'])) {
                 if ('directory' === $resourceNode->getResourceType()->getName()) {
                     // ugly hack to only get create rights for directories (it's the only one that can handle it).

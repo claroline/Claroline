@@ -150,7 +150,7 @@ class RightsManager
         $role,
         ResourceNode $node,
         $isRecursive = false,
-        $creations = [],
+        array $creations = [],
         $mergePerms = false
     ) {
         $this->log('Editing permissions...');
