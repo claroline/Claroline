@@ -28,5 +28,6 @@
     "main_settings": "Paramètres généraux",
     "technical_settings": "Paramètres techniques",
     "appearance_settings": "Apparence",
-    "users_management": "Gestion des utilisateurs"
+    "users_management": "Gestion des utilisateurs",
+    "templates_management": "Gestion des templates"
 }

@@ -51,6 +51,7 @@ class Configuration implements ConfigurationInterface
         $this->addThemeSection($pluginSection);
         $this->addAdminToolSection($pluginSection);
         $this->addAdditionalActionSection($pluginSection);
+        $this->addTemplateSection($pluginSection);
 
         return $treeBuilder;
     }
@@ -396,6 +397,22 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
         ->end()->end();
+    }
+
+    private function addTemplateSection(NodeBuilder $pluginSection)
+    {
+        $pluginSection
+            ->arrayNode('templates')
+                ->prototype('array')
+                    ->children()
+                        ->scalarNode('name')->isRequired()->end()
+                        ->arrayNode('placeholders')
+                            ->prototype('scalar')->end()
+                            ->defaultValue([])
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
     }
 
     public static function isResourceClassLoadable($v)

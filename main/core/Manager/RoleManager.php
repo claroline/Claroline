@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\Exception\LastManagerDeleteException;
 use Claroline\CoreBundle\Manager\Exception\RoleReadOnlyException;
+use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CoreBundle\Repository\GroupRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
@@ -58,24 +59,35 @@ class RoleManager
     private $container;
     private $translator;
     private $configHandler;
+    /** @var TemplateManager */
+    private $templateManager;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "dispatcher"     = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "container"      = @DI\Inject("service_container"),
-     *     "translator"     = @DI\Inject("translator"),
-     *     "configHandler"  = @DI\Inject("claroline.config.platform_config_handler")
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "container"       = @DI\Inject("service_container"),
+     *     "translator"      = @DI\Inject("translator"),
+     *     "configHandler"   = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "templateManager" = @DI\Inject("claroline.manager.template_manager")
      * })
+     *
+     * @param ObjectManager                $om
+     * @param StrictDispatcher             $dispatcher
+     * @param Container                    $container
+     * @param TranslatorInterface          $translator
+     * @param PlatformConfigurationHandler $configHandler
+     * @param TemplateManager              $templateManager
      */
     public function __construct(
         ObjectManager $om,
         StrictDispatcher $dispatcher,
         Container $container,
         TranslatorInterface $translator,
-        PlatformConfigurationHandler $configHandler
+        PlatformConfigurationHandler $configHandler,
+        TemplateManager $templateManager
     ) {
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\Workspace');
@@ -87,6 +99,7 @@ class RoleManager
         $this->container = $container;
         $this->translator = $translator;
         $this->configHandler = $configHandler;
+        $this->templateManager = $templateManager;
     }
 
     /**
@@ -737,22 +750,29 @@ class RoleManager
 
     private function sendInscriptionMessage(AbstractRoleSubject $ars, Role $role, $withMail = true)
     {
+        $workspace = $role->getWorkspace();
+        $locale = null;
+        $placeholders = [
+            'role_name' => $role->getTranslationKey(),
+        ];
+
+        if ($ars instanceof User) {
+            $locale = $ars->getLocale();
+            $placeholders['first_name'] = $ars->getFirstName();
+            $placeholders['last_name'] = $ars->getLastName();
+            $placeholders['username'] = $ars->getUsername();
+        }
         //workspace registration
-        if ($role->getWorkspace()) {
-            $content = $this->translator->trans(
-                'workspace_registration_message',
-                ['%workspace_name%' => $role->getWorkspace()->getName()],
-                'platform'
-            );
-            $object = $this->translator->trans(
-                'workspace_registration_message_object',
-                ['%workspace_name%' => $role->getWorkspace()->getName()],
-                'platform'
-            );
+        if ($workspace) {
+            $placeholders['workspace_name'] = $workspace->getName();
+            $placeholders['workspace_code'] = $workspace->getCode();
+
+            $object = $this->templateManager->getTemplate('workspace_registration', $placeholders, $locale, 'title');
+            $content = $this->templateManager->getTemplate('workspace_registration', $placeholders, $locale);
         } else {
             //new role
-            $content = $this->translator->trans('new_role_message', [], 'platform');
-            $object = $this->translator->trans('new_role_message_object', [], 'platform');
+            $object = $this->templateManager->getTemplate('platform_role_registration', $placeholders, $locale, 'title');
+            $content = $this->templateManager->getTemplate('platform_role_registration', $placeholders, $locale);
         }
 
         $sender = $this->container->get('security.token_storage')->getToken()->getUser();

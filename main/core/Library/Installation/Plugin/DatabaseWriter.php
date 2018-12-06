@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Template\TemplateType;
 use Claroline\CoreBundle\Entity\Theme\Theme;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
@@ -240,6 +241,10 @@ class DatabaseWriter
         foreach ($processedConfiguration['additional_action'] as $action) {
             $this->updateAdditionalAction($action);
         }
+
+        foreach ($processedConfiguration['templates'] as $templateType) {
+            $this->createTemplateType($templateType, $plugin);
+        }
     }
 
     /**
@@ -332,6 +337,10 @@ class DatabaseWriter
 
         foreach ($processedConfiguration['additional_action'] as $actionConfiguration) {
             $this->updateAdditionalAction($actionConfiguration);
+        }
+
+        foreach ($processedConfiguration['templates'] as $templateType) {
+            $this->updateTemplateType($templateType, $plugin);
         }
     }
 
@@ -941,6 +950,45 @@ class DatabaseWriter
             $this->em->remove($decoder);
         }
         $this->em->flush();
+    }
+
+    /**
+     * @param array  $templateTypeConfiguration
+     * @param Plugin $plugin
+     */
+    private function createTemplateType($templateTypeConfiguration, Plugin $plugin)
+    {
+        $templateType = new TemplateType();
+        $this->persistTemplateType($templateTypeConfiguration, $plugin, $templateType);
+    }
+
+    /**
+     * @param array  $templateTypeConfiguration
+     * @param Plugin $plugin
+     */
+    private function updateTemplateType($templateTypeConfiguration, Plugin $plugin)
+    {
+        $templateType = $this->em->getRepository(TemplateType::class)
+            ->findOneBy(['name' => $templateTypeConfiguration['name']]);
+
+        if (null === $templateType) {
+            $templateType = new TemplateType();
+        }
+
+        $this->persistTemplateType($templateTypeConfiguration, $plugin, $templateType);
+    }
+
+    /**
+     * @param array        $templateTypeConfiguration
+     * @param Plugin       $plugin
+     * @param TemplateType $templateType
+     */
+    private function persistTemplateType($templateTypeConfiguration, Plugin $plugin, TemplateType $templateType)
+    {
+        $templateType->setName($templateTypeConfiguration['name']);
+        $templateType->setPlaceholders(isset($templateTypeConfiguration['placeholders']) ? $templateTypeConfiguration['placeholders'] : []);
+        $templateType->setPlugin($plugin);
+        $this->em->persist($templateType);
     }
 
     public function setLogger(LoggerInterface $logger)

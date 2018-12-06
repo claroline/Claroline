@@ -28,7 +28,8 @@
       "resource": "resource/bootstrap",
       "desktop-parameters-tool": "tools/desktop-parameters",
       "home": "home/bootstrap",
-      "progression-tool": "tools/progression/bootstrap"
+      "progression-tool": "tools/progression/bootstrap",
+      "templates-management": "administration/template/bootstrap"
     }
   },
 

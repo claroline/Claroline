@@ -1,0 +1,32 @@
+{% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ 'templates_management' | trans({}, 'tools') | striptags | raw }}
+{% endblock %}
+
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
+{% block breadcrumb %}
+    {{ macros.breadcrumbs([{
+        'name': 'administration'|trans({}, 'platform'),
+        'href': path('claro_admin_index')
+    }, {
+        'name': 'templates_management'|trans({}, 'tools'),
+        'href': ''
+    }]) }}
+{% endblock %}
+
+{% block content %}
+    <div
+        class="page-container templates-container"
+        data-locales="{{ locales | json_encode | raw | escape }}"
+        data-default-locale="{{ defaultLocale | json_encode | raw | escape }}"
+    >
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ hotAsset('dist/claroline-distribution-main-core-templates-management.js') }}"></script>
+{% endblock %}

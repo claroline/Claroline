@@ -73,13 +73,14 @@ registry.add('core', {
 
   data: {
     types: {
-      'organization': () => { return import(/* webpackChunkName: "core-data-organization" */ '#/main/core/user/data/types/organization') },
-      'resource'    : () => { return import(/* webpackChunkName: "core-data-resource" */     '#/main/core/data/types/resource') },
-      'users'       : () => { return import(/* webpackChunkName: "core-data-users" */        '#/main/core/data/types/users') },
-      'workspace'   : () => { return import(/* webpackChunkName: "core-data-workspace" */    '#/main/core/data/types/workspace') },
-      'workspaces'  : () => { return import(/* webpackChunkName: "core-data-workspaces" */   '#/main/core/data/types/workspaces') },
-      'groups'      : () => { return import(/* webpackChunkName: "core-data-groups" */       '#/main/core/data/types/groups') },
-      'location'    : () => { return import(/* webpackChunkName: "core-data-location" */     '#/main/core/data/types/location') }
+      'organization'  : () => { return import(/* webpackChunkName: "core-data-organization" */  '#/main/core/user/data/types/organization') },
+      'resource'      : () => { return import(/* webpackChunkName: "core-data-resource" */      '#/main/core/data/types/resource') },
+      'users'         : () => { return import(/* webpackChunkName: "core-data-users" */         '#/main/core/data/types/users') },
+      'workspace'     : () => { return import(/* webpackChunkName: "core-data-workspace" */     '#/main/core/data/types/workspace') },
+      'workspaces'    : () => { return import(/* webpackChunkName: "core-data-workspaces" */    '#/main/core/data/types/workspaces') },
+      'groups'        : () => { return import(/* webpackChunkName: "core-data-groups" */        '#/main/core/data/types/groups') },
+      'location'      : () => { return import(/* webpackChunkName: "core-data-location" */      '#/main/core/data/types/location') },
+      'template_type' : () => { return import(/* webpackChunkName: "core-data-template-type" */ '#/main/core/data/types/template-type') }
     },
     sources: {
       'resources'    : () => { return import(/* webpackChunkName: "core-data-resources" */  '#/main/core/data/sources/resources') },

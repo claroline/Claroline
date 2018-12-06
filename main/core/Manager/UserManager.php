@@ -916,16 +916,15 @@ class UserManager
     public function getByEmailValidationHash($validationHash)
     {
         /** @var User $user */
-        $user = $this->userRepo->findBy(['emailValidationHash' => $validationHash]);
+        $user = $this->userRepo->findOneBy(['emailValidationHash' => $validationHash]);
 
         return $user;
     }
 
     public function validateEmailHash($validationHash)
     {
-        /** @var User[] $users */
-        $users = $this->getByEmailValidationHash($validationHash);
-        $user = $users[0];
+        /** @var User $user */
+        $user = $this->getByEmailValidationHash($validationHash);
         $user->setIsMailValidated(true);
         $this->objectManager->persist($user);
         $this->objectManager->flush();

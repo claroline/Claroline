@@ -316,8 +316,7 @@ class AuthenticationController
     public function sendEmailValidationAction($hash)
     {
         $this->mailManager->sendValidateEmail($hash);
-        $users = $this->userManager->getByEmailValidationHash($hash);
-        $user = $users[0];
+        $user = $this->userManager->getByEmailValidationHash($hash);
         $this->request->getSession()
             ->getFlashBag()
             ->add('success', $this->translator->trans('email_sent', ['%email%' => $user->getEmail()], 'platform'));
