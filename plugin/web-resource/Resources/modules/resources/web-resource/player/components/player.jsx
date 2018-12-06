@@ -18,7 +18,13 @@ class PlayerComponent extends Component {
   }
 
   checkHeight() {
-    const contentHeight = this.iframe.contentWindow.document.body.scrollHeight
+    let contentHeight = this.iframe.contentWindow.document.body.scrollHeight
+
+    if (contentHeight === 0) {
+      //really dirty, but we need this element if everything is populated through javascript in the iframe...
+      contentHeight = document.getElementsByClassName('page-content')[0].clientHeight
+    }
+
     if (contentHeight !== this.state.height) {
       this.setState({height: contentHeight})
     }
