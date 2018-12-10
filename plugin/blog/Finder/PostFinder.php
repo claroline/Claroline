@@ -36,8 +36,8 @@ class PostFinder extends AbstractFinder
                 case 'authorName':
                     $qb->innerJoin('obj.author', 'author');
                     $qb->andWhere("
-                        UPPER(author.firstName) LIKE :{$filterName} 
-                        OR UPPER(author.lastName) LIKE :{$filterName} 
+                        UPPER(author.firstName) LIKE :{$filterName}
+                        OR UPPER(author.lastName) LIKE :{$filterName}
                         OR UPPER(CONCAT(CONCAT(author.firstName, ' '), author.lastName)) LIKE :{$filterName}
                         OR UPPER(CONCAT(CONCAT(author.lastName, ' '), author.firstName)) LIKE :{$filterName}
                     ");

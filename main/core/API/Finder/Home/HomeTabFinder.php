@@ -100,8 +100,8 @@ class HomeTabFinder extends AbstractFinder
                     }
 
                     $expr[] = $qb->expr()->orX(
-                      $qb->expr()->eq('u.id', ':userId'),
-                      $qb->expr()->eq('u.uuid', ':userId')
+                      $qb->expr()->like('u.id', ':userId'),
+                      $qb->expr()->like('u.uuid', ':userId')
                     );
 
                     $qb->andWhere($qb->expr()->orX(...$expr));

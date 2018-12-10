@@ -34,8 +34,8 @@ class MessageFinder extends AbstractFinder
                 case 'subject':
                     $qb->join('obj.subject', 'subject');
                     $qb->andWhere($qb->expr()->orX(
-                        $qb->expr()->eq('subject.id', ':'.$filterName),
-                        $qb->expr()->eq('subject.uuid', ':'.$filterName)
+                        $qb->expr()->like('subject.id', ':'.$filterName),
+                        $qb->expr()->like('subject.uuid', ':'.$filterName)
                     ));
                     $qb->setParameter($filterName, $filterValue);
                     break;
@@ -45,8 +45,8 @@ class MessageFinder extends AbstractFinder
                     } else {
                         $qb->join('obj.parent', 'parent');
                         $qb->andWhere($qb->expr()->orX(
-                            $qb->expr()->eq('parent.id', ':'.$filterName),
-                            $qb->expr()->eq('parent.uuid', ':'.$filterName)
+                            $qb->expr()->like('parent.id', ':'.$filterName),
+                            $qb->expr()->like('parent.uuid', ':'.$filterName)
                         ));
                         $qb->setParameter($filterName, $filterValue);
                     }
@@ -55,8 +55,8 @@ class MessageFinder extends AbstractFinder
                     $qb->join('obj.subject', 'sf');
                     $qb->join('sf.forum', 'forum');
                     $qb->andWhere($qb->expr()->orX(
-                        $qb->expr()->eq('forum.id', ':'.$filterName),
-                        $qb->expr()->eq('forum.uuid', ':'.$filterName)
+                        $qb->expr()->like('forum.id', ':'.$filterName),
+                        $qb->expr()->like('forum.uuid', ':'.$filterName)
                     ));
                     $qb->setParameter($filterName, $filterValue);
                     break;

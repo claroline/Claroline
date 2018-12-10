@@ -33,8 +33,8 @@ class UserFinder extends AbstractFinder
               case 'forum':
                 $qb->leftJoin('obj.forum', 'forum');
                 $qb->andWhere($qb->expr()->orX(
-                    $qb->expr()->eq('forum.id', ':'.$filterName),
-                    $qb->expr()->eq('forum.uuid', ':'.$filterName)
+                    $qb->expr()->like('forum.id', ':'.$filterName),
+                    $qb->expr()->like('forum.uuid', ':'.$filterName)
                 ));
                 $qb->setParameter($filterName, $filterValue);
                 break;
