@@ -40,7 +40,7 @@ class AnnouncementFinder extends AbstractFinder
                     $qb->leftJoin('obj.aggregate', 'a');
                     $qb->leftJoin('a.resourceNode', 'node');
                     $qb->leftJoin('node.workspace', 'w');
-                    $qb->andWhere("w.uuid = :{$filterName}");
+                    $qb->andWhere("w.uuid like :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
                 case 'meta.publishedAt':
@@ -85,8 +85,8 @@ class AnnouncementFinder extends AbstractFinder
                     $qb->leftJoin('w.roles', 'r');
                     $qb->leftJoin('r.users', 'ru');
                     $qb->andWhere($qb->expr()->orX(
-                        $qb->expr()->eq('ru.uuid', ':_userUuid'),
-                        $qb->expr()->eq('ru.id', ':_userId')
+                        $qb->expr()->like('ru.uuid', ':_userUuid'),
+                        $qb->expr()->like('ru.id', ':_userId')
                     ));
                     $qb->andWhere('r.name != :roleUser');
                     $qb->setParameter('_userUuid', $filterValue);
@@ -101,8 +101,8 @@ class AnnouncementFinder extends AbstractFinder
                     $qb->leftJoin('r.groups', 'rg');
                     $qb->leftJoin('rg.users', 'rgu');
                     $qb->andWhere($qb->expr()->orX(
-                        $qb->expr()->eq('rgu.uuid', ':_groupUserId'),
-                        $qb->expr()->eq('rgu.id', ':_groupUserUuid')
+                        $qb->expr()->like('rgu.uuid', ':_groupUserId'),
+                        $qb->expr()->like('rgu.id', ':_groupUserUuid')
                     ));
                     $qb->andWhere('r.name != :roleUser');
                     $qb->setParameter('_groupUserId', $filterValue);
