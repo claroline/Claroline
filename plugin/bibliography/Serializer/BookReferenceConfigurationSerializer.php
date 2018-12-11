@@ -16,7 +16,7 @@ class BookReferenceConfigurationSerializer
 
     public function getClass()
     {
-        return 'Icap\BibliographyBundle\Entity\BookReferenceConfiguration';
+        return BookReferenceConfiguration::class;
     }
 
     /**

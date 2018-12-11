@@ -7,6 +7,7 @@ import Panel from 'react-bootstrap/lib/Panel'
 import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 
 import {tex, trans} from '#/main/app/intl/translation'
+import {Heading} from '#/main/core/layout/components/heading'
 import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {makeItemPanelKey, makeStepPropPanelKey} from './../../../utils/utils'
@@ -490,6 +491,10 @@ StepFooter.propTypes = {
 
 export const StepEditor = props =>
   <div>
+    <Heading level={2}>
+      {props.step.title || `${tex('step')} ${props.stepIndex + 1}`}
+    </Heading>
+
     <PanelGroup accordion activeKey={props.activePanelKey}>
       <Panel
         className="step-parameters"

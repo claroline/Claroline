@@ -16,14 +16,14 @@ class PluginSerializer
 
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Plugin';
+        return Plugin::class;
     }
 
     /**
      * Serializes a Plugin entity.
      *
      * @param Plugin $plugin
-     * @param array $options
+     * @param array  $options
      *
      * @return array
      */
@@ -31,14 +31,14 @@ class PluginSerializer
     {
         return [
             'id' => $plugin->getId(),
-            'name' => $plugin->getDisplayName(),
+            'name' => $plugin->getShortName(),
             'vendor' => $plugin->getVendorName(),
             'bundle' => $plugin->getBundleName(),
         ];
     }
 
     /**
-     * Deserializes data into a Group entity.
+     * Deserializes data into a Plugin entity.
      *
      * @param array  $data
      * @param Plugin $plugin

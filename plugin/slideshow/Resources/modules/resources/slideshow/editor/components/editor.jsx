@@ -17,8 +17,8 @@ import {MODAL_SLIDE} from '#/plugin/slideshow/resources/slideshow/editor/modals/
 
 const EditorComponent = props =>
   <FormData
-    level={3}
-    displayLevel={2}
+    level={2}
+    title={trans('parameters')}
     name={selectors.FORM_NAME}
     buttons={true}
     target={(slideshow) => ['apiv2_slideshow_update', {id: slideshow.id}]}

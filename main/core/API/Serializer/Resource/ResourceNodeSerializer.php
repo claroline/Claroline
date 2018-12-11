@@ -266,13 +266,8 @@ class ResourceNodeSerializer
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $meta = array_merge($meta, [
-                'type' => $resourceNode->getResourceType()->getName(),
-                'mimeType' => $resourceNode->getMimeType(),
-                'description' => $resourceNode->getDescription(),
                 'authors' => $resourceNode->getAuthor(),
                 'license' => $resourceNode->getLicense(),
-                'published' => $resourceNode->isPublished(),
-                'active' => $resourceNode->isActive(),
             ]);
         }
 

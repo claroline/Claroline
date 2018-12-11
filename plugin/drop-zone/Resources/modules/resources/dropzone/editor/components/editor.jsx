@@ -14,8 +14,8 @@ import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 
 const EditorComponent = props =>
   <FormData
-    level={3}
-    title={trans('configuration', {}, 'platform')}
+    level={2}
+    title={trans('parameters')}
     name={`${select.STORE_NAME}.dropzoneForm`}
     buttons={true}
     save={{

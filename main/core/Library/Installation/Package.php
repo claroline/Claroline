@@ -17,11 +17,15 @@ namespace Claroline\CoreBundle\Library\Installation;
  */
 class Package implements PackageInterface
 {
+    private $name;
+    private $version;
+    private $upgraded;
+
     public function __construct($name, $version, $isUpgraded = false)
     {
         $this->name = $name;
         $this->version = $version;
-        $this->isUpgraded = $isUpgraded;
+        $this->upgraded = $isUpgraded;
     }
 
     public function getName()
@@ -46,11 +50,11 @@ class Package implements PackageInterface
 
     public function setIsUpgraded($isUpgraded)
     {
-        $this->isUpgraded = $isUpgraded;
+        $this->upgraded = $isUpgraded;
     }
 
-    public function getIsUpgraded()
+    public function isUpgraded()
     {
-        return $this->isUpgraded;
+        return $this->upgraded;
     }
 }

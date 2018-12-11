@@ -2,8 +2,10 @@ import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {ASYNC_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
+
 import {MODAL_USERS_PICKER} from '#/main/core/modals/users'
-import {MODAL_ROLES_PICKER} from '#/main/core/modals/roles'
+import {MODAL_WORKSPACE_ROLES} from '#/main/core/workspace/modals/roles'
 
 /**
  * Registers selected users to some workspaces.
@@ -13,37 +15,40 @@ export default (workspaces, refresher) => ({
   icon: 'fa fa-fw fa-user',
   label: trans('register_users'),
   displayed: -1 !== workspaces.findIndex(workspace => hasPermission('administrate', workspace)),
+  // open a modal to select the list of users to register
   modal: [MODAL_USERS_PICKER, {
     title: trans('register_users'),
     url: ['apiv2_user_list_managed_organization'],
 
-    // open the Roles modal after selecting users
+    // load the list of common roles for selected workspaces
     selectAction: (users) => ({
-      type: MODAL_BUTTON,
-      label: trans('select', {}, 'actions'),
-      modal: [MODAL_ROLES_PICKER, {
-        title: trans('register_users'),
+      type: ASYNC_BUTTON,
+      request: {
         url: ['apiv2_workspace_roles_common', {
           workspaces: workspaces.map(workspace => workspace.id)
         }],
-
-        // send registration request for selected role and users
-        selectAction: (roles) => ({
-          type: ASYNC_BUTTON,
-          label: trans('register', {}, 'actions'),
-          request: {
-            url: ['apiv2_workspace_bulk_register_users', {
-              role: roles[0],
-              workspaces: workspaces.map(workspace => workspace.id),
-              users: users
-            }],
+        success: (response, dispatch) => dispatch(modalActions.showModal(MODAL_WORKSPACE_ROLES, {
+          icon: 'fa fa-fw fa-user',
+          title: trans('register_users'),
+          roles: response,
+          // send registration request for selected role and users
+          selectAction: (role) => ({
+            type: ASYNC_BUTTON,
+            label: trans('register', {}, 'actions'),
             request: {
-              method: 'PATCH'
-            },
-            success: () => refresher.update(workspaces)
-          }
-        })
-      }]
+              url: ['apiv2_workspace_bulk_register_users', {
+                role: role.translationKey,
+                workspaces: workspaces.map(workspace => workspace.id),
+                users: users.map(user => user.id)
+              }],
+              request: {
+                method: 'PATCH'
+              },
+              success: () => refresher.update(workspaces)
+            }
+          })
+        }))
+      }
     })
   }],
   group: trans('registration'),

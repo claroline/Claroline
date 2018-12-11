@@ -35,6 +35,7 @@
 
   "styles": {
     "entry": {
+      "administration-parameters": "administration/parameters.less",
       "home-tool": "tools/home.less",
       "theme-management": "tools/theme-management.less",
       "iframe": "iframe/iframe.less"

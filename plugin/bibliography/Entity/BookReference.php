@@ -2,7 +2,7 @@
 
 namespace Icap\BibliographyBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -10,11 +10,11 @@ use Doctrine\ORM\Mapping as ORM;
  * Book Reference.
  *
  * @ORM\Table(name="icap__bibliography_book_reference")
- * @ORM\Entity(repositoryClass="Icap\BibliographyBundle\Repository\BookReferenceRepository")
+ * @ORM\Entity()
  */
 class BookReference extends AbstractResource
 {
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -71,6 +71,9 @@ class BookReference extends AbstractResource
      */
     protected $coverUrl;
 
+    /**
+     * BookReference constructor.
+     */
     public function __construct()
     {
         $this->refreshUuid();

@@ -1,13 +1,13 @@
 import {hasPermission} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
-import {URL_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
+import {URL_BUTTON} from '#/main/app/buttons'
 
 /**
  * Open workspace action.
  */
 export default (workspaces) => ({
   name: 'open',
-  type: CALLBACK_BUTTON,
+  type: URL_BUTTON,
   label: trans('open', {}, 'actions'),
   primary: true,
   displayed: hasPermission('open', workspaces[0]),
@@ -16,6 +16,5 @@ export default (workspaces) => ({
     workspaceId: workspaces[0].id
   }],
   scope: ['object'],
-  default: true,
-  callback: () => true
+  default: true
 })

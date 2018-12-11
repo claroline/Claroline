@@ -58,6 +58,7 @@ const Metadata = props =>
         item={props.item}
       />
     </FormGroup>
+
     <FormGroup
       id={`item-${props.item.id}-tags`}
       label={trans('tags')}

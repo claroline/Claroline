@@ -16,7 +16,7 @@ const LocationsPickerModal = props => {
 
   return (
     <Modal
-      {...omit(props, 'selected', 'selectAction', 'resetSelect')}
+      {...omit(props, 'url', 'selected', 'selectAction', 'resetSelect')}
       icon="fa fa-fw fa-location-arrow"
       bsSize="lg"
       onExiting={() => props.resetSelect()}

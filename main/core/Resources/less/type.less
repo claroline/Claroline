@@ -14,3 +14,21 @@
     // there may be a better way to handle it.
     margin-top: 0;
 }
+
+.h-numbering {
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    font-size: @heading-numbering-font;
+    font-weight: @heading-numbering-weight;
+    padding: @heading-numbering-padding;
+    margin-right: 10px;
+    background: @heading-numbering-bg;
+    color: @heading-numbering-color;
+    border-radius: @heading-numbering-border-radius;
+    .box-shadow(@heading-numbering-box-shadow);
+
+    &:after {
+        content: @heading-numbering-separator;
+    }
+}

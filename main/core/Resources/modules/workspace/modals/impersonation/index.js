@@ -1,6 +1,9 @@
 /**
  * Workspace Impersonation modal.
  * Lets the current user use another workspace role.
+ *
+ * @deprecated
+ * @todo remove me when toolbar will use standard WS actions.
  */
 
 import {registry} from '#/main/app/modals/registry'

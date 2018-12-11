@@ -17,9 +17,9 @@
     "name": "Discover the Claroline menu",
     "description": "Familiarize yourself with the features available in the Claroline menu.",
 
-
     "intro": {
-
+      "title": "Let's discover the Claroline menu together !",
+      "message": "The Claroline menu allows you to navigate through the different tools and sections of the application."
     },
     "tools_group": {
       "message": "The tools menu gives you access to all the tools added through your preference tool.",
@@ -49,15 +49,15 @@
 
     "tools": {
       "resource_manager": {
-        "documentation": "https://claroline.gitbooks.io/claroline-connect-documentation/content/fr/resources/resources.html",
-        "message": "Permet de voir et gérer toutes vos ressources."
+        "documentation": "https://claroline.gitbooks.io/claroline-connect-documentation/content/en/resources/resources.html",
+        "message": "Allows you to see and manage all your resources."
       }
     },
 
     "administration": {
       "user_management": {
         "documentation": "",
-        "message": "Permet de voir les utilisateurs et les groupes inscrits, de changer leurs droits ainsi que d'en inscrire de nouveaux."
+        "message": "Allows you to view registered users and groups, change their rights, and register new ones."
       }
     }
   },

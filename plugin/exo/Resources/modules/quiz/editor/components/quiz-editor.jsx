@@ -8,6 +8,7 @@ import Panel from 'react-bootstrap/lib/Panel'
 import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 
 import {trans, tex} from '#/main/app/intl/translation'
+import {Heading} from '#/main/core/layout/components/heading'
 import {ActivableSet} from '#/main/core/layout/form/components/fieldset/activable-set.jsx'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
@@ -505,17 +506,23 @@ function hasPanelError(allProps, errorPropNames) {
 }
 
 const QuizEditor = props =>
-  <PanelGroup
-    accordion
-    activeKey={props.activePanelKey}
-  >
-    {makePanel(Display, trans('display_parameters'), 'display_mode', props)}
-    {makePanel(Picking, tex('step_picking'), 'step-picking', props, ['picking'])}
-    {makePanel(Signing, tex('signing'), 'signing', props, ['duration', 'maxAttempts'])}
-    {makePanel(Correction, trans('correction'), 'correction', props)}
-    {makePanel(Notation, trans('notation'), 'notation', props)}
-    {makePanel(Access, tex('access'), 'access', props)}
-  </PanelGroup>
+  <div>
+    <Heading level={2}>
+      {trans('parameters')}
+    </Heading>
+
+    <PanelGroup
+      accordion
+      activeKey={props.activePanelKey}
+    >
+      {makePanel(Display, trans('display_parameters'), 'display_mode', props)}
+      {makePanel(Picking, tex('step_picking'), 'step-picking', props, ['picking'])}
+      {makePanel(Signing, tex('signing'), 'signing', props, ['duration', 'maxAttempts'])}
+      {makePanel(Correction, trans('correction'), 'correction', props)}
+      {makePanel(Notation, trans('notation'), 'notation', props)}
+      {makePanel(Access, tex('access'), 'access', props)}
+    </PanelGroup>
+  </div>
 
 QuizEditor.propTypes = {
   quiz: T.shape({

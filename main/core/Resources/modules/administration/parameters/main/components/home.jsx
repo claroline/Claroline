@@ -1,24 +1,23 @@
 import React from 'react'
 
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {URL_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 const Home = () =>
   <FormData
+    level={2}
+    title={trans('home')}
     name="parameters"
     target={['apiv2_parameters_update']}
     buttons={true}
     cancel={{
-      type: LINK_BUTTON,
-      target: '/identification',
-      exact: true
+      type: URL_BUTTON,
+      target: ['claro_admin_open']
     }}
     sections={[
       {
-        icon: 'fa fa-fw fa-user-plus',
-        title: trans('Home'),
-        defaultOpened: true,
+        title: trans('general'),
         fields: [
           {
             name: 'home.redirection_type',

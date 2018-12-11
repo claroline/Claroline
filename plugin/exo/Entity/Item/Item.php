@@ -2,7 +2,8 @@
 
 namespace UJM\ExoBundle\Entity\Item;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,16 +17,8 @@ use UJM\ExoBundle\Entity\ItemType\AbstractItem;
  */
 class Item
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    private $id;
-
-    use UuidTrait;
+    use Id;
+    use Uuid;
 
     /**
      * The mime type of the Item type.
@@ -181,11 +174,17 @@ class Item
     }
 
     /**
-     * @return int
+     * NB. This is required to make Tags work properly.
+     *
+     * @return string
      */
-    public function getId()
+    public function __toString()
     {
-        return $this->id;
+        if (!empty($this->getTitle())) {
+            return $this->getTitle();
+        }
+
+        return substr(strip_tags($this->content), 0, 50);
     }
 
     /**

@@ -4,7 +4,6 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {matchPath, Routes, withRouter} from '#/main/app/router'
-import {currentUser} from '#/main/app/security'
 
 import {MODAL_DATA_LIST} from '#/main/app/modals/list'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'

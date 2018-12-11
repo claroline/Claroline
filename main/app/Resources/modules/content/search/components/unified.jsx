@@ -22,14 +22,14 @@ const CurrentFilter = props =>
         </span>
 
         <span className="search-filter-value">
-        {definition.render(props.value, props.options)}
+          {definition.render(props.value, props.options)}
 
-        {!props.locked &&
-          <button type="button" className="btn btn-link" onClick={props.remove}>
-            <span className="fa fa-times"/>
-            <span className="sr-only">{trans('list_remove_filter')}</span>
-          </button>
-        }
+          {!props.locked &&
+            <button type="button" className="btn btn-link" onClick={props.remove}>
+              <span className="fa fa-times"/>
+              <span className="sr-only">{trans('list_remove_filter')}</span>
+            </button>
+          }
         </span>
       </div>
     )}
@@ -269,7 +269,7 @@ class SearchUnified extends Component {
         {this.state.currentSearch &&
           <FiltersList
             available={this.props.available.filter(availableFilter =>
-                // removes locked filters
+              // removes locked filters
               -1 === this.props.current.findIndex(currentFilter => (currentFilter.property === availableFilter.name || currentFilter.property === availableFilter.alias) && currentFilter.locked)
             )}
             currentSearch={this.state.currentSearch}

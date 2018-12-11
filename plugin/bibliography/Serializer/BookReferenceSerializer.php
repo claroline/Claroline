@@ -22,7 +22,7 @@ class BookReferenceSerializer
 
     public function getClass()
     {
-        return 'Icap\BibliographyBundle\Entity\BookReference';
+        return BookReference::class;
     }
 
     /**
@@ -37,7 +37,6 @@ class BookReferenceSerializer
     {
         return [
             'id' => $bookReference->getUuid(),
-            'name' => $bookReference->getResourceNode()->getName(),
             'author' => $bookReference->getAuthor(),
             'abstract' => $bookReference->getAbstract(),
             'isbn' => $bookReference->getIsbn(),
@@ -66,9 +65,7 @@ class BookReferenceSerializer
             $bookReference = new BookReference();
             $bookReference->refreshUuid();
         }
-        if (!empty($data['name'])) {
-            $bookReference->getResourceNode()->setName($data['name']);
-        }
+
         $this->sipe('author', 'setAuthor', $data, $bookReference);
         $this->sipe('isbn', 'setIsbn', $data, $bookReference);
         $this->sipe('abstract', 'setAbstract', $data, $bookReference);

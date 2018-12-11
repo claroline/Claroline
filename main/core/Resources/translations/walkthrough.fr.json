@@ -18,28 +18,29 @@
     "description": "Familiarisez-vous avec les fonctionnalités du menu Claroline.",
 
     "intro": {
-
+      "title": "Découvrons le menu Claroline ensemble !",
+      "message": "Le menu Claroline vous permet de naviguer à travers les différents outils et sections de l'application."
     },
     "tools_group": {
-      "message": "Le menu d'Outils vous permet d'accéder à tous les outils du bureau ajoutés.",
-      "action": "Cliquez sur le bouton pour ouvrir le menu Outils."
+      "message": "Le menu d'outils vous permet d'accéder à tous les outils du bureau ajoutés.",
+      "action": "Cliquez sur le bouton pour ouvrir le menu d'outils."
     },
     "workspaces_menu": {
-      "title": "Le menu principale",
-      "message": "Le menu principale vous permet d'ouvrir votre bureau, l'accueil ou encore de parcourir vos espaces d'activités."
+      "title": "Le menu principal",
+      "message": "Le menu principal vous permet d'ouvrir votre bureau, l'accueil ou encore de parcourir vos espaces d'activités."
     },
     "administration_group": {
-      "message": "Le menu d'Administration vous permet d'accéder à tous les outils d'administration auxquels vous avez accès.",
+      "message": "Le menu d'administration vous permet d'accéder à tous les outils d'administration auxquels vous avez accès.",
       "action": "Cliquez sur le bouton pour ouvrir le menu Administration."
     },
     "notifications": {
       "title": "Le centre de notifications",
-      "message": "Le centre de notifications regroupe toute votre communications au sein de l'application: messages avec les autres utilisateurs, notifications, ...",
+      "message": "Le centre de notifications regroupe toute votre communication au sein de l'application: messages avec les autres utilisateurs, notifications, ...",
       "action": "Cliquez sur le bouton pour ouvrir le centre de notifications."
     },
     "user_menu": {
       "title": "Le menu utilisateur",
-      "message": "Le menu Utilisateur vous permet d'accéder à vos outils personnels, votre profile ainsi que vos préférences.",
+      "message": "Le menu utilisateur vous permet d'accéder à vos outils personnels, votre profil ainsi que vos préférences.",
       "action": "Cliquez sur le bouton pour ouvrir le menu Utilisateur."
     },
     "locale": {

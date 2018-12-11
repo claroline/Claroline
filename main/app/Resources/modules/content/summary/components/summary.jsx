@@ -41,7 +41,7 @@ const SummaryHeader = props =>
           'fa-chevron-left': props.opened,
           'fa-chevron-right': !props.opened
         })}
-        label={trans(props.opened ? 'close_summary':'open_summary', {}, 'path')}
+        label={trans(props.opened ? 'close-summary':'open-summary', {}, 'actions')}
         callback={props.toggleOpen}
       />
     </div>

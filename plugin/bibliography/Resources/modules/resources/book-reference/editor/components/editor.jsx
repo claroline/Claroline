@@ -1,20 +1,17 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import {PropTypes as T} from 'prop-types'
 
-import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
+import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-import {trans} from '#/main/app/intl/translation'
-
 import {selectors} from '#/plugin/bibliography/resources/book-reference/store'
 
-const EditorComponent = (props) =>
+const Editor = () =>
   <FormData
-    level={3}
+    level={2}
+    title={trans('parameters')}
     name={selectors.STORE_NAME+'.bookReference'}
-    target={['apiv2_book_reference_update', {id: props.id}]}
+    target={(bookReference) => ['apiv2_book_reference_update', {id: bookReference.id}]}
     buttons={true}
     cancel={{
       type: LINK_BUTTON,
@@ -27,11 +24,6 @@ const EditorComponent = (props) =>
         primary: true,
         fields: [
           {
-            name: 'name',
-            type: 'string',
-            label: trans('name'),
-            required: true
-          }, {
             name: 'author',
             type: 'string',
             label: trans('author', {}, 'icap_bibliography'),
@@ -92,16 +84,6 @@ const EditorComponent = (props) =>
       }
     ]}
   />
-
-EditorComponent.propTypes = {
-  id: T.string.isRequired
-}
-
-const Editor = connect(
-  (state) => ({
-    id: formSelect.data(formSelect.form(state, selectors.STORE_NAME+'.bookReference')).id
-  })
-)(EditorComponent)
 
 export {
   Editor

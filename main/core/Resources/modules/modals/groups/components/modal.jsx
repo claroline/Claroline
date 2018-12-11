@@ -16,7 +16,7 @@ const GroupsPickerModal = props => {
 
   return (
     <Modal
-      {...omit(props, 'selected', 'selectAction', 'resetSelect')}
+      {...omit(props, 'url', 'selected', 'selectAction', 'resetSelect')}
       icon="fa fa-fw fa-users"
       bsSize="lg"
       onExiting={() => props.resetSelect()}

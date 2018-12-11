@@ -23,7 +23,8 @@ class Editor extends Component {
     //bad.
     return (
       <FormData
-        level={5}
+        level={2}
+        title={trans('parameters')}
         name={selectors.FORM_NAME}
         buttons={true}
         target={['apiv2_resource_file_update', {id: this.props.file.id}]}

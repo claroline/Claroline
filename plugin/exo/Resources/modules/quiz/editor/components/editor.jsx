@@ -26,7 +26,8 @@ let Editor = props =>
     }}
     cancel={{
       type: LINK_BUTTON,
-      target: '/'
+      target: '/',
+      exact: true
     }}
   >
     <ThumbnailBox

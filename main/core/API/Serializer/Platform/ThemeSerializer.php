@@ -57,7 +57,7 @@ class ThemeSerializer
                 'default' => $theme->isDefault(),
                 'enabled' => $theme->isEnabled(),
                 'custom' => $theme->isCustom(),
-                'plugin' => $theme->getPlugin() ? $theme->getPlugin()->getDisplayName() : null,
+                'plugin' => $theme->getPlugin() ? $theme->getPlugin()->getShortName() : null,
                 'creator' => $theme->getUser() ? $this->userSerializer->serialize($theme->getUser()) : null,
             ],
             'parameters' => [

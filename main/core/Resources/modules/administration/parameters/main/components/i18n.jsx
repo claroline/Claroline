@@ -3,30 +3,30 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {URL_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {selectors} from '#/main/core/administration/parameters/main/store'
 
 const I18nComponent = (props) =>
   <FormData
+    level={2}
+    title={trans('language')}
     name={selectors.FORM_NAME}
     target={['apiv2_parameters_update']}
     buttons={true}
     cancel={{
-      type: LINK_BUTTON,
-      target: '/main',
-      exact: true
+      type: URL_BUTTON,
+      target: ['claro_admin_open']
     }}
     sections={[
       {
-        title: trans('i18n'),
+        title: trans('general'),
         fields: [
           {
             name: 'locales.available',
             type: 'locale',
             label: trans('available_languages'),
-            required: true,
             options: {
               available: props.availableLocales,
               multiple: true
@@ -35,7 +35,6 @@ const I18nComponent = (props) =>
             name: 'locales.default',
             type: 'locale',
             label: trans('default_language'),
-            required: true,
             options: {
               available: props.availableLocales
             }

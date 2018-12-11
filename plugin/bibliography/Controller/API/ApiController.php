@@ -2,11 +2,15 @@
 
 namespace Icap\BibliographyBundle\Controller\API;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
+use Icap\BibliographyBundle\Entity\BookReferenceConfiguration;
+use Icap\BibliographyBundle\Repository\BookReferenceConfigurationRepository;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
@@ -14,6 +18,23 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  */
 class ApiController extends FOSRestController
 {
+    /** @var BookReferenceConfigurationRepository */
+    private $configRepository;
+
+    /**
+     * ApiController constructor.
+     *
+     * @DI\InjectParams({
+     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     * })
+     *
+     * @param ObjectManager $om
+     */
+    public function __construct(ObjectManager $om)
+    {
+        $this->configRepository = $om->getRepository(BookReferenceConfiguration::class);
+    }
+
     /**
      * Search in ISBNDB.
      *
@@ -23,7 +44,7 @@ class ApiController extends FOSRestController
      * @QueryParam(name="index", description="Index of the database used to search for the query", default="title")
      * @QueryParam(name="page", description="Page of returned results", requirements="\d+", default="1")
      *
-     * @return jsonResponse
+     * @return array
      *
      * @throws HttpException
      * @throws \Exception
@@ -80,8 +101,7 @@ class ApiController extends FOSRestController
      */
     private function getApiKey()
     {
-        $configRepository = $this->get('icap_bibliography.repository.book_reference_configuration');
-        $config = $configRepository->findAll()[0];
+        $config = $this->configRepository->findAll()[0];
         $api_key = $config->getApiKey();
 
         if (is_null($api_key)) {

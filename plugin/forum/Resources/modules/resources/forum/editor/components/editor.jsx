@@ -15,8 +15,7 @@ import {selectors} from '#/plugin/forum/resources/forum/editor/store'
 
 const EditorComponent = (props) =>
   <FormData
-    level={3}
-    displayLevel={2}
+    level={2}
     name={selectors.FORM_NAME}
     title={trans('parameters')}
     className="content-container"

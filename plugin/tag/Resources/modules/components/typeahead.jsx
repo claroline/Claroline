@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {trans} from '#/main/app/intl/translation'
 import {url} from '#/main/app/api'
 import {Button} from '#/main/app/action/components/button'
 

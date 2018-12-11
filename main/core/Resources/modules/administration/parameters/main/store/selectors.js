@@ -11,9 +11,12 @@ const locales = createSelector(
   (parameters) => parameters.locales
 )
 
+const plugins = state => state.plugins
+
 export const selectors = {
   FORM_NAME,
   availableLocales,
   parameters,
-  locales
+  locales,
+  plugins
 }

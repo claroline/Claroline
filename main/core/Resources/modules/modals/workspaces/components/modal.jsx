@@ -16,7 +16,7 @@ const WorkspacesModal = props => {
 
   return (
     <Modal
-      {...omit(props, 'selected', 'selectAction', 'resetSelect')}
+      {...omit(props, 'url', 'selected', 'selectAction', 'resetSelect')}
       icon="fa fa-fw fa-books"
       bsSize="lg"
       onExiting={() => props.resetSelect()}

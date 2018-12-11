@@ -123,14 +123,6 @@ claro_admin_plugin:
     prefix: admin/plugins
     type: annotation
 
-claro_plugin_api:
-    resource: "@ClarolineCoreBundle/Controller/API/Admin/PluginController.php"
-    prefix: api
-    type: rest
-    defaults: {_format: json}
-    options:
-        expose: true
-
 claro_client:
     resource: "@ClarolineCoreBundle/Controller/API/Admin/ClientController.php"
     type: annotation

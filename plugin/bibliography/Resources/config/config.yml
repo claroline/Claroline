@@ -7,7 +7,3 @@ plugin:
       class: Icap\BibliographyBundle\Entity\BookReference
       tags: [content]
       exportable: false
-
-  #widgets:
-  #  - name: book_reference_list
-  #    is_configurable: false

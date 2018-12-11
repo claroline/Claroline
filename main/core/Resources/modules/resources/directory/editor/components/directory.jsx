@@ -15,7 +15,8 @@ import {Directory as DirectoryTypes} from '#/main/core/resources/directory/prop-
 
 const DirectoryForm = (props) =>
   <FormData
-    level={3}
+    level={2}
+    title={trans('parameters')}
     name={selectors.FORM_NAME}
     target={['apiv2_resource_directory_update', {id: props.directory.id}]}
     buttons={true}

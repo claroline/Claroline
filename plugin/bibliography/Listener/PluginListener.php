@@ -52,7 +52,7 @@ class PluginListener
      *
      * @param PluginOptionsEvent $event
      */
-    public function onConfig(PluginOptionsEvent $event)
+    public function onConfigure(PluginOptionsEvent $event)
     {
         // If user is not platform admin, deny access
         if (

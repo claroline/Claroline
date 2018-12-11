@@ -11,9 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -27,13 +25,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Plugin
 {
-    //use Uuid;
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_plugin"})
      */
     protected $id;
 
@@ -41,7 +36,6 @@ class Plugin
      * @ORM\Column(name="vendor_name", length=50)
      * @Assert\NotBlank()
      * @Assert\Length(max=50)
-     * @Groups({"api_plugin"})
      */
     protected $vendorName;
 
@@ -49,13 +43,11 @@ class Plugin
      * @ORM\Column(name="short_name", length=50)
      * @Assert\NotBlank()
      * @Assert\Length(max=50)
-     * @Groups({"api_plugin"})
      */
     protected $bundleName;
 
     /**
      * @ORM\Column(name="has_options", type="boolean")
-     * @Groups({"api_plugin"})
      */
     protected $hasOptions = false;
 
@@ -79,12 +71,7 @@ class Plugin
 
     public function getShortName()
     {
-        return strtolower($this->getVendorName().str_replace('Bundle', '', $this->getBundleName()));
-    }
-
-    public function getDisplayName()
-    {
-        return $this->getVendorName().'/'.str_replace('Bundle', '', $this->getBundleName());
+        return strtolower($this->getVendorName().'_'.str_replace('Bundle', '', $this->getBundleName()));
     }
 
     public function getVendorName()

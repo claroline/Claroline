@@ -621,7 +621,7 @@ class ItemSerializer extends AbstractSerializer
     private function serializeTags(Item $question)
     {
         $event = new GenericDataEvent([
-            'class' => 'UJM\ExoBundle\Entity\Item\Item',
+            'class' => Item::class,
             'ids' => [$question->getUuid()],
         ]);
         $this->eventDispatcher->dispatch('claroline_retrieve_used_tags_by_class_and_ids', $event);
@@ -649,7 +649,7 @@ class ItemSerializer extends AbstractSerializer
                 'tags' => $tags,
                 'data' => [
                     [
-                        'class' => 'UJM\ExoBundle\Entity\Item\Item',
+                        'class' => Item::class,
                         'id' => $question->getUuid(),
                         'name' => $question->getTitle(),
                     ],

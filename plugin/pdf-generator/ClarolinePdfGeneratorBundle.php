@@ -41,11 +41,6 @@ class ClarolinePdfGeneratorBundle extends DistributionPluginBundle implements Co
         return __DIR__."/Resources/config/{$folder}/{$file}.yml";
     }
 
-    public function hasMigrations()
-    {
-        return true;
-    }
-
     public function getExtraRequirements()
     {
         return [

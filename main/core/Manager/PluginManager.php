@@ -15,6 +15,7 @@ use Claroline\AppBundle\Parser\IniParser;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Repository\PluginRepository;
 use Claroline\KernelBundle\Manager\BundleManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -24,19 +25,36 @@ use Symfony\Component\HttpKernel\KernelInterface;
  */
 class PluginManager
 {
+    /** @var string */
     private $kernelRootDir;
+
+    /** @var ObjectManager */
     private $om;
+
+    /** @var PluginRepository */
     private $pluginRepo;
+
+    /** @var KernelInterface */
     private $kernel;
+
+    /** @var BundleManager */
     private $bundleManager;
+
+    /** @var array */
     private $loadedBundles;
 
     /**
+     * PluginManager constructor.
+     *
      * @DI\InjectParams({
      *      "kernelRootDir" = @DI\Inject("%kernel.root_dir%"),
      *      "om"            = @DI\Inject("claroline.persistence.object_manager"),
      *      "kernel"        = @DI\Inject("kernel")
      * })
+     *
+     * @param string          $kernelRootDir
+     * @param ObjectManager   $om
+     * @param KernelInterface $kernel
      */
     public function __construct(
         $kernelRootDir,
@@ -52,15 +70,6 @@ class PluginManager
         $this->loadedBundles = IniParser::parseFile($this->iniFile);
         BundleManager::initialize($kernel, $this->iniFile);
         $this->bundleManager = BundleManager::getInstance();
-    }
-
-    public function getDistributionVersion()
-    {
-        foreach ($this->bundleManager->getActiveBundles(true) as $bundle) {
-            if ('ClarolineCoreBundle' === $bundle['instance']->getName()) {
-                return $bundle['instance']->getVersion();
-            }
-        }
     }
 
     public function updateIniFile($vendor, $bundle)
@@ -94,11 +103,6 @@ class PluginManager
         }
     }
 
-    public function getPlugins()
-    {
-        return $this->pluginRepo->findAll();
-    }
-
     public function getPluginsData()
     {
         /** @var Plugin[] $plugins */
@@ -106,21 +110,25 @@ class PluginManager
         $data = [];
 
         foreach ($plugins as $plugin) {
-            if ($this->getBundle($plugin) && !$this->getBundle($plugin)->isHidden()) {
+            $bundle = $this->getBundle($plugin);
+            if ($bundle && !$bundle->isHidden()) {
                 $data[] = [
                     'id' => $plugin->getId(),
-                    'name' => $plugin->getVendorName().$plugin->getBundleName(),
-                    'vendor' => $plugin->getVendorName(),
-                    'bundle' => $plugin->getBundleName(),
-                    'has_options' => $plugin->hasOptions(),
-                    'description' => $this->getDescription($plugin),
-                    'is_loaded' => $this->isLoaded($plugin),
-                    'version' => $this->getVersion($plugin),
-                    'origin' => $this->getOrigin($plugin),
-                    'is_ready' => $this->isReady($plugin),
-                    'require' => $this->getRequirements($plugin),
-                    'required_by' => $this->getRequiredBy($plugin),
-                    'is_locked' => $this->isLocked($plugin),
+                    'name' => $plugin->getShortName(),
+                    'meta' => [
+                        'version' => $this->getVersion($plugin),
+                        'origin' => $this->getOrigin($plugin),
+                        'vendor' => $plugin->getVendorName(),
+                        'bundle' => $plugin->getBundleName(),
+                    ],
+                    'ready' => $this->isReady($plugin),
+                    'enabled' => $this->isLoaded($plugin),
+                    'locked' => $this->isLocked($plugin),
+
+                    'hasOptions' => $plugin->hasOptions(),
+
+                    'requirements' => $this->getRequirements($plugin),
+                    'requiredBy' => $this->getRequiredBy($plugin),
                 ];
             }
         }
@@ -184,6 +192,8 @@ class PluginManager
 
     /**
      * @param mixed $plugin Plugin Entity, ShortName (ClarolineCoreBundle) Fqcn (Claroline\CoreBundle\ClarolineCoreBundle)
+     *
+     * @return bool
      */
     public function isLoaded($plugin)
     {
@@ -205,14 +215,8 @@ class PluginManager
 
     /**
      * @param mixed $plugin Plugin Entity, ShortName (ClarolineCoreBundle) Fqcn (Claroline\CoreBundle\ClarolineCoreBundle)
-     */
-    public function getDescription($plugin)
-    {
-        return $this->getBundle($plugin)->getOrigin();
-    }
-
-    /**
-     * @param mixed $plugin Plugin Entity, ShortName (ClarolineCoreBundle) Fqcn (Claroline\CoreBundle\ClarolineCoreBundle)
+     *
+     * @return bool
      */
     public function isHidden($plugin)
     {
@@ -221,6 +225,8 @@ class PluginManager
 
     /**
      * @param mixed $plugin Plugin Entity, ShortName (ClarolineCoreBundle) Fqcn (Claroline\CoreBundle\ClarolineCoreBundle)
+     *
+     * @return string|null
      */
     public function getOrigin($plugin)
     {
@@ -229,6 +235,8 @@ class PluginManager
 
     /**
      * @param mixed $plugin Plugin Entity, ShortName (ClarolineCoreBundle) Fqcn (Claroline\CoreBundle\ClarolineCoreBundle)
+     *
+     * @return string
      */
     public function getVersion($plugin)
     {
@@ -237,6 +245,8 @@ class PluginManager
 
     /**
      * @param mixed $plugin Plugin Entity, ShortName (ClarolineCoreBundle) Fqcn (Claroline\CoreBundle\ClarolineCoreBundle)
+     *
+     * @return array
      */
     public function getRequirements($plugin)
     {
@@ -253,6 +263,8 @@ class PluginManager
 
     /**
      * @param mixed $plugin Plugin Entity, ShortName (ClarolineCoreBundle) Fqcn (Claroline\CoreBundle\ClarolineCoreBundle)
+     *
+     * @return array
      */
     public function getMissingRequirements($plugin)
     {
@@ -268,6 +280,8 @@ class PluginManager
 
     /**
      * @param mixed $plugin Plugin Entity, ShortName (ClarolineCoreBundle) Fqcn (Claroline\CoreBundle\ClarolineCoreBundle)
+     *
+     * @return bool
      */
     public function isReady($plugin)
     {
@@ -281,6 +295,8 @@ class PluginManager
 
     /**
      * @param mixed $plugin Plugin Entity, ShortName (ClarolineCoreBundle) Fqcn (Claroline\CoreBundle\ClarolineCoreBundle)
+     *
+     * @return bool
      */
     public function isActivatedByDefault($plugin)
     {
@@ -291,6 +307,8 @@ class PluginManager
 
     /**
      * @param mixed $plugin Plugin Entity, ShortName (ClarolineCoreBundle) Fqcn (Claroline\CoreBundle\ClarolineCoreBundle)
+     *
+     * @return array
      */
     public function getRequiredBy($plugin)
     {
@@ -309,6 +327,8 @@ class PluginManager
 
     /**
      * @param mixed $plugin Plugin Entity, ShortName (ClarolineCoreBundle) Fqcn (Claroline\CoreBundle\ClarolineCoreBundle)
+     *
+     * @return bool
      */
     public function isLocked($plugin)
     {
@@ -325,6 +345,8 @@ class PluginManager
 
     /**
      * @param mixed $plugin Plugin Entity, ShortName (ClarolineCoreBundle) Fqcn (Claroline\CoreBundle\ClarolineCoreBundle)
+     *
+     * @return mixed
      */
     public function getBundle($plugin)
     {
@@ -335,6 +357,8 @@ class PluginManager
                 return $bundle['instance'];
             }
         }
+
+        return null;
     }
 
     public function getInstalledBundles()

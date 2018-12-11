@@ -6,10 +6,12 @@
     <head>
         {% set description = getContent('platformDescription') %}
         {% block meta %}
+            <meta charset="utf-8" />
+
             {% if not description is empty %}
                 <meta name="description" content="{{ description.content | striptags }}" />
             {% endif %}
-            <meta charset="utf-8" />
+
             {#
                The following line is needed for unit testing as the DOMDocument
                used by the SF's crawler doesn't recognize the HTML5 charset meta tag.
@@ -33,9 +35,6 @@
         <title>{% spaceless %}
             {% block title %}
                 {{ pagetitle | striptags | raw }}
-                {% if not description is empty and description.content != "" %}
-                    - {{ description.content | striptags | raw }}
-                {% endif %}
             {% endblock %}
         {% endspaceless %}</title>
 

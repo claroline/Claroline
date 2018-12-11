@@ -611,25 +611,36 @@ class WorkspaceController extends AbstractCrudController
     {
         /** @var Workspace[] $workspaces */
         $workspaces = $this->decodeQueryParam($request, 'Claroline\CoreBundle\Entity\Workspace\Workspace', 'workspaces');
-        $roles = [];
 
-        foreach ($workspaces as $workspace) {
-            foreach ($workspace->getRoles() as $role) {
-                if (!isset($roles[$role->getTranslationKey()])) {
-                    $roles[$role->getTranslationKey()] = 1;
-                } else {
-                    ++$roles[$role->getTranslationKey()];
+        $roles = [];
+        if (1 === count($workspaces)) {
+            $roles = $workspaces[0]->getRoles()->toArray();
+        } else {
+            $all = [];
+            foreach ($workspaces as $workspace) {
+                foreach ($workspace->getRoles() as $role) {
+                    if (!isset($all[$role->getTranslationKey()])) {
+                        $all[$role->getTranslationKey()] = [
+                            'count' => 1,
+                            'instance' => $role,
+                        ];
+                    } else {
+                        ++$all[$role->getTranslationKey()]['count'];
+                    }
+                }
+            }
+
+            // only grab roles used by multiple ws
+            foreach ($all as $role) {
+                if (1 < $role['count']) {
+                    $roles[] = $role['instance'];
                 }
             }
         }
 
-        if (count($workspaces) > 1) {
-            $roles = array_filter($roles, function ($amount) {
-                return $amount > 1;
-            });
-        }
-
-        return new JsonResponse(array_keys($roles));
+        return new JsonResponse(array_map(function (Role $role) {
+            return $this->serializer->serialize($role);
+        }, $roles));
     }
 
     /**
@@ -709,32 +720,6 @@ class WorkspaceController extends AbstractCrudController
         return [
           'get' => ['id' => '^(?!.*(schema|copy|parameters|find|doc|menu\/)).*'],
         ];
-    }
-
-    /**
-     * @Route(
-     *    "/{id}/management/roles",
-     *    name="apiv2_workspace_management_roles_list"
-     * )
-     * @Method("GET")
-     * @ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
-     *
-     * @param Request   $request
-     * @param Workspace $workspace
-     *
-     * @return JsonResponse
-     */
-    public function rolesListAction(Request $request, Workspace $workspace)
-    {
-        return new JsonResponse(
-            $this->finder->search('Claroline\CoreBundle\Entity\Role', array_merge(
-                $request->query->all(),
-                ['hiddenFilters' => [
-                    'workspace' => [$workspace->getUuid()],
-                    'roleNames' => ['ROLE_ANONYMOUS', 'ROLE_USER'],
-                ]]
-            ))
-        );
     }
 
     /**

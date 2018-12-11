@@ -7,20 +7,14 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Icap\BibliographyBundle\Entity\BookReference;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Templating\EngineInterface;
 
 /**
  * @DI\Service()
  */
 class BibliographyListener
 {
-    /** @var EngineInterface */
-    private $templating;
-
     /** @var ObjectManager */
     private $om;
 
@@ -31,21 +25,17 @@ class BibliographyListener
      * BibliographyListener constructor.
      *
      * @DI\InjectParams({
-     *     "templating"           = @DI\Inject("templating"),
-     *     "objectManager"        = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer"           = @DI\Inject("claroline.api.serializer")
+     *     "objectManager" = @DI\Inject("claroline.persistence.object_manager"),
+     *     "serializer"    = @DI\Inject("claroline.api.serializer")
      * })
      *
-     * @param EngineInterface    $templating
      * @param ObjectManager      $objectManager
      * @param SerializerProvider $serializer
      */
     public function __construct(
-        EngineInterface $templating,
         ObjectManager $objectManager,
         SerializerProvider $serializer
     ) {
-        $this->templating = $templating;
         $this->serializer = $serializer;
         $this->om = $objectManager;
     }
@@ -63,26 +53,6 @@ class BibliographyListener
             'bookReference' => $this->serializer->serialize($event->getResource()),
         ]);
 
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("open_icap_bibliography")
-     *
-     * @param OpenResourceEvent $event
-     */
-    public function onOpen(OpenResourceEvent $event)
-    {
-        $bookReference = $event->getResource();
-        $content = $this->templating->render(
-            'IcapBibliographyBundle:book_reference:open.html.twig',
-            [
-                '_resource' => $bookReference,
-            ]
-        );
-        $response = new Response($content);
-
-        $event->setResponse($response);
         $event->stopPropagation();
     }
 

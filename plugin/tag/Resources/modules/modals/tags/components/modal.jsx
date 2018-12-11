@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
@@ -26,6 +26,7 @@ const TagsModal = props =>
       <TagTypeahead
         selectAction={(tagName) => ({
           type: CALLBACK_BUTTON,
+          label: trans('add', {}, 'actions'),
           callback: () => props.addTag(props.objectClass, props.objects, {name: tagName})
         })}
       />
