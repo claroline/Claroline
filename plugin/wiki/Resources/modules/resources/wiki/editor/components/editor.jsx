@@ -13,6 +13,7 @@ import {WIKI_MODES, WIKI_MODE_CHOICES} from '#/plugin/wiki/resources/wiki/consta
 const EditorComponent = props =>
   <FormData
     level={2}
+    title={trans('parameters')}
     buttons={true}
     target={() => ['apiv2_wiki_update_options', {id: props.wiki.id}]}
     cancel={{
@@ -20,7 +21,6 @@ const EditorComponent = props =>
       target: '/',
       exact: true
     }}
-    title={trans('configure', {}, 'platform')}
     name={selectors.STORE_NAME + '.wikiForm'}
     sections={[
       {

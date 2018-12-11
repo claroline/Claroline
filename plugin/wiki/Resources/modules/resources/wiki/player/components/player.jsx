@@ -30,25 +30,31 @@ class PlayerComponent extends Component {
 
   render() {
     return (
-      <div className={'wiki-overview'}>
+      <div className="wiki-overview">
         <WikiSection
           section={this.props.sections.tree}
           displaySectionNumbers={false}
           setSectionVisibility={null}
           num={[]}
         />
+
         {this.props.wiki.display.contents && this.props.sections.tree.children.length > 0 &&
-        <Contents sectionTree={this.props.sections.tree}/>
+          <Contents
+            showNumbering={this.props.showNumbering}
+            sections={this.props.sections.tree}
+          />
         }
+
         {this.props.sections.tree.children.length === 0 &&
-        <div className="wiki-empty-message text-info">
-          {trans('empty_wiki_message', {}, 'icap_wiki')}
-        </div>
+          <div className="wiki-empty-message text-info">
+            {trans('empty_wiki_message', {}, 'icap_wiki')}
+          </div>
         }
+
         {this.props.sections.tree.children.length > 0 &&
-        <WikiSectionTree
-          sections={this.props.sections}
-        />
+          <WikiSectionTree
+            sections={this.props.sections}
+          />
         }
       </div>
     )
@@ -56,13 +62,15 @@ class PlayerComponent extends Component {
 }
 
 PlayerComponent.propTypes = {
-  'sections': T.object.isRequired,
-  'wiki': T.object.isRequired,
-  'fetchSectionTree': T.func.isRequired
+  showNumbering: T.bool,
+  sections: T.object.isRequired,
+  wiki: T.object.isRequired,
+  fetchSectionTree: T.func.isRequired
 }
 
 const Player = connect(
   state => ({
+    showNumbering: selectors.wiki(state).display.sectionNumbers,
     sections: selectors.sections(state),
     wiki: selectors.wiki(state)
   }),

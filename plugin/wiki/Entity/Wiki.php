@@ -2,7 +2,7 @@
 
 namespace Icap\WikiBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,7 +18,7 @@ class Wiki extends AbstractResource
     const MODERATE_MODE = 1;
     const READ_ONLY_MODE = 2;
 
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @ORM\OneToOne(targetEntity="Icap\WikiBundle\Entity\Section", cascade={"all"})

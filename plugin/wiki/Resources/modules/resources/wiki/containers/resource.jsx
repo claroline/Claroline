@@ -7,7 +7,7 @@ import {actions as historyActions} from '#/plugin/wiki/resources/wiki/history/st
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/app/security'
 
-import {Resource} from '#/plugin/wiki/resources/wiki/components/resource'
+import {WikiResource as WikiResourceComponent} from '#/plugin/wiki/resources/wiki/components/resource'
 import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'
 import {reducer} from '#/plugin/wiki/resources/wiki/store/reducer'
 
@@ -24,7 +24,7 @@ const WikiResource = withReducer(selectors.STORE_NAME, reducer)(
       setCurrentHistoryVersion: (sectionId = null, contributionId = null) => dispatch(historyActions.setCurrentHistoryVersion(sectionId, contributionId)),
       setCurrentHistoryCompareSet: (sectionId = null, id1 = null, id2 = null) => dispatch(historyActions.setCurrentHistoryCompareSet(sectionId, id1, id2))
     })
-  )(Resource)
+  )(WikiResourceComponent)
 )
 
 export {

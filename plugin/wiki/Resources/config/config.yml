@@ -7,6 +7,6 @@ plugin:
           class: Icap\WikiBundle\Entity\Wiki
           tags: [content, community]
           exportable: false
-          activity_rules:
-            - action: resource-read
-            - action: resource-icap_wiki-contribution_create
+          actions:
+              - name: add-section
+                decoder: add-section

@@ -9,7 +9,7 @@
 * file that was distributed with this source code.
 */
 
-namespace Icap\WikiBundle\Listener;
+namespace Icap\WikiBundle\Listener\Entity;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Icap\WikiBundle\Entity\Contribution;

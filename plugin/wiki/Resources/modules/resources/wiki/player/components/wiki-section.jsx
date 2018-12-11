@@ -8,6 +8,8 @@ import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {currentUser} from '#/main/app/security'
 import {implementPropTypes} from '#/main/app/prop-types'
+import {Toolbar} from '#/main/app/action/components/toolbar'
+
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {Heading} from '#/main/core/layout/components/heading'
@@ -25,109 +27,77 @@ import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'
 const loggedUser = currentUser()
 
 const WikiSectionContent = props =>
-  <div className="wiki-section-content">
+  <section className="wiki-section-content">
     <Heading
-      key={`wiki-section-title-${props.section.id}`}
-      level={props.num.length + 3}
+      level={props.num.length + 1}
       className="wiki-section-title"
     >
-      {props.section.activeContribution.title &&
-      <span className="wiki-section-title-text">
-        {props.displaySectionNumbers && props.num && Array.isArray(props.num) && <span className="ordering">{props.num.join('.')}</span>}
-        <span className="title">{props.section.activeContribution.title}</span>
-      </span>
+      {props.section.activeContribution.title && props.displaySectionNumbers &&
+        <span className="h-numbering">{props.num.join('.')}</span>
       }
+
+      {props.section.activeContribution.title}
+
       {!props.section.meta.visible &&
-      <span className="wiki-section-invisible-text">
+        <small className="wiki-section-invisible-text">
           ({trans(props.canEdit ? 'invisible' : 'waiting_for_moderation', {}, 'icap_wiki')})
-      </span>
+        </small>
       }
-      <span className="wiki-section-actions">
-        {!props.isRoot &&
-        <Button
-          type={CALLBACK_BUTTON}
-          callback={() => document.getElementsByClassName('page-title')[0].scrollIntoView({block: 'end', behavior: 'smooth',  inline: 'start'})}
-          icon={'fa fa-fw fa-arrow-up'}
-          className={'btn btn-link'}
-          tooltip="top"
-          label={trans('back_to_top', {}, 'icap_wiki')}
-          title={trans('back_to_top', {}, 'icap_wiki')}
+
+      {props.loggedUserId !== null && (props.canEdit || props.mode !== '2') &&
+        <Toolbar
+          id={`actions-${props.section.id}`}
+          className="wiki-section-actions"
+          buttonName="btn btn-link"
+          tooltip="left"
+          toolbar="more"
+          actions={[
+            {
+              type: CALLBACK_BUTTON,
+              icon: 'fa fa-fw fa-plus',
+              label: trans(props.isRoot ? 'create_new_section' : 'add_new_subsection', {}, 'icap_wiki'),
+              callback: () => props.addSection(props.section.id),
+              confirm: !props.saveEnabled ? undefined : {
+                message: trans('unsaved_changes_warning'),
+                button: trans('proceed')
+              }
+            }, {
+              type: CALLBACK_BUTTON,
+              icon: 'fa fa-fw fa-pencil',
+              label: trans('edit', {}, 'actions'),
+              callback: () => props.editSection(props.section),
+              confirm: !props.saveEnabled ? undefined : {
+                message: trans('unsaved_changes_warning'),
+                button: trans('proceed')
+              }
+            }, {
+              type: LINK_BUTTON,
+              icon: 'fa fa-fw fa-history',
+              label: trans('history', {}, 'icap_wiki'),
+              target: `/history/${props.section.id}`
+            }, {
+              type: CALLBACK_BUTTON,
+              icon: props.section.meta.visible ? 'fa fa-fw fa-eye' : 'fa fa-fw fa-eye-slash',
+              label: trans(props.section.meta.visible ? 'render_invisible' : 'render_visible', {}, 'icap_wiki'),
+              callback: () => props.setSectionVisibility(props.section.id, !props.section.meta.visible),
+              displayed: props.canEdit && props.setSectionVisibility && !props.isRoot
+            }, {
+              type: CALLBACK_BUTTON,
+              icon: 'fa fa-fw fa-trash-o',
+              label: trans('delete', {}, 'actions'),
+              callback: () => props.deleteSection(props.wikiId, props.section),
+              displayed: !props.isRoot && (props.canEdit || (props.section.meta.creator && props.loggedUserId === props.section.meta.creator.id)),
+              dangerous: true
+            }
+          ]}
         />
-        }
-        {props.loggedUserId !== null && (props.canEdit || props.mode !== '2') &&
-        <span>
-          <Button
-            id={`wiki-section-add-${props.section.id}`}
-            type={CALLBACK_BUTTON}
-            icon={'fa fa-fw fa-plus'}
-            className={classNames({'btn': !props.isRoot}, {'btn-link': !props.isRoot}, {'page-actions-btn': props.isRoot})}
-            tooltip="top"
-            primary={props.isRoot}
-            callback={() => {
-              props.addSection(props.section.id)
-            }}
-            label={trans(props.isRoot ? 'create_new_section' : 'add_new_subsection', {}, 'icap_wiki')}
-            title={trans(props.isRoot ? 'create_new_section' : 'add_new_subsection', {}, 'icap_wiki')}
-            confirm={!props.saveEnabled ? undefined : {
-              message: trans('unsaved_changes_warning'),
-              button: trans('proceed')
-            }}
-          />
-          <Button
-            id={`wiki-section-edit-${props.section.id}`}
-            type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-pencil"
-            className="btn btn-link"
-            tooltip="top"
-            callback={() => props.editSection(props.section)}
-            label={trans('edit', {}, 'icap_wiki')}
-            title={trans('edit', {}, 'icap_wiki')}
-            confirm={!props.saveEnabled ? undefined : {
-              message: trans('unsaved_changes_warning'),
-              button: trans('proceed')
-            }}
-          />
-          <Button
-            id={`wiki-section-history-${props.section.id}`}
-            type={LINK_BUTTON}
-            icon="fa fa-fw fa-history"
-            className="btn btn-link"
-            tooltip="top"
-            target={`/history/${props.section.id}`}
-            label={trans('history', {}, 'icap_wiki')}
-            title={trans('history', {}, 'icap_wiki')}
-          />
-          {props.loggedUserId !== null && props.canEdit && props.setSectionVisibility && !props.isRoot &&
-          <Button
-            id={`wiki-section-toggle-visibility-${props.section.id}`}
-            type={CALLBACK_BUTTON}
-            icon={props.section.meta.visible ? 'fa fa-fw fa-eye' : 'fa fa-fw fa-eye-slash'}
-            className="btn btn-link"
-            tooltip="top"
-            label={trans(props.section.meta.visible ? 'render_invisible' : 'render_visible', {}, 'icap_wiki')}
-            title={trans(props.section.meta.visible ? 'render_invisible' : 'render_visible', {}, 'icap_wiki')}
-            callback={() => props.setSectionVisibility(props.section.id, !props.section.meta.visible)}
-          />
-          }
-          {!props.isRoot && props.loggedUserId !== null && (props.canEdit || (props.section.meta.creator && props.loggedUserId === props.section.meta.creator.id)) &&
-          <Button
-            id={`wiki-section-delete-${props.section.id}`}
-            type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-trash-o"
-            className="btn btn-link"
-            dangerous={true}
-            tooltip="top"
-            label={trans('delete')}
-            title={trans('delete')}
-            callback={() => props.deleteSection(props.wikiId, props.section)}
-          />
-          }
-        </span>
-        }
-      </span>
+      }
     </Heading>
-    {props.section.activeContribution.text && <HtmlText className="wiki-section-text">{props.section.activeContribution.text}</HtmlText>}
-  </div>
+
+    {props.section.activeContribution.text &&
+      <HtmlText className="wiki-section-text">{props.section.activeContribution.text}</HtmlText>
+    }
+  </section>
 
 implementPropTypes(WikiSectionContent, SectionTypes, {
   isRoot: T.bool.isRequired
@@ -146,11 +116,10 @@ class WikiSectionComponent extends Component {
     return (
       <div
         id={`wiki-section-${this.props.section.id}`}
-        className={classNames(
-          'wiki-section',
-          {'wiki-section-root': this.isRoot()},
-          {'wiki-section-invisible': !this.props.section.meta.visible}
-        )}
+        className={classNames('wiki-section', {
+          'wiki-section-root': this.isRoot(),
+          'wiki-section-invisible': !this.props.section.meta.visible
+        })}
       >
         {(this.props.currentSection && this.props.currentSection.id && this.props.currentSection.id === this.props.section.id) ?
           <WikiSectionForm
@@ -163,10 +132,10 @@ class WikiSectionComponent extends Component {
           />
         }
         {(this.props.currentSection && this.props.currentSection.parentId && this.props.currentSection.parentId === this.props.section.id) &&
-        <WikiSectionForm
-          cancelChanges={this.props.addSection}
-          saveChanges={(isNew) => this.props.saveSection(this.props.section.id, isNew)}
-        />
+          <WikiSectionForm
+            cancelChanges={this.props.addSection}
+            saveChanges={(isNew) => this.props.saveSection(this.props.section.id, isNew)}
+          />
         }
         {
           !this.isRoot() &&

@@ -1,80 +1,101 @@
 import React, {Component} from 'react'
-import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
+
+import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {CallbackButton, CALLBACK_BUTTON} from '#/main/app/buttons/callback'
 
-// todo : replace by stateless component
+const ContentSection = props =>
+  <li className="wiki-contents-item">
+    <CallbackButton
+      className="btn-link"
+      callback={() => {
+        let node = document.getElementById(`wiki-section-${props.section.id}`)
+        if (node) {
+          node.scrollIntoView({block: 'end', behavior: 'smooth', inline: 'center'})
+        }
+      }}
+    >
+      {props.showNumbering &&
+        <span className="numbering">{props.num.join('.')}</span>
+      }
 
-class ContentSection extends Component {
+      {props.section.activeContribution.title}
+    </CallbackButton>
+
+    {props.section.children && 0 < props.section.children.length &&
+      <ul className="wiki-contents-items">
+        {props.section.children.map((section, index) =>
+          <ContentSection
+            key={section.id}
+            num={props.num.concat([index + 1])}
+            section={section}
+            showNumbering={props.showNumbering}
+          />
+        )}
+      </ul>
+    }
+  </li>
+
+ContentSection.propTypes = {
+  num: T.arrayOf(T.number).isRequired,
+  section: T.object.isRequired,
+  showNumbering: T.bool.isRequired
+}
+
+class Contents extends Component {
   constructor(props) {
     super(props)
 
-    this.goToSection = this.goToSection.bind(this)
+    this.state = {
+      opened: true
+    }
   }
 
-  goToSection() {
-    let node = document.getElementById(`wiki-section-${this.props.section.id}`)
-    if (node) {
-      node.scrollIntoView({block: 'end', behavior: 'smooth', inline: 'center'})
-    }    
-  }
-  
   render() {
     return (
-      <div className="wiki-contents-section">
-        <div className="wiki-contents-section-title">
-          {this.props.num && Array.isArray(this.props.num) &&
-          <span className="ordering">{this.props.num.join('.')}</span>
-          }
+      <div className="wiki-contents">
+        <h2 className="wiki-contents-title">
+          {trans('wiki_contents', {}, 'icap_wiki')}
+
           <Button
-            className="title"
+            className="btn-link"
             type={CALLBACK_BUTTON}
-            callback={this.goToSection}
-            label={this.props.section.activeContribution.title}
+            icon={classes('fa fa-fw', {
+              'fa-chevron-up': this.state.opened,
+              'fa-chevron-down': !this.state.opened
+            })}
+            label={trans(this.state.opened ? 'close-summary':'open-summary', {}, 'actions')}
+            tooltip="left"
+            callback={() => this.setState({opened: !this.state.opened})}
           />
-        </div>
-        {
-          this.props.section.children &&
-          this.props.section.children.map(
-            (section, index) => <ContentSection
-              section={section}
-              key={section.id}
-              num={this.props.num.concat([index + 1])}
-            />
-          )
+        </h2>
+
+        {this.state.opened && this.props.sections.children && 0 < this.props.sections.children.length &&
+          <ul className="wiki-contents-items">
+            {this.props.sections.children.map((section, index) =>
+              <ContentSection
+                key={section.id}
+                num={[index + 1]}
+                section={section}
+                showNumbering={this.props.showNumbering}
+              />
+            )}
+          </ul>
         }
-      </div>    
+      </div>
     )
   }
 }
 
-ContentSection.propTypes = {
-  section: T.object.isRequired,
-  num: T.arrayOf(T.number).isRequired
+Contents.propTypes = {
+  showNumbering: T.bool,
+  sections: T.object.isRequired
 }
 
-const Contents = props =>
-  <div className="wiki-contents-container">
-    <div className="wiki-contents">
-      <h5 className="wiki-contents-title text-center">{trans('wiki_contents', {}, 'icap_wiki')}</h5>
-      <div className="wiki-contents-inner">
-        {
-          props.sectionTree.children &&
-          props.sectionTree.children.map(
-            (section, index) => <ContentSection
-              section={section}
-              key={section.id}
-              num={[index + 1]}
-            />
-          )
-        }
-      </div>
-    </div>
-  </div>
-
-Contents.propTypes = {
-  sectionTree: T.object.isRequired
+Contents.defaultProps = {
+  showNumbering: false
 }
 
 export {

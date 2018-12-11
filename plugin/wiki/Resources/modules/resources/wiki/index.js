@@ -1,4 +1,4 @@
-import {WikiResource} from '#/plugin/wiki/resources/wiki/containers/wiki'
+import {WikiResource} from '#/plugin/wiki/resources/wiki/containers/resource'
 
 /**
  * Wiki resource application.

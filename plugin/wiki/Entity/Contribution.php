@@ -2,7 +2,7 @@
 
 namespace Icap\WikiBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,13 +11,13 @@ use Icap\NotificationBundle\Entity\UserPickerContent;
 
 /**
  * @ORM\Entity(repositoryClass="Icap\WikiBundle\Repository\ContributionRepository")
- * @ORM\EntityListeners({"Icap\WikiBundle\Listener\ContributionListener"})
+ * @ORM\EntityListeners({"Icap\WikiBundle\Listener\Entity\ContributionListener"})
  * @ORM\Table(name="icap__wiki_contribution")
  * @ORM\HasLifecycleCallbacks()
  */
 class Contribution
 {
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @ORM\Id

@@ -15,19 +15,18 @@ import {VersionDetail} from '#/plugin/wiki/resources/wiki/history/components/ver
 import {VersionCompare} from '#/plugin/wiki/resources/wiki/history/components/version-compare'
 import {DeletedSections} from '#/plugin/wiki/resources/wiki/deleted/components/deleted-sections'
 
-const Resource = props =>
+const WikiResource = props =>
   <ResourcePage
-    primaryAction="create-section"
+    styles={['claroline-distribution-plugin-wiki-wiki-resource']}
+    primaryAction="add-section"
     customActions={[
       {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-home',
         label: trans('show_overview'),
         target: '/',
-        exact: true,
-        primary: false
-      },
-      {
+        exact: true
+      }, {
         type: DOWNLOAD_BUTTON,
         icon: 'fa fa-fw fa-file-pdf-o',
         displayed: props.canExport,
@@ -35,8 +34,7 @@ const Resource = props =>
         file: {
           url: url(['icap_wiki_export_pdf', {id: props.wiki.id}])
         }
-      },
-      {
+      }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-trash-o',
         displayed: props.canEdit,
@@ -54,9 +52,7 @@ const Resource = props =>
         }, {
           path: '/edit',
           component: Editor,
-          disabled: !props.canEdit,
-          onLeave: () => props.resetForm(),
-          onEnter: () => props.resetForm(props.wiki)
+          disabled: !props.canEdit
         }, {
           path: '/history/:id',
           exact: true,
@@ -75,8 +71,7 @@ const Resource = props =>
           component: VersionCompare,
           onLeave: () => props.setCurrentHistoryCompareSet(),
           onEnter: params => props.setCurrentHistoryCompareSet(params.sectionId, params.id1, params.id2)
-        },
-        {
+        }, {
           path: '/section/deleted',
           component: DeletedSections,
           exact: true,
@@ -86,10 +81,12 @@ const Resource = props =>
     />
   </ResourcePage>
 
-Resource.propTypes = {
+WikiResource.propTypes = {
   canEdit: T.bool.isRequired,
   canExport: T.bool.isRequired,
-  wiki: T.object.isRequired,
+  wiki: T.shape({
+    id: T.string.isRequired
+  }).isRequired,
   resetForm: T.func.isRequired,
   setCurrentHistorySection: T.func.isRequired,
   setCurrentHistoryVersion: T.func.isRequired,
@@ -97,5 +94,5 @@ Resource.propTypes = {
 }
 
 export {
-  Resource
+  WikiResource
 }

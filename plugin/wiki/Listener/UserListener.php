@@ -8,11 +8,11 @@ use Icap\WikiBundle\Manager\SectionManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * Class ApiListener.
+ * UserListener.
  *
  * @DI\Service
  */
-class ApiListener
+class UserListener
 {
     /** @var SectionManager */
     private $sectionManager;

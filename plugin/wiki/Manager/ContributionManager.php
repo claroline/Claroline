@@ -28,21 +28,18 @@ class ContributionManager
     /**
      * @DI\InjectParams({
      *    "om"                      = @DI\Inject("claroline.persistence.object_manager"),
-     *    "contributionRepository"  = @DI\Inject("icap.wiki.contribution_repository"),
      *    "contributionSerializer"  = @DI\Inject("claroline.serializer.wiki.section.contribution")
      * })
      *
      * @param ObjectManager          $om
-     * @param ContributionRepository $contributionRepository
      * @param ContributionSerializer $contributionSerializer
      */
     public function __construct(
         ObjectManager $om,
-        ContributionRepository $contributionRepository,
         ContributionSerializer $contributionSerializer
     ) {
         $this->om = $om;
-        $this->contributionRepository = $contributionRepository;
+        $this->contributionRepository = $om->getRepository(Contribution::class);
         $this->contributionSerializer = $contributionSerializer;
     }
 

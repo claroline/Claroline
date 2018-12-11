@@ -2,7 +2,7 @@
 
 namespace Icap\WikiBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,7 +16,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class Section
 {
-    use UuidTrait;
+    use Uuid;
 
     /**
      * @ORM\Id
