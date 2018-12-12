@@ -3,6 +3,8 @@ import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST, url} from '#/main/app/api'
 
 export const TAGS_LOAD = 'TAGS_LOAD'
+export const TAG_ADD = 'TAG_ADD'
+export const TAG_DELETE = 'TAG_DELETE'
 
 export const actions = {}
 
@@ -19,7 +21,8 @@ actions.fetchTags = (objectClass, objects) => ({
   }
 })
 
-actions.addTag = (objectClass, objects, tag) => ({
+actions.addTag = makeActionCreator(TAG_ADD, 'tag')
+actions.postTag = (objectClass, objects, tag) => ({
   [API_REQUEST]: {
     url: ['apiv2_tag_add_objects', {tag: tag.name}],
     request: {
@@ -30,10 +33,11 @@ actions.addTag = (objectClass, objects, tag) => ({
         name: object.name
       })))
     },
-    success: (response, dispatch) => dispatch(actions.loadTags(response.data))
+    success: (response, dispatch) => dispatch(actions.addTag(response))
   }
 })
 
+actions.deleteTag = makeActionCreator(TAG_DELETE, 'tag')
 actions.removeTag = (objectClass, objects, tag) => ({
   [API_REQUEST]: {
     url: ['apiv2_tag_remove_objects', {id: tag.id}],
@@ -45,6 +49,6 @@ actions.removeTag = (objectClass, objects, tag) => ({
         name: object.name
       })))
     },
-    success: (response, dispatch) => dispatch(actions.loadTags(response.data))
+    success: (response, dispatch) => dispatch(actions.deleteTag(tag))
   }
 })

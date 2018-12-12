@@ -285,6 +285,18 @@ class TagManager
         $this->om->endFlushSuite();
     }
 
+    public function removeTagFromObjects(Tag $tag, array $objects = [])
+    {
+        foreach ($objects as $object) {
+            $taggedObject = $this->getOneTaggedObjectByTagAndObject($tag, $object['id'], $object['class']);
+            if ($taggedObject) {
+                $this->om->remove($taggedObject);
+            }
+        }
+
+        $this->om->flush();
+    }
+
     /***********************************
      * Access to TagRepository methods *
      ***********************************/

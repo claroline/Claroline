@@ -59,6 +59,17 @@ class TagFinder extends AbstractFinder
 
                     break;
 
+                case 'user':
+                    if ($filterValue) {
+                        $qb->leftJoin('obj.user', 'u');
+                        $qb->andWhere("(obj.user IS NULL OR u.uuid = :{$filterName})");
+                    } else {
+                        $qb->andWhere('obj.user IS NULL');
+                    }
+                    $qb->setParameter($filterName, $filterValue);
+
+                    break;
+
                 default:
                     if (is_string($filterValue)) {
                         $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");

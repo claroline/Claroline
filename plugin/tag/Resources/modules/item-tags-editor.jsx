@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import cloneDeep from 'lodash/cloneDeep'
 
 import {trans} from '#/main/app/intl/translation'
+import {currentUser} from '#/main/app/security'
 import {url} from '#/main/app/api'
 import {actions} from './actions.js'
 
@@ -85,12 +86,14 @@ class TagsEditor extends Component {
   }
 
   updateCurrentTag(value) {
+    const authenticated = currentUser()
+
     this.setState({currentTag: value})
 
     if (value) {
       this.setState({isFetching: true})
 
-      fetch(url(['apiv2_tag_list'], {name: value}), {
+      fetch(url(['apiv2_tag_list'], {filters: {name: value, user: authenticated ? authenticated.id : null}}), {
         method: 'GET' ,
         credentials: 'include'
       })

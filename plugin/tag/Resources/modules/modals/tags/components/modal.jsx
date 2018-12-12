@@ -24,11 +24,7 @@ const TagsModal = props =>
   >
     <div className="modal-body">
       <TagTypeahead
-        selectAction={(tagName) => ({
-          type: CALLBACK_BUTTON,
-          label: trans('add', {}, 'actions'),
-          callback: () => props.addTag(props.objectClass, props.objects, {name: tagName})
-        })}
+        select={(tagName) => props.addTag(props.objectClass, props.objects, {name: tagName})}
       />
 
       {0 === props.tags.length &&

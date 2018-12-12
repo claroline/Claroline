@@ -13,13 +13,14 @@ namespace Claroline\TagBundle\Controller;
 
 use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\TagBundle\Entity\Tag;
 use Claroline\TagBundle\Entity\TaggedObject;
 use Claroline\TagBundle\Manager\TagManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use User;
 
 /**
  * @ApiMeta(
@@ -56,19 +57,20 @@ class TagController extends AbstractCrudController
      * List all objects linked to a Tag.
      *
      * @EXT\Route("/{id}/object", name="apiv2_tag_list_objects")
+     * @EXT\ParamConverter("tag", class="ClarolineTagBundle:Tag", options={"mapping": {"id": "uuid"}})
      * @EXT\Method("GET")
      *
-     * @param string  $id
+     * @param Tag     $tag
      * @param Request $request
      *
      * @return JsonResponse
      */
-    public function listObjectsAction($id, Request $request)
+    public function listObjectsAction(Tag $tag, Request $request)
     {
         return new JsonResponse(
             $this->finder->search(TaggedObject::class, array_merge(
                 $request->query->all(),
-                ['hiddenFilters' => [$this->getName() => $id]]
+                ['hiddenFilters' => [$this->getName() => $tag->getUuid()]]
             ))
         );
     }
@@ -89,7 +91,7 @@ class TagController extends AbstractCrudController
      */
     public function addObjectsAction($tag, User $user, Request $request)
     {
-        $taggedObjects = $this->manager->tagData([$tag], $this->decodeRequest($request), $user, true);
+        $taggedObjects = $this->manager->tagData([$tag], $this->decodeRequest($request), $user);
 
         return new JsonResponse(
             !empty($taggedObjects) ? $this->serializer->serialize($taggedObjects[0]->getTag()) : null
@@ -98,17 +100,19 @@ class TagController extends AbstractCrudController
 
     /**
      * @EXT\Route("/{id}/object", name="apiv2_tag_remove_objects")
+     * @EXT\ParamConverter("tag", class="ClarolineTagBundle:Tag", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @EXT\Method("DELETE")
      *
-     * @param string  $id
+     * @param Tag     $tag
      * @param Request $request
      *
      * @return JsonResponse
      */
-    public function removeObjectsAction($id, Request $request)
+    public function removeObjectsAction(Tag $tag, Request $request)
     {
-        // TODO : implement
+        $this->manager->removeTagFromObjects($tag, $this->decodeRequest($request));
+
         return new JsonResponse(null, 204);
     }
 }

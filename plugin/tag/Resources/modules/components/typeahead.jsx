@@ -1,8 +1,11 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {url} from '#/main/app/api'
+import {trans} from '#/main/app/intl/translation'
+import {makeCancelable, url} from '#/main/app/api'
+import {currentUser} from '#/main/app/security'
 import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {Tag as TagTypes} from '#/plugin/tag/data/types/tag/prop-types'
 
@@ -17,8 +20,9 @@ const TagsList = props =>
     {props.tags.map((tag) =>
       <li key={tag.id}>
         <Button
-          {...props.selectAction(tag.name)}
+          type={CALLBACK_BUTTON}
           label={tag.name}
+          callback={() => props.select(tag.name)}
         />
       </li>
     )}
@@ -29,7 +33,7 @@ TagsList.propTypes = {
     TagTypes.propTypes
   )),
   isFetching: T.bool.isRequired,
-  selectAction: T.func.isRequired
+  select: T.func.isRequired
 }
 
 class TagTypeahead extends Component {
@@ -42,26 +46,55 @@ class TagTypeahead extends Component {
     }
   }
 
+  reset() {
+    // cancel previous search if any
+    if (this.pending) {
+      this.pending.cancel()
+    }
+
+    this.setState({
+      currentTag: '',
+      isFetching: false,
+      results: []
+    })
+  }
+
   updateCurrentTag(value) {
+    const authenticated = currentUser()
+
     this.setState({currentTag: value})
 
-    if (value) {
+    // cancel previous search if any
+    if (this.pending) {
+      this.pending.cancel()
+    }
+
+    if (value && 3 <= value.length) {
       this.setState({isFetching: true})
 
-      fetch(url(['apiv2_tag_list'], {filters: {name:value}}), {
-        method: 'GET' ,
-        credentials: 'include'
-      })
-        .then(response => response.json())
-        .then(results => this.setState({results: results.data, isFetching: false}))
+      this.pending = makeCancelable(
+        fetch(
+          url(['apiv2_tag_list'], {filters: {name: value, user: authenticated ? authenticated.id : null}}), {
+            method: 'GET' ,
+            credentials: 'include'
+          })
+          .then(response => response.json())
+          .then(results => this.setState({results: results.data, isFetching: false}))
+      )
+
+      this.pending.promise.then(
+        () => this.pending = null,
+        () => this.pending = null
+      )
     } else {
-      this.setState({results: [], isFetching: false})
+      this.setState({
+        isFetching: false,
+        results: []
+      })
     }
   }
 
   render() {
-    const selectAction = this.props.selectAction(this.state.currentTag.trim())
-
     return (
       <div className="tag-typehead">
         <div className="input-group">
@@ -73,9 +106,14 @@ class TagTypeahead extends Component {
           />
           <span className="input-group-btn">
             <Button
-              {...selectAction}
+              type={CALLBACK_BUTTON}
               className="btn btn-default"
-              disabled={selectAction.disabled || !this.state.currentTag.trim()}
+              label={trans('add', {}, 'actions')}
+              disabled={!this.state.currentTag.trim()}
+              callback={() => {
+                this.props.select(this.state.currentTag.trim())
+                this.reset()
+              }}
             />
           </span>
         </div>
@@ -84,7 +122,10 @@ class TagTypeahead extends Component {
           <TagsList
             isFetching={this.state.isFetching}
             tags={this.state.results}
-            selectAction={this.props.selectAction}
+            select={(tag) => {
+              this.props.select(tag)
+              this.reset()
+            }}
           />
         }
       </div>
@@ -93,8 +134,7 @@ class TagTypeahead extends Component {
 }
 
 TagTypeahead.propTypes = {
-  // an action generator
-  selectAction: T.func.isRequired
+  select: T.func.isRequired
 }
 
 export {

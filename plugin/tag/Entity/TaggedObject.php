@@ -13,12 +13,15 @@ namespace Claroline\TagBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\TagBundle\Repository\TaggedObjectRepository")
- * @ORM\Table(name="claro_tagbundle_tagged_object", uniqueConstraints={@ORM\UniqueConstraint(name="unique", columns={"object_id", "object_class", "object_name"})}))
- * @DoctrineAssert\UniqueEntity({"objectId", "objectClass", "tag"})
+ * @ORM\Table(name="claro_tagbundle_tagged_object", uniqueConstraints={
+ *     @ORM\UniqueConstraint(
+ *          name="unique",
+ *          columns={"object_id", "object_class", "tag_id"}
+ *     )
+ * })
  */
 class TaggedObject
 {
