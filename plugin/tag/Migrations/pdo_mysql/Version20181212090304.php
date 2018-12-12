@@ -17,6 +17,15 @@ class Version20181212090304 extends AbstractMigration
         $this->addSql('
             DROP INDEX `unique` ON claro_tagbundle_tagged_object
         ');
+        
+        // fixes tags on forum subjects
+        $this->addSql('
+            UPDATE claro_tagbundle_tagged_object AS t 
+            LEFT JOIN claro_forum_subject AS f ON (TRIM(t.object_name) = TRIM(f.title)) 
+            SET t.object_id = f.uuid 
+            WHERE t.object_id = "0" AND object_class = "Claroline\\ForumBundle\\Entity\\Subject"
+        ');
+        
         $this->addSql('
             CREATE UNIQUE INDEX `unique` ON claro_tagbundle_tagged_object (object_id, object_class, tag_id)
         ');
