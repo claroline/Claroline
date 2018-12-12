@@ -2,6 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,6 +16,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Competency implements \JsonSerializable
 {
+    use Uuid;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -112,7 +115,7 @@ class Competency implements \JsonSerializable
      */
     public function __construct()
     {
-        $this->levels = new ArrayCollection();
+        $this->refreshUuid();
         $this->resources = new ArrayCollection();
         $this->competencyAbilities = new ArrayCollection();
         $this->children = new ArrayCollection();
@@ -186,6 +189,14 @@ class Competency implements \JsonSerializable
             // allow child to be persisted by cascade
             $parent->addChild($this);
         }
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getChildren()
+    {
+        return $this->children;
     }
 
     /**
@@ -284,11 +295,35 @@ class Competency implements \JsonSerializable
     }
 
     /**
+     * @return ArrayCollection
+     */
+    public function getCompetencyAbilities()
+    {
+        return $this->competencyAbilities;
+    }
+
+    /**
      * @param CompetencyAbility $link
      */
     public function addCompetencyAbility(CompetencyAbility $link)
     {
         $this->competencyAbilities->add($link);
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceCount()
+    {
+        return $this->resourceCount;
+    }
+
+    /**
+     * @param int $resourceCount
+     */
+    public function setResourceCount($resourceCount)
+    {
+        $this->resourceCount = $resourceCount;
     }
 
     public function jsonSerialize()

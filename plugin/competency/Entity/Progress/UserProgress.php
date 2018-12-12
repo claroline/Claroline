@@ -2,6 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Entity\Progress;
 
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -11,11 +12,18 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class UserProgress extends AbstractUserProgress
 {
+    use Uuid;
+
     /**
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="update")
      */
     private $date;
+
+    public function __construct()
+    {
+        $this->refreshUuid();
+    }
 
     /**
      * @return \DateTime

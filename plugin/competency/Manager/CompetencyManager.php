@@ -48,101 +48,13 @@ class CompetencyManager
     }
 
     /**
-     * Returns the list of registered frameworks.
-     *
-     * @param bool $shortArrays Whether full entities or minimal arrays should be returned
-     *
-     * @return array
-     */
-    public function listFrameworks($shortArrays = false)
-    {
-        $frameworks = $this->competencyRepo->findBy(['parent' => null]);
-
-        return !$shortArrays ?
-            $frameworks :
-            array_map(function ($framework) {
-                return [
-                    'id' => $framework->getId(),
-                    'name' => $framework->getName(),
-                    'description' => $framework->getDescription(),
-                ];
-            }, $frameworks);
-    }
-
-    /**
      * Returns whether there are scales registered in the database.
      *
      * @return bool
      */
     public function hasScales()
     {
-        return $this->om->count('HeVinciCompetencyBundle:Scale') > 0;
-    }
-
-    /**
-     * Persists a scale in the database.
-     *
-     * @param Scale $scale
-     *
-     * @return Scale
-     */
-    public function createScale(Scale $scale)
-    {
-        $this->om->persist($scale);
-        $this->om->flush();
-
-        return $scale;
-    }
-
-    /**
-     * Updates an existing scale.
-     *
-     * @param Scale $scale
-     *
-     * @return Scale
-     *
-     * @throws \LogicException if the scale is already bound to an ability
-     */
-    public function updateScale(Scale $scale)
-    {
-        if ($this->scaleRepo->findAbilityCount($scale) > 0) {
-            throw new \LogicException(
-                "Cannot update scale '{$scale->getName()}': scale is bound to at least one ability"
-            );
-        }
-
-        $this->om->flush();
-        $scale->setAbilityCount(0);
-        $scale->setFrameworkCount($this->scaleRepo->findCompetencyCount($scale));
-
-        return $scale;
-    }
-
-    /**
-     * Returns the list of scales.
-     */
-    public function listScales()
-    {
-        return $this->scaleRepo->findWithStatus();
-    }
-
-    /**
-     * Deletes a scale.
-     *
-     * @param Scale $scale
-     *
-     * @throws \LogicException is the scale is bound to a framework
-     */
-    public function deleteScale(Scale $scale)
-    {
-        if ($this->scaleRepo->findCompetencyCount($scale) > 0) {
-            throw new \LogicException(
-                "Cannot delete scale '{$scale->getName()}': scale is bound to at least one framework"
-            );
-        }
-
-        $this->om->remove($scale);
-        $this->om->flush();
+        return $this->om->count(Scale::class) > 0;
     }
 
     /**
@@ -166,19 +78,28 @@ class CompetencyManager
         }
     }
 
-    /**
-     * Persists a competency framework.
-     *
-     * @param Competency $framework
-     *
-     * @return Competency
-     */
-    public function persistFramework(Competency $framework)
-    {
-        $this->om->persist($framework);
-        $this->om->flush();
+    /****************************************************************************************************************/
 
-        return $framework;
+    /**
+     * Returns the list of registered frameworks.
+     *
+     * @param bool $shortArrays Whether full entities or minimal arrays should be returned
+     *
+     * @return array
+     */
+    public function listFrameworks($shortArrays = false)
+    {
+        $frameworks = $this->competencyRepo->findBy(['parent' => null]);
+
+        return !$shortArrays ?
+            $frameworks :
+            array_map(function ($framework) {
+                return [
+                    'id' => $framework->getId(),
+                    'name' => $framework->getName(),
+                    'description' => $framework->getDescription(),
+                ];
+            }, $frameworks);
     }
 
     /**
@@ -231,133 +152,6 @@ class CompetencyManager
     }
 
     /**
-     * Deletes a competency.
-     *
-     * @param Competency $competency
-     */
-    public function deleteCompetency(Competency $competency)
-    {
-        $this->om->remove($competency);
-        $this->om->flush();
-        $this->abilityRepo->deleteOrphans();
-    }
-
-    /**
-     * Creates a sub-competency.
-     *
-     * @param Competency $parent
-     * @param Competency $child
-     *
-     * @return Competency
-     *
-     * @throws \LogicException if the competency already has abilities
-     */
-    public function createSubCompetency(Competency $parent, Competency $child)
-    {
-        if ($this->competencyAbilityRepo->countByCompetency($parent) > 0) {
-            throw new \LogicException(
-                "Cannot create sub-competency: competency {$parent->getId()}"
-                .' is already associated with abilities'
-            );
-        }
-
-        $child->setParent($parent);
-        $this->om->persist($child);
-        $this->om->flush();
-
-        return $child;
-    }
-
-    /**
-     * Updates a competency.
-     *
-     * @param Competency $competency
-     *
-     * @return Competency
-     */
-    public function updateCompetency(Competency $competency)
-    {
-        $this->om->flush();
-
-        return $competency;
-    }
-
-    /**
-     * Creates an ability and links it to a given competency.
-     *
-     * @param Competency $parent
-     * @param Ability    $ability
-     * @param Level      $level
-     *
-     * @return \HeVinci\CompetencyBundle\Entity\Ability
-     *
-     * @throws \LogicException if the parent competency is not a leaf node
-     */
-    public function createAbility(Competency $parent, Ability $ability, Level $level)
-    {
-        if ($parent->getRight() - $parent->getLeft() > 1) {
-            throw new \LogicException(
-                "Cannot associate an ability with competency '{$parent->getName()}'"
-                .': competency must be a leaf node'
-            );
-        }
-
-        $link = new CompetencyAbility();
-        $link->setCompetency($parent);
-        $link->setAbility($ability);
-        $link->setLevel($level);
-
-        $this->om->persist($ability);
-        $this->om->persist($link);
-        $this->om->flush();
-
-        return $ability;
-    }
-
-    /**
-     * Removes the association between a competency and an ability. If
-     * the ability is not linked to any other competency, it is deleted
-     * as well.
-     *
-     * @param Competency $parent
-     * @param Ability    $ability
-     *
-     * @throws \Exception if ability is not linked to competency
-     */
-    public function removeAbility(Competency $parent, Ability $ability)
-    {
-        $linkCount = $this->competencyAbilityRepo->countByAbility($ability);
-        $link = $this->competencyAbilityRepo->findOneByTerms($parent, $ability);
-        $this->om->remove($link);
-
-        if (1 === $linkCount) {
-            $this->om->remove($ability);
-        }
-
-        $this->om->flush();
-    }
-
-    /**
-     * Updates an ability.
-     *
-     * @param Competency $parent
-     * @param Ability    $ability
-     * @param Level      $level
-     *
-     * @return Ability
-     *
-     * @throws \Exception if ability is not linked to competency
-     */
-    public function updateAbility(Competency $parent, Ability $ability, Level $level)
-    {
-        $link = $this->competencyAbilityRepo->findOneByTerms($parent, $ability);
-        $link->setLevel($level);
-        $this->om->flush();
-
-        return $ability;
-    }
-
-    /**
      * Sets the level temporary attribute of an ability.
      *
      * @param Competency $parent
@@ -367,83 +161,6 @@ class CompetencyManager
     {
         $link = $this->competencyAbilityRepo->findOneByTerms($parent, $ability);
         $ability->setLevel($link->getLevel());
-    }
-
-    /**
-     * Returns the first five abilities whose name begins by a given string,
-     * excluding the abilities linked to a particular competency.
-     *
-     * @see HeVinci\CompetencyBundle\Repository\AbilityRepository::findByFirstName
-     *
-     * @param Competency $parent
-     * @param string     $search
-     *
-     * @return Ability[]
-     */
-    public function suggestAbilities(Competency $parent, $search)
-    {
-        return $this->abilityRepo->findFirstByName($search, $parent);
-    }
-
-    /**
-     * Creates a link between a competency and an existing ability.
-     *
-     * @param Competency $parent
-     * @param Ability    $ability
-     * @param Level      $level
-     *
-     * @return Ability
-     *
-     * @throws \LogicException if a link already exists
-     */
-    public function linkAbilityToCompetency(Competency $parent, Ability $ability, Level $level)
-    {
-        $link = $this->competencyAbilityRepo->findOneBy([
-            'competency' => $parent,
-            'ability' => $ability,
-        ]);
-
-        if ($link) {
-            throw new \LogicException(
-                "Ability {$ability->getId()} is already linked to competency {$parent->getId()}"
-            );
-        }
-
-        $link = new CompetencyAbility();
-        $link->setCompetency($parent);
-        $link->setAbility($ability);
-        $link->setLevel($level);
-
-        $this->om->persist($link);
-        $this->om->flush();
-
-        return $ability;
-    }
-
-    /**
-     * Returns the id and name of the first five users whose first name,
-     * last name or username include a given string.
-     *
-     * @param string $search
-     *
-     * @return array
-     */
-    public function suggestUsers($search)
-    {
-        return $this->competencyRepo->findFirstUsersByName($search);
-    }
-
-    /**
-     * Returns the id and name of the first five groups whose name
-     * includes a given string.
-     *
-     * @param string $search
-     *
-     * @return array
-     */
-    public function suggestGroups($search)
-    {
-        return $this->competencyRepo->findFirstGroupsByName($search);
     }
 
     /**

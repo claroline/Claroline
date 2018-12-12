@@ -19,7 +19,7 @@ class CompetencyProgressRepository extends EntityRepository
      */
     public function findByUserAndCompetencyIds(User $user, array $competencyIds)
     {
-        if (count($competencyIds) === 0) {
+        if (0 === count($competencyIds)) {
             return [];
         }
 

@@ -1,35 +1,13 @@
-hevinci_resource:
-    resource: "@HeVinciCompetencyBundle/Controller/ResourceController.php"
-    type: annotation
-    prefix: competencies
-
-hevinci_picker:
-    resource: "@HeVinciCompetencyBundle/Controller/PickerController.php"
-    type: annotation
-    prefix: competencies
-
-hevinci_objectives_widget:
-    resource: "@HeVinciCompetencyBundle/Controller/WidgetController.php"
-    type: annotation
-    prefix: competencies
-
-hevinci_objectives_tool:
-    resource: "@HeVinciCompetencyBundle/Controller/ObjectiveController.php"
-    type: annotation
-    prefix: competencies
+# JSON API
+hevinci_competency_bundle_api:
+    resource: "@HeVinciCompetencyBundle/Controller/API/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true
 
 hevinci_my_objectives_tool:
     resource: "@HeVinciCompetencyBundle/Controller/MyObjectiveController.php"
-    type: annotation
-    prefix: competencies
-
-hevinci_competency_tool_frameworks:
-    resource: "@HeVinciCompetencyBundle/Controller/CompetencyController.php"
-    type: annotation
-    prefix: competencies
-
-hevinci_competency_tool_scales:
-    resource: "@HeVinciCompetencyBundle/Controller/ScaleController.php"
     type: annotation
     prefix: competencies
 

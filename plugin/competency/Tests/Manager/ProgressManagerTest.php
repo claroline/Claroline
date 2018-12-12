@@ -766,7 +766,7 @@ class ProgressManagerTest extends RepositoryTestCase
 
         $this->assertEquals($percentage, $targetLog->getPercentage());
 
-        if ($level === null) {
+        if (null === $level) {
             // "assertNull" dumps the whole entity if the assertion fails...
             $this->assertEquals(
                 'NULL',

@@ -2,6 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Entity\Progress;
 
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,6 +17,8 @@ class AbilityProgress
     const STATUS_ACQUIRED = 'acquired';
     const STATUS_PENDING = 'pending';
     const STATUS_NOT_ATTEMPTED = 'not_attempted';
+
+    use Uuid;
 
     /**
      * @ORM\Id
@@ -69,6 +72,11 @@ class AbilityProgress
      * Note: this field retains the user name in case it is deleted
      */
     private $userName;
+
+    public function __construct()
+    {
+        $this->refreshUuid();
+    }
 
     /**
      * @return int
@@ -172,7 +180,7 @@ class AbilityProgress
         if (!is_null($this->failedResourceIds)) {
             $key = array_search($resource->getId(), $this->failedResourceIds);
 
-            if ($key !== false) {
+            if (false !== $key) {
                 array_splice($this->failedResourceIds, $key, 1);
             }
         }

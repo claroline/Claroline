@@ -1,6 +1,7 @@
 {
   "webpack": {
     "entry": {
+      "competencies": "administration/competency/bootstrap",
       "my-objectives": "my-objectives/index.jsx"
     }
   },

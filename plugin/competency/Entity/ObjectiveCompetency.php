@@ -2,6 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ObjectiveCompetency implements \JsonSerializable
 {
+    use Uuid;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -40,6 +43,14 @@ class ObjectiveCompetency implements \JsonSerializable
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $framework;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->refreshUuid();
+    }
 
     /**
      * @return int

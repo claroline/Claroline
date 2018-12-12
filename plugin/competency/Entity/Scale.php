@@ -2,9 +2,9 @@
 
 namespace HeVinci\CompetencyBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use HeVinci\CompetencyBundle\Validator as CustomAssert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as BR;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -15,6 +15,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Scale implements \JsonSerializable
 {
+    use Uuid;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -36,8 +38,7 @@ class Scale implements \JsonSerializable
      *     cascade={"persist", "remove"},
      *     orphanRemoval=true
      * )
-     * @CustomAssert\NotEmpty
-     * @CustomAssert\NoDuplicate(property="name")
+     * @ORM\OrderBy({"value" = "ASC"})
      */
     private $levels;
 
@@ -64,7 +65,9 @@ class Scale implements \JsonSerializable
 
     public function __construct()
     {
+        $this->refreshUuid();
         $this->levels = new ArrayCollection();
+        $this->competencies = new ArrayCollection();
     }
 
     /**
@@ -118,6 +121,19 @@ class Scale implements \JsonSerializable
             $level->setScale($this);
             $this->levels->add($level);
         }
+    }
+
+    public function emptyLevels()
+    {
+        $this->levels->clear();
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getCompetencies()
+    {
+        return $this->competencies;
     }
 
     /**

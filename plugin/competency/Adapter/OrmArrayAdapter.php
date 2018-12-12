@@ -30,7 +30,7 @@ class OrmArrayAdapter implements AdapterInterface
 
     public function getNbResults()
     {
-        if ($this->cachedCount === null) {
+        if (null === $this->cachedCount) {
             $this->cachedCount = $this->countQuery->getSingleScalarResult();
         }
 

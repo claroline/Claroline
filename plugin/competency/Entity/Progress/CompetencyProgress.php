@@ -2,6 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Entity\Progress;
 
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -11,6 +12,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class CompetencyProgress extends AbstractCompetencyProgress implements \JsonSerializable
 {
+    use Uuid;
+
     /**
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="update")
@@ -21,6 +24,11 @@ class CompetencyProgress extends AbstractCompetencyProgress implements \JsonSeri
      * @ORM\Column(type="integer", name="resource_id", nullable=true)
      */
     protected $resourceId;
+
+    public function __construct()
+    {
+        $this->refreshUuid();
+    }
 
     /**
      * @return \DateTime

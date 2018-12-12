@@ -4,7 +4,6 @@ namespace HeVinci\CompetencyBundle\Listener;
 
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use HeVinci\CompetencyBundle\Util\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,14 +60,6 @@ class PluginListenerTest extends UnitTestCase
         $event = new CustomActionResourceEvent($resource);
         $this->listener->onOpenResourceCompetencies($event);
         $this->assertEquals($this->response, $event->getResponse());
-    }
-
-    public function testDisplayObjectivesWidget()
-    {
-        $this->expectSubRequest(['_controller' => 'HeVinciCompetencyBundle:Widget:objectives']);
-        $event = new DisplayWidgetEvent($this->mock('Claroline\CoreBundle\Entity\Widget\WidgetInstance'));
-        $this->listener->onDisplayObjectivesWidget($event);
-        $this->assertEquals('Test response', $event->getContent());
     }
 
     private function expectSubRequest(array $attributes)

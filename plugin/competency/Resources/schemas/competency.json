@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The competency uuid"
+    },
+    "name": {
+      "type": "string",
+      "description": "The competency name",
+      "minLength": 1
+    },
+    "description": {
+      "type": ["string", "null"],
+      "description": "The competency description"
+    },
+    "parent": {
+      "type": ["object", "null"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The competency parent"
+        }
+      }
+    },
+    "scale": {
+      "type": ["object"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The uuid of the associated scale"
+        }
+      }
+    }
+  },
+  "required": ["name"],
+  "claroline": {
+    "ids": ["id"]
+  }
+}

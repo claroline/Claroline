@@ -2,6 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,6 +17,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Objective implements \JsonSerializable
 {
+    use Uuid;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -49,6 +52,7 @@ class Objective implements \JsonSerializable
 
     public function __construct()
     {
+        $this->refreshUuid();
         $this->objectiveCompetencies = new ArrayCollection();
         $this->users = new ArrayCollection();
         $this->groups = new ArrayCollection();

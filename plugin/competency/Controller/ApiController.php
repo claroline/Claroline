@@ -71,7 +71,7 @@ class ApiController
         $data = $request->getContent();
         $errors = $this->validator->validate($data);
 
-        if ($errors['type'] === Validator::ERR_TYPE_NONE) {
+        if (Validator::ERR_TYPE_NONE === $errors['type']) {
             $this->manager->importFramework($data);
 
             return new JsonResponse('Framework created');

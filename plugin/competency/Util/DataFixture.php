@@ -20,6 +20,7 @@ abstract class DataFixture
     }
 
     abstract protected function load();
+
     abstract protected function unload();
 
     protected function loadCsvData($file, $separator)
@@ -48,7 +49,7 @@ abstract class DataFixture
             $callback($data[$i]);
             $progress->advance();
 
-            if ($i !== 0 && $i % $iterationCount === 0) {
+            if (0 !== $i && 0 === $i % $iterationCount) {
                 $this->om->endFlushSuite();
                 $this->om->startFlushSuite();
             }

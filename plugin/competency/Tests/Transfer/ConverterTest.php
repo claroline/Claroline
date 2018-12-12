@@ -28,7 +28,7 @@ class ConverterTest extends RepositoryTestCase
 
         $this->assertJsonStringEqualsJsonString($originalJson, $roundTripJson);
 
-        if ($frameworkFileName === 'non-ascii.json') {
+        if ('non-ascii.json' === $frameworkFileName) {
             // previous check doesn't cover encoding problems (data is json-decoded before assertion).
             // the following is a raw assertion on "cleaned/normalized" strings
             $this->assertEquals(

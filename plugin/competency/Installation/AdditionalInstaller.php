@@ -2,7 +2,6 @@
 
 namespace HeVinci\CompetencyBundle\Installation;
 
-use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
