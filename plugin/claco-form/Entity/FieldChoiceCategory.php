@@ -227,7 +227,7 @@ class FieldChoiceCategory
                 $this->setBoolValue($value);
                 break;
             case FieldFacet::CHOICE_TYPE:
-                $options = $this->filed->getDetails();
+                $options = $this->field->getDetails();
 
                 if (isset($options['multiple']) && $options['multiple']) {
                     $this->setArrayValue($value);
