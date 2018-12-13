@@ -81,32 +81,6 @@
 
 .data-grid-item-container {
     position: relative; // constrain selection checkbox
-
-    .data-card {
-        width: 100%; // fill container
-        height: 100%; // fill container
-
-        // todo : make it on every card with mixins
-        &.selected {
-            background-color: @state-info-bg;
-            border-color: #abcfe0; // todo : use a var same as .table
-
-            .box-shadow(0 0 2px fadeOut(@brand-info, 65%));
-
-            .data-card-header {
-                background: #bfe3f4;
-                border-color: #abcfe0 !important;
-            }
-
-            &:hover {
-                background-color: #bfe3f4;
-
-                .data-card-header {
-                    background: #b5d9ea;
-                }
-            }
-        }
-    }
 }
 
 .data-grid-item-select {

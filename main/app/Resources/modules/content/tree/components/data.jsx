@@ -3,6 +3,10 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {Checkbox} from '#/main/core/layout/form/components/field/checkbox'
+import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
 import {
   createListDefinition,
@@ -11,96 +15,57 @@ import {
   getFilterableProps,
   isRowSelected
 } from '#/main/app/content/list/utils'
-import {DataCard as DataCardTypes} from '#/main/app/content/card/prop-types'
 import {
   DataListProperty as DataListPropertyTypes,
   DataListSelection as DataListSelectionTypes,
   DataListSearch as DataListSearchTypes
 } from '#/main/app/content/list/prop-types'
-
-import {Action as ActionTypes} from '#/main/app/action/prop-types'
-import {TooltipElement} from '#/main/core/layout/components/tooltip-element'
-import {Checkbox} from '#/main/core/layout/form/components/field/checkbox'
-import {ListActions, ListPrimaryAction, ListBulkActions} from '#/main/app/content/list/components/actions'
+import {ListBulkActions} from '#/main/app/content/list/components/actions'
 import {ListEmpty} from '#/main/app/content/list/components/empty'
 import {ListHeader} from '#/main/app/content/list/components/header'
 
+import {flattenTree} from '#/main/app/content/tree/utils'
+
 // todo there are some big c/c from data-list
 // todo maybe make it a list view
-// todo reuse DataCard for display
+// todo support dynamic actions
 
 const TreeDataItemContent = props =>
-  <div className={classes('data-tree-item', props.computedData.className, {
+  <div className={classes('data-tree-item', {
     'expanded': props.expanded,
-    'selected': props.selected,
     'data-tree-leaf': !props.hasChildren
   })}>
     {props.hasChildren &&
-      <button
-        type="button"
-        className="btn btn-tree-toggle"
-        onClick={props.toggle}
-      >
-        <span className={classes('fa fa-fw', {
+      <Button
+        type={CALLBACK_BUTTON}
+        className="btn-tree-toggle"
+        icon={classes('fa fa-fw', {
           'fa-plus': !props.expanded,
           'fa-minus': props.expanded
-        })} />
-      </button>
+        })}
+        label={trans(props.expanded ? 'collapse':'expand', {}, 'actions')}
+        tooltip="right"
+        callback={props.toggle}
+      />
     }
 
-    <div className="data-tree-item-content">
-      <div className="data-tree-item-label">
-        {props.onSelect &&
-          <input
-            type="checkbox"
-            className="data-tree-item-select"
-            checked={props.selected}
-            onChange={props.onSelect}
-          />
-        }
+    {React.createElement(props.card, {
+      className: classes({selected: props.selected}),
+      size: 'sm',
+      orientation: 'row',
+      data: props.data,
+      primaryAction: props.primaryAction,
+      actions: props.actions
+    })}
 
-        <ListPrimaryAction
-          action={props.primaryAction}
-          className="item-title"
-          disabledWrapper="h2"
-        >
-          {props.computedData.title}
-          {props.computedData.subtitle &&
-            <small key="item-subtitle">{props.computedData.subtitle}</small>
-          }
-        </ListPrimaryAction>
-
-        {props.computedData.flags &&
-        <div className="item-flags">
-          {props.computedData.flags.map((flag, flagIndex) => flag &&
-            <TooltipElement
-              key={flagIndex}
-              id={`item-${props.data.id}-flag-${flagIndex}`}
-              tip={flag[1]}
-            >
-              <span className={classes('item-flag', flag[0])} />
-            </TooltipElement>
-          )}
-        </div>
-        }
-      </div>
-
-      {0 < props.actions.length &&
-        <ListActions
-          id={`actions-${props.data.id}`}
-          actions={props.actions}
-        />
-      }
-
-      {props.connectDragSource && props.connectDragSource(
-        <span
-          className="btn data-actions-btn btn-drag"
-        >
-          <span className="fa fa-fw fa-arrows" />
-          <span className="sr-only">{trans('move')}</span>
-        </span>
-      )}
-    </div>
+    {props.onSelect &&
+      <input
+        type="checkbox"
+        className="data-tree-item-select"
+        checked={props.selected}
+        onChange={props.onSelect}
+      />
+    }
   </div>
 
 TreeDataItemContent.propTypes = {
@@ -116,16 +81,9 @@ TreeDataItemContent.propTypes = {
   data: T.shape({
     id: T.string
   }).isRequired,
-  /**
-   * Computed card data from row.
-   */
-  computedData: T.shape(
-    DataCardTypes.propTypes
-  ).isRequired,
+  card: T.func.isRequired,
   toggle: T.func,
-  onSelect: T.func,
-
-  connectDragSource: T.func
+  onSelect: T.func
 }
 
 TreeDataItemContent.defaultProps = {
@@ -155,7 +113,7 @@ class TreeDataItem extends Component {
           expanded={this.state.expanded}
           hasChildren={this.props.data.children && 0 < this.props.data.children.length}
           data={this.props.data}
-          computedData={this.props.card(this.props.data)}
+          card={this.props.card}
           actions={getActions([this.props.data], this.props.actions)}
           primaryAction={getPrimaryAction(this.props.data, this.props.primaryAction)}
           onSelect={this.props.onSelect ? () => this.props.onSelect(this.props.data) : undefined}
@@ -163,24 +121,24 @@ class TreeDataItem extends Component {
         />
 
         {this.props.data.children && 0 < this.props.data.children.length &&
-        <ul
-          className="data-tree-children"
-          style={{
-            display: this.state.expanded ? 'block':'none'
-          }}
-        >
-          {this.props.data.children.map((child) =>
-            <TreeDataItem
-              key={child.id}
-              data={child}
-              actions={this.props.actions}
-              primaryAction={this.props.primaryAction}
-              selected={this.props.selected}
-              onSelect={this.props.onSelect}
-              card={this.props.card}
-            />
-          )}
-        </ul>
+          <ul
+            className="data-tree-children"
+            style={{
+              display: this.state.expanded ? 'block':'none'
+            }}
+          >
+            {this.props.data.children.map((child) =>
+              <TreeDataItem
+                key={child.id}
+                data={child}
+                actions={this.props.actions}
+                primaryAction={this.props.primaryAction}
+                selected={this.props.selected}
+                onSelect={this.props.onSelect}
+                card={this.props.card}
+              />
+            )}
+          </ul>
         }
       </li>
     )
@@ -196,13 +154,7 @@ TreeDataItem.propTypes = {
   }).isRequired,
   primaryAction: T.func,
   actions: T.func,
-
   onSelect: T.func,
-
-  /*onDrop: T.func,
-   connectDragSource: T.func.isRequired,
-   connectDropTarget: T.func.isRequired,*/
-
   card: T.func.isRequired
 }
 
@@ -235,6 +187,8 @@ class TreeData extends Component {
       })
     }
 
+    const flatTree = flattenTree(this.props.data)
+
     return (
       <div className="data-list">
         <ListHeader
@@ -243,68 +197,69 @@ class TreeData extends Component {
         />
 
         {0 < this.props.totalResults &&
-        <div className="data-tree">
-          <div className="data-tree-header">
-            <button
-              type="button"
-              className="btn btn-tree-toggle"
-              onClick={() => true}
-            >
-              <span className={classes('fa fa-fw', {
-                'fa-plus': !this.state.expanded,
-                'fa-minus': this.state.expanded
-              })} />
-            </button>
-
-            {this.props.selection &&
-            <Checkbox
-              id="data-tree-select"
-              label={trans('list_select_all')}
-              labelChecked={trans('list_deselect_all')}
-              checked={0 < this.props.selection.current.length}
-              onChange={(val) => {
-                val.target.checked ? this.props.selection.toggleAll(this.props.data): this.props.selection.toggleAll([])
-              }}
-            />
-            }
-          </div>
-
-          {this.props.selection && 0 < this.props.selection.current.length &&
-          <ListBulkActions
-            count={this.props.selection.current.length}
-            actions={getActions(
-              this.props.selection.current.map(id => this.props.data.find(row => id === row.id) || {id: id}),
-              this.props.actions
-            )}
-          />
-          }
-
-          <ul className="data-tree-content">
-            {this.props.data.map((row) =>
-              <TreeDataItem
-                key={`tree-item-${row.id}`}
-                data={row}
-                actions={this.props.actions}
-                primaryAction={this.props.primaryAction}
-                selected={this.props.selection ? this.props.selection.current : []}
-                onSelect={
-                  this.props.selection ? () => {
-                    this.props.selection.toggle(row, !isRowSelected(row, this.props.selection ? this.props.selection.current : []))
-                  } : undefined
-                }
-                card={this.props.card}
-
-                onDrop={() => {
-
-                }}
+          <div className="data-tree">
+            <div className="data-tree-header">
+              <Button
+                type={CALLBACK_BUTTON}
+                className="btn-tree-toggle"
+                icon={classes('fa fa-fw', {
+                  'fa-plus': !this.state.expanded,
+                  'fa-minus': this.state.expanded
+                })}
+                label={trans(this.state.expanded ? 'collapse':'expand', {}, 'actions')}
+                tooltip="right"
+                callback={() => true}
               />
-            )}
-          </ul>
-        </div>
+
+              {this.props.selection &&
+                <Checkbox
+                  id="data-tree-select"
+                  label={trans('list_select_all')}
+                  labelChecked={trans('list_deselect_all')}
+                  checked={0 < this.props.selection.current.length}
+                  onChange={() => {
+                    if (0 === this.props.selection.current.length) {
+                      this.props.selection.toggleAll(flatTree)
+                    } else {
+                      this.props.selection.toggleAll([])
+                    }
+                  }}
+                />
+              }
+            </div>
+
+            {this.props.selection && 0 < this.props.selection.current.length &&
+              <ListBulkActions
+                count={this.props.selection.current.length}
+                actions={getActions(
+                  this.props.selection.current.map(id => flatTree.find(row => id === row.id) || {id: id}),
+                  this.props.actions
+                )}
+              />
+            }
+
+            <ul className="data-tree-content">
+              {this.props.data.map((row) =>
+                <TreeDataItem
+                  key={`tree-item-${row.id}`}
+                  data={row}
+                  actions={this.props.actions}
+                  primaryAction={this.props.primaryAction}
+                  selected={this.props.selection ? this.props.selection.current : []}
+                  onSelect={
+                    this.props.selection ? () => {
+                      this.props.selection.toggle(row, !isRowSelected(row, this.props.selection ? this.props.selection.current : []))
+                    } : undefined
+                  }
+                  card={this.props.card}
+                />
+              )}
+            </ul>
+          </div>
         }
 
         {0 === this.props.totalResults &&
-        <ListEmpty hasFilters={this.props.filters && 0 < this.props.filters.current.length} />
+          <ListEmpty hasFilters={this.props.filters && 0 < this.props.filters.current.length} />
         }
       </div>
     )
@@ -360,10 +315,6 @@ TreeData.propTypes = {
   selection: T.shape(
     DataListSelectionTypes.propTypes
   ),
-
-  reorder: T.shape({
-
-  }),
 
   /**
    * A function to normalize data for card display.

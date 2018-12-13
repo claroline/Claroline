@@ -61,6 +61,7 @@
     }
 }
 
+// TODO : create a mixin to generate card styles viants
 .data-card-muted {
     border-color: @data-card-muted-border;
     color: @data-card-muted-color;
@@ -74,6 +75,26 @@
 
     .data-card-content {
         color: @data-card-muted-color;
+    }
+}
+
+.data-card-selected {
+    background-color: @state-info-bg;
+    border-color: #abcfe0; // todo : use a var same as .table
+
+    .box-shadow(0 0 2px fadeOut(@brand-info, 65%));
+
+    .data-card-header {
+        background: #bfe3f4;
+        border-color: #abcfe0 !important;
+    }
+
+    &:hover {
+        background-color: #bfe3f4;
+
+        .data-card-header {
+            background: #b5d9ea;
+        }
     }
 }
 

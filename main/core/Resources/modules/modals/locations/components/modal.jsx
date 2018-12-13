@@ -18,6 +18,7 @@ const LocationsPickerModal = props => {
     <Modal
       {...omit(props, 'url', 'selected', 'selectAction', 'resetSelect')}
       icon="fa fa-fw fa-location-arrow"
+      className="data-picker-modal"
       bsSize="lg"
       onExiting={() => props.resetSelect()}
     >

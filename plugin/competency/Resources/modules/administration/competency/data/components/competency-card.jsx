@@ -1,9 +1,10 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
+import {trans} from '#/main/app/intl/translation'
 import {DataCard} from '#/main/app/content/card/components/data'
 
-import {Competency as CompetencyType} from '#/plugin/competency/administration/competency/prop-types'
+import {Competency as CompetencyTypes} from '#/plugin/competency/administration/competency/prop-types'
 
 const CompetencyCard = props =>
   <DataCard
@@ -16,9 +17,47 @@ const CompetencyCard = props =>
   />
 
 CompetencyCard.propTypes = {
-  data: T.shape(CompetencyType.propTypes).isRequired
+  data: T.shape(
+    CompetencyTypes.propTypes
+  ).isRequired
+}
+
+const CompetencyTreeCard = props =>
+  <div className="competency-card">
+    <DataCard
+      {...props}
+      id={props.data.id}
+      icon="fa fa-graduation-cap"
+      title={props.data.name}
+      subtitle={props.data.scale.name}
+      flags={[
+        props.data.abilities && 0 < props.data.abilities.length && ['fa fa-graduation-cap', trans('ability.contains_desc', {}, 'competency')]
+      ].filter(flag => !!flag)}
+      contentText={props.data.description}
+    />
+
+    {props.data.abilities && 0 < props.data.abilities.length &&
+      <ul className="competency-abilities">
+        {props.data.abilities.map(competencyAbility =>
+          <li className="competency-ability" key={competencyAbility.id}>
+            <span className="competency-ability-name">
+              {competencyAbility.ability.name}
+            </span>
+
+            {competencyAbility.level.name}
+          </li>
+        )}
+      </ul>
+    }
+  </div>
+
+CompetencyTreeCard.propTypes = {
+  data: T.shape(
+    CompetencyTypes.propTypes
+  ).isRequired
 }
 
 export {
-  CompetencyCard
+  CompetencyCard,
+  CompetencyTreeCard
 }

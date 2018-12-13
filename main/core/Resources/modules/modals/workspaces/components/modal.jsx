@@ -18,6 +18,7 @@ const WorkspacesModal = props => {
     <Modal
       {...omit(props, 'url', 'selected', 'selectAction', 'resetSelect')}
       icon="fa fa-fw fa-books"
+      className="data-picker-modal"
       bsSize="lg"
       onExiting={() => props.resetSelect()}
     >

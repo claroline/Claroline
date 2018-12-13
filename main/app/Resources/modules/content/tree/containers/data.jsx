@@ -147,6 +147,7 @@ TreeData.propTypes = {
 }
 
 TreeData.defaultProps = {
+  selectable: true,
   sortable: false, // not implemented
   paginated: false // not implemented
 }

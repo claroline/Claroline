@@ -18,8 +18,8 @@ const AbilitiesPickerModal = props => {
   return (
     <Modal
       {...omit(props, 'confirmText', 'selected', 'selectAction', 'resetSelect')}
-      className="abilities-picker-modal"
       icon="fa fa-fw fa-graduation-cap"
+      className="data-picker-modal"
       bsSize="lg"
       onExiting={() => props.resetSelect()}
     >

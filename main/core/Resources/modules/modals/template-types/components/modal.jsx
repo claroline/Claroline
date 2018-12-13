@@ -17,7 +17,7 @@ const TemplateTypesPickerModal = props => {
   return (
     <Modal
       {...omit(props, 'confirmText', 'selected', 'selectAction', 'resetSelect')}
-      className="template-types-picker-modal"
+      className="template-types-picker-modal data-picker-modal"
       icon="fa fa-fw fa-file-alt"
       bsSize="lg"
       onExiting={() => props.resetSelect()}

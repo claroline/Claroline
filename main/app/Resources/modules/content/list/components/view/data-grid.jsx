@@ -24,7 +24,9 @@ import {ListBulkActions} from '#/main/app/content/list/components/actions'
 const DataGridItem = props =>
   <li className="data-grid-item-container">
     {React.createElement(props.card, {
-      className: classes({selected: props.selected}),
+      className: classes({
+        'data-card-selected': props.selected
+      }),
       size: props.size,
       orientation: props.orientation,
       data: props.row,
@@ -133,7 +135,11 @@ const DataGrid = props =>
             labelChecked={trans('list_deselect_all')}
             checked={0 < props.selection.current.length}
             onChange={() => {
-              0 === props.selection.current.length ? props.selection.toggleAll(props.data): props.selection.toggleAll([])
+              if (0 === props.selection.current.length) {
+                props.selection.toggleAll(props.data)
+              } else {
+                props.selection.toggleAll([])
+              }
             }}
           />
         }

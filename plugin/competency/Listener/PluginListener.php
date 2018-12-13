@@ -37,6 +37,8 @@ class PluginListener
     private $kernel;
 
     /**
+     * PluginListener constructor.
+     *
      * @DI\InjectParams({
      *     "authorization"     = @DI\Inject("security.authorization_checker"),
      *     "competencyManager" = @DI\Inject("hevinci.competency.competency_manager"),
@@ -67,24 +69,6 @@ class PluginListener
         $this->toolManager = $toolManager;
         $this->request = $stack->getCurrentRequest();
         $this->kernel = $kernel;
-    }
-
-    /**
-     * @DI\Observe("administration_tool_competencies")
-     *
-     * @param OpenAdministrationToolEvent $event
-     */
-    public function onOpenCompetencyTool(OpenAdministrationToolEvent $event)
-    {
-        $competenciesTool = $this->toolManager->getAdminToolByName('competencies');
-
-        if (is_null($competenciesTool) || !$this->authorization->isGranted('OPEN', $competenciesTool)) {
-            throw new AccessDeniedException();
-        }
-        $this->competencyManager->ensureHasScale();
-        $content = $this->templating->render('HeVinciCompetencyBundle:administration:competencies_tool.html.twig');
-        $event->setResponse(new Response($content));
-        $event->stopPropagation();
     }
 
     /**
@@ -138,7 +122,7 @@ class PluginListener
         $subRequest = $this->request->duplicate([], null, $attributes);
         $response = $this->kernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 
-        if ($event instanceof DisplayToolEvent || $event instanceof DisplayWidgetEvent) {
+        if ($event instanceof DisplayToolEvent) {
             $event->setContent($response->getContent());
         } else {
             $event->setResponse($response);

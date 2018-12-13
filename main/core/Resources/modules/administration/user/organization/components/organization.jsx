@@ -58,22 +58,27 @@ const OrganizationForm = props =>
                 'internal': trans('internal')
               }
             }
-          }, {
-            name: 'vat',
-            label: trans('vat_number'),
-            type: 'string',
-            required: false
-          }, {
+          }
+        ]
+      }, {
+        title: trans('information'),
+        fields: [
+          {
             name: 'parent',
             type: 'organization',
             label: trans('parent'),
             options: {
               filterChoices: (value, key) => props.organization.id !== key
             }
-          },  {
+          }, {
             name: 'email',
             type: 'email',
             label: trans('email')
+          }, {
+            name: 'vat',
+            label: trans('vat_number'),
+            type: 'string',
+            required: false
           }
         ]
       }

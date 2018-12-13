@@ -18,6 +18,7 @@ const UsersPickerModal = props => {
     <Modal
       {...omit(props, 'url', 'selected', 'selectAction', 'resetSelect')}
       icon="fa fa-fw fa-user"
+      className="data-picker-modal"
       bsSize="lg"
       onExiting={() => props.resetSelect()}
     >

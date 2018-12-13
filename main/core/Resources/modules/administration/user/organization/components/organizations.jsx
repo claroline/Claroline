@@ -2,9 +2,9 @@ import React from 'react'
 
 import {trans} from '#/main/app/intl/translation'
 import {TreeData} from '#/main/app/content/tree/containers/data'
-import {OrganizationList} from '#/main/core/administration/user/organization/components/organization-list'
 
-// TODO : upgrade to DataCard format
+import {OrganizationCard} from '#/main/core/user/data/components/organization-card'
+import {OrganizationList} from '#/main/core/administration/user/organization/components/organization-list'
 
 const Organizations = () =>
   <TreeData
@@ -28,14 +28,7 @@ const Organizations = () =>
         target: 'organizations/form/parent/' + rows[0].id
       }
     ]}
-    card={(row) => ({
-      icon: 'fa fa-building',
-      title: row.name,
-      subtitle: row.code,
-      flags: [
-        row.meta.default && ['fa fa-check', trans('default')]
-      ].filter(flag => !!flag)
-    })}
+    card={OrganizationCard}
   />
 
 export {

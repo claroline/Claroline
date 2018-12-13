@@ -8,11 +8,11 @@ use HeVinci\CompetencyBundle\Manager\ProgressManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * Class ApiListener.
+ * Class UserListener.
  *
  * @DI\Service
  */
-class ApiListener
+class UserListener
 {
     /** @var ObjectiveManager */
     private $objectiveManager;
@@ -21,6 +21,8 @@ class ApiListener
     private $progressManager;
 
     /**
+     * UserListener constructor.
+     *
      * @DI\InjectParams({
      *     "objectiveManager" = @DI\Inject("hevinci.competency.objective_manager"),
      *     "progressManager"  = @DI\Inject("hevinci.competency.progress_manager")

@@ -18,7 +18,7 @@ const ScalesPickerModal = props => {
   return (
     <Modal
       {...omit(props, 'confirmText', 'selected', 'selectAction', 'resetSelect')}
-      className="scales-picker-modal"
+      className="data-picker-modal"
       icon="fa fa-fw fa-arrow-up"
       bsSize="lg"
       onExiting={() => props.resetSelect()}

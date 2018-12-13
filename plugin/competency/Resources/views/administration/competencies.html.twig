@@ -29,5 +29,10 @@
 {% block javascripts %}
     {{ parent() }}
 
-    <script type="text/javascript" src="{{ hotAsset('dist/claroline-distribution-plugin-competency-competencies.js') }}"></script>
+    <script type="text/javascript" src="{{ hotAsset('claroline-distribution-plugin-competency-competencies') }}"></script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-competency-competency.css') }}" />
 {% endblock %}

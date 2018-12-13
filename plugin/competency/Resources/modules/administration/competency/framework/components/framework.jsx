@@ -5,6 +5,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {TreeData} from '#/main/app/content/tree/containers/data'
 
 import {FrameworkList} from '#/plugin/competency/administration/competency/framework/components/framework-list'
+import {CompetencyTreeCard} from '#/plugin/competency/administration/competency/data/components/competency-card'
 
 const Framework = () =>
   <TreeData
@@ -52,14 +53,7 @@ const Framework = () =>
         target: `/frameworks/${rows[0].id}/ability_choice`
       }
     ]}
-    card={(row) => ({
-      icon: 'fa fa-graduation-cap',
-      title: row.name,
-      subtitle: row.abilities.map(competencyAbility => competencyAbility.ability.name).join(', '),
-      flags: [
-        row.abilities && 0 < row.abilities.length && ['fa fa-graduation-cap', trans('ability.contains_desc', {}, 'competency')]
-      ].filter(flag => !!flag)
-    })}
+    card={CompetencyTreeCard}
   />
 
 export {

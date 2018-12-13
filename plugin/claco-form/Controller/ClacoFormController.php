@@ -941,12 +941,10 @@ class ClacoFormController extends Controller
      * @param Entry $entry
      * @param Field $field
      *
-     * @return StreamedResponse
+     * @return StreamedResponse|JsonResponse
      */
     public function downloadAction(Entry $entry, Field $field)
     {
-        $field = $fieldValue->getField();
-
         if (FieldFacet::FILE_TYPE !== $field->getType()) {
             return new JsonResponse(null, 404);
         }

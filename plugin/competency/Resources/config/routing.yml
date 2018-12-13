@@ -10,8 +10,3 @@ hevinci_my_objectives_tool:
     resource: "@HeVinciCompetencyBundle/Controller/MyObjectiveController.php"
     type: annotation
     prefix: competencies
-
-hevinci_competency_api:
-    resource: "@HeVinciCompetencyBundle/Controller/ApiController.php"
-    type: annotation
-    prefix: api/competencies

@@ -6,15 +6,12 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Pager\PagerFactory;
-use HeVinci\CompetencyBundle\Adapter\OrmArrayAdapter;
 use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Entity\Level;
 use HeVinci\CompetencyBundle\Entity\Objective;
 use HeVinci\CompetencyBundle\Entity\ObjectiveCompetency;
 use HeVinci\CompetencyBundle\Entity\Progress\AbilityProgress;
 use JMS\DiExtraBundle\Annotation as DI;
-use Pagerfanta\Pagerfanta;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -25,7 +22,6 @@ class ObjectiveManager
     private $om;
     private $competencyManager;
     private $progressManager;
-    private $pagerFactory;
     private $objectiveRepo;
     private $competencyRepo;
     private $objectiveCompetencyRepo;
@@ -34,30 +30,26 @@ class ObjectiveManager
 
     /**
      * @DI\InjectParams({
-     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "competencyManager"  = @DI\Inject("hevinci.competency.competency_manager"),
-     *     "progressManager"    = @DI\Inject("hevinci.competency.progress_manager"),
-     *     "pagerFactory"       = @DI\Inject("claroline.pager.pager_factory"),
-     *     "translator"         = @DI\Inject("translator")
+     *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
+     *     "competencyManager" = @DI\Inject("hevinci.competency.competency_manager"),
+     *     "progressManager"   = @DI\Inject("hevinci.competency.progress_manager"),
+     *     "translator"        = @DI\Inject("translator")
      * })
      *
      * @param ObjectManager       $om
      * @param CompetencyManager   $competencyManager
      * @param ProgressManager     $progressManager
-     * @param PagerFactory        $pagerFactory
      * @param TranslatorInterface $translator
      */
     public function __construct(
         ObjectManager $om,
         CompetencyManager $competencyManager,
         ProgressManager $progressManager,
-        PagerFactory $pagerFactory,
         TranslatorInterface $translator
     ) {
         $this->om = $om;
         $this->competencyManager = $competencyManager;
         $this->progressManager = $progressManager;
-        $this->pagerFactory = $pagerFactory;
         $this->objectiveRepo = $om->getRepository('HeVinciCompetencyBundle:Objective');
         $this->competencyRepo = $om->getRepository('HeVinciCompetencyBundle:Competency');
         $this->objectiveCompetencyRepo = $om->getRepository('HeVinciCompetencyBundle:ObjectiveCompetency');
@@ -241,53 +233,6 @@ class ObjectiveManager
     }
 
     /**
-     * Returns a pager for all the users who have at least one objective.
-     * If a particular objective is given, only the users who have that
-     * objective are returned.
-     *
-     * @param Objective $objective
-     * @param int       $page
-     *
-     * @return Pagerfanta
-     */
-    public function listUsersWithObjective(Objective $objective = null, $page = 1)
-    {
-        return $this->listSubjectsWithObjective('Users', $objective, $page);
-    }
-
-    /**
-     * Returns a pager for all the groups which have at least one objective.
-     * If a particular objective is given, only the groups which have that
-     * objective are returned.
-     *
-     * @param Objective $objective
-     * @param int       $page
-     *
-     * @return Pagerfanta
-     */
-    public function listGroupsWithObjective(Objective $objective = null, $page = 1)
-    {
-        return $this->listSubjectsWithObjective('Groups', $objective, $page);
-    }
-
-    /**
-     * Returns a pager for all the members of a group, including progress data.
-     *
-     * @param Group $group
-     * @param int   $page
-     *
-     * @return Pagerfanta
-     */
-    public function listGroupUsers(Group $group, $page = 1)
-    {
-        $countQuery = $this->objectiveRepo->getGroupUsersCountQuery($group);
-        $resultQuery = $this->objectiveRepo->getGroupUsersQuery($group);
-        $adapter = new OrmArrayAdapter($countQuery, $resultQuery);
-
-        return $this->pagerFactory->createPagerWithAdapter($adapter, $page);
-    }
-
-    /**
      * Assigns an objective to a user or a group. If the objective has already
      * been assigned, returns false. Otherwise, returns true.
      *
@@ -424,17 +369,6 @@ class ObjectiveManager
         }
 
         return $subject instanceof User ? 'User' : 'Group';
-    }
-
-    private function listSubjectsWithObjective($subjectType, Objective $objective = null, $page = 1)
-    {
-        $countMethod = "get{$subjectType}WithObjectiveCountQuery";
-        $fetchMethod = "get{$subjectType}WithObjectiveQuery";
-        $countQuery = $this->objectiveRepo->{$countMethod}($objective);
-        $resultQuery = $this->objectiveRepo->{$fetchMethod}($objective);
-        $adapter = new OrmArrayAdapter($countQuery, $resultQuery);
-
-        return $this->pagerFactory->createPagerWithAdapter($adapter, $page);
     }
 
     public function getUserChallengeByLevel(User $user, Competency $competency, $level)

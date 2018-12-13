@@ -18,6 +18,7 @@ const GroupsPickerModal = props => {
     <Modal
       {...omit(props, 'url', 'selected', 'selectAction', 'resetSelect')}
       icon="fa fa-fw fa-users"
+      className="data-picker-modal"
       bsSize="lg"
       onExiting={() => props.resetSelect()}
     >
