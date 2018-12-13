@@ -71,10 +71,29 @@ class Updater120200 extends Updater
         $offset = 0;
 
         while ($offset < $total) {
-            $nodes = $this->om->getRepository(ResourceNode::class)->findBy([], [], self::BATCH_SIZE, $offset);
+	    $nodes = $this->om->getRepository(ResourceNode::class)->findBy([], [], self::BATCH_SIZE, $offset);
 
             foreach ($nodes as $node) {
-                $this->om->persist($node);
+		$skip = false;
+                $this->log($node->getName().' - '.$node->getId());
+		$ancestors = $node->getOldAncestors();	
+		$ids = array_map(function($ancestor) {
+		    return $ancestor['id'];
+		}, $ancestors);
+		$ids = array_unique($ids);
+
+		if (count($ids) !== count($ancestors)) {
+	            $skip = true;
+		    $this->om->detach($node);
+	        }
+               
+		if (!$skip) {
+                    $this->om->persist($node);
+		} else {
+			 
+                    $this->log('unset ' .$node->getName().' - '.$node->getId());
+	            unset($node);
+		}
                 ++$offset;
                 $this->log('Building resource paths '.$offset.'/'.$total);
             }

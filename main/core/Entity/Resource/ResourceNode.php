@@ -36,6 +36,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class ResourceNode
 {
     const PATH_SEPARATOR = '/';
+
+    const PATH_OLDSEPARATOR = '`';
     // identifiers
     use Id;
     use Uuid;
@@ -901,6 +903,16 @@ class ResourceNode
      */
     public function preFlush(PreFlushEventArgs $args)
     {
+	$ancestors = $this->getOldAncestors();
+        $ids = array_map(function($ancestor) {
+            return $ancestor['id'];
+        }, $ancestors);
+        $ids = array_unique($ids);
+
+        if (count($ids) !== count($ancestors)) {
+	    return;
+        }
+
         $entityManager = $args->getEntityManager();
 
         $this->materializedPath = $this->makePath($this);
@@ -916,5 +928,26 @@ class ResourceNode
         }
 
         return $path;
+    }
+
+
+    /**
+     * Returns the ancestors of a resource.
+     *
+     * @return array[array] An array of resources represented as arrays
+     */
+    public function getOldAncestors()
+    {
+        // No need to access DB to get ancestors as they are given by the materialized path.
+        $parts = preg_split('/-(\d+)'.ResourceNode::PATH_OLDSEPARATOR.'/', $this->path, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $ancestors = [];
+        $countAncestors = count($parts);
+        for ($i = 0; $i < $countAncestors; $i += 2) {
+            $ancestors[] = [
+                'id' => (int) $parts[$i + 1],
+                'name' => $parts[$i],
+            ];
+        }
+        return $ancestors;
     }
 }
