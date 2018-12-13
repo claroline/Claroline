@@ -97,6 +97,7 @@ class Converter
                 $newCompetency = new Competency();
                 $newCompetency->setName($competency->name);
                 $newCompetency->setParent($parentCompetency, true);
+                $newCompetency->setScale($scale);
                 $this->walkJsonNodes($competency, $newCompetency, $scale);
             }
         } else {

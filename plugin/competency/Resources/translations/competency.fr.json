@@ -8,6 +8,7 @@
     "ability.create": "Créer une capacité",
     "ability.creation": "Création d'une capacité",
     "ability.edition": "Edition d'une capacité",
+    "ability.min_evaluated_resource_count": "Nombre de ressources évaluées à réussir",
     "ability.min_resource_count": "Nombre de ressources à réussir",
     "ability.none": "Aucune capacité",
     "ability.picker": "Sélecteur de capacité",

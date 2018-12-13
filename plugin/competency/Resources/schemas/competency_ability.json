@@ -30,6 +30,10 @@
         "minResourceCount": {
           "type": "integer",
           "description": "The number of resources to pass"
+        },
+        "minEvaluatedResourceCount": {
+          "type": "integer",
+          "description": "The number of evaluated resources to pass"
         }
       },
       "required": ["id", "name"]

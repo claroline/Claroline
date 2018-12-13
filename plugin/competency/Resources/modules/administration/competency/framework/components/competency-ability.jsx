@@ -62,6 +62,15 @@ const CompetencyAbilityComponent = (props) =>
                 min: 0,
                 max: 1000
               }
+            }, {
+              name: 'ability.minEvaluatedResourceCount',
+              type: 'number',
+              label: trans('ability.min_evaluated_resource_count', {}, 'competency'),
+              required: true,
+              options: {
+                min: 0,
+                max: 1000
+              }
             }
           ]
         }

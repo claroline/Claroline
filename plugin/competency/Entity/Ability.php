@@ -40,6 +40,13 @@ class Ability implements \JsonSerializable
     private $minResourceCount = 1;
 
     /**
+     * @ORM\Column(type="integer")
+     * @Assert\NotBlank
+     * @Assert\Range(min="0", max="1000")
+     */
+    private $minEvaluatedResourceCount = 0;
+
+    /**
      * @ORM\OneToMany(targetEntity="CompetencyAbility", mappedBy="ability")
      */
     private $competencyAbilities;
@@ -112,6 +119,22 @@ class Ability implements \JsonSerializable
     public function getMinResourceCount()
     {
         return $this->minResourceCount;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMinEvaluatedResourceCount()
+    {
+        return $this->minEvaluatedResourceCount;
+    }
+
+    /**
+     * @param int $minEvaluatedResourceCount
+     */
+    public function setMinEvaluatedResourceCount($minEvaluatedResourceCount)
+    {
+        $this->minEvaluatedResourceCount = $minEvaluatedResourceCount;
     }
 
     /**

@@ -35,6 +35,7 @@ class AbilitySerializer
             'id' => $ability->getUuid(),
             'name' => $ability->getName(),
             'minResourceCount' => $ability->getMinResourceCount(),
+            'minEvaluatedResourceCount' => $ability->getMinEvaluatedResourceCount(),
         ];
 
         return $serialized;

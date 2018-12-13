@@ -117,6 +117,7 @@ class CompetencyAbilitySerializer
         $this->sipe('ability.id', 'setUuid', $data, $ability);
         $this->sipe('ability.name', 'setName', $data, $ability);
         $this->sipe('ability.minResourceCount', 'setMinResourceCount', $data, $ability);
+        $this->sipe('ability.minEvaluatedResourceCount', 'setMinEvaluatedResourceCount', $data, $ability);
         $this->om->persist($ability);
         $competencyAbility->setAbility($ability);
 

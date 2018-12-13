@@ -8,6 +8,7 @@
     "ability.create": "Create an ability",
     "ability.creation": "Ability creation",
     "ability.edition": "Ability edition",
+    "ability.min_evaluated_resource_count": "Number of evaluated resources to pass",
     "ability.min_resource_count": "Number of resources to pass",
     "ability.none": "No ability",
     "ability.picker": "Ability picker",
