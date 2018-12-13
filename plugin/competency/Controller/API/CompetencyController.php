@@ -14,15 +14,34 @@ namespace HeVinci\CompetencyBundle\Controller\API;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use HeVinci\CompetencyBundle\Entity\Competency;
+use HeVinci\CompetencyBundle\Manager\CompetencyManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
  * @EXT\Route("/competency")
  */
 class CompetencyController extends AbstractCrudController
 {
+    /** @var CompetencyManager */
+    private $manager;
+
+    /**
+     * @DI\InjectParams({
+     *     "manager" = @DI\Inject("hevinci.competency.competency_manager")
+     * })
+     *
+     * @param CompetencyManager $manager
+     */
+    public function __construct(CompetencyManager $manager)
+    {
+        $this->manager = $manager;
+    }
+
     public function getName()
     {
         return 'competency';
@@ -93,6 +112,81 @@ class CompetencyController extends AbstractCrudController
         $data = $this->finder->search(Competency::class, $params, [Options::SERIALIZE_MINIMAL, Options::IS_RECURSIVE]);
 
         return new JsonResponse($data, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/framework/{id}/export",
+     *     name="apiv2_competency_framework_export"
+     * )
+     * @EXT\ParamConverter(
+     *     "framework",
+     *     class="HeVinciCompetencyBundle:Competency",
+     *     options={"mapping": {"id": "uuid"}}
+     * )
+     *
+     * @param Competency $framework
+     *
+     * @return Response
+     */
+    public function frameworkExportAction(Competency $framework)
+    {
+        $this->manager->ensureIsRoot($framework);
+        $response = new Response($this->manager->exportFramework($framework));
+        $disposition = $response->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            "{$framework->getName()}.json",
+            "framework-{$framework->getId()}.json"
+        );
+        $response->headers->set('Content-Type', 'application/json');
+        $response->headers->set('Content-Disposition', $disposition);
+
+        return $response;
+    }
+
+    /**
+     * @EXT\Route(
+     *    "/framework/file/upload",
+     *     name="apiv2_competency_framework_file_upload"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function uploadAction(Request $request)
+    {
+        $files = $request->files->all();
+        $data = null;
+
+        if (1 === count($files)) {
+            foreach ($files as $file) {
+                $data = file_get_contents($file);
+            }
+        } else {
+            return new JsonResponse('No uploaded file', 500);
+        }
+
+        return new JsonResponse($data, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/framework/import",
+     *     name="apiv2_competency_framework_import"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function frameworkImportAction(Request $request)
+    {
+        $data = $this->decodeRequest($request);
+        $fileData = isset($data['file']) ? $data['file'] : null;
+        $this->manager->importFramework($fileData);
+
+        return new JsonResponse();
     }
 
     public function getOptions()

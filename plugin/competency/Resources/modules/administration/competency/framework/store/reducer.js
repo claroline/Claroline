@@ -8,10 +8,12 @@ const reducer = combineReducers({
     sortBy: {property: 'name', direction: 1}
   }, {
     invalidated: makeReducer(false, {
-      [FORM_SUBMIT_SUCCESS+'/frameworks.form']: () => true
+      [FORM_SUBMIT_SUCCESS+'/frameworks.form']: () => true,
+      [FORM_SUBMIT_SUCCESS+'/frameworks.import']: () => true
     })
   }),
   form: makeFormReducer('frameworks.form', {}, {}),
+  import: makeFormReducer('frameworks.import', {}, {}),
   current: makeListReducer('frameworks.current', {}, {}),
   competency: makeFormReducer('frameworks.competency', {}, {
     abilities: combineReducers({

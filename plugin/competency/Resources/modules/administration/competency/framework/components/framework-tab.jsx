@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {Routes} from '#/main/app/router'
+import {matchPath, Routes, withRouter} from '#/main/app/router'
 
 import {makeId} from '#/main/core/scaffolding/id'
 import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions'
@@ -13,23 +13,42 @@ import {PageActions, PageAction} from '#/main/core/layout/page/components/page-a
 import {actions} from '#/plugin/competency/administration/competency/framework/store'
 import {Frameworks} from '#/plugin/competency/administration/competency/framework/components/frameworks'
 import {FrameworkForm} from '#/plugin/competency/administration/competency/framework/components/framework-form'
+import {FrameworkImport} from '#/plugin/competency/administration/competency/framework/components/framework-import'
 import {Framework} from '#/plugin/competency/administration/competency/framework/components/framework'
 import {Competency} from '#/plugin/competency/administration/competency/framework/components/competency'
 import {CompetencyAbility} from '#/plugin/competency/administration/competency/framework/components/competency-ability'
 import {CompetencyAbilityChoice} from '#/plugin/competency/administration/competency/framework/components/competency-ability-choice'
 
-const FrameworkTabActions = () =>
+const FrameworkTabActionsComponent = (props) =>
   <PageActions>
-    <PageAction
-      type={LINK_BUTTON}
-      icon="fa fa-plus"
-      label={trans('framework.create', {}, 'competency')}
-      target="/frameworks/form"
-      primary={true}
-    />
+    {matchPath(props.location.pathname, {path: '/frameworks', exact: true}) &&
+      <PageAction
+        type={LINK_BUTTON}
+        icon="fa fa-plus"
+        label={trans('framework.create', {}, 'competency')}
+        target="/frameworks/form"
+        primary={true}
+      />
+    }
+    {matchPath(props.location.pathname, {path: '/frameworks', exact: true}) &&
+      <PageAction
+        type={LINK_BUTTON}
+        icon="fa fa-upload"
+        label={trans('framework.import', {}, 'competency')}
+        target="/frameworks/import"
+      />
+    }
   </PageActions>
 
-const FrameworkTabComponent = props =>
+FrameworkTabActionsComponent.propTypes = {
+  location: T.shape({
+    pathname: T.string
+  }).isRequired
+}
+
+const FrameworkTabActions = withRouter(FrameworkTabActionsComponent)
+
+const FrameworkTabComponent = (props) =>
   <Routes
     routes={[
       {
@@ -37,10 +56,16 @@ const FrameworkTabComponent = props =>
         exact: true,
         component: Frameworks
       }, {
+        path: '/frameworks/import',
+        exact: true,
+        component: FrameworkImport,
+        onEnter: () => props.resetForm('frameworks.import'),
+        onLeave: () => props.resetForm('frameworks.import')
+      }, {
         path: '/frameworks/form/:id?',
         component: FrameworkForm,
         onEnter: (params) => props.openForm(params.id),
-        onLeave: () => props.resetForm()
+        onLeave: () => props.resetForm('frameworks.form')
       }, {
         path: '/frameworks/:id?',
         exact: true,
@@ -87,8 +112,8 @@ const FrameworkTab = connect(
 
       dispatch(actions.open('frameworks.form', defaultProps, id))
     },
-    resetForm() {
-      dispatch(actions.reset('frameworks.form'))
+    resetForm(formName) {
+      dispatch(actions.reset(formName))
     },
     loadCurrent(id) {
       dispatch(actions.loadCurrent('frameworks.current', id))
@@ -104,7 +129,7 @@ const FrameworkTab = connect(
       dispatch(actions.open('frameworks.competency', defaultProps, id))
     },
     resetCompetency() {
-      dispatch(actions.reset('frameworks.competency')),
+      dispatch(actions.reset('frameworks.competency'))
       dispatch(actions.invalidateList('frameworks.competency.abilities.list'))
     },
     openAbility(competencyId, id = null) {
