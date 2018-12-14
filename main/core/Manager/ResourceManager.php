@@ -543,6 +543,14 @@ class ResourceManager
         if ($parent === $child) {
             throw new ResourceMoveException('You cannot move a directory into itself');
         }
+
+        $descendants = $this->getDescendants($child);
+        foreach ($descendants as $descendant) {
+            if ($parent === $descendant) {
+                throw new ResourceMoveException('You cannot move a directory into its descendants');
+            }
+        }
+
         $this->om->startFlushSuite();
         $this->setLastIndex($parent, $child);
         $child->setParent($parent);
