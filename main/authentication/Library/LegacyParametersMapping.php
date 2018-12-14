@@ -31,6 +31,7 @@ class LegacyParametersMapping implements LegacyParametersMappingInterface
             $parameters[$resourceOwnerStr.'_client_secret'] = 'external_authentication.'.$resourceOwnerStr.'.client_secret';
             $parameters[$resourceOwnerStr.'_client_active'] = 'external_authentication.'.$resourceOwnerStr.'.client_active';
             $parameters[$resourceOwnerStr.'_client_force_reauthenticate'] = 'external_authentication.'.$resourceOwnerStr.'.client_force_reauthenticate';
+            $parameters[$resourceOwnerStr.'_domain'] = 'external_authentication.'.$resourceOwnerStr.'.domain';
         }
 
         $parameters['generic_authorization_url'] = 'external_authentication.generic.authorization_url';
