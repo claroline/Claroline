@@ -6,7 +6,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Entity\Competency;
-use HeVinci\CompetencyBundle\Entity\CompetencyAbility;
 use HeVinci\CompetencyBundle\Entity\Level;
 use HeVinci\CompetencyBundle\Entity\Scale;
 use HeVinci\CompetencyBundle\Transfer\Converter;
@@ -192,6 +191,88 @@ class CompetencyManager
         }
 
         return $collection;
+    }
+
+    /**
+     * Associates a competency to several resource nodes.
+     *
+     * @param Competency $competency
+     * @param array      $nodes
+     *
+     * @return string
+     */
+    public function associateCompetencyToResources(Competency $competency, array $nodes)
+    {
+        $associatedNodes = [];
+
+        foreach ($nodes as $node) {
+            if (!$competency->isLinkedToResource($node)) {
+                $competency->linkResource($node);
+                $associatedNodes[] = $node;
+            }
+        }
+        $this->om->persist($competency);
+        $this->om->flush();
+
+        return $associatedNodes;
+    }
+
+    /**
+     * Dissociates a competency from several resource nodes.
+     *
+     * @param Competency $competency
+     * @param array      $nodes
+     *
+     * @return string
+     */
+    public function dissociateCompetencyFromResources(Competency $competency, array $nodes)
+    {
+        foreach ($nodes as $node) {
+            $competency->removeResource($node);
+        }
+        $this->om->persist($competency);
+        $this->om->flush();
+    }
+
+    /**
+     * Associates an ability to several resource nodes.
+     *
+     * @param Ability $ability
+     * @param array   $nodes
+     *
+     * @return string
+     */
+    public function associateAbilityToResources(Ability $ability, array $nodes)
+    {
+        $associatedNodes = [];
+
+        foreach ($nodes as $node) {
+            if (!$ability->isLinkedToResource($node)) {
+                $ability->linkResource($node);
+                $associatedNodes[] = $node;
+            }
+        }
+        $this->om->persist($ability);
+        $this->om->flush();
+
+        return $associatedNodes;
+    }
+
+    /**
+     * Dissociates an ability from several resource nodes.
+     *
+     * @param Ability $ability
+     * @param array   $nodes
+     *
+     * @return string
+     */
+    public function dissociateAbilityFromResources(Ability $ability, array $nodes)
+    {
+        foreach ($nodes as $node) {
+            $ability->removeResource($node);
+        }
+        $this->om->persist($ability);
+        $this->om->flush();
     }
 
     /****************************************************************************************************************/

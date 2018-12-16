@@ -13,6 +13,9 @@ namespace HeVinci\CompetencyBundle\Controller\API;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
+use Claroline\CoreBundle\Manager\ToolManager;
 use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Manager\CompetencyManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -21,25 +24,42 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @EXT\Route("/competency")
  */
 class CompetencyController extends AbstractCrudController
 {
+    /** @var AuthorizationCheckerInterface */
+    protected $authorization;
+
     /** @var CompetencyManager */
     private $manager;
 
+    /** @var ToolManager */
+    private $toolManager;
+
     /**
      * @DI\InjectParams({
-     *     "manager" = @DI\Inject("hevinci.competency.competency_manager")
+     *     "authorization" = @DI\Inject("security.authorization_checker"),
+     *     "manager"       = @DI\Inject("hevinci.competency.competency_manager"),
+     *     "toolManager"   = @DI\Inject("claroline.manager.tool_manager")
      * })
      *
-     * @param CompetencyManager $manager
+     * @param AuthorizationCheckerInterface $authorization
+     * @param CompetencyManager             $manager
+     * @param ToolManager                   $toolManager
      */
-    public function __construct(CompetencyManager $manager)
-    {
+    public function __construct(
+        AuthorizationCheckerInterface $authorization,
+        CompetencyManager $manager,
+        ToolManager $toolManager
+    ) {
+        $this->authorization = $authorization;
         $this->manager = $manager;
+        $this->toolManager = $toolManager;
     }
 
     public function getName()
@@ -54,7 +74,7 @@ class CompetencyController extends AbstractCrudController
 
     public function getIgnore()
     {
-        return ['exist', 'copyBulk', 'schema', 'find', 'list'];
+        return ['exist', 'copyBulk', 'schema', 'find'];
     }
 
     /**
@@ -156,6 +176,8 @@ class CompetencyController extends AbstractCrudController
      */
     public function uploadAction(Request $request)
     {
+        $this->checkToolAccess();
+
         $files = $request->files->all();
         $data = null;
 
@@ -182,9 +204,104 @@ class CompetencyController extends AbstractCrudController
      */
     public function frameworkImportAction(Request $request)
     {
+        $this->checkToolAccess();
+
         $data = $this->decodeRequest($request);
         $fileData = isset($data['file']) ? $data['file'] : null;
         $this->manager->importFramework($fileData);
+
+        return new JsonResponse();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/node/{node}/competencies/fetch",
+     *     name="apiv2_competency_resource_competencies_list"
+     * )
+     * @EXT\ParamConverter(
+     *     "node",
+     *     class="ClarolineCoreBundle:Resource\ResourceNode",
+     *     options={"mapping": {"node": "uuid"}}
+     * )
+     *
+     * @param ResourceNode $node
+     *
+     * @return JsonResponse
+     */
+    public function resourceCompetenciesFetchAction(ResourceNode $node)
+    {
+        $competencies = $this->finder->fetch(
+            Competency::class,
+            ['resources' => [$node->getUuid()]]
+        );
+        $serialized = array_map(function (Competency $competency) {
+            return $this->serializer->serialize($competency, [Options::SERIALIZE_MINIMAL]);
+        }, $competencies);
+
+        return new JsonResponse($serialized);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/node/{node}/competency/{competency}/associate",
+     *     name="apiv2_competency_resource_associate"
+     * )
+     * @EXT\ParamConverter(
+     *     "node",
+     *     class="ClarolineCoreBundle:Resource\ResourceNode",
+     *     options={"mapping": {"node": "uuid"}}
+     * )
+     * @EXT\ParamConverter(
+     *     "competency",
+     *     class="HeVinciCompetencyBundle:Competency",
+     *     options={"mapping": {"competency": "uuid"}}
+     * )
+     * @EXT\Method("POST")
+     *
+     * @param ResourceNode $node
+     * @param Competency   $competency
+     *
+     * @return JsonResponse
+     */
+    public function resourceCompetencyAssociateAction(ResourceNode $node, Competency $competency)
+    {
+        $this->checkResourceAccess($node, 'EDIT');
+
+        $associatedNodes = $this->manager->associateCompetencyToResources($competency, [$node]);
+        $data = 0 < count($associatedNodes) ?
+            $this->serializer->serialize($competency, [Options::SERIALIZE_MINIMAL]) :
+            null;
+
+        return new JsonResponse($data);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/node/{node}/competency/{competency}/dissociate",
+     *     name="apiv2_competency_resource_dissociate"
+     * )
+     * @EXT\ParamConverter(
+     *     "node",
+     *     class="ClarolineCoreBundle:Resource\ResourceNode",
+     *     options={"mapping": {"node": "uuid"}}
+     * )
+     * @EXT\ParamConverter(
+     *     "competency",
+     *     class="HeVinciCompetencyBundle:Competency",
+     *     options={"mapping": {"competency": "uuid"}}
+     * )
+     * @EXT\Method("DELETE")
+     *
+     * @param ResourceNode $node
+     * @param Competency   $competency
+     *
+     * @return JsonResponse
+     */
+    public function resourceCompetencyDissociateAction(ResourceNode $node, Competency $competency)
+    {
+        $this->checkResourceAccess($node, 'EDIT');
+
+        $this->manager->dissociateCompetencyFromResources($competency, [$node]);
 
         return new JsonResponse();
     }
@@ -194,5 +311,30 @@ class CompetencyController extends AbstractCrudController
         return [
             'get' => [Options::IS_RECURSIVE],
         ];
+    }
+
+    /**
+     * @param string $rights
+     */
+    private function checkToolAccess($rights = 'OPEN')
+    {
+        $competenciesTool = $this->toolManager->getAdminToolByName('competencies');
+
+        if (is_null($competenciesTool) || !$this->authorization->isGranted($rights, $competenciesTool)) {
+            throw new AccessDeniedException();
+        }
+    }
+
+    /**
+     * @param ResourceNode $node
+     * @param string       $rights
+     */
+    private function checkResourceAccess(ResourceNode $node, $rights = 'OPEN')
+    {
+        $collection = new ResourceCollection([$node]);
+
+        if (!$this->authorization->isGranted($rights, $collection)) {
+            throw new AccessDeniedException();
+        }
     }
 }

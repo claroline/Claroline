@@ -43,7 +43,8 @@ const Ability = {
   propTypes: {
     id: T.string,
     name: T.string,
-    minResourceCount: T.number
+    minResourceCount: T.number,
+    minEvaluatedResourceCount: T.number
   }
 }
 

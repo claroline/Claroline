@@ -58,6 +58,11 @@ class CompetencyFinder extends AbstractFinder
                     $qb->andWhere('UPPER(s.name) LIKE :scaleName');
                     $qb->setParameter('scaleName', '%'.strtoupper($filterValue).'%');
                     break;
+                case 'resources':
+                    $qb->join('obj.resources', 'r');
+                    $qb->andWhere('r.uuid IN (:resourceIds)');
+                    $qb->setParameter('resourceIds', is_array($filterValue) ? $filterValue : [$filterValue]);
+                    break;
                 default:
                     if (is_bool($filterValue)) {
                         $qb->andWhere("obj.{$filterName} = :{$filterName}");

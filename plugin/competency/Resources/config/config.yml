@@ -19,3 +19,4 @@ plugin:
         - name: manage_competencies
           group: management
           decoder: administrate
+          scope: [object]

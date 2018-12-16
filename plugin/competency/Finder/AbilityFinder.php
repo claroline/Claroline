@@ -31,6 +31,11 @@ class AbilityFinder extends AbstractFinder
     {
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
+                case 'resources':
+                    $qb->join('obj.resources', 'r');
+                    $qb->andWhere('r.uuid IN (:resourceIds)');
+                    $qb->setParameter('resourceIds', is_array($filterValue) ? $filterValue : [$filterValue]);
+                    break;
                 default:
                     if (is_bool($filterValue)) {
                         $qb->andWhere("obj.{$filterName} = :{$filterName}");
