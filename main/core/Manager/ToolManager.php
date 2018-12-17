@@ -120,7 +120,8 @@ class ToolManager
 
         $offset = 0;
         $totalTools = $this->om->count(Tool::class);
-
+        $this->om->startFlushSuite();
+        
         while ($offset < $total) {
             $workspaces = $this->om->getRepository(Workspace::class)->findBy([], [], 500, $offset);
             $ot = [];
@@ -131,12 +132,14 @@ class ToolManager
                 $this->log('Adding tool '.$offset.'/'.$total);
             }
             $this->log('Flush');
-            $this->om->flush();
+            $this->om->forceFlush();
 
             foreach ($ot as $toDetach) {
                 $this->om->detach($toDetach);
             }
         }
+        
+        $this->om->endFlushSuite();
     }
 
     /**
