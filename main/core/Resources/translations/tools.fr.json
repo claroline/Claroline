@@ -29,5 +29,6 @@
     "technical_settings": "Paramètres techniques",
     "appearance_settings": "Apparence",
     "users_management": "Gestion des utilisateurs",
-    "templates_management": "Gestion des templates"
+    "templates_management": "Gestion des templates",
+    "resource_trash": "Poubelle de ressources"
 }

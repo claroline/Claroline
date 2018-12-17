@@ -1,4 +1,3 @@
-
 import {ResourceCard} from '#/main/core/resource/data/components/resource-card'
 
 import {trans} from '#/main/app/intl/translation'

@@ -770,6 +770,7 @@ class DatabaseWriter
             $tool->setDesktopCategory("{$toolConfiguration['desktop_category']}");
         }
 
+        $this->toolManager->setLogger($this->logger);
         $this->toolManager->create($tool);
         $this->persistCustomToolRights($toolConfiguration['tool_rights'], $tool);
     }

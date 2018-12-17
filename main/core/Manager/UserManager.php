@@ -1428,6 +1428,7 @@ class UserManager
         $i = 0;
         $flushed = true;
         $this->objectManager->startFlushSuite();
+
         for ($batch = 0; $batch < ceil($cntUsers / $batchSize); ++$batch) {
             $users = $this->userRepo->findUsersNotManagersOfPersonalWorkspace(0, $batchSize);
             $nb = count($users);

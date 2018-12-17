@@ -20,7 +20,8 @@ class PersonalWorkspaceIntegrityCheckerCommand extends ContainerAwareCommand
     {
         $this->setName('claroline:personal_ws:check')
             ->setDescription('Checks the personal workspace integrity of the platform.')
-            ->addOption('user', 'u', InputOption::VALUE_OPTIONAL, 'User login or email. Checks integrity only for this user.');
+            ->addOption('user', 'u', InputOption::VALUE_OPTIONAL, 'User login or email. Checks integrity only for this user.')
+            ->addOption('personal', 'p', InputOption::VALUE_NONE, 'Only check the is_personal parameter');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -28,6 +29,22 @@ class PersonalWorkspaceIntegrityCheckerCommand extends ContainerAwareCommand
         $consoleLogger = ConsoleLogger::get($output);
         $userManager = $this->getContainer()->get('claroline.manager.user_manager');
         $userManager->setLogger($consoleLogger);
+
+        if ($input->getOption('personal')) {
+            $consoleLogger->warning('Restoring is_personal parameter');
+            $sql = '
+                UPDATE claro_workspace workspace
+                JOIN claro_user user on workspace.id = user.workspace_id
+                SET workspace.is_personal = true
+            ';
+
+            $conn = $this->getContainer()->get('doctrine.dbal.default_connection');
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+
+            return;
+        }
+
         $userId = $input->getOption('user');
         if (!empty($userId)) {
             $user = $userManager->getUserByUsernameOrMail($userId, $userId);

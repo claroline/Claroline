@@ -233,9 +233,7 @@ class MailManager
         if ($this->isMailerAvailable()) {
             $to = [];
 
-            $fromEmail = $this->parameters['mailer']['from'] && !is_null($from) && !is_null($replyToMail) ?
-                $from->getEmail() :
-                $this->getMailerFrom();
+            $fromEmail = $this->parameters['mailer']['from'];
             $locale = 1 === count($users) ? $users[0]->getLocale() : $this->parameters['locales']['default'];
 
             if (!$locale) {

@@ -188,9 +188,6 @@ class Updater120118 extends Updater
                 'portfolio' => [
                     'url' => $this->getParameter($parameters, 'portfolio_url'),
                 ],
-                'resource' => [
-                    'soft_delete' => $this->getParameter($parameters, 'resource_soft_delete'),
-                ],
                 'country' => $this->getParameter($parameters, 'country'),
                 'profile' => [
                     'roles_confidential' => $this->getParameter($parameters, 'profile_roles_confidential'),

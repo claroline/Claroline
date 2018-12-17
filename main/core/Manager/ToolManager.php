@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
@@ -35,6 +36,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ToolManager
 {
+    use LoggableTrait;
+
     // todo adds a config in tools to avoid this
     const WORKSPACE_MODEL_TOOLS = ['home', 'resource_manager', 'users'];
 
@@ -104,6 +107,36 @@ class ToolManager
         $this->om->forceFlush();
         $this->toolMaskManager->createDefaultToolMaskDecoders($tool);
         $this->om->endFlushSuite();
+
+        //check if there are already workspace Tools, if not we add them
+        $ot = $this->om->getRepository(OrderedTool::class)->findBy(['tool' => $tool], [], 1, 0);
+
+        if (count($ot) > 0 || !$tool->isDisplayableInWorkspace()) {
+            return;
+        }
+
+        $total = $this->om->count(Workspace::class);
+        $this->log('Adding tool '.$tool->getName().' to workspaces ('.$total.')');
+
+        $offset = 0;
+        $totalTools = $this->om->count(Tool::class);
+
+        while ($offset < $total) {
+            $workspaces = $this->om->getRepository(Workspace::class)->findBy([], [], 500, $offset);
+            $ot = [];
+
+            foreach ($workspaces as $workspace) {
+                $ot[] = $this->setWorkspaceTool($tool, $totalTools, $tool->getName(), $workspace);
+                ++$offset;
+                $this->log('Adding tool '.$offset.'/'.$total);
+            }
+            $this->log('Flush');
+            $this->om->flush();
+
+            foreach ($ot as $toDetach) {
+                $this->om->detach($toDetach);
+            }
+        }
     }
 
     /**

@@ -190,6 +190,15 @@ class WorkspaceFinder extends AbstractFinder
         return $qb;
     }
 
+    //required for the unions
+    public function getExtraFieldMapping()
+    {
+        return [
+          'meta.personal' => 'is_personal',
+          'meta.model' => 'isModel',
+        ];
+    }
+
     public function getFilters()
     {
         return [

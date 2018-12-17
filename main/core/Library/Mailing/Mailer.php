@@ -59,6 +59,8 @@ class Mailer
             return true;
         } catch (\Exception $e) {
             $logger->error('Fail to send email to '.$to);
+            $logger->error($e->getMessage());
+            $logger->error(json_encode($message));
 
             return false;
         }

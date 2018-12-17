@@ -17,6 +17,7 @@
       "user-tracking": "user/tracking",
       "contacts-tool": "user/contact",
       "resources-tool": "tools/resources/bootstrap",
+      "trash-tool": "tools/trash/bootstrap",
       "workspace-user-management": "workspace/user",
       "administration-toolbar": "administration/toolbar",
       "workspace-toolbar": "workspace/toolbar",

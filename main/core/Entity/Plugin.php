@@ -108,4 +108,10 @@ class Plugin
     {
         return $this->hasOptions;
     }
+
+    //for debugging
+    public function __toString()
+    {
+        return $this->getBundleFQCN();
+    }
 }

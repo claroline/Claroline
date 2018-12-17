@@ -1,0 +1,27 @@
+
+{% set layout = 'ClarolineCoreBundle:workspace:layout.html.twig' %}
+
+{% extends layout %}
+
+{# Title of the Page #}
+{% block title %}
+    {{ parent() ~ ' - ' ~ "trash" | trans({}, "tools") | striptags | raw }}
+{% endblock %}
+
+{# Content of the Page #}
+{% block content %}
+    <div
+        class="page-container trash-container"
+        data-workspace="{{ workspace | api_serialize | json_encode | raw | escape }}"
+    ></div>
+{% endblock %}
+
+{% block javascripts %}
+    {# Claroline JS #}
+    {{ parent() }}
+
+    {# Translations #}
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'resource' }) }}"></script>
+
+    <script src="{{ hotAsset('dist/claroline-distribution-main-core-trash-tool.js') }}"></script>
+{% endblock %}
