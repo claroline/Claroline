@@ -13,11 +13,7 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
-use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
-use Claroline\CoreBundle\Pager\PagerFactory;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -25,69 +21,67 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class WorkspaceUserQueueManager
 {
+    /** @var StrictDispatcher */
     private $dispatcher;
-    private $objectManager;
-    private $pagerFactory;
+    /** @var ObjectManager */
+    private $om;
+    /** @var RoleManager */
     private $roleManager;
-    private $wksQrepo;
-    private $workspaceManager;
 
     /**
-     * Constructor.
+     * WorkspaceUserQueueManager constructor.
      *
      * @DI\InjectParams({
-     *     "dispatcher"       = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "objectManager"    = @DI\Inject("claroline.persistence.object_manager"),
-     *     "pagerFactory"     = @DI\Inject("claroline.pager.pager_factory"),
-     *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
-     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
+     *     "dispatcher"  = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "om"          = @DI\Inject("claroline.persistence.object_manager"),
+     *     "roleManager" = @DI\Inject("claroline.manager.role_manager")
      * })
+     *
+     * @param StrictDispatcher $dispatcher
+     * @param ObjectManager    $om
+     * @param RoleManager      $roleManager
      */
     public function __construct(
         StrictDispatcher $dispatcher,
-        ObjectManager $objectManager,
-        PagerFactory $pagerFactory,
-        RoleManager $roleManager,
-        WorkspaceManager $workspaceManager
+        ObjectManager $om,
+        RoleManager $roleManager
     ) {
         $this->dispatcher = $dispatcher;
-        $this->objectManager = $objectManager;
-        $this->pagerFactory = $pagerFactory;
+        $this->om = $om;
         $this->roleManager = $roleManager;
-        $this->workspaceManager = $workspaceManager;
-        $this->wksQrepo = $this->objectManager->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRegistrationQueue');
     }
 
-    public function validateRegistration(WorkspaceRegistrationQueue $wksqrq)
+    /**
+     * Validates a pending workspace registration.
+     *
+     * @param WorkspaceRegistrationQueue $workspaceRegistration
+     */
+    public function validateRegistration(WorkspaceRegistrationQueue $workspaceRegistration)
     {
         $this->roleManager->associateRolesToSubjects(
-            [$wksqrq->getUser()],
-            [$wksqrq->getRole()],
+            [$workspaceRegistration->getUser()],
+            [$workspaceRegistration->getRole()],
             true
         );
-        $this->objectManager->remove($wksqrq);
-        $this->objectManager->flush();
+
+        $this->om->remove($workspaceRegistration);
+        $this->om->flush();
     }
 
-    public function removeRegistrationQueue(WorkspaceRegistrationQueue $wksqrq)
+    /**
+     * Removes a pending workspace registration.
+     *
+     * @param WorkspaceRegistrationQueue $workspaceRegistration
+     */
+    public function removeRegistration(WorkspaceRegistrationQueue $workspaceRegistration)
     {
         $this->dispatcher->dispatch(
             'log',
             'Log\LogWorkspaceRegistrationDecline',
-            [$wksqrq]
+            [$workspaceRegistration]
         );
 
-        $this->objectManager->remove($wksqrq);
-        $this->objectManager->flush();
-    }
-
-    public function removeUserFromWorkspaceQueue(Workspace $workspace, User $user)
-    {
-        $queue = $this->wksQrepo->findOneByWorkspaceAndUser($workspace, $user);
-
-        if (!is_null($queue)) {
-            $this->objectManager->remove($queue);
-            $this->objectManager->flush();
-        }
+        $this->om->remove($workspaceRegistration);
+        $this->om->flush();
     }
 }

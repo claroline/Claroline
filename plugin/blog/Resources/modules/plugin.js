@@ -2,7 +2,7 @@
 
 import {registry} from '#/main/app/plugins/registry'
 
-registry.add('blog', {
+registry.add('IcapBlogBundle', {
   actions: {
     resource: {
       'blog_post' : () => { return import(/* webpackChunkName: "plugin-blog-action-post" */ '#/plugin/blog/resources/blog/actions/post') }

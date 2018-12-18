@@ -12,9 +12,8 @@
 namespace Claroline\SurveyBundle\Listener;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Resource\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\SurveyBundle\Entity\Choice;
@@ -71,25 +70,6 @@ class SurveyListener
         $this->router = $router;
         $this->surveyManager = $surveyManager;
         $this->templating = $templating;
-    }
-
-    /**
-     * @DI\Observe("create_form_claroline_survey")
-     *
-     * @param CreateFormResourceEvent $event
-     */
-    public function onCreationForm(CreateFormResourceEvent $event)
-    {
-        $form = $this->formFactory->create(SurveyType::class, new Survey());
-        $content = $this->templating->render(
-            'ClarolineCoreBundle:resource:create_form.html.twig',
-            [
-                'form' => $form->createView(),
-                'resourceType' => 'claroline_survey',
-            ]
-        );
-        $event->setResponseContent($content);
-        $event->stopPropagation();
     }
 
     /**

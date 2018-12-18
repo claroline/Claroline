@@ -11,7 +11,9 @@
 
 namespace Claroline\TagBundle\Listener;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\GenericDataEvent;
+use Claroline\CoreBundle\Event\SearchObjectsEvent;
 use Claroline\TagBundle\Entity\TaggedObject;
 use Claroline\TagBundle\Manager\TagManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -21,6 +23,9 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class TagListener
 {
+    /** @var ObjectManager */
+    private $om;
+
     /** @var TagManager */
     private $manager;
 
@@ -28,15 +33,62 @@ class TagListener
      * TagListener constructor.
      *
      * @DI\InjectParams({
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
      *     "tagManager" = @DI\Inject("claroline.manager.tag_manager")
      * })
      *
-     * @param TagManager $tagManager
+     * @param ObjectManager $om
+     * @param TagManager    $tagManager
      */
     public function __construct(
+        ObjectManager $om,
         TagManager $tagManager
     ) {
+        $this->om = $om;
         $this->manager = $tagManager;
+    }
+
+    /**
+     * @DI\Observe("objects.search")
+     *
+     * @param SearchObjectsEvent $event
+     */
+    public function onSearchObjects(SearchObjectsEvent $event)
+    {
+        // checks if there are filters managed by tag plugin in query
+        $filters = $event->getFilters();
+
+        if (!empty($filters) && !empty($filters['tags'])) {
+            $tags = is_string($filters['tags']) ? [$filters['tags']] : $filters['tags'];
+
+            // generate query for tags filter
+            $tagQueryBuilder = $this->om->createQueryBuilder();
+            $tagQueryBuilder
+                ->select('to.id')
+                ->from('ClarolineTagBundle:TaggedObject', 'to')
+                ->innerJoin('to.tag', 't')
+                ->where('to.objectClass = :objectClass')
+                ->andWhere('to.objectId = obj.uuid') // this makes the UUID required on tagged objects
+                ->andWhere('t.uuid IN (:tags)')
+                ->groupBy('to.objectId')
+                ->having('COUNT(to.id) = :expectedCount'); // this permits to make a AND between tags
+
+            // append sub query to the original one
+            $queryBuilder = $event->getQueryBuilder();
+            $queryBuilder
+                ->andWhere(
+                    $queryBuilder->expr()->exists($tagQueryBuilder->getDql())
+                )
+                ->setParameters([
+                    'expectedCount' => count($tags),
+                    'objectClass' => $event->getObjectClass(),
+                    'tags' => $tags,
+                ]);
+
+            // remove tags from filters list
+            unset($filters['tags']);
+            $event->setFilters($filters);
+        }
     }
 
     /**

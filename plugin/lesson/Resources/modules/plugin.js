@@ -2,7 +2,7 @@
 
 import {registry} from '#/main/app/plugins/registry'
 
-registry.add('lesson', {
+registry.add('IcapLessonBundle', {
   actions: {
     resource: {
       'chapter' : () => { return import(/* webpackChunkName: "plugin-lesson-action-chapter" */ '#/plugin/lesson/resources/lesson/actions/chapter') }

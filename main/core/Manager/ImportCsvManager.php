@@ -318,7 +318,7 @@ class ImportCsvManager
                 if (is_null($group)) {
                     $logs[] = "[$lineNb] $groupTxt [$groupName] $nonExistentTxt";
                 } else {
-                    $this->groupManager->removeAllUsersFromGroup($group);
+                    $this->groupManager->removeUsersFromGroup($group, $group->getUsers()->toArray());
                     $logs[] = "$groupTxt [$groupName] $emptiedTxt";
                 }
             }

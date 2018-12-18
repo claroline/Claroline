@@ -5,8 +5,7 @@ namespace [[Vendor]]\[[Bundle]]Bundle\Listener;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\Resource\CreateResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\DownloadResourceEvent;
@@ -31,25 +30,6 @@ class [[Resource_Type]]ResourceListener
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-    }
-
-    /**
-     * @DI\Observe("create_form_[[vendor]]_[[resource_type]]")
-     *
-     * @param CreateFormResourceEvent $event
-     */
-    public function onCreateForm(CreateFormResourceEvent $event)
-    {
-        $form = $this->container->get('form.factory')->create(new [[Resource_Type]]Type(), new [[Resource_Type]]());
-        $content = $this->container->get('templating')->render(
-            '[[Vendor]][[Bundle]]Bundle:[[Resource_Type]]:createForm.html.twig',
-            array(
-                'form' => $form->createView(),
-                'resourceType' => '[[vendor]]_[[resource_type]]'
-            )
-        );
-        $event->setResponseContent($content);
-        $event->stopPropagation();
     }
 
     /**

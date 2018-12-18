@@ -91,7 +91,6 @@ The definition of your listener must be placed in the
 Here is the list of events fired by the resource manager
 (lower case is forced here):
 
-* create_form_*resourcetypename* => CreateFormResourceEvent
 * create_*resourcetypename* => CreateResourceEvent
 * delete_*resourcetypename* => DeleteResourceEvent
 * download_*resourcetypename* => DownloadResourceEvent
@@ -110,112 +109,6 @@ set in the archive.
 
 Define your listener class in the *Listener* folder. The following code comes
 from the FileListener. We are going to analyze it.
-
-**Form creation**
-
-``` php
-/**
- * @DI\Observe("create_form_file")
- *
- * @param CreateFormResourceEvent $event
- */
-public function onCreateForm(CreateFormResourceEvent $event)
-{
-    $form = $this->container->get('form.factory')->create(new FileType, new File());
-    $content = $this->container->get('templating')->render(
-        'ClarolineCoreBundle:resource:create_form.html.twig',
-        array(
-            'form' => $form->createView(),
-            'resourceType' => 'file'
-        )
-    );
-    $event->setResponseContent($content);
-    $event->stopPropagation();
-}
-```
-
-Please find the Symfony documentation [here](http://symfony.com/doc/2.0/book/forms.html)
-
-You can use the 'ClarolineCoreBundle:resource:create_form.html.twig' as default
-form for your resource wich is what's happening here.
-
-**Note**: don't forget the 'resourceType' attribute. Its value must be the
-'name' field you defined in your config.yml file.
-
-If you want to write your own twig file, your form action must be:
-
-    action="{{ path('claro_resource_create', {'resourceType':resourceType, 'parentId':'_nodeId'}) }}"
-
-where resourceType is the 'name' field you defined in your config.yml file and
-**_nodeId** is a placeholder used by the javascript manager.
-
-**Form submission**
-
-```php
-/**
- * @DI\Observe("create_file")
- *
- * @param CreateResourceEvent $event
- */
-public function onCreate(CreateResourceEvent $event)
-{
-    $request = $this->container->get('request');
-    $form = $this->container->get('form.factory')->create(new FileType, new File());
-    $form->handleRequest($request);
-
-    if ($form->isValid()) {
-        $file = $form->getData();
-        $tmpFile = $form->get('file')->getData();
-        $fileName = $tmpFile->getClientOriginalName();
-        $extension = pathinfo($fileName, PATHINFO_EXTENSION);
-        $size = filesize($tmpFile);
-        $mimeType = $tmpFile->getClientMimeType();
-        $hashName = $this->container->get('claroline.utilities.misc')->generateGuid() . "." . $extension;
-        $tmpFile->move($this->container->getParameter('claroline.param.files_directory'), $hashName);
-        $file->setSize($size);
-        $file->setName($fileName);
-        $file->setHashName($hashName);
-        $file->setMimeType($mimeType);
-        $event->setResources(array($file));
-        $event->stopPropagation();
-
-        return;
-    }
-
-    $content = $this->container->get('templating')->render(
-        'ClarolineCoreBundle:resource:create_form.html.twig',
-        array(
-            'form' => $form->createView(),
-            'resourceType' => $event->getResourceType()
-        )
-    );
-    $event->setErrorFormContent($content);
-    $event->stopPropagation();
-}
-```
-
-As you can see, we first valid the form.
-
-If the form is valid, we create new File entity (wich extends AbstractResource)
-and set all its properties. We also move the data submitted by the user in the
-/files directory.
-We finally use the appropriate setter on the event to send back the created
-file.
-
-
-```php
-$event->setResources(array($file));
-```
-
-This file will be persisted by the claroline core. Rights, creator, creation
-date, ... will be set and everything will be flushed.
-
-If the form validation fails, we render the form with its validation errors,
-and set it in the event with the appropriate setter.
-
-```php
-$event->setErrorFormContent($content);
-```
 
 **Delete**
 

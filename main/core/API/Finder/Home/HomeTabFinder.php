@@ -24,6 +24,9 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class HomeTabFinder extends AbstractFinder
 {
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
     /**
      * WorkspaceFinder constructor.
      *
@@ -31,8 +34,7 @@ class HomeTabFinder extends AbstractFinder
      *     "tokenStorage" = @DI\Inject("security.token_storage")
      * })
      *
-     * @param AuthorizationCheckerInterface $authChecker
-     * @param TokenStorageInterface         $tokenStorage
+     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(TokenStorageInterface $tokenStorage)
     {

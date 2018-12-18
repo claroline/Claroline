@@ -76,7 +76,7 @@ class TagController extends AbstractCrudController
     }
 
     /**
-     * Adds a taf to a collection of taggable objects.
+     * Adds a tag to a collection of taggable objects.
      * NB. If the tag does not exist, it will be created.
      *
      * @EXT\Route("/{tag}/object", name="apiv2_tag_add_objects")

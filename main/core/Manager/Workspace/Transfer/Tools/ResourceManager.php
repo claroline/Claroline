@@ -118,9 +118,9 @@ class ResourceManager
 
         if (isset($data['root'])) {
             $new = $this->dispatcher->dispatch(
-              'transfer_export_claroline_corebundle_entity_resource_resourcenode',
-              'Claroline\\CoreBundle\\Event\\ExportObjectEvent',
-              [new \StdClass(), $event->getFileBag(), $data['root']]
+                'transfer_export_claroline_corebundle_entity_resource_resourcenode',
+                ExportObjectEvent::class,
+                [new \StdClass(), $event->getFileBag(), $data['root']]
             );
 
             $event->overwrite('root', $new->getData());

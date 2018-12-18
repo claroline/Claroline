@@ -2,10 +2,9 @@
 
 namespace UJM\LtiBundle\Listener;
 
-use Claroline\CoreBundle\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
+use Claroline\CoreBundle\Event\Resource\CreateResourceEvent;
+use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\DiExtraBundle\Annotation\Inject;
@@ -62,29 +61,6 @@ class LtiListener
         $subRequest = $this->request->duplicate([], null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);
-        $event->stopPropagation();
-    }
-
-    /**
-     * Displays a form to create an LTI link.
-     *
-     * @DI\Observe("create_form_ujm_lti_resource")
-     *
-     * @param CreateFormResourceEvent $event
-     */
-    public function onCreateForm(CreateFormResourceEvent $event)
-    {
-        /** @var FormInterface $form */
-        $form = $this->container->get('form.factory')->create(new LtiResourceType());
-
-        $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:resource:create_form.html.twig', [
-                'resourceType' => 'ujm_lti_resource',
-                'form' => $form->createView(),
-            ]
-        );
-
-        $event->setResponseContent($content);
         $event->stopPropagation();
     }
 

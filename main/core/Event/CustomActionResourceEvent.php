@@ -18,6 +18,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Event dispatched by the resource controller when a custom action is asked on a resource.
+ *
+ * @deprecated
  */
 class CustomActionResourceEvent extends Event implements DataConveyorEventInterface
 {

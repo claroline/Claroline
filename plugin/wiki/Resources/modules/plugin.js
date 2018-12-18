@@ -2,7 +2,7 @@
 
 import {registry} from '#/main/app/plugins/registry'
 
-registry.add('wiki', {
+registry.add('IcapWikiBundle', {
   actions: {
     resource: {
       // TODO : finish implementation

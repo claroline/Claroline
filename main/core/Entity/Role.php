@@ -163,22 +163,6 @@ class Role extends BaseRole
      */
     protected $personalWorkspaceCreationEnabled = false;
 
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\ProfileProperty",
-     *     mappedBy="role"
-     * )
-     */
-    protected $profileProperties;
-
-    /**
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tab\HomeTabConfig",
-     *     mappedBy="roles"
-     * )
-     */
-    protected $homeTabConfigs;
-
     public function __construct()
     {
         $this->refreshUuid();
@@ -187,9 +171,7 @@ class Role extends BaseRole
         $this->groups = new ArrayCollection();
         $this->toolRights = new ArrayCollection();
         $this->pwsToolConfig = new ArrayCollection();
-        $this->profileProperties = new ArrayCollection();
         $this->adminTools = new ArrayCollection();
-        $this->homeTabConfigs = new ArrayCollection();
     }
 
     public function getId()
@@ -406,16 +388,6 @@ class Role extends BaseRole
     public function setPersonalWorkspaceCreationEnabled($boolean)
     {
         $this->personalWorkspaceCreationEnabled = $boolean;
-    }
-
-    public function getProfileProperties()
-    {
-        return $this->profileProperties;
-    }
-
-    public function addProfileProperty(ProfileProperty $property)
-    {
-        $this->profileProperties->add($property);
     }
 
     /**

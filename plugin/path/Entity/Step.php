@@ -107,17 +107,6 @@ class Step
     protected $path;
 
     /**
-     * Condition.
-     *
-     * @var StepCondition
-     *
-     * @ORM\OneToOne(targetEntity="Innova\PathBundle\Entity\StepCondition", mappedBy="step", cascade={"persist", "remove"})
-     *
-     * @deprecated
-     */
-    protected $condition;
-
-    /**
      * Inherited resources.
      *
      * @var ArrayCollection|InheritedResource[]
@@ -487,36 +476,6 @@ class Step
         }
 
         return $this;
-    }
-
-    /**
-     * Set condition.
-     *
-     * @param StepCondition $condition
-     *
-     * @return Step
-     */
-    public function setCondition(StepCondition $condition = null)
-    {
-        if ($condition !== $this->condition) {
-            $this->condition = $condition;
-
-            if (null !== $condition) {
-                $condition->setStep($this);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * Get condition.
-     *
-     * @return StepCondition
-     */
-    public function getCondition()
-    {
-        return $this->condition;
     }
 
     /**

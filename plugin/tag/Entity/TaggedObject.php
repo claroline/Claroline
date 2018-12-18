@@ -49,9 +49,7 @@ class TaggedObject
     private $objectName;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\TagBundle\Entity\Tag"
-     * )
+     * @ORM\ManyToOne(targetEntity="Claroline\TagBundle\Entity\Tag", inversedBy="taggedObjects")
      * @ORM\JoinColumn(name="tag_id", onDelete="CASCADE", nullable=false)
      *
      * @var Tag
@@ -75,13 +73,7 @@ class TaggedObject
      */
     public function setTag(Tag $tag)
     {
-        if ($this->tag) {
-            $this->tag->removeTaggedObject($this);
-        }
-
         $this->tag = $tag;
-
-        $this->tag->addTagObject($this);
     }
 
     /**

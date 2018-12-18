@@ -27,7 +27,7 @@ class CompetencyFinder extends AbstractFinder
         return Competency::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
         $scaleJoin = false;
 

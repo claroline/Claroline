@@ -1,5 +1,7 @@
 import merge from 'lodash/merge'
 
+import {isTypeEnabled} from '#/main/app/data'
+
 import {DataListProperty} from '#/main/app/content/list/prop-types'
 
 /**
@@ -10,7 +12,11 @@ import {DataListProperty} from '#/main/app/content/list/prop-types'
  * @return {Array} - the defaulted definition
  */
 function createListDefinition(definition) {
-  return definition.map(dataDef => merge({}, DataListProperty.defaultProps, dataDef))
+  return definition
+    // add default
+    .map(dataDef => merge({}, DataListProperty.defaultProps, dataDef))
+    // remove disabled types
+    .filter(dataDef => isTypeEnabled(dataDef.type))
 }
 
 /**

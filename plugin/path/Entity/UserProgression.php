@@ -10,9 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
  * Represents the progression of a User in a Step.
  *
  * @ORM\Table(name="innova_path_progression")
- * @ORM\Entity(repositoryClass="Innova\PathBundle\Repository\UserProgressionRepository")
+ * @ORM\Entity()
  */
-class UserProgression implements \JsonSerializable
+class UserProgression
 {
     /**
      * Default status when creating a new UserProgression.
@@ -211,19 +211,6 @@ class UserProgression implements \JsonSerializable
     public static function getAvailableStatus()
     {
         return static::$statusAvailable;
-    }
-
-    public function jsonSerialize()
-    {
-        return [
-            'id' => $this->id,
-            'userId' => ($this->user instanceof User) ? $this->user->getId() : 0,
-            'stepId' => $this->step->getId(),
-            'status' => $this->status,
-            'authorized' => $this->authorized,
-            'locked' => $this->locked,
-            'lockedcall' => $this->lockedcall,
-        ];
     }
 
     /**

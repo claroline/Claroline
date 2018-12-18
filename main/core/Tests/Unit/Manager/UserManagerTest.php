@@ -239,15 +239,6 @@ class UserManagerTest extends MockeryTestCase
         $this->getManager()->refreshUser($user);
     }
 
-    public function testGetNbUsers()
-    {
-        $this->userRepo->shouldReceive('count')
-            ->once()
-            ->andReturn(4);
-
-        $this->assertEquals(4, $this->getManager()->getNbUsers());
-    }
-
     public function testGetUsersByIds()
     {
         $ids = [1, 3, 4];

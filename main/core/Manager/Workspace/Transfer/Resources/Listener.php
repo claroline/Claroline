@@ -73,9 +73,10 @@ class Listener
         $resource = $this->om->getRepository($resourceNode->getClass())->findOneBy(['resourceNode' => $resourceNode]);
 
         if (isset($data['resource'])) {
+            /** @var ExportObjectEvent $new */
             $new = $this->dispatcher->dispatch(
                 'transfer_export_'.$this->getUnderscoreClassName(get_class($resource)),
-                'Claroline\\CoreBundle\\Event\\ExportObjectEvent',
+                ExportObjectEvent::class,
                 [$resource, $event->getFileBag(), $data['resource']]
             );
 

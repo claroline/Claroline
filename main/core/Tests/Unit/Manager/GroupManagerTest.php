@@ -11,19 +11,14 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use Doctrine\ORM\Query;
-use Mockery as m;
 
 class GroupManagerTest extends MockeryTestCase
 {
     private $om;
     private $groupRepo;
-    private $userRepo;
-    private $pagerFactory;
-    private $translator;
     private $eventDispatcher;
+    private $roleManager;
 
     public function setUp()
     {
@@ -31,10 +26,8 @@ class GroupManagerTest extends MockeryTestCase
 
         $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
         $this->groupRepo = $this->mock('Claroline\CoreBundle\Repository\GroupRepository');
-        $this->userRepo = $this->mock('Claroline\CoreBundle\Repository\UserRepository');
-        $this->pagerFactory = $this->mock('Claroline\CoreBundle\Pager\PagerFactory');
-        $this->translator = $this->mock('Symfony\Component\Translation\Translator');
         $this->eventDispatcher = $this->mock('Claroline\CoreBundle\Event\StrictDispatcher');
+        $this->roleManager = $this->mock('Claroline\CoreBundle\Manager\RoleManager');
     }
 
     public function testInsertGroup()
@@ -53,28 +46,6 @@ class GroupManagerTest extends MockeryTestCase
         $this->om->shouldReceive('flush')->once();
 
         $this->getManager()->deleteGroup($group);
-    }
-
-    public function testUpdateGroup()
-    {
-        $group = $this->mock('Claroline\CoreBundle\Entity\Group');
-        $role = $this->mock('Claroline\CoreBundle\Entity\Role');
-        $unitOfWork = $this->mock('Doctrine\ORM\UnitOfWork');
-        $changeSet = [];
-
-        $this->om->shouldReceive('getUnitOfWork')->once()->andReturn($unitOfWork);
-        $unitOfWork->shouldReceive('computeChangeSets')->once();
-        $unitOfWork->shouldReceive('getEntityChangeSet')->with($group)->once()->andReturn($changeSet);
-        $group->shouldReceive('getPlatformRole')->once()->andReturn($role);
-        $role->shouldReceive('getTranslationKey')->once()->andReturn('new_key');
-        $changeSet['platformRole'] = ['old_key', 'new_key'];
-        $this->eventDispatcher->shouldReceive('dispatch')
-            ->with('log', 'Log\LogGroupUpdate', [$group, $changeSet])
-            ->once();
-        $this->om->shouldReceive('persist')->with($group)->once();
-        $this->om->shouldReceive('flush')->once();
-
-        $this->getManager()->updateGroup($group, 'old_key');
     }
 
     public function testAddUsersToGroup()
@@ -116,135 +87,16 @@ class GroupManagerTest extends MockeryTestCase
         $this->getManager()->removeUsersFromGroup($group, $users);
     }
 
-    public function testImportUsers()
-    {
-        $group = $this->mock('Claroline\CoreBundle\Entity\Group');
-        $user = $this->mock('Claroline\CoreBundle\Entity\User');
-        $manager = $this->getManager(['addUsersToGroup']);
-        $users = [
-            [
-                'firstname1',
-                'lastname1',
-                'username1',
-                'password1',
-                'email1@claroline.net',
-                'code1',
-            ],
-            [
-                'firstname2',
-                'lastname2',
-                'username2',
-                'password2',
-                'email2@claroline.net',
-                'code2',
-            ],
-        ];
-
-        m::getConfiguration()->allowMockingNonExistentMethods(true);
-        $this->userRepo->shouldReceive('findOneBy')
-            ->with(['username' => 'username1', 'firstName' => 'firstname1', 'lastName' => 'lastname1'])
-            ->once()
-            ->andReturn(null);
-        $this->userRepo->shouldReceive('findOneBy')
-            ->with(['username' => 'username2', 'firstName' => 'firstname2', 'lastName' => 'lastname2'])
-            ->once()
-            ->andReturn($user);
-        m::getConfiguration()->allowMockingNonExistentMethods(false);
-
-        $manager->shouldReceive('addUsersToGroup')
-            ->with($group, [$user])
-            ->once();
-
-        $manager->importUsers($group, $users);
-    }
-
-    public function testGetGroups()
-    {
-        $em = $this->mock('Doctrine\ORM\EntityManager');
-        $query = new Query($em);
-
-        $this->groupRepo->shouldReceive('findAll')
-            ->with(false, 'id')
-            ->once()
-            ->andReturn($query);
-        $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1, 50)
-            ->once()
-            ->andReturn('pager');
-
-        $this->assertEquals('pager', $this->getManager()->getGroups(1));
-    }
-
-    public function testGetGroupsByName()
-    {
-        $em = $this->mock('Doctrine\ORM\EntityManager');
-        $query = new Query($em);
-
-        $this->groupRepo->shouldReceive('findByName')
-            ->with('search', false, 'id')
-            ->once()
-            ->andReturn($query);
-        $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1, 50)
-            ->once()
-            ->andReturn('pager');
-
-        $this->assertEquals('pager', $this->getManager()->getGroupsByName('search', 1));
-    }
-
-    public function testGetGroupsByRoles()
-    {
-        $em = $this->mock('Doctrine\ORM\EntityManager');
-        $query = new Query($em);
-        $role = new Role();
-        $roles = [$role];
-
-        $this->groupRepo->shouldReceive('findByRoles')
-            ->with($roles, true, 'id')
-            ->once()
-            ->andReturn($query);
-
-        $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1, 50)
-            ->once()
-            ->andReturn('pager');
-
-        $this->assertEquals('pager', $this->getManager()->getGroupsByRoles($roles, 1));
-    }
-
-    public function testGetGroupsByRolesAndName()
-    {
-        $em = $this->mock('Doctrine\ORM\EntityManager');
-        $query = new Query($em);
-        $role = new Role();
-        $roles = [$role];
-
-        $this->groupRepo->shouldReceive('findByRolesAndName')
-            ->with($roles, 'name', true, 'id')
-            ->once()
-            ->andReturn($query);
-
-        $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1, 50)
-            ->once()
-            ->andReturn('pager');
-
-        $this->assertEquals('pager', $this->getManager()->getGroupsByRolesAndName($roles, 'name', 1));
-    }
-
     private function getManager(array $mockedMethods = [])
     {
         $this->om->shouldReceive('getRepository')->once()
             ->with('ClarolineCoreBundle:Group')->andReturn($this->groupRepo);
-        $this->om->shouldReceive('getRepository')->once()
-            ->with('ClarolineCoreBundle:User')->andReturn($this->userRepo);
 
         if (0 === count($mockedMethods)) {
             return new GroupManager(
                 $this->om,
-                $this->pagerFactory,
-                $this->translator,
-                $this->eventDispatcher
+                $this->eventDispatcher,
+                $this->roleManager
             );
         }
 
@@ -261,9 +113,8 @@ class GroupManagerTest extends MockeryTestCase
             'Claroline\CoreBundle\Manager\GroupManager'.$stringMocked,
             [
                 $this->om,
-                $this->pagerFactory,
-                $this->translator,
                 $this->eventDispatcher,
+                $this->roleManager,
             ]
         );
     }

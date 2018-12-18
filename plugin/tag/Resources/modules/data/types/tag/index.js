@@ -1,9 +1,9 @@
 import {trans} from '#/main/app/intl/translation'
 
-import {TagCell} from '#/plugin/tag/data/tag/components/cell'
-import {TagDisplay} from '#/plugin/tag/data/tag/components/display'
-import {TagFilter} from '#/plugin/tag/data/tag/components/filter'
-import {TagGroup} from '#/plugin/tag/data/tag/components/group'
+import {TagCell} from '#/plugin/tag/data/types/tag/components/cell'
+import {TagDisplay} from '#/plugin/tag/data/types/tag/components/display'
+import {TagFilter} from '#/plugin/tag/data/types/tag/components/filter'
+import {TagGroup} from '#/plugin/tag/data/types/tag/components/group'
 
 // todo : finish implementation
 // todo : validation

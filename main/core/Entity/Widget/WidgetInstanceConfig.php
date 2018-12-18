@@ -15,7 +15,7 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WidgetInstanceConfigRepository")
+ * @ORM\Entity()
  * @ORM\Table(
  *     name="claro_widget_instance_config"
  * )

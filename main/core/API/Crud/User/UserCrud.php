@@ -7,6 +7,7 @@ use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\UserCreatedEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -138,7 +139,7 @@ class UserCrud
         //we need this line for the log system
         //dispatch some events but they should be listening the same as we are imo.
         //something should be done for event listeners
-        $this->dispatcher->dispatch('user_created_event', 'UserCreated', ['user' => $user]);
+        $this->dispatcher->dispatch('user_created_event', UserCreatedEvent::class, ['user' => $user]);
         $this->dispatcher->dispatch('log', 'Log\LogUserCreate', [$user]);
         $this->om->endFlushSuite();
     }

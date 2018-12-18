@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\API\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\CoreBundle\Entity\Theme\Theme;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -23,10 +24,10 @@ class ThemeFinder extends AbstractFinder
 {
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Theme\Theme';
+        return Theme::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
         foreach ($searches as $filterName => $filterValue) {
             if (is_string($filterValue)) {

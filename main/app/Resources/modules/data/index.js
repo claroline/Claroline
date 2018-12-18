@@ -1,6 +1,6 @@
 import {checkPropTypes} from 'prop-types'
 
-import {getApps, getApp} from '#/main/app/plugins'
+import {getApps, getApp, isAppEnabled} from '#/main/app/plugins'
 import {DataType} from '#/main/app/data/prop-types'
 
 /**
@@ -62,21 +62,26 @@ function getType(typeName) {
     })
 }
 
+function isTypeEnabled(typeName) {
+  return isAppEnabled('data.types', typeName)
+}
+
 /**
- * Gets a data type definition by its name.
+ * Gets a data source definition by its name.
  *
- * @param {string} typeName
+ * @param {string} sourceName
  *
  * @return {Promise.<Object>}
  */
-function getSource(typeName) {
+function getSource(sourceName) {
   // retrieve the data source application
-  return getApp('data.sources', typeName)()
+  return getApp('data.sources', sourceName)()
 }
 
 export {
   getCreatableTypes,
   getTypes,
   getType,
+  isTypeEnabled,
   getSource
 }

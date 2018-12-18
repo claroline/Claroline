@@ -78,11 +78,7 @@ class ResourceNode
     /**
      * @var ResourceType
      *
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
-     *     inversedBy="abstractResources",
-     *     cascade={"persist"}
-     * )
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType")
      * @ORM\JoinColumn(name="resource_type_id", onDelete="CASCADE", nullable=false)
      */
     private $resourceType;
@@ -903,14 +899,14 @@ class ResourceNode
      */
     public function preFlush(PreFlushEventArgs $args)
     {
-	$ancestors = $this->getOldAncestors();
-        $ids = array_map(function($ancestor) {
+        $ancestors = $this->getOldAncestors();
+        $ids = array_map(function ($ancestor) {
             return $ancestor['id'];
         }, $ancestors);
         $ids = array_unique($ids);
 
         if (count($ids) !== count($ancestors)) {
-	    return;
+            return;
         }
 
         $entityManager = $args->getEntityManager();
@@ -930,7 +926,6 @@ class ResourceNode
         return $path;
     }
 
-
     /**
      * Returns the ancestors of a resource.
      *
@@ -943,13 +938,14 @@ class ResourceNode
         $ancestors = [];
         $countAncestors = count($parts);
         for ($i = 0; $i < $countAncestors; $i += 2) {
-	    if (array_key_exists($i + 1, $parts)) {
+            if (array_key_exists($i + 1, $parts)) {
                 $ancestors[] = [
                     'id' => (int) $parts[$i + 1],
                     'name' => $parts[$i],
-	        ];
-	    }
+                ];
+            }
         }
+
         return $ancestors;
     }
 }

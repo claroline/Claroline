@@ -4,13 +4,12 @@ namespace Innova\AudioRecorderBundle\EventListener\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\Resource\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
-use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use Innova\AudioRecorderBundle\Manager\AudioRecorderManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -82,27 +81,6 @@ class AudioRecorderListener
         $event->setPublished(true);
         $event->setResourceType('file');
         $event->setResources([$file]);
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("create_form_innova_audio_recorder")
-     *
-     * @param CreateFormResourceEvent $event
-     */
-    public function onCreateForm(CreateFormResourceEvent $event)
-    {
-        $config = $this->manager->getConfig();
-        // Create form POPUP
-        $content = $this->container->get('templating')->render(
-                'InnovaAudioRecorderBundle:AudioRecorder:form.html.twig',
-                [
-                  'resourceType' => 'innova_audio_recorder',
-                  'maxTry' => $config->getMaxTry(),
-                  'maxTime' => $config->getMaxRecordingTime(),
-                ]
-        );
-        $event->setResponseContent($content);
         $event->stopPropagation();
     }
 

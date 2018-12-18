@@ -14,62 +14,54 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Pager\PagerFactory;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\GroupRepository;
-use Claroline\CoreBundle\Repository\UserRepository;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("claroline.manager.group_manager")
  */
 class GroupManager
 {
+    /** @var ObjectManager */
     private $om;
     /** @var GroupRepository */
     private $groupRepo;
-    /** @var UserRepository */
-    private $userRepo;
-    private $pagerFactory;
-    private $translator;
+    /** @var StrictDispatcher */
     private $eventDispatcher;
+    /** @var RoleManager */
     private $roleManager;
 
     /**
-     * Constructor.
+     * GroupManager constructor.
      *
      * @DI\InjectParams({
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory"),
-     *     "translator"      = @DI\Inject("translator"),
      *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
-     *     "container"       = @DI\Inject("service_container")
+     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager")
      * })
+     *
+     * @param ObjectManager    $om
+     * @param StrictDispatcher $eventDispatcher
+     * @param RoleManager      $roleManager
      */
     public function __construct(
         ObjectManager $om,
-        PagerFactory $pagerFactory,
-        TranslatorInterface $translator,
         StrictDispatcher $eventDispatcher,
-        RoleManager $roleManager,
-        ContainerInterface $container
+        RoleManager $roleManager
     ) {
         $this->om = $om;
         $this->groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
-        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
-        $this->pagerFactory = $pagerFactory;
-        $this->translator = $translator;
         $this->eventDispatcher = $eventDispatcher;
         $this->roleManager = $roleManager;
-        $this->container = $container;
     }
 
     /**
      * Persists and flush a group.
      *
-     * @param \Claroline\CoreBundle\Entity\Group $group
+     * @param Group $group
+     *
+     * @return Group
      */
     public function insertGroup(Group $group)
     {
@@ -83,7 +75,7 @@ class GroupManager
     /**
      * Removes a group.
      *
-     * @param \Claroline\CoreBundle\Entity\Group $group
+     * @param Group $group
      */
     public function deleteGroup(Group $group)
     {
@@ -98,41 +90,14 @@ class GroupManager
     }
 
     /**
-     * @todo what does this method do ?
-     *
-     * @param \Claroline\CoreBundle\Entity\Group $group
-     * @param Role[]                             $oldRoles
-     */
-    public function updateGroup(Group $group, array $oldRoles)
-    {
-        $unitOfWork = $this->om->getUnitOfWork();
-        $unitOfWork->computeChangeSets();
-        $changeSet = $unitOfWork->getEntityChangeSet($group);
-        $newRoles = $group->getPlatformRoles();
-        $oldRolesTranslationKeys = [];
-
-        foreach ($oldRoles as $oldRole) {
-            $oldRolesTranslationKeys[] = $oldRole->getTranslationKey();
-        }
-
-        $newRolesTransactionKeys = [];
-
-        foreach ($newRoles as $newRole) {
-            $newRolesTransactionKeys[] = $newRole->getTranslationKey();
-        }
-
-        $changeSet['platformRole'] = [$oldRolesTranslationKeys, $newRolesTransactionKeys];
-        $this->eventDispatcher->dispatch('log', 'Log\LogGroupUpdate', [$group, $changeSet]);
-
-        $this->om->persist($group);
-        $this->om->flush();
-    }
-
-    /**
      * Adds an array of user to a group.
      *
-     * @param \Claroline\CoreBundle\Entity\Group $group
-     * @param User[]                             $users
+     * @param Group  $group
+     * @param User[] $users
+     *
+     * @return User[]
+     *
+     * @throws Exception\AddRoleException
      */
     public function addUsersToGroup(Group $group, array $users)
     {
@@ -157,27 +122,10 @@ class GroupManager
     }
 
     /**
-     * Removes all users from a group.
+     * Removes an array of users from a group.
      *
-     * @param \Claroline\CoreBundle\Entity\Group $group
-     */
-    public function removeAllUsersFromGroup(Group $group)
-    {
-        $users = $group->getUsers();
-
-        foreach ($users as $user) {
-            $group->removeUser($user);
-        }
-
-        $this->om->persist($group);
-        $this->om->flush();
-    }
-
-    /**
-     * Removes an array of user from a group.
-     *
-     * @param \Claroline\CoreBundle\Entity\Group $group
-     * @param User[]                             $users
+     * @param Group  $group
+     * @param User[] $users
      */
     public function removeUsersFromGroup(Group $group, array $users)
     {
@@ -191,113 +139,10 @@ class GroupManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Group $group
-     * @param array                              $users
-     *
-     * @return array
-     */
-    public function importUsers(Group $group, array $users)
-    {
-        $toImport = $this->userRepo->findByUsernames($users);
-
-        return $this->addUsersToGroup($group, $toImport);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace[] $workspaces
-     *
-     * @return Group[]
-     */
-    public function getGroupsByWorkspaces(array $workspaces)
-    {
-        return $this->groupRepo->findGroupsByWorkspaces($workspaces, true);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace[] $workspaces
-     * @param string                                             $search
-     *
-     * @return Group[]
-     */
-    public function getGroupsByWorkspacesAndSearch(array $workspaces, $search)
-    {
-        return $this->groupRepo->findGroupsByWorkspacesAndSearch(
-            $workspaces,
-            $search
-        );
-    }
-
-    /**
-     * @param int    $page
-     * @param int    $max
-     * @param string $orderedBy
-     * @param string $order
-     *
-     * @deprecated use api instead
-     *
-     * @return \PagerFanta\PagerFanta
-     */
-    public function getGroups($page, $max = 50, $orderedBy = 'id', $order = null)
-    {
-        $query = $this->groupRepo->findAll(false, $orderedBy, $order);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
-     * @param string $search
-     * @param int    $page
-     * @param int    $max
-     * @param string $orderedBy
-     *
-     * @deprecated use api instead
-     *
-     * @return \PagerFanta\PagerFanta
-     */
-    public function getGroupsByName($search, $page, $max = 50, $orderedBy = 'id')
-    {
-        $query = $this->groupRepo->findByName($search, false, $orderedBy);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Role[] $roles
-     * @param int                                 $page
-     * @param int                                 $max
-     * @param string                              $orderedBy
-     * @param null                                $order
-     *
-     * @return \PagerFanta\PagerFanta
-     */
-    public function getGroupsByRoles(array $roles, $page = 1, $max = 50, $orderedBy = 'id', $order = null)
-    {
-        $query = $this->groupRepo->findByRoles($roles, true, $orderedBy, $order);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Role[] $roles
-     * @param string                              $name
-     * @param int                                 $page
-     * @param int                                 $max
-     * @param string                              $orderedBy
-     *
-     * @return \PagerFanta\PagerFanta
-     */
-    public function getGroupsByRolesAndName(array $roles, $name, $page = 1, $max = 50, $orderedBy = 'id')
-    {
-        $query = $this->groupRepo->findByRolesAndName($roles, $name, true, $orderedBy);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
      * Sets an array of platform role to a group.
      *
-     * @param \Claroline\CoreBundle\Entity\Group $group
-     * @param array                              $roles
+     * @param Group $group
+     * @param array $roles
      */
     public function setPlatformRoles(Group $group, $roles)
     {
@@ -354,150 +199,6 @@ class GroupManager
                     return $entity;
                 }
             }
-        }
-    }
-
-    public function emptyGroup(Group $group)
-    {
-        $users = $group->getUsers();
-
-        foreach ($users as $user) {
-            $group->removeUser($user);
-            $this->om->persist($user);
-        }
-
-        $this->om->persist($group);
-        $this->om->flush();
-    }
-
-    //used in EmptyGroupCommand command: todo: remove it
-    public function searchPartialList($searches, $page, $limit, $count = false, $exclude = false)
-    {
-        $baseFieldsName = Group::getSearchableFields();
-
-        $qb = $this->om->createQueryBuilder();
-        $count ? $qb->select('count(g)') : $qb->select('g');
-        $qb->from('Claroline\CoreBundle\Entity\Group', 'g');
-
-        //Admin can see everything, but the others... well they can only see their own organizations.
-        //Cli always win aswell
-        if ('cli' !== php_sapi_name() || 'test' === $this->container->get('kernel')->getEnvironment()) {
-            if (!$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
-                $currentUser = $this->container->get('security.token_storage')->getToken()->getUser();
-                $qb->join('g.organizations', 'go');
-                $qb->join('go.administrators', 'ga');
-                $qb->andWhere('ga.id = :userId');
-                $qb->setParameter('userId', $currentUser->getId());
-            }
-        }
-
-        foreach ($searches as $key => $search) {
-            foreach ($search as $id => $el) {
-                if (in_array($key, $baseFieldsName)) {
-                    $string = "UPPER (g.{$key})";
-                    if ($exclude) {
-                        $string .= ' NOT';
-                    }
-                    $string .= " LIKE :{$key}{$id}";
-                    $qb->andWhere($string);
-                    $qb->setParameter($key.$id, '%'.strtoupper($el).'%');
-                }
-            }
-        }
-
-        $query = $qb->getQuery();
-
-        if (null !== $page && null !== $limit && !$count) {
-            $query->setMaxResults($limit);
-            $query->setFirstResult($page * $limit);
-        }
-
-        return $count ? $query->getSingleScalarResult() : $query->getResult();
-    }
-
-    public function getAll()
-    {
-        return $this->groupRepo->findAll();
-    }
-
-    /**
-     * Serialize a group array.
-     *
-     * @param Group[] $groups
-     *
-     * @return array
-     */
-    public function convertGroupsToArray(array $groups)
-    {
-        $content = [];
-        $i = 0;
-        foreach ($groups as $group) {
-            $content[$i]['id'] = $group->getId();
-            $content[$i]['name'] = $group->getName();
-            $rolesString = '';
-            $roles = $group->getEntityRoles();
-            $rolesCount = count($roles);
-            $j = 0;
-            foreach ($roles as $role) {
-                $rolesString .= "{$this->translator->trans($role->getTranslationKey(), [], 'platform')}";
-                if ($j < $rolesCount - 1) {
-                    $rolesString .= ' ,';
-                }
-                ++$j;
-            }
-            $content[$i]['roles'] = $rolesString;
-            ++$i;
-        }
-
-        return $content;
-    }
-
-    /**
-     * @param int $page
-     * @param int $max
-     *
-     * @return \PagerFanta\PagerFanta
-     */
-    public function getAllGroups($page, $max = 50)
-    {
-        $query = $this->groupRepo->findAll(false);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
-     * @param int    $page
-     * @param string $search
-     * @param int    $max
-     *
-     * @return \PagerFanta\PagerFanta
-     */
-    public function getAllGroupsBySearch($page, $search, $max = 50)
-    {
-        $query = $this->groupRepo->findAllGroupsBySearch($search);
-
-        return $this->pagerFactory->createPagerFromArray($query, $page, $max);
-    }
-
-    public function importMembers($data, $group)
-    {
-        $data = $this->container->get('claroline.utilities.misc')->formatCsvOutput($data);
-        $lines = str_getcsv($data, PHP_EOL);
-
-        foreach ($lines as $line) {
-            $users[] = str_getcsv($line, ';');
-        }
-
-        if ($this->validateAddUsersToGroup($users, $group)) {
-            $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
-            $max = $roleUser->getMaxUsers();
-            $total = $this->container->get('claroline.manager.user_manager')->countUsersByRoleIncludingGroup($roleUser);
-
-            if ($total + count($users) > $max) {
-                return false;
-            }
-
-            return $this->importUsers($group, $users);
         }
     }
 }

@@ -5,7 +5,7 @@ import {registry} from '#/main/app/plugins/registry'
 /**
  * Declares applications provided by the PlannedNotification plugin.
  */
-registry.add('planned-notification', {
+registry.add('ClarolinePlannedNotificationBundle', {
   data: {
     types: {
       'workspace_roles'       : () => { return import(/* webpackChunkName: "planned-notification-data-workspace_roles" */ '#/plugin/planned-notification/data/roles') },

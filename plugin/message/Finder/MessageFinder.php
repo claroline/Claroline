@@ -23,15 +23,17 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class MessageFinder extends AbstractFinder
 {
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
     /**
-     * ParametersSerializer constructor.
+     * MessageFinder constructor.
      *
      * @DI\InjectParams({
      *     "tokenStorage" = @DI\Inject("security.token_storage")
      * })
      *
-     * @param SerializerProvider        $serializer
-     * @param AbstractMessageSerializer $messageSerializer
+     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(TokenStorageInterface $tokenStorage)
     {
@@ -43,7 +45,7 @@ class MessageFinder extends AbstractFinder
         return Message::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
         $qb->join('obj.userMessages', 'um');
         $qb->leftJoin('um.user', 'currentUser');

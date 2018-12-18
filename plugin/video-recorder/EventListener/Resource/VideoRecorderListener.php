@@ -4,13 +4,12 @@ namespace Innova\VideoRecorderBundle\EventListener\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\Resource\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
-use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use Innova\VideoRecorderBundle\Manager\VideoRecorderManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -81,26 +80,6 @@ class VideoRecorderListener
         $event->setPublished(true);
         $event->setResourceType('file');
         $event->setResources([$file]);
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("create_form_innova_video_recorder")
-     *
-     * @param CreateFormResourceEvent $event
-     */
-    public function onCreateForm(CreateFormResourceEvent $event)
-    {
-        $config = $this->manager->getConfig();
-        // Create form POPUP
-        $content = $this->container->get('templating')->render(
-                'InnovaVideoRecorderBundle:VideoRecorder:form.html.twig',
-                [
-                  'resourceType' => 'innova_video_recorder',
-                  'maxTime' => $config->getMaxRecordingTime(),
-                ]
-        );
-        $event->setResponseContent($content);
         $event->stopPropagation();
     }
 

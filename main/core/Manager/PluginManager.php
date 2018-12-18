@@ -166,8 +166,8 @@ class PluginManager
 
     public function getEnabled($shortName = false)
     {
+        // retrieve all bundles registered in app
         $enabledBundles = [];
-
         foreach ($this->loadedBundles as $bundle => $enabled) {
             if ($enabled) {
                 if ($shortName) {
@@ -179,8 +179,7 @@ class PluginManager
             }
         }
 
-        //maybe only keep plugins that are in the database ? but it's one more request
-        //we could also parse composer.json and so on...
+        // maybe keep only real claroline plugins
 
         return $enabledBundles;
     }

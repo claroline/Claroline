@@ -84,10 +84,7 @@ class HomeTabConfig
     private $details;
 
     /**
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Role",
-     *     inversedBy="roles"
-     * )
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Role")
      * @ORM\JoinTable(name="claro_home_tab_roles")
      */
     private $roles;

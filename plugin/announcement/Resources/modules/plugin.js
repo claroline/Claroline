@@ -2,7 +2,7 @@
 
 import {registry} from '#/main/app/plugins/registry'
 
-registry.add('announcement', {
+registry.add('ClarolineAnnouncementBundle', {
   actions: {
     resource: {
       'create-announce' : () => { return import(/* webpackChunkName: "plugin-announcement-action-create-announce" */ '#/plugin/announcement/resources/announcement/actions/create-announce') }

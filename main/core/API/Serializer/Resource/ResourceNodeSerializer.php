@@ -308,7 +308,8 @@ class ResourceNodeSerializer
         $this->sipe('name', 'setName', $data, $resourceNode);
 
         if (isset($data['meta']['workspace'])) {
-            $workspace = $this->om->getRepository(Workspace::class)->findOneByUuid($data['meta']['workspace']['uuid']);
+            /** @var Workspace $workspace */
+            $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $data['meta']['workspace']['uuid']]);
             $resourceNode->setWorkspace($workspace);
         }
 

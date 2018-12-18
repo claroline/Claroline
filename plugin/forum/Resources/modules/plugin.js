@@ -2,7 +2,7 @@
 
 import {registry} from '#/main/app/plugins/registry'
 
-registry.add('forum', {
+registry.add('ClarolineForumBundle', {
   actions: {
     resource: {
       'post' : () => { return import(/* webpackChunkName: "plugin-forum-action-post" */ '#/plugin/forum/resources/forum/actions/post') }

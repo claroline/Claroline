@@ -76,7 +76,7 @@ class EntryFinder extends AbstractFinder
         return 'Claroline\ClacoFormBundle\Entity\Entry';
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
         $clacoFormRepo = $this->om->getRepository('ClarolineClacoFormBundle:ClacoForm');
         $fieldRepo = $this->om->getRepository('ClarolineClacoFormBundle:Field');

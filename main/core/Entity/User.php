@@ -616,7 +616,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $roleNames = parent::getRoles();
 
         if ($areGroupsIncluded) {
-            foreach ($this->getGroups() as $group) {
+            foreach ($this->groups as $group) {
                 $roleNames = array_unique(array_merge($roleNames, $group->getRoles()));
             }
         }
@@ -640,7 +640,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         }
 
         if ($areGroupsIncluded) {
-            foreach ($this->getGroups() as $group) {
+            foreach ($this->groups as $group) {
                 foreach ($group->getEntityRoles() as $role) {
                     if (!in_array($role, $roles)) {
                         $roles[] = $role;
@@ -661,7 +661,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     {
         $roles = [];
 
-        foreach ($this->getGroups() as $group) {
+        foreach ($this->groups as $group) {
             foreach ($group->getEntityRoles() as $role) {
                 if (!in_array($role, $roles)) {
                     $roles[] = $role;

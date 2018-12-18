@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Manager\Workspace\Transfer\OrderedToolTransfer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -204,9 +205,10 @@ class TransferManager
             $name = 'export_tool_'.$orderedToolData['name'];
             //use an other even. StdClass is not pretty
             if (isset($orderedToolData['data'])) {
-                $event = $this->dispatcher->dispatch($name, 'Claroline\\CoreBundle\\Event\\ExportObjectEvent', [
-                  new \StdClass(), $fileBag, $orderedToolData['data'],
-              ]);
+                /** @var ExportObjectEvent $event */
+                $event = $this->dispatcher->dispatch($name, ExportObjectEvent::class, [
+                    new \StdClass(), $fileBag, $orderedToolData['data'],
+                ]);
                 $data['orderedTools'][$key]['data'] = $event->getData();
             }
         }

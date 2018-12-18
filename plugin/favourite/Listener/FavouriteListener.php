@@ -3,7 +3,6 @@
 namespace HeVinci\FavouriteBundle\Listener;
 
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
-use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Doctrine\Common\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -67,33 +66,6 @@ class FavouriteListener
         );
 
         $event->setResponse(new Response($content));
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("widget_hevinci_favourite_widget")
-     *
-     * @param DisplayWidgetEvent $event
-     */
-    public function onDisplay(DisplayWidgetEvent $event)
-    {
-        $widgetInstance = $event->getInstance();
-        $workspace = $widgetInstance->getWorkspace();
-        $user = $this->tokenStorage->getToken()->getUser();
-        $isAnon = 'anon.' === $user;
-        $favourites = [];
-
-        if (!$isAnon) {
-            $favouriteRepo = $this->om->getRepository('HeVinciFavouriteBundle:Favourite');
-            $favourites = is_null($workspace) ?
-                $favouriteRepo->findBy(['user' => $user]) :
-                $favouriteRepo->findFavouritesByUserAndWorkspace($user, $workspace);
-        }
-        $content = $this->templatingEngine->render(
-            'HeVinciFavouriteBundle:widget:favourite.html.twig',
-            ['favourites' => $favourites]
-        );
-        $event->setContent($content);
         $event->stopPropagation();
     }
 }

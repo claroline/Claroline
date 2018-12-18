@@ -13,7 +13,7 @@ use Symfony\Component\EventDispatcher\Event;
  *
  * The DataSource MUST populate the event and can be configured with an `options` array.
  */
-class DataSourceEvent extends Event implements MandatoryEventInterface, DataConveyorEventInterface
+class GetDataEvent extends Event implements MandatoryEventInterface, DataConveyorEventInterface
 {
     /** @var string */
     private $context;
@@ -46,7 +46,7 @@ class DataSourceEvent extends Event implements MandatoryEventInterface, DataConv
     private $populated = false;
 
     /**
-     * DataSourceEvent constructor.
+     * GetDataEvent constructor.
      *
      * @param string    $context
      * @param array     $options

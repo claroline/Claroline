@@ -2,82 +2,90 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
-import {trans, transChoice} from '#/main/app/intl/translation'
-import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {Modal} from '#/main/app/overlay/modal/components/modal'
+import {ListData} from '#/main/app/content/list/containers/data'
 
-import {TagTypeahead} from '#/plugin/tag/components/typeahead'
+import {selectors} from '#/plugin/tag/modals/tags/store'
 import {Tag as TagTypes} from '#/plugin/tag/data/types/tag/prop-types'
+import {TagCard} from '#/plugin/tag/card/components/tag'
 
-const TagsModal = props =>
-  <Modal
-    {...omit(props, 'tags', 'objectClass', 'objects', 'update', 'loadTags', 'removeTag', 'addTag')}
-    icon="fa fa-fw fa-tags"
-    title={trans('tags', {}, 'tag')}
-    subtitle={1 === props.objects.length ?
-      props.objects[0].name
-      :
-      transChoice('count_elements', props.objects.length, {count: props.objects.length})
-    }
-    onEntering={() => props.loadTags(props.objectClass, props.objects)}
-  >
-    <div className="modal-body">
-      <TagTypeahead
-        select={(tagName) => props.addTag(props.objectClass, props.objects, {name: tagName})}
+const TagsModal = props => {
+  const selectAction = props.selectAction(props.selected)
+
+  return (
+    <Modal
+      {...omit(props, 'url', 'selected', 'selectAction', 'resetSelect')}
+      icon="fa fa-fw fa-tags"
+      className="data-picker-modal"
+      bsSize="lg"
+      onExiting={() => props.resetSelect()}
+    >
+      <ListData
+        name={selectors.STORE_NAME}
+        fetch={{
+          url: ['apiv2_tag_list'],
+          autoload: true
+        }}
+        definition={[
+          {
+            name: 'color',
+            type: 'color',
+            label: trans('color'),
+            displayed: true,
+            filterable: false,
+            sortable: false
+          }, {
+            name: 'name',
+            type: 'string',
+            label: trans('name'),
+            primary: true,
+            displayed: true
+          }, {
+            name: 'meta.description',
+            type: 'string',
+            label: trans('description'),
+            options: {
+              long: true
+            }
+          }, {
+            name: 'elements',
+            type: 'number',
+            label: trans('elements'),
+            displayed: true
+          }
+        ]}
+        card={TagCard}
       />
 
-      {0 === props.tags.length &&
-        <div className="no-item-info">{trans('no_tag', {}, 'tag')}</div>
-      }
-
-      {0 !== props.tags.length &&
-        <ul className="tags">
-          {props.tags.map(tag =>
-            <li key={tag.id} className="tag" style={{borderColor: tag.color}}>
-              <span className="tag-color" style={{backgroundColor: tag.color}} />
-
-              <div className="tag-meta">
-                {tag.name}
-
-                {tag.meta.description &&
-                  <p className="tag-description">{tag.meta.description}</p>
-                }
-              </div>
-
-              <Button
-                className="tag-action btn btn-link"
-                type={CALLBACK_BUTTON}
-                icon="fa fa-times"
-                label={trans('delete', {}, 'actions')}
-                tooltip="left"
-                callback={() => props.removeTag(props.objectClass, props.objects, tag)}
-              />
-            </li>
-          )}
-        </ul>
-      }
-    </div>
-  </Modal>
+      <Button
+        label={trans('select', {}, 'actions')}
+        {...selectAction}
+        className="modal-btn btn"
+        primary={true}
+        disabled={0 === props.selected.length}
+        onClick={props.fadeModal}
+      />
+    </Modal>
+  )
+}
 
 TagsModal.propTypes = {
-  objectClass: T.string.isRequired,
-  objects: T.arrayOf(T.shape({
-    id: T.oneOfType([T.string, T.number]).isRequired,
-    name: T.string.isRequired
-  })),
-  update: T.func,
+  objectClass: T.string, // TODO : filtering by objectClass doesn't work for now.
+  title: T.string,
+  selectAction: T.func.isRequired,
+  fadeModal: T.func.isRequired,
 
-  tags: T.arrayOf(T.shape(
+  // from store
+  selected: T.arrayOf(T.shape(
     TagTypes.propTypes
-  )),
-  loadTags: T.func.isRequired,
-  removeTag: T.func.isRequired,
-  addTag: T.func.isRequired
+  )).isRequired,
+  resetSelect: T.func.isRequired
 }
 
 TagsModal.defaultProps = {
-  tags: []
+  title: trans('tags', {}, 'tag')
 }
 
 export {

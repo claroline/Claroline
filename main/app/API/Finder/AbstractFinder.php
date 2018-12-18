@@ -11,7 +11,9 @@
 
 namespace Claroline\AppBundle\API\Finder;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Event\SearchObjectsEvent;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NativeQuery;
@@ -23,25 +25,48 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 abstract class AbstractFinder implements FinderInterface
 {
+    // TODO : move in finders using it
     use FinderTrait;
 
+    /** @var ObjectManager */
     protected $om;
+    /** @var EntityManager */
     protected $_em;
+    /** @var StrictDispatcher */
+    private $eventDispatcher;
 
     /**
+     * AbstractFinder constructor.
+     *
      * @DI\InjectParams({
-     *      "om" = @DI\Inject("claroline.persistence.object_manager"),
-     *      "em" = @DI\Inject("doctrine.orm.entity_manager")
+     *      "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *      "em"              = @DI\Inject("doctrine.orm.entity_manager"),
+     *      "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher")
      * })
      *
-     * @param ObjectManager $om
-     * @param EntityManager $em
+     * @param ObjectManager    $om
+     * @param EntityManager    $em
+     * @param StrictDispatcher $eventDispatcher
      */
-    public function setObjectManager(ObjectManager $om, EntityManager $em)
-    {
+    public function setObjectManager(
+        ObjectManager $om,
+        EntityManager $em,
+        StrictDispatcher $eventDispatcher
+    ) {
         $this->om = $om;
         $this->_em = $em;
+        $this->eventDispatcher = $eventDispatcher;
     }
+
+    /**
+     * The queried object is already named "obj".
+     *
+     * @param QueryBuilder $qb
+     * @param array        $searches
+     * @param array|null   $sortBy
+     * @param array        $options
+     */
+    abstract public function configureQueryBuilder(QueryBuilder $qb, array $searches, array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1]);
 
     public function find(array $filters = [], array $sortBy = null, $page = 0, $limit = -1, $count = false)
     {
@@ -53,13 +78,27 @@ abstract class AbstractFinder implements FinderInterface
         $qb->select($count ? 'COUNT(DISTINCT obj)' : 'DISTINCT obj')->from($this->getClass(), 'obj');
         //make an option parameters for query builder ?
         $options = [
-          'page' => $page,
-          'limit' => $limit,
-          'count' => $count,
+            'page' => $page,
+            'limit' => $limit,
+            'count' => $count,
         ];
 
+        // Let's the whole app knows we are doing a search with an event
+        // ATTENTION : This needs to be done first because if a listener manage a filter (like Tags),
+        // it needs to be removed from list of filters to avoid the finder implementation to process it
+
+        /** @var SearchObjectsEvent $event */
+        $event = $this->eventDispatcher->dispatch('objects.search', SearchObjectsEvent::class, [
+            'queryBuilder' => $qb,
+            'objectClass' => $this->getClass(),
+            'filters' => $filters,
+            'sortBy' => $sortBy,
+            'page' => $page,
+            'limit' => $limit,
+        ]);
+
         // filter query - let's the finder implementation process the filters to configure query
-        $query = $this->configureQueryBuilder($qb, $filters, $sortBy, $options);
+        $query = $this->configureQueryBuilder($qb, $event->getFilters(), $sortBy, $options);
 
         if ($query instanceof QueryBuilder) {
             $qb = $query;
@@ -72,6 +111,7 @@ abstract class AbstractFinder implements FinderInterface
                 $qb->setFirstResult($page * $limit);
                 $qb->setMaxResults($limit);
             }
+
             $query = $qb->getQuery();
         }
 

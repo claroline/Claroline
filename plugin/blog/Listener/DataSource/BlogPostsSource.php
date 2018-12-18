@@ -13,7 +13,7 @@ namespace Icap\BlogBundle\Listener\DataSource;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\DataSource;
-use Claroline\CoreBundle\Event\DataSource\DataSourceEvent;
+use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Entity\Statusable;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -43,9 +43,9 @@ class BlogPostsSource
     /**
      * @DI\Observe("data_source.blog_posts.load")
      *
-     * @param DataSourceEvent $event
+     * @param GetDataEvent $event
      */
-    public function getData(DataSourceEvent $event)
+    public function getData(GetDataEvent $event)
     {
         $options = $event->getOptions() ? $event->getOptions() : [];
         $options['hiddenFilters']['status'] = Statusable::STATUS_PUBLISHED;

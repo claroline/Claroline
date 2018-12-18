@@ -11,18 +11,18 @@
 
 namespace Claroline\AppBundle\API\Finder;
 
-use Doctrine\ORM\QueryBuilder;
-
 interface FinderInterface
 {
     /**
-     * The queried object is already named "obj".
+     * @param array      $filters
+     * @param array|null $sortBy
+     * @param int        $page
+     * @param int        $limit
+     * @param bool       $count
      *
-     * @param QueryBuilder $qb
-     * @param array        $searches
-     * @param array|null   $sortBy
+     * @return array
      */
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches, array $sortBy = null);
+    public function find(array $filters = [], array $sortBy = null, $page = 0, $limit = -1, $count = false);
 
     /** @return string */
     public function getClass();

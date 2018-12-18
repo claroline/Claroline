@@ -3,7 +3,6 @@
 namespace Icap\BlogBundle\Listener;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
-use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
@@ -15,7 +14,6 @@ use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Manager\PostManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -165,23 +163,6 @@ class BlogListener
         $entityManager->persist($newBlog);
 
         $event->setCopy($newBlog);
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("configure_blog_icap_blog")
-     *
-     * @param CustomActionResourceEvent $event
-     */
-    public function onConfigure(CustomActionResourceEvent $event)
-    {
-        $route = $this->container
-            ->get('router')
-            ->generate(
-                'icap_blog_configure',
-                ['blogId' => $event->getResource()->getId()]
-            );
-        $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();
     }
 

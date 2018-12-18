@@ -19,7 +19,7 @@ class ContributionFinder extends AbstractFinder
      * @param array        $searches
      * @param array|null   $sortBy
      */
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches, array $sortBy = null)
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches, array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
         $joinedCreator = false;
         foreach ($searches as $filterName => $filterValue) {

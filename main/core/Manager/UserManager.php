@@ -93,7 +93,7 @@ class UserManager
      * @param StrictDispatcher             $strictEventDispatcher
      * @param TokenStorageInterface        $tokenStorage
      * @param TranslatorInterface          $translator
-     * @param TraceableValidator           $validator
+     * @param ValidatorInterface           $validator
      * @param WorkspaceManager             $workspaceManager
      */
     public function __construct(
@@ -792,14 +792,6 @@ class UserManager
         } else {
             return  $this->userRepo->findUsersByWorkspaces($workspaces);
         }
-    }
-
-    /**
-     * @return int
-     */
-    public function getNbUsers()
-    {
-        return $this->userRepo->count();
     }
 
     public function countUsersForPlatformRoles($organizations = null)

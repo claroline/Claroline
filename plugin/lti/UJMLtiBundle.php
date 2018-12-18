@@ -6,10 +6,6 @@ use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use UJM\LtiBundle\Library\Installation\AdditionalInstaller;
 
-/**
- * Bundle class.
- * Uncomment if necessary.
- */
 class UJMLtiBundle extends DistributionPluginBundle
 {
     public function getConfiguration($environment)

@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Listener\DataSource;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\DataSource\DataSourceEvent;
+use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
@@ -41,9 +41,9 @@ class MyWorkspaceSource
     /**
      * @DI\Observe("data_source.my_workspaces.load")
      *
-     * @param DataSourceEvent $event
+     * @param GetDataEvent $event
      */
-    public function getData(DataSourceEvent $event)
+    public function getData(GetDataEvent $event)
     {
         $options = $event->getOptions();
         $options['hiddenFilters']['user'] = $this->tokenStorage->getToken()->getUser()->getId();

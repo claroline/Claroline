@@ -16,7 +16,6 @@ use Symfony\Component\EventDispatcher\Event;
 
 class UserCreatedEvent extends Event
 {
-    private $role;
     private $user;
 
     public function __construct(User $user)

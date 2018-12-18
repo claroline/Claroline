@@ -289,7 +289,7 @@ class WorkspaceController extends AbstractCrudController
               ->findOneBy(['user' => $user, 'workspace' => $workspace]);
             //maybe use the crud instead ? I don't know yet
             $this->container->get('claroline.manager.workspace_user_queue_manager')->validateRegistration($pending);
-            $this->container->get('claroline.manager.workspace_user_queue_manager')->removeRegistrationQueue($pending);
+            $this->container->get('claroline.manager.workspace_user_queue_manager')->removeRegistration($pending);
         }
 
         return new JsonResponse($this->finder->search(
@@ -319,7 +319,7 @@ class WorkspaceController extends AbstractCrudController
         foreach ($users as $user) {
             $pending = $this->om->getRepository('Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue')
               ->findOneBy(['user' => $user, 'workspace' => $workspace]);
-            $this->container->get('claroline.manager.workspace_user_queue_manager')->removeRegistrationQueue($pending);
+            $this->container->get('claroline.manager.workspace_user_queue_manager')->removeRegistration($pending);
         }
 
         return new JsonResponse($this->finder->search(

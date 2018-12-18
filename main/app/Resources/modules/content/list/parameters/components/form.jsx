@@ -154,17 +154,6 @@ const ListForm = props => {
           title: trans('search_and_filters'),
           fields: [
             {
-              name: 'javascripts',
-              label: trans('javascripts'),
-              type: 'collection',
-              options: {
-                type: 'file',
-                options: {
-                  // file options
-                }
-              }
-            },
-            {
               name: 'filters',
               label: trans('list_filters_default'),
               type: 'collection',

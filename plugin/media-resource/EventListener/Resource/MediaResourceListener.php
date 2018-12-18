@@ -2,10 +2,9 @@
 
 namespace Innova\MediaResourceBundle\EventListener\Resource;
 
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
+use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Resource\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Innova\MediaResourceBundle\Entity\MediaResource;
@@ -94,23 +93,6 @@ class MediaResourceListener
         $event->stopPropagation();
 
         return;
-    }
-
-    /**
-     * @DI\Observe("create_form_innova_media_resource")
-     */
-    public function onCreateForm(CreateFormResourceEvent $event)
-    {
-        // Create form
-        $form = $this->container->get('form.factory')->create(new MediaResourceType(), new MediaResource());
-        $content = $this->container->get('templating')->render(
-                'ClarolineCoreBundle:resource:create_form.html.twig', [
-                    'form' => $form->createView(),
-                    'resourceType' => 'innova_media_resource',
-                ]
-        );
-        $event->setResponseContent($content);
-        $event->stopPropagation();
     }
 
     /**

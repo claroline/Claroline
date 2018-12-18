@@ -1,5 +1,7 @@
 /**
- * Tags modal.
+ * Tags picker modal.
+ *
+ * Displays the tags picker inside the modal.
  */
 
 import {registry} from '#/main/app/modals/registry'

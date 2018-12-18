@@ -18,10 +18,11 @@ class LogFinder extends AbstractFinder
      * @param QueryBuilder $qb
      * @param array        $searches
      * @param array|null   $sortBy
+     * @param array        $options
      *
      * @return QueryBuilder
      */
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches, array $sortBy = null)
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches, array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
         $qb->leftJoin('obj.resourceType', 'ort');
         $userJoin = false;

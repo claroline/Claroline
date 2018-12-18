@@ -53,7 +53,7 @@ class ContactFinder extends AbstractFinder
         return 'Claroline\CoreBundle\Entity\Contact\Contact';
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
         $qb->join('obj.user', 'u');
         $qb->join('obj.contact', 'c');

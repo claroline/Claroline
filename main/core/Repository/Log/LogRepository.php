@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Repository\Log;
 
-use Claroline\AppBundle\API\Finder\FinderInterface;
+use Claroline\CoreBundle\API\Finder\LogFinder;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
@@ -22,7 +22,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 class LogRepository extends EntityRepository
 {
-    /** @var FinderInterface */
+    /** @var LogFinder */
     private $finder;
 
     /**
@@ -30,9 +30,9 @@ class LogRepository extends EntityRepository
      *     "finder" = @DI\Inject("claroline.api.finder.log")
      * })
      *
-     * @param FinderInterface $finder
+     * @param LogFinder $finder
      */
-    public function setFinder(FinderInterface $finder)
+    public function setFinder(LogFinder $finder)
     {
         $this->finder = $finder;
     }

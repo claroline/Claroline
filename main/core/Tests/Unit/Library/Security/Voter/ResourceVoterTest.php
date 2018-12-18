@@ -14,8 +14,9 @@ namespace Claroline\CoreBundle\Library\Security\Voter;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Claroline\CoreBundle\Security\Voter\ResourceVoter;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class ResourceVoterTest extends MockeryTestCase
@@ -25,30 +26,38 @@ class ResourceVoterTest extends MockeryTestCase
     private $translator;
     private $ut;
     private $maskManager;
+    private $resourceManager;
+    private $workspaceManager;
+    private $rightsManager;
+    private $restrictionsManager;
     private $voter;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->em = $this->mock("Doctrine\ORM\EntityManager");
-        $this->translator = $this->mock("Symfony\Component\Translation\Translator");
-        $this->ut = $this->mock("Claroline\CoreBundle\Library\Security\Utilities");
-        $this->maskManager = $this->mock("Claroline\CoreBundle\Manager\Resource\MaskManager");
-        $this->repository = $this->mock("Claroline\CoreBundle\Repository\ResourceRightsRepository");
+        $this->em = $this->mock('Doctrine\ORM\EntityManager');
+        $this->translator = $this->mock('Symfony\Component\Translation\Translator');
+        $this->ut = $this->mock('Claroline\CoreBundle\Library\Security\Utilities');
+        $this->maskManager = $this->mock('Claroline\CoreBundle\Manager\Resource\MaskManager');
+        $this->repository = $this->mock('Claroline\CoreBundle\Repository\ResourceRightsRepository');
         $this->resourceManager = $this->mock('Claroline\CoreBundle\Manager\ResourceManager');
         $this->workspaceManager = $this->mock('Claroline\CoreBundle\Manager\Workspace\WorkspaceManager');
+        $this->rightsManager = $this->mock('Claroline\CoreBundle\Manager\Resource\RightsManager');
+        $this->restrictionsManager = $this->mock('Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager');
 
         $this->em->shouldReceive('getRepository')->once()->with('ClarolineCoreBundle:Resource\ResourceRights')
            ->andReturn($this->repository);
 
         $this->voter = new ResourceVoter(
-          $this->em,
-          $this->translator,
-          $this->ut,
-          $this->maskManager,
-          $this->resourceManager,
-          $this->workspaceManager
+            $this->em,
+            $this->translator,
+            $this->ut,
+            $this->maskManager,
+            $this->resourceManager,
+            $this->workspaceManager,
+            $this->rightsManager,
+            $this->restrictionsManager
         );
     }
 

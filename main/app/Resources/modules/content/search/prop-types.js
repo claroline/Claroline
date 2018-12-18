@@ -23,7 +23,8 @@ const Search = {
   },
   defaultProps: {
     disabled: false,
-    mode: constants.DEFAULT_SEARCH_TYPE
+    mode: constants.DEFAULT_SEARCH_TYPE,
+    current: []
   }
 }
 

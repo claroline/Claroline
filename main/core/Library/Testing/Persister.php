@@ -4,12 +4,10 @@ namespace Claroline\CoreBundle\Library\Testing;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Facet\Facet;
-use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Location;
 use Claroline\CoreBundle\Entity\Organization\Organization;
-use Claroline\CoreBundle\Entity\ProfileProperty;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
@@ -260,17 +258,6 @@ class Persister
         $this->om->persist($client);
 
         return $client;
-    }
-
-    public function profileProperty($property, $role, $isEditable = true)
-    {
-        $profileProperty = new ProfileProperty();
-        $profileProperty->setProperty($property);
-        $profileProperty->setIsEditable($isEditable);
-        $profileProperty->setRole($this->role($role));
-        $this->om->persist($profileProperty);
-
-        return $profileProperty;
     }
 
     /**

@@ -15,6 +15,7 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpFoundation\Response;
 
 class StrictDispatcherTest extends MockeryTestCase
 {
@@ -36,7 +37,7 @@ class StrictDispatcherTest extends MockeryTestCase
         $dispatcher = $this->mock('Symfony\Component\EventDispatcher\EventDispatcher');
         $claroDispatcher = new StrictDispatcher($dispatcher);
         $dispatcher->shouldReceive('hasListeners')->once()->andReturn(false);
-        $claroDispatcher->dispatch('notObserved', 'CreateFormResource', []);
+        $claroDispatcher->dispatch('notObserved', 'PluginOptions', []);
     }
 
     /**
@@ -48,7 +49,7 @@ class StrictDispatcherTest extends MockeryTestCase
         $claroDispatcher = new StrictDispatcher($dispatcher);
         $dispatcher->shouldReceive('hasListeners')->once()->andReturn(true);
         $dispatcher->shouldReceive('dispatch')->once();
-        $claroDispatcher->dispatch('notPopulated', 'CreateFormResource', []);
+        $claroDispatcher->dispatch('notPopulated', 'PluginOptions', []);
     }
 
     public function testDispatch()
@@ -57,11 +58,12 @@ class StrictDispatcherTest extends MockeryTestCase
         $dispatcher->addListener(
             'test_populated',
             function (Event $event) {
-                $event->setResponseContent('content');
+                $event->setResponse(new Response('content'));
             }
         );
         $claroDispatcher = new StrictDispatcher($dispatcher);
-        $event = $claroDispatcher->dispatch('test_populated', 'CreateFormResource', []);
-        $this->assertEquals('content', $event->getResponseContent());
+        $event = $claroDispatcher->dispatch('test_populated', 'PluginOptions', []);
+        $this->assertTrue($event->getResponse() instanceof Response);
+        $this->assertEquals('content', $event->getResponse()->getContent());
     }
 }

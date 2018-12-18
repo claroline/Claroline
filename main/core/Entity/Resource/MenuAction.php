@@ -66,11 +66,7 @@ class MenuAction
     private $default = false;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
-     *     inversedBy="actions",
-     *     cascade={"persist"}
-     * )
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType")
      * @ORM\JoinColumn(name="resource_type_id", onDelete="SET NULL")
      */
     private $resourceType;

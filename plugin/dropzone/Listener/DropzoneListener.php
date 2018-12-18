@@ -2,11 +2,10 @@
 
 namespace Icap\DropzoneBundle\Listener;
 
-use Claroline\CoreBundle\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Resource\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
@@ -47,26 +46,6 @@ class DropzoneListener
         $this->httpKernel = $httpKernel;
         $this->request = $requestStack->getCurrentRequest();
         $this->resourceManager = $resourceManager;
-    }
-
-    /**
-     * @DI\Observe("create_form_icap_dropzone")
-     *
-     * @param CreateFormResourceEvent $event
-     */
-    public function onCreateForm(CreateFormResourceEvent $event)
-    {
-        $form = $this->container->get('form.factory')->create(DropzoneType::class, new Dropzone());
-        $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:resource:create_form.html.twig',
-            [
-                'form' => $form->createView(),
-                'resourceType' => 'icap_dropzone',
-            ]
-        );
-
-        $event->setResponseContent($content);
-        $event->stopPropagation();
     }
 
     /**

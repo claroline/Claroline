@@ -14,7 +14,7 @@ namespace Claroline\AnnouncementBundle\Listener\DataSource;
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\DataSource;
-use Claroline\CoreBundle\Event\DataSource\DataSourceEvent;
+use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -26,6 +26,9 @@ class AnnouncementSource
     /** @var FinderProvider */
     private $finder;
 
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
     /**
      * AnnouncementSource constructor.
      *
@@ -34,7 +37,8 @@ class AnnouncementSource
      *     "tokenStorage" = @DI\Inject("security.token_storage")
      * })
      *
-     * @param FinderProvider $finder
+     * @param FinderProvider        $finder
+     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(
       FinderProvider $finder,
@@ -47,9 +51,9 @@ class AnnouncementSource
     /**
      * @DI\Observe("data_source.announcements.load")
      *
-     * @param DataSourceEvent $event
+     * @param GetDataEvent $event
      */
-    public function getData(DataSourceEvent $event)
+    public function getData(GetDataEvent $event)
     {
         $options = $event->getOptions() ? $event->getOptions() : [];
         $options['hiddenFilters']['visible'] = true;

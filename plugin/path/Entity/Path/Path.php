@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Path.
  *
  * @ORM\Table(name="innova_path")
- * @ORM\Entity(repositoryClass="Innova\PathBundle\Repository\PathRepository")
+ * @ORM\Entity()
  */
 class Path extends AbstractResource
 {
@@ -23,31 +23,15 @@ class Path extends AbstractResource
     use SummaryParameters;
 
     /**
-     * Name of the path (only for forms).
-     *
-     * @var string
-     *
-     * @Assert\NotBlank
-     */
-    protected $name;
-
-    /**
      * JSON structure of the path.
      *
      * @var string
      *
      * @ORM\Column(name="structure", type="text", nullable=true)
+     *
+     * @deprecated
      */
     protected $structure;
-
-    /**
-     * Display a breadcrumbs for navigation into the Path.
-     *
-     * @var bool
-     *
-     * @ORM\Column(name="breadcrumbs", type="boolean")
-     */
-    protected $breadcrumbs = true;
 
     /**
      * Steps linked to the path.
@@ -88,22 +72,13 @@ class Path extends AbstractResource
     protected $description;
 
     /**
-     * Does the path manage conditions that block all the further steps or just the next one.
-     *
-     * @var bool
-     *
-     * @ORM\Column(name="is_complete_blocking_condition", type="boolean")
-     */
-    protected $completeBlockingCondition;
-
-    /**
      * Is it possible for the user to manualy set the progression.
      *
      * @var bool
      *
      * @ORM\Column(name="manual_progression_allowed", type="boolean")
      */
-    protected $manualProgressionAllowed;
+    protected $manualProgressionAllowed = true;
 
     /**
      * Show overview to users or directly start the path.
@@ -115,15 +90,13 @@ class Path extends AbstractResource
     private $showOverview = true;
 
     /**
-     * Class constructor.
+     * Path constructor.
      */
     public function __construct()
     {
         $this->refreshUuid();
+
         $this->steps = new ArrayCollection();
-        $this->modified = false;
-        $this->completeBlockingCondition = true;
-        $this->manualProgressionAllowed = true;
     }
 
     /**
@@ -158,51 +131,6 @@ class Path extends AbstractResource
         }
 
         return $structure;
-    }
-
-    /**
-     * Is path already published.
-     *
-     * @return bool
-     */
-    public function isPublished()
-    {
-        if ($this->resourceNode instanceof ResourceNode) {
-            return $this->resourceNode->isPublished();
-        } else {
-            return false;
-        }
-    }
-
-    public function setPublished($published)
-    {
-        $this->resourceNode->setPublished($published);
-
-        return $this;
-    }
-
-    /**
-     * Set modified.
-     *
-     * @param bool $modified
-     *
-     * @return \Innova\PathBundle\Entity\Path\Path
-     */
-    public function setModified($modified)
-    {
-        $this->modified = $modified;
-
-        return $this;
-    }
-
-    /**
-     * Is path modified since the last deployment.
-     *
-     * @return bool
-     */
-    public function isModified()
-    {
-        return $this->modified;
     }
 
     /**
@@ -308,54 +236,6 @@ class Path extends AbstractResource
     }
 
     /**
-     * Set breadcrumbs.
-     *
-     * @param bool $breadcrumbs
-     *
-     * @return Path
-     */
-    public function setBreadcrumbs($breadcrumbs)
-    {
-        $this->breadcrumbs = $breadcrumbs;
-
-        return $this;
-    }
-
-    /**
-     * Does Path have a breadcrumbs ?
-     *
-     * @return bool
-     */
-    public function hasBreadcrumbs()
-    {
-        return $this->breadcrumbs;
-    }
-
-    /**
-     * Get completeBlockingCondition.
-     *
-     * @return bool
-     */
-    public function isCompleteBlockingCondition()
-    {
-        return $this->completeBlockingCondition;
-    }
-
-    /**
-     * Set completeBlockingCondition.
-     *
-     * @param bool $completeBlockingCondition
-     *
-     * @return Path
-     */
-    public function setCompleteBlockingCondition($completeBlockingCondition)
-    {
-        $this->completeBlockingCondition = $completeBlockingCondition;
-
-        return $this;
-    }
-
-    /**
      * Get manualProgressionAllowed.
      *
      * @return bool
@@ -413,8 +293,6 @@ class Path extends AbstractResource
             'id' => $this->getId(),
             'name' => $this->getName(),
             'description' => $this->getDescription(),
-            'breadcrumbs' => $this->breadcrumbs,
-            'completeBlockingCondition' => $this->completeBlockingCondition,
             'manualProgressionAllowed' => $this->manualProgressionAllowed,
             'steps' => [],
         ];

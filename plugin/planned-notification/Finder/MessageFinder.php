@@ -26,7 +26,7 @@ class MessageFinder extends AbstractFinder
         return 'Claroline\PlannedNotificationBundle\Entity\Message';
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
         $qb->join('obj.workspace', 'w');
         $qb->andWhere('w.uuid = :workspaceUuid');

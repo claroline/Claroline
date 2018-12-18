@@ -2,7 +2,7 @@
 
 import {registry} from '#/main/app/plugins/registry'
 
-registry.add('agenda', {
+registry.add('ClarolineAgendaBundle', {
   data: {
     sources: {
       'events' : () => { return import(/* webpackChunkName: "agenda-data-events" */  '#/plugin/agenda/data/sources/events') },

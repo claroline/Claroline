@@ -5,7 +5,7 @@ import {registry} from '#/main/app/plugins/registry'
 /**
  * Declares applications provided by the base application.
  */
-registry.add('app', {
+registry.add('ClarolineAppBundle', {
   data: {
     types: {
       'boolean'     : () => { return import(/* webpackChunkName: "app-data-boolean" */      '#/main/app/data/boolean') },

@@ -26,7 +26,7 @@ class DropFinder extends AbstractFinder
         return 'Claroline\DropZoneBundle\Entity\Drop';
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
         $qb->join('obj.dropzone', 'd');
         $qb->andWhere('d.uuid = :dropzoneUuid');

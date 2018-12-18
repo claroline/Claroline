@@ -26,7 +26,7 @@ class UserFinder extends AbstractFinder
         return 'Claroline\ForumBundle\Entity\Validation\User';
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {

@@ -5,7 +5,7 @@ import {registry} from '#/main/app/plugins/registry'
 /**
  * Declares applications provided by the Notification plugin.
  */
-registry.add('notification', {
+registry.add('IcapNotificationBundle', {
   actions: {
     resource: {
       'follow'       : () => { return import(/* webpackChunkName: "resource-action-follow" */        '#/plugin/notification/resource/actions/follow') },

@@ -16,7 +16,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\DataSource\DataSourceEvent;
+use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\CoreBundle\Repository\DataSourceRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -131,10 +131,10 @@ class DataSourceManager
                 ->findOneBy(['uuid' => $contextId]);
         }
 
-        /** @var DataSourceEvent $event */
+        /** @var GetDataEvent $event */
         $event = $this->eventDispatcher->dispatch(
             'data_source.'.$type.'.load',
-            DataSourceEvent::class,
+            GetDataEvent::class,
             [$context, $options, $user, $workspace]
         );
 

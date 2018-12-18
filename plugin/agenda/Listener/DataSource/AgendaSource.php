@@ -14,7 +14,7 @@ namespace Claroline\AgendaBundle\Listener\DataSource;
 use Claroline\AgendaBundle\Entity\Event;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\DataSource;
-use Claroline\CoreBundle\Event\DataSource\DataSourceEvent;
+use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -47,9 +47,9 @@ class AgendaSource
     /**
      * @DI\Observe("data_source.events.load")
      *
-     * @param DataSourceEvent $event
+     * @param GetDataEvent $event
      */
-    public function getEventsData(DataSourceEvent $event)
+    public function getEventsData(GetDataEvent $event)
     {
         $options = $event->getOptions() ? $event->getOptions() : [];
         $options['hiddenFilters']['types'] = ['event'];
@@ -72,9 +72,9 @@ class AgendaSource
     /**
      * @DI\Observe("data_source.tasks.load")
      *
-     * @param DataSourceEvent $event
+     * @param GetDataEvent $event
      */
-    public function getTasksData(DataSourceEvent $event)
+    public function getTasksData(GetDataEvent $event)
     {
         $options = $event->getOptions() ? $event->getOptions() : [];
         $options['hiddenFilters']['types'] = ['task'];

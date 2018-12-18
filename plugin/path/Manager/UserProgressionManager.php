@@ -127,21 +127,6 @@ class UserProgressionManager
     }
 
     /**
-     * @param string|User $user
-     * @param array       $paths
-     *
-     * @return int
-     */
-    public function calculateUserProgression($user, array $paths)
-    {
-        if ($user instanceof User) {
-            return $this->repository->findUserProgression($user, $paths);
-        }
-
-        return 0;
-    }
-
-    /**
      * Fetch resource user evaluation with up-to-date status.
      *
      * @param Path $path

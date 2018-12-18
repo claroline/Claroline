@@ -8,12 +8,11 @@
 
 namespace Icap\WebsiteBundle\Listener;
 
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
+use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Resource\CreateResourceEvent;
+use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Icap\WebsiteBundle\Entity\Website;
 use Icap\WebsiteBundle\Form\WebsiteType;
@@ -47,25 +46,6 @@ class WebsiteListener
         $this->httpKernel = $httpKernel;
         $this->request = $requestStack->getCurrentRequest();
         $this->websiteManager = $websiteManager;
-    }
-
-    /**
-     * @DI\Observe("create_form_icap_website")
-     *
-     * @param CreateFormResourceEvent $event
-     */
-    public function onCreateForm(CreateFormResourceEvent $event)
-    {
-        $form = $this->container->get('form.factory')->create(WebsiteType::class, new Website());
-        $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:resource:create_form.html.twig',
-            [
-                'form' => $form->createView(),
-                'resourceType' => 'icap_website',
-            ]
-        );
-        $event->setResponseContent($content);
-        $event->stopPropagation();
     }
 
     /**

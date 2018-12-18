@@ -50,9 +50,7 @@ class PathManager
         // Get path data
         $pathData = [];
         $pathData['description'] = $path->getDescription();
-        $pathData['published'] = $path->isPublished();
-        $pathData['summaryDisplayed'] = $path->isSummaryDisplayed();
-        $pathData['completeBlockingCondition'] = $path->isCompleteBlockingCondition();
+        $pathData['summaryDisplayed'] = $path->getShowSummary();
         $pathData['manualProgressionAllowed'] = $path->isManualProgressionAllowed();
 
         // Get path structure into a file (to replace resources ID with placeholders)
@@ -68,13 +66,8 @@ class PathManager
 
         // Process Steps
         $data['steps'] = [];
-        if ($path->isPublished()) {
-            $stepsData = [];
-            foreach ($path->getSteps() as $step) {
-                $stepsData[] = $this->exportStep($step);
-            }
-
-            $data['steps'] = $stepsData;
+        foreach ($path->getSteps() as $step) {
+            $data['steps'][] = $this->exportStep($step);
         }
 
         return $data;
@@ -98,9 +91,7 @@ class PathManager
 
         // Populate Path properties
         $path->setDescription($pathData['description']);
-        $path->setModified($pathData['modified']);
         $path->setOpenSummary($pathData['summaryDisplayed']);
-        $path->setCompleteBlockingCondition($pathData['completeBlockingCondition']);
         $path->setManualProgressionAllowed($pathData['manualProgressionAllowed']);
 
         // Create steps

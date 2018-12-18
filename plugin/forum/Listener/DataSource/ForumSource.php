@@ -13,7 +13,7 @@ namespace Claroline\ForumBundle\Listener\DataSource;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\DataSource;
-use Claroline\CoreBundle\Event\DataSource\DataSourceEvent;
+use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\ForumBundle\Entity\Message;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -42,9 +42,9 @@ class ForumSource
     /**
      * @DI\Observe("data_source.forum_messages.load")
      *
-     * @param DataSourceEvent $event
+     * @param GetDataEvent $event
      */
-    public function getData(DataSourceEvent $event)
+    public function getData(GetDataEvent $event)
     {
         $options = $event->getOptions() ? $event->getOptions() : [];
         $options['hiddenFilters']['moderation'] = false;

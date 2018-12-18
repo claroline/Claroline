@@ -5,7 +5,7 @@ import {registry} from '#/main/app/plugins/registry'
 /**
  * Declares applications provided by the Core plugin.
  */
-registry.add('core', {
+registry.add('ClarolineCoreBundle', {
   /**
    * Provides menu which can be used as the main header menu.
    */

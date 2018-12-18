@@ -26,7 +26,7 @@ class CategoryFinder extends AbstractFinder
         return 'Claroline\ClacoFormBundle\Entity\Category';
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
         $qb->join('obj.clacoForm', 'cf');
         $qb->andWhere('cf.id = :clacoFormId');

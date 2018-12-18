@@ -11,9 +11,8 @@
 
 namespace Claroline\AppBundle\API;
 
-use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\AppBundle\API\Finder\FinderInterface;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Doctrine\ORM\Query\Query;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -57,7 +56,7 @@ class FinderProvider
      *
      * @param FinderInterface $finder
      */
-    public function add(AbstractFinder $finder)
+    public function add(FinderInterface $finder)
     {
         $this->finders[$finder->getClass()] = $finder;
     }

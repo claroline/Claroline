@@ -15,6 +15,7 @@ use Claroline\BundleRecorder\Log\LoggableTrait;
 use Doctrine\Common\Persistence\ObjectManager as ObjectManagerInterface;
 use Doctrine\Common\Persistence\ObjectManagerDecorator;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\UnitOfWork;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
@@ -147,6 +148,9 @@ class ObjectManager extends ObjectManagerDecorator
         }
     }
 
+    /**
+     * @return QueryBuilder
+     */
     public function createQueryBuilder()
     {
         return $this->wrapped->createQueryBuilder();

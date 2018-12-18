@@ -1,24 +1,22 @@
 import {connect} from 'react-redux'
 
 import {withReducer} from '#/main/app/store/components/withReducer'
+import {
+  actions as listActions,
+  select as listSelect
+} from '#/main/app/content/list/store'
 
+import {reducer, selectors} from '#/plugin/tag/modals/tags/store'
 import {TagsModal as TagsModalComponent} from '#/plugin/tag/modals/tags/components/modal'
-import {actions, reducer, selectors} from '#/plugin/tag/modals/tags/store'
 
 const TagsModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
-      tags: selectors.tags(state)
+      selected: listSelect.selectedFull(listSelect.list(state, selectors.STORE_NAME))
     }),
     (dispatch) => ({
-      loadTags(objectClass, objects) {
-        dispatch(actions.fetchTags(objectClass, objects))
-      },
-      addTag(objectClass, objects, tag) {
-        dispatch(actions.postTag(objectClass, objects, tag))
-      },
-      removeTag(objectClass, objects, tag) {
-        dispatch(actions.removeTag(objectClass, objects, tag))
+      resetSelect() {
+        dispatch(listActions.resetSelect(selectors.STORE_NAME))
       }
     })
   )(TagsModalComponent)
