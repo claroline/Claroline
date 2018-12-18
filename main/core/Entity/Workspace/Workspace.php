@@ -190,7 +190,8 @@ class Workspace
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Role"
+     *     targetEntity="Claroline\CoreBundle\Entity\Role",
+     *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="default_role_id", onDelete="SET NULL")
      *
