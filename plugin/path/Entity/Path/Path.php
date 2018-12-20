@@ -5,11 +5,9 @@ namespace Innova\PathBundle\Entity\Path;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Parameters\SummaryParameters;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Innova\PathBundle\Entity\Step;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Path.
