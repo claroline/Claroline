@@ -5,6 +5,7 @@ namespace Claroline\ForumBundle\Serializer;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\MessageSerializer as AbstractMessageSerializer;
 use Claroline\ForumBundle\Entity\Message;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -29,31 +30,38 @@ class MessageSerializer
     /** @var ObjectManager */
     private $om;
 
+    /** @var PublicFileSerializer */
+    private $fileSerializer;
+
     /**
-     * ParametersSerializer constructor.
+     * MessageSerializer constructor.
      *
      * @DI\InjectParams({
      *     "serializer"        = @DI\Inject("claroline.api.serializer"),
      *     "messageSerializer" = @DI\Inject("claroline.serializer.message"),
      *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
-     *     "subjectSerializer" = @DI\Inject("claroline.serializer.forum_subject")
+     *     "subjectSerializer" = @DI\Inject("claroline.serializer.forum_subject"),
+     *     "fileSerializer"    = @DI\Inject("claroline.serializer.public_file")
      * })
      *
      * @param SerializerProvider        $serializer
      * @param AbstractMessageSerializer $messageSerializer
      * @param ObjectManager             $om
      * @param SubjectSerializer         $subjectSerializer
+     * @param PublicFileSerializer      $fileSerializer
      */
     public function __construct(
         SerializerProvider $serializer,
         AbstractMessageSerializer $messageSerializer,
         ObjectManager $om,
-        SubjectSerializer $subjectSerializer
+        SubjectSerializer $subjectSerializer,
+        PublicFileSerializer $fileSerializer
     ) {
         $this->serializer = $serializer;
         $this->messageSerializer = $messageSerializer;
         $this->om = $om;
         $this->subjectSerializer = $subjectSerializer;
+        $this->fileSerializer = $fileSerializer;
     }
 
     public function getClass()
@@ -102,7 +110,7 @@ class MessageSerializer
             }
 
             $data['meta']['poster'] = $subject->getPoster() ?
-              $this->container->get('claroline.serializer.public_file')->serialize($subject->getPoster()) :
+              $this->fileSerializer->serialize($subject->getPoster()) :
               null;
         }
 
@@ -119,7 +127,7 @@ class MessageSerializer
      * @param Message $message
      * @param array   $options
      *
-     * @return Plugin
+     * @return Message
      */
     public function deserialize($data, Message $message, array $options = [])
     {
@@ -137,7 +145,7 @@ class MessageSerializer
         }
 
         if (isset($data['parent'])) {
-            $parent = $this->om->getRepository($this->getClass())->findOneByUuid($data['parent']['id']);
+            $parent = $this->om->getRepository($this->getClass())->findOneBy(['uuid' => $data['parent']['id']]);
 
             if ($parent) {
                 $message->setParent($parent);

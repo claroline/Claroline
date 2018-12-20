@@ -72,6 +72,9 @@ class Message extends AbstractMessage
         $this->subject = $subject;
     }
 
+    /**
+     * @return Subject
+     */
     public function getSubject()
     {
         if ($parent = $this->getParent()) {
@@ -101,6 +104,9 @@ class Message extends AbstractMessage
         $this->parent = $parent;
     }
 
+    /**
+     * @return Message
+     */
     public function getParent()
     {
         return $this->parent;

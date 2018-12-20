@@ -18,14 +18,15 @@ class MessageSerializer
 
     /**
      * @DI\InjectParams({
-     *      "provider" = @DI\Inject("claroline.api.serializer")
+     *      "serializer" = @DI\Inject("claroline.api.serializer")
      * })
      *
      * @param SerializerProvider $serializer
      */
-    public function __construct(SerializerProvider $provider)
+    public function __construct(SerializerProvider $serializer)
     {
-        $this->serializerProvider = $provider;
+        // bad
+        $this->serializerProvider = $serializer;
     }
 
     public function getClass()
@@ -122,7 +123,7 @@ class MessageSerializer
      * @param AbstractMessage $message
      * @param array           $options
      *
-     * @return Forum
+     * @return AbstractMessage
      */
     public function deserialize($data, AbstractMessage $message, array $options = [])
     {
