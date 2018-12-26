@@ -160,13 +160,13 @@ class OptimizedRightsManager
           INSERT IGNORE INTO claro_list_type_creation (resource_rights_id, resource_type_id)
           SELECT r.id as rid, t.id as tid FROM (
             SELECT rights.id
-            FROM claro_resource_rights rights
-            JOIN claro_resource_node node ON rights.resourceNode_id = node.id
+            FROM claro_resource_rights AS rights
+            JOIN claro_resource_node AS node ON rights.resourceNode_id = node.id
             JOIN claro_role role ON rights.role_id = role.id
-            JOIN claro_resource_type type on node.resource_type_id = type.id
+            JOIN claro_resource_type AS rType on node.resource_type_id = rType.id
             WHERE node.path LIKE ?
             AND role.id = {$role->getId()}
-            AND type.name = 'directory'
+            AND rType.name = 'directory'
           ) as r, (
             SELECT id
             FROM claro_resource_type

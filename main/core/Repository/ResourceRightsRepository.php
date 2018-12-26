@@ -70,7 +70,7 @@ class ResourceRightsRepository extends EntityRepository
      * directory.
      *
      * @param array        $roles
-     * @param ResourceNode $resource
+     * @param ResourceNode $node
      *
      * @return array
      */
@@ -81,9 +81,9 @@ class ResourceRightsRepository extends EntityRepository
         }
 
         $dql = '
-            SELECT DISTINCT type.name
-            FROM Claroline\CoreBundle\Entity\Resource\ResourceType type
-            JOIN type.rights right
+            SELECT DISTINCT rType.name
+            FROM Claroline\CoreBundle\Entity\Resource\ResourceType AS rType
+            JOIN rType.rights right
             JOIN right.role role
             JOIN right.resourceNode resource
             WHERE ';
@@ -92,11 +92,12 @@ class ResourceRightsRepository extends EntityRepository
 
         foreach ($roles as $key => $role) {
             $dql .= 0 !== $index ? ' OR ' : '';
-            $dql .= "resource.id = {$node->getId()} AND role.name = :role_{$key}";
+            $dql .= "resource.id = :nodeId AND role.name = :role_{$key}";
             ++$index;
         }
 
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('nodeId', $node->getId());
 
         foreach ($roles as $key => $role) {
             $query->setParameter('role_'.$key, $role);

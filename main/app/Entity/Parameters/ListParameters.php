@@ -308,16 +308,6 @@ trait ListParameters
     }
 
     /**
-     * Get display.
-     *
-     * @return string
-     */
-    public function getDisplay()
-    {
-        return $this->display;
-    }
-
-    /**
      * Get available page sizes.
      *
      * @return array
@@ -340,6 +330,16 @@ trait ListParameters
     public function setAvailablePageSizes(array $availablePageSizes)
     {
         $this->availablePageSizes = $availablePageSizes;
+    }
+
+    /**
+     * Get display.
+     *
+     * @return string
+     */
+    public function getDisplay()
+    {
+        return $this->display;
     }
 
     /**

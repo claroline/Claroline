@@ -31,7 +31,7 @@ class ResourceTypeRepository extends EntityRepository implements ContainerAwareI
     /**
      * Returns all the resource types introduced by plugins.
      *
-     * @return array[ResourceType]
+     * @return ResourceType[]
      */
     public function findPluginResourceTypes()
     {
@@ -50,20 +50,20 @@ class ResourceTypeRepository extends EntityRepository implements ContainerAwareI
      * Returns the number of existing resources for each resource type.
      *
      * @param Workspace $workspace
-     * @param null $organizations
+     * @param null      $organizations
      *
-     * @return array
+     * @return ResourceType[]
      */
     public function countResourcesByType($workspace = null, $organizations = null)
     {
         $qb = $this
-            ->createQueryBuilder('type')
-            ->select('type.id, type.name, COUNT(rs.id) AS total')
-            ->leftJoin('Claroline\CoreBundle\Entity\Resource\ResourceNode', 'rs', 'WITH', 'type = rs.resourceType')
-            ->andWhere('type.name != :directoryName')
+            ->createQueryBuilder('rType')
+            ->select('rType.id, rType.name, COUNT(rs.id) AS total')
+            ->leftJoin('Claroline\CoreBundle\Entity\Resource\ResourceNode', 'rs', 'WITH', 'rType = rs.resourceType')
+            ->andWhere('rType.name != :directoryName')
             ->andWhere('rs.active = 1')
             ->setParameter('directoryName', 'directory')
-            ->groupBy('type.id')
+            ->groupBy('rType.id')
             ->orderBy('total', 'DESC');
 
         if (!empty($workspace)) {
@@ -72,7 +72,7 @@ class ResourceTypeRepository extends EntityRepository implements ContainerAwareI
                 ->setParameter('workspace', $workspace);
         }
 
-        if ($organizations !== null) {
+        if (!empty($organizations)) {
             $qb->leftJoin('Claroline\CoreBundle\Entity\Workspace\Workspace', 'ws', 'WITH', 'ws = rs.workspace')
                 ->join('ws.organizations', 'orgas')
                 ->andWhere('orgas IN (:organizations)')
