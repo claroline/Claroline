@@ -12,7 +12,7 @@ app/config/Authentication/*
 app/config/Synchronization/*
 app/config/bundles.ini
 app/config/parameters.yml
-app/config/platform_options.yml
+app/config/platform_options.json
 app/config/tmp_files.yml
 app/config/previous-installed.json
 app/logs/*
@@ -24,9 +24,7 @@ npm-debug.log
 templates/*
 vendor/*
 theme-assets.json
-webpack-assets.json
-webpack-dlls.json
-webpack-stats.json
+webpack-*.json
 web/bundles/*
 web/css/*
 web/data

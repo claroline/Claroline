@@ -47,7 +47,6 @@
         "build": [
             "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "npm run dll",
             "npm run webpack"
         ],
         "disable-maintenance": [
