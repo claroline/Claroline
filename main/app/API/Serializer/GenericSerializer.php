@@ -2,34 +2,59 @@
 
 namespace Claroline\AppBundle\API\Serializer;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\ManyToOne;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
+ * This class is useful for quick dev/prototype/simple objects but you shouldn't use it too much
+ *
  * @DI\Service("claroline.generic_serializer")
- * This class is usefull for quick dev/prototype/simple objects but you shouldn't use it too much
  */
 class GenericSerializer
 {
     const INCLUDE_MANY_TO_ONE = 'many_to_one';
     //maybe later include many to many
 
-    /**
-     * @DI\Inject("claroline.persistence.object_manager")
-     */
-    public $om;
+    /** @var ObjectManager */
+    protected $om;
+
+    /** @var Reader */
+    protected $reader;
 
     /**
-     * @DI\Inject("annotation_reader")
+     * @DI\InjectParams({
+     *      "om" = @DI\Inject("claroline.persistence.object_manager")
+     * })
      *
-     * @var Reader
+     * @param ObjectManager $om
      */
-    public $reader;
+    public function setObjectManager(ObjectManager $om)
+    {
+        $this->om = $om;
+    }
+
+    /**
+     * @DI\InjectParams({
+    *       "reader" = @DI\Inject("annotation_reader")
+     * })
+     *
+     * @param Reader $reader
+     */
+    public function setAnnotationReader(Reader $reader)
+    {
+        $this->reader = $reader;
+    }
 
     /**
      * Default serialize method.
+     *
+     * @param mixed $object
+     * @param array $options
+     *
+     * @return \stdClass
      */
     public function serialize($object, array $options = [])
     {

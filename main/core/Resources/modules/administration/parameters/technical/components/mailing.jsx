@@ -1,5 +1,5 @@
 import React from 'react'
-import {connect} from 'react-redux'
+
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
@@ -16,7 +16,7 @@ const display = (transport, property) => {
   return displayFields[transport].indexOf(property) > -1
 }
 
-const MailingComponent = () =>
+const Mailing = () =>
   <FormData
     name="parameters"
     target={['apiv2_parameters_update']}
@@ -39,42 +39,37 @@ const MailingComponent = () =>
             required: true,
             options: {
               choices: {
-                'sendmail': 'sendmail',
-                'gmail': 'gmail',
-                'smtp': 'smtp',
-                'postal': 'postal'
+                sendmail: 'sendmail',
+                gmail: 'gmail',
+                smtp: 'smtp',
+                postal: 'postal'
               }
             }
-          },
-          {
+          }, {
             name: 'mailer.host',
             type: 'string',
             label: trans('host'),
             required: false,
             displayed: parameters => display(parameters.mailer.transport, 'mailer.host')
-          },
-          {
+          }, {
             name: 'mailer.port',
             type: 'string',
             label: trans('port'),
             required: false,
             displayed: parameters => display(parameters.mailer.transport, 'mailer.port')
-          },
-          {
+          }, {
             name: 'mailer.username',
             type: 'string',
             label: trans('username'),
             required: false,
             displayed: parameters => display(parameters.mailer.transport, 'mailer.username')
-          },
-          {
+          }, {
             name: 'mailer.password',
-            type: 'string',
+            type: 'password',
             label: trans('password'),
             required: false,
             displayed: parameters => display(parameters.mailer.transport, 'mailer.password')
-          },
-          {
+          }, {
             name: 'mailer.auth_mode',
             type: 'choice',
             label: trans('auth_mode'),
@@ -88,8 +83,7 @@ const MailingComponent = () =>
               }
             },
             displayed: parameters => display(parameters.mailer.transport, 'mailer.auth_mode')
-          },
-          {
+          }, {
             name: 'mailer.encryption',
             type: 'choice',
             label: trans('encryption'),
@@ -102,8 +96,7 @@ const MailingComponent = () =>
               }
             },
             displayed: parameters => display(parameters.mailer.transport, 'mailer.encryption')
-          },
-          {
+          }, {
             name: 'mailer.tag',
             type: 'string',
             label: trans('tag'),
@@ -114,14 +107,6 @@ const MailingComponent = () =>
       }
     ]}
   />
-
-MailingComponent.propTypes = {
-}
-
-const Mailing = connect(
-  null,
-  () => ({ })
-)(MailingComponent)
 
 export {
   Mailing

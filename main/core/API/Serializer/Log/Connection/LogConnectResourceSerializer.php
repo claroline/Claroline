@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\API\Serializer\Log\Connection;
 
 use Claroline\AppBundle\API\Options;
-use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Log\Connection\LogConnectResource;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -14,8 +13,6 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class LogConnectResourceSerializer
 {
-    use SerializerTrait;
-
     /** @var SerializerProvider */
     private $serializer;
 
@@ -30,7 +27,7 @@ class LogConnectResourceSerializer
      */
     public function __construct(SerializerProvider $serializer)
     {
-        $this->serializer = $serializer;
+        $this->serializer = $serializer; // bad
     }
 
     public function getClass()

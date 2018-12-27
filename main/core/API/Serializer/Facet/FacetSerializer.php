@@ -29,7 +29,7 @@ class FacetSerializer
      */
     public function __construct(SerializerProvider $serializer)
     {
-        $this->serializer = $serializer;
+        $this->serializer = $serializer; // bad
     }
 
     /**

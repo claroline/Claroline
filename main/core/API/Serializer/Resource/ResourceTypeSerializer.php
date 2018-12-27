@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Resource;
 
-use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
@@ -14,8 +13,6 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class ResourceTypeSerializer
 {
-    use SerializerTrait;
-
     /** @var ResourceActionManager */
     private $actionManager;
 

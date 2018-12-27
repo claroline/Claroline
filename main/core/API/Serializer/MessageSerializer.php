@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\API\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\AbstractMessage;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -16,22 +16,24 @@ class MessageSerializer
 {
     use SerializerTrait;
 
+    /** @var UserSerializer */
+    private $userSerializer;
+
     /**
      * @DI\InjectParams({
-     *      "serializer" = @DI\Inject("claroline.api.serializer")
+     *      "userSerializer" = @DI\Inject("claroline.serializer.user")
      * })
      *
-     * @param SerializerProvider $serializer
+     * @param UserSerializer $userSerializer
      */
-    public function __construct(SerializerProvider $serializer)
+    public function __construct(UserSerializer $userSerializer)
     {
-        // bad
-        $this->serializerProvider = $serializer;
+        $this->userSerializer = $userSerializer;
     }
 
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\AbstractMessage';
+        return AbstractMessage::class;
     }
 
     /**
@@ -43,18 +45,9 @@ class MessageSerializer
     }
 
     /**
-     * @return string
-     */
-    /*
-    public function getSamples()
-    {
-       return '#/main/core/message';
-    }*/
-
-    /**
      * Serializes a AbstractMessage entity.
      *
-     * @param AbstractMessage $forum
+     * @param AbstractMessage $message
      * @param array           $options
      *
      * @return array
@@ -64,16 +57,18 @@ class MessageSerializer
         return [
             'id' => $message->getUuid(),
             'content' => $message->getContent(),
-            'meta' => $this->serializeMeta($message, $options),
-            'children' => $this->serializeChildren($message, $options),
-            'parent' => $this->serializeParent($message, $options),
+            'meta' => $this->serializeMeta($message),
+            'parent' => $this->serializeParent($message),
+            'children' => array_map(function (AbstractMessage $child) use ($options) {
+                return $this->serialize($child, $options);
+            }, $message->getChildren()->toArray()),
         ];
     }
 
-    public function serializeMeta(AbstractMessage $message, array $options = [])
+    protected function serializeMeta(AbstractMessage $message)
     {
         return [
-            'creator' => $this->serializeCreator($message, $options),
+            'creator' => $this->serializeCreator($message),
             'created' => $message->getCreationDate()->format('Y-m-d\TH:i:s'),
             'updated' => $message->getModificationDate()->format('Y-m-d\TH:i:s'),
             'flagged' => $message->isFlagged(),
@@ -81,10 +76,10 @@ class MessageSerializer
         ];
     }
 
-    public function serializeCreator(AbstractMessage $message, array $options = [])
+    protected function serializeCreator(AbstractMessage $message)
     {
         if (!empty($message->getCreator())) {
-            return $this->serializerProvider->serialize($message->getCreator(), [Options::SERIALIZE_MINIMAL]);
+            return $this->userSerializer->serialize($message->getCreator(), [Options::SERIALIZE_MINIMAL]);
         }
 
         return [
@@ -92,20 +87,7 @@ class MessageSerializer
         ];
     }
 
-    public function serializeChildren(AbstractMessage $message, array $options = [])
-    {
-        $children = [];
-
-        if ($message->getChildren()) {
-            foreach ($message->getChildren()->toArray() as $child) {
-                $children[] = $this->serialize($child, $options);
-            }
-        }
-
-        return $children;
-    }
-
-    public function serializeParent(AbstractMessage $message, array $options = [])
+    protected function serializeParent(AbstractMessage $message)
     {
         $parent = null;
 
@@ -136,10 +118,7 @@ class MessageSerializer
 
             if (isset($data['meta']['creator'])) {
                 $message->setAuthor($data['meta']['creator']['name']);
-                $creator = $this->serializerProvider->deserialize(
-                    'Claroline\CoreBundle\Entity\User',
-                    $data['meta']['creator']
-                );
+                $creator = $this->userSerializer->deserialize($data['meta']['creator']);
 
                 if ($creator) {
                     $message->setCreator($creator);

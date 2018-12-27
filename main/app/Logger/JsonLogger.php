@@ -20,11 +20,9 @@ class JsonLogger implements LoggerInterface
 {
     private $file;
     private $cache;
-    private $utils;
 
     public function __construct($file)
     {
-        $this->utils = new ArrayUtils();
         $this->file = $file;
         $this->cache = null;
 
@@ -37,7 +35,7 @@ class JsonLogger implements LoggerInterface
     public function set($property, $value)
     {
         $data = $this->get();
-        $this->utils->set($data, $property, $value);
+        ArrayUtils::set($data, $property, $value);
         $this->write($data);
     }
 
@@ -138,7 +136,7 @@ class JsonLogger implements LoggerInterface
         $data = $this->cache ? $this->cache : json_decode(file_get_contents($this->file), true);
 
         if ($property) {
-            return $this->utils->get($data, $property);
+            return ArrayUtils::get($data, $property);
         }
 
         return $data ? $data : [];

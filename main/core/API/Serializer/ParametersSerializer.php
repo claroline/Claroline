@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\API\Serializer;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Entity\File\PublicFile;
@@ -19,12 +18,19 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class ParametersSerializer
 {
+    /** @var ObjectManager */
+    private $om;
+
     /** @var SerializerProvider */
     private $serializer;
 
     /** @var FinderProvider */
     private $finder;
 
+    /** @var PlatformConfigurationHandler */
+    private $configHandler;
+
+    /** @var string */
     private $filePath;
 
     /**
@@ -38,20 +44,21 @@ class ParametersSerializer
      *     "om"            = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
-     * @param PlatformConfigurationHandler $config
      * @param SerializerProvider           $serializer
      * @param FinderProvider               $finder
+     * @param ObjectManager                $om
+     * @param PlatformConfigurationHandler $configHandler
+     * @param string                       $filePath
      */
     public function __construct(
-        SerializerProvider $serializer,
-        FinderProvider $finder,
+        SerializerProvider $serializer, // bad
+        FinderProvider $finder, // bad
         ObjectManager $om,
         PlatformConfigurationHandler $configHandler,
         $filePath
     ) {
         $this->serializer = $serializer;
         $this->finder = $finder;
-        $this->arrayUtils = new ArrayUtils();
         $this->filePath = $filePath;
         $this->configHandler = $configHandler;
         $this->om = $om;
@@ -66,6 +73,7 @@ class ParametersSerializer
         }
 
         $data['javascripts'] = $this->serializeJavascripts($data);
+        $data['display']['logo'] = $this->om->getRepository(PublicFile::class)->findOneBy(['url' => $data['display']['logo']]);
 
         return $data;
     }
@@ -75,13 +83,14 @@ class ParametersSerializer
      *
      * @param array $data - the data to deserialize
      *
-     * @return PlatformConfiguration
+     * @return array
      */
     public function deserialize(array $data)
     {
         $original = $data;
         $this->deserializeTos($data);
         $data = $this->getJavascriptsData($data);
+        $data = $this->getLogoData($data);
         unset($data['tos']['text']);
 
         $data = array_merge($this->serialize([Options::SERIALIZE_MINIMAL]), $data);
@@ -149,10 +158,20 @@ class ParametersSerializer
         $uploadedFiles = [];
 
         foreach ($data['javascripts'] as $url) {
-            $file = $this->om->getRepository(PublicFile::class)->findOneByUrl($url);
+            $file = $this->om->getRepository(PublicFile::class)->findOneBy(['url' => $url]);
             $uploadedFiles[] = $this->serializer->serialize($file);
         }
 
         return $uploadedFiles;
+    }
+
+    public function getLogoData(array $data)
+    {
+        if (isset($data['display']) && isset($data['display']['logo'])) {
+            $logo = $data['display']['logo'];
+            $data['display']['logo'] = $logo['url'];
+        }
+
+        return $data;
     }
 }

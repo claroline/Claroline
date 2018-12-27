@@ -9,8 +9,21 @@ use Symfony\Component\EventDispatcher\Event;
 
 class ExportObjectEvent extends Event
 {
+    /** @var mixed */
+    protected $object;
+
+    /** @var FileBag */
+    protected $fileBag;
+
+    /** @var array */
+    protected $data;
+
     /**
-     * TODO: write doc.
+     * ExportObjectEvent constructor.
+     *
+     * @param mixed   $object
+     * @param FileBag $fileBag
+     * @param array   $data
      */
     public function __construct(
         $object,
@@ -20,7 +33,6 @@ class ExportObjectEvent extends Event
         $this->object = $object;
         $this->data = $data;
         $this->fileBag = $fileBag;
-        $this->arrayUtils = new ArrayUtils();
     }
 
     /**
@@ -55,6 +67,6 @@ class ExportObjectEvent extends Event
 
     public function overwrite($key, $value)
     {
-        $this->arrayUtils->set($this->data, $key, $value);
+        ArrayUtils::set($this->data, $key, $value);
     }
 }

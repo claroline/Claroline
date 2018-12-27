@@ -4,6 +4,7 @@ import {trans} from '#/main/app/intl/translation'
 import {param} from '#/main/app/config'
 import {currentUser} from '#/main/app/security'
 
+const isImpersonated = (state) => state.isImpersonated
 const mainMenu = (state) => state.mainMenu
 const administration = (state) => state.administration
 const context = (state) => state.context
@@ -67,6 +68,7 @@ const registrationUrl = createSelector(
 const maintenance = () => param('maintenance')
 
 export const selectors = {
+  isImpersonated,
   mainMenu,
   administration,
   context,

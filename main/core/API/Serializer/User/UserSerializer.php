@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\API\Serializer\User;
 
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\GenericSerializer;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -28,8 +29,10 @@ use Symfony\Component\Security\Core\Role\Role as BaseRole;
 /**
  * @DI\Service("claroline.serializer.user")
  * @DI\Tag("claroline.serializer")
+ *
+ * @todo remove parent class
  */
-class UserSerializer
+class UserSerializer extends GenericSerializer
 {
     use SerializerTrait;
 
@@ -40,7 +43,7 @@ class UserSerializer
     private $authChecker;
 
     /** @var ObjectManager */
-    private $om;
+    protected $om;
 
     /** @var PlatformConfigurationHandler */
     private $config;
@@ -140,7 +143,7 @@ class UserSerializer
      *
      * @return array - the serialized representation of the user
      */
-    public function serialize(User $user, array $options = [])
+    public function serialize($user, array $options = [])
     {
         if (isset($options['public']) && $options['public']) {
             // TODO : remove me (only used by BBBPlugin and it's not maintained)
@@ -445,10 +448,10 @@ class UserSerializer
      *
      * @return User
      */
-    public function deserialize(array $data, User $user = null, array $options = [])
+    public function deserialize($data, $user = null, array $options = [])
     {
         // remove this later (with the Trait)
-        $this->genericSerializer->deserialize($data, $user, $options);
+        $user = parent::deserialize($data, $user, $options);
 
         $this->sipe('picture.url', 'setPicture', $data, $user);
         $this->sipe('email', 'setEmail', $data, $user);

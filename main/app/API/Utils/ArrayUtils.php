@@ -13,7 +13,7 @@ class ArrayUtils
      *
      * @throws \Exception
      */
-    public function set(array &$object, $keys, $value)
+    static public function set(array &$object, $keys, $value)
     {
         $keys = explode('.', $keys);
         $depth = count($keys);
@@ -28,7 +28,7 @@ class ArrayUtils
                 throw new \Exception('Cannot set property because it already exists as a non \stdClass');
             }
 
-            $this->set($object[$key], implode('.', $keys), $value);
+            static::set($object[$key], implode('.', $keys), $value);
         }
     }
 
@@ -42,14 +42,14 @@ class ArrayUtils
      *
      * @throws \Exception
      */
-    public function get(array $object, $keys)
+    static public function get(array $object, $keys)
     {
         $parts = explode('.', $keys);
         $key = array_shift($parts);
 
         if (isset($object[$key])) {
             if (!empty($parts) && is_array($object[$key])) {
-                return $this->get($object[$key], implode('.', $parts));
+                return static::get($object[$key], implode('.', $parts));
             }
 
             return $object[$key];
@@ -69,10 +69,10 @@ class ArrayUtils
      *
      * @throws \Exception
      */
-    public function has(array $object, $keys)
+    static public function has(array $object, $keys)
     {
         try {
-            $this->get($object, $keys);
+            static::get($object, $keys);
 
             return true;
         } catch (\Exception $e) {

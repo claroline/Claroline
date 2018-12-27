@@ -166,6 +166,7 @@ Header.propTypes = {
 }
 
 Header.defaultProps = {
+  isImpersonated: T.bool.isRequired,
   currentUser: null,
   tools: [],
   userTools: [],

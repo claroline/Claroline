@@ -152,7 +152,7 @@ class RemoveUsersCommand extends ContainerAwareCommand
             $om->startFlushSuite();
 
             foreach ($usersToDelete as $user) {
-                $userManager->deleteUser($user);
+                $om->remove($user);
             }
 
             $om->endFlushSuite();

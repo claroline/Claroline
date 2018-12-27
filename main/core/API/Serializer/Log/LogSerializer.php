@@ -2,8 +2,6 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Log;
 
-use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -16,11 +14,6 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class LogSerializer
 {
-    use SerializerTrait;
-
-    /** @var SerializerProvider */
-    private $serializer;
-
     /** @var TranslatorInterface */
     private $translator;
 
@@ -31,19 +24,17 @@ class LogSerializer
      * RoleSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.api.serializer"),
      *     "translator" = @DI\Inject("translator"),
      *     "dispatcher" = @DI\Inject("event_dispatcher")
      * })
      *
-     * @param SerializerProvider $serializer
+     * @param TranslatorInterface      $translator
+     * @param EventDispatcherInterface $dispatcher
      */
     public function __construct(
-        SerializerProvider $serializer,
         TranslatorInterface $translator,
         EventDispatcherInterface $dispatcher
     ) {
-        $this->serializer = $serializer;
         $this->translator = $translator;
         $this->dispatcher = $dispatcher;
     }
@@ -108,7 +99,7 @@ class LogSerializer
 
         $serialized = [
             'id' => $log->getId(),
-            'action' => $this->translator->trans('log_'.$log->getAction().'_shortname', [], 'log'),
+            'action' => $this->translator->trans('log_'.$log->getAction().'_shortname', [], 'log'), // translation should be done in client
             'dateLog' => $log->getDateLog()->format('Y-m-d\TH:i:s'),
             'description' => $description,
             'doer' => $doer,
@@ -132,9 +123,8 @@ class LogSerializer
             $eventName = 'create_log_details';
         }
         $event = new LogCreateDelegateViewEvent($log);
-        $description = $this->processContent($this->dispatcher->dispatch($eventName, $event)->getResponseContent());
         $serialized['details'] = $log->getDetails();
-        $serialized['detailedDescription'] = $description;
+        $serialized['detailedDescription'] = $this->processContent($this->dispatcher->dispatch($eventName, $event)->getResponseContent());
         $serialized['doerType'] = $log->getDoerType();
     }
 

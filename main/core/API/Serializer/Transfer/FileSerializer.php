@@ -25,9 +25,7 @@ class FileSerializer
      *     "fileSerializer" = @DI\Inject("claroline.serializer.public_file")
      * })
      *
-     * @param ObjectManager       $om
-     * @param UserSerializer      $userSerializer
-     * @param WorkspaceSerializer $workspaceSerializer
+     * @param PublicFileSerializer $fileSerializer
      */
     public function __construct(
         PublicFileSerializer $fileSerializer
@@ -44,7 +42,7 @@ class FileSerializer
     /**
      * Serializes a PublicFile entity.
      *
-     * @param PublicFile $file
+     * @param File $file
      * @param array      $options
      *
      * @return array

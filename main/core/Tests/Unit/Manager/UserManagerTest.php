@@ -173,51 +173,6 @@ class UserManagerTest extends MockeryTestCase
         $manager->importUsers($users);
     }
 
-    public function testConvertUsersToArray()
-    {
-        $userA = $this->mock('Claroline\CoreBundle\Entity\User');
-        $userB = $this->mock('Claroline\CoreBundle\Entity\User');
-        $roleAA = $this->mock('Claroline\CoreBundle\Entity\Role');
-        $roleAB = $this->mock('Claroline\CoreBundle\Entity\Role');
-        $roleBA = $this->mock('Claroline\CoreBundle\Entity\Role');
-        $roleBB = $this->mock('Claroline\CoreBundle\Entity\Role');
-
-        $userA->shouldReceive('getId')->once()->andReturn(1);
-        $userA->shouldReceive('getUsername')->once()->andReturn('username_1');
-        $userA->shouldReceive('getLastName')->once()->andReturn('lastname_1');
-        $userA->shouldReceive('getFirstName')->once()->andReturn('firstname_1');
-        $userA->shouldReceive('getAdministrativeCode')->once()->andReturn('code_1');
-        $userA->shouldReceive('getEntityRoles')->once()->andReturn([$roleAA, $roleAB]);
-        $roleAA->shouldReceive('getTranslationKey')->once()->andReturn('ROLE_AA');
-        $this->translator->shouldReceive('trans')
-            ->with('ROLE_AA', [], 'platform')
-            ->once()
-            ->andReturn('ROLE_AA_TRAD');
-        $roleAB->shouldReceive('getTranslationKey')->once()->andReturn('ROLE_AB');
-        $this->translator->shouldReceive('trans')
-            ->with('ROLE_AB', [], 'platform')
-            ->once()
-            ->andReturn('ROLE_AB_TRAD');
-        $userB->shouldReceive('getId')->once()->andReturn(2);
-        $userB->shouldReceive('getUsername')->once()->andReturn('username_2');
-        $userB->shouldReceive('getLastName')->once()->andReturn('lastname_2');
-        $userB->shouldReceive('getFirstName')->once()->andReturn('firstname_2');
-        $userB->shouldReceive('getAdministrativeCode')->once()->andReturn('code_2');
-        $userB->shouldReceive('getEntityRoles')->once()->andReturn([$roleBA, $roleBB]);
-        $roleBA->shouldReceive('getTranslationKey')->once()->andReturn('ROLE_BA');
-        $this->translator->shouldReceive('trans')
-            ->with('ROLE_BA', [], 'platform')
-            ->once()
-            ->andReturn('ROLE_BA_TRAD');
-        $roleBB->shouldReceive('getTranslationKey')->once()->andReturn('ROLE_BB');
-        $this->translator->shouldReceive('trans')
-            ->with('ROLE_BB', [], 'platform')
-            ->once()
-            ->andReturn('ROLE_BB_TRAD');
-
-        $this->getManager()->convertUsersToArray([$userA, $userB]);
-    }
-
     public function testGetUserByUserName()
     {
         $this->userRepo->shouldReceive('loadUserByUsername')

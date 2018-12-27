@@ -17,8 +17,6 @@ class CsvAdapter implements AdapterInterface
 {
     /** @var TranslatorInterface */
     private $translator;
-    /** @var ArrayUtils */
-    private $arrayUtils;
 
     /**
      * @DI\InjectParams({
@@ -30,7 +28,6 @@ class CsvAdapter implements AdapterInterface
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
-        $this->arrayUtils = new ArrayUtils();
     }
 
     /**
@@ -116,7 +113,7 @@ class CsvAdapter implements AdapterInterface
             $value = (bool) $value;
         }
 
-        $this->arrayUtils->set($object, $propertyName, $value);
+        ArrayUtils::set($object, $propertyName, $value);
     }
 
     public function explainSchema(\stdClass $data, $mode)

@@ -18,6 +18,8 @@ class FileSerializer
     /** @var RouterInterface */
     private $router;
 
+    private $filesDir;
+
     /**
      * ResourceNodeManager constructor.
      *
@@ -27,6 +29,7 @@ class FileSerializer
      * })
      *
      * @param RouterInterface $router
+     * @param string          $filesDir
      */
     public function __construct(RouterInterface $router, $filesDir)
     {

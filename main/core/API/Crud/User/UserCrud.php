@@ -197,6 +197,7 @@ class UserCrud
      */
     public function preUpdate(UpdateEvent $event)
     {
-        //do stuff here
+        // TODO : rename user role if user is renamed
+        // TODO : rename personal WS if user is renamed
     }
 }

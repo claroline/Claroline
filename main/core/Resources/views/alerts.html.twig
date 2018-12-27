@@ -32,7 +32,7 @@
     {% block claroline_danger %}{% endblock %}
 </div>
 
-{% if app.user != null and app.user.isMailValidated == false and app.user.hideMailWarning == false and is_mailer_available() and app.user.emailValidationHash %}
+{% if app.user != null and app.user.isMailValidated == false and app.user.hideMailWarning == false  and app.user.emailValidationHash %}
     <div class="alert-email-confirm">
         <h4 class="label label-warning">
             {{ 'email_not_activated_part_1'|trans({'%email%': app.user.email}, 'platform') }}

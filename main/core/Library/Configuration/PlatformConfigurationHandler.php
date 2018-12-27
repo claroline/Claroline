@@ -23,7 +23,6 @@ class PlatformConfigurationHandler
 {
     private $configFile;
     private $parameters;
-    private $lockedParameters;
 
     /**
      * PlatformConfigurationHandler constructor.
@@ -33,7 +32,6 @@ class PlatformConfigurationHandler
      * })
      *
      * @param string $configFile
-     * @param string $lockedConfigFile
      */
     public function __construct($configFile)
     {
@@ -41,7 +39,6 @@ class PlatformConfigurationHandler
         $this->defaultConfigs = [];
         $this->configFile = $configFile;
         $this->parameters = $this->mergeParameters();
-        $this->arrayUtils = new ArrayUtils();
         //just in case init went wrong
         $mapping = new LegacyParametersMapping();
         $this->mapping = $mapping->getMapping();
@@ -49,7 +46,7 @@ class PlatformConfigurationHandler
 
     public function hasParameter($parameter)
     {
-        return $this->arrayUtils->has($this->parameters, $parameter);
+        return ArrayUtils::has($this->parameters, $parameter);
     }
 
     /**
@@ -62,11 +59,11 @@ class PlatformConfigurationHandler
     public function getParameter($parameter)
     {
         if ($this->hasParameter($parameter)) {
-            return $this->arrayUtils->get($this->parameters, $parameter);
+            return ArrayUtils::get($this->parameters, $parameter);
         }
 
-        if (array_key_exists($parameter, $this->mapping) && $this->arrayUtils->has($this->parameters, $this->mapping[$parameter])) {
-            return $this->arrayUtils->get($this->parameters, $this->mapping[$parameter]);
+        if (array_key_exists($parameter, $this->mapping) && ArrayUtils::has($this->parameters, $this->mapping[$parameter])) {
+            return ArrayUtils::get($this->parameters, $this->mapping[$parameter]);
         }
 
         //otherwise let's go default
@@ -76,11 +73,11 @@ class PlatformConfigurationHandler
         }
 
         if (array_key_exists($parameter, $defaults)) {
-            return $this->arrayUtils->get($defaults, $parameter);
+            return ArrayUtils::get($defaults, $parameter);
         }
 
-        if (array_key_exists($parameter, $this->mapping) && $this->arrayUtils->has($defaults, $this->mapping[$parameter])) {
-            return $this->arrayUtils->get($defaults, $this->mapping[$parameter]);
+        if (array_key_exists($parameter, $this->mapping) && ArrayUtils::has($defaults, $this->mapping[$parameter])) {
+            return ArrayUtils::get($defaults, $this->mapping[$parameter]);
         }
 
         return null;

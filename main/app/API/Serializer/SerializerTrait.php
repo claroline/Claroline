@@ -13,69 +13,13 @@ namespace Claroline\AppBundle\API\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Utils\ArrayUtils;
-use Claroline\BundleRecorder\Log\LoggableTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 
 trait SerializerTrait
 {
-    use LoggableTrait;
-
-    /** @var GenericSerializer */
-    protected $genericSerializer;
-
-    /** @var ArrayUtils */
-    private $arrayUtils;
-
     /**
-     * Injects Serializer service.
-     *
-     * @DI\InjectParams({
-     *      "serializer" = @DI\Inject("claroline.generic_serializer")
-     * })
-     *
-     * @param GenericSerializer $serializer
-     */
-    public function setSerializer(GenericSerializer $serializer)
-    {
-        $this->genericSerializer = $serializer;
-    }
-
-    public function serialize($object, array $options = []): array
-    {
-        return $this->genericSerializer->serialize($object, $options);
-    }
-
-    public function deserialize($data, $object, array $options = [])
-    {
-        return $this->genericSerializer->deserialize($data, $object, $options);
-    }
-
-    /**
-     * @param $prop   - the property path
-     * @param $setter - the setter to use
-     * @param $data   - the data array
-     * @param $object - the object to use the setter on
-     */
-    public function setIfPropertyExists($prop, $setter, $data = [], $object)
-    {
-        //date parsing just in case
-
-        if (!$this->arrayUtils) {
-            $this->arrayUtils = new ArrayUtils();
-        }
-
-        if ($data && is_array($data)) {
-            try {
-                $value = $this->arrayUtils->get($data, $prop);
-
-                $object->{$setter}($value);
-            } catch (\Exception $e) {
-            }
-        }
-    }
-
-    /**
-     * Alias of setIfPropertyExists.
+     * SetIfPropertyExists.
+     * Sets an entity prop from an array data source.
      *
      * @param $prop   - the property path
      * @param $setter - the setter to use
@@ -84,7 +28,14 @@ trait SerializerTrait
      */
     public function sipe($prop, $setter, $data = [], $object)
     {
-        $this->setIfPropertyExists($prop, $setter, $data, $object);
+        if ($data && is_array($data)) {
+            try {
+                $value = ArrayUtils::get($data, $prop);
+
+                $object->{$setter}($value);
+            } catch (\Exception $e) {
+            }
+        }
     }
 
     public function getUuid($object, array $options): string

@@ -73,6 +73,7 @@ class TranslatableSerializer
 
     public function deserialize(array $data, Content $content, array $options = [])
     {
+        // TODO : rewrite. persist/flush are not allowed in serializers
         foreach ($data as $locale => $text) {
             //not handled by the crud for now
             $method = 'set'.ucfirst($options['property']);

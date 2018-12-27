@@ -199,7 +199,8 @@ class UserManager
             $user = $this->getUserByUsername($username);
 
             if ($user) {
-                $this->deleteUser($user);
+                $this->log('Removing '.$user->getUsername().'...');
+                $this->objectManager->remove($user);
                 ++$i;
             }
 
@@ -209,94 +210,6 @@ class UserManager
         }
 
         $this->objectManager->endFlushSuite();
-    }
-
-    public function csvFacets($file)
-    {
-        $data = file_get_contents($file);
-        $data = $this->container->get('claroline.utilities.misc')->formatCsvOutput($data);
-        $lines = str_getcsv($data, PHP_EOL);
-        $fields = array_shift($lines);
-        $fields = str_getcsv($fields, ';');
-        $facetManager = $this->container->get('claroline.manager.facet_manager');
-        $this->objectManager->startFlushSuite();
-        $i = 0;
-
-        foreach ($lines as $line) {
-            $values = str_getcsv($line, ';');
-            $username = array_shift($values);
-            $user = $this->getUserByUsername($username);
-
-            foreach ($fields as $key => $field) {
-                $fieldFacet = $facetManager->getFieldFacetByName($field);
-                $facetManager->setFieldValue($user, $fieldFacet, $values[$key], true);
-            }
-
-            ++$i;
-
-            if (0 === $i % 100) {
-                $this->objectManager->forceFlush();
-                $this->objectManager->clear();
-            }
-        }
-
-        $this->objectManager->endFlushSuite();
-    }
-
-    /**
-     * Rename a user.
-     *
-     * @todo use crud instead
-     * @todo REMOVE ME
-     * It renames the user role and its personal WS if needed
-     *
-     * @param User   $user
-     * @param string $previousUsername
-     */
-    public function rename(User $user, $previousUsername)
-    {
-        if ($user->getUsername() !== $previousUsername) {
-            // Rename user role
-            $userRole = $this->roleManager->getUserRole($previousUsername);
-
-            if ($userRole) {
-                $this->roleManager->renameUserRole($userRole, $user->getUsername());
-            }
-
-            // Rename personal WS
-            $pws = $user->getPersonalWorkspace();
-            if ($pws) {
-                $personalWorkspaceName = $this->translator->trans('personal_workspace', [], 'platform').' '.$user->getUsername();
-                $this->workspaceManager->rename($pws, trim($personalWorkspaceName));
-            }
-        }
-
-        $this->objectManager->persist($user);
-        $this->objectManager->flush();
-    }
-
-    /**
-     * @todo use crud instead
-     * @todo REMOVE ME
-     */
-    public function setIsMailNotified(User $user, $isNotified)
-    {
-        $user->setIsMailNotified($isNotified);
-        $this->objectManager->persist($user);
-        $this->objectManager->flush();
-    }
-
-    /**
-     * Removes a user.
-     *
-     * @param \Claroline\CoreBundle\Entity\User $user
-     *
-     * @todo use crud instead
-     * @todo REMOVE ME
-     */
-    public function deleteUser(User $user)
-    {
-        $this->log('Removing '.$user->getUsername().'...');
     }
 
     /**
@@ -671,50 +584,6 @@ class UserManager
     {
         $this->roleManager->resetRoles($user);
         $this->roleManager->associateRoles($user, $roles);
-    }
-
-    /**
-     * Serialize a user. Use JMS serializer from entities instead.
-     *
-     * @todo use serializer instead
-     * @todo REMOVE ME
-     *
-     * @param User[] $users
-     *
-     * @return array
-     *
-     * @deprecated
-     */
-    public function convertUsersToArray(array $users)
-    {
-        $content = [];
-        $i = 0;
-
-        foreach ($users as $user) {
-            $content[$i]['id'] = $user->getId();
-            $content[$i]['username'] = $user->getUsername();
-            $content[$i]['lastname'] = $user->getLastName();
-            $content[$i]['firstname'] = $user->getFirstName();
-            $content[$i]['administrativeCode'] = $user->getAdministrativeCode();
-
-            $rolesString = '';
-            $roles = $user->getEntityRoles();
-            $rolesCount = count($roles);
-            $j = 0;
-
-            foreach ($roles as $role) {
-                $rolesString .= "{$this->translator->trans($role->getTranslationKey(), [], 'platform')}";
-
-                if ($j < $rolesCount - 1) {
-                    $rolesString .= ' ,';
-                }
-                ++$j;
-            }
-            $content[$i]['roles'] = $rolesString;
-            ++$i;
-        }
-
-        return $content;
     }
 
     /**

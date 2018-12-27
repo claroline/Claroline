@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Resource\Types;
 
-use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\Entity\Resource\Text;
 use Claroline\CoreBundle\Manager\TextManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -14,8 +13,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class TextSerializer
 {
-    use SerializerTrait;
-
     /** @var TextManager */
     private $manager;
 

@@ -30,7 +30,7 @@ class PanelFacetSerializer
      */
     public function __construct(SerializerProvider $serializer)
     {
-        $this->serializer = $serializer;
+        $this->serializer = $serializer; // bad
     }
 
     /**
@@ -104,5 +104,6 @@ class PanelFacetSerializer
 
     private function deserializeRoles(array $roleData, PanelFacet $panel)
     {
+        // TODO : implement
     }
 }

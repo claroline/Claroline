@@ -22,8 +22,7 @@ const Meta = () =>
           {
             name: 'display.name',
             type: 'string',
-            label: trans('name'),
-            required: false
+            label: trans('name')
           }, {
             name: 'display.secondary_name',
             type: 'string',

@@ -125,6 +125,7 @@ class TeamSerializer
      */
     public function deserialize($data, Team $team)
     {
+        // TODO : rewrite. persist/flush are not allowed in serializers
         $this->om->startFlushSuite();
 
         $this->sipe('id', 'setUuid', $data, $team);

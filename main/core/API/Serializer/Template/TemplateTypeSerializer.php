@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Template;
 
-use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\Entity\Template\TemplateType;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -21,15 +20,12 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class TemplateTypeSerializer
 {
-    use SerializerTrait;
-
     /**
      * @param TemplateType $templateType
-     * @param array        $options
      *
      * @return array
      */
-    public function serialize(TemplateType $templateType, array $options = [])
+    public function serialize(TemplateType $templateType)
     {
         $serialized = [
             'id' => $templateType->getUuid(),

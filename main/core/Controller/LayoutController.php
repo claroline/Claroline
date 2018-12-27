@@ -186,13 +186,10 @@ class LayoutController extends Controller
             $current = 'desktop';
         }
 
-        // if has_role('ROLE_USURPATE_WORKSPACE_ROLE') or is_impersonated()
-        // if ($role instanceof \Symfony\Component\Security\Core\Role\SwitchUserRole)
-
         // I think we will need to merge this with the default platform config object
         // this can be done when the top bar will be moved in the main react app
         return $this->render('ClarolineCoreBundle:layout:top_bar.html.twig', [
-            //'isImpersonated' => $this->isImpersonated(),
+            'isImpersonated' => $this->isImpersonated(),
             'mainMenu' => $this->configHandler->getParameter('header_menu'),
             'context' => [
                 'type' => $current,

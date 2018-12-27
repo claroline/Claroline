@@ -9,5 +9,6 @@
         data-user-tools="{{ userTools | json_encode | raw | escape }}"
         data-notification-tools="{{ notificationTools | json_encode | raw | escape }}"
         data-notifications="{{ notifications | json_encode | raw | escape }}"
+        data-is-impersonated="{{ isImpersonated }}"
     ></div>
 {% endblock %}

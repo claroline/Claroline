@@ -37,7 +37,7 @@ class FieldFacetSerializer
      */
     public function __construct(SerializerProvider $serializer, ObjectManager $om)
     {
-        $this->serializer = $serializer;
+        $this->serializer = $serializer; // bad
         $this->om = $om;
 
         $this->fieldFacetChoiceRepo = $om->getRepository('Claroline\CoreBundle\Entity\Facet\FieldFacetChoice');
