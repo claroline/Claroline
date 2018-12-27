@@ -16,7 +16,7 @@ const NotificationsMenu = props =>
           status: 'primary',
           value: 100 > props.count.notifications ? props.count.notifications : '99+'
         } : undefined}
-        label={trans('show-notifications', {}, 'actions')}
+        label={trans('notifications')}
         target={['icap_notification_view']}
       />
 

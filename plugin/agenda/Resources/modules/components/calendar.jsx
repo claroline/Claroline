@@ -5,9 +5,7 @@ import $ from 'jquery'
 import {PropTypes as T} from 'prop-types'
 //import 'moment/min/moment.min.js'
 
-import 'fullcalendar/dist/fullcalendar.css'
-import 'fullcalendar/dist/fullcalendar.print.min.css'
-import 'fullcalendar/dist/fullcalendar.js'
+import 'fullcalendar/dist/fullcalendar'
 
 //fullcalendar wrapper
 class Calendar extends Component {

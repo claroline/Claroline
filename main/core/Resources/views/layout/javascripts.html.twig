@@ -1,23 +1,17 @@
-{# Base libraries #}
-<script src="{{ hotAsset('scaffolding_dll') }}"></script>
+{# Webpack boilerplate #}
+<script src="{{ hotAsset('runtime') }}"></script>
 
-{# React/Redux & related libraries #}
-<script src="{{ hotAsset('react_dll') }}"></script>
+{# Base libraries #}
+<script src="{{ hotAsset('vendor') }}"></script>
 
 {# Frequently used Claroline JS #}
-<script src="{{ hotAsset('commons') }}"></script>
+<script src="{{ hotAsset('app') }}"></script>
 
 {# Claroline Plugins configuration #}
 <script src="{{ hotAsset('plugins') }}"></script>
 
 {# Polyfills #}
 <script src="{{ hotAsset('claroline-distribution-main-app-polyfills') }}"></script>
-
-<script>
-    if (window.sessionStorage.getItem('hide_browser_warning')) {
-        $('.outdated-browser-warning').hide();
-    }
-</script>
 
 {# TODO: remove this when custom js builds are available #}
 {# ATTENTION : it must be loaded before Bootstrap to override `.tooltip()` method #}
@@ -33,7 +27,8 @@
     'packages/bootstrap/js/tab.js'
     'packages/bootstrap/js/tooltip.js'
     'packages/bootstrap/js/popover.js'
-    %}<script src="{{ asset_url }}"></script>
+%}
+    <script src="{{ asset_url }}"></script>
 {% endjavascripts %}
 
 {# We have replaced WillDurand by our own to be able to lazy load trans domains #}
@@ -84,10 +79,6 @@
             }
         });
     });
-
-    $('#close-browser-warning').on('click', function() {
-        window.sessionStorage.setItem('hide_browser_warning', true);
-    })
 
     // The following code fixes the issue of unscrollable modal due to focus loss when multiple modals are opened.
     var oldJqTrigger = jQuery.fn.trigger;

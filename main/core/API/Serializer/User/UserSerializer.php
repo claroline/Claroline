@@ -450,6 +450,10 @@ class UserSerializer extends GenericSerializer
      */
     public function deserialize($data, $user = null, array $options = [])
     {
+        if (empty($user)) {
+            $user = new User();
+        }
+
         // remove this later (with the Trait)
         $user = parent::deserialize($data, $user, $options);
 

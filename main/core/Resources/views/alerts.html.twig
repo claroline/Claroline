@@ -1,16 +1,5 @@
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 
-{% if not app.session.get('hide_browser_warning') %}
-<div class="alert alert-danger outdated-browser-warning" style="text-align: center;">
-    <a id="close-browser-warning" class="close" data-dismiss="alert" href="#" aria-hidden="true">&times;</a>
-    <div align="center"> <i class="fa fa-warning"></i>
-        {{ 'outdated_brower_message'|trans({}, 'platform') }}
-        (<a href="http://browsehappy.com" target="_blank">http://browsehappy.com</a>).
-        {{ 'ie_support_message'|trans({}, 'platform')}}
-    </div>
-</div>
-{% endif %}
-
 {% if is_maintenance_enabled() %}
 <div class="alert-claroline-danger">
     <h4 class="label label-danger">
@@ -32,7 +21,7 @@
     {% block claroline_danger %}{% endblock %}
 </div>
 
-{% if app.user != null and app.user.isMailValidated == false and app.user.hideMailWarning == false  and app.user.emailValidationHash %}
+{% if app.user != null and app.user.isMailValidated == false and app.user.hideMailWarning == false and is_mailer_available() and app.user.emailValidationHash %}
     <div class="alert-email-confirm">
         <h4 class="label label-warning">
             {{ 'email_not_activated_part_1'|trans({'%email%': app.user.email}, 'platform') }}

@@ -13,7 +13,6 @@ namespace Claroline\AppBundle\API\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Utils\ArrayUtils;
-use JMS\DiExtraBundle\Annotation as DI;
 
 trait SerializerTrait
 {

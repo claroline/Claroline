@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping\ManyToOne;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * This class is useful for quick dev/prototype/simple objects but you shouldn't use it too much
+ * This class is useful for quick dev/prototype/simple objects but you shouldn't use it too much.
  *
  * @DI\Service("claroline.generic_serializer")
  */
@@ -38,7 +38,7 @@ class GenericSerializer
 
     /**
      * @DI\InjectParams({
-    *       "reader" = @DI\Inject("annotation_reader")
+     *      "reader" = @DI\Inject("annotation_reader")
      * })
      *
      * @param Reader $reader

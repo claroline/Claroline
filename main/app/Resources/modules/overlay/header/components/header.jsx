@@ -9,7 +9,6 @@ import {WalkthroughOverlay} from '#/main/app/overlay/walkthrough/containers/over
 import {HeaderBrand} from '#/main/app/overlay/header/components/brand'
 import {HeaderLocale} from '#/main/app/overlay/header/components/locale'
 import {HeaderNotifications} from '#/main/app/overlay/header/components/notifications'
-import {HeaderTitle} from '#/main/app/overlay/header/components/title'
 import {HeaderTools} from '#/main/app/overlay/header/components/tools'
 import {HeaderUser} from '#/main/app/overlay/header/components/user'
 import {HeaderMain} from '#/main/app/overlay/header/components/main'
@@ -18,17 +17,12 @@ import {getWalkthrough} from '#/main/app/overlay/header/walkthroughs/menus'
 
 const Header = props =>
   <header className="app-header">
-    {props.logo &&
+    {((props.display.name && props.title) || props.logo) &&
       <HeaderBrand
         logo={props.logo}
-        redirectHome={props.redirectHome}
-      />
-    }
-
-    {(props.display.name && props.title) &&
-      <HeaderTitle
         title={props.title}
         subtitle={props.subtitle}
+        showTitle={props.display.name}
         redirectHome={props.redirectHome}
       />
     }
@@ -36,7 +30,7 @@ const Header = props =>
     {0 !== props.tools.length &&
       <HeaderTools
         type="tools"
-        icon="fa fa-fw fa-wrench"
+        icon="fa fa-fw fa-tools"
         label={trans('tools')}
         tools={props.tools}
       />

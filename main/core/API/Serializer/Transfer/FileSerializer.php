@@ -42,8 +42,8 @@ class FileSerializer
     /**
      * Serializes a PublicFile entity.
      *
-     * @param File $file
-     * @param array      $options
+     * @param File  $file
+     * @param array $options
      *
      * @return array
      */

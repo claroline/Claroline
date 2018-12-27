@@ -1,4 +1,4 @@
-/* global process, require, window */
+/* global require, window */
 
 import {
   applyMiddleware,
@@ -8,6 +8,7 @@ import {
 import thunk from 'redux-thunk'
 import merge from 'lodash/merge'
 
+import {env} from '#/main/app/config'
 import {combineReducers} from '#/main/app/store/reducer'
 
 import {apiMiddleware} from '#/main/app/api/store/middleware'
@@ -16,7 +17,7 @@ import {apiMiddleware} from '#/main/app/api/store/middleware'
 const middleware = [apiMiddleware, thunk]
 
 // add dev tools
-if (process.env.NODE_ENV !== 'production') { // todo : retrieve current env elsewhere
+if ('production' !== env()) {
   // Register redux freeze (it will throw errors if the state is mistakenly mutated)
   middleware.push(
     require('redux-freeze')
@@ -49,7 +50,7 @@ function createStore(name, reducers, initialState = {}) {
   // we must do it at each store creation in order to register all
   // of them in the dev console
   const composeEnhancers =
-    process.env.NODE_ENV !== 'production' &&
+    env() !== 'production' &&
     typeof window === 'object' &&
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
       window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({

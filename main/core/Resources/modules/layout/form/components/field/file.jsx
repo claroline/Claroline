@@ -124,7 +124,7 @@ implementPropTypes(FileComponent, FormFieldTypes, {
   min: T.number,
   max: T.number,
 
-  uploadUrl: T.oneOfType([T.string, T.arrayOf]),
+  uploadUrl: T.oneOfType([T.string, T.arrayOf(T.string)]),
   autoUpload: T.bool,
   unzippable: T.bool,
 

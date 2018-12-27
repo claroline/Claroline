@@ -1,22 +1,107 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
+import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
+import {selectors as formSelectors} from '#/main/app/content/form/store'
 
-const displayFields = {
-  'sendmail': [],
-  'gmail': ['mailer.username', 'mailer.password'],
-  'smtp': ['mailer.host', 'mailer.username', 'mailer.password', 'mailer.auth_mode', 'mailer.encryption', 'mailer.port'],
-  'postal': ['mailer.host', 'mailer.api_key', 'mailer.tag'
-  ]
-}
+const mailers = [
+  {
+    name: 'sendmail',
+    label: trans('mailer_sendmail'),
+    fields: []
+  }, {
+    name: 'gmail',
+    label: trans('mailer_gmail'),
+    fields: [
+      {
+        name: 'mailer.username',
+        type: 'string',
+        label: trans('username')
+      }, {
+        name: 'mailer.password',
+        type: 'password',
+        label: trans('password')
+      }
+    ]
+  }, {
+    name: 'smtp',
+    label: trans('mailer_smtp'),
+    fields: [
+      {
+        name: 'mailer.host',
+        type: 'url',
+        label: trans('host')
+      }, {
+        name: 'mailer.encryption',
+        type: 'choice',
+        label: trans('encryption'),
+        required: false,
+        options: {
+          choices: {
+            'none': 'none',
+            'tls': 'tls',
+            'ssl': 'ssl'
+          }
+        }
+      }, {
+        name: 'mailer.port',
+        type: 'string',
+        label: trans('port'),
+        required: false
+      }, {
+        name: 'mailer.auth_mode',
+        type: 'choice',
+        label: trans('auth_mode'),
+        options: {
+          condensed: true,
+          choices: {
+            'none': 'none',
+            'plain': 'plain',
+            'login': 'login',
+            'cram-md5': 'cram-md5'
+          }
+        },
+        linked: [
+          {
+            name: 'mailer.username',
+            type: 'string',
+            label: trans('username'),
+            displayed: (parameters) => 'none' !== parameters.mailer.auth_mode
+          }, {
+            name: 'mailer.password',
+            type: 'password',
+            label: trans('password'),
+            displayed: (parameters) => 'none' !== parameters.mailer.auth_mode
+          }
+        ]
+      }
+    ]
+  }, {
+    name: 'postal',
+    label: trans('mailer_postal'),
+    fields: [
+      {
+        name: 'mailer.host',
+        type: 'url',
+        label: trans('host')
+      }, {
+        name: 'mailer.api_key',
+        type: 'string',
+        label: trans('api_key')
+      }, {
+        name: 'mailer.tag',
+        type: 'string',
+        label: trans('tag'),
+        required: false
+      }
+    ]
+  }
+]
 
-const display = (transport, property) => {
-  return displayFields[transport].indexOf(property) > -1
-}
-
-const Mailing = () =>
+const MailingForm = (props) =>
   <FormData
     name="parameters"
     target={['apiv2_parameters_update']}
@@ -38,75 +123,29 @@ const Mailing = () =>
             label: trans('transport'),
             required: true,
             options: {
-              choices: {
-                sendmail: 'sendmail',
-                gmail: 'gmail',
-                smtp: 'smtp',
-                postal: 'postal'
-              }
-            }
-          }, {
-            name: 'mailer.host',
-            type: 'string',
-            label: trans('host'),
-            required: false,
-            displayed: parameters => display(parameters.mailer.transport, 'mailer.host')
-          }, {
-            name: 'mailer.port',
-            type: 'string',
-            label: trans('port'),
-            required: false,
-            displayed: parameters => display(parameters.mailer.transport, 'mailer.port')
-          }, {
-            name: 'mailer.username',
-            type: 'string',
-            label: trans('username'),
-            required: false,
-            displayed: parameters => display(parameters.mailer.transport, 'mailer.username')
-          }, {
-            name: 'mailer.password',
-            type: 'password',
-            label: trans('password'),
-            required: false,
-            displayed: parameters => display(parameters.mailer.transport, 'mailer.password')
-          }, {
-            name: 'mailer.auth_mode',
-            type: 'choice',
-            label: trans('auth_mode'),
-            required: false,
-            options: {
-              choices: {
-                'none': 'none',
-                'plain': 'plain',
-                'login': 'login',
-                'cram-md5': 'cram-md5'
-              }
+              condensed: true,
+              choices: mailers.reduce((choices, mailer) => Object.assign(choices, {
+                [mailer.name]: mailer.label
+              }), {})
             },
-            displayed: parameters => display(parameters.mailer.transport, 'mailer.auth_mode')
-          }, {
-            name: 'mailer.encryption',
-            type: 'choice',
-            label: trans('encryption'),
-            required: false,
-            options: {
-              choices: {
-                'none': 'none',
-                'tls': 'tls',
-                'ssl': 'ssl'
-              }
-            },
-            displayed: parameters => display(parameters.mailer.transport, 'mailer.encryption')
-          }, {
-            name: 'mailer.tag',
-            type: 'string',
-            label: trans('tag'),
-            required: false,
-            displayed: parameters => display(parameters.mailer.transport, 'mailer.tag')
+            linked: mailers.find(mailer => mailer.name === props.mailer.transport) || []
           }
         ]
       }
     ]}
   />
+
+MailingForm.propTypes = {
+  mailer: T.shape({
+    transport: T.string
+  })
+}
+
+const Mailing = connect(
+  (state) => ({
+    parameters: formSelectors.data(formSelectors.form(state, 'parameters')).mailer
+  })
+)(MailingForm)
 
 export {
   Mailing

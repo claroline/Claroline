@@ -136,7 +136,6 @@ class RemoveUsersCommand extends ContainerAwareCommand
     private function confirmDeleteUsers($usersToDelete)
     {
         $helper = $this->getHelper('question');
-        $userManager = $this->getContainer()->get('claroline.manager.user_manager');
 
         foreach ($usersToDelete as $user) {
             $this->getOutput()->writeln("{$user->getId()}: {$user->getFirstName()} {$user->getLastName()} - {$user->getUsername()}");

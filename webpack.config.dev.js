@@ -2,86 +2,102 @@
  * Webpack configuration for DEV environments.
  */
 
-const Encore = require('@symfony/webpack-encore')
-
 const entries = require('./webpack/entries')
 const config = require('./webpack/config')
-const plugins = require('./webpack/plugins')
 const paths = require('./webpack/paths')
 const shared = require('./webpack/shared')
 
-Encore
-  .configureRuntimeEnvironment('dev')
-  .setOutputPath(paths.output())
-  .setPublicPath('/dist')
-  .autoProvidejQuery()
-  .setManifestKeyPrefix('/dist')
-  .enableSourceMaps(true)
-  //.cleanupOutputBeforeBuild()
-  .enableBuildNotifications()
-  // enables files versioning for browser cache busting
-  .enableVersioning(true)
+const assetsFile = require('./webpack/plugins/assets-file')
+const hashedModuleIds = require('./webpack/plugins/hashed-module-ids')
+const vendorDistributionShortcut = require('./webpack/plugins/vendor-shortcut')
+const distributionShortcut = require('./webpack/plugins/distribution-shortcut')
 
-  // Plugins
-  .configureDefinePlugin(options => {
-    options['process.env'] = {
-      NODE_ENV: JSON.stringify('development')
+// dev
+const circularDependency = require('./webpack/plugins/dev/circular-dependency')
+const hotModuleReplacement = require('./webpack/plugins/dev/hot-module-replacement')
+const notifier = require('./webpack/plugins/dev/notifier')
+
+const babel = require('./webpack/rules/babel')
+
+module.exports = {
+  mode: 'development',
+  // configure webpack logs
+  stats: {
+    colors: true,
+    errorDetails: true
+  },
+  devServer: {
+    hot: true,
+    contentBase: paths.output()
+  },
+  output: {
+    path: paths.output(),
+    publicPath: '/dist',
+    // webpack-dev-server requires to use the hash of the build
+    // it doesn't accept [contenthash] like in prod
+    filename: '[name].[hash].js', // this is for static entries declared in assets.json
+    chunkFilename: '[name].[hash].js' // this is for dynamic entries declared in modules/plugin.js
+  },
+  module: {
+    rules: [
+      babel()
+    ]
+  },
+  // grab entries to compile
+  entry: Object.assign({},
+    // get the one defined in assets.json file (static entries)
+    entries.collectEntries(),
+    // get the one defined in modules/plugin.js file (dynamic entries)
+    {plugins: config.collectConfig()}
+  ),
+  plugins: [
+    assetsFile('webpack-dev.json'),
+    hashedModuleIds(),
+    vendorDistributionShortcut(),
+    distributionShortcut(),
+
+    // dev tools
+    hotModuleReplacement(),
+    notifier(),
+    circularDependency()
+  ],
+  optimization: {
+    // bundle webpack runtime code into a single chunk file
+    // it avoids having it embed in each generated chunk
+    runtimeChunk: 'single',
+    splitChunks: {
+      // just use a more agnostic char for chunk names generation (default if ~)
+      automaticNameDelimiter: '-',
+      cacheGroups: {
+        // bundle common vendors
+        vendor: {
+          name: 'vendor',
+          test: /[\\/]node_modules[\\/]/,
+          chunks: 'all',
+          minChunks: 4,
+          priority: -10,
+          reuseExistingChunk: true
+        },
+        app: {
+          name: 'app',
+          test: /[\\/]vendor[\\/]claroline[\\/]distribution[\\/]main[\\/]app/,
+          minChunks: 4,
+          priority: -20,
+          chunks: 'all',
+          reuseExistingChunk: true
+        },
+        // bundle common modules to decrease generated file size
+        default: {
+          minChunks: 4,
+          priority: -30,
+          reuseExistingChunk: true
+        }
+      }
     }
-  })
-  .configureManifestPlugin(options => {
-    options.fileName = 'manifest.lib.json'
-  })
-  .configureUglifyJsPlugin(options => {
-    options.compress = false
-    options.beautify = false
-  })
-  .addPlugin(plugins.circularDependencies())
-  .addPlugin(plugins.assetsInfoFile())
-  .addPlugin(plugins.vendorDistributionShortcut())
-  .addPlugin(plugins.distributionShortcut())
-  .addPlugin(plugins.scaffoldingDllReference())
-  .addPlugin(plugins.reactDllReference())
-  .addPlugin(plugins.commonsChunk())
-
-  // Babel configuration
-  .configureBabel(babelConfig => {
-    babelConfig.compact = false
-
-    // for webpack dynamic import (compile `import()` and generate targeted chunks)
-    babelConfig.plugins.push('syntax-dynamic-import')
-  })
-  .enableReactPreset()
-
-  // todo : this loader will no longer be required when angular will be fully removed
-  .addLoader({
-    test: /\.html$/,
-    loader: 'html-loader'
-  })
-
-  // configuration from plugins
-  .addEntry('plugins', config.collectConfig())
-
-// grab plugins entries
-const collectedEntries = entries.collectEntries()
-Object.keys(collectedEntries).forEach(key => Encore.addEntry(key, collectedEntries[key]))
-
-const webpackConfig = Encore.getWebpackConfig()
-
-webpackConfig.watchOptions = {
-  poll: 2000,
-  ignored: /web\/packages|node_modules/
+  },
+  resolve: {
+    modules: ['./node_modules', './web/packages'],
+    extensions: ['.js', '.jsx']
+  },
+  externals: shared.externals()
 }
-
-webpackConfig.resolve.modules = ['./node_modules', './web/packages']
-//in that order it solves some issues... if we start with bower.json, many packages don't work
-webpackConfig.resolve.descriptionFiles = ['package.json', '.bower.json', 'bower.json']
-webpackConfig.resolve.alias = shared.aliases()
-webpackConfig.externals = shared.externals()
-
-// for webpack dynamic import
-// override name for non entry chunk files
-// todo : find a way to use versioning
-webpackConfig.output.chunkFilename = '[name].js'
-
-// export the final configuration
-module.exports = webpackConfig

@@ -51,7 +51,6 @@
 }
 
 .app-header-brand {
-    flex: 0;
     height: 100%;
     text-align: center;
 
@@ -71,12 +70,14 @@
     // declare colors var to make it usable inside the SVG
     --logo-default: @top-bar-brand-color;
     --logo-primary: @brand-primary;
+
+    + .app-header-title {
+        margin-left: floor(@grid-gutter-width / 2);
+    }
 }
 
 .app-header-title {
-    flex-direction: column !important; // override default alignment
-    align-items: flex-start !important; // override default alignment
-    padding: 0 floor(@grid-gutter-width / 2);
+    text-align: left;
     margin: 0;
     line-height: 1;
     font-size: @top-bar-brand-font-size;

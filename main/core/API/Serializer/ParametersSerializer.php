@@ -73,7 +73,6 @@ class ParametersSerializer
         }
 
         $data['javascripts'] = $this->serializeJavascripts($data);
-        $data['display']['logo'] = $this->om->getRepository(PublicFile::class)->findOneBy(['url' => $data['display']['logo']]);
 
         return $data;
     }

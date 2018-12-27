@@ -17,7 +17,7 @@
     "d3": "^4.4.0",
     "immutability-helper": "^2.0.0",
     "invariant": "^2.2.1",
-    "@fortawesome/fontawesome-free": "^5.5.0",
+    "@fortawesome/fontawesome-free": "^5",
     "fullcalendar": "^3.0.0",
     "jquery": "2.2.4",
     "jquery-option-tree": "git://github.com/jongilbraith/jquery-option-tree.git#502925496eea4becf88a0109fe51fc4af48b3691",
@@ -26,7 +26,6 @@
     "jsplumb": "^2.2.11",
     "lodash": "^4.16.1",
     "mathjax": "^2.7.4",
-    "modernizr": "^3.3.1",
     "moment": "^2.15.1",
     "pdfjs-dist": "1.4.133",
     "prop-types": "^15.5.10",
@@ -54,6 +53,5 @@
   },
   "files": [
     "package.json"
-  ],
-  "browser": {}
+  ]
 }

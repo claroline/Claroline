@@ -8,6 +8,5 @@
  */
 
 import '#/main/app/polyfills/core-js'
-import '#/main/app/polyfills/modernizr'
 import '#/main/app/polyfills/svg4everybody'
 import '#/main/app/polyfills/whatwg-fetch'

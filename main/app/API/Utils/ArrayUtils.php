@@ -13,7 +13,7 @@ class ArrayUtils
      *
      * @throws \Exception
      */
-    static public function set(array &$object, $keys, $value)
+    public static function set(array &$object, $keys, $value)
     {
         $keys = explode('.', $keys);
         $depth = count($keys);
@@ -42,7 +42,7 @@ class ArrayUtils
      *
      * @throws \Exception
      */
-    static public function get(array $object, $keys)
+    public static function get(array $object, $keys)
     {
         $parts = explode('.', $keys);
         $key = array_shift($parts);
@@ -69,7 +69,7 @@ class ArrayUtils
      *
      * @throws \Exception
      */
-    static public function has(array $object, $keys)
+    public static function has(array $object, $keys)
     {
         try {
             static::get($object, $keys);

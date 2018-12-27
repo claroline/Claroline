@@ -32,13 +32,7 @@
 {% endblock %}
 
 {% block stylesheets %}
-
-
     {{ parent() }}
-
-    {% set calendarPath = 'packages/fullcalendar/dist/' %}
-    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.min.css') }}'/>
-    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.print.css') }}' media='print' />
 
     <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-agenda-agenda.css') }}" />
 {% endblock %}
@@ -46,5 +40,5 @@
 {% block javascripts %}
     {{ parent() }}
 
-    <script src="{{ hotAsset('dist/claroline-distribution-plugin-agenda-agenda.js') }}"></script>
+    <script src="{{ hotAsset('claroline-distribution-plugin-agenda-agenda') }}"></script>
 {% endblock javascripts %}

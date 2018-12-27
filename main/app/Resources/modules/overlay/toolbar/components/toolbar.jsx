@@ -42,7 +42,7 @@ const MoreTools = props =>
     id="toolbar-more-tools"
     className="tool-link"
     type={MENU_BUTTON}
-    icon="fa fa-wrench"
+    icon="fa fa-tools"
     label={trans('show-more-tools', {}, 'actions')}
     tooltip="right"
     menu={{

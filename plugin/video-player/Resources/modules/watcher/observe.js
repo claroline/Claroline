@@ -1,5 +1,6 @@
 import $ from 'jquery'
-export default function observe (selector, callback, containers = [document.body]) {
+
+export default function observe(selector, callback, containers = [document.body]) {
   window.MutationObserver = window.MutationObserver || window.WebKitMutationObserver
 
   const initialized = []
@@ -14,8 +15,8 @@ export default function observe (selector, callback, containers = [document.body
           let keepGoing = true
           initialized.forEach(id => {
             // this is required because otherwise videoJs goes into infinite loop for unknown reason
-            // as it automatically adds html_5_api at the end of an id wich triggers the observer wich trigger video js
-            // to add html_5_api to the id wich trigger the observer... etc.
+            // as it automatically adds html_5_api at the end of an id which triggers the observer which trigger video js
+            // to add html_5_api to the id which trigger the observer... etc.
             if (el.id.indexOf(id) === 0) {
               keepGoing = false
             }

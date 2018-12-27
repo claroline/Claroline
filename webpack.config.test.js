@@ -2,73 +2,88 @@
  * Webpack configuration for TEST environments.
  */
 
-const Encore = require('@symfony/webpack-encore')
-
 const entries = require('./webpack/entries')
-const plugins = require('./webpack/plugins')
+const config = require('./webpack/config')
 const paths = require('./webpack/paths')
 const shared = require('./webpack/shared')
 
-Encore
-  .configureRuntimeEnvironment('dev')
-  .setOutputPath(paths.output())
-  .setPublicPath('/dist')
-  .autoProvidejQuery()
-  .setManifestKeyPrefix('/dist')
-  .enableSourceMaps(false)
-  //.cleanupOutputBeforeBuild()
-  .enableBuildNotifications()
-  .enableVersioning(false)
+const assetsFile = require('./webpack/plugins/assets-file')
+const hashedModuleIds = require('./webpack/plugins/hashed-module-ids')
+const vendorDistributionShortcut = require('./webpack/plugins/vendor-shortcut')
+const distributionShortcut = require('./webpack/plugins/distribution-shortcut')
 
-  // Plugins
-  .configureDefinePlugin(options => {
-    options['process.env'] = {
-      NODE_ENV: JSON.stringify('development')
+const babel = require('./webpack/rules/babel')
+
+module.exports = {
+  mode: 'development',
+  // configure webpack logs
+  stats: {
+    colors: true,
+    errorDetails: true
+  },
+  // configure output files
+  output: {
+    path: paths.output(),
+    publicPath: '/dist',
+    // use content hash in the name of generated file for proper caching
+    filename: '[name].[contenthash].js', // this is for static entries declared in assets.json
+    chunkFilename: '[name].[contenthash].js' // this is for dynamic entries declared in modules/plugin.js
+  },
+  module: {
+    rules: [
+      babel()
+    ]
+  },
+  // grab entries to compile
+  entry: Object.assign({},
+    // get the one defined in assets.json file (static entries)
+    entries.collectEntries(),
+    // get the one defined in modules/plugin.js file (dynamic entries)
+    {plugins: config.collectConfig()}
+  ),
+  plugins: [
+    assetsFile('webpack-test.json'),
+    hashedModuleIds(),
+    vendorDistributionShortcut(),
+    distributionShortcut()
+  ],
+  optimization: {
+    // bundle webpack runtime code into a single chunk file
+    // it avoids having it embed in each generated chunk
+    runtimeChunk: 'single',
+    splitChunks: {
+      // just use a more agnostic char for chunk names generation (default is ~)
+      automaticNameDelimiter: '-',
+      cacheGroups: {
+        // bundle common vendors
+        vendor: {
+          name: 'vendor',
+          test: /[\\/]node_modules[\\/]/,
+          chunks: 'all',
+          minChunks: 4,
+          priority: -10,
+          reuseExistingChunk: true
+        },
+        app: {
+          name: 'app',
+          test: /[\\/]vendor[\\/]claroline[\\/]distribution[\\/]main[\\/]app/,
+          minChunks: 4,
+          priority: -20,
+          chunks: 'all',
+          reuseExistingChunk: true
+        },
+        // bundle common modules to decrease generated file size
+        default: {
+          minChunks: 5,
+          priority: -30,
+          reuseExistingChunk: true
+        }
+      }
     }
-  })
-  .configureManifestPlugin(options => {
-    options.fileName = 'manifest.lib.json'
-  })
-  .configureUglifyJsPlugin(options => {
-    options.compress = false
-    options.beautify = false
-  })
-  .addPlugin(plugins.vendorDistributionShortcut())
-  .addPlugin(plugins.distributionShortcut())
-  .addPlugin(plugins.rethrowCompilationErrors())
-  // we can not use CommonChunksPlugin (nor DLLs) in test env
-  // @see https://github.com/webpack-contrib/karma-webpack/issues/24
-  // (I keep the commented line to avoid someone adding it by mistake)
-  //.addPlugin(plugins.commonsChunk())
-
-  // Babel configuration
-  .configureBabel(babelConfig => {
-    babelConfig.compact = false
-  })
-  .enableReactPreset()
-
-  // todo : this loader will no longer be required when angular will be fully removed
-  .addLoader({
-    test: /\.html$/,
-    loader: 'html-loader'
-  })
-
-// grab plugins entries
-const collectedEntries = entries.collectEntries()
-Object.keys(collectedEntries).forEach(key => Encore.addEntry(key, collectedEntries[key]))
-
-const config = Encore.getWebpackConfig()
-
-config.watchOptions = {
-  poll: 2000,
-  ignored: /web\/packages|node_modules/
+  },
+  resolve: {
+    modules: ['./node_modules', './web/packages'],
+    extensions: ['.js', '.jsx']
+  },
+  externals: shared.externals()
 }
-
-config.resolve.modules = ['./node_modules', './web/packages']
-//in that order it solves some issues... if we start with bower.json, many packages don't work
-config.resolve.descriptionFiles = ['package.json', '.bower.json', 'bower.json']
-config.resolve.alias = shared.aliases()
-config.externals = shared.externals()
-
-// export the final configuration
-module.exports = config

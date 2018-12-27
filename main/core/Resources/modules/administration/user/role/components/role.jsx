@@ -131,7 +131,7 @@ const RoleForm = props =>
 
       {PLATFORM_ROLE === props.role.type &&
         <FormSection
-          icon="fa fa-fw fa-wrench"
+          icon="fa fa-fw fa-tools"
           title={trans('desktop_tools')}
         >
           <div className="list-group" fill={true}>

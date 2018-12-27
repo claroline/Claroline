@@ -8,10 +8,14 @@ import isEmpty from 'lodash/isEmpty'
 // todo : find where I must put it
 // (I put it here for now because it's the root of all apps)
 // this give the source paths to webpack for dynamic loading
-import {asset} from '#/main/app/config'
+import {asset, env} from '#/main/app/config'
 
 /* eslint-disable no-undef, no-unused-vars, no-global-assign */
-__webpack_public_path__ = asset('dist/')
+if ('development' === env()) {
+  __webpack_public_path__ = 'http://localhost:8080/dist/'
+} else {
+  __webpack_public_path__ = asset('dist/')
+}
 /* eslint-enable no-undef, no-unused-vars, no-global-assign */
 
 import {createStore} from '#/main/app/store'
