@@ -26,6 +26,7 @@
     "@babel/preset-env": "^7.0.0",
     "babel-loader": "^8.0.0",
     "claroline-distribution": "file:./vendor/claroline/distribution",
+    "cssnano": "^4.1",
     "less": "3.0.4",
     "postcss-cli": "^2.5.0",
     "shelljs": "^0.5.3",
