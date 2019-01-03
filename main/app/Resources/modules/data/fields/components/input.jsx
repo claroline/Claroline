@@ -17,6 +17,7 @@ import {FormProp} from '#/main/app/content/form/components/prop'
 // todo try to avoid connexion to the store
 // todo create working preview
 // todo restore data type icon : <span className={classes('field-item-icon', registry.get(field.type).meta.icon)} />
+// todo find a way to use collections
 
 const FieldPreview = props =>
   <FormProp

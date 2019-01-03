@@ -1,5 +1,6 @@
 import {trans, tval} from '#/main/app/intl/translation'
 
+import {boolean} from '#/main/app/data/boolean/validators'
 import {parseBool, translateBool} from '#/main/app/data/boolean/utils'
 
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
@@ -19,13 +20,7 @@ const dataType = {
   parse: (display) => parseBool(display),
   render: (raw) => translateBool(raw),
 
-  validate: (value) => {
-    try {
-      parseBool(value)
-    } catch (e) {
-      return tval('This value should be a valid boolean.')
-    }
-  },
+  validate: (value) => boolean(value),
   components: {
     details: BooleanDisplay,
     table: BooleanCell,

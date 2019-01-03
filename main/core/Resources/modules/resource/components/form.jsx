@@ -151,19 +151,20 @@ const ResourceFormComponent = (props) =>
             calculated: restrictedByIps,
             onChange: activated => {
               if (!activated) {
-                props.updateProp('restrictions.ips', [])
+                props.updateProp('restrictions.allowedIps', [])
               }
             },
             linked: [
               {
                 name: 'restrictions.allowedIps',
-                label: trans('resource_allowed_ip'),
-                type: 'ip',
+                label: trans('allowed_ips'),
+                type: 'collection',
                 required: true,
                 displayed: restrictedByIps,
                 options: {
-                  placeholder: trans('resource_no_allowed_ip', {}, 'resource'),
-                  multiple: true
+                  type: 'ip',
+                  placeholder: trans('no_allowed_ip'),
+                  button: trans('add_ip')
                 }
               }
             ]
@@ -206,6 +207,7 @@ ResourceFormComponent.defaultProps = {
 }
 
 const ResourceForm = connect(
+  null,
   (dispatch, ownProps) =>({
     updateProp(propName, propValue) {
       dispatch(formActions.updateProp(ownProps.name, propName, propValue))

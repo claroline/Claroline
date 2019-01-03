@@ -21,7 +21,6 @@
     "resource_explorer": "Resources explorer",
     "resource_fullscreen": "Display in fullscreen on open",
     "resource_likes": "{0} This resource has never been liked. | {1} This resource has been liked by one user. | ]1,Inf[ This resource has been liked by %count% users.",
-    "resource_no_allowed_ip": "No IP is allowed.",
     "resource_not_published": "Resource is not published",
     "resource_overview": "Resource overview",
     "resource_overview_actions": "Available actions",

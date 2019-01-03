@@ -4,7 +4,7 @@ import classes from 'classnames'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
-import {IPv4} from '#/main/core/scaffolding/ip'
+import {IPv4} from '#/main/app/data/ip/utils'
 
 /**
  * Renders an input for a part of an IP address.
@@ -51,7 +51,7 @@ IpPartInput.propTypes = {
 /**
  * Renders an IP v4 input.
  */
-class Ip extends Component {
+class IpInput extends Component {
   updatePart(index, partValue) {
     const valueParts = IPv4.parse(this.props.value)
 
@@ -116,7 +116,7 @@ class Ip extends Component {
   }
 }
 
-implementPropTypes(Ip, FormFieldTypes, {
+implementPropTypes(IpInput, FormFieldTypes, {
   value: T.string,
   placeholder: T.string,
   size: T.string
@@ -126,5 +126,5 @@ implementPropTypes(Ip, FormFieldTypes, {
 })
 
 export {
-  Ip
+  IpInput
 }

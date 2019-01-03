@@ -30,42 +30,12 @@
 @import "type";
 @import "alert/index";
 @import "data/index";
-@import "libraries/index";
 @import "layout/index";
 @import "progression/index";
 @import "tinymce/index";
 @import "users/index";
 @import "widget/index";
 @import "workspace/index";
-
-/*****************************/
-/*  Desktop parameters menu  */
-/*****************************/
-ul.desktop-parameters-menu {
-    li.list-group-item {
-        padding: 0;
-        &:hover,
-        &:focus{
-            background-color: @list-group-hover-bg;
-            a {
-                color: @list-group-link-hover-color;
-            }
-        }
-
-        a {
-            padding: 10px 15px;
-            position: relative;
-            display: block;
-            color: @list-group-link-color;
-            text-decoration: none;
-
-            &:hover,
-            &:focus{
-                text-decoration: none;
-            }
-        }
-    }
-}
 
 .notification-date {
     text-decoration: underline;
@@ -83,18 +53,6 @@ ul.desktop-parameters-menu {
     pointer-events: none; // Future-proof disabling of clicks
     box-shadow: none;
     .opacity(.65);
-}
-
-.general_parameters_form {
-    .redirect-after-login, .portfolio-url {
-        .radio-with-input {
-            line-height: 34px;
-            min-height: 40px;
-            input[type=radio] {
-                margin-top: 10px;
-            }
-        }
-    }
 }
 
 /**********************/

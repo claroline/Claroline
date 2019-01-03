@@ -3,4 +3,11 @@
     videojs.options.flash.swf = "{{ asset('packages/video.js/dist/video-js.swf') }}"
 </script>
 <script src="{{ hotAsset('dist/claroline-distribution-plugin-video-player-watcher')}}"></script>
-<link href="{{ asset('packages/video.js/dist/video-js.min.css') }}" rel="stylesheet">
+<link href="{{ asset('packages/video.js/dist/video-js.min.css') }}" rel="stylesheet" />
+<style type="text/css">
+    /* Avoid having the default player to appear and blink while video js is loading */
+    .vjs-waiting {
+        display: none;
+        background: transparent;
+    }
+</style>

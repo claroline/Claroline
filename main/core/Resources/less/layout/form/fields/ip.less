@@ -1,5 +1,6 @@
-// todo merge all *-list-control (there is also one for tags in exobundle)
-// must use collection
+/**
+ * Styles for `ip` data type.
+ */
 
 .ip-control {
     display: flex;
@@ -16,52 +17,5 @@
         flex: 1;
         text-align: right;
         min-width: 0; // hack to avoid overflow in FF
-    }
-}
-
-.ip-list-control {
-    ul {
-        margin: 0;
-        padding: 0;
-        list-style-type: none;
-    }
-
-    .ip-add {
-        margin-bottom: 5px;
-    }
-
-    .no-ip-info {
-        font-style: italic;
-        text-align: center;
-
-        // todo use vars
-        line-height: 30px;
-        border: 1px dashed #999;
-        border-radius: 4px;
-        padding: 5px;
-        color: #999;
-    }
-
-    .ip-item {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        background: @gray-lighter;
-        padding: 5px;
-
-        + .ip-item {
-            margin-top: 5px;
-        }
-
-        .border-radius(@border-radius-base);
-
-        .ip-control {
-            flex: 1;
-        }
-
-        .btn {
-            margin-left: floor(@grid-gutter-width / 2);
-            padding: 4px;
-        }
     }
 }
