@@ -4,7 +4,7 @@ import get from 'lodash/get'
 import classes from 'classnames'
 
 import {trans, tex} from '#/main/app/intl/translation'
-import {ErrorBlock} from '#/main/core/layout/form/components/error-block'
+import {ContentError} from '#/main/app/content/components/error'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group'
@@ -122,7 +122,7 @@ ChoiceItem.propTypes = {
 const ChoiceItems = props =>
   <div className="choice-items">
     {get(props.item, '_errors.choices') &&
-      <ErrorBlock text={props.item._errors.choices} warnOnly={!props.validating}/>
+      <ContentError text={props.item._errors.choices} warnOnly={!props.validating}/>
     }
 
     <ul>

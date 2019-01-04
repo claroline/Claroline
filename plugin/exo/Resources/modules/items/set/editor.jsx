@@ -5,11 +5,12 @@ import {PropTypes as T} from 'prop-types'
 
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
+
 import {tex, trans} from '#/main/app/intl/translation'
-import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
-import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea'
+import {ContentError} from '#/main/app/content/components/error'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
 import {actions} from './editor'
 import {SetItemDragPreview} from './set-item-drag-preview.jsx'
 
@@ -465,19 +466,19 @@ class SetForm extends Component {
         </div>
 
         {get(this.props.item, '_errors.item') &&
-          <ErrorBlock text={this.props.item._errors.item} warnOnly={!this.props.validating}/>
+          <ContentError text={this.props.item._errors.item} warnOnly={!this.props.validating}/>
         }
         {get(this.props.item, '_errors.items') &&
-          <ErrorBlock text={this.props.item._errors.items} warnOnly={!this.props.validating}/>
+          <ContentError text={this.props.item._errors.items} warnOnly={!this.props.validating}/>
         }
         {get(this.props.item, '_errors.sets') &&
-          <ErrorBlock text={this.props.item._errors.sets} warnOnly={!this.props.validating}/>
+          <ContentError text={this.props.item._errors.sets} warnOnly={!this.props.validating}/>
         }
         {get(this.props.item, '_errors.solutions') &&
-          <ErrorBlock text={this.props.item._errors.solutions} warnOnly={!this.props.validating}/>
+          <ContentError text={this.props.item._errors.solutions} warnOnly={!this.props.validating}/>
         }
         {get(this.props.item, '_errors.odd') &&
-          <ErrorBlock text={this.props.item._errors.odd} warnOnly={!this.props.validating}/>
+          <ContentError text={this.props.item._errors.odd} warnOnly={!this.props.validating}/>
         }
 
         <div className="set-items row">

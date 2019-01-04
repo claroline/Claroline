@@ -17,6 +17,8 @@ import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
 import {actions} from '#/plugin/claco-form/resources/claco-form/editor/store'
 import {CategoryFieldsValues} from '#/plugin/claco-form/resources/claco-form/editor/components/category-fields-values'
 
+// TODO : use FormData
+
 class CategoryFormModalComponent extends Component {
   constructor(props) {
     super(props)

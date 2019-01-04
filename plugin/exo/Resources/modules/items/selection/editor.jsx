@@ -5,17 +5,17 @@ import get from 'lodash/get'
 import Popover from 'react-bootstrap/lib/Popover'
 
 import {tex} from '#/main/app/intl/translation'
-import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
-import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
+import {FormGroup} from '#/main/core/layout/form/components/group/form-group'
+import {ContentError} from '#/main/app/content/components/error'
 
-import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
-import {Radios} from '#/main/core/layout/form/components/field/radios.jsx'
-import {ColorPicker} from '#/main/core/layout/form/components/field/color-picker.jsx'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea'
+import {Radios} from '#/main/core/layout/form/components/field/radios'
+import {ColorPicker} from '#/main/core/layout/form/components/field/color-picker'
 import {actions} from './editor'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
 import {utils} from './utils/utils'
 import {SCORE_SUM, SCORE_FIXED} from './../../quiz/enums'
-import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
+import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
 
 function updateAnswer(value, parameter, selectionId, mode) {
   switch(mode) {
@@ -269,7 +269,7 @@ class SelectionForm extends Component {
         }
 
         {get(this.props, '_errors.solutions') &&
-          <ErrorBlock text={this.props._errors.solutions} warnOnly={!this.props.validating}/>
+          <ContentError text={this.props._errors.solutions} warnOnly={!this.props.validating}/>
         }
         {this.state.showFeedback &&
           <div className="feedback-container selection-form-row">
@@ -595,7 +595,7 @@ export class Selection extends Component {
               })
             }
             {get(this.props.item, '_errors.colors') &&
-              <ErrorBlock text={get(this.props.item, '_errors.colors')} warnOnly={!this.props.validating}/>
+              <ContentError text={get(this.props.item, '_errors.colors')} warnOnly={!this.props.validating}/>
             }
             <button
               type="button"

@@ -1,4 +1,4 @@
-import {trans, tval} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {boolean} from '#/main/app/data/boolean/validators'
 import {parseBool, translateBool} from '#/main/app/data/boolean/utils'

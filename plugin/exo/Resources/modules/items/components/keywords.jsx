@@ -8,7 +8,7 @@ import Popover from 'react-bootstrap/lib/Popover'
 import {trans, tex} from '#/main/app/intl/translation'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
-import {ErrorBlock} from '#/main/core/layout/form/components/error-block'
+import {ContentError} from '#/main/app/content/components/error'
 import {TooltipElement} from '#/main/core/layout/components/tooltip-element'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
 
@@ -156,19 +156,19 @@ KeywordItem.defaultProps = {
 const KeywordItems = props =>
   <div className="keyword-items">
     {get(props, '_errors.count') &&
-      <ErrorBlock text={props._errors.count} warnOnly={!props.validating} />
+      <ContentError text={props._errors.count} warnOnly={!props.validating} />
     }
     {get(props, '_errors.noValidKeyword') &&
-      <ErrorBlock text={props._errors.noValidKeyword} warnOnly={!props.validating} />
+      <ContentError text={props._errors.noValidKeyword} warnOnly={!props.validating} />
     }
     {get(props, '_errors.duplicate') &&
-      <ErrorBlock text={props._errors.duplicate} warnOnly={!props.validating} />
+      <ContentError text={props._errors.duplicate} warnOnly={!props.validating} />
     }
     {get(props, '_errors.text') &&
-      <ErrorBlock text={props._errors.text} warnOnly={!props.validating} />
+      <ContentError text={props._errors.text} warnOnly={!props.validating} />
     }
     {get(props, '_errors.score') &&
-      <ErrorBlock text={props._errors.score} warnOnly={!props.validating} />
+      <ContentError text={props._errors.score} warnOnly={!props.validating} />
     }
 
     <ul>

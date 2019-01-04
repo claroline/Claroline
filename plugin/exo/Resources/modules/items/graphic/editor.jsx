@@ -5,7 +5,7 @@ import get from 'lodash/get'
 import {asset} from '#/main/app/config/asset'
 import {tex} from '#/main/app/intl/translation'
 import {makeDroppable} from './../../utils/dragAndDrop'
-import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
+import {ContentError} from '#/main/app/content/components/error'
 import {ImageInput} from './components/image-input.jsx'
 import {ModeSelector} from './components/mode-selector.jsx'
 import {AreaPopover} from './components/area-popover.jsx'
@@ -174,7 +174,7 @@ export class Graphic extends Component {
     return (
       <div className="graphic-editor">
         {get(this.props.item, '_errors.image') &&
-          <ErrorBlock
+          <ContentError
             text={this.props.item._errors.image}
             warnOnly={!this.props.validating}
           />

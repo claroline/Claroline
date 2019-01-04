@@ -4,9 +4,9 @@ import get from 'lodash/get'
 import classes from 'classnames'
 
 import {tex} from '#/main/app/intl/translation'
-import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
-import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
+import {ContentError} from '#/main/app/content/components/error'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
 import {actions} from './editor'
 import {utils} from './utils/utils'
 
@@ -101,7 +101,7 @@ const Boolean = props => {
       </div>
 
       {get(props.item, '_errors.choices') &&
-        <ErrorBlock text={props.item._errors.choices} warnOnly={!props.validating} />
+        <ContentError text={props.item._errors.choices} warnOnly={!props.validating} />
       }
 
       <div className="row">

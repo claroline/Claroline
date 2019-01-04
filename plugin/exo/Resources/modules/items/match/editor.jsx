@@ -6,7 +6,7 @@ import get from 'lodash/get'
 
 import {tex, trans} from '#/main/app/intl/translation'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea'
-import {ErrorBlock} from '#/main/core/layout/form/components/error-block'
+import {ContentError} from '#/main/app/content/components/error'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
 import {actions} from './editor'
 import {utils} from './utils/utils'
@@ -426,17 +426,17 @@ class Match extends Component {
         </div>
 
         {get(this.props.item, '_errors.items') &&
-          <ErrorBlock text={this.props.item._errors.items} warnOnly={!this.props.validating}/>
+          <ContentError text={this.props.item._errors.items} warnOnly={!this.props.validating}/>
         }
         {get(this.props.item, '_errors.solutions') &&
-          <ErrorBlock text={this.props.item._errors.solutions} warnOnly={!this.props.validating}/>
+          <ContentError text={this.props.item._errors.solutions} warnOnly={!this.props.validating}/>
         }
         {get(this.props.item, '_errors.warning') &&
-          <ErrorBlock text={this.props.item._errors.warning} warnOnly={!this.props.validating}/>
+          <ContentError text={this.props.item._errors.warning} warnOnly={!this.props.validating}/>
         }
 
         <span className="help-block">
-          <span className="fa fa-info-circle"></span>{tex('match_editor_click_link_help')}
+          <span className="fa fa-info-circle"/> {tex('match_editor_click_link_help')}
         </span>
 
         <div

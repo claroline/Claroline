@@ -7,7 +7,7 @@ import Tooltip from 'react-bootstrap/lib/Tooltip'
 
 import {tex, trans} from '#/main/app/intl/translation'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
-import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
+import {ContentError} from '#/main/app/content/components/error'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {actions} from './editor'
@@ -475,16 +475,16 @@ const PairForm = (props) => {
       </div>
 
       {get(props.item, '_errors.item') &&
-        <ErrorBlock text={props.item._errors.item} warnOnly={!props.validating}/>
+        <ContentError text={props.item._errors.item} warnOnly={!props.validating}/>
       }
       {get(props.item, '_errors.items') &&
-        <ErrorBlock text={props.item._errors.items} warnOnly={!props.validating}/>
+        <ContentError text={props.item._errors.items} warnOnly={!props.validating}/>
       }
       {get(props.item, '_errors.solutions') &&
-        <ErrorBlock text={props.item._errors.solutions} warnOnly={!props.validating}/>
+        <ContentError text={props.item._errors.solutions} warnOnly={!props.validating}/>
       }
       {get(props.item, '_errors.odd') &&
-        <ErrorBlock text={props.item._errors.odd} warnOnly={!props.validating}/>
+        <ContentError text={props.item._errors.odd} warnOnly={!props.validating}/>
       }
 
       <div className="row pair-items">

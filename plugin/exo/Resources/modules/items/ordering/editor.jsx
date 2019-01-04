@@ -6,7 +6,7 @@ import classes from 'classnames'
 import {trans, tex} from '#/main/app/intl/translation'
 import {SCORE_SUM, SCORE_FIXED} from './../../quiz/enums'
 import {makeSortable, SORT_HORIZONTAL, SORT_VERTICAL} from './../../utils/sortable'
-import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
+import {ContentError} from '#/main/app/content/components/error'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
 import {Radios} from '#/main/core/layout/form/components/field/radios.jsx'
@@ -228,7 +228,7 @@ const OrderingItems = props => {
   return (
     <div>
       {get(props.item, '_errors.items') &&
-        <ErrorBlock text={props.item._errors.items} warnOnly={!props.validating}/>
+        <ContentError text={props.item._errors.items} warnOnly={!props.validating}/>
       }
       <div className="items-row">
         <ItemList

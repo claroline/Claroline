@@ -6,7 +6,7 @@ import isEmpty from 'lodash/isEmpty'
 import Overlay from 'react-bootstrap/lib/Overlay'
 
 import {tex} from '#/main/app/intl/translation'
-import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
+import {ContentError} from '#/main/app/content/components/error'
 import {Radios} from '#/main/core/layout/form/components/field/radios.jsx'
 import {SUM_CELL, SUM_COL, SUM_ROW, actions} from './editor'
 import {SCORE_SUM, SCORE_FIXED} from './../../quiz/enums'
@@ -553,7 +553,7 @@ const Grid = props =>
     </FormGroup>
 
     {get(props.item, '_errors.solutions') &&
-      <ErrorBlock text={props.item._errors.solutions} warnOnly={!props.validating} />
+      <ContentError text={props.item._errors.solutions} warnOnly={!props.validating} />
     }
 
     <div className="grid-body">

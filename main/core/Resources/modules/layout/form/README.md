@@ -56,16 +56,4 @@ A form group embed the following features :
   
   #### IP
   `import {Ip} from '#/main/core/layout/form/components/field/ip.jsx'`
-
-  #### IP list
-  `import {IpList} from '#/main/core/layout/form/components/field/ip-list.jsx'`
-
-## Others
-
-### Components
-  #### HelpBlock
-  `import {HelpBlock} from '#/main/core/layout/form/components/help-block.jsx'`
-
-  #### ErrorBlock
-  `import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'`
   
