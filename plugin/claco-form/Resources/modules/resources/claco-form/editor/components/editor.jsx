@@ -488,7 +488,7 @@ const EditorComponent = props =>
                 dangerous: true,
                 confirm: {
                   title: trans('objects_delete_title'),
-                  message: transChoice('objects_delete_question', rows.length, {count: rows.length}, 'platform'),
+                  message: transChoice('objects_delete_question', rows.length, {count: rows.length}, 'platform')
                 },
                 callback: () => props.deleteKeywords(rows)
               }

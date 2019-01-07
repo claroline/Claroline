@@ -28,7 +28,10 @@ module.exports = {
   },
   devServer: {
     hot: true,
-    contentBase: paths.output()
+    contentBase: paths.output(),
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
   },
   output: {
     path: paths.output(),

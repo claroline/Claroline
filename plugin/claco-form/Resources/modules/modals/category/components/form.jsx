@@ -13,7 +13,7 @@ import {Category as CategoryTypes} from '#/plugin/claco-form/resources/claco-for
 
 const CategoryFormModal = props =>
   <Modal
-    {...omit(props, 'saveEnabled', 'formData', 'fields', 'category', 'loadCategory', 'saveCategory')}
+    {...omit(props, 'saveEnabled', 'formData', 'fields', 'category', 'loadCategory', 'saveCategory', 'updateProp')}
     icon="fa fa-fw fa-object-group"
     title={trans('category')}
     subtitle={(props.category && props.category.name) || trans('new_category')}
@@ -116,6 +116,7 @@ CategoryFormModal.propTypes = {
   fields: T.arrayOf(T.shape({
     // TODO : field propTypes
   })),
+  updateProp: T.func.isRequired,
   loadCategory: T.func.isRequired,
   saveCategory: T.func.isRequired,
   fadeModal: T.func.isRequired

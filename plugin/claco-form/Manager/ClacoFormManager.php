@@ -23,7 +23,6 @@ use Claroline\ClacoFormBundle\Entity\FieldChoiceCategory;
 use Claroline\ClacoFormBundle\Entity\FieldValue;
 use Claroline\ClacoFormBundle\Entity\Keyword;
 use Claroline\ClacoFormBundle\Event\Log\LogClacoFormConfigureEvent;
-use Claroline\ClacoFormBundle\Event\Log\LogClacoFormTemplateEditEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogCommentCreateEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogCommentDeleteEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogCommentEditEvent;

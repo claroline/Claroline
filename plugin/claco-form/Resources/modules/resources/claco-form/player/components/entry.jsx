@@ -384,7 +384,7 @@ class EntryComponent extends Component {
 
               {this.props.template && this.props.useTemplate ?
                 <HtmlText>
-                  {generateFromTemplate(this.props.template, this.props.fields, this.props.entries, this.canViewMetadata())}
+                  {generateFromTemplate(this.props.template, this.props.fields, this.props.entry, this.canViewMetadata())}
                 </HtmlText> :
                 <DetailsData
                   name={selectors.STORE_NAME+'.entries.current'}
