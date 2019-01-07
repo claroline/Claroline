@@ -97,6 +97,13 @@ class RoleFinder extends AbstractFinder
                     $qb->andWhere('w.uuid IN (:workspaceIds)');
                     $qb->setParameter('workspaceIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
+                case 'workspaceConfigurable':
+                    $qb->leftJoin('obj.workspace', 'w');
+                    $qb->andWhere('w.uuid IN (:workspaceIds)');
+                    $qb->setParameter('workspaceIds', is_array($filterValue) ? $filterValue : [$filterValue]);
+                    $qb->orWhere("obj.name LIKE 'ROLE_ANONYMOUS'");
+                    $qb->orWhere("obj.name LIKE 'ROLE_USER'");
+                    break;
                 case 'grantable':
                     if (!$isAdmin && $this->tokenStorage->getToken()) {
                         $qb->join('obj.users', 'cu');
