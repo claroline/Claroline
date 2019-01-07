@@ -300,7 +300,7 @@ const EntryForm = withRouter(connect(
     canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
     clacoFormId: selectors.clacoForm(state).id,
     fields: selectors.visibleFields(state),
-    useTemplate: selectors.params(state).use_template,
+    useTemplate: selectors.useTemplate(state),
     template: selectors.template(state),
     titleLabel: selectors.params(state).title_field_label,
     displayMetadata: selectors.params(state).display_metadata,

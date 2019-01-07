@@ -6,7 +6,7 @@ import {trans} from '#/main/app/intl/translation'
 import {url, makeCancelable} from '#/main/app/api'
 
 import {FormGroup as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
-import {FormGroup} from '#/main/core/layout/form/components/group/form-group'
+import {FormGroup} from '#/main/app/content/form/components/group'
 
 import {Select} from '#/main/core/layout/form/components/field/select'
 

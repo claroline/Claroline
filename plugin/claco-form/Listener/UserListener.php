@@ -7,11 +7,9 @@ use Claroline\CoreBundle\Event\User\MergeUsersEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * Class ApiListener.
- *
  * @DI\Service
  */
-class ApiListener
+class UserListener
 {
     /** @var ClacoFormManager */
     private $clacoFormManager;

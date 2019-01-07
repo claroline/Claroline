@@ -136,33 +136,6 @@ class ClacoFormController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/claco/form/{clacoForm}/template/edit",
-     *     name="claro_claco_form_template_edit",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter(
-     *     "clacoForm",
-     *     class="ClarolineClacoFormBundle:ClacoForm",
-     *     options={"mapping": {"clacoForm": "uuid"}}
-     * )
-     *
-     * @param ClacoForm $clacoForm
-     *
-     * @return JsonResponse
-     */
-    public function clacoFormTemplateEditAction(ClacoForm $clacoForm)
-    {
-        $this->clacoFormManager->checkRight($clacoForm, 'EDIT');
-        $template = $this->request->request->get('template', false);
-        $useTemplate = $this->request->request->get('useTemplate', false);
-        $useTemplate = $useTemplate && 1 === intval($useTemplate);
-        $clacoFormTemplate = $this->clacoFormManager->saveClacoFormTemplate($clacoForm, $template, $useTemplate);
-
-        return new JsonResponse(['template' => $clacoFormTemplate, 'useTemplate' => $clacoForm->getUseTemplate()], 200);
-    }
-
-    /**
-     * @EXT\Route(
      *     "/claco/form/{clacoForm}/keyword/get/by/name/{name}/excluding/uuid/{uuid}",
      *     name="claro_claco_form_get_keyword_by_name_excluding_uuid",
      *     options = {"expose"=true}

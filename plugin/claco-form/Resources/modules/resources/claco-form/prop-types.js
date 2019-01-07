@@ -90,10 +90,6 @@ const ClacoForm = {
       default_home: T.string,
       display_nb_entries: T.string,
       menu_position: T.string,
-      random_enabled: T.bool,
-      random_categories: T.array,
-      random_start_date: T.string,
-      random_end_date: T.string,
       search_enabled: T.bool,
       search_column_enabled: T.bool,
       search_columns: T.array,
@@ -119,7 +115,6 @@ const ClacoForm = {
       new_keywords_enabled: T.bool,
       display_keywords: T.bool,
       open_keywords: T.bool,
-      use_template: T.bool,
       default_display_mode: T.string,
       display_title: T.string,
       display_subtitle: T.string,
@@ -128,7 +123,15 @@ const ClacoForm = {
       search_restricted: T.bool,
       search_restricted_columns: T.array
     }).isRequired,
-    template: T.string,
+    template: T.shape({
+      enabled: T.bool.isRequired,
+      content: T.string
+    }),
+    random: T.shape({
+      enabled: T.bool.isRequired,
+      dates: T.array,
+      categories: T.array
+    }),
     categories: T.arrayOf(T.shape(Category.propTypes)),
     keywords: T.arrayOf(T.shape(Keyword.propTypes)),
     fields: T.arrayOf(T.shape(Field.propTypes))

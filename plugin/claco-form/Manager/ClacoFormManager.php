@@ -242,19 +242,6 @@ class ClacoFormManager
         return $details;
     }
 
-    public function saveClacoFormTemplate(ClacoForm $clacoForm, $template, $useTemplate)
-    {
-        $clacoFormTemplate = empty($template) ? null : $template;
-        $clacoFormUseTemplate = $clacoFormTemplate ? $useTemplate : false;
-        $clacoForm->setTemplate($clacoFormTemplate);
-        $clacoForm->setUseTemplate($clacoFormUseTemplate);
-        $this->persistClacoForm($clacoForm);
-        $event = new LogClacoFormTemplateEditEvent($clacoForm, $clacoFormTemplate);
-        $this->eventDispatcher->dispatch('log', $event);
-
-        return $clacoFormTemplate;
-    }
-
     public function persistKeyword(Keyword $keyword)
     {
         $this->om->persist($keyword);

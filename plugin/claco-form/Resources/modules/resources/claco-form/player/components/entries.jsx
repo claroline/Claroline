@@ -31,12 +31,6 @@ const EntriesComponent = props =>
       parameters: {
         actions: (rows) => [
           {
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-eye',
-            label: trans('view_entry', {}, 'clacoform'),
-            target: `/entries/${rows[0].id}`,
-            scope: ['object']
-          }, {
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-print',
             label: trans('print_entry', {}, 'clacoform'),
@@ -54,40 +48,40 @@ const EntriesComponent = props =>
           }, {
             type: LINK_BUTTON,
             icon: 'fa fa-fw fa-pencil',
-            label: trans('edit'),
+            label: trans('edit', {}, 'actions'),
             target: `/entry/form/${rows[0].id}`,
             displayed: !rows[0].locked && canEditEntry(rows[0], props.clacoForm),
             scope: ['object']
           }, {
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-eye',
-            label: trans('publish'),
+            label: trans('publish', {}, 'actions'),
             callback: () => props.switchEntriesStatus(rows, constants.ENTRY_STATUS_PUBLISHED),
             displayed: rows.filter(e => !e.locked && canManageEntry(e, props.canEdit)).length === rows.length &&
             rows.filter(e => e.status === constants.ENTRY_STATUS_PUBLISHED).length !== rows.length
           }, {
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-eye-slash',
-            label: trans('unpublish'),
+            label: trans('unpublish', {}, 'actions'),
             callback: () => props.switchEntriesStatus(rows, constants.ENTRY_STATUS_UNPUBLISHED),
             displayed: rows.filter(e => !e.locked && canManageEntry(e, props.canEdit)).length === rows.length &&
             rows.filter(e => e.status !== constants.ENTRY_STATUS_PUBLISHED).length !== rows.length
           }, {
             type: CALLBACK_BUTTON,
             icon: 'fa fa-w fa-lock',
-            label: trans('lock'),
+            label: trans('lock', {}, 'actions'),
             callback: () => props.switchEntriesLock(rows, true),
             displayed: props.canAdministrate && rows.filter(e => e.locked).length !== rows.length
           }, {
             type: CALLBACK_BUTTON,
             icon: 'fa fa-w fa-unlock',
-            label: trans('unlock'),
+            label: trans('unlock', {}, 'actions'),
             callback: () => props.switchEntriesLock(rows, false),
             displayed: props.canAdministrate && rows.filter(e => !e.locked).length !== rows.length
           }, {
             type: CALLBACK_BUTTON,
             icon: 'fa fa-w fa-trash-o',
-            label: trans('delete'),
+            label: trans('delete', {}, 'actions'),
             confirm: {
               title: transChoice('delete_selected_entries', rows.length, {count: rows.length}, 'clacoform'),
               message: transChoice('delete_selected_entries_confirm_message', rows.length, {count: rows.length}, 'clacoform')

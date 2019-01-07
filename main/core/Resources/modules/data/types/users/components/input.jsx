@@ -44,8 +44,6 @@ const UsersInput = props => {
           <UserCard
             key={`user-card-${user.id}`}
             data={user}
-            size="sm"
-            orientation="col"
             actions={[
               {
                 name: 'delete',

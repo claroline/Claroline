@@ -60,7 +60,7 @@ const Overview = withRouter(
     (state) => ({
       resourceId: selectors.clacoForm(state).id,
       canSearchEntry: selectors.canSearchEntry(state),
-      randomEnabled: selectors.params(state).random_enabled,
+      randomEnabled: selectors.clacoForm(state).random.enabled,
       canAddEntry: selectors.canAddEntry(state)
     })
   )(OverviewComponent)

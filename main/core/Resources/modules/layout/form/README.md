@@ -14,7 +14,7 @@ A form group embed the following features :
 
 ### Components
   #### FormGroup
-  `import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'`
+  `import {FormGroup} from '#/main/app/content/form/components/group.jsx'`
 
   #### CheckGroup
   `import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'`

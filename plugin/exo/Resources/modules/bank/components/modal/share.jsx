@@ -7,7 +7,7 @@ import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {registry} from '#/main/app/modals/registry'
 
 import {update} from './../../../utils/utils'
-import {FormGroup} from '#/main/core/layout/form/components/group/form-group'
+import {FormGroup} from '#/main/app/content/form/components/group'
 import {UserTypeahead} from './../../../users/components/typeahead'
 
 export const MODAL_SHARE = 'MODAL_SHARE'

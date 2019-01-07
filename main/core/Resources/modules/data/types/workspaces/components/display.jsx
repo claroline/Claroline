@@ -14,8 +14,6 @@ const WorkspacesDisplay = (props) => !isEmpty(props.data) ?
       <WorkspaceCard
         key={`workspace-card-${workspace.id}`}
         data={workspace}
-        size="sm"
-        orientation="col"
       />
     )}
   </div> :

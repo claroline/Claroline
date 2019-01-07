@@ -74,7 +74,16 @@ function createFormDefinition(sections, data) {
  * @param {object} newErrors - the new error object (removed errors are set to `undefined`)
  */
 function cleanErrors(errors, newErrors) {
-  return omitBy(mergeWith(errors instanceof Array ? [] : {}, errors, newErrors, (objV, srcV) => {
+  // manually manage arrays (omitBy works great, but it converts it into objects, which fuck up the react components)
+  if (errors instanceof Array || newErrors instanceof Array) {
+    if (newErrors) {
+      return newErrors
+    }
+
+    return errors
+  }
+
+  return omitBy(mergeWith((errors instanceof Array || newErrors instanceof Array) ? [] : {}, errors, newErrors, (objV, srcV) => {
     // recursive walk in sub objects
     return (isObject(srcV) ? cleanErrors(objV, srcV) : srcV) || null
   }), isEmpty)

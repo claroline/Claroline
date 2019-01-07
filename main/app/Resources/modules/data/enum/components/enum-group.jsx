@@ -4,7 +4,7 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {makeId} from '#/main/core/scaffolding/id'
 import {trans} from '#/main/app/intl/translation'
 import {FormGroup as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
-import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
+import {FormGroup} from '#/main/app/content/form/components/group.jsx'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {TextGroup}  from '#/main/core/layout/form/components/group/text-group.jsx'
 

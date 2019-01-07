@@ -5,7 +5,7 @@ import merge from 'lodash/merge'
 
 import {Await} from '#/main/app/components/await'
 import {trans} from '#/main/app/intl/translation'
-import {FormGroup} from '#/main/core/layout/form/components/group/form-group'
+import {FormGroup} from '#/main/app/content/form/components/group'
 import {getType} from '#/main/app/data'
 
 import {DataType as DataTypeTypes} from '#/main/app/data/prop-types'

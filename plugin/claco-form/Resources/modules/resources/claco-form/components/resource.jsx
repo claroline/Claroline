@@ -11,7 +11,6 @@ import {ClacoForm as ClacoFormType} from '#/plugin/claco-form/resources/claco-fo
 
 import {Overview} from '#/plugin/claco-form/resources/claco-form/overview/components/overview'
 import {Editor} from '#/plugin/claco-form/resources/claco-form/editor/components/editor'
-import {TemplateForm} from '#/plugin/claco-form/resources/claco-form/editor/template/components/template-form'
 import {Entries} from '#/plugin/claco-form/resources/claco-form/player/components/entries'
 import {EntryForm} from '#/plugin/claco-form/resources/claco-form/player/components/entry-form'
 import {Entry} from '#/plugin/claco-form/resources/claco-form/player/components/entry'
@@ -50,13 +49,6 @@ const ClacoFormResource = props =>
         displayed: props.canSearchEntry,
         target: '/entries',
         exact: true
-      }, {
-        type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-file-text-o',
-        label: trans('template_management', {}, 'clacoform'),
-        displayed: props.canEdit,
-        target: '/template',
-        group: trans('management')
       }, {
         type: URL_BUTTON,
         icon: 'fa fa-fw fa-download',
@@ -105,10 +97,6 @@ const ClacoFormResource = props =>
           disabled: !props.canEdit,
           onLeave: () => props.resetForm(),
           onEnter: () => props.resetForm(props.clacoForm)
-        }, {
-          path: '/template',
-          component: TemplateForm,
-          disabled: !props.canEdit
         }, {
           path: '/entries',
           component: Entries,

@@ -41,8 +41,6 @@ const LocationInput = props => {
       <div>
         <LocationCard
           data={props.value}
-          size="sm"
-          orientation="col"
           actions={[
             {
               name: 'delete',

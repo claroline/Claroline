@@ -5,7 +5,7 @@ import get from 'lodash/get'
 import Popover from 'react-bootstrap/lib/Popover'
 
 import {tex} from '#/main/app/intl/translation'
-import {FormGroup} from '#/main/core/layout/form/components/group/form-group'
+import {FormGroup} from '#/main/app/content/form/components/group'
 import {ContentError} from '#/main/app/content/components/error'
 
 import {Textarea} from '#/main/core/layout/form/components/field/textarea'

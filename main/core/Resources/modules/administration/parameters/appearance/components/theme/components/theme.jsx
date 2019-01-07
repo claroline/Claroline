@@ -29,7 +29,7 @@ import {LINK_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
 
 /*import {HelpBlock}    from '#/main/core/layout/form/components/help-block.jsx'*/
 //import {FormSection, FormSections} from '#/main/app/content/form/components/sections.jsx'
-import {FormGroup}    from '#/main/core/layout/form/components/group/form-group.jsx'
+import {FormGroup}    from '#/main/app/content/form/components/group.jsx'
 import {CheckGroup}   from '#/main/core/layout/form/components/group/check-group.jsx'
 import {TextGroup}    from '#/main/core/layout/form/components/group/text-group.jsx'
 import {ToggleableSet} from '#/main/core/layout/form/components/fieldset/toggleable-set.jsx'

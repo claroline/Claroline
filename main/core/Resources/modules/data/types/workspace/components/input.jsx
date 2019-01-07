@@ -40,8 +40,6 @@ const WorkspaceInput = props => {
       <div>
         <WorkspaceCard
           data={props.value}
-          size="sm"
-          orientation="col"
           actions={[
             {
               name: 'delete',

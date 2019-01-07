@@ -42,10 +42,13 @@ const FormInput = props => {
           // forward error to the caller
           validateProp(props, value).then(errors => {
             props.setErrors(errors)
-          })
-        }
 
-        if (props.onChange) {
+            if (props.onChange) {
+              // forward updated value to the caller
+              props.onChange(value)
+            }
+          })
+        } else if (props.onChange) {
           // forward updated value to the caller
           props.onChange(value)
         }
@@ -69,7 +72,7 @@ FormInput.propTypes = {
   options: T.object,
   required: T.bool,
   value: T.any,
-  error: T.oneOfType([T.string, T.object]), // object is for complex types like collection
+  error: T.oneOfType([T.string, T.arrayOf(T.string), T.object]), // object is for complex types like collection
   validating: T.bool,
   onChange: T.func,
   setErrors: T.func
@@ -96,7 +99,7 @@ FormProp.propTypes = {
   options: T.object,
   required: T.bool,
   value: T.any,
-  error: T.oneOfType([T.string, T.object]), // object is for complex types like collection
+  error: T.oneOfType([T.string, T.arrayOf(T.string), T.object]), // object is for complex types like collection
   validating: T.bool,
   onChange: T.func,
   setErrors: T.func

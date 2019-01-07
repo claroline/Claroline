@@ -58,7 +58,7 @@ const AboutModal = props =>
               label: 'Cet espace d\'activités n\'est pas un modèle.',
               type: 'boolean',
               options: {
-                icon: 'fa fa-fw fa-object-group',
+                icon: 'fa fa-fw fa-briefcase',
                 labelChecked: 'Cet espace d\'activités est un modèle.'
               }
             }, {

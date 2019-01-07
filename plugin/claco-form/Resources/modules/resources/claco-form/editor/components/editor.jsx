@@ -1,21 +1,22 @@
 import React from 'react'
-import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
+import {connect} from 'react-redux'
 
 import {makeId} from '#/main/core/scaffolding/id'
 import {trans, transChoice} from '#/main/app/intl/translation'
-import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
+import {
+  actions as formActions,
+  selectors as formSelect
+} from '#/main/app/content/form/store'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
-import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {ListForm} from '#/main/app/content/list/parameters/containers/form'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
+import {getTemplateErrors, getTemplateHelp} from '#/plugin/claco-form/resources/claco-form/template'
 import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
-import {ClacoForm as ClacoFormType} from '#/plugin/claco-form/resources/claco-form/prop-types'
+import {ClacoForm as ClacoFormTypes} from '#/plugin/claco-form/resources/claco-form/prop-types'
 import {constants} from '#/plugin/claco-form/resources/claco-form/constants'
 import {actions} from '#/plugin/claco-form/resources/claco-form/editor/store'
 import entriesSource from '#/plugin/claco-form/data/sources/entries'
@@ -44,10 +45,7 @@ const EditorComponent = props =>
     title={trans('parameters')}
     name={selectors.STORE_NAME+'.clacoFormForm'}
     buttons={true}
-    save={{
-      type: CALLBACK_BUTTON,
-      callback: () => props.saveForm(props.clacoForm.id)
-    }}
+    target={(clacoForm) => ['apiv2_clacoform_update', {id: clacoForm.id}]}
     cancel={{
       type: LINK_BUTTON,
       target: '/',
@@ -75,22 +73,6 @@ const EditorComponent = props =>
         title: trans('general'),
         fields: [
           {
-            name: 'details.max_entries',
-            type: 'number',
-            label: trans('label_max_entries', {}, 'clacoform'),
-            required: true,
-            options: {
-              min: 0
-            }
-          }, {
-            name: 'details.edition_enabled',
-            type: 'boolean',
-            label: trans('label_edition_enabled', {}, 'clacoform')
-          }, {
-            name: 'details.moderated',
-            type: 'boolean',
-            label: trans('label_moderated', {}, 'clacoform')
-          }, {
             name: 'details.keywords_enabled',
             type: 'boolean',
             label: trans('label_keywords_enabled', {}, 'clacoform'),
@@ -135,6 +117,21 @@ const EditorComponent = props =>
               choices: constants.MENU_POSITION_CHOICES
             }
           }, {
+            name: 'template.enabled',
+            label: trans('use_template', {}, 'clacoform'),
+            type: 'boolean',
+            linked: [
+              {
+                name: 'template.content',
+                type: 'html',
+                label: trans('template', {}, 'clacoform'),
+                help: getTemplateHelp(props.clacoForm.fields),
+                displayed: (clacoForm) => clacoForm.template && clacoForm.template.enabled,
+                required: true,
+                onChange: (template) => props.validateTemplate(template, props.clacoForm.fields, props.errors)
+              }
+            ]
+          }, {
             name: 'details.display_categories',
             type: 'boolean',
             label: trans('label_display_categories', {}, 'clacoform'),
@@ -147,43 +144,146 @@ const EditorComponent = props =>
           }
         ]
       }, {
+        icon: 'fa fa-fw fa-key',
+        title: trans('access_restrictions'),
+        fields: [
+          {
+            name: 'details.display_metadata',
+            type: 'choice',
+            label: trans('label_display_metadata', {}, 'clacoform'),
+            required: true,
+            options: {
+              noEmpty: true,
+              condensed: true,
+              choices: constants.DISPLAY_METADATA_CHOICES
+            }
+          }, {
+            name: 'details.locked_fields_for',
+            type: 'choice',
+            label: trans('lock_fields', {}, 'clacoform'),
+            required: true,
+            options: {
+              noEmpty: true,
+              condensed: true,
+              choices: constants.LOCKED_FIELDS_FOR_CHOICES
+            }
+          }, {
+            name: 'details.max_entries',
+            type: 'number',
+            label: trans('label_max_entries', {}, 'clacoform'),
+            required: true,
+            options: {
+              min: 0
+            }
+          }, {
+            name: 'details.edition_enabled',
+            type: 'boolean',
+            label: trans('label_edition_enabled', {}, 'clacoform')
+          }, {
+            name: 'details.moderated',
+            type: 'boolean',
+            label: trans('label_moderated', {}, 'clacoform')
+          }
+        ]
+      }, {
+        id: 'comments',
+        icon: 'fa fa-fw fa-comments-o',
+        title: trans('comments', {}, 'clacoform'),
+        fields: [
+          {
+            name: 'details.comments_enabled',
+            type: 'boolean',
+            label: trans('label_comments_enabled', {}, 'clacoform'),
+            linked: [
+              {
+                name: 'details.comments_roles',
+                type: 'choice',
+                label: trans('enable_comments_for_roles', {}, 'clacoform'),
+                displayed: props.clacoForm.details.comments_enabled,
+                options: {
+                  multiple: true,
+                  condensed: true,
+                  choices: props.roles.reduce((acc, r) => Object.assign(acc, {
+                    [r.name]: trans(r.translationKey)
+                  }), {})
+                }
+              }, {
+                name: 'details.moderate_comments',
+                type: 'choice',
+                label: trans('label_moderate_comments', {}, 'clacoform'),
+                displayed: props.clacoForm.details.comments_enabled,
+                required: true,
+                options: {
+                  noEmpty: true,
+                  condensed: true,
+                  choices: constants.MODERATE_COMMENTS_CHOICES
+                }
+              }
+            ]
+          }, {
+            name: 'details.display_comments',
+            type: 'boolean',
+            label: trans('label_display_comments', {}, 'clacoform'),
+            linked: [
+              {
+                name: 'details.comments_display_roles',
+                type: 'choice',
+                label: trans('display_comments_for_roles', {}, 'clacoform'),
+                displayed: props.clacoForm.details.display_comments,
+                options: {
+                  multiple: true,
+                  condensed: true,
+                  choices: props.roles.reduce((acc, r) => Object.assign(acc, {
+                    [r.name]: trans(r.translationKey)
+                  }), {})
+                }
+              }, {
+                name: 'details.open_comments',
+                type: 'boolean',
+                label: trans('label_open_panel_by_default', {}, 'clacoform'),
+                displayed: props.clacoForm.details.display_comments
+              }, {
+                name: 'details.display_comment_author',
+                type: 'boolean',
+                label: trans('label_display_comment_author', {}, 'clacoform'),
+                displayed: props.clacoForm.details.display_comments
+              }, {
+                name: 'details.display_comment_date',
+                type: 'boolean',
+                label: trans('label_display_comment_date', {}, 'clacoform'),
+                displayed: props.clacoForm.details.display_comments
+              }
+            ]
+          }
+        ]
+      }, {
         id: 'random',
         icon: 'fa fa-fw fa-random',
         title: trans('random_entries', {}, 'clacoform'),
         fields: [
           {
-            name: 'details.random_enabled',
+            name: 'random.enabled',
             type: 'boolean',
             label: trans('label_random_enabled', {}, 'clacoform'),
             required: true,
             linked: [
               {
-                name: 'details.random_categories',
+                name: 'random.categories',
                 type: 'choice',
                 label: trans('label_random_categories', {}, 'clacoform'),
-                displayed: props.clacoForm.details.random_enabled,
-                required: false,
+                displayed: props.clacoForm.random.enabled,
                 options: {
                   multiple: true,
-                  condensed: true,
-                  choices: props.clacoForm.categories.reduce((acc, cat) => {
-                    acc[cat.id] = cat.name
-
-                    return acc
-                  }, {})
+                  condensed: false,
+                  choices: props.clacoForm.categories.reduce((acc, cat) => Object.assign(acc, {
+                    [cat.id]: cat.name
+                  }), {})
                 }
               }, {
-                name: 'details.random_start_date',
-                type: 'date',
-                label: trans('label_random_start_date', {}, 'clacoform'),
-                displayed: props.clacoForm.details.random_enabled,
-                required: false
-              },
-              {
-                name: 'details.random_end_date',
-                type: 'date',
-                label: trans('label_random_end_date', {}, 'clacoform'),
-                displayed: props.clacoForm.details.random_enabled,
+                name: 'random.dates',
+                type: 'date-range',
+                label: trans('label_random_dates', {}, 'clacoform'),
+                displayed: props.clacoForm.random.enabled,
                 required: false
               }
             ]
@@ -231,115 +331,6 @@ const EditorComponent = props =>
             }
           }
         ]
-      }, {
-        id: 'metadata',
-        icon: 'fa fa-fw fa-user-secret',
-        title: trans('confidential_data'),
-        fields: [
-          {
-            name: 'details.display_metadata',
-            type: 'choice',
-            label: trans('label_display_metadata', {}, 'clacoform'),
-            required: true,
-            options: {
-              noEmpty: true,
-              condensed: true,
-              choices: constants.DISPLAY_METADATA_CHOICES
-            }
-          }
-        ]
-      }, {
-        id: 'locked',
-        icon: 'fa fa-fw fa-lock',
-        title: trans('locked_fields', {}, 'clacoform'),
-        fields: [
-          {
-            name: 'details.locked_fields_for',
-            type: 'choice',
-            label: trans('lock_fields', {}, 'clacoform'),
-            required: true,
-            options: {
-              noEmpty: true,
-              condensed: true,
-              choices: constants.LOCKED_FIELDS_FOR_CHOICES
-            }
-          }
-        ]
-      }, {
-        id: 'comments',
-        icon: 'fa fa-fw fa-comments-o',
-        title: trans('comments', {}, 'clacoform'),
-        fields: [
-          {
-            name: 'details.comments_enabled',
-            type: 'boolean',
-            label: trans('label_comments_enabled', {}, 'clacoform'),
-            linked: [
-              {
-                name: 'details.comments_roles',
-                type: 'choice',
-                label: trans('enable_comments_for_roles', {}, 'clacoform'),
-                displayed: props.clacoForm.details.comments_enabled,
-                options: {
-                  multiple: true,
-                  condensed: true,
-                  choices: props.roles.reduce((acc, r) => {
-                    acc[r.name] = trans(r.translationKey)
-
-                    return acc
-                  }, {})
-                }
-              }, {
-                name: 'details.moderate_comments',
-                type: 'choice',
-                label: trans('label_moderate_comments', {}, 'clacoform'),
-                displayed: props.clacoForm.details.comments_enabled,
-                required: true,
-                options: {
-                  noEmpty: true,
-                  condensed: true,
-                  choices: constants.MODERATE_COMMENTS_CHOICES
-                }
-              }
-            ]
-          }, {
-            name: 'details.display_comments',
-            type: 'boolean',
-            label: trans('label_display_comments', {}, 'clacoform'),
-            linked: [
-              {
-                name: 'details.comments_display_roles',
-                type: 'choice',
-                label: trans('display_comments_for_roles', {}, 'clacoform'),
-                displayed: props.clacoForm.details.display_comments,
-                options: {
-                  multiple: true,
-                  condensed: true,
-                  choices: props.roles.reduce((acc, r) => {
-                    acc[r.name] = trans(r.translationKey)
-
-                    return acc
-                  }, {})
-                }
-              }, {
-                name: 'details.open_comments',
-                type: 'boolean',
-                label: trans('label_open_panel_by_default', {}, 'clacoform'),
-                displayed: props.clacoForm.details.display_comments
-              }, {
-                name: 'details.display_comment_author',
-                type: 'boolean',
-                label: trans('label_display_comment_author', {}, 'clacoform'),
-                displayed: props.clacoForm.details.display_comments
-              }, {
-                name: 'details.display_comment_date',
-                type: 'boolean',
-                label: trans('label_display_comment_date', {}, 'clacoform'),
-                displayed: props.clacoForm.details.display_comments
-              }
-            ]
-          }
-        ]
       }
     ]}
   >
@@ -355,29 +346,17 @@ const EditorComponent = props =>
       <FormSection
         id="clacoform-categories"
         className="embedded-list-section"
-        icon="fa fa-fw fa-table"
+        icon="fa fa-fw fa-object-group"
         title={trans('categories')}
         actions={[
           {
-            type: CALLBACK_BUTTON,
+            type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',
             label: trans('create_a_category', {}, 'clacoform'),
-            callback: () => props.showModal(MODAL_CATEGORY_FORM, {
-              title: trans('create_a_category', {}, 'clacoform'),
-              isNew: true,
-              category: {
-                id: makeId(),
-                name: '',
-                managers: [],
-                details: {
-                  color: '',
-                  notify_addition: true,
-                  notify_edition: true,
-                  notify_removal: true,
-                  notify_pending_comment: true
-                }
-              }
-            })
+            modal: [MODAL_CATEGORY_FORM, {
+              fields: props.clacoForm.fields,
+              saveCategory: (category) => props.saveCategory(category, true)
+            }]
           }
         ]}
       >
@@ -387,15 +366,6 @@ const EditorComponent = props =>
             url: ['apiv2_clacoformcategory_list', {clacoForm: props.clacoForm.id}],
             autoload: true
           }}
-          primaryAction={(row) => ({
-            type: CALLBACK_BUTTON,
-            label: trans('edit'),
-            callback: () => props.showModal(MODAL_CATEGORY_FORM, {
-              title: trans('edit_category', {}, 'clacoform'),
-              isNew: false,
-              category: row
-            })
-          })}
           definition={[
             {
               name: 'name',
@@ -405,7 +375,7 @@ const EditorComponent = props =>
             }, {
               name: 'managers',
               type: 'string',
-              label: trans('managers', {}, 'clacoform'),
+              label: trans('managers'),
               displayed: true,
               render: (rowData) => rowData.managers.map(m => m.firstName + ' ' + m.lastName).join(', ')
             }, {
@@ -440,135 +410,131 @@ const EditorComponent = props =>
           ]}
           actions={(rows) => [
             {
-              type: CALLBACK_BUTTON,
+              type: MODAL_BUTTON,
               icon: 'fa fa-fw fa-pencil',
-              label: trans('edit'),
-              callback: () => props.showModal(MODAL_CATEGORY_FORM, {
-                title: trans('edit_category', {}, 'clacoform'),
-                isNew: false,
-                category: rows[0]
-              }),
+              label: trans('edit', {}, 'actions'),
+              modal: [MODAL_CATEGORY_FORM, {
+                category: rows[0],
+                fields: props.clacoForm.fields,
+                saveCategory: (category) => props.saveCategory(category, false)
+              }],
               scope: ['object']
             }, {
               type: CALLBACK_BUTTON,
               icon: 'fa fa-fw fa-trash-o',
-              label: trans('delete'),
+              label: trans('delete', {}, 'actions'),
               dangerous: true,
+              confirm: {
+                title: trans('objects_delete_title'),
+                message: transChoice('objects_delete_question', rows.length, {count: rows.length}, 'platform')
+              },
               callback: () => props.deleteCategories(rows)
             }
           ]}
         />
       </FormSection>
+
       {props.clacoForm.details.keywords_enabled &&
-      <FormSection
-        id="clacoform-keywords"
-        className="embedded-list-section"
-        icon="fa fa-fw fa-font"
-        title={trans('keywords')}
-        actions={[
-          {
-            type: CALLBACK_BUTTON,
-            icon: 'fa fa-fw fa-plus',
-            label: trans('create_a_keyword', {}, 'clacoform'),
-            callback: () => props.showModal(MODAL_KEYWORD_FORM, {
-              title: trans('create_a_keyword', {}, 'clacoform'),
-              isNew: true,
-              keyword: {
-                id: makeId(),
-                name: ''
+        <FormSection
+          id="clacoform-keywords"
+          className="embedded-list-section"
+          icon="fa fa-fw fa-font"
+          title={trans('keywords')}
+          actions={[
+            {
+              type: MODAL_BUTTON,
+              icon: 'fa fa-fw fa-plus',
+              label: trans('create_a_keyword', {}, 'clacoform'),
+              modal: [MODAL_KEYWORD_FORM, {
+                title: trans('create_a_keyword', {}, 'clacoform'),
+                isNew: true,
+                keyword: {
+                  id: makeId(),
+                  name: ''
+                }
+              }]
+            }
+          ]}
+        >
+          <ListData
+            name={selectors.STORE_NAME+'.clacoFormForm.keywords'}
+            fetch={{
+              url: ['apiv2_clacoformkeyword_list', {clacoForm: props.clacoForm.id}],
+              autoload: true
+            }}
+            definition={[
+              {
+                name: 'name',
+                type: 'string',
+                label: trans('name'),
+                displayed: true
               }
-            })
-          }
-        ]}
-      >
-        <ListData
-          name={selectors.STORE_NAME+'.clacoFormForm.keywords'}
-          fetch={{
-            url: ['apiv2_clacoformkeyword_list', {clacoForm: props.clacoForm.id}],
-            autoload: true
-          }}
-          primaryAction={(row) => ({
-            type: CALLBACK_BUTTON,
-            label: trans('edit'),
-            callback: () => props.showModal(MODAL_KEYWORD_FORM, {
-              title: trans('edit_keyword', {}, 'clacoform'),
-              isNew: false,
-              keyword: row
-            })
-          })}
-          definition={[
-            {
-              name: 'name',
-              type: 'string',
-              label: trans('name'),
-              displayed: true
-            }
-          ]}
-          actions={(rows) => [
-            {
-              type: CALLBACK_BUTTON,
-              icon: 'fa fa-fw fa-pencil',
-              label: trans('edit'),
-              callback: () => props.showModal(MODAL_KEYWORD_FORM, {
-                title: trans('edit_keyword', {}, 'clacoform'),
-                isNew: false,
-                keyword: rows[0]
-              }),
-              scope: ['object']
-            }, {
-              type: CALLBACK_BUTTON,
-              icon: 'fa fa-fw fa-trash-o',
-              label: trans('delete'),
-              dangerous: true,
-              callback: () => props.deleteKeywords(rows)
-            }
-          ]}
-        />
-      </FormSection>
+            ]}
+            actions={(rows) => [
+              {
+                type: MODAL_BUTTON,
+                icon: 'fa fa-fw fa-pencil',
+                label: trans('edit'),
+                modal: [MODAL_KEYWORD_FORM, {
+                  title: trans('edit_keyword', {}, 'clacoform'),
+                  isNew: false,
+                  keyword: rows[0]
+                }],
+                scope: ['object']
+              }, {
+                type: CALLBACK_BUTTON,
+                icon: 'fa fa-fw fa-trash-o',
+                label: trans('delete'),
+                dangerous: true,
+                confirm: {
+                  title: trans('objects_delete_title'),
+                  message: transChoice('objects_delete_question', rows.length, {count: rows.length}, 'platform'),
+                },
+                callback: () => props.deleteKeywords(rows)
+              }
+            ]}
+          />
+        </FormSection>
       }
     </FormSections>
   </FormData>
 
 EditorComponent.propTypes = {
-  clacoForm: T.shape(ClacoFormType.propTypes),
+  clacoForm: T.shape(
+    ClacoFormTypes.propTypes
+  ),
+  errors: T.object,
   roles: T.array,
+  validateTemplate: T.func.isRequired,
+  saveCategory: T.func.isRequired,
   deleteCategories: T.func.isRequired,
-  deleteKeywords: T.func.isRequired,
-  showModal: T.func.isRequired,
-  saveForm: T.func.isRequired
+  deleteKeywords: T.func.isRequired
 }
 
 const Editor = connect(
   (state) => ({
     clacoForm: formSelect.data(formSelect.form(state, selectors.STORE_NAME+'.clacoFormForm')),
+    errors: formSelect.errors(formSelect.form(state, selectors.STORE_NAME+'.clacoFormForm')),
     roles: selectors.roles(state)
   }),
   (dispatch) => ({
-    deleteCategories(categories) {
-      dispatch(
-        modalActions.showModal(MODAL_CONFIRM, {
-          title: trans('objects_delete_title'),
-          question: transChoice('objects_delete_question', categories.length, {'count': categories.length}, 'platform'),
-          dangerous: true,
-          handleConfirm: () => dispatch(actions.deleteCategories(categories))
+    validateTemplate(template, fields, errors = {}) {
+      if (template) {
+        const formErrors = Object.assign({}, errors, {
+          template: {content: getTemplateErrors(template, fields)}
         })
-      )
+
+        dispatch(formActions.setErrors(selectors.STORE_NAME+'.clacoFormForm', formErrors))
+      }
+    },
+    saveCategory(category, isNew) {
+      dispatch(actions.saveCategory(category, isNew))
+    },
+    deleteCategories(categories) {
+      dispatch(actions.deleteCategories(categories))
     },
     deleteKeywords(keywords) {
-      dispatch(
-        modalActions.showModal(MODAL_CONFIRM, {
-          title: trans('objects_delete_title'),
-          question: transChoice('objects_delete_question', keywords.length, {'count': keywords.length}, 'platform'),
-          dangerous: true,
-          handleConfirm: () => dispatch(actions.deleteKeywords(keywords))
-        })
-      )
-    },
-    showModal(type, props) {
-      dispatch(modalActions.showModal(type, props))
-    },
-    saveForm(id) {
-      dispatch(formActions.saveForm(selectors.STORE_NAME+'.clacoFormForm', ['apiv2_clacoform_update', {id: id}]))
+      dispatch(actions.deleteKeywords(keywords))
     }
   })
 )(EditorComponent)

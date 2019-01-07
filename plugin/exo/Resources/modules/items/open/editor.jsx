@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import {actions} from './editor'
 import {tex} from '#/main/app/intl/translation'
-import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
+import {FormGroup} from '#/main/app/content/form/components/group.jsx'
 
 export const Open = (props) =>
   <fieldset className="open-editor">

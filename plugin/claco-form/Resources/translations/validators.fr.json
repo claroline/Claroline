@@ -1,0 +1,4 @@
+{
+  "entry_field_duplicated": "Le champ %field% ne doit pas être dupliqué.",
+  "entry_field_required": "Le champ %field% est requis."
+}

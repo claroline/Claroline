@@ -10,8 +10,6 @@ import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 const WorkspaceDisplay = (props) => props.data ?
   <WorkspaceCard
     data={props.data}
-    size="sm"
-    orientation="col"
   /> :
   <EmptyPlaceholder
     size="lg"

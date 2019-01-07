@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\ClacoFormBundle\Listener;
+namespace Claroline\ClacoFormBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
@@ -134,7 +134,6 @@ class ClacoFormListener
      */
     public function onDelete(DeleteResourceEvent $event)
     {
-        $this->om->remove($event->getResource());
         $event->stopPropagation();
     }
 }

@@ -109,8 +109,8 @@ class CategorySerializer
                 $category->setClacoForm($clacoForm);
             }
         }
-        $category->emptyManagers();
 
+        $category->emptyManagers();
         if (isset($data['managers'])) {
             foreach ($data['managers'] as $managerData) {
                 $manager = $this->userRepo->findOneBy(['username' => $managerData['username']]);
@@ -120,6 +120,7 @@ class CategorySerializer
                 }
             }
         }
+
         if (isset($data['fieldsValues'])) {
             $this->deserializeFieldChoiceCategory($data['fieldsValues'], $category);
         }

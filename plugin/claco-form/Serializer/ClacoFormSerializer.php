@@ -9,6 +9,7 @@ use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\ClacoFormBundle\Entity\Keyword;
+use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -74,7 +75,6 @@ class ClacoFormSerializer
     {
         $serialized = [
             'id' => $clacoForm->getUuid(),
-            'template' => $clacoForm->getTemplate(),
 
             // TODO : break into multiple sub object
             // TODO : use camelCase
@@ -86,13 +86,7 @@ class ClacoFormSerializer
                 'default_home' => $clacoForm->getDefaultHome(),
                 'display_nb_entries' => $clacoForm->getDisplayNbEntries(),
                 'menu_position' => $clacoForm->getMenuPosition(),
-                'random_enabled' => $clacoForm->isRandomEnabled(),
-                'random_categories' => $clacoForm->getRandomCategories(),
-                'random_start_date' => $clacoForm->getRandomStartDate(),
-                'random_end_date' => $clacoForm->getRandomEndDate(),
                 'search_enabled' => $clacoForm->getSearchEnabled(),
-                //'search_column_enabled' => $clacoForm->isSearchColumnEnabled(),
-                //'search_columns' => $clacoForm->getSearchColumns(),
                 'display_metadata' => $clacoForm->getDisplayMetadata(),
                 'locked_fields_for' => $clacoForm->getLockedFieldsFor(),
                 'display_categories' => $clacoForm->getDisplayCategories(),
@@ -115,14 +109,24 @@ class ClacoFormSerializer
                 'new_keywords_enabled' => $clacoForm->isNewKeywordsEnabled(),
                 'display_keywords' => $clacoForm->getDisplayKeywords(),
                 'open_keywords' => $clacoForm->getOpenKeywords(),
-                'use_template' => $clacoForm->getUseTemplate(),
-                //'default_display_mode' => $clacoForm->getDefaultDisplayMode(),
                 'display_title' => $clacoForm->getDisplayTitle(),
                 'display_subtitle' => $clacoForm->getDisplaySubtitle(),
                 'display_content' => $clacoForm->getDisplayContent(),
                 'title_field_label' => $clacoForm->getTitleFieldLabel(),
-                //'search_restricted' => $clacoForm->isSearchRestricted(),
-                //'search_restricted_columns' => $clacoForm->getSearchRestrictedColumns(),
+            ],
+
+            'random' => [
+                'enabled' => $clacoForm->isRandomEnabled(),
+                'categories' => $clacoForm->getRandomCategories(),
+                'dates' => DateRangeNormalizer::normalize(
+                    $clacoForm->getRandomStartDate(),
+                    $clacoForm->getRandomEndDate()
+                ),
+            ],
+
+            'template' => [
+                'enabled' => $clacoForm->getUseTemplate(),
+                'content' => $clacoForm->getTemplate(),
             ],
 
             // entry list config
@@ -189,7 +193,24 @@ class ClacoFormSerializer
      */
     public function deserialize($data, ClacoForm $clacoForm)
     {
+        // TODO : remove and call all setters individually
         $this->sipe('details', 'setDetails', $data, $clacoForm);
+
+        // random feature
+        $this->sipe('random.enabled', 'setRandomEnabled', $data, $clacoForm);
+        $this->sipe('random.categories', 'setRandomCategories', $data, $clacoForm);
+        if (isset($data['random']['dates'])) {
+            $dateRange = DateRangeNormalizer::denormalize($data['random']['dates']);
+
+            $clacoForm->setRandomStartDate($dateRange[0]);
+            $clacoForm->setRandomEndDate($dateRange[1]);
+        }
+
+        // entries template
+        if (isset($data['template'])) {
+            $this->sipe('template.enabled', 'setUseTemplate', $data, $clacoForm);
+            $this->sipe('template.content', 'setTemplate', $data, $clacoForm);
+        }
 
         // fields
         $oldFields = $clacoForm->getFields();

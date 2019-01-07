@@ -1,4 +1,5 @@
 import {createSelector} from 'reselect'
+import get from 'lodash/get'
 
 import {currentUser} from '#/main/app/security'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
@@ -34,12 +35,12 @@ const visibleFields = createSelector(
 
 const template = createSelector(
   [clacoForm],
-  (clacoForm) => clacoForm.template
+  (clacoForm) => get(clacoForm, 'template.content')
 )
 
 const useTemplate = createSelector(
   [clacoForm],
-  (clacoForm) => clacoForm.details['use_template']
+  (clacoForm) => get(clacoForm, 'template.enabled')
 )
 
 const entries = createSelector(

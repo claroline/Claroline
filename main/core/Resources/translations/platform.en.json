@@ -1712,5 +1712,7 @@
     "javascript": "Javascript",
     "javascripts": "Javascripts",
     "add_javascript": "Add a javascript",
-    "no_javascript": "No javascript"
+    "no_javascript": "No javascript",
+    "new_category": "New category",
+    "notified_actions": "Notified actions"
 }

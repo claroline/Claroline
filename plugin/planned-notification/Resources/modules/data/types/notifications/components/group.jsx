@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 
 import {FormGroupWithField as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
-import {FormGroup} from '#/main/core/layout/form/components/group/form-group'
+import {FormGroup} from '#/main/app/content/form/components/group'
 
 import {Notification as NotificationType} from '#/plugin/planned-notification/tools/planned-notification/prop-types'
 import {NotificationsInput} from '#/plugin/planned-notification/data/types/notifications/components/input'

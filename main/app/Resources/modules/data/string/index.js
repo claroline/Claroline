@@ -22,16 +22,19 @@ const dataType = {
     {
       name: 'long',
       type: 'boolean',
-      label: trans('text_long')
-    }, {
-      name: 'minRows',
-      type: 'number',
-      parent: 'long',
-      displayed: !!options.long,
-      label: trans('textarea_rows'),
-      options: {
-        min: 1
-      }
+      label: trans('text_long'),
+      linked: [
+        {
+          name: 'minRows',
+          type: 'number',
+          parent: 'long',
+          displayed: !!options.long,
+          label: trans('textarea_rows'),
+          options: {
+            min: 1
+          }
+        }
+      ]
     }, {
       name: 'minLength',
       type: 'number',

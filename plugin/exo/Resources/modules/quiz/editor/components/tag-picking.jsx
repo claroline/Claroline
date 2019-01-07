@@ -8,7 +8,7 @@ import {trans, tex} from '#/main/app/intl/translation'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
 import {ContentHelp} from '#/main/app/content/components/help'
 import {Numeric} from '#/main/core/layout/form/components/field/numeric'
-import {FormGroup} from '#/main/core/layout/form/components/group/form-group'
+import {FormGroup} from '#/main/app/content/form/components/group'
 import {NumberGroup} from '#/main/core/layout/form/components/group/number-group'
 import {RadiosGroup} from '#/main/core/layout/form/components/group/radios-group'
 

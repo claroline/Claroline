@@ -14,8 +14,6 @@ const UsersDisplay = (props) => !isEmpty(props.data) ?
       <UserCard
         key={`user-card-${user.id}`}
         data={user}
-        size="sm"
-        orientation="col"
       />
     )}
   </div> :

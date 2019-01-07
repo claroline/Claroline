@@ -3,6 +3,7 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
+import {toKey} from '#/main/core/scaffolding/text/utils'
 
 import {ContentHelp} from '#/main/app/content/components/help'
 import {ContentError} from '#/main/app/content/components/error'
@@ -34,7 +35,11 @@ const FormGroup = props =>
 
     {props.children}
 
-    {props.error &&
+    {props.error && Array.isArray(props.error) && props.error.map(error =>
+      <ContentError key={toKey(error)} text={error} inGroup={true} warnOnly={props.warnOnly} />
+    )}
+
+    {props.error && !Array.isArray(props.error) &&
       <ContentError text={props.error} inGroup={true} warnOnly={props.warnOnly} />
     }
 

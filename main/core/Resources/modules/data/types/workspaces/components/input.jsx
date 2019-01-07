@@ -44,8 +44,6 @@ const WorkspacesInput = props => {
           <WorkspaceCard
             key={`workspace-card-${workspace.id}`}
             data={workspace}
-            size="sm"
-            orientation="col"
             actions={[
               {
                 name: 'delete',

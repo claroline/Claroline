@@ -14,8 +14,6 @@ const GroupsDisplay = (props) => !isEmpty(props.data) ?
       <GroupCard
         key={`group-card-${group.id}`}
         data={group}
-        size="sm"
-        orientation="col"
       />
     )}
   </div> :

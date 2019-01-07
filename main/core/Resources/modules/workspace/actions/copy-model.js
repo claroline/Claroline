@@ -6,7 +6,7 @@ import {ASYNC_BUTTON} from '#/main/app/buttons'
 export default (workspaces, refresher) => ({
   name: 'copy-model',
   type: ASYNC_BUTTON,
-  icon: 'fa fa-fw fa-object-group',
+  icon: 'fa fa-fw fa-briefcase',
   label: trans('copy-model', {}, 'actions'),
   displayed: !!workspaces.find(workspace => hasPermission('administrate', workspace)),
   confirm: {

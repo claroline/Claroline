@@ -25,7 +25,7 @@ import {
   Entry as EntryType,
   EntryUser as EntryUserType
 } from '#/plugin/claco-form/resources/claco-form/prop-types'
-import {getCountry, generateFieldKey} from '#/plugin/claco-form/resources/claco-form/utils'
+import {generateFromTemplate} from '#/plugin/claco-form/resources/claco-form/template'
 import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
 import {actions} from '#/plugin/claco-form/resources/claco-form/player/store'
 import {EntryComments} from '#/plugin/claco-form/resources/claco-form/player/components/entry-comments'
@@ -271,54 +271,6 @@ class EntryComponent extends Component {
     this.props.saveEntryUser(entryUser)
   }
 
-  generateTemplate() {
-    let template = this.props.template
-    template = template.replace('%clacoform_entry_title%', this.props.entry.title)
-    this.props.fields.forEach(f => {
-      let replacedField = ''
-      const fieldValue = this.props.entry.values ? this.props.entry.values[f.id] : ''
-
-      if (this.canViewMetadata() || !f.isMetadata) {
-        switch (f.type) {
-          case 'cascade':
-            replacedField = fieldValue ? fieldValue.join(', ') : ''
-            break
-          case 'choice':
-            replacedField = fieldValue ?
-              Array.isArray(fieldValue) ?
-                fieldValue.join(', ') :
-                fieldValue :
-              ''
-            break
-          case 'date':
-            replacedField = fieldValue && fieldValue.date ?
-              displayDate(fieldValue.date) :
-              fieldValue ? displayDate(fieldValue) : ''
-            break
-          case 'country':
-            replacedField = getCountry(fieldValue) || ''
-            break
-          case 'file':
-            replacedField = fieldValue && fieldValue['name'] ? `
-              <a href="${url(['claro_claco_form_field_value_file_download', {entry: this.props.entry.id, field: f.id}])}">
-                ${fieldValue['name']}
-              </a>` :
-              ''
-            break
-          default:
-            replacedField = fieldValue
-        }
-        if (replacedField === undefined) {
-          replacedField = ''
-        }
-      }
-      template = template.replace(generateFieldKey(f.autoId), replacedField)
-    })
-    template += '<br/>'
-
-    return template
-  }
-
   getSections(fields, titleLabel) {
     const sectionFields = [
       {
@@ -364,7 +316,8 @@ class EntryComponent extends Component {
       }
       sectionFields.push(params)
     })
-    const sections = [
+
+    return [
       {
         id: 'general',
         title: trans('general'),
@@ -372,8 +325,6 @@ class EntryComponent extends Component {
         fields: sectionFields
       }
     ]
-
-    return sections
   }
 
   render() {
@@ -433,7 +384,7 @@ class EntryComponent extends Component {
 
               {this.props.template && this.props.useTemplate ?
                 <HtmlText>
-                  {this.generateTemplate()}
+                  {generateFromTemplate(this.props.template, this.props.fields, this.props.entries, this.canViewMetadata())}
                 </HtmlText> :
                 <DetailsData
                   name={selectors.STORE_NAME+'.entries.current'}
@@ -556,8 +507,8 @@ const Entry = withRouter(connect(
     menuPosition: selectors.params(state).menu_position,
     isOwner: selectors.isCurrentEntryOwner(state),
     isManager: selectors.isCurrentEntryManager(state),
-    randomEnabled: selectors.params(state).random_enabled,
-    useTemplate: selectors.params(state).use_template,
+    randomEnabled: selectors.clacoForm(state).random.enabled,
+    useTemplate: selectors.useTemplate(state),
     template: selectors.template(state),
     titleLabel: selectors.params(state).title_field_label
   }),

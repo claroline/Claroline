@@ -7,7 +7,7 @@ import {trans, tex} from '#/main/app/intl/translation'
 import {ContentError} from '#/main/app/content/components/error'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
-import {FormGroup} from '#/main/core/layout/form/components/group/form-group'
+import {FormGroup} from '#/main/app/content/form/components/group'
 import {RadiosGroup} from '#/main/core/layout/form/components/group/radios-group'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
 

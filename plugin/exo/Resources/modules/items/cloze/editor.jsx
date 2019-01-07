@@ -4,7 +4,7 @@ import get from 'lodash/get'
 
 import {trans, tex} from '#/main/app/intl/translation'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea'
-import {FormGroup} from '#/main/core/layout/form/components/group/form-group'
+import {FormGroup} from '#/main/app/content/form/components/group'
 import {actions} from './editor'
 
 import {KeywordsPopover} from './../components/keywords.jsx'

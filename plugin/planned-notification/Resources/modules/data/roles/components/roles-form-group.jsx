@@ -6,7 +6,7 @@ import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {MODAL_DATA_LIST} from '#/main/app/modals/list'
 import {trans} from '#/main/app/intl/translation'
 import {FormGroup as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
-import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
+import {FormGroup} from '#/main/app/content/form/components/group.jsx'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 
 import {select} from '#/plugin/planned-notification/tools/planned-notification/selectors'
