@@ -78,12 +78,14 @@ function cleanErrors(errors, newErrors) {
   if (errors instanceof Array || newErrors instanceof Array) {
     if (newErrors) {
       return newErrors
+        .map(error => (isObject(error) ? cleanErrors(error instanceof Array ? [] : {}, error) : error) || null)
+        .filter(error => !isEmpty(error))
     }
 
     return errors
   }
 
-  return omitBy(mergeWith((errors instanceof Array || newErrors instanceof Array) ? [] : {}, errors, newErrors, (objV, srcV) => {
+  return omitBy(mergeWith({}, errors, newErrors, (objV, srcV) => {
     // recursive walk in sub objects
     return (isObject(srcV) ? cleanErrors(objV, srcV) : srcV) || null
   }), isEmpty)

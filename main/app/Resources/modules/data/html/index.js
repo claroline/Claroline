@@ -1,6 +1,7 @@
 import React from 'react'
 
 import {trans} from '#/main/app/intl/translation'
+import {chain, string} from '#/main/core/validation'
 
 import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group'
 import {HtmlCell} from '#/main/app/data/html/components/table'
@@ -21,7 +22,7 @@ const dataType = {
 
     return htmlRendered
   },
-  validate: (value) => typeof value === 'string',
+  validate: (value, options) => chain(value, options, [string]),
   components: {
     table: HtmlCell,
     form: HtmlGroup
