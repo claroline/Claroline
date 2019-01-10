@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
+use Claroline\ForumBundle\Entity\Validation\User;
 use Claroline\ForumBundle\Event\LogPostMessageEvent;
 use Claroline\MessageBundle\Manager\MessageManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -63,7 +64,7 @@ class MessageCrud
         $forum = $this->getSubject($message)->getForum();
 
         //create user if not here
-        $user = $this->om->getRepository('ClarolineForumBundle:Validation\User')->findOneBy([
+        $user = $this->om->getRepository(User::class)->findOneBy([
           'user' => $message->getCreator(),
           'forum' => $forum,
         ]);

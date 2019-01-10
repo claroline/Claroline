@@ -212,11 +212,11 @@ class TagManager
 
             if ($replace) {
                 $this->removeTaggedObjectsByClassAndIds($objectClass, [$objectId]);
+                $this->om->forceFlush();
             }
 
             foreach ($uniqueTags as $tagName) {
                 $tag = $tagsList[$tagName];
-
                 $taggedObject = $replace ?
                     null :
                     $this->getOneTaggedObjectByTagAndObject($tag, $objectId, $objectClass);
