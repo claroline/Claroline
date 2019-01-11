@@ -159,7 +159,6 @@ class AnnouncementController
     {
         $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
         $ids = $request->query->all()['filters']['roles'];
-        $ids = explode(',', $ids);
         $roles = $this->om->findList(Role::class, 'uuid', $ids);
         $node = $announcement->getAggregate()->getResourceNode();
 
