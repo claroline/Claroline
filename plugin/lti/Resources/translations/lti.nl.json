@@ -1,8 +1,5 @@
 {
     "add_lti_app": "Een externe app voegen",
     "choice_app": "Een app kiezen",
-    "name_app": "Naam van de app",
-    "open_application": "De app openen",
-    "open_application_in_a_new_window": "De app in een nieuwe pagina openen",
-    "open_application_in_the_same_window": "De app in dezlfde pagina openen"
+    "url": "URL"
 }

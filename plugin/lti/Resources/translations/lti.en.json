@@ -1,8 +1,11 @@
 {
     "add_lti_app": "Add an external application",
     "choice_app": "Choose an application",
-    "name_app": "Name of the application",
-    "open_application": "Open the application",
-    "open_application_in_a_new_window": "Open the application in a new window",
-    "open_application_in_the_same_window": "Open the application in the same window"
+    "display_ratio": "Display ratio",
+    "display_ratio_list": "List of display ratio",
+    "key": "Key",
+    "open_application_in_a_new_tab": "Open the application in a new tab",
+    "secret": "Secret",
+    "unconfigured_resource": "The resource is not configured yet.",
+    "url": "URL"
 }

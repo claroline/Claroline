@@ -1,9 +1,7 @@
-ujm_lti:
-    resource: "@UJMLtiBundle/Controller/LtiController.php"
-    type: annotation
-    prefix: /
-
-ujm_lti_tool:
-    resource: "@UJMLtiBundle/Controller/LtiWsController.php"
-    type: annotation
-    prefix: /
+# JSON API
+claro_lti_api:
+    resource: "@UJMLtiBundle/Controller/API/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true
