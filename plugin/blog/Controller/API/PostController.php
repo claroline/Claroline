@@ -132,19 +132,20 @@ class PostController
      *
      * @EXT\Route("/{postId}", name="apiv2_blog_post_get")
      * @EXT\Method("GET")
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
+     * @EXT\ParamConverter("blog", options={"mapping": {"blogId": "uuid"}})
      *
      * @param Blog $blog
      * @param Post $post
      *
      * @return array
      */
-    public function getAction(Request $request, Blog $blog, $postId, User $user = null)
+    public function getAction(Request $request, Blog $blog, $postId)
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
         $post = $this->postManager->getPostByIdOrSlug($blog, $postId);
+
         if (is_null($post)) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException('Post not found');
         }
 
         $this->trackingManager->dispatchPostReadEvent($post);

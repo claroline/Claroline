@@ -78,7 +78,7 @@ class PostManager
      */
     public function getPostByIdOrSlug(Blog $blog, $postId)
     {
-        if (preg_match('/^\d+$/', $postId)) {
+        if (is_int($postId)) {
             $post = $this->repo->findOneBy([
                 'blog' => $blog,
                 'id' => $postId,
@@ -348,7 +348,7 @@ class PostManager
      * @param $publication
      * @param $abstract
      */
-    public function getPosts($blogId, $filters, $publication = PostManager::GET_PUBLISHED_POSTS, $abstract = true)
+    public function getPosts($blogId, $filters, $publication = self::GET_PUBLISHED_POSTS, $abstract = true)
     {
         if (!isset($filters['hiddenFilters'])) {
             $filters['hiddenFilters'] = [];
@@ -358,9 +358,9 @@ class PostManager
             'blog' => $blogId,
         ];
         $publicationOptions = [];
-        if (PostManager::GET_PUBLISHED_POSTS === $publication) {
+        if (self::GET_PUBLISHED_POSTS === $publication) {
             $publicationOptions = ['published' => true];
-        } elseif (PostManager::GET_UNPUBLISHED_POSTS === $publication) {
+        } elseif (self::GET_UNPUBLISHED_POSTS === $publication) {
             $publicationOptions = ['published' => false];
         }
         $filters['hiddenFilters'] = array_merge($filters['hiddenFilters'], $publicationOptions);
