@@ -49,7 +49,7 @@ class Path extends AbstractResource
      *
      * @ORM\Column(name="modified", type="boolean")
      */
-    protected $modified;
+    protected $modified = false;
 
     /**
      * Numbering of the steps.
