@@ -4,24 +4,33 @@ import classes from 'classnames'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
-const Text = props => props.long ?
-  <textarea
-    id={props.id}
-    className={classes('form-control', {[`input-${props.size}`]: !!props.size})}
-    value={props.value || ''}
-    disabled={props.disabled}
-    onChange={(e) => props.onChange(e.target.value)}
-    rows={props.minRows}
-  />
-  :
-  <input
-    id={props.id}
-    type="text"
-    className={classes('form-control', {[`input-${props.size}`]: !!props.size})}
-    value={props.value || ''}
-    disabled={props.disabled}
-    onChange={(e) => props.onChange(e.target.value)}
-  />
+const Text = props => {
+  if (props.long) {
+    return (
+      <textarea
+        id={props.id}
+        key={props.id}
+        className={classes('form-control', {[`input-${props.size}`]: !!props.size})}
+        value={props.value || ''}
+        disabled={props.disabled}
+        onChange={(e) => props.onChange(e.target.value)}
+        rows={props.minRows}
+      />
+    )
+  }
+
+  return (
+    <input
+      id={props.id}
+      key={props.id}
+      type="text"
+      className={classes('form-control', {[`input-${props.size}`]: !!props.size})}
+      value={props.value || ''}
+      disabled={props.disabled}
+      onChange={(e) => props.onChange(e.target.value)}
+    />
+  )
+}
 
 implementPropTypes(Text, FormFieldTypes, {
   value: T.string,

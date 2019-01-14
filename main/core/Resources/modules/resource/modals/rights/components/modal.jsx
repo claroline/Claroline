@@ -16,13 +16,11 @@ import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types
 
 const RightsModal = props =>
   <Modal
-    {...omit(props, 'resourceNode', 'saveEnabled', 'save', 'updateRights', 'loadNode', 'updateNode', 'nodeForm')}
+    {...omit(props, 'resourceNode', 'saveEnabled', 'save', 'updateRights', 'loadNode', 'updateNode', 'nodeForm', 'recursiveEnabled', 'setRecursiveEnabled')}
     icon="fa fa-fw fa-lock"
     title={trans('rights')}
     subtitle={props.resourceNode.name}
-    onEntering={() => {
-      props.loadNode(props.resourceNode)
-    }}
+    onEntering={() => props.loadNode(props.resourceNode)}
   >
     {!isEmpty(props.nodeForm.id) &&
       <ResourceRights
@@ -32,12 +30,13 @@ const RightsModal = props =>
     }
 
     {'directory' === props.resourceNode.meta.type &&
-      <div className="modal-body">
+      <div className="modal-footer">
         <Checkbox
           id={'recursive-node-' + props.resourceNode.id}
           label={trans('apply_recursively_to_directories', {}, 'platform')}
           checked={props.recursiveEnabled}
           onChange={value => props.setRecursiveEnabled(value)}
+          inline={true}
         />
       </div>
     }

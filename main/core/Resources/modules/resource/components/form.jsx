@@ -60,11 +60,8 @@ const ResourceFormComponent = (props) =>
             }
           }, {
             name: 'meta.published',
-            label: trans('resource_not_published', {}, 'resource'),
-            type: 'boolean',
-            options: {
-              labelChecked: trans('resource_published', {}, 'resource')
-            }
+            label: trans('publish', {}, 'actions'),
+            type: 'boolean'
           }
         ]
       }, {
@@ -75,8 +72,7 @@ const ResourceFormComponent = (props) =>
             name: 'thumbnail',
             label: trans('thumbnail'),
             type: 'image'
-          },
-          {
+          }, {
             name: 'poster',
             label: trans('poster'),
             type: 'image',

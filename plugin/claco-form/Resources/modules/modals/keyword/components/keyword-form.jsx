@@ -110,8 +110,8 @@ class KeywordFormModalComponent extends Component {
           </button>
           <button className="btn btn-primary" onClick={() => this.validateKeyword()}>
             {this.state.isFetching ?
-              <span className="fa fa-fw fa-circle-o-notch fa-spin"></span> :
-              <span>{trans('ok')}</span>
+              <span className="fa fa-fw fa-circle-o-notch fa-spin" /> :
+              trans('ok')
             }
           </button>
         </div>

@@ -3,7 +3,10 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 const Checkbox = props =>
-  <div className={classes('checkbox', props.className)}>
+  <div className={classes({
+    'checkbox'       : !props.inline,
+    'checkbox-inline': props.inline
+  }, props.className)}>
     <label htmlFor={props.id}>
       <input
         id={props.id}
@@ -24,11 +27,13 @@ Checkbox.propTypes = {
   labelChecked: T.string,
   checked: T.bool.isRequired,
   disabled: T.bool,
+  inline: T.bool,
   onChange: T.func.isRequired
 }
 
 Checkbox.defaultProps = {
-  disabled: false
+  disabled: false,
+  inline: false
 }
 
 export {

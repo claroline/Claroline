@@ -90,8 +90,6 @@ const getUserListDefinition = (searchData) => {
     })
   }
 
-  //  console.log(def)
-
   return def
 }
 

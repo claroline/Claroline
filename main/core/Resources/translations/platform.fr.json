@@ -786,7 +786,7 @@
     "no_action_found": "Aucune action trouvée.",
     "no_activity_in_workspace": "Cet espace ne contient actuellement aucune activité.",
     "no_category": "Il n'y a aucune catégorie.",
-    "no_choice": "Aucun choix",
+    "no_choice": "Aucun choix disponible.",
     "no_configuration_for_resource": "Il n'y a pas de configuration pour cette ressource.",
     "no_contact": "Aucun contact",
     "no_description": "Aucune description",
@@ -1747,5 +1747,6 @@
     "add_javascript": "Ajouter un javascript",
     "no_javascript": "Aucun javascript",
     "new_category": "Nouvelle catégorie",
-    "notified_actions": "Actions notifiées"
+    "notified_actions": "Actions notifiées",
+    "add_rights": "Ajouter des droits"
 }

@@ -1,7 +1,5 @@
 import cloneDeep from 'lodash/cloneDeep'
 
-// TODO : merge with permissions.js
-
 // TODO : this 3 methods should be moved in a `role` module
 const roleAnonymous = () => 'ROLE_ANONYMOUS'
 const roleUser = () => 'ROLE_USER'
@@ -11,7 +9,8 @@ const roleWorkspace = (workspace, admin = false) => (admin ? 'ROLE_WS_MANAGER_':
  * Gets standard roles that have permissions on the ResourceNode.
  *
  * @param workspace
- * @returns {[*,*]}
+ *
+ * @returns {Array}
  */
 const standardRoles = (workspace = null) => {
   const roles = [roleAnonymous(), roleUser()]
@@ -22,26 +21,62 @@ const standardRoles = (workspace = null) => {
   return roles
 }
 
+const isWorkspaceRole = (roleName, workspace) => roleName.endsWith(workspace.id)
+
+const isStandardRole = (roleName, workspace = null) => {
+  if (roleAnonymous() === roleName || roleUser() === roleName) {
+    // it's a platform role
+    return true
+  }
+
+  if (workspace && isWorkspaceRole(roleName, workspace)) {
+    // it's a role of the resource Workspace
+    return true
+  }
+
+  return false
+}
+
 /**
  * Gets permissions object for a Role.
  *
  * @param {string} roleName
- * @param {object} perms
+ * @param {Array}  perms
  *
  * @return {object}
  */
-const findRolePermissions = (roleName, perms) => perms.find(perm => perm.name === roleName) || {}
+const findRolePermissions = (roleName, perms) => {
+  const rolePerms = perms.find(perm => perm.name === roleName)
+  if (rolePerms) {
+    return rolePerms.permissions
+  }
+
+  return {}
+}
 
 /**
  * Checks if a role has custom permissions.
  * By default a role only have the `open` perm.
  *
- * @todo checks `create` perm (role should have no creation perm)
- *
  * @param rolePerms
  */
 const roleHaveCustomPerms = (rolePerms) => {
-  const customPerms = Object.keys(rolePerms).filter(permName => -1 === ['open', 'download', 'create'].indexOf(permName) && rolePerms[permName])
+  const customPerms = Object.keys(rolePerms)
+    .filter(permName => {
+      if (-1 === ['open', 'download'].indexOf(permName)) {
+        // non standard reading right
+        if (rolePerms[permName]) {
+          // perm is set
+          if (rolePerms[permName] instanceof Array) {
+            return 0 < rolePerms[permName].length
+          }
+
+          return true
+        }
+      }
+
+      return false
+    })
 
   return 0 < customPerms.length
 }
@@ -49,15 +84,15 @@ const roleHaveCustomPerms = (rolePerms) => {
 /**
  * Checks if the resource has custom permissions.
  *
- * @param {object} perms
+ * @param {Array}  perms
  * @param {object} workspace
  *
  * @returns {boolean}
  */
 const hasCustomRules = (perms, workspace = null) => {
-  // checks if there is perms for custom roles
+  // checks if there are perms for custom roles
   const standard = standardRoles(workspace)
-  const customRoles = Object.keys(perms).filter(roleName => -1 === standard.indexOf(roleName))
+  const customRoles = perms.filter(rolePerm => !isStandardRole(rolePerm.name, workspace))
   if (0 < customRoles.length) {
     return true
   }
@@ -71,7 +106,7 @@ const hasCustomRules = (perms, workspace = null) => {
 /**
  * Computes permissions to get a single string representing who have the `open` right.
  *
- * @param {object} perms
+ * @param {Array}  perms
  * @param {object} workspace
  *
  * @return {string}
@@ -96,38 +131,34 @@ const getSimpleAccessRule = (perms, workspace = null) => {
 }
 
 const setSimpleAccessRule = (perms, rule, workspace = null) => {
-  // Retrieve and duplicates standard roles
-  const anonymous = cloneDeep(perms[roleAnonymous()])
-  const users     = cloneDeep(perms[roleUser()])
-  const wsUsers   = cloneDeep(perms[roleWorkspace(workspace)])
+  const updatedPerms = cloneDeep(perms)
 
-  switch (rule) {
-    case 'all':
-      anonymous.permissions.open = true
-      users.permissions.open     = true
-      wsUsers.permissions.open   = true
-      break
-    case 'user':
-      anonymous.permissions.open = false
-      users.permissions.open     = true
-      wsUsers.permissions.open   = true
-      break
-    case 'workspace':
-      anonymous.permissions.open = false
-      users.permissions.open     = false
-      wsUsers.permissions.open   = true
-      break
-    case 'admin':
-      anonymous.permissions.open = false
-      users.permissions.open     = false
-      wsUsers.permissions.open   = false
-      break
+  const permsLevel = {
+    all: 0,
+    user: 1,
+    workspace: 2,
+    admin: 3
   }
 
-  return Object.assign({}, perms, {
-    [roleAnonymous()]: anonymous,
-    [roleUser()]: users,
-    [roleWorkspace(workspace)]: wsUsers
+  return updatedPerms.map((rolePerms) => {
+    let roleLevel
+    if (rolePerms.name === roleAnonymous()) {
+      // perms for Anonymous
+      roleLevel = 0
+    } else if (rolePerms.name === roleUser()) {
+      // perms for User
+      roleLevel = 1
+    } else if (isWorkspaceRole(rolePerms.name, workspace)) {
+      // perms for Workspace roles
+      roleLevel = 2
+    } else {
+      // perms for Custom role
+      roleLevel = 1
+    }
+
+    rolePerms.permissions.open = roleLevel >= permsLevel[rule]
+
+    return rolePerms
   })
 }
 
@@ -138,5 +169,6 @@ export {
   findRolePermissions,
   hasCustomRules,
   getSimpleAccessRule,
-  setSimpleAccessRule
+  setSimpleAccessRule,
+  isStandardRole
 }

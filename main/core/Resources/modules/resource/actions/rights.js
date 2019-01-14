@@ -4,7 +4,7 @@ import classes from 'classnames'
 import {trans} from '#/main/app/intl/translation'
 import {MODAL_BUTTON} from '#/main/app/buttons'
 
-import {getSimpleAccessRule, hasCustomRules} from '#/main/core/resource/rights'
+import {getSimpleAccessRule, hasCustomRules} from '#/main/core/resource/permissions'
 import {MODAL_RESOURCE_RIGHTS} from '#/main/core/resource/modals/rights'
 
 /**
