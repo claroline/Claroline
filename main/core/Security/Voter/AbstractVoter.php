@@ -43,7 +43,7 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
     const PATCH = 'PATCH';
 
     /** @var ContainerInterface */
-    private $container;
+    protected $container;
 
     /**
      * @DI\InjectParams({

@@ -78,6 +78,7 @@ final class Options
     const WORKSPACE_FETCH_RESOURCES = 'workspace_fetch_resources';
     const WORKSPACE_DESERIALIZE_ROLES = 'workspace_deserialize_roles';
     //for role
+    const SERIALIZE_ROLES = 'serialize_roles';
     const SERIALIZE_COUNT_USER = 'serialize_count_user';
     const SERIALIZE_ROLE_TOOLS_RIGHTS = 'serialize_role_tools_rights';
     const SERIALIZE_ROLE_DESKTOP_TOOLS = 'serialize_role_desktop_tools';

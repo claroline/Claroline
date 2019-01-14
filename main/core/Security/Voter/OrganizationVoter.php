@@ -23,7 +23,9 @@ class OrganizationVoter extends AbstractVoter
 {
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
-        if ($this->hasAdminToolAccess($token, 'user_management')) {
+        $parameters = $this->container->get('claroline.serializer.parameters')->serialize();
+
+        if ($this->hasAdminToolAccess($token, 'user_management') || $parameters['registration']['force_organization_creation']) {
             return VoterInterface::ACCESS_GRANTED;
         }
 

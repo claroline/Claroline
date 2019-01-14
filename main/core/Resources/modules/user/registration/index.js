@@ -4,8 +4,6 @@ import {bootstrap} from '#/main/app/dom/bootstrap'
 import {reducer} from '#/main/core/user/registration/reducer'
 import {UserRegistration} from '#/main/core/user/registration/components/main.jsx'
 
-const getCollaboratorRole = (workspace) => workspace.roles.find(role => role.name.indexOf('COLLABORATOR') > -1)
-
 // mount the react application
 bootstrap(
   '.user-registration-container',
@@ -17,7 +15,7 @@ bootstrap(
     },
     user: {
       data: {
-        roles: initialData.defaultWorkspaces.map(workspace => getCollaboratorRole(workspace))
+        roles: initialData.defaultWorkspaces.map(workspace => workspace.registration.defaultRole)
       }
     }
   })

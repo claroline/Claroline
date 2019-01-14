@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Facet\Facet;
+use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Entity\Role;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -85,7 +86,7 @@ class FacetSerializer
 
             foreach ($data['sections'] as $section) {
                 //check if section exists first
-                $panelFacet = $this->serializer->deserialize('Claroline\CoreBundle\Entity\Facet\PanelFacet', $section, $options);
+                $panelFacet = $this->serializer->deserialize(PanelFacet::class, $section, $options);
                 $panelFacet->setFacet($facet);
             }
         }

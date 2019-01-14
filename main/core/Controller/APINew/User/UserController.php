@@ -201,7 +201,7 @@ class UserController extends AbstractCrudController
         }
 
         $user = $this->crud->create(
-           User::class,
+            User::class,
             $this->decodeRequest($request)
         );
 

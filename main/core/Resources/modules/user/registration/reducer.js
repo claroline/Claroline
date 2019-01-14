@@ -7,7 +7,7 @@ import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 import {LIST_TOGGLE_SELECT, LIST_TOGGLE_SELECT_ALL} from '#/main/app/content/list/store/actions'
 import cloneDeep from 'lodash/cloneDeep'
 
-const getCollaboratorRole = (workspace) => workspace.roles.find(role => role.name.indexOf('COLLABORATOR') > -1)
+const getDefaultRole = (workspace) => workspace.registration.defaultRole
 
 export const reducer = {
   workspaces: makeListReducer('workspaces'),
@@ -41,14 +41,14 @@ export const reducer = {
         const user = cloneDeep(state)
 
         action.selected ?
-          user.roles.push(getCollaboratorRole(action.row)):
-          user.roles.splice(user.roles.indexOf(role => role.id === getCollaboratorRole(action.row).id))
+          user.roles.push(getDefaultRole(action.row)):
+          user.roles.splice(user.roles.indexOf(role => role.id === getDefaultRole(action.row).id))
 
         return user
       },
       [LIST_TOGGLE_SELECT_ALL+'/workspaces']: (state, action) => {
         const user = cloneDeep(state)
-        user.roles = action.rows.map(workspace => getCollaboratorRole(workspace))
+        user.roles = action.rows.map(workspace => getDefaultRole(workspace))
 
         return user
       }
