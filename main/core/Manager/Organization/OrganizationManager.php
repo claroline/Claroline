@@ -39,6 +39,7 @@ class OrganizationManager
     public function getDefault($createIfEmpty = false)
     {
         $defaultOrganization = $this->repo->findOneByDefault(true);
+
         if ($createIfEmpty && null === $defaultOrganization) {
             $defaultOrganization = $this->createDefault(true);
         }
