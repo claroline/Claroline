@@ -27,7 +27,7 @@ class Updater120212 extends Updater
     public function postUpdate()
     {
         $this->generateFieldFacetsUuids();
-        $this->deleteSupportBundleTables();
+        $this->deleteSupportBundleFromDB();
     }
 
     public function generateFieldFacetsUuids()
@@ -36,10 +36,10 @@ class Updater120212 extends Updater
         $this->conn->prepare('UPDATE claro_field_facet SET uuid = (SELECT UUID())')->execute();
     }
 
-    private function deleteSupportBundleTables()
+    private function deleteSupportBundleFromDB()
     {
         $this->log('Deleting DB tables from SupportBundle...');
-        $sql = '
+        $tablesSql = '
             DROP TABLE IF EXISTS
             formalibre_support_configuration,
             formalibre_support_comment,
@@ -47,9 +47,32 @@ class Updater120212 extends Updater
             formalibre_support_intervention,
             formalibre_support_ticket,
             formalibre_support_status,
-            formalibre_support_type
+            formalibre_support_type,
+            doctrine_formalibresupportbundle_versions
         ';
-        $this->conn->prepare($sql)->execute();
+        $this->conn->prepare($tablesSql)->execute();
         $this->log('DB tables from SupportBundle deleted.');
+
+        $this->log('Deleting support tools...');
+        $adminToolSql = '
+            DELETE tool FROM claro_admin_tools tool
+            WHERE tool.name = "formalibre_support_management_tool"
+        ';
+        $toolSql = '
+            DELETE tool FROM claro_tools tool
+            WHERE tool.name = "formalibre_support_tool"
+        ';
+        $this->conn->prepare($adminToolSql)->execute();
+        $this->conn->prepare($toolSql)->execute();
+        $this->log('Support tools deleted.');
+
+        $this->log('Deleting SupportBundle plugin...');
+        $pluginSql = '
+            DELETE plugin FROM claro_plugin plugin
+            WHERE plugin.vendor_name = "FormaLibre"
+            AND plugin.short_name = "SupportBundle"
+        ';
+        $this->conn->prepare($pluginSql)->execute();
+        $this->log('SupportBundle plugin deleted.');
     }
 }
