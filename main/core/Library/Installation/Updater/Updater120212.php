@@ -27,11 +27,29 @@ class Updater120212 extends Updater
     public function postUpdate()
     {
         $this->generateFieldFacetsUuids();
+        $this->deleteSupportBundleTables();
     }
 
     public function generateFieldFacetsUuids()
     {
         $this->log('Rebuild fieldfacet uuids');
         $this->conn->prepare('UPDATE claro_field_facet SET uuid = (SELECT UUID())')->execute();
+    }
+
+    private function deleteSupportBundleTables()
+    {
+        $this->log('Deleting DB tables from SupportBundle...');
+        $sql = '
+            DROP TABLE IF EXISTS
+            formalibre_support_configuration,
+            formalibre_support_comment,
+            formalibre_support_ticket_user,
+            formalibre_support_intervention,
+            formalibre_support_ticket,
+            formalibre_support_status,
+            formalibre_support_type
+        ';
+        $this->conn->prepare($sql)->execute();
+        $this->log('DB tables from SupportBundle deleted.');
     }
 }
