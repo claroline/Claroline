@@ -21,7 +21,7 @@ export default (workspaces, refresher) => ({
       model: 1
     }),
     request: {
-      method: 'POST'
+      method: 'GET'
     },
     success: (response) => refresher.update(response)
   },

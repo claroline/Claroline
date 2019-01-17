@@ -21,14 +21,14 @@ use Symfony\Component\Routing\RouteCollection;
 class ApiLoader extends Loader
 {
     const DEFAULT_MAP = [
+      'create' => ['', 'POST'],
+      'deleteBulk' => ['', 'DELETE'],
+      'list' => ['', 'GET'],
       'schema' => ['/schema', 'GET'],
       'find' => ['/find', 'GET'],
-      'create' => ['', 'POST'],
       'doc' => ['/doc', 'GET'],
-      'update' => ['/{id}', 'PUT'],
-      'deleteBulk' => ['', 'DELETE'],
       'copyBulk' => ['/copy', 'GET'],
-      'list' => ['', 'GET'],
+      'update' => ['/{id}', 'PUT'],
       'get' => ['/{id}', 'GET'],
       'exist' => ['/exist/{field}/{value}', 'GET'],
     ];
