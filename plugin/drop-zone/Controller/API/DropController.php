@@ -12,6 +12,7 @@
 namespace Claroline\DropZoneBundle\Controller\API;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\ApiManager;
@@ -51,7 +52,8 @@ class DropController
      * @DI\InjectParams({
      *     "apiManager" = @DI\Inject("claroline.manager.api_manager"),
      *     "finder"     = @DI\Inject("claroline.api.finder"),
-     *     "manager"    = @DI\Inject("claroline.manager.dropzone_manager")
+     *     "manager"    = @DI\Inject("claroline.manager.dropzone_manager"),
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param ApiManager      $apiManager
@@ -61,11 +63,13 @@ class DropController
     public function __construct(
         ApiManager $apiManager,
         FinderProvider $finder,
-        DropzoneManager $manager
+        DropzoneManager $manager,
+        ObjectManager $om
     ) {
         $this->apiManager = $apiManager;
         $this->finder = $finder;
         $this->manager = $manager;
+        $this->om = $om;
     }
 
     /**
@@ -396,16 +400,15 @@ class DropController
 
     /**
      * @EXT\Route("/drops/download", name="claro_dropzone_drops_download")
-     * @EXT\Method("GET")
-     * @EXT\ParamConverter("user", converter="current_user")
+     * @EXT\Method("POST")
      *
      * Downloads drops documents into a ZIP archive
      *
      * @return StreamedResponse
      */
-    public function dropsDownloadAction()
+    public function dropsDownloadAction(Request $request)
     {
-        $drops = $this->apiManager->getParametersByUuid('ids', 'Claroline\DropZoneBundle\Entity\Drop');
+        $drops = $this->decodeIdsString($request, Drop::class);
         $dropzone = $drops[0]->getDropzone();
         $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
         $fileName = $dropzone->getResourceNode()->getName();
@@ -449,5 +452,17 @@ class DropController
         if (!in_array($user, $team->getUsers())) {
             throw new AccessDeniedException();
         }
+    }
+
+    /**
+     * @param Request $request
+     * @param string  $class
+     */
+    protected function decodeIdsString(Request $request, $class)
+    {
+        $ids = json_decode($request->getContent(), true)['_ids'];
+        $property = is_numeric($ids[0]) ? 'id' : 'uuid';
+
+        return $this->om->findList($class, $property, $ids);
     }
 }

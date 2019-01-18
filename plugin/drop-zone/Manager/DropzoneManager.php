@@ -1350,7 +1350,7 @@ class DropzoneManager
                 '';
             $dirName = $drop->getTeamName() ?
                 strtolower($drop->getTeamName()) :
-                strtolower($drop->getUser()->getFirstName().' '.$drop->getUser()->getLastName().' - '.$drop->getUser()->getUsername());
+                strtolower($drop->getUser()->getLastName().' '.$drop->getUser()->getFirstName().' - '.$drop->getUser()->getUsername());
 
             if ('' !== $date) {
                 $dirName .= ' '.$date;

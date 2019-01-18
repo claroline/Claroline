@@ -43,6 +43,34 @@ function handleResponse(dispatch, response, originalRequest) {
 }
 
 /**
+ * A callback executed when a response is received.
+ *
+ * @param {function} dispatch
+ * @param {object}   response
+ * @param {object}   originalRequest
+ *
+ * @return {object}
+ */
+function handleDownload(response) {
+
+  const disposition = response.headers && response.headers.get('Content-Disposition')
+
+  const n = disposition.lastIndexOf('=')
+  const name = disposition.substring(n + 1)
+  // The actual download
+  return response.blob().then(blob => {
+    var link = document.createElement('a')
+    link.href = window.URL.createObjectURL(blob)
+    link.download = name
+
+    document.body.appendChild(link)
+
+    link.click()
+    link.remove()
+  })
+}
+
+/**
  * A callback executed when a success response is received.
  *
  * @param {function} dispatch
@@ -105,13 +133,19 @@ function handleResponseError(dispatch, responseError, originalRequest, error) {
 function getResponseData(response) {
   if (204 !== response.status) {
     const contentType = response.headers && response.headers.get('content-type')
-    if (contentType && contentType.indexOf('application/json') !== -1) {
-      // Decode JSON
-      return response.json()
-    } else {
-      // Return raw data (maybe someday we will need to also manage files)
-      return response.text()
+    if (contentType) {
+      if (contentType.indexOf('application/json') !== -1) {
+        // Decode JSON
+        return response.json()
+      } else {
+        if (contentType.indexOf('text') !== -1) {
+          return response.text()
+        } else {
+          return handleDownload(response)
+        }
+      }
     }
+
   }
 
   return Promise.resolve(null)
@@ -142,7 +176,7 @@ function apiFetch(apiRequest, dispatch) {
 
   return fetch(url(requestParameters.url), requestParameters.request)
     .then(
-      response => handleResponse(dispatch, response, requestParameters)
+      response =>  handleResponse(dispatch, response, requestParameters)
     )
     .then(
       responseData  => handleResponseSuccess(dispatch, responseData, requestParameters.success),
