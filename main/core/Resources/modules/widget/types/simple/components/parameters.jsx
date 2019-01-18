@@ -20,7 +20,7 @@ const SimpleWidgetParameters = (props) =>
             type: 'html',
             required: true,
             options: {
-              workspace: 'workspace' === props.context.type ? props.context.data : undefined,
+              workspace: 'workspace' === props.currentContext.type ? props.currentContext.data : undefined,
               minimal: false
             }
           }
@@ -31,7 +31,7 @@ const SimpleWidgetParameters = (props) =>
 
 SimpleWidgetParameters.propTypes = {
   name: T.string.isRequired,
-  context: T.shape({
+  currentContext: T.shape({
     type: T.string,
     data: T.object
   })

@@ -25,36 +25,36 @@ const FormInput = props => {
         {props.definition.render(props.value, props.options) || '-'}
       </FormGroup>
     )
-  } else {
-    return React.createElement(props.definition.components.form, merge({}, props.options, {
-      id: props.id,
-      label: props.label,
-      size: props.size,
-      hideLabel: props.hideLabel,
-      disabled: props.disabled,
-      help: props.help,
-      error: props.error,
-      warnOnly: !props.validating,
-      optional: !props.required,
-      value: props.value,
-      onChange: (value) => {
-        if (props.setErrors) {
-          // forward error to the caller
-          validateProp(props, value).then(errors => {
-            props.setErrors(errors)
-
-            if (props.onChange) {
-              // forward updated value to the caller
-              props.onChange(value)
-            }
-          })
-        } else if (props.onChange) {
-          // forward updated value to the caller
-          props.onChange(value)
-        }
-      }
-    }))
   }
+
+  return React.createElement(props.definition.components.form, merge({}, props.options, {
+    id: props.id,
+    label: props.label,
+    size: props.size,
+    hideLabel: props.hideLabel,
+    disabled: props.disabled,
+    help: props.help,
+    error: props.error,
+    warnOnly: !props.validating,
+    optional: !props.required,
+    value: props.value,
+    onChange: (value) => {
+      if (props.setErrors) {
+        // forward error to the caller
+        validateProp(props, value).then(errors => {
+          props.setErrors(errors)
+
+          if (props.onChange) {
+            // forward updated value to the caller
+            props.onChange(value)
+          }
+        })
+      } else if (props.onChange) {
+        // forward updated value to the caller
+        props.onChange(value)
+      }
+    }
+  }))
 }
 
 FormInput.propTypes = {

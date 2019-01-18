@@ -34,7 +34,7 @@ const WidgetCol = props =>
           icon="fa fa-fw fa-pencil"
           label={trans('edit', {}, 'actions')}
           modal={[MODAL_CONTENT_PARAMETERS, {
-            context: props.context,
+            currentContext: props.currentContext,
             content: props.content,
             save: props.updateContent
           }]}
@@ -81,7 +81,7 @@ const WidgetCol = props =>
     {props.content &&
       <WidgetContent
         instance={props.content}
-        context={props.context}
+        currentContext={props.currentContext}
       />
     }
 
@@ -101,7 +101,7 @@ const WidgetCol = props =>
         type={MODAL_BUTTON}
         label={trans('add_widget', {}, 'widget')}
         modal={[MODAL_WIDGET_CONTENT, {
-          context: props.context,
+          currentContext: props.currentContext,
           add: props.addContent
         }]}
         disabled={props.disabled}
@@ -112,7 +112,7 @@ const WidgetCol = props =>
 WidgetCol.propTypes = {
   disabled: T.bool,
   size: T.number.isRequired,
-  context: T.object,
+  currentContext: T.object,
   content: T.shape(
     WidgetInstanceTypes.propTypes
   ),
@@ -160,7 +160,7 @@ const WidgetEditor = props =>
             <WidgetCol
               key={col}
               size={(12 / sum(props.widget.display.layout)) * props.widget.display.layout[col]}
-              context={props.context}
+              currentContext={props.currentContext}
               widget={props.widget}
               content={props.widget.contents[col]}
               addContent={(content) => {
@@ -200,7 +200,7 @@ const WidgetEditor = props =>
 
 WidgetEditor.propTypes = {
   disabled: T.bool,
-  context: T.object,
+  currentContext: T.object,
   widget: T.shape(
     WidgetContainerTypes.propTypes
   ).isRequired,

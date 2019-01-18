@@ -19,14 +19,14 @@ const WidgetCol = props =>
     {props.content &&
       <WidgetContent
         instance={props.content}
-        context={props.context}
+        currentContext={props.currentContext}
       />
     }
   </div>
 
 WidgetCol.propTypes = {
   size: T.number.isRequired,
-  context: T.object,
+  currentContext: T.object,
   content: T.shape(
     WidgetInstanceTypes.propTypes
   )
@@ -57,7 +57,7 @@ const Widget = props =>
           <WidgetCol
             key={col}
             size={(12 / sum(props.widget.display.layout)) * props.widget.display.layout[col]}
-            context={props.context}
+            currentContext={props.currentContext}
             content={props.widget.contents[col]}
           />
         )}
@@ -69,7 +69,7 @@ Widget.propTypes = {
   widget: T.shape(
     WidgetContainerTypes.propTypes
   ).isRequired,
-  context: T.object
+  currentContext: T.object
 }
 
 export {

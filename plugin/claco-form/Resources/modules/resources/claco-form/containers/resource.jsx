@@ -1,5 +1,6 @@
 import {connect} from 'react-redux'
 
+import {withRouter} from '#/main/app/router'
 import {withReducer} from '#/main/app/store/components/withReducer'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 
@@ -13,54 +14,56 @@ import {ClacoFormResource as ClacoFormResourceComponent} from '#/plugin/claco-fo
 
 const authenticatedUser = currentUser()
 
-const ClacoFormResource = withReducer(selectors.STORE_NAME, reducer)(
-  connect(
-    (state) => ({
-      clacoForm: selectors.clacoForm(state),
-      canEdit: selectors.canAdministrate(state),
-      canAddEntry: selectors.canAddEntry(state),
-      canSearchEntry: selectors.canSearchEntry(state),
-      defaultHome: selectors.params(state) ? selectors.params(state).default_home : null
-    }),
-    (dispatch) => ({
-      resetForm(formData) {
-        dispatch(formActions.resetForm(selectors.STORE_NAME+'.clacoFormForm', formData))
-      },
-      openEntryForm(id, clacoFormId, fields = []) {
-        const defaultValue = {
-          id: makeId(),
-          values: {},
-          clacoForm: {
-            id: clacoFormId
-          },
-          user: authenticatedUser,
-          categories: [],
-          keywords: []
-        }
-        fields.forEach(f => {
-          if (f.type === 'date') {
-            defaultValue.values[f.id] = now()
+const ClacoFormResource = withRouter(
+  withReducer(selectors.STORE_NAME, reducer)(
+    connect(
+      (state) => ({
+        clacoForm: selectors.clacoForm(state),
+        canEdit: selectors.canAdministrate(state),
+        canAddEntry: selectors.canAddEntry(state),
+        canSearchEntry: selectors.canSearchEntry(state),
+        defaultHome: selectors.params(state) ? selectors.params(state).default_home : null
+      }),
+      (dispatch) => ({
+        resetForm(formData) {
+          dispatch(formActions.resetForm(selectors.STORE_NAME+'.clacoFormForm', formData))
+        },
+        openEntryForm(id, clacoFormId, fields = []) {
+          const defaultValue = {
+            id: makeId(),
+            values: {},
+            clacoForm: {
+              id: clacoFormId
+            },
+            user: authenticatedUser,
+            categories: [],
+            keywords: []
           }
-        })
+          fields.forEach(f => {
+            if (f.type === 'date') {
+              defaultValue.values[f.id] = now()
+            }
+          })
 
-        dispatch(entryActions.openForm(selectors.STORE_NAME+'.entries.current', id, defaultValue))
-      },
-      resetEntryForm() {
-        dispatch(formActions.resetForm(selectors.STORE_NAME+'.entries.current', {}, true))
-      },
-      loadEntryUser(entryId) {
-        if (authenticatedUser) {
-          dispatch(entryActions.loadEntryUser(entryId))
+          dispatch(entryActions.openForm(selectors.STORE_NAME+'.entries.current', id, defaultValue))
+        },
+        resetEntryForm() {
+          dispatch(formActions.resetForm(selectors.STORE_NAME+'.entries.current', {}, true))
+        },
+        loadEntryUser(entryId) {
+          if (authenticatedUser) {
+            dispatch(entryActions.loadEntryUser(entryId))
+          }
+        },
+        resetEntryUser() {
+          dispatch(entryActions.resetEntryUser())
+        },
+        loadAllUsedCountries(clacoFormId) {
+          dispatch(entryActions.loadAllUsedCountries(clacoFormId))
         }
-      },
-      resetEntryUser() {
-        dispatch(entryActions.resetEntryUser())
-      },
-      loadAllUsedCountries(clacoFormId) {
-        dispatch(entryActions.loadAllUsedCountries(clacoFormId))
-      }
-    })
-  )(ClacoFormResourceComponent)
+      })
+    )(ClacoFormResourceComponent)
+  )
 )
 
 export {

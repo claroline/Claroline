@@ -5,9 +5,6 @@ import {PropTypes as T} from 'prop-types'
 import {withRouter} from '#/main/app/router'
 import {withModal} from '#/main/app/overlay/modal/withModal'
 import {trans} from '#/main/app/intl/translation'
-import {UserAvatar} from '#/main/core/user/components/avatar'
-import {User as UserTypes} from '#/main/core/user/prop-types'
-import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action' // todo : use Button
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {MODAL_ALERT} from '#/main/app/modals/alert'
@@ -16,6 +13,9 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
+
+import {UserAvatar} from '#/main/core/user/components/avatar'
+import {User as UserTypes} from '#/main/core/user/prop-types'
 
 import {select} from '#/plugin/forum/resources/forum/store/selectors'
 
@@ -32,13 +32,13 @@ const SubjectFormWrapper = (props) =>
 
           {(props.editingSubject && props.cancel) &&
             <div className="user-message-actions">
-              <TooltipAction
-                id="close"
-                className="btn-link-default"
-                position="bottom"
+              <Button
+                type={CALLBACK_BUTTON}
+                className="btn-link"
+                tooltip="bottom"
                 icon="fa fa-fw fa-times"
-                label={trans('cancel')}
-                action={props.cancel}
+                label={trans('cancel', {}, 'actions')}
+                callback={props.cancel}
               />
             </div>
           }

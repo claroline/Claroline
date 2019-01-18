@@ -12,7 +12,7 @@ const WidgetGrid = props => {
         <Widget
           key={index}
           widget={widget}
-          context={props.context}
+          currentContext={props.currentContext}
         />
       )}
     </div>
@@ -21,7 +21,7 @@ const WidgetGrid = props => {
 
 
 WidgetGrid.propTypes = {
-  context: T.object,
+  currentContext: T.object,
   widgets: T.arrayOf(T.shape(
     WidgetContainerTypes.propTypes
   ))

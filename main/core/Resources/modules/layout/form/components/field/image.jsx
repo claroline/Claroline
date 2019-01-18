@@ -7,7 +7,8 @@ import {asset} from '#/main/app/config/asset'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {actions} from '#/main/app/api/store'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 // todo : merge with file type
 
@@ -49,15 +50,16 @@ class Image extends Component {
               }}
             />
 
-            <TooltipButton
+            <Button
               id={`${this.props.id}-delete`}
-              className="btn btn-danger"
-              title={trans('delete')}
-              position="left"
-              onClick={() => this.props.deleteFile(this.props.value.id, this.props.onChange)}
-            >
-              <span className="fa fa-fw fa-trash-o" />
-            </TooltipButton>
+              type={CALLBACK_BUTTON}
+              className="btn"
+              icon="fa fa-fw fa-trash-o"
+              label={trans('delete')}
+              tooltip="left"
+              callback={() => this.props.deleteFile(this.props.value.id, this.props.onChange)}
+              dangerous={true}
+            />
           </div>
         }
 

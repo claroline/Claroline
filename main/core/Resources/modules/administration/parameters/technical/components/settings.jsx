@@ -1,7 +1,6 @@
 import React from 'react'
-import {connect} from 'react-redux'
 
-import {withRouter, Routes} from '#/main/app/router'
+import {Routes} from '#/main/app/router'
 
 import {Authentication} from '#/main/core/administration/parameters/technical/components/authentication'
 import {Domain} from '#/main/core/administration/parameters/technical/components/domain'
@@ -15,7 +14,7 @@ import {Token} from '#/main/core/administration/parameters/technical/components/
 import {Sessions} from '#/main/core/administration/parameters/technical/components/sessions'
 import {Javascripts} from '#/main/core/administration/parameters/technical/components/javascripts'
 
-const SettingsComponent = () =>
+const Settings = () =>
   <Routes
     redirect={[
       {from: '/', exact: true, to: '/domain' }
@@ -70,15 +69,6 @@ const SettingsComponent = () =>
       }
     ]}
   />
-
-SettingsComponent.propTypes = {
-}
-
-const Settings = withRouter(connect(
-  () => ({ }),
-  () => ({ })
-)(SettingsComponent))
-
 
 export {
   Settings

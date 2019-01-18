@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {withRouter} from '#/main/app/router'
@@ -13,7 +14,7 @@ import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'
 import {actions, selectors} from '#/plugin/announcement/resources/announcement/store'
 
-const restrictByDates = (announcement) => announcement.restrictions.enableDates || (announcement.restrictions.dates && 0 !== announcement.restrictions.dates.length)
+const restrictByDates = (announcement) => get(announcement, 'restrictions.enableDates') || (get(announcement, 'restrictions.dates') && 0 !== get(announcement, 'restrictions.dates').length)
 
 const AnnounceFormComponent = props =>
   <FormData

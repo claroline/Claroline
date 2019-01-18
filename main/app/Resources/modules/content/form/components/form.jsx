@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
@@ -16,7 +15,7 @@ const FormWrapper = props => props.embedded ?
     {props.children}
   </fieldset>
   :
-  <form id={props.id} action="#" className={classes('form data-form', props.className)}>
+  <form id={props.id} className={classes('form data-form', props.className)} action="#">
     {props.children}
   </form>
 
@@ -76,7 +75,7 @@ class Form extends Component {
         {(this.props.save || this.props.cancel) &&
           <FormActions
             save={this.props.save ? merge({}, this.props.save, {
-              disabled: this.props.disabled || this.props.save.disabled || !(this.props.pendingChanges && (!this.props.validating || isEmpty(this.props.errors)))
+              disabled: this.props.disabled || this.props.save.disabled || !(this.props.pendingChanges && (!this.props.validating || this.props.errors))
             }) : undefined}
             cancel={this.props.cancel}
           />
@@ -99,7 +98,7 @@ Form.propTypes = {
   level: T.number,
   displayLevel: T.number,
   title: T.string,
-  errors: T.object,
+  errors: T.bool,
   validating: T.bool,
   pendingChanges: T.bool,
   children: T.node.isRequired,
@@ -126,7 +125,7 @@ Form.propTypes = {
 Form.defaultProps = {
   disabled: false,
   level: 2,
-  errors: {},
+  errors: false,
   validating: false,
   pendingChanges: false
 }

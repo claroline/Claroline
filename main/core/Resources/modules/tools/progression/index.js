@@ -13,7 +13,7 @@ export const App = () => ({
     tool: {
       icon: 'tasks',
       name: 'progression',
-      context: initialData.context
+      currentContext: initialData.currentContext
     },
     items: initialData.items,
     levelMax: initialData.levelMax

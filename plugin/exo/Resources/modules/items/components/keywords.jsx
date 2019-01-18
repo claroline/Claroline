@@ -10,7 +10,8 @@ import {Textarea} from '#/main/core/layout/form/components/field/textarea'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
 import {ContentError} from '#/main/app/content/components/error'
 import {TooltipElement} from '#/main/core/layout/components/tooltip-element'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 /**
  * Edits a Keyword.
@@ -102,24 +103,26 @@ class KeywordItem extends Component {
             />
           }
 
-          <TooltipButton
+          <Button
             id={`keyword-${this.props.keyword._id}-feedback-toggle`}
-            className="btn-link-default"
-            title={tex('words_feedback_info')}
-            onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-          >
-            <span className="fa fa-fw fa-comments-o" />
-          </TooltipButton>
+            className="btn-link"
+            type={CALLBACK_BUTTON}
+            icon="fa fa-fw fa-comments-o"
+            label={tex('words_feedback_info')}
+            callback={() => this.setState({showFeedback: !this.state.showFeedback})}
+            tooltip="top"
+          />
 
-          <TooltipButton
+          <Button
             id={`keyword-${this.props.keyword._id}-delete`}
-            className="btn-link-default"
+            className="btn-link"
+            type={CALLBACK_BUTTON}
+            icon="fa fa-fw fa-trash-o"
+            label={trans('delete', {}, 'actions')}
+            callback={() => this.props.keyword._deletable && this.props.removeKeyword()}
             disabled={!this.props.keyword._deletable}
-            title={trans('delete')}
-            onClick={() => this.props.keyword._deletable && this.props.removeKeyword()}
-          >
-            <span className="fa fa-fw fa-trash-o" />
-          </TooltipButton>
+            tooltip="top"
+          />
         </div>
       </li>
     )
@@ -276,25 +279,27 @@ const KeywordsPopover = props =>
 
         <div className="popover-actions">
           {props.remove &&
-            <TooltipButton
+            <Button
               id={`keywords-popover-${props.id}-remove`}
-              title={tex('delete')}
-              className="btn-link-default"
-              onClick={props.remove}
-            >
-              <span className="fa fa-fw fa-trash-o" />
-            </TooltipButton>
+              className="btn-link"
+              type={CALLBACK_BUTTON}
+              icon="fa fa-fw fa-trash-o"
+              label={trans('delete', {}, 'actions')}
+              callback={props.remove}
+              tooltip="top"
+            />
           }
 
-          <TooltipButton
+          <Button
             id={`keywords-popover-${props.id}-close`}
-            title={tex('close')}
-            className="btn-link-default"
+            className="btn-link"
+            type={CALLBACK_BUTTON}
+            icon="fa fa-fw fa-times"
+            label={trans('close', {}, 'actions')}
             disabled={!isEmpty(props._errors)}
-            onClick={props.close}
-          >
-            <span className="fa fa-fw fa-times" />
-          </TooltipButton>
+            callback={props.close}
+            tooltip="top"
+          />
         </div>
       </div>
     }

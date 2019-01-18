@@ -38,7 +38,7 @@ class WidgetGridEditor extends Component {
           <WidgetEditor
             key={index}
             widget={widgetContainer}
-            context={this.props.context}
+            currentContext={this.props.currentContext}
             isMoving={this.state.movingContentId}
             stopMovingContent={() => this.stopMovingContent()}
             startMovingContent={(contentId) => this.startMovingContent(contentId)}
@@ -206,7 +206,7 @@ class WidgetGridEditor extends Component {
 
 WidgetGridEditor.propTypes = {
   disabled: T.bool,
-  context: T.object.isRequired,
+  currentContext: T.object.isRequired,
   widgets: T.arrayOf(T.shape(
     WidgetContainerTypes.propTypes
   )),

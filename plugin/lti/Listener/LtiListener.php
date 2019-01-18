@@ -5,6 +5,7 @@ namespace UJM\LtiBundle\Listener;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
@@ -76,7 +77,13 @@ class LtiListener
         if (is_null($ltiTool) || !$this->authorization->isGranted('OPEN', $ltiTool)) {
             throw new AccessDeniedException();
         }
-        $content = $this->templating->render('UJMLtiBundle:administration:management.html.twig');
+
+        $content = $this->templating->render('UJMLtiBundle:administration:management.html.twig', [
+            'context' => [
+                'type' => Tool::ADMINISTRATION,
+            ],
+        ]);
+
         $event->setResponse(new Response($content));
         $event->stopPropagation();
     }

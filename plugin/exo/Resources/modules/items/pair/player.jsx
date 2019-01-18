@@ -1,13 +1,16 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import times from 'lodash/times'
+
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
-import times from 'lodash/times'
+
 import {tex, trans} from '#/main/app/intl/translation'
 import {utils} from './utils/utils'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {PairItemDragPreview} from './pair-item-drag-preview.jsx'
 
 let DropBox = props => props.connectDropTarget (
@@ -33,15 +36,17 @@ DropBox = makeDroppable(DropBox, 'ITEM')
 const PairItem = props =>
   <div className="pair-item">
     {props.item.removable &&
-      <TooltipButton
+      <Button
         id={`pair-${props.item.id}-delete`}
-        className="btn-link-default btn-item-remove pull-right"
-        title={trans('delete')}
-        onClick={() => props.handleItemRemove(props.item.id)}
-      >
-        <span className="fa fa-fw fa-trash-o" />
-      </TooltipButton>
+        type={CALLBACK_BUTTON}
+        className="btn-link btn-item-remove pull-right"
+        icon="fa fa-fw fa-trash-o"
+        label={trans('delete', {}, 'actions')}
+        callback={() => props.handleItemRemove(props.item.id)}
+        tooltip="top"
+      />
     }
+
     <div className="item-content" dangerouslySetInnerHTML={{__html: props.item.data}} />
   </div>
 

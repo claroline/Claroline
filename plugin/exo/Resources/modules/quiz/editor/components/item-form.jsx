@@ -4,15 +4,16 @@ import get from 'lodash/get'
 
 import {trans, tex} from '#/main/app/intl/translation'
 import {HINT_ADD, HINT_CHANGE, HINT_REMOVE} from './../actions'
-import {FormGroup} from '#/main/app/content/form/components/group.jsx'
-import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group.jsx'
-import {TextGroup} from '#/main/core/layout/form/components/group/text-group.jsx'
-import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
-import {ToggleableSet} from '#/main/core/layout/form/components/fieldset/toggleable-set.jsx'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
-import ObjectsEditor from './item-objects-editor.jsx'
-import TagsEditor from '#/plugin/tag/item-tags-editor.jsx'
-import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
+import {FormGroup} from '#/main/app/content/form/components/group'
+import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group'
+import {TextGroup} from '#/main/core/layout/form/components/group/text-group'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea'
+import {ToggleableSet} from '#/main/core/layout/form/components/fieldset/toggleable-set'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import ObjectsEditor from './item-objects-editor'
+import TagsEditor from '#/plugin/tag/item-tags-editor'
+import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
 
 // TODO: add categories, define-as-model
 
@@ -110,14 +111,14 @@ const Hint = props =>
       )}
     />
 
-    <TooltipButton
+    <Button
       id={`hint-${props.id}-delete`}
-      title={trans('delete')}
-      className="btn-link-default"
-      onClick={props.onRemove}
-    >
-      <span className="fa fa-fw fa-trash-o" />
-    </TooltipButton>
+      className="btn-link"
+      type={CALLBACK_BUTTON}
+      icon="fa fa-fw fa-trash-o"
+      label={trans('delete', {}, 'actions')}
+      callback={props.onRemove}
+    />
   </div>
 
 Hint.propTypes = {

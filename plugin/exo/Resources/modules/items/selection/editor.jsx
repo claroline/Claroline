@@ -12,7 +12,8 @@ import {Textarea} from '#/main/core/layout/form/components/field/textarea'
 import {Radios} from '#/main/core/layout/form/components/field/radios'
 import {ColorPicker} from '#/main/core/layout/form/components/field/color-picker'
 import {actions} from './editor'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {utils} from './utils/utils'
 import {SCORE_SUM, SCORE_FIXED} from './../../quiz/enums'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
@@ -85,6 +86,7 @@ class ChoiceItem extends Component {
             onChange={e => this.props.onChange(updateAnswer(Number(e.target.value), 'score', this.getSelectionId(), this.props.item.mode))}
           />
         }
+
         {this.props.item.score.type === SCORE_FIXED &&
           <span>
             <input
@@ -100,16 +102,16 @@ class ChoiceItem extends Component {
           </span>
         }
 
-        <span>
-          <TooltipButton
-            id={`choice-${this.getSelectionId()}-feedback-toggle`}
-            className="pull-right"
-            title={tex('choice_feedback_info')}
-            onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-          >
-            <span className="fa fa-fw fa-comments-o" />
-          </TooltipButton>
-        </span>
+        <Button
+          id={`choice-${this.getSelectionId()}-feedback-toggle`}
+          className="btn pull-right"
+          type={CALLBACK_BUTTON}
+          icon="fa fa-fw fa-comments-o"
+          label={tex('choice_feedback_info')}
+          callback={() => this.setState({showFeedback: !this.state.showFeedback})}
+          tooltip="top"
+        />
+
         {this.state.showFeedback &&
           <div className="feedback-container selection-form-row">
             <Textarea
@@ -222,22 +224,25 @@ class SelectionForm extends Component {
             {utils.getSelectionText(this.props.item)}
 
             <div className="popover-actions">
-              <TooltipButton
+              <Button
                 id={`selection-${this.props.item._selectionId}-delete`}
-                title={tex('delete')}
-                className="btn-link-default"
-                onClick={this.removeAndClose.bind(this)}
-              >
-                <span className="fa fa-fw fa-trash-o" />
-              </TooltipButton>
-              <TooltipButton
+                className="btn-link"
+                type={CALLBACK_BUTTON}
+                icon="fa fa-fw fa-trash-o"
+                label={tex('delete')}
+                callback={this.removeAndClose.bind(this)}
+                tooltip="top"
+              />
+
+              <Button
                 id={`selection-${this.props.item._selectionId}-close`}
-                title={tex('close')}
-                className="btn-link-default"
-                onClick={this.closePopover.bind(this)}
-              >
-                <span className="fa fa-fw fa-times" />
-              </TooltipButton>
+                className="btn-link"
+                type={CALLBACK_BUTTON}
+                icon="fa fa-fw fa-times"
+                label={tex('close')}
+                callback={this.closePopover.bind(this)}
+                tooltip="top"
+              />
             </div>
           </div>
         }>
@@ -390,13 +395,15 @@ class HighlightAnswer extends Component {
             }
           </div>
           <div className="col-xs-2">
-            <TooltipButton
+            <Button
               id={`choice-${this.props.answer._answerId}-feedback-toggle`}
-              title={tex('choice_feedback_info')}
-              onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-            >
-              <span className="fa fa-fw fa-comments-o" />
-            </TooltipButton>
+              className="btn"
+              type={CALLBACK_BUTTON}
+              icon="fa fa-fw fa-comments-o"
+              label={tex('choice_feedback_info')}
+              callback={() => this.setState({showFeedback: !this.state.showFeedback})}
+              tooltip="top"
+            />
           </div>
           <div className="col-xs-3">
             <i onClick={() => this.props.onChange(actions.highlightRemoveAnswer(this.props.answer._answerId))} className="fa fa-trash-o pointer checkbox"></i>

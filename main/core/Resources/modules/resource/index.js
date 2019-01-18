@@ -11,7 +11,7 @@ export const App = () => ({
   initialData: (initialData) => Object.assign({}, initialData, {
     tool: {
       name: 'resource_manager',
-      context: {
+      currentContext: {
         type: get(initialData, 'resourceNode.workspace') ? constants.TOOL_WORKSPACE : constants.TOOL_DESKTOP,
         data: get(initialData, 'resourceNode.workspace')
       }

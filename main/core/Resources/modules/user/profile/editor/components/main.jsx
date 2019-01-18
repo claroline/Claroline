@@ -1,13 +1,13 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {UserDetails} from '#/main/core/user/components/details.jsx'
+import {UserDetails} from '#/main/core/user/components/details'
 import {connectProfile} from '#/main/core/user/profile/connect'
-import {ProfileNav} from '#/main/core/user/profile/components/nav.jsx'
-import {ProfileFacets} from '#/main/core/user/profile/components/facets.jsx'
+import {ProfileNav} from '#/main/core/user/profile/components/nav'
+import {ProfileFacets} from '#/main/core/user/profile/components/facets'
 
 import {selectors as select} from '#/main/app/content/form/store/selectors'
-import {ProfileFacet} from '#/main/core/user/profile/editor/components/facet.jsx'
+import {ProfileFacet} from '#/main/core/user/profile/editor/components/facet'
 
 const ProfileEditComponent = props =>
   <div className="row user-profile user-profile-edit">
@@ -41,7 +41,7 @@ ProfileEditComponent.propTypes = {
 }
 
 const ProfileEdit = connectProfile(
-  state => ({
+  (state) => ({
     user: select.data(select.form(state, 'user'))
   })
 )(ProfileEditComponent)

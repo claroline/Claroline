@@ -46,7 +46,7 @@ class GaugeBorder extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (!this.props.preFilled && nextProps.filling !== this.props.filling) {
       this.updateFilling(this.props.filling, nextProps.filling)
     }
@@ -151,7 +151,7 @@ class GaugeText extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (!this.props.preFilled && nextProps.value !== this.props.value) {
       this.updateText(this.props.value, nextProps.value)
     }

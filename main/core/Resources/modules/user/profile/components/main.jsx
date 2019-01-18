@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {Routes} from '#/main/app/router'
+import {Routes, withRouter} from '#/main/app/router'
 
 import {UserPageContainer} from '#/main/core/user/containers/page'
 import {User as UserTypes} from '#/main/core/user/prop-types'
@@ -44,13 +44,14 @@ ProfileComponent.propTypes = {
   parameters: T.object.isRequired
 }
 
-const Profile = connect(
-  state => ({
-    user: selectors.data(selectors.details(state, 'user')),
-    parameters: profileSelect.parameters(state)
-  }),
-  null
-)(ProfileComponent)
+const Profile = withRouter(
+  connect(
+    (state) => ({
+      user: selectors.data(selectors.details(state, 'user')),
+      parameters: profileSelect.parameters(state)
+    })
+  )(ProfileComponent)
+)
 
 export {
   Profile

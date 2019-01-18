@@ -5,7 +5,7 @@ import {makeReducer} from '#/main/app/store/reducer'
 const reducer = {
   isImpersonated: makeReducer(null),
   mainMenu: makeReducer(null),
-  context: makeReducer({}),
+  currentContext: makeReducer({}),
   display: makeReducer({}),
   tools: makeReducer([]),
   userTools: makeReducer([]),

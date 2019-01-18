@@ -1,6 +1,5 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {
@@ -16,10 +15,8 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {ScheduledTasks} from '#/main/core/administration/scheduled-task/components/scheduled-tasks'
 import {ScheduledTask}  from '#/main/core/administration/scheduled-task/components/scheduled-task'
-import {actions}        from '#/main/core/administration/scheduled-task/actions'
-import {select}         from '#/main/core/administration/scheduled-task/selectors'
 
-const Tool = props =>
+const ScheduledTaskTool = props =>
   <PageContainer>
     <PageHeader
       title={trans('tasks_scheduling', {}, 'tools')}
@@ -52,21 +49,10 @@ const Tool = props =>
     />
   </PageContainer>
 
-Tool.propTypes = {
+ScheduledTaskTool.propTypes = {
   isCronConfigured: T.bool.isRequired,
   openForm: T.func.isRequired
 }
-
-const ScheduledTaskTool = connect(
-  state => ({
-    isCronConfigured: select.isCronConfigured(state)
-  }),
-  dispatch => ({
-    openForm(id = null) {
-      dispatch(actions.open('task', id))
-    }
-  })
-)(Tool)
 
 export {
   ScheduledTaskTool

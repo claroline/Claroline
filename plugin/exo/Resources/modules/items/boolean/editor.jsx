@@ -6,7 +6,8 @@ import classes from 'classnames'
 import {tex} from '#/main/app/intl/translation'
 import {ContentError} from '#/main/app/content/components/error'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {actions} from './editor'
 import {utils} from './utils/utils'
 
@@ -54,14 +55,15 @@ class Item extends Component {
               actions.updateChoice(this.props.choice.id, 'score', e.target.value)
             )}
           />
-          <TooltipButton
+
+          <Button
             id={`choice-${this.props.choice.id}-feedback-toggle`}
-            className="btn-link-default"
-            title={tex('choice_feedback_info')}
-            onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-          >
-            <span className="fa fa-fw fa-comments-o" />
-          </TooltipButton>
+            className="btn-link"
+            type={CALLBACK_BUTTON}
+            icon="fa fa-fw fa-comments-o"
+            label={tex('choice_feedback_info')}
+            callback={() => this.setState({showFeedback: !this.state.showFeedback})}
+          />
         </div>
       </div>
     )

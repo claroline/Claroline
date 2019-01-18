@@ -11,7 +11,7 @@ import {MenuButton} from '#/main/app/buttons/menu/components/button'
 
 const WorkspacesDropdown = props =>
   <ul className="app-workspaces dropdown-menu">
-    {'home' !== props.context.type &&
+    {'home' !== props.currentContext.type &&
     <li role="presentation">
       <Button
         type={URL_BUTTON}
@@ -21,7 +21,7 @@ const WorkspacesDropdown = props =>
       />
     </li>
     }
-    {('desktop' !== props.context.type && props.user.id) &&
+    {('desktop' !== props.currentContext.type && props.user.id) &&
     <li role="presentation">
       <Button
         type={URL_BUTTON}
@@ -105,7 +105,7 @@ const WorkspacesDropdown = props =>
   </ul>
 
 WorkspacesDropdown.propTypes = {
-  context: T.shape({
+  currentContext: T.shape({
     type: T.oneOf(['home', 'desktop', 'administration', 'workspace']).isRequired, // TODO : use constants
     data: T.shape({
       name: T.string.isRequired
@@ -137,7 +137,7 @@ const WorkspacesMenu = props =>
     }}
     menu={
       <WorkspacesDropdown
-        context={props.context}
+        currentContext={props.currentContext}
         user={props.user}
         personal={props.personal}
         history={props.history}
@@ -147,18 +147,18 @@ const WorkspacesMenu = props =>
   >
     <div className="header-workspaces">
       <span className={classes('fa fa-fw icon-with-text-right', {
-        'fa-home' : 'home' === props.context.type,
-        'fa-atlas': 'desktop' === props.context.type,
-        'fa-book' : 'workspace' === props.context.type,
-        'fa-cogs' : 'administration'=== props.context.type
+        'fa-home' : 'home' === props.currentContext.type,
+        'fa-atlas': 'desktop' === props.currentContext.type,
+        'fa-book' : 'workspace' === props.currentContext.type,
+        'fa-cogs' : 'administration'=== props.currentContext.type
       })}/>
-      {'workspace' === props.context.type ? props.context.data.name : trans(props.context.type)}
+      {'workspace' === props.currentContext.type ? props.currentContext.data.name : trans(props.currentContext.type)}
     </div>
     <span className="fa fa-fw fa-caret-down icon-with-text-left" />
   </MenuButton>
 
 WorkspacesMenu.propTypes = {
-  context: T.shape({
+  currentContext: T.shape({
     type: T.oneOf(['home', 'desktop', 'administration', 'workspace']).isRequired, // TODO : use constants
     data: T.shape({
       name: T.string.isRequired

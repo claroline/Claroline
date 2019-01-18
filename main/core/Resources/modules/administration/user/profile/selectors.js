@@ -21,7 +21,7 @@ const currentFacetIndex = createSelector(
 
 const currentFacet = createSelector(
   [facets, currentFacetIndex],
-  (facets, currentFacetIndex) => -1 !== currentFacetIndex ? facets[currentFacetIndex] : {}
+  (facets, currentFacetIndex) => -1 !== currentFacetIndex ? facets[currentFacetIndex] : undefined
 )
 
 export const select = {

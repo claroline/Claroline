@@ -1,6 +1,30 @@
-import {Component, createElement} from 'react'
+import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import invariant from 'invariant'
+import {ReactReduxContext} from 'react-redux'
+
+class ReducerLoader extends Component {
+  constructor(props) {
+    super(props)
+
+    props.store.injectReducer(props.keyName, props.reducer)
+  }
+
+  render() {
+    if (!this.props.storeState[this.props.keyName]) {
+      return null
+    }
+
+    return this.props.children
+  }
+}
+
+ReducerLoader.propTypes = {
+  store: T.object.isRequired,
+  storeState: T.object,
+  keyName: T.string.isRequired,
+  reducer: T.func.isRequired,
+  children: T.any
+}
 
 function getDisplayName(WrappedComponent) {
   return WrappedComponent.displayName || WrappedComponent.name || 'Component'
@@ -16,32 +40,24 @@ function getDisplayName(WrappedComponent) {
  */
 function withReducer(key, reducer) {
   return function appendReducers(WrappedComponent) {
-    const wrappedDisplayName = `WithReducers(${getDisplayName(WrappedComponent)})`
+    const WithReducer = (props) => (
+      <ReactReduxContext.Consumer>
+        {({ store, storeState }) => (
+          <ReducerLoader
+            store={store}
+            storeState={storeState}
+            keyName={key}
+            reducer={reducer}
+          >
+            <WrappedComponent {...props} />
+          </ReducerLoader>
+        )}
+      </ReactReduxContext.Consumer>
+    )
 
-    // maybe use a static component
-    // (advantage of class is the reducers are appended before the first rendering)
-    class WithReducers extends Component {
-      constructor(props, context) {
-        super(props, context)
+    WithReducer.displayName = getDisplayName(WrappedComponent)
 
-        invariant(context.store,
-          `Could not find "store" in either the context of ${wrappedDisplayName}. You may have called withReducers outside <Provider>.`
-        )
-
-        context.store.injectReducer(key, reducer)
-      }
-
-      render() {
-        return createElement(WrappedComponent, this.props)
-      }
-    }
-
-    WithReducers.displayName = wrappedDisplayName
-    WithReducers.contextTypes = {
-      store: T.object.isRequired
-    }
-
-    return WithReducers
+    return WithReducer
   }
 }
 

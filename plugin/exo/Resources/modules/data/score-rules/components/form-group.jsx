@@ -6,7 +6,8 @@ import {makeId} from '#/main/core/scaffolding/id'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormGroup as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
 import {FormGroup} from '#/main/app/content/form/components/group'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {SelectGroup}  from '#/main/core/layout/form/components/group/select-group'
 import {NumberGroup}  from '#/main/core/layout/form/components/group/number-group'
 
@@ -136,14 +137,15 @@ const ScoreRule = props =>
     </div>
 
     <div className="right-controls">
-      <TooltipButton
+      <Button
         id={`rule-${props.rule.id}-delete`}
-        className="btn-link-danger"
-        title={trans('delete')}
-        onClick={props.onDelete}
-      >
-        <span className="fa fa-fw fa-trash-o" />
-      </TooltipButton>
+        className="btn-link"
+        type={CALLBACK_BUTTON}
+        icon="fa fa-fw fa-trash-o"
+        label={trans('delete', {}, 'actions')}
+        callback={props.onDelete}
+        tooltip="top"
+      />
     </div>
   </li>
 

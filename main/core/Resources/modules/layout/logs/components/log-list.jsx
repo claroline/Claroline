@@ -10,7 +10,7 @@ import {constants as listConst} from '#/main/app/content/list/constants'
 
 class LogList extends Component {
   
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.chart.invalidated) {
       nextProps.getChartData(nextProps.id, nextProps.queryString)
     }

@@ -1,6 +1,5 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {TabbedPageContainer} from '#/main/core/layout/tabs'
@@ -11,11 +10,10 @@ import {RoleTab, RoleTabActions} from '#/main/core/workspace/user/role/component
 import {ParametersTab} from '#/main/core/workspace/user/parameters/components/parameters-tab'
 import {PendingTab} from '#/main/core/workspace/user/pending/components/pending-tab.jsx'
 
-import {select}  from '#/main/core/workspace/user/selectors'
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 import {READ_ONLY, MANAGER, ADMIN, getPermissionLevel} from  '#/main/core/workspace/user/restrictions'
 
-const Tool = (props) => {
+const UserTool = (props) => {
   const permLevel = getPermissionLevel(props.workspace)
 
   return (
@@ -67,17 +65,11 @@ const Tool = (props) => {
   )
 }
 
-Tool.propTypes = {
+UserTool.propTypes = {
   workspace: T.shape(
     WorkspaceTypes.propTypes
   ).isRequired
 }
-
-const UserTool = connect(
-  state => ({
-    workspace: select.workspace(state)
-  })
-)(Tool)
 
 export {
   UserTool

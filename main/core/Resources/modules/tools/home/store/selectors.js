@@ -4,7 +4,7 @@ const currentTabId = (state) => state.currentTabId
 const editable = (state) => state.editable
 const administration = (state) => state.administration
 const editing = (state) => state.editing
-const context = (state) => state.context
+const context = (state) => state.currentContext
 const tabs = (state) => state.tabs
 
 const currentTab = createSelector(
@@ -14,7 +14,7 @@ const currentTab = createSelector(
 
 const widgets = createSelector(
   [currentTab],
-  (currentTab) => currentTab.widgets
+  (currentTab) => currentTab ? (currentTab.widgets || []) : []
 )
 
 const sortedTabs = createSelector(

@@ -26,15 +26,25 @@ const ProfileFacet = {
     id: T.string.isRequired,
     title: T.string.isRequired,
     position: T.number,
-    display: T.shape({
-      creation: T.bool
-    }),
     meta: T.shape({
       main: T.bool
+    }),
+    display: T.shape({
+      creation: T.bool
     }),
     sections: T.arrayOf(T.shape(
       ProfileFacetSection.propTypes
     ))
+  },
+  defaultProps: {
+    title: '',
+    meta: {
+      main: false
+    },
+    display: {
+      creation: false
+    },
+    sections: []
   }
 }
 

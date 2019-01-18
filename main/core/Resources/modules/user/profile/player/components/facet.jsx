@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import cloneDeep from 'lodash/cloneDeep'
+import get from 'lodash/get'
 
 import {selectors as detailsSelect} from '#/main/app/content/details/store'
 import {DetailsData} from '#/main/app/content/details/containers/data'
@@ -11,10 +12,16 @@ import {select} from '#/main/core/user/profile/selectors'
 import {getDetailsDefaultSection, formatDetailsSections} from '#/main/core/user/profile/utils'
 
 const ProfileFacetComponent = props => {
-  const sections = formatDetailsSections(cloneDeep(props.facet.sections), props.user, props.parameters)
+  // todo : create a selector instead
+  let sections = []
+  if (props.facet) {
+    if (props.facet.sections) {
+      sections = formatDetailsSections(cloneDeep(props.facet.sections), props.user, props.parameters)
+    }
 
-  if (props.facet.meta.main) {
-    sections.unshift(getDetailsDefaultSection(props.user))
+    if (get(props.facet, 'meta.main')) {
+      sections.unshift(getDetailsDefaultSection(props.user))
+    }
   }
 
   return (

@@ -32,24 +32,28 @@ const EditorComponent = props =>
     <PathSummary
       prefix="edit"
       steps={props.path.steps}
-      actions={[
+      actions={(step) => [
         {
+          type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-plus',
           label: trans('step_add_child', {}, 'path'),
-          action: props.addStep
+          callback: () => props.addStep(step)
         }, {
+          type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-files-o',
           label: trans('copy', {}, 'actions'),
-          action: props.copyStep
+          callback: () => props.copyStep(step)
         }, {
+          type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-clipboard',
           label: trans('paste', {}, 'actions'),
-          action: props.pasteStep,
+          callback: () => props.pasteStep(step),
           displayed: !!props.copy
         }, {
+          type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-trash-o',
           label: trans('delete', {}, 'actions'),
-          action: (step) => props.removeStep(step, props.history)
+          callback: () => props.removeStep(step, props.history)
         }
       ]}
       parameters={true}

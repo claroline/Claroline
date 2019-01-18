@@ -16,12 +16,24 @@ const icon = createSelector(
 
 const context = createSelector(
   [store],
-  (store) => store.context
+  (store) => store.currentContext
+)
+
+const contextType = createSelector(
+  [context],
+  (context) => context.type
+)
+
+const contextData = createSelector(
+  [context],
+  (context) => context.data
 )
 
 export const selectors = {
   STORE_NAME,
   name,
   icon,
-  context
+  context,
+  contextType,
+  contextData
 }

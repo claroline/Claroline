@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 import omit from 'lodash/omit'
 
 import {url} from '#/main/app/api'
@@ -19,7 +20,9 @@ const AboutModal = props =>
     subtitle={props.workspace.name}
   >
     <ContentMeta
-      meta={props.workspace.meta}
+      creator={get(props.workspace, 'meta.creator')}
+      created={get(props.workspace, 'meta.created')}
+      updated={get(props.workspace, 'meta.updated')}
     />
 
     <div className="modal-body">

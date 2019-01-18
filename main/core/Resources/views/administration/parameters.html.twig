@@ -8,7 +8,7 @@
     <div
         class="page-container main-settings-container"
 
-        data-context="{{ context | json_encode | raw | escape }}"
+        data-current-context="{{ context | json_encode | raw | escape }}"
         data-parameters="{{ parameters | json_encode | raw | escape }}"
         data-available-locales="{{ availableLocales | json_encode | raw | escape }}"
     ></div>

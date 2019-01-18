@@ -18,26 +18,26 @@ import {Tabs} from '#/main/core/tools/home/components/tabs'
 const PlayerComponent = props =>
   <PageSimple
     className="home-tool"
-    showBreadCrumb={showToolBreadcrumb(props.context.type, props.context.data)}
-    path={[].concat(getToolPath('home', props.context.type, props.context.data), props.currentTab ? [{
+    showBreadCrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
+    path={[].concat(getToolPath('home', props.currentContext.type, props.currentContext.data), props.currentTab ? [{
       label: props.currentTab.title,
       target: '/' // this don't work but it's never used as current tab is always last for now
     }] : [])}
   >
     <PageHeader
-      className={props.currentTab.centerTitle ? 'text-center' : ''}
-      title={props.currentTab ? props.currentTab.longTitle : ('desktop' === props.context.type ? trans('desktop') : props.context.data.name)}
-      poster={props.currentTab.poster ? props.currentTab.poster.url: undefined}
+      className={props.currentTab && props.currentTab.centerTitle ? 'text-center' : ''}
+      title={props.currentTab ? props.currentTab.longTitle : ('desktop' === props.currentContext.type ? trans('desktop') : props.currentContext.data.name)}
+      poster={props.currentTab && props.currentTab.poster ? props.currentTab.poster.url: undefined}
     >
       {1 < props.tabs.length &&
         <Tabs
           tabs={props.tabs}
-          context={props.context}
+          currentContext={props.currentContext}
           editing={false}
         />
       }
 
-      {props.editable &&
+      {(props.currentTab && props.editable) &&
         <PageActions>
           <PageAction
             type={LINK_BUTTON}
@@ -52,14 +52,14 @@ const PlayerComponent = props =>
 
     <PageContent>
       <WidgetGrid
-        context={props.context}
+        currentContext={props.currentContext}
         widgets={props.widgets}
       />
     </PageContent>
   </PageSimple>
 
 PlayerComponent.propTypes = {
-  context: T.object.isRequired,
+  currentContext: T.object.isRequired,
   tabs: T.arrayOf(T.shape(
     TabTypes.propTypes
   )),
@@ -72,7 +72,7 @@ PlayerComponent.propTypes = {
 
 const Player = connect(
   (state) => ({
-    context: selectors.context(state),
+    currentContext: selectors.context(state),
     editable: selectors.editable(state),
     tabs: playerSelectors.tabs(state),
     currentTab: selectors.currentTab(state),

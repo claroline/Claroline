@@ -32,6 +32,7 @@ const ButtonComponent = props => {
     props.icon &&
       <span key="button-icon" className={classes('action-icon', props.icon, !props.hideLabel && 'icon-with-text-right')} aria-hidden={true} />,
     props.hideLabel ? <span key="button-label" className="sr-only">{props.label}</span> : props.label,
+    props.children,
     props.subscript &&
       <span key="button-subscript" className={classes('action-subscript', `${props.subscript.type} ${props.subscript.type}-${props.subscript.status || 'primary'}`)}>{props.subscript.value}</span>
   ])
@@ -57,11 +58,15 @@ const Button = props => props.tooltip ?
     <ButtonComponent
       {...omit(props, 'tooltip', 'group', 'context', 'scope', 'default')}
       hideLabel={true}
-    />
+    >
+      {props.children}
+    </ButtonComponent>
   </TooltipElement> :
   <ButtonComponent
     {...omit(props, 'tooltip', 'group', 'context', 'scope', 'default')}
-  />
+  >
+    {props.children}
+  </ButtonComponent>
 
 implementPropTypes(Button, ActionTypes, {
   /**
@@ -77,7 +82,8 @@ implementPropTypes(Button, ActionTypes, {
    *
    * @type {string}
    */
-  size: T.oneOf(['sm', 'lg'])
+  size: T.oneOf(['sm', 'lg']),
+  children: T.any
 })
 
 export {

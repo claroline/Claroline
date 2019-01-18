@@ -5,7 +5,8 @@ import omit from 'lodash/omit'
 
 import {trans, tex} from '#/main/app/intl/translation'
 
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {ContentHelp} from '#/main/app/content/components/help'
 import {Numeric} from '#/main/core/layout/form/components/field/numeric'
 import {FormGroup} from '#/main/app/content/form/components/group'
@@ -114,27 +115,29 @@ class TagList extends Component {
             onChange={this.updatePending}
           />
 
-          <TooltipButton
+          <Button
             id={`${this.props.id}-add-btn`}
-            title={trans('add')}
             className="btn-link"
+            type={CALLBACK_BUTTON}
+            icon="fa fa-fw fa-plus"
+            label={trans('add', {}, 'actions')}
             disabled={!this.state.pending[0] || !this.state.pending[1]}
-            onClick={this.addTag}
-          >
-            <span className="fa fa-fw fa-plus" />
-          </TooltipButton>
+            callback={this.addTag}
+            tooltip="left"
+          />
         </div>
 
         <ContentHelp help={tex('picking_tag_input_help')} />
 
         {0 !== this.props.selected.length &&
-          <button
-            type="button"
-            className="btn btn-sm btn-link-danger"
-            onClick={this.removeAll}
-          >
-            {trans('delete_all')}
-          </button>
+          <Button
+            className="btn"
+            type={CALLBACK_BUTTON}
+            label={trans('delete_all')}
+            callback={this.removeAll}
+            dangerous={true}
+            size="sm"
+          />
         }
 
         {0 !== this.props.selected.length &&
@@ -148,14 +151,16 @@ class TagList extends Component {
                   onChange={tag => this.updateTag(index, tag)}
                 />
 
-                <TooltipButton
+                <Button
                   id={`${this.props.id}-auth-${index}-delete`}
-                  title={trans('delete')}
-                  className="btn-link-danger"
+                  className="btn-link"
+                  type={CALLBACK_BUTTON}
+                  icon="fa fa-fw fa-trash-o"
+                  label={trans('delete', {}, 'actions')}
                   onClick={() => this.removeTag(index)}
-                >
-                  <span className="fa fa-fw fa-trash-o" />
-                </TooltipButton>
+                  tooltip="top"
+                  dangerous={true}
+                />
               </li>
             )}
           </ul>

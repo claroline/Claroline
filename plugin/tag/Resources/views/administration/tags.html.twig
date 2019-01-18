@@ -6,8 +6,8 @@
 
 {% block content %}
     <div
-            class="page-container tags-container"
-            data-context="{{ context | json_encode | raw | escape }}"
+        class="page-container tags-container"
+        data-current-context="{{ context | json_encode | raw | escape }}"
     ></div>
 {% endblock %}
 

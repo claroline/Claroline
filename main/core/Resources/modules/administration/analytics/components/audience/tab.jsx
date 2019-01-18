@@ -85,7 +85,7 @@ class Tab extends Component {
     this.props.getAudienceData(this.state.filters)
   }
   
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.audience.loaded) {
       this.setState({filters: nextProps.audience.data.filters})
     }

@@ -15,7 +15,7 @@
 {% block content %}
     <div
         class="page-container resources-container"
-        data-context="{{ context | json_encode | raw | escape }}"
+        data-current-context="{{ context | json_encode | raw | escape }}"
         data-root="{{ root | json_encode | raw | escape }}"
     ></div>
 {% endblock %}

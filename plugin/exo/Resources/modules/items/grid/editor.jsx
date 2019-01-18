@@ -5,14 +5,15 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import Overlay from 'react-bootstrap/lib/Overlay'
 
-import {tex} from '#/main/app/intl/translation'
+import {trans, tex} from '#/main/app/intl/translation'
 import {ContentError} from '#/main/app/content/components/error'
-import {Radios} from '#/main/core/layout/form/components/field/radios.jsx'
+import {Radios} from '#/main/core/layout/form/components/field/radios'
 import {SUM_CELL, SUM_COL, SUM_ROW, actions} from './editor'
 import {SCORE_SUM, SCORE_FIXED} from './../../quiz/enums'
-import {FormGroup} from '#/main/app/content/form/components/group.jsx'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
-import {ColorPicker} from '#/main/core/layout/form/components/field/color-picker.jsx'
+import {FormGroup} from '#/main/app/content/form/components/group'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {ColorPicker} from '#/main/core/layout/form/components/field/color-picker'
 import {utils} from './utils/utils'
 import {KeywordsPopover} from './../components/keywords.jsx'
 
@@ -116,32 +117,32 @@ class GridCell extends Component {
               </Overlay>
             }
 
-            <TooltipButton
+            <Button
               ref={element => this.refPopover = element}
               id={`cell-${this.props.cell.id}-solution`}
-              title={undefined !== this.props.solution ? tex('grid_edit_solution') : tex('grid_create_solution')}
-              className="btn-link-default"
-              onClick={
+              className="btn-link"
+              type={CALLBACK_BUTTON}
+              icon={classes('fa fa-fw', {
+                'fa-pencil': undefined !== this.props.solution,
+                'fa-plus': undefined === this.props.solution
+              })}
+              label={undefined !== this.props.solution ? tex('grid_edit_solution') : tex('grid_create_solution')}
+              callback={
                 undefined !== this.props.solution ? this.props.openSolution : this.props.createSolution
               }
-            >
-              <span
-                className={classes('fa fa-fw', {
-                  'fa-pencil': undefined !== this.props.solution,
-                  'fa-plus': undefined === this.props.solution
-                })}
-              />
-            </TooltipButton>
+              tooltip="top"
+            />
 
             {undefined !== this.props.solution &&
-              <TooltipButton
+              <Button
                 id={`cell-${this.props.cell.id}-delete-solution`}
-                className="btn-link-default"
-                title={tex('delete')}
-                onClick={this.props.removeSolution}
-              >
-                <span className="fa fa-fw fa-trash-o" />
-              </TooltipButton>
+                className="btn-link"
+                type={CALLBACK_BUTTON}
+                icon="fa fa-fw fa-trash-o"
+                label={trans('delete', {}, 'actions')}
+                callback={this.props.removeSolution}
+                tooltip="top"
+              />
             }
           </div>
         </div>
@@ -264,15 +265,15 @@ const GridRow = props =>
         />
       }
 
-      <TooltipButton
+      <Button
         id={`grid-btn-delete-row-${props.index}`}
-        className="btn-link-default"
-        title={tex('delete')}
+        className="btn-link"
+        type={CALLBACK_BUTTON}
+        icon="fa fa-fw fa-trash-o"
+        label={trans('delete', {}, 'actions')}
         disabled={!props.deletable}
-        onClick={props.removeRow}
-      >
-        <span className="fa fa-fw fa-trash-o" />
-      </TooltipButton>
+        callback={props.removeRow}
+      />
     </td>
   </tr>
 
@@ -366,15 +367,16 @@ const GridTable = props =>
               />
             }
 
-            <TooltipButton
+            <Button
               id={`grid-btn-delete-col-${colIndex}`}
-              className="btn-link-default"
-              title={tex('delete')}
+              className="btn-link"
+              type={CALLBACK_BUTTON}
+              icon="fa fa-fw fa-trash-o"
+              label={trans('delete', {}, 'actions')}
               disabled={props.item.cols <= 1}
-              onClick={() => props.removeColumn(colIndex)}
-            >
-              <span className="fa fa-fw fa-trash-o" />
-            </TooltipButton>
+              callback={() => props.removeColumn(colIndex)}
+              tooltip="top"
+            />
           </td>
         )}
         <td />

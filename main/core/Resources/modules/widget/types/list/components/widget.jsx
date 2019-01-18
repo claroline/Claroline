@@ -35,8 +35,8 @@ class ListWidget extends Component {
         fetch={{
           url: ['apiv2_data_source', {
             type: this.props.source,
-            context: this.props.context.type,
-            contextId: 'workspace' === this.props.context.type ? this.props.context.data.uuid : null
+            context: this.props.currentContext.type,
+            contextId: 'workspace' === this.props.currentContext.type ? this.props.currentContext.data.uuid : null
           }],
           autoload: true
         }}
@@ -49,7 +49,7 @@ class ListWidget extends Component {
 
 ListWidget.propTypes = {
   source: T.string,
-  context: T.object.isRequired,
+  currentContext: T.object.isRequired,
   parameters: T.shape(
     ListParametersTypes.propTypes
   )

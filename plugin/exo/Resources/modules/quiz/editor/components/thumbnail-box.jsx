@@ -4,7 +4,8 @@ import classes from 'classnames'
 
 import {trans, tex} from '#/main/app/intl/translation'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {SORT_DETECT, makeSortable} from './../../../utils/sortable'
 
@@ -137,18 +138,19 @@ class ThumbnailBox extends Component {
           />
         )}
 
-        <TooltipButton
+        <Button
           id="quiz-add-step"
-          className="btn btn-primary new-step"
-          title={tex('add_step')}
-          position="bottom"
-          onClick={() => {
+          className="btn new-step"
+          type={CALLBACK_BUTTON}
+          icon="fa fa-fw fa-plus"
+          label={tex('add_step')}
+          tooltip="bottom"
+          callback={() => {
             this.props.onNewStepClick(this.props.thumbnails.length)
             this.setState({addedThumbnail: true})
           }}
-        >
-          <span className="fa fa-plus" />
-        </TooltipButton>
+          primary={true}
+        />
       </div>
     )
   }

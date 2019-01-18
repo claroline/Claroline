@@ -18,7 +18,7 @@ class Route extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.location.pathname !== nextProps.location.pathname) {
       if (this.props.onLeave) {
         this.props.onLeave(this.props.computedMatch.params)

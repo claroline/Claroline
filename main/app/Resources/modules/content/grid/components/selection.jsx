@@ -47,7 +47,7 @@ class GridSelection extends Component {
     this.changeGroup = this.changeGroup.bind(this)
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (0 === this.props.items.length && 0 < nextProps.items.length) {
       this.setState({
         currentType: nextProps.items[0]

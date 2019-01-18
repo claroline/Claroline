@@ -1,7 +1,5 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import {Provider} from 'react-redux'
-import isEmpty from 'lodash/isEmpty'
+import {createElement} from 'react'
+import {render, unmountComponentAtNode} from 'react-dom'
 
 // TODO : move in dom module
 
@@ -19,43 +17,35 @@ if ('development' === env()) {
 /* eslint-enable no-undef, no-unused-vars, no-global-assign */
 
 import {createStore} from '#/main/app/store'
+import {Main} from '#/main/app/components/main'
 
 /**
  * Mounts a new React/Redux app into the DOM.
- *
- * @todo :
- *   We should append Alert & Modal overlays here when we will upgrade to React 16.
- *   We can't for now because it will require additional html containers which will break styles
- *   For now, it's added by :
- *     - Page
- *     - WidgetContent
- *     - Toolbar
- *     - Header
  *
  * @param {HTMLElement} container     - the HTML element which will hold the JS app.
  * @param {*}           rootComponent - the React root component of the app.
  * @param {object}      reducers      - an object containing the reducers of the app.
  * @param {object}      initialData   - the data to preload in store on app mount.
+ * @param {boolean}     embedded      - is the mounted app is mounted into another ?
  */
-function mount(container, rootComponent, reducers = null, initialData = {}) {
-  let appRoot
-  if (!isEmpty(reducers)) {
-    // Create store
-    const store = createStore(rootComponent.displayName, reducers, initialData)
+function mount(container, rootComponent, reducers = {}, initialData = {}, embedded = false) {
+  // create store
+  // we initialize a new store even if the mounted app does not declare reducers
+  // we have dynamic reducers which can be added during runtime and they will be fucked up
+  // if they don't find a store to use.
+  const store = createStore(rootComponent.displayName, reducers, initialData)
 
-    appRoot = React.createElement(
-      Provider, {
-        store: store
-      },
-      React.createElement(rootComponent)
-    )
-  } else {
-    appRoot = React.createElement(rootComponent)
-  }
+  const appRoot = createElement(
+    Main, {
+      store: store,
+      embedded: embedded
+    },
+    createElement(rootComponent)
+  )
 
   // Render app
   try {
-    ReactDOM.render(appRoot, container)
+    render(appRoot, container)
   } catch (error) {
     // rethrow errors (in some case they are swallowed)
     throw error
@@ -63,7 +53,7 @@ function mount(container, rootComponent, reducers = null, initialData = {}) {
 }
 
 function unmount(container) {
-  ReactDOM.unmountComponentAtNode(container)
+  unmountComponentAtNode(container)
 }
 
 export {

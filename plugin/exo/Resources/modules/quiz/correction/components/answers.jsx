@@ -8,7 +8,8 @@ import {HtmlText} from '#/main/core/layout/components/html-text'
 import {actions} from './../actions'
 import {selectors as correctionSelectors} from './../selectors'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 class AnswerRow extends Component {
   constructor(props) {
@@ -51,14 +52,14 @@ class AnswerRow extends Component {
               <span className="input-group-addon">{`/ ${this.props.scoreMax}`}</span>
             </span>
 
-            <TooltipButton
+            <Button
               id={`feedback-${this.props.id}-toggle`}
-              className="btn-link-default"
-              title={tex('feedback')}
-              onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-            >
-              <span className="fa fa-fw fa-comments-o" />
-            </TooltipButton>
+              className="btn-link"
+              type={CALLBACK_BUTTON}
+              icon="fa fa-fw fa-comments-o"
+              label={tex('feedback')}
+              callback={() => this.setState({showFeedback: !this.state.showFeedback})}
+            />
           </div>
         </div>
       </div>

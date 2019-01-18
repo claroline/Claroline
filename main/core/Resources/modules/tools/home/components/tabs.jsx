@@ -46,7 +46,6 @@ const Tabs = props =>
   </nav>
 
 Tabs.propTypes = {
-  context: T.object.isRequired,
   editing: T.bool.isRequired,
   prefix: T.string,
   tabs: T.arrayOf(T.shape(

@@ -10,15 +10,15 @@ import {tex, trans} from '#/main/app/intl/translation'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea'
 import {ContentError} from '#/main/app/content/components/error'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {actions} from './editor'
 import {SetItemDragPreview} from './set-item-drag-preview.jsx'
 
 let DropBox = props => props.connectDropTarget(
-  <div className={classes(
-    'set-drop-placeholder',
-    {'hover': props.isOver}
-  )}>
+  <div className={classes('set-drop-placeholder', {
+    hover: props.isOver
+  })}>
     {tex('set_drop_item')}
   </div>
 )
@@ -36,6 +36,7 @@ DropBox = makeDroppable(DropBox, 'ITEM')
 class Association extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
       showFeedback: false
     }
@@ -71,25 +72,27 @@ class Association extends Component {
             )}
           />
 
-          <TooltipButton
+          <Button
             id={`ass-${this.props.association.itemId}-${this.props.association.setId}-feedback-toggle`}
-            className="btn-link-default"
-            title={tex('feedback_association_created')}
-            onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-          >
-            <span className="fa fa-fw fa-comments-o" />
-          </TooltipButton>
+            className="btn-link"
+            type={CALLBACK_BUTTON}
+            icon="fa fa-fw fa-comments-o"
+            label={tex('feedback_association_created')}
+            callback={() => this.setState({showFeedback: !this.state.showFeedback})}
+            tooltip="top"
+          />
 
-          <TooltipButton
+          <Button
             id={`ass-${this.props.association.itemId}-${this.props.association.setId}-delete`}
-            className="btn-link-default"
-            title={trans('delete')}
-            onClick={() => this.props.onChange(
+            className="btn-link"
+            type={CALLBACK_BUTTON}
+            icon="fa fa-fw fa-trash-o"
+            label={trans('delete', {}, 'actions')}
+            callback={() => this.props.onChange(
               actions.removeAssociation(this.props.association.setId, this.props.association.itemId))
             }
-          >
-            <span className="fa fa-fw fa-trash-o" />
-          </TooltipButton>
+            tooltip="top"
+          />
         </div>
       </div>
     )
@@ -122,17 +125,18 @@ class Set extends Component {
           </div>
 
           <div className="right-controls">
-            <TooltipButton
+            <Button
               id={`set-${this.props.set.id}-delete`}
-              className="btn-link-default"
-              title={trans('delete')}
+              className="btn-link"
+              type={CALLBACK_BUTTON}
+              icon="fa fa-fw fa-trash-o"
+              label={trans('delete', {}, 'actions')}
               disabled={!this.props.set._deletable}
-              onClick={() => this.props.onChange(
+              callback={() => this.props.onChange(
                 actions.removeSet(this.props.set.id))
               }
-            >
-              <span className="fa fa-fw fa-trash-o" />
-            </TooltipButton>
+              tooltip="top"
+            />
           </div>
         </div>
 
@@ -231,17 +235,18 @@ let Item = props => {
         />
       </div>
       <div className="right-controls">
-        <TooltipButton
+        <Button
           id={`set-item-${props.item.id}-delete`}
-          className="btn-link-default"
-          title={trans('delete')}
+          className="btn-link"
+          type={CALLBACK_BUTTON}
+          icon="fa fa-fw fa-trash-o"
+          label={trans('delete', {}, 'actions')}
           disabled={!props.item._deletable}
-          onClick={() => props.onChange(
+          callback={() => props.onChange(
             actions.removeItem(props.item.id, false)
           )}
-        >
-          <span className="fa fa-fw fa-trash-o" />
-        </TooltipButton>
+          tooltip="top"
+        />
 
         {props.connectDragSource(
           <div>
@@ -362,22 +367,25 @@ class Odd extends Component {
               actions.updateItem(this.props.odd.id, 'score', e.target.value, true)
             )}
           />
-          <TooltipButton
+          <Button
             id={`odd-${this.props.odd.id}-feedback-toggle`}
-            className="btn-link-default"
-            title={tex('feedback')}
-            onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-          >
-            <span className="fa fa-fw fa-comments-o" />
-          </TooltipButton>
-          <TooltipButton
+            className="btn-link"
+            type={CALLBACK_BUTTON}
+            icon="fa fa-fw fa-comments-o"
+            label={tex('feedback')}
+            callback={() => this.setState({showFeedback: !this.state.showFeedback})}
+            tooltip="top"
+          />
+
+          <Button
             id={`odd-${this.props.odd.id}-delete`}
-            className="btn-link-default"
-            title={trans('delete')}
+            className="btn-link"
+            type={CALLBACK_BUTTON}
+            icon="fa fa-fw fa-trash-o"
+            label={trans('delete', {}, 'actions')}
             onClick={() => this.props.onChange(actions.removeItem(this.props.odd.id, true))}
-          >
-            <span className="fa fa-fw fa-trash-o" />
-          </TooltipButton>
+            tooltip="top"
+          />
         </div>
       </div>
     )

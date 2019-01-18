@@ -15,7 +15,7 @@
       "home-tool": "tools/home/bootstrap",
       "admin-desktop-tool": "administration/home/bootstrap",
       "user-tracking": "user/tracking",
-      "contacts-tool": "user/contact",
+      "contacts-tool": "tools/contact",
       "resources-tool": "tools/resources/bootstrap",
       "trash-tool": "tools/trash/bootstrap",
       "workspace-user-management": "workspace/user",

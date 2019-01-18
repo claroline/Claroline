@@ -3,8 +3,9 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import tinycolor from 'tinycolor2'
 
-import {tex} from '#/main/app/intl/translation'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
+import {tex, trans} from '#/main/app/intl/translation'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {makeDraggable} from './../../../utils/dragAndDrop'
 import {AreaResizer, AreaResizerDraggable} from './area-resizer.jsx'
 import {AnswerAreaDragPreview} from './answer-area-drag-preview.jsx'
@@ -117,11 +118,13 @@ export class AnswerArea extends Component {
               top: FRAME_GUTTER + AREA_GUTTER
             }}
           >
-            <TooltipButton
+            <Button
               id="area-edit"
-              className="btn-default btn-sm"
-              title={tex('graphic_area_edit')}
-              onClick={e => {
+              className="btn"
+              type={CALLBACK_BUTTON}
+              icon="fa fa-fw fa-pencil"
+              label={tex('graphic_area_edit')}
+              callback={e => {
                 const rect = e.target.classList.contains('btn') ?
                   e.target.getBoundingClientRect() : e.target.parentNode.getBoundingClientRect()
                 const containerRect = document.getElementsByClassName('graphic-editor')[0].getBoundingClientRect()
@@ -131,18 +134,21 @@ export class AnswerArea extends Component {
                   rect.top + rect.height + window.pageYOffset - containerRect.top
                 )
               }}
-            >
-              <span className="fa fa-fw fa-pencil" />
-            </TooltipButton>
+              size="sm"
+              tooltip="top"
+            />
 
-            <TooltipButton
+            <Button
               id="area-edit"
-              className="btn-danger btn-sm"
-              title={tex('delete')}
-              onClick={() => props.onDelete(props.id)}
-            >
-              <span className="fa fa-fw fa-trash-o" />
-            </TooltipButton>
+              className="btn"
+              type={CALLBACK_BUTTON}
+              icon="fa fa-fw fa-trash-o"
+              label={trans('delete', {}, 'actions')}
+              callback={() => props.onDelete(props.id)}
+              size="sm"
+              tooltip="top"
+              dangerous={true}
+            />
           </div>
         }
       </div>

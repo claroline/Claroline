@@ -3,10 +3,9 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import get from 'lodash/get'
 
-
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {currentUser} from '#/main/app/security'
-import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {MODAL_ALERT} from '#/main/app/modals/alert'
 import {actions as listActions} from '#/main/app/content/list/store'
 import {withModal} from '#/main/app/overlay/modal/withModal'
@@ -59,16 +58,6 @@ class MessageCommentsComponent extends Component {
     this.setState({showCommentForm: null})
   }
 
-  deleteComment(commentId) {
-    this.props.showModal(MODAL_CONFIRM, {
-      dangerous: true,
-      icon: 'fa fa-fw fa-trash-o',
-      title: trans('delete_comment', {}, 'forum'),
-      question: trans('remove_comment_confirm_message', {}, 'forum'),
-      handleConfirm: () => this.props.deleteComment(commentId)
-    })
-  }
-
   render() {
     const visibleComments = this.props.message.children.filter(comment => 'NONE' === comment.meta.moderation)
 
@@ -86,30 +75,39 @@ class MessageCommentsComponent extends Component {
                     allowHtml={true}
                     actions={[
                       {
+                        type: CALLBACK_BUTTON,
                         icon: 'fa fa-fw fa-pencil',
-                        label: trans('edit'),
+                        label: trans('edit', {}, 'actions'),
                         displayed: authenticatedUser && (comment.meta.creator.id === authenticatedUser.id) && !get(this.props.subject, 'meta.closed'),
-                        action: () => this.setState({showCommentForm: comment.id})
+                        callback: () => this.setState({showCommentForm: comment.id})
                       }, {
+                        type: CALLBACK_BUTTON,
                         icon: 'fa fa-fw fa-flag-o',
                         label: trans('flag', {}, 'forum'),
                         displayed: authenticatedUser && (comment.meta.creator.id !== authenticatedUser.id) && !comment.meta.flagged,
-                        action: () => this.props.flag(comment, this.props.subject.id)
+                        callback: () => this.props.flag(comment, this.props.subject.id)
                       }, {
+                        type: CALLBACK_BUTTON,
                         icon: 'fa fa-fw fa-flag',
                         label: trans('unflag', {}, 'forum'),
                         displayed: authenticatedUser && (comment.meta.creator.id !== authenticatedUser.id) && comment.meta.flagged,
-                        action: () => this.props.unFlag(comment, this.props.subject.id)
+                        callback: () => this.props.unFlag(comment, this.props.subject.id)
                       }, {
+                        type: CALLBACK_BUTTON,
                         icon: 'fa fa-fw fa-trash-o',
-                        label: trans('delete'),
+                        label: trans('delete', {}, 'actions'),
                         displayed: authenticatedUser && (comment.meta.creator.id === authenticatedUser.id || this.props.moderator),
-                        action: () => this.deleteComment(comment.id),
-                        dangerous: true
+                        callback: () => this.props.deleteComment(comment.id),
+                        dangerous: true,
+                        confirm: {
+                          title: trans('delete_comment', {}, 'forum'),
+                          message: trans('remove_comment_confirm_message', {}, 'forum')
+                        }
                       }
                     ]}
                   />
                 }
+
                 {this.state.showCommentForm === comment.id &&
                   <CommentForm
                     user={currentUser()}

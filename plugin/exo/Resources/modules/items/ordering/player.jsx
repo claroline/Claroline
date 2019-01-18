@@ -7,7 +7,8 @@ import {trans, tex} from '#/main/app/intl/translation'
 import {MODE_INSIDE, MODE_BESIDE, DIRECTION_HORIZONTAL, DIRECTION_VERTICAL} from './editor'
 import {makeSortable, SORT_HORIZONTAL, SORT_VERTICAL} from './../../utils/sortable'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {OrderingItemDragPreview} from './ordering-item-drag-preview.jsx'
 
 let DropBox = props => {
@@ -36,14 +37,17 @@ let SortableItem = props => {
         <div className="item-data" dangerouslySetInnerHTML={{__html: props.data}} />
         <div className="item-actions">
           {props.canDelete &&
-            <TooltipButton
+            <Button
               id={`answer-${props.index}-delete`}
-              title={trans('delete')}
-              onClick={props.onDelete}
-            >
-              <span className="fa fa-fw fa-trash-o" />
-            </TooltipButton>
+              className="btn"
+              type={CALLBACK_BUTTON}
+              icon="fa fa-fw fa-trash-o"
+              label={trans('delete', {}, 'actions')}
+              callback={props.onDelete}
+              tooltip="top"
+            />
           }
+
           <span
             title={trans('move')}
             draggable="true"

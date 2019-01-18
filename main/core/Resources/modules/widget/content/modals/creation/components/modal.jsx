@@ -60,7 +60,7 @@ const ContentCreationModal = props => {
         )
       case 'parameters':
         return (
-          <WidgetContentForm level={5} name={selectors.FORM_NAME} context={props.context} />
+          <WidgetContentForm level={5} name={selectors.FORM_NAME} currentContext={props.currentContext} />
         )
     }
   }
@@ -73,13 +73,13 @@ const ContentCreationModal = props => {
 
   return (
     <Modal
-      {...omit(props, 'context', 'add', 'instance', 'saveEnabled', 'availableTypes', 'availableSources', 'fetchContents', 'update', 'reset', 'currentStep', 'changeStep')}
+      {...omit(props, 'currentContext', 'add', 'instance', 'saveEnabled', 'availableTypes', 'availableSources', 'fetchContents', 'update', 'reset', 'currentStep', 'changeStep')}
       icon="fa fa-fw fa-plus"
       title={trans('new_widget', {}, 'widget')}
       subtitle={renderStepTitle()}
       onEntering={() => {
         if (0 === props.availableTypes.length) {
-          props.fetchContents(props.context)
+          props.fetchContents(props.currentContext)
         }
       }}
       fadeModal={() => close()}
@@ -104,7 +104,7 @@ const ContentCreationModal = props => {
 }
 
 ContentCreationModal.propTypes = {
-  context: T.object.isRequired,
+  currentContext: T.object.isRequired,
   fadeModal: T.func.isRequired,
   add: T.func.isRequired,
 

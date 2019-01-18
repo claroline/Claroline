@@ -1,25 +1,14 @@
 {% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
 
 {% block title %}
-    {{ parent() ~ ' - ' ~ 'LTI' }}
-{% endblock %}
-
-{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
-{% block breadcrumb %}
-    {{ macros.breadcrumbs([
-        {
-            'name': 'administration'|trans({}, 'platform'),
-            'href': path('claro_admin_index')
-        },
-        {
-            'name': 'LTI',
-            'href': ''
-        }
-    ]) }}
+    {{ parent() ~ ' - ' ~ 'lti_tool' | trans({}, 'tools') | striptags | raw }}
 {% endblock %}
 
 {% block content %}
-    <div class="page-container lti-container">
+    <div
+        class="page-container lti-container"
+        data-current-context="{{ context | json_encode | raw | escape }}"
+    >
     </div>
 {% endblock %}
 

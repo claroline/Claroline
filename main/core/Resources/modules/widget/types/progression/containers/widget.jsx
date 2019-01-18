@@ -9,7 +9,7 @@ import {ProgressionWidget as ProgressionWidgetComponent} from '#/main/core/widge
 const ProgressionWidget = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
-      context: contentSelectors.context(state),
+      currentContext: contentSelectors.context(state),
       levelMax: contentSelectors.parameters(state).levelMax,
       items: selectors.items(state)
     }),

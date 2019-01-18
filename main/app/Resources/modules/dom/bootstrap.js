@@ -53,7 +53,7 @@ function bootstrap(containerSelector, rootComponent, reducers = null, transformD
   const initialData = getInitialData(container)
 
   // mount the application
-  mount(container, rootComponent, reducers, transformData(initialData))
+  mount(container, rootComponent, reducers, transformData(initialData), false)
 }
 
 export {

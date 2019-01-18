@@ -3,8 +3,6 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
-import {OverlayStack} from '#/main/app/overlay/containers/stack'
-import {WalkthroughOverlay} from '#/main/app/overlay/walkthrough/containers/overlay'
 
 import {HeaderBrand} from '#/main/app/overlay/header/components/brand'
 import {HeaderLocale} from '#/main/app/overlay/header/components/locale'
@@ -39,7 +37,7 @@ const Header = props =>
     <HeaderMain
       menu={props.mainMenu}
       authenticated={props.authenticated}
-      context={props.context}
+      currentContext={props.currentContext}
       user={props.currentUser}
     />
 
@@ -97,10 +95,6 @@ const Header = props =>
     {props.display.locale &&
       <HeaderLocale locale={props.locale} />
     }
-
-    <OverlayStack>
-      <WalkthroughOverlay />
-    </OverlayStack>
   </header>
 
 Header.propTypes = {
@@ -109,7 +103,7 @@ Header.propTypes = {
   /**
    * The current context of the app.
    */
-  context: T.shape({
+  currentContext: T.shape({
     type: T.oneOf(['home', 'desktop', 'administration', 'workspace']).isRequired, // TODO : use constants
     data: T.object
   }).isRequired,

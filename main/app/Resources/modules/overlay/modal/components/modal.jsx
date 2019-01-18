@@ -17,7 +17,7 @@ class Modal extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.show !== nextProps.show) {
       // we are showing / hiding the modal,
       // we need to enable lifecycle events

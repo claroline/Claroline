@@ -34,7 +34,7 @@ const SummaryHeader = props =>
       }
 
       <Button
-        type="callback"
+        type={CALLBACK_BUTTON}
         tooltip={props.opened ? 'bottom':'right'}
         className="btn-link summary-control"
         icon={classes('fa fa-fw', {
@@ -64,7 +64,7 @@ class SummaryLink extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.collapsed !== this.props.collapsed) {
       this.setState({collapsed: nextProps.collapsed || false})
     }
@@ -93,10 +93,10 @@ class SummaryLink extends Component {
             <div className="step-actions">
               {this.props.additional
                 .filter(action => undefined === action.displayed || action.displayed)
-                .map((action, index) =>
+                .map((action, actionIndex) =>
                   <Button
                     {...action}
-                    key={toKey(action.label) + index}
+                    key={toKey(action.label) + actionIndex}
                     tooltip="bottom"
                     className="btn-link btn-summary"
                   />
@@ -105,7 +105,7 @@ class SummaryLink extends Component {
 
               {collapsible &&
                 <Button
-                  type="callback"
+                  type={CALLBACK_BUTTON}
                   tooltip="bottom"
                   className="btn-link btn-summary"
                   icon={classes('fa', {

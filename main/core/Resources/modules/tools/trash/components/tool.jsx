@@ -1,24 +1,24 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
-import {ResourceList} from '#/main/core/resource/data/components/resource-list'
-import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
-import {actions} from '#/main/core/tools/trash/store/actions'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
-const TrashToolComponent = props =>
+import {ResourceList} from '#/main/core/resource/data/components/resource-list'
+import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
+
+const TrashTool = props =>
   <ToolPage
     subtitle={trans('trash')}
-    disabled={false}
   >
     <ListData
       name="resources"
       fetch={{
-        url: ['apiv2_resource_workspace_removed_list', {workspace: props.workspace.uuid}],
+        url: ['apiv2_resource_workspace_removed_list', {
+          workspace: props.workspace.uuid
+        }],
         autoload: true
       }}
       delete={{
@@ -38,23 +38,13 @@ const TrashToolComponent = props =>
       card={ResourceList.card}
     />
   </ToolPage>
-TrashToolComponent.propTypes = {
+
+TrashTool.propTypes = {
   workspace: T.shape(
     ResourceNodeTypes.propTypes
   ),
   restore: T.func.isRequired
 }
-
-const TrashTool = connect(
-  state => ({
-    workspace: state.workspace
-  }),
-  dispatch => ({
-    restore(resourceNodes) {
-      dispatch(actions.restore(resourceNodes))
-    }
-  })
-)(TrashToolComponent)
 
 export {
   TrashTool

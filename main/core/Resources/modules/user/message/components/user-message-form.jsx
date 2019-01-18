@@ -3,14 +3,13 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group'
+import {TextGroup} from '#/main/core/layout/form/components/group/text-group'
 
 import {User as UserTypes} from '#/main/core/user/prop-types'
-
-import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action.jsx'
-import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group.jsx'
-import {TextGroup} from '#/main/core/layout/form/components/group/text-group.jsx'
-
-import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
+import {UserAvatar} from '#/main/core/user/components/avatar'
 
 class UserMessageForm extends Component {
   constructor(props) {
@@ -20,6 +19,8 @@ class UserMessageForm extends Component {
       pendingChanges: false,
       content: props.content
     }
+
+    this.updateContent = this.updateContent.bind(this)
   }
 
   updateContent(content) {
@@ -49,13 +50,13 @@ class UserMessageForm extends Component {
 
             {this.props.cancel &&
               <div className="user-message-actions">
-                <TooltipAction
-                  id="close"
-                  className="btn-link-default"
-                  position="bottom"
+                <Button
+                  type={CALLBACK_BUTTON}
+                  className="btn btn-link"
+                  tooltip="bottom"
                   icon="fa fa-fw fa-times"
-                  label={trans('cancel')}
-                  action={this.props.cancel}
+                  label={trans('cancel', {}, 'actions')}
+                  callback={this.props.cancel}
                 />
               </div>
             }
@@ -69,20 +70,21 @@ class UserMessageForm extends Component {
               hideLabel: true,
               value: this.state.content,
               long: true,
-              onChange: value => this.updateContent(value)
+              onChange: this.updateContent
             }
           )}
 
-          <button
-            className="btn btn-block btn-primary btn-save btn-emphasis"
+          <Button
+            type={CALLBACK_BUTTON}
+            className="btn btn-block btn-save btn-emphasis"
             disabled={!this.state.pendingChanges || !this.state.content}
-            onClick={() => {
+            label={this.props.submitLabel}
+            callback={() => {
               this.props.submit(this.state.content)
               this.setState({pendingChanges: false, content: ''})
             }}
-          >
-            {this.props.submitLabel}
-          </button>
+            primary={true}
+          />
         </div>
 
         {'right' === this.props.position && this.props.user &&
@@ -135,7 +137,7 @@ UserMessageForm.defaultProps = {
   content: '',
   allowHtml: false,
   position: 'left',
-  submitLabel: trans('create')
+  submitLabel: trans('create', {}, 'actions')
 }
 
 export {

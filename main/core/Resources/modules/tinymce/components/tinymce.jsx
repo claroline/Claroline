@@ -53,7 +53,7 @@ class Editor extends Component {
     })
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if ((nextProps.content !== this.editor.getContent()
       && nextProps.content !== this.props.content)) {
       this.editor.setContent(nextProps.content)

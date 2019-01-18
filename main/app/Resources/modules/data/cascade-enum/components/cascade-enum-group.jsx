@@ -5,9 +5,10 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {makeId} from '#/main/core/scaffolding/id'
 import {trans} from '#/main/app/intl/translation'
 import {FormGroup as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
-import {FormGroup} from '#/main/app/content/form/components/group.jsx'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
+import {FormGroup} from '#/main/app/content/form/components/group'
 import {TextGroup}  from '#/main/core/layout/form/components/group/text-group'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 const EnumChildren = props =>
   <ul className="enum-children-list">
@@ -61,11 +62,14 @@ const EnumItem = props =>
       />
 
       <div className="right-controls">
-        <TooltipButton
+        <Button
           id={`enum-item-${props.item.id}-add`}
-          className="btn-link-default"
-          title={props.addChildButtonLabel}
-          onClick={() => {
+          type={CALLBACK_BUTTON}
+          className="btn-link"
+          icon="fa fa-fw fa-plus"
+          label={props.addChildButtonLabel}
+          tooltip="left"
+          callback={() => {
             const newItem = Object.assign({}, props.item)
             const newChild = {
               id: makeId(),
@@ -79,17 +83,18 @@ const EnumItem = props =>
             newItem.children.push(newChild)
             props.onChange(newItem, props.indexes)
           }}
-        >
-          <span className="fa fa-fw fa-plus" />
-        </TooltipButton>
-        <TooltipButton
+        />
+
+        <Button
           id={`enum-item-${props.item.id}-delete`}
-          className="btn-link-danger"
-          title={props.deleteButtonLabel}
-          onClick={() => props.onDelete(props.indexes)}
-        >
-          <span className="fa fa-fw fa-trash-o" />
-        </TooltipButton>
+          type={CALLBACK_BUTTON}
+          className="btn-link"
+          icon="fa fa-fw fa-trash-o"
+          label={props.deleteButtonLabel}
+          tooltip="left"
+          callback={() => props.onDelete(props.indexes)}
+          dangerous={true}
+        />
       </div>
     </div>
 

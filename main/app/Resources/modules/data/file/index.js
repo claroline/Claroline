@@ -1,6 +1,6 @@
 import {trans} from '#/main/app/intl/translation'
 
-import {DownloadLink} from '#/main/core/layout/button/components/download-link'
+import {FileDisplay} from '#/main/app/data/file/components/display'
 import {FileGroup} from '#/main/core/layout/form/components/group/file-group'
 
 const dataType = {
@@ -8,12 +8,12 @@ const dataType = {
   meta: {
     creatable: true,
     icon: 'fa fa-fw fa fa-file-o',
-    label: trans('file'),
-    description: trans('file_desc')
+    label: trans('file', {}, 'data'),
+    description: trans('file_desc', {}, 'data')
   },
   components: {
-    table: DownloadLink,
-    details: DownloadLink,
+    table: FileDisplay,
+    details: FileDisplay,
     form: FileGroup
   }
 }

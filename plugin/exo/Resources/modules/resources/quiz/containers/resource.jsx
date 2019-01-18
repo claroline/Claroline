@@ -1,5 +1,6 @@
 import {connect} from 'react-redux'
 
+import {withRouter} from '#/main/app/router'
 import {withReducer} from '#/main/app/store/components/withReducer'
 
 import {DragNDropContext} from '#/main/app/overlay/dnd'
@@ -19,44 +20,46 @@ import {actions as playerActions} from '#/plugin/exo/quiz/player/actions'
 import {actions as statisticsActions} from '#/plugin/exo/quiz/statistics/actions'
 
 const QuizResource = DragNDropContext(
-  withReducer(select.STORE_NAME, reducer)(
-    connect(
-      (state) => ({
-        quizId: select.id(state),
-        resourceNodeId: resourceSelectors.resourceNode(state).id,
-        editable: hasPermission('edit', resourceSelectors.resourceNode(state)),
-        hasPapers: select.hasPapers(state),
-        hasOverview: select.hasOverview(state),
-        papersAdmin: select.papersAdmin(state),
-        docimologyAdmin: select.docimologyAdmin(state),
-        showStatistics: select.parameters(state).showStatistics,
-        registeredUser: select.registered()
-      }),
-      (dispatch) => ({
-        edit(quizId) {
-          dispatch(editorActions.selectObject(quizId, TYPE_QUIZ))
-        },
-        testMode(testMode) {
-          dispatch(playerActions.setTestMode(testMode))
-        },
-        statistics() {
-          dispatch(statisticsActions.displayStatistics())
-        },
-        correction(questionId = null) {
-          if (!questionId) {
-            dispatch(correctionActions.displayQuestions())
-          } else {
-            dispatch(correctionActions.displayQuestionAnswers(questionId))
+  withRouter(
+    withReducer(select.STORE_NAME, reducer)(
+      connect(
+        (state) => ({
+          quizId: select.id(state),
+          resourceNodeId: resourceSelectors.resourceNode(state).id,
+          editable: hasPermission('edit', resourceSelectors.resourceNode(state)),
+          hasPapers: select.hasPapers(state),
+          hasOverview: select.hasOverview(state),
+          papersAdmin: select.papersAdmin(state),
+          docimologyAdmin: select.docimologyAdmin(state),
+          showStatistics: select.parameters(state).showStatistics,
+          registeredUser: select.registered()
+        }),
+        (dispatch) => ({
+          edit(quizId) {
+            dispatch(editorActions.selectObject(quizId, TYPE_QUIZ))
+          },
+          testMode(testMode) {
+            dispatch(playerActions.setTestMode(testMode))
+          },
+          statistics() {
+            dispatch(statisticsActions.displayStatistics())
+          },
+          correction(questionId = null) {
+            if (!questionId) {
+              dispatch(correctionActions.displayQuestions())
+            } else {
+              dispatch(correctionActions.displayQuestionAnswers(questionId))
+            }
+          },
+          loadCurrentPaper(paperId) {
+            dispatch(papersActions.loadCurrentPaper(paperId))
+          },
+          resetCurrentPaper() {
+            dispatch(papersActions.setCurrentPaper(null))
           }
-        },
-        loadCurrentPaper(paperId) {
-          dispatch(papersActions.loadCurrentPaper(paperId))
-        },
-        resetCurrentPaper() {
-          dispatch(papersActions.setCurrentPaper(null))
-        }
-      })
-    )(QuizResourceComponent)
+        })
+      )(QuizResourceComponent)
+    )
   )
 )
 

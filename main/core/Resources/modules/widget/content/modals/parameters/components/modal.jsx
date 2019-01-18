@@ -13,13 +13,13 @@ import {selectors} from '#/main/core/widget/content/modals/parameters/store'
 
 const ParametersModal = props =>
   <Modal
-    {...omit(props, 'instance', 'saveEnabled', 'save','loadContent', 'formData', 'context')}
+    {...omit(props, 'instance', 'saveEnabled', 'save','loadContent', 'formData', 'currentContext')}
     icon="fa fa-fw fa-cog"
     title={trans('parameters')}
     onEntering={() => props.loadContent(props.content)}
   >
     {!isEmpty(props.formData) &&
-      <WidgetContentForm level={5} name={selectors.STORE_NAME} context={props.context} />
+      <WidgetContentForm level={5} name={selectors.STORE_NAME} context={props.currentContext} />
     }
 
     <Button
@@ -36,7 +36,7 @@ const ParametersModal = props =>
   </Modal>
 
 ParametersModal.propTypes = {
-  context: T.object,
+  currentContext: T.object,
   formData: T.shape({}),
   content: T.shape({}),
   loadContent: T.func.isRequired,

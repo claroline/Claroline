@@ -7,11 +7,12 @@ import {trans, tex} from '#/main/app/intl/translation'
 import {SCORE_SUM, SCORE_FIXED} from './../../quiz/enums'
 import {makeSortable, SORT_HORIZONTAL, SORT_VERTICAL} from './../../utils/sortable'
 import {ContentError} from '#/main/app/content/components/error'
-import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
-import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea'
+import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
 import {Radios} from '#/main/core/layout/form/components/field/radios.jsx'
 import {FormGroup} from '#/main/app/content/form/components/group.jsx'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {MODE_INSIDE, MODE_BESIDE, DIRECTION_HORIZONTAL, DIRECTION_VERTICAL, actions} from './editor'
 import {OrderingItemDragPreview} from './ordering-item-drag-preview.jsx'
 
@@ -60,25 +61,28 @@ class Item extends Component {
               )}
             />
           }
-          <TooltipButton
+          <Button
             id={`item-${this.props.id}-feedback-toggle`}
-            className="btn-link-default"
-            title={tex('choice_feedback_info')}
-            onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-          >
-            <span className="fa fa-fw fa-comments-o" />
-          </TooltipButton>
-          <TooltipButton
+            className="btn-link"
+            type={CALLBACK_BUTTON}
+            icon="fa fa-fw fa-comments-o"
+            label={tex('choice_feedback_info')}
+            callback={() => this.setState({showFeedback: !this.state.showFeedback})}
+            tooltip="top"
+          />
+
+          <Button
             id={`item-${this.props.id}-delete`}
-            className="btn-link-default"
-            disabled={!this.props.deletable}
-            title={trans('delete')}
-            onClick={() => this.props.onChange(
+            className="btn-link"
+            type={CALLBACK_BUTTON}
+            icon="fa fa-fw fa-trash-o"
+            label={trans('delete')}
+            callback={() => this.props.onChange(
               actions.removeItem(this.props.id)
             )}
-          >
-            <span className="fa fa-fw fa-trash-o" />
-          </TooltipButton>
+            disabled={!this.props.deletable}
+            tooltip="top"
+          />
         </div>
         {this.props.item.direction === DIRECTION_HORIZONTAL && this.state.showFeedback &&
           <div className="feedback-container">

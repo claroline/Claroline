@@ -1,4 +1,4 @@
-import {ResourcesTool} from '#/main/core/tools/resources/components/tool'
+import {ResourcesTool} from '#/main/core/tools/resources/containers/tool'
 import {reducer} from '#/main/core/tools/resources/store'
 
 /**
@@ -12,7 +12,7 @@ export const App = () => ({
   initialData: initialData => ({
     tool: {
       name: 'resource_manager',
-      context: initialData.context
+      currentContext: initialData.currentContext
     },
     resourceManager: {
       root: initialData.root,

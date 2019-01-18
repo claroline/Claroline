@@ -7,7 +7,7 @@ import {currentUser} from '#/main/app/security'
 const isImpersonated = (state) => state.isImpersonated
 const mainMenu = (state) => state.mainMenu
 const administration = (state) => state.administration
-const context = (state) => state.context
+const context = (state) => state.currentContext
 const tools = (state) => state.tools
 const userTools = (state) => state.userTools
 const notificationTools = (state) => state.notificationTools

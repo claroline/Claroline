@@ -40,7 +40,7 @@ class ListData extends Component {
     })
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     // display config or definition have changed
     if (!isEqual(this.props.definition, nextProps.definition)
       || !isEqual(this.props.display, nextProps.display)

@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import cloneDeep from 'lodash/cloneDeep'
+import get from 'lodash/get'
 
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {FormData} from '#/main/app/content/form/containers/data'
@@ -14,10 +15,16 @@ import {getFormDefaultSection, formatFormSections} from '#/main/core/user/profil
 // todo manage differences between main / default / plugin facets
 
 const ProfileFacetComponent = props => {
-  const sections = formatFormSections(cloneDeep(props.facet.sections), props.originalUser, props.parameters)
+  // todo : create selector
+  let sections = []
+  if (props.facet) {
+    if (props.facet.sections) {
+      sections = formatFormSections(cloneDeep(props.facet.sections), props.originalUser, props.parameters)
+    }
 
-  if (props.facet.meta.main) {
-    sections.unshift(getFormDefaultSection(props.user))
+    if (get(props.facet, 'meta.main')) {
+      sections.unshift(getFormDefaultSection(props.user))
+    }
   }
 
   return (

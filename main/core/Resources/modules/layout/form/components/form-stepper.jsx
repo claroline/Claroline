@@ -6,7 +6,7 @@ import {Button as ButtonTypes} from '#/main/app/buttons/prop-types'
 import {Button} from '#/main/app/action'
 import {trans} from '#/main/app/intl/translation'
 import {Redirect as RedirectTypes} from '#/main/app/router/prop-types'
-import {Router, Routes, NavLink, withRouter} from '#/main/app/router'
+import {Routes, NavLink} from '#/main/app/router'
 
 /**
  * Renders the form navigation.
@@ -91,7 +91,7 @@ FormStepperFooter.propTypes = {
   }).isRequired
 }
 
-const FormStepperComponent = withRouter(props => {
+const FormStepper = props => {
   let activeIndex = props.steps.findIndex(step => props.location && step.path === props.location.pathname)
   if (-1 === activeIndex) {
     activeIndex = 0
@@ -107,7 +107,6 @@ const FormStepperComponent = withRouter(props => {
       <Routes
         routes={props.steps}
         redirect={props.redirect}
-        blockingSteps={props.blockingSteps}
       />
 
       <FormStepperFooter
@@ -117,37 +116,13 @@ const FormStepperComponent = withRouter(props => {
       />
     </div>
   )
-})
-
-FormStepperComponent.propTypes = {
-  className: T.string,
-  steps: T.arrayOf(T.shape({
-    title: T.string.isRequired,
-    // route part
-    path: T.string.isRequired,
-    component: T.any.isRequired, // todo find better typing
-    exact: T.bool,
-    onEnter: T.func,
-    onLeave: T.func,
-    action:  T.shape(ButtonTypes.propTypes)
-  })).isRequired,
-  redirect: T.arrayOf(T.shape(
-    RedirectTypes.propTypes
-  )),
-  submit: T.shape({
-    icon: T.string,
-    label: T.string,
-    action: T.oneOfType([T.string, T.func]).isRequired
-  }).isRequired
 }
-
-const FormStepper = props =>
-  <Router>
-    <FormStepperComponent {...props} />
-  </Router>
 
 FormStepper.propTypes = {
   className: T.string,
+  location: T.shape({
+    pathname: T.string
+  }),
   steps: T.arrayOf(T.shape({
     title: T.string.isRequired,
     // route part
@@ -166,10 +141,6 @@ FormStepper.propTypes = {
     label: T.string,
     action: T.oneOfType([T.string, T.func]).isRequired
   }).isRequired
-}
-
-FormStepper.defaultProps = {
-  blockingSteps: false
 }
 
 export {

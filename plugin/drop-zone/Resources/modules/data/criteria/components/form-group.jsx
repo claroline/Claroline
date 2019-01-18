@@ -6,7 +6,8 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 
 import {FormGroup as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
 import {FormGroup} from '#/main/app/content/form/components/group'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {HtmlGroup}  from '#/main/core/layout/form/components/group/html-group'
 
 import {Criterion as CriterionTypes} from '#/plugin/drop-zone/data/criteria/prop-types'
@@ -25,14 +26,16 @@ const Criterion = props =>
     />
 
     <div className="right-controls">
-      <TooltipButton
+      <Button
         id={`criterion-${props.criterion.id}-delete`}
-        className="btn-link-danger"
+        className="btn-link"
+        type={CALLBACK_BUTTON}
+        icon="fa fa-fw fa-trash-o"
         title={trans('delete')}
-        onClick={props.onDelete}
-      >
-        <span className="fa fa-fw fa-trash-o" />
-      </TooltipButton>
+        callback={props.onDelete}
+        tooltip="left"
+        dangerous={true}
+      />
     </div>
   </li>
 

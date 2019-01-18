@@ -6,17 +6,17 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
-
-import {Action as ActionTypes} from '#/main/core/layout/action/prop-types'
+import {toKey} from '#/main/core/scaffolding/text/utils'
+import {Action as ActionTypes} from '#/main/app/action/prop-types'
+import {Button} from '#/main/app/action/components/button'
 import {User as UserTypes} from '#/main/core/user/prop-types'
 
 import {UrlButton} from '#/main/app/buttons/url/components/button'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 
-// TODO : replace me with Button from main/app/action
-import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action'
+import {UserAvatar} from '#/main/core/user/components/avatar'
 
-import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
+// TODO : buttons toolbar
 
 /**
  * Representation of a User message.
@@ -56,12 +56,11 @@ const UserMessage = props => {
 
           {0 !== actions.length &&
             <div className="user-message-actions">
-              {actions.map((action, actionIndex) =>
-                <TooltipAction
-                  key={`action-${actionIndex}`}
-                  id={`action-${actionIndex}`}
-                  className={action.dangerous ? 'btn-link-danger' : 'btn-link-default'}
-                  position="bottom"
+              {actions.map((action) =>
+                <Button
+                  key={action.id || toKey(action.label)}
+                  className="btn-link"
+                  tooltip="bottom"
                   {...action}
                 />
               )}

@@ -4,11 +4,6 @@ import classes from 'classnames'
 import {theme} from '#/main/app/config'
 import {implementPropTypes} from '#/main/app/prop-types'
 
-import {OverlayStack} from '#/main/app/overlay/containers/stack'
-import {ModalOverlay} from '#/main/app/overlay/modal/containers/overlay'
-import {AlertOverlay} from '#/main/app/overlay/alert/containers/overlay'
-import {WalkthroughOverlay} from '#/main/app/overlay/walkthrough/containers/overlay'
-
 import {PageSimple as PageSimpleTypes} from '#/main/app/page/prop-types'
 import {PageBreadcrumb} from '#/main/app/page/components/breadcrumb'
 import {PageWrapper} from '#/main/app/page/components/wrapper'
@@ -29,8 +24,6 @@ const PageSimple = props =>
       embedded: props.embedded
     })}
   >
-    <AlertOverlay />
-
     {!props.embedded &&
       <PageBreadcrumb
         path={props.path}
@@ -41,11 +34,6 @@ const PageSimple = props =>
     }
 
     {props.children}
-
-    <OverlayStack>
-      <ModalOverlay />
-      <WalkthroughOverlay />
-    </OverlayStack>
 
     {props.styles.map(styleName =>
       <link key={styleName} rel="stylesheet" type="text/css" href={theme(styleName)} />

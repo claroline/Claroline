@@ -12,7 +12,7 @@ export const App = () => ({
   initialData: initialData => ({
     tool: {
       name: 'claroline_tag_admin_tool',
-      context: initialData.context
+      currentContext: initialData.currentContext
     }
   })
 })

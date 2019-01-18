@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Listener\Tool;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -72,6 +73,10 @@ class TrashListener
         $content = $this->templating->render(
             'ClarolineCoreBundle:tool:trash.html.twig', [
                 'workspace' => $workspace,
+                'context' => [
+                    'type' => Tool::WORKSPACE,
+                    'data' => $this->serializer->serialize($workspace),
+                ],
             ]
         );
 

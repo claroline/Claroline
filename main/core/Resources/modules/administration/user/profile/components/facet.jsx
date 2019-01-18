@@ -4,9 +4,7 @@ import {connect} from 'react-redux'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
-
-import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
@@ -14,8 +12,6 @@ import {FormSections, FormSection} from '#/main/app/content/form/components/sect
 import {ProfileFacet as ProfileFacetTypes} from '#/main/core/user/profile/prop-types'
 import {actions} from '#/main/core/administration/user/profile/actions'
 import {select} from '#/main/core/administration/user/profile/selectors'
-
-// todo manage differences between main / default / plugin facets
 
 const FacetSection = props =>
   <FormSection
@@ -28,7 +24,11 @@ const FacetSection = props =>
         icon: 'fa fa-fw fa-trash-o',
         label: trans('delete'),
         callback: props.remove,
-        dangerous: true
+        dangerous: true,
+        confirm: {
+          title: trans('profile_remove_section'),
+          message: trans('profile_remove_section_question')
+        }
       }
     ]}
   >
@@ -96,11 +96,6 @@ const ProfileFacetComponent = props =>
             displayed: !props.facet.meta.main
           }
         ]
-      }, {
-        icon: 'fa fa-fw fa-key',
-        title: trans('access_restrictions'),
-        fields: [
-        ]
       }
     ]}
   >
@@ -123,15 +118,13 @@ const ProfileFacetComponent = props =>
       <div className="no-section-info">{trans('profile_facet_no_section')}</div>
     }
 
-    <div className="text-center">
-      <button
-        type="button"
-        className="btn btn-primary btn-block btn-emphasis"
-        onClick={() => props.addSection(props.facet.id)}
-      >
-        {trans('profile_facet_section_add')}
-      </button>
-    </div>
+    <Button
+      type={CALLBACK_BUTTON}
+      className="btn btn-block btn-emphasis"
+      label={trans('profile_facet_section_add')}
+      callback={() => props.addSection(props.facet.id)}
+      primary={true}
+    />
   </FormData>
 
 ProfileFacetComponent.propTypes = {
@@ -143,25 +136,21 @@ ProfileFacetComponent.propTypes = {
   removeSection: T.func.isRequired
 }
 
+ProfileFacetComponent.defaultProps = {
+  facet: ProfileFacetTypes.defaultProps
+}
+
 const ProfileFacet = connect(
-  state => ({
+  (state) => ({
     index: select.currentFacetIndex(state),
     facet: select.currentFacet(state)
   }),
-  dispatch => ({
+  (dispatch) => ({
     addSection(facetId) {
       dispatch(actions.addSection(facetId))
     },
     removeSection(facetId, sectionId) {
-      dispatch(
-        modalActions.showModal(MODAL_CONFIRM, {
-          icon: 'fa fa-fw fa-trash-o',
-          title: trans('profile_remove_section'),
-          question: trans('profile_remove_section_question'),
-          dangerous: true,
-          handleConfirm: () => dispatch(actions.removeSection(facetId, sectionId))
-        })
-      )
+      dispatch(actions.removeSection(facetId, sectionId))
     }
   })
 )(ProfileFacetComponent)

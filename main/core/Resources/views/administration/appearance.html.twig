@@ -8,7 +8,7 @@
     <div
         class="page-container appearance-settings-container"
 
-        data-context="{{ context | json_encode | raw | escape }}"
+        data-current-context="{{ context | json_encode | raw | escape }}"
         data-parameters="{{ parameters | json_encode | raw | escape }}"
         data-themes="{{ themes | json_encode | raw | escape }}"
         data-is-read-only = "{{ isReadOnly | json_encode | raw | escape }}"

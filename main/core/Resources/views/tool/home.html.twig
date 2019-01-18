@@ -23,7 +23,7 @@
     <div
         class="page-container home-container"
         data-editable="{{ editable }}"
-        data-context="{{ context | json_encode | raw | escape }}"
+        data-current-context="{{ context | json_encode | raw | escape }}"
         data-tabs="{{ tabs | json_encode | raw | escape }}"
     ></div>
 {% endblock %}

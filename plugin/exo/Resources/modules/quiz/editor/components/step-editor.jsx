@@ -8,8 +8,9 @@ import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 
 import {tex, trans} from '#/main/app/intl/translation'
 import {Heading} from '#/main/core/layout/components/heading'
-import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
+import {TooltipElement} from '#/main/core/layout/components/tooltip-element'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {makeItemPanelKey, makeStepPropPanelKey} from './../../../utils/utils'
 import {makeSortable, SORT_VERTICAL} from './../../../utils/sortable'
 import {getDefinition, isQuestionType} from './../../../items/item-types'
@@ -58,58 +59,50 @@ const ItemActions = props =>
       />
     }
 
-    <TooltipButton
+    <Button
       id={`item-panel-${props.itemId}-delete`}
-      className="btn-link-danger"
-      title={trans('delete')}
-      position="left"
-      onClick={e => {
-        e.stopPropagation()
-        props.showModal(MODAL_CONFIRM, {
-          icon: 'fa fa-fw fa-trash-o',
-          title: tex('delete_item'),
-          question: tex('remove_question_confirm_message'),
-          dangerous: true,
-          handleConfirm: () => props.handleItemDelete(props.itemId)
-        })
-      }}
-    >
-      <span className="fa fa-fw fa-trash-o" />
-    </TooltipButton>
+      className="btn-link"
+      type={CALLBACK_BUTTON}
+      icon="fa fa-fw fa-trash-o"
+      label={trans('delete')}
+      tooltip="left"
+      callback={() => props.showModal(MODAL_CONFIRM, {
+        icon: 'fa fa-fw fa-trash-o',
+        title: tex('delete_item'),
+        question: tex('remove_question_confirm_message'),
+        dangerous: true,
+        handleConfirm: () => props.handleItemDelete(props.itemId)
+      })}
+      dangerous={true}
+    />
 
-    <TooltipButton
+    <Button
       id={`item-panel-${props.itemId}-change-step`}
-      className="btn-link-default"
-      title={tex('change_step')}
-      position="left"
-      onClick={e => {
-        e.stopPropagation()
-        props.showModal(MODAL_MOVE_ITEM, {
-          title: tex('change_step'),
-          question: tex('change_step_confirm_message'),
-          itemId: props.itemId,
-          handleClick: (stepId) => props.handleItemChangeStep(props.itemId, stepId)
-        })
-      }}
-    >
-      <span className="fa fa-fw fa-exchange" />
-    </TooltipButton>
+      className="btn-link"
+      type={CALLBACK_BUTTON}
+      icon="fa fa-fw fa-exchange"
+      label={tex('change_step')}
+      tooltip="left"
+      callback={() => props.showModal(MODAL_MOVE_ITEM, {
+        title: tex('change_step'),
+        question: tex('change_step_confirm_message'),
+        itemId: props.itemId,
+        handleClick: (stepId) => props.handleItemChangeStep(props.itemId, stepId)
+      })}
+    />
 
-    <TooltipButton
+    <Button
       id={`item-panel-${props.itemId}-duplicate`}
-      className="btn-link-default"
-      title={tex('duplicate')}
-      position="left"
-      onClick={e => {
-        e.stopPropagation()
-        props.showModal(MODAL_DUPLICATE_ITEM, {
-          title: tex('duplicate_item'),
-          handleSubmit: (amount) => props.handleItemDuplicate(props.itemId, amount)
-        })
-      }}
-    >
-      <span className="fa fa-fw fa-copy" />
-    </TooltipButton>
+      className="btn-link"
+      type={CALLBACK_BUTTON}
+      icon="fa fa-fw fa-copy"
+      label={tex('duplicate')}
+      tooltip="left"
+      callback={() => props.showModal(MODAL_DUPLICATE_ITEM, {
+        title: tex('duplicate_item'),
+        handleSubmit: (amount) => props.handleItemDuplicate(props.itemId, amount)
+      })}
+    />
 
     <TooltipElement
       id={`item-panel-${props.itemId}-move`}

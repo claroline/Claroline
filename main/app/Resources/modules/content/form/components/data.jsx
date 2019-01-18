@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import cloneDeep from 'lodash/cloneDeep'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 import set from 'lodash/set'
 
 import {toKey} from '#/main/core/scaffolding/text/utils'
@@ -118,18 +119,26 @@ class FormData extends Component {
         level={this.props.level}
         displayLevel={this.props.displayLevel}
         title={this.props.title}
-        errors={this.props.errors}
+        errors={!isEmpty(this.props.errors)}
         validating={this.props.validating}
         pendingChanges={this.props.pendingChanges}
         save={this.props.save}
         cancel={this.props.cancel}
       >
         {this.props.meta &&
-          <ContentMeta meta={get(this.props.data, 'meta')} />
+          <ContentMeta
+            creator={get(this.props.data, 'meta.creator')}
+            created={get(this.props.data, 'meta.created')}
+            updated={get(this.props.data, 'meta.updated')}
+          />
         }
 
         {primarySections.map(primarySection =>
-          <div id={primarySection.id} key={toKey(primarySection.title)} className="form-primary-section panel panel-default">
+          <div
+            id={primarySection.id || toKey(primarySection.title)}
+            key={primarySection.id || toKey(primarySection.title)}
+            className="form-primary-section panel panel-default"
+          >
             <fieldset className="panel-body">
               <Heading level={hLevel} displayed={false}>
                 {primarySection.title}
@@ -148,11 +157,11 @@ class FormData extends Component {
           <FormSections
             level={hLevel}
             displayLevel={hDisplay}
-            defaultOpened={openedSection ? openedSection.id : undefined}
+            defaultOpened={openedSection ? (openedSection.id || toKey(openedSection.title)) : undefined}
           >
             {otherSections.map(section =>
               <FormSection
-                id={section.id}
+                id={section.id || toKey(section.title)}
                 key={section.id || toKey(section.title)}
                 icon={section.icon}
                 title={section.title}
@@ -198,12 +207,30 @@ FormData.propTypes = {
   sections: T.arrayOf(T.shape(
     DataFormSectionTypes.propTypes
   )).isRequired,
+  /**
+   * The save action of the form.
+   */
+  save: T.shape({
+    type: T.string.isRequired,
+    disabled: T.bool
+    // todo find a way to document custom action type props
+  }),
+
+  /**
+   * The cancel action of the form (if provided.
+   */
+  cancel: T.shape({
+    type: T.string.isRequired,
+    disabled: T.bool
+    // todo find a way to document custom action type props
+  }),
   setErrors: T.func.isRequired,
   updateProp: T.func.isRequired,
   children: T.node
 }
 
 FormData.defaultProps = {
+  level: 2,
   data: {}
 }
 

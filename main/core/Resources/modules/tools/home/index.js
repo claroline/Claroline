@@ -1,4 +1,4 @@
-import {HomeTool} from '#/main/core/tools/home/components/tool'
+import {HomeTool} from '#/main/core/tools/home/containers/tool'
 import {reducer} from '#/main/core/tools/home/store'
 
 /**

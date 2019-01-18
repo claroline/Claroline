@@ -13,10 +13,10 @@ import {getToolPath, showToolBreadcrumb} from '#/main/core/tool/utils'
 const ToolPage = props =>
   <PageFull
     title={trans(props.name, {}, 'tools')}
-    showBreadcrumb={showToolBreadcrumb(props.context.type, props.context.data)}
-    path={[].concat(getToolPath(props.name, props.context.type, props.context.data), props.path)}
+    showBreadcrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
+    path={[].concat(getToolPath(props.name, props.currentContext.type, props.currentContext.data), props.path)}
 
-    {...omit(props, 'name', 'context', 'path')}
+    {...omit(props, 'name', 'currentContext', 'path')}
   >
     {props.children}
   </PageFull>
@@ -24,7 +24,7 @@ const ToolPage = props =>
 ToolPage.propTypes = {
   // tool props
   name: T.string.isRequired,
-  context: T.shape({
+  currentContext: T.shape({
     type: T.oneOf(['administration', 'desktop', 'workspace']),
     data: T.object
   }).isRequired,

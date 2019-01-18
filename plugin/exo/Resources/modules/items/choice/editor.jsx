@@ -9,7 +9,8 @@ import {Textarea} from '#/main/core/layout/form/components/field/textarea'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
 import {FormGroup} from '#/main/app/content/form/components/group'
 import {RadiosGroup} from '#/main/core/layout/form/components/group/radios-group'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {
   SCORE_SUM,
@@ -25,17 +26,17 @@ import {ScoreRulesGroup} from '#/plugin/exo/data/score-rules/components/form-gro
 class ChoiceItem extends Component {
   constructor(props) {
     super(props)
+
     this.state = {showFeedback: false}
   }
 
   render() {
     return (
       <li
-        className={classes(
-          'answer-item choice-item',
-          {'expected-answer' : this.props.checked},
-          {'unexpected-answer' : !this.props.checked}
-        )}
+        className={classes('answer-item choice-item', {
+          'unexpected-answer' : !this.props.checked,
+          'expected-answer' : this.props.checked
+        })}
       >
         <input
           className="choice-item-tick"
@@ -81,26 +82,29 @@ class ChoiceItem extends Component {
             />
           }
 
-          <TooltipButton
+          <Button
             id={`choice-${this.props.id}-feedback-toggle`}
-            className="btn-link-default"
-            title={tex('choice_feedback_info')}
-            onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-          >
-            <span className="fa fa-fw fa-comments-o" />
-          </TooltipButton>
+            className="btn-link"
+            type={CALLBACK_BUTTON}
+            icon="fa fa-fw fa-comments-o"
+            label={tex('choice_feedback_info')}
+            callback={() => this.setState({showFeedback: !this.state.showFeedback})}
+            tooltip="top"
+          />
 
-          <TooltipButton
+          <Button
             id={`choice-${this.props.id}-delete`}
-            className="btn-link-default"
+            className="btn-link"
+            type={CALLBACK_BUTTON}
             disabled={!this.props.deletable}
-            title={trans('delete')}
-            onClick={() => this.props.deletable && this.props.onChange(
+            icon="fa fa-fw fa-trash-o"
+            label={trans('delete')}
+            callback={() => this.props.deletable && this.props.onChange(
               actions.removeChoice(this.props.id)
             )}
-          >
-            <span className="fa fa-fw fa-trash-o" />
-          </TooltipButton>
+            tooltip="top"
+            dangerous={true}
+          />
         </div>
       </li>
     )

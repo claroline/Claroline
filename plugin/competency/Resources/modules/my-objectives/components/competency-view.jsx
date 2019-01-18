@@ -11,7 +11,7 @@ class CompetencyView extends Component {
     this.props.fetchCompetencyData(this.props.match.params.oId, this.props.match.params.cId)
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.match.params.oId !== nextProps.match.params.oId || this.props.match.params.cId !== nextProps.match.params.cId) {
       this.props.fetchCompetencyData(nextProps.match.params.oId, nextProps.match.params.cId)
     }

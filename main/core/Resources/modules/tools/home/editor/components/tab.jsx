@@ -20,12 +20,12 @@ const TabEditor = props =>
     disabled={props.readOnly}
     target={props.administration ?
       ['apiv2_home_admin', {
-        context: props.context.type,
-        contextId: props.context.data ? props.context.data.uuid : currentUser().id
+        context: props.currentContext.type,
+        contextId: props.currentContext.data ? props.currentContext.data.uuid : currentUser().id
       }] :
       ['apiv2_home_update', {
-        context: props.context.type,
-        contextId: props.context.data ? props.context.data.uuid : currentUser().id
+        context: props.currentContext.type,
+        contextId: props.currentContext.data ? props.currentContext.data.uuid : currentUser().id
       }]
     }
     cancel={{
@@ -114,7 +114,7 @@ const TabEditor = props =>
       }, {
         icon: 'fa fa-fw fa-key',
         title: trans('access_restrictions'),
-        displayed: props.context.type === 'workspace' || props.administration,
+        displayed: props.currentContext.type === 'workspace' || props.administration,
         fields: [
           {
             name: 'restrictions.hidden',
@@ -140,8 +140,8 @@ const TabEditor = props =>
                 options:{
                   inline: false,
                   multiple : true,
-                  choices: props.context.type === 'workspace' || props.administration ?
-                    props.context.data.roles.reduce((acc, role) => {
+                  choices: props.currentContext.type === 'workspace' || props.administration ?
+                    props.currentContext.data.roles.reduce((acc, role) => {
                       acc[role.id] = trans(role.translationKey)
                       return acc
                     }, {})
@@ -156,7 +156,7 @@ const TabEditor = props =>
   >
     <WidgetGridEditor
       disabled={props.readOnly}
-      context={props.context}
+      currentContext={props.currentContext}
       widgets={props.widgets}
       tabs={props.tabs}
       currentTabIndex={props.currentTabIndex}
@@ -168,7 +168,7 @@ const TabEditor = props =>
   </FormData>
 
 TabEditor.propTypes = {
-  context: T.object.isRequired,
+  currentContext: T.object.isRequired,
   currentTab: T.shape(TabTypes.propTypes),
 
   administration: T.bool.isRequired,

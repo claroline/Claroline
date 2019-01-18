@@ -1,17 +1,20 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
-import {Action as ActionTypes} from '#/main/core/layout/action/prop-types'
+import {toKey} from '#/main/core/scaffolding/text/utils'
+import {Action as ActionTypes} from '#/main/app/action/prop-types'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
+
+import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group'
+import {TextGroup} from '#/main/core/layout/form/components/group/text-group'
+import {HtmlText} from '#/main/core/layout/components/html-text'
+
 import {User as UserTypes} from '#/main/core/user/prop-types'
-import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action.jsx'
-import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group.jsx'
-import {TextGroup} from '#/main/core/layout/form/components/group/text-group.jsx'
-import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
-import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
+import {UserAvatar} from '#/main/core/user/components/avatar'
 
 class CommentForm extends Component {
   constructor(props) {
@@ -21,6 +24,8 @@ class CommentForm extends Component {
       pendingChanges: false,
       content: props.content
     }
+
+    this.updateContent = this.updateContent.bind(this)
   }
 
   updateContent(content) {
@@ -47,13 +52,13 @@ class CommentForm extends Component {
               }
             </div>
             <div className="user-comment-actions">
-              <TooltipAction
-                id="close"
-                className="btn-link-default"
-                position="bottom"
+              <Button
+                type={CALLBACK_BUTTON}
+                className="btn-link"
+                tooltip="bottom"
                 icon="fa fa-fw fa-times"
                 label={trans('cancel')}
-                action={this.props.cancel}
+                callback={this.props.cancel}
               />
             </div>
           </div>
@@ -66,17 +71,19 @@ class CommentForm extends Component {
               hideLabel: true,
               value: this.state.content,
               long: true,
-              onChange: value => this.updateContent(value)
+              onChange: this.updateContent
             }
           )}
+
           <div className="btn-save-container">
-            <button
+            <Button
+              type={CALLBACK_BUTTON}
               className="btn btn-block btn-primary btn-save"
+              label={trans('add_comment', {}, 'forum')}
               disabled={!this.state.pendingChanges || !this.state.content}
-              onClick={() => this.props.submit(this.state.content)}
-            >
-              {trans('add_comment', {}, 'forum')}
-            </button>
+              callback={() => this.props.submit(this.state.content)}
+              primary={true}
+            />
           </div>
         </div>
 
@@ -133,10 +140,8 @@ CommentForm.defaultProps = {
   submitLabel: trans('create')
 }
 
-
-
 const Comment = props => {
-  const actions = props.actions.filter(action => action.displayed)
+  const actions = props.actions.filter(action => undefined === action.displayed || action.displayed)
 
   return (
     <div className={classes('user-comment-container', {
@@ -161,12 +166,11 @@ const Comment = props => {
 
           {0 !== actions.length &&
             <div className="user-comment-actions">
-              {actions.map((action, actionIndex) =>
-                <TooltipAction
-                  key={`action-${actionIndex}`}
-                  id={`action-${actionIndex}`}
-                  className={action.dangerous ? 'btn-link-danger' : 'btn-link-default'}
-                  position="bottom"
+              {actions.map((action) =>
+                <Button
+                  key={action.id || toKey(action.label)}
+                  className="btn-link"
+                  tooltip="bottom"
                   {...action}
                 />
               )}
@@ -237,9 +241,7 @@ Comment.propTypes = {
    * @type {array}
    */
   actions: T.arrayOf(
-    T.shape(merge({}, ActionTypes.propTypes, {
-      displayed: T.bool.isRequired
-    }))
+    T.shape(ActionTypes.propTypes)
   )
 }
 

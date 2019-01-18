@@ -1,46 +1,17 @@
 .user-profile {
     .no-section-info {
-        margin-bottom: 15px;
+        margin-bottom: @component-margin-bottom;
         font-style: italic;
         text-align: center;
     }
-}
 
-.profile-facet-add {
-    display: block;
-    text-align: left;
-    padding: 10px 15px;
-    border: 1px solid transparent;
-    color: @text-color;
-    background: #ebebeb;
-    text-decoration: none;
-    border-radius: @border-radius-base;
+    .btn-add-facet {
+        display: block;
+        text-align: left;
+        padding: 10px 15px;
 
-    > .fa {
-        margin-right: @icon-text-spacer;
-    }
-
-    &.active {
-        background: @summary-bg;
-        color: @summary-link-active-color;
-        padding-right: 30px;
-        margin-right: floor(-@grid-gutter-width / 2);
-        border-top-right-radius: @grid-gutter-width;
-        border-bottom-right-radius: @grid-gutter-width;
-
-        .box-shadow(@summary-box-shadow);
-    }
-
-    + .lateral-link {
-        margin-top: 5px;
-    }
-}
-
-.profile-facet-add {
-    color: @brand-primary;
-
-    &:hover {
-        color: white;
-        background: @brand-primary;
+        + .lateral-link {
+            margin-top: 5px;
+        }
     }
 }

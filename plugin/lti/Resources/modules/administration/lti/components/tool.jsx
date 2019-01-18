@@ -1,19 +1,16 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {Routes} from '#/main/app/router'
 
-import {makeId} from '#/main/core/scaffolding/id'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
-import {actions} from '#/plugin/lti/administration/lti/store'
 import {Apps} from '#/plugin/lti/administration/lti/components/apps'
 import {App}  from '#/plugin/lti/administration/lti/components/app'
 
-const Tool = props =>
+const LtiTool = props =>
   <ToolPage
     actions={[
       {
@@ -42,24 +39,10 @@ const Tool = props =>
     />
   </ToolPage>
 
-Tool.propTypes = {
+LtiTool.propTypes = {
   openForm: T.func.isRequired,
   resetForm: T.func.isRequired
 }
-
-const LtiTool = connect(
-  null,
-  dispatch => ({
-    openForm(id = null) {
-      dispatch(actions.open('app', id, {
-        id: makeId()
-      }))
-    },
-    resetForm() {
-      dispatch(actions.open('app', null, {}))
-    }
-  })
-)(Tool)
 
 export {
   LtiTool

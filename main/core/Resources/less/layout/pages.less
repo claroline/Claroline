@@ -14,11 +14,6 @@
     min-height: 100%; // fill parent
     max-width: 100%;
 
-    .flying-alerts { // like this it also impacts the widgets alerts
-        top: floor(@grid-gutter-width / 2) + @top-bar-height;
-        right: floor(@grid-gutter-width / 2);
-    }
-
     &.fullscreen {
         position: fixed;
         z-index: @zindex-fullscreen;
@@ -28,10 +23,6 @@
         right: 0;
         background: @body-bg; // regular page container has no background. We need to hide what is under
         overflow-y: scroll; // get the scrollbar
-
-        .flying-alerts {
-            top: floor(@grid-gutter-width / 2) !important;
-        }
     }
 
     &.sm {

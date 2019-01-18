@@ -14,7 +14,7 @@ class ResourceEmbedded extends Component {
     this.mountResource(this.props.resourceNode, this.props.lifecycle, this.props.showHeader)
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     // the embedded resource has changed
     if (this.props.resourceNode.id !== nextProps.resourceNode.id) {
       // remove old app
@@ -35,7 +35,7 @@ class ResourceEmbedded extends Component {
     mount(this.mountNode, ResourceApp.component, ResourceApp.store, {
       tool: {
         name: 'resource_manager',
-        context: {
+        currentContext: {
           type: resourceNode.workspace ? constants.TOOL_WORKSPACE : constants.TOOL_DESKTOP,
           data: resourceNode.workspace || null
         }
@@ -44,7 +44,7 @@ class ResourceEmbedded extends Component {
       embedded: true,
       showHeader: showHeader,
       lifecycle: lifecycleActions
-    })
+    }, true)
   }
 
   render() {
@@ -73,7 +73,7 @@ ResourceEmbedded.propTypes = {
 
 ResourceEmbedded.defaultProps = {
   lifecycle: {},
-  onResourceClose: () => {}
+  onResourceClose: () => true
 }
 
 export {

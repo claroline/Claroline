@@ -43,7 +43,7 @@ class Walkthrough extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (!isEqual(this.props.current, nextProps.current)) {
       if (this.props.current) {
         this.endStep(this.props.current)
@@ -195,10 +195,6 @@ Walkthrough.propTypes = {
   start: T.func.isRequired,
   restart: T.func.isRequired,
   additional: T.array
-}
-
-Walkthrough.defaultProps = {
-
 }
 
 class WalkthroughOverlay extends Component {

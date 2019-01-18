@@ -6,8 +6,8 @@ import {List as ProgressionList} from '#/main/core/tools/progression/components/
 
 class ProgressionWidget extends Component {
   componentDidMount() {
-    if ('workspace' === this.props.context.type) {
-      this.props.loadItems(this.props.context.data.uuid, this.props.levelMax)
+    if ('workspace' === this.props.currentContext.type) {
+      this.props.loadItems(this.props.currentContext.data.uuid, this.props.levelMax)
     }
   }
 
@@ -22,7 +22,7 @@ class ProgressionWidget extends Component {
 }
 
 ProgressionWidget.propTypes = {
-  context: T.object.isRequired,
+  currentContext: T.object.isRequired,
   items: T.arrayOf(T.shape(ProgressionItemType.propTypes)),
   levelMax: T.number,
   loadItems: T.func.isRequired

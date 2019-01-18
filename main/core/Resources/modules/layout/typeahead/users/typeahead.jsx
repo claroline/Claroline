@@ -5,8 +5,8 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import {trans} from '#/main/app/intl/translation'
 import {url} from '#/main/app/api'
-
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 const UsersList = props =>
   <ul className="dropdown-menu">
@@ -39,16 +39,16 @@ const SelectedUser = props =>
   <li className="selected-user">
     {props.user.name ? props.user.name : props.user.firstName + ' ' + props.user.lastName}
 
-    <TooltipButton
+    <Button
       id={`remove-${props.user.id}`}
-      title={trans('delete')}
-      position="left"
-      onClick={props.remove}
-      className="btn-link btn-link-danger"
-    >
-      <span className="fa fa-fw fa-trash-o" />
-      <span className="sr-only">{trans('delete')}</span>
-    </TooltipButton>
+      type={CALLBACK_BUTTON}
+      className="btn-link"
+      icon="fa fa-fw fa-trash-o"
+      label={trans('delete', {}, 'actions')}
+      tooltip="left"
+      callback={props.remove}
+      dangerous={true}
+    />
   </li>
 
 SelectedUser.propTypes = {

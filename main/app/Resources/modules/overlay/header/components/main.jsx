@@ -15,7 +15,7 @@ const HeaderMain = (props) =>
       <Await
         for={getMenu(props.menu)}
         then={(menu) => React.createElement(menu.default, {
-          context: props.context,
+          currentContext: props.currentContext,
           authenticated: props.authenticated,
           user: props.user
         })}
@@ -28,7 +28,7 @@ const HeaderMain = (props) =>
 
 HeaderMain.propTypes = {
   menu: T.string,
-  context: T.shape({
+  currentContext: T.shape({
     type: T.oneOf(['home', 'desktop', 'administration', 'workspace']).isRequired, // TODO : use constants
     data: T.shape({
       name: T.string.isRequired

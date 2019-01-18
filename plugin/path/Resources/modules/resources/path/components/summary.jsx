@@ -4,10 +4,9 @@ import {connect} from 'react-redux'
 import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
+import {toKey} from '#/main/core/scaffolding/text/utils'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action.jsx'
-import {Action as ActionTypes} from '#/main/core/layout/action/prop-types'
 
 import {actions, selectors} from '#/plugin/path/resources/path/store'
 import {Step as StepTypes} from '#/plugin/path/resources/path/prop-types'
@@ -24,28 +23,28 @@ const SummaryHeader = props =>
 
     <div className="summary-controls">
       {props.opened &&
-        <TooltipAction
-          id="path-summary-pin"
-          position={props.opened ? 'bottom':'right'}
+        <Button
+          type={CALLBACK_BUTTON}
+          tooltip={props.opened ? 'bottom':'right'}
           className={classes('btn-link summary-control hidden-xs hidden-sm', {
             active: props.pinned
           })}
           icon="fa fa-fw fa-map-pin"
           label={trans(props.pinned ? 'unpin_summary':'pin_summary', {}, 'path')}
-          action={props.togglePin}
+          callback={props.togglePin}
         />
       }
 
-      <TooltipAction
-        id="path-summary-open"
-        position={props.opened ? 'bottom':'right'}
+      <Button
+        type={CALLBACK_BUTTON}
+        tooltip={props.opened ? 'bottom':'right'}
         className="btn-link summary-control"
         icon={classes('fa fa-fw', {
           'fa-chevron-left': props.opened,
           'fa-chevron-right': !props.opened
         })}
-        label={trans(props.opened ? 'close_summary':'open_summary', {}, 'path')}
-        action={props.toggleOpen}
+        label={trans(props.opened ? 'close-summary':'open-summary', {}, 'actions')}
+        callback={props.toggleOpen}
       />
     </div>
   </header>
@@ -68,6 +67,12 @@ class SummaryLink extends Component {
   }
 
   render() {
+    let actions = []
+    if (this.props.actions) {
+      actions = this.props.actions(this.props.step)
+        .filter(action => undefined === action.displayed || action.displayed)
+    }
+
     return (
       <li className="summary-link-container">
         <div className="summary-link">
@@ -79,33 +84,28 @@ class SummaryLink extends Component {
             target={`/${this.props.prefix}/${this.props.step.id}`}
           />
 
-          {(this.props.opened && (this.state.collapsible || 0 !== this.props.actions.length)) &&
+          {(this.props.opened && (this.state.collapsible || 0 !== actions.length)) &&
             <div className="step-actions">
-              {this.props.actions
-                .filter(action => undefined === action.displayed || action.displayed)
-                .map((action, actionIndex) =>
-                  <TooltipAction
-                    {...action}
-                    key={actionIndex}
-                    id={`step-${this.props.step.id}-${actionIndex}`}
-                    position="bottom"
-                    className="btn-link btn-summary"
-                    action={typeof action.action === 'string' ? action.action : () => action.action(this.props.step)}
-                  />
-                )
-              }
+              {actions.map((action, actionIndex) =>
+                <Button
+                  {...action}
+                  key={toKey(action.label) + actionIndex}
+                  tooltip="bottom"
+                  className="btn-link btn-summary"
+                />
+              )}
 
               {this.state.collapsible &&
-                <TooltipAction
-                  id={`step-${this.props.step.id}-collapse`}
-                  position="bottom"
+                <Button
+                  type={CALLBACK_BUTTON}
+                  tooltip="bottom"
                   className="btn-link btn-summary"
                   icon={classes('fa', {
                     'fa-caret-right': this.state.collapsed,
                     'fa-caret-down': !this.state.collapsed
                   })}
-                  label={trans(this.state.collapsed ? 'expand_step':'collapse_step', {}, 'path')}
-                  action={() => this.setState({collapsed: !this.state.collapsed})}
+                  label={trans(this.state.collapsed ? 'expand': 'collapse', {}, 'actions')}
+                  callback={() => this.setState({collapsed: !this.state.collapsed})}
                 />
               }
             </div>
@@ -136,9 +136,7 @@ SummaryLink.propTypes = {
   step: T.shape(
     StepTypes.propTypes
   ).isRequired,
-  actions: T.arrayOf(T.shape(
-    ActionTypes.propTypes
-  ))
+  actions: T.func
 }
 
 SummaryLink.defaultProps = {
@@ -205,9 +203,7 @@ Summary.propTypes = {
   steps: T.arrayOf(T.shape(
     StepTypes.propTypes
   )),
-  actions: T.arrayOf(T.shape(
-    ActionTypes.propTypes
-  )),
+  actions: T.func,
   opened: T.bool.isRequired,
   pinned: T.bool.isRequired,
   togglePin: T.func.isRequired,
@@ -218,7 +214,7 @@ Summary.propTypes = {
 
 Summary.defaultProps = {
   steps: [],
-  actions: []
+  actions: () => []
 }
 
 const PathSummary = connect(

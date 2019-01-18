@@ -9,7 +9,7 @@ const ToolPage = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       name: selectors.name(state),
-      context: selectors.context(state)
+      currentContext: selectors.context(state)
     })
   )(ToolPageComponent)
 )

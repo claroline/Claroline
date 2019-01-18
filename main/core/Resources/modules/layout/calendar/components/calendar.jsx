@@ -158,7 +158,7 @@ class Calendar extends Component {
     this.today = this.today.bind(this)
   }
 
-  /*componentWillReceiveProps(nextProps) {
+  /*UNSAFE_componentWillReceiveProps(nextProps) {
     // updates state if selected value changes at runtime
     if (this.props.selected !== nextProps.selected) {
       let selected = null

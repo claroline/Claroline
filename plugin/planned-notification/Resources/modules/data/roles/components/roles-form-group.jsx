@@ -6,8 +6,9 @@ import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {MODAL_DATA_LIST} from '#/main/app/modals/list'
 import {trans} from '#/main/app/intl/translation'
 import {FormGroup as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
-import {FormGroup} from '#/main/app/content/form/components/group.jsx'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
+import {FormGroup} from '#/main/app/content/form/components/group'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {select} from '#/plugin/planned-notification/tools/planned-notification/selectors'
 import {Role as RoleType} from '#/plugin/planned-notification/data/roles/prop-types'
@@ -16,14 +17,15 @@ const Role = props =>
   <span className="role-item">
     {trans(props.role.translationKey)}
     {props.canEdit &&
-      <TooltipButton
+      <Button
         id={`role-${props.role.id}-delete`}
-        className="btn-link-danger"
-        title={trans('delete')}
-        onClick={props.onDelete}
-      >
-        <span className="fa fa-fw fa-trash-o" />
-      </TooltipButton>
+        className="btn-link"
+        icon="fa fa-fw fa-trash-o"
+        label={trans('delete')}
+        tooltip="left"
+        callback={props.onDelete}
+        dangerous={true}
+      />
     }
   </span>
 
@@ -64,15 +66,15 @@ const RolesFormGroupComponent = props =>
         {trans('no_role')}
       </div>
     }
+
     {!props.disabled &&
-      <button
-        className="btn btn-block btn-default"
-        type="button"
-        onClick={() => props.pickRoles(props.workspace.uuid, props)}
-      >
-        <span className="fa fa-fw fa-plus icon-with-text-right" />
-        {trans('add_roles')}
-      </button>
+      <Button
+        className="btn btn-block"
+        type={CALLBACK_BUTTON}
+        icon="fa fa-fw fa-plus"
+        label={trans('add_roles')}
+        callback={() => props.pickRoles(props.workspace.uuid, props)}
+      />
     }
   </FormGroup>
 

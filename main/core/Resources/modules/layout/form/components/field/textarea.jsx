@@ -2,12 +2,12 @@ import React, {Component} from 'react'
 import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 
 import {Tinymce} from '#/main/core/tinymce/components/tinymce'
-
 import {getOffsets} from '#/main/core/scaffolding/text/selection'
 
 // see https://github.com/lovasoa/react-contenteditable
@@ -168,21 +168,21 @@ class Textarea extends Component {
       <div id={`${this.props.id}-container`} className={classes('editor-control text-editor', {
         minimal: this.state.minimal
       })}>
-        <TooltipButton
+        <Button
           id={`${this.props.id}-editor-toggle`}
-          title={trans(this.state.minimal ? 'show_editor_toolbar' : 'hide_editor_toolbar')}
-          position="left"
-          className="toolbar-toggle"
-          onClick={() => {
+          className="btn toolbar-toggle"
+          type={CALLBACK_BUTTON}
+          icon={classes('fa', {
+            'fa-plus-circle': this.state.minimal,
+            'fa-minus-circle': !this.state.minimal
+          })}
+          label={trans(this.state.minimal ? 'show_editor_toolbar' : 'hide_editor_toolbar')}
+          tooltip="left"
+          callback={() => {
             this.setState({minimal: !this.state.minimal})
             this.props.onChangeMode({minimal: !this.state.minimal})
           }}
-        >
-          <span className={classes('fa', {
-            'fa-plus-circle': this.state.minimal,
-            'fa-minus-circle': !this.state.minimal
-          })} />
-        </TooltipButton>
+        />
 
         {this.state.minimal ?
           this.makeMinimalEditor() :

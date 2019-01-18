@@ -3,11 +3,12 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import Popover from 'react-bootstrap/lib/Popover'
 
-import {tex} from '#/main/app/intl/translation'
+import {trans, tex} from '#/main/app/intl/translation'
 import {FormGroup} from '#/main/app/content/form/components/group.jsx'
-import {ColorPicker} from '#/main/core/layout/form/components/field/color-picker.jsx'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
-import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
+import {ColorPicker} from '#/main/core/layout/form/components/field/color-picker'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea'
 
 export class AreaPopover extends Component {
   constructor(props) {
@@ -30,23 +31,25 @@ export class AreaPopover extends Component {
             {tex('graphic_area_edit')}
 
             <div className="popover-actions">
-              <TooltipButton
+              <Button
                 id="area-popover-delete"
                 className="btn-link-default"
-                title={tex('delete')}
-                onClick={this.props.onDelete}
-              >
-                <span className="fa fa-fw fa-trash-o" />
-              </TooltipButton>
+                type={CALLBACK_BUTTON}
+                icon="fa fa-fw fa-trash-o"
+                label={trans('delete', {}, 'actions')}
+                callback={this.props.onDelete}
+                tooltip="top"
+              />
 
-              <TooltipButton
+              <Button
                 id="area-popover-close"
-                title={tex('close')}
-                className="btn-link-default"
-                onClick={this.props.onClose}
-              >
-                <span className="fa fa-fw fa-times" />
-              </TooltipButton>
+                className="btn-link"
+                type={CALLBACK_BUTTON}
+                icon="fa fa-fw fa-times"
+                label={trans('close', {}, 'actions')}
+                callback={this.props.onClose}
+                tooltip="top"
+              />
             </div>
           </div>
         }
@@ -70,14 +73,14 @@ export class AreaPopover extends Component {
               onChange={e => this.props.onChangeScore(parseFloat(e.target.value))}
             />
 
-            <TooltipButton
+            <Button
               id="area-popover-feedback-tip"
-              className="btn-link-default"
-              title={tex('graphic_feedback_info')}
-              onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-            >
-              <span className="fa fa-fw fa-comments-o" />
-            </TooltipButton>
+              className="btn-link"
+              type={CALLBACK_BUTTON}
+              icon="fa fa-fw fa-comments-o"
+              label={tex('graphic_feedback_info')}
+              callback={() => this.setState({showFeedback: !this.state.showFeedback})}
+            />
           </div>
         </div>
 

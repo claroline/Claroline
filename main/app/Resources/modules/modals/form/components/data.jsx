@@ -32,7 +32,7 @@ class FormDataModal extends Component {
     this.updateProp = this.updateProp.bind(this)
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.data !== this.props.data) {
       this.setState({
         data: cloneDeep(nextProps.data)

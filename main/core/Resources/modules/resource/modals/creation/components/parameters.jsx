@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {Await} from '#/main/app/components/await'
 import {ContentMeta} from '#/main/app/content/meta/components/meta'
@@ -12,7 +13,11 @@ import {selectors} from '#/main/core/resource/modals/creation/store'
 
 const ResourceParameters = (props) =>
   <div>
-    <ContentMeta meta={props.resourceNode.meta} />
+    <ContentMeta
+      creator={get(props.resourceNode, 'meta.creator')}
+      created={get(props.resourceNode, 'meta.created')}
+      updated={get(props.resourceNode, 'meta.updated')}
+    />
 
     <Await
       for={getResource(props.resourceNode.meta.type)}

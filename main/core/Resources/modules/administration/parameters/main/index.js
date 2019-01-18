@@ -1,5 +1,5 @@
 import {reducer} from '#/main/core/administration/parameters/main/store/reducer'
-import {Tool} from '#/main/core/administration/parameters/main/components/tool.jsx'
+import {Tool} from '#/main/core/administration/parameters/main/components/tool'
 
 export const App = () => ({
   component: Tool,
@@ -7,7 +7,7 @@ export const App = () => ({
   initialData: (initialData) => ({
     tool: {
       name: 'main_settings',
-      context: initialData.context
+      currentContext: initialData.currentContext
     },
 
     parameters: {

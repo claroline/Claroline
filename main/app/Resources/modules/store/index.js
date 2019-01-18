@@ -39,7 +39,7 @@ function createStore(name, reducers, initialState = {}) {
     const reducerNames = Object.keys(reducers)
     Object.keys(initialState).forEach(item => {
       if (reducerNames.indexOf(item) === -1) {
-        reducers[item] = (state = null) => state
+        reducers[item] = (state = initialState[item]) => state
       }
     })
 

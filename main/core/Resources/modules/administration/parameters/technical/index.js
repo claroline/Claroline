@@ -7,7 +7,7 @@ export const App = () => ({
   initialData: (initialData) => ({
     tool: {
       name: 'technical_settings',
-      context: initialData.context
+      currentContext: initialData.currentContext
     },
 
     parameters: {

@@ -74,6 +74,10 @@ Resources.propsTypes = {
   resourceTypes: T.object.isRequired // todo check
 }
 
+Resources.defaultProps = {
+  resourceTypes: {}
+}
+
 export {
   Resources
 }

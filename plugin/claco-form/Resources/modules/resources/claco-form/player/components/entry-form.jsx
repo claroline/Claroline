@@ -178,7 +178,7 @@ class EntryFormComponent extends Component {
               }}
             />
 
-          mount(fieldEl, fieldComponent, {})
+          mount(fieldEl, fieldComponent, {}, {}, true)
         }
       })
     }

@@ -94,7 +94,7 @@ class GaugeLiquid extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.fillPercent !== this.props.fillPercent) {
       this.fill(this.props.fillPercent, nextProps.fillPercent)
     }

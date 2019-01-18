@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 import omit from 'lodash/omit'
 
 import {url} from '#/main/app/api'
@@ -19,7 +20,9 @@ const AboutModal = props =>
     subtitle={props.resourceNode.name}
   >
     <ContentMeta
-      meta={props.resourceNode.meta}
+      creator={get(props.resourceNode, 'meta.creator')}
+      created={get(props.resourceNode, 'meta.created')}
+      updated={get(props.resourceNode, 'meta.updated')}
     />
 
     <DetailsData

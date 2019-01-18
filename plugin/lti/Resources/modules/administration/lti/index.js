@@ -1,5 +1,5 @@
 import {reducer} from '#/plugin/lti/administration/lti/store'
-import {LtiTool} from '#/plugin/lti/administration/lti/components/tool'
+import {LtiTool} from '#/plugin/lti/administration/lti/containers/tool'
 
 export const App = () => ({
   component: LtiTool,
@@ -7,7 +7,7 @@ export const App = () => ({
   initialData: (initialData) => Object.assign({
     tool: {
       name: 'lti_tool',
-      context: {}
+      currentContext: initialData.currentContext
     }
   }, initialData)
 })

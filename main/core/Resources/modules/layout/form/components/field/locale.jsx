@@ -3,13 +3,13 @@ import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
 import {param} from '#/main/app/config'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
 import {LocaleFlag} from '#/main/app/intl/locale/components/flag'
-
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button'
 
 const Locale = props => {
   let available = props.available
@@ -20,14 +20,16 @@ const Locale = props => {
   return (
     <div className="locales" role="checklist">
       {available.map(locale =>
-        <TooltipButton
+        <Button
           id={`btn-${locale}`}
           key={locale}
-          title={trans(locale)}
-          className={classes('locale-btn', {
+          type={CALLBACK_BUTTON}
+          label={trans(locale)}
+          tooltip="bottom"
+          className={classes('btn-link locale-btn', {
             active: props.multiple && props.value ? -1 !== props.value.indexOf(locale) : locale === props.value
           })}
-          onClick={() => {
+          callback={() => {
             let newValue
             if (!props.multiple) {
               newValue = locale
@@ -48,7 +50,7 @@ const Locale = props => {
           }}
         >
           <LocaleFlag locale={locale} />
-        </TooltipButton>
+        </Button>
       )}
     </div>
   )

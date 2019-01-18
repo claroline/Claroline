@@ -71,7 +71,7 @@ const WidgetContentFormComponent = (props) => {
 
               return React.createElement(parametersApp.component, {
                 name: props.name,
-                context: props.context,
+                currentContext: props.currentContext,
                 instance: props.instance
               })
             }
@@ -86,7 +86,7 @@ const WidgetContentFormComponent = (props) => {
 WidgetContentFormComponent.propTypes = {
   level: T.number,
   name: T.string.isRequired,
-  context: T.object.isRequired,
+  currentContext: T.object.isRequired,
   instance: T.shape(
     WidgetInstanceTypes.propTypes
   ).isRequired

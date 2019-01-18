@@ -5,13 +5,21 @@ import {
   MemoryRouter
 } from 'react-router-dom'
 
-const Router = props => !props.embedded ?
-  <HashRouter>
-    {props.children}
-  </HashRouter> :
-  <MemoryRouter>
-    {props.children}
-  </MemoryRouter>
+const Router = props => {
+  if (!props.embedded) {
+    return (
+      <HashRouter>
+        {props.children}
+      </HashRouter>
+    )
+  }
+
+  return (
+    <MemoryRouter>
+      {props.children}
+    </MemoryRouter>
+  )
+}
 
 Router.propTypes = {
   children: T.node.isRequired,

@@ -30,7 +30,7 @@ class Widget extends Component {
 const ListWidget = connect(
   (state) => ({
     source: contentSelectors.source(state),
-    context: contentSelectors.context(state),
+    currentContext: contentSelectors.context(state),
 
     parameters: contentSelectors.parameters(state),
 
