@@ -36,6 +36,7 @@ class WorkspaceAccessHandler implements AccessDeniedHandlerInterface
             return $this->redirect([
                 '_controller' => 'ClarolineCoreBundle:Workspace:openDenied',
                 'workspace' => $exception->getWorkspace()->getId(),
+                'action' => $exception->getAction(),
             ], $request);
         }
     }

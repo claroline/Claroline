@@ -42,10 +42,16 @@ class WorkspaceVoter extends AbstractVoter
             case self::PATCH:  return $this->checkPatch($token, $object, $collection);
         }
 
-        //check the expiration date first
         $now = new \DateTime();
+
         if ($object->getEndDate()) {
             if ($now->getTimeStamp() > $object->getEndDate()->getTimeStamp()) {
+                return VoterInterface::ACCESS_DENIED;
+            }
+        }
+
+        if ($object->getStartDate()) {
+            if ($now->getTimeStamp() < $object->getStartDate()->getTimeStamp()) {
                 return VoterInterface::ACCESS_DENIED;
             }
         }

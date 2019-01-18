@@ -313,19 +313,37 @@ class WorkspaceController
     }
 
     /**
-     * @EXT\Route("/{workspace}/denied", name="claro_workspace_denied")
+     * @EXT\Route("/{workspace}/denied/{action}", name="claro_workspace_denied")
      * @EXT\Template
      *
      * @param Workspace $workspace
      *
      * @return Response
      */
-    public function openDeniedAction(Workspace $workspace)
+    public function openDeniedAction(Workspace $workspace, $action)
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
+        //check the expiration date first
+        $now = new \DateTime();
+        $dateValidity = true;
+
+        if ($workspace->getEndDate()) {
+            if ($now->getTimeStamp() > $workspace->getEndDate()->getTimeStamp()) {
+                $dateValidity = false;
+            }
+        }
+
+        if ($workspace->getStartDate()) {
+            if ($now->getTimeStamp() < $workspace->getStartDate()->getTimeStamp()) {
+                $dateValidity = false;
+            }
+        }
+
         return [
           'workspace' => $workspace,
+          'action' => $action,
+          'dateValidity' => $dateValidity,
           'isInQueue' => $this->workspaceManager->isUserInValidationQueue($workspace, $user),
         ];
     }
@@ -373,6 +391,7 @@ class WorkspaceController
         if (!$this->authorization->isGranted($attributes, $workspace)) {
             $exception = new WorkspaceAccessException();
             $exception->setWorkspace($workspace);
+            $exception->setAction($attributes);
 
             throw $exception;
         }
