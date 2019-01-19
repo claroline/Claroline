@@ -165,16 +165,8 @@ class TagListener
 
         if (is_array($data) && isset($data['class']) && !empty($data['ids'])) {
             /** @var TaggedObject[] $taggedObjects */
-            $taggedObjects = $this->manager->getTaggedObjects(
-                null,
-                false,
-                $data['class'],
-                '',
-                false,
-                'name',
-                'ASC',
-                $data['ids']
-            );
+            $taggedObjects = $this->manager->getTaggedObjects($data['class'], $data['ids']);
+
             if (isset($data['frequency']) && $data['frequency']) {
                 //array [tagName => frequency]
                 foreach ($taggedObjects as $taggedObject) {
@@ -193,7 +185,6 @@ class TagListener
                 $tags = array_values($tags);
             }
         }
-
         $event->setResponse($tags);
     }
 }

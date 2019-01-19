@@ -151,7 +151,7 @@ class Tag
         return $this->taggedObjects;
     }
 
-    public function addTagObject(TaggedObject $taggedObject)
+    public function addTaggedObject(TaggedObject $taggedObject)
     {
         if (!$this->taggedObjects->contains($taggedObject)) {
             $this->taggedObjects->add($taggedObject);
