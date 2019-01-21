@@ -179,7 +179,7 @@ MessageCommentsComponent.propTypes = {
 }
 
 MessageCommentsComponent.defaultProps = {
-  bannedUser: true,
+  bannedUser: false,
   isValidatedUser: false
 }
 

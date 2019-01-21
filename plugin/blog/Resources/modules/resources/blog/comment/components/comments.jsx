@@ -61,7 +61,7 @@ const CommentsComponent = props =>
               />
               {!props.canModerate && !props.canEdit && props.isModerated &&
                 <span className="help-block">
-                  <span className="fa fa-fw fa-info-circle"></span>
+                  <span className="fa fa-fw fa-info-circle" />
                   {trans('icap_blog_comment_form_moderation_help', {}, 'icap_blog')}
                 </span>
               }

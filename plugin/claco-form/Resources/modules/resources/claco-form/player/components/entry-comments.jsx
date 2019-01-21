@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
@@ -156,25 +157,29 @@ class EntryCommentsComponent extends Component {
                   allowHtml={true}
                   actions={[
                     {
+                      type: CALLBACK_BUTTON,
                       icon: 'fa fa-fw fa-pencil',
                       label: trans('edit'),
                       displayed: this.canEditComment(comment),
-                      action: () => this.showCommentForm(comment)
+                      callback: () => this.showCommentForm(comment)
                     }, {
+                      type: CALLBACK_BUTTON,
                       icon: 'fa fa-fw fa-check',
                       label: trans('activate'),
                       displayed: this.props.canManage && (0 === comment.status || 2 === comment.status),
-                      action: () => this.props.activateComment(comment.id)
+                      callback: () => this.props.activateComment(comment.id)
                     }, {
+                      type: CALLBACK_BUTTON,
                       icon: 'fa fa-fw fa-ban',
                       label: trans('block', {}, 'clacoform'),
                       displayed: this.props.canManage && 1 === comment.status,
-                      action: () => this.props.blockComment(comment.id)
+                      callback: () => this.props.blockComment(comment.id)
                     }, {
+                      type: CALLBACK_BUTTON,
                       icon: 'fa fa-fw fa-trash-o',
                       label: trans('delete'),
                       displayed: this.props.canManage,
-                      action: () => this.deleteComment(comment.id),
+                      callback: () => this.deleteComment(comment.id),
                       dangerous: true
                     }
                   ]}

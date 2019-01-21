@@ -4,6 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {UserMessage} from '#/main/core/user/message/components/user-message'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
@@ -21,20 +22,23 @@ const MessageComponent = (props) =>
       allowHtml={true}
       actions={[
         {
+          type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-sync-alt',
           label: trans('restore'),
           displayed: get(props.message, 'meta.removed'),
-          action: () => props.restoreMessage([props.message])
+          callback: () => props.restoreMessage([props.message])
         }, {
+          type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-trash-o',
           label: trans('delete'),
-          action: () => props.removeMessage([props.message]),
+          callback: () => props.removeMessage([props.message]),
           dangerous: true,
           displayed: get(props.message, 'meta.removed')
         }, {
+          type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-trash-o',
           label: trans('delete'),
-          action: () => props.deleteMessage([props.message], props.history.push),
+          callback: () => props.deleteMessage([props.message], props.history.push),
           dangerous: true,
           displayed: !get(props.message, 'meta.removed')
         }

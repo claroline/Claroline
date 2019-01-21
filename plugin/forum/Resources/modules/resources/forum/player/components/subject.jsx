@@ -8,7 +8,7 @@ import {withRouter} from '#/main/app/router'
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {currentUser} from '#/main/app/security'
 import {Button} from '#/main/app/action/components/button'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
 import {UserMessage} from '#/main/core/user/message/components/user-message'
 import {UserMessageForm} from '#/main/core/user/message/components/user-message-form'
 import {withModal} from '#/main/app/overlay/modal/withModal'
@@ -154,116 +154,127 @@ class SubjectComponent extends Component {
             allowHtml={true}
             actions={[
               {
+                type: CALLBACK_BUTTON,
                 icon: 'fa fa-fw fa-pencil',
                 label: trans('edit'),
                 displayed: authenticatedUser && get(this.props.subject, 'meta.creator.id', false) === authenticatedUser.id,
-                action: () => this.editSubject(this.props.subject.id)
+                callback: () => this.editSubject(this.props.subject.id)
               }, {
+                type: CALLBACK_BUTTON,
                 icon: 'fa fa-fw fa-thumb-tack',
                 label: trans('stick', {}, 'forum'),
                 displayed: !(get(this.props.subject, 'meta.sticky', true)) && this.props.moderator,
-                action: () => this.props.stickSubject(this.props.subject)
+                callback: () => this.props.stickSubject(this.props.subject)
               }, {
+                type: CALLBACK_BUTTON,
                 icon: 'fa fa-fw fa-thumb-tack',
                 label: trans('unstick', {}, 'forum'),
                 displayed: get(this.props.subject, 'meta.sticky', false) && this.props.moderator,
-                action: () => this.props.unStickSubject(this.props.subject)
+                callback: () => this.props.unStickSubject(this.props.subject)
               }, {
+                type: CALLBACK_BUTTON,
                 icon: 'fa fa-fw fa-times-circle',
                 label: trans('close_subject', {}, 'forum'),
                 displayed: !(get(this.props.subject, 'meta.closed', true)) && authenticatedUser && (get(this.props.subject, 'meta.creator.id', false) === authenticatedUser.id || this.props.moderator),
-                action: () => this.props.closeSubject(this.props.subject)
+                callback: () => this.props.closeSubject(this.props.subject)
               }, {
+                type: CALLBACK_BUTTON,
                 icon: 'fa fa-fw fa-check-circle',
                 label: trans('open_subject', {}, 'forum'),
                 displayed: (get(this.props.subject, 'meta.closed', false)) && authenticatedUser && (get(this.props.subject, 'meta.creator.id', false) === authenticatedUser.id || this.props.moderator),
-                action: () => this.props.unCloseSubject(this.props.subject)
+                callback: () => this.props.unCloseSubject(this.props.subject)
               }, {
+                type: CALLBACK_BUTTON,
                 icon: 'fa fa-fw fa-flag-o',
                 label: trans('flag', {}, 'forum'),
                 displayed: authenticatedUser && (get(this.props.subject, 'meta.creator.id') !== authenticatedUser.id) && !(get(this.props.subject, 'meta.flagged', true)),
-                action: () => this.props.flagSubject(this.props.subject)
+                callback: () => this.props.flagSubject(this.props.subject)
               }, {
+                type: CALLBACK_BUTTON,
                 icon: 'fa fa-fw fa-flag',
                 label: trans('unflag', {}, 'forum'),
                 displayed: authenticatedUser && (get(this.props.subject, 'meta.creator.id') !== authenticatedUser.id) && (get(this.props.subject, 'meta.flagged', false)),
-                action: () => this.props.unFlagSubject(this.props.subject)
+                callback: () => this.props.unFlagSubject(this.props.subject)
               }, {
+                type: CALLBACK_BUTTON,
                 icon: 'fa fa-fw fa-trash-o',
                 label: trans('delete'),
                 displayed: authenticatedUser && get(this.props.subject, 'meta.creator.id') === authenticatedUser.id || this.props.moderator,
-                action: () => this.deleteSubject(this.props.subject.id),
+                callback: () => this.deleteSubject(this.props.subject.id),
                 dangerous: true
               }
             ]}
           />
         }
-        {(!isEmpty(this.props.messages) && !this.props.showSubjectForm) &&
-          <div>
-            <MessagesSort
-              sortOrder={this.props.sortOrder}
-              messages={this.props.messages}
-              totalResults={this.props.totalResults}
-              pages={this.props.pages}
-              toggleSort={() => this.props.toggleSort(this.props.sortOrder)}
-              changePage={() => this.props.changePage(this.props.currentPage + 1)}
-              changePagePrev={() => this.props.changePage(this.props.currentPage - 1)}
-            >
-              <ul className="posts">
-                {this.props.messages.map(message =>
-                  <li key={message.id} className="post">
-                    {this.state.showMessageForm !== message.id &&
-                      <UserMessage
-                        user={get(message, 'meta.creator')}
-                        date={message.meta.created}
-                        content={message.content}
-                        allowHtml={true}
-                        actions={[
-                          {
-                            icon: 'fa fa-fw fa-pencil',
-                            label: trans('edit'),
-                            displayed: authenticatedUser && (message.meta.creator.id === authenticatedUser.id)  && !(get(this.props.subject, 'meta.closed', true)),
-                            action: () => this.setState({showMessageForm: message.id})
-                          }, {
-                            icon: 'fa fa-fw fa-flag-o',
-                            label: trans('flag', {}, 'forum'),
-                            displayed: authenticatedUser && (message.meta.creator.id !== authenticatedUser.id) && !message.meta.flagged,
-                            action: () => this.props.flag(message, this.props.subject.id)
-                          }, {
-                            icon: 'fa fa-fw fa-flag',
-                            label: trans('unflag', {}, 'forum'),
-                            displayed: authenticatedUser && (message.meta.creator.id !== authenticatedUser.id) && message.meta.flagged,
-                            action: () => this.props.unFlag(message, this.props.subject.id)
-                          }, {
-                            icon: 'fa fa-fw fa-trash-o',
-                            label: trans('delete'),
-                            displayed:  authenticatedUser && (message.meta.creator.id === authenticatedUser.id || this.props.moderator),
-                            action: () => this.deleteMessage(message.id),
-                            dangerous: true
-                          }
-                        ]}
-                      />
-                    }
-                    {this.state.showMessageForm === message.id &&
-                        <UserMessageForm
-                          user={currentUser()}
-                          allowHtml={true}
-                          submitLabel={trans('save')}
-                          content={message.content}
-                          submit={(content) => this.updateMessage(message, content)}
-                          cancel={() => this.setState({showMessageForm: null})}
-                        />
-                    }
-                    <MessageComments
-                      message={message}
+        {(!this.props.showSubjectForm && !isEmpty(this.props.messages)) &&
+          <MessagesSort
+            sortOrder={this.props.sortOrder}
+            messages={this.props.messages}
+            totalResults={this.props.totalResults}
+            pages={this.props.pages}
+            toggleSort={() => this.props.toggleSort(this.props.sortOrder)}
+            changePage={() => this.props.changePage(this.props.currentPage + 1)}
+            changePagePrev={() => this.props.changePage(this.props.currentPage - 1)}
+          >
+            <ul className="posts">
+              {this.props.messages.map(message =>
+                <li key={message.id} className="post">
+                  {this.state.showMessageForm !== message.id &&
+                    <UserMessage
+                      user={get(message, 'meta.creator')}
+                      date={message.meta.created}
+                      content={message.content}
+                      allowHtml={true}
+                      actions={[
+                        {
+                          type: CALLBACK_BUTTON,
+                          icon: 'fa fa-fw fa-pencil',
+                          label: trans('edit', {}, 'actions'),
+                          displayed: authenticatedUser && (message.meta.creator.id === authenticatedUser.id)  && !(get(this.props.subject, 'meta.closed', true)),
+                          callback: () => this.setState({showMessageForm: message.id})
+                        }, {
+                          type: CALLBACK_BUTTON,
+                          icon: 'fa fa-fw fa-flag-o',
+                          label: trans('flag', {}, 'forum'),
+                          displayed: authenticatedUser && (message.meta.creator.id !== authenticatedUser.id) && !message.meta.flagged,
+                          callback: () => this.props.flag(message, this.props.subject.id)
+                        }, {
+                          type: CALLBACK_BUTTON,
+                          icon: 'fa fa-fw fa-flag',
+                          label: trans('unflag', {}, 'forum'),
+                          displayed: authenticatedUser && (message.meta.creator.id !== authenticatedUser.id) && message.meta.flagged,
+                          callback: () => this.props.unFlag(message, this.props.subject.id)
+                        }, {
+                          type: CALLBACK_BUTTON,
+                          icon: 'fa fa-fw fa-trash-o',
+                          label: trans('delete', {}, 'actions'),
+                          displayed:  authenticatedUser && (message.meta.creator.id === authenticatedUser.id || this.props.moderator),
+                          callback: () => this.deleteMessage(message.id),
+                          dangerous: true
+                        }
+                      ]}
                     />
-                  </li>
-                )}
-              </ul>
-            </MessagesSort>
-          </div>
+                  }
+                  {this.state.showMessageForm === message.id &&
+                      <UserMessageForm
+                        user={currentUser()}
+                        allowHtml={true}
+                        submitLabel={trans('save')}
+                        content={message.content}
+                        submit={(content) => this.updateMessage(message, content)}
+                        cancel={() => this.setState({showMessageForm: null})}
+                      />
+                  }
+                  <MessageComments
+                    message={message}
+                  />
+                </li>
+              )}
+            </ul>
+          </MessagesSort>
         }
-        {!this.props.bannedUser && this.props.showSubjectForm || !get(this.props.subject, 'meta.closed') &&
+
+        {!this.props.bannedUser && !this.props.showSubjectForm && !get(this.props.subject, 'meta.closed') &&
           <UserMessageForm
             user={currentUser()}
             allowHtml={true}
@@ -321,7 +332,7 @@ SubjectComponent.propTypes = {
 }
 
 SubjectComponent.defaultProps = {
-  bannedUser: true,
+  bannedUser: false,
   isValidatedUser: false,
   moderatedMessages: []
 }
