@@ -40,7 +40,7 @@ const EditorComponent = props =>
   >
     <PageHeader
       alignTitle={true === props.currentTab.centerTitle ? 'center' : 'left'}
-      title={props.currentTab ? props.currentTab.longTitle : ('desktop' === props.currentContext.type ? trans('desktop') : props.currentContext.data.name)}
+      title={props.currentTabTitle}
       poster={props.currentTab.poster ? props.currentTab.poster.url: undefined}
     >
       <Tabs
@@ -121,6 +121,7 @@ EditorComponent.propTypes = {
   playerTabs: T.arrayOf(T.shape(
     TabTypes.propTypes
   )),
+  currentTabTitle: T.string,
   currentTab: T.shape(TabTypes.propTypes),
   currentTabIndex: T.number.isRequired,
   widgets: T.arrayOf(T.shape(
@@ -145,6 +146,7 @@ const Editor = connect(
     playerTabs: selectors.tabs(state),
     widgets: editorSelectors.widgets(state),
     currentTabIndex: editorSelectors.currentTabIndex(state),
+    currentTabTitle: selectors.currentTabTitle(state),
     currentTab: editorSelectors.currentTab(state)
   }),
   (dispatch) => ({

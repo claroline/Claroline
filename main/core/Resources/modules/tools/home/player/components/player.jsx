@@ -26,7 +26,7 @@ const PlayerComponent = props =>
   >
     <PageHeader
       className={props.currentTab && props.currentTab.centerTitle ? 'text-center' : ''}
-      title={props.currentTab ? props.currentTab.longTitle : ('desktop' === props.currentContext.type ? trans('desktop') : props.currentContext.data.name)}
+      title={props.currentTabTitle}
       poster={props.currentTab && props.currentTab.poster ? props.currentTab.poster.url: undefined}
     >
       {1 < props.tabs.length &&
@@ -63,6 +63,7 @@ PlayerComponent.propTypes = {
   tabs: T.arrayOf(T.shape(
     TabTypes.propTypes
   )),
+  currentTabTitle: T.string.isRequired,
   currentTab: T.shape(TabTypes.propTypes),
   editable: T.bool.isRequired,
   widgets: T.arrayOf(T.shape(
@@ -76,6 +77,7 @@ const Player = connect(
     editable: selectors.editable(state),
     tabs: playerSelectors.tabs(state),
     currentTab: selectors.currentTab(state),
+    currentTabTitle: selectors.currentTabTitle(state),
     widgets: selectors.widgets(state)
   })
 )(PlayerComponent)
