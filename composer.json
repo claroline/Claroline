@@ -38,7 +38,7 @@
             "npm install"
         ],
         "fetch-dev": [
-            "composer install --prefer-source",
+            "composer install --prefer-source -vvv",
             "npm install",
             "npm install fullcalendar"
         ],
