@@ -7,11 +7,7 @@
         "claroline/distribution": "12.x-dev"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "2.11",
-        "mockery/mockery": "0.9.6",
-        "mikey179/vfsStream": "1.6.4",
-        "phpunit/phpunit": "7.1.5",
-        "symfony/phpunit-bridge": "4.0.9"
+
     },
     "scripts": {
         "fast-install" : [
