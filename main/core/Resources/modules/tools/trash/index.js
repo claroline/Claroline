@@ -13,7 +13,6 @@ export const App = () => ({
     tool: {
       name: 'resources',
       currentContext: initialData.currentContext
-    },
-    workspace: initialData.workspace
+    }
   })
 })

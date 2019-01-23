@@ -168,7 +168,9 @@ class ParametersSerializer
     {
         if (isset($data['display']) && isset($data['display']['logo'])) {
             $logo = $data['display']['logo'];
-            $data['display']['logo'] = $logo['url'];
+            if (isset($logo['url'])) {
+                $data['display']['logo'] = $logo['url'];
+            }
         }
 
         return $data;

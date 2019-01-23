@@ -53,7 +53,7 @@ const meta = createSelector(
 
 const bannedUser = createSelector(
   [restrictions],
-  (restrictions) => restrictions.bannedUser
+  (restrictions) => restrictions.banned
 )
 const moderator = createSelector(
   [restrictions],

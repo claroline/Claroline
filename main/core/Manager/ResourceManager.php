@@ -936,7 +936,7 @@ class ResourceManager
      */
     public function restore(ResourceNode $resourceNode)
     {
-        $resourceNode->setActive(true);
+        $this->setActive($resourceNode);
         $workspace = $resourceNode->getWorkspace();
 
         if ($workspace) {
@@ -950,6 +950,16 @@ class ResourceManager
 
         $this->om->persist($resourceNode);
         $this->om->flush();
+    }
+
+    public function setActive(ResourceNode $node)
+    {
+        foreach ($node->getChildren() as $child) {
+            $this->setActive($child);
+        }
+
+        $node->setActive(true);
+        $this->om->persist($node);
     }
 
     /**

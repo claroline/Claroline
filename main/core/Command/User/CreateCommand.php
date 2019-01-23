@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Command\User;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
+use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Entity\User as UserEntity;
 use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -24,7 +25,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Creates an user, optionally with a specific role (default to simple user).
  */
-class CreateCommand extends ContainerAwareCommand
+class CreateCommand extends ContainerAwareCommand implements AdminCliCommand
 {
     use BaseCommandTrait;
 
