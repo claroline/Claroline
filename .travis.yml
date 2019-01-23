@@ -38,7 +38,7 @@ before_install:
   - git remote set-branches --add origin $TRAVIS_BRANCH
   - git fetch origin
   # keep a list of files impacted by the PR (wouldn't work with direct push)
-  - git diff --name-only --diff-filter=AM origin/$TRAVIS_BRANCH > git_diff_files.txt
+  - git diff --name-only --diff-filter=AM origin/$TRAVIS_BRANCH ':(exclude)main/dev/Resources/travis/composer.lock' > git_diff_files.txt
   # leave build/repo dir
   - cd ../..
   # increase php memory size (required for composer)
@@ -56,6 +56,7 @@ before_script:
   - cd Claroline-${TRAVIS_BRANCH}
   - php scripts/configure.php --default
   # override platform composer.json with build/repo local reference
+  - mv $TRAVIS_BUILD_DIR/main/dev/Resources/travis/composer.lock .
   - php $TRAVIS_BUILD_DIR/main/dev/Resources/travis/pre-composer.php claroline/distribution $TRAVIS_BUILD_DIR "*"
   # fetch dependencies and build (currently this is done in prod mode)
   - export TRAVIS_REPO_SLUG REMOTE_HOST REMOTE_USER REMOTE_PASS CACHE_PATH
