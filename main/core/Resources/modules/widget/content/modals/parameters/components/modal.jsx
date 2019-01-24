@@ -19,7 +19,7 @@ const ParametersModal = props =>
     onEntering={() => props.loadContent(props.content)}
   >
     {!isEmpty(props.formData) &&
-      <WidgetContentForm level={5} name={selectors.STORE_NAME} context={props.currentContext} />
+      <WidgetContentForm level={5} name={selectors.STORE_NAME} currentContext={props.currentContext} />
     }
 
     <Button

@@ -82,7 +82,6 @@ const WidgetContentFormComponent = (props) => {
   )
 }
 
-
 WidgetContentFormComponent.propTypes = {
   level: T.number,
   name: T.string.isRequired,

@@ -39,9 +39,9 @@ const EditorComponent = props =>
     }] : [])}
   >
     <PageHeader
-      alignTitle={true === props.currentTab.centerTitle ? 'center' : 'left'}
+      alignTitle={props.currentTab && props.currentTab.centerTitle ? 'center' : 'left'}
       title={props.currentTabTitle}
-      poster={props.currentTab.poster ? props.currentTab.poster.url: undefined}
+      poster={props.currentTab && props.currentTab.poster ? props.currentTab.poster.url: undefined}
     >
       <Tabs
         prefix="/edit"
@@ -82,7 +82,7 @@ const EditorComponent = props =>
                 confirm: {
                   title: trans('home_tab_delete_confirm_title'),
                   message: trans('home_tab_delete_confirm_message'),
-                  subtitle: props.currentTab.title
+                  subtitle: props.currentTab && props.currentTab.title
                 },
                 disabled: props.readOnly || 1 >= props.tabs.length,
                 callback: () => props.deleteTab(props.tabs, props.currentTab, props.history.push)
@@ -101,7 +101,7 @@ const EditorComponent = props =>
         widgets={props.widgets}
         administration={props.administration}
         readOnly={props.readOnly}
-        created={0 !== props.playerTabs.filter(tab => props.currentTab.id === tab.id).length}
+        created={props.currentTab && 0 !== props.playerTabs.filter(tab => props.currentTab.id === tab.id).length}
         tabs={props.tabs}
 
         update={props.updateTab}
@@ -146,7 +146,7 @@ const Editor = connect(
     playerTabs: selectors.tabs(state),
     widgets: editorSelectors.widgets(state),
     currentTabIndex: editorSelectors.currentTabIndex(state),
-    currentTabTitle: selectors.currentTabTitle(state),
+    currentTabTitle: editorSelectors.currentTabTitle(state),
     currentTab: editorSelectors.currentTab(state)
   }),
   (dispatch) => ({
