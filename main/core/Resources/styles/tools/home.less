@@ -2,6 +2,13 @@
 @import "../../less/mixins";
 @import "../../less/themes/default/variables";
 
+// TODO : move us
+@home-tab-color:         @text-color;
+@home-tab-bg:            #ebebeb;
+@home-tab-border-radius: @border-radius-small;
+@home-tab-hover-color:   @text-color;
+@home-tab-hover-bg:      white;
+
 .tool-nav {
   display: flex;
   flex-direction: row;
@@ -21,15 +28,16 @@
   .nav-add-tab,
   .nav-tab {
     position: relative;
-    color: @text-color;
+    color: @home-tab-color;
     padding: @padding-large-vertical @padding-large-horizontal;
     margin: 5px;
-    background: #ebebeb;
+    background: @home-tab-bg;
     border: 1px solid transparent;
-    border-radius: @border-radius-small;
+    border-radius: @home-tab-border-radius;
 
     &:hover {
-      background: white;
+      color: @home-tab-hover-color;
+      background: @home-tab-hover-bg;
       .box-shadow(@box-shadow-base);
     }
 
