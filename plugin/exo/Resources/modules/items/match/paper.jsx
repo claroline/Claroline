@@ -148,7 +148,7 @@ export class MatchPaper extends Component
   // switch tab handler
   handleSelect(key) {
     this.jsPlumbInstance.getConnections().forEach(conn => {
-      this.jsPlumbInstance.detach(conn)
+      this.jsPlumbInstance.deleteConnection(conn)
     })
 
     this.setState({key})
