@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {withRouter} from '#/main/app/router'
@@ -24,7 +25,7 @@ const AnnounceSendComponent = props =>
       type: CALLBACK_BUTTON,
       icon: 'fa fa-fw fa-paper-plane-o',
       label: trans('send', {}, 'actions'),
-      disabled: parseInt(props.announcement.meta.notifyUsers) === 0,
+      disabled: 0 === parseInt(get(props.announcement, 'meta.notifyUsers') || 0),
       callback: () => {
         props.send(props.aggregateId, props.announcement)
         props.history.push('/')
@@ -55,15 +56,13 @@ const AnnounceSendComponent = props =>
                 name: 'roles',
                 label: trans('roles_to_send_to', {}, 'announcement'),
                 type: 'choice',
-                displayed: (announcement) => 0 !== parseInt(announcement.meta.notifyUsers),
+                displayed: (announcement) => 0 !== parseInt(get(announcement, 'meta.notifyUsers') || 0),
                 options: {
                   multiple: true,
                   condensed: true,
-                  choices: props.workspaceRoles.reduce((acc, current) => {
-                    acc[current.id] = trans(current.translationKey)
-
-                    return acc
-                  }, {})
+                  choices: props.workspaceRoles.reduce((acc, current) => Object.assign(acc, {
+                    [current.id]: trans(current.translationKey)
+                  }), {})
                 }
               }
             ]
