@@ -1198,9 +1198,12 @@ class RoleManager
 
     public function checkUserIntegrity(User $user, $i = 1, $totalUsers = 1)
     {
+        $userRole = $role = $this->roleRepo->findOneByName('ROLE_USER');
         $this->log('Checking personal role for '.$user->getUsername()." ($i/$totalUsers)");
         $roleName = 'ROLE_USER_'.strtoupper($user->getUsername());
         $role = $this->roleRepo->findOneByName($roleName);
+        $user->addRole($userRole);
+        $this->om->persist($user);
 
         if (!$role) {
             $this->log('Adding user role for '.$user->getUsername(), LogLevel::DEBUG);
