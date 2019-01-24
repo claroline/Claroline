@@ -21,7 +21,6 @@ use Claroline\CoreBundle\Entity\Task\ScheduledTask;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Validator\Constraints as ClaroAssert;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -426,8 +425,6 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @var ArrayCollection
      */
     private $scheduledTasks;
-
-    private $mainOrganization = null;
 
     public function __construct()
     {
@@ -1244,21 +1241,6 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
 
     public function setMainOrganization(Organization $organization)
     {
-        $this->mainOrganization = $organization;
-    }
-
-    /**
-     * @ORM\PreFlush
-     * For some reason it cannot always be done in the setMainOrganization method. Doctrine will just fail to make the good request
-     */
-    public function preFlush(PreFlushEventArgs $args)
-    {
-        $organization = $this->mainOrganization;
-
-        if (!$organization) {
-            return;
-        }
-
         $found = false;
 
         foreach ($this->userOrganizationReferences as $ref) {
