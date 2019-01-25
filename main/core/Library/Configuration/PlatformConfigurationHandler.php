@@ -130,15 +130,16 @@ class PlatformConfigurationHandler
 
     protected function mergeParameters()
     {
+        $defaults = new PlatformDefaults();
+
         if (!file_exists($this->configFile)) {
-            $defaults = new PlatformDefaults();
             file_put_contents($this->configFile, json_encode($defaults->getDefaultParameters(), JSON_PRETTY_PRINT));
         }
 
         $parameters = json_decode(file_get_contents($this->configFile), true);
 
         if ($parameters) {
-            return array_merge($this->parameters, $parameters);
+            return $this->arrayMerge($parameters, $defaults->getDefaultParameters());
         }
 
         return $this->parameters;
@@ -147,5 +148,20 @@ class PlatformConfigurationHandler
     public function getDefaultParameters()
     {
         return $this->parameters;
+    }
+
+    public function arrayMerge(array $array1, array $array2)
+    {
+        foreach ($array2 as $key => $value) {
+            if (!array_key_exists($key, $array1)) {
+                $array1[$key] = $value;
+            } else {
+                if (is_array($value)) {
+                    $array1[$key] = $this->arrayMerge($array1[$key], $array2[$key]);
+                }
+            }
+        }
+
+        return $array1;
     }
 }

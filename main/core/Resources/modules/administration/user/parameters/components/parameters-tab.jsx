@@ -161,6 +161,19 @@ const Parameters = (props) => {
                   return choices
                 }, {})
               }
+            }, {
+              name: 'profile.show_email',
+              type: 'choice',
+              label: trans('show_email'),
+              options: {
+                multiple: true,
+                condensed: true,
+                choices: Object.keys(roleEnum).filter(r => ['ROLE_ADMIN', 'ROLE_ANONYMOUS'].indexOf(r) === -1).reduce((choices, key) => {
+                  choices[key] = roleEnum[key]
+
+                  return choices
+                }, {})
+              }
             }
           ]
         }, {

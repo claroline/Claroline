@@ -43,6 +43,7 @@ class PlatformDefaults implements ParameterProviderInterface
               'roles_confidential' => [],
               'roles_locked' => [],
               'roles_edition' => [],
+              'show_email' => ['ROLE_USER'],
             ],
             'country' => '-',
             'portfolio' => [

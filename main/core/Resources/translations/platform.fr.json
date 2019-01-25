@@ -1751,5 +1751,6 @@
     "no_javascript": "Aucun javascript",
     "new_category": "Nouvelle catégorie",
     "notified_actions": "Actions notifiées",
-    "add_rights": "Ajouter des droits"
+    "add_rights": "Ajouter des droits",
+    "show_email": "Montrer l'e-mail"
 }
