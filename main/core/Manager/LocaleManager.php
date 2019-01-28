@@ -177,4 +177,9 @@ class LocaleManager
 
         return null;
     }
+
+    public function getLocale(User $user)
+    {
+        return $user->getLocale() ? $user->getLocale() : $this->defaultLocale;
+    }
 }

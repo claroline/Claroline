@@ -115,7 +115,7 @@ class MailManager
             'username' => $user->getUsername(),
             'password_reset_link' => $link,
         ];
-        $locale = $user->getLocale();
+        $locale = $this->container->get('claroline.manager.locale_manager')->getLocale($user);
         $subject = $this->templateManager->getTemplate('forgotten_password', $placeholders, $locale, 'title');
         $body = $this->templateManager->getTemplate('forgotten_password', $placeholders, $locale);
 
@@ -131,7 +131,7 @@ class MailManager
             ['hash' => $hash],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $locale = $user->getLocale();
+        $locale = $this->container->get('claroline.manager.locale_manager')->getLocale($user);
         $placeholders = [
             'first_name' => $user->getFirstName(),
             'last_name' => $user->getLastName(),
@@ -152,7 +152,7 @@ class MailManager
             ['hash' => $hash],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $locale = $user->getLocale();
+        $locale = $this->container->get('claroline.manager.locale_manager')->getLocale($user);
         $placeholders = [
             'first_name' => $user->getFirstName(),
             'last_name' => $user->getLastName(),
@@ -173,7 +173,7 @@ class MailManager
             ['hash' => $hash],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $locale = $user->getLocale();
+        $locale = $this->container->get('claroline.manager.locale_manager')->getLocale($user);
         $placeholders = [
             'first_name' => $user->getFirstName(),
             'last_name' => $user->getLastName(),
@@ -193,7 +193,7 @@ class MailManager
      */
     public function sendCreationMessage(User $user)
     {
-        $locale = $user->getLocale();
+        $locale = $this->container->get('claroline.manager.locale_manager')->getLocale($user);
         $url = $this->router->generate(
             'claro_security_validate_email',
             ['hash' => $user->getEmailValidationHash()],
