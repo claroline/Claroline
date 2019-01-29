@@ -6,9 +6,9 @@ import merge from 'lodash/merge'
 import {Await} from '#/main/app/components/await'
 import {trans} from '#/main/app/intl/translation'
 import {FormGroup} from '#/main/app/content/form/components/group'
-import {getType} from '#/main/app/data'
+import {getType} from '#/main/app/data/types'
 
-import {DataType as DataTypeTypes} from '#/main/app/data/prop-types'
+import {DataType as DataTypeTypes} from '#/main/app/data/types/prop-types'
 
 // todo there are big c/c from Form component but I don't know if we can do better
 

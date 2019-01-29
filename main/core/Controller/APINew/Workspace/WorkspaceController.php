@@ -458,28 +458,6 @@ class WorkspaceController extends AbstractCrudController
 
     /**
      * @Route(
-     *    "/list",
-     *    name="apiv2_workspace_displayable_list"
-     * )
-     * @Method("GET")
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function listDisplayableAction(Request $request)
-    {
-        return new JsonResponse($this->finder->search(
-            'Claroline\CoreBundle\Entity\Workspace\Workspace',
-            array_merge($request->query->all(), ['hiddenFilters' => ['displayable' => true, 'model' => false, 'sameOrganization' => true]]),
-            $this->getOptions()['list']
-        ));
-    }
-
-    /**
-     * For anonymous.
-     *
-     * @Route(
      *    "/list/registerable",
      *    name="apiv2_workspace_list_registerable"
      * )
@@ -493,7 +471,12 @@ class WorkspaceController extends AbstractCrudController
     {
         return new JsonResponse($this->finder->search(
             'Claroline\CoreBundle\Entity\Workspace\Workspace',
-            array_merge($request->query->all(), ['hiddenFilters' => ['displayable' => true, 'model' => false, 'selfRegistration' => true]]),
+            array_merge($request->query->all(), ['hiddenFilters' => [
+                'displayable' => true,
+                'model' => false,
+                'selfRegistration' => true,
+                'sameOrganization' => true,
+            ]]),
             $this->getOptions()['list']
         ));
     }

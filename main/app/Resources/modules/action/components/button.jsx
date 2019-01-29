@@ -6,7 +6,7 @@ import omit from 'lodash/omit'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {toKey} from '#/main/core/scaffolding/text/utils'
 import {registry as buttonRegistry} from '#/main/app/buttons/registry'
-import {TooltipElement} from '#/main/core/layout/components/tooltip-element'
+import {TooltipOverlay} from '#/main/app/overlay/tooltip/components/overlay'
 
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
@@ -49,7 +49,7 @@ implementPropTypes(ButtonComponent, ActionTypes, {
  * @constructor
  */
 const Button = props => props.tooltip ?
-  <TooltipElement
+  <TooltipOverlay
     id={`${props.id || toKey(props.label)}-tip`}
     position={props.tooltip}
     tip={props.label}
@@ -61,7 +61,7 @@ const Button = props => props.tooltip ?
     >
       {props.children}
     </ButtonComponent>
-  </TooltipElement> :
+  </TooltipOverlay> :
   <ButtonComponent
     {...omit(props, 'tooltip', 'group', 'context', 'scope', 'default')}
   >

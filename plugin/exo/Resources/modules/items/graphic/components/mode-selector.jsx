@@ -1,12 +1,14 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+
 import {tex} from '#/main/app/intl/translation'
-import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
+import {TooltipOverlay} from '#/main/app/overlay/tooltip/components/overlay'
+
 import {MODE_RECT, MODE_CIRCLE, MODE_SELECT} from './../enums'
 
 const ModeButton = props =>
-  <TooltipElement id={props.id} tip={props.tip}>
+  <TooltipOverlay id={props.id} tip={props.tip}>
     <button
       type="button"
       className={classes('btn', 'btn-default', {active: props.active})}
@@ -14,7 +16,7 @@ const ModeButton = props =>
     >
       {props.children}
     </button>
-  </TooltipElement>
+  </TooltipOverlay>
 
 ModeButton.propTypes = {
   id: T.string.isRequired,

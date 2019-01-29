@@ -9,7 +9,7 @@ import {MenuItem} from '#/main/app/overlay/menu'
 import {DataListProperty} from '#/main/app/content/list/prop-types'
 
 const ColumnsMenu = props =>
-  <div className="dropdown-menu dropdown-menu-right">
+  <ul className="dropdown-menu dropdown-menu-right">
     <MenuItem header={true}>{trans('list_columns')}</MenuItem>
 
     {props.available.map(availableColumn =>
@@ -25,7 +25,7 @@ const ColumnsMenu = props =>
         </label>
       </li>
     )}
-  </div>
+  </ul>
 
 ColumnsMenu.propTypes = {
   available: T.arrayOf(

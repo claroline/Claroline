@@ -256,9 +256,9 @@ class SelectionForm extends Component {
           />
         }
         {this.props.item.mode === 'highlight' &&
-          this.getSolution().answers.map((answer, key) => {
-            return <HighlightAnswer key={key} answer={answer} item={this.props.item} onChange={this.props.onChange}></HighlightAnswer>
-          })
+          this.getSolution().answers.map((answer, key) =>
+            <HighlightAnswer key={key} answer={answer} item={this.props.item} onChange={this.props.onChange} />
+          )
         }
         {this.props.item.mode === 'highlight' &&
           <button
@@ -274,7 +274,7 @@ class SelectionForm extends Component {
         }
 
         {get(this.props, '_errors.solutions') &&
-          <ContentError text={this.props._errors.solutions} warnOnly={!this.props.validating}/>
+          <ContentError error={this.props._errors.solutions} warnOnly={!this.props.validating}/>
         }
         {this.state.showFeedback &&
           <div className="feedback-container selection-form-row">
@@ -602,7 +602,7 @@ export class Selection extends Component {
               })
             }
             {get(this.props.item, '_errors.colors') &&
-              <ContentError text={get(this.props.item, '_errors.colors')} warnOnly={!this.props.validating}/>
+              <ContentError error={get(this.props.item, '_errors.colors')} warnOnly={!this.props.validating}/>
             }
             <button
               type="button"

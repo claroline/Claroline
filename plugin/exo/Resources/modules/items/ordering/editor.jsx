@@ -232,7 +232,7 @@ const OrderingItems = props => {
   return (
     <div>
       {get(props.item, '_errors.items') &&
-        <ContentError text={props.item._errors.items} warnOnly={!props.validating}/>
+        <ContentError error={props.item._errors.items} warnOnly={!props.validating}/>
       }
       <div className="items-row">
         <ItemList

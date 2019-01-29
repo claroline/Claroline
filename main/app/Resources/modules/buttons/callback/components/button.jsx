@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Component} from 'react'
 import classes from 'classnames'
 import omit from 'lodash/omit'
 
@@ -11,70 +11,81 @@ import {Button as ButtonTypes} from '#/main/app/buttons/prop-types'
 /**
  * Callback button.
  * Renders a component that will trigger a callback on click.
- *
- * @param props
- * @constructor
  */
-const CallbackButton = withModal(props =>
-  <button
-    {...omit(props, 'active', 'displayed', 'primary', 'dangerous', 'size', 'callback', 'bsRole', 'bsClass', 'confirm', 'showModal')}
-    type="button"
-    role="button"
-    tabIndex={props.tabIndex}
-    disabled={props.disabled}
-    className={classes(
-      props.className,
-      props.size && `btn-${props.size}`,
-      {
-        disabled: props.disabled,
-        default: !props.primary && !props.dangerous,
-        primary: props.primary,
-        danger: props.dangerous,
-        active: props.active
-      }
-    )}
-    onClick={(e) => {
-      if (!props.disabled) {
-        if (props.confirm) {
-          // show confirmation modal before executing
-          props.showModal(MODAL_CONFIRM, {
-            icon: props.confirm.icon,
-            title: props.confirm.title,
-            subtitle: props.confirm.subtitle,
-            question: props.confirm.message,
-            confirmButtonText: props.confirm.button,
-            dangerous: props.dangerous,
-            handleConfirm: () => {
-              if (props.onClick) {
-                // execute the default click callback if any (mostly to make dropdown works)
-                props.onClick(e)
-              }
-              props.callback(e)
+class CallbackButtonComponent extends Component {
+  constructor(props) {
+    super(props)
+
+    this.onClick = this.onClick.bind(this)
+  }
+
+  onClick(e) {
+    if (!this.props.disabled) {
+      if (this.props.confirm) {
+        // show confirmation modal before executing
+        this.props.showModal(MODAL_CONFIRM, {
+          icon: this.props.confirm.icon,
+          title: this.props.confirm.title,
+          subtitle: this.props.confirm.subtitle,
+          question: this.props.confirm.message,
+          confirmButtonText: this.props.confirm.button,
+          dangerous: this.props.dangerous,
+          handleConfirm: () => {
+            if (this.props.onClick) {
+              // execute the default click callback if any (mostly to make dropdown works)
+              this.props.onClick(e)
             }
-          })
-        } else {
-          if (props.onClick) {
-            // execute the default click callback if any (mostly to make dropdown works)
-            props.onClick(e)
+            this.props.callback(e)
           }
-          props.callback(e)
+        })
+      } else {
+        if (this.props.onClick) {
+          // execute the default click callback if any (mostly to make dropdown works)
+          this.props.onClick(e)
         }
+        this.props.callback(e)
       }
+    }
 
-      e.preventDefault()
-      e.stopPropagation()
+    e.preventDefault()
+    e.stopPropagation()
 
-      e.target.blur()
-    }}
-  >
-    {props.children}
-  </button>
-)
+    e.target.blur()
+  }
 
-implementPropTypes(CallbackButton, ButtonTypes, {
-  //showModal: T.func.isRequired, // injected from `withModal`
+  render() {
+    return (
+      <button
+        {...omit(this.props, 'active', 'displayed', 'primary', 'dangerous', 'size', 'callback', 'bsRole', 'bsClass', 'confirm', 'showModal')}
+        type="button"
+        role="button"
+        tabIndex={this.props.tabIndex}
+        disabled={this.props.disabled}
+        className={classes(
+          this.props.className,
+          this.props.size && `btn-${this.props.size}`,
+          {
+            disabled: this.props.disabled,
+            default: !this.props.primary && !this.props.dangerous,
+            primary: this.props.primary,
+            danger: this.props.dangerous,
+            active: this.props.active
+          }
+        )}
+        onClick={this.onClick}
+      >
+        {this.props.children}
+      </button>
+    )
+  }
+}
+
+implementPropTypes(CallbackButtonComponent, ButtonTypes, {
+  showModal: T.func.isRequired, // comes from HOC withModal
   callback: T.func.isRequired
 })
+
+const CallbackButton = withModal(CallbackButtonComponent)
 
 export {
   CallbackButton

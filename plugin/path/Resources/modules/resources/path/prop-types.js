@@ -47,12 +47,18 @@ const Path = {
       numbering: T.oneOf(['none', 'numeric', 'literal', 'custom']),
       manualProgressionAllowed: T.bool
     }).isRequired,
+    opening: T.shape({
+      secondaryResources: T.oneOf(['_self', '_blank'])
+    }),
     steps: T.arrayOf(T.shape(
       Step.propTypes
     ))
   },
   defaultProps: {
-    steps: []
+    steps: [],
+    opening: {
+      secondaryResources: '_self'
+    }
   }
 }
 

@@ -1,12 +1,10 @@
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {withRouter} from '#/main/app/router'
-
 import {actions, selectors} from '#/main/core/resource/explorer/store'
 import {ResourceExplorer as ResourceExplorerComponent} from '#/main/core/resource/explorer/components/explorer'
 
-const ResourceExplorer = withRouter(connect(
+const ResourceExplorer = connect(
   (state, ownProps) => ({
     root: selectors.root(selectors.explorer(state, ownProps.name)),
     currentId: selectors.currentId(selectors.explorer(state, ownProps.name)),
@@ -23,7 +21,7 @@ const ResourceExplorer = withRouter(connect(
       dispatch(actions.toggleDirectoryOpen(ownProps.name, directory, opened))
     }
   })
-)(ResourceExplorerComponent))
+)(ResourceExplorerComponent)
 
 ResourceExplorer.propTypes = {
   name: T.string.isRequired

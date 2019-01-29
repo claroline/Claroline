@@ -1,6 +1,6 @@
 import merge from 'lodash/merge'
 
-import {isTypeEnabled} from '#/main/app/data'
+import {isTypeEnabled} from '#/main/app/data/types'
 
 import {DataListProperty} from '#/main/app/content/list/prop-types'
 

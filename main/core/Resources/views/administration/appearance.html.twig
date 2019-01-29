@@ -10,8 +10,6 @@
 
         data-current-context="{{ context | json_encode | raw | escape }}"
         data-parameters="{{ parameters | json_encode | raw | escape }}"
-        data-themes="{{ themes | json_encode | raw | escape }}"
-        data-is-read-only = "{{ isReadOnly | json_encode | raw | escape }}"
         data-icon-set-choices = "{{ iconSetChoices | json_encode | raw | escape }}"
     ></div>
 {% endblock %}

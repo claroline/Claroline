@@ -3,7 +3,7 @@ import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
 import {asset} from '#/main/app/config/asset'
-import {getPlainText} from '#/main/app/data/html/utils'
+import {getPlainText} from '#/main/app/data/types/html/utils'
 import {displayDate} from '#/main/app/intl/date'
 import {DataCard} from '#/main/app/content/card/components/data'
 import {ResourceIcon} from '#/main/core/resource/components/icon'

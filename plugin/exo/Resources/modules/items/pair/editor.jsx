@@ -481,16 +481,16 @@ const PairForm = (props) => {
       </div>
 
       {get(props.item, '_errors.item') &&
-        <ContentError text={props.item._errors.item} warnOnly={!props.validating}/>
+        <ContentError error={props.item._errors.item} warnOnly={!props.validating}/>
       }
       {get(props.item, '_errors.items') &&
-        <ContentError text={props.item._errors.items} warnOnly={!props.validating}/>
+        <ContentError error={props.item._errors.items} warnOnly={!props.validating}/>
       }
       {get(props.item, '_errors.solutions') &&
-        <ContentError text={props.item._errors.solutions} warnOnly={!props.validating}/>
+        <ContentError error={props.item._errors.solutions} warnOnly={!props.validating}/>
       }
       {get(props.item, '_errors.odd') &&
-        <ContentError text={props.item._errors.odd} warnOnly={!props.validating}/>
+        <ContentError error={props.item._errors.odd} warnOnly={!props.validating}/>
       }
 
       <div className="row pair-items">

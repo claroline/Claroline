@@ -1,19 +1,18 @@
 import {trans} from '#/main/app/intl/translation'
 
 import {ScaleDisplay} from '#/plugin/competency/data/types/scale/components/display'
-import {ScaleGroup} from '#/plugin/competency/data/types/scale/components/group'
+import {ScaleInput} from '#/plugin/competency/data/types/scale/components/input'
 
 const dataType = {
   name: 'competency_scale',
   meta: {
-    creatable: false,
     icon: 'fa fa-fw fa fa-arrow-up',
-    label: trans('scale', {}, 'competency'),
-    description: trans('scale_desc', {}, 'competency')
+    label: trans('scale', {}, 'data'),
+    description: trans('scale_desc', {}, 'data')
   },
   components: {
     details: ScaleDisplay,
-    form: ScaleGroup
+    input: ScaleInput
   }
 }
 

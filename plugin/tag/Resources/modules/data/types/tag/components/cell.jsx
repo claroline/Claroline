@@ -1,6 +1,6 @@
 import React from 'react'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {DataCell as DataCellTypes} from '#/main/app/data/prop-types'
+import {DataCell as DataCellTypes} from '#/main/app/data/types/prop-types'
 
 const TagCell = () =>
   <div>

@@ -13,10 +13,10 @@ const ContentHelp = props => Array.isArray(props.help) ?
     )}
   </ul>
   :
-  <span className="help-block">
+  <div className="help-block">
     <span className="help-icon fa fa-fw fa-info-circle" />
     {props.help}
-  </span>
+  </div>
 
 ContentHelp.propTypes = {
   help: T.oneOfType([

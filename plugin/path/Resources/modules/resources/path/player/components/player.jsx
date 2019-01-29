@@ -71,6 +71,7 @@ const PlayerComponent = props => {
                     enableNavigation={props.enableNavigation}
                     disableNavigation={props.disableNavigation}
                     onEmbeddedResourceClose={props.computeResourceDuration}
+                    secondaryResourcesTarget={props.path.opening.secondaryResources}
                   />
                 </PathCurrent>
 
@@ -106,8 +107,8 @@ const Player = connect(
     steps: flattenSteps(selectors.steps(state))
   }),
   dispatch => ({
-    updateProgression(stepId, status = constants.STATUS_SEEN) {
-      dispatch(actions.updateProgression(stepId, status))
+    updateProgression(stepId, status = constants.STATUS_SEEN, silent) {
+      dispatch(actions.updateProgression(stepId, status, silent))
     },
     enableNavigation() {
       dispatch(actions.enableNavigation())

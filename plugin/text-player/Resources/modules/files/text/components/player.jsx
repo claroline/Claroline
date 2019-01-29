@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {HtmlText} from '#/main/core/layout/components/html-text'
-import {getPlainText} from '#/main/app/data/html/utils'
+import {getPlainText} from '#/main/app/data/types/html/utils'
 
 import {Text as TextTypes} from '#/plugin/text-player/files/text/prop-types'
 

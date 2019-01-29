@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\Listener\Administration;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Entity\Icon\IconSetTypeEnum;
-use Claroline\CoreBundle\Entity\Theme\Theme;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use Claroline\CoreBundle\Manager\IconSetManager;
@@ -88,12 +87,7 @@ class AppearanceListener
                     'type' => Tool::ADMINISTRATION,
                 ],
                 'parameters' => $this->serializer->serialize(),
-                'isReadOnly' => !$this->themeManager->isThemeDirWritable(),
                 'iconSetChoices' => $iconSetChoices,
-                'themes' => $this->finder->search(Theme::class, [
-                    'limit' => -1,
-                    'sortBy' => 'name',
-                ]),
             ]
         );
 

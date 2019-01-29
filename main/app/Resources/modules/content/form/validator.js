@@ -3,7 +3,7 @@ import get from 'lodash/get'
 // todo : move in data module
 
 import {chain, notEmpty, validateIf} from '#/main/core/validation'
-import {getType} from '#/main/app/data'
+import {getType} from '#/main/app/data/types'
 
 /**
  * Validates a value based on a definition object.

@@ -2,7 +2,7 @@ import {trans} from '#/main/app/intl/translation'
 
 import {ResourceCell} from '#/main/core/data/types/resource/components/cell'
 import {ResourceFilter} from '#/main/core/data/types/resource/components/filter'
-import {ResourceGroup} from '#/main/core/data/types/resource/components/group'
+import {ResourceInput} from '#/main/core/data/types/resource/components/input'
 import {ResourceDisplay} from '#/main/core/data/types/resource/components/display'
 
 const dataType = {
@@ -18,7 +18,7 @@ const dataType = {
   components: {
     table: ResourceCell,
     details: ResourceDisplay,
-    form: ResourceGroup,
+    input: ResourceInput,
     search: ResourceFilter
   }
 }

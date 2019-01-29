@@ -79,6 +79,24 @@ const ParametersForm = props =>
             }
           }
         ]
+      }, {
+        icon: 'fa fa-fw fa-sign-in',
+        title: trans('opening_parameters'),
+        fields: [
+          {
+            name: 'opening.secondaryResources',
+            label: trans('secondary_resources_open_target', {}, 'path'),
+            type: 'choice',
+            options: {
+              noEmpty: true,
+              condensed: true,
+              choices: {
+                _self: trans('same_window'),
+                _blank: trans('new_window')
+              }
+            }
+          }
+        ]
       }
     ]}
   />

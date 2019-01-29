@@ -10,7 +10,8 @@ import {DataDetailsSection as DataDetailsSectionTypes} from '#/main/app/content/
 import {createDetailsDefinition} from '#/main/app/content/details/utils'
 import {DetailsProp} from '#/main/app/content/details/components/prop'
 
-// todo there are big c/c from Form component but I don't know if we can do better
+// TODO : there are big c/c from Form component but I don't know if we can do better
+// TODO : manage linked fields
 
 const DetailsData = props => {
   const hLevel = props.level + (props.title ? 1 : 0)

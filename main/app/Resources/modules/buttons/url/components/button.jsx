@@ -38,6 +38,7 @@ const UrlButton = props => {
         danger: props.dangerous,
         active: props.active // it may not be useful because by definition an url will change the context
       }, props.size && `btn-${props.size}`)}
+      target={props.open}
     >
       {props.children}
     </a>
@@ -48,7 +49,8 @@ implementPropTypes(UrlButton, ButtonTypes, {
   target: T.oneOfType([
     T.array, // a symfony url array
     T.string
-  ])
+  ]),
+  open: T.string
 })
 
 export {

@@ -37,7 +37,11 @@ const WalkthroughOverlay = withReducer(selectors.STORE_NAME, reducer)(
       finish() {
         dispatch(actions.finish())
       }
-    })
+    }),
+    undefined,
+    {
+      areStatesEqual: (next, prev) => selectors.store(prev) === selectors.store(next)
+    }
   )(WalkthroughOverlayComponent)
 )
 

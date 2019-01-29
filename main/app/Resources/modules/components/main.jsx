@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {Provider} from 'react-redux'
 
@@ -14,25 +14,21 @@ import {WalkthroughOverlay} from '#/main/app/overlay/walkthrough/containers/over
 
 const Main = props =>
   <Provider store={props.store}>
+    <AlertOverlay key="alert" />
+
     <Router embedded={props.embedded}>
-      <Fragment>
-        <AlertOverlay key="alert" />
-
-        {props.children}
-
-        <OverlayStack>
-          <ModalOverlay key="modal" />,
-          <WalkthroughOverlay key="walkthrough" />
-        </OverlayStack>
-      </Fragment>
+      {props.children}
     </Router>
+
+    <OverlayStack>
+      <ModalOverlay key="modal" />,
+      <WalkthroughOverlay key="walkthrough" />
+    </OverlayStack>
   </Provider>
 
 Main.propTypes = {
   embedded: T.bool,
-  store: T.shape({
-
-  }).isRequired,
+  store: T.object.isRequired,
   children: T.any
 }
 

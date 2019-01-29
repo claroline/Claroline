@@ -181,16 +181,6 @@ class ThemeManager
     }
 
     /**
-     * Returns whether the theme directory is writable.
-     *
-     * @return bool
-     */
-    public function isThemeDirWritable()
-    {
-        return is_writable($this->themeDir);
-    }
-
-    /**
      * @param Theme $theme
      * @param User  $user
      *

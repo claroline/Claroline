@@ -1,7 +1,10 @@
 import isEmpty from 'lodash/isEmpty'
 import {chain, array, string, notBlank, lengthInRange} from '#/main/core/validation'
 
-import {CriteriaGroup} from '#/plugin/drop-zone/data/criteria/components/form-group'
+import {CriteriaGroup} from '#/plugin/drop-zone/data/criteria/components/group'
+import {CriteriaInput} from '#/plugin/drop-zone/data/criteria/components/input'
+
+// TODO : replace by a criterion type and use `collection`
 
 const dataType = {
   name: 'criteria',
@@ -23,7 +26,8 @@ const dataType = {
   }]),
 
   components: {
-    form: CriteriaGroup
+    group: CriteriaGroup,
+    input: CriteriaInput
   }
 }
 

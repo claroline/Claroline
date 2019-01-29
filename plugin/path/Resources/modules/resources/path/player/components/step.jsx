@@ -6,7 +6,8 @@ import {asset} from '#/main/app/config/asset'
 import {currentUser} from '#/main/app/security'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {DropdownButton, MenuItem} from '#/main/core/layout/components/dropdown'
+import {Button} from '#/main/app/action/components/button'
+import {MENU_BUTTON, CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {ResourceCard} from '#/main/core/resource/data/components/resource-card'
 import {ResourceEmbedded} from '#/main/core/resource/components/embedded'
@@ -18,32 +19,20 @@ const ManualProgression = props =>
   <div className="step-manual-progression">
     {trans('user_progression', {}, 'path')}
 
-    <DropdownButton
+    <Button
       id="step-progression"
-      title={constants.STEP_STATUS[props.status]}
-      className={props.status}
-      bsStyle="link"
-      noCaret={true}
-      pullRight={true}
-    >
-      {Object.keys(constants.STEP_MANUAL_STATUS).map((status) =>
-        <MenuItem
-          key={status}
-          className={classes({
-            active: status === props.status
-          })}
-          onClick={(e) => {
-            props.updateProgression(props.stepId, status)
-
-            e.preventDefault()
-            e.stopPropagation()
-            e.target.blur()
-          }}
-        >
-          {constants.STEP_MANUAL_STATUS[status]}
-        </MenuItem>
-      )}
-    </DropdownButton>
+      className={classes('btn-link', props.status)}
+      type={MENU_BUTTON}
+      label={constants.STEP_STATUS[props.status]}
+      menu={{
+        align: 'right',
+        items: Object.keys(constants.STEP_MANUAL_STATUS).map((status) => ({
+          type: CALLBACK_BUTTON,
+          label: constants.STEP_MANUAL_STATUS[status],
+          callback: () => props.updateProgression(props.stepId, status, false)
+        }))
+      }}
+    />
   </div>
 
 ManualProgression.propTypes = {
@@ -61,9 +50,10 @@ const SecondaryResources = props =>
         size="sm"
         orientation="row"
         primaryAction={{
-          type: 'url',
+          type: URL_BUTTON,
           label: trans('open', {}, 'actions'),
-          target: ['claro_resource_open', {node: resource.resource.autoId, resourceType: resource.resource.meta.type}]
+          target: ['claro_resource_open', {node: resource.resource.autoId, resourceType: resource.resource.meta.type}],
+          open: props.target
         }}
         data={resource.resource}
       />
@@ -72,6 +62,7 @@ const SecondaryResources = props =>
 
 SecondaryResources.propTypes = {
   className: T.string,
+  target: T.oneOf(['_self', '_blank']),
   resources: T.arrayOf(T.shape({
     resource: T.shape({
       autoId: T.number.isRequired,
@@ -141,6 +132,7 @@ const Step = props =>
             'col-md-12': !props.fullWidth
           })}
           resources={[].concat(props.inheritedResources, props.secondaryResources)}
+          target={props.secondaryResourcesTarget}
         />
       }
     </div>
@@ -151,6 +143,7 @@ implementPropTypes(Step, StepTypes, {
   numbering: T.string,
   showResourceHeader: T.bool.isRequired,
   manualProgressionAllowed: T.bool.isRequired,
+  secondaryResourcesTarget: T.oneOf(['_self', '_blank']),
   updateProgression: T.func.isRequired,
   enableNavigation: T.func.isRequired,
   disableNavigation: T.func.isRequired,

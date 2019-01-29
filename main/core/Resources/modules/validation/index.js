@@ -3,6 +3,7 @@ import set from 'lodash/set'
 import moment from 'moment'
 
 import {trans, tval} from '#/main/app/intl/translation'
+import {isValidDate} from '#/main/app/intl/date'
 
 // TODO : break me
 
@@ -129,6 +130,12 @@ function email(value) {
   // we use same regex than W3C <input type="email" />
   if (match(value, {regex: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/ig})) {
     return tval('This value should be a valid email.')
+  }
+}
+
+function date(value) {
+  if (!isValidDate(value)) {
+    return tval('This value should be a valid date.')
   }
 }
 
@@ -270,6 +277,7 @@ export {
   ltMax,
   gtZero,
   email,
+  date,
   url,
   gteZero,
   lengthMin,

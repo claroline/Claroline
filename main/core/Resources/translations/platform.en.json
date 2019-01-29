@@ -1508,6 +1508,7 @@
     "registration_confirm": "Validate my registration",
     "form_next_step": "Next",
     "show_password": "Show password",
+    "hide_password": "Hide password",
     "accept_term_of_service": "Accept terms of service",
     "registered_at": "registered at",
     "last_logged_at": "last logged at",
@@ -1719,5 +1720,8 @@
     "new_category": "New category",
     "notified_actions": "Notified actions",
     "add_rights": "Add rights",
-    "show_email": "Show email"
+    "show_email": "Show email",
+    "same_window": "In the same window (default)",
+    "new_window": "In a new window/tab",
+    "hidden": "Hidden"
 }

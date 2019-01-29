@@ -4,11 +4,11 @@ import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {getPlainText} from '#/main/app/data/html/utils'
+import {getPlainText} from '#/main/app/data/types/html/utils'
 import {number} from '#/main/app/intl'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {Button} from '#/main/app/action/components/button'
-import {TooltipElement} from '#/main/core/layout/components/tooltip-element'
+import {TooltipOverlay} from '#/main/app/overlay/tooltip/components/overlay'
 import {Heading} from '#/main/core/layout/components/heading'
 
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
@@ -75,7 +75,7 @@ const CardHeader = props => {
       {0 !== props.flags.length &&
         <div className="data-card-flags">
           {props.flags.map((flag, flagIndex) => flag &&
-            <TooltipElement
+            <TooltipOverlay
               key={flagIndex}
               id={`data-card-${props.id}-flag-${flagIndex}`}
               tip={flag[1]}
@@ -87,7 +87,7 @@ const CardHeader = props => {
                 </span> :
                 <span className={classes('data-card-flag', flag[0])} />
               }
-            </TooltipElement>
+            </TooltipOverlay>
           )}
         </div>
       }

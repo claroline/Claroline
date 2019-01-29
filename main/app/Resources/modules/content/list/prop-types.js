@@ -1,7 +1,7 @@
 import {PropTypes as T} from 'prop-types'
 import merge from 'lodash/merge'
 
-import {DataProperty} from '#/main/app/data/prop-types'
+import {DataProperty} from '#/main/app/data/types/prop-types'
 
 import {constants as searchConst} from '#/main/app/content/search/constants'
 

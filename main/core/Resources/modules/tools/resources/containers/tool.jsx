@@ -24,7 +24,11 @@ const ResourcesTool = withRouter(
       deleteNodes(resourceNodes) {
         dispatch(explorerActions.deleteNodes(selectors.STORE_NAME, resourceNodes))
       }
-    })
+    }),
+    undefined,
+    {
+      areStatesEqual: (next, prev) => selectors.store(prev) === selectors.store(next)
+    }
   )(ResourcesToolComponent)
 )
 

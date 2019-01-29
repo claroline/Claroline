@@ -262,10 +262,6 @@ class ItemSerializer extends AbstractSerializer
                     $item->setScoreRule(json_encode($score));
                 },
             ], $data, $item);
-
-            if (isset($data->tags)) {
-                $this->deserializeTags($item, $data->tags, $options);
-            }
         } else {
             // content item
             $this->mapObjectToEntity([
@@ -276,6 +272,10 @@ class ItemSerializer extends AbstractSerializer
         }
 
         $this->deserializeQuestionType($item, $data, $options);
+
+        if (isset($data->tags)) {
+            $this->deserializeTags($item, $data->tags, $options);
+        }
 
         return $item;
     }

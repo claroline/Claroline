@@ -435,13 +435,13 @@ class Match extends Component {
         </div>
 
         {get(this.props.item, '_errors.items') &&
-          <ContentError text={this.props.item._errors.items} warnOnly={!this.props.validating}/>
+          <ContentError error={this.props.item._errors.items} warnOnly={!this.props.validating}/>
         }
         {get(this.props.item, '_errors.solutions') &&
-          <ContentError text={this.props.item._errors.solutions} warnOnly={!this.props.validating}/>
+          <ContentError error={this.props.item._errors.solutions} warnOnly={!this.props.validating}/>
         }
         {get(this.props.item, '_errors.warning') &&
-          <ContentError text={this.props.item._errors.warning} warnOnly={!this.props.validating}/>
+          <ContentError error={this.props.item._errors.warning} warnOnly={!this.props.validating}/>
         }
 
         <span className="help-block">

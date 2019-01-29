@@ -1,14 +1,16 @@
 import React from 'react'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import classes from 'classnames'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {toKey} from '#/main/core/scaffolding/text/utils'
 
 import {ContentHelp} from '#/main/app/content/components/help'
 import {ContentError} from '#/main/app/content/components/error'
 
 import {FormGroup as FormGroupTypes} from '#/main/core/layout/form/prop-types'
+
+// TODO : move in Data module and rename (this is not only used in form)
 
 /**
  * Renders an agnostic form group.
@@ -24,26 +26,26 @@ const FormGroup = props =>
   })}>
     {props.label &&
       <label
-        className={classes('control-label', {'sr-only': props.hideLabel})}
+        className={classes('control-label', {
+          'sr-only': props.hideLabel
+        })}
         htmlFor={props.id}
       >
         {props.label}
 
-        {props.optional && <small>({trans('optional')})</small>}
+        {props.optional &&
+          <small>({trans('optional')})</small>
+        }
       </label>
     }
 
     {props.children}
 
-    {props.error && Array.isArray(props.error) && props.error.map(error =>
-      <ContentError key={toKey(error)} text={error} inGroup={true} warnOnly={props.warnOnly} />
-    )}
-
-    {props.error && !Array.isArray(props.error) &&
-      <ContentError text={props.error} inGroup={true} warnOnly={props.warnOnly} />
+    {!isEmpty(props.error) &&
+      <ContentError error={props.error} warnOnly={props.warnOnly} />
     }
 
-    {props.help && 0 !== props.help.length &&
+    {!isEmpty(props.help) &&
       <ContentHelp help={props.help} />
     }
   </div>

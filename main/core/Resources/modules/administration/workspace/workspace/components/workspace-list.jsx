@@ -38,10 +38,10 @@ const WorkspaceList = {
       type: 'boolean',
       alias: 'personal'
     }, {
-      name: 'display.displayable',
-      label: trans('displayable_in_workspace_list'),
+      name: 'restrictions.hidden',
+      label: trans('hidden'),
       type: 'boolean',
-      alias: 'displayable'
+      alias: 'hidden'
     }, {
       name: 'createdAfter',
       label: trans('created_after'),

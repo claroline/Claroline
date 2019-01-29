@@ -161,7 +161,7 @@ plugin:
           class: wrench
 
         - name: appearance_settings
-          class: paint-brush
+          class: drafting-compass
 
         - name: user_management
           class: user

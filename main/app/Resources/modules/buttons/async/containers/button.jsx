@@ -22,7 +22,7 @@ import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 const AsyncButtonComponent = props =>
   <CallbackButton
     {...omit(props, 'request', 'executeRequest')}
-    callback={() => props.executeRequest(props.request)}
+    callback={props.executeRequest}
   >
     {props.children}
   </CallbackButton>
@@ -38,10 +38,10 @@ implementPropTypes(AsyncButtonComponent, ButtonTypes, {
 
 const AsyncButton = connect(
   null,
-  (dispatch) => ({
-    executeRequest(request) {
+  (dispatch, ownProps) => ({
+    executeRequest() {
       dispatch({
-        [API_REQUEST]: request
+        [API_REQUEST]: ownProps.request
       })
     }
   })

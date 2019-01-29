@@ -11,7 +11,12 @@ const OverlayStack = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       show: selectors.show(state)
-    })
+    }),
+    undefined,
+    undefined,
+    {
+      areStatesEqual: (next, prev) => selectors.store(prev) === selectors.store(next)
+    }
   )(OverlayStackComponent)
 )
 

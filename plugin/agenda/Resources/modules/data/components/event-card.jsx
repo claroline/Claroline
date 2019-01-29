@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {getPlainText} from '#/main/app/data/html/utils'
+import {getPlainText} from '#/main/app/data/types/html/utils'
 import {DataCard} from '#/main/app/content/card/components/data'
 
 const EventCard = (props) =>

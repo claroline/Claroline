@@ -46,5 +46,6 @@
     "path_numbering_numeric": "Numérique",
     "path_numbering_literal": "Littérale",
     "path_numbering_custom": "Customisée",
-    "step_numbering": "Numérotation"
+    "step_numbering": "Numérotation",
+    "secondary_resources_open_target": "Ouverture des ressources complémentaires"
 }

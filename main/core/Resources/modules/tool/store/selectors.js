@@ -31,6 +31,7 @@ const contextData = createSelector(
 
 export const selectors = {
   STORE_NAME,
+  store,
   name,
   icon,
   context,

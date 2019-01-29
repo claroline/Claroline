@@ -3,7 +3,7 @@ import {trans} from '#/main/app/intl/translation'
 import {TagCell} from '#/plugin/tag/data/types/tag/components/cell'
 import {TagDisplay} from '#/plugin/tag/data/types/tag/components/display'
 import {TagFilter} from '#/plugin/tag/data/types/tag/components/filter'
-import {TagGroup} from '#/plugin/tag/data/types/tag/components/group'
+import {TagInput} from '#/plugin/tag/data/types/tag/components/input'
 
 // todo : finish implementation
 // todo : validation
@@ -11,7 +11,6 @@ import {TagGroup} from '#/plugin/tag/data/types/tag/components/group'
 const dataType = {
   name: 'tag',
   meta: {
-    creatable: false,
     icon: 'fa fa-fw fa-tag',
     label: trans('tag', {}, 'data'),
     description: trans('tag_desc', {}, 'data')
@@ -20,7 +19,7 @@ const dataType = {
     details: TagDisplay,
     table: TagCell,
     search: TagFilter,
-    form: TagGroup
+    input: TagInput
   }
 }
 

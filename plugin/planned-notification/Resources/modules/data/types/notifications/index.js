@@ -1,7 +1,7 @@
 import {trans} from '#/main/app/intl/translation'
 
 import {NotificationsDisplay} from '#/plugin/planned-notification/data/types/notifications/components/display'
-import {NotificationsGroup} from '#/plugin/planned-notification/data/types/notifications/components/group'
+import {NotificationsInput} from '#/plugin/planned-notification/data/types/notifications/components/input'
 
 const dataType = {
   name: 'planned_notifications',
@@ -13,7 +13,7 @@ const dataType = {
   },
   components: {
     details: NotificationsDisplay,
-    form: NotificationsGroup
+    input: NotificationsInput
   }
 }
 

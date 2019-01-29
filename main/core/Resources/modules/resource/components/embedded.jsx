@@ -11,39 +11,44 @@ import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types
 // the class is because of the use of references and lifecycle
 class ResourceEmbedded extends Component {
   componentDidMount() {
-    this.mountResource(this.props.resourceNode, this.props.lifecycle, this.props.showHeader)
+    this.mountResource()
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  componentDidUpdate(prevProps) {
     // the embedded resource has changed
-    if (this.props.resourceNode.id !== nextProps.resourceNode.id) {
+    if (this.props.resourceNode.id !== prevProps.resourceNode.id) {
       // remove old app
       unmount(this.mountNode)
-      this.props.onResourceClose(this.props.resourceNode.id)
+      this.props.onResourceClose(prevProps.resourceNode.id)
 
-      this.mountResource(nextProps.resourceNode, nextProps.lifecycle, nextProps.showHeader)
+      // FIXME : otherwise the new app is not correctly booted and I don't know why
+      setTimeout(this.mountResource.bind(this), 0)
+      //this.mountResource()
     }
   }
 
   componentWillUnmount() {
     this.props.onResourceClose(this.props.resourceNode.id)
+    // remove old app
+    unmount(this.mountNode)
   }
 
-  mountResource(resourceNode, lifecycleActions, showHeader) {
+  mountResource() {
     const ResourceApp = new App()
 
     mount(this.mountNode, ResourceApp.component, ResourceApp.store, {
       tool: {
         name: 'resource_manager',
+        // In fact, I think I should let the caller choose the context
         currentContext: {
-          type: resourceNode.workspace ? constants.TOOL_WORKSPACE : constants.TOOL_DESKTOP,
-          data: resourceNode.workspace || null
+          type: this.props.resourceNode.workspace ? constants.TOOL_WORKSPACE : constants.TOOL_DESKTOP,
+          data: this.props.resourceNode.workspace || null
         }
       },
-      resourceNode: resourceNode,
+      resourceNode: this.props.resourceNode,
       embedded: true,
-      showHeader: showHeader,
-      lifecycle: lifecycleActions
+      showHeader: this.props.showHeader,
+      lifecycle: this.props.lifecycle
     }, true)
   }
 

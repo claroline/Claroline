@@ -1,17 +1,18 @@
+import {createSelector} from 'reselect'
 
-const themeChoices = (state) => {
-  const choices = {}
+import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
 
-  state.themes.data.forEach(theme => {
-    choices[theme.normalizedName] = theme.name
-  })
+const parameters = (state) => formSelectors.data(formSelectors.form(state, 'parameters'))
 
-  return choices
-}
+const theme = createSelector(
+  [parameters],
+  (parameters) => parameters.theme
+)
 
-const iconSetChoices = (state) => state. iconSetChoices
+const iconSetChoices = (state) => state.iconSetChoices
 
 export const selectors = {
-  themeChoices,
+  parameters,
+  theme,
   iconSetChoices
 }

@@ -28,16 +28,12 @@ actions.saveTheme = (theme) => ({
   }
 })
 
-actions.deleteThemes = (themes) => {
-  const themeIds = themes.map(theme => theme.id)
-
-  return {
-    [API_REQUEST]: {
-      url: url(['apiv2_theme_delete_bulk'], {ids: themes.map(t => t.id)}),
-      request: {
-        method: 'DELETE'
-      },
-      success: (data, dispatch) => dispatch(actions.removeThemes(themeIds))
-    }
+actions.deleteThemes = (themes) => ({
+  [API_REQUEST]: {
+    url: url(['apiv2_theme_delete_bulk'], {ids: themes.map(theme => theme.id)}),
+    request: {
+      method: 'DELETE'
+    },
+    success: (data, dispatch) => dispatch(actions.removeThemes(themes.map(theme => theme.id)))
   }
-}
+})

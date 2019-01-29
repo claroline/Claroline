@@ -20,7 +20,11 @@ const ModalOverlay = withReducer(selectors.STORE_NAME, reducer)(
       hideModal(modalId) {
         dispatch(actions.hideModal(modalId))
       }
-    })
+    }),
+    undefined,
+    {
+      areStatesEqual: (next, prev) => selectors.modals(prev) === selectors.modals(next)
+    }
   )(ModalOverlayComponent)
 )
 

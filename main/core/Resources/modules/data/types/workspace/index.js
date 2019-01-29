@@ -1,19 +1,18 @@
 import {trans} from '#/main/app/intl/translation'
 
 import {WorkspaceDisplay} from '#/main/core/data/types/workspace/components/display'
-import {WorkspaceGroup} from '#/main/core/data/types/workspace/components/group'
+import {WorkspaceInput} from '#/main/core/data/types/workspace/components/input'
 
 const dataType = {
   name: 'workspace',
   meta: {
-    creatable: false,
     icon: 'fa fa-fw fa fa-books',
-    label: trans('workspace'),
-    description: trans('workspace_desc')
+    label: trans('workspace', {}, 'data'),
+    description: trans('workspace_desc', {}, 'data')
   },
   components: {
     details: WorkspaceDisplay,
-    form: WorkspaceGroup
+    input: WorkspaceInput
   }
 }
 

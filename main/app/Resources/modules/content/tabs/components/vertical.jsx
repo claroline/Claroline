@@ -4,16 +4,17 @@ import classes from 'classnames'
 import omit from 'lodash/omit'
 
 import {NavLink} from '#/main/app/router'
+import {toKey} from '#/main/core/scaffolding/text/utils'
 
 const Vertical = (props) =>
   <nav
     {...omit(props, 'tabs')}
     className={classes('lateral-nav', props.className)}
   >
-    {props.tabs.map((tab, tabIndex) =>
+    {props.tabs.map((tab) =>
       <NavLink
         to={tab.path}
-        key={`tab-link-${tabIndex}`}
+        key={toKey(tab.title)}
         className="lateral-link"
         exact={tab.exact}
       >

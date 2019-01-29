@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {implementPropTypes} from '#/main/app/prop-types'
-import {isTypeEnabled} from '#/main/app/data'
+import {isTypeEnabled} from '#/main/app/data/types'
 
 import {SearchFull} from '#/main/app/content/search/components/full'
 import {SearchUnified} from '#/main/app/content/search/components/unified'

@@ -14,9 +14,6 @@ export const App = () => ({
       data: initialData.parameters,
       originalData: initialData.parameters
     },
-    themes: {
-      data: initialData.themes.data
-    },
     iconSetChoices: initialData.iconSetChoices
   })
 })

@@ -23,7 +23,7 @@
 {% block content %}
     <div
         class="page-container workspaces-container"
-        data-url="{{'apiv2_workspace_displayable_list' | json_encode | raw | escape}}"
+        data-url="{{'apiv2_workspace_list_registerable' | json_encode | raw | escape}}"
         data-parameters="{{ parameters | json_encode | raw | escape }}"
     ></div>
 {% endblock %}

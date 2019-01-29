@@ -2,10 +2,10 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {tex} from '#/main/app/intl/translation'
-import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
+import {TooltipOverlay} from '#/main/app/overlay/tooltip/components/overlay'
 
 const ValidationStatus = props =>
-  <TooltipElement
+  <TooltipOverlay
     id={props.id}
     position={props.position}
     tip={tex(props.validating ?
@@ -17,7 +17,7 @@ const ValidationStatus = props =>
       'validation-status text-danger fa fa-fw fa-warning' :
       'validation-status text-warning fa fa-fw fa-clock-o'
     }/>
-  </TooltipElement>
+  </TooltipOverlay>
 
 ValidationStatus.propTypes = {
   id: T.string.isRequired,

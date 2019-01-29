@@ -474,19 +474,19 @@ class SetForm extends Component {
         </div>
 
         {get(this.props.item, '_errors.item') &&
-          <ContentError text={this.props.item._errors.item} warnOnly={!this.props.validating}/>
+          <ContentError error={this.props.item._errors.item} warnOnly={!this.props.validating}/>
         }
         {get(this.props.item, '_errors.items') &&
-          <ContentError text={this.props.item._errors.items} warnOnly={!this.props.validating}/>
+          <ContentError error={this.props.item._errors.items} warnOnly={!this.props.validating}/>
         }
         {get(this.props.item, '_errors.sets') &&
-          <ContentError text={this.props.item._errors.sets} warnOnly={!this.props.validating}/>
+          <ContentError error={this.props.item._errors.sets} warnOnly={!this.props.validating}/>
         }
         {get(this.props.item, '_errors.solutions') &&
-          <ContentError text={this.props.item._errors.solutions} warnOnly={!this.props.validating}/>
+          <ContentError error={this.props.item._errors.solutions} warnOnly={!this.props.validating}/>
         }
         {get(this.props.item, '_errors.odd') &&
-          <ContentError text={this.props.item._errors.odd} warnOnly={!this.props.validating}/>
+          <ContentError error={this.props.item._errors.odd} warnOnly={!this.props.validating}/>
         }
 
         <div className="set-items row">

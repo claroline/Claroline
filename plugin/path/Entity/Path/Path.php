@@ -70,7 +70,7 @@ class Path extends AbstractResource
     protected $description;
 
     /**
-     * Is it possible for the user to manualy set the progression.
+     * Is it possible for the user to manually set the progression.
      *
      * @var bool
      *
@@ -86,6 +86,15 @@ class Path extends AbstractResource
      * @var bool
      */
     private $showOverview = true;
+
+    /**
+     * Force the opening of secondary resources.
+     *
+     * @ORM\Column(options={"default" : "_self"})
+     *
+     * @var string
+     */
+    private $secondaryResourcesTarget = '_self';
 
     /**
      * Path constructor.
@@ -318,5 +327,25 @@ class Path extends AbstractResource
     public function getShowOverview()
     {
         return $this->showOverview;
+    }
+
+    /**
+     * Get the opening target for secondary resources.
+     *
+     * @return string
+     */
+    public function getSecondaryResourcesTarget()
+    {
+        return $this->secondaryResourcesTarget;
+    }
+
+    /**
+     * Set the opening target for secondary resources.
+     *
+     * @param $secondaryResourcesTarget
+     */
+    public function setSecondaryResourcesTarget($secondaryResourcesTarget)
+    {
+        $this->secondaryResourcesTarget = $secondaryResourcesTarget;
     }
 }

@@ -8,9 +8,10 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 const FormField = {
   propTypes: {
     id: T.string.isRequired,
-    className: T.string,
     value: T.any, // depends on type
+    error: T.oneOfType([T.string, T.arrayOf(T.string)]),
     placeholder: T.any, // depends on type
+    autoComplete: T.string,
     disabled: T.bool,
     size: T.oneOf(['sm', 'lg']),
     onChange: T.func.isRequired

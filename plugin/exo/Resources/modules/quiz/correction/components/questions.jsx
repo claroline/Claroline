@@ -4,14 +4,14 @@ import {connect} from 'react-redux'
 
 import {tex} from '#/main/app/intl/translation'
 import {selectors as correctionSelectors} from './../selectors'
-import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
+import {TooltipOverlay} from '#/main/app/overlay/tooltip/components/overlay'
 
 export const QuestionRow = props =>
   <tr>
     <td>{props.question.title || props.question.content}</td>
     <td>{props.answers.length}</td>
     <td className="actions-cell text-right">
-      <TooltipElement
+      <TooltipOverlay
         id={props.question.id}
         tip={tex('to_correct')}
       >
@@ -19,7 +19,7 @@ export const QuestionRow = props =>
           <span className="fa fa-fw fa-check-square-o" />
           <span className="sr-only">{tex('to_correct')}</span>
         </a>
-      </TooltipElement>
+      </TooltipOverlay>
     </td>
   </tr>
 

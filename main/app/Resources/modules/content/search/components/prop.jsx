@@ -4,8 +4,8 @@ import merge from 'lodash/merge'
 
 import {Await} from '#/main/app/components/await'
 
-import {getType} from '#/main/app/data'
-import {DataType as DataTypeTypes} from '#/main/app/data/prop-types'
+import {getType} from '#/main/app/data/types'
+import {DataType as DataTypeTypes} from '#/main/app/data/types/prop-types'
 
 const SearchInput = props => {
   const isValidSearch = !props.definition.validate || !props.definition.validate(props.currentSearch, props.options)

@@ -11,5 +11,6 @@ const show = createSelector(
 
 export const selectors = {
   STORE_NAME,
+  store,
   show
 }

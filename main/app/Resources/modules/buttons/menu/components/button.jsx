@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import classes from 'classnames'
+import identity from 'lodash/identity'
 import omit from 'lodash/omit'
 
 import RootCloseWrapper from 'react-overlays/lib/RootCloseWrapper'
@@ -173,7 +174,7 @@ const MenuButton = props => {
         {...omit(props, 'menu', 'containerClassName', 'onToggle')}
         className={classes('dropdown-toggle', props.className)}
         bsRole="toggle"
-        callback={() => true}
+        callback={identity}
       >
         {props.children}
       </CallbackButton>

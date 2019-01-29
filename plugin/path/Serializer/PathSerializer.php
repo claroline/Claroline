@@ -98,6 +98,9 @@ class PathSerializer
                 'numbering' => $path->getNumbering() ? $path->getNumbering() : 'none',
                 'manualProgressionAllowed' => $path->isManualProgressionAllowed(),
             ],
+            'opening' => [
+                'secondaryResources' => $path->getSecondaryResourcesTarget(),
+            ],
             'steps' => array_map(function (Step $step) {
                 return $this->serializeStep($step);
             }, $path->getRootSteps()),
@@ -120,6 +123,8 @@ class PathSerializer
         $this->sipe('display.openSummary', 'setOpenSummary', $data, $path);
         $this->sipe('display.numbering', 'setNumbering', $data, $path);
         $this->sipe('display.manualProgressionAllowed', 'setManualProgressionAllowed', $data, $path);
+
+        $this->sipe('opening.secondaryResources', 'setSecondaryResourcesTarget', $data, $path);
 
         if (isset($data['steps'])) {
             $this->deserializeSteps($data['steps'], $path);

@@ -39,29 +39,18 @@ function createFormDefinition(sections, data) {
     .map(section => {
       // adds defaults to the section configuration
       const defaultedSection = merge({}, DataFormSection.defaultProps, section)
-      if (isDisplayed(defaultedSection, data)) {
-        // fields
-        if (defaultedSection.fields && 0 !== defaultedSection.fields.length) {
-          defaultedSection.fields = defaultedSection.fields
-            // adds default to fields
-            .map(field => createFieldDefinition(field, data))
-            // filters hidden fields
-            .filter(field => isDisplayed(field, data))
-        }
+      if (isDisplayed(defaultedSection, data) && 0 !== defaultedSection.fields.length) {
+        // section has fields and is displayed keep it
+        defaultedSection.fields = defaultedSection.fields
+        // adds default to fields
+          .map(field => createFieldDefinition(field, data))
+          // filters hidden fields
+          .filter(field => isDisplayed(field, data))
 
-        // advanced fields
-        if (defaultedSection.advanced && defaultedSection.advanced.fields && 0 !== defaultedSection.advanced.fields.length) {
-          defaultedSection.advanced.fields = defaultedSection.advanced.fields
-            .map(field => createFieldDefinition(field, data))
-            .filter(field => isDisplayed(field, data))
-        }
-
-        if (0 < defaultedSection.fields.length || (defaultedSection.advanced && 0 < defaultedSection.advanced.fields.length)) {
-          // only keep the section if it has fields or advanced fields
-          return defaultedSection
-        }
+        return defaultedSection
       }
 
+      // only keep the section if it has fields
       return null
     })
     .filter(section => null !== section)

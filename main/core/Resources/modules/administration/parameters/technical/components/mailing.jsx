@@ -128,7 +128,7 @@ const MailingForm = (props) =>
                 [mailer.name]: mailer.label
               }), {})
             },
-            linked: mailers.find(mailer => mailer.name === props.mailer.transport) || []
+            linked: (props.mailer && mailers.find(mailer => mailer.name === props.mailer.transport)) || []
           }
         ]
       }

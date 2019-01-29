@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {ListSource} from '#/main/app/content/list/containers/source'
-import {getSource} from '#/main/app/data'
+import {getSource} from '#/main/app/data/sources'
 import {ListParameters as ListParametersTypes} from '#/main/app/content/list/parameters/prop-types'
 
 import {selectors} from '#/main/core/widget/types/list/store'

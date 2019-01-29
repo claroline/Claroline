@@ -67,7 +67,7 @@ const additional = createSelector(
 
 export const selectors = {
   STORE_NAME,
-
+  store,
   skipped,
   started,
   finished,

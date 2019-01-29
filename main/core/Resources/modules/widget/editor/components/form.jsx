@@ -22,7 +22,6 @@ const WidgetForm = props =>
             name: 'display.layout',
             type: 'string',
             label: trans('widget_layout'),
-            readOnly: true,
             hideLabel: true,
             render: (widget) => {
               const layout = get(widget, 'display.layout') || [1]

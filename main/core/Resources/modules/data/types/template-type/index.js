@@ -1,19 +1,18 @@
 import {trans} from '#/main/app/intl/translation'
 
 import {TemplateTypeDisplay} from '#/main/core/data/types/template-type/components/display'
-import {TemplateTypeGroup} from '#/main/core/data/types/template-type/components/group'
+import {TemplateTypeInput} from '#/main/core/data/types/template-type/components/input'
 
 const dataType = {
   name: 'template_type',
   meta: {
-    creatable: false,
     icon: 'fa fa-fw fa fa-file-alt',
-    label: trans('template_type', {}, 'template'),
-    description: trans('template_type_desc', {}, 'template')
+    label: trans('template_type', {}, 'data'),
+    description: trans('template_type_desc', {}, 'data')
   },
   components: {
     details: TemplateTypeDisplay,
-    form: TemplateTypeGroup
+    input: TemplateTypeInput
   }
 }
 

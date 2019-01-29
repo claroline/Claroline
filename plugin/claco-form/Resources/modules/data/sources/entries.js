@@ -1,4 +1,5 @@
 import React from 'react'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
@@ -94,10 +95,10 @@ function getCardValue(clacoForm, row, type) {
  * because it requires additional data to be computed
  */
 export default (clacoForm, canViewMetadata = false, canEdit = false, canAdministrate = false, isCategoryManager = false) => {
-  const fields = clacoForm.fields
-  const titleLabel = clacoForm.details.title_field_label
-  const hasCategories = clacoForm.details.display_categories
-  const hasKeywords = clacoForm.details.display_keywords
+  const fields = clacoForm.fields || []
+  const titleLabel = get(clacoForm, 'details.title_field_label') || trans('title')
+  const hasCategories = get(clacoForm, 'details.display_categories') || false
+  const hasKeywords = get(clacoForm, 'details.display_keywords') || false
 
   return {
     name: 'entries',
@@ -197,9 +198,9 @@ export default (clacoForm, canViewMetadata = false, canEdit = false, canAdminist
           displayable: false,
           filterable: hasCategories,
           options: {
-            choices: clacoForm.categories.reduce((acc, category) => Object.assign(acc, {
+            choices: clacoForm.categories ? clacoForm.categories.reduce((acc, category) => Object.assign(acc, {
               [category.id]: category.name
-            }), {})
+            }), {}) : {}
           }
         },
         // Keywords

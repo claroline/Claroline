@@ -6,7 +6,7 @@ import isUndefined from 'lodash/isUndefined'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {Password} from '#/main/core/layout/form/components/field/password'
+import {PasswordInput} from '#/main/app/data/types/password/components/input'
 import {ContentHelp} from '#/main/app/content/components/help'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 
@@ -64,9 +64,13 @@ Restriction.defaultProps = {
 class ResourceRestrictions extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
       codeAccess: ''
     }
+
+    this.updateCodeAccess = this.updateCodeAccess.bind(this)
+    this.submitCodeAccess = this.submitCodeAccess.bind(this)
   }
 
   updateCodeAccess(value) {
@@ -144,18 +148,19 @@ class ResourceRestrictions extends Component {
           >
             {this.props.errors.locked &&
               <div>
-                <Password
+                <PasswordInput
                   id="access-code"
                   value={this.state.codeAccess}
-                  onChange={(value) => this.updateCodeAccess(value)}
+                  onChange={this.updateCodeAccess}
                 />
+
                 <Button
                   className="btn btn-block btn-emphasis"
                   type={CALLBACK_BUTTON}
                   icon="fa fa-fw fa-sign-in-alt"
                   disabled={!this.state.codeAccess}
                   label={trans('Accéder à la ressource', {}, 'actions')}
-                  callback={() => this.submitCodeAccess()}
+                  callback={this.submitCodeAccess}
                   primary={true}
                 />
               </div>

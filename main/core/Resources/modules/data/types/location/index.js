@@ -1,19 +1,19 @@
 import {trans} from '#/main/app/intl/translation'
 
 import {LocationDisplay} from '#/main/core/data/types/location/components/display'
-import {LocationGroup} from '#/main/core/data/types/location/components/group'
+import {LocationInput} from '#/main/core/data/types/location/components/input'
 
 const dataType = {
   name: 'location',
   meta: {
     creatable: false,
     icon: 'fa fa-fw fa fa-location-arrow',
-    label: trans('location'),
-    description: trans('location_desc')
+    label: trans('location', {}, 'data'),
+    description: trans('location_desc', {}, 'data')
   },
   components: {
     details: LocationDisplay,
-    form: LocationGroup
+    input: LocationInput
   }
 }
 

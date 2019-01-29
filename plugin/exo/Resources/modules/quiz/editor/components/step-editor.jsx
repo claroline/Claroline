@@ -8,7 +8,7 @@ import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 
 import {tex, trans} from '#/main/app/intl/translation'
 import {Heading} from '#/main/core/layout/components/heading'
-import {TooltipElement} from '#/main/core/layout/components/tooltip-element'
+import {TooltipOverlay} from '#/main/app/overlay/tooltip/components/overlay'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {makeItemPanelKey, makeStepPropPanelKey} from './../../../utils/utils'
@@ -104,7 +104,7 @@ const ItemActions = props =>
       })}
     />
 
-    <TooltipElement
+    <TooltipOverlay
       id={`item-panel-${props.itemId}-move`}
       position="left"
       tip={tex('move_item')}
@@ -119,7 +119,7 @@ const ItemActions = props =>
           <span className="fa fa-fw fa-arrows" />
         </span>
       )}
-    </TooltipElement>
+    </TooltipOverlay>
   </div>
 
 ItemActions.propTypes = {

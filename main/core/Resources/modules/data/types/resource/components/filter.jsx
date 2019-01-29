@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {DataSearch as DataSearchTypes} from '#/main/app/data/prop-types'
+import {DataSearch as DataSearchTypes} from '#/main/app/data/types/prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'

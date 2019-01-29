@@ -175,7 +175,7 @@ export class Graphic extends Component {
       <div className="graphic-editor">
         {get(this.props.item, '_errors.image') &&
           <ContentError
-            text={this.props.item._errors.image}
+            error={this.props.item._errors.image}
             warnOnly={!this.props.validating}
           />
         }

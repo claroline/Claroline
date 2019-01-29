@@ -4,7 +4,8 @@ import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {DropdownButton, MenuItem} from '#/main/core/layout/components/dropdown'
+import {Button} from '#/main/app/action/components/button'
+import {MENU_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Checkbox} from '#/main/core/layout/form/components/field/checkbox'
 
 import {
@@ -77,39 +78,40 @@ const DataGridSort = props =>
   <div className="data-grid-sort">
     {trans('list_sort_by')}
 
-    <DropdownButton
+    <Button
       id="data-grid-sort-menu"
-      title={props.current.property && getPropDefinition(props.current.property, props.available) ?
+      className="btn-link"
+      type={MENU_BUTTON}
+      label={props.current.property && getPropDefinition(props.current.property, props.available) ?
         getPropDefinition(props.current.property, props.available).label :
         trans('none')
       }
-      bsStyle="link"
-      noCaret={true}
-      pullRight={true}
-    >
-      <MenuItem header>{trans('list_columns')}</MenuItem>
-      {props.available.map(column =>
-        <MenuItem
-          key={`sort-by-${column.name}`}
-          onClick={() => props.updateSort(column.alias ? column.alias : column.name)}
-        >
-          {column.label}
-        </MenuItem>
-      )}
-    </DropdownButton>
+      primary={true}
+      menu={{
+        label: trans('list_columns'),
+        align: 'right',
+        items: props.available.map(column => ({
+          type: CALLBACK_BUTTON,
+          label: column.label,
+          callback: () => props.updateSort(column.alias ? column.alias : column.name)
+        }))
+      }}
+    />
 
-    <button
-      type="button"
-      className="btn btn-link"
-      disabled={!props.current.property}
-      onClick={() => props.current.property && props.updateSort(props.current.property)}
-    >
-      <span className={classes('fa fa-fw', {
+    <Button
+      className="btn-link"
+      type={CALLBACK_BUTTON}
+      icon={classes('fa fa-fw', {
         'fa-sort'     :  0 === props.current.direction || !props.current.direction,
         'fa-sort-asc' :  1 === props.current.direction,
         'fa-sort-desc': -1 === props.current.direction
-      })} />
-    </button>
+      })}
+      label={trans('sort', {}, 'actions')}
+      disabled={!props.current.property}
+      callback={() => props.updateSort(props.current.property)}
+      tooltip="left"
+      primary={true}
+    />
   </div>
 
 

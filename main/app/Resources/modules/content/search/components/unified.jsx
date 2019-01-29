@@ -5,10 +5,10 @@ import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
 import {Await} from '#/main/app/components/await'
-import {getType} from '#/main/app/data'
+import {getType} from '#/main/app/data/types'
 import {getPropDefinition} from '#/main/app/content/list/utils'
 
-import {TooltipElement} from '#/main/core/layout/components/tooltip-element'
+import {TooltipOverlay} from '#/main/app/overlay/tooltip/components/overlay'
 
 // TODO : reuse #/main/app/content/search/components/prop
 
@@ -79,13 +79,13 @@ AvailableFilterDisabled.propTypes = {
 const AvailableFilterFlag = props => props.isValid ?
   <span className="fa fa-fw" />
   :
-  <TooltipElement
+  <TooltipOverlay
     id={props.id}
     tip={trans('list_search_invalid_filter')}
     position="right"
   >
     <span className="cursor-help fa fa-fw fa-warning" />
-  </TooltipElement>
+  </TooltipOverlay>
 
 AvailableFilterFlag.propTypes = {
   id: T.string.isRequired,

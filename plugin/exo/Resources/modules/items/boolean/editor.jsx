@@ -103,7 +103,7 @@ const Boolean = props => {
       </div>
 
       {get(props.item, '_errors.choices') &&
-        <ContentError text={props.item._errors.choices} warnOnly={!props.validating} />
+        <ContentError error={props.item._errors.choices} warnOnly={!props.validating} />
       }
 
       <div className="row">

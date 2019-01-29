@@ -23,7 +23,7 @@ import entriesSource from '#/plugin/claco-form/data/sources/entries'
 import {MODAL_CATEGORY_FORM} from '#/plugin/claco-form/modals/category'
 import {MODAL_KEYWORD_FORM} from '#/plugin/claco-form/modals/keyword'
 
-const generateDisplayList = (fields) => {
+const generateDisplayList = (fields = []) => {
   const displayList = {
     title: trans('title'),
     date: trans('date'),
@@ -81,7 +81,7 @@ const EditorComponent = props =>
                 name: 'details.new_keywords_enabled',
                 type: 'boolean',
                 label: trans('label_new_keywords_enabled', {}, 'clacoform'),
-                displayed: props.clacoForm.details.keywords_enabled,
+                displayed: (clacoForm) => clacoForm.details && clacoForm.details.keywords_enabled,
                 required: true
               }
             ]
@@ -125,7 +125,7 @@ const EditorComponent = props =>
                 name: 'template.content',
                 type: 'html',
                 label: trans('template', {}, 'clacoform'),
-                help: getTemplateHelp(props.clacoForm.fields),
+                help: getTemplateHelp(props.clacoForm.fields || []),
                 displayed: (clacoForm) => clacoForm.template && clacoForm.template.enabled,
                 required: true,
                 onChange: (template) => props.validateTemplate(template, props.clacoForm.fields, props.errors)
@@ -199,7 +199,7 @@ const EditorComponent = props =>
                 name: 'details.comments_roles',
                 type: 'choice',
                 label: trans('enable_comments_for_roles', {}, 'clacoform'),
-                displayed: props.clacoForm.details.comments_enabled,
+                displayed: (clacoForm) => clacoForm.details && clacoForm.details.comments_enabled,
                 options: {
                   multiple: true,
                   condensed: true,
@@ -211,7 +211,7 @@ const EditorComponent = props =>
                 name: 'details.moderate_comments',
                 type: 'choice',
                 label: trans('label_moderate_comments', {}, 'clacoform'),
-                displayed: props.clacoForm.details.comments_enabled,
+                displayed: (clacoForm) => clacoForm.details && clacoForm.details.comments_enabled,
                 required: true,
                 options: {
                   noEmpty: true,
@@ -229,7 +229,7 @@ const EditorComponent = props =>
                 name: 'details.comments_display_roles',
                 type: 'choice',
                 label: trans('display_comments_for_roles', {}, 'clacoform'),
-                displayed: props.clacoForm.details.display_comments,
+                displayed: (clacoForm) => clacoForm.details && clacoForm.details.display_comments,
                 options: {
                   multiple: true,
                   condensed: true,
@@ -241,17 +241,17 @@ const EditorComponent = props =>
                 name: 'details.open_comments',
                 type: 'boolean',
                 label: trans('label_open_panel_by_default', {}, 'clacoform'),
-                displayed: props.clacoForm.details.display_comments
+                displayed: (clacoForm) => clacoForm.details && clacoForm.details.display_comments
               }, {
                 name: 'details.display_comment_author',
                 type: 'boolean',
                 label: trans('label_display_comment_author', {}, 'clacoform'),
-                displayed: props.clacoForm.details.display_comments
+                displayed: (clacoForm) => clacoForm.details && clacoForm.details.display_comments
               }, {
                 name: 'details.display_comment_date',
                 type: 'boolean',
                 label: trans('label_display_comment_date', {}, 'clacoform'),
-                displayed: props.clacoForm.details.display_comments
+                displayed: (clacoForm) => clacoForm.details && clacoForm.details.display_comments
               }
             ]
           }
@@ -271,20 +271,19 @@ const EditorComponent = props =>
                 name: 'random.categories',
                 type: 'choice',
                 label: trans('label_random_categories', {}, 'clacoform'),
-                displayed: props.clacoForm.random.enabled,
+                displayed: (clacoForm) => clacoForm.random && clacoForm.random.enabled,
                 options: {
                   multiple: true,
                   condensed: false,
-                  choices: props.clacoForm.categories.reduce((acc, cat) => Object.assign(acc, {
+                  choices: props.clacoForm.categories ? props.clacoForm.categories.reduce((acc, cat) => Object.assign(acc, {
                     [cat.id]: cat.name
-                  }), {})
+                  }), {}) : {}
                 }
               }, {
                 name: 'random.dates',
                 type: 'date-range',
                 label: trans('label_random_dates', {}, 'clacoform'),
-                displayed: props.clacoForm.random.enabled,
-                required: false
+                displayed: (clacoForm) => clacoForm.random && clacoForm.random.enabled
               }
             ]
           }
@@ -364,7 +363,7 @@ const EditorComponent = props =>
           name={selectors.STORE_NAME+'.clacoFormForm.categories'}
           fetch={{
             url: ['apiv2_clacoformcategory_list', {clacoForm: props.clacoForm.id}],
-            autoload: true
+            autoload: !!props.clacoForm.id
           }}
           definition={[
             {
@@ -434,7 +433,7 @@ const EditorComponent = props =>
         />
       </FormSection>
 
-      {props.clacoForm.details.keywords_enabled &&
+      {props.clacoForm.details && props.clacoForm.details.keywords_enabled &&
         <FormSection
           id="clacoform-keywords"
           className="embedded-list-section"
@@ -460,7 +459,7 @@ const EditorComponent = props =>
             name={selectors.STORE_NAME+'.clacoFormForm.keywords'}
             fetch={{
               url: ['apiv2_clacoformkeyword_list', {clacoForm: props.clacoForm.id}],
-              autoload: true
+              autoload: !!props.clacoForm.id
             }}
             definition={[
               {

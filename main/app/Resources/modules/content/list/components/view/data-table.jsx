@@ -6,13 +6,13 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {Await} from '#/main/app/components/await'
-import {getType} from '#/main/app/data'
+import {getType} from '#/main/app/data/types'
 import {getPrimaryAction, getActions, isRowSelected} from '#/main/app/content/list/utils'
 import {
   Action as ActionTypes,
   PromisedAction as PromisedActionTypes
 } from '#/main/app/action/prop-types'
-import {TooltipElement} from '#/main/core/layout/components/tooltip-element'
+import {TooltipOverlay} from '#/main/app/overlay/tooltip/components/overlay'
 import {
   Table,
   TableHeaderCell,
@@ -163,7 +163,7 @@ const DataTable = props =>
       <tr>
         {props.selection &&
           <TableHeaderCell align="center" className="checkbox-cell">
-            <TooltipElement
+            <TooltipOverlay
               id="data-table-select"
               position="right"
               tip={trans(0 < props.selection.current.length ? 'list_deselect_all' : 'list_select_all')}
@@ -175,7 +175,7 @@ const DataTable = props =>
                   0 === props.selection.current.length ? props.selection.toggleAll(props.data): props.selection.toggleAll([])
                 }}
               />
-            </TooltipElement>
+            </TooltipOverlay>
           </TableHeaderCell>
         }
 

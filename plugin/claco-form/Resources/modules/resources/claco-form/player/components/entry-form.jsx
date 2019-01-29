@@ -11,7 +11,7 @@ import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {FormProp} from '#/main/app/content/form/components/prop'
+import {DataInput} from '#/main/app/data/components/input'
 
 import {currentUser} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
@@ -115,7 +115,7 @@ class EntryFormComponent extends Component {
   renderTemplateFields() {
     if (this.props.useTemplate && this.props.template) {
       const titleComponent =
-        <FormProp
+        <DataInput
           id="field-title"
           type="string"
           label={trans('title')}
@@ -124,7 +124,7 @@ class EntryFormComponent extends Component {
           value={this.props.entry.title}
           error={this.props.errors.title}
           onChange={(value) => this.props.updateFormProp('title', value)}
-          setErrors={(errors) => {
+          setError={(errors) => {
             const newErrors = this.props.errors ? cloneDeep(this.props.errors) : {}
             set(newErrors, 'title', errors)
 
@@ -157,7 +157,7 @@ class EntryFormComponent extends Component {
           }
 
           const fieldComponent = () =>
-            <FormProp
+            <DataInput
               key={`field-${f.id}`}
               id={`field-${f.id}`}
               type={f.type}
@@ -169,8 +169,8 @@ class EntryFormComponent extends Component {
               value={this.props.entry.values ? this.props.entry.values[f.id] : undefined}
               error={this.props.errors[f.id]}
               options={f.options ? options : {}}
-              updateProp={(value) => this.props.updateFormProp(`values.${f.id}`, value)}
-              setErrors={(errors) => {
+              onChange={(value) => this.props.updateFormProp(`values.${f.id}`, value)}
+              onError={(errors) => {
                 const newErrors = this.props.errors ? cloneDeep(this.props.errors) : {}
                 set(newErrors, `values.${f.id}`, errors)
 

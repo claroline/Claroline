@@ -10,7 +10,12 @@ const ToolPage = withReducer(selectors.STORE_NAME, reducer)(
     (state) => ({
       name: selectors.name(state),
       currentContext: selectors.context(state)
-    })
+    }),
+    undefined,
+    undefined,
+    {
+      areStatesEqual: (next, prev) => selectors.store(prev) === selectors.store(next)
+    }
   )(ToolPageComponent)
 )
 

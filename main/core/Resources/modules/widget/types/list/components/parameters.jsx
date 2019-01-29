@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {ListForm} from '#/main/app/content/list/parameters/containers/form'
-import {getSource} from '#/main/app/data'
+import {getSource} from '#/main/app/data/sources'
 
 import {WidgetInstance as WidgetInstanceTypes} from '#/main/core/widget/content/prop-types'
 

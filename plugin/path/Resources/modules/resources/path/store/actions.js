@@ -23,9 +23,9 @@ actions.disableNavigation = makeActionCreator(STEP_DISABLE_NAVIGATION)
 
 actions.updateStepProgression = makeActionCreator(STEP_UPDATE_PROGRESSION, 'stepId', 'status')
 
-actions.updateProgression = (stepId, status = constants.STATUS_SEEN) => ({
+actions.updateProgression = (stepId, status = constants.STATUS_SEEN, silent = true) => ({
   [API_REQUEST]: {
-    silent: true,
+    silent: silent,
     url: ['innova_path_progression_update', {id: stepId}],
     request: {
       method: 'PUT',

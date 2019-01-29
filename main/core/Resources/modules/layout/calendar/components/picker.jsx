@@ -1,4 +1,4 @@
-/* eslint-ignore react/no-string-refs, react/no-find-dom-node, react/no-string-refs */
+/* eslint-ignore react/no-string-refs, react/no-find-dom-node */
 
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
@@ -8,9 +8,9 @@ import Overlay from 'react-bootstrap/lib/Overlay'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
-import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
+import {TooltipOverlay} from '#/main/app/overlay/tooltip/components/overlay'
 
-import {Calendar} from '#/main/core/layout/calendar/components/calendar.jsx'
+import {Calendar} from '#/main/core/layout/calendar/components/calendar'
 import {Calendar as CalendarTypes} from '#/main/core/layout/calendar/prop-types'
 
 const CalendarPopover = props =>
@@ -61,13 +61,13 @@ class CalendarPicker extends Component {
     }
   }
 
-  // I use TooltipElement + raw <button> because of the ref (stateless component can not get refs)
+  // I use TooltipOverlay + raw <button> because of the ref (stateless component can not get refs)
   render() {
     return (
       <div className={classes('calendar-picker', {
         open : this.state.active
       })}>
-        <TooltipElement
+        <TooltipOverlay
           id={uniqueId('datepicker_')}
           position="right"
           tip={trans(!this.state.open ? 'open_calendar':'close_calendar')}
@@ -94,7 +94,7 @@ class CalendarPicker extends Component {
               {this.props.label || trans(this.state.open ? 'open_calendar':'close_calendar')}
             </span>
           </button>
-        </TooltipElement>
+        </TooltipOverlay>
 
         <Overlay
           show={this.state.open}

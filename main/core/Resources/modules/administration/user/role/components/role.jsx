@@ -51,7 +51,7 @@ const RoleForm = props =>
             name: 'type',
             type: 'choice',
             label: trans('type'),
-            readOnly: true,
+            disabled: true,
             options: {
               condensed: true,
               choices: enumRole

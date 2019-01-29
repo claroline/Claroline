@@ -273,6 +273,7 @@ const GridRow = props =>
         label={trans('delete', {}, 'actions')}
         disabled={!props.deletable}
         callback={props.removeRow}
+        tooltip="top"
       />
     </td>
   </tr>
@@ -555,7 +556,7 @@ const Grid = props =>
     </FormGroup>
 
     {get(props.item, '_errors.solutions') &&
-      <ContentError text={props.item._errors.solutions} warnOnly={!props.validating} />
+      <ContentError error={props.item._errors.solutions} warnOnly={!props.validating} />
     }
 
     <div className="grid-body">
