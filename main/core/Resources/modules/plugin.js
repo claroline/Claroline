@@ -30,6 +30,7 @@ registry.add('ClarolineCoreBundle', {
       'open'     : () => { return import(/* webpackChunkName: "core-action-resource-open" */      '#/main/core/resource/actions/open') },
       // 'notes'    : () => { return import(/* webpackChunkName: "core-action-resource-notes" */     '#/main/core/resource/actions/notes') },
       'publish'  : () => { return import(/* webpackChunkName: "core-action-resource-publish" */   '#/main/core/resource/actions/publish') },
+      'restore'  : () => { return import(/* webpackChunkName: "core-action-resource-restore" */   '#/main/core/resource/actions/restore') },
       'rights'   : () => { return import(/* webpackChunkName: "core-action-resource-rights" */    '#/main/core/resource/actions/rights') },
       'unpublish': () => { return import(/* webpackChunkName: "core-action-resource-unpublish" */ '#/main/core/resource/actions/unpublish') },
 

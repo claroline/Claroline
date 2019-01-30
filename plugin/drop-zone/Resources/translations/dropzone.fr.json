@@ -87,7 +87,6 @@
     "remaining_correction_msg": "Il vous reste une copie à corriger pour terminer cette évaluation.",
     "remaining_corrections_msg": "Il vous reste %count% copies à corriger pour terminer cette évaluation.",
     "report": "Rapport",
-    "resource_type": "Ressource d'un espace d'activités",
     "revalidate_correction": "Revalider la correction",
     "review_disabled_corrections_done": "Vos corrections ont été faites.",
     "review_disabled_drop_not_finished": "Votre copie n'est pas terminée.",

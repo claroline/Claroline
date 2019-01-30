@@ -216,21 +216,9 @@ class ResourceListener
      */
     public function delete(ResourceActionEvent $event)
     {
-        $this->manager->delete($event->getResourceNode(), false, true);
+        $options = $event->getOptions();
 
-        $event->setResponse(
-            new JsonResponse(null, 204)
-        );
-    }
-
-    /**
-     * @DI\Observe("resource.hard_delete")
-     *
-     * @param ResourceActionEvent $event
-     */
-    public function hardDelete(ResourceActionEvent $event)
-    {
-        $this->manager->delete($event->getResourceNode(), false, false);
+        $this->manager->delete($event->getResourceNode(), false, (bool) $options['hard']);
 
         $event->setResponse(
             new JsonResponse(null, 204)

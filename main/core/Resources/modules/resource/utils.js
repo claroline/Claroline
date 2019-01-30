@@ -14,7 +14,7 @@ import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {hasPermission} from '#/main/app/security'
 
 function getTypes() {
-  return param('resourceTypes')
+  return param('resources.types')
 }
 
 /**
@@ -25,7 +25,7 @@ function getTypes() {
  * @return {object}
  */
 function getType(resourceNode) {
-  return param('resourceTypes')
+  return param('resources.types')
     .find(type => type.name === resourceNode.meta.type)
 }
 

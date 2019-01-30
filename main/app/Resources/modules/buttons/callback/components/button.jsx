@@ -30,6 +30,7 @@ class CallbackButtonComponent extends Component {
           question: this.props.confirm.message,
           confirmButtonText: this.props.confirm.button,
           dangerous: this.props.dangerous,
+          additional: this.props.confirm.additional,
           handleConfirm: () => {
             if (this.props.onClick) {
               // execute the default click callback if any (mostly to make dropdown works)

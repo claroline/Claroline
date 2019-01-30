@@ -1,6 +1,8 @@
 import get from 'lodash/get'
 
-import {trans} from '#/main/app/intl/translation'
+import {url} from '#/main/app/api/router'
+import {param} from '#/main/app/config'
+import {trans, transChoice} from '#/main/app/intl/translation'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 
 /**
@@ -14,21 +16,20 @@ export default (resourceNodes, nodesRefresher) => ({ // todo collection
   type: ASYNC_BUTTON,
   icon: 'fa fa-fw fa-recycle',
   label: trans('restore', {}, 'actions'),
-  displayed: -1 !== resourceNodes.findIndex(node => !get(node, 'meta.active')),
-  dangerous: true,
+  displayed: -1 !== resourceNodes.findIndex(node => !get(node, 'meta.active')) && param('resources.softDelete'),
   confirm: {
-    title: trans('resources_delete_confirm'),
-    message: trans('resources_delete_message')
+    title: transChoice('resources_restore_confirm', resourceNodes.length),
+    subtitle: 1 === resourceNodes.length ? resourceNodes[0].name : transChoice('count_elements', resourceNodes.length, {count: resourceNodes.length}),
+    message: transChoice('resources_restore_message', resourceNodes.length)
   },
   request: {
-    url: ['claro_resource_action', {
-      type: resourceNodes[0].meta.type,
-      action: 'restore',
-      id: resourceNodes[0].id
-    }],
+    url: url(
+      ['claro_resource_collection_action', {action: 'restore'}],
+      {ids: resourceNodes.map(node => node.id)}
+    ),
     request: {
       method: 'POST'
     },
-    success: () => nodesRefresher.update(resourceNodes)
+    success: (restoredNodes) => nodesRefresher.update(restoredNodes)
   }
 })

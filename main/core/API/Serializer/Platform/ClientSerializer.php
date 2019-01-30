@@ -156,9 +156,12 @@ class ClientSerializer
             'openGraph' => [
                 'enabled' => $this->config->getParameter('enable_opengraph'),
             ],
-            'resourceTypes' => array_map(function (ResourceType $resourceType) {
-                return $this->resourceTypeSerializer->serialize($resourceType);
-            }, $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll()),
+            'resources' => [
+                'types' => array_map(function (ResourceType $resourceType) {
+                    return $this->resourceTypeSerializer->serialize($resourceType);
+                }, $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll()),
+                'softDelete' => $this->config->getParameter('resource.soft_delete'),
+            ],
             'plugins' => $this->pluginManager->getEnabled(true),
             'javascripts' => $this->config->getParameter('javascripts'),
         ];

@@ -57,14 +57,6 @@ plugin:
           api: [DELETE]
           recursive: true
 
-        # Deletes one or more resources 
-        - name: hard_delete
-          decoder: delete
-          group: management
-          scope: [object, collection] # The action can be executed on multiple resources at once.
-          api: [DELETE]
-          recursive: true
-
         # Restores one or more soft deleted resources
         - name: restore
           decoder: delete

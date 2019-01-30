@@ -6,7 +6,7 @@ import {trans} from '#/main/app/intl/translation'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
-import {ResourceCard} from '#/main/core/resource/data/components/resource-card'
+import {ResourceCard} from '#/main/core/resource/components/card'
 
 // todo embedded option
 // todo add resource actions

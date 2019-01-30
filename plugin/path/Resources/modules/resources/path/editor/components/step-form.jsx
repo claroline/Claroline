@@ -1,11 +1,11 @@
 import React from 'react'
 
-import {trans} from '#/main/app/intl/translation'
+import {trans, transChoice} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
-import {ResourceCard} from '#/main/core/resource/data/components/resource-card'
+import {ResourceCard} from '#/main/core/resource/components/card'
 import {MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
@@ -30,8 +30,8 @@ const SecondaryResourcesSection = props =>
             modal: [MODAL_CONFIRM, {
               dangerous: true,
               icon: 'fa fa-fw fa-trash-o',
-              title: trans('resources_delete_confirm'),
-              question: trans('resource_delete_message'),
+              title: transChoice('resources_delete_confirm', 1),
+              question: transChoice('resources_delete_message', 1, {count: 1}),
               handleConfirm: () => props.removeSecondaryResource(props.stepId, sr.id)
             }]
           }

@@ -87,6 +87,7 @@ class ResourcePage extends Component {
             if (currentNode) {
               // grabs updated data
               this.props.updateNode(currentNode)
+              this.props.loadResource(this.props.resourceNode, this.props.embedded)
             }
           },
           delete: (resourceNodes) => {

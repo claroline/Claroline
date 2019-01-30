@@ -6,7 +6,7 @@
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {ConfirmModal} from '#/main/app/modals/confirm/components/confirm'
+import {ConfirmModal} from '#/main/app/modals/confirm/components/modal'
 
 const MODAL_CONFIRM = 'MODAL_CONFIRM'
 

@@ -14,19 +14,23 @@ const ListSource = props => {
   // and the configuration
   let computedDefinition = []
   const definition = get(props.source, 'parameters.definition')
-  if (definition && props.parameters) {
-    const availableFilters = get(props.parameters, 'availableFilters') || []
-    const availableSort = get(props.parameters, 'availableSort') || []
-    const availableColumns = get(props.parameters, 'availableColumns') || []
-    const columns = get(props.parameters, 'columns') || []
-    const filters = get(props.parameters, 'filters') || []
+  if (definition) {
+    computedDefinition = createListDefinition(definition)
 
-    computedDefinition = createListDefinition(definition).map(column => Object.assign({}, column, {
-      filterable : !!column.filterable  && (-1 !== availableFilters.indexOf(column.alias || column.name) || !!filters.find(filter => filter.property === column.alias || filter.property === column.name)),
-      sortable   : !!column.sortable    && -1 !== availableSort.indexOf(column.alias || column.name),
-      displayable: !!column.displayable && -1 !== availableColumns.indexOf(column.name),
-      displayed  : -1 !== columns.indexOf(column.name)
-    }))
+    if (props.parameters) {
+      const availableFilters = get(props.parameters, 'availableFilters') || []
+      const availableSort = get(props.parameters, 'availableSort') || []
+      const availableColumns = get(props.parameters, 'availableColumns') || []
+      const columns = get(props.parameters, 'columns') || []
+      const filters = get(props.parameters, 'filters') || []
+
+      computedDefinition = computedDefinition.map(column => Object.assign({}, column, {
+        filterable : !!column.filterable  && (-1 !== availableFilters.indexOf(column.alias || column.name) || !!filters.find(filter => filter.property === column.alias || filter.property === column.name)),
+        sortable   : !!column.sortable    && -1 !== availableSort.indexOf(column.alias || column.name),
+        displayable: !!column.displayable && -1 !== availableColumns.indexOf(column.name),
+        displayed  : -1 !== columns.indexOf(column.name)
+      }))
+    }
   }
 
   // compute final card

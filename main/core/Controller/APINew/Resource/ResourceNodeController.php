@@ -41,9 +41,9 @@ class ResourceNodeController extends AbstractCrudController
      *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager")
      * })
      *
-     * @param ResourceManager $resourceManager
-     * @param RightsManager   $rightsManager
-     * @param ResourceActionManager
+     * @param ResourceActionManager $actionManager
+     * @param ResourceManager       $resourceManager
+     * @param RightsManager         $rightsManager
      */
     public function __construct(
         ResourceActionManager $actionManager,

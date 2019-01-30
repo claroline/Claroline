@@ -1,7 +1,7 @@
 import React from 'react'
 import isEmpty from 'lodash/isEmpty'
 
-import {trans} from '#/main/app/intl/translation'
+import {trans, transChoice} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
@@ -10,7 +10,7 @@ import {ModalButton} from '#/main/app/buttons/modal/containers/button'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 
-import {ResourceCard} from '#/main/core/resource/data/components/resource-card'
+import {ResourceCard} from '#/main/core/resource/components/card'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {MODAL_RESOURCE_EXPLORER} from '#/main/core/resource/modals/explorer'
 
@@ -44,8 +44,8 @@ const ResourceInput = props => {
             modal: [MODAL_CONFIRM, {
               dangerous: true,
               icon: 'fa fa-fw fa-trash-o',
-              title: trans('resources_delete_confirm'),
-              question: trans('resource_delete_message'),
+              title: transChoice('resources_delete_confirm', 1),
+              question: transChoice('resources_delete_message', 1, {count: 1}),
               handleConfirm: () => props.onChange(null)
             }]
           }
@@ -63,12 +63,12 @@ const ResourceInput = props => {
           modal={[MODAL_CONFIRM, {
             dangerous: true,
             icon: 'fa fa-fw fa-trash-o',
-            title: trans('resources_delete_confirm'),
-            question: trans('resource_delete_message'),
+            title: transChoice('resources_delete_confirm', 1),
+            question: transChoice('resources_delete_message', 1, {count: 1}),
             handleConfirm: () => props.onChange(null)
           }]}
         >
-          <span>{trans('delete')}</span>
+          <span>{trans('delete', {}, 'actions')}</span>
         </ModalButton>
         <ResourceEmbedded
           resourceNode={props.value}

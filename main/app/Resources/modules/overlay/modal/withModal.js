@@ -19,7 +19,11 @@ function withModal(Component) {
       showModal(modalType, modalProps) {
         dispatch(actions.showModal(modalType, modalProps))
       }
-    })
+    }),
+    undefined,
+    {
+      areStatesEqual: () => true
+    }
   )(Component)
 
   WithModal.displayName = `WithModal(${getDisplayName(Component)})`

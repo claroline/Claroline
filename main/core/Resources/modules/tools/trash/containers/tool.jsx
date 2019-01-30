@@ -1,8 +1,9 @@
 import {connect} from 'react-redux'
 
+import {actions as listActions} from '#/main/app/content/list/store/actions'
+
 import {TrashTool as TrashToolComponent} from '#/main/core/tools/trash/components/tool'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
-import {actions} from '#/main/core/tools/trash/store'
 
 // TODO : make it available in desktop
 
@@ -11,8 +12,8 @@ const TrashTool = connect(
     workspace: toolSelectors.contextData(state)
   }),
   (dispatch) => ({
-    restore(resourceNodes) {
-      dispatch(actions.restore(resourceNodes))
+    invalidate() {
+      dispatch(listActions.invalidateData('resources'))
     }
   })
 )(TrashToolComponent)

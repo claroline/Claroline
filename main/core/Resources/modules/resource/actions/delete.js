@@ -1,9 +1,12 @@
+import {createElement} from 'react'
 import get from 'lodash/get'
 
 import {url} from '#/main/app/api'
+import {param} from '#/main/app/config'
+import {trans, transChoice} from '#/main/app/intl/translation'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 
-import {trans} from '#/main/app/intl/translation'
+import {ResourceCard} from '#/main/core/resource/components/card'
 
 /**
  * Deletes some resource nodes.
@@ -16,16 +19,33 @@ export default (resourceNodes, nodesRefresher) => ({
   type: ASYNC_BUTTON,
   icon: 'fa fa-fw fa-trash-o',
   label: trans('delete', {}, 'actions'),
-  displayed: -1 !== resourceNodes.findIndex(node => get(node, 'meta.active')),
+  // display action only if nodes are not already deleted
+  // or if they are deleted and soft delete is enabled (will allow to hard delete them)
+  displayed: -1 !== resourceNodes.findIndex(node => get(node, 'meta.active')) || param('resources.softDelete'),
   dangerous: true,
   confirm: {
-    title: trans('resources_delete_confirm'),
-    message: trans('resources_delete_message')
+    title: transChoice('resources_delete_confirm', resourceNodes.length),
+    subtitle: 1 === resourceNodes.length ? resourceNodes[0].name : transChoice('count_elements', resourceNodes.length, {count: resourceNodes.length}),
+    message: transChoice('resources_delete_message', resourceNodes.length, {count: resourceNodes.length}),
+    additional: [
+      createElement('div', {
+        key: 'additional',
+        className: 'modal-body'
+      }, resourceNodes.map(node => createElement(ResourceCard, {
+        key: node.id,
+        className: 'component-container',
+        data: node
+      })))
+    ]
   },
   request: {
     url: url(
       ['claro_resource_collection_action', {action: 'delete'}],
-      {ids: resourceNodes.map(resourceNode => resourceNode.id)}
+      {
+        ids: resourceNodes.map(resourceNode => resourceNode.id),
+        // hard delete if soft delete is not enabled or if selected nodes already are soft deleted
+        hard: !param('resources.softDelete') || -1 !== resourceNodes.findIndex(node => !get(node, 'meta.active'))
+      }
     ),
     request: {
       method: 'DELETE'

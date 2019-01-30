@@ -87,7 +87,6 @@
     "remaining_correction_msg": "You have one remaining copy to correct to finish this evaluation.",
     "remaining_corrections_msg": "You have %count% remaining copies to correct to finish this evaluation.",
     "report": "Report",
-    "resource_type": "Resource of a workspace",
     "revalidate_correction": "Revalidate the correction",
     "review_disabled_corrections_done": "Your corrections are done.",
     "review_disabled_drop_not_finished": "Your drop is not finished.",

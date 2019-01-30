@@ -1,4 +1,4 @@
-import {ResourceCard} from '#/main/core/resource/data/components/resource-card'
+import {ResourceCard} from '#/main/core/resource/components/card'
 
 import {trans} from '#/main/app/intl/translation'
 import {URL_BUTTON} from '#/main/app/buttons'
@@ -59,7 +59,6 @@ export default {
         type: 'tag',
         label: trans('tags'),
         displayable: false,
-        filterable: true,
         sortable: false,
         options: {
           objectClass: 'Claroline\\CoreBundle\\Entity\\Resource\\ResourceNode'
