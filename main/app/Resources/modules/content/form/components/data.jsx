@@ -138,6 +138,7 @@ class FormData extends Component {
             value={field.calculated ? field.calculated(this.props.data) : get(this.props.data, field.name)}
             error={get(this.props.errors, field.name)}
 
+            onChange={field.onChange}
             update={this.update}
             setErrors={this.setErrors}
           />
