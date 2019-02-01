@@ -48,6 +48,12 @@ const UserPageActions = props => {
       }]
     }, {
       type: URL_BUTTON,
+      icon: 'fa fa-trophy',
+      label: trans('user-badges'),
+      group: trans('badges'),
+      target: '#/badges/'+props.user.id
+    }, {
+      type: URL_BUTTON,
       icon: 'fa fa-fw fa-line-chart',
       label: trans('show_tracking'),
       group: trans('user_management'),

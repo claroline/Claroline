@@ -669,6 +669,11 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         return $roles;
     }
 
+    public function getGroups()
+    {
+        return $this->groups;
+    }
+
     /**
      * Checks if the user has a given role.
      *

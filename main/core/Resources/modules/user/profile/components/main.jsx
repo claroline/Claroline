@@ -12,6 +12,7 @@ import {selectors} from '#/main/app/content/details/store'
 import {select as profileSelect} from '#/main/core/user/profile/selectors'
 import {ProfileEdit} from '#/main/core/user/profile/editor/components/main'
 import {ProfileShow} from '#/main/core/user/profile/player/components/main'
+import {ProfileBadgeList} from '#/plugin/open-badge/tools/badges/badge/components/profile-badges'
 
 const authenticatedUser = currentUser()
 
@@ -29,6 +30,9 @@ const ProfileComponent = props =>
           component: ProfileEdit,
           disabled: authenticatedUser === null || props.user.username !== authenticatedUser.username &&
             authenticatedUser.roles.filter(r => ['ROLE_ADMIN'].concat(props.parameters['roles_edition']).indexOf(r.name) > -1).length === 0
+        }, {
+          path: '/badges/:id',
+          component: ProfileBadgeList
         }
       ]}
       redirect={[

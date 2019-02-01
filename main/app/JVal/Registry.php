@@ -18,31 +18,31 @@ use JVal\Registry as JValRegistry;
 class Registry extends JValRegistry
 {
     private static $commonConstraints = [
-        'Maximum',
-        'Minimum',
-        'MaxLength',
-        'MinLength',
-        'Pattern',
-        'Items',
-        'MaxItems',
-        'MinItems',
-        'UniqueItems',
-        'Required',
-        'Properties',
-        'Dependencies',
-        'Enum',
-        'Type',
-        'Format',
+        'Claroline\\AppBundle\\JVal\\Constraint\\Maximum',
+        'Claroline\\AppBundle\\JVal\\Constraint\\Minimum',
+        'Claroline\\AppBundle\\JVal\\Constraint\\MaxLength',
+        'Claroline\\AppBundle\\JVal\\Constraint\\MinLength',
+        'Claroline\\AppBundle\\JVal\\Constraint\\Pattern',
+        'Claroline\\AppBundle\\JVal\\Constraint\\Items',
+        'Claroline\\AppBundle\\JVal\\Constraint\\MaxItems',
+        'Claroline\\AppBundle\\JVal\\Constraint\\MinItems',
+        'Claroline\\AppBundle\\JVal\\Constraint\\UniqueItems',
+        'Claroline\\AppBundle\\JVal\\Constraint\\Required',
+        'Claroline\\AppBundle\\JVal\\Constraint\\Properties',
+        'Claroline\\AppBundle\\JVal\\Constraint\\Dependencies',
+        'Claroline\\AppBundle\\JVal\\Constraint\\Enum',
+        'Claroline\\AppBundle\\JVal\\Constraint\\Type',
+        'Claroline\\AppBundle\\JVal\\Constraint\\Format',
     ];
 
     private static $draft4Constraints = [
-        'MultipleOf',
-        'MinProperties',
-        'MaxProperties',
-        'AllOf',
-        'AnyOf',
-        'OneOf',
-        'Not',
+        'Claroline\\AppBundle\\JVal\\Constraint\\MultipleOf',
+        'Claroline\\AppBundle\\JVal\\Constraint\\MinProperties',
+        'Claroline\\AppBundle\\JVal\\Constraint\\MaxProperties',
+        'Claroline\\AppBundle\\JVal\\Constraint\\AllOf',
+        'Claroline\\AppBundle\\JVal\\Constraint\\AnyOf',
+        'Claroline\\AppBundle\\JVal\\Constraint\\OneOf',
+        'Claroline\\AppBundle\\JVal\\Constraint\\Not',
     ];
 
     private $customConstraints;
@@ -82,7 +82,7 @@ class Registry extends JValRegistry
     private function createBuiltInConstraints(array $constraintNames)
     {
         return array_map(function ($name) {
-            $class = "JVal\\Constraint\\{$name}Constraint";
+            $class = "{$name}Constraint";
 
             return new $class();
         }, $constraintNames);

@@ -60,9 +60,17 @@ registry.add('ClarolineCoreBundle', {
     },
 
     user: {
-
+      'disable'        : () => { return import(/* webpackChunkName: "core-action-user-disable" */         '#/main/core/user/actions/disable') },
+      'enable'         : () => { return import(/* webpackChunkName: "core-action-user-enable" */          '#/main/core/user/actions/enable') },
+      'password-change': () => { return import(/* webpackChunkName: "core-action-user-password-change" */ '#/main/core/user/actions/password-change') },
+      'password-reset' : () => { return import(/* webpackChunkName: "core-action-user-password-reset" */  '#/main/core/user/actions/password-reset') },
+      'show-as'        : () => { return import(/* webpackChunkName: "core-action-user-show-as" */         '#/main/core/user/actions/show-as') },
+      'show-profile'   : () => { return import(/* webpackChunkName: "core-action-user-show-profile" */    '#/main/core/user/actions/show-profile') },
+      'show-tracking'  : () => { return import(/* webpackChunkName: "core-action-user-show-tracking" */   '#/main/core/user/actions/show-tracking') },
+      'ws-disable'     : () => { return import(/* webpackChunkName: "core-action-user-ws-disable" */      '#/main/core/user/actions/ws-disable') },
+      'ws-enable'      : () => { return import(/* webpackChunkName: "core-action-user-ws-enable" */       '#/main/core/user/actions/ws-enable') },
+      'merge'          : () => { return import(/* webpackChunkName: "core-action-user-ws-merge" */        '#/main/core/user/actions/merge') }
     },
-
     group: {
 
     }
@@ -89,15 +97,16 @@ registry.add('ClarolineCoreBundle', {
 
   data: {
     types: {
-      'organization'  : () => { return import(/* webpackChunkName: "core-data-organization" */  '#/main/core/data/types/organization') },
-      'organizations' : () => { return import(/* webpackChunkName: "core-data-organizations" */ '#/main/core/data/types/organizations') },
-      'resource'      : () => { return import(/* webpackChunkName: "core-data-resource" */      '#/main/core/data/types/resource') },
-      'users'         : () => { return import(/* webpackChunkName: "core-data-users" */         '#/main/core/data/types/users') },
-      'workspace'     : () => { return import(/* webpackChunkName: "core-data-workspace" */     '#/main/core/data/types/workspace') },
-      'workspaces'    : () => { return import(/* webpackChunkName: "core-data-workspaces" */    '#/main/core/data/types/workspaces') },
-      'groups'        : () => { return import(/* webpackChunkName: "core-data-groups" */        '#/main/core/data/types/groups') },
-      'location'      : () => { return import(/* webpackChunkName: "core-data-location" */      '#/main/core/data/types/location') },
-      'template_type' : () => { return import(/* webpackChunkName: "core-data-template-type" */ '#/main/core/data/types/template-type') }
+      'organization' : () => { return import(/* webpackChunkName: "core-data-organization" */  '#/main/core/data/types/organization') },
+      'resource'     : () => { return import(/* webpackChunkName: "core-data-resource" */      '#/main/core/data/types/resource') },
+      'user'         : () => { return import(/* webpackChunkName: "core-data-user" */         '#/main/core/data/types/user') },
+      'users'        : () => { return import(/* webpackChunkName: "core-data-users" */         '#/main/core/data/types/users') },
+      'workspace'    : () => { return import(/* webpackChunkName: "core-data-workspace" */     '#/main/core/data/types/workspace') },
+      'workspaces'   : () => { return import(/* webpackChunkName: "core-data-workspaces" */    '#/main/core/data/types/workspaces') },
+      'groups'       : () => { return import(/* webpackChunkName: "core-data-groups" */        '#/main/core/data/types/groups') },
+      'group'       : () => { return import(/* webpackChunkName: "core-data-groups" */        '#/main/core/data/types/group') },
+      'location'     : () => { return import(/* webpackChunkName: "core-data-location" */      '#/main/core/data/types/location') },
+      'template_type': () => { return import(/* webpackChunkName: "core-data-template-type" */ '#/main/core/data/types/template-type') }
     },
     sources: {
       'resources'    : () => { return import(/* webpackChunkName: "core-data-resources" */  '#/main/core/data/sources/resources') },

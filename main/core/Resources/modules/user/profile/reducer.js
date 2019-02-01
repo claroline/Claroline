@@ -1,5 +1,7 @@
 import {makeReducer} from '#/main/app/store/reducer'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
+import {makeListReducer} from '#/main/app/content/list/store'
+import {combineReducers} from '#/main/app/store/reducer'
 
 import {
   PROFILE_FACET_OPEN
@@ -11,7 +13,10 @@ const reducer = {
   }),
   facets: makeReducer([], {}),
   user: makeFormReducer('user', {}),
-  parameters: makeReducer({}, {})
+  parameters: makeReducer({}, {}),
+  badges: combineReducers({
+    mine: makeListReducer('badges.mine', {})
+  })
 }
 
 export {

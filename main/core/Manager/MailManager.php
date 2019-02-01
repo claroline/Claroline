@@ -83,8 +83,7 @@ class MailManager
         $this->router = $router;
         $this->templateManager = $templateManager;
         $this->templating = $templating;
-
-        $this->parameters = $parametersSerializer->serialize([Options::SERIALIZE_MINIMAL]);
+        $this->serializer = $parametersSerializer;
     }
 
     /**
@@ -225,6 +224,7 @@ class MailManager
      */
     public function send($subject, $body, array $users, $from = null, array $extra = [], $force = false, $replyToMail = null)
     {
+        $parameters = $this->serializer->serialize([Options::SERIALIZE_MINIMAL]);
         if (0 === count($users) && (!isset($extra['to']) || 0 === count($extra['to']))) {
             //obviously, if we're not going to send anything to anyone, it's better to stop
             return false;
@@ -233,21 +233,21 @@ class MailManager
         if ($this->isMailerAvailable()) {
             $to = [];
 
-            $fromEmail = $this->parameters['mailer']['from'];
-            $locale = 1 === count($users) ? $users[0]->getLocale() : $this->parameters['locales']['default'];
+            $fromEmail = $parameters['mailer']['from'];
+            $locale = 1 === count($users) ? $users[0]->getLocale() : $parameters['locales']['default'];
 
             if (!$locale) {
-                $locale = $this->parameters['locales']['default'];
+                $locale = $parameters['locales']['default'];
             }
 
             $body = $this->templateManager->getTemplate('claro_mail_layout', ['content' => $body], $locale);
-            $body = str_replace('%platform_name%', $this->parameters['display']['name'], $body);
+            $body = str_replace('%platform_name%', $parameters['display']['name'], $body);
 
             if ($from) {
                 $body = str_replace('%first_name%', $from->getFirstName(), $body);
                 $body = str_replace('%last_name%', $from->getLastName(), $body);
             } else {
-                $body = str_replace('%first_name%', $this->parameters['display']['name'], $body);
+                $body = str_replace('%first_name%', $parameters['display']['name'], $body);
                 $body = str_replace('%last_name%', '', $body);
             }
 
@@ -299,15 +299,16 @@ class MailManager
      */
     public function refreshCache(RefreshCacheEvent $event)
     {
+        $parameters = $this->serializer->serialize([Options::SERIALIZE_MINIMAL]);
         $data = [
-          'transport' => $this->parameters['mailer']['transport'],
-          'host' => $this->parameters['mailer']['host'],
-          'username' => $this->parameters['mailer']['username'],
-          'password' => $this->parameters['mailer']['password'],
-          'auth_mode' => $this->parameters['mailer']['auth_mode'],
-          'encryption' => $this->parameters['mailer']['encryption'],
-          'port' => $this->parameters['mailer']['port'],
-          'api_key' => $this->parameters['mailer']['api_key'],
+          'transport' => $parameters['mailer']['transport'],
+          'host' => $parameters['mailer']['host'],
+          'username' => $parameters['mailer']['username'],
+          'password' => $parameters['mailer']['password'],
+          'auth_mode' => $parameters['mailer']['auth_mode'],
+          'encryption' => $parameters['mailer']['encryption'],
+          'port' => $parameters['mailer']['port'],
+          'api_key' => $parameters['mailer']['api_key'],
         ];
 
         if (is_array($this->mailer->test($data))) {
@@ -324,16 +325,17 @@ class MailManager
 
     public function getMailerFrom()
     {
-        if ($from = $this->parameters['mailer']['from']) {
+        $parameters = $this->serializer->serialize([Options::SERIALIZE_MINIMAL]);
+        if ($from = $parameters['mailer']['from']) {
             if (filter_var($from, FILTER_VALIDATE_EMAIL)) {
                 return $from;
             }
         }
 
-        if ($this->parameters['internet']['domain_name'] && '' !== trim($this->parameters['internet']['domain_name'])) {
-            return 'noreply@'.$this->parameters['internet']['domain_name'];
+        if ($parameters['internet']['domain_name'] && '' !== trim($parameters['internet']['domain_name'])) {
+            return 'noreply@'.$parameters['internet']['domain_name'];
         }
 
-        return $this->parameters['help']['support_email'];
+        return $parameters['help']['support_email'];
     }
 }

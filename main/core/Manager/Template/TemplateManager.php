@@ -43,7 +43,7 @@ class TemplateManager
     public function __construct(ObjectManager $om, ParametersSerializer $parametersSerializer)
     {
         $this->om = $om;
-        $this->parameters = $parametersSerializer->serialize([Options::SERIALIZE_MINIMAL]);
+        $this->serializer = $parametersSerializer;
 
         $this->templateTypeRepo = $om->getRepository(TemplateType::class);
         $this->templateRepo = $om->getRepository(Template::class);
@@ -70,6 +70,7 @@ class TemplateManager
      */
     public function getTemplate($templateTypeName, $placeholders = [], $locale = null, $mode = 'content')
     {
+        $parameters = $this->serializer->serialize([Options::SERIALIZE_MINIMAL]);
         $result = '';
         $templateType = $this->templateTypeRepo->findOneBy(['name' => $templateTypeName]);
 
@@ -87,7 +88,7 @@ class TemplateManager
             }
             // If no template is found for the given locale or locale is null, uses default locale
             if (!$locale || !$template) {
-                $defaultLocale = isset($this->parameters['locale']['default']) ? $this->parameters['locales']['default'] : null;
+                $defaultLocale = isset($parameters['locale']['default']) ? $parameters['locales']['default'] : null;
 
                 if ($defaultLocale && $defaultLocale !== $locale) {
                     $template = $this->templateRepo->findOneBy([
@@ -144,6 +145,7 @@ class TemplateManager
      */
     public function replacePlaceholders($text, $placeholders = [])
     {
+        $parameters = $this->serializer->serialize([Options::SERIALIZE_MINIMAL]);
         $now = new \DateTime();
         $keys = [
             '%platform_name%',
@@ -152,8 +154,8 @@ class TemplateManager
             '%datetime%',
         ];
         $values = [
-            $this->parameters['display']['name'],
-            $this->parameters['internet']['platform_url'],
+            $parameters['display']['name'],
+            $parameters['internet']['platform_url'],
             $now->format('Y-m-d'),
             $now->format('Y-m-d H:i:s'),
         ];

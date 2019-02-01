@@ -280,4 +280,54 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
 
         return $perm;
     }
+
+    //ready to be overrided
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
+    {
+        $collection = isset($options['collection']) ? $options['collection'] : null;
+        //crud actions
+        switch ($attributes[0]) {
+            case self::VIEW: return $this->checkView($token, $object);
+            case self::CREATE: return $this->checkCreation($token, $object);
+            case self::EDIT:   return $this->checkEdit($token, $object);
+            case self::DELETE: return $this->checkDelete($token, $object);
+            case self::PATCH:  return $this->checkPatch($token, $object, $collection);
+        }
+    }
+
+    //ready to be overrided
+    private function checkView(TokenInterface $token, $object)
+    {
+        return VoterInterface::ACCESS_GRANTED;
+    }
+
+    //ready to be overrided
+    private function checkCreation(TokenInterface $token, $object)
+    {
+        return VoterInterface::ACCESS_GRANTED;
+    }
+
+    //ready to be overrided
+    private function checkEdit(TokenInterface $token, $object)
+    {
+        return VoterInterface::ACCESS_GRANTED;
+    }
+
+    //ready to be overrided
+    private function checkDelete(TokenInterface $token, $object)
+    {
+        return VoterInterface::ACCESS_GRANTED;
+    }
+
+    //ready to be overrided
+    private function checkPatch(TokenInterface $token, $object, ObjectCollection $collection = null)
+    {
+        return VoterInterface::ACCESS_GRANTED;
+    }
+
+    //ready to be overrided
+    public function getSupportedActions()
+    {
+        return[self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::PATCH];
+    }
 }

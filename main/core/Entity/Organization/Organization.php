@@ -201,6 +201,11 @@ class Organization
      */
     private $userOrganizationReferences;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Cryptography\CryptographicKey", mappedBy="organization")
+     */
+    private $keys;
+
     public function __construct()
     {
         $this->type = self::TYPE_EXTERNAL;
@@ -210,6 +215,7 @@ class Organization
 
         $this->locations = new ArrayCollection();
         $this->workspaces = new ArrayCollection();
+        $this->keys = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->administrators = new ArrayCollection();
         $this->userOrganizationReferences = new ArrayCollection();
@@ -425,6 +431,11 @@ class Organization
     public function getRight()
     {
         return $this->rgt;
+    }
+
+    public function getKeys()
+    {
+        return $this->keys;
     }
 
     public function addWorkspace(Workspace $workspace)

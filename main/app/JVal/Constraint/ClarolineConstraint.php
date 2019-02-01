@@ -89,7 +89,7 @@ class ClarolineConstraint implements Constraint
     {
         foreach ($schema->requiredAtCreation as $property) {
             if (in_array('create', $options) && !property_exists($instance, $property)) {
-                $context->addViolation('property "%s" is missing', [$property]);
+                $context->addViolation('property "%s" is missing', [$property], $property);
             }
         }
     }

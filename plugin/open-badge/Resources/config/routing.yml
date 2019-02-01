@@ -1,0 +1,12 @@
+claro_open_badge_api:
+    resource: "@ClarolineOpenBadgeBundle/Controller/API/"
+    prefix: api
+    type: api
+    options:
+        expose: true
+
+claro_open_badge_implementation:
+    resource: "@ClarolineOpenBadgeBundle/Controller/"
+    type: annotation
+    options:
+        expose: true

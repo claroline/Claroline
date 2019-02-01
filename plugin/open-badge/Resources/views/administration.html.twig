@@ -1,0 +1,24 @@
+{% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'users' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+{% block breadcrumb %}
+    {{ macros.breadcrumbs([{
+        'name': 'administration'|trans({}, 'platform'),
+        'href': path('claro_admin_index')
+    }, {
+        'name': 'open_badge'|trans({}, 'tools'),
+        'href': ''
+    }]) }}
+{% endblock %}
+
+{% block content %}
+    <div class="page-container open-badge-container" data-current-context="{{ "administration" | json_encode | raw | escape }}" data-parameters="{{ parameters | json_encode | raw | escape }}">
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ hotAsset('dist/claroline-distribution-plugin-open-badge-badge.js') }}"></script>
+{% endblock %}

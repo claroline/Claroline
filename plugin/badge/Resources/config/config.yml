@@ -11,16 +11,16 @@ plugin:
     tools:
       - name: badges
         class: trophy
-        is_displayable_in_workspace: true
+        is_displayable_in_workspace: false
         is_displayable_in_desktop: false
       - name: my_badges
         class: trophy
-        is_displayable_in_workspace: true
+        is_displayable_in_workspace: false
         is_displayable_in_desktop: false
       - name: all_my_badges
         class: trophy
         is_displayable_in_workspace: false
-        is_displayable_in_desktop: true
+        is_displayable_in_desktop: false
         desktop_category: user
 
     admin_tools:

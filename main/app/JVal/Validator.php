@@ -10,8 +10,8 @@
 namespace Claroline\AppBundle\JVal;
 
 use Claroline\AppBundle\JVal\Constraint\ClarolineConstraint;
+use Claroline\AppBundle\JVal\Constraint\RequiredConstraint;
 use Closure;
-use JVal\Context;
 use JVal\Resolver;
 use JVal\Uri;
 
@@ -53,6 +53,7 @@ class Validator
     {
         $constraints = [
             new ClarolineConstraint(),
+            new RequiredConstraint(),
         ];
 
         return self::build($preFetchHook, $constraints);
