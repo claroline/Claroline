@@ -95,9 +95,17 @@
         "documentation": "",
         "message": "Shows the actions done by users in the workspace."
       },
+      "progression": {
+        "documentation": "",
+        "message": "Shows your progression in the resources of the workspace."
+      },
       "resource_manager": {
         "documentation": "https://claroline.gitbooks.io/claroline-connect-documentation/content/fr/resources/resources.html",
         "message": "Permits to view and manage the resources of the workspace."
+      },
+      "resource_trash": {
+        "documentation": "",
+        "message": "Permits to restore or completely remove the deleted resources of the workspace."
       },
       "users": {
         "documentation": "https://claroline.gitbooks.io/claroline-connect-documentation/content/fr/tools/manage-users.html",

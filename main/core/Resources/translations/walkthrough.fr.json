@@ -95,9 +95,17 @@
         "documentation": "",
         "message": "Affiche les actions effectuées par les utilisateurs dans l'espace d'activités."
       },
+      "progression": {
+        "documentation": "",
+        "message": "Affiche votre progression dans les ressources de l'espace d'activités."
+      },
       "resource_manager": {
         "documentation": "https://claroline.gitbooks.io/claroline-connect-documentation/content/fr/resources/resources.html",
         "message": "Permet de voir et gérer les ressources de l'espace d'activités."
+      },
+      "resource_trash": {
+        "documentation": "",
+        "message": "Permet de restaurer ou supprimer définitivement les ressources supprimées de l'espace d'activités."
       },
       "users": {
         "documentation": "https://claroline.gitbooks.io/claroline-connect-documentation/content/fr/tools/manage-users.html",
