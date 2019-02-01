@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * This controller is used to do some redirects/route alias. It's not always possible to do it
@@ -76,6 +77,12 @@ class RedirectController extends Controller
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
         if ('anon.' === $user) {
+            $configHandler = $this->container->get('claroline.config.platform_config_handler');
+
+            if (!$configHandler->getParameter('registration.self')) {
+                throw new AccessDeniedException();
+            }
+
             return $this->redirectToRoute('claro_workspace_subscription_url_generate_anonymous', [
                 'workspace' => $workspace->getId(),
             ]);

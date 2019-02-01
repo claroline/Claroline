@@ -77,6 +77,11 @@ class WorkspaceParametersController extends Controller
     public function anonymousSubscriptionAction(Workspace $workspace)
     {
         $configHandler = $this->container->get('claroline.config.platform_config_handler');
+
+        if (!$configHandler->getParameter('registration.self')) {
+            throw new AccessDeniedException();
+        }
+
         $profilerSerializer = $this->container->get('claroline.serializer.profile');
         $tosManager = $this->container->get('claroline.common.terms_of_service_manager');
         $allowWorkspace = $configHandler->getParameter('allow_workspace_at_registration');
