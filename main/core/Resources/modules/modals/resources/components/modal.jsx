@@ -3,7 +3,6 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
 
-import {toKey} from '#/main/core/scaffolding/text/utils'
 import {trans} from '#/main/app/intl/translation'
 import {Router, withRouter} from '#/main/app/router'
 import {Button} from '#/main/app/action/components/button'
@@ -13,7 +12,7 @@ import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {ResourceExplorer} from '#/main/core/resource/explorer/containers/explorer'
 
-import {selectors} from '#/main/core/resource/modals/explorer/store'
+import {selectors} from '#/main/core/modals/resources/store'
 
 const ExplorerBreadcrumb = props => {
   let ancestors = props.path.slice()
@@ -33,9 +32,8 @@ const ExplorerBreadcrumb = props => {
   return (
     <ul className="breadcrumb modal-breadcrumb">
       {ancestors.map((node, index) => index !== ancestors.length - 1 ?
-        <li role="presentation">
+        <li key={node.id} role="presentation">
           <Button
-            key={node.id || toKey(node.name)}
             type={LINK_BUTTON}
             label={node.name}
             target={`/${node.id}`}

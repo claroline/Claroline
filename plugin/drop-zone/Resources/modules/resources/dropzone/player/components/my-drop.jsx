@@ -18,7 +18,7 @@ import {actions as correctionActions} from '#/plugin/drop-zone/resources/dropzon
 import {Documents} from '#/plugin/drop-zone/resources/dropzone/components/documents.jsx'
 import {MODAL_ADD_DOCUMENT} from '#/plugin/drop-zone/resources/dropzone/player/components/modal/add-document.jsx'
 import {MODAL_CORRECTION} from '#/plugin/drop-zone/resources/dropzone/correction/components/modal/correction-modal'
-import {MODAL_RESOURCE_EXPLORER} from '#/main/core/resource/modals/explorer'
+import {MODAL_RESOURCE_EXPLORER} from '#/main/core/modals/resources'
 
 const Corrections = props =>
   <table className="table corrections-table">

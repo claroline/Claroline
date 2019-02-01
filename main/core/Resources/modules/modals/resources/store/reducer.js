@@ -1,6 +1,6 @@
 import {makeResourceExplorerReducer} from '#/main/core/resource/explorer/store'
 
-import {selectors} from '#/main/core/resource/modals/explorer/store/selectors'
+import {selectors} from '#/main/core/modals/resources/store/selectors'
 
 const reducer = makeResourceExplorerReducer(selectors.STORE_NAME)
 

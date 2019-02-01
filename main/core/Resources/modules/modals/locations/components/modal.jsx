@@ -20,7 +20,7 @@ const LocationsPickerModal = props => {
       icon="fa fa-fw fa-location-arrow"
       className="data-picker-modal"
       bsSize="lg"
-      onExiting={() => props.resetSelect()}
+      onExiting={props.resetSelect}
     >
       <ListData
         name={selectors.STORE_NAME}

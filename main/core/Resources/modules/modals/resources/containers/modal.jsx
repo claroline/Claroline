@@ -7,8 +7,8 @@ import {
   selectors as explorerSelectors
 } from '#/main/core/resource/explorer/store'
 
-import {ExplorerModal as ExplorerModalComponent} from '#/main/core/resource/modals/explorer/components/modal'
-import {reducer, selectors} from '#/main/core/resource/modals/explorer/store'
+import {ExplorerModal as ExplorerModalComponent} from '#/main/core/modals/resources/components/modal'
+import {reducer, selectors} from '#/main/core/modals/resources/store'
 
 const ExplorerModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(

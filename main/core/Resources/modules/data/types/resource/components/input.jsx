@@ -12,7 +12,7 @@ import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 
 import {ResourceCard} from '#/main/core/resource/components/card'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
-import {MODAL_RESOURCE_EXPLORER} from '#/main/core/resource/modals/explorer'
+import {MODAL_RESOURCE_EXPLORER} from '#/main/core/modals/resources'
 
 const ResourceInput = props => {
   if (!isEmpty(props.value) && !props.embedded) {

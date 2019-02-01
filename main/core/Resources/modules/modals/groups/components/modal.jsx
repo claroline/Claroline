@@ -20,7 +20,7 @@ const GroupsPickerModal = props => {
       icon="fa fa-fw fa-users"
       className="data-picker-modal"
       bsSize="lg"
-      onExiting={() => props.resetSelect()}
+      onExiting={props.resetSelect}
     >
       <ListData
         name={selectors.STORE_NAME}

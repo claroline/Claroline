@@ -6,7 +6,7 @@ import {url} from '#/main/app/api'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl/translation'
 
-import {MODAL_RESOURCE_EXPLORER} from '#/main/core/resource/modals/explorer'
+import {MODAL_RESOURCE_EXPLORER} from '#/main/core/modals/resources'
 
 // TODO : make loaders work
 // TODO : remove placeholder on selection cancel
