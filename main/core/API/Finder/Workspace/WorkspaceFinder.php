@@ -68,6 +68,13 @@ class WorkspaceFinder extends AbstractFinder
             }
 
             switch ($filterName) {
+                case 'orphan':
+                    if ($filterValue) {
+                        $qb->andWhere('obj.personal = true');
+                        $qb->leftJoin('obj.personalUser', 'ps');
+                        $qb->andWhere('ps.isRemoved = true');
+                    }
+                    break;
                 case 'hidden':
                     $qb->andWhere("obj.displayable = :{$filterName}");
                     $qb->setParameter($filterName, !$filterValue);

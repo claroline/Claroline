@@ -50,7 +50,7 @@ trait HasWorkspacesTrait
     {
         $object = $this->find($class, $id);
         $workspaces = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Workspace\Workspace');
-        $this->crud->patch($object, 'user', Crud::COLLECTION_ADD, $workspaces);
+        $this->crud->patch($object, 'workspace', Crud::COLLECTION_ADD, $workspaces);
 
         return new JsonResponse(
             $this->serializer->serialize($object)
@@ -73,7 +73,7 @@ trait HasWorkspacesTrait
     {
         $object = $this->find($class, $id);
         $workspaces = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Workspace\Workspace');
-        $this->crud->patch($object, 'user', Crud::COLLECTION_REMOVE, $workspaces);
+        $this->crud->patch($object, 'workspace', Crud::COLLECTION_REMOVE, $workspaces);
 
         return new JsonResponse(
             $this->serializer->serialize($object)

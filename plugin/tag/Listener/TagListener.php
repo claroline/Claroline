@@ -105,6 +105,7 @@ class TagListener
             $user = isset($data['user']) ? $data['user'] : null;
             $taggedObject = $this->manager->tagObject($data['tag'], $data['object'], $user);
         }
+
         $event->setResponse($taggedObject);
     }
 

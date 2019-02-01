@@ -10,6 +10,7 @@ use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
@@ -30,6 +31,7 @@ class WorkspaceCrud
      *     "userManager"     = @DI\Inject("claroline.manager.user_manager"),
      *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "orgaManager"     = @DI\Inject("claroline.manager.organization.organization_manager"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
@@ -40,12 +42,14 @@ class WorkspaceCrud
       UserManager $userManager,
       TokenStorageInterface $tokenStorage,
       ResourceManager $resourceManager,
+      OrganizationManager $orgaManager,
       ObjectManager $om
     ) {
         $this->manager = $manager;
         $this->userManager = $userManager;
         $this->tokenStorage = $tokenStorage;
         $this->resourceManager = $resourceManager;
+        $this->organizationManager = $orgaManager;
         $this->om = $om;
     }
 
@@ -79,7 +83,11 @@ class WorkspaceCrud
 
         if ($user instanceof User) {
             $workspace->setCreator($user);
-            $workspace->addOrganization($user->getMainOrganization());
+
+            $organization = $user->getMainOrganization() ?
+                $user->getMainOrganization() :
+                $this->organizationManager->getDefault();
+            $workspace->addOrganization($organization);
         }
 
         if (in_array(Options::LIGHT_COPY, $options)) {

@@ -426,4 +426,14 @@ class Organization
     {
         return $this->rgt;
     }
+
+    public function addWorkspace(Workspace $workspace)
+    {
+        $workspace->addOrganization($this);
+    }
+
+    public function removeWorkspace(Workspace $workspace)
+    {
+        $workspace->removeOrganization($this);
+    }
 }

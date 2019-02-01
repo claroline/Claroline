@@ -43,7 +43,8 @@ class UserOrganizationReference
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization",
-     *     inversedBy="userOrganizationReferences"
+     *     inversedBy="userOrganizationReferences",
+     *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="oganization_id", nullable=false, onDelete="CASCADE")
      *

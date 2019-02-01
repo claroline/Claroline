@@ -121,19 +121,19 @@ class UserCrud
             }
         }
 
-        if ($createWs) {
-            $this->userManager->setPersonalWorkspace($user);
-        }
-
         $token = $this->container->get('security.token_storage')->getToken();
 
         if (null === $user->getMainOrganization()) {
             //we want a min organization
             if ($token && $token->getUser() instanceof User && $token->getUser()->getMainOrganization()) {
-                $user->setMainOrganization($token->getUser()->getMainOrganization());
+                $user->addOrganization($token->getUser()->getMainOrganization(), true);
             } else {
-                $user->setMainOrganization($this->container->get('claroline.manager.organization.organization_manager')->getDefault());
+                $user->addOrganization($this->container->get('claroline.manager.organization.organization_manager')->getDefault(), true);
             }
+        }
+
+        if ($createWs) {
+            $this->userManager->setPersonalWorkspace($user);
         }
 
         //we need this line for the log system

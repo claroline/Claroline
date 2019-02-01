@@ -39,6 +39,11 @@ class MessageFinder extends AbstractFinder
                     ));
                     $qb->setParameter($filterName, $filterValue);
                     break;
+                case 'subject.title':
+                    $qb->join('obj.subject', 'subject');
+                    $qb->andWhere('UPPER(subject.title) LIKE :title');
+                    $qb->setParameter('title', '%'.strtoupper($filterValue).'%');
+                    break;
                 case 'parent':
                     if (empty($filterValue)) {
                         $qb->andWhere('obj.parent IS NULL');

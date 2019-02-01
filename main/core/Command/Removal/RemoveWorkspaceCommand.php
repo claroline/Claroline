@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Command\Removal;
 
 use Claroline\CoreBundle\Command\Traits\AskRolesTrait;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Psr\Log\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -40,6 +41,13 @@ class RemoveWorkspaceCommand extends ContainerAwareCommand
             'p',
             InputOption::VALUE_NONE,
             'When set to true, removes the personal workspaces'
+        );
+
+        $this->addOption(
+            'orphans',
+            'o',
+            InputOption::VALUE_NONE,
+            'When set to true, removes the personal workspaces of deleted users'
         );
 
         $this->addOption(
@@ -99,6 +107,7 @@ class RemoveWorkspaceCommand extends ContainerAwareCommand
         $helper = $this->getHelper('question');
         $personal = $input->getOption('personal');
         $standard = $input->getOption('standard');
+        $orphans = $input->getOption('orphans');
         $this->setForce($input->getOption('force'));
         $this->setInput($input);
         $this->setOutput($output);
@@ -128,6 +137,18 @@ class RemoveWorkspaceCommand extends ContainerAwareCommand
             $question = new Question('Filter on name (continue if no filter)', null);
             $name = $helper->ask($input, $output, $question);
             $this->deleteWorkspaceByCodeAndName($code, $name);
+        }
+
+        if ($orphans) {
+            $this->deleteOrphans();
+        }
+    }
+
+    private function deleteOrphans()
+    {
+        $toDelete = $this->getContainer()->get('claroline.api.finder')->fetch(Workspace::class, ['orphan' => true]);
+        if (count($toDelete) > 0) {
+            $this->confirmWorkspaceDelete($toDelete);
         }
     }
 

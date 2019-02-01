@@ -91,13 +91,14 @@ const SubjectsList = props =>
           alias: 'creator'
         }, {
           name: 'tags',
-          type: 'string',
+          type: 'tag',
           label: trans('tags'),
-          renderer: (rowData) => rowData.tags.map(tag =>
-            <span key={tag}>{tag} </span>
-          ),
-          displayed: true,
-          sortable: false
+          displayable: false,
+          filterable: true,
+          sortable: false,
+          options: {
+            objectClass: 'Claroline\\ForumBundle\\Entity\\Subject'
+          }
         }, {
           name: 'createdBefore',
           type: 'date',

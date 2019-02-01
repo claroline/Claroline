@@ -247,7 +247,7 @@ class SubjectSerializer
     private function serializeTags(Subject $subject)
     {
         $event = new GenericDataEvent([
-            'class' => 'Claroline\ForumBundle\Entity\Subject',
+            'class' => Subject::class,
             'ids' => [$subject->getUuid()],
         ]);
         $this->eventDispatcher->dispatch('claroline_retrieve_used_tags_by_class_and_ids', $event);
@@ -269,7 +269,7 @@ class SubjectSerializer
             'tags' => $tags,
             'data' => [
                 [
-                    'class' => 'Claroline\ForumBundle\Entity\Subject',
+                    'class' => Subject::class,
                     'id' => $subject->getUuid(),
                     'name' => $subject->getTitle(),
                 ],

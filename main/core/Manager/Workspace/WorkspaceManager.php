@@ -1205,6 +1205,8 @@ class WorkspaceManager
                     }
                 }
             }
+
+            $this->dispatcher->dispatch('workspace_copy_tool_'.$orderedTool->getTool()->getName(), 'WorkspaceCopyTool', [$source, $workspace]);
         }
     }
 

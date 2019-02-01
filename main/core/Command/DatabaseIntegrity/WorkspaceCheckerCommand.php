@@ -16,17 +16,19 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class WorkspaceToolIntegrityCheckerCommand extends ContainerAwareCommand
+class WorkspaceCheckerCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('claroline:workspace_tool:check')
+        $this->setName('claroline:workspace:check')
             ->setDescription('Checks the workspace tools integrity of the platform.')
             ->addOption('all', 'a', InputOption::VALUE_NONE, 'All tools and workspace');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $output->writeln('Workspace tool restoration...');
+
         if ($input->getOption('all')) {
             $workspaces = $this->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Workspace\Workspace')
               ->findBy(['personal' => false]);
@@ -51,5 +53,28 @@ class WorkspaceToolIntegrityCheckerCommand extends ContainerAwareCommand
             $output->writeln('Restoring tools for '.$workspace->getName().'...');
             $this->getContainer()->get('claroline.manager.tool_manager')->addMissingWorkspaceTools($workspace);
         }
+
+        $output->writeln('Workspace organization restoration...');
+
+        $query = $this->getContainer()->get('doctrine.orm.entity_manager')->createQuery(
+          '
+            SELECT w from Claroline\CoreBundle\Entity\Workspace\Workspace w
+            LEFT JOIN w.organizations o
+            WHERE o IS null
+          '
+        );
+
+        $workspaces = $query->getResult();
+
+        $defaultOrganization = $this->getContainer()->get('claroline.manager.organization.organization_manager')->getDefault();
+        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+
+        foreach ($workspaces as $workspace) {
+            $output->writeln('Restoring organization for '.$workspace->getName().'...');
+            $workspace->addOrganization($defaultOrganization);
+            $om->persist($workspace);
+        }
+
+        $om->flush();
     }
 }

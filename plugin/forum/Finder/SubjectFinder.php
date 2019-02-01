@@ -58,15 +58,6 @@ class SubjectFinder extends AbstractFinder
                     $qb->andWhere("creator.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
-                case 'tags':
-                    $qb->andWhere("obj.uuid IN (
-                        SELECT to.objectId
-                        FROM Claroline\TagBundle\Entity\TaggedObject to
-                        LEFT JOIN to.tag t
-                        WHERE UPPER(t.name) LIKE :tagFilter
-                    )");
-                    $qb->setParameter('tagFilter', '%'.strtoupper($filterValue).'%');
-                    break;
                 case 'moderation':
                     if ($filterValue) {
                         $qb->andWhere($qb->expr()->orX(
