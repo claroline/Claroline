@@ -76,13 +76,7 @@ class CompetencyAbilityFinder extends AbstractFinder
                     $qb->setParameter('levelName', '%'.strtoupper($filterValue).'%');
                     break;
                 default:
-                    if (is_bool($filterValue)) {
-                        $qb->andWhere("obj.{$filterName} = :{$filterName}");
-                        $qb->setParameter($filterName, $filterValue);
-                    } else {
-                        $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");
-                        $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
-                    }
+                    $this->setDefaults($qb, $filterName, $filterValue);
             }
         }
         if (!is_null($sortBy) && isset($sortBy['property']) && isset($sortBy['direction'])) {

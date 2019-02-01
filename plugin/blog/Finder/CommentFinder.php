@@ -47,12 +47,8 @@ class CommentFinder extends AbstractFinder
                     ->innerJoin('obj.post', 'post')
                     ->andWhere('post.blog = :blog')
                     ->setParameter('blog', $filterValue);
-            } elseif (is_string($filterValue)) {
-                $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");
-                $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
             } else {
-                $qb->andWhere("obj.{$filterName} = :{$filterName}");
-                $qb->setParameter($filterName, $filterValue);
+                $this->setDefaults($qb, $filterName, $filterValue);
             }
         }
 

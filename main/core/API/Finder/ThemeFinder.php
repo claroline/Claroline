@@ -30,13 +30,7 @@ class ThemeFinder extends AbstractFinder
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
         foreach ($searches as $filterName => $filterValue) {
-            if (is_string($filterValue)) {
-                $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");
-                $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
-            } else {
-                $qb->andWhere("obj.{$filterName} = :{$filterName}");
-                $qb->setParameter($filterName, $filterValue);
-            }
+            $this->setDefaults($qb, $filterName, $filterValue);
         }
 
         return $qb;

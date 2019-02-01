@@ -52,8 +52,7 @@ class LocationFinder extends AbstractFinder
                     break;
 
                 default:
-                    $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");
-                    $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
+                    $this->setDefaults($qb, $filterName, $filterValue);
 
                     break;
             }
