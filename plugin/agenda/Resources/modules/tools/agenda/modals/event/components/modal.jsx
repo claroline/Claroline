@@ -29,7 +29,8 @@ const EventModal = props =>
 EventModal.propTypes = {
   event: T.object.isRequired,
   onForm: T.func.isRequired,
-  onDelete: T.func.isRequired
+  onDelete: T.func.isRequired,
+  fadeModal: T.func.isRequired
 }
 
 export {

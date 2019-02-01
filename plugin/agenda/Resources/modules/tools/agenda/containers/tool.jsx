@@ -51,7 +51,7 @@ const form = [
       }, {
         name: 'allDay',
         type: 'boolean',
-        label: trans('all_day'),
+        label: trans('all_day', {}, 'agenda'),
         required: true,
         options: {
           time: true
@@ -116,7 +116,7 @@ const AgendaTool = connect(
     onDayClick(calendarRef, workspace, date) {
       dispatch (
         modalActions.showModal(MODAL_DATA_FORM, {
-          title: 'event',
+          title: trans('event', {}, 'agenda'),
           save: event => {
             dispatch(actions.create(event, workspace, calendarRef))
           },
