@@ -44,6 +44,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
+use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -995,12 +996,20 @@ class ResourceManager
                 [$this->getResourceFromNode($this->getRealTarget($nodes[0]))]
             );
             $extension = $event->getExtension();
-            $data['name'] = empty($extension) ?
+            $hasExtension = '' !== pathinfo($nodes[0]->getName(), PATHINFO_EXTENSION);
+
+            $extGuesser = ExtensionGuesser::getInstance();
+            $mimeGuesser = MimeTypeGuesser::getInstance();
+
+            if (!$hasExtension) {
+                $extension = $extGuesser->guess($nodes[0]->getMimeType());
+            }
+
+            $data['name'] = $hasExtension ?
                 $nodes[0]->getName() :
                 $nodes[0]->getName().'.'.$extension;
             $data['file'] = $event->getItem();
-            $guesser = ExtensionGuesser::getInstance();
-            $data['mimeType'] = null !== $guesser->guess($nodes[0]->getMimeType()) ? $nodes[0]->getMimeType() : null;
+            $data['mimeType'] = $nodes[0]->getMimeType() ? $nodes[0]->getMimeType() : $mimeGuesser->guess($extension);
 
             return $data;
         }
