@@ -227,9 +227,14 @@ class ResourceController
         $file = $data['file'] ?: tempnam('tmp', 'tmp');
         $fileName = $data['name'];
         $response = new BinaryFileResponse($file);
+
+        $fileName = null === $fileName ? $response->getFile()->getFilename() : $fileName;
+        $fileName = str_replace('/', '_', $fileName);
+        $fileName = str_replace('\\', '_', $fileName);
+
         $response->setContentDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            null === $fileName ? $response->getFile()->getFilename() : $fileName
+            $fileName
         );
 
         return $response;
