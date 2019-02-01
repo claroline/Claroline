@@ -111,10 +111,6 @@ const WorkspaceFormComponent = (props) => {
             type: 'image',
             label: trans('thumbnail')
           }, {
-            name: 'poster',
-            type: 'image',
-            label: trans('poster')
-          }, {
             name: 'display.showTools',
             type: 'boolean',
             label: trans('showTools')
