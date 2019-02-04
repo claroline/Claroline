@@ -1,7 +1,0 @@
-plugin:
-  has_options: true
-
-  resources:
-    - name: claroline_big_blue_button
-      class: Claroline\BigBlueButtonBundle\Entity\BBB
-      tags: [community]
