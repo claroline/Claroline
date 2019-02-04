@@ -185,7 +185,6 @@
             "Claroline\\InstallationBundle\\ClarolineInstallationBundle",
             "Claroline\\MigrationBundle\\ClarolineMigrationBundle",
             "Claroline\\KernelBundle\\ClarolineKernelBundle",
-            "Claroline\\OpenBadgeBundle\\ClarolineOpenBadgeBundle",
             "Claroline\\CoreBundle\\ClarolineCoreBundle",
             "Claroline\\AppBundle\\ClarolineAppBundle",
             "Claroline\\AuthenticationBundle\\ClarolineAuthenticationBundle",
@@ -236,7 +235,8 @@
             "Claroline\\DropZoneBundle\\ClarolineDropZoneBundle",
             "Claroline\\PlannedNotificationBundle\\ClarolinePlannedNotificationBundle",
             "Claroline\\LinkBundle\\ClarolineLinkBundle",
-            "Claroline\\SlideshowBundle\\ClarolineSlideshowBundle"
+            "Claroline\\SlideshowBundle\\ClarolineSlideshowBundle",
+            "Claroline\\OpenBadgeBundle\\ClarolineOpenBadgeBundle"
         ]
     }
 }
