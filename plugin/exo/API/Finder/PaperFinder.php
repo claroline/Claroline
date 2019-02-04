@@ -33,6 +33,7 @@ class PaperFinder extends AbstractFinder
         $qb->join('obj.exercise', 'e');
         $qb->andWhere('e.id = :exerciseId');
         $qb->setParameter('exerciseId', $searches['exercise']);
+        unset($searches['exercise']);
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
