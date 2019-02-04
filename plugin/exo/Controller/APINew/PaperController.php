@@ -20,7 +20,9 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Library\Mode\MarkMode;
 use UJM\ExoBundle\Library\Options\Transfer;
@@ -47,15 +49,20 @@ class PaperController extends AbstractCrudController
      *
      * @DI\InjectParams({
      *      "authorization" = @DI\Inject("security.authorization_checker"),
-     *     "finder"         = @DI\Inject("claroline.api.finder")
+     *      "tokenStorage"  = @DI\Inject("security.token_storage"),
+     *      "finder"        = @DI\Inject("claroline.api.finder")
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param FinderProvider                $finder
      */
-    public function __construct(AuthorizationCheckerInterface $authorization, FinderProvider $finder)
-    {
+    public function __construct(
+       AuthorizationCheckerInterface $authorization,
+       FinderProvider $finder,
+       TokenStorageInterface $tokenStorage
+    ) {
         $this->authorization = $authorization;
+        $this->tokenStorage = $tokenStorage;
         $this->finder = $finder;
     }
 
@@ -94,14 +101,15 @@ class PaperController extends AbstractCrudController
 
         $collection = new ResourceCollection([$exercise->getResourceNode()]);
 
-        if ($this->authorization->isGranted('ADMINISTRATE', $collection) ||
-            $this->authorization->isGranted('MANAGE_PAPERS', $collection) ||
-            MarkMode::NEVER !== $exercise->getMarkMode()
-        ) {
+        if (!($this->authorization->isGranted('ADMINISTRATE', $collection) ||
+          $this->authorization->isGranted('MANAGE_PAPERS', $collection)
+        )) {
+            $params['hiddenFilters']['user'] = $this->tokenStorage->getToken()->getUser()->getUsername();
+        } elseif (MarkMode::NEVER !== $exercise->getMarkMode()) {
             $serializationOptions[] = Transfer::INCLUDE_USER_SCORE;
         }
 
-        $data = $this->finder->search('UJM\ExoBundle\Entity\Attempt\Paper', $params, $serializationOptions);
+        $data = $this->finder->search(Paper::class, $params, $serializationOptions);
 
         return new JsonResponse($data, 200);
     }

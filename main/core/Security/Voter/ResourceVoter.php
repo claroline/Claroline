@@ -202,7 +202,7 @@ class ResourceVoter implements VoterInterface
      *
      * @return bool
      */
-    private function canCreate(array $rightsCreation, $resourceType)
+    protected function canCreate(array $rightsCreation, $resourceType)
     {
         foreach ($rightsCreation as $item) {
             if ($item['name'] === $resourceType) {
@@ -222,7 +222,7 @@ class ResourceVoter implements VoterInterface
      *
      * @throws \Exception
      */
-    private function checkAction($action, array $nodes, TokenInterface $token)
+    protected function checkAction($action, array $nodes, TokenInterface $token)
     {
         $haveSameWorkspace = true;
         $ws = $nodes[0]->getWorkspace();
@@ -265,7 +265,6 @@ class ResourceVoter implements VoterInterface
                 // Test if user can administrate
                 $adminDecoder = $this->maskManager->getDecoder($type, 'administrate');
                 $canAdministrate = $adminDecoder ? (0 !== ($mask & $adminDecoder->getValue())) : false;
-
                 // If user can administrate OR resource is open then check action
                 if ($canAdministrate ||
                     ($this->restrictionsManager->isStarted($node) &&
@@ -302,7 +301,7 @@ class ResourceVoter implements VoterInterface
      *
      * @return array
      */
-    private function checkCreation($type, ResourceNode $node, TokenInterface $token)
+    protected function checkCreation($type, ResourceNode $node, TokenInterface $token)
     {
         if (null === $type) {
             return [];
@@ -362,7 +361,7 @@ class ResourceVoter implements VoterInterface
      *
      * @return array
      */
-    private function checkMove(ResourceNode $parent, $nodes, TokenInterface $token)
+    protected function checkMove(ResourceNode $parent, $nodes, TokenInterface $token)
     {
         $errors = [];
 
@@ -391,7 +390,7 @@ class ResourceVoter implements VoterInterface
      *
      * @return array
      */
-    private function checkCopy(ResourceNode $parent, array $nodes, TokenInterface $token)
+    protected function checkCopy(ResourceNode $parent, array $nodes, TokenInterface $token)
     {
         //first I need to know if I can create what I want in the parent directory
         $errors = [];
@@ -407,7 +406,7 @@ class ResourceVoter implements VoterInterface
         return $errors;
     }
 
-    public function getRoleActionDeniedMessage($action, $path)
+    protected function getRoleActionDeniedMessage($action, $path)
     {
         return $this->translator
             ->trans(
@@ -420,14 +419,14 @@ class ResourceVoter implements VoterInterface
             );
     }
 
-    private function isWorkspaceManager(Workspace $workspace, TokenInterface $token)
+    protected function isWorkspaceManager(Workspace $workspace, TokenInterface $token)
     {
         $managerRoleName = 'ROLE_WS_MANAGER_'.$workspace->getGuid();
 
         return in_array($managerRoleName, $this->ut->getRoles($token)) ? true : false;
     }
 
-    private function isUsurpatingWorkspaceRole(TokenInterface $token)
+    protected function isUsurpatingWorkspaceRole(TokenInterface $token)
     {
         foreach ($token->getRoles() as $role) {
             if ('ROLE_USURPATE_WORKSPACE_ROLE' === $role->getRole()) {
@@ -457,7 +456,7 @@ class ResourceVoter implements VoterInterface
         return true;
     }
 
-    private function isAdmin($object)
+    protected function isAdmin($object)
     {
         if ($object instanceof ResourceNode) {
             $nodes = [$object];
