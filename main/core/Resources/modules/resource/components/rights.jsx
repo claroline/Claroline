@@ -25,7 +25,7 @@ import {
 } from '#/main/core/resource/permissions'
 
 const CreatePermission = props => {
-  const availableTypes = param('resourceTypes')
+  const availableTypes = param('resources.types')
 
   return (
     <td
