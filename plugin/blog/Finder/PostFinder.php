@@ -5,6 +5,7 @@ namespace Icap\BlogBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Doctrine\ORM\QueryBuilder;
+use Icap\BlogBundle\Entity\Post;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -15,7 +16,7 @@ class PostFinder extends AbstractFinder
 {
     public function getClass()
     {
-        return 'Icap\BlogBundle\Entity\Post';
+        return Post::class;
     }
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])

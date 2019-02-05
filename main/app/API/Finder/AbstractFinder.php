@@ -291,17 +291,12 @@ abstract class AbstractFinder implements FinderInterface
             return;
         }
 
-        if (is_bool($filterValue)) {
+        if (is_string($filterValue)) {
+            $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");
+            $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
+        } else {
             $qb->andWhere("obj.{$filterName} = :{$filterName}");
             $qb->setParameter($filterName, $filterValue);
-        } else {
-            if (is_int($filterValue)) {
-                $qb->andWhere("obj.{$filterName} = :{$filterName}");
-                $qb->setParameter($filterName, $filterValue);
-            } else {
-                $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");
-                $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
-            }
         }
     }
 
