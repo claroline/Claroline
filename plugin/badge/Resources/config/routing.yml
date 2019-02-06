@@ -1,4 +1,0 @@
-icap_badge:
-    resource: "@IcapBadgeBundle/Controller"
-    type: annotation
-    prefix:   /

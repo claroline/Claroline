@@ -7,13 +7,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterface
 {
-    public function postInstall()
-    {
-        $updater = new Updater\MigrationUpdater();
-        $updater->setLogger($this->logger);
-        $updater->postInstall($this->container->get('doctrine.orm.entity_manager'), $this->container->get('event_dispatcher'));
-    }
-
     public function postUpdate($currentVersion, $targetVersion)
     {
         if (version_compare($currentVersion, '0.1.3', '<')) {

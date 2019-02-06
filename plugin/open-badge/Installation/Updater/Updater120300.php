@@ -20,7 +20,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\InstallationBundle\Updater\Updater;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
-use Icap\BadgeBundle\Entity\Badge;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\File;
@@ -109,20 +108,22 @@ class Updater120300 extends Updater
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         $this->log('Building image public files...');
-        $badges = $this->om->getRepository(Badge::class)->findAll();
-        $i = 0;
-        $total = count($badges);
 
-        foreach ($badges as $badge) {
+        $sql = 'SELECT * FROM `claro_badge`';
+        $badges = $this->conn->query($sql);
+
+        $i = 0;
+
+        while ($row = $badges->fetch()) {
             ++$i;
 
-            $this->log('Migrating image '.$badge->getImagePath().' '.$i.'/'.$total);
+            $this->log('Migrating image '.$row['image'].' '.$i);
 
-            $publicFile = $this->om->getRepository(PublicFile::class)->findOneByUrl('data/uploads/badges/'.$badge->getImagePath());
+            $publicFile = $this->om->getRepository(PublicFile::class)->findOneByUrl('data/uploads/badges/'.$row['image']);
             $author = $this->om->getRepository(User::class)->findOneByUsername('claroline-connect');
 
             if (!$publicFile) {
-                $file = $this->container->getParameter('claroline.param.files_directory').'/data/uploads/badges/'.$badge->getImagePath();
+                $file = $this->container->getParameter('claroline.param.files_directory').'/data/uploads/badges/'.$row['image'];
                 try {
                     $sfFile = new File($file);
                     $mimeType = $sfFile->getMimeType();
@@ -133,18 +134,18 @@ class Updater120300 extends Updater
                 }
                 $publicFile = new PublicFile();
                 $publicFile->setDirectoryName('uploads/badges');
-                $publicFile->setFilename($badge->getImagePath());
+                $publicFile->setFilename($row['image']);
                 $publicFile->setSize($size);
                 $publicFile->setMimeType($mimeType);
                 $publicFile->setCreationDate(new \DateTime());
-                $publicFile->setUrl('data/uploads/badges/'.$badge->getImagePath());
+                $publicFile->setUrl('data/uploads/badges/'.$row['image']);
                 $publicFile->setSourceType(null);
                 $publicFile->setCreator($author);
 
                 $publicFileUse = new PublicFileUse();
                 $publicFileUse->setPublicFile($publicFile);
                 $publicFileUse->setObjectClass(BadgeClass::class);
-                $publicFileUse->setObjectUuid($badge->getUuid());
+                $publicFileUse->setObjectUuid($row['uuid']);
                 $publicFileUse->setObjectName(null);
 
                 $this->om->persist($publicFile);
