@@ -408,7 +408,7 @@ class LogConnectManager
                 'afterDate' => $connection->getConnectionDate(),
             ];
             $sortBy = ['property' => 'connectionDate', 'direction' => 1];
-            $nextConnections = $this->finder->get(LogConnectPlatform::class)->find($filters, $sortBy, null, 1);
+            $nextConnections = $this->finder->get(LogConnectPlatform::class)->find($filters, $sortBy, 0, 1);
             $nextDate = 0 < count($nextConnections) ? $nextConnections[0]->getConnectionDate() : null;
 
             // Gets most recent log preceding the following platform connection
@@ -418,7 +418,7 @@ class LogConnectManager
                     'dateToStrict' => $nextDate,
                 ];
                 $logSortBy = ['property' => 'dateLog', 'direction' => -1];
-                $logs = $this->finder->get(Log::class)->find($logFilters, $logSortBy, null, 1);
+                $logs = $this->finder->get(Log::class)->find($logFilters, $logSortBy, 0, 1);
 
                 if (1 === count($logs) && $this->computeConnectionDuration($connection, $logs[0]->getDateLog())) {
                     ++$i;
