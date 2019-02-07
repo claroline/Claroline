@@ -11,10 +11,10 @@ import {ASYNC_BUTTON} from '#/main/app/buttons'
  * @param {Array}  resourceNodes  - the list of resource nodes on which we want to execute the action.
  * @param {object} nodesRefresher - an object containing methods to update context in response to action (eg. add, update, delete).
  */
-export default (resourceNodes, nodesRefresher) => ({ // todo collection
+export default (resourceNodes, nodesRefresher) => ({
   name: 'restore',
   type: ASYNC_BUTTON,
-  icon: 'fa fa-fw fa-recycle',
+  icon: 'fa fa-fw fa-trash-restore-alt',
   label: trans('restore', {}, 'actions'),
   displayed: -1 !== resourceNodes.findIndex(node => !get(node, 'meta.active')) && param('resources.softDelete'),
   confirm: {
