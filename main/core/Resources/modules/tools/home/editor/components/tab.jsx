@@ -105,7 +105,7 @@ const TabEditor = props =>
           }, {
             name: 'poster',
             label: trans('poster'),
-            type: 'file',
+            type: 'image',
             options: {
               ratio: '3:1'
             }

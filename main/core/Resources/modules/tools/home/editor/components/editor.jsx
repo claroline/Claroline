@@ -32,7 +32,7 @@ import {TabEditor} from '#/main/core/tools/home/editor/components/tab'
 const EditorComponent = props =>
   <PageSimple
     className="home-tool"
-    showBreadCrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
+    showBreadcrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
     path={[].concat(getToolPath('home', props.currentContext.type, props.currentContext.data), props.currentTab ? [{
       label: props.currentTab.longTitle,
       target: '/' // this don't work but it's never used as current tab is always last for now

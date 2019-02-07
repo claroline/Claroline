@@ -18,7 +18,7 @@ import {Tabs} from '#/main/core/tools/home/components/tabs'
 const PlayerComponent = props =>
   <PageSimple
     className="home-tool"
-    showBreadCrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
+    showBreadcrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
     path={[].concat(getToolPath('home', props.currentContext.type, props.currentContext.data), props.currentTab ? [{
       label: props.currentTab.title,
       target: '/' // this don't work but it's never used as current tab is always last for now
