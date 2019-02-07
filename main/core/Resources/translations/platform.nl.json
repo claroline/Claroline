@@ -392,7 +392,7 @@
     "email_sent": "Validatie e-email gestuurd naar %email%. Gelieve uw spams te raadplegen indien u niets ontvangen hebt.",
     "email_validated": "E-email gevalideerd",
     "email_validation": "Validatie van de e-email",
-    "email_validation_url_display": "Gelieve naar de volgende URL te gaan om uw e-email te bevestigen:  %url%.",
+    "email_validation_url_display": "Gelieve naar de volgende URL te gaan om uw e-mail te bevestigen:  <a href=\"%url%\">%url%</a>",
     "empty_file": "Leeg bestand",
     "enable": "Activeren",
     "encryption": "Versleuteling",

@@ -40,10 +40,10 @@ class Csv implements ExporterInterface
         file_put_contents($this->tmpLogPath, $tmpFile."\n", FILE_APPEND);
         $fp = fopen($tmpFile, 'w');
 
-        fputcsv($fp, $titles);
+        fputcsv($fp, $titles, ';');
 
         foreach ($data as $item) {
-            fputcsv($fp, $item);
+            fputcsv($fp, $item, ';');
         }
 
         fclose($fp);

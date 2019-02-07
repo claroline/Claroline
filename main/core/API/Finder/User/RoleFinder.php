@@ -62,6 +62,11 @@ class RoleFinder extends AbstractFinder
             $isAdmin = true;
         }
 
+        //if not admin doesnt list platform_admin role, for security purpose
+        if (!$isAdmin) {
+            $qb->andWhere("obj.name != 'ROLE_ADMIN'");
+        }
+
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'type':

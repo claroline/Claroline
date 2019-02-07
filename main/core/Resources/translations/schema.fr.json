@@ -6,5 +6,7 @@
   "The user username": "L'identifiant de l'utilisateur",
   "The group name": "Le nom du groupe",
   "The group id": "L'id du groupe (uuid/id)",
-  "The plain login password": "Le password (décrypté) de l'utilisateur"
+  "The plain login password": "Le password (décrypté) de l'utilisateur",
+  "The user role": "Nom du rôle de l'utilisateur. S'il s'agit d'un rôle par défaut se référer aux valeurs du tableau suivant: Utilisateur -> USER, Créateur d'espaces -> WS_CREATOR, Gestionnaire de l'accueil -> HOME_MANAGER, Gestionnaire de compétences -> COMPETENCY_MANAGER",
+  "The organisation code": "Le code de l'organisation"
 }

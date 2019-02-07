@@ -1371,13 +1371,13 @@ class WorkspaceManager
             $json = $zip->getFromName('workspace.json');
             $data = json_decode($json, true);
             $data['code'] = $data['name'] = $name;
-            $workspace = $this->container->get('claroline.manager.workspace.transfer')->create($data, $name);
-            $this->log('Add tools...');
-            $this->container->get('claroline.manager.tool_manager')->addMissingWorkspaceTools($workspace);
+            $workspace = $this->container->get('claroline.manager.workspace.transfer')->create($data);
             $workspace->setName($name);
             $workspace->setPersonal($isPersonal);
             $workspace->setCode($name);
             $workspace->setModel(true);
+            $this->log('Add tools...');
+            $this->container->get('claroline.manager.tool_manager')->addMissingWorkspaceTools($workspace);
             $this->log('Build and set default admin');
             $workspace->setCreator($this->container->get('claroline.manager.user_manager')->getDefaultClarolineAdmin());
             $this->container->get('claroline.core_bundle.listener.log.log_listener')->setDefaults();

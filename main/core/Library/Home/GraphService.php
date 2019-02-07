@@ -24,10 +24,19 @@ class GraphService
 
     public function get($url)
     {
+        stream_context_set_default(
+        [
+            'http' => [
+                //specify proxy in parameters
+                //'proxy' => '
+                'request_fulluri' => true,
+            ],
+        ]);
+
         $this->graph['url'] = $url;
         $headers = get_headers($url, 1);
 
-        if ($headers && is_string($type = $headers['Content-Type']) && strpos($type, 'image/') === 0) {
+        if ($headers && is_string($type = $headers['Content-Type']) && 0 === strpos($type, 'image/')) {
             $this->graph['type'] = 'raw';
             $this->graph['images'][] = $url;
         } elseif (false !== ($content = @file_get_contents($url))) {

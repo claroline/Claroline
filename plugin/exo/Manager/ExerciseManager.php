@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
@@ -67,6 +68,7 @@ class ExerciseManager
      *     "serializer"   = @DI\Inject("ujm_exo.serializer.exercise"),
      *     "itemManager"  = @DI\Inject("ujm_exo.manager.item"),
      *     "paperManager" = @DI\Inject("ujm_exo.manager.paper"),
+     *     "utils"        = @DI\Inject("claroline.utilities.misc"),
      *     "definitions"  = @DI\Inject("ujm_exo.collection.item_definitions")
      * })
      *
@@ -76,6 +78,7 @@ class ExerciseManager
      * @param ItemManager               $itemManager
      * @param PaperManager              $paperManager
      * @param ItemDefinitionsCollection $definitions
+     * @param ClaroUtilities            $utils
      */
     public function __construct(
         ObjectManager $om,
@@ -83,6 +86,7 @@ class ExerciseManager
         ExerciseSerializer $serializer,
         ItemManager $itemManager,
         PaperManager $paperManager,
+        ClaroUtilities $utils,
         ItemDefinitionsCollection $definitions
     ) {
         $this->om = $om;
@@ -92,6 +96,7 @@ class ExerciseManager
         $this->itemManager = $itemManager;
         $this->paperManager = $paperManager;
         $this->definitions = $definitions;
+        $this->utils = $utils;
     }
 
     /**
@@ -308,7 +313,7 @@ class ExerciseManager
         return $handle;
     }
 
-    public function exportResultsToCsv(Exercise $exercise)
+    public function exportResultsToCsv(Exercise $exercise, $output = null)
     {
         /** @var PaperRepository $repo */
         $repo = $this->om->getRepository('UJMExoBundle:Attempt\Paper');
@@ -329,7 +334,18 @@ class ExerciseManager
 
                 if ($this->definitions->has($item->getMimeType())) {
                     $definition = $this->definitions->get($item->getMimeType());
-                    $titles[$item->getUuid()] = $definition->getCsvTitles($itemType);
+                    $subtitles = $definition->getCsvTitles($itemType);
+                    //cas particulier texte à trous
+                    if ('application/x.cloze+json' === $item->getMimeType()) {
+                        $qText = $item->getTitle();
+                        if (empty($qText)) {
+                            $qText = $item->getContent();
+                        }
+                        foreach ($subtitles as &$holeTitle) {
+                            $holeTitle = $qText.': '.$holeTitle;
+                        }
+                    }
+                    $titles[$item->getUuid()] = $subtitles;
                 }
             }
         }
@@ -338,14 +354,19 @@ class ExerciseManager
 
         foreach ($titles as $title) {
             foreach ($title as $subTitle) {
-                $flattenedTitles[] = $subTitle;
+                $flattenedTitles[] = $this->utils->html2Csv($subTitle);
             }
         }
 
-        $fp = fopen('php://output', 'w+');
+        if (null === $output) {
+            $output = 'php://output';
+        }
+        $fp = fopen($output, 'w+');
+        fputcsv($fp, [$exercise->getResourceNode()->getName()], ';');
         fputcsv($fp, $flattenedTitles, ';');
 
         //this is the same reason why we use an array of array here
+        $repo = $this->om->getRepository('UJMExoBundle:Attempt\Paper');
         $limit = 250;
         $iteration = 0;
         $papers = [];
@@ -355,7 +376,6 @@ class ExerciseManager
             ++$iteration;
             $dataPapers = [];
 
-            /** @var Paper $paper */
             foreach ($papers as $paper) {
                 $structure = json_decode($paper->getStructure());
                 $totalScoreOn = $structure->parameters->totalScoreOn && floatval($structure->parameters->totalScoreOn) > 0 ? floatval($structure->parameters->totalScoreOn) : $this->paperManager->calculateTotal($paper);
@@ -426,7 +446,7 @@ class ExerciseManager
                 foreach ($paper as $paperItem) {
                     if (is_array($paperItem)) {
                         foreach ($paperItem as $paperEl) {
-                            $flattenedAnswers[] = $paperEl;
+                            $flattenedAnswers[] = $this->utils->html2Csv($paperEl, true);
                         }
                     }
                 }

@@ -1220,5 +1220,7 @@
     "nl": "Nederlands",
     "es": "Español",
     "it": "Italiano",
-    "de": "Deutsch"
+    "de": "Deutsch",
+    "email_validation_url_display": "",
+    "confirmation_checkbox": ""
 }

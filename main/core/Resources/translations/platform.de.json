@@ -1163,5 +1163,7 @@
     "administrators": "Administratoren",
     "background_color": "Hintergrundfarbe",
     "coordinates": "Koordinaten",
-    "country": "Land"
+    "country": "Land",
+    "email_validation_url_display": "",
+    "confirmation _checkbox": ""
 }

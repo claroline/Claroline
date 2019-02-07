@@ -99,6 +99,8 @@ class TransferProvider
         $executor->setLogger($this->logger);
         $adapter = $this->getAdapter($mimeType);
 
+        $data = $this->formatCsvOutput($data);
+
         $schema = $executor->getSchema();
         //use the translator here
         $jsonLogger->info('Building objects from data...');
@@ -322,5 +324,56 @@ class TransferProvider
         }
 
         throw new \Exception('No adapter found for mime type '.$mimeType);
+    }
+
+    private function formatCsvOutput($data)
+    {
+        // If encoding not UTF-8 then convert it to UTF-8
+        $data = $this->stringToUtf8($data);
+        $data = str_replace("\r\n", PHP_EOL, $data);
+        $data = str_replace("\r", PHP_EOL, $data);
+        $data = str_replace("\n", PHP_EOL, $data);
+
+        return $data;
+    }
+
+    private function stringToUtf8($string)
+    {
+        // If encoding not UTF-8 then convert it to UTF-8
+        $encoding = $this->detectEncoding($string);
+        if ($encoding && 'UTF-8' !== $encoding) {
+            $string = iconv($encoding, 'UTF-8', $string);
+        }
+
+        return $string;
+    }
+
+    /**
+     * Detect if encoding is UTF-8, ASCII, ISO-8859-1 or Windows-1252.
+     *
+     * @param $string
+     *
+     * @return bool|string
+     */
+    private function detectEncoding($string)
+    {
+        static $enclist = ['UTF-8', 'ASCII', 'ISO-8859-1', 'Windows-1252'];
+        if (function_exists('mb_detect_encoding')) {
+            return mb_detect_encoding($string, $enclist, true);
+        }
+        $result = false;
+        foreach ($enclist as $item) {
+            try {
+                $sample = iconv($item, $item, $string);
+                if (md5($sample) === md5($string)) {
+                    $result = $item;
+                    break;
+                }
+            } catch (ContextErrorException $e) {
+                unset($e);
+            }
+        }
+
+        return $result;
     }
 }

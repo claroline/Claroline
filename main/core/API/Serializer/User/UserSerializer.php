@@ -458,8 +458,12 @@ class UserSerializer extends GenericSerializer
         $user = parent::deserialize($data, $user, $options);
 
         $this->sipe('picture.url', 'setPicture', $data, $user);
+        $this->sipe('username', 'setUserName', $data, $user);
+        $this->sipe('firstName', 'setFirstName', $data, $user);
+        $this->sipe('lastName', 'setLastName', $data, $user);
         $this->sipe('email', 'setEmail', $data, $user);
-        $this->sipe('plainPassword', 'setPlainPassword', $data, $user);
+        //don't trim the password just in case
+        $this->sipe('plainPassword', 'setPlainPassword', $data, $user, false);
 
         if (isset($data['meta'])) {
             $this->deserializeMeta($data['meta'], $user);

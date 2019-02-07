@@ -390,6 +390,9 @@ class WorkspaceSerializer
      */
     public function deserialize(array $data, Workspace $workspace, array $options = [])
     {
+        $this->sipe('code', 'setCode', $data, $workspace);
+        $this->sipe('name', 'setName', $data, $workspace);
+
         if (isset($data['thumbnail']) && isset($data['thumbnail']['id'])) {
             $thumbnail = $this->serializer->deserialize(
                 PublicFile::class,
@@ -431,9 +434,6 @@ class WorkspaceSerializer
         } else {
             $workspace->refreshUuid();
         }
-
-        $this->sipe('code', 'setCode', $data, $workspace);
-        $this->sipe('name', 'setName', $data, $workspace);
 
         $this->sipe('meta.model', 'setModel', $data, $workspace);
         $this->sipe('meta.description', 'setDescription', $data, $workspace);

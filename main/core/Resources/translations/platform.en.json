@@ -418,7 +418,7 @@
     "email_sent": "An email has been sent to the adress %email%. If you haven''t received anything, please check your spam folder.",
     "email_validated": "Email validated",
     "email_validation": "Email validation",
-    "email_validation_url_display": "Please use the following link to confirm your email: %url%",
+    "email_validation_url_display": "Please use the following link to confirm your email: <a href=\"%url%\">%url%</a>",
     "empty_file": "Empty file",
     "enable": "Enable",
     "enable_opengraph": "Enable opengraph",
@@ -1688,5 +1688,8 @@
     "show_email": "Show email",
     "same_window": "In the same window (default)",
     "new_window": "In a new window/tab",
-    "hidden": "Hidden"
+    "hidden": "Hidden",
+    "publication_by_date": "Access period",
+    "confirmation_checkbox": "By checking this box, I confirm that I have read and understood the warning.",
+    "publication_by_date_help": "Resource must be published beforehand, then define dates in format dd/mm/yyyy HH:mm. <br/>Ex: 25/12/2018 14:00"
 }

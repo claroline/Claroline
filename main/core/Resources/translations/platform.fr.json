@@ -424,7 +424,7 @@
     "email_sent": "Courriel de validation envoyé à l'adresse %email%. Veuillez consulter vos pourriels si vous n'avez rien reçu.",
     "email_validated": "Courriel validé",
     "email_validation": "Validation du courriel",
-    "email_validation_url_display": "Veuillez vous rendre à l'url suivante pour confirmer votre courriel: %url%",
+    "email_validation_url_display": "Veuillez vous rendre à l'url suivante pour confirmer votre courriel : <a href=\"%url%\">%url%</a>",
     "empty_file": "Fichier vide",
     "enable": "Activer",
     "enable_opengraph": "Activer opengraph",
@@ -1721,5 +1721,8 @@
     "show_email": "Montrer l'e-mail",
     "same_window": "Dans la même fenêtre (défaut)",
     "new_window": "Dans une nouvelle fenêtre/onglet",
-    "hidden": "Caché"
+    "hidden": "Caché",
+    "publication_by_date": "Période d'accès",
+    "confirmation_checkbox": "En cochant cette case, je confirme avoir pris connaissance et compris l'avertissement ci-dessus.",
+    "publication_by_date_help": "Si une ressource est publiée, cette option permet de limiter l'accés à cette derniere sur la période définie. Des dates de début et fin doivent être saisies au format <br/>jj/mm/aaaa HH:mm. <br/>Ex: 25/12/2018 14:00"
 }

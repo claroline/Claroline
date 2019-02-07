@@ -63,7 +63,7 @@ class PlatformUpdateCommand extends ContainerAwareCommand
                 'When set to true, themes won\'t be rebuild'
             )
             ->addOption(
-                'create_database',
+                'no_create_database',
                 'd',
                 InputOption::VALUE_NONE,
                 'When set to true, the create database is not executed'
@@ -90,7 +90,7 @@ class PlatformUpdateCommand extends ContainerAwareCommand
             sprintf('<comment>%s - Updating the platform...</comment>', date('H:i:s'))
         );
 
-        if (!$input->getOption('create_database')) {
+        if (!$input->getOption('no_create_database')) {
             $databaseCreator = new CreateDatabaseDoctrineCommand();
             $databaseCreator->setContainer($this->getContainer());
             $databaseCreator->run(new ArrayInput([]), $output);
