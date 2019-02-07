@@ -29,11 +29,6 @@ class Version20181108095008 extends AbstractMigration
         $this->addSql('
             CREATE UNIQUE INDEX `unique` ON claro_tagbundle_tag (tag_name, user_id)
         ');
-        $this->addSql('
-            CREATE UNIQUE INDEX `unique` ON claro_tagbundle_tagged_object (
-                object_id, object_class, object_name
-            )
-        ');
     }
 
     public function down(Schema $schema)

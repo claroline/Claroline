@@ -14,10 +14,6 @@ class Version20181212090304 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $this->addSql('
-            DROP INDEX `unique` ON claro_tagbundle_tagged_object
-        ');
-
         // fixes tags on forum subjects
         $this->addSql('
             UPDATE claro_tagbundle_tagged_object AS t 
