@@ -44,7 +44,6 @@ const CompetenciesPickerModal = props => {
           }
         ]}
         card={CompetencyCard}
-        display={props.display}
       />
 
       <Button

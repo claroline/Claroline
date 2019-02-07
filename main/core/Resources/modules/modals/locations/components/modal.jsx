@@ -30,7 +30,6 @@ const LocationsPickerModal = props => {
         }}
         definition={LocationList.definition}
         card={LocationList.card}
-        display={props.display}
       />
 
       <Button

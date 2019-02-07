@@ -30,7 +30,6 @@ const WorkspacesModal = props => {
         }}
         definition={WorkspaceList.definition}
         card={WorkspaceList.card}
-        display={props.display}
       />
 
       <Button

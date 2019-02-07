@@ -30,7 +30,6 @@ const RolesPickerModal = props => {
         }}
         definition={RoleList.definition}
         card={RoleList.card}
-        display={props.display}
       />
 
       <Button

@@ -31,7 +31,6 @@ const AbilitiesPickerModal = props => {
         }}
         definition={AbilityList.definition}
         card={AbilityList.card}
-        display={props.display}
       />
 
       <Button

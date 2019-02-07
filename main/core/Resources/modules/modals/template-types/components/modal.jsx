@@ -30,7 +30,6 @@ const TemplateTypesPickerModal = props => {
         }}
         definition={TemplateTypeList.definition}
         card={TemplateTypeList.card}
-        display={props.display}
       />
 
       <Button

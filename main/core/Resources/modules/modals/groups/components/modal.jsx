@@ -30,7 +30,6 @@ const GroupsPickerModal = props => {
         }}
         definition={GroupList.definition}
         card={GroupList.card}
-        display={props.display}
       />
 
       <Button

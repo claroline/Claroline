@@ -29,7 +29,6 @@ const OrganizationPickerModal = props => {
         }}
         definition={OrganizationList.definition}
         card={OrganizationList.card}
-        display={props.display}
       />
 
       <Button

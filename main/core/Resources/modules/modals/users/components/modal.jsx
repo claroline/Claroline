@@ -59,7 +59,6 @@ const UsersPickerModal = props => {
           }
         ]}
         card={UserList.card}
-        display={props.display}
       />
 
       <Button
