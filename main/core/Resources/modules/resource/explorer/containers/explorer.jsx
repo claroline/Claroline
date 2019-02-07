@@ -1,27 +1,31 @@
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
+import {withRouter} from '#/main/app/router'
 import {actions, selectors} from '#/main/core/resource/explorer/store'
 import {ResourceExplorer as ResourceExplorerComponent} from '#/main/core/resource/explorer/components/explorer'
 
-const ResourceExplorer = connect(
-  (state, ownProps) => ({
-    root: selectors.root(selectors.explorer(state, ownProps.name)),
-    currentId: selectors.currentId(selectors.explorer(state, ownProps.name)),
-    directories: selectors.directories(selectors.explorer(state, ownProps.name)),
-    listConfiguration: selectors.listConfiguration(selectors.explorer(state, ownProps.name)),
-    showSummary: selectors.showSummary(selectors.explorer(state, ownProps.name)),
-    openSummary: selectors.openSummary(selectors.explorer(state, ownProps.name))
-  }),
-  (dispatch, ownProps) => ({
-    changeDirectory(directoryId = null) {
-      dispatch(actions.changeDirectory(ownProps.name, directoryId))
-    },
-    toggleDirectoryOpen(directory, opened) {
-      dispatch(actions.toggleDirectoryOpen(ownProps.name, directory, opened))
-    }
-  })
-)(ResourceExplorerComponent)
+// NB. the `withRouter` HOC is required for when the Explorer is embedded in a modal
+const ResourceExplorer = withRouter(
+  connect(
+    (state, ownProps) => ({
+      root: selectors.root(selectors.explorer(state, ownProps.name)),
+      currentId: selectors.currentId(selectors.explorer(state, ownProps.name)),
+      directories: selectors.directories(selectors.explorer(state, ownProps.name)),
+      listConfiguration: selectors.listConfiguration(selectors.explorer(state, ownProps.name)),
+      showSummary: selectors.showSummary(selectors.explorer(state, ownProps.name)),
+      openSummary: selectors.openSummary(selectors.explorer(state, ownProps.name))
+    }),
+    (dispatch, ownProps) => ({
+      changeDirectory(directoryId = null) {
+        dispatch(actions.changeDirectory(ownProps.name, directoryId))
+      },
+      toggleDirectoryOpen(directory, opened) {
+        dispatch(actions.toggleDirectoryOpen(ownProps.name, directory, opened))
+      }
+    })
+  )(ResourceExplorerComponent)
+)
 
 ResourceExplorer.propTypes = {
   name: T.string.isRequired

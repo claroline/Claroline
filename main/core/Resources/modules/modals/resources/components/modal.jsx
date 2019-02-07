@@ -51,7 +51,7 @@ ExplorerBreadcrumb.propTypes = {
     ResourceNodeTypes.propTypes
   ),
   path: T.arrayOf(T.shape({
-    id: T.number.isRequired,
+    id: T.string.isRequired,
     name: T.string.isRequired
   })).isRequired
 }
