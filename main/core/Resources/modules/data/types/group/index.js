@@ -1,7 +1,7 @@
 import {trans} from '#/main/app/intl/translation'
 
 import {GroupDisplay} from '#/main/core/data/types/group/components/display'
-import {GroupGroup} from '#/main/core/data/types/group/components/group'
+import {GroupInput} from '#/main/core/data/types/group/components/input'
 
 const dataType = {
   name: 'group',
@@ -13,7 +13,7 @@ const dataType = {
   },
   components: {
     details: GroupDisplay,
-    form: GroupGroup
+    input: GroupInput
   }
 }
 
