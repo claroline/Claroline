@@ -60,7 +60,7 @@ class ResourceSource
 
         if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {
             //parent allow to fetch things outside of the workspace.
-            if (isset($options['filters']) && !array_key_exists('parent', $options['filters'])) {
+            if (!isset($options['filters']) || !array_key_exists('parent', $options['filters'])) {
                 // only grab workspace root directory content
                 /** @var ResourceNode $workspaceRoot */
                 $workspaceRoot = $this->repository->findOneBy([
