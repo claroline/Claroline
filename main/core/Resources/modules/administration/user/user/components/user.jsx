@@ -71,6 +71,7 @@ const UserForm = props =>
           {
             name: 'mainOrganization',
             type: 'organization',
+            required: true,
             label: trans('main_organization')
           }
         ]

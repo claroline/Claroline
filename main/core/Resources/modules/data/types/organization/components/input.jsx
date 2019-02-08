@@ -1,93 +1,91 @@
-import React, {Component} from 'react'
-import pickBy from 'lodash/pickBy'
-import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
+import React from 'react'
+
+import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {Button} from '#/main/app/action/components/button'
 
 import {trans} from '#/main/app/intl/translation'
-import {url, makeCancelable} from '#/main/app/api'
-
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+import {OrganizationCard} from '#/main/core/user/data/components/organization-card'
+import {Organization as OrganizationType} from '#/main/core/user/prop-types'
+import {MODAL_ORGANIZATION_PICKER} from '#/main/core/modals/organization'
 
-import {Select} from '#/main/core/layout/form/components/field/select'
+const OrganizationButton = props =>
+  <Button
+    className="btn"
+    style={{marginTop: 10}}
+    type={MODAL_BUTTON}
+    icon="fa fa-fw fa-book"
+    label={trans('select_a_organization')}
+    primary={true}
+    modal={[MODAL_ORGANIZATION_PICKER, {
+      url: ['apiv2_organization_list'],
+      title: props.title,
+      selectAction: (selected) => ({
+        type: CALLBACK_BUTTON,
+        callback: () => props.onChange(selected[0])
+      })
+    }]}
+  />
 
-class OrganizationInput extends Component {
-  constructor(props) {
-    super(props)
+OrganizationButton.propTypes = {
+  title: T.string,
+  onChange: T.func.isRequired
+}
 
-    this.state = {
-      fetched: false,
-      organizations: []
-    }
+const OrganizationInput = props => {
+  if (props.value) {
+    return(
+      <div>
+        <OrganizationCard
+          data={props.value}
+          size="sm"
+          orientation="col"
+          actions={[
+            {
+              name: 'delete',
+              type: CALLBACK_BUTTON,
+              icon: 'fa fa-fw fa-trash-o',
+              label: trans('delete', {}, 'actions'),
+              dangerous: true,
+              callback: () => props.onChange(null)
+            }
+          ]}
+        />
 
-    // retrieve locales
-    this.fetchOrganizations()
-  }
-
-  fetchOrganizations() {
-    this.pending = makeCancelable(
-      fetch(
-        url(['apiv2_organization_list']), {credentials: 'include'}
-      )
-        .then(response => response.json())
-        .then(
-          (data) => {
-            this.loadOrganizations(data.data)
-            this.pending = null
-          },
-          () => this.pending = null
-        )
+        <OrganizationButton
+          {...props.picker}
+          onChange={props.onChange}
+        />
+      </div>
     )
-  }
-
-  loadOrganizations(organizations) {
-    this.setState({
-      fetched: true,
-      organizations: organizations
-    })
-  }
-
-  componentWillUnmount() {
-    if (this.pending) {
-      this.pending.cancel()
-    }
-  }
-
-  render() {
-    if (!this.state.fetched) {
-      return (
-        <div>
-          {trans('Please wait while we load organizations...')}
-          </div>
-      )
-    }
-
+  } else {
     return (
-      <Select
-        id={this.props.id}
-        choices={pickBy(this.state.organizations.reduce((choices, organization) => {
-          choices[organization.id] = organization.name
-
-          return choices
-        }, {}), this.props.filterChoices)}
-        value={this.props.value ? this.props.value.id : ''}
-        onChange={(value) => this.props.onChange({
-          id: value,
-          name: this.state.organizations.find(organization => value === organization.id).name
-        })}
-      />
+      <EmptyPlaceholder
+        size="lg"
+        icon="fa fa-book"
+        title={trans('no_organization')}
+      >
+        <OrganizationButton
+          {...props.picker}
+          onChange={props.onChange}
+        />
+      </EmptyPlaceholder>
     )
   }
 }
 
 implementPropTypes(OrganizationInput, FormFieldTypes, {
-  // more precise value type
-  value: T.shape({
-    id: T.string.isRequired,
-    name: T.string.isRequired
-  }),
-  filterChoices: T.func
+  value: T.shape(OrganizationType.propTypes),
+  picker: T.shape({
+    title: T.string
+  })
 }, {
-  label: trans('organization'),
-  filterChoices: () => true
+  value: null,
+  picker: {
+    title: trans('organization_selector')
+  }
 })
 
 export {

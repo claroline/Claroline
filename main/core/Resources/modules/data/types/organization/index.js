@@ -1,7 +1,7 @@
 import {trans} from '#/main/app/intl/translation'
 
 import {OrganizationDisplay} from '#/main/core/data/types/organization/components/display'
-import {OrganizationGroup} from '#/main/core/data/types/organization/components/group'
+import {OrganizationInput} from '#/main/core/data/types/organization/components/input'
 
 const dataType = {
   name: 'organization',
@@ -13,7 +13,7 @@ const dataType = {
   },
   components: {
     details: OrganizationDisplay,
-    form: OrganizationGroup
+    input: OrganizationInput
   }
 }
 

@@ -99,12 +99,12 @@ registry.add('ClarolineCoreBundle', {
     types: {
       'organization' : () => { return import(/* webpackChunkName: "core-data-organization" */  '#/main/core/data/types/organization') },
       'resource'     : () => { return import(/* webpackChunkName: "core-data-resource" */      '#/main/core/data/types/resource') },
-      'user'         : () => { return import(/* webpackChunkName: "core-data-user" */         '#/main/core/data/types/user') },
+      'user'         : () => { return import(/* webpackChunkName: "core-data-user" */          '#/main/core/data/types/user') },
       'users'        : () => { return import(/* webpackChunkName: "core-data-users" */         '#/main/core/data/types/users') },
       'workspace'    : () => { return import(/* webpackChunkName: "core-data-workspace" */     '#/main/core/data/types/workspace') },
       'workspaces'   : () => { return import(/* webpackChunkName: "core-data-workspaces" */    '#/main/core/data/types/workspaces') },
       'groups'       : () => { return import(/* webpackChunkName: "core-data-groups" */        '#/main/core/data/types/groups') },
-      'group'       : () => { return import(/* webpackChunkName: "core-data-groups" */        '#/main/core/data/types/group') },
+      'group'        : () => { return import(/* webpackChunkName: "core-data-group" */         '#/main/core/data/types/group') },
       'location'     : () => { return import(/* webpackChunkName: "core-data-location" */      '#/main/core/data/types/location') },
       'template_type': () => { return import(/* webpackChunkName: "core-data-template-type" */ '#/main/core/data/types/template-type') }
     },
