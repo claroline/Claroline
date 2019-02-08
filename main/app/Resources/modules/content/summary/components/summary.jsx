@@ -80,7 +80,6 @@ class SummaryLink extends Component {
 
   render() {
     const collapsible = this.props.collapsible || (this.props.children && 0 !== this.props.children.length)
-
     return (
       <li className="summary-link-container">
         <div className="summary-link">

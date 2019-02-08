@@ -10,6 +10,7 @@ plugin:
           exportable: false
           actions:
               - name: chapter
+                decoder: edit
           activity_rules:
               - action: resource-read
               - action: resource-icap_lesson-chapter_read
