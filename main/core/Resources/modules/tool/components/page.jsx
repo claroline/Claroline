@@ -33,7 +33,7 @@ ToolPage.propTypes = {
   subtitle: T.string,
   toolbar: T.string,
   actions: T.any,
-  path:T.arrayOf(T.object), // TODO : correct typing
+  path: T.arrayOf(T.object), // TODO : correct typing
   children: T.any
 }
 

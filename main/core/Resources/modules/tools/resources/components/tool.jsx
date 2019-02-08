@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {URL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
@@ -15,8 +15,9 @@ const ResourcesTool = props =>
   <ToolPage
     subtitle={props.current && props.current.name}
     path={props.current ? props.current.path.map(ancestorNode => ({
+      type: LINK_BUTTON,
       label: ancestorNode.name,
-      target: ['claro_resource_show_short', {id: ancestorNode.id}]
+      target: `/${ancestorNode.id}`
     })) : []}
     disabled={props.loading}
     toolbar={getToolbar('add')}
