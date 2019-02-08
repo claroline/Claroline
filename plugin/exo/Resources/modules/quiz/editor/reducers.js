@@ -76,11 +76,11 @@ function initialQuizState() {
 
 function reduceQuiz(quiz = initialQuizState(), action = {}) {
   switch (action.type) {
-    case RESOURCE_LOAD:
+    case RESOURCE_LOAD: {
       const normalized = decorate(normalize(action.resourceData.quiz), getDecorators(), action.resourceData.resourceNode.permissions.edit)
 
       return normalized.quiz
-
+    }
     case QUIZ_UPDATE: {
       // updates quiz
       const updatedQuiz = cloneDeep(quiz)
@@ -153,10 +153,11 @@ function reduceQuiz(quiz = initialQuizState(), action = {}) {
 
 function reduceSteps(steps = {}, action = {}) {
   switch (action.type) {
-    case RESOURCE_LOAD:
+    case RESOURCE_LOAD: {
       const normalized = decorate(normalize(action.resourceData.quiz), getDecorators(), action.resourceData.resourceNode.permissions.edit)
 
       return normalized.steps
+    }
     case ITEM_CHANGE_STEP: {
       //remove the old one
       Object.keys(steps).forEach(stepId => {
@@ -234,11 +235,11 @@ function reduceSteps(steps = {}, action = {}) {
 
 function reduceItems(items = {}, action = {}) {
   switch (action.type) {
-    case RESOURCE_LOAD:
+    case RESOURCE_LOAD: {
       const normalized = decorate(normalize(action.resourceData.quiz), getDecorators(), action.resourceData.resourceNode.permissions.edit)
 
       return normalized.items
-
+    }
     case ITEM_CREATE: {
       let newItem = decorateItem({
         id: action.id,
@@ -523,7 +524,10 @@ function reduceValidatingState(validating = false, action = {}) {
       return true
     case QUIZ_SAVED:
       return false
+    case ITEM_DETAIL_UPDATE:
+      return false
   }
+
   return validating
 }
 
