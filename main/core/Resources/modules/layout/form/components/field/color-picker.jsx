@@ -6,7 +6,7 @@ import {TwitterPicker} from 'react-color'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
-// TODO : rewrite me without external dependency
+// TODO : remove me. It's only used in quiz items. I need to know why it required the autoOpen feature.
 
 class ColorPicker extends Component {
   constructor(props) {

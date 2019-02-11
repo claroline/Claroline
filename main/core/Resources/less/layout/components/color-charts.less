@@ -1,0 +1,225 @@
+/*
+ * Color charts styles
+ */
+
+@color-chart-color: @text-color;
+
+@color-chart-padding: 15px;
+@color-chart-slider-size: 20px;
+
+// classical gray squares representation for transparency
+// in base64 encoded to avoid external image
+@transparent-bg: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAMUlEQVQ4T2NkYGAQYcAP3uCTZhw1gGGYhAGBZIA/nYDCgBDAm9BGDWAAJyRCgLaBCAAgXwixzAS0pgAAAABJRU5ErkJggg==";
+
+.color-chart-container {
+    position: relative;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: flex-start;
+    color: @color-chart-color;
+    max-width: 420px; // to have approx same sizing than calendar
+
+    .current-container {
+        flex: 1; // ratio : 1/3
+        max-width: 420px / 3; // to have approx same sizing than calendar
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: space-between;
+        padding: @color-chart-padding;
+
+        &.transparent {
+            // add bg to show transparency
+            background-image: url(@transparent-bg);
+        }
+
+        .current-color {
+            font-size: @font-size-h4;
+            font-weight: 900;
+
+            // removes default input styles
+            outline: 0;
+            background: none;
+            box-shadow: none;
+            border: none;
+            padding: 0;
+            padding-bottom: 3px;
+            border-bottom: 2px solid;
+
+            &.text-light {
+                border-color: @text-light-color;
+            }
+            &.text-dark {
+                border-color: @text-dark-color;
+            }
+        }
+
+        .btn-view {
+            border: 1px solid;
+            margin-top: @component-margin-bottom;
+
+            &.text-light {
+                border-color: @text-light-color;
+            }
+            &.text-dark {
+                border-color: @text-dark-color;
+            }
+        }
+    }
+
+    .colors-container {
+        flex: 2; // ratio : 2/3
+        max-width: 100%;
+        padding: @color-chart-padding;
+
+        // temp to have approx same sizing than calendar
+        width: (420px / 3) * 2;
+        height: 260px;
+    }
+}
+
+.color-chart-library {
+    margin: -2px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    // I have 250px width.
+    // With this config I can align 10 colors before line break.
+    .color {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 34px;
+        height: 34px;
+        margin: 4px;
+        border: 1px solid rgba(0, 0, 0, .15);
+        border-radius: 50%;
+
+        .fa {
+            margin: 0;
+        }
+    }
+}
+
+.color-chart-selector {
+    margin: -5px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    // I have 230px height
+    .color {
+        cursor: crosshair;
+        position: relative;
+        width: 200px;
+        height: 200px;
+        margin: 5px;
+        
+        .color-gradient {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background:
+                linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0)),
+                linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+        }
+
+        .color-cursor {
+            cursor: move;
+            position: absolute;
+            display: inline-block;
+            margin-left: -5px;
+            margin-bottom: -5px;
+            width: 10px;
+            height: 10px;
+            border: 1px solid #FFFFFF;
+            border-radius: 50%;
+            background: transparent;
+            box-shadow:
+                      0 0 2px 1px rgba(0,0,0,.4),
+                inset 0 0 2px 1px rgba(0,0,0,.4);
+        }
+    }
+
+    .color-slider {
+        cursor: pointer;
+        overflow: visible; // show cursor overflow for terminal values
+        position: relative;
+
+        .slider-cursor {
+            position: absolute;
+            display: inline-block;
+            width: @color-chart-slider-size;
+            height: @color-chart-slider-size;
+            background: white;
+            border: none;
+            box-shadow: 0 0 2px 1px rgba(0,0,0,.4);
+        }
+
+        &.color-slider-h {
+            height: @color-chart-slider-size;
+
+            .slider-cursor {
+                cursor: ew-resize;
+                width: floor(@color-chart-slider-size / 2);
+                margin-left: -(@color-chart-slider-size / 4);
+            }
+        }
+
+        &.color-slider-v {
+            width: @color-chart-slider-size;
+
+            .slider-cursor {
+                cursor: ns-resize;
+                height: floor(@color-chart-slider-size / 2);
+                margin-top: -(@color-chart-slider-size / 4);
+            }
+        }
+    }
+
+    .color-hue {
+        margin: 5px;
+        height: 200px;
+        // red / magenta / blue / cyan / green / yellow / red
+        background: linear-gradient(to bottom, #FF0000, #FF00FF, #0000FF, #00FFFF, #00FF00, #FFFF00, #FF0000);
+    }
+
+    .color-alpha {
+        margin: 5px;
+        width: 100%;
+        background-image: url(@transparent-bg);
+
+        .color-slider-current {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
+
+
+/*
+ * Color picker.
+ */
+.dropdown-menu {
+    .color-chart-container {
+        margin: -@dropdown-menu-padding-v -@dropdown-menu-padding-h;
+    }
+}
+
+// vertical layout for XS screens
+@media (max-width: @screen-xs-max) {
+    .color-chart-container {
+        flex-direction: column;
+
+        .current-container,
+        .colors-container {
+            flex: auto; // otherwise it breaks on IE
+            //width: 100%;
+        }
+    }
+}

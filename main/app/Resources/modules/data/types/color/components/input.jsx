@@ -1,67 +1,90 @@
 import React, {Component} from 'react'
 import classes from 'classnames'
-import Overlay from 'react-bootstrap/lib/Overlay'
-import {TwitterPicker} from 'react-color'
+import tinycolor from 'tinycolor2'
 
+import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
-// TODO : rewrite me without external dependency
+import {Button} from '#/main/app/action/components/button'
+import {MENU_BUTTON} from '#/main/app/buttons'
+import {ColorChart} from '#/main/core/layout/color-chart/components/color-chart'
 
 class ColorInput extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      open: this.props.autoOpen
+
+    this.onInputChange = this.onInputChange.bind(this)
+    this.onInputBlur = this.onInputBlur.bind(this)
+  }
+
+  onInputChange(e) {
+    this.props.onChange(e.target.value)
+  }
+
+  onInputBlur(e) {
+    // format color string
+    const color = tinycolor(e.target.value)
+    if (color.isValid()) {
+      if (1 > color.getAlpha()) {
+        // convert to rgba
+        this.props.onChange(color.toRgbString())
+      } else {
+        // no alpha => convert to hex
+        this.props.onChange(color.toHexString())
+      }
     }
   }
 
   render() {
-    return (
-      <span className="color-picker" id={this.props.id}>
-        <button
-          className={classes('btn btn-default', this.props.className)}
-          role="button"
-          type="button"
-          ref={element => this.refTarget = element}
-          onClick={() => this.setState({open: !this.state.open})}
-        >
-          <span
-            className={classes('fa fa-fw', {
-              'fa-font': this.props.forFontColor,
-              'fa-paint-brush': !this.props.forFontColor
-            })}
-          />
-          <span
-            className="color-indicator"
-            style={{
-              backgroundColor: this.props.value
-            }}
-          />
-        </button>
+    let color
+    if (this.props.value) {
+      color = tinycolor(this.props.value)
+    }
 
-        <Overlay
-          show={this.state.open}
-          onHide={() => this.setState({open: false})}
-          placement="bottom"
-          container={this}
-          target={this.refTarget}
-          rootClose={true}
-        >
-          <TwitterPicker
-            color={this.props.value || undefined}
-            colors={this.props.colors}
-            onChangeComplete={color => {
-              this.setState({open: false})
-              if (color) {
-                this.props.onChange(color.hex)
-              } else {
-                this.props.onChange('')
-              }
+    return (
+      <div className={classes('input-group', {
+        [`input-group-${this.props.size}`]: !!this.props.size
+      })}>
+        <span className="input-group-btn">
+          <Button
+            className={classes('btn', {
+              'text-light': color && color.isDark(),
+              'text-dark': color && color.isLight()
+            })}
+            style={{
+              background: this.props.value,
+              borderColor: this.props.value
             }}
+            type={MENU_BUTTON}
+            icon={this.props.colorIcon}
+            label={trans('show-colors', {}, 'actions')}
+            tooltip="right"
+            size={this.props.size}
+            disabled={this.props.disabled}
+            menu={
+              <div className="dropdown-menu">
+                <ColorChart
+                  selected={this.props.value}
+                  onChange={this.props.onChange}
+                />
+              </div>
+            }
           />
-        </Overlay>
-      </span>
+        </span>
+
+        <input
+          id={this.props.id}
+          type="text"
+          autoComplete={this.props.autoComplete}
+          className="form-control"
+          placeholder={this.props.placeholder || '#FFFFFF'}
+          value={this.props.value || ''}
+          disabled={this.props.disabled}
+          onChange={this.onInputChange}
+          onBlur={this.onInputBlur}
+        />
+      </div>
     )
   }
 }
@@ -69,10 +92,12 @@ class ColorInput extends Component {
 implementPropTypes(ColorInput, FormFieldTypes, {
   // more precise value type
   value: T.string,
-  colors: T.arrayOf(T.string),
-  forFontColor: T.bool,
-  autoOpen: T.bool
+
+  // custom options
+  colorIcon: T.string,
+  colors: T.arrayOf(T.string)
 }, {
+  colorIcon: 'fa fa-fw fa-palette',
   colors: [
     '#FF6900',
     '#FCB900',
@@ -84,9 +109,7 @@ implementPropTypes(ColorInput, FormFieldTypes, {
     '#EB144C',
     '#FFFFFF',
     '#000000'
-  ],
-  forFontColor: false,
-  autoOpen: false
+  ]
 })
 
 export {

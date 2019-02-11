@@ -10,6 +10,7 @@
     "This value should be greater than {{ limit }}.": "This value should be greater than {{ limit }}.",
     "This value should be lower than {{ limit }}.": "This value should be lower than {{ limit }}.",
     "This value should be a valid email.": "This value should be a valid email.",
+    "This value should be a valid color.": "This value should be a valid color.",
     "This email already exists.": "This email already exists.",
     "This username already exists.": "This username already exists.",
     "email_not_valid": "This email address is not valid.",
