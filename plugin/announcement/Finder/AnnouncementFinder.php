@@ -29,16 +29,21 @@ class AnnouncementFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
+        $qb->leftJoin('obj.aggregate', 'a');
+        $qb->leftJoin('a.resourceNode', 'node');
+
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
+                case 'published':
+                    $qb->andWhere('node.published = :published');
+                    $qb->setParameter('published', $filterValue);
+                    break;
                 case 'creator':
                     $qb->leftJoin('obj.creator', 'creator');
                     $qb->andWhere("creator.username LIKE :{$filterName}");
                     $qb->setParameter($filterName, '%'.$filterValue.'%');
                     break;
                 case 'workspace':
-                    $qb->leftJoin('obj.aggregate', 'a');
-                    $qb->leftJoin('a.resourceNode', 'node');
                     $qb->leftJoin('node.workspace', 'w');
                     $qb->andWhere("w.uuid like :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
@@ -79,8 +84,6 @@ class AnnouncementFinder extends AbstractFinder
                     return $this->union($byUserSearch, $byGroupSearch, $options, $sortBy);
                     break;
                 case '_user':
-                    $qb->leftJoin('obj.aggregate', 'a');
-                    $qb->leftJoin('a.resourceNode', 'node');
                     $qb->leftJoin('node.workspace', 'w');
                     $qb->leftJoin('w.roles', 'r');
                     $qb->leftJoin('r.users', 'ru');
@@ -94,8 +97,6 @@ class AnnouncementFinder extends AbstractFinder
                     $qb->setParameter('roleUser', 'ROLE_USER');
                     break;
                 case '_group':
-                    $qb->leftJoin('obj.aggregate', 'a');
-                    $qb->leftJoin('a.resourceNode', 'node');
                     $qb->leftJoin('node.workspace', 'w');
                     $qb->leftJoin('w.roles', 'r');
                     $qb->leftJoin('r.groups', 'rg');
@@ -110,8 +111,6 @@ class AnnouncementFinder extends AbstractFinder
                     $qb->setParameter('roleUser', 'ROLE_USER');
                     break;
                 case 'anonymous':
-                    $qb->leftJoin('obj.aggregate', 'a');
-                    $qb->leftJoin('a.resourceNode', 'node');
                     $qb->join('node.rights', 'rights');
                     $qb->join('rights.role', 'role');
                     $qb->andWhere("role.name = 'ROLE_ANONYMOUS'");
