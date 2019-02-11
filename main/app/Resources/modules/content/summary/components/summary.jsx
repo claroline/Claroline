@@ -24,7 +24,7 @@ const SummaryHeader = props =>
         <Button
           type={CALLBACK_BUTTON}
           tooltip={props.opened ? 'bottom':'right'}
-          className={classes('btn-link summary-control hidden-xs hidden-sm', {
+          className={classes('summary-control hidden-xs hidden-sm', {
             active: props.pinned
           })}
           icon="fa fa-fw fa-map-pin"
@@ -36,7 +36,7 @@ const SummaryHeader = props =>
       <Button
         type={CALLBACK_BUTTON}
         tooltip={props.opened ? 'bottom':'right'}
-        className="btn-link summary-control"
+        className="summary-control"
         icon={classes('fa fa-fw', {
           'fa-chevron-left': props.opened,
           'fa-chevron-right': !props.opened
@@ -62,6 +62,8 @@ class SummaryLink extends Component {
     this.state = {
       collapsed: this.props.collapsed || false
     }
+
+    this.toggleCollapse = this.toggleCollapse.bind(this)
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -97,7 +99,7 @@ class SummaryLink extends Component {
                     {...action}
                     key={toKey(action.label) + actionIndex}
                     tooltip="bottom"
-                    className="btn-link btn-summary"
+                    className="btn-summary"
                   />
                 )
               }
@@ -106,13 +108,13 @@ class SummaryLink extends Component {
                 <Button
                   type={CALLBACK_BUTTON}
                   tooltip="bottom"
-                  className="btn-link btn-summary"
+                  className="btn-summary"
                   icon={classes('fa', {
                     'fa-caret-right': this.state.collapsed,
                     'fa-caret-down': !this.state.collapsed
                   })}
                   label={trans(this.state.collapsed ? 'expand': 'collapse', {}, 'actions')}
-                  callback={this.toggleCollapse.bind(this)}
+                  callback={this.toggleCollapse}
                 />
               }
             </div>

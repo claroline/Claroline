@@ -1,4 +1,5 @@
 import React from 'react'
+import identity from 'lodash/identity'
 import omit from 'lodash/omit'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
@@ -14,7 +15,7 @@ const PopoverButton = (props) =>
   >
     <CallbackButton
       {...omit(props, 'popover')}
-      callback={() => true}
+      callback={identity}
     >
       {props.children}
     </CallbackButton>

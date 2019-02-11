@@ -27,6 +27,7 @@ const I18nComponent = (props) =>
             name: 'locales.available',
             type: 'locale',
             label: trans('available_languages'),
+            required: true,
             options: {
               available: props.availableLocales,
               multiple: true
@@ -35,6 +36,7 @@ const I18nComponent = (props) =>
             name: 'locales.default',
             type: 'locale',
             label: trans('default_language'),
+            required: true,
             options: {
               available: props.availableLocales
             }

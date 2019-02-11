@@ -38,7 +38,11 @@ class NumberInput extends PureComponent {
   }
 
   onChange(e) {
-    this.props.onChange(Number(e.target.value))
+    if ('' !== e.target.value) {
+      this.props.onChange(Number(e.target.value))
+    } else {
+      this.props.onChange(null)
+    }
   }
 
   render() {

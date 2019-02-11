@@ -12,15 +12,15 @@ import {BooleanFilter} from '#/main/app/data/types/boolean/components/filter'
 const dataType = {
   name: 'boolean',
   meta: {
-    creatable: true,
     icon: 'fa fa-fw fa-check-square-o',
     label: trans('boolean', {}, 'data'),
-    description: trans('boolean_desc', {}, 'data')
+    description: trans('boolean_desc', {}, 'data'),
+    creatable: true
   },
-  parse: (display) => parseBool(display),
-  render: (raw) => translateBool(raw),
+  parse: parseBool,
+  render: translateBool,
 
-  validate: (value) => boolean(value),
+  validate: boolean,
   components: {
     // old api
     details: BooleanDisplay,

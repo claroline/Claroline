@@ -93,8 +93,9 @@ const CurrentDate = props =>
     }
 
     <CallbackButton
-      className="btn btn-now btn-block btn-sm"
+      className="btn-link btn-now btn-block"
       callback={props.today}
+      size="sm"
     >
       {trans(props.time ? 'now': 'today')}
     </CallbackButton>
@@ -157,20 +158,6 @@ class Calendar extends Component {
     this.update = this.update.bind(this)
     this.today = this.today.bind(this)
   }
-
-  /*UNSAFE_componentWillReceiveProps(nextProps) {
-    // updates state if selected value changes at runtime
-    if (this.props.selected !== nextProps.selected) {
-      let selected = null
-      if (this.props.selected && isValidDate(this.props.selected, getApiFormat())) {
-        selected = moment.utc(this.props.selected).local()
-      }
-
-      this.setState({
-        selected: selected
-      })
-    }
-  }*/
 
   /**
    * Updates the selected date.

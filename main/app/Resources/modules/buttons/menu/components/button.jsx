@@ -24,6 +24,12 @@ import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 // The class is only here because react-bootstrap dropdown uses ref to work and
 // it's not possible on stateless components
 class StandardMenu extends Component {
+  constructor(props) {
+    super(props)
+
+    this.handleRootClose = this.handleRootClose.bind(this)
+  }
+
   // for custom menus
   handleRootClose(event) {
     this.props.onClose(event, { source: 'rootClose' })
@@ -112,7 +118,7 @@ class StandardMenu extends Component {
     return (
       <RootCloseWrapper
         disabled={!props.open}
-        onRootClose={this.handleRootClose.bind(this)}
+        onRootClose={this.handleRootClose}
         event={props.rootCloseEvent}
       >
         {props.menu}

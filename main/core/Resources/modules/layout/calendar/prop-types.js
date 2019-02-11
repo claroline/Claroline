@@ -5,8 +5,6 @@ const CalendarView = {
     now: T.object.isRequired,
     selected: T.object,
 
-    showCurrent: T.bool,
-
     /**
      * The current displayed range.
      */
@@ -26,7 +24,7 @@ const CalendarView = {
     update: T.func.isRequired
   },
   defaultProps: {
-    showCurrent: true
+
   }
 }
 
@@ -38,6 +36,8 @@ const Calendar = {
      * @type {string}
      */
     selected: T.string,
+
+    showCurrent: T.bool,
 
     /**
      * A callback executed when the selected date changes.
@@ -83,6 +83,7 @@ const Calendar = {
   },
   defaultProps: {
     selected: '',
+    showCurrent: true,
     // date configuration
     minDate: '1900-01-01',
     maxDate: '2099-12-31',

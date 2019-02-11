@@ -1431,7 +1431,7 @@
     "published_at": "published on %date%",
     "last_modified_at": "modified on %date%",
     "not_published": "not published",
-    "access_restrictions": "Access Restrictions",
+    "access_restrictions": "Access restrictions",
     "access_dates": "Access period",
     "restrict_by_dates": "Restrict by dates",
     "rich_text_tools": "Rich text tools",
@@ -1689,6 +1689,8 @@
     "same_window": "In the same window (default)",
     "new_window": "In a new window/tab",
     "hidden": "Hidden",
+    "colors-library": "Library",
+    "colors-selector": "Selector",
     "publication_by_date": "Access period",
     "confirmation_checkbox": "By checking this box, I confirm that I have read and understood the warning.",
     "publication_by_date_help": "Resource must be published beforehand, then define dates in format dd/mm/yyyy HH:mm. <br/>Ex: 25/12/2018 14:00"

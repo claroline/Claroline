@@ -85,6 +85,7 @@
 
 .summary-controls {
     .summary-control {
+        .btn-link;
         color: @path-summary-control-color;
         background: @path-summary-control-bg;
         padding: 0;
@@ -106,7 +107,7 @@
 .summary-title {
     color: @path-summary-title-color;
     font-size: @font-size-h3;
-    text-transform: uppercase;
+    text-transform: uppercase; // todo : use a var
 
     // remove default h* spacing
     padding: 0 !important;
@@ -131,6 +132,10 @@
     .fa {
         width: @path-summary-collapsed-width - (@path-summary-padding * 2);
         text-align: center;
+    }
+
+    .btn-summary {
+        .btn-link;
     }
 
     a,

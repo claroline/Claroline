@@ -41,7 +41,7 @@ const dataType = {
     }
   ],
 
-  parse: (display) => parseFloat(display),
+  parse: parseFloat,
 
   /**
    * Displays a number value.

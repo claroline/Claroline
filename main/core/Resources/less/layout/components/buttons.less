@@ -108,18 +108,19 @@ input[type=reset] {
             text-decoration: none;
         }
     }
+}
 
-    &.primary {
-        .button-link-variant(@link-color, @link-hover-color, @link-hover-decoration);
-    }
+// variants
+.btn-link.primary {
+    .button-link-variant(@link-color, @link-hover-color, @link-hover-decoration);
+}
 
-    &.default {
-        .button-link-variant(@gray, @gray-dark, @link-hover-decoration);
-    }
+.btn-link.default {
+    .button-link-variant(@gray, @gray-dark, @link-hover-decoration);
+}
 
-    &.danger {
-        .button-link-variant(@brand-danger, darken(@brand-danger, 10%), @link-hover-decoration);
-    }
+.btn-link.danger {
+    .button-link-variant(@brand-danger, darken(@brand-danger, 10%), @link-hover-decoration);
 }
 
 // todo : for retro compatibility, to remove

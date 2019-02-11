@@ -2,13 +2,15 @@ import React from 'react'
 import classes from 'classnames'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
+import {trans} from '#/main/app/intl/translation'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {isValidDate, getApiFormat, getDisplayFormat, displayDate, apiDate} from '#/main/app/intl/date'
 
-import {CalendarPicker} from '#/main/core/layout/calendar/components/picker'
+import {Button} from '#/main/app/action/components/button'
+import {MENU_BUTTON} from '#/main/app/buttons'
+import {Calendar} from '#/main/core/layout/calendar/components/calendar'
 
-// TODO : change calendar button size size according to props.size
-
+// deprecated
 const Date = props => {
   const displayFormat = getDisplayFormat(false, props.time)
 
@@ -20,17 +22,27 @@ const Date = props => {
   return (
     <div className="input-group">
       <span className="input-group-btn">
-        <CalendarPicker
-          className="btn-default"
+        <Button
+          className="btn"
+          type={MENU_BUTTON}
           icon={props.calendarIcon}
-          selected={props.value}
+          label={trans('show-calendar', {}, 'actions')}
+          tooltip="right"
+          size={props.size}
           disabled={props.disabled}
-          onChange={props.onChange}
-          minDate={props.minDate}
-          maxDate={props.maxDate}
-          time={props.time}
-          minTime={props.minTime}
-          maxTime={props.maxTime}
+          menu={
+            <div className="dropdown-menu">
+              <Calendar
+                selected={props.value}
+                onChange={props.onChange}
+                minDate={props.minDate}
+                maxDate={props.maxDate}
+                time={props.time}
+                minTime={props.minTime}
+                maxTime={props.maxTime}
+              />
+            </div>
+          }
         />
       </span>
 
@@ -71,7 +83,8 @@ implementPropTypes(Date, FormFieldTypes, {
   minTime: T.string,
   maxTime: T.string
 }, {
-  value: ''
+  value: '',
+  calendarIcon: 'fa fa fa-fw fa-calendar'
 })
 
 export {

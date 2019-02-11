@@ -50,7 +50,7 @@ const dataType = {
     const choices = options.choices || {}
 
     if (options.multiple) {
-      const unknown = differenceBy(value, Object.keys(choices), (value) => value+'')
+      const unknown = differenceBy(value, Object.keys(choices), (selected) => selected+'')
       if (0 !== unknown.length) {
         return tval('This value is invalid.')
       }

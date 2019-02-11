@@ -28,6 +28,14 @@
 
 @images-path: "images/";
 
+// a color to use on background which is considered 'dark' by tinycolor2
+// @see https://www.npmjs.com/package/tinycolor2#isdark
+@text-light-color: #FDFDFD; // todo : adjust
+
+// a color to use on background which is considered 'light' by tinycolor2
+// @see https://www.npmjs.com/package/tinycolor2#islight
+@text-dark-color:  #262626; // todo : adjust
+
 
 // -
 // Z-indexes
@@ -116,6 +124,7 @@
 //@breadcrumb-link-bg:            #EAEAEA;
 @breadcrumb-link-color:         #777;
 @breadcrumb-link-hover-color:   #333;
+
 
 // -
 // Toolbars
@@ -314,6 +323,8 @@
 // Dropdown
 // ---
 
+@dropdown-menu-padding-v:     5px;
+@dropdown-menu-padding-h:     0;
 @dropdown-menu-box-shadow:    0 1px 2px rgba(0, 0, 0, 0.2);
 @dropdown-menu-border-radius: 0;
 

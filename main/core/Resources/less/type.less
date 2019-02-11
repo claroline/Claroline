@@ -1,18 +1,18 @@
-// In bootstrap this doesn't use the mixin
+// in bootstrap this doesn't use the mixin
 .text-muted {
     .text-emphasis-variant(@text-muted);
 }
 
-.text-html-content {
-    // by default justify content for better display,
-    // it can be easily overridden through WYSIWYG editors (currently TinyMCE).
-    text-align: justify;
+// a color to use on background which is considered 'dark' by tinycolor2
+// @see https://www.npmjs.com/package/tinycolor2#isdark
+.text-light {
+    color: @text-light-color !important; // todo : adjust
 }
 
-.h-first {
-    // otherwise there is to many space when used just after a .page-header
-    // there may be a better way to handle it.
-    margin-top: 0;
+// a color to use on background which is considered 'light' by tinycolor2
+// @see https://www.npmjs.com/package/tinycolor2#islight
+.text-dark {
+    color: @text-dark-color !important; // todo : adjust
 }
 
 .h-numbering {
@@ -31,4 +31,12 @@
     &:after {
         content: @heading-numbering-separator;
     }
+}
+
+// AVOID USING IT
+// Find a better way to handle it
+.h-first {
+    // otherwise there is to many space when used just after a .page-header
+    // there may be a better way to handle it.
+    margin-top: 0;
 }

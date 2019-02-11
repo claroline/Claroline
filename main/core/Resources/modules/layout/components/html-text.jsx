@@ -12,7 +12,7 @@ import omit from 'lodash/omit'
 const HtmlText = props =>
   <div
     {...omit(props, 'children')}
-    className={classes('text-html-content', props.className)}
+    className={classes('text-html-content text-justify', props.className)}
     dangerouslySetInnerHTML={{ __html: props.children }}
   />
 

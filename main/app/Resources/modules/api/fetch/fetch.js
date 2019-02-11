@@ -45,21 +45,19 @@ function handleResponse(dispatch, response, originalRequest) {
 /**
  * A callback executed when a response is received.
  *
- * @param {function} dispatch
  * @param {object}   response
- * @param {object}   originalRequest
  *
  * @return {object}
  */
 function handleDownload(response) {
-
   const disposition = response.headers && response.headers.get('Content-Disposition')
 
   const n = disposition.lastIndexOf('=')
   const name = disposition.substring(n + 1)
+
   // The actual download
   return response.blob().then(blob => {
-    var link = document.createElement('a')
+    const link = document.createElement('a')
     link.href = window.URL.createObjectURL(blob)
     link.download = name
 
