@@ -868,6 +868,12 @@ class ResourceManager
                             rmdir($dir);
                         }
                     }
+                } elseif ($softDelete && !in_array($node->getResourceType()->getName(), $ignore)) {
+                    $this->dispatcher->dispatch(
+                        "resource.{$node->getResourceType()->getName()}.soft_delete",
+                        'Resource\DeleteResource',
+                        [$resource]
+                    );
                 }
 
                 if ($softDelete || $eventSoftDelete) {
