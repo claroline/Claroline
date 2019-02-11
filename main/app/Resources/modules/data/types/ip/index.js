@@ -14,17 +14,7 @@ const dataType = {
     description: trans('ip_desc', {}, 'data')
   },
 
-  /**
-   * Validates an IP string.
-   *   - it MUST contains 4 groups separated by ".".
-   *   - each group MUST be a number between 0 and 255 or "*".
-   *
-   * @param {string} value
-   * @param {object} options
-   *
-   * @return {boolean}
-   */
-  validate: (value, options = {}) => ip(value, options),
+  validate: ip,
 
   components: {
     input: IpInput
