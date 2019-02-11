@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\UserCreatedEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
@@ -77,6 +78,13 @@ class UserCrud
         $this->toolManager->addRequiredToolsToUser($user, 0);
         $this->toolManager->addRequiredToolsToUser($user, 1);
         $roleUser = $this->roleManager->getRoleByName(PlatformRoles::USER);
+        $groupUser = $this->om->getRepository(Group::class)->findOneByName(PlatformRoles::USER);
+
+        if ($groupUser) {
+            $user->addGroup($groupUser);
+        } else {
+            //maybe throw an exception ?
+        }
 
         if (!$roleUser) {
             throw new \Exception('ROLE_USER does not exists');

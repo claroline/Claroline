@@ -22,6 +22,16 @@ trait GroupsTrait
     }
 
     /**
+     * @param Group $group
+     */
+    public function hasGroup(Group $group)
+    {
+        $this->hasGroupsProperty();
+
+        return $this->groups->contains($group);
+    }
+
+    /**
      * Removes an group.
      *
      * @param Group $group

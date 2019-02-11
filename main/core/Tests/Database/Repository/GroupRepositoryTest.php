@@ -40,7 +40,7 @@ class GroupRepositoryTest extends RepositoryTestCase
     public function testFindAll()
     {
         $groups = self::$repo->findAll();
-        $this->assertEquals(4, count($groups));
+        $this->assertEquals(5, count($groups));
         $query = self::$repo->findAll(false);
         $this->assertInstanceof('Doctrine\ORM\Query', $query);
     }
@@ -69,6 +69,6 @@ class GroupRepositoryTest extends RepositoryTestCase
 
     public function testFindNames()
     {
-        $this->assertEquals(4, count(self::$repo->findNames()));
+        $this->assertEquals(5, count(self::$repo->findNames()));
     }
 }

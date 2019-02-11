@@ -26,6 +26,7 @@ use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use JMS\DiExtraBundle\Annotation as DI;
 use Pagerfanta\Pagerfanta;
 use Psr\Log\LoggerInterface;
@@ -1117,6 +1118,49 @@ class UserManager
             $this->log("Flushing... [UOW = {$this->objectManager->getUnitOfWork()->size()}]");
             $this->objectManager->forceFlush();
             $default = $this->organizationManager->getDefault();
+
+            $offset += $limit;
+        }
+
+        $this->objectManager->endFlushSuite();
+    }
+
+    /**
+     * This method will bind each users who don't already have an organization to the default one.
+     */
+    public function bindUserToGroup()
+    {
+        $limit = 250;
+        $offset = 0;
+        $this->log('Add default group to users...');
+        $this->objectManager->startFlushSuite();
+        $countUsers = $this->objectManager->count('ClarolineCoreBundle:User');
+        $default = $this->objectManager->getRepository(Group::class)->findOneByName(PlatformRoles::USER);
+        $i = 0;
+
+        while ($offset < $countUsers) {
+            $users = $this->userRepo->findBy([], null, $limit, $offset);
+
+            /** @var User $user */
+            foreach ($users as $user) {
+                if (!$user->hasGroup($default)) {
+                    ++$i;
+                    $this->log('Add default group for user '.$user->getUsername());
+                    $user->addGroup($default);
+                    $this->objectManager->persist($user);
+
+                    if (0 === $i % 250) {
+                        $this->log("Flushing... [UOW = {$this->objectManager->getUnitOfWork()->size()}]");
+                        $this->objectManager->forceFlush();
+                    }
+                } else {
+                    $this->log("group for user {$user->getUsername()} already exists");
+                }
+            }
+
+            $this->log("Flushing... [UOW = {$this->objectManager->getUnitOfWork()->size()}]");
+            $this->objectManager->forceFlush();
+            $default = $this->objectManager->getRepository(Group::class)->findOneByName(PlatformRoles::USER);
 
             $offset += $limit;
         }

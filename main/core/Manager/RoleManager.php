@@ -138,7 +138,7 @@ class RoleManager
      *
      * @return \Claroline\CoreBundle\Entity\Role
      */
-    public function createBaseRole($name, $translationKey, $isReadOnly = true)
+    public function createBaseRole($name, $translationKey, $isReadOnly = true, $makeGroup = false)
     {
         $role = new Role();
         $role->setName($name);
@@ -147,6 +147,15 @@ class RoleManager
         $role->setPersonalWorkspaceCreationEnabled(true);
         $role->setType(Role::PLATFORM_ROLE);
         $this->om->persist($role);
+
+        if ($makeGroup) {
+            $group = new Group();
+            $group->setName($name);
+            $group->setReadOnly($isReadOnly);
+            $group->addRole($role);
+            $this->om->persist($group);
+        }
+
         $this->om->flush();
 
         return $role;

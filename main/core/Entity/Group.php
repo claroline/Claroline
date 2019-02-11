@@ -93,6 +93,13 @@ class Group extends AbstractRoleSubject
      */
     protected $locations;
 
+    /**
+     * @ORM\Column(name="is_read_only", type="boolean")
+     *
+     * @var bool
+     */
+    protected $isReadOnly = false;
+
     public function __construct()
     {
         parent::__construct();
@@ -157,7 +164,7 @@ class Group extends AbstractRoleSubject
         $return = [];
 
         foreach ($roles as $role) {
-            if ($role->getType() !== Role::WS_ROLE) {
+            if (Role::WS_ROLE !== $role->getType()) {
                 $return[] = $role;
             }
         }
@@ -176,7 +183,7 @@ class Group extends AbstractRoleSubject
         $removedRoles = [];
 
         foreach ($roles as $role) {
-            if ($role->getType() !== Role::WS_ROLE) {
+            if (Role::WS_ROLE !== $role->getType()) {
                 $removedRoles[] = $role;
             }
         }
@@ -211,5 +218,30 @@ class Group extends AbstractRoleSubject
     public function __toString()
     {
         return $this->name;
+    }
+
+    /**
+     * Get the isReadOnly property.
+     *
+     * @return bool
+     */
+    public function isReadOnly()
+    {
+        return $this->isReadOnly;
+    }
+
+    /**
+     * Get the isReadOnly property.
+     *
+     * @return bool
+     */
+    public function getIsReadOnly()
+    {
+        return $this->isReadOnly();
+    }
+
+    public function setReadOnly($value)
+    {
+        $this->isReadOnly = $value;
     }
 }

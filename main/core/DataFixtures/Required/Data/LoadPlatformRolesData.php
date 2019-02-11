@@ -33,7 +33,7 @@ class LoadPlatformRolesData implements RequiredFixture
     {
         $manager->startFlushSuite();
         $roleManager = $this->container->get('claroline.manager.role_manager');
-        $roleManager->createBaseRole(PlatformRoles::USER, 'user');
+        $roleManager->createBaseRole(PlatformRoles::USER, 'user', true, true);
         $roleManager->createBaseRole(PlatformRoles::WS_CREATOR, 'ws_creator');
         $roleManager->createBaseRole(PlatformRoles::ADMIN, 'admin');
         $roleManager->createBaseRole(PlatformRoles::ANONYMOUS, 'anonymous');
