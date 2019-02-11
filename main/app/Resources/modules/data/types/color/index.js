@@ -1,5 +1,4 @@
 import {trans} from '#/main/app/intl/translation'
-import {chain, string} from '#/main/core/validation'
 
 import {color} from '#/main/app/data/types/color/validators'
 import {ColorCell} from '#/main/app/data/types/color/components/cell'

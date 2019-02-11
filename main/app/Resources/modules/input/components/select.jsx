@@ -21,17 +21,25 @@ const getSelectedValues = (e) => {
 const Select = props =>
   <select
     id={props.id}
-    className={classes('form-control', {[`input-${props.size}`]: !!props.size})}
+    autoComplete={props.autoComplete}
+    className={classes('form-control', {
+      [`input-${props.size}`]: !!props.size})
+    }
     value={props.value || ''}
     disabled={props.disabled}
-    onChange={e => props.multiple ?
-      props.onChange(getSelectedValues(e)) :
-      props.onChange(!isNaN(e.target.value) ? parseFloat(e.target.value) : e.target.value)
-    }
+    onChange={e => {
+      if ('' === e.target.value) {
+        props.onChange(null)
+      } else if (props.multiple) {
+        props.onChange(getSelectedValues(e))
+      } else {
+        props.onChange(!isNaN(e.target.value) ? parseFloat(e.target.value) : e.target.value)
+      }
+    }}
     multiple={props.multiple}
   >
     {!props.multiple && !props.noEmpty &&
-      <option value=""/>
+      <option value="">{props.placeholder}</option>
     }
 
     {Object.keys(props.choices).map(option =>
