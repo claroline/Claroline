@@ -2,12 +2,14 @@
 
 namespace Claroline\AnnouncementBundle\Crud;
 
+use Claroline\AnnouncementBundle\Entity\AnnouncementSend;
 use Claroline\AnnouncementBundle\Manager\AnnouncementManager;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -20,6 +22,7 @@ class AnnouncementCrud
      * AnnouncementManager constructor.
      *
      * @DI\InjectParams({
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
      *     "manager"         = @DI\Inject("claroline.manager.announcement_manager")
      * })
@@ -27,11 +30,13 @@ class AnnouncementCrud
      * @param StrictDispatcher $eventDispatcher
      */
     public function __construct(
+        ObjectManager $om,
         StrictDispatcher $eventDispatcher,
         AnnouncementManager $manager
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->manager = $manager;
+        $this->om = $om;
     }
 
     /**
@@ -78,6 +83,12 @@ class AnnouncementCrud
     public function preDelete(DeleteEvent $event)
     {
         $announcement = $event->getObject();
+        $send = $this->om->getRepository(AnnouncementSend::class)->findBy(['announcement' => $announcement]);
+
+        foreach ($send as $el) {
+            $this->om->remove($el);
+        }
+
         // delete scheduled task is any
         $this->manager->unscheduleMessage($announcement);
 
