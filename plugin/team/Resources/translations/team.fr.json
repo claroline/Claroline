@@ -26,6 +26,7 @@
     "team_managers": "Gestionnaires de l'équipe",
     "team_members": "Membres de l'équipe",
     "team_self_registration": "Permettre aux utilisateurs de s'inscrire",
+    "team_create_public_directory": "Créer le répertoire de l'équipe",
     "team_self_unregistration": "Permettre aux utilisateurs de se désinscrire",
     "unregister_from_team": "Se désinscrire de l'équipe",
     "unregister_from_team_confirm_message": "Êtes-vous sûr de vouloir vous désinscrire de cette équipe ?",

@@ -167,20 +167,22 @@ class TeamSerializer
         $user = $this->tokenStorage->getToken()->getUser();
 
         if (empty($directory) && 'anon.' !== $user) {
-            $defaultResource = isset($data['defaultResource']['id']) ?
-                $this->resourceNodeRepo->findOneBy(['uuid' => $data['defaultResource']['id']]) :
-                null;
-            $creatableResources = isset($data['creatableResources']) ?
-                $data['creatableResources'] :
-                [];
-            $directory = $this->teamManager->createTeamDirectory(
-                $team,
-                $user,
-                $defaultResource,
-                $creatableResources
-            );
-            $team->setDirectory($directory);
-            $this->teamManager->initializeTeamRights($team);
+            if ($data['createPublicDirectory']) {
+                $defaultResource = isset($data['defaultResource']['id']) ?
+                  $this->resourceNodeRepo->findOneBy(['uuid' => $data['defaultResource']['id']]) :
+                  null;
+                $creatableResources = isset($data['creatableResources']) ?
+                  $data['creatableResources'] :
+                  [];
+                $directory = $this->teamManager->createTeamDirectory(
+                  $team,
+                  $user,
+                  $defaultResource,
+                  $creatableResources
+              );
+                $team->setDirectory($directory);
+                $this->teamManager->initializeTeamRights($team);
+            }
         } elseif ('anon.' !== $user) {
             $this->teamManager->updateTeamDirectoryPerms($team);
         }

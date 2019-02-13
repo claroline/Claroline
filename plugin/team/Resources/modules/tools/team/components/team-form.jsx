@@ -66,16 +66,27 @@ const TeamFormComponent = props =>
               name: 'maxUsers',
               type: 'number',
               label: trans('max_users', {}, 'team')
-            }, {
-              name: 'publicDirectory',
+            },
+            {
+              name: 'createPublicDirectory',
               type: 'boolean',
-              label: trans('team_directory_public_access', {}, 'team'),
-              required: true
-            }, {
-              name: 'deletableDirectory',
-              type: 'boolean',
-              label: trans('delete_team_directory', {}, 'team'),
-              required: true
+              label: trans('team_create_public_directory', {}, 'team'),
+              required: true,
+              linked: [
+                {
+                  name: 'publicDirectory',
+                  type: 'boolean',
+                  label: trans('team_directory_public_access', {}, 'team'),
+                  required: true,
+                  displayed: props.team.createPublicDirectory
+                }, {
+                  name: 'deletableDirectory',
+                  type: 'boolean',
+                  label: trans('delete_team_directory', {}, 'team'),
+                  required: true,
+                  displayed: props.team.createPublicDirectory
+                }
+              ]
             }, {
               name: 'selfRegistration',
               type: 'boolean',
