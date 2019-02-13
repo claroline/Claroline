@@ -7,14 +7,13 @@ const PAGE_SIZE_5 = '5'
 const PAGE_SIZE_10 = '10'
 const PAGE_SIZE_20 = '20'
   
-const TAGCLOUD_TYPE_CLASSIC = '0'
-const TAGCLOUD_TYPE_3D = '1'
-const TAGCLOUD_TYPE_CLASSIC_NUM = '2'
-const TAGCLOUD_TYPE_LIST = '3'
+const TAGCLOUD_TYPE_CLASSIC = 'classic'
+const TAGCLOUD_TYPE_CLASSIC_NUM = 'classic_number'
+const TAGCLOUD_TYPE_LIST = 'vertical'
   
-const COMMENT_MODERATION_MODE_NONE = '0'
-const COMMENT_MODERATION_MODE_PRIOR_ONCE = '1'
-const COMMENT_MODERATION_MODE_ALL = '2'
+const COMMENT_MODERATION_MODE_NONE = 'never'
+const COMMENT_MODERATION_MODE_PRIOR_ONCE = 'first'
+const COMMENT_MODERATION_MODE_ALL = 'always'
   
 const LIST_POSTS = 'list_posts'
 const CREATE_POST = 'create_post'
@@ -31,7 +30,6 @@ const PAGE_SIZE = {
 const TAGCLOUD_TYPE = {
   [TAGCLOUD_TYPE_CLASSIC]: trans('classic', {}, 'icap_blog'),
   [TAGCLOUD_TYPE_CLASSIC_NUM]: trans('advanced', {}, 'icap_blog'),
-  [TAGCLOUD_TYPE_3D]: trans('3D', {}, 'icap_blog'),
   [TAGCLOUD_TYPE_LIST]: trans('vertical_list', {}, 'icap_blog')
 }
 

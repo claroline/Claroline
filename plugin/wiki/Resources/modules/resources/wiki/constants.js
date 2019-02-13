@@ -1,8 +1,8 @@
 import {trans} from '#/main/app/intl/translation'
 
-const WIKI_MODE_NORMAL = 0
-const WIKI_MODE_MODERATE = 1
-const WIKI_MODE_READ_ONLY = 2
+const WIKI_MODE_NORMAL = 'normal'
+const WIKI_MODE_MODERATE = 'moderate'
+const WIKI_MODE_READ_ONLY = 'read_only'
 
 const WIKI_MODES = {
   [WIKI_MODE_NORMAL]: 'normal',

@@ -85,7 +85,7 @@ class PostsList extends Component {
               label: trans('author', {}, 'platform'),
               type: 'string'
             },{
-              name: 'tags',
+              name: 'tag',
               label: trans('tags', {}, 'platform'),
               type: 'string',
               sortable: false,
@@ -122,7 +122,7 @@ PostsList.propTypes ={
   posts: T.array,
   canEdit: T.bool,
   canPost: T.bool,
-  filters: T.object,
+  filters: T.array,
   history: T.object,
   location: T.object,
   initDataListFilters: T.func

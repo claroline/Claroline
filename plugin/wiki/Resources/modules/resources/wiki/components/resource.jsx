@@ -85,7 +85,7 @@ WikiResource.propTypes = {
   canEdit: T.bool.isRequired,
   canExport: T.bool.isRequired,
   wiki: T.shape({
-    id: T.string.isRequired
+    id: T.string
   }).isRequired,
   resetForm: T.func.isRequired,
   setCurrentHistorySection: T.func.isRequired,

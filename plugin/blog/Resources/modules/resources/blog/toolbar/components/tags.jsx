@@ -67,7 +67,7 @@ const Tags = withRouter(connect(
   }),
   () => ({
     searchByTag: (history, querystring, tag) => {
-      history.push(updateQueryParameters(querystring, 'tags', tag))
+      history.push(updateQueryParameters(querystring, 'tag', tag))
     },
     goHome: (history) => {
       history.push('/')

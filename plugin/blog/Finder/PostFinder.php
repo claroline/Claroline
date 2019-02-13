@@ -77,14 +77,14 @@ class PostFinder extends AbstractFinder
                     $qb->andWhere('obj.publicationDate <= :endOfDay');
                     $qb->setParameter(':endOfDay', $endOfDay);
                     break;
-                case 'tags':
+                case 'tag':
                     $qb->andWhere("obj.uuid IN (
                         SELECT to.objectId
                         FROM Claroline\TagBundle\Entity\TaggedObject to
                         INNER JOIN to.tag t
-                        WHERE UPPER(t.name) LIKE :tagFilter
+                        WHERE UPPER(t.name) = :tagFilter
                     )");
-                    $qb->setParameter('tagFilter', '%'.strtoupper($filterValue).'%');
+                    $qb->setParameter('tagFilter', strtoupper($filterValue));
                     break;
                 case 'workspace':
                     $qb->leftJoin('obj.blog', 'b');

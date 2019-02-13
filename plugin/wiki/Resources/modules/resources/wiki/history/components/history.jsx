@@ -2,6 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import {withRouter} from '#/main/app/router'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
@@ -16,7 +17,8 @@ const loggedUser = currentUser()
 
 const HistoryComponent = props =>
   <section className="wiki-section-history">
-    <h2>{(props.section.activeContribution.title ? (props.section.activeContribution.title + ': ') : '') + trans('revision_history', {}, 'icap_wiki')}</h2>
+    <h2>{(!isEmpty(props.section.activeContribution) ? (props.section.activeContribution.title + ': ') : '') + trans('revision_history', {}, 'icap_wiki')}</h2>
+    {!isEmpty(props.section) &&
     <ListData
       name={selectors.STORE_NAME + '.history.contributions'}
       fetch={{
@@ -65,8 +67,8 @@ const HistoryComponent = props =>
           scope: ['object'],
           displayed: props.section.activeContribution.id !== rows[0].id && (
             props.canEdit ||
-            (props.mode === '0' && loggedUser !== null) ||
-            (props.mode !== '2' && loggedUser !== null && props.section.meta.creator !== null && props.section.meta.creator.id === loggedUser.id)
+              (props.mode === '0' && loggedUser !== null) ||
+              (props.mode !== '2' && loggedUser !== null && props.section.meta.creator !== null && props.section.meta.creator.id === loggedUser.id)
           )
         }, {
           type: LINK_BUTTON,
@@ -78,6 +80,7 @@ const HistoryComponent = props =>
         }
       ]}
     />
+    }
   </section>
 
 HistoryComponent.propTypes = {

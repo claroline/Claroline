@@ -100,7 +100,7 @@ class WikiListener
         $wiki = $event->getResource();
         $sectionTree = $this->sectionManager->getSerializedSectionTree(
             $wiki,
-            $this->tokenStorage->getToken()->getUser(),
+            $this->tokenStorage->getToken()->getUser() instanceof User ? $this->tokenStorage->getToken()->getUser() : null,
             $this->checkPermission('EDIT', $resourceNode)
         );
 

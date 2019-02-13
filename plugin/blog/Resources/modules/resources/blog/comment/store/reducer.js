@@ -5,7 +5,7 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
 import {
-  SHOW_COMMENTS, 
+  SHOW_COMMENTS,
   SHOW_COMMENT_FORM,
   SHOW_EDIT_COMMENT_FORM,
   CREATE_POST_COMMENT,
@@ -61,7 +61,8 @@ const reducer = {
     }),
     invalidated: makeReducer(false, {
       [POST_LOAD]: () => true,
-      [POST_RESET]: () => true
+      [POST_RESET]: () => true,
+      [CREATE_POST_COMMENT]: () => true
     })
   })
 }

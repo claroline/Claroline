@@ -60,11 +60,11 @@ class BlogOptionsSerializer
             'authorizeAnonymousComment' => $blogOptions->getAuthorizeAnonymousComment(),
             'postPerPage' => $blogOptions->getPostPerPage(),
             'autoPublishPost' => $blogOptions->getAutoPublishPost(),
-            'commentModerationMode' => strval($blogOptions->getCommentModerationMode()),
+            'commentModerationMode' => $this->getModerationModeStringValue($blogOptions->getCommentModerationMode()),
             'displayTitle' => $blogOptions->getDisplayTitle(),
             'bannerActivate' => $blogOptions->isBannerActivate(),
             'displayPostViewCounter' => $blogOptions->getDisplayPostViewCounter(),
-            'tagCloud' => null !== $blogOptions->getTagCloud() ? strval($blogOptions->getTagCloud()) : '0',
+            'tagCloud' => null !== $blogOptions->getTagCloud() ? $this->getTagModeStringValue($blogOptions->getTagCloud()) : '0',
             'widgetOrder' => $this->serializeWidgetOrder($blogOptions->getListWidgetBlog()),
             'widgetList' => $this->serializeWidgetList($this->blogManager->getPanelInfos()),
             'tagTopMode' => $blogOptions->isTagTopMode(),
@@ -72,6 +72,84 @@ class BlogOptionsSerializer
             'displayFullPosts' => $blogOptions->getDisplayFullPosts(),
             'infos' => $blog->getInfos(),
         ];
+    }
+
+    private function getModerationModeStringValue($value)
+    {
+        switch ($value) {
+            case 0:
+                $strVal = 'never';
+                break;
+            case 1:
+                $strVal = 'first';
+                break;
+            case 2:
+                $strVal = 'always';
+                break;
+            default:
+                $strVal = 'never';
+        }
+
+        return $strVal;
+    }
+
+    private function getModerationModeIntValue($value)
+    {
+        switch ($value) {
+            case 'never':
+                $intVal = 0;
+                break;
+            case 'first':
+                $intVal = 1;
+                break;
+            case 'always':
+                $intVal = 2;
+                break;
+            default:
+                $intVal = 0;
+        }
+
+        return $intVal;
+    }
+
+    private function getTagModeStringValue($value)
+    {
+        switch ($value) {
+            case 0:
+                $strVal = 'classic';
+                break;
+            case 2:
+                $strVal = 'classic_number';
+                break;
+            case 3:
+                $strVal = 'vertical';
+                break;
+            default:
+                //sphere3d (1) deprecated, fallback on classic
+                $strVal = 'classic';
+        }
+
+        return $strVal;
+    }
+
+    private function getTagModeIntValue($value)
+    {
+        switch ($value) {
+            case 'classic':
+                $intVal = 0;
+                break;
+            case 'classic_number':
+                $intVal = 2;
+                break;
+            case 'vertical':
+                $intVal = 3;
+                break;
+            default:
+                //sphere3d (1) deprecated, fallback on classic
+                $intVal = 0;
+        }
+
+        return $intVal;
     }
 
     private function serializeWidgetList()
@@ -137,11 +215,11 @@ class BlogOptionsSerializer
         $blogOptions->setAuthorizeAnonymousComment($data['authorizeAnonymousComment']);
         $blogOptions->setPostPerPage($data['postPerPage']);
         $blogOptions->setAutoPublishPost($data['autoPublishPost']);
-        $blogOptions->setCommentModerationMode($data['commentModerationMode']);
+        $blogOptions->setCommentModerationMode($this->getModerationModeIntValue($data['commentModerationMode']));
         $blogOptions->setDisplayTitle($data['displayTitle']);
         $blogOptions->setBannerActivate($data['bannerActivate']);
         $blogOptions->setDisplayPostViewCounter($data['displayPostViewCounter']);
-        $blogOptions->setTagCloud($data['tagCloud']);
+        $blogOptions->setTagCloud($this->getTagModeIntValue($data['tagCloud']));
         $blogOptions->setListWidgetBlog($this->deserializeWidgetOrder($data['widgetOrder']));
         $blogOptions->setTagTopMode($data['tagTopMode']);
         $blogOptions->setMaxTag($data['maxTag']);

@@ -35,8 +35,8 @@ function initDatalistFilters(dispatch, query){
   let obj = parseQuery(query)
   if(!isEmpty(obj))
   {
-    if(!isEmpty(obj['tags'])){
-      dispatch(listActions.addFilter(selectors.STORE_NAME+'.posts', 'tags', obj['tags']))
+    if(!isEmpty(obj['tag'])){
+      dispatch(listActions.addFilter(selectors.STORE_NAME+'.posts', 'tag', obj['tag']))
       dispatch(postActions.initDataList())
     }
     if(!isEmpty(obj['author'])){

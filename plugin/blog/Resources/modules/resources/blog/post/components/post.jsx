@@ -295,7 +295,7 @@ const PostCardContainer = withRouter(connect(
       history.push(updateQueryParameters(querystring, 'author', authorName))
     },
     getPostsByTag: (history, querystring, tag) => {
-      history.push(updateQueryParameters(querystring, 'tags', tag))
+      history.push(updateQueryParameters(querystring, 'tag', tag))
     }
   })
 )(PostCard))
