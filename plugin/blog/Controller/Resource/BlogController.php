@@ -195,19 +195,4 @@ class BlogController extends Controller
             ]
             );
     }
-
-    /**
-     * This function is kept for backwards compatibility and redirects old pre-angular URLS to the new react ones.
-     *
-     * @EXT\Route(
-     *     "/{blogId}/post/view/{postSlug}",
-     *     name="icap_blog_post_view"
-     * )
-     *
-     * @EXT\ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
-     */
-    public function openPostAction(Blog $blog, $postSlug)
-    {
-        return $this->redirectToRoute('icap_blog_open', ['blogId' => $blog->getId(), '_fragment' => $postSlug], 301);
-    }
 }
