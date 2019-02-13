@@ -88,6 +88,7 @@ class MessageSerializer
             'read' => $userMessage->isRead(),
             'removed' => $userMessage->isRemoved(),
             'sent' => $userMessage->isSent(),
+            'umuuid' => $userMessage->getUuid(),
           ],
         ];
 
@@ -115,8 +116,6 @@ class MessageSerializer
      */
     public function deserialize($data, Message $message, array $options = [])
     {
-        $userMessages = $this->getUserMessages($message);
-
         $this->sipe('object', 'setObject', $data, $message);
         $this->sipe('content', 'setContent', $data, $message);
         $currentUser = $this->tokenStorage->getToken()->getUser();
@@ -126,23 +125,8 @@ class MessageSerializer
             $message->setParent($parent);
         }
 
-        if ($currentUser instanceof User) {
+        if ($currentUser instanceof User && in_array(Options::CRUD_CREATE, $options)) {
             $message->setSender($currentUser);
-        }
-
-        //when we create the message, the userMessage doesn't exist yet
-        if (isset($data['meta'])) {
-            foreach ($userMessages as $userMessage) {
-                if (isset($data['meta']['removed'])) {
-                    $userMessage->setIsRemoved($data['meta']['removed']);
-                }
-
-                if (isset($data['meta']['read'])) {
-                    $userMessage->setIsRead($data['meta']['read']);
-                }
-
-                $this->om->persist($userMessage);
-            }
         }
 
         //build the "to" string here

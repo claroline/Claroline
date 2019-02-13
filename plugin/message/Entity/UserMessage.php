@@ -11,6 +11,7 @@
 
 namespace Claroline\MessageBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -20,6 +21,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 class UserMessage
 {
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -72,6 +75,7 @@ class UserMessage
         $this->isRead = false;
         $this->isRemoved = false;
         $this->isSent = false;
+        $this->refreshUuid();
     }
 
     public function getId()

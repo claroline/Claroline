@@ -265,11 +265,11 @@ class Crud
      */
     public function replace($object, $property, $data, array $options = [])
     {
-        $methodName = 'set'.ucfirst(strtolower($property));
+        $methodName = 'set'.ucfirst($property);
 
         if (!method_exists($object, $methodName)) {
             throw new \LogicException(
-                sprintf('You have requested a non implemented action \'set\' on %s', get_class($object))
+                sprintf('You have requested a non implemented action \'set\' on %s (looked for %s)', get_class($object), $methodName)
             );
         }
 

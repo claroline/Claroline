@@ -63,7 +63,7 @@ actions.deleteMessages = (messages) => ({
 
 actions.removeMessages = (messages, formName = null) => ({
   [API_REQUEST]: {
-    url: ['apiv2_message_soft_delete', {ids: messages.map(message => message.id)}],
+    url: ['apiv2_message_soft_delete', {ids: messages.map(message => message.meta.umuuid)}],
     request: {
       method: 'PUT'
     },
@@ -78,7 +78,7 @@ actions.removeMessages = (messages, formName = null) => ({
 
 actions.restoreMessages = (messages) => ({
   [API_REQUEST]: {
-    url: ['apiv2_message_restore', {ids: messages.map(message => message.id)}],
+    url: ['apiv2_message_restore', {ids: messages.map(message => message.meta.umuuid)}],
     request: {
       method: 'PUT'
     },
@@ -111,13 +111,12 @@ actions.markedAsReadWhenOpen = (id) => ({
 })
 
 actions.openMessage = (id) =>  (dispatch) => {
-  dispatch(actions.fetchMessage(id))
-  dispatch(actions.markedAsReadWhenOpen(id))
+  dispatch(actions.fetchMessage(id)).then((data) => dispatch(actions.markedAsReadWhenOpen(data.meta.umuuid)))
 }
 
 actions.readMessages = (messages) => ({
   [API_REQUEST]: {
-    url: ['apiv2_message_read', {ids: messages.map(message => message.id)}],
+    url: ['apiv2_message_read', {ids: messages.map(message => message.meta.umuuid)}],
     request: {
       method: 'PUT'
     },
@@ -129,7 +128,7 @@ actions.readMessages = (messages) => ({
 
 actions.unreadMessages = (messages) => ({
   [API_REQUEST]: {
-    url: ['apiv2_message_unread', {ids: messages.map(message => message.id)}],
+    url: ['apiv2_message_unread', {ids: messages.map(message => message.meta.umuuid)}],
     request: {
       method: 'PUT'
     },

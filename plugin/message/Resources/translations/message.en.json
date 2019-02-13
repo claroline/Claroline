@@ -14,8 +14,8 @@
     "messages_sent": "Sent messages",
 
     "message_read" : "Read",
-    "marked_read_message": "Mark as unread",
-    "marked_unread_message": "Mark as read",
+    "marked_read_message": "Mark read",
+    "marked_unread_message": "Mark as unread",
     "new_message": "New message",
     "remove_message_confirm_message": "Are you sure you want to delete this message?",
     "remove_message_s_confirm_message": "Are you sure you want to delete these %count% messages?"

@@ -15,6 +15,7 @@ use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\MessageBundle\Entity\Message;
+use Claroline\MessageBundle\Entity\UserMessage;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -120,25 +121,19 @@ class MessageController extends AbstractCrudController
      */
     public function softDeleteAction(Request $request)
     {
-        $messages = $this->decodeIdsString($request, $this->getClass());
+        $messages = $this->decodeIdsString($request, UserMessage::class);
         $updated = [];
 
         $this->om->startFlushSuite();
 
         foreach ($messages as $message) {
-            $data = [
-                'id' => $message->getUuid(),
-                'meta' => [
-                    'removed' => true,
-                ],
-            ];
-            $updated[] = $this->crud->update($this->getClass(), $data);
+            $updated[] = $this->crud->replace($message, 'removed', true);
         }
 
         $this->om->endFlushSuite();
 
-        return new JsonResponse(array_map(function (Message $message) {
-            return $this->serializer->serialize($message);
+        return new JsonResponse(array_map(function (UserMessage $message) {
+            return $this->serializer->serialize($message->getMessage());
         }, $messages));
     }
 
@@ -156,25 +151,19 @@ class MessageController extends AbstractCrudController
      */
     public function softUndeleteAction(Request $request)
     {
-        $messages = $this->decodeIdsString($request, $this->getClass());
+        $messages = $this->decodeIdsString($request, UserMessage::class);
         $updated = [];
 
         $this->om->startFlushSuite();
 
         foreach ($messages as $message) {
-            $data = [
-                'id' => $message->getUuid(),
-                'meta' => [
-                    'removed' => false,
-                ],
-            ];
-            $updated[] = $this->crud->update($this->getClass(), $data);
+            $updated[] = $this->crud->replace($message, 'removed', false);
         }
 
         $this->om->endFlushSuite();
 
-        return new JsonResponse(array_map(function (Message $message) {
-            return $this->serializer->serialize($message);
+        return new JsonResponse(array_map(function (UserMessage $message) {
+            return $this->serializer->serialize($message->getMessage());
         }, $messages));
     }
 
@@ -192,25 +181,19 @@ class MessageController extends AbstractCrudController
      */
     public function readAction(Request $request)
     {
-        $messages = $this->decodeIdsString($request, $this->getClass());
+        $messages = $this->decodeIdsString($request, UserMessage::class);
         $updated = [];
 
         $this->om->startFlushSuite();
 
         foreach ($messages as $message) {
-            $data = [
-                'id' => $message->getUuid(),
-                'meta' => [
-                    'read' => true,
-                ],
-            ];
-            $updated[] = $this->crud->update($this->getClass(), $data);
+            $updated[] = $this->crud->replace($message, 'isRead', true);
         }
 
         $this->om->endFlushSuite();
 
-        return new JsonResponse(array_map(function (Message $message) {
-            return $this->serializer->serialize($message);
+        return new JsonResponse(array_map(function (UserMessage $message) {
+            return $this->serializer->serialize($message->getMessage());
         }, $messages));
     }
 
@@ -228,25 +211,19 @@ class MessageController extends AbstractCrudController
      */
     public function unreadAction(Request $request)
     {
-        $messages = $this->decodeIdsString($request, $this->getClass());
+        $messages = $this->decodeIdsString($request, UserMessage::class);
         $updated = [];
 
         $this->om->startFlushSuite();
 
         foreach ($messages as $message) {
-            $data = [
-                'id' => $message->getUuid(),
-                'meta' => [
-                    'read' => false,
-                ],
-            ];
-            $updated[] = $this->crud->update($this->getClass(), $data);
+            $updated[] = $this->crud->replace($message, 'isRead', false);
         }
 
         $this->om->endFlushSuite();
 
-        return new JsonResponse(array_map(function (Message $message) {
-            return $this->serializer->serialize($message);
+        return new JsonResponse(array_map(function (UserMessage $message) {
+            return $this->serializer->serialize($message->getMessage());
         }, $messages));
     }
 
@@ -302,10 +279,33 @@ class MessageController extends AbstractCrudController
         return new JsonResponse($this->serializer->serialize($root, [Options::IS_RECURSIVE]));
     }
 
+    public function getAction(Request $request, $id, $class)
+    {
+        $tokenStorage = $this->container->get('security.token_storage');
+        $currentUser = $tokenStorage->getToken()->getUser();
+
+        $query = $request->query->all();
+        $object = $this->find($class, $id);
+        $um = $this->om->getRepository(UserMessage::class)->findOneBy(['message' => $object, 'user' => $currentUser]);
+        $this->crud->replace($um, 'isRead', true);
+        $options = $this->options['get'];
+
+        if (isset($query['options'])) {
+            $options = $query['options'];
+        }
+
+        return $object ?
+            new JsonResponse(
+                $this->serializer->serialize($object, $options)
+            ) :
+            new JsonResponse("No object found for id {$id} of class {$class}", 404);
+    }
+
     public function getOptions()
     {
         return [
             'get' => [Options::IS_RECURSIVE],
+            'create' => [Options::CRUD_CREATE],
         ];
     }
 
