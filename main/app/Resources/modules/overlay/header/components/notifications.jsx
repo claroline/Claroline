@@ -27,6 +27,11 @@ const NotificationsMenu = props =>
           icon={`fa fa-fw fa-${tool.icon}`}
           label={trans(tool.name, {}, 'tools')}
           target={tool.open}
+          subscript={0 !== props.count[tool.name] ? {
+            type: 'label',
+            status: 'primary',
+            value: 100 > props.count[tool.name] ? props.count[tool.name] : '99+'
+          } : undefined}
         />
       )}
     </li>
@@ -41,7 +46,10 @@ NotificationsMenu.propTypes = {
 }
 
 const HeaderNotifications = props => {
-  let totalCount = props.count.notifications + props.count.messages
+  let totalCount = 0
+
+  Object.keys(props.count).forEach(key => totalCount += props.count[key])
+  
   return (
     <Button
       id="app-notifications-menu"
