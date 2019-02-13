@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Controller\APINew;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -40,6 +41,12 @@ class LoggerController
      */
     public function getAction($subdir, $name)
     {
-        return new Response(file_get_contents($this->logDir.$subdir.DIRECTORY_SEPARATOR.$name.'.json'));
+        $file = $this->logDir.$subdir.DIRECTORY_SEPARATOR.$name.'.json';
+
+        if (file_exists($file)) {
+            return new Response(file_get_contents($file));
+        }
+
+        return new JsonResponse(['log' => 'no file found']);
     }
 }

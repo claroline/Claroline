@@ -33,6 +33,26 @@ actions.reset = (formName, data = {}, isNew = false) => ({
   isNew: isNew
 })
 
+actions.errors = (formName, errors) => (dispatch) => {
+  const formErrors = {}
+  if (errors && Array.isArray(errors)) {
+    // read server errors and create a comprehensive object for the form
+    errors.map(error => {
+      const errorPath = error.path
+        .replace(/^\/|\/$/g, '') // removes trailing and leading slashes
+        .replace(/\//g, '.') // replaces / by . (for lodash)
+
+      set(formErrors, errorPath, tval(error.message))
+    })
+
+    // dispatch an error action if the caller want to do something particular
+    dispatch(actions.submitFormError(formName, formErrors))
+
+    // inject errors in form
+    dispatch(actions.setErrors(formName, formErrors))
+  }
+}
+
 actions.save = (formName, target) => (dispatch, getState) => {
   const formNew = formSelect.isNew(formSelect.form(getState(), formName))
   const formData = formSelect.data(formSelect.form(getState(), formName))
@@ -66,26 +86,7 @@ actions.save = (formName, target) => (dispatch, getState) => {
           dispatch(actions.submitFormSuccess(formName, response))
           dispatch(actions.resetForm(formName, response, false))
         },
-        error: (errors, dispatch) => {
-          // try to build form errors object from response
-          const formErrors = {}
-          if (errors && Array.isArray(errors)) {
-            // read server errors and create a comprehensive object for the form
-            errors.map(error => {
-              const errorPath = error.path
-                .replace(/^\/|\/$/g, '') // removes trailing and leading slashes
-                .replace(/\//g, '.') // replaces / by . (for lodash)
-
-              set(formErrors, errorPath, tval(error.message))
-            })
-
-            // dispatch an error action if the caller want to do something particular
-            dispatch(actions.submitFormError(formName, formErrors))
-
-            // inject errors in form
-            dispatch(actions.setErrors(formName, formErrors))
-          }
-        }
+        error: (errors, dispatch) => dispatch(actions.errors(formName, errors))
       }
     })
   }

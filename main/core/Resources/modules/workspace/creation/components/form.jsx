@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+import isEmpty from 'lodash/isEmpty'
 
 import {withRouter} from '#/main/app/router'
 import {actions as formActions, selectors as formSelect} from '#/main/app/content/form/store'
@@ -30,6 +31,10 @@ class WorkspaceComponent extends Component {
           clearInterval(loader)
 
           props.loadLog(props.workspace.code)
+
+          if (isEmpty(props.log)) {
+            this.setState({refresh: false})
+          }
         }, 1500)
       }
     }
@@ -79,6 +84,7 @@ WorkspaceComponent.defaultProps = {
 const ConnectedForm = withRouter(connect(
   (state) => ({
     models: state.models,
+    log: state.workspaces.creation.log,
     workspace: formSelect.data(formSelect.form(state, 'workspaces.current')),
     logData: state.workspaces.creation.log //always {} for some reason
   }),
