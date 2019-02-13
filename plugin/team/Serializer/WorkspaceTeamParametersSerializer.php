@@ -49,6 +49,9 @@ class WorkspaceTeamParametersSerializer
             'publicDirectory' => $parameters->isPublic(),
             'deletableDirectory' => $parameters->isDirDeletable(),
             'allowedTeams' => $parameters->getMaxTeams(),
+            'workspace' => [
+              'uuid' => $parameters->getWorkspace()->getUuid(),
+            ],
         ];
 
         return $serialized;
