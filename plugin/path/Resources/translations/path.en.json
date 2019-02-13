@@ -47,5 +47,6 @@
     "path_numbering_literal": "Literal",
     "path_numbering_custom": "Custom",
     "step_numbering": "Numbering",
-    "secondary_resources_open_target": "Secondary resources opening"
+    "secondary_resources_open_target": "Secondary resources opening",
+    "start_disabled_empty": "Path is empty."
 }

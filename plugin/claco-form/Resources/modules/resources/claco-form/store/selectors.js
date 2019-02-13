@@ -255,6 +255,11 @@ const message = createSelector(
   (resource) => resource.message
 )
 
+const showEntryNav = createSelector(
+  [clacoForm],
+  (clacoForm) => get(clacoForm, 'display.showEntryNav')
+)
+
 export const selectors = {
   STORE_NAME,
   resource,
@@ -287,5 +292,6 @@ export const selectors = {
   usedCountries,
   canGeneratePdf,
   message,
-  listConfiguration
+  listConfiguration,
+  showEntryNav
 }

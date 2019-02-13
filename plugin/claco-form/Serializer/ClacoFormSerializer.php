@@ -115,6 +115,10 @@ class ClacoFormSerializer
                 'title_field_label' => $clacoForm->getTitleFieldLabel(),
             ],
 
+            'display' => [
+                'showEntryNav' => $clacoForm->getShowEntryNav(),
+            ],
+
             'random' => [
                 'enabled' => $clacoForm->isRandomEnabled(),
                 'categories' => $clacoForm->getRandomCategories(),
@@ -195,6 +199,9 @@ class ClacoFormSerializer
     {
         // TODO : remove and call all setters individually
         $this->sipe('details', 'setDetails', $data, $clacoForm);
+
+        // display
+        $this->sipe('display.showEntryNav', 'setShowEntryNav', $data, $clacoForm);
 
         // random feature
         $this->sipe('random.enabled', 'setRandomEnabled', $data, $clacoForm);

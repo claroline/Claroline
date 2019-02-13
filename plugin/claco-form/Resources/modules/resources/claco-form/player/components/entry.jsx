@@ -1,22 +1,22 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
+import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
+import {connect} from 'react-redux'
+import classes from 'classnames'
 
 import {url} from '#/main/app/api'
 import {withRouter} from '#/main/app/router'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {DetailsData} from '#/main/app/content/details/containers/data'
 import {Button} from '#/main/app/action/components/button'
+import {Toolbar} from '#/main/app/action/components/toolbar'
 
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
 import {UserMicro} from '#/main/core/user/components/micro'
-import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {MODAL_USER_PICKER} from '#/main/core/layout/modal/user-picker'
 
@@ -31,158 +31,120 @@ import {actions} from '#/plugin/claco-form/resources/claco-form/player/store'
 import {EntryComments} from '#/plugin/claco-form/resources/claco-form/player/components/entry-comments'
 import {EntryMenu} from '#/plugin/claco-form/resources/claco-form/player/components/entry-menu'
 
-// TODO : use standard toolbar instead
+// TODO : find a way to merge actions list with the one in entries list
 const EntryActions = props =>
-  <div className="entry-actions">
-    <div className="btn-group margin-right-sm" role="group">
-      <Button
-        id="tooltip-button-notifications"
-        className="btn-link"
-        type={CALLBACK_BUTTON}
-        icon={`fa fa-w fa-${props.notificationsEnabled ? 'bell-slash-o' : 'bell-o'}`}
-        label={props.notificationsEnabled ?
-          trans('deactivate_notifications', {}, 'clacoform') :
-          trans('activate_notifications', {}, 'clacoform')
-        }
-        tooltip="top"
-        callback={() => props.updateNotification({
-          notifyEdition: !props.notificationsEnabled,
-          notifyComment: !props.notificationsEnabled
-        })}
-      />
-
-      {props.displayComments &&
-        <button type="button" className="btn btn-link dropdown-toggle" data-toggle="dropdown">
-          <span className="fa fa-caret-down" />
-        </button>
+  <Toolbar
+    className="entry-actions"
+    buttonName="btn-link"
+    tooltip="top"
+    toolbar="more"
+    size="sm"
+    actions={[
+      {
+        name: 'edit',
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-pencil',
+        label: trans('edit', {}, 'actions'),
+        target: `/entry/form/${props.entryId}`,
+        displayed: !props.locked && props.canEdit,
+        group: trans('management'),
+        primary: true
+      }, {
+        name: 'publish',
+        type: CALLBACK_BUTTON,
+        icon: classes('fa fa-fw', {
+          'fa-eye-slash': 1 === props.status,
+          'fa-eye': 1 !== props.status
+        }),
+        label: trans(props.status === 1 ? 'unpublish':'publish', {}, 'actions'),
+        callback: props.toggleStatus,
+        displayed: !props.locked && props.canManage,
+        group: trans('management')
+      }, {
+        name: 'change-owner',
+        type: MODAL_BUTTON,
+        icon: 'fa fa-fw fa-user-edit',
+        label: trans('change_entry_owner', {}, 'clacoform'),
+        callback: props.changeOwner,
+        modal: [MODAL_USER_PICKER, {
+          title: trans('change_entry_owner', {}, 'clacoform'),
+          unique: true,
+          handleRemove: () => {},
+          handleSelect: props.changeOwner
+        }],
+        displayed: props.canAdministrate,
+        group: trans('management')
+      }, {
+        name: 'lock',
+        type: CALLBACK_BUTTON,
+        icon: classes('fa fa-fw', {
+          'fa-lock': !props.locked,
+          'fa-unlock': props.locked
+        }),
+        label: trans(props.locked ? 'unlock':'lock', {}, 'actions'),
+        callback: props.toggleLock,
+        displayed: props.canAdministrate,
+        group: trans('management')
+      }, {
+        name: 'delete',
+        type: CALLBACK_BUTTON,
+        icon: 'fa fa-fw fa-trash-o',
+        label: trans('delete', {}, 'actions'),
+        callback: props.delete,
+        confirm: {
+          title: trans('delete_entry', {}, 'clacoform'),
+          message: trans('delete_entry_confirm_message', {title: props.entryTitle}, 'clacoform')
+        },
+        dangerous: true,
+        displayed: !props.locked && props.canManage,
+        group: trans('management')
+      }, {
+        name: 'pdf',
+        type: CALLBACK_BUTTON,
+        icon: 'fa fa-fw fa-print',
+        label: trans('print_entry', {}, 'clacoform'),
+        callback: props.downloadPdf,
+        displayed: props.canGeneratePdf,
+        group: trans('transfer')
+      }, {
+        name: 'share',
+        type: CALLBACK_BUTTON,
+        icon: 'fa fa-fw fa-share-alt',
+        label: trans('share', {}, 'actions'),
+        callback: props.share,
+        displayed: props.canShare,
+        group: trans('community')
+      }, {
+        name: 'notify-edit',
+        type: CALLBACK_BUTTON,
+        icon: classes('fa fa-fw', {
+          'fa-bell': !props.notifyEdition,
+          'fa-bell-slash': props.notifyEdition
+        }),
+        label: trans(!props.notifyEdition ? 'enable_edition_notification':'disable_edition_notification', {}, 'clacoform'),
+        callback: () => props.updateEntryUserProp('notifyEdition', !props.notifyEdition),
+        group: trans('notifications')
+      }, {
+        name: 'notify-comments',
+        type: CALLBACK_BUTTON,
+        icon: classes('fa fa-fw', {
+          'fa-bell': !props.notifyComment,
+          'fa-bell-slash': props.notifyComment
+        }),
+        label: trans(!props.notifyComment ? 'enable_comments_notification':'disable_comments_notification', {}, 'clacoform'),
+        callback: () => props.updateEntryUserProp('notifyComment', !props.notifyComment),
+        displayed: props.displayComments,
+        group: trans('notifications')
       }
-
-      {props.displayComments &&
-        <ul className="dropdown-menu dropdown-menu-right notifications-buttons">
-          <li>
-            <CheckGroup
-              id="notify-edition-chk"
-              value={props.notifyEdition}
-              label={trans('editions', {}, 'clacoform')}
-              onChange={checked => props.updateEntryUserProp('notifyEdition', checked)}
-            />
-          </li>
-          <li>
-            <CheckGroup
-              id="notify-comment-chk"
-              value={props.notifyComment}
-              label={trans('comments', {}, 'clacoform')}
-              onChange={checked => props.updateEntryUserProp('notifyComment', checked)}
-            />
-          </li>
-        </ul>
-      }
-    </div>
-
-    {props.canAdministrate &&
-      <Button
-        id="tooltip-button-owner"
-        className="btn-link"
-        type={CALLBACK_BUTTON}
-        icon="fa fa-fw fa-user"
-        label={trans('change_entry_owner', {}, 'clacoform')}
-        tooltip="top"
-        callback={props.changeOwner}
-      />
-    }
-
-    {props.canGeneratePdf &&
-      <Button
-        id="tooltip-button-print"
-        className="btn-link"
-        type={CALLBACK_BUTTON}
-        icon="fa fa-fw fa-print"
-        label={trans('print_entry', {}, 'clacoform')}
-        tooltip="top"
-        callback={props.downloadPdf}
-      />
-    }
-
-    {props.canShare &&
-      <Button
-        id="tooltip-button-share"
-        className="btn-link"
-        type={CALLBACK_BUTTON}
-        icon="fa fa-fw fa-share-alt"
-        label={trans('share_entry', {}, 'clacoform')}
-        tooltip="top"
-        callback={props.share}
-      />
-    }
-
-    {!props.locked && props.canEdit &&
-      <Button
-        id="entry-edit"
-        className="btn-link"
-        type={LINK_BUTTON}
-        icon="fa fa-fw fa-pencil"
-        label={trans('edit')}
-        tooltip="top"
-        target={`/entry/form/${props.entryId}`}
-      />
-    }
-
-    {!props.locked && props.canManage &&
-      <Button
-        id="tooltip-button-status"
-        className="btn-link"
-        type={CALLBACK_BUTTON}
-        icon={`fa fa-fw fa-${props.status === 1 ? 'eye-slash' : 'eye'}`}
-        label={props.status === 1 ? trans('unpublish') : trans('publish')}
-        tooltip="top"
-        callback={props.toggleStatus}
-      />
-    }
-
-    {!props.locked && props.canAdministrate &&
-      <Button
-        id="tooltip-button-lock"
-        className="btn-link"
-        type={CALLBACK_BUTTON}
-        icon="fa fa-fw fa-lock"
-        label={trans('lock_entry', {}, 'clacoform')}
-        tooltip="top"
-        callback={props.toggleLock}
-      />
-    }
-
-    {props.locked && props.canAdministrate &&
-      <Button
-        id="tooltip-button-lock"
-        className="btn-link"
-        type={CALLBACK_BUTTON}
-        icon="fa fa-fw fa-unlock"
-        label={trans('unlock_entry', {}, 'clacoform')}
-        tooltip="top"
-        callback={props.toggleLock}
-      />
-    }
-
-    {!props.locked && props.canManage &&
-      <Button
-        id="entry-delete"
-        className="btn-link"
-        type={CALLBACK_BUTTON}
-        icon="fa fa-fw fa-trash-o"
-        label={trans('delete')}
-        tooltip="top"
-        callback={props.delete}
-        dangerous={true}
-      />
-    }
-  </div>
+    ]}
+  />
 
 EntryActions.propTypes = {
   // data
+  entryTitle: T.string.isRequired,
   entryId: T.string.isRequired,
   status: T.number.isRequired,
   locked: T.bool.isRequired,
-  notificationsEnabled: T.bool.isRequired,
 
   // current user rights
   canAdministrate: T.bool.isRequired,
@@ -202,14 +164,14 @@ EntryActions.propTypes = {
   delete: T.func.isRequired,
   toggleStatus: T.func.isRequired,
   toggleLock: T.func.isRequired,
-  updateNotification: T.func.isRequired,
   updateEntryUserProp: T.func.isRequired
 }
 
 class EntryComponent extends Component {
   constructor(props) {
     super(props)
-    this.updateNotification = this.updateNotification.bind(this)
+
+    this.showSharingForm = this.showSharingForm.bind(this)
   }
 
   canViewMetadata() {
@@ -250,188 +212,187 @@ class EntryComponent extends Component {
       })
   }
 
-  showOwnerForm() {
-    this.props.showModal(
-      MODAL_USER_PICKER,
-      {
-        title: trans('change_entry_owner', {}, 'clacoform'),
-        unique: true,
-        handleRemove: () => {},
-        handleSelect: (user) => this.props.changeEntryOwner(this.props.entryId, user.id)
-      }
-    )
-  }
-
-  isNotificationsEnabled() {
-    return this.props.entryUser.notifyEdition || (this.props.displayComments && this.props.entryUser.notifyComment)
-  }
-
-  updateNotification(notifications) {
-    const entryUser = Object.assign({}, this.props.entryUser, notifications)
-    this.props.saveEntryUser(entryUser)
-  }
-
-  getSections(fields, titleLabel) {
-    const sectionFields = [
-      {
-        name: 'title',
-        type: 'string',
-        label: titleLabel ? titleLabel : trans('title'),
-        required: true
-      }
-    ]
-    fields.forEach(f => {
-      const params = {
-        name: `values.${f.id}`,
-        type: f.type,
-        label: f.label,
-        required: f.required,
-        help: f.help,
-        displayed: this.isFieldDisplayable(f)
-      }
-
-      switch (f.type) {
-        case 'choice':
-          params['options'] = {
-            multiple: f.options.multiple !== undefined ? f.options.multiple : false,
-            condensed: f.options.condensed !== undefined ? f.options.condensed : false,
-            choices: f.options.choices ?
-              f.options.choices.reduce((acc, choice) => {
-                acc[choice.value] = choice.value
-
-                return acc
-              }, {}) :
-              {}
-          }
-          break
-        case 'file':
-          if (this.props.entry && this.props.entry.values && this.props.entry.values[f.id]) {
-            params['calculated'] = (data) => Object.assign(
-              {},
-              data.values[f.id],
-              {url: url(['claro_claco_form_field_value_file_download', {entry: data.id, field: f.id}])}
-            )
-          }
-          break
-      }
-      sectionFields.push(params)
-    })
-
+  getSections(fields) {
     return [
       {
         id: 'general',
         title: trans('general'),
         primary: true,
-        fields: sectionFields
+        fields: fields.map(f => {
+          const params = {
+            name: `values.${f.id}`,
+            type: f.type,
+            label: f.label,
+            required: f.required,
+            help: f.help,
+            displayed: this.isFieldDisplayable(f)
+          }
+
+          switch (f.type) {
+            case 'choice':
+              params['options'] = {
+                multiple: f.options.multiple !== undefined ? f.options.multiple : false,
+                condensed: f.options.condensed !== undefined ? f.options.condensed : false,
+                choices: f.options.choices ?
+                  f.options.choices.reduce((acc, choice) => {
+                    acc[choice.value] = choice.value
+
+                    return acc
+                  }, {}) :
+                  {}
+              }
+              break
+            case 'file':
+              if (this.props.entry && this.props.entry.values && this.props.entry.values[f.id]) {
+                params['calculated'] = (data) => Object.assign(
+                  {},
+                  data.values[f.id],
+                  {url: url(['claro_claco_form_field_value_file_download', {entry: data.id, field: f.id}])}
+                )
+              }
+              break
+          }
+
+          return params
+        })
       }
     ]
   }
 
   render() {
+    if (!this.props.canViewEntry && !this.canShare()) {
+      return (
+        <div className="alert alert-danger">
+          {trans('unauthorized')}
+        </div>
+      )
+    }
+
     return (
-      this.props.canViewEntry || this.canShare() ?
-        <div className="entry">
+      <Fragment>
+        <div className="entry-container">
           {['up', 'both'].indexOf(this.props.menuPosition) > -1 &&
             <EntryMenu />
           }
 
-          <div className="panel panel-default">
-            <div className="panel-body">
-              <h2 className="entry-title">{this.props.entry.title}</h2>
+          <div className="entry">
+            {this.props.showEntryNav &&
+              <Button
+                className="btn-link btn-entry-nav"
+                type={CALLBACK_BUTTON}
+                icon="fa fa-fw fa-chevron-left"
+                label={trans('previous')}
+                tooltip="right"
+                callback={() => true}
+              />
+            }
 
-              <div className="entry-meta">
-                {this.canViewMetadata() &&
-                  <div className="entry-info">
-                    <UserMicro {...this.props.entry.user} />
+            <div className="entry-content panel panel-default">
+              <div className="panel-body">
+                <h2 className="entry-title">{this.props.entry.title}</h2>
 
-                    <div className="date">
-                      {this.props.entry.publicationDate ?
-                        trans('published_at', {date: displayDate(this.props.entry.publicationDate, false, true)}) : trans('not_published')
-                      }
+                <div className="entry-meta">
+                  {this.canViewMetadata() &&
+                    <div className="entry-info">
+                      <UserMicro {...this.props.entry.user} />
 
-                      , {trans('last_modified_at', {date: displayDate(this.props.entry.editionDate, false, true)})}
+                      <div className="date">
+                        {this.props.entry.publicationDate ?
+                          trans('published_at', {date: displayDate(this.props.entry.publicationDate, false, true)}) : trans('not_published')
+                        }
+
+                        , {trans('last_modified_at', {date: displayDate(this.props.entry.editionDate || this.props.entry.creationDate, false, true)})}
+                      </div>
                     </div>
-                  </div>
-                }
+                  }
 
-                {this.props.entry.id && this.props.entryUser.id &&
-                  <EntryActions
-                    entryId={this.props.entry.id}
-                    status={this.props.entry.status}
-                    locked={this.props.entry.locked}
-                    notificationsEnabled={this.isNotificationsEnabled()}
-                    displayComments={this.props.displayComments}
-                    notifyEdition={this.props.entryUser.notifyEdition}
-                    notifyComment={this.props.entryUser.notifyComment}
-                    canAdministrate={this.props.canAdministrate}
-                    canEdit={this.props.canEditEntry}
-                    canGeneratePdf={this.props.canGeneratePdf}
-                    canManage={this.canManageEntry()}
-                    canShare={this.canShare()}
+                  {this.props.entry.id && this.props.entryUser.id &&
+                    <EntryActions
+                      entryId={this.props.entry.id}
+                      entryTitle={this.props.entry.title}
+                      status={this.props.entry.status}
+                      locked={this.props.entry.locked}
+                      displayComments={this.props.displayComments}
+                      notifyEdition={this.props.entryUser.notifyEdition}
+                      notifyComment={this.props.entryUser.notifyComment}
+                      canAdministrate={this.props.canAdministrate}
+                      canEdit={this.props.canEditEntry}
+                      canGeneratePdf={this.props.canGeneratePdf}
+                      canManage={this.canManageEntry()}
+                      canShare={this.canShare()}
 
-                    changeOwner={() => this.showOwnerForm()}
-                    downloadPdf={() => this.props.downloadEntryPdf(this.props.entry.id)}
-                    share={() => this.showSharingForm()}
-                    delete={() => this.props.deleteEntry(this.props.entry)}
-                    toggleStatus={() => this.props.switchEntryStatus(this.props.entry.id)}
-                    toggleLock={() => this.props.switchEntryLock(this.props.entry.id)}
-                    updateNotification={this.updateNotification}
-                    updateEntryUserProp={this.props.updateEntryUserProp}
+                      changeOwner={(user) => this.props.changeEntryOwner(this.props.entry.id, user.id)}
+                      downloadPdf={() => this.props.downloadEntryPdf(this.props.entry.id)}
+                      share={this.showSharingForm}
+                      delete={() => this.props.deleteEntry(this.props.entry)}
+                      toggleStatus={() => this.props.switchEntryStatus(this.props.entry.id)}
+                      toggleLock={() => this.props.switchEntryLock(this.props.entry.id)}
+                      updateEntryUserProp={this.props.updateEntryUserProp}
 
+                    />
+                  }
+                </div>
+
+                {this.props.template && this.props.useTemplate ?
+                  <HtmlText>
+                    {generateFromTemplate(this.props.template, this.props.fields, this.props.entry, this.canViewMetadata())}
+                  </HtmlText> :
+                  <DetailsData
+                    name={selectors.STORE_NAME+'.entries.current'}
+                    sections={this.getSections(this.props.fields)}
                   />
                 }
               </div>
 
-              {this.props.template && this.props.useTemplate ?
-                <HtmlText>
-                  {generateFromTemplate(this.props.template, this.props.fields, this.props.entry, this.canViewMetadata())}
-                </HtmlText> :
-                <DetailsData
-                  name={selectors.STORE_NAME+'.entries.current'}
-                  sections={this.getSections(this.props.fields, this.props.titleLabel)}
-                />
+              {((this.props.displayCategories && this.props.entry.categories && 0 < this.props.entry.categories.length) ||
+              (this.props.displayKeywords && this.props.entry.keywords && 0 < this.props.entry.keywords.length)) &&
+                <div className="entry-footer panel-footer">
+                  {this.props.displayCategories && this.props.entry.categories && 0 < this.props.entry.categories.length &&
+                    <span className="title">{trans('categories')}</span>
+                  }
+                  {this.props.displayCategories && this.props.entry.categories && this.props.entry.categories.map(c =>
+                    <span key={`category-${c.id}`} className="label label-primary">{c.name}</span>
+                  )}
+
+                  {this.props.displayKeywords && this.props.entry.keywords && 0 < this.props.entry.keywords.length &&
+                    <hr/>
+                  }
+                  {this.props.displayKeywords && this.props.entry.keywords && 0 < this.props.entry.keywords.length &&
+                    <span className="title">{trans('keywords')}</span>
+                  }
+                  {this.props.displayKeywords && this.props.entry.keywords && this.props.entry.keywords.map(c =>
+                    <span key={`keyword-${c.id}`} className="label label-default">{c.name}</span>
+                  )}
+                </div>
               }
             </div>
 
-            {((this.props.displayCategories && this.props.entry.categories && 0 < this.props.entry.categories.length) ||
-            (this.props.displayKeywords && this.props.entry.keywords && 0 < this.props.entry.keywords.length)) &&
-              <div className="entry-footer panel-footer">
-                {this.props.displayCategories && this.props.entry.categories && 0 < this.props.entry.categories.length &&
-                  <span className="title">{trans('categories')}</span>
-                }
-                {this.props.displayCategories && this.props.entry.categories && this.props.entry.categories.map(c =>
-                  <span key={`category-${c.id}`} className="label label-primary">{c.name}</span>
-                )}
-
-                {this.props.displayKeywords && this.props.entry.keywords && 0 < this.props.entry.keywords.length &&
-                  <hr/>
-                }
-                {this.props.displayKeywords && this.props.entry.keywords && 0 < this.props.entry.keywords.length &&
-                  <span className="title">{trans('keywords')}</span>
-                }
-                {this.props.displayKeywords && this.props.entry.keywords && this.props.entry.keywords.map(c =>
-                  <span key={`keyword-${c.id}`} className="label label-default">{c.name}</span>
-                )}
-              </div>
+            {this.props.showEntryNav &&
+              <Button
+                className="btn-link btn-entry-nav"
+                type={CALLBACK_BUTTON}
+                icon="fa fa-fw fa-chevron-right"
+                label={trans('next')}
+                tooltip="left"
+                callback={() => true}
+              />
             }
           </div>
 
           {['down', 'both'].indexOf(this.props.menuPosition) > -1 &&
             <EntryMenu />
           }
-
-          {(this.props.canViewComments || this.props.canComment) &&
-            <EntryComments
-              opened={this.props.openComments}
-              canComment={this.props.canComment}
-              canManage={this.canManageEntry()}
-              canViewComments={this.props.canViewComments}
-            />
-          }
-        </div> :
-        <div className="alert alert-danger">
-          {trans('unauthorized')}
         </div>
+
+        {(this.props.canViewComments || this.props.canComment) &&
+          <EntryComments
+            opened={this.props.openComments}
+            canComment={this.props.canComment}
+            canManage={this.canManageEntry()}
+            canViewComments={this.props.canViewComments}
+          />
+        }
+      </Fragment>
     )
   }
 }
@@ -450,6 +411,7 @@ EntryComponent.propTypes = {
   isOwner: T.bool,
   isManager: T.bool,
 
+  showEntryNav: T.bool.isRequired,
   displayMetadata: T.string.isRequired,
   displayCategories: T.bool.isRequired,
   displayKeywords: T.bool.isRequired,
@@ -497,6 +459,7 @@ const Entry = withRouter(connect(
     canComment: selectors.canComment(state),
     canViewComments: selectors.canViewComments(state),
     fields: selectors.visibleFields(state),
+    showEntryNav: selectors.showEntryNav(state),
     displayMetadata: selectors.params(state).display_metadata,
     displayKeywords: selectors.params(state).display_keywords,
     displayCategories: selectors.params(state).display_categories,
@@ -514,18 +477,8 @@ const Entry = withRouter(connect(
   }),
   (dispatch, ownProps) => ({
     deleteEntry(entry) {
-      dispatch(
-        modalActions.showModal(MODAL_CONFIRM, {
-          icon: 'fa fa-fw fa-trash-o',
-          title: trans('delete_entry', {}, 'clacoform'),
-          question: trans('delete_entry_confirm_message', {title: entry.title}, 'clacoform'),
-          dangerous: true,
-          handleConfirm: () => {
-            dispatch(actions.deleteEntries([entry]))
-            ownProps.history.push('/entries')
-          }
-        })
-      )
+      dispatch(actions.deleteEntries([entry]))
+      ownProps.history.push('/entries')
     },
     switchEntryStatus(entryId) {
       dispatch(actions.switchEntryStatus(entryId))

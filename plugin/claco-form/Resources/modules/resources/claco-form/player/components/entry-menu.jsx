@@ -11,7 +11,7 @@ import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
 
 const EntryMenuComponent = props =>
-  <div className="entry-menu">
+  <nav className="entry-menu">
     {props.canSearchEntry &&
       <Button
         className="btn-link"
@@ -30,22 +30,21 @@ const EntryMenuComponent = props =>
         type={CALLBACK_BUTTON}
         icon="fa fa-fw fa-random"
         label={trans('random_entry', {}, 'clacoform')}
-        callback={() => {
-          return fetch(url(['claro_claco_form_entry_random', {clacoForm: props.clacoFormId}]), {
-            method: 'GET' ,
-            credentials: 'include'
+        callback={() => fetch(url(['claro_claco_form_entry_random', {clacoForm: props.clacoFormId}]), {
+          method: 'GET' ,
+          credentials: 'include'
+        })
+          .then(response => response.json())
+          .then(entryId => {
+            if (entryId) {
+              props.history.push(`/entries/${entryId}`)
+            }
           })
-            .then(response => response.json())
-            .then(entryId => {
-              if (entryId) {
-                props.history.push(`/entries/${entryId}`)
-              }
-            })
-        }}
+        }
         primary={true}
       />
     }
-  </div>
+  </nav>
 
 EntryMenuComponent.propTypes = {
   clacoFormId: T.string.isRequired,

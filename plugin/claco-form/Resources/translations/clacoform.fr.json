@@ -121,7 +121,6 @@
     "label_votes_date": "Ouvrir les votes entre les dates suivantes",
     "label_votes_enabled": "Autoriser les votes",
     "link_to_entry": "Lien vers la fiche",
-    "lock_entry": "Verrouiller la fiche",
     "lock_fields": "Verrouiller les champs",
     "lock_selected_entries": "Verrouiller les fiches sélectionnées",
     "locked_fields": "Champs verrouillés",
@@ -167,7 +166,6 @@
     "sub_list_management": "Gestion de la sous-liste",
     "template_variables_message": "Vous pouvez utiliser les variables suivantes. Elles seront remplacées par les champs correspondants.",
     "title_field_label": "Label du champ titre",
-    "unlock_entry": "Déverrouiller la fiche",
     "unlock_selected_entries": "Déverrouiller les fiches sélectionnées",
     "use_template": "Personnaliser l'affichage des fiches",
     "template": "Format des fiches",
@@ -175,5 +173,10 @@
     "view_entry": "Voir la fiche",
     "votes": "Votes",
     "votes_management": "Gestion des votes",
-    "all_comments": "Tous les commentaires"
+    "all_comments": "Tous les commentaires",
+    "show_entry_nav": "Afficher la navigation entre les fiches",
+    "disable_edition_notification": "Désactiver les notifications des changements",
+    "enable_edition_notification": "Activer les notifications des changements",
+    "disable_comments_notification": "Désactiver les notifications des commentaires",
+    "enable_comments_notification": "Activer les notifications des commentaires"
 }

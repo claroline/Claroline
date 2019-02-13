@@ -20,7 +20,7 @@ const EntryDataList = props =>
           type="button"
           onClick={() => props.removeData(d)}
         >
-          <span className="fa fa-times-circle"></span>
+          <span className="fa fa-times-circle" />
         </button>
       </div>
     )}
@@ -90,14 +90,12 @@ class EntryFormData extends Component {
               this.setState({showForm: false, current: ''})
             }}
           /> :
-          <div>
-            <button
-              className="btn btn-default"
-              onClick={() => this.setState({showForm: true, current: ''})}
-            >
-              <span className="fa fa-fw fa-plus"></span>
-            </button>
-          </div>
+          <button
+            className="btn btn-default"
+            onClick={() => this.setState({showForm: true, current: ''})}
+          >
+            <span className="fa fa-fw fa-plus" />
+          </button>
         }
       </div>
     )

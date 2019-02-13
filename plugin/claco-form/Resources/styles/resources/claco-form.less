@@ -53,7 +53,34 @@
     }
 }
 
-.entry {
+.entry-container {
+    margin-bottom: @component-margin-bottom;
+
+    .entry {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+
+        .btn-entry-nav {
+            flex: 0;
+            font-size: @carousel-control-font-size;
+            padding: 0;
+            border: none;
+        }
+
+        // Scale up controls for tablets and up
+        @media screen and (min-width: @screen-sm-min) {
+            .btn-entry-nav {
+                font-size: (@carousel-control-font-size * 1.5);
+            }
+        }
+
+    }
+
+    .entry-content {
+        flex: 1;
+    }
+
     .panel {
         margin-bottom: 0;
     }
@@ -62,8 +89,17 @@
         margin-top: 0;
     }
 
-    .comments-container {
-        margin-top: @component-margin-bottom;
+    // TODO : make it generic (DataDetails in panels)
+    .data-details {
+        .panel {
+            border: none;
+            box-shadow: none;
+            background: none;
+        }
+
+        .panel-body {
+            padding: 0;
+        }
     }
 }
 
@@ -139,51 +175,4 @@
 .form-group-align {
     display: flex;
     align-items: center;
-}
-
-.clacoform-field-group {
-    .field-tooltip {
-        margin-left: 5px;
-    }
-}
-
-.clacoform-field-choice {
-    margin-bottom: 10px;
-
-    select {
-        border-color: #CCC !important;
-    }
-}
-
-.template-buttons,
-.entry-form-buttons {
-    margin-top: 20px;
-
-    .btn {
-        margin-right: 5px;
-    }
-}
-
-.choices-children-box {
-    margin-top: 10px;
-}
-
-.choices-management-buttons {
-    width: 100%;
-}
-
-.choices-management-btn {
-    width: 50%;
-}
-
-.inactive-comment-row {
-    background-color: #F2B36F;
-}
-
-.notifications-buttons {
-    padding: 10px;
-
-    .form-group {
-        margin: 0;
-    }
 }

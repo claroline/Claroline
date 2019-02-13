@@ -2,8 +2,10 @@ import {constants as intlConstants} from '#/main/app/intl/constants'
 
 const generateFieldKey = (id) => `%field_${id}%`
 
+// TODO : move elsewhere
 const getCountry = (value) => intlConstants.REGIONS[value] || null
 
+// TODO : move elsewhere
 const getFileType = (mimeType) => {
   const typeParts = mimeType.split('/')
   let type = 'file'

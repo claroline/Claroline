@@ -1,3 +1,5 @@
+import merge from 'lodash/merge'
+
 import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST, url} from '#/main/app/api'
 
@@ -20,37 +22,36 @@ const actions = {}
 actions.updateResourceProperty = makeActionCreator(RESOURCE_PROPERTY_UPDATE, 'property', 'value')
 actions.updateResourceParamsProperty = makeActionCreator(RESOURCE_PARAMS_PROPERTY_UPDATE, 'property', 'value')
 
-actions.saveCategory = (category, isNew) => (dispatch, getState) => {
+actions.saveCategory = (clacoFormId, category, isNew) => {
   if (isNew) {
-    const clacoFormId = selectors.clacoForm(getState()).id
-    category['clacoForm'] = {}
-    category['clacoForm']['id'] = clacoFormId
+    const newCategory = merge({}, category, {
+      // this should be used in the API URL instead
+      clacoForm: {
+        id: clacoFormId
+      }
+    })
 
-    dispatch({
+    return {
       [API_REQUEST]: {
         url: ['apiv2_clacoformcategory_create'],
         request: {
           method: 'POST',
-          body: JSON.stringify(category)
+          body: JSON.stringify(newCategory)
         },
-        success: (data, dispatch) => {
-          dispatch(actions.addCategory(data))
-        }
+        success: (data, dispatch) => dispatch(actions.addCategory(data))
       }
-    })
-  } else {
-    dispatch({
-      [API_REQUEST]: {
-        url: ['apiv2_clacoformcategory_update', {id: category.id}],
-        request: {
-          method: 'PUT',
-          body: JSON.stringify(category)
-        },
-        success: (data, dispatch) => {
-          dispatch(actions.updateCategory(data))
-        }
-      }
-    })
+    }
+  }
+
+  return {
+    [API_REQUEST]: {
+      url: ['apiv2_clacoformcategory_update', {id: category.id}],
+      request: {
+        method: 'PUT',
+        body: JSON.stringify(category)
+      },
+      success: (data, dispatch) => dispatch(actions.updateCategory(data))
+    }
   }
 }
 

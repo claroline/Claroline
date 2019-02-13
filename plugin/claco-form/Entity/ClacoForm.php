@@ -729,4 +729,17 @@ class ClacoForm extends AbstractResource
         }
         $this->details['search_restricted_columns'] = $searchRestrictedColumns;
     }
+
+    public function getShowEntryNav()
+    {
+        return !is_null($this->details) && isset($this->details['showEntryNav']) ? $this->details['showEntryNav'] : false;
+    }
+
+    public function setShowEntryNav($showEntryNav)
+    {
+        if (is_null($this->details)) {
+            $this->details = [];
+        }
+        $this->details['showEntryNav'] = $showEntryNav;
+    }
 }

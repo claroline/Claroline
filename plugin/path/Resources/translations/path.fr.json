@@ -47,5 +47,6 @@
     "path_numbering_literal": "Littérale",
     "path_numbering_custom": "Customisée",
     "step_numbering": "Numérotation",
-    "secondary_resources_open_target": "Ouverture des ressources complémentaires"
+    "secondary_resources_open_target": "Ouverture des ressources complémentaires",
+    "start_disabled_empty": "Le parcours est vide."
 }

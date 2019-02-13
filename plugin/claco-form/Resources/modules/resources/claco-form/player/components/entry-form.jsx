@@ -214,7 +214,7 @@ class EntryFormComponent extends Component {
             }}
             cancel={{
               type: LINK_BUTTON,
-              target: '/',
+              target: this.props.entry.id ? `/entries/${this.props.entry.id}` : '/',
               exact: true
             }}
           />
@@ -253,14 +253,6 @@ class EntryFormComponent extends Component {
               </FormSection>
             }
           </FormSections>
-        }
-        {this.props.entry && (this.props.useTemplate && this.props.template) &&
-          <button
-            className="btn btn-primary"
-            onClick={() => this.props.saveForm(this.props.entry, this.props.isNew, this.props.history.push)}
-          >
-            {trans('save')}
-          </button>
         }
       </div>
     )

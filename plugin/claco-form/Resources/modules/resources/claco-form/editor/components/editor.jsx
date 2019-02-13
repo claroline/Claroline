@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+import get from 'lodash/get'
 
 import {makeId} from '#/main/core/scaffolding/id'
 import {trans, transChoice} from '#/main/app/intl/translation'
@@ -81,7 +82,7 @@ const EditorComponent = props =>
                 name: 'details.new_keywords_enabled',
                 type: 'boolean',
                 label: trans('label_new_keywords_enabled', {}, 'clacoform'),
-                displayed: (clacoForm) => clacoForm.details && clacoForm.details.keywords_enabled,
+                displayed: (clacoForm) => get(clacoForm, 'details.keywords_enabled'),
                 required: true
               }
             ]
@@ -126,7 +127,7 @@ const EditorComponent = props =>
                 type: 'html',
                 label: trans('template', {}, 'clacoform'),
                 help: getTemplateHelp(props.clacoForm.fields || []),
-                displayed: (clacoForm) => clacoForm.template && clacoForm.template.enabled,
+                displayed: (clacoForm) => get(clacoForm, 'template.enabled'),
                 required: true,
                 onChange: (template) => props.validateTemplate(template, props.clacoForm.fields, props.errors)
               }
@@ -134,14 +135,16 @@ const EditorComponent = props =>
           }, {
             name: 'details.display_categories',
             type: 'boolean',
-            label: trans('label_display_categories', {}, 'clacoform'),
-            required: true
+            label: trans('label_display_categories', {}, 'clacoform')
           }, {
             name: 'details.display_keywords',
             type: 'boolean',
-            label: trans('label_display_keywords', {}, 'clacoform'),
-            required: true
-          }
+            label: trans('label_display_keywords', {}, 'clacoform')
+          }/*, {
+            name: 'display.showEntryNav',
+            type: 'boolean',
+            label: trans('show_entry_nav', {}, 'clacoform')
+          }*/
         ]
       }, {
         icon: 'fa fa-fw fa-key',
@@ -199,7 +202,7 @@ const EditorComponent = props =>
                 name: 'details.comments_roles',
                 type: 'choice',
                 label: trans('enable_comments_for_roles', {}, 'clacoform'),
-                displayed: (clacoForm) => clacoForm.details && clacoForm.details.comments_enabled,
+                displayed: (clacoForm) => get(clacoForm, 'details.comments_enabled'),
                 options: {
                   multiple: true,
                   condensed: true,
@@ -211,7 +214,7 @@ const EditorComponent = props =>
                 name: 'details.moderate_comments',
                 type: 'choice',
                 label: trans('label_moderate_comments', {}, 'clacoform'),
-                displayed: (clacoForm) => clacoForm.details && clacoForm.details.comments_enabled,
+                displayed: (clacoForm) => get(clacoForm, 'details.comments_enabled'),
                 required: true,
                 options: {
                   noEmpty: true,
@@ -229,7 +232,7 @@ const EditorComponent = props =>
                 name: 'details.comments_display_roles',
                 type: 'choice',
                 label: trans('display_comments_for_roles', {}, 'clacoform'),
-                displayed: (clacoForm) => clacoForm.details && clacoForm.details.display_comments,
+                displayed: (clacoForm) => get(clacoForm, 'details.display_comments'),
                 options: {
                   multiple: true,
                   condensed: true,
@@ -241,17 +244,17 @@ const EditorComponent = props =>
                 name: 'details.open_comments',
                 type: 'boolean',
                 label: trans('label_open_panel_by_default', {}, 'clacoform'),
-                displayed: (clacoForm) => clacoForm.details && clacoForm.details.display_comments
+                displayed: (clacoForm) => get(clacoForm, 'details.display_comments')
               }, {
                 name: 'details.display_comment_author',
                 type: 'boolean',
                 label: trans('label_display_comment_author', {}, 'clacoform'),
-                displayed: (clacoForm) => clacoForm.details && clacoForm.details.display_comments
+                displayed: (clacoForm) => get(clacoForm, 'details.display_comments')
               }, {
                 name: 'details.display_comment_date',
                 type: 'boolean',
                 label: trans('label_display_comment_date', {}, 'clacoform'),
-                displayed: (clacoForm) => clacoForm.details && clacoForm.details.display_comments
+                displayed: (clacoForm) => get(clacoForm, 'details.display_comments')
               }
             ]
           }
@@ -271,10 +274,11 @@ const EditorComponent = props =>
                 name: 'random.categories',
                 type: 'choice',
                 label: trans('label_random_categories', {}, 'clacoform'),
-                displayed: (clacoForm) => clacoForm.random && clacoForm.random.enabled,
+                displayed: (clacoForm) => get(clacoForm, 'random.enabled'),
                 options: {
                   multiple: true,
                   condensed: false,
+                  inline: false,
                   choices: props.clacoForm.categories ? props.clacoForm.categories.reduce((acc, cat) => Object.assign(acc, {
                     [cat.id]: cat.name
                   }), {}) : {}
@@ -354,7 +358,7 @@ const EditorComponent = props =>
             label: trans('create_a_category', {}, 'clacoform'),
             modal: [MODAL_CATEGORY_FORM, {
               fields: props.clacoForm.fields,
-              saveCategory: (category) => props.saveCategory(category, true)
+              saveCategory: (category) => props.saveCategory(props.clacoForm.id, category, true)
             }]
           }
         ]}
@@ -415,7 +419,7 @@ const EditorComponent = props =>
               modal: [MODAL_CATEGORY_FORM, {
                 category: rows[0],
                 fields: props.clacoForm.fields,
-                saveCategory: (category) => props.saveCategory(category, false)
+                saveCategory: (category) => props.saveCategory(props.clacoForm.id, category, false)
               }],
               scope: ['object']
             }, {
@@ -526,8 +530,8 @@ const Editor = connect(
         dispatch(formActions.setErrors(selectors.STORE_NAME+'.clacoFormForm', formErrors))
       }
     },
-    saveCategory(category, isNew) {
-      dispatch(actions.saveCategory(category, isNew))
+    saveCategory(clacoFormId, category, isNew) {
+      dispatch(actions.saveCategory(clacoFormId, category, isNew))
     },
     deleteCategories(categories) {
       dispatch(actions.deleteCategories(categories))

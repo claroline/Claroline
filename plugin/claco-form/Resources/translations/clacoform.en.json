@@ -121,7 +121,6 @@
     "label_votes_date": "Allow votes between these two dates",
     "label_votes_enabled": "Allow votes",
     "link_to_entry": "Link to entry",
-    "lock_entry": "Lock entry",
     "lock_fields": "Lock fields",
     "lock_selected_entries": "Lock selected entries",
     "locked_fields": "Locked fieds",
@@ -167,7 +166,6 @@
     "sub_list_management": "Sub-list management",
     "template_variables_message": "You can use the following variables. They will be replaced by the corresponding field.",
     "title_field_label": "Label for title field",
-    "unlock_entry": "Unlock entry",
     "unlock_selected_entries": "Unlock selected entries",
     "use_template": "Customize the display of entries",
     "template": "Entries format",
@@ -175,5 +173,10 @@
     "view_entry": "View entry",
     "votes": "Votes",
     "votes_management": "Manage votes",
-    "all_comments": "All comments"
+    "all_comments": "All comments",
+    "show_entry_nav": "Display navigation between the entries",
+    "disable_edition_notification": "Disable notifications on updates",
+    "enable_edition_notification": "Enable notifications on updates",
+    "disable_comments_notification": "Disable notifications on comments",
+    "enable_comments_notification": "Enable notifications on comments"
 }
