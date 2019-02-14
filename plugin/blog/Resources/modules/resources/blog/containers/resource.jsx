@@ -7,12 +7,12 @@ import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/app/security'
 
 import {reducer, selectors} from '#/plugin/blog/resources/blog/store'
-import {Blog} from '#/plugin/blog/resources/blog/player/components/resource'
+import {BlogResource as BlogResourceComponent} from '#/plugin/blog/resources/blog/components/resource'
 
 const BlogResource = withRouter(
   withReducer(selectors.STORE_NAME, reducer)(
     connect(
-      state => ({
+      (state) => ({
         blogId: selectors.blog(state).data.id,
         saveEnabled: formSelect.saveEnabled(formSelect.form(state, selectors.STORE_NAME + '.blog.data.options')),
         pdfEnabled: selectors.pdfEnabled(state),
@@ -21,7 +21,7 @@ const BlogResource = withRouter(
         canPost: hasPermission('post', resourceSelect.resourceNode(state)),
         canModerate: hasPermission('moderate', resourceSelect.resourceNode(state))
       })
-    )(Blog)
+    )(BlogResourceComponent)
   )
 )
 

@@ -1,42 +1,52 @@
-html, body{
+html,
+body {
     font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
     font-size: 12px;
 }
-h1, h2, h3, h4, h5, h6{margin: 10px 0; font-weight: 500;}
-h1{
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 10px 0;
+    font-weight: 500;
+}
+
+h1 {
     font-size: 20px;
 }
 
-h2{
+h2 {
     font-size: 16px;
 }
 
-h3{
+h3 {
     font-size: 14px;
 }
 
-h4{
+h4 {
     font-size: 12px;
 }
 
-a{
+a {
     color: #2a6496;
 }
 
-ul{
-    ul{margin-left: 10px;}
+ul {
     display: block;
-    margin-left: 0px;
-    padding-left: 0px;
+    margin-left: 0;
+    padding-left: 0;
+
+    ul {
+        margin-left: 10px;
+    }
 }
 
-table{
+table {
     border-color: #ccc;
     border-width: 0 0 1px 1px;
     border-style: solid;
-    border-spacing: 0px;
+    border-spacing: 0;
     border-collapse: separate;
-    td, th{
+
+    td, th {
         border-width: 1px 1px 0 0;
         border-style: solid;
         margin: 0;
@@ -45,8 +55,8 @@ table{
     }
 }
 
-div.pdf-contents{
-    div.pdf-contents-inner{
+div.pdf-contents {
+    div.pdf-contents-inner {
         float:left;
         border: 1px solid #e3e3e3;
         padding: 10px;
@@ -54,19 +64,22 @@ div.pdf-contents{
     }
 }
 
-ul.no-bullet-list{
+ul.no-bullet-list {
     list-style: none;
 }
 
-.page-header{
+.page-header {
     border-bottom: 1px solid #eeeeee;
 }
 
-.subsection-header{
+.subsection-header {
     border-bottom: 1px dashed #eeeeee;
 }
 
-.clearfix, .clearfix::after{clear:both;}
+.clearfix,
+.clearfix::after {
+    clear:both;
+}
 
 article {
     border: 1px solid #f8f8f8;
@@ -74,4 +87,7 @@ article {
     padding: 10px;
 }
 
-span.author, time{color: #2a6496}
+span.author,
+time {
+    color: #2a6496
+}

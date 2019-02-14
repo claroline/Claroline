@@ -11,7 +11,7 @@ import {DOWNLOAD_BUTTON, LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {Moderation} from '#/plugin/blog/resources/blog/moderation/components/moderation'
 import {Player} from '#/plugin/blog/resources/blog/player/components/player'
 
-const Blog = props =>
+const BlogResource = props =>
   <ResourcePage
     styles={['claroline-distribution-plugin-blog-blog-resource']}
     primaryAction="blog_post"
@@ -44,7 +44,6 @@ const Blog = props =>
       }
     ]}
   >
-    <div id={'blog-top-page'}></div>
     <Routes
       routes={[
         {
@@ -58,7 +57,7 @@ const Blog = props =>
     />
   </ResourcePage>
 
-Blog.propTypes = {
+BlogResource.propTypes = {
   blogId: T.string.isRequired,
   saveEnabled: T.bool.isRequired,
   pdfEnabled: T.bool.isRequired,
@@ -68,4 +67,6 @@ Blog.propTypes = {
   canExport: T.bool
 }
 
-export {Blog}
+export {
+  BlogResource
+}

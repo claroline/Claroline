@@ -5,10 +5,6 @@ import {selectors} from '#/plugin/blog/resources/blog/store'
 import isEmpty from 'lodash/isEmpty'
 import find from 'lodash/find'
 
-function getCommentsNumber(canEdit, publisedNumber, unpublishedNumber) {
-  return canEdit ? publisedNumber + unpublishedNumber : publisedNumber
-}
-
 function splitArray(array){
   return array.split(',').map(item => item.trim())
 }
@@ -74,7 +70,6 @@ function updateQueryParameters(uri, key, value) {
 }
 
 export {
-  getCommentsNumber,
   splitArray,
   cleanTag,
   parseQuery,

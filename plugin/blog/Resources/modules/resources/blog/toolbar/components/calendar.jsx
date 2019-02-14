@@ -10,14 +10,16 @@ import {selectors} from '#/plugin/blog/resources/blog/store'
 
 const BlogCalendarComponent = props =>
   <div key='redactors' className="panel panel-default">
-    <div className="panel-heading"><h2 className="panel-title">{trans('calendar', {}, 'icap_blog')}</h2></div>
-    <div className="panel-body calendar">
-      <Calendar
-        selected={props.calendarSelectedDate}
-        onChange={props.searchByDate}
-        time={false}
-      />
+    <div className="panel-heading">
+      <h2 className="panel-title">{trans('calendar')}</h2>
     </div>
+
+    <Calendar
+      selected={props.calendarSelectedDate}
+      onChange={props.searchByDate}
+      time={false}
+      showCurrent={false}
+    />
   </div>
 
 BlogCalendarComponent.propTypes = {

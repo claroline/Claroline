@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/app/intl/translation'
 import {constants as listConst} from '#/main/app/content/list/constants'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {PostCard} from '#/plugin/blog/resources/blog/post/components/post'
+import {PostCard} from '#/plugin/blog/resources/blog/post/components/card'
 import {selectors} from '#/plugin/blog/resources/blog/store'
 
 const UnpublishedPostsComponent = (props) =>

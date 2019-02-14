@@ -1,13 +1,11 @@
 /*
  * Blog resource styles.
  */
- 
-.post-infos {
-  margin-bottom: 0;
-  font-size: 14px;
-  font-weight: 400;
-  float:left;
-}
+
+@import "../../variables";
+@import "../../mixins";
+
+@import "post";
 
 .user-picture {
   width: 24px;
@@ -15,63 +13,6 @@
 
 .user-name {
   margin-left: 2px;
-}
-
-.post-header{
-  margin: 0px;
-  padding: 15px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.post-title{
-  font-size: 20px;
-  margin: 0px;
-  font-weight: 600;
-  padding-bottom:8px;
-}
-
-.post-content{
-  margin-bottom: 15px;
-  font-size: 14px;
-  line-height: 1.42857143;
-  text-align: justify;
-  padding: 15px 15px;
-}
-
-.post-actions{
-  position: relative;
-  float: right;
-}
-
-.posts-list{
-  padding-left: 0px;
-}
-
-.posts-list .page-content{
-  padding-left: 0px;
-  padding-right: 0px;
-}
-
-.blog-page {
-  padding-left: 0px;
-  padding-right: 0px;
-}
-
-.blog-container {
-  margin-top: 10px;
-  padding-left: 0px;
-  padding-right: 0px;
-}
-
-.post-container{
-  padding-bottom: 10px;
-  width: 100%;
-}
-
-.read_more {
-  color: #148ac7;
-  cursor: pointer;
 }
 
 .link {
@@ -84,38 +25,21 @@
   background-color: #feb403;
 }
 
-.blog-widgets {
-  padding: 0px;
-}
-
 .unpublished {
   border-color: #fbeed5;
   background-color: #e0e0e0;
 }
 
-.comment {
+/*.comment {
   padding-left: 24px;
-}
+}*/
 
 .order-widgets {
    position:relative;
 }
 
 .widget-label{
- margin-left: 12px;
-}
-
-.post-tags {
-  max-width:70%;
-}
-
-.post-tags li{
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-.calendar .current-container {
-  display: none;
+  margin-left: 12px;
 }
 
 .export-links {
@@ -124,32 +48,21 @@
 
 .label-pdf {
   background-color: #f45642;
-}
 
-.label-pdf:hover {
-  background-color: #d34837;
+  &:hover {
+    background-color: #d34837;
+  }
 }
 
 .redactor-name{
   padding-right: 10px;
 }
 
-.data-card-blog{
-  position: relative;
-  border: 1px solid #ddd;
-  color: #333;
-  background: #fff;
-  font-size: 14px;
-  border-radius: 0;
-  -webkit-box-shadow: 0 0 2px rgba(0,0,0,.15);
-  box-shadow: 0 0 2px rgba(0,0,0,.15);
+.widget-ordering-button {
+  padding: 0;
 }
 
-.widget-ordering-button{
-  padding: 0px;
-}
-
-.pinned-label{
+.pinned-label {
   font-size: 60%;
   margin-left: 6px;
   vertical-align: middle;
@@ -157,19 +70,4 @@
 
 .toolmanager{
   margin-top: -15px;
-}
-
-.posts-list .blog-primary-button{
-  margin-bottom:10px;
-  background-color: #148ac7 !important;
-  color: #fff !important;
-}
-
-.button-go-to-top {
-  color: #148ac7 !important;
-  padding: 20px 0px 0px 0px;
-}
-
-.post-actions .post-button {
-  padding: 6px;
 }

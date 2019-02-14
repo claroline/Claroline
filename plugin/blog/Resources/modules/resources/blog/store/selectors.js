@@ -1,5 +1,8 @@
 import {createSelector} from 'reselect'
 
+import {hasPermission} from '#/main/app/security'
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
+
 const STORE_NAME = 'resource'
 
 const resource = (state) => state[STORE_NAME]
@@ -100,7 +103,19 @@ const displayTagsFrequency = createSelector(
   }
 )
 
+const countPostComments = createSelector(
+  [resourceSelectors.resourceNode, post],
+  (resourceNode, post) => {
+    if (hasPermission('edit', resourceNode)) {
+      return post.commentsNumber + post.commentsNumberUnpublished
+    }
+
+    return post.commentsNumber
+  }
+)
+
 export const selectors = {
+  STORE_NAME,
   countTags,
   displayTagsFrequency,
   blog,
@@ -117,5 +132,5 @@ export const selectors = {
   postEdit,
   goHome,
   calendarSelectedDate,
-  STORE_NAME
+  countPostComments
 }

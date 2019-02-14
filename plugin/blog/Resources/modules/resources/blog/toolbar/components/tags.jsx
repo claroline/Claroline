@@ -1,13 +1,16 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
+import isEmpty from 'lodash/isEmpty'
+
 import {trans} from '#/main/app/intl/translation'
+import {withRouter} from '#/main/app/router'
+import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {TagCloud} from '#/main/app/content/meta/components/tag-cloud'
+
 import {selectors} from '#/plugin/blog/resources/blog/store'
 import {constants} from '#/plugin/blog/resources/blog/constants'
 import {cleanTag} from '#/plugin/blog/resources/blog/utils'
-import isEmpty from 'lodash/isEmpty'
-import {withRouter} from '#/main/app/router'
 import {updateQueryParameters} from '#/plugin/blog/resources/blog/utils'
 
 const TagsComponent = props =>
@@ -15,6 +18,7 @@ const TagsComponent = props =>
     <div className="panel-heading">
       <h2 className="panel-title">{trans('tagcloud', {}, 'icap_blog')}</h2>
     </div>
+
     <div className="panel-body">
       {!isEmpty(props.tags) ?
         <div>
@@ -32,10 +36,15 @@ const TagsComponent = props =>
               <ul>
                 {props.tags && Object.keys(props.tags).sort().map((tag, index) =>(
                   <li key={index} className={'list-unstyled'}>
-                    <a className='link' onClick={() => {
-                      props.goHome(props.history)
-                      props.searchByTag(props.history, props.location.search, tag)
-                    }} >{tag}</a>
+                    <CallbackButton
+                      className='link'
+                      callback={() => {
+                        props.goHome(props.history)
+                        props.searchByTag(props.history, props.location.search, tag)
+                      }}
+                    >
+                      {tag}
+                    </CallbackButton>
                   </li>
                 ))}
               </ul>

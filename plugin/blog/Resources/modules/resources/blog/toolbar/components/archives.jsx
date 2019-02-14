@@ -8,6 +8,7 @@ import moment from 'moment'
 
 import {getApiFormat} from '#/main/app/intl/date'
 import {trans} from '#/main/app/intl/translation'
+import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {actions as listActions} from '#/main/app/content/list/store'
 import {actions as postActions} from '#/plugin/blog/resources/blog/post/store'
 import {Section, Sections} from '#/main/core/layout/components/sections'
@@ -24,11 +25,11 @@ const ArchivesComponent = props =>
               <ul>
                 {props.archives[year] && Object.keys(props.archives[year]).map((month) => (
                   <li className="list-unstyled" key={month}>
-                    <a href="#" onClick={() => {
+                    <CallbackButton callback={() => {
                       props.searchByRange(props.archives[year][month]['monthValue'] - 1, year)
                     }}>
                       {props.archives[year][month]['month']} ({props.archives[year][month]['count']})
-                    </a>
+                    </CallbackButton>
                   </li>
                 ))}
               </ul>

@@ -1,5 +1,5 @@
 
-import {BlogResource} from '#/plugin/blog/resources/blog/containers/blog'
+import {BlogResource} from '#/plugin/blog/resources/blog/containers/resource'
 
 /**
  * Blog resource application.

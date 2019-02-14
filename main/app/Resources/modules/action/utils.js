@@ -6,6 +6,8 @@ import {MENU_BUTTON} from '#/main/app/buttons'
 const GROUP_SEPARATOR  = '|'
 const ACTION_SEPARATOR = ' '
 
+// TODO : use reselect to memoize toolbars config
+
 /**
  *
  * @param {string} toolbarConfig

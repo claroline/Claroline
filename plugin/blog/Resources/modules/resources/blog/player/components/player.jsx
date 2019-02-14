@@ -2,13 +2,10 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
-import Grid from 'react-bootstrap/lib/Grid'
-import Row from 'react-bootstrap/lib/Row'
-import Col from 'react-bootstrap/lib/Col'
 
-import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/app/security'
-import {RoutedPageContent} from '#/main/core/layout/router'
+import {Routes} from '#/main/app/router'
+import {selectors as resourceSelect} from '#/main/core/resource/store'
 
 import {actions as editorActions} from '#/plugin/blog/resources/blog/editor/store'
 import {actions as postActions} from '#/plugin/blog/resources/blog/post/store'
@@ -22,54 +19,53 @@ import {BlogOptions} from '#/plugin/blog/resources/blog/editor/components/blog-o
 import {initDatalistFilters} from '#/plugin/blog/resources/blog/utils'
 
 const PlayerComponent = props =>
-  <Grid key="blog-grid" className="blog-container  blog-page">
-    <Row className="show-grid">
-      <Col xs={12} md={9} className={'posts-list'}>
-        <RoutedPageContent
-          routes={[
-            {
-              path: '/author/:authorId',
-              component: Posts,
-              exact: true,
-              onEnter: (params) => props.getPostByAuthor(props.blogId, params.authorId)
-            }, {
-              path: '/new',
-              component: PostForm,
-              disabled: !props.canEdit,
-              onEnter: () => props.createPost()
-            }, {
-              path: '/edit',
-              disabled: !props.canEdit,
-              component: BlogOptions,
-              onEnter: () => props.editBlogOptions(props.blogId),
-              exact: true
-            }, {
-              path: '/:id',
-              component: Post,
-              exact: true,
-              onEnter: (params) => props.getPost(props.blogId, params.id)
-            }, {
-              path: '/:id/edit',
-              component: PostForm,
-              disabled: !props.canEdit,
-              onEnter: (params) => props.editPost(props.blogId, params.id)
-            }, {
-              path: '/',
-              component: Posts,
-              exact: true,
-              onEnter: () => {
-                props.switchMode(constants.LIST_POSTS)
-                props.initDataListFilters(props.location.search)
-              }
+  <div className="row">
+    <div className="col-lg-9 col-md-8 col-sm-7 col-xs-12">
+      <Routes
+        routes={[
+          {
+            path: '/author/:authorId',
+            component: Posts,
+            exact: true,
+            onEnter: (params) => props.getPostByAuthor(props.blogId, params.authorId)
+          }, {
+            path: '/new',
+            component: PostForm,
+            disabled: !props.canEdit,
+            onEnter: () => props.createPost()
+          }, {
+            path: '/edit',
+            disabled: !props.canEdit,
+            component: BlogOptions,
+            onEnter: () => props.editBlogOptions(props.blogId),
+            exact: true
+          }, {
+            path: '/:id',
+            component: Post,
+            exact: true,
+            onEnter: (params) => props.getPost(props.blogId, params.id)
+          }, {
+            path: '/:id/edit',
+            component: PostForm,
+            disabled: !props.canEdit,
+            onEnter: (params) => props.editPost(props.blogId, params.id)
+          }, {
+            path: '/',
+            component: Posts,
+            exact: true,
+            onEnter: () => {
+              props.switchMode(constants.LIST_POSTS)
+              props.initDataListFilters(props.location.search)
             }
-          ]}
-        />
-      </Col>
-      <Col xs={12} md={3} className="blog-widgets">
-        <Tools />
-      </Col>
-    </Row>
-  </Grid>
+          }
+        ]}
+      />
+    </div>
+
+    <div className="col-lg-3 col-md-4 col-sm-5 col-xs-12">
+      <Tools />
+    </div>
+  </div>
 
 PlayerComponent.propTypes = {
   blogId: T.string.isRequired,

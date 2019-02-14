@@ -5,6 +5,7 @@ import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
+import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {UrlButton} from '#/main/app/buttons/url/components/button'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 import {selectors} from '#/plugin/blog/resources/blog/store'
@@ -20,11 +21,11 @@ const RedactorsComponent = props =>
           <UrlButton target={['claro_user_profile', {user: get(author, 'meta.publicUrl')}]}>
             <UserAvatar className="user-picture" picture={author ? author.picture : undefined} alt={true} />
           </UrlButton>
-          <a className="redactor-name link" onClick={() => {
+          <CallbackButton className="redactor-name link" callback={() => {
             props.goHome(props.history)
             props.getPostsByAuthor(props.history, props.location.search, author.firstName + ' ' + author.lastName)
           }}>{author.firstName + ' ' + author.lastName}
-          </a>
+          </CallbackButton>
         </span>
       ))) : (
         trans('no_authors', {}, 'icap_blog')
