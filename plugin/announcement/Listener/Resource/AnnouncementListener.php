@@ -158,6 +158,7 @@ class AnnouncementListener
      */
     public function delete(DeleteResourceEvent $event)
     {
+        $this->crud->delete($event->getResource());
         $event->stopPropagation();
     }
 }
