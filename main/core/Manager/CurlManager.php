@@ -23,7 +23,6 @@ class CurlManager
         $options[CURLOPT_RETURNTRANSFER] = true;
         $options[CURLOPT_URL] = $url;
 
-        $url = trim($url);
         $ch = curl_init();
 
         foreach ($options as $option => $value) {
@@ -31,8 +30,15 @@ class CurlManager
         }
 
         switch ($type) {
-            case 'POST': $this->setPostCurl($ch, $payload); break;
-            case 'PUT': $this->setPutCurl($ch, $payload); break;
+            case 'POST':
+                $this->setPostCurl($ch, $payload);
+                break;
+            case 'PUT':
+                $this->setPutCurl($ch, $payload);
+                break;
+            case 'PUT':
+                $this->setDeleteCurl($ch);
+                break;
         }
 
         $serverOutput = curl_exec($ch);
@@ -47,25 +53,17 @@ class CurlManager
     private function setPostCurl($ch, $payload)
     {
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->urlify($payload));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
     }
 
     private function setPutCurl($ch, $payload)
     {
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->urlify($payload));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
     }
 
-    private function urlify($payload)
+    private function setDeleteCurl($ch)
     {
-        $string = '';
-
-        foreach ($payload as $key => $value) {
-            $string .= $key.'='.$value.'&';
-        }
-
-        rtrim($string, '&');
-
-        return $string;
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
     }
 }
