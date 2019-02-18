@@ -1,0 +1,8 @@
+plugin:
+  has_options: false
+
+  resources:
+    - name: rss_feed
+      class: Claroline\RssBundle\Entity\Resource\RssFeed
+      tags: [content]
+      exportable: true

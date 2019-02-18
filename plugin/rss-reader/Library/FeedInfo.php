@@ -16,16 +16,16 @@ namespace Claroline\RssReaderBundle\Library;
  */
 class FeedInfo
 {
-    private $title;
-    private $imageUrl;
-    private $description;
-    private $link;
-    private $language;
-    private $author;
-    private $email;
-    private $lastUpdate;
-    private $copyright;
-    private $generator;
+    public $title;
+    public $imageUrl;
+    public $description;
+    public $link;
+    public $language;
+    public $author;
+    public $email;
+    public $lastUpdate;
+    public $copyright;
+    public $generator;
 
     public function getTitle()
     {
@@ -116,6 +116,7 @@ class FeedInfo
     {
         $this->copyright = (string) $copyright ?: null;
     }
+
     public function getGenerator()
     {
         return $this->generator;

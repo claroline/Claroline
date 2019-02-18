@@ -11,24 +11,24 @@
 
 namespace Claroline\RssReaderBundle\Library\Reader;
 
-use SimpleXMLElement;
-use Claroline\RssReaderBundle\Library\FeedReaderInterface;
 use Claroline\RssReaderBundle\Library\FeedInfo;
 use Claroline\RssReaderBundle\Library\FeedItem;
+use Claroline\RssReaderBundle\Library\FeedReaderInterface;
+use SimpleXMLElement;
 
 /**
  * Reader for classic rss feeds.
  */
 class RssReader implements FeedReaderInterface
 {
-    private $feed;
+    public $feed;
 
     /**
      * {@inheritdoc}
      */
     public function supports($feedType)
     {
-        return $feedType === 'rss';
+        return 'rss' === $feedType;
     }
 
     /**
@@ -68,7 +68,7 @@ class RssReader implements FeedReaderInterface
     {
         $itemCount = count($this->feed->channel->item);
         $max = is_integer($max) && $max < $itemCount ? $max : $itemCount;
-        $items = array();
+        $items = [];
 
         for ($i = 0; $i < $max; ++$i) {
             $item = new FeedItem();

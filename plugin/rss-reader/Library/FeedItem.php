@@ -18,12 +18,12 @@ namespace Claroline\RssReaderBundle\Library;
  */
 class FeedItem
 {
-    private $title;
-    private $description;
-    private $link;
-    private $author;
-    private $date;
-    private $guid;
+    public $title;
+    public $description;
+    public $link;
+    public $author;
+    public $date;
+    public $guid;
 
     public function getTitle()
     {

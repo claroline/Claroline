@@ -18,7 +18,7 @@ use SimpleXMLElement;
  */
 class ReaderProvider
 {
-    private $readers;
+    public $readers;
 
     /**
      * Constructor.
