@@ -1457,4 +1457,33 @@ class WorkspaceManager
             $this->roleManager->dissociateRole($subject, $role);
         }
     }
+
+    public function setWorkspacesFlag()
+    {
+        $workspaces = $this->container->get('claroline.api.finder')->fetch(Workspace::class, [
+            'name' => 'Espace personnel',
+            'meta.personal' => false,
+            //maybe add personal user here
+        ]);
+
+        $i = 0;
+        $total = count($workspaces);
+
+        foreach ($workspaces as $workspace) {
+            $workspace->setIsPersonal(true);
+            $this->om->persist($workspace);
+
+            ++$i;
+
+            $this->log('Restore workspace personal flag for '.$workspace->getName().' '.$i.'/'.$total);
+
+            if (0 === $i % 500) {
+                $this->log('Flushing...');
+                $this->om->flush();
+            }
+        }
+
+        $this->log('Flushing...');
+        $this->om->flush();
+    }
 }

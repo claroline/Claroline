@@ -20,11 +20,13 @@ class ObjectCollection extends ArrayCollection
 
     public function __construct(array $objects, array $options = [])
     {
-        $this->class = get_class($objects[0]);
-
         foreach ($objects as $object) {
-            if (get_class($object) !== $this->class) {
-                throw new \Exception('Classes of objects are varying.');
+            if (!$object instanceof $objects[0]) {
+                $classes = '';
+                foreach ($objects as $object) {
+                    $classes .= get_class($object).', ';
+                }
+                throw new \Exception('Classes of objects are varying. '.$classes);
             }
         }
 

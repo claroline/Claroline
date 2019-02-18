@@ -296,6 +296,7 @@ class Organization
     public function addAdministrator(User $user)
     {
         if (!$this->administrators->contains($user)) {
+            $this->addUser($user);
             $this->administrators->add($user);
             $user->addAdministratedOrganization($this);
         }
@@ -397,10 +398,20 @@ class Organization
 
     public function addUser(User $user)
     {
-        $ref = new UserOrganizationReference();
-        $ref->setOrganization($this);
-        $ref->setUser($user);
-        $this->userOrganizationReferences->add($ref);
+        $found = false;
+
+        foreach ($this->userOrganizationReferences as $userOrgaRef) {
+            if ($userOrgaRef->getOrganization() === $this && $userOrgaRef->getUser() === $user) {
+                $found = true;
+            }
+        }
+
+        if (!$found) {
+            $ref = new UserOrganizationReference();
+            $ref->setOrganization($this);
+            $ref->setUser($user);
+            $this->userOrganizationReferences->add($ref);
+        }
     }
 
     public function removeUser(User $user)

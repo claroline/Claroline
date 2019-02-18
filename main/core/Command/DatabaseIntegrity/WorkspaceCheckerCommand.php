@@ -22,12 +22,19 @@ class WorkspaceCheckerCommand extends ContainerAwareCommand
     {
         $this->setName('claroline:workspace:check')
             ->setDescription('Checks the workspace tools integrity of the platform.')
-            ->addOption('all', 'a', InputOption::VALUE_NONE, 'All tools and workspace');
+            ->addOption('all', 'a', InputOption::VALUE_NONE, 'All tools and workspace')
+            ->addOption('flag', 'f', InputOption::VALUE_NONE, 'Set the personal workspace flag');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('Workspace tool restoration...');
+
+        if ($input->getOption('flag')) {
+            $consoleLogger = ConsoleLogger::get($output);
+            $this->getContainer()->get('claroline.manager.workspace_manager')->setLogger($consoleLogger);
+            $this->getContainer()->get('claroline.manager.workspace_manager')->setWorkspacesFlag();
+        }
 
         if ($input->getOption('all')) {
             $workspaces = $this->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Workspace\Workspace')

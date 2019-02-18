@@ -206,7 +206,7 @@ const Role = connect(
         definition: UserList.definition,
         card: UserList.card,
         fetch: {
-          url: ['apiv2_user_list_managed_organization'],
+          url: ['apiv2_user_list_registerable'],
           autoload: true
         },
         handleSelect: (selected) => dispatch(actions.addUsers(roleId, selected))

@@ -1100,6 +1100,13 @@ class UserManager
 
             /** @var User $user */
             foreach ($users as $user) {
+                $this->log('Setting user administrated organization...');
+
+                foreach ($user->getAdministratedOrganizations() as $organization) {
+                    //I know this is weird but the setter is now in this method (it used to not exist)
+                    $user->addAdministratedOrganization($organization);
+                }
+
                 if (0 === count($user->getOrganizations())) {
                     ++$i;
                     $this->log('Add default organization for user '.$user->getUsername());

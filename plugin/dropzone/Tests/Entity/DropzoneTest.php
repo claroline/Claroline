@@ -10,8 +10,9 @@ namespace Icap\DropzoneBundle\Tests\Entity;
 
 use DateTime;
 use Icap\DropzoneBundle\Entity\Dropzone;
+use PHPUnit\Framework\TestCase;
 
-class DropzoneTest extends \PHPUnit\Framework\TestCase
+class DropzoneTest extends TestCase
 {
     private function createFixturesDropzones()
     {
@@ -43,7 +44,7 @@ class DropzoneTest extends \PHPUnit\Framework\TestCase
         $dz5 = new Dropzone();
         $dz5->setManualPlanning(false);
         $dz5->setStartAllowDrop(new DateTime());
-        $dateEnd6 = DateTime::createFromFormat('d-m-Y', '15-02-2019');
+        $dateEnd6 = DateTime::createFromFormat('d-m-Y', '15-02-2999');
         $dz5->setEndAllowDrop($dateEnd6);
         $dz5->setPeerReview(true);
 
@@ -57,8 +58,8 @@ class DropzoneTest extends \PHPUnit\Framework\TestCase
 
         $dz7 = new Dropzone();
         $dz7->setManualPlanning(false);
-        $date8 = DateTime::createFromFormat('d-m-Y', '15-02-2019');
-        $dateEnd8 = DateTime::createFromFormat('d-m-Y', '15-02-2020');
+        $date8 = DateTime::createFromFormat('d-m-Y', '15-02-2999');
+        $dateEnd8 = DateTime::createFromFormat('d-m-Y', '15-02-3000');
         $dz7->setStartAllowDrop($date8);
         $dz7->setEndAllowDrop($dateEnd8);
         $dz7->setPeerReview(true);

@@ -18,7 +18,7 @@ export default (workspaces, refresher) => ({
   // open a modal to select the list of users to register
   modal: [MODAL_USERS_PICKER, {
     title: trans('register_users'),
-    url: ['apiv2_user_list_managed_organization'],
+    url: ['apiv2_user_list_registerable'],
 
     // load the list of common roles for selected workspaces
     selectAction: (users) => ({
