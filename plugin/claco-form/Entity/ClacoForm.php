@@ -267,7 +267,9 @@ class ClacoForm extends AbstractResource
 
     public function getRandomStartDate()
     {
-        return !is_null($this->details) && isset($this->details['random_start_date']) ? $this->details['random_start_date'] : null;
+        return !is_null($this->details) && isset($this->details['random_start_date']) ?
+            new \DateTime($this->details['random_start_date']) :
+            null;
     }
 
     public function setRandomStartDate(\DateTime $startDate = null)
@@ -280,7 +282,9 @@ class ClacoForm extends AbstractResource
 
     public function getRandomEndDate()
     {
-        return !is_null($this->details) && isset($this->details['random_end_date']) ? $this->details['random_end_date'] : null;
+        return !is_null($this->details) && isset($this->details['random_end_date']) ?
+            new \DateTime($this->details['random_end_date']) :
+            null;
     }
 
     public function setRandomEndDate(\DateTime $endDate = null)
@@ -516,7 +520,9 @@ class ClacoForm extends AbstractResource
 
     public function getVotesStartDate()
     {
-        return !is_null($this->details) && isset($this->details['votes_start_date']) ? $this->details['votes_start_date'] : null;
+        return !is_null($this->details) && isset($this->details['votes_start_date']) ?
+            new \DateTime($this->details['votes_start_date']) :
+            null;
     }
 
     public function setVotesStartDate(\DateTime $startDate = null)
@@ -529,7 +535,9 @@ class ClacoForm extends AbstractResource
 
     public function getVotesEndDate()
     {
-        return !is_null($this->details) && isset($this->details['votes_end_date']) ? $this->details['votes_end_date'] : null;
+        return !is_null($this->details) && isset($this->details['votes_end_date']) ?
+            new \DateTime($this->details['votes_end_date']) :
+            null;
     }
 
     public function setVotesEndDate(\DateTime $endDate = null)
