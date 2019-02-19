@@ -24,7 +24,7 @@ plugin:
         - name: rights
           decoder: administrate
           group: management
-          scope: [object, collection]
+          scope: [object]
           api: [GET, POST, PUT]
 
         # Publishes one ore more resources
@@ -69,7 +69,7 @@ plugin:
         - name: configure
           decoder: administrate
           group: management
-          scope: [object, collection] # The action can be executed on multiple resources at once.
+          scope: [object]
           api: [PUT]
           recursive: true
 

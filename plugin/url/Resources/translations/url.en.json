@@ -1,0 +1,6 @@
+{
+    "iframe_desc": "Display URL in the resource",
+    "redirect_desc": "Open URL in the current tab",
+    "tab_desc": "Open URL in a new tab",
+    "url": "URL"
+}

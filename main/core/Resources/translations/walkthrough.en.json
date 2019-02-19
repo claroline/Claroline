@@ -87,6 +87,10 @@
         "documentation": "",
         "message": "Shows some analytics data of the workspace usage."
       },
+      "badges": {
+        "documentation": "",
+        "message": "The tool is being refactored and will be available later."
+      },
       "home": {
         "documentation": "https://claroline.gitbooks.io/claroline-connect-documentation/content/fr/workspaces/ws-homepage.html",
         "message": "Permits to create an overview of the workspace."
@@ -94,6 +98,10 @@
       "logs": {
         "documentation": "",
         "message": "Shows the actions done by users in the workspace."
+      },
+      "my_badges": {
+        "documentation": "",
+        "message": "The tool is being refactored and will be available later."
       },
       "progression": {
         "documentation": "",

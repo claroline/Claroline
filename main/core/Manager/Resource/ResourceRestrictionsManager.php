@@ -93,6 +93,9 @@ class ResourceRestrictionsManager
 
             if (!empty($resourceNode->getAccessibleFrom()) || !empty($resourceNode->getAccessibleUntil())) {
                 $errors['notStarted'] = !$this->isStarted($resourceNode);
+                $errors['startDate'] = $resourceNode->getAccessibleFrom() ?
+                    $resourceNode->getAccessibleFrom()->format('d/m/Y') :
+                    null;
                 $errors['ended'] = $this->isEnded($resourceNode);
             }
 

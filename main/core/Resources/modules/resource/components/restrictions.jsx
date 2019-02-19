@@ -127,7 +127,7 @@ class ResourceRestrictions extends Component {
             }}
             fail={{
               title: this.props.errors.notStarted ? 'La ressource n\'est pas encore accessible.' : 'La ressource n\'est plus accessible.',
-              help: this.props.errors.notStarted ? 'Veuillez patientez jusqu' : ''
+              help: this.props.errors.notStarted ? `Veuillez patientez jusqu'au ${this.props.errors.startDate}` : ''
             }}
           />
         }
@@ -215,7 +215,8 @@ ResourceRestrictions.propTypes = {
     locked: T.bool,
     notStarted: T.bool,
     ended: T.bool,
-    invalidLocation: T.bool
+    invalidLocation: T.bool,
+    startDate: T.string
   }).isRequired,
   dismiss: T.func.isRequired,
   checkAccessCode: T.func

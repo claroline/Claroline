@@ -31,7 +31,7 @@ const OverviewComponent = props =>
         target: '/play',
         primary: true,
         disabled: props.empty,
-        disabledMessages: props.empty ? [trans('start_disabled_empty')]:[]
+        disabledMessages: props.empty ? [trans('start_disabled_empty', {}, 'path')]:[]
       }
     ]}
   >

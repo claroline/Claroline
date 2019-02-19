@@ -87,6 +87,10 @@
         "documentation": "",
         "message": "Affiche des statistiques sur l'usage de l'espace d'activités."
       },
+      "badges": {
+        "documentation": "",
+        "message": "L’outil est en cours de refonte. Il sera disponible ultérieurement."
+      },
       "home": {
         "documentation": "https://claroline.gitbooks.io/claroline-connect-documentation/content/fr/workspaces/ws-homepage.html",
         "message": "Permet de créer une vue d'ensemble de l'espace d'activités."
@@ -94,6 +98,10 @@
       "logs": {
         "documentation": "",
         "message": "Affiche les actions effectuées par les utilisateurs dans l'espace d'activités."
+      },
+      "my_badges": {
+        "documentation": "",
+        "message": "L’outil est en cours de refonte. Il sera disponible ultérieurement."
       },
       "progression": {
         "documentation": "",

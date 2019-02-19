@@ -60,12 +60,13 @@ const reducer = combineReducers({
         data.position = action.isRoot ? 'subchapter' : data.position
         return data
       },
-      [FORM_RESET + '/resource.chapter_form']: () => ({
+      [FORM_RESET + '/resource.chapter_form']: (state) => ({
         position: 'subchapter',
         order: {
           sibling: 'before',
           subchapter: 'first'
-        }
+        },
+        parentSlug: state.parentSlug
       })
     })
   }),
@@ -82,6 +83,9 @@ const reducer = combineReducers({
       [TREE_LOADED]: (state, action) => action.tree,
       [CHAPTER_DELETED]: (state, action) => action.tree
     })
+  }),
+  root: makeReducer(null, {
+    [RESOURCE_LOAD]: (state, action) => action.resourceData.root
   })
 })
 

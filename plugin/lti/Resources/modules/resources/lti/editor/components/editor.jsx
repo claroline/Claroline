@@ -52,7 +52,7 @@ const EditorComponent = props =>
             name: 'ratioList',
             type: 'choice',
             displayed: (ltiResource) => ltiResource && !ltiResource.openInNewTab,
-            label: trans('display_ratio_list', {}, 'lti'),
+            label: trans('display_ratio_list'),
             options: {
               multiple: false,
               condensed: false,
@@ -65,7 +65,7 @@ const EditorComponent = props =>
             name: 'ratio',
             type: 'number',
             displayed: (ltiResource) => ltiResource && !ltiResource.openInNewTab,
-            label: trans('display_ratio', {}, 'lti'),
+            label: trans('display_ratio'),
             options: {
               min: 0,
               unit: '%'

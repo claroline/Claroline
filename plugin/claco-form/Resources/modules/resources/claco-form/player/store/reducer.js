@@ -121,6 +121,12 @@ const reducer = combineReducers({
 
         return newState
       }
+    }),
+    pendingChanges: makeReducer(false, {
+      [ENTRY_CATEGORY_ADD]: () => true,
+      [ENTRY_CATEGORY_REMOVE]: () => true,
+      [ENTRY_KEYWORD_ADD]: () => true,
+      [ENTRY_KEYWORD_REMOVE]: () => true
     })
   }),
   entryUser: makeReducer({}, {

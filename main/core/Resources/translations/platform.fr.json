@@ -382,6 +382,8 @@
     "display_captcha": "Activer les captchas",
     "display_mode": "Mode de vue",
     "display_options": "Options d'affichage",
+    "display_ratio": "Proportion d'affichage",
+    "display_ratio_list": "Liste de proportions d'affichage",
     "display_views": "{0,1} %count% vue|[2,Inf[ %count% vues",
     "displayable_in_desktop": "Disponible dans le bureau",
     "displayable_in_workspace": "Disponible dans l'espace d'activités",

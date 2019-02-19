@@ -33,7 +33,7 @@ const EditorComponent = props =>
           {
             name: 'ratioList',
             type: 'choice',
-            label: trans('display_ratio_list', {}, 'scorm'),
+            label: trans('display_ratio_list'),
             options: {
               multiple: false,
               condensed: false,
@@ -43,7 +43,7 @@ const EditorComponent = props =>
           }, {
             name: 'ratio',
             type: 'number',
-            label: trans('display_ratio', {}, 'scorm'),
+            label: trans('display_ratio'),
             options: {
               min: 0,
               unit: '%'

@@ -26,7 +26,7 @@ const UrlForm = props =>
         fields: [
           {
             name: 'url',
-            label: trans('url'),
+            label: trans('url', {}, 'url'),
             type: 'url',
             required: true
           },
@@ -36,10 +36,12 @@ const UrlForm = props =>
             type: 'choice',
             required: true,
             options: {
+              multiple: false,
+              condensed: true,
               choices: {
-                'iframe': 'iframe',
-                'redirect': 'redirect',
-                'tab': 'tab'
+                'iframe': trans('iframe_desc', {}, 'url'),
+                'redirect': trans('redirect_desc', {}, 'url'),
+                'tab': trans('tab_desc', {}, 'url')
               }
             }
           },
@@ -47,7 +49,7 @@ const UrlForm = props =>
             name: 'ratioList',
             type: 'choice',
             displayed: url => url.mode === 'iframe',
-            label: trans('display_ratio_list', {}, 'scorm'),
+            label: trans('display_ratio_list'),
             options: {
               multiple: false,
               condensed: false,
@@ -58,7 +60,7 @@ const UrlForm = props =>
             name: 'ratio',
             type: 'number',
             displayed: url => url.mode === 'iframe',
-            label: trans('display_ratio', {}, 'scorm'),
+            label: trans('display_ratio'),
             options: {
               min: 0,
               unit: '%'

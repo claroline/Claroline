@@ -22,6 +22,11 @@ const mode = createSelector(
   (resource) => resource.mode
 )
 
+const root = createSelector(
+  [resource],
+  (resource) => resource.root
+)
+
 const tree = createSelector(
   [resource],
   (resource) => resource.tree
@@ -52,6 +57,7 @@ export const selectors = {
   lesson,
   mode,
   chapter,
+  root,
   treeData,
   treeInvalidated,
   canExport,

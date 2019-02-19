@@ -80,7 +80,7 @@ class LessonResource extends Component {
               path: '/new',
               component: ChapterForm,
               exact: true,
-              onEnter: () => this.props.createChapter(this.props.lesson.id)
+              onEnter: () => this.props.createChapter(this.props.lesson.id, this.props.root.slug)
             }, {
               path: '/:slug',
               component: ChapterResource,
@@ -111,6 +111,7 @@ LessonResource.propTypes = {
   canExport: T.bool.isRequired,
   canEdit: T.bool.isRequired,
   tree: T.any.isRequired,
+  root: T.any,
   createChapter: T.func.isRequired,
   copyChapter: T.func.isRequired,
   loadChapter: T.func.isRequired,
