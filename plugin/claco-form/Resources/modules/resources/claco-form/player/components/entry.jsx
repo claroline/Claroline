@@ -7,7 +7,7 @@ import {url} from '#/main/app/api'
 import {withRouter} from '#/main/app/router'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
-import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {ASYNC_BUTTON, CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {DetailsData} from '#/main/app/content/details/containers/data'
 import {Button} from '#/main/app/action/components/button'
 import {Toolbar} from '#/main/app/action/components/toolbar'
@@ -27,7 +27,7 @@ import {
 } from '#/plugin/claco-form/resources/claco-form/prop-types'
 import {generateFromTemplate} from '#/plugin/claco-form/resources/claco-form/template'
 import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
-import {actions} from '#/plugin/claco-form/resources/claco-form/player/store'
+import {actions, selectors as playerSelectors} from '#/plugin/claco-form/resources/claco-form/player/store'
 import {EntryComments} from '#/plugin/claco-form/resources/claco-form/player/components/entry-comments'
 import {EntryMenu} from '#/plugin/claco-form/resources/claco-form/player/components/entry-menu'
 
@@ -279,11 +279,18 @@ class EntryComponent extends Component {
             {this.props.showEntryNav &&
               <Button
                 className="btn-link btn-entry-nav"
-                type={CALLBACK_BUTTON}
+                type={ASYNC_BUTTON}
                 icon="fa fa-fw fa-chevron-left"
                 label={trans('previous')}
                 tooltip="right"
-                callback={() => true}
+                request={{
+                  url: url(['apiv2_clacoformentry_previous', {clacoForm: this.props.clacoFormId, entry: this.props.entryId}])+this.props.slideshowQueryString,
+                  success: (previous) => {
+                    if (previous && previous.id) {
+                      this.props.history.push(`/entries/${previous.id}`)
+                    }
+                  }
+                }}
               />
             }
 
@@ -370,11 +377,18 @@ class EntryComponent extends Component {
             {this.props.showEntryNav &&
               <Button
                 className="btn-link btn-entry-nav"
-                type={CALLBACK_BUTTON}
+                type={ASYNC_BUTTON}
                 icon="fa fa-fw fa-chevron-right"
                 label={trans('next')}
                 tooltip="left"
-                callback={() => true}
+                request={{
+                  url: url(['apiv2_clacoformentry_next', {clacoForm: this.props.clacoFormId, entry: this.props.entryId}])+this.props.slideshowQueryString,
+                  success: (next) => {
+                    if (next && next.id) {
+                      this.props.history.push(`/entries/${next.id}`)
+                    }
+                  }
+                }}
               />
             }
           </div>
@@ -399,6 +413,7 @@ class EntryComponent extends Component {
 
 EntryComponent.propTypes = {
   clacoFormId: T.string.isRequired,
+  slideshowQueryString: T.string,
   entryId: T.string,
   canEdit: T.bool.isRequired,
   canAdministrate: T.bool.isRequired,
@@ -447,6 +462,7 @@ EntryComponent.propTypes = {
 const Entry = withRouter(connect(
   (state, ownProps) => ({
     clacoFormId: selectors.clacoForm(state).id,
+    slideshowQueryString: playerSelectors.slideshowQueryString(state),
     entryId: ownProps.match.params.id,
     entry: formSelect.data(formSelect.form(state, selectors.STORE_NAME+'.entries.current')),
     entryUser: selectors.entryUser(state),

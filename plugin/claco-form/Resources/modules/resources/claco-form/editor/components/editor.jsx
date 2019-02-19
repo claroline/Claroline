@@ -140,11 +140,11 @@ const EditorComponent = props =>
             name: 'details.display_keywords',
             type: 'boolean',
             label: trans('label_display_keywords', {}, 'clacoform')
-          }/*, {
+          }, {
             name: 'display.showEntryNav',
             type: 'boolean',
             label: trans('show_entry_nav', {}, 'clacoform')
-          }*/
+          }
         ]
       }, {
         icon: 'fa fa-fw fa-key',

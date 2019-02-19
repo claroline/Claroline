@@ -21,6 +21,17 @@ const currentPage  = (listState) => paginationSelectors.currentPage(pagination(l
 
 const filters      = (listState) => searchSelectors.filters(listState.filters) // for retro-compatibility
 
+const sortByQueryString = createSelector(
+  [sortBy],
+  (sortBy) => {
+    if (sortBy.property && 0 !== sortBy.direction) {
+      return `sortBy=${-1 === sortBy.direction ? '-':''}${sortBy.property}`
+    }
+
+    return ''
+  }
+)
+
 /**
  * Creates an URL query sting based on the list current config.
  * Format: ?filters[FILTER_NAME]=FILTER_VALUE&sortBy=SORT_NAME&page=0&limit=-1
@@ -39,9 +50,9 @@ function queryString(listState) {
   }
 
   // add sort by
-  const currentSort = sortBy(listState)
-  if (currentSort.property && 0 !== currentSort.direction) {
-    queryParams.push(`sortBy=${-1 === currentSort.direction ? '-':''}${currentSort.property}`)
+  const currentSort = sortByQueryString(listState)
+  if (0 < currentSort.length) {
+    queryParams.push(currentSort)
   }
 
   // add pagination
@@ -68,7 +79,8 @@ const pages = createSelector(
   }
 )
 
-export const select = {
+let selectors, select
+selectors = select = {
   list,
   loaded,
   invalidated,
@@ -81,5 +93,11 @@ export const select = {
   currentPage,
   pageSize,
   pages,
+  sortByQueryString,
   queryString
+}
+
+export {
+  select, // for retro-compatibility
+  selectors
 }

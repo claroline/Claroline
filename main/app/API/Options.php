@@ -100,4 +100,7 @@ final class Options
 
     const CRUD_CREATE = 'crud_create';
     const CRUD_UPDATE = 'crud_update';
+
+    //finder options
+    const SQL_ARRAY_MAP = 'sql_array_map';
 }
