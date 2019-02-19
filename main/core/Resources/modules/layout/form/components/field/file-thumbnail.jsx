@@ -161,13 +161,17 @@ export const FileThumbnail = props =>
 FileThumbnail.propTypes = {
   data: T.object,
   type: T.string.isRequired,
+
   canEdit: T.bool.isRequired,
-  canDelete: T.bool.isRequired,
-  canExpand: T.bool.isRequired,
-  canDownload: T.bool.isRequired,
   handleEdit: T.func,
+
+  canDelete: T.bool.isRequired,
   handleDelete: T.func.isRequired,
+
+  canExpand: T.bool.isRequired,
   handleExpand: T.func,
+
+  canDownload: T.bool.isRequired,
   handleDownload: T.func
 }
 

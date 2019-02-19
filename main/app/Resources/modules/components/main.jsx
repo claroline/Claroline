@@ -5,6 +5,9 @@ import {Provider} from 'react-redux'
 import {Router} from '#/main/app/router'
 import {OverlayStack} from '#/main/app/overlay/containers/stack'
 
+import {DragDropProvider} from '#/main/app/overlay/dnd/components/provider'
+import {FileDrop} from '#/main/app/overlay/dnd/components/file-drop'
+
 // implemented overlays
 import {ModalOverlay} from '#/main/app/overlay/modal/containers/overlay'
 import {AlertOverlay} from '#/main/app/overlay/alert/containers/overlay'
@@ -14,16 +17,20 @@ import {WalkthroughOverlay} from '#/main/app/overlay/walkthrough/containers/over
 
 const Main = props =>
   <Provider store={props.store}>
-    <AlertOverlay key="alert" />
+    <DragDropProvider>
+      <FileDrop>
+        <AlertOverlay key="alert" />
 
-    <Router embedded={props.embedded}>
-      {props.children}
-    </Router>
+        <Router embedded={props.embedded}>
+          {props.children}
+        </Router>
 
-    <OverlayStack>
-      <ModalOverlay key="modal" />,
-      <WalkthroughOverlay key="walkthrough" />
-    </OverlayStack>
+        <OverlayStack>
+          <ModalOverlay key="modal" />,
+          <WalkthroughOverlay key="walkthrough" />
+        </OverlayStack>
+      </FileDrop>
+    </DragDropProvider>
   </Provider>
 
 Main.propTypes = {

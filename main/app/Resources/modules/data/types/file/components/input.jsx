@@ -1,57 +1,96 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import has from 'lodash/has'
+import classes from 'classnames'
+import isEmpty from 'lodash/isEmpty'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {actions} from '#/main/app/api/store'
 
-import {Checkbox} from '#/main/core/layout/form/components/field/checkbox'
+import {FileDropContext} from '#/main/app/overlay/dnd/file-drop-context'
+import {getType} from '#/main/app/data/types/file/utils'
 import {FileThumbnail} from '#/main/core/layout/form/components/field/file-thumbnail'
 
 // todo handle unzippable
 
+function getEventFiles(e) {
+  let files = []
+  if (e.dataTransfer.items) {
+    // Use DataTransferItemList interface to access the file(s)
+    for (let i = 0; i < e.dataTransfer.items.length; i++) {
+      // If dropped items aren't files, reject them
+      if (e.dataTransfer.items[i].kind === 'file') {
+        files.push(
+          e.dataTransfer.items[i].getAsFile()
+        )
+      }
+    }
+  } else {
+    // Use DataTransfer interface to access the file(s)
+    files = e.dataTransfer.files
+  }
+
+  return files
+}
+
 class FileComponent extends Component {
-  constructor(props) {
-    super(props)
+  constructor(props, context) {
+    super(props, context)
 
-    this.state = {
-      unzip: false
+    this.onFileDrop = this.onFileDrop.bind(this)
+    this.onFileSelect = this.onFileSelect.bind(this)
+  }
+
+  onFileDrop(e) {
+    e.preventDefault() // prevent file from being opened
+
+    // grab files from event to upload them
+    const files = getEventFiles(e)
+    console.log(files)
+    if (!isEmpty(files)) {
+      // upload dropped files
     }
   }
 
-  isTypeAllowed(type) {
-    let isAllowed = this.props.types.length === 0
-
-    if (!isAllowed) {
-      const regex = new RegExp(type, 'gi')
-      this.props.types.forEach(t => {
-        if (t.match(regex)) {
-          isAllowed = true
+  onFileSelect() {
+    if (!isEmpty(this.input.files)) {
+      if (!this.props.multiple) {
+        const file = this.input.files[0]
+        if (this.props.autoUpload) {
+          this.props.uploadFile(file, this.props.uploadUrl, this.props.onChange)
+        } else {
+          this.props.onChange(file)
         }
-      })
+      } else {
+        // Only manages multiple files if autoUpload is false
+        if (this.props.autoUpload) {
+          this.props.uploadFile(this.input.files[0], this.props.uploadUrl, this.props.onChange)
+        } else {
+          this.props.onChange(this.input.files)
+        }
+      }
     }
-
-    return isAllowed
   }
 
-  getFileType(mimeType) {
-    const typeParts = mimeType.split('/')
-    let type = 'file'
+  onChange(files) {
 
-    if (typeParts[0] && ['image', 'audio', 'video'].indexOf(typeParts[0]) > -1) {
-      type = typeParts[0]
-    } else if (typeParts[1]) {
-      type = typeParts[1]
-    }
-
-    return type
   }
 
   render() {
     return (
-      <fieldset>
+      <div
+        className={classes('file-control', {
+          'highlight': this.context
+        })}
+        onDrop={this.onFileDrop}
+      >
+        {this.context &&
+          <div className="files-drop-placeholder">
+            Déposez vos fichiers ici
+          </div>
+        }
+
         <input
           id={this.props.id}
           type="file"
@@ -60,41 +99,27 @@ class FileComponent extends Component {
           multiple={this.props.multiple}
           accept={this.props.types.join(',')}
           ref={input => this.input = input}
-          onChange={() => {
-            if (this.input.files[0]) {
-              if (!this.props.multiple) {
-                const file = this.input.files[0]
-                if (this.props.autoUpload) {
-                  this.props.uploadFile(file, this.props.uploadUrl, this.props.onChange)
-                } else {
-                  this.props.onChange(file)
-                }
-              } else {
-                // Only manages multiple files if autoUpload is false
-                if (this.props.autoUpload) {
-                  this.props.uploadFile(this.input.files[0], this.props.uploadUrl, this.props.onChange)
-                } else {
-                  this.props.onChange(this.input.files)
-                }
-              }
-            }}
-          }
+          onChange={this.onFileSelect}
         />
 
-        {this.props.unzippable &&
-          <Checkbox
-            id={`${this.props.id}-unzip`}
-            checked={this.state.unzip}
-            disabled={this.props.disabled}
-            label={trans('unzip_file')}
-            onChange={(checked) => this.setState({unzip: checked})}
-          />
-        }
+        <button
+          type="button"
+          className="files-drop-container"
+          onClick={() => this.input.click()}
+        >
+          <div className="files-drop">
+            <span className="files-drop-icon fa fa-file-upload" />
+            <div className="files-drop-label">
+              Choisir un fichier
+              <span className="files-drop-info">Vous pouvez aussi glisser/déposer un fichier ici</span>
+            </div>
+          </div>
+        </button>
 
-        {has(this.props.value, 'mimeType') && has(this.props.value, 'url') &&
+        {!isEmpty(this.props.value) &&
           <div className="file-thumbnails">
             <FileThumbnail
-              type={this.getFileType(this.props.value.mimeType)}
+              type={getType(this.props.value.mimeType)}
               data={this.props.value}
               canEdit={false}
               canExpand={false}
@@ -109,14 +134,25 @@ class FileComponent extends Component {
             />
           </div>
         }
-      </fieldset>
+      </div>
     )
   }
 }
 
+// register to the FileDropContext to know when a file enters the window
+FileComponent.contextType = FileDropContext
+
 implementPropTypes(FileComponent, FormFieldTypes, {
   // more precise value type
-  value: T.oneOfType([T.array, T.object]),
+  value: T.oneOfType([
+    T.array,
+    T.shape({
+      id: T.number,
+      mimeType: T.string.isRequired,
+      url: T.string.isRequired
+    })
+  ]),
+
   // custom props
   types: T.arrayOf(T.string),
 
@@ -126,7 +162,6 @@ implementPropTypes(FileComponent, FormFieldTypes, {
 
   uploadUrl: T.oneOfType([T.string, T.arrayOf(T.string)]),
   autoUpload: T.bool,
-  unzippable: T.bool,
 
   // async method for autoUpload
   uploadFile: T.func.isRequired,
@@ -135,8 +170,6 @@ implementPropTypes(FileComponent, FormFieldTypes, {
   types: [],
   multiple: false,
   autoUpload: true,
-  unzippable: false,
-  onChange: () => {},
   uploadUrl: ['apiv2_file_upload']
 })
 

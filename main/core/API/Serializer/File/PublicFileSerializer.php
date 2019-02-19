@@ -43,13 +43,16 @@ class PublicFileSerializer
     {
         return [
             'id' => $file->getId(),
+            'type' => $file->getMimeType(),
+            'name' => $file->getFilename(),
             'size' => $file->getSize(),
-            'filename' => $file->getFilename(),
-            'directory' => $file->getDirectoryName(),
-            'creator' => [],
-            'mimeType' => $file->getMimeType(),
+            'directory' => $file->getDirectoryName(), // I'm not sure this is needed
             'sourceType' => $file->getSourceType(),
             'url' => $file->getUrl(),
+
+            // deprecated use `type` / `name` (this is to be compliant with the js File API)
+            'mimeType' => $file->getMimeType(),
+            'filename' => $file->getFilename(),
           ];
     }
 

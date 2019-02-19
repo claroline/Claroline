@@ -1,0 +1,99 @@
+
+.file-control {
+    position: relative; // to constrain drop placeholder
+
+    input[type=file] {
+        display: none;
+    }
+
+    .files-drop-placeholder {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: @input-color;
+        background: fadeOut(@input-bg, 25%);
+        border: 3px dashed @input-color;
+
+        font-size: @font-size-h2;
+        text-transform: uppercase;
+        font-weight: 900;
+
+        left: 4px;
+        top: 4px;
+        right: 4px;
+        bottom: 4px;
+
+        &:hover {
+            color: @input-border-focus;
+            border-color: @input-border-focus;
+        }
+    }
+
+    .files-drop-container {
+        display: block;
+        width: 100%;
+        color: @input-color;
+        background: @input-bg;
+        border: 1px solid @input-border;
+        border-radius:@input-border-radius;
+        box-shadow: @input-box-shadow;
+
+        .files-drop {
+            margin: auto 0;
+            display: inline-flex;
+            flex-direction: row;
+            align-items: center;
+
+            .files-drop-label {
+                font-weight: bold;
+            }
+
+            .files-drop-info {
+                display: block;
+                font-style: italic;
+                font-weight: normal;
+            }
+        }
+    }
+
+    .files-list {
+
+    }
+
+    // sizing
+    .file-control-size-variant(@font-size-h4, @font-size-base, @padding-base-vertical, @padding-base-horizontal, @input-border-radius);
+
+    &.input-sm {
+        .file-control-size-variant(@font-size-h5, @font-size-small, @padding-small-vertical, @padding-small-horizontal, @input-border-radius-small);
+    }
+
+    &.input-lg {
+        .file-control-size-variant(@font-size-h3, @font-size-large, @padding-large-vertical, @padding-large-horizontal, @input-border-radius-large);
+    }
+}
+
+.file-control-size-variant(@font-size-title, @font-size-text, @padding-v, @padding-h, @border-radius) {
+    border-radius: @border-radius;
+
+    .files-drop-placeholder {
+        border-radius: @border-radius;
+    }
+
+    .files-drop-icon,
+    .files-drop-label {
+        padding: @padding-v @padding-h;
+    }
+
+    .files-drop-icon {
+        font-size: @font-size-title + @font-size-text;
+    }
+
+    .files-drop-label {
+        font-size: @font-size-title;
+    }
+
+    .files-drop-info {
+        font-size: @font-size-text;
+    }
+}

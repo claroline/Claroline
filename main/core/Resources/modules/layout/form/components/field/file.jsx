@@ -7,10 +7,7 @@ import {trans} from '#/main/app/intl/translation'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {actions} from '#/main/app/api/store'
 
-import {Checkbox} from '#/main/core/layout/form/components/field/checkbox'
 import {FileThumbnail} from '#/main/core/layout/form/components/field/file-thumbnail'
-
-// todo handle unzippable
 
 class FileComponent extends Component {
   constructor(props) {
@@ -19,21 +16,6 @@ class FileComponent extends Component {
     this.state = {
       unzip: false
     }
-  }
-
-  isTypeAllowed(type) {
-    let isAllowed = this.props.types.length === 0
-
-    if (!isAllowed) {
-      const regex = new RegExp(type, 'gi')
-      this.props.types.forEach(t => {
-        if (t.match(regex)) {
-          isAllowed = true
-        }
-      })
-    }
-
-    return isAllowed
   }
 
   getFileType(mimeType) {
@@ -81,16 +63,6 @@ class FileComponent extends Component {
           }
         />
 
-        {this.props.unzippable &&
-          <Checkbox
-            id={`${this.props.id}-unzip`}
-            checked={this.state.unzip}
-            disabled={this.props.disabled}
-            label={trans('unzip_file')}
-            onChange={(checked) => this.setState({unzip: checked})}
-          />
-        }
-
         {has(this.props.value, 'mimeType') && has(this.props.value, 'url') &&
           <div className="file-thumbnails">
             <FileThumbnail
@@ -126,7 +98,6 @@ implementPropTypes(FileComponent, FormFieldTypes, {
 
   uploadUrl: T.oneOfType([T.string, T.arrayOf(T.string)]),
   autoUpload: T.bool,
-  unzippable: T.bool,
 
   // async method for autoUpload
   uploadFile: T.func.isRequired,
@@ -135,7 +106,6 @@ implementPropTypes(FileComponent, FormFieldTypes, {
   types: [],
   multiple: false,
   autoUpload: true,
-  unzippable: false,
   onChange: () => {},
   uploadUrl: ['apiv2_file_upload']
 })
