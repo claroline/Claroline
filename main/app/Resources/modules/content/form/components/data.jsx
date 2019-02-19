@@ -116,7 +116,7 @@ class FormData extends Component {
             error={get(this.props.errors, field.name)}
             warnOnly={!this.props.validating}
           >
-            {field.render(this.props.data)}
+            {field.render(this.props.data, this.props.errors)}
           </FormGroup>
         )
       } else {
@@ -199,7 +199,6 @@ class FormData extends Component {
         cancel={this.props.cancel}
         lock={this.props.lock}
         getLock={this.props.getLock}
-        setLock={this.props.setLock}
         unlock={this.props.unlock}
       >
         {this.props.meta &&
@@ -283,7 +282,6 @@ FormData.propTypes = {
   }),
 
   getLock: T.func.isRequired,
-  setLock: T.func.isRequired,
   unlock: T.func.isRequired,
 
   /**

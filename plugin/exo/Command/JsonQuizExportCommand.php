@@ -50,7 +50,7 @@ class JsonQuizExportCommand extends ContainerAwareCommand
         $resManager = $this->getContainer()->get('claroline.manager.resource_manager');
         $node = $resManager->getById($match[1]);
         $exercise = $resManager->getResourceFromNode($node);
-        $file = $this->getContainer()->get('ujm_exo.manager.json_quiz')->export($exercise);
+        $file = $this->getContainer()->get('ujm_exo.manager.exercise')->export($exercise);
         rename($file, $input->getArgument('destination').'/'.$node->getName().'.json');
     }
 }

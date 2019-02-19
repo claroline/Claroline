@@ -336,7 +336,7 @@ describe('Set validator', () => {
 
     ensure.equal(validate(item), {
       solutions: 'set_no_solution',
-      items: 'set_no_orphean_items'
+      items: 'set_no_orphan_items'
     })
   })
 

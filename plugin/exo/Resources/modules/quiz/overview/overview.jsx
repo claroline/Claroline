@@ -121,7 +121,6 @@ OverviewComponent.propTypes = {
   editable: T.bool.isRequired,
   quiz: T.shape({
     description: T.string,
-    meta: T.object.isRequired,
     parameters: T.object.isRequired,
     picking: T.object.isRequired
   }).isRequired,

@@ -566,6 +566,7 @@
     "host": "Hôte",
     "hour": "heure",
     "hours": "heures",
+    "hours_short": "h",
     "html": "HTML",
     "icon": "Icône",
     "icon_tab_help": "Entrez le nom de l'icône Font Awesome que vous souhaitez ajouter.",
@@ -728,6 +729,7 @@
     "min_text_length": "Longueur minimale du texte",
     "minute": "minute",
     "minutes": "minutes",
+    "minutes_short": "m",
     "misc": "Divers",
     "missing_%content%": "La variable %content% est manquante pour la langue \"%language%\".",
     "missing_%password%": "La variable %password% est manquante pour la langue \"%language%\".",
@@ -1062,12 +1064,9 @@
     "score": "Score",
     "score_to_pass": "Score à obtenir pour réussir (%)",
     "score_total": "Score total",
-    "search": "Rechercher",
-    "search_group": "Rechercher un groupe",
-    "search_user": "Rechercher un utilisateur",
-    "search_workspace": "Rechercher un espace d''activités",
     "second": "seconde",
     "seconds": "secondes",
+    "seconds_short": "s",
     "section_delete_confirm_title": "Supprimer la section",
     "section_delete_confirm_message": "Êtes-vous sûr de vouloir supprimer cette section ?",
     "security_token": "Jeton d'authentification",
@@ -1748,5 +1747,6 @@
     "last": "Dernier",
     "update_object": "Object en cours de modification",
     "object_currently_modified": "L'objet est en cours de modification par %username% depuis %date%",
-    "update_anyway": "Modifier quand même"
+    "update_anyway": "Modifier quand même",
+    "choices": "Choix"
 }

@@ -7,7 +7,8 @@ import {tex, trans} from '#/main/app/intl/translation'
 import {notBlank} from '#/main/core/validation'
 
 import {ITEM_CREATE} from '#/plugin/exo/quiz/editor/actions'
-import {SCORE_FIXED, SCORE_RULES, NUMBERING_NONE} from '#/plugin/exo/quiz/enums'
+import {SCORE_FIXED, SCORE_RULES} from '#/plugin/exo/quiz/enums'
+import {constants} from '#/plugin/exo/resources/quiz/constants'
 import {makeId} from '#/plugin/exo/utils/utils'
 import {Choice as component} from '#/plugin/exo/items/choice/editor.jsx'
 import {
@@ -47,7 +48,7 @@ function decorate(item) {
 
   let decorated = Object.assign({}, item, {
     choices: choicesWithSolutions,
-    numbering: item.numbering || NUMBERING_NONE
+    numbering: item.numbering || constants.NUMBERING_NONE
   })
 
   return setChoiceTicks(decorated)

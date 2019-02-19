@@ -4,7 +4,6 @@ import {shallow, mount} from 'enzyme'
 import {spyConsole, renew, ensure, mockGlobals} from '#/main/core/scaffolding/tests'
 import {Overview} from './overview.jsx'
 import {
-  QUIZ_SUMMATIVE,
   QUIZ_PICKING_DEFAULT,
   SHUFFLE_ALWAYS,
   SHOW_CORRECTION_AT_DATE,
@@ -59,7 +58,7 @@ describe('<Overview/>', () => {
         quiz: {
           description: 'DESC',
           parameters: {
-            type: QUIZ_SUMMATIVE,
+            type: 'summative',
             showMetadata: true,
             duration: 10,
             maxAttempts: 5,

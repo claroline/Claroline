@@ -5,8 +5,8 @@ import {select as quizSelectors} from '#/plugin/exo/quiz/selectors'
 // TODO : there are duplication with base quiz selectors
 
 const offline = createSelector(
-  [quizSelectors.noServer, quizSelectors.testMode],
-  (noServer, testMode) => noServer || testMode
+  [quizSelectors.testMode],
+  (testMode) => testMode
 )
 const paper = createSelector(
   [quizSelectors.resource],

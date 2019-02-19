@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Controller\Api;
 
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -13,10 +14,8 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Library\Options\Transfer;
-use UJM\ExoBundle\Library\Validator\ValidationException;
 use UJM\ExoBundle\Manager\DocimologyManager;
 use UJM\ExoBundle\Manager\ExerciseManager;
-use UJM\ExoBundle\Manager\JsonQuizManager;
 
 /**
  * Exercise API Controller exposes REST API.
@@ -31,9 +30,6 @@ class ExerciseController extends AbstractController
     /** @var ExerciseManager */
     private $exerciseManager;
 
-    /** @var JsonQuizManager */
-    private $jsonQuizManager;
-
     /** @var DocimologyManager */
     private $docimologyManager;
 
@@ -43,24 +39,20 @@ class ExerciseController extends AbstractController
      * @DI\InjectParams({
      *     "authorization"     = @DI\Inject("security.authorization_checker"),
      *     "exerciseManager"   = @DI\Inject("ujm_exo.manager.exercise"),
-     *     "jsonQuizManager"   = @DI\Inject("ujm_exo.manager.json_quiz"),
      *     "docimologyManager" = @DI\Inject("ujm_exo.manager.docimology")
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param ExerciseManager               $exerciseManager
-     * @param JsonQuizManager               $jsonQuizManager
      * @param DocimologyManager             $docimologyManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ExerciseManager $exerciseManager,
-        JsonQuizManager $jsonQuizManager,
         DocimologyManager $docimologyManager
     ) {
         $this->authorization = $authorization;
         $this->exerciseManager = $exerciseManager;
-        $this->jsonQuizManager = $jsonQuizManager;
         $this->docimologyManager = $docimologyManager;
     }
 
@@ -113,7 +105,7 @@ class ExerciseController extends AbstractController
             // Try to update exercise
             try {
                 $this->exerciseManager->update($exercise, $data);
-            } catch (ValidationException $e) {
+            } catch (InvalidDataException $e) {
                 $errors = $e->getErrors();
             }
         }
@@ -124,7 +116,9 @@ class ExerciseController extends AbstractController
         }
 
         // Exercise updated
-        return new JsonResponse(null, 204);
+        return new JsonResponse(
+            $this->exerciseManager->serialize($exercise, [Transfer::INCLUDE_SOLUTIONS])
+        );
     }
 
     /**
@@ -182,7 +176,7 @@ class ExerciseController extends AbstractController
     {
         $this->assertHasPermission('ADMINISTRATE', $exercise);
 
-        $file = $this->jsonQuizManager->export($exercise);
+        $file = $this->exerciseManager->export($exercise);
 
         $response = new StreamedResponse();
         $response->setCallBack(

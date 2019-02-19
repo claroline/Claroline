@@ -13,7 +13,6 @@ import {decorateItem} from '#/plugin/exo/quiz/decorators'
 import {getIndex, makeId, makeItemPanelKey, update, refreshIds} from '#/plugin/exo/utils/utils'
 import {getDefinition} from '#/plugin/exo/items/item-types'
 import {getContentDefinition} from '#/plugin/exo/contents/content-types'
-import {ATTEMPT_FINISH} from '#/plugin/exo/quiz/player/actions'
 import {
   TYPE_QUIZ,
   TYPE_STEP,
@@ -138,15 +137,6 @@ function reduceQuiz(quiz = initialQuizState(), action = {}) {
         }
       })
     }
-    case ATTEMPT_FINISH:
-      return update(quiz, {
-        meta: {
-          userPaperCount: {$set: quiz.meta.userPaperCount + 1},
-          userPaperDayCount: {$set: quiz.meta.userPaperDayCount + 1},
-          paperCount: {$set: quiz.meta.paperCount + 1}
-        }
-      })
-
   }
   return quiz
 }

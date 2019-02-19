@@ -11,7 +11,6 @@ use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Csv\ArrayCompressor;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Serializer\Item\Type\GraphicQuestionSerializer;
-use UJM\ExoBundle\Transfer\Parser\ContentParserInterface;
 use UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\GraphicAnswerValidator;
 use UJM\ExoBundle\Validator\JsonSchema\Item\Type\GraphicQuestionValidator;
 
@@ -171,17 +170,6 @@ class GraphicDefinition extends AbstractDefinition
         foreach ($item->getAreas() as $area) {
             $area->refreshUuid();
         }
-    }
-
-    /**
-     * No additional content fields to process.
-     *
-     * @param ContentParserInterface $contentParser
-     * @param \stdClass              $item
-     */
-    public function parseContents(ContentParserInterface $contentParser, \stdClass $item)
-    {
-        return;
     }
 
     private function isPointInArea(Area $area, $x, $y)

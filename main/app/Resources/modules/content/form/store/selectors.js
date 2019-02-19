@@ -12,6 +12,8 @@ const errors = (formState) => formState.errors
 const data = (formState) => formState.data
 const originalData = (formState) => formState.originalData
 
+const value = (formState, prop) => get(data(formState), prop)
+
 const valid = createSelector(
   [errors],
   (errors) => isEmpty(errors)
@@ -31,5 +33,6 @@ export const selectors = {
   data,
   originalData,
   valid,
-  saveEnabled
+  saveEnabled,
+  value
 }

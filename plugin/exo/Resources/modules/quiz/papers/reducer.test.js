@@ -2,7 +2,7 @@ import freeze from 'deep-freeze'
 
 import {ensure} from '#/main/core/scaffolding/tests'
 import {reducePapers} from './reducer'
-import {PAPERS_INIT, PAPER_CURRENT} from './actions'
+import {PAPER_CURRENT} from './actions'
 
 describe('Papers reducer', () => {
   it('returns an empty papers list by default', () => {
@@ -11,11 +11,6 @@ describe('Papers reducer', () => {
       papers: {},
       isFetched: false
     })
-  })
-
-  it('sets papers on init', () => {
-    const papers = reducePapers({}, {type: PAPERS_INIT, papers: {id: 'PAPERS'}})
-    ensure.equal(papers.papers, {id: 'PAPERS'})
   })
 
   it('updates current paper id', () => {

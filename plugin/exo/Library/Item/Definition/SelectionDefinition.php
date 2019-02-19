@@ -11,7 +11,6 @@ use UJM\ExoBundle\Entity\Misc\Selection;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Serializer\Item\Type\SelectionQuestionSerializer;
-use UJM\ExoBundle\Transfer\Parser\ContentParserInterface;
 use UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\SelectionAnswerValidator;
 use UJM\ExoBundle\Validator\JsonSchema\Item\Type\SelectionQuestionValidator;
 
@@ -283,17 +282,6 @@ class SelectionDefinition extends AbstractDefinition
         foreach ($item->getSelections() as $selection) {
             $selection->refreshUuid();
         }
-    }
-
-    /**
-     * Parses item text.
-     *
-     * @param ContentParserInterface $contentParser
-     * @param \stdClass              $item
-     */
-    public function parseContents(ContentParserInterface $contentParser, \stdClass $item)
-    {
-        $item->text = $contentParser->parse($item->text);
     }
 
     public function getCsvTitles(AbstractItem $question)

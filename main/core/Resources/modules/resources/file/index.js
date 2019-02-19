@@ -1,5 +1,5 @@
 
-import {FileCreation} from '#/main/core/resources/file/components/creation'
+import {FileCreation} from '#/main/core/resources/file/containers/creation'
 import {FileResource} from '#/main/core/resources/file/containers/resource'
 
 /**

@@ -1,89 +1,67 @@
-.thumbnail-box {
+.quiz-navbar {
+    flex-shrink: 0;
+
     display: flex;
     flex-direction: column;
-    flex-shrink: 0;
-    align-items: center;
+
     width: @quiz-summary-width;
-    overflow: auto;
+    //overflow: auto;
     background: @quiz-summary-bg;
     padding: @quiz-summary-padding;
     border-radius: @summary-border-radius;
     box-shadow: @quiz-summary-box-shadow-v;
-    text-align: center;
 
     margin-top: @component-margin-bottom;
-    // fake bootstrap grid
-    margin-right: @grid-gutter-width;
-    margin-bottom: 0;
+    margin-bottom: @component-margin-bottom;
+    margin-right: @grid-gutter-width; // fake bootstrap grid
 
-    .thumbnail {
+    .quiz-navlink {
+        position: relative;
         display: flex;
         flex-direction: column;
-        flex-shrink: 0;
+        justify-content: space-around;
+        align-items: center;
+
         width: 100px;
         height: 100px;
-        text-align: center;
-        text-decoration: none;
         font-size: @quiz-summary-font;
-        margin-bottom: floor(@grid-gutter-width / 2);
+        border-radius: 2px;
+
         background: @quiz-summary-link-bg;
         color: @quiz-summary-link-color;
-        border-color: @quiz-summary-link-color;
+        border: 1px solid @quiz-summary-link-color;
 
-        a {
-            color: @quiz-summary-link-color;
-            text-decoration: none;
-            /* required by text-overflow */
-            white-space: nowrap;
-            overflow: hidden;
+        + .quiz-navlink {
+            margin-top: @quiz-summary-padding;
         }
 
-        &.active {
+        > .fa {
+            font-size: 28px;
+        }
+
+        .step-toolbar {
+            position: absolute;
+            right: 0;
+            top: 0;
+
+            .step-toolbar-btn {
+                padding: 4px;
+            }
+        }
+
+        &:hover {
+            color: @quiz-summary-link-hover-color;
+            background: @quiz-summary-link-bg;
+            border-color: @quiz-summary-link-hover-color;
+        }
+
+        &.active,
+        &:active,
+        &:focus {
             color: @quiz-summary-link-active-color;
             background: @quiz-summary-link-active-bg;
             border-color: @quiz-summary-link-active-color;
-
-            a {
-                color: @quiz-summary-link-active-color;
-            }
-
-            &:hover{
-                .step-actions{
-                    visibility: visible;
-                }
-            }
         }
-        &:hover:not(.active) {
-            a {
-                color: @quiz-summary-link-hover-color;
-            }
-
-            color: @quiz-summary-link-hover-color;
-            background: @quiz-summary-link-hover-bg;
-            border-color: @quiz-summary-link-hover-color;
-            cursor: pointer;
-        }
-    }
-    .step-actions,
-    .step-label,
-    .step-bottom {
-        height: 33%;
-    }
-    .step-actions {
-        display: flex;
-        justify-content: space-between;
-        visibility: hidden;
-    }
-    .step-label {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        outline: 0;
-        text-overflow: ellipsis;
-        font-weight: bold;
-    }
-    .new-step {
-        flex: none;
     }
 }
 
@@ -100,30 +78,21 @@
 }
 
 @media (max-width: @screen-sm-min) {
-    .thumbnail-box {
+    .quiz-navbar {
         flex-direction: row;
         width: 100%;
         height: 106px;
         margin-right: 0;
+        margin-bottom: 0;
         box-shadow: @quiz-summary-box-shadow-h;
 
-        .thumbnail {
+        .quiz-navlink {
             width: 80px;
             height: 80px;
 
-            margin-bottom: 0;
-            margin-right: floor(@grid-gutter-width / 2);
-
-            .step-label.type-quiz:before {
-                content: "\F013";
-                font-family: FontAwesome;
-                display: inline-block;
-                font-size: 1.2em;
-                -webkit-font-smoothing: antialiased;
-            }
-
-            .step-label.type-quiz .quiz-title{
-                display: none;
+            + .quiz-navlink {
+                margin-top: 0;
+                margin-left: @quiz-summary-padding;
             }
         }
     }

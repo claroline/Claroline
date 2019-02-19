@@ -6,7 +6,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Serializer\Item\Type\ContentItemSerializer;
-use UJM\ExoBundle\Transfer\Parser\ContentParserInterface;
 use UJM\ExoBundle\Validator\JsonSchema\Item\Type\ContentItemValidator;
 
 /**
@@ -132,18 +131,5 @@ class ContentItemDefinition implements ItemDefinitionInterface
     public function refreshIdentifiers(AbstractItem $item)
     {
         return;
-    }
-
-    /**
-     * Parses content.
-     *
-     * @param ContentParserInterface $contentParser
-     * @param \stdClass              $item
-     */
-    public function parseContents(ContentParserInterface $contentParser, \stdClass $item)
-    {
-        if (property_exists($item, 'data')) {
-            $item->data = $contentParser->parse($item->data);
-        }
     }
 }

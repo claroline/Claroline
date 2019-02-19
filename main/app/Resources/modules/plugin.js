@@ -32,6 +32,7 @@ registry.add('ClarolineAppBundle', {
       'score'       : () => { return import(/* webpackChunkName: "app-data-score" */        '#/main/app/data/types/score') },
       'storage'     : () => { return import(/* webpackChunkName: "app-data-storage" */      '#/main/app/data/types/storage') },
       'string'      : () => { return import(/* webpackChunkName: "app-data-string" */       '#/main/app/data/types/string') },
+      'time'        : () => { return import(/* webpackChunkName: "app-data-time" */         '#/main/app/data/types/time') },
       'translated'  : () => { return import(/* webpackChunkName: "app-data-translated" */   '#/main/app/data/types/translated') },
       'translation' : () => { return import(/* webpackChunkName: "app-data-translation" */  '#/main/app/data/types/translation') },
       'url'         : () => { return import(/* webpackChunkName: "app-data-url" */          '#/main/app/data/types/url') },

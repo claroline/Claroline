@@ -75,7 +75,7 @@ class EditorMain extends Component {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-trash-o',
         label: trans('delete', {}, 'actions'),
-        callback: () => this.props.removeStep(step.id, this.props.history),
+        callback: () => this.props.removeStep(step.id),
         confirm: {
           title: trans('deletion'),
           subtitle: step.title,
@@ -143,28 +143,34 @@ class EditorMain extends Component {
                 render: (routeProps) => {
                   const step = this.props.steps.find(step => routeProps.match.params.id === step.id)
 
-                  const CurrentStep = (
-                    <PathCurrent
-                      prefix="/edit"
-                      current={step}
-                      all={this.props.steps}
-                      navigation={true}
-                    >
-                      <EditorStep
-                        {...step}
-                        pathId={this.props.path.id}
-                        workspace={this.props.workspace}
-                        resourceParent={this.props.resourceParent}
-                        actions={this.getStepActions(step)}
-                        numbering={getNumbering(this.props.path.display.numbering, this.props.path.steps, step)}
-                        customNumbering={constants.NUMBERING_CUSTOM === this.props.path.display.numbering}
-                        stepPath={getFormDataPart(step.id, this.props.path.steps)}
-                        onEmbeddedResourceClose={this.props.computeResourceDuration}
-                      />
-                    </PathCurrent>
-                  )
+                  if (step) {
+                    const CurrentStep = (
+                      <PathCurrent
+                        prefix="/edit"
+                        current={step}
+                        all={this.props.steps}
+                        navigation={true}
+                      >
+                        <EditorStep
+                          {...step}
+                          pathId={this.props.path.id}
+                          workspace={this.props.workspace}
+                          resourceParent={this.props.resourceParent}
+                          actions={this.getStepActions(step)}
+                          numbering={getNumbering(this.props.path.display.numbering, this.props.path.steps, step)}
+                          customNumbering={constants.NUMBERING_CUSTOM === this.props.path.display.numbering}
+                          stepPath={getFormDataPart(step.id, this.props.path.steps)}
+                          onEmbeddedResourceClose={this.props.computeResourceDuration}
+                        />
+                      </PathCurrent>
+                    )
 
-                  return CurrentStep
+                    return CurrentStep
+                  }
+
+                  routeProps.history.push('/edit')
+
+                  return null
                 }
               }
             ]}
@@ -198,13 +204,7 @@ EditorMain.propTypes = {
   removeStep: T.func.isRequired,
 
   // resource management
-  computeResourceDuration: T.func.isRequired,
-  history: T.shape({
-    location: T.shape({
-      pathname: T.string.isRequired
-    }).isRequired,
-    push: T.func.isRequired
-  }).isRequired
+  computeResourceDuration: T.func.isRequired
 }
 
 export {

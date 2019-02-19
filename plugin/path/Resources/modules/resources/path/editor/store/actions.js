@@ -1,13 +1,13 @@
 import {makeActionCreator} from '#/main/app/store/actions'
 
-export const STEP_ADD = 'STEP_ADD'
-export const STEP_COPY = 'STEP_COPY'
-export const STEP_MOVE = 'STEP_MOVE'
-export const STEP_REMOVE = 'STEP_REMOVE'
+export const PATH_ADD_STEP    = 'PATH_ADD_STEP'
+export const PATH_COPY_STEP   = 'PATH_COPY_STEP'
+export const PATH_MOVE_STEP   = 'PATH_MOVE_STEP'
+export const PATH_REMOVE_STEP = 'PATH_REMOVE_STEP'
 
 export const actions = {}
 
-actions.addStep = makeActionCreator(STEP_ADD, 'parentId')
-actions.copyStep = makeActionCreator(STEP_COPY, 'id', 'position')
-actions.moveStep = makeActionCreator(STEP_MOVE, 'id', 'position')
-actions.removeStep = makeActionCreator(STEP_REMOVE, 'id')
+actions.addStep = makeActionCreator(PATH_ADD_STEP, 'step', 'parentId')
+actions.copyStep = makeActionCreator(PATH_COPY_STEP, 'id', 'position')
+actions.moveStep = makeActionCreator(PATH_MOVE_STEP, 'id', 'position')
+actions.removeStep = makeActionCreator(PATH_REMOVE_STEP, 'id')

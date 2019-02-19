@@ -1,3 +1,5 @@
+import {trans} from '#/main/app/intl/translation'
+
 import { stripDiacritics } from '#/main/core/scaffolding/text/strip-diacritics'
 import editor, {SUM_CELL, SUM_COL, SUM_ROW} from './editor'
 import {GridPaper} from './paper.jsx'
@@ -201,6 +203,9 @@ function generateStats(item, papers, withAllParpers) {
 export default {
   type: 'application/x.grid+json',
   name: 'grid',
+  tags: [trans('question', {}, 'quiz')],
+  answerable: true,
+
   paper: GridPaper,
   player: GridPlayer,
   feedback: GridFeedback,

@@ -274,7 +274,7 @@ function validate(item) {
     return item.solutions.associations.find(association => association.itemId === el.id) === undefined &&
       item.solutions.odd.find(o => o.itemId === el.id) === undefined
   })){
-    errors.items = tex('set_no_orphean_items')
+    errors.items = tex('set_no_orphan_items')
   }
 
   // one set min

@@ -1,3 +1,5 @@
+import {trans} from '#/main/app/intl/translation'
+
 import editor from './editor'
 import {BooleanPaper} from './paper.jsx'
 import {BooleanPlayer} from './player.jsx'
@@ -58,8 +60,11 @@ function generateStats(item, papers, withAllParpers) {
 }
 
 export default {
-  type: 'application/x.boolean+json',
   name: 'boolean',
+  type: 'application/x.boolean+json',
+  tags: [trans('question', {}, 'quiz')],
+  answerable: true,
+
   paper: BooleanPaper,
   player: BooleanPlayer,
   feedback: BooleanFeedback,

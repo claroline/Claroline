@@ -5,7 +5,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 
 import {HtmlText} from '#/main/core/layout/components/html-text'
-import {Section} from '#/main/core/layout/components/sections'
+import {Section} from '#/main/app/content/components/sections'
 
 import {selectors} from '#/plugin/lti/resources/lti/store'
 import {LtiResource as LtiResourceType} from '#/plugin/lti/resources/lti/prop-types'

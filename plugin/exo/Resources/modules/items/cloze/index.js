@@ -1,3 +1,5 @@
+import {trans} from '#/main/app/intl/translation'
+
 import editor from './editor'
 import {ClozePaper} from './paper.jsx'
 import {ClozePlayer} from './player.jsx'
@@ -107,6 +109,9 @@ function generateStats(item, papers, withAllParpers) {
 export default {
   type: 'application/x.cloze+json',
   name: 'cloze',
+  tags: [trans('question', {}, 'quiz')],
+  answerable: true,
+
   paper: ClozePaper,
   player: ClozePlayer,
   feedback: ClozeFeedback,

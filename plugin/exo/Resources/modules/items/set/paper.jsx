@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import has from 'lodash/has'
 
 import {tex} from '#/main/app/intl/translation'
 import {Feedback} from './../components/feedback-btn.jsx'
@@ -8,8 +9,7 @@ import {SolutionScore} from './../components/score.jsx'
 import {AnswerStats} from '../components/stats.jsx'
 import {PaperTabs} from './../components/paper-tabs.jsx'
 import {utils} from './utils/utils'
-import {WarningIcon} from './utils/warning-icon.jsx'
-import has from 'lodash/has'
+import {WarningIcon} from '#/plugin/exo/components/warning-icon'
 
 export const SetPaper = props => {
   return (

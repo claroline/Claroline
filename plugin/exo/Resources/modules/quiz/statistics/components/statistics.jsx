@@ -13,7 +13,7 @@ import quizSelect from './../../selectors'
 import {selectors as paperSelect} from './../../papers/selectors'
 import {getDefinition, isQuestionType} from './../../../items/item-types'
 import {Metadata as ItemMetadata} from './../../../items/components/metadata'
-import {NUMBERING_NONE} from './../../../quiz/enums'
+import {constants} from '#/plugin/exo/resources/quiz/constants'
 import {getNumbering} from './../../../utils/numbering'
 
 const Statistics = props =>
@@ -34,7 +34,7 @@ const Statistics = props =>
 
               <ItemMetadata
                 item={item}
-                numbering={props.numbering !== NUMBERING_NONE ? (idx + 1) + '.' + getNumbering(props.numbering, idxItem): null}
+                numbering={props.numbering !== constants.NUMBERING_NONE ? (idx + 1) + '.' + getNumbering(props.numbering, idxItem): null}
               />
 
               {React.createElement(

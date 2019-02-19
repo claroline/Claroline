@@ -1,9 +1,8 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {url} from '#/main/app/api'
-import {tex, trans} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {hasPermission} from '#/main/app/security'
 import {getTimeDiff} from '#/main/app/intl/date'
@@ -16,12 +15,10 @@ import {selectors as paperSelect} from '#/plugin/exo/quiz/papers/selectors'
 import {utils} from '#/plugin/exo/quiz/papers/utils'
 
 const Papers = props =>
-  <div className="papers-list">
-    <div className="panel panel-heading">
-      <a className="btn btn-primary" href={url(['exercise_papers_export_json', {'exerciseId': props.quiz.id}])}> {tex('json_export')} </a>
-      {' '}
-      <a className="btn btn-primary" href={url(['exercise_papers_export_csv', {'exerciseId': props.quiz.id}])}> {tex('csv_export')} </a>
-    </div>
+  <Fragment>
+    <h3 className="h2">
+      {trans('results', {}, 'quiz')}
+    </h3>
 
     <ListData
       name={`${quizSelect.STORE_NAME}.papers.list`}
@@ -31,7 +28,7 @@ const Papers = props =>
         target: `/papers/${row.id}`
       })}
       fetch={{
-        url: ['apiv2_exopaper_list', {exercise: props.quiz.id}],
+        url: ['exercise_paper_list', {exerciseId: props.quiz.id}],
         autoload: true
       }}
       definition={[
@@ -51,14 +48,20 @@ const Papers = props =>
           label: trans('start_date'),
           displayed: true,
           filterable: false,
-          type: 'string'
+          type: 'date',
+          options: {
+            time: true
+          }
         }, {
           name: 'endDate',
           alias: 'end',
           label: trans('end_date'),
           displayed: true,
           filterable: false,
-          type: 'string'
+          type: 'date',
+          options: {
+            time: true
+          }
         }, {
           name: 'duration',
           label: trans('duration'),
@@ -90,11 +93,11 @@ const Papers = props =>
               <ScoreBox size="sm" score={rowData.score} scoreMax={paperSelect.paperScoreMax(rowData)} /> :
               '-'
             :
-            tex('paper_score_not_available')
+            trans('paper_score_not_available', {}, 'quiz')
         }
       ]}
     />
-  </div>
+  </Fragment>
 
 Papers.propTypes = {
   admin: T.bool.isRequired,

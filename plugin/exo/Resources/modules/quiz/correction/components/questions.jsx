@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {tex} from '#/main/app/intl/translation'
+import {tex, trans} from '#/main/app/intl/translation'
 import {selectors as correctionSelectors} from './../selectors'
 import {TooltipOverlay} from '#/main/app/overlay/tooltip/components/overlay'
 
@@ -13,11 +13,11 @@ export const QuestionRow = props =>
     <td className="actions-cell text-right">
       <TooltipOverlay
         id={props.question.id}
-        tip={tex('to_correct')}
+        tip={trans('correct', {}, 'actions')}
       >
         <a className="btn btn-link-default" href={`#correction/questions/${props.question.id}`}>
           <span className="fa fa-fw fa-check-square-o" />
-          <span className="sr-only">{tex('to_correct')}</span>
+          <span className="sr-only">{trans('correct', {}, 'actions')}</span>
         </a>
       </TooltipOverlay>
     </td>

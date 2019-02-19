@@ -7,18 +7,16 @@ import Panel from 'react-bootstrap/lib/Panel'
 import {tex} from '#/main/app/intl/translation'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/app/security'
-import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box.jsx'
+import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
+import {ScoreGauge} from '#/main/core/layout/evaluation/components/score-gauge'
 
 import quizSelect from '#/plugin/exo/quiz/selectors'
-import {
-  NUMBERING_NONE
-} from '#/plugin/exo/quiz/enums'
+import {constants} from '#/plugin/exo/resources/quiz/constants'
 import {getDefinition, isQuestionType} from '#/plugin/exo/items/item-types'
 import {selectors as paperSelect} from '#/plugin/exo/quiz/papers/selectors'
 import {utils} from '#/plugin/exo/quiz/papers/utils'
 import {getNumbering} from '#/plugin/exo/utils/numbering'
-import {ScoreGauge} from '#/plugin/exo/components/score-gauge.jsx'
-import {Metadata as ItemMetadata} from '#/plugin/exo/items/components/metadata.jsx'
+import {Metadata as ItemMetadata} from '#/plugin/exo/items/components/metadata'
 
 function getAnswer(itemId, answers) {
   const answer = answers.find(answer => answer.questionId === itemId)
@@ -78,7 +76,7 @@ const PaperComponent = props => {
                   <h4 className="item-title">{item.title}</h4>
                 }
 
-                <ItemMetadata item={item} numbering={props.numbering !== NUMBERING_NONE ? (idx + 1) + '.' + getNumbering(props.numbering, idxItem): null} />
+                <ItemMetadata item={item} numbering={props.numbering !== constants.NUMBERING_NONE ? (idx + 1) + '.' + getNumbering(props.numbering, idxItem): null} />
 
                 {React.createElement(
                   getDefinition(item.type).paper,

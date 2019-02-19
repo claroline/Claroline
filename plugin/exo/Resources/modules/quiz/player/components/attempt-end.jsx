@@ -7,13 +7,13 @@ import {hasPermission} from '#/main/app/security'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {HtmlText} from '#/main/core/layout/components/html-text'
+import {ScoreGauge} from '#/main/core/layout/evaluation/components/score-gauge'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 
 import {select as playerSelectors} from './../selectors'
 import quizSelectors from './../../selectors'
 import {selectors as paperSelectors} from './../../papers/selectors'
 import {utils as paperUtils} from './../../papers/utils'
-import {ScoreGauge} from './../../../components/score-gauge'
 
 // TODO : merge with PlayerRestrictions
 
@@ -120,8 +120,8 @@ const AttemptEnd = connect(
     showStatistics: quizSelectors.parameters(state).showStatistics,
     maxAttempts: quizSelectors.parameters(state).maxAttempts,
     maxAttemptsPerDay: quizSelectors.parameters(state).maxAttemptsPerDay,
-    userPaperCount: quizSelectors.meta(state).userPaperCount,
-    userPaperDayCount: quizSelectors.meta(state).userPaperDayCount
+    userPaperCount: playerSelectors.userPaperCount(state),
+    userPaperDayCount: playerSelectors.userPaperDayCount(state)
   })
 )(AttemptEndComponent)
 

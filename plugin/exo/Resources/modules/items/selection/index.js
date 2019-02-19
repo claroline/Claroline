@@ -1,3 +1,5 @@
+import {trans} from '#/main/app/intl/translation'
+
 import editor from './editor'
 import {SelectionPaper} from './paper.jsx'
 import {SelectionPlayer} from './player.jsx'
@@ -86,6 +88,9 @@ function generateStats() {
 export default {
   type: 'application/x.selection+json',
   name: 'selection',
+  tags: [trans('question', {}, 'quiz')],
+  answerable: true,
+
   paper: SelectionPaper,
   player: SelectionPlayer,
   feedback: SelectionFeedback,

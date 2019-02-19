@@ -28,9 +28,6 @@ import {
   SHOW_CORRECTION_AT_DATE,
   TOTAL_SCORE_ON_CUSTOM,
   TOTAL_SCORE_ON_DEFAULT,
-  NUMBERING_LITTERAL,
-  NUMBERING_NONE,
-  NUMBERING_NUMERIC,
   STATISTICS_ALL_PAPERS,
   statisticsModes
 } from '#/plugin/exo/quiz/enums'
@@ -40,109 +37,6 @@ import {RandomPicking} from '#/plugin/exo/quiz/editor/components/random-picking.
 import {TagPicking} from '#/plugin/exo/quiz/editor/components/tag-picking.jsx'
 
 const TOTAL_SCORE_ON_DEFAULT_VALUE = 100
-
-const Display = props =>
-  <fieldset>
-    <ActivableSet
-      id="quiz-show-overview"
-      label={tex('show_overview')}
-      activated={props.parameters.showOverview}
-      onChange={checked => props.onChange('parameters.showOverview', checked)}
-    >
-      <HtmlGroup
-        id="quiz-description"
-        label={tex('overview_message')}
-        value={props.description}
-        onChange={description => props.onChange('description', description)}
-      />
-
-      <CheckGroup
-        id="quiz-show-metadata"
-        value={props.parameters.showMetadata}
-        label={tex('metadata_visible')}
-        help={tex('metadata_visible_help')}
-        onChange={checked => props.onChange('parameters.showMetadata', checked)}
-      />
-    </ActivableSet>
-
-    <ActivableSet
-      id="quiz-show-end-page"
-      label={tex('show_end_page')}
-      activated={props.parameters.showEndPage}
-      onChange={checked => props.onChange('parameters.showEndPage', checked)}
-    >
-      <HtmlGroup
-        id="quiz-end-message"
-        label={tex('end_message')}
-        value={props.parameters.endMessage}
-        onChange={endMessage => props.onChange('parameters.endMessage', endMessage)}
-      />
-
-      <CheckGroup
-        id="quiz-end-navigation"
-        value={props.parameters.endNavigation}
-        label={tex('show_end_navigation')}
-        help={tex('show_end_navigation_help')}
-        onChange={checked => props.onChange('parameters.endNavigation', checked)}
-      />
-    </ActivableSet>
-
-    <RadiosGroup
-      id="quiz-numbering"
-      label={tex('quiz_numbering')}
-      choices={{
-        [NUMBERING_NONE]: tex('quiz_numbering_none'),
-        [NUMBERING_NUMERIC]: tex('quiz_numbering_numeric'),
-        [NUMBERING_LITTERAL]: tex('quiz_numbering_litteral')
-      }}
-      value={props.parameters.numbering}
-      onChange={numbering => props.onChange('parameters.numbering', numbering)}
-    />
-    <CheckGroup
-      id="quiz-show-progression"
-      value={props.parameters.progressionDisplayed}
-      label={tex('show_progression_gauge')}
-      onChange={checked => props.onChange('parameters.progressionDisplayed', checked)}
-    />
-  </fieldset>
-
-Display.propTypes = {
-  description: T.string.isRequired,
-  parameters: T.shape({
-    type: T.string.isRequired,
-    showOverview: T.bool.isRequired,
-    showMetadata: T.bool.isRequired,
-    showEndPage: T.bool.isRequired,
-    endMessage: T.string,
-    endNavigation: T.bool,
-    numbering: T.string,
-    progressionDisplayed: T.bool
-  }).isRequired,
-  validating: T.bool.isRequired,
-  onChange: T.func.isRequired
-}
-
-const Access = props =>
-  <fieldset>
-    <NumberGroup
-      id="quiz-maxPapers"
-      label={tex('maximum_papers')}
-      min={0}
-      value={props.parameters.maxPapers}
-      onChange={maxPapers => props.onChange('parameters.maxPapers', maxPapers)}
-      help={tex('maximum_papers_attempts_help')}
-      warnOnly={!props.validating}
-      error={get(props, 'errors.parameters.maxPapers')}
-    />
-  </fieldset>
-
-Access.propTypes = {
-  parameters: T.shape({
-    maxPapers: T.number.isRequired
-  }).isRequired,
-  validating: T.bool.isRequired,
-  onChange: T.func.isRequired
-}
 
 const Picking = props =>
   <fieldset>
@@ -194,90 +88,6 @@ Picking.propTypes = {
   onChange: T.func.isRequired
 }
 
-const Signing = props =>
-  <fieldset>
-    <NumberGroup
-      id="quiz-maxAttempts"
-      label={tex('maximum_attempts')}
-      min={0}
-      value={props.parameters.maxAttempts}
-      onChange={maxAttempts => props.onChange('parameters.maxAttempts', maxAttempts)}
-      help={tex('number_max_attempts_help')}
-      warnOnly={!props.validating}
-      error={get(props, 'errors.parameters.maxAttempts')}
-    />
-
-    {props.parameters.maxAttempts > 0 &&
-      <NumberGroup
-        id="quiz-maxAttemptsPerDay"
-        label={tex('maximum_attempts_per_day')}
-        min={0}
-        value={props.parameters.maxAttemptsPerDay}
-        onChange={maxAttemptsPerDay => props.onChange('parameters.maxAttemptsPerDay', maxAttemptsPerDay)}
-        help={tex('number_max_attempts_per_day_help')}
-        warnOnly={!props.validating}
-        error={get(props, 'errors.parameters.maxAttemptsPerDay')}
-      />
-    }
-
-    <CheckGroup
-      id="quiz-interruptible"
-      value={props.parameters.interruptible}
-      label={tex('allow_test_exit')}
-      onChange={checked => props.onChange('parameters.interruptible', checked)}
-    />
-
-    <CheckGroup
-      id="quiz-mandatoryQuestions"
-      value={props.parameters.mandatoryQuestions}
-      label={tex('mandatory_questions')}
-      onChange={checked => props.onChange('parameters.mandatoryQuestions', checked)}
-    />
-
-    <CheckGroup
-      id="quiz-end-confirm"
-      value={props.parameters.showEndConfirm}
-      label={tex('show_end_confirm')}
-      help={tex('show_end_confirm_help')}
-      onChange={checked => props.onChange('parameters.showEndConfirm', checked)}
-    />
-
-    <ActivableSet
-      id="quiz-time-limited"
-      label={tex('limit_quiz_duration')}
-      activated={props.parameters.timeLimited}
-      onChange={checked => props.onChange('parameters.timeLimited', checked)}
-    >
-      <NumberGroup
-        id="quiz-duration"
-        label={tex('duration')}
-        help={tex('duration_help')}
-        min={0}
-        unit={trans('minutes')}
-        required={props.parameters.timeLimited}
-        value={props.parameters.duration}
-        onChange={duration => props.onChange('parameters.duration', duration)}
-        warnOnly={!props.validating}
-        error={get(props, 'errors.parameters.duration')}
-      />
-    </ActivableSet>
-  </fieldset>
-
-Signing.propTypes = {
-  parameters: T.shape({
-    timeLimited: T.bool.isRequired,
-    duration: T.number.isRequired,
-    maxAttempts: T.number.isRequired,
-    mandatoryQuestions: T.bool.isRequired,
-    maxAttemptsPerDay: T.number.isRequired,
-    interruptible: T.bool.isRequired,
-    showFeedback: T.bool.isRequired,
-    showEndConfirm: T.bool
-  }).isRequired,
-  validating: T.bool.isRequired,
-  onChange: T.func.isRequired
-}
-
 const Correction = props =>
   <fieldset>
     <FormGroup
@@ -306,25 +116,6 @@ const Correction = props =>
         />
       </div>
     }
-    <CheckGroup
-      id="quiz-show-feedback"
-      value={props.parameters.showFeedback}
-      label={tex('show_feedback')}
-      onChange={checked => props.onChange('parameters.showFeedback', checked)}
-    />
-    <CheckGroup
-      id="quiz-anonymizeAttempts"
-      value={props.parameters.anonymizeAttempts}
-      label={tex('anonymous')}
-      onChange={checked => props.onChange('parameters.anonymizeAttempts', checked)}
-    />
-
-    <CheckGroup
-      id="quiz-showFullCorrection"
-      value={props.parameters.showFullCorrection}
-      label={tex('maximal_correction')}
-      onChange={checked => props.onChange('parameters.showFullCorrection', checked)}
-    />
 
     <ActivableSet
       id="quiz-showStatistics"
@@ -515,12 +306,9 @@ const QuizEditor = props =>
       accordion
       activeKey={props.activePanelKey}
     >
-      {makePanel(Display, trans('display_parameters'), 'display_mode', props)}
       {makePanel(Picking, tex('step_picking'), 'step-picking', props, ['picking'])}
-      {makePanel(Signing, tex('signing'), 'signing', props, ['duration', 'maxAttempts'])}
       {makePanel(Correction, trans('correction'), 'correction', props)}
       {makePanel(Notation, trans('notation'), 'notation', props)}
-      {makePanel(Access, tex('access'), 'access', props)}
     </PanelGroup>
   </div>
 

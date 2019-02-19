@@ -6,6 +6,7 @@ import isEqual from 'lodash/isEqual'
 
 import {Overlay, Position, Transition} from 'react-overlays'
 import {addClasses, removeClasses} from '#/main/app/dom/classes'
+import {scrollTo} from '#/main/app/dom/scroll'
 
 import {WalkThroughStep} from '#/main/app/overlay/walkthrough/components/step'
 import {WalkThroughEnd} from '#/main/app/overlay/walkthrough/components/end'
@@ -73,21 +74,17 @@ class Walkthrough extends Component {
     }
 
     // scroll to the correct UI element if needed
-    let scrollTo
+    let scrollToEl
     if (step.position) {
       // scroll to the popover position
-      scrollTo = step.position.target
+      scrollToEl = step.position.target
     } else if (step.highlight && 0 < step.highlight.length) {
       // scroll to the first highlighted
-      scrollTo = step.highlight[0]
+      scrollToEl = step.highlight[0]
     }
 
-    if (scrollTo) {
-      // TODO : find a way to enable smooth scrolling (as is the popover position will be wrong because it's calculated before end of scroll)
-      const scrollToElement = document.querySelector(scrollTo)
-      if (scrollToElement) {
-        scrollToElement.scrollIntoView({/*behavior: 'smooth'*/})
-      }
+    if (scrollToEl) {
+      scrollTo(scrollToEl)
     }
 
     // set highlighted components

@@ -6,7 +6,7 @@ import {select as quizSelect} from '#/plugin/exo/quiz/selectors'
 
 import {tex, trans} from '#/main/app/intl/translation'
 
-import {TYPE_QUIZ, TYPE_STEP} from './../enums'
+//import {TYPE_QUIZ, TYPE_STEP} from './../enums'
 
 const quiz = createSelector( // todo : duplicated
   [quizSelect.resource],
@@ -31,9 +31,9 @@ const saving = createSelector(editor, editor => editor.saving)
 const saveEnabled = createSelector([saved, saving], (saved, saving) => !saved && !saving)
 const validating = createSelector(editor, editor => editor.validating)
 const currentObject = createSelector(editor, editor => editor.currentObject)
-const openPanels = createSelector(editor, editor => editor.openPanels)
-const quizOpenPanel = createSelector(openPanels, panels => panels[TYPE_QUIZ])
-const openStepPanels = createSelector(openPanels, panels => panels[TYPE_STEP])
+//const openPanels = createSelector(editor, editor => editor.openPanels)
+//const quizOpenPanel = createSelector(openPanels, panels => panels[TYPE_QUIZ])
+//const openStepPanels = createSelector(openPanels, panels => panels[TYPE_STEP])
 
 
 const stepList = createSelector(
@@ -48,7 +48,7 @@ const tags = createSelector(
   (items) => uniq(Object.keys(items).map(key => items[key]).reduce((tags, item) => [...tags.concat(item.tags)], []))
 )
 
-const quizThumbnail = createSelector(
+/*const quizThumbnail = createSelector(
   quiz,
   currentObject,
   (quiz, current) => {
@@ -75,15 +75,15 @@ const stepThumbnails = createSelector(
       hasErrors: !!step.items.find(id => !isEmpty(items[id]._errors))
     }
   })
-)
+)*/
 
-const thumbnails = createSelector(
+/*const thumbnails = createSelector(
   quizThumbnail,
   stepThumbnails,
   (quiz, steps) => [quiz].concat(steps)
-)
+)*/
 
-const currentObjectDeep = createSelector(
+/*const currentObjectDeep = createSelector(
   currentObject,
   quiz,
   steps,
@@ -101,9 +101,9 @@ const currentObjectDeep = createSelector(
       items: steps[current.id].items.map(itemId => items[itemId])
     })
   }
-)
+)*/
 
-const currentObjectIndex = createSelector(
+/*const currentObjectIndex = createSelector(
   currentObject,
   steps,
   (currentObject, steps) => {
@@ -113,9 +113,9 @@ const currentObjectIndex = createSelector(
 
     return Object.keys(steps).indexOf(currentObject.id) + 1
   }
-)
+)*/
 
-const stepOpenPanel = createSelector(
+/*const stepOpenPanel = createSelector(
   currentObject,
   openStepPanels,
   (current, panels) => {
@@ -124,9 +124,9 @@ const stepOpenPanel = createSelector(
     }
     return false
   }
-)
+)*/
 
-const nextObject = createSelector(
+/*const nextObject = createSelector(
   currentObject,
   quiz,
   stepList,
@@ -150,7 +150,7 @@ const nextObject = createSelector(
       type: TYPE_STEP
     }
   }
-)
+)*/
 
 const valid = createSelector(
   quiz,
@@ -169,12 +169,12 @@ const valid = createSelector(
 export default {
   quiz,
   items,
-  thumbnails,
+  /*thumbnails,
   currentObjectDeep,
   currentObjectIndex,
   quizOpenPanel,
   stepOpenPanel,
-  nextObject,
+  nextObject,*/
   editor,
   valid,
   validating,
@@ -187,12 +187,12 @@ export default {
 export const select = {
   quiz,
   items,
-  thumbnails,
+  /*thumbnails,
   currentObjectDeep,
   currentObjectIndex,
   quizOpenPanel,
   stepOpenPanel,
-  nextObject,
+  nextObject,*/
   editor,
   valid,
   validating,

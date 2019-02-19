@@ -2,19 +2,6 @@ import {tex} from '#/main/app/intl/translation'
 
 // TODO : migrate select options formats
 
-export const TYPE_QUIZ = 'quiz'
-export const TYPE_STEP = 'step'
-
-export const QUIZ_SUMMATIVE = 'summative'
-export const QUIZ_EVALUATIVE = 'evaluative'
-export const QUIZ_FORMATIVE = 'formative'
-
-export const quizTypes = [
-  [QUIZ_SUMMATIVE, 'summative'],
-  [QUIZ_EVALUATIVE, 'evaluative'],
-  [QUIZ_FORMATIVE, 'formative']
-]
-
 export const QUIZ_PICKING_DEFAULT = 'standard'
 export const QUIZ_PICKING_TAGS = 'tags'
 
@@ -22,16 +9,6 @@ export const quizPicking = {
   [QUIZ_PICKING_DEFAULT]: tex('quiz_picking_steps'),
   [QUIZ_PICKING_TAGS]: tex('quiz_picking_tags')
 }
-
-export const NUMBERING_NONE = 'none'
-export const NUMBERING_LITTERAL = 'litteral'
-export const NUMBERING_NUMERIC = 'numeric'
-
-export const quizNumbering = [
-  [NUMBERING_NONE, 'none'],
-  [NUMBERING_LITTERAL, 'litteral'],
-  [NUMBERING_NUMERIC, 'numeric']
-]
 
 export const SHUFFLE_NEVER = 'never'
 export const SHUFFLE_ALWAYS = 'always'

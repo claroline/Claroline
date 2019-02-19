@@ -5,8 +5,8 @@ import {trans} from '#/main/app/intl/translation'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {ScoreGauge} from '#/main/core/layout/evaluation/components/score-gauge'
 
-import {ScoreGauge} from '#/plugin/exo/components/score-gauge'
 import {utils as paperUtils} from '#/plugin/exo/quiz/papers/utils'
 import {selectors as paperSelectors} from '#/plugin/exo/quiz/papers/selectors'
 

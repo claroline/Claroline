@@ -12,7 +12,6 @@ use UJM\ExoBundle\Library\Attempt\GenericPenalty;
 use UJM\ExoBundle\Library\Csv\ArrayCompressor;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Serializer\Item\Type\OrderingQuestionSerializer;
-use UJM\ExoBundle\Transfer\Parser\ContentParserInterface;
 use UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\OrderingAnswerValidator;
 use UJM\ExoBundle\Validator\JsonSchema\Item\Type\OrderingQuestionValidator;
 
@@ -167,19 +166,6 @@ class OrderingDefinition extends AbstractDefinition
         foreach ($item->getItems() as $orderingItem) {
             $orderingItem->refreshUuid();
         }
-    }
-
-    /**
-     * Parses items contents.
-     *
-     * @param ContentParserInterface $contentParser
-     * @param \stdClass              $item
-     */
-    public function parseContents(ContentParserInterface $contentParser, \stdClass $item)
-    {
-        array_walk($item->items, function (\stdClass $item) use ($contentParser) {
-            $item->data = $contentParser->parse($item->data);
-        });
     }
 
     public function getCsvTitles(AbstractItem $item)

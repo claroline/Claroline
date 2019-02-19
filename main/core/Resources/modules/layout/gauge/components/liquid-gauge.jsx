@@ -131,14 +131,14 @@ class GaugeLiquid extends Component {
 
   animate() {
     this.waveNode
-      .attr('transform', `translate(${this.waveAnimation(this.waveNode.attr('T'))}, 0)`)
+      .attr('transform', `translate(${this.waveAnimation(this.waveNode.attr('delta'))}, 0)`)
       .transition()
-      .duration(LIQUID_GAUGE_CONFIG.waveAnimateTime * (1-this.waveNode.attr('T')))
+      .duration(LIQUID_GAUGE_CONFIG.waveAnimateTime * (1-this.waveNode.attr('delta')))
       .ease(easeLinear)
       .attr('transform', `translate(${this.waveAnimation(1)}, 0)`)
-      .attr('T', 1)
+      .attr('delta', 1)
       .on('end', () => {
-        this.waveNode.attr('T', 0)
+        this.waveNode.attr('delta', 0)
 
         this.animate()
       })
@@ -177,7 +177,7 @@ class GaugeLiquid extends Component {
             <path
               ref={el => this.wave = el}
               d={clipArea(data)}
-              T={0}
+              delta={0}
             />
           </clipPath>
         </defs>

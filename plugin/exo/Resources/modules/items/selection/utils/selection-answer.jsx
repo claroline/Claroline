@@ -4,6 +4,7 @@ import classes from 'classnames'
 import cloneDeep from 'lodash/cloneDeep'
 
 import {utils} from './utils'
+import {WarningIcon} from '#/plugin/exo/components/warning-icon'
 import {Feedback} from '../../components/feedback-btn.jsx'
 import {SolutionScore} from '../../components/score.jsx'
 import {SCORE_SUM} from './../../../quiz/enums'
@@ -151,15 +152,6 @@ SelectionAnswer.propTypes = {
 
 }
 
-const AnswerWarningIcon = props =>
-  props.valid ?
-    <span className="fa fa-check answer-warning-span" aria-hidden="true" /> :
-    <span className="fa fa-times answer-warning-span" aria-hidden="true" />
-
-AnswerWarningIcon.propTypes = {
-  valid: T.bool.isRequired
-}
-
 const DisplayFindAnswer = props => {
   const cssClasses = {
     'selection-success': props.solution.score > 0 && props.answer,
@@ -173,7 +165,7 @@ const DisplayFindAnswer = props => {
       <span className='selection-text'>{props.text}</span>
 
       {(props.showScore && props.answer)  &&
-        <AnswerWarningIcon valid={!!props.solution.score } />
+        <WarningIcon valid={!!props.solution.score } />
       }
 
       {(props.solution && props.solution.feedback) && ((props.answer && props.showScore) || props.displayTrueAnswer) &&
@@ -203,7 +195,7 @@ const DisplaySelectAnswer = props => {
       <span className='selection-text'>{props.text}</span>
 
       {props.showScore && props.answer && !props.displayTrueAnswer &&
-        <AnswerWarningIcon valid={!!props.solution.score} />
+        <WarningIcon valid={!!props.solution.score} />
       }
 
       {(props.solution && props.solution.feedback) && ((props.answer && props.showScore) || props.displayTrueAnswer) &&
@@ -275,7 +267,7 @@ class DisplayHighlightAnswer extends Component {
 
         {this.props.showScore && this.props.answer && !this.props.displayTrueAnswer &&
           <span className={classes(cssClasses)}>
-            <AnswerWarningIcon valid={this.state.solution.score > 0} />
+            <WarningIcon valid={this.state.solution.score > 0} />
           </span>
         }
 

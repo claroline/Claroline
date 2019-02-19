@@ -4,7 +4,7 @@ import classes from 'classnames'
 
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {Feedback} from '../components/feedback-btn.jsx'
-import {WarningIcon} from './utils/warning-icon.jsx'
+import {WarningIcon} from '#/plugin/exo/components/warning-icon'
 import {utils} from './utils/utils'
 
 export const BooleanFeedback = props => {

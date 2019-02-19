@@ -15,6 +15,14 @@ class Modal extends Component {
       enterEvents: this.props.show,
       exitEvents: true
     }
+
+    this.onHide = this.onHide.bind(this)
+    this.onEnter = this.onEnter.bind(this)
+    this.onEntering = this.onEntering.bind(this)
+    this.onEntered = this.onEntered.bind(this)
+    this.onExit = this.onExit.bind(this)
+    this.onExiting = this.onExiting.bind(this)
+    this.onExited = this.onExited.bind(this)
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -44,6 +52,35 @@ class Modal extends Component {
     }
   }
 
+  onHide() {
+    this.on('exit', this.props.fadeModal)
+  }
+
+  onEnter() {
+    this.on('enter', this.props.onEnter)
+  }
+
+  onEntering() {
+    this.on('enter', this.props.onEntering)
+  }
+
+  onEntered() {
+    this.on('enter', this.props.onEntered)
+  }
+
+  onExit() {
+    this.on('exit', this.props.onExit)
+  }
+
+  onExiting() {
+    this.on('exit', this.props.onExiting)
+  }
+
+  onExited() {
+    this.on('exit', this.props.onExit)
+    this.on('exit', this.props.hideModal)
+  }
+
   render() {
     return (
       <BaseModal
@@ -52,20 +89,16 @@ class Modal extends Component {
         enforceFocus={false}
         dialogClassName={this.props.className}
         show={this.props.show && !this.props.disabled}
-        onHide={() => this.on('exit', this.props.fadeModal)}
 
-        onEnter={() => this.on('enter', this.props.onEnter)}
-        onEntering={() => this.on('enter', this.props.onEntering)}
-        onEntered={() => this.on('enter', this.props.onEntered)}
-
-        onExit={() => this.on('exit', this.props.onExit)}
-        onExiting={() => this.on('exit', this.props.onExiting)}
-        onExited={() => {
-          this.on('exit', this.props.onExit)
-          this.on('exit', this.props.hideModal)
-        }}
+        onHide={this.onHide}
+        onEnter={this.onEnter}
+        onEntering={this.onEntering}
+        onEntered={this.onEntered}
+        onExit={this.onExit}
+        onExiting={this.onExiting}
+        onExited={this.onExited}
       >
-        {this.props.title &&
+        {(this.props.title || this.props.icon) &&
           <BaseModal.Header closeButton={true}>
             <BaseModal.Title>
               {this.props.icon &&

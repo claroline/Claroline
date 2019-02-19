@@ -10,7 +10,6 @@ use UJM\ExoBundle\Entity\Misc\BooleanChoice;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Serializer\Item\Type\BooleanQuestionSerializer;
-use UJM\ExoBundle\Transfer\Parser\ContentParserInterface;
 use UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\BooleanAnswerValidator;
 use UJM\ExoBundle\Validator\JsonSchema\Item\Type\BooleanQuestionValidator;
 
@@ -167,19 +166,6 @@ class BooleanDefinition extends AbstractDefinition
         foreach ($item->getChoices() as $choice) {
             $choice->refreshUuid();
         }
-    }
-
-    /**
-     * Parses choices contents.
-     *
-     * @param ContentParserInterface $contentParser
-     * @param \stdClass              $item
-     */
-    public function parseContents(ContentParserInterface $contentParser, \stdClass $item)
-    {
-        array_walk($item->choices, function (\stdClass $choice) use ($contentParser) {
-            $choice->data = $contentParser->parse($choice->data);
-        });
     }
 
     public function getCsvTitles(AbstractItem $item)

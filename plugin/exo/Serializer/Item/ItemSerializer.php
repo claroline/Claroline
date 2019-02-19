@@ -6,6 +6,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -335,17 +336,19 @@ class ItemSerializer extends AbstractSerializer
         $metadata->protectQuestion = $question->getProtectUpdate();
 
         if (!empty($creator)) {
+            $metadata->creator = $this->userSerializer->serialize($creator, $options);
+            // TODO : remove me. for retro compatibility with old schema
             $metadata->authors = [
                 $this->userSerializer->serialize($creator, $options),
             ];
         }
 
         if ($question->getDateCreate()) {
-            $metadata->created = $question->getDateCreate()->format('Y-m-d\TH:i:s');
+            $metadata->created = DateNormalizer::normalize($question->getDateCreate());
         }
 
         if ($question->getDateModify()) {
-            $metadata->updated = $question->getDateModify()->format('Y-m-d\TH:i:s');
+            $metadata->updated = DateNormalizer::normalize($question->getDateModify());
         }
 
         if ($this->hasOption(Transfer::INCLUDE_ADMIN_META, $options)) {

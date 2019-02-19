@@ -19,7 +19,7 @@ class SecondaryResource
     /**
      * Step.
      *
-     * @var \Innova\PathBundle\Entity\Step
+     * @var Step
      *
      * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Step", inversedBy="secondaryResources")
      * @ORM\JoinColumn(name="step_id", onDelete="CASCADE", nullable=false)
@@ -29,7 +29,7 @@ class SecondaryResource
     /**
      * Resource.
      *
-     * @var \Claroline\CoreBundle\Entity\Resource\ResourceNode
+     * @var ResourceNode
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
      * @ORM\JoinColumn(name="resource_id", onDelete="CASCADE", nullable=false)

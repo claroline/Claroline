@@ -100,7 +100,7 @@ class JsonQuizImportCommand extends ContainerAwareCommand
             }
 
             if (!$input->getOption('dry_run') && !$errors) {
-                $this->getContainer()->get('ujm_exo.manager.json_quiz')->import(
+                $this->getContainer()->get('ujm_exo.manager.exercise')->import(
                 $question,
                 $workspace,
                 $owner

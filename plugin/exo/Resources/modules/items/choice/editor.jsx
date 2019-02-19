@@ -15,11 +15,9 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {
   SCORE_SUM,
   SCORE_FIXED,
-  SCORE_RULES,
-  NUMBERING_LITTERAL,
-  NUMBERING_NONE,
-  NUMBERING_NUMERIC
+  SCORE_RULES
 } from '#/plugin/exo/quiz/enums'
+import {constants} from '#/plugin/exo/resources/quiz/constants'
 import {QCM_MULTIPLE, QCM_SINGLE, actions} from '#/plugin/exo/items/choice/editor'
 import {ScoreRulesGroup} from '#/plugin/exo/data/score-rules/components/group'
 import {ScoreRulesInput} from '#/plugin/exo/data/score-rules/components/input'
@@ -276,12 +274,8 @@ const Choice = props =>
     <RadiosGroup
       id={`item-${props.item.id}-numbering`}
       label={tex('choice_numbering')}
-      choices={{
-        [NUMBERING_NONE]: tex('quiz_numbering_none'),
-        [NUMBERING_NUMERIC]: tex('quiz_numbering_numeric'),
-        [NUMBERING_LITTERAL]: tex('quiz_numbering_litteral')
-      }}
-      value={props.item.numbering ? props.item.numbering : NUMBERING_NONE}
+      choices={constants.QUIZ_NUMBERINGS}
+      value={props.item.numbering ? props.item.numbering : constants.NUMBERING_NONE}
       onChange={numbering => props.onChange(actions.updateProperty('numbering', numbering))}
     />
 

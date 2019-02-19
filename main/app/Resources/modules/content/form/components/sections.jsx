@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import omit from 'lodash/omit'
 
-import {Section, Sections} from '#/main/core/layout/components/sections'
+import {Section, Sections} from '#/main/app/content/components/sections'
 
 /**
  * Renders a form section.

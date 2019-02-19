@@ -8,7 +8,7 @@ import {SolutionScore} from './../components/score.jsx'
 import {AnswerStats} from '../components/stats.jsx'
 import {PaperTabs} from './../components/paper-tabs.jsx'
 import {utils} from './utils/utils'
-import {WarningIcon} from './utils/warning-icon.jsx'
+import {WarningIcon} from '#/plugin/exo/components/warning-icon'
 import {SUM_CELL, SUM_COL, SUM_ROW} from './editor'
 import {SCORE_SUM, SCORE_FIXED} from './../../quiz/enums'
 

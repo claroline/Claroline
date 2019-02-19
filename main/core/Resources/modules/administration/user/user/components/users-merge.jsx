@@ -7,7 +7,7 @@ import {currentUser} from '#/main/app/security'
 
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {Sections, Section} from '#/main/core/layout/components/sections'
+import {Sections, Section} from '#/main/app/content/components/sections'
 import {DetailsData} from '#/main/app/content/details/components/data'
 import {ListData} from '#/main/app/content/list/containers/data'
 

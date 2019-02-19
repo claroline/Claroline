@@ -1,3 +1,5 @@
+import {trans} from '#/main/app/intl/translation'
+
 import editor from './editor'
 import {PairPaper} from './paper.jsx'
 import {PairPlayer} from './player.jsx'
@@ -134,6 +136,9 @@ function generateStats(item, papers, withAllParpers) {
 export default {
   type: 'application/x.pair+json',
   name: 'pair',
+  tags: [trans('question', {}, 'quiz')],
+  answerable: true,
+
   paper: PairPaper,
   player: PairPlayer,
   feedback: PairFeedback,

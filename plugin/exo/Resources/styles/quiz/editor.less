@@ -5,13 +5,6 @@
 
   .edit-zone {
     flex: 1 100%;
-    //padding-left: floor(@grid-gutter-width / 2); // fake bootstrap grid
-    .panel-body {
-      & > * {
-        max-width: @quiz-container-width;
-        margin: auto;
-      }
-    }
 
     .left-controls,
     .right-controls {
@@ -28,63 +21,6 @@
     .feedback-container {
       margin-top: @form-group-margin-bottom;
       padding-left: @grid-gutter-width;
-    }
-
-    // TODO : move in tag bundle
-    .item-tags-list {
-      display: flex;
-      flex-wrap: wrap;
-      margin-bottom: 10px;
-    }
-
-    // TODO : move in tag bundle
-    .item-tag {
-      margin: 5px;
-    }
-
-    // TODO : move in tag bundle
-    .tags-dropdown-menu {
-      position: inherit;
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      border-radius: 3px;
-      padding-top: 0px;
-      padding-bottom: 0px;
-
-      .tags-fetching {
-        background-color: #DEE1E8;
-      }
-    }
-  }
-
-  .item-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-  }
-
-  .item-actions {
-    white-space: nowrap; // Avoid buttons to be displayed on multi lines
-
-    .btn-link,
-    .btn {
-      padding: 0;
-    }
-  }
-
-  .step-parameters + div,
-  .step-parameters + .panel {
-    margin-top: @component-margin-bottom;
-  }
-
-  .step-footer {
-    text-align: center;
-
-    .btn-link,
-    .btn {
-      padding: @padding-large-vertical @padding-large-horizontal; // todo : should be a special class to be reused (eg Login btn)
     }
   }
 
@@ -122,26 +58,10 @@
     margin: 0 floor(@grid-gutter-width / 2);
   }
 
-  .no-item-info,
   .no-hint-info {
     margin-bottom: @form-group-margin-bottom;
     font-style: italic;
     text-align: center;
-  }
-
-  .fa.disabled { // todo : find why this is needed
-    color: #aaa;
-    cursor: not-allowed;
-  }
-
-  .editor-panel-title {
-    cursor: pointer;
-  }
-
-  .panel-title[aria-expanded=true] .item-icon {
-    color: @brand-primary;
-    fill: @brand-primary;
-    stroke: @brand-primary;
   }
 }
 

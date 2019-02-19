@@ -558,6 +558,7 @@
     "host": "Host",
     "hour": "hour",
     "hours": "hours",
+    "hours_short": "h",
     "html": "HTML",
     "icon": "Platform Icon",
     "icon_set_create_success": "Icon pack created successfully.",
@@ -715,6 +716,7 @@
     "min_text_length": "Minimum length of the text",
     "minute": "minute",
     "minutes": "minutes",
+    "minutes_short": "m",
     "misc": "Miscellaneous",
     "missing_%content%": "The variable %content% is missing for \"%language%\".",
     "missing_%password%": "The variable %password% is missing for \"%language%\".",
@@ -1038,12 +1040,9 @@
     "score": "Score",
     "score_to_pass": "Score to pass (%)",
     "score_total": "Total score",
-    "search": "Search",
-    "search_group": "Search for a group",
-    "search_user": "Search for an user",
-    "search_workspace": "Search for a workspace",
     "second": "second",
     "seconds": "seconds",
+    "seconds_short": "s",
     "security_token": "Security Token",
     "security_token_delete_confirm_message": "Are you sure you want to delete this security token ?",
     "security_token_delete_confirm_title": "Delete security token",
@@ -1715,5 +1714,6 @@
     "last": "Last",
     "update_object": "The object is currently being updated",
     "object_currently_modified": "The object is being modified by %username% since %date%",
-    "update_anyway": "update anyway"
+    "update_anyway": "update anyway",
+    "choices": "Choices"
 }

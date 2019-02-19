@@ -1,3 +1,5 @@
+import {trans} from '#/main/app/intl/translation'
+
 import editor from './editor'
 import {SetPaper} from './paper.jsx'
 import {SetPlayer} from './player.jsx'
@@ -84,6 +86,9 @@ function generateStats(item, papers, withAllParpers) {
 export default {
   type: 'application/x.set+json',
   name: 'set',
+  tags: [trans('question', {}, 'quiz')],
+  answerable: true,
+
   paper: SetPaper,
   player: SetPlayer,
   feedback: SetFeedback,

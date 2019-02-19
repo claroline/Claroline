@@ -1,4 +1,7 @@
-import editor from './editor'
+import {trans} from '#/main/app/intl/translation'
+
+import {ChoiceEditor} from "#/plugin/exo/items/choice/components/editor"
+
 import {ChoicePaper} from './paper.jsx'
 import {ChoicePlayer} from './player.jsx'
 import {ChoiceFeedback} from './feedback.jsx'
@@ -68,10 +71,17 @@ function generateStats(item, papers, withAllParpers) {
 export default {
   type: 'application/x.choice+json',
   name: 'choice',
+  tags: [trans('question', {}, 'quiz')],
+  answerable: true,
+
+  components: {
+    editor: ChoiceEditor
+  },
+
+  // old
   paper: ChoicePaper,
   player: ChoicePlayer,
   feedback: ChoiceFeedback,
-  editor,
   getCorrectedAnswer,
   generateStats
 }

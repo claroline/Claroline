@@ -1,5 +1,4 @@
 import {
-  QUIZ_SUMMATIVE,
   QUIZ_PICKING_DEFAULT,
   SHUFFLE_NEVER,
   SHOW_CORRECTION_AT_VALIDATION,
@@ -12,7 +11,7 @@ import {
 const quiz = {
   description: '',
   parameters: {
-    type: QUIZ_SUMMATIVE,
+    type: 'summative',
     showMetadata: true,
     duration: 0,
     maxAttempts: 0,

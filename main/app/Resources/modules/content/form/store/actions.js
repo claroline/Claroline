@@ -37,7 +37,7 @@ actions.reset = (formName, data = {}, isNew = false) => ({
   isNew: isNew
 })
 
-//the dispatch retuned in the success function isn't the same as the first one
+//the dispatch returned in the success function isn't the same as the first one
 //async request doesn't work with the usual way otherwise
 actions.getItemLock = (className, id) => (dispatch) => {
   if (id) {
@@ -147,7 +147,11 @@ actions.save = (formName, target) => (dispatch, getState) => {
         },
         success: (response, dispatch) => {
           dispatch(actions.submitFormSuccess(formName, response))
-          dispatch(actions.resetForm(formName, response, false))
+
+          if (response) {
+            // I should check status code (204) instead but I don't have access to it here
+            dispatch(actions.resetForm(formName, response, false))
+          }
         },
         error: (errors, status, dispatch) => dispatch(actions.errors(formName, errors))
       }

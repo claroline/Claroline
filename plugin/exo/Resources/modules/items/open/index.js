@@ -1,3 +1,5 @@
+import {trans} from '#/main/app/intl/translation'
+
 import editor from './editor'
 import {OpenPaper} from './paper.jsx'
 import {OpenPlayer} from './player.jsx'
@@ -16,6 +18,9 @@ function generateStats() {
 export default {
   type: 'application/x.open+json',
   name: 'open',
+  tags: [trans('question', {}, 'quiz')],
+  answerable: true,
+
   paper: OpenPaper,
   player: OpenPlayer,
   feedback: OpenFeedback,

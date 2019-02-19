@@ -2,16 +2,20 @@
 
 namespace UJM\ExoBundle\Controller\Api;
 
+use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Library\Mode\MarkMode;
+use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Library\Validator\ValidationException;
 use UJM\ExoBundle\Manager\Attempt\PaperManager;
 use UJM\ExoBundle\Manager\ExerciseManager;
@@ -25,19 +29,16 @@ use UJM\ExoBundle\Manager\ExerciseManager;
  */
 class PaperController extends AbstractController
 {
-    /**
-     * @var AuthorizationCheckerInterface
-     */
+    /** @var AuthorizationCheckerInterface */
     private $authorization;
 
-    /**
-     * @var PaperManager
-     */
+    /* @var FinderProvider */
+    protected $finder;
+
+    /** @var PaperManager */
     private $paperManager;
 
-    /**
-     * @var ExerciseManager
-     */
+    /** @var ExerciseManager */
     private $exerciseManager;
 
     /**
@@ -45,20 +46,24 @@ class PaperController extends AbstractController
      *
      * @DI\InjectParams({
      *     "authorization"   = @DI\Inject("security.authorization_checker"),
+     *     "finder"          = @DI\Inject("claroline.api.finder"),
      *     "paperManager"    = @DI\Inject("ujm_exo.manager.paper"),
      *     "exerciseManager" = @DI\Inject("ujm_exo.manager.exercise")
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
+     * @param FinderProvider                $finder
      * @param PaperManager                  $paperManager
      * @param ExerciseManager               $exerciseManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
+        FinderProvider $finder,
         PaperManager $paperManager,
         ExerciseManager $exerciseManager
     ) {
         $this->authorization = $authorization;
+        $this->finder = $finder;
         $this->paperManager = $paperManager;
         $this->exerciseManager = $exerciseManager;
     }
@@ -67,42 +72,38 @@ class PaperController extends AbstractController
      * Returns all the papers associated with an exercise.
      * Administrators get the papers of all users, others get only theirs.
      *
-     * @EXT\Route("", name="exercise_papers")
+     * @EXT\Route("", name="exercise_paper_list")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("user", converter="current_user")
      *
      * @param Exercise $exercise
      * @param User     $user
+     * @param Request  $request
      *
      * @return JsonResponse
      */
-    public function listAction(Exercise $exercise, User $user)
+    public function listAction(Exercise $exercise, User $user, Request $request)
     {
         $this->assertHasPermission('OPEN', $exercise);
+
+        $params = $request->query->all();
+
+        $params['hiddenFilters'] = [];
+        $params['hiddenFilters']['exercise'] = $exercise->getId();
+        $serializationOptions = [];
+
+        $collection = new ResourceCollection([$exercise->getResourceNode()]);
+        if (!($this->authorization->isGranted('ADMINISTRATE', $collection) ||
+            $this->authorization->isGranted('MANAGE_PAPERS', $collection)
+        )) {
+            $params['hiddenFilters']['user'] = $user->getid();
+        } elseif (MarkMode::NEVER !== $exercise->getMarkMode()) {
+            $serializationOptions[] = Transfer::INCLUDE_USER_SCORE;
+        }
 
         return new JsonResponse(
-            $this->paperManager->serializeExercisePapers($exercise, $this->isAdmin($exercise) ? null : $user)
+            $this->finder->search(Paper::class, $params, $serializationOptions)
         );
-    }
-
-    /**
-     * Returns all the papers associated with an exercise.
-     *
-     * @EXT\Route("/papers/all", name="exercise_papers_all")
-     * @EXT\Method("GET")
-     *
-     * @param Exercise $exercise
-     *
-     * @return JsonResponse
-     */
-    public function listAllAction(Exercise $exercise)
-    {
-        $this->assertHasPermission('OPEN', $exercise);
-        $papers = $this->isAdmin($exercise) || $exercise->hasStatistics() ?
-            $this->paperManager->serializeExercisePapers($exercise, null) :
-            [];
-
-        return new JsonResponse($papers);
     }
 
     /**
@@ -110,7 +111,7 @@ class PaperController extends AbstractController
      * Also includes the complete definition and solution of each question
      * associated with the exercise.
      *
-     * @EXT\Route("/{id}", name="exercise_export_paper")
+     * @EXT\Route("/{id}", name="exercise_paper_get")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("paper", class="UJMExoBundle:Attempt\Paper", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user")

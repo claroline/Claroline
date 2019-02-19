@@ -9,3 +9,45 @@
 @import "./papers";
 @import "./correction";
 @import "./statistics";
+
+// copied from path bundle
+.parameters-title,
+.step-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+}
+
+.step-toolbar {
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+// this is a big c/c from .resource-type
+// todo : move in editor styles
+.quiz-type {
+    height: auto !important; // override default form control
+    display: flex;
+    align-items: center;
+
+    .fa {
+        font-size: 40px;
+        margin-right: 10px;
+    }
+
+    h1 {
+        padding: 0;
+        margin: 0;
+        font-size: @font-size-large;
+        font-weight: bold;
+    }
+
+    p {
+        margin-top: 5px;
+        margin-bottom: 0;
+        font-style: italic;
+        font-size: @font-size-small;
+        color: #777; // todo : use a var
+    }
+}

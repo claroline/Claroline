@@ -63,27 +63,33 @@ const PlayerMain = props => {
               },
               render: (routeProps) => {
                 const step = props.steps.find(step => routeProps.match.params.id === step.id)
-                const Current =
-                  <PathCurrent
-                    prefix="/play"
-                    current={step}
-                    all={props.steps}
-                    navigation={props.navigationEnabled}
-                  >
-                    <Step
-                      {...step}
-                      fullWidth={props.fullWidth}
-                      numbering={getNumbering(props.path.display.numbering, props.path.steps, step)}
-                      manualProgressionAllowed={props.path.display.manualProgressionAllowed}
-                      updateProgression={props.updateProgression}
-                      enableNavigation={props.enableNavigation}
-                      disableNavigation={props.disableNavigation}
-                      onEmbeddedResourceClose={props.computeResourceDuration}
-                      secondaryResourcesTarget={props.path.opening.secondaryResources}
-                    />
-                  </PathCurrent>
+                if (step) {
+                  const Current =
+                    <PathCurrent
+                      prefix="/play"
+                      current={step}
+                      all={props.steps}
+                      navigation={props.navigationEnabled}
+                    >
+                      <Step
+                        {...step}
+                        fullWidth={props.fullWidth}
+                        numbering={getNumbering(props.path.display.numbering, props.path.steps, step)}
+                        manualProgressionAllowed={props.path.display.manualProgressionAllowed}
+                        updateProgression={props.updateProgression}
+                        enableNavigation={props.enableNavigation}
+                        disableNavigation={props.disableNavigation}
+                        onEmbeddedResourceClose={props.computeResourceDuration}
+                        secondaryResourcesTarget={props.path.opening.secondaryResources}
+                      />
+                    </PathCurrent>
 
-                return Current
+                  return Current
+                }
+
+                routeProps.history.push('/play')
+
+                return null
               }
             }
           ]}

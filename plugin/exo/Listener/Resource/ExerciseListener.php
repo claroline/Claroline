@@ -4,23 +4,22 @@ namespace UJM\ExoBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
 use Claroline\CoreBundle\Event\Resource\PublicationChangeEvent;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\Form\FormFactory;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Library\Options\Transfer;
+use UJM\ExoBundle\Manager\Attempt\PaperManager;
 use UJM\ExoBundle\Manager\DocimologyManager;
 use UJM\ExoBundle\Manager\ExerciseManager;
 
@@ -37,17 +36,14 @@ class ExerciseListener
     /** @var ExerciseManager */
     private $exerciseManager;
 
+    /** @var PaperManager */
+    private $paperManager;
+
     /** @var DocimologyManager */
     private $docimologyManager;
 
-    /** @var FormFactory */
-    private $formFactory;
-
     /** @var ObjectManager */
     private $om;
-
-    /** @var RequestStack */
-    private $request;
 
     /** @var ResourceEvaluationManager */
     private $resourceEvalManager;
@@ -67,10 +63,9 @@ class ExerciseListener
      * @DI\InjectParams({
      *     "authorization"       = @DI\Inject("security.authorization_checker"),
      *     "exerciseManager"     = @DI\Inject("ujm_exo.manager.exercise"),
+     *     "paperManager"        = @DI\Inject("ujm_exo.manager.paper"),
      *     "docimologyManager"   = @DI\Inject("ujm_exo.manager.docimology"),
-     *     "formFactory"         = @DI\Inject("form.factory"),
      *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
-     *     "request"             = @DI\Inject("request_stack"),
      *     "resourceEvalManager" = @DI\Inject("claroline.manager.resource_evaluation_manager"),
      *     "templating"          = @DI\Inject("templating"),
      *     "tokenStorage"        = @DI\Inject("security.token_storage"),
@@ -79,10 +74,9 @@ class ExerciseListener
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param ExerciseManager               $exerciseManager
+     * @param PaperManager                  $paperManager
      * @param DocimologyManager             $docimologyManager
-     * @param FormFactory                   $formFactory
      * @param ObjectManager                 $om
-     * @param RequestStack                  $request
      * @param ResourceEvaluationManager     $resourceEvalManager
      * @param TwigEngine                    $templating
      * @param TokenStorageInterface         $tokenStorage
@@ -91,10 +85,9 @@ class ExerciseListener
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ExerciseManager $exerciseManager,
+        PaperManager $paperManager,
         DocimologyManager $docimologyManager,
-        FormFactory $formFactory,
         ObjectManager $om,
-        RequestStack $request,
         ResourceEvaluationManager $resourceEvalManager,
         TwigEngine $templating,
         TokenStorageInterface $tokenStorage,
@@ -102,10 +95,9 @@ class ExerciseListener
     ) {
         $this->authorization = $authorization;
         $this->exerciseManager = $exerciseManager;
+        $this->paperManager = $paperManager;
         $this->docimologyManager = $docimologyManager;
-        $this->formFactory = $formFactory;
         $this->om = $om;
-        $this->request = $request;
         $this->resourceEvalManager = $resourceEvalManager;
         $this->templating = $templating;
         $this->tokenStorage = $tokenStorage;
@@ -123,55 +115,36 @@ class ExerciseListener
     {
         /** @var Exercise $exercise */
         $exercise = $event->getResource();
-        $user = $this->tokenStorage->getToken()->getUser();
+        $currentUser = $this->tokenStorage->getToken()->getUser();
 
         $canEdit = $this->authorization->isGranted('EDIT', new ResourceCollection([$exercise->getResourceNode()]));
-        $options = [Transfer::INCLUDE_METRICS];
 
+        $options = [];
         if ($canEdit || $exercise->hasStatistics()) {
             $options[] = Transfer::INCLUDE_SOLUTIONS;
         }
 
+        // fetch additional user data
+        $nbUserPapers = 0;
+        $nbUserPapersDayCount = 0;
+        $userEvaluation = null;
+        if ($currentUser instanceof User) {
+            $nbUserPapers = (int) $this->paperManager->countUserFinishedPapers($exercise, $currentUser);
+            $nbUserPapersDayCount = (int) $this->paperManager->countUserFinishedDayPapers($exercise, $currentUser);
+            $userEvaluation = $this->serializer->serialize(
+                $this->resourceEvalManager->getResourceUserEvaluation($exercise->getResourceNode(), $currentUser)
+            );
+        }
+
         $event->setData([
-            'quiz' => $this->exerciseManager->serialize($exercise, $options),
-            'userEvaluation' => 'anon.' === $user ?
-                null :
-                $this->serializer->serialize(
-                    $this->resourceEvalManager->getResourceUserEvaluation($exercise->getResourceNode(), $user)
-                ),
+            'quiz' => $this->serializer->serialize($exercise, $options),
+            'paperCount' => (int) $this->paperManager->countExercisePapers($exercise),
+
+            // user data
+            'userPaperCount' => $nbUserPapers,
+            'userPaperDayCount' => $nbUserPapersDayCount,
+            'userEvaluation' => $userEvaluation,
         ]);
-        $event->stopPropagation();
-    }
-
-    /**
-     * Opens the Exercise resource.
-     *
-     * @DI\Observe("open_ujm_exercise")
-     *
-     * @param OpenResourceEvent $event
-     */
-    public function onOpen(OpenResourceEvent $event)
-    {
-        /** @var Exercise $exercise */
-        $exercise = $event->getResource();
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        $canEdit = $this->authorization->isGranted('EDIT', new ResourceCollection([$exercise->getResourceNode()]));
-
-        $content = $this->templating->render(
-            'UJMExoBundle:exercise:open.html.twig', [
-                '_resource' => $exercise,
-                'quiz' => $this->exerciseManager->serialize(
-                    $exercise,
-                    $canEdit ? [Transfer::INCLUDE_SOLUTIONS, Transfer::INCLUDE_METRICS] : [Transfer::INCLUDE_METRICS]
-                ),
-                'userEvaluation' => 'anon.' === $user ?
-                    null :
-                    $this->resourceEvalManager->getResourceUserEvaluation($exercise->getResourceNode(), $user),
-            ]
-        );
-
-        $event->setResponse(new Response($content));
         $event->stopPropagation();
     }
 

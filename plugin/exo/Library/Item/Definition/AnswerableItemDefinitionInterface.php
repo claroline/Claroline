@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Library\Item\Definition;
 
+use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
@@ -52,4 +53,8 @@ interface AnswerableItemDefinitionInterface
      * @return \stdClass
      */
     public function getStatistics(AbstractItem $question, array $answersData);
+
+    public function getCsvTitles(AbstractItem $item);
+
+    public function getCsvAnswers(AbstractItem $item, Answer $answer);
 }

@@ -12,11 +12,6 @@ const registered = () => null !== currentUser()
 
 const resource = (state) => state[STORE_NAME]
 
-const noServer = createSelector(
-  resource,
-  (resource) => resource.noServer
-)
-
 const steps = createSelector(
   resource,
   (resource) => resource.steps
@@ -80,21 +75,6 @@ const meta = createSelector(
   (quiz) => quiz.meta || {}
 )
 
-const hasUserPapers = createSelector(
-  meta,
-  (meta) => meta.userPaperCount > 0
-)
-
-const paperCount = createSelector(
-  meta,
-  (meta) => meta.paperCount || 0
-)
-
-const hasPapers = createSelector(
-  [paperCount, papers],
-  (paperCount, papers) => paperCount > 0 || (papers.papers && papers.papers.length > 0)
-)
-
 const noItems = createSelector(
   [steps, items],
   (steps, items) => Object.keys(steps).length === 1 && Object.keys(items).length === 0
@@ -139,15 +119,12 @@ const docimologyAdmin = createSelector(
 export default {
   STORE_NAME,
   resource,
-  noServer,
   id,
   quiz,
   steps,
   items,
   empty,
   papers,
-  hasPapers,
-  hasUserPapers,
   papersAdmin,
   docimologyAdmin,
   registered,
@@ -169,15 +146,12 @@ export default {
 export const select = {
   STORE_NAME,
   resource,
-  noServer,
   id,
   quiz,
   steps,
   items,
   empty,
   papers,
-  hasPapers,
-  hasUserPapers,
   papersAdmin,
   docimologyAdmin,
   registered,

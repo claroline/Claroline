@@ -11,7 +11,6 @@ use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Csv\ArrayCompressor;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Serializer\Item\Type\ChoiceQuestionSerializer;
-use UJM\ExoBundle\Transfer\Parser\ContentParserInterface;
 use UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\ChoiceAnswerValidator;
 use UJM\ExoBundle\Validator\JsonSchema\Item\Type\ChoiceQuestionValidator;
 
@@ -184,19 +183,6 @@ class ChoiceDefinition extends AbstractDefinition
         foreach ($item->getChoices() as $choice) {
             $choice->refreshUuid();
         }
-    }
-
-    /**
-     * Parses choices contents.
-     *
-     * @param ContentParserInterface $contentParser
-     * @param \stdClass              $item
-     */
-    public function parseContents(ContentParserInterface $contentParser, \stdClass $item)
-    {
-        array_walk($item->choices, function (\stdClass $choice) use ($contentParser) {
-            $choice->data = $contentParser->parse($choice->data);
-        });
     }
 
     public function getCsvTitles(AbstractItem $item)

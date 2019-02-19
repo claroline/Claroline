@@ -11,14 +11,13 @@ import {CustomDragLayer} from '#/plugin/exo/utils/custom-drag-layer'
 import {Overview}   from '#/plugin/exo/quiz/overview/overview'
 import {Player}     from '#/plugin/exo/quiz/player/components/player'
 import {AttemptEnd} from '#/plugin/exo/quiz/player/components/attempt-end'
-import {Editor}     from '#/plugin/exo/quiz/editor/components/editor'
 import {Papers}     from '#/plugin/exo/quiz/papers/components/papers'
 import {Paper}      from '#/plugin/exo/quiz/papers/components/paper'
 import {Questions}  from '#/plugin/exo/quiz/correction/components/questions'
 import {Answers}    from '#/plugin/exo/quiz/correction/components/answers'
 import {Statistics} from '#/plugin/exo/quiz/statistics/components/statistics'
 
-// todo : restore editor buttons
+import {EditorMain} from '#/plugin/exo/resources/quiz/editor/containers/main'
 
 const QuizResource = props =>
   <ResourcePage
@@ -34,46 +33,60 @@ const QuizResource = props =>
       }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-play',
-        label: trans('pass_quiz', {}, 'quiz'),
+        label: trans('start', {}, 'actions'),
         target: '/play'
       }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-play',
-        label: trans('exercise_try', {}, 'quiz'),
+        label: trans('test', {}, 'actions'),
         displayed: props.editable,
-        target: '/test'
+        target: '/test',
+        group: trans('management')
       }, {
         type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-list',
-        label: trans('results_list', {}, 'quiz'),
-        disabled: !props.hasPapers,
+        icon: 'fa fa-fw fa-tasks',
+        label: trans('show-results', {}, 'actions'),
         displayed: props.registeredUser,
         target: '/papers',
         exact: true
       }, {
         type: URL_BUTTON,
-        icon: 'fa fa-fw fa-table',
+        icon: 'fa fa-fw fa-file-csv',
         label: trans('export_csv_results', {}, 'quiz'),
-        disabled: !props.hasPapers,
         displayed: props.papersAdmin,
-        target: ['exercise_papers_export', {exerciseId: props.quizId}]
+        target: ['exercise_papers_export', {exerciseId: props.quizId}],
+        group: trans('transfer')
+      }, {
+        type: URL_BUTTON,
+        icon: 'fa fa-fw fa-file-csv',
+        label: trans('export_csv_answers', {}, 'quiz'),
+        displayed: props.papersAdmin,
+        target: ['exercise_papers_export_csv', {exerciseId: props.quizId}],
+        group: trans('transfer')
+      }, {
+        type: URL_BUTTON,
+        icon: 'fa fa-fw fa-file-code',
+        label: trans('export_json_answers', {}, 'quiz'),
+        displayed: props.papersAdmin,
+        target: ['exercise_papers_export_json', {exerciseId: props.quizId}],
+        group: trans('transfer')
       }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-check-square-o',
-        label: trans('manual_correction', {}, 'quiz'),
-        disabled: !props.hasPapers,
+        label: trans('correct', {}, 'actions'),
         displayed: props.papersAdmin,
-        target: '/correction/questions'
+        target: '/correction/questions',
+        group: trans('management')
       }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-bar-chart',
-        label: trans('statistics', {}, 'quiz'),
+        label: trans('show-statistics', {}, 'actions'),
         displayed: props.papersAdmin,
         target: '/statistics'
       }, {
         type: URL_BUTTON,
         icon: 'fa fa-fw fa-pie-chart',
-        label: trans('docimology', {}, 'quiz'),
+        label: trans('view_docimology', {}, 'actions'),
         displayed: props.docimologyAdmin,
         target: ['exercise_docimology', {id: props.quizId}]
       }
@@ -89,11 +102,8 @@ const QuizResource = props =>
           disabled: !props.hasOverview
         }, {
           path: '/edit',
-          component: Editor,
-          disabled: !props.editable,
-          onEnter: () => {
-            props.edit(props.quizId)
-          }
+          component: EditorMain,
+          disabled: !props.editable
         }, {
           path: '/test',
           component: Player,
@@ -115,7 +125,7 @@ const QuizResource = props =>
         }, {
           path: '/papers/:id', // todo : declare inside papers module
           component: Paper,
-          onEnter: (params) => props.loadCurrentPaper(params.id),
+          onEnter: (params) => props.loadCurrentPaper(props.quizId, params.id),
           onLeave: () => props.resetCurrentPaper()
         }, {
           path: '/correction/questions',
@@ -154,16 +164,13 @@ const QuizResource = props =>
   </ResourcePage>
 
 QuizResource.propTypes = {
-  quizId: T.string.isRequired,
-  resourceNodeId: T.string.isRequired,
+  quizId: T.string,
   editable: T.bool.isRequired,
   papersAdmin: T.bool.isRequired,
   docimologyAdmin: T.bool.isRequired,
   showStatistics: T.bool.isRequired,
-  hasPapers: T.bool.isRequired,
   registeredUser: T.bool.isRequired,
   hasOverview: T.bool.isRequired,
-  edit: T.func.isRequired,
   testMode: T.func.isRequired,
   statistics: T.func.isRequired,
   correction: T.func.isRequired,

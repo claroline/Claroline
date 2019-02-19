@@ -9,7 +9,7 @@ import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
 import {constants} from '#/main/core/user/tracking/constants'
 import {ResourceIcon} from '#/main/core/resource/components/icon'
-import {ScoreGauge} from '#/main/core/layout/evaluation/components/score-gauge.jsx'
+import {ScoreGauge} from '#/main/core/layout/evaluation/components/score-gauge'
 
 const EventWrapper = props =>
   <li className={classes('timeline-event-container', {

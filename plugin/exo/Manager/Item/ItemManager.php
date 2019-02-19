@@ -4,6 +4,7 @@ namespace UJM\ExoBundle\Manager\Item;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Exercise;
@@ -14,13 +15,11 @@ use UJM\ExoBundle\Library\Item\ItemDefinitionsCollection;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Library\Options\Validation;
-use UJM\ExoBundle\Library\Validator\ValidationException;
 use UJM\ExoBundle\Manager\Attempt\ScoreManager;
 use UJM\ExoBundle\Repository\AnswerRepository;
 use UJM\ExoBundle\Repository\ItemRepository;
 use UJM\ExoBundle\Serializer\Item\HintSerializer;
 use UJM\ExoBundle\Serializer\Item\ItemSerializer;
-use UJM\ExoBundle\Transfer\Parser\ContentParserInterface;
 use UJM\ExoBundle\Validator\JsonSchema\Item\ItemValidator;
 
 /**
@@ -129,7 +128,7 @@ class ItemManager
      *
      * @return Item
      *
-     * @throws ValidationException
+     * @throws InvalidDataException
      */
     public function create(\stdClass $data)
     {
@@ -144,14 +143,14 @@ class ItemManager
      *
      * @return Item
      *
-     * @throws ValidationException
+     * @throws InvalidDataException
      */
     public function update(Item $question, \stdClass $data)
     {
         // Validate received data
         $errors = $this->validator->validate($data, [Validation::REQUIRE_SOLUTIONS]);
         if (count($errors) > 0) {
-            throw new ValidationException('Question is not valid', $errors);
+            throw new InvalidDataException('Question is not valid', $errors);
         }
 
         // Update Item with new data
@@ -231,6 +230,7 @@ class ItemManager
     {
         // Let the question correct the answer
         $definition = $this->itemDefinitions->get($question->getMimeType());
+        /** @var AnswerableItemDefinitionInterface $definition */
         $corrected = $definition->correctAnswer($question->getInteraction(), json_decode($answer->getData()));
         if (!$corrected instanceof CorrectedAnswer) {
             $corrected = new CorrectedAnswer();
@@ -294,8 +294,10 @@ class ItemManager
         // Get entities for score calculation
         $question = $this->serializer->deserialize($questionData, new Item());
 
-        // Get the expected answer for the question
+        /** @var AnswerableItemDefinitionInterface $definition */
         $definition = $this->itemDefinitions->get($question->getMimeType());
+
+        // Get the expected answer for the question
         $expected = $definition->expectAnswer($question->getInteraction());
 
         return $this->scoreManager->calculateTotal(json_decode($question->getScoreRule()), $expected, $question->getInteraction());
@@ -395,30 +397,6 @@ class ItemManager
         $definition->refreshIdentifiers($item->getInteraction());
     }
 
-    public function parseContents(ContentParserInterface $contentParser, \stdClass $itemData)
-    {
-        if (isset($itemData->description)) {
-            $itemData->description = $contentParser->parse($itemData->description);
-        }
-
-        if (1 === preg_match('#^application\/x\.[^/]+\+json$#', $itemData->type)) {
-            // it's a question
-            $itemData->content = $contentParser->parse($itemData->content);
-            if (isset($itemData->hints)) {
-                array_walk($itemData->hints, function (\stdClass $hint) use ($contentParser) {
-                    $hint->value = $contentParser->parse($hint->value);
-                });
-            }
-
-            $definition = $this->itemDefinitions->get($itemData->type);
-        } else {
-            // it's a content
-            $definition = $this->itemDefinitions->get(ItemType::CONTENT);
-        }
-
-        $definition->parseContents($contentParser, $itemData);
-    }
-
     /**
      * Find all content for a given user and the replace him by another.
      *
@@ -429,7 +407,7 @@ class ItemManager
      */
     public function replaceUser(User $from, User $to)
     {
-        $items = $this->repository->findByCreator($from);
+        $items = $this->repository->findBy(['creator' => $from]);
 
         if (count($items) > 0) {
             foreach ($items as $item) {

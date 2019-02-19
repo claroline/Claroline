@@ -3,7 +3,6 @@
 namespace UJM\ExoBundle\Library\Item\Definition;
 
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
-use UJM\ExoBundle\Transfer\Parser\ContentParserInterface;
 
 /**
  * Interface for the definition of a quiz item type.
@@ -59,14 +58,6 @@ interface ItemDefinitionInterface
      * @return AbstractItem
      */
     public function deserializeQuestion(\stdClass $data, AbstractItem $question = null, array $options = []);
-
-    /**
-     * Applies an arbitrary parser on all HTML contents in the item definition.
-     *
-     * @param ContentParserInterface $contentParser
-     * @param \stdClass              $item
-     */
-    public function parseContents(ContentParserInterface $contentParser, \stdClass $item);
 
     /**
      * Generates new UUIDs for the Item entities.

@@ -6,7 +6,7 @@ import classes from 'classnames'
 
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {getNumbering} from './../../utils/numbering'
-import {NUMBERING_NONE} from './../../quiz/enums'
+import {constants} from '#/plugin/exo/resources/quiz/constants'
 
 export class ChoicePlayer extends Component {
   constructor(props) {
@@ -46,7 +46,7 @@ export class ChoicePlayer extends Component {
               this.isChecked(choice.id, this.props.answer) ? 'selected-answer' : null
             )}
           >
-            {this.props.item.numbering !== NUMBERING_NONE &&
+            {this.props.item.numbering !== constants.NUMBERING_NONE &&
               <span>
                 {getNumbering(this.props.item.numbering, idx)}) {'\u00a0'} {/*non breaking whitespace */}
               </span>

@@ -24,6 +24,7 @@ class StringInput extends PureComponent {
       value: this.props.value || '',
       disabled: this.props.disabled,
       onChange: this.onChange,
+      placeholder: this.props.placeholder,
       autoComplete: this.props.autoComplete
     }
 

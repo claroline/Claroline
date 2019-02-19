@@ -1,10 +1,10 @@
 import invariant from 'invariant'
 import difference from 'lodash/difference'
 
-import textContent from './text-content'
-import imageContent from './image-content'
-import audioContent from './audio-content'
-import videoContent from './video-content'
+import textContent from './text'
+import imageContent from './image'
+import audioContent from './audio'
+import videoContent from './video'
 
 const typeProperties = [
   'type',
@@ -94,15 +94,6 @@ function assertValidItemType(definition) {
     definition.icon,
     makeError('icon component is mandatory', definition)
   )
-
-  const extraProperties = difference(Object.keys(definition), typeProperties)
-
-  if (extraProperties.length > 0) {
-    invariant(
-      false,
-      makeError(`unknown property '${extraProperties[0]}'`, definition)
-    )
-  }
 }
 
 function makeError(message, definition) {

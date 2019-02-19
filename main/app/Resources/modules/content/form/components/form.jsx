@@ -53,8 +53,9 @@ class Form extends Component {
   }
 
   componentDidMount() {
-    if (this.props.lock.id !== undefined && this.props.lock.id && this.props.lock.className) {
+    if (this.props.lock && this.props.lock.className) {
       this.props.getLock(this.props.lock.className, this.props.lock.id)
+
       this.setState({logChecked: true})
     }
 
@@ -68,7 +69,7 @@ class Form extends Component {
   }
 
   componentDidUpdate(previousProps) {
-    if (this.props.lock.id !== undefined && previousProps.lock && this.props.lock && this.props.lock.id !== previousProps.lock.id) {
+    if (previousProps.lock && this.props.lock && this.props.lock.id !== previousProps.lock.id) {
       this.props.getLock(this.props.lock.className, this.props.lock.id)
       this.setState({logChecked: true})
     }
@@ -120,9 +121,8 @@ Form.propTypes = {
     className: T.string.isRequired
   }),
 
-  getLock: T.func.isRequired,
-  setLock: T.func.isRequired,
-  unlock: T.func.isRequired,
+  getLock: T.func,
+  unlock: T.func,
 
   /**
    * The save action of the form (if provided, form toolbar will be displayed).
@@ -148,8 +148,7 @@ Form.defaultProps = {
   level: 2,
   errors: false,
   validating: false,
-  pendingChanges: false,
-  lock: {}
+  pendingChanges: false
 }
 
 export {

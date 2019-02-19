@@ -4,7 +4,7 @@ import classes from 'classnames'
 
 import {toKey} from '#/main/core/scaffolding/text/utils'
 import {Heading} from '#/main/core/layout/components/heading'
-import {Sections, Section} from '#/main/core/layout/components/sections'
+import {Sections, Section} from '#/main/app/content/components/sections'
 
 import {DataDetailsSection as DataDetailsSectionTypes} from '#/main/app/content/details/prop-types'
 import {createDetailsDefinition} from '#/main/app/content/details/utils'

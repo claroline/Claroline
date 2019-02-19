@@ -1,12 +1,11 @@
-import {
-  NUMBERING_LITTERAL,
-  NUMBERING_NUMERIC
-} from './../quiz/enums'
+import {constants} from '#/plugin/exo/resources/quiz/constants'
+
+// TODO : deprecated. remove me
 
 export function getNumbering(numberingType, idx) {
   switch (numberingType) {
-    case NUMBERING_NUMERIC: return idx + 1
-    case NUMBERING_LITTERAL: return 'abcdefghijklmnopqrstuvwxyz'[idx]
+    case constants.NUMBERING_NUMERIC: return idx + 1
+    case constants.NUMBERING_LITTERAL: return 'abcdefghijklmnopqrstuvwxyz'[idx]
     default: return null
   }
 }

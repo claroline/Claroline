@@ -1,3 +1,5 @@
+import {trans} from '#/main/app/intl/translation'
+
 import editor from './editor'
 import {GraphicPaper} from './paper.jsx'
 import {GraphicPlayer} from './player.jsx'
@@ -102,6 +104,9 @@ function generateStats(item, papers, withAllParpers) {
 export default {
   type: 'application/x.graphic+json',
   name: 'graphic',
+  tags: [trans('question', {}, 'quiz')],
+  answerable: true,
+
   paper: GraphicPaper,
   player: GraphicPlayer,
   feedback: GraphicFeedback,

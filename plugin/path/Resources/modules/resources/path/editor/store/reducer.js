@@ -13,10 +13,10 @@ import {Step} from '#/plugin/path/resources/path/prop-types'
 import {getStepPath, getStepParent, getFormDataPart} from '#/plugin/path/resources/path/editor/utils'
 
 import {
-  STEP_ADD,
-  STEP_COPY,
-  STEP_MOVE,
-  STEP_REMOVE
+  PATH_ADD_STEP,
+  PATH_COPY_STEP,
+  PATH_MOVE_STEP,
+  PATH_REMOVE_STEP
 } from '#/plugin/path/resources/path/editor/store/actions'
 import {selectors} from '#/plugin/path/resources/path/editor/store/selectors'
 
@@ -57,57 +57,61 @@ function pushStep(step, steps, position) {
 
 const reducer = makeFormReducer(selectors.FORM_NAME, {}, {
   pendingChanges: makeReducer(false, {
-    [STEP_ADD]: () => true,
-    [STEP_COPY]: () => true,
-    [STEP_MOVE]: () => true,
-    [STEP_REMOVE]: () => true
+    [PATH_ADD_STEP]: () => true,
+    [PATH_COPY_STEP]: () => true,
+    [PATH_MOVE_STEP]: () => true,
+    [PATH_REMOVE_STEP]: () => true
   }),
   originalData: makeReducer({}, {
     [RESOURCE_LOAD]: (state, action) => action.resourceData.path || state
   }),
   data: makeReducer({}, {
+    /**
+     * Fills form when the path data are loaded.
+     *
+     * @param {object} state - the path object @see Path.propTypes
+     */
     [RESOURCE_LOAD]: (state, action) => action.resourceData.path || state,
-    [STEP_ADD]: (state, action) => {
+
+    /**
+     * Adds a new step to the path.
+     *
+     * @param {object} state - the path object @see Path.propTypes
+     */
+    [PATH_ADD_STEP]: (state, action) => {
       const newState = cloneDeep(state)
+      const newStep = merge({id: makeId()}, Step.defaultProps, action.step || {})
 
       if (!action.parentId) {
-        newState.steps.push(merge({}, Step.defaultProps, {
-          id: makeId(),
-          title: `${trans('step', {}, 'path')} ${newState.steps.length + 1}`
-        }))
+        if (!newStep.title) {
+          newStep.title = `${trans('step', {}, 'path')} ${newState.steps.length + 1}`
+        }
+
+        newState.steps.push(newStep)
       } else {
-        const parentPath = getStepPath(action.parentId, newState.steps)
         const parent = get(newState, getFormDataPart(action.parentId, newState.steps))
+
+        if (!newStep.title) {
+          const parentPath = getStepPath(action.parentId, newState.steps)
+          newStep.title = `${trans('step', {}, 'path')} ${parentPath.map(i => i+1).join('.')}.${parent.children.length + 1}`
+        }
+
         if (!parent.children) {
           parent.children = []
         }
 
-        parent.children.push(merge({}, Step.defaultProps, {
-          id: makeId(),
-          title: `${trans('step', {}, 'path')} ${parentPath.map(i => i+1).join('.')}.${parent.children.length + 1}`
-        }))
+        parent.children.push(newStep)
       }
 
       return newState
     },
-    [STEP_REMOVE]: (state, action) => {
-      const newState = cloneDeep(state)
-      const stepPath = getStepPath(action.id, newState.steps)
 
-      if (stepPath.length === 1) {
-        newState.steps.splice(stepPath[0], 1)
-      } else {
-        let step = newState.steps[stepPath[0]]
-
-        for (let i = 1; i < stepPath.length - 1; ++i) {
-          step = step.children[stepPath[i]]
-        }
-        step.children.splice(stepPath[stepPath.length - 1], 1)
-      }
-
-      return newState
-    },
-    [STEP_COPY]: (state, action) => {
+    /**
+     * Creates a copy af a copy and push it at the requested position.
+     *
+     * @param {object} state - the path object @see Path.propTypes
+     */
+    [PATH_COPY_STEP]: (state, action) => {
       const newState = cloneDeep(state)
 
       // generate a copy of the step and its subtree
@@ -125,7 +129,13 @@ const reducer = makeFormReducer(selectors.FORM_NAME, {}, {
 
       return newState
     },
-    [STEP_MOVE]: (state, action) => {
+
+    /**
+     * Moves a step to another position.
+     *
+     * @param {object} state - the path object @see Path.propTypes
+     */
+    [PATH_MOVE_STEP]: (state, action) => {
       const newState = cloneDeep(state)
 
       // get the step to move
@@ -148,6 +158,29 @@ const reducer = makeFormReducer(selectors.FORM_NAME, {}, {
         parent.children = pushStep(original, parent.children, action.position)
       } else {
         newState.steps = pushStep(original, newState.steps, action.position)
+      }
+
+      return newState
+    },
+
+    /**
+     * Removes a step from the path.
+     *
+     * @param {object} state - the path object @see Path.propTypes
+     */
+    [PATH_REMOVE_STEP]: (state, action) => {
+      const newState = cloneDeep(state)
+      const stepPath = getStepPath(action.id, newState.steps)
+
+      if (stepPath.length === 1) {
+        newState.steps.splice(stepPath[0], 1)
+      } else {
+        let step = newState.steps[stepPath[0]]
+
+        for (let i = 1; i < stepPath.length - 1; ++i) {
+          step = step.children[stepPath[i]]
+        }
+        step.children.splice(stepPath[stepPath.length - 1], 1)
       }
 
       return newState

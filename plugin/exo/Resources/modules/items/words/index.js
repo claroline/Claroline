@@ -1,3 +1,5 @@
+import {trans} from '#/main/app/intl/translation'
+
 import editor from './editor'
 import {WordsPaper} from './paper.jsx'
 import {WordsPlayer} from './player.jsx'
@@ -69,6 +71,9 @@ function generateStats(item, papers, withAllParpers) {
 export default {
   type: 'application/x.words+json',
   name: 'words',
+  tags: [trans('question', {}, 'quiz')],
+  answerable: true,
+
   paper: WordsPaper,
   player: WordsPlayer,
   feedback: WordsFeedback,

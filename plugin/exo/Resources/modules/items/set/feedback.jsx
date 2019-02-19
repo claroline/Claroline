@@ -4,7 +4,7 @@ import classes from 'classnames'
 
 import {utils} from './utils/utils'
 import {Feedback} from '../components/feedback-btn.jsx'
-import {WarningIcon} from './utils/warning-icon.jsx'
+import {WarningIcon} from '#/plugin/exo/components/warning-icon'
 
 export const SetFeedback = props =>
   <div className="set-paper">

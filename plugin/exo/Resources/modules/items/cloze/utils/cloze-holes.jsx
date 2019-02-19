@@ -1,21 +1,13 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-
 import classes from 'classnames'
 
 import {tex} from '#/main/app/intl/translation'
+
+import {WarningIcon} from '#/plugin/exo/components/warning-icon'
 import {select} from '../selectors'
 import {Feedback} from '../../components/feedback-btn.jsx'
 import {SolutionScore} from '../../components/score.jsx'
-
-const AnswerWarningIcon = props =>
-  props.valid ?
-    <span className="fa fa-check answer-warning-span" aria-hidden="true" /> :
-    <span className="fa fa-times answer-warning-span" aria-hidden="true" />
-
-AnswerWarningIcon.propTypes = {
-  valid: T.bool.isRequired
-}
 
 const HoleInput = props =>
   props.choices ?
@@ -72,7 +64,7 @@ PlayerHole.propTypes = {
 
 const SolutionHole = props =>
   <span className={classes('cloze-hole answer-item', props.className)}>
-    <AnswerWarningIcon valid={props.solution && 0 < props.solution.score ? true : false} />
+    <WarningIcon valid={props.solution && 0 < props.solution.score} />
 
     <HoleInput
       value={props.answer}

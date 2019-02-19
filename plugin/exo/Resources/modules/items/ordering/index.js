@@ -1,3 +1,5 @@
+import {trans} from '#/main/app/intl/translation'
+
 import editor from './editor'
 import {OrderingPaper} from './paper.jsx'
 import {OrderingPlayer} from './player.jsx'
@@ -84,6 +86,9 @@ function generateStats(item, papers, withAllParpers) {
 export default {
   type: 'application/x.ordering+json',
   name: 'ordering',
+  tags: [trans('question', {}, 'quiz')],
+  answerable: true,
+
   paper: OrderingPaper,
   player: OrderingPlayer,
   feedback: OrderingFeedback,

@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import {utils} from './utils/utils'
 import {Feedback} from '../components/feedback-btn.jsx'
-import {WarningIcon} from './utils/warning-icon.jsx'
+import {WarningIcon} from '#/plugin/exo/components/warning-icon'
 
 export const PairFeedback = (props) => {
   const yourAnswers = utils.getYourAnswers(props.answer, props.item)

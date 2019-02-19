@@ -8,7 +8,7 @@ import {SolutionScore} from './../components/score.jsx'
 import {AnswerStats} from '../components/stats.jsx'
 import {PaperTabs} from './../components/paper-tabs.jsx'
 import {utils} from './utils/utils'
-import {WarningIcon} from './utils/warning-icon.jsx'
+import {WarningIcon} from '#/plugin/exo/components/warning-icon'
 
 export const PairPaper = props => {
   const yourAnswers = utils.getYourAnswers(props.answer, props.item)

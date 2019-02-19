@@ -31,7 +31,7 @@ import {ContentItemForm} from './content-item-form.jsx'
 import {ItemPanelDragPreview} from './item-panel-drag-preview.jsx'
 import {ContentPanelDragPreview} from './content-panel-drag-preview.jsx'
 import {getNumbering} from './../../../utils/numbering'
-import {NUMBERING_NONE} from './../../../quiz/enums'
+import {constants} from '#/plugin/exo/resources/quiz/constants'
 
 const ParametersHeader = props =>
   <div onClick={props.onClick} className="panel-title editor-panel-title" aria-expanded={props.active}>
@@ -185,7 +185,7 @@ const ItemPanel = props =>
           header={
             <ItemHeader
               item={props.item}
-              numbering={props.numbering !== NUMBERING_NONE ? props.stepIndex + '.' + getNumbering(props.numbering, props.index): null}
+              numbering={props.numbering !== constants.NUMBERING_NONE ? props.stepIndex + '.' + getNumbering(props.numbering, props.index): null}
               handlePanelClick={props.handlePanelClick}
               handleItemDelete={props.handleItemDelete}
               handleItemChangeStep={props.handleItemChangeStep}

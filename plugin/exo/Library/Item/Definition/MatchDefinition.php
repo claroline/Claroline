@@ -14,7 +14,6 @@ use UJM\ExoBundle\Library\Attempt\GenericPenalty;
 use UJM\ExoBundle\Library\Csv\ArrayCompressor;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Serializer\Item\Type\MatchQuestionSerializer;
-use UJM\ExoBundle\Transfer\Parser\ContentParserInterface;
 use UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\MatchAnswerValidator;
 use UJM\ExoBundle\Validator\JsonSchema\Item\Type\MatchQuestionValidator;
 
@@ -197,23 +196,6 @@ class MatchDefinition extends AbstractDefinition
         foreach ($item->getProposals() as $proposal) {
             $proposal->refreshUuid();
         }
-    }
-
-    /**
-     * Parses items contents.
-     *
-     * @param ContentParserInterface $contentParser
-     * @param \stdClass              $item
-     */
-    public function parseContents(ContentParserInterface $contentParser, \stdClass $item)
-    {
-        array_walk($item->firstSet, function (\stdClass $item) use ($contentParser) {
-            $item->data = $contentParser->parse($item->data);
-        });
-
-        array_walk($item->secondSet, function (\stdClass $item) use ($contentParser) {
-            $item->data = $contentParser->parse($item->data);
-        });
     }
 
     public function getCsvTitles(AbstractItem $item)

@@ -82,22 +82,22 @@ const ContentCreationModal = props => {
           props.fetchContents(props.currentContext)
         }
       }}
-      fadeModal={() => close()}
+      fadeModal={close}
     >
       {renderStep()}
 
       {'parameters' === props.currentStep &&
-          <Button
-            className="modal-btn btn"
-            type={CALLBACK_BUTTON}
-            primary={true}
-            disabled={!props.saveEnabled}
-            label={trans('add', {}, 'actions')}
-            callback={() => {
-              props.add(props.instance)
-              close()
-            }}
-          />
+        <Button
+          className="modal-btn btn"
+          type={CALLBACK_BUTTON}
+          primary={true}
+          disabled={!props.saveEnabled}
+          label={trans('add', {}, 'actions')}
+          callback={() => {
+            props.add(props.instance)
+            close()
+          }}
+        />
       }
     </Modal>
   )
