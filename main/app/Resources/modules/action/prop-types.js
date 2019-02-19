@@ -141,8 +141,7 @@ const Toolbar = {
   },
   defaultProps: {
     className: 'toolbar',
-    disabled: false,
-    tooltip: 'bottom'
+    disabled: false
   }
 }
 

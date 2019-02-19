@@ -26,6 +26,11 @@ const workspace = createSelector(
   (resourceNode) => resourceNode.workspace
 )
 
+const workspaceId = createSelector(
+  [workspace],
+  (workspace) => workspace.autoId
+)
+
 const meta = createSelector(
   [resourceNode],
   (resourceNode) => resourceNode.meta
@@ -91,6 +96,7 @@ export const selectors = {
   // node
   resourceNode,
   workspace,
+  workspaceId,
   parent,
   meta,
   published,
