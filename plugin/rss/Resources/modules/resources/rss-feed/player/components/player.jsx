@@ -27,9 +27,7 @@ const PlayerComponent = props => {
             <a href={item.link} rel="noopener noreferrer" target="_blank">{item.title}</a>
             {/* {item.date} */}
           </h4>
-          <p className="feed-item-desc">
-            {item.description}
-          </p>
+          <p className="feed-item-desc" dangerouslySetInnerHTML={{ __html:item.description }}/>
         </div>
       )}
     </div>
