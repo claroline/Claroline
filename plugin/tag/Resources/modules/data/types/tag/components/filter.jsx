@@ -33,7 +33,7 @@ const TagFilter = (props) =>
   </span>
 
 implementPropTypes(TagFilter, DataSearchTypes, {
-  search: T.arrayOf(T.string),
+  search: T.oneOfType([T.string, T.arrayOf(T.string)]),
   objectClass: T.string
 })
 
