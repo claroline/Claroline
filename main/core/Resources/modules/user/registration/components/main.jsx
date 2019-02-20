@@ -76,6 +76,7 @@ const RegistrationForm = props => {
       <FormStepper
         key="form"
         className="page-content"
+        location={props.location}
         submit={{
           icon: 'fa fa-user-plus',
           label: trans('registration_confirm'),
@@ -83,7 +84,7 @@ const RegistrationForm = props => {
         }}
         steps={steps}
         redirect={[
-          {from: '/', exact: true, to: !props.options.allowWorkspace && props.defaultWorkspaces ? 'registration': '/account'}
+          {from: '/', exact: true, to: !props.options.allowWorkspace && props.defaultWorkspaces ? '/registration': '/account'}
         ]}
       />
     </PageContainer>
@@ -91,6 +92,9 @@ const RegistrationForm = props => {
 }
 
 RegistrationForm.propTypes = {
+  location: T.shape({
+    path: T.string
+  }),
   user: T.shape({
     // user type
   }).isRequired,
