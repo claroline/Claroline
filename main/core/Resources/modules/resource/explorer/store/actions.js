@@ -200,9 +200,9 @@ actions.deleteNodes = (explorerName, deletedNodes) => (dispatch, getState) => {
 
   // change current directory if it is deleted
   const current = selectors.currentNode(explorerState)
-  if (-1 !== deletedNodes.findIndex(node => node.is === current.id)) {
+  if (-1 !== deletedNodes.findIndex(node => node.id === current.id)) {
     dispatch(actions.setCurrentNode(explorerName, selectors.directory(selectors.directories(explorerState), current.parent.id)))
-  } else {
+  } else if (-1 !== deletedNodes.findIndex(node => node.parent && node.parent.id === current.id)) {
     // reset list if nodes are deleted from the current directory
     dispatch(actions.invalidateCurrentResources(explorerName, deletedNodes))
   }
@@ -238,10 +238,17 @@ actions.invalidateCurrentResources = (explorerName, updatedNodes) => (dispatch, 
   const explorerState = selectors.explorer(getState(), explorerName)
   const current = selectors.currentNode(explorerState)
 
-  if (current && -1 !== updatedNodes.findIndex(node => node.parent && current.id === node.parent.id)) {
-    // we are inside a directory and one of the child have changed
-    dispatch(listActions.fetchData(explorerName +'.resources', ['apiv2_resource_list', {parent: current.id}], true))
-  } else if (-1 !== updatedNodes.findIndex(node => !!node.parent)) {
-    dispatch(listActions.fetchData(explorerName +'.resources', ['apiv2_resource_list'], true))
+  if (current) {
+    // we are inside a directory
+    if (-1 !== updatedNodes.findIndex(node => node.parent && current.id === node.parent.id)) {
+      // one of the child have changed
+      dispatch(listActions.fetchData(explorerName +'.resources', ['apiv2_resource_list', {parent: current.id}], true))
+    }
+  } else {
+    // we are on the root
+    if (-1 !== updatedNodes.findIndex(node => !!node.parent)) {
+      // one of the child have changed
+      dispatch(listActions.fetchData(explorerName +'.resources', ['apiv2_resource_list'], true))
+    }
   }
 }

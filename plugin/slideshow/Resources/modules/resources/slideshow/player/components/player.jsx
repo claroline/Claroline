@@ -22,8 +22,14 @@ const PlayerComponent = props => {
     )
   }
 
+  let activeIndex = props.slides.findIndex(slide => slide.id === props.activeSlide)
+  if (-1 === activeIndex) {
+    activeIndex = 0
+  }
+
   return (
     <Carousel
+      defaultActiveIndex={activeIndex}
       interval={props.autoPlay && props.interval}
       controls={props.showControls}
       indicators={props.showControls}
@@ -57,6 +63,7 @@ const PlayerComponent = props => {
 }
 
 PlayerComponent.propTypes = {
+  activeSlide: T.string,
   autoPlay: T.bool.isRequired,
   interval: T.number.isRequired,
   showControls: T.bool,
