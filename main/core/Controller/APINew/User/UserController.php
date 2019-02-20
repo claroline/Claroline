@@ -227,6 +227,7 @@ class UserController extends AbstractCrudController
             //maybe move these options in an other class
             Options::SEND_EMAIL,
             Options::ADD_NOTIFICATIONS,
+            Options::WORKSPACE_VALIDATE_ROLES,
         ];
 
         return [

@@ -83,7 +83,7 @@ const RegistrationForm = props => {
         }}
         steps={steps}
         redirect={[
-          {from: '/', exact: true, to: '/account'}
+          {from: '/', exact: true, to: !props.options.allowWorkspace && props.defaultWorkspaces ? 'registration': '/account'}
         ]}
       />
     </PageContainer>

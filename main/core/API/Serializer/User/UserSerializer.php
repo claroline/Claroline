@@ -14,6 +14,7 @@ use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 use Claroline\CoreBundle\Event\User\DecorateUserEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
@@ -499,8 +500,25 @@ class UserSerializer extends GenericSerializer
                         'type' => Role::PLATFORM_ROLE,
                     ]);
                 }
+
                 if ($role && $role->getId()) {
-                    $user->addRole($role);
+                    $roleWs = $role->getWorkspace();
+                    if (in_array(Options::WORKSPACE_VALIDATE_ROLES, $options) && Role::WS_ROLE === $role->getType() && $roleWs->getRegistrationValidation()) {
+                        if (!$user->hasRole($role)) {
+                            $workspaceManager = $this->container->get('claroline.manager.workspace_manager');
+
+                            if (!$workspaceManager->isUserInValidationQueue($roleWs, $user)) {
+                                //for some reason the workspace add manager queue is broken here. Probably it's the log fault
+                                $wksrq = new WorkspaceRegistrationQueue();
+                                $wksrq->setUser($user);
+                                $wksrq->setRole($role);
+                                $wksrq->setWorkspace($roleWs);
+                                $this->om->persist($wksrq);
+                            }
+                        }
+                    } else {
+                        $user->addRole($role);
+                    }
                 }
             }
         }
