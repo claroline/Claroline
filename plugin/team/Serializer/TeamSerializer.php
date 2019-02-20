@@ -167,7 +167,7 @@ class TeamSerializer
         $user = $this->tokenStorage->getToken()->getUser();
 
         if (empty($directory) && 'anon.' !== $user) {
-            if ($data['createPublicDirectory']) {
+            if (isset($data['createPublicDirectory']) && $data['createPublicDirectory']) {
                 $defaultResource = isset($data['defaultResource']['id']) ?
                   $this->resourceNodeRepo->findOneBy(['uuid' => $data['defaultResource']['id']]) :
                   null;
