@@ -2,12 +2,15 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
+import {asset} from '#/main/app/config/asset'
 import {trans} from '#/main/app/intl/translation'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
+import {Button} from '#/main/app/action/components/button'
+import {LINK_BUTTON} from '#/main/app/buttons'
+import {LinkButton} from '#/main/app/buttons/link/components/button'
 
 import {selectors} from '#/plugin/slideshow/resources/slideshow/player/store'
-import {Slides} from '#/plugin/slideshow/resources/slideshow/components/slides'
 import {Slide as SlideTypes} from '#/plugin/slideshow/resources/slideshow/prop-types'
 
 // TODO : merge with standard overview when UserProgression will be implemented for slideshow
@@ -26,7 +29,7 @@ const OverviewComponent = props =>
       </section>
     }
 
-    <section className="">
+    <section>
       <h3 className="h2">{trans('slides', {}, 'slideshow')}</h3>
 
       {0 === props.slides.length &&
@@ -38,11 +41,27 @@ const OverviewComponent = props =>
       }
 
       {0 !== props.slides.length &&
-        <Slides
-          slides={props.slides}
-        />
+        <ul className="slides">
+          {props.slides.map(slide =>
+            <li key={slide.id} className="slide-preview">
+              <LinkButton target={`/play/${slide.id}`}>
+                <img src={asset(slide.content.url)} alt={slide.title} className="img-thumbnail"/>
+              </LinkButton>
+            </li>
+          )}
+        </ul>
       }
     </section>
+
+    <Button
+      type={LINK_BUTTON}
+      className="btn btn-block btn-emphasis"
+      icon="fa fa-fw fa-play"
+      label={trans('start_slideshow', {}, 'slideshow')}
+      target="/play"
+      primary={true}
+      disabled={0 === props.slides.length}
+    />
   </section>
 
 OverviewComponent.propTypes = {

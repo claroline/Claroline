@@ -37,8 +37,16 @@ const SlideshowResource = props =>
           disabled: !props.showOverview,
           component: Overview
         }, {
-          path: '/play',
-          component: Player
+          path: '/play/:id?',
+          render: (routeProps) => {
+            const SlideshowPlayer = (
+              <Player
+                activeSlide={routeProps.match.params.id}
+              />
+            )
+
+            return SlideshowPlayer
+          }
         }, {
           path: '/edit',
           component: Editor,
