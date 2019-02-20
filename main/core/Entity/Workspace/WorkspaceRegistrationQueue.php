@@ -40,7 +40,7 @@ class WorkspaceRegistrationQueue
     protected $role;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", inversedBy="wkUserQueues")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     protected $user;
@@ -89,6 +89,7 @@ class WorkspaceRegistrationQueue
     public function setUser($user)
     {
         $this->user = $user;
+        $user->addWorkspaceUserQueue($this);
     }
 
     /**

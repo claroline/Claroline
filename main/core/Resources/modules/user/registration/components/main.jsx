@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
-
+import {withRouter} from '#/main/app/router'
 import {trans} from '#/main/app/intl/translation'
 
 import {PageContainer, PageHeader} from '#/main/core/layout/page/index'
@@ -76,6 +76,7 @@ const RegistrationForm = props => {
       <FormStepper
         key="form"
         className="page-content"
+        location={props.location}
         submit={{
           icon: 'fa fa-user-plus',
           label: trans('registration_confirm'),
@@ -83,7 +84,7 @@ const RegistrationForm = props => {
         }}
         steps={steps}
         redirect={[
-          {from: '/', exact: true, to: '/account'}
+          {from: '/', exact: true, to: !props.options.allowWorkspace && props.defaultWorkspaces ? '/registration': '/account'}
         ]}
       />
     </PageContainer>
@@ -91,6 +92,9 @@ const RegistrationForm = props => {
 }
 
 RegistrationForm.propTypes = {
+  location: T.shape({
+    path: T.string
+  }),
   user: T.shape({
     // user type
   }).isRequired,
@@ -110,7 +114,7 @@ RegistrationForm.propTypes = {
   defaultWorkspaces: T.array
 }
 
-const UserRegistration = connect(
+const UserRegistration = withRouter(connect(
   (state) => ({
     user: formSelect.data(formSelect.form(state, 'user')),
     facets: select.facets(state),
@@ -139,7 +143,7 @@ const UserRegistration = connect(
       }
     }
   })
-)(RegistrationForm)
+)(RegistrationForm))
 
 export {
   UserRegistration

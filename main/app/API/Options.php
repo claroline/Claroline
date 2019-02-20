@@ -77,6 +77,7 @@ final class Options
     const WORKSPACE_FETCH_HOME = 'workspace_fetch_home';
     const WORKSPACE_FETCH_RESOURCES = 'workspace_fetch_resources';
     const WORKSPACE_DESERIALIZE_ROLES = 'workspace_deserialize_roles';
+    const WORKSPACE_VALIDATE_ROLES = 'workspace_validate_roles';
     //for role
     const SERIALIZE_ROLES = 'serialize_roles';
     const SERIALIZE_COUNT_USER = 'serialize_count_user';
