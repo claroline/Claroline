@@ -36,8 +36,9 @@ class ResourceRestrictionsManager
      *     "security"      = @DI\Inject("security.authorization_checker")
      * })
      *
-     * @param SessionInterface $session
-     * @param RightsManager    $rightsManager
+     * @param SessionInterface              $session
+     * @param RightsManager                 $rightsManager
+     * @param AuthorizationCheckerInterface $security
      */
     public function __construct(
         SessionInterface $session,

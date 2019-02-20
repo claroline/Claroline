@@ -12,6 +12,7 @@ import {HtmlText} from '#/main/core/layout/components/html-text'
 import {Timer} from '#/main/core/layout/gauge/components/timer'
 import {ProgressBar} from '#/main/core/layout/components/progress-bar'
 import {ScoreGauge} from '#/main/core/layout/evaluation/components/score-gauge'
+import {selectors as resourceSelect} from '#/main/core/resource/store'
 
 import {trans} from '#/main/app/intl/translation'
 import {getDefinition, isQuestionType} from '#/plugin/exo/items/item-types'
@@ -23,7 +24,8 @@ import {actions} from '#/plugin/exo/quiz/player/actions'
 import {ItemPlayer} from '#/plugin/exo/items/components/item-player'
 import {ItemFeedback} from '#/plugin/exo/items/components/item-feedback'
 import {ContentItemPlayer} from '#/plugin/exo/contents/components/content-item-player'
-import {PlayerNav} from '#/plugin/exo/quiz/player/components/nav-bar.jsx'
+import {PlayerNav} from '#/plugin/exo/quiz/player/components/nav-bar'
+import {PlayerRestrictions} from '#/plugin/exo/quiz/player/components/restrictions'
 import {getNumbering} from '#/plugin/exo/utils/numbering'
 import {NUMBERING_NONE} from '#/plugin/exo/quiz/enums'
 
@@ -106,7 +108,7 @@ class PlayerComponent extends Component {
       .start()
       .then(
         () => this.setState({fetching: false}),
-        () => this.setState({fetching: false, error: true})
+        (error) => this.setState({fetching: false, error: error})
       )
   }
 
@@ -156,7 +158,11 @@ class PlayerComponent extends Component {
         }
 
         {(!this.state.fetching && this.state.error) &&
-          <span>{trans('attempt_not_available', {}, 'quiz')}</span>
+          <PlayerRestrictions
+            {...this.state.error}
+            workspaceId={this.props.workspaceId}
+            showStatistics={this.props.showStatistics}
+          />
         }
 
         {(!this.state.fetching && !this.state.error) &&
@@ -195,6 +201,7 @@ class PlayerComponent extends Component {
 }
 
 PlayerComponent.propTypes = {
+  workspaceId: T.number,
   history: T.object.isRequired,
   quizId: T.string.isRequired,
   numbering: T.string.isRequired,
@@ -215,6 +222,7 @@ PlayerComponent.propTypes = {
   }).isRequired,
   next: T.object,
   previous: T.object,
+  showStatistics: T.bool.isRequired,
   showFeedback: T.bool.isRequired,
   showEndConfirm: T.bool.isRequired,
   feedbackEnabled: T.bool.isRequired,
@@ -237,6 +245,7 @@ PlayerComponent.defaultProps = {
 
 const Player = withRouter(connect(
   state => ({
+    workspaceId: resourceSelect.workspaceId(state),
     mandatoryQuestions: selectQuiz.parameters(state).mandatoryQuestions,
     quizId: selectQuiz.id(state),
     number: select.currentStepNumber(state),
@@ -247,6 +256,7 @@ const Player = withRouter(connect(
     allAnswers: select.answers(state),
     next: select.next(state),
     previous: select.previous(state),
+    showStatistics: selectQuiz.parameters(state).showStatistics,
     showFeedback: select.showFeedback(state),
     showEndConfirm: select.showEndConfirm(state),
     feedbackEnabled: select.feedbackEnabled(state),

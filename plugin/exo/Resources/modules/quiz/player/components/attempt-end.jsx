@@ -15,7 +15,9 @@ import {selectors as paperSelectors} from './../../papers/selectors'
 import {utils as paperUtils} from './../../papers/utils'
 import {ScoreGauge} from './../../../components/score-gauge'
 
-const AttemptEnd = props => {
+// TODO : merge with PlayerRestrictions
+
+const AttemptEndComponent = props => {
   const showScore = paperUtils.showScore(false, props.paper.finished, paperSelectors.showScoreAt(props.paper), paperSelectors.showCorrectionAt(props.paper), paperSelectors.correctionDate(props.paper))
   const showCorrection = paperUtils.showCorrection(false, props.paper.finished, paperSelectors.showCorrectionAt(props.paper), paperSelectors.correctionDate(props.paper))
   const answers = Object.keys(props.answers).map(key => props.answers[key])
@@ -23,11 +25,14 @@ const AttemptEnd = props => {
     (0 === props.maxAttemptsPerDay || props.maxAttemptsPerDay > props.userPaperDayCount)
 
   return (
-    <div className="quiz-player attempt-end">
+    <div className="quiz-player">
       <div className="row">
         {showScore &&
           <div className="col-md-3 text-center">
-            <ScoreGauge userScore={paperUtils.computeScore(props.paper, answers)} maxScore={paperSelectors.paperScoreMax(props.paper)} />
+            <ScoreGauge
+              userScore={paperUtils.computeScore(props.paper, answers)}
+              maxScore={paperSelectors.paperScoreMax(props.paper)}
+            />
           </div>
         }
 
@@ -86,7 +91,7 @@ const AttemptEnd = props => {
   )
 }
 
-AttemptEnd.propTypes = {
+AttemptEndComponent.propTypes = {
   workspaceId: T.number,
   admin: T.bool.isRequired,
   answers: T.object.isRequired,
@@ -104,7 +109,7 @@ AttemptEnd.propTypes = {
   userPaperDayCount: T.number.isRequired
 }
 
-const ConnectedAttemptEnd = connect(
+const AttemptEnd = connect(
   (state) => ({
     workspaceId: resourceSelect.workspaceId(state),
     admin: hasPermission('edit', resourceSelect.resourceNode(state)) || quizSelectors.papersAdmin(state),
@@ -118,8 +123,8 @@ const ConnectedAttemptEnd = connect(
     userPaperCount: quizSelectors.meta(state).userPaperCount,
     userPaperDayCount: quizSelectors.meta(state).userPaperDayCount
   })
-)(AttemptEnd)
+)(AttemptEndComponent)
 
 export {
-  ConnectedAttemptEnd as AttemptEnd
+  AttemptEnd
 }

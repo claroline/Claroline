@@ -100,12 +100,18 @@ class AttemptController extends AbstractController
         $this->assertHasPermission('OPEN', $exercise);
 
         if (!$this->isAdmin($exercise) && !$this->attemptManager->canPass($exercise, $user)) {
-            throw new AccessDeniedException('max attempts reached');
+            return new JsonResponse([
+                'message' => $exercise->getAttemptsReachedMessage(),
+                'accessErrors' => $this->attemptManager->getErrors($exercise, $user),
+                'lastAttempt' => $this->paperManager->serialize(
+                    $this->attemptManager->getLastPaper($exercise, $user)
+                ),
+            ], 403);
         }
 
-        $paper = $this->attemptManager->startOrContinue($exercise, $user);
-
-        return new JsonResponse($this->paperManager->serialize($paper));
+        return new JsonResponse($this->paperManager->serialize(
+            $this->attemptManager->startOrContinue($exercise, $user)
+        ));
     }
 
     /**

@@ -103,6 +103,15 @@ class Exercise extends AbstractResource
     private $endMessage = '';
 
     /**
+     * A message to display when a user has done all its attempts.
+     *
+     * @ORM\Column(name="attempts_reached_message", type="text", nullable=true)
+     *
+     * @var string
+     */
+    private $attemptsReachedMessage = '';
+
+    /**
      * Show navigation buttons on the end page.
      *
      * @ORM\Column(name="end_navigation", type="boolean")
@@ -422,6 +431,16 @@ class Exercise extends AbstractResource
     public function getEndMessage()
     {
         return $this->endMessage;
+    }
+
+    public function setAttemptsReachedMessage($attemptsReachedMessage)
+    {
+        $this->attemptsReachedMessage = $attemptsReachedMessage;
+    }
+
+    public function getAttemptsReachedMessage()
+    {
+        return $this->attemptsReachedMessage;
     }
 
     /**

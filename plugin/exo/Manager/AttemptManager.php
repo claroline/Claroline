@@ -107,17 +107,41 @@ class AttemptManager
      */
     public function canPass(Exercise $exercise, User $user = null)
     {
+        // TODO : max attempts by day
+
         $canPass = true;
         if ($user) {
             $max = $exercise->getMaxAttempts();
-            $nbFinishedPapers = $this->paperManager->countUserFinishedPapers($exercise, $user);
-
-            if ($max > 0 && $nbFinishedPapers >= $max) {
-                $canPass = false;
+            if ($max > 0) {
+                $nbFinishedPapers = $this->paperManager->countUserFinishedPapers($exercise, $user);
+                if ($nbFinishedPapers >= $max) {
+                    $canPass = false;
+                }
             }
         }
 
         return $canPass;
+    }
+
+    public function getErrors(Exercise $exercise, User $user = null)
+    {
+        // TODO : max attempts by day
+
+        $errors = [];
+        if ($user) {
+            $max = $exercise->getMaxAttempts();
+            if ($max > 0) {
+                // quiz has limited attempts
+                $nbFinishedPapers = $this->paperManager->countUserFinishedPapers($exercise, $user);
+
+                $errors['maxAttemptsReached'] = false;
+                if ($nbFinishedPapers >= $max) {
+                    $errors['maxAttemptsReached'] = true;
+                }
+            }
+        }
+
+        return $errors;
     }
 
     /**
@@ -168,7 +192,7 @@ class AttemptManager
         // Start a new attempt is needed
         if (empty($paper)) {
             // Get the last paper for generation
-            $lastPaper = (null !== $user) ? $this->paperRepository->findLastPaper($exercise, $user) : null;
+            $lastPaper = $this->getLastPaper($exercise, $user);
 
             // Generate a new paper
             $paper = $this->paperGenerator->create($exercise, $user, $lastPaper);
@@ -179,6 +203,15 @@ class AttemptManager
         }
 
         return $paper;
+    }
+
+    public function getLastPaper(Exercise $exercise, User $user = null)
+    {
+        if (null !== $user) {
+            return $this->paperRepository->findLastPaper($exercise, $user);
+        }
+
+        return null;
     }
 
     /**
