@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
-
+import {withRouter} from '#/main/app/router'
 import {trans} from '#/main/app/intl/translation'
 
 import {PageContainer, PageHeader} from '#/main/core/layout/page/index'
@@ -110,7 +110,7 @@ RegistrationForm.propTypes = {
   defaultWorkspaces: T.array
 }
 
-const UserRegistration = connect(
+const UserRegistration = withRouter(connect(
   (state) => ({
     user: formSelect.data(formSelect.form(state, 'user')),
     facets: select.facets(state),
@@ -139,7 +139,7 @@ const UserRegistration = connect(
       }
     }
   })
-)(RegistrationForm)
+)(RegistrationForm))
 
 export {
   UserRegistration

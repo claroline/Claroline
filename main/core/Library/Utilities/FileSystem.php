@@ -26,6 +26,7 @@ class FileSystem extends Fs
         }
     }
 
+    //todo à virer
     public function rmDirContent($path, $recursive = false)
     {
         $iterator = new \DirectoryIterator($path);
@@ -49,10 +50,10 @@ class FileSystem extends Fs
     public function copyDir($path, $target, $originalPath = '', $originalTarget = '')
     {
         $iterator = new \DirectoryIterator($path);
-        if ($originalPath === '') {
+        if ('' === $originalPath) {
             $originalPath = $path;
         }
-        if ($originalTarget === '') {
+        if ('' === $originalTarget) {
             $originalTarget = $target;
         }
 
