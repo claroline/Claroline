@@ -30,7 +30,7 @@ export default (resourceNodes, nodesRefresher) => ({
           method: 'PUT',
           body: JSON.stringify({destination: selected[0]})
         },
-        success: (response) => nodesRefresher.update([selected[0], response])
+        success: (response) => nodesRefresher.update([selected[0], ...response])
       }
     }),
     filters: [{property: 'resourceType', value: 'directory', locked: true}]
