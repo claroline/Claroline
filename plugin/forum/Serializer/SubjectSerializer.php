@@ -176,6 +176,7 @@ class SubjectSerializer
                 $first = new Message();
                 $first->setIsFirst(true);
                 $first->setSubject($subject);
+                $this->sipe('meta.moderation', 'setModerated', $data, $first);
             }
 
             $first->setContent($data['content']);
