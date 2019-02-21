@@ -94,13 +94,15 @@ class TeamSerializer
      */
     public function serialize(Team $team)
     {
+        $users = $team->getRole() ? $team->getRole()->getUsers()->toArray() : $team->getUsers()->toArray();
+
         return [
             'id' => $team->getUuid(),
             'name' => $team->getName(),
             'description' => $team->getDescription(),
             'workspace' => $this->workspaceSerializer->serialize($team->getWorkspace(), [Options::SERIALIZE_MINIMAL]),
             'maxUsers' => $team->getMaxUsers(),
-            'countUsers' => count($team->getUsers()),
+            'countUsers' => count($users),
             'selfRegistration' => $team->isSelfRegistration(),
             'selfUnregistration' => $team->isSelfUnregistration(),
             'directory' => $team->getDirectory() ?

@@ -108,7 +108,7 @@ class TeamListener
     /**
      * @DI\Observe("workspace_copy_tool_claroline_team_tool")
      *
-     * @param DisplayToolEvent $event
+     * @param WorkspaceCopyToolEvent $event
      */
     public function onWorkspaceToolCopy(WorkspaceCopyToolEvent $event)
     {

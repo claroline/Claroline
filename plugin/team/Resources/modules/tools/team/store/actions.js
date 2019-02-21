@@ -76,6 +76,9 @@ actions.fillTeams = (teams) => ({
     url: url(['apiv2_team_fill'], {ids: teams.map(t => t.id)}),
     request: {
       method: 'PATCH'
+    },
+    success: (data, dispatch) => {
+      dispatch(listActions.invalidateData('teams.list'))
     }
   }
 })
@@ -85,6 +88,9 @@ actions.emptyTeams = (teams) => ({
     url: url(['apiv2_team_empty'], {ids: teams.map(t => t.id)}),
     request: {
       method: 'PATCH'
+    },
+    success: (data, dispatch) => {
+      dispatch(listActions.invalidateData('teams.list'))
     }
   }
 })
