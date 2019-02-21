@@ -7,7 +7,7 @@
         "claroline/distribution": "12.x-dev"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "2.11",
+        "friendsofphp/php-cs-fixer": "2.14",
         "mockery/mockery": "0.9.6",
         "mikey179/vfsStream": "1.6.4",
         "phpmd/phpmd": "@stable",
