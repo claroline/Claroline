@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as Serializer;
@@ -29,6 +30,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="claro__organization")
  * @DoctrineAssert\UniqueEntity("name")
  * @Gedmo\Tree(type="nested")
+ * @ORM\HasLifecycleCallbacks
  */
 class Organization
 {
@@ -206,6 +208,8 @@ class Organization
      */
     private $keys;
 
+    private $referencesToRemove;
+
     public function __construct()
     {
         $this->type = self::TYPE_EXTERNAL;
@@ -221,6 +225,8 @@ class Organization
         $this->userOrganizationReferences = new ArrayCollection();
         $this->children = new ArrayCollection();
         $this->type = self::TYPE_INTERNAL;
+
+        $this->referencesToRemove = [];
     }
 
     public function getId()
@@ -424,8 +430,9 @@ class Organization
             }
         }
 
-        if ($found) {
+        if ($found && count($user->getOrganizations()) > 0) {
             $this->userOrganizationReferences->removeElement($found);
+            $this->referencesToRemove[] = $found;
         }
     }
 
@@ -457,5 +464,21 @@ class Organization
     public function removeWorkspace(Workspace $workspace)
     {
         $workspace->removeOrganization($this);
+    }
+
+    /**
+     * @ORM\PreFlush
+     */
+    public function removeOrganizationReferences(PreFlushEventArgs $event)
+    {
+        $em = $event->getEntityManager();
+
+        if (is_array($this->referencesToRemove)) {
+            foreach ($this->referencesToRemove as $toRemove) {
+                $em->remove($toRemove);
+            }
+        }
+
+        $this->referencesToRemove = [];
     }
 }

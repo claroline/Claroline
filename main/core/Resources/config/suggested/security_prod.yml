@@ -47,7 +47,7 @@ security:
                 failure_handler: claroline.security.authentication.failure_handler
             anonymous: ~
             logout: true
-            switch_user: { role: ROLE_ADMIN, parameter: _switch }
+            switch_user: { role: ROLE_ALLOWED_TO_SWITCH, parameter: _switch }
 
             remember_me:
                 secret:      "%secret%"
@@ -60,7 +60,7 @@ security:
         cas:
             pattern: ^/
             anonymous: ~
-            switch_user: { role: ROLE_ADMIN, parameter: _switch }
+            switch_user: { role: ROLE_ALLOWED_TO_SWITCH, parameter: _switch }
             # Same context as main firewall to work well with api
             context: main
 
