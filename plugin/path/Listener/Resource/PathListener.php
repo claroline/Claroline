@@ -10,7 +10,6 @@ use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Innova\PathBundle\Entity\InheritedResource;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\SecondaryResource;
 use Innova\PathBundle\Entity\Step;
@@ -258,7 +257,7 @@ class PathListener
      * @param Step  $step         The step to copy
      * @param Path  $pathCopy     The copied path
      * @param array $nodesCopy    The list of all copied resources nodes
-     * @param array $stepsMapping The mapping between uuid of old steps and uuid of new ones. Useful for InheritedResources.
+     * @param array $stepsMapping The mapping between uuid of old steps and uuid of new ones
      * @param Step  $parent       The step parent of the copy
      */
     private function copyStep(Step $step, Path $pathCopy, array $nodesCopy, array &$stepsMapping, Step $parent = null)
@@ -270,44 +269,28 @@ class PathListener
         $stepCopy->setDescription($step->getDescription());
         $stepCopy->setPoster($step->getPoster());
         $stepCopy->setNumbering($step->getNumbering());
-        $stepCopy->setLvl($step->getLvl());
         $stepCopy->setOrder($step->getOrder());
 
         $stepsMapping[$step->getUuid()] = $stepCopy->getUuid();
 
         $primaryResource = $step->getResource();
-
-        if (!empty($primaryResource) && isset($nodesCopy[$primaryResource->getGuid()])) {
-            $stepCopy->setResource($nodesCopy[$primaryResource->getGuid()]);
+        if (!empty($primaryResource) && isset($nodesCopy[$primaryResource->getUuid()])) {
+            $stepCopy->setResource($nodesCopy[$primaryResource->getUuid()]);
         }
+
         foreach ($step->getSecondaryResources() as $secondaryResource) {
             $resource = $secondaryResource->getResource();
 
-            if (isset($nodesCopy[$resource->getGuid()])) {
+            if (isset($nodesCopy[$resource->getUuid()])) {
                 $secondaryResourceCopy = new SecondaryResource();
                 $secondaryResourceCopy->setStep($stepCopy);
-                $secondaryResourceCopy->setResource($nodesCopy[$resource->getGuid()]);
+                $secondaryResourceCopy->setResource($nodesCopy[$resource->getUuid()]);
                 $secondaryResourceCopy->setOrder($secondaryResource->getOrder());
-                $secondaryResourceCopy->setInheritanceEnabled($secondaryResource->isInheritanceEnabled());
+
                 $this->om->persist($secondaryResourceCopy);
             }
         }
-        foreach ($step->getInheritedResources() as $inheritedResource) {
-            $resource = $inheritedResource->getResource();
 
-            if (isset($nodesCopy[$resource->getGuid()])) {
-                $inheritedResourceCopy = new InheritedResource();
-                $inheritedResourceCopy->setStep($stepCopy);
-                $inheritedResourceCopy->setResource($nodesCopy[$resource->getGuid()]);
-                $inheritedResourceCopy->setOrder($inheritedResource->getOrder());
-                $inheritedResourceCopy->setLvl($inheritedResource->getLvl());
-
-                if (isset($stepsMapping[$inheritedResource->getSourceUuid()])) {
-                    $inheritedResource->setSourceUuid($stepsMapping[$inheritedResource->getSourceUuid()]);
-                }
-                $this->om->persist($inheritedResourceCopy);
-            }
-        }
         foreach ($step->getChildren() as $child) {
             $this->copyStep($child, $pathCopy, $nodesCopy, $stepsMapping, $stepCopy);
         }

@@ -140,7 +140,6 @@
 
     a,
     button,
-    .btn-add,
     .btn-summary {
         font-size: @path-summary-font; // required to override default button size
         color: @path-summary-link-color;
@@ -156,14 +155,6 @@
             color: @path-summary-link-active-color;
         }
     }
-
-    a,
-    .btn-add {
-        border: none;
-        flex: 1;
-        display: flex;
-        align-items: center;
-    }
 }
 
 .summary-link {
@@ -172,18 +163,22 @@
 
     display: flex;
     align-items: center;
-    //justify-content: space-between;
 
     &:hover {
         background-color: @path-summary-link-hover-bg;
+    }
+
+    > a,
+    > button {
+        border: none;
+        flex: 1;
+        display: flex;
+        align-items: center;
     }
 }
 
 .step-actions {
     white-space: nowrap; // avoid buttons to be displayed in column
-    line-height: 2em;
-    vertical-align: middle;
-    margin-left: auto; // move to the right of the flex container
 
     .btn-summary {
         padding: 2px;
@@ -238,7 +233,7 @@
         // Take full height of the viewport / content (if taller than than viewport)
         left: 0;
         top: @component-margin-bottom;
-        bottom: 0;
+        bottom: @component-margin-bottom;
 
         // hide title when closed
         .summary-title {
@@ -269,7 +264,7 @@
         // Take full height of the viewport / content (if taller than than viewport)
         left: 0;
         top: @component-margin-bottom;
-        bottom: 0;
+        bottom: @component-margin-bottom;
 
         // hide title when closed
         .summary-title {

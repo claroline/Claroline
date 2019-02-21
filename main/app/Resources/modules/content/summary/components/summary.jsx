@@ -7,6 +7,7 @@ import {toKey} from '#/main/core/scaffolding/text/utils'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {Button} from '#/main/app/action/components/button'
+import {Toolbar} from '#/main/app/action/components/toolbar'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {Summary as SummaryTypes} from '#/main/app/content/summary/prop-types'
@@ -82,6 +83,7 @@ class SummaryLink extends Component {
 
   render() {
     const collapsible = this.props.collapsible || (this.props.children && 0 !== this.props.children.length)
+
     return (
       <li className="summary-link-container">
         <div className="summary-link">
@@ -91,33 +93,25 @@ class SummaryLink extends Component {
           />
 
           {(this.props.opened && (collapsible || 0 !== this.props.additional.length)) &&
-            <div className="step-actions">
-              {this.props.additional
-                .filter(action => undefined === action.displayed || action.displayed)
-                .map((action, actionIndex) =>
-                  <Button
-                    {...action}
-                    key={toKey(action.label) + actionIndex}
-                    tooltip="bottom"
-                    className="btn-summary"
-                  />
-                )
-              }
-
-              {collapsible &&
-                <Button
-                  type={CALLBACK_BUTTON}
-                  tooltip="bottom"
-                  className="btn-summary"
-                  icon={classes('fa', {
+            <Toolbar
+              className="step-actions"
+              buttonName="btn-summary"
+              tooltip="bottom"
+              toolbar="collapse more"
+              actions={(this.props.additional || []).concat([
+                {
+                  type: CALLBACK_BUTTON,
+                  name: 'collapse',
+                  icon: classes('fa fa-fw', {
                     'fa-caret-right': this.state.collapsed,
                     'fa-caret-down': !this.state.collapsed
-                  })}
-                  label={trans(this.state.collapsed ? 'expand': 'collapse', {}, 'actions')}
-                  callback={this.toggleCollapse}
-                />
-              }
-            </div>
+                  }),
+                  displayed: collapsible,
+                  label: trans(this.state.collapsed ? 'expand': 'collapse', {}, 'actions'),
+                  callback: this.toggleCollapse
+                }
+              ])}
+            />
           }
         </div>
 

@@ -31,7 +31,7 @@ const reducer = combineReducers({
     [STEP_ENABLE_NAVIGATION]: () => true,
     [STEP_DISABLE_NAVIGATION]: () => false
   }),
-  pathForm: editorReducer.pathForm,
+  pathForm: editorReducer,
   path: makeReducer({}, {
     [RESOURCE_LOAD]: (state, action) => action.resourceData.path || state,
     // replaces path data after success updates

@@ -38,7 +38,6 @@ class Path extends AbstractResource
      *
      * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\Step", mappedBy="path", cascade={"persist", "remove"})
      * @ORM\OrderBy({
-     *     "lvl" = "ASC",
      *     "order" = "ASC"
      * })
      */

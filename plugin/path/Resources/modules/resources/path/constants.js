@@ -2,6 +2,7 @@ import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
 
+// TODO : maybe merge with quiz numbering
 const NUMBERING_NONE    = 'none'
 const NUMBERING_NUMERIC = 'numeric'
 const NUMBERING_LITERAL = 'literal'

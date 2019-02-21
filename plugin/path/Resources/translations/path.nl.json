@@ -124,8 +124,6 @@
     "step_copy": "Kopiëren",
     "step_delete": "De stap verwijderen",
     "step_delete_confirm": "Bent u er zeker van dat u deze stap (en al zijn geassocieerde kinderstappen) wenst te verwijderen ?",
-    "step_delete_title": "<span class=\"trash-o\"></span> Stap verwijderen : <strong>&lt;%resourceName%&gt;</strong>",
-    "step_description": "Beschrijving",
     "step_drag": "Het element verplaatsen",
     "step_duration": "Verwachte duur",
     "step_edit": "De stap bewerken",

@@ -4,7 +4,6 @@ namespace Innova\PathBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Innova\PathBundle\Entity\InheritedResource;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -127,17 +126,7 @@ class PathManager
             'activityId' => !empty($activity) ? $activity->getId() : null,
             'activityNodeId' => !empty($activity) ? $activity->getResourceNode()->getId() : null,
             'order' => $step->getOrder(),
-            'lvl' => $step->getLvl(),
-            'inheritedResources' => [],
         ];
-
-        $inheritedResources = $step->getInheritedResources();
-        foreach ($inheritedResources as $inherited) {
-            $data['inheritedResources'][] = [
-                'resource' => $inherited->getResource()->getId(),
-                'lvl' => $inherited->getLvl(),
-            ];
-        }
 
         return $data;
     }
@@ -161,7 +150,6 @@ class PathManager
             $step->setParent($createdSteps[$data['parent']]);
         }
 
-        $step->setLvl($data['lvl']);
         $step->setOrder($data['order']);
         $step->setActivityHeight(0);
 
@@ -169,20 +157,6 @@ class PathManager
         if (!empty($data['activityNodeId']) && !empty($createdResources[$data['activityNodeId']])) {
             // Step has an Activity
             $step->setActivity($createdResources[$data['activityNodeId']]);
-        }
-
-        if (!empty($data['inheritedResources'])) {
-            foreach ($data['inheritedResources'] as $inherited) {
-                if (!empty($createdResources[$inherited['resource']])) {
-                    // Check if the resource has been created (in case of the Resource has no Importer, it may not exist)
-                    $inheritedResource = new InheritedResource();
-                    $inheritedResource->setLvl($inherited['lvl']);
-                    $inheritedResource->setStep($step);
-                    $inheritedResource->setResource($createdResources[$inherited['resource']]->getResourceNode());
-
-                    $this->om->persist($inheritedResource);
-                }
-            }
         }
 
         $createdSteps[$data['uid']] = $step;

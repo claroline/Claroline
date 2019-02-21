@@ -46,16 +46,16 @@ const SecondaryResources = props =>
     <h4 className="h3 h-first">En complément...</h4>
     {props.resources.map(resource =>
       <ResourceCard
-        key={resource.resource.id}
+        key={resource.id}
         size="sm"
         orientation="row"
         primaryAction={{
           type: URL_BUTTON,
           label: trans('open', {}, 'actions'),
-          target: ['claro_resource_open', {node: resource.resource.autoId, resourceType: resource.resource.meta.type}],
+          target: ['claro_resource_open', {node: resource.autoId, resourceType: resource.meta.type}],
           open: props.target
         }}
-        data={resource.resource}
+        data={resource}
       />
     )}
   </div>
@@ -125,13 +125,13 @@ const Step = props =>
         </div>
       }
 
-      {(0 !== props.secondaryResources.length || 0 !== props.inheritedResources.length) &&
+      {0 !== props.secondaryResources.length &&
         <SecondaryResources
           className={classes('col-sm-12', {
             'col-md-3': props.fullWidth,
             'col-md-12': !props.fullWidth
           })}
-          resources={[].concat(props.inheritedResources, props.secondaryResources)}
+          resources={props.secondaryResources}
           target={props.secondaryResourcesTarget}
         />
       }

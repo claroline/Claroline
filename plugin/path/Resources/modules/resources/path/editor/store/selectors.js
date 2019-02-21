@@ -21,15 +21,9 @@ const steps = createSelector(
   (path) => path.steps || []
 )
 
-const stepCopy = createSelector(
-  [form],
-  (form) => form.copy
-)
-
 export const selectors = {
   FORM_NAME,
   form,
   path,
-  stepCopy,
   steps
 }

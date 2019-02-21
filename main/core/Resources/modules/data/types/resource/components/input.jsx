@@ -86,7 +86,7 @@ const ResourceInput = props => {
         title={trans('no_resource')}
       >
         <ModalButton
-          className="btn btn-add-resource"
+          className="btn"
           primary={true}
           modal={[MODAL_RESOURCE_EXPLORER, {
             title: props.picker.title,

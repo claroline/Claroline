@@ -99,6 +99,7 @@ registry.add('ClarolineCoreBundle', {
     types: {
       'organization' : () => { return import(/* webpackChunkName: "core-data-organization" */  '#/main/core/data/types/organization') },
       'resource'     : () => { return import(/* webpackChunkName: "core-data-resource" */      '#/main/core/data/types/resource') },
+      'resources'    : () => { return import(/* webpackChunkName: "core-data-resources" */     '#/main/core/data/types/resources') },
       'user'         : () => { return import(/* webpackChunkName: "core-data-user" */          '#/main/core/data/types/user') },
       'users'        : () => { return import(/* webpackChunkName: "core-data-users" */         '#/main/core/data/types/users') },
       'workspace'    : () => { return import(/* webpackChunkName: "core-data-workspace" */     '#/main/core/data/types/workspace') },

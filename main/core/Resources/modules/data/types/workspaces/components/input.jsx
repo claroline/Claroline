@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import isEmpty from 'lodash/isEmpty'
 
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
@@ -39,7 +39,7 @@ WorkspacesButton.propTypes = {
 const WorkspacesInput = props => {
   if (!isEmpty(props.value)) {
     return(
-      <div>
+      <Fragment>
         {props.value.map(workspace =>
           <WorkspaceCard
             key={`workspace-card-${workspace.id}`}
@@ -80,7 +80,7 @@ const WorkspacesInput = props => {
             props.onChange(newValue)
           }}
         />
-      </div>
+      </Fragment>
     )
   } else {
     return (

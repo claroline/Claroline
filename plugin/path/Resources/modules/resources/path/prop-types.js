@@ -22,17 +22,15 @@ const Step = {
     secondaryResources: T.arrayOf(T.shape({
       // minimal resource
     })),
-    inheritedResources: T.arrayOf(T.shape({
-      // minimal resource
-    })),
     userProgression: T.shape({
       status: T.string
     })
   },
   defaultProps: {
+    description: null,
+    display: {},
     showResourceHeader: false,
     secondaryResources: [],
-    inheritedResources: [],
     children: []
   }
 }

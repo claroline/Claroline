@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import isEmpty from 'lodash/isEmpty'
 
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
@@ -39,7 +39,7 @@ GroupsButton.propTypes = {
 const GroupsInput = props => {
   if (!isEmpty(props.value)) {
     return(
-      <div>
+      <Fragment>
         {props.value.map(group =>
           <GroupCard
             key={`group-card-${group.id}`}
@@ -79,26 +79,28 @@ const GroupsInput = props => {
             props.onChange(newValue)
           }}
         />
-      </div>
-    )
-  } else {
-    return (
-      <EmptyPlaceholder
-        size="lg"
-        icon="fa fa-users"
-        title={trans('no_group')}
-      >
-        <GroupsButton
-          {...props.picker}
-          onChange={props.onChange}
-        />
-      </EmptyPlaceholder>
+      </Fragment>
     )
   }
+
+  return (
+    <EmptyPlaceholder
+      size="lg"
+      icon="fa fa-users"
+      title={trans('no_group')}
+    >
+      <GroupsButton
+        {...props.picker}
+        onChange={props.onChange}
+      />
+    </EmptyPlaceholder>
+  )
 }
 
 implementPropTypes(GroupsInput, FormFieldTypes, {
-  value: T.arrayOf(T.shape(GroupType.propTypes)),
+  value: T.arrayOf(T.shape(
+    GroupType.propTypes
+  )),
   picker: T.shape({
     title: T.string
   })

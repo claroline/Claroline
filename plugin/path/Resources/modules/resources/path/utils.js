@@ -3,30 +3,33 @@ import {constants} from '#/plugin/path/resources/path/constants'
 /**
  * Flattens a tree of steps into a one-level array.
  *
- * @param {Array} steps
+ * @param {Array}  steps
  */
 function flattenSteps(steps) {
-  function flatten(step) {
+  function flatten(step, parent = null) {
     const children = step.children
     const flatStep = Object.assign({}, step)
+
     delete flatStep.children
+    if (parent) {
+      flatStep.parent = {
+        id: parent.id,
+        title: parent.title
+      }
+    }
 
     let flattened = [flatStep]
 
     if (children) {
-      children.map(child => {
-        flattened = flattened.concat(flatten(child))
+      children.map((child) => {
+        flattened = flattened.concat(flatten(child, flatStep))
       })
     }
 
     return flattened
   }
 
-  return steps.reduce((acc, step) => {
-    acc = acc.concat(flatten(step))
-
-    return acc
-  }, [])
+  return steps.reduce((acc, step) => acc.concat(flatten(step)), [])
 }
 
 /**

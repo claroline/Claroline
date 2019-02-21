@@ -211,7 +211,7 @@
     "coordinates": "Coordonnées",
     "copiable": "Copiable",
     "copies": "Copies",
-    "copy": "Copier",
+    "copy": "Copie",
     "copy_model_workspaces": "{1} Dupliquer l'espace d'activités en tant que modèle|[2,Inf[ Dupliquer %count% espaces d'activités en tant que modèle",
     "copy_model_workspaces_confirm": "Êtes-vous sûr de vouloir dupliquer les espaces d'activités suivants [ %workspace_list% ]?",
     "copy_permalink_to_clipboard": "Copier le permalien dans le presse-papiers",
@@ -748,7 +748,6 @@
     "month.September": "Septembre",
     "months": "mois",
     "more_actions": "Actions disponibles",
-    "move": "Déplacer",
     "my_account": "Mon compte",
     "my_agenda": "Mon agenda",
     "my_applications": "Mes applications",
@@ -1728,5 +1727,11 @@
     "colors-selector": "Sélecteur",
     "publication_by_date": "Période d'accès",
     "confirmation_checkbox": "En cochant cette case, je confirme avoir pris connaissance et compris l'avertissement ci-dessus.",
-    "publication_by_date_help": "Si une ressource est publiée, cette option permet de limiter l'accés à cette derniere sur la période définie. Des dates de début et fin doivent être saisies au format <br/>jj/mm/aaaa HH:mm. <br/>Ex: 25/12/2018 14:00"
+    "publication_by_date_help": "Si une ressource est publiée, cette option permet de limiter l'accés à cette derniere sur la période définie. Des dates de début et fin doivent être saisies au format <br/>jj/mm/aaaa HH:mm. <br/>Ex: 25/12/2018 14:00",
+    "movement": "Déplacement",
+    "before": "Avant",
+    "after": "Après",
+    "deletion": "Suppression",
+    "first": "Premier",
+    "last": "Dernier"
 }

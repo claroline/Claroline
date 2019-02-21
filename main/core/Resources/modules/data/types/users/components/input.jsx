@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import isEmpty from 'lodash/isEmpty'
 
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
@@ -39,7 +39,7 @@ UsersButton.propTypes = {
 const UsersInput = props => {
   if (!isEmpty(props.value)) {
     return(
-      <div>
+      <Fragment>
         {props.value.map(user =>
           <UserCard
             key={`user-card-${user.id}`}
@@ -79,7 +79,7 @@ const UsersInput = props => {
             props.onChange(newValue)
           }}
         />
-      </div>
+      </Fragment>
     )
   } else {
     return (

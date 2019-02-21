@@ -2,7 +2,7 @@
 
 namespace Innova\PathBundle\Entity;
 
-use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,18 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SecondaryResource
 {
-    use Uuid;
-
-    /**
-     * Identifier.
-     *
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use Id;
 
     /**
      * Step.
@@ -35,7 +24,7 @@ class SecondaryResource
      * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Step", inversedBy="secondaryResources")
      * @ORM\JoinColumn(name="step_id", onDelete="CASCADE", nullable=false)
      */
-    protected $step;
+    private $step;
 
     /**
      * Resource.
@@ -45,7 +34,7 @@ class SecondaryResource
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
      * @ORM\JoinColumn(name="resource_id", onDelete="CASCADE", nullable=false)
      */
-    protected $resource;
+    private $resource;
 
     /**
      * Order of the secondary resource in the step.
@@ -54,32 +43,7 @@ class SecondaryResource
      *
      * @ORM\Column(name="resource_order", type="integer")
      */
-    protected $order;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="inheritance_enabled", type="boolean")
-     */
-    protected $inheritanceEnabled = false;
-
-    /**
-     * SecondaryResource constructor.
-     */
-    public function __construct()
-    {
-        $this->refreshUuid();
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+    private $order;
 
     /**
      * Get step.
@@ -149,26 +113,6 @@ class SecondaryResource
     public function setOrder($order)
     {
         $this->order = $order;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isInheritanceEnabled()
-    {
-        return $this->inheritanceEnabled;
-    }
-
-    /**
-     * @param bool $inheritanceEnabled
-     *
-     * @return SecondaryResource
-     */
-    public function setInheritanceEnabled($inheritanceEnabled)
-    {
-        $this->inheritanceEnabled = $inheritanceEnabled;
 
         return $this;
     }

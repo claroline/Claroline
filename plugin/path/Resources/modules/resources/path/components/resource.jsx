@@ -6,9 +6,9 @@ import {Routes} from '#/main/app/router'
 import {ResourcePage} from '#/main/core/resource/containers/page'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
-import {Overview} from '#/plugin/path/resources/path/overview/components/overview'
-import {Editor} from '#/plugin/path/resources/path/editor/components/editor'
-import {Player} from '#/plugin/path/resources/path/player/components/player'
+import {OverviewMain} from '#/plugin/path/resources/path/overview/containers/main'
+import {EditorMain} from '#/plugin/path/resources/path/editor/containers/main'
+import {PlayerMain} from '#/plugin/path/resources/path/player/containers/main'
 
 const PathResource = props =>
   <ResourcePage
@@ -33,15 +33,15 @@ const PathResource = props =>
       routes={[
         {
           path: '/edit',
-          component: Editor,
+          component: EditorMain,
           disabled: !props.editable
         }, {
           path: '/play',
-          component: Player
+          component: PlayerMain
         }, {
           path: '/',
           exact: true,
-          component: Overview,
+          component: OverviewMain,
           disabled: !props.overview
         }
       ]}

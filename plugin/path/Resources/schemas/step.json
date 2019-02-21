@@ -33,26 +33,11 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "The uuid of the secondary resource"
-          },
-          "inheritanceEnabled": {
-            "type": "boolean",
-            "description": "Wether the secondary resource is inherited by the step children or not"
-          },
-          "resource": {
-            "type": "object",
-            "description": "The resource node",
-            "properties": {
-              "id": {
-                "type": "string",
-                "description": "The uuid of the resource"
-              }
-            },
-            "required": ["id"]
+            "description": "The uuid of the resource"
           }
         },
-        "claroIds": ["id"],
-        "required": ["inheritanceEnabled", "resource"]
+        "required": ["id"],
+        "claroIds": ["id"]
       }
     },
     "children": {

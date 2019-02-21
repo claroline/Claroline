@@ -29,19 +29,19 @@ SummaryStep.propTypes = {
   ).isRequired
 }
 
-const Summary = props =>
+const OverviewSummary = props =>
   <ul className="summary-overview">
     {props.steps.map(step =>
       <SummaryStep key={step.id} step={step} />
     )}
   </ul>
 
-Summary.propTypes = {
+OverviewSummary.propTypes = {
   steps: T.arrayOf(T.shape(
     StepTypes.propTypes
   )).isRequired
 }
 
 export {
-  Summary
+  OverviewSummary
 }

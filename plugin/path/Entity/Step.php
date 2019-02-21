@@ -60,15 +60,6 @@ class Step
     protected $activityHeight;
 
     /**
-     * Depth of the step in the Path.
-     *
-     * @var int
-     *
-     * @ORM\Column(name="lvl", type="integer")
-     */
-    protected $lvl;
-
-    /**
      * Order of the steps relative to his siblings in the path.
      *
      * @var int
@@ -105,16 +96,6 @@ class Step
      * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Path\Path", inversedBy="steps")
      */
     protected $path;
-
-    /**
-     * Inherited resources.
-     *
-     * @var ArrayCollection|InheritedResource[]
-     *
-     * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\InheritedResource", mappedBy="step", cascade={"persist", "remove"})
-     * @ORM\OrderBy({"order" = "ASC"})
-     */
-    protected $inheritedResources;
 
     /**
      * Title of the step.
@@ -176,7 +157,6 @@ class Step
         $this->refreshUuid();
 
         $this->children = new ArrayCollection();
-        $this->inheritedResources = new ArrayCollection();
         $this->secondaryResources = new ArrayCollection();
     }
 
@@ -224,30 +204,6 @@ class Step
         $this->parameters = $parameters;
 
         return $this;
-    }
-
-    /**
-     * Set lvl.
-     *
-     * @param int $lvl
-     *
-     * @return Step
-     */
-    public function setLvl($lvl)
-    {
-        $this->lvl = $lvl;
-
-        return $this;
-    }
-
-    /**
-     * Get lvl.
-     *
-     * @return int
-     */
-    public function getLvl()
-    {
-        return $this->lvl;
     }
 
     /**
@@ -418,62 +374,6 @@ class Step
     public function setActivityHeight($activityHeight)
     {
         $this->activityHeight = $activityHeight;
-
-        return $this;
-    }
-
-    /**
-     * Get inherited resources.
-     *
-     * @return ArrayCollection|InheritedResource[]
-     */
-    public function getInheritedResources()
-    {
-        return $this->inheritedResources;
-    }
-
-    /**
-     * Removes all inherited resources.
-     *
-     * @return Step
-     */
-    public function emptyInheritedResources()
-    {
-        $this->inheritedResources->clear();
-
-        return $this;
-    }
-
-    /**
-     * Add an inherited resource.
-     *
-     * @param InheritedResource $inheritedResource
-     *
-     * @return Step
-     */
-    public function addInheritedResource(InheritedResource $inheritedResource)
-    {
-        if (!$this->inheritedResources->contains($inheritedResource)) {
-            $this->inheritedResources->add($inheritedResource);
-            $inheritedResource->setStep($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove an inherited resource.
-     *
-     * @param InheritedResource $inheritedResource
-     *
-     * @return $this
-     */
-    public function removeInheritedResource(InheritedResource $inheritedResource)
-    {
-        if ($this->inheritedResources->contains($inheritedResource)) {
-            $this->inheritedResources->removeElement($inheritedResource);
-            $inheritedResource->setStep(null);
-        }
 
         return $this;
     }
