@@ -26,7 +26,7 @@
         "doctrine/dbal": "2.7.1",
         "doctrine/doctrine-bundle": "1.9.1",
         "doctrine/migrations": "1.7.2",
-        "doctrine/orm": "2.6.1",
+        "doctrine/orm": "2.6.3",
         "egulias/email-validator": "2.1.4",
         "fabiang/xmpp": "0.7.0",
         "friendsofsymfony/jsrouting-bundle": "2.2.0",
