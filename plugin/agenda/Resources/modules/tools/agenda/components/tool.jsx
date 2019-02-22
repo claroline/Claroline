@@ -51,9 +51,10 @@ class AgendaTool extends Component {
       //aussi il faudra virer le routing.generate ici (filtrer par workspace si il y a)
       /** @global Routing */
       events: this.getFetchRoute(),
+      slotLabelFormat: 'H:mm',
       timeFormat: 'H:mm',
       agenda: 'h:mm{ - h:mm}',
-      allDayText: trans('isAllDay'),
+      allDayText: trans('isAllDay', {}, 'agenda'),
       lazyFetching : false,
       fixedWeekCount: false,
       eventLimit: 4,
