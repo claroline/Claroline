@@ -112,7 +112,7 @@ class PaperControllerTest extends TransactionalTestCase
     public function testAnonymousPapers()
     {
         $this->request('GET', "/api/exercises/{$this->exercise->getUuid()}/papers");
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
     }
 
     /**
@@ -179,7 +179,7 @@ class PaperControllerTest extends TransactionalTestCase
 
         // Request the created paper
         $this->request('GET', "/api/exercises/{$this->exercise->getUuid()}/papers/{$paper->getUuid()}");
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
     }
 
     /**

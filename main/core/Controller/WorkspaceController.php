@@ -147,6 +147,7 @@ class WorkspaceController
     /**
      * @EXT\Route("/list/currentuser", name="claro_workspace_by_user")
      * @EXT\Method("GET")
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @EXT\Template
      *
      * @return array

@@ -16,8 +16,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * By default throws an exception if no User authenticated.
@@ -46,7 +46,7 @@ class CurrentUserConverter implements ParamConverterInterface
      * {@inheritdoc}
      *
      * @throws InvalidConfigurationException if the parameter name is missing
-     * @throws AccessDeniedHttpException     if the current request is anonymous and `allowAnonymous` option is false
+     * @throws AccessDeniedException         if the current request is anonymous and `allowAnonymous` option is false
      */
     public function apply(Request $request, ParamConverter $configuration)
     {
@@ -75,7 +75,7 @@ class CurrentUserConverter implements ParamConverterInterface
             }
         }
 
-        throw new AccessDeniedHttpException();
+        throw new AccessDeniedException();
     }
 
     /**
