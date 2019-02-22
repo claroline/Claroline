@@ -18,6 +18,7 @@ actions.initializeAPI = (sco, scormData, trackings) => (dispatch) => {
 
 actions.commitData = (scoId, mode, scoData) => ({
   [API_REQUEST]: {
+    silent: true,
     url: ['apiv2_scorm_sco_commit', {sco: scoId, mode: mode}],
     request: {
       body: JSON.stringify(scoData),
