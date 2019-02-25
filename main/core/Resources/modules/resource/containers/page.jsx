@@ -19,7 +19,8 @@ const ResourcePage = connect(
     managed: selectors.managed(state),
     resourceNode: selectors.resourceNode(state),
     userEvaluation: selectors.resourceEvaluation(state),
-    accessErrors: selectors.accessErrors(state)
+    accessErrors: selectors.accessErrors(state),
+    serverErrors: selectors.serverErrors(state)
   }),
   (dispatch) => ({
     updateNode(resourceNode) {

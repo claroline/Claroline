@@ -11,6 +11,7 @@ export const RESOURCE_UPDATE_NODE   = 'RESOURCE_UPDATE_NODE'
 export const USER_EVALUATION_UPDATE = 'USER_EVALUATION_UPDATE'
 export const RESOURCE_LOAD          = 'RESOURCE_LOAD'
 export const RESOURCE_SET_LOADED    = 'RESOURCE_SET_LOADED'
+export const RESOURCE_SERVER_ERRORS  = 'RESOURCE_SERVER_ERRORS'
 export const RESOURCE_RESTRICTIONS_DISMISS = 'RESOURCE_RESTRICTIONS_DISMISS'
 export const RESOURCE_RESTRICTIONS_ERROR = 'RESOURCE_RESTRICTIONS_ERROR'
 export const RESOURCE_RESTRICTIONS_UNLOCKED = 'RESOURCE_RESTRICTIONS_UNLOCKED'
@@ -20,6 +21,7 @@ export const actions = {}
 
 actions.setResourceLoaded = makeActionCreator(RESOURCE_SET_LOADED)
 actions.setRestrictionsError = makeActionCreator(RESOURCE_RESTRICTIONS_ERROR, 'errors')
+actions.setServerErrors = makeActionCreator(RESOURCE_SERVER_ERRORS, 'errors')
 actions.unlockResource = makeActionCreator(RESOURCE_RESTRICTIONS_UNLOCKED)
 actions.loadResource = makeActionCreator(RESOURCE_LOAD, 'resourceData')
 actions.fetchResource = (resourceNode, embedded = false) => ({
@@ -43,7 +45,12 @@ actions.fetchResource = (resourceNode, embedded = false) => ({
       // and store is up-to-date
       dispatch(actions.setResourceLoaded())
     },
-    error: (response, dispatch) => dispatch(actions.setRestrictionsError(response))
+    error: (response, status, dispatch) => {
+      switch(status) {
+        case 500: dispatch(actions.setServerErrors(response)); break
+        case 403: dispatch(actions.setRestrictionsError(response)); break
+      }
+    }
   }
 })
 
@@ -76,6 +83,6 @@ actions.checkAccessCode = (resourceNode, code, embedded = false) => ({
       dispatch(actions.unlockResource())
       dispatch(actions.fetchResource(resourceNode, embedded))
     },
-    error: (response, dispatch) => dispatch(actions.fetchResource(resourceNode, embedded))
+    error: (response, status, dispatch) => dispatch(actions.fetchResource(resourceNode, embedded))
   }
 })

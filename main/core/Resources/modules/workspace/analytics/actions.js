@@ -16,7 +16,7 @@ actions.getDashboardData = (route, params = {}, queryString = '') => (dispatch) 
         success: (response, dispatch) => {
           dispatch(actions.loadDashboard(response))
         },
-        error: (err, dispatch) => {
+        error: (err, status, dispatch) => {
           dispatch(actions.loadDashboard({}))
         }
       }

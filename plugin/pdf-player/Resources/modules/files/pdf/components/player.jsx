@@ -23,7 +23,7 @@ class PdfPlayer extends Component {
         pdf: pdf,
         context: document.getElementById('pdf-canvas-' + this.props.file.id).getContext('2d')
       }, () => this.renderPage())
-    })
+    }).catch(() => this.props.setErrors())
   }
 
   renderPage() {
@@ -128,7 +128,8 @@ class PdfPlayer extends Component {
 PdfPlayer.propTypes = {
   file: T.shape(
     PdfTypes.propTypes
-  ).isRequired
+  ).isRequired,
+  setErrors: T.func.isRequired
 }
 
 export {

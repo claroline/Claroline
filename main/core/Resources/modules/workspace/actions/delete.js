@@ -26,7 +26,7 @@ export default (workspaces, refresher) => ({
     },
     success: () => refresher.delete(workspaces)
     // todo : make custom errors work (I can not dispatch actions from here)
-    /*error: (data, dispatch) => {
+    /*error: (data, status, dispatch) => {
       if (data.errors) {
         Object.values(data.errors).forEach(message => dispatch(
           alertActions.addAlert(

@@ -20,7 +20,7 @@ actions.openLog = (route, params = {}) => (dispatch) => {
         success: (response, dispatch) => {
           dispatch(actions.loadLog(response))
         },
-        error: (err, dispatch) => {
+        error: (err, status, dispatch) => {
           dispatch(actions.loadLog({}))
         }
       }
@@ -39,7 +39,7 @@ actions.getChartData = (route, params = {}, queryString = '') => (dispatch) => {
         success: (response, dispatch) => {
           dispatch(actions.loadChartData(response))
         },
-        error: (err, dispatch) => {
+        error: (err, status, dispatch) => {
           dispatch(actions.loadChartData({}))
         }
       }

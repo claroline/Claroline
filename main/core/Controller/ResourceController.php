@@ -226,6 +226,11 @@ class ResourceController
 
         $file = $data['file'] ?: tempnam('tmp', 'tmp');
         $fileName = $data['name'];
+
+        if (!file_exists($file)) {
+            return new JsonResponse(['file_not_found'], 500);
+        }
+
         $response = new BinaryFileResponse($file);
 
         $fileName = null === $fileName ? $response->getFile()->getFilename() : $fileName;
@@ -338,10 +343,14 @@ class ResourceController
 
         // gets the current user roles to check access restrictions
         $userRoles = $this->security->getRoles($this->tokenStorage->getToken());
-
         $accessErrors = $this->restrictionsManager->getErrors($resourceNode, $userRoles);
+
         if (empty($accessErrors) || $this->manager->isManager($resourceNode)) {
-            $loaded = $this->manager->load($resourceNode, intval($embedded) ? true : false);
+            try {
+                $loaded = $this->manager->load($resourceNode, intval($embedded) ? true : false);
+            } catch (ResourceNotFoundException $e) {
+                return new JsonResponse(['resource_not_found'], 500);
+            }
 
             return new JsonResponse(
                 array_merge([

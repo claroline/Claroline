@@ -289,6 +289,10 @@ class FileController extends AbstractApiController
         $file = $this->resourceManager->getResourceFromNode($resourceNode);
         $path = $this->fileDir.DIRECTORY_SEPARATOR.$file->getHashName();
 
+        if (!file_exists($path)) {
+            return new JsonResponse(['File not found'], 500);
+        }
+
         $response = new BinaryFileResponse($path);
         $response->headers->set('Content-Type', $resourceNode->getMimeType());
 

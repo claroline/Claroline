@@ -115,7 +115,7 @@ actions.fetchCurrentDirectory = (explorerName, directoryId, filters = []) => ({
 
       dispatch(actions.setLoading(explorerName, false))
     },
-    error: (errors, dispatch) => dispatch(actions.setLoading(explorerName, false))
+    error: (errors, status, dispatch) => dispatch(actions.setLoading(explorerName, false))
   }
 })
 

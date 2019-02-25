@@ -57,7 +57,7 @@ actions.save = (workspace) => ({
       window.location.href =  route
     },
     //todo use selector instead ?
-    error: (errors, dispatch) => dispatch(formActions.errors('workspaces.current', errors))
+    error: (errors, status, dispatch) => dispatch(formActions.errors('workspaces.current', errors))
   }
 })
 

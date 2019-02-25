@@ -9,15 +9,15 @@ import {getFile} from '#/main/core/files'
 
 import {File as FileTypes} from '#/main/core/files/prop-types'
 import {selectors} from '#/main/core/resources/file/store'
+import {actions} from '#/main/core/resources/file/store'
 import {selectors as nodeSelectors} from '#/main/core/resource/store/selectors'
-import {url} from '#/main/app/api'
 
 // TODO : display a standard player with file info if no custom one
 
 const Player = (props) => {
   // FIXME : ugly
   if (props.file.autoDownload) {
-    window.location.href = url(['claro_resource_download', {ids: [props.resourceNode.id]}])
+    props.download(props.resourceNode)
   }
 
   return (
@@ -37,9 +37,7 @@ const Player = (props) => {
             </div>
           )
         }
-
-        // FIXME : ugly
-        window.location.href = url(['claro_resource_download', {ids: [props.resourceNode.id]}])
+        props.download(props.resourceNode)
       }}
     >
 
@@ -49,6 +47,7 @@ const Player = (props) => {
 
 Player.propTypes = {
   mimeType: T.string.isRequired,
+  download: T.func.isRequired,
   resourceNode: T.shape({
     id: T.string.isRequired
   }).isRequired,
@@ -62,6 +61,11 @@ const FilePlayer = connect(
     mimeType: selectors.mimeType(state),
     file: selectors.file(state),
     resourceNode: nodeSelectors.resourceNode(state)
+  }),
+  (dispatch) => ({
+    download(resourceNode) {
+      dispatch(actions.download(resourceNode))
+    }
   })
 )(Player)
 

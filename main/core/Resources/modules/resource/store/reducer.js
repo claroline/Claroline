@@ -10,6 +10,7 @@ import {
   USER_EVALUATION_UPDATE,
   RESOURCE_RESTRICTIONS_DISMISS,
   RESOURCE_RESTRICTIONS_ERROR,
+  RESOURCE_SERVER_ERRORS,
   RESOURCE_RESTRICTIONS_UNLOCKED
 } from '#/main/core/resource/store/actions'
 
@@ -37,6 +38,10 @@ const reducer = {
         return newState
       }
     })
+  }),
+
+  serverErrors: makeReducer([], {
+    [RESOURCE_SERVER_ERRORS]: (state, action) => action.errors
   }),
 
   embedded: makeReducer(false), // this can not be changed at runtime

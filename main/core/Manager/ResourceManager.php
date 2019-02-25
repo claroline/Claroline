@@ -1817,15 +1817,20 @@ class ResourceManager
     {
         // maybe use a specific log ?
         $this->dispatcher->dispatch('log', 'Log\LogResourceRead', [$resourceNode, $embedded]);
+        $resource = $this->getResourceFromNode($resourceNode);
 
-        /** @var LoadResourceEvent $event */
-        $event = $this->dispatcher->dispatch(
-            'resource.load',
-            LoadResourceEvent::class,
-            [$this->getResourceFromNode($resourceNode)]
-        );
+        if ($resource) {
+            /** @var LoadResourceEvent $event */
+            $event = $this->dispatcher->dispatch(
+              'resource.load',
+              LoadResourceEvent::class,
+              [$resource]
+          );
 
-        return $event->getData();
+            return $event->getData();
+        }
+
+        throw new ResourceNotFoundException();
     }
 
     public function isManager(ResourceNode $resourceNode)

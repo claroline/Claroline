@@ -15,6 +15,7 @@ import {getActions, getToolbar} from '#/main/core/resource/utils'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {ResourceIcon} from '#/main/core/resource/components/icon'
 import {ResourceRestrictions} from '#/main/core/resource/components/restrictions'
+import {ServerErrors} from '#/main/core/resource/components/errors'
 import {UserProgression} from '#/main/core/resource/components/user-progression'
 
 // todo : manage fullscreen through store
@@ -120,7 +121,11 @@ class ResourcePage extends Component {
           />
         }
 
-        {this.props.loaded && isEmpty(this.props.accessErrors) &&
+        {!isEmpty(this.props.serverErrors) &&
+          <ServerErrors errors={this.props.serverErrors}/>
+        }
+
+        {this.props.loaded && isEmpty(this.props.accessErrors) && isEmpty(this.props.serverErrors) &&
           this.props.children
         }
       </ToolPage>
@@ -138,7 +143,7 @@ ResourcePage.propTypes = {
     label: T.string.isRequired,
     target: T.string.isRequired
   })),
-  
+
   /**
    * The current resource node.
    */
@@ -147,6 +152,7 @@ ResourcePage.propTypes = {
   ).isRequired,
 
   accessErrors: T.object,
+  serverErrors: T.array,
 
   updateNode: T.func.isRequired,
   loadResource: T.func.isRequired,

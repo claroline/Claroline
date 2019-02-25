@@ -238,7 +238,7 @@ class ThumbnailCreator
     private function getImageAndExtensionFromUrl($url)
     {
         if (!file_exists($url)) {
-            throw new FileNotFoundException("File not found: '${url}'");
+            throw new FileNotFoundException("file_not_found: '${url}'");
         }
         $extension = $this->getImageExtensionFromUrl($url);
         if ('svg' === $extension) {

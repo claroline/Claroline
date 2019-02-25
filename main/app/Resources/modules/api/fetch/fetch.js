@@ -113,7 +113,7 @@ function handleResponseError(dispatch, responseError, originalRequest, error) {
     } else {
       return getResponseData(responseError) // get error data if any
         .then(errorData => {
-          error(errorData, dispatch)
+          error(errorData, responseError.status, dispatch)
 
           return Promise.reject(errorData)
         })

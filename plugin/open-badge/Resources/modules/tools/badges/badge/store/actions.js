@@ -44,7 +44,7 @@ actions.save = (formName, badge, workspace, isNew) => ({
       dispatch(formActions.resetForm(formName, response, false))
       dispatch(listActions.invalidateData('badges.list'))
     },
-    error: (errors, dispatch) => {
+    error: (errors, status, dispatch) => {
       // try to build form errors object from response
       const formErrors = {}
       if (errors && Array.isArray(errors)) {
