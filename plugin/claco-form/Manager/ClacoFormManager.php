@@ -48,6 +48,7 @@ use Ramsey\Uuid\Uuid;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -510,7 +511,7 @@ class ClacoFormManager
         $addedCategories = [];
         $node = $entry->getClacoForm()->getResourceNode();
         $clacoFormName = $node->getName();
-        $url = $this->router->generate('claro_resource_open_short', ['node' => $node->getId()], true).
+        $url = $this->router->generate('claro_resource_open_short', ['node' => $node->getId()], UrlGeneratorInterface::ABSOLUTE_URL).
             '#/entries/'.$entry->getUuid();
 
         foreach ($oldCategories as $category) {
@@ -593,7 +594,7 @@ class ClacoFormManager
         $node = $clacoForm->getResourceNode();
 
         if ($clacoForm->getDisplayComments()) {
-            $url = $this->router->generate('claro_resource_open_short', ['node' => $node->getId()], true).
+            $url = $this->router->generate('claro_resource_open_short', ['node' => $node->getId()], UrlGeneratorInterface::ABSOLUTE_URL).
                 '#/entries/'.$entry->getUuid();
             $receivers = [];
             $categories = $entry->getCategories();
@@ -796,7 +797,7 @@ class ClacoFormManager
         $receivers = [];
         $clacoForm = $entry->getClacoForm();
         $node = $clacoForm->getResourceNode();
-        $url = $this->router->generate('claro_resource_open_short', ['node' => $node->getId()], true).
+        $url = $this->router->generate('claro_resource_open_short', ['node' => $node->getId()], UrlGeneratorInterface::ABSOLUTE_URL).
             '#/entries/'.$entry->getUuid();
 
         switch ($type) {
