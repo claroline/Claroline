@@ -33,7 +33,7 @@ class ApiListener
                 $response = new JsonResponse([
                     'message' => $exception->getMessage(),
                     'trace' => $exception->getTrace(),
-                ], 500);
+                ], $exception->getCode());
             }
 
             $event->setResponse($response);

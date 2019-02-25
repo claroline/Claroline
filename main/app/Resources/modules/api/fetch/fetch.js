@@ -100,7 +100,7 @@ function handleResponseError(dispatch, responseError, originalRequest, error) {
       throw responseError
     }
 
-    if (401 === responseError.status) { // authentication needed
+    if (401 === responseError.status || 403 === responseError.status) { // authentication needed
       return authenticate()
         .then(
           () => apiFetch(originalRequest, dispatch), // re-execute original request,

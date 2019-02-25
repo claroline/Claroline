@@ -11,9 +11,11 @@
 
 namespace Claroline\ForumBundle\Security;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
  * @DI\Service
@@ -23,7 +25,14 @@ class SubjectVoter extends AbstractVoter
 {
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
-        //check if we can create the subject here
+        switch ($attributes[0]) {
+          case self::CREATE: return $this->checkCreate($token);
+      }
+    }
+
+    public function checkCreate($token)
+    {
+        return $token->getUser() instanceof User ? VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
     }
 
     public function getClass()
