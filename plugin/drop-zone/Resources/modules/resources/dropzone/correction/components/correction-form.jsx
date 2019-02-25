@@ -36,12 +36,12 @@ const CriteriaForm = props =>
                   id={`criterion-form-${c.id}-radio`}
                   label="criterion_form_radio"
                   choices={[...Array(props.dropzone.parameters.criteriaTotal).keys()].reduce((acc, current) => {
-                    acc[current] = current
+                    acc[current] = `${current}`
 
                     return acc
                   }, {})}
                   hideLabel={true}
-                  value={`${props.grades.find(g => g.criterion === c.id).value}`}
+                  value={props.grades.find(g => g.criterion === c.id).value}
                   onChange={value => props.handleUpdate(c.id, parseInt(value))}
                 />
               </td>

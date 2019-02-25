@@ -36,7 +36,9 @@ const EditorComponent = props =>
             name: 'parameters.reviewType',
             type: 'choice',
             label: trans('review_type', {}, 'dropzone'),
-            help: trans(constants.REVIEW_TYPE_PEER === props.dropzone.parameters.reviewType ? 'peer_review_help':'manager_review_help', {}, 'dropzone'),
+            help: props.dropzone.parameters && constants.REVIEW_TYPE_PEER === props.dropzone.parameters.reviewType ?
+              trans('peer_review_help', {}, 'dropzone') :
+              trans('manager_review_help', {}, 'dropzone'),
             required: true,
             onChange: (value) => {
               if (constants.REVIEW_TYPE_PEER === value) {
@@ -68,7 +70,9 @@ const EditorComponent = props =>
             name: 'planning.type',
             type: 'choice',
             label: trans('type'),
-            help: trans(constants.PLANNING_TYPE_MANUAL === props.dropzone.planning.type ? 'planning_manual_help':'planning_auto_help', {}, 'dropzone'),
+            help: props.dropzone.planning && constants.PLANNING_TYPE_MANUAL === props.dropzone.planning.type ?
+              trans('planning_manual_help', {}, 'dropzone') :
+              trans('planning_auto_help', {}, 'dropzone'),
             required: true,
             options: {
               choices: constants.PLANNING_TYPES,
@@ -80,23 +84,25 @@ const EditorComponent = props =>
                 name: 'planning.state',
                 type: 'choice',
                 label: trans('choose_current_state', {}, 'dropzone'),
-                displayed: constants.PLANNING_TYPE_MANUAL === props.dropzone.planning.type,
+                displayed: props.dropzone.planning && constants.PLANNING_TYPE_MANUAL === props.dropzone.planning.type,
                 required: true,
                 options: {
                   noEmpty: true,
                   condensed: true,
-                  choices: constants.PLANNING_STATES[props.dropzone.parameters.reviewType]
+                  choices: props.dropzone.parameters && props.dropzone.parameters.reviewType ?
+                    constants.PLANNING_STATES[props.dropzone.parameters.reviewType] :
+                    {}
                 }
               }, {
                 name: 'parameters.autoCloseDropsAtDropEndDate',
                 type: 'boolean',
                 label: trans('auto_close_drops_at_drop_end_date', {}, 'dropzone'),
-                displayed: constants.PLANNING_TYPE_MANUAL !== props.dropzone.planning.type
+                displayed: props.dropzone.planning && constants.PLANNING_TYPE_MANUAL !== props.dropzone.planning.type
               }, {
                 name: 'planning.drop',
                 type: 'date-range',
                 label: trans('drop_range', {}, 'dropzone'),
-                displayed: constants.PLANNING_TYPE_MANUAL !== props.dropzone.planning.type,
+                displayed: props.dropzone.planning && constants.PLANNING_TYPE_MANUAL !== props.dropzone.planning.type,
                 required: true,
                 options: {
                   time: true
@@ -105,7 +111,10 @@ const EditorComponent = props =>
                 name: 'planning.review',
                 type: 'date-range',
                 label: trans('review_range', {}, 'dropzone'),
-                displayed: constants.PLANNING_TYPE_MANUAL !== props.dropzone.planning.type && constants.REVIEW_TYPE_PEER === props.dropzone.parameters.reviewType,
+                displayed: props.dropzone.planning &&
+                  constants.PLANNING_TYPE_MANUAL !== props.dropzone.planning.type &&
+                  props.dropzone.parameters &&
+                  constants.REVIEW_TYPE_PEER === props.dropzone.parameters.reviewType,
                 required: true,
                 options: {
                   time: true
@@ -158,7 +167,7 @@ const EditorComponent = props =>
                 name: 'display.successMessage',
                 type: 'html',
                 label: trans('success_message', {}, 'dropzone'),
-                displayed: props.dropzone.display.showFeedback,
+                displayed: props.dropzone.display && props.dropzone.display.showFeedback,
                 required: true,
                 options: {
                   workspace: props.workspace
@@ -167,7 +176,7 @@ const EditorComponent = props =>
                 name: 'display.failMessage',
                 type: 'html',
                 label: trans('fail_message', {}, 'dropzone'),
-                displayed: props.dropzone.display.showFeedback,
+                displayed: props.dropzone.display && props.dropzone.display.showFeedback,
                 required: true,
                 options: {
                   workspace: props.workspace
@@ -178,8 +187,8 @@ const EditorComponent = props =>
             name: 'parameters.expectedCorrectionTotal',
             type: 'number',
             label: trans('expected_correction_total_label', {}, 'dropzone'),
-            required: constants.REVIEW_TYPE_PEER === props.dropzone.parameters.reviewType,
-            displayed: constants.REVIEW_TYPE_PEER === props.dropzone.parameters.reviewType,
+            required: props.dropzone.parameters && constants.REVIEW_TYPE_PEER === props.dropzone.parameters.reviewType,
+            displayed: props.dropzone.parameters && constants.REVIEW_TYPE_PEER === props.dropzone.parameters.reviewType,
             options: {
               min: 1
             }
@@ -187,7 +196,10 @@ const EditorComponent = props =>
             name: 'parameters.correctionDenialEnabled',
             type: 'boolean',
             label: trans('correction_denial_label', {}, 'dropzone'),
-            displayed: constants.REVIEW_TYPE_PEER === props.dropzone.parameters.reviewType && props.dropzone.display.displayCorrectionsToLearners
+            displayed: props.dropzone.parameters &&
+              constants.REVIEW_TYPE_PEER === props.dropzone.parameters.reviewType &&
+              props.dropzone.display &&
+              props.dropzone.display.displayCorrectionsToLearners
           }, {
             name: 'display.correctionInstruction',
             type: 'html',
@@ -204,21 +216,21 @@ const EditorComponent = props =>
                 name: 'parameters.commentInCorrectionForced',
                 type: 'boolean',
                 label: trans('force_comment', {}, 'dropzone'),
-                displayed: props.dropzone.parameters.commentInCorrectionEnabled
+                displayed: props.dropzone.parameters && props.dropzone.parameters.commentInCorrectionEnabled
               }
             ]
           }, {
             name: 'parameters.criteriaEnabled',
             type: 'boolean',
             label: trans('enable_evaluation_criteria', {}, 'dropzone'),
-            required: constants.REVIEW_TYPE_PEER === props.dropzone.parameters.reviewType,
-            disabled: constants.REVIEW_TYPE_PEER === props.dropzone.parameters.reviewType,
+            required: props.dropzone.parameters && constants.REVIEW_TYPE_PEER === props.dropzone.parameters.reviewType,
+            disabled: props.dropzone.parameters && constants.REVIEW_TYPE_PEER === props.dropzone.parameters.reviewType,
             linked: [
               {
                 name: 'parameters.criteriaTotal',
                 type: 'number',
                 label: trans('evaluation_scale', {}, 'dropzone'),
-                displayed: props.dropzone.parameters.criteriaEnabled,
+                displayed: props.dropzone.parameters && props.dropzone.parameters.criteriaEnabled,
                 required: true,
                 options: {
                   min: 2
@@ -227,7 +239,7 @@ const EditorComponent = props =>
                 name: 'parameters.criteria',
                 type: 'criteria',
                 label: trans('criteria', {}, 'dropzone'),
-                displayed: props.dropzone.parameters.criteriaEnabled,
+                displayed: props.dropzone.parameters && props.dropzone.parameters.criteriaEnabled,
                 required: true
               }
             ]

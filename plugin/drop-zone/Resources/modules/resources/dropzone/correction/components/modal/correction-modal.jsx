@@ -142,14 +142,14 @@ class CorrectionModal extends Component {
                         id={`criterion-form-${c.id}-radio`}
                         label="correction_criterion_radio"
                         choices={[...Array(this.props.dropzone.parameters.criteriaTotal).keys()].reduce((acc, current) => {
-                          acc[current] = current
+                          acc[current] = `${current}`
 
                           return acc
                         }, {})}
                         disabled={true}
                         hideLabel={true}
                         value={this.props.correction.grades.find(g => g.criterion === c.id) ?
-                          `${this.props.correction.grades.find(g => g.criterion === c.id).value}` :
+                          this.props.correction.grades.find(g => g.criterion === c.id).value :
                           ''
                         }
                         onChange={() => {}}

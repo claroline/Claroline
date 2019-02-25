@@ -41,6 +41,8 @@ Document.propTypes = {
   type: T.string.isRequired
 }
 
+const formatUrl = (url) => url.startsWith('http') ? url : `http://${url}`
+
 const DocumentRow = props =>
   <tr className="drop-document">
     <td className="document-type">
@@ -69,7 +71,7 @@ const DocumentRow = props =>
       }
 
       {props.document.type === constants.DOCUMENT_TYPE_URL &&
-        <a href={props.document.data}>{props.document.data}</a>
+        <a href={formatUrl(props.document.data)}>{formatUrl(props.document.data)}</a>
       }
 
       {props.document.type === constants.DOCUMENT_TYPE_RESOURCE &&
