@@ -29,7 +29,7 @@ abstract class AbstractUpdateAction extends AbstractAction
 
         $successData['update'][] = [
           'data' => $data,
-          'log' => $this->getAction()[0].' removed.',
+          'log' => $this->getAction()[0].' updated.',
         ];
     }
 
