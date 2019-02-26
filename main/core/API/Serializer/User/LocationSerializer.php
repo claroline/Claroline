@@ -57,7 +57,7 @@ class LocationSerializer
     public function deserialize($data, Location $location, array $options = [])
     {
         $this->sipe('name', 'setName', $data, $location);
-        $this->sipe('street', 'setStreet', $data, $location);
+        $this->sipe('meta.type', 'setType', $data, $location);
         $this->sipe('boxNumber', 'setBoxNumber', $data, $location);
         $this->sipe('street', 'setStreet', $data, $location);
         $this->sipe('streetNumber', 'setStreetNumber', $data, $location);
@@ -75,5 +75,13 @@ class LocationSerializer
     public function getClass()
     {
         return Location::class;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSchema()
+    {
+        return '#/main/core/location.json';
     }
 }
