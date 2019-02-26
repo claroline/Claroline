@@ -88,6 +88,12 @@ class UserMessage
         $this->isRemoved = $removed;
     }
 
+    //alias
+    public function setRemoved($removed)
+    {
+        $this->setIsRemoved($removed);
+    }
+
     public function setIsRead($isRead)
     {
         $this->isRead = $isRead;
@@ -96,6 +102,12 @@ class UserMessage
             $now = new \DateTime();
             $this->setLastOpenDate($now);
         }
+    }
+
+    //alias
+    public function setRead($isRead)
+    {
+        $this->setIsRead($isRead);
     }
 
     public function isRemoved()
