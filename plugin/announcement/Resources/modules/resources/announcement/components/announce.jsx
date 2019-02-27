@@ -18,7 +18,7 @@ const AnnounceDetail = props =>
     {...props.announcement}
     active={true}
     sendPost={() => props.sendPost(props.aggregateId, props.announcement)}
-    removePost={() => props.sendPost(props.aggregateId, props.announcement)}
+    removePost={() => props.removePost(props.aggregateId, props.announcement)}
     editable={props.editable}
     deletable={props.deletable}
   />
