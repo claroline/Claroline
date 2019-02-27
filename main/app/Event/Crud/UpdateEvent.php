@@ -16,4 +16,15 @@ namespace Claroline\AppBundle\Event\Crud;
  */
 class UpdateEvent extends CrudEvent
 {
+    public function __construct($object, array $options, array $oldData = [])
+    {
+        parent::__construct($object, $options);
+
+        $this->oldData = $oldData;
+    }
+
+    public function getOldData()
+    {
+        return $this->oldData;
+    }
 }

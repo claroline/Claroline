@@ -206,7 +206,13 @@ class UserCrud
      */
     public function preUpdate(UpdateEvent $event)
     {
-        // TODO : rename user role if user is renamed
-        // TODO : rename personal WS if user is renamed
+        $oldData = $event->getOldData();
+        $user = $event->getObject();
+
+        if (!empty($oldData) && $oldData['username'] !== $user->getUsername()) {
+            $userRole = $this->roleManager->getUserRole($oldData['username']);
+            $this->roleManager->renameUserRole($userRole, $user->getUsername());
+            // TODO : rename personal WS if user is renamed
+        }
     }
 }

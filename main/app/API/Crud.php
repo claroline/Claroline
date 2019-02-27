@@ -119,15 +119,19 @@ class Crud
             }
         }
 
-        // gets entity from raw data.
+        $oldObject = $this->om->getObject($data, $class);
+        $this->checkPermission('EDIT', $oldObject, [], true);
+        $oldData = $this->serializer->serialize($oldObject);
+
+        if (!$oldData) {
+            $oldData = [];
+        }
+
         $object = $this->serializer->deserialize($class, $data, $options);
 
-        // updates the entity if allowed
-        $this->checkPermission('EDIT', $object, [], true);
-
-        if ($this->dispatch('update', 'pre', [$object, $options])) {
+        if ($this->dispatch('update', 'pre', [$object, $options, $oldData])) {
             $this->om->save($object);
-            $this->dispatch('update', 'post', [$object, $options]);
+            $this->dispatch('update', 'post', [$object, $options, $oldData]);
         }
 
         return $object;
