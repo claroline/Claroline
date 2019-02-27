@@ -5,6 +5,7 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {url} from '#/main/app/api'
+import {isAdmin} from '#/main/app/security'
 
 import {select as workspaceSelect} from '#/main/core/workspace/selectors'
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
@@ -244,6 +245,7 @@ const WorkspaceFormComponent = (props) => {
                 props.updateProp('restrictions.dates', [])
               }
             },
+            displayed: isAdmin(),
             linked: [
               {
                 name: 'restrictions.dates',
@@ -261,6 +263,7 @@ const WorkspaceFormComponent = (props) => {
             type: 'boolean',
             label: trans('restrict_max_users'),
             calculated: restrictUsers,
+            displayed: isAdmin(),
             onChange: activated => {
               if (!activated) {
                 // reset max users field
@@ -284,6 +287,7 @@ const WorkspaceFormComponent = (props) => {
             type: 'boolean',
             label: trans('restrict_max_resources'),
             calculated: restrictResources,
+            displayed: isAdmin(),
             onChange: activated => {
               if (!activated) {
                 // reset max users field
@@ -307,6 +311,7 @@ const WorkspaceFormComponent = (props) => {
             type: 'boolean',
             label: trans('restrict_max_storage'),
             calculated: restrictStorage,
+            displayed: isAdmin(),
             onChange: activated => {
               if (!activated) {
                 // reset max users field
