@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Entity\Icon\IconItem;
 use Claroline\CoreBundle\Entity\Icon\IconSet;
 use Claroline\CoreBundle\Entity\Icon\IconSetTypeEnum;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Icon\ResourceIconItemFilenameList;
 use Claroline\CoreBundle\Library\Icon\ResourceIconSetIconItemList;
 use Claroline\CoreBundle\Library\Utilities\ExtensionNotSupportedException;
@@ -61,7 +62,8 @@ class IconSetManager
      *     "iconSetsWebDir"     = @DI\Inject("%claroline.param.icon_sets_web_dir%"),
      *     "iconSetsDir"        = @DI\Inject("%claroline.param.icon_sets_directory%"),
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "thumbnailCreator"   = @DI\Inject("claroline.utilities.thumbnail_creator")
+     *     "thumbnailCreator"   = @DI\Inject("claroline.utilities.thumbnail_creator"),
+     *     "ch"                 = @DI\Inject("claroline.config.platform_config_handler")
      * })
      *
      * @param $webDir
@@ -75,7 +77,8 @@ class IconSetManager
         $iconSetsWebDir,
         $iconSetsDir,
         ObjectManager $om,
-        ThumbnailCreator $thumbnailCreator
+        ThumbnailCreator $thumbnailCreator,
+        PlatformConfigurationHandler $ch
     ) {
         $this->fs = new FileSystem();
         $this->thumbnailCreator = $thumbnailCreator;
@@ -85,6 +88,7 @@ class IconSetManager
         $this->webDir = $webDir;
         $this->iconSetsWebDir = $iconSetsWebDir;
         $this->iconSetsDir = $iconSetsDir;
+        $this->ch = $ch;
     }
 
     /**
@@ -265,9 +269,12 @@ class IconSetManager
         }
     }
 
+    /**
+     * @deprecated
+     */
     public function getActiveResourceIconSet()
     {
-        return $this->iconSetRepo->findOneBy(['active' => true, 'type' => IconSetTypeEnum::RESOURCE_ICON_SET]);
+        $this->getIconSetByCName($this->ch->getParameter('display.resource_icon_set'));
     }
 
     public function getResourceIconSetStampIcon(IconSet $iconSet = null)
