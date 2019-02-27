@@ -7,7 +7,9 @@ const reducer = {
   explanation: makeReducer({}),
   import: makeFormReducer('import'),
   export: makeFormReducer('export'),
-  history: makeListReducer('history'),
+  history: makeListReducer('history', {
+    sortBy: {property: 'uploadDate', direction: -1}
+  }),
   log: logReducer
 }
 
