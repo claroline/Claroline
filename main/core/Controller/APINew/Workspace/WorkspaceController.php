@@ -784,7 +784,30 @@ class WorkspaceController extends AbstractCrudController
     public function listRolesAction($id, $class, Request $request)
     {
         return new JsonResponse(
-            $this->finder->search('Claroline\CoreBundle\Entity\Role', array_merge(
+            $this->finder->search(Role::class, array_merge(
+                $request->query->all(),
+                ['hiddenFilters' => ['workspace' => [$id]]]
+            ))
+        );
+    }
+
+    /**
+     * @Route(
+     *    "/{id}/role/configurable",
+     *    name="apiv2_workspace_list_roles_configurable"
+     *)
+     * @Method("GET")
+     *
+     * @param string  $id
+     * @param string  $class
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function listConfigurableRolesAction($id, Request $request)
+    {
+        return new JsonResponse(
+            $this->finder->search(Role::class, array_merge(
                 $request->query->all(),
                 ['hiddenFilters' => ['workspaceConfigurable' => [$id]]]
             ))
