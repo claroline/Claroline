@@ -9,6 +9,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Manager\IconSetManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -41,6 +42,7 @@ class ParametersSerializer
      *     "finder"        = @DI\Inject("claroline.api.finder"),
      *     "filePath"      = @DI\Inject("%claroline.param.platform_options%"),
      *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "ism"           = @DI\Inject("claroline.manager.icon_set_manager"),
      *     "om"            = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
@@ -53,6 +55,7 @@ class ParametersSerializer
     public function __construct(
         SerializerProvider $serializer, // bad
         FinderProvider $finder, // bad
+        IconSetManager $ism,
         ObjectManager $om,
         PlatformConfigurationHandler $configHandler,
         $filePath
@@ -62,6 +65,7 @@ class ParametersSerializer
         $this->filePath = $filePath;
         $this->configHandler = $configHandler;
         $this->om = $om;
+        $this->ism = $ism;
     }
 
     public function serialize(array $options = [])

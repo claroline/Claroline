@@ -274,7 +274,7 @@ class IconSetManager
      */
     public function getActiveResourceIconSet()
     {
-        $this->getIconSetByCName($this->ch->getParameter('display.resource_icon_set'));
+        return $this->iconSetRepo->findOneByName($this->ch->getParameter('display.resource_icon_set'));
     }
 
     public function getResourceIconSetStampIcon(IconSet $iconSet = null)
