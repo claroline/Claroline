@@ -38,7 +38,7 @@ const UserTabActionsComponent = props =>
         type={LINK_BUTTON}
         icon="fa fa-pencil"
         label={trans('create_user')}
-        target={trans('create_user')}
+        target="/users/form"
       />
     }
   </PageActions>
