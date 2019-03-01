@@ -81,6 +81,7 @@ class Message extends AbstractMessage
     public function setSubject(Subject $subject)
     {
         $this->subject = $subject;
+        $subject->addMessage($this);
     }
 
     /**

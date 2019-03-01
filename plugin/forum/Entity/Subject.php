@@ -185,6 +185,13 @@ class Subject
         return $this->messages;
     }
 
+    public function addMessage(Message $message)
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages->add($message);
+        }
+    }
+
     public function setSticked($boolean)
     {
         $this->sticked = $boolean;

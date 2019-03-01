@@ -63,16 +63,33 @@ class SubjectCrud
             $user->setForum($forum);
             $user->setUser($subject->getCreator());
         }
+
+        $messages = $subject->getMessages();
+        $first = $messages && isset($messages[0]) ? $messages[0] : null;
+
         if (!$this->checkPermission('EDIT', $forum->getResourceNode())) {
             if (Forum::VALIDATE_PRIOR_ALL === $forum->getValidationMode()) {
                 $subject->setModerated(Forum::VALIDATE_PRIOR_ALL);
+                if ($first) {
+                    $first->setModerated(Forum::VALIDATE_PRIOR_ALL);
+                }
             }
 
             if (Forum::VALIDATE_PRIOR_ONCE === $forum->getValidationMode()) {
                 $subject->setModerated($user->getAccess() ? Forum::VALIDATE_NONE : Forum::VALIDATE_PRIOR_ONCE);
+                if ($first) {
+                    $first->setModerated(Forum::VALIDATE_PRIOR_ALL);
+                }
             }
         } else {
             $subject->setModerated(Forum::VALIDATE_NONE);
+            if ($first) {
+                $first->setModerated(Forum::VALIDATE_PRIOR_ALL);
+            }
+        }
+
+        if ($first) {
+            $this->om->persist($first);
         }
 
         return $subject;
