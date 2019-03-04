@@ -3,12 +3,16 @@ import set from 'lodash/set'
 
 import {makeInstanceAction, makeInstanceActionCreator} from '#/main/app/store/actions'
 
+import {dateToDisplayFormat} from '#/main/app/intl/date'
+import {trans} from '#/main/app/intl/translation'
 import {tval} from '#/main/app/intl/translation'
 import {API_REQUEST} from '#/main/app/api'
 import {actions as alertActions} from '#/main/app/overlay/alert/store'
 import {constants as alertConstants} from '#/main/app/overlay/alert/constants'
 import {constants as actionConstants} from '#/main/app/action/constants'
-
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
+import {actions as modalActions} from '#/main/app/overlay/modal/store'
+import {currentUser} from '#/main/app/security'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 
 export const FORM_RESET          = 'FORM_RESET'
@@ -31,6 +35,59 @@ actions.reset = (formName, data = {}, isNew = false) => ({
   type: makeInstanceAction(FORM_RESET, formName),
   data: data,
   isNew: isNew
+})
+
+//the dispatch retuned in the success function isn't the same as the first one
+//async request doesn't work with the usual way otherwise
+actions.getItemLock = (className, id) => (dispatch) => dispatch({
+  [API_REQUEST]: {
+    url: ['apiv2_object_lock_get', {class: className, id}],
+    request: {
+      method: 'GET'
+    },
+    success: (response) => {
+      if (response.value) {
+        return dispatch(actions.validateLock(response, className, id))
+      }
+
+      dispatch(actions.lockItem(className, id))
+    }
+  }
+})
+
+actions.validateLock = (lock) => (dispatch) => {
+  if (lock.user.username !== currentUser().username) {
+    dispatch(
+      modalActions.showModal(MODAL_CONFIRM, {
+        title: trans('update_object'),
+        dangerous: true,
+        icon: 'fa fa-fw fa-check',
+        question: trans('object_currently_modified', {username: lock.user.username, date: dateToDisplayFormat(lock.updated)}),
+        confirmButtonText: trans('update_anyway'),
+        handleConfirm: () => {
+          dispatch(actions.lockItem(lock.className, lock.id))
+        }
+      })
+    )
+  }
+}
+
+actions.lockItem = (className, id) => ({
+  [API_REQUEST]: {
+    url: ['apiv2_object_lock', {class: className, id}],
+    request: {
+      method: 'PUT'
+    }
+  }
+})
+
+actions.unlockItem = (className, id) => ({
+  [API_REQUEST]: {
+    url: ['apiv2_object_unlock', {class: className, id}],
+    request: {
+      method: 'PUT'
+    }
+  }
 })
 
 actions.errors = (formName, errors) => (dispatch) => {

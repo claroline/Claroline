@@ -253,6 +253,7 @@ class ResourceNodeSerializer
     {
         $meta = [
             'type' => $resourceNode->getResourceType()->getName(),
+            'className' => $resourceNode->getResourceType()->getClass(),
             'mimeType' => $resourceNode->getMimeType(),
             'description' => $resourceNode->getDescription(),
             'creator' => $resourceNode->getCreator() ?

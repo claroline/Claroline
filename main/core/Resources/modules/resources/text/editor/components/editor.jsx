@@ -20,6 +20,11 @@ const EditorComponent = (props) =>
       target: '/',
       exact: true
     }}
+    lock={{
+      id: props.text.id,
+      className: 'Claroline\\CoreBundle\\Entity\\Resource\\Text',
+      autoUnlock: true
+    }}
     sections={[
       {
         title: trans('general', {}, 'platform'),

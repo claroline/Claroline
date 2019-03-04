@@ -43,8 +43,8 @@ const PlayerComponent = props =>
             type={LINK_BUTTON}
             label={trans('configure', {}, 'actions')}
             icon="fa fa-fw fa-cog"
-            target={`/edit/tab/${props.currentTab.id}`}
             primary={true}
+            target={`/edit/tab/${props.currentTab.id}`}
           />
         </PageActions>
       }
@@ -63,6 +63,7 @@ PlayerComponent.propTypes = {
   tabs: T.arrayOf(T.shape(
     TabTypes.propTypes
   )),
+  history: T.object.isRequired,
   currentTabTitle: T.string.isRequired,
   currentTab: T.shape(TabTypes.propTypes),
   editable: T.bool.isRequired,

@@ -17,6 +17,10 @@ const TabEditor = props =>
     name="editor"
     dataPart={`[${props.currentTabIndex}]`}
     buttons={true}
+    lock={{
+      id: props.currentTab ? props.currentTab.id: null,
+      className:'Claroline\\CoreBundle\\Entity\\Tab\\HomeTab'
+    }}
     disabled={props.readOnly}
     target={props.administration ?
       ['apiv2_home_admin', {

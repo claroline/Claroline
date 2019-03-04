@@ -197,6 +197,10 @@ class FormData extends Component {
         pendingChanges={this.props.pendingChanges}
         save={this.props.save}
         cancel={this.props.cancel}
+        lock={this.props.lock}
+        getLock={this.props.getLock}
+        setLock={this.props.setLock}
+        unlock={this.props.unlock}
       >
         {this.props.meta &&
           <ContentMeta
@@ -272,6 +276,15 @@ FormData.propTypes = {
   sections: T.arrayOf(T.shape(
     DataFormSectionTypes.propTypes
   )).isRequired,
+
+  lock: T.shape({
+    id: T.string.isRequired,
+    className: T.string.isRequired
+  }),
+
+  getLock: T.func.isRequired,
+  setLock: T.func.isRequired,
+  unlock: T.func.isRequired,
 
   /**
    * The save action of the form.

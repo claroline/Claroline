@@ -1695,6 +1695,7 @@
     "publication_by_date": "Access period",
     "confirmation_checkbox": "By checking this box, I confirm that I have read and understood the warning.",
     "publication_by_date_help": "Resource must be published beforehand, then define dates in format dd/mm/yyyy HH:mm. <br/>Ex: 25/12/2018 14:00",
+    "warning_lock": "The ressource is being updated by %username% since %date%",
     "server_error": "Server error",
     "sever_error_message": "The server returned an error when the resource was fetched",
     "resource_not_found": "Resource not found",
@@ -1704,5 +1705,8 @@
     "after": "After",
     "deletion": "Deletion",
     "first": "First",
-    "last": "Last"
+    "last": "Last",
+    "update_object": "The object is currently being updated",
+    "object_currently_modified": "The object is being modified by %username% since %date%",
+    "update_anyway": "update anyway"
 }

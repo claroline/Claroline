@@ -1728,6 +1728,7 @@
     "publication_by_date": "Période d'accès",
     "confirmation_checkbox": "En cochant cette case, je confirme avoir pris connaissance et compris l'avertissement ci-dessus.",
     "publication_by_date_help": "Si une ressource est publiée, cette option permet de limiter l'accés à cette derniere sur la période définie. Des dates de début et fin doivent être saisies au format <br/>jj/mm/aaaa HH:mm. <br/>Ex: 25/12/2018 14:00",
+    "warning_lock": "La ressource est en cours de modification par %username% depuis le %date%",
     "server_error": "Erreur serveur",
     "sever_error_message": "Le serveur a renvoyé une erreur lors de la recherche de la ressource",
     "resource_not_found": "Resource introuvable",
@@ -1737,5 +1738,8 @@
     "after": "Après",
     "deletion": "Suppression",
     "first": "Premier",
-    "last": "Dernier"
+    "last": "Dernier",
+    "update_object": "Object en cours de modification",
+    "object_currently_modified": "L'objet est en cours de modification par %username% depuis %date%",
+    "update_anyway": "Modifier quand même"
 }

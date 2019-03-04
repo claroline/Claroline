@@ -13,6 +13,7 @@ use Claroline\CoreBundle\Entity\Tab\HomeTabConfig;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetContainer;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Manager\LockManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -29,12 +30,14 @@ class HomeTabSerializer
     private $serializer;
     private $om;
     private $widgetContainerFinder;
+    private $lockManager;
 
     /**
      * ContactSerializer constructor.
      *
      * @DI\InjectParams({
      *     "serializer"            = @DI\Inject("claroline.api.serializer"),
+     *     "lockManager"           = @DI\Inject("claroline.manager.lock_manager"),
      *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
      *     "widgetContainerFinder" = @DI\Inject("claroline.api.finder.widget_container")
      * })
@@ -46,10 +49,12 @@ class HomeTabSerializer
     public function __construct(
         SerializerProvider $serializer,
         ObjectManager $om,
+        LockManager $lockManager,
         WidgetContainerFinder $widgetContainerFinder
     ) {
         $this->serializer = $serializer;
         $this->om = $om;
+        $this->lockManager = $lockManager;
         $this->widgetContainerFinder = $widgetContainerFinder;
     }
 
@@ -98,6 +103,8 @@ class HomeTabSerializer
             }
         }
 
+        $lock = $this->lockManager->getLock(HomeTab::class, $this->getUuid($homeTab, $options));
+
         $data = [
             'id' => $this->getUuid($homeTab, $options),
             'title' => $homeTabConfig->getName(),
@@ -120,6 +127,9 @@ class HomeTabSerializer
             'widgets' => array_map(function ($container) use ($options) {
                 return $this->serializer->serialize($container, $options);
             }, $containers),
+            'meta' => [
+              'lock' => $this->serializer->serialize($lock),
+            ],
         ];
 
         if (!in_array(Options::REFRESH_UUID, $options)) {

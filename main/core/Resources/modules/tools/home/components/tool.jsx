@@ -22,7 +22,9 @@ const HomeTool = props =>
       }, {
         path: '/edit/tab/:id?',
         component: Editor,
-        onEnter: (params) => props.setCurrentTab(params.id),
+        onEnter: (params) => {
+          props.setCurrentTab(params.id)
+        },
         disabled: !props.editable
       }
     ]}

@@ -9,7 +9,7 @@ import {apiFetch} from '#/main/app/api/fetch'
  */
 const apiMiddleware = () => next => action => {
   const requestParameters = action[constants.API_REQUEST]
-
+  
   if (typeof requestParameters === 'undefined') {
     // this is not an api request action, lets pass it without additional processing
     return next(action)

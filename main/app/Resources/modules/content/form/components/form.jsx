@@ -37,6 +37,7 @@ class Form extends Component {
     super(props)
 
     this.warnPendingChanges = this.warnPendingChanges.bind(this)
+
   }
 
   warnPendingChanges(e) {
@@ -52,6 +53,11 @@ class Form extends Component {
   }
 
   componentDidMount() {
+    if (this.props.lock.id !== undefined && this.props.lock.id && this.props.lock.className) {
+      this.props.getLock(this.props.lock.className, this.props.lock.id)
+      this.setState({logChecked: true})
+    }
+
     window.addEventListener('beforeunload', this.warnPendingChanges)
   }
 
@@ -59,6 +65,13 @@ class Form extends Component {
     // todo warn also here
     // if client route has changed, it will not trigger before unload
     window.removeEventListener('beforeunload', this.warnPendingChanges)
+  }
+
+  componentDidUpdate(previousProps) {
+    if (this.props.lock.id !== undefined && previousProps.lock && this.props.lock && this.props.lock.id !== previousProps.lock.id) {
+      this.props.getLock(this.props.lock.className, this.props.lock.id)
+      this.setState({logChecked: true})
+    }
   }
 
   render() {
@@ -102,6 +115,14 @@ Form.propTypes = {
   validating: T.bool,
   pendingChanges: T.bool,
   children: T.node.isRequired,
+  lock: T.shape({
+    id: T.string.isRequired,
+    className: T.string.isRequired
+  }),
+
+  getLock: T.func.isRequired,
+  setLock: T.func.isRequired,
+  unlock: T.func.isRequired,
 
   /**
    * The save action of the form (if provided, form toolbar will be displayed).
@@ -127,7 +148,8 @@ Form.defaultProps = {
   level: 2,
   errors: false,
   validating: false,
-  pendingChanges: false
+  pendingChanges: false,
+  lock: {}
 }
 
 export {

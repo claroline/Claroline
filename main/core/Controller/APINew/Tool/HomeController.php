@@ -19,6 +19,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Entity\Widget\WidgetContainer;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Claroline\CoreBundle\Manager\LockManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -37,15 +38,18 @@ class HomeController extends AbstractApiController
     private $serializer;
     /** @var ObjectManager */
     private $om;
+    /** @var LockManager */
+    private $lockManager;
 
     /**
      * HomeController constructor.
      *
      * @DI\InjectParams({
-     *     "finder"     = @DI\Inject("claroline.api.finder"),
-     *     "crud"       = @DI\Inject("claroline.api.crud"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer"),
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager")
+     *     "finder"      = @DI\Inject("claroline.api.finder"),
+     *     "lockManager" = @DI\Inject("claroline.manager.lock_manager"),
+     *     "crud"        = @DI\Inject("claroline.api.crud"),
+     *     "serializer"  = @DI\Inject("claroline.api.serializer"),
+     *     "om"          = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param FinderProvider     $finder
@@ -56,13 +60,67 @@ class HomeController extends AbstractApiController
     public function __construct(
         FinderProvider $finder,
         Crud $crud,
+        LockManager $lockManager,
         SerializerProvider $serializer,
         ObjectManager $om
     ) {
         $this->finder = $finder;
         $this->crud = $crud;
+        $this->lockManager = $lockManager;
         $this->serializer = $serializer;
         $this->om = $om;
+    }
+
+    /**
+     * @EXT\Route("/lock", name="apiv2_home_lock", options={"method_prefix"=false})
+     * @EXT\Method("PUT")
+     *
+     * @param Request $request
+     * @param string  $context
+     * @param string  $contextId
+     *
+     * @return JsonResponse
+     */
+    public function lockTabAction(Request $request)
+    {
+        // grab tabs data
+        $tabs = $this->decodeIdsString($request, HomeTab::class);
+
+        $this->om->startFlushSuite();
+
+        foreach ($tabs as $tab) {
+            $this->lockManager->lock(HomeTab::class, $tab->getUuid());
+        }
+
+        $this->om->endFlushSuite();
+
+        return new JsonResponse();
+    }
+
+    /**
+     * @EXT\Route("/unlock", name="apiv2_home_unlock", options={"method_prefix"=false})
+     * @EXT\Method("PUT")
+     *
+     * @param Request $request
+     * @param string  $context
+     * @param string  $contextId
+     *
+     * @return JsonResponse
+     */
+    public function unlockTabAction(Request $request)
+    {
+        // grab tabs data
+        $tabs = $this->decodeIdsString($request, HomeTab::class);
+
+        $this->om->startFlushSuite();
+
+        foreach ($tabs as $tab) {
+            $this->lockManager->unlock(HomeTab::class, $tab->getUuid());
+        }
+
+        $this->om->endFlushSuite();
+
+        return new JsonResponse();
     }
 
     /**
@@ -195,10 +253,28 @@ class HomeController extends AbstractApiController
         }
 
         foreach ($installedTabs as $installedTab) {
+            $this->lockManager->unlock(HomeTab::class, $installedTab->getUuid());
+
             if (!in_array($installedTab->getUuid(), $ids)) {
                 // the tab no longer exist we can remove it
                 $this->crud->delete($installedTab);
             }
         }
+    }
+
+    /**
+     * @param Request $request
+     * @param string  $class
+     */
+    protected function decodeIdsString(Request $request, $class)
+    {
+        $ids = $request->query->get('ids');
+        if (!$ids) {
+            return [];
+        }
+
+        $property = is_numeric($ids[0]) ? 'id' : 'uuid';
+
+        return $this->om->findList($class, $property, $ids);
     }
 }
