@@ -115,6 +115,7 @@ class ResourceRights
     public function setResourceNode(ResourceNode $resourceNode)
     {
         $this->resourceNode = $resourceNode;
+        $resourceNode->addRight($this);
     }
 
     public function getMask()

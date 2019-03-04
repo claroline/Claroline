@@ -121,6 +121,17 @@ class ForumListener
     }
 
     /**
+     * Create a forum resource.
+     *
+     * @DI\Observe("resource.claroline_forum.create")
+     *
+     * @param DeleteResourceEvent $event
+     */
+    public function onCreate(CreateResourceEvent $event)
+    {
+    }
+
+    /**
      * Copies a forum resource.
      *
      * @DI\Observe("copy_claroline_forum")

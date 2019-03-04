@@ -93,7 +93,9 @@ class Crud
 
         if ($this->dispatch('create', 'pre', [$object, $options])) {
             $this->om->save($object);
-            $this->dispatch('create', 'post', [$object, $options]);
+            if (!in_array(Options::IGNORE_CRUD_POST_EVENT, $options)) {
+                $this->dispatch('create', 'post', [$object, $options]);
+            }
         }
 
         return $object;

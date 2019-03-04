@@ -101,6 +101,7 @@ final class Options
 
     const CRUD_CREATE = 'crud_create';
     const CRUD_UPDATE = 'crud_update';
+    const IGNORE_CRUD_POST_EVENT = 'ignore_crud_post_event';
 
     //finder options
     const SQL_ARRAY_MAP = 'sql_array_map';

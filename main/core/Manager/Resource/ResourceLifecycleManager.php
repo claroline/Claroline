@@ -93,7 +93,7 @@ class ResourceLifecycleManager
 
     public function edit(ResourceNode $resourceNode)
     {
-        // fixme : wrong event
+        // fixme : wrong event. Use crud instead ?
 
         /** @var CopyResourceEvent $event */
         $event = $this->dispatcher->dispatch(

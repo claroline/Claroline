@@ -36,7 +36,7 @@ class ResourceNodeCrud
     }
 
     /**
-     * @DI\Observe("crud_pre_create_object_claroline_corebundle_entity_resource_resource_node")
+     * @DI\Observe("crud_pre_create_object_claroline_corebundle_entity_resource_resourcenode")
      *
      * @param CreateEvent $event
      *

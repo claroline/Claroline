@@ -24,19 +24,22 @@ class LogResourceDeleteEvent extends LogGenericEvent
     {
         parent::__construct(
             self::ACTION,
-            array(
-                'resource' => array(
+            [
+                'resource' => [
                     'name' => $node->getName(),
                     'path' => $node->getPathForDisplay(),
-                ),
-                'workspace' => array(
+                ],
+                'workspace' => [
                     'name' => $node->getWorkspace()->getName(),
-                ),
-                'owner' => array(
+                ],
+                'owner' => $node->getCreator() ? [
                     'lastName' => $node->getCreator()->getLastName(),
                     'firstName' => $node->getCreator()->getFirstName(),
-                ),
-            ),
+                ] : [
+                    'lastName' => 'unknown',
+                    'firstName' => 'unknown',
+                ],
+            ],
             null,
             null,
             $node,

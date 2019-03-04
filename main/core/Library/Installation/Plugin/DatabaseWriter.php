@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\Action\AdditionalAction;
 use Claroline\CoreBundle\Entity\Activity\ActivityRuleAction;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Entity\Plugin;
+use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
@@ -373,13 +374,33 @@ class DatabaseWriter
             $this->mm->addDefaultPerms($resourceType);
         }
 
+        $newActions = [];
         if (!empty($resourceConfiguration['actions'])) {
             foreach ($resourceConfiguration['actions'] as $resourceAction) {
+                $newActions[] = $resourceAction['decoder'];
                 $this->updateResourceAction(array_merge($resourceAction, [
                     'resource_type' => $resourceType->getName(),
                 ]), $plugin);
             }
         }
+
+        $permissionMap = $this->mm->getPermissionMap($resourceType);
+        $defaults = $this->mm->getDefaultResourceActionsMask($resourceType);
+        $oldActions = array_filter($permissionMap, function ($name) use ($defaults) {
+            return !in_array($name, array_keys($defaults));
+        });
+
+        $toRemove = array_filter($oldActions, function ($action) use ($newActions) {
+            return !in_array($action, $newActions);
+        });
+
+        foreach ($toRemove as $el) {
+            $mask = $this->em->getRepository(MaskDecoder::class)->findOneBy(['resourceType' => $resourceType, 'name' => $el]);
+            $this->log('Remove mask decoder '.$el, LogLevel::ERROR);
+            $this->em->remove($mask);
+        }
+
+        $this->em->flush();
 
         $this->updateIcons($resourceConfiguration, $resourceType, $pluginBundle);
         $this->updateActivityRules($resourceConfiguration['activity_rules'], $resourceType);
@@ -538,22 +559,6 @@ class DatabaseWriter
             $resourceType = $this->em
                 ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
                 ->findOneBy(['name' => $action['resource_type']]);
-        }
-
-        $resourceActions = $this->em
-            ->getRepository('ClarolineCoreBundle:Resource\MenuAction')
-            ->findBy(['name' => $action['name'], 'resourceType' => $resourceType]);
-
-        $countResources = count($resourceActions);
-        if ($countResources > 1) {
-            //keep the first one, remove the rest and then flush
-            $this->log('Removing superfluous masks...', LogLevel::ERROR);
-
-            for ($i = 1; $i < $countResources; ++$i) {
-                $this->em->remove($resourceActions[$i]);
-            }
-
-            $this->em->forceFlush();
         }
 
         $this->log('Updating resource action '.$action['name']);
