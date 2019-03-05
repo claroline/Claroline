@@ -207,7 +207,7 @@ function APIClass(sco, scormData, tracking, dispatch) {
         case 'cmi.student_data.time_limit_action' :
           this.apiLastError = '0'
 
-          return this.scoData[arg]
+          return this.scoData[arg] ? this.scoData[arg] : ''
         case 'cmi.core.exit' :
         case 'cmi.core.session_time' :
           this.apiLastError = '404' // write only
