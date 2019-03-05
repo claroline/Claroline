@@ -144,7 +144,7 @@ class Step
      *
      * @var ArrayCollection|SecondaryResource[]
      *
-     * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\SecondaryResource", mappedBy="step", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\SecondaryResource", mappedBy="step", cascade={"persist", "remove"}, orphanRemoval=true)
      * @ORM\OrderBy({"order" = "ASC"})
      */
     protected $secondaryResources;
