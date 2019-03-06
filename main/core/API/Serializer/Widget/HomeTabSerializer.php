@@ -103,8 +103,6 @@ class HomeTabSerializer
             }
         }
 
-        $lock = $this->lockManager->getLock(HomeTab::class, $this->getUuid($homeTab, $options));
-
         $data = [
             'id' => $this->getUuid($homeTab, $options),
             'title' => $homeTabConfig->getName(),
@@ -127,9 +125,6 @@ class HomeTabSerializer
             'widgets' => array_map(function ($container) use ($options) {
                 return $this->serializer->serialize($container, $options);
             }, $containers),
-            'meta' => [
-              'lock' => $this->serializer->serialize($lock),
-            ],
         ];
 
         if (!in_array(Options::REFRESH_UUID, $options)) {

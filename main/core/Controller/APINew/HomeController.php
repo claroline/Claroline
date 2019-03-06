@@ -88,7 +88,7 @@ class HomeController extends AbstractApiController
             HomeTab::class,
             ['filters' => ['type' => HomeTab::TYPE_HOME]]
         );
-
+     
         $tabs = array_filter($tabs['data'], function ($data) {
             return $data !== [];
         });
