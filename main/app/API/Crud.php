@@ -78,7 +78,7 @@ class Crud
     {
         // validates submitted data.
         if (!in_array(self::NO_VALIDATE, $options)) {
-            $errors = $this->validate($class, $data, ValidatorProvider::CREATE);
+            $errors = $this->validate($class, $data, ValidatorProvider::CREATE, $options);
 
             if (count($errors) > 0) {
                 return $errors; // todo : it should throw an Exception otherwise it makes return inconsistent
@@ -297,9 +297,9 @@ class Crud
      * @param mixed  $data  - the serialized data to validate
      * @param string $mode  - the validation mode
      */
-    public function validate($class, $data, $mode)
+    public function validate($class, $data, $mode, array $options = [])
     {
-        return $this->validator->validate($class, $data, $mode, true);
+        return $this->validator->validate($class, $data, $mode, true, $options);
     }
 
     /**

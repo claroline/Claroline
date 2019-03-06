@@ -99,7 +99,7 @@ class ValidatorProvider
      *
      * @throws InvalidDataException
      */
-    public function validate($class, $data, $mode, $throwException = false)
+    public function validate($class, $data, $mode, $throwException = false, array $options = [])
     {
         $schema = $this->serializer->getSchema($class);
 
@@ -141,7 +141,7 @@ class ValidatorProvider
         $errors = $this->validateUnique($uniqueFields, $data, $mode, $class);
 
         //custom validation
-        $errors = array_merge($errors, $validator->validate($data, $mode));
+        $errors = array_merge($errors, $validator->validate($data, $mode, $options));
 
         if (!empty($errors) && $throwException) {
             throw new InvalidDataException(

@@ -36,7 +36,7 @@ class WorkspaceValidator implements ValidatorInterface
         $this->repo = $this->om->getRepository(Workspace::class);
     }
 
-    public function validate($data, $mode)
+    public function validate($data, $mode, array $options = [])
     {
         $errors = [];
 

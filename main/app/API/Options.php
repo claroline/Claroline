@@ -68,6 +68,7 @@ final class Options
     const SEND_EMAIL = 'send_email';
     const ADD_NOTIFICATIONS = 'add_notifications';
     const PROFILE_SERIALIZE = 'profile_serialize';
+    const VALIDATE_FACET = 'validate_facet';
     const REGISTRATION = 'registration';
 
     //for workspace

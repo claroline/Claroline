@@ -31,7 +31,7 @@ class MessageValidator implements ValidatorInterface
         $this->om = $om;
     }
 
-    public function validate($data, $mode)
+    public function validate($data, $mode, array $options = [])
     {
         $errors = [];
 

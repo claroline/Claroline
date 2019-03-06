@@ -2,11 +2,14 @@
 
 namespace Claroline\CoreBundle\API\Validator;
 
+use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Claroline\AppBundle\API\ValidatorInterface;
 use Claroline\AppBundle\API\ValidatorProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\Repository\UserRepository;
-use Doctrine\ORM\QueryBuilder;
+use  Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -24,18 +27,20 @@ class UserValidator implements ValidatorInterface
      * UserValidator constructor.
      *
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "profileSerializer" = @DI\Inject("claroline.serializer.profile"),
+     *     "om"                = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $om)
+    public function __construct(ObjectManager $om, ProfileSerializer $profileSerializer)
     {
         $this->om = $om;
         $this->repo = $this->om->getRepository('Claroline\CoreBundle\Entity\User');
+        $this->profileSerializer = $profileSerializer;
     }
 
-    public function validate($data, $mode)
+    public function validate($data, $mode, array $options = [])
     {
         $errors = [];
 
@@ -68,6 +73,31 @@ class UserValidator implements ValidatorInterface
                   'path' => 'meta/publicUrl',
                   'message' => 'The public url '.$data['meta']['publicUrl'].' already exists.',
               ];
+            }
+        }
+
+        if (in_array(Options::VALIDATE_FACET, $options)) {
+            $facets = $this->profileSerializer->serialize([Options::REGISTRATION]);
+            $required = [];
+
+            foreach ($facets as $facet) {
+                foreach ($facet['sections'] as $section) {
+                    foreach ($section['fields'] as $field) {
+                        if ($field['required']) {
+                            $required[] = $field;
+                        }
+                    }
+                }
+            }
+
+            $utils = new ArrayUtils();
+            foreach ($required as $field) {
+                if (!$utils->has($data, 'profile.'.$field['id'])) {
+                    $errors[] = [
+                 'path' => 'profile/'.$field['id'],
+                 'message' => 'The field '.$field['label'].' is required',
+               ];
+                }
             }
         }
 

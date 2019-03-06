@@ -27,7 +27,7 @@ class GroupValidator implements ValidatorInterface
         $this->repo = $this->om->getRepository('Claroline\CoreBundle\Entity\Group');
     }
 
-    public function validate($data, $mode)
+    public function validate($data, $mode, array $options = [])
     {
         return [];
     }

@@ -19,7 +19,7 @@ const Facet = props => {
       field.name = 'profile.' + field.id
     })
   })
-
+  
   return (<div className="profile-facet">
     <FormData
       name="user"

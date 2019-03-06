@@ -48,7 +48,7 @@ class ResourceNodeValidator implements ValidatorInterface
      *
      * @return array
      */
-    public function validate($data, $mode)
+    public function validate($data, $mode, array $options = [])
     {
         $errors = [];
 
