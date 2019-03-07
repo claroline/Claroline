@@ -32,7 +32,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @DI\Service("claroline.manager.scorm_manager")
@@ -135,7 +135,7 @@ class ScormManager
         $this->logRepo = $om->getRepository('ClarolineCoreBundle:Log\Log');
     }
 
-    public function uploadScormArchive(Workspace $workspace, UploadedFile $file)
+    public function uploadScormArchive(Workspace $workspace, File $file)
     {
         // Checks if it is a valid scorm archive
         $zip = new \ZipArchive();
@@ -150,7 +150,7 @@ class ScormManager
         }
     }
 
-    public function generateScorm(Workspace $workspace, UploadedFile $file)
+    public function generateScorm(Workspace $workspace, File $file)
     {
         $ds = DIRECTORY_SEPARATOR;
         $hashName = Uuid::uuid4()->toString().'.zip';
@@ -211,7 +211,7 @@ class ScormManager
         return $trackings;
     }
 
-    public function parseScormArchive(UploadedFile $file)
+    public function parseScormArchive(File $file)
     {
         $data = [];
         $contents = '';
@@ -946,11 +946,11 @@ class ScormManager
     /**
      * Unzip a given ZIP file into the web resources directory.
      *
-     * @param Workspace    $workspace
-     * @param UploadedFile $file
-     * @param string       $hashName  name of the destination directory
+     * @param Workspace $workspace
+     * @param File      $file
+     * @param string    $hashName  name of the destination directory
      */
-    private function unzipScormArchive(Workspace $workspace, UploadedFile $file, $hashName)
+    private function unzipScormArchive(Workspace $workspace, File $file, $hashName)
     {
         $zip = new \ZipArchive();
         $zip->open($file);
