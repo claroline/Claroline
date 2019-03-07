@@ -87,12 +87,6 @@ class LessonSerializer
     {
         if (empty($lesson)) {
             $lesson = new lesson();
-            $lesson->refreshUuid();
-        }
-        $this->sipe('title', 'setTitle', $data, $lesson);
-
-        if (empty($lesson->getTitle())) {
-            throw new BadRequestHttpException('Title cannot be blank');
         }
 
         return $lesson;
