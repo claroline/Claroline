@@ -41,5 +41,7 @@ class WidgetContainerCrud
         foreach ($container->getWidgetContainerConfigs() as $config) {
             $this->om->remove($config);
         }
+
+        $this->om->flush();
     }
 }

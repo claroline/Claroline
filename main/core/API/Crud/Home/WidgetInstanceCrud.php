@@ -41,5 +41,7 @@ class WidgetInstanceCrud
         foreach ($instance->getWidgetInstanceConfigs() as $config) {
             $this->om->remove($config);
         }
+
+        $this->om->flush();
     }
 }

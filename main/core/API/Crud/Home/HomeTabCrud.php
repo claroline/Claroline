@@ -52,5 +52,7 @@ class HomeTabCrud
         foreach ($homeTab->getHomeTabConfigs() as $config) {
             $this->om->remove($config);
         }
+
+        $this->om->flush();
     }
 }
