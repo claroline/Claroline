@@ -199,7 +199,7 @@ class BlogOptionsSerializer
 
     /**
      * @param array              $data
-     * @param BlogOptions | null $options
+     * @param BlogOptions | null $blogOptions
      * @param array              $options
      *
      * @return BlogOptions - The deserialized blogOptions entity
@@ -209,21 +209,27 @@ class BlogOptionsSerializer
         if (empty($blogOptions)) {
             $blogOptions = new BlogOptions();
         }
-
         $this->sipe('id', 'setUuid', $data, $blogOptions);
-        $blogOptions->setAuthorizeComment($data['authorizeComment']);
-        $blogOptions->setAuthorizeAnonymousComment($data['authorizeAnonymousComment']);
-        $blogOptions->setPostPerPage($data['postPerPage']);
-        $blogOptions->setAutoPublishPost($data['autoPublishPost']);
-        $blogOptions->setCommentModerationMode($this->getModerationModeIntValue($data['commentModerationMode']));
-        $blogOptions->setDisplayTitle($data['displayTitle']);
-        $blogOptions->setBannerActivate($data['bannerActivate']);
-        $blogOptions->setDisplayPostViewCounter($data['displayPostViewCounter']);
-        $blogOptions->setTagCloud($this->getTagModeIntValue($data['tagCloud']));
-        $blogOptions->setListWidgetBlog($this->deserializeWidgetOrder($data['widgetOrder']));
-        $blogOptions->setTagTopMode($data['tagTopMode']);
-        $blogOptions->setMaxTag($data['maxTag']);
-        $blogOptions->setDisplayFullPosts($data['displayFullPosts']);
+        $this->sipe('authorizeComment', 'setAuthorizeComment', $data, $blogOptions);
+        $this->sipe('authorizeAnonymousComment', 'setAuthorizeAnonymousComment', $data, $blogOptions);
+        $this->sipe('postPerPage', 'setPostPerPage', $data, $blogOptions);
+        $this->sipe('autoPublishPost', 'setAutoPublishPost', $data, $blogOptions);
+        $this->sipe('displayTitle', 'setDisplayTitle', $data, $blogOptions);
+        $this->sipe('bannerActivate', 'setBannerActivate', $data, $blogOptions);
+        $this->sipe('displayPostViewCounter', 'setDisplayPostViewCounter', $data, $blogOptions);
+        $this->sipe('tagTopMode', 'setTagTopMode', $data, $blogOptions);
+        $this->sipe('maxTag', 'setMaxTag', $data, $blogOptions);
+        $this->sipe('displayFullPosts', 'setDisplayFullPosts', $data, $blogOptions);
+
+        if (isset($data['commentModerationMode'])) {
+            $blogOptions->setCommentModerationMode($this->getModerationModeIntValue($data['commentModerationMode']));
+        }
+        if (isset($data['tagCloud'])) {
+            $blogOptions->setTagCloud($this->getTagModeIntValue($data['tagCloud']));
+        }
+        if (isset($data['widgetOrder'])) {
+            $blogOptions->setListWidgetBlog($this->deserializeWidgetOrder($data['widgetOrder']));
+        }
 
         return $blogOptions;
     }

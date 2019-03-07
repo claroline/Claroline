@@ -73,8 +73,8 @@ class BlogSerializer
             $blog = new Blog();
         }
         $this->sipe('id', 'setUuid', $data, $blog);
-        $blog->setName($data['name']);
-        $blog->setInfos($data['infos']);
+        $this->sipe('name', 'setName', $data, $blog);
+        $this->sipe('infos', 'setInfos', $data, $blog);
         $blog->setOptions($this->blogOptionsSerializer->deserialize($data));
 
         return $blog;

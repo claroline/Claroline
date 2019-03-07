@@ -70,8 +70,10 @@ class TextSerializer
         $user = $this->tokenStorage->getToken()->getUser();
 
         // TODO : replace `createRevision`. It calls om flush and persist and this is not allowed in serializer
-        $revision = $this->manager->createRevision($text, $data['content'], 'anon.' === $user ? null : $user);
+        $revision = isset($data['content']) ?
+            $this->manager->createRevision($text, $data['content'], 'anon.' === $user ? null : $user) :
+            null;
 
-        return $revision->getText();
+        return $revision ? $revision->getText() : '';
     }
 }

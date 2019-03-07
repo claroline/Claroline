@@ -12,6 +12,5 @@
       "minLength": 1
     }
   },
-  "required": ["id", "name"],
   "claroIds": ["id"]
 }
