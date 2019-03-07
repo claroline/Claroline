@@ -113,8 +113,7 @@ class PathSerializer
      */
     public function deserialize($data, Path $path)
     {
-        $path->setUuid($data['id']);
-
+        $this->sipe('id', 'setUuid', $data, $path);
         $this->sipe('display.description', 'setDescription', $data, $path);
         $this->sipe('display.showOverview', 'setShowOverview', $data, $path);
         $this->sipe('display.showSummary', 'setShowSummary', $data, $path);
