@@ -110,7 +110,10 @@ class ExerciseSerializer implements SerializerInterface
     public function deserialize($data, $exercise = null, array $options = [])
     {
         $exercise = $exercise ?: new Exercise();
-        $exercise->setUuid($data->id);
+
+        if (isset($data->id)) {
+            $exercise->setUuid($data->id);
+        }
 
         if (in_array(Transfer::REFRESH_UUID, $options)) {
             $exercise->refreshUuid();
