@@ -91,11 +91,13 @@ class WikiSerializer
             $wiki = new Wiki();
         }
         $this->sipe('id', 'setUuid', $data, $wiki);
-        $wiki->setMode($this->getModeIntValue($data['mode']));
+
+        if (isset($data['mode'])) {
+            $wiki->setMode($this->getModeIntValue($data['mode']));
+        }
         if (isset($data['display']['sectionNumbers'])) {
             $wiki->setDisplaySectionNumbers($data['display']['sectionNumbers']);
         }
-
         if (isset($data['display']['contents'])) {
             $wiki->setDisplayContents($data['display']['contents']);
         }
