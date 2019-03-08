@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
@@ -40,12 +41,9 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -97,6 +95,7 @@ class ResourceManager
      *     "ut"                    = @DI\Inject("claroline.utilities.misc"),
      *     "secut"                 = @DI\Inject("claroline.security.utilities"),
      *     "translator"            = @DI\Inject("translator"),
+     *     "serializer"            = @DI\Inject("claroline.api.serializer"),
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler")
      * })
      *
@@ -119,7 +118,8 @@ class ResourceManager
         ClaroUtilities $ut,
         Utilities $secut,
         TranslatorInterface $translator,
-        PlatformConfigurationHandler $platformConfigHandler
+        PlatformConfigurationHandler $platformConfigHandler,
+        SerializerProvider $serializer
     ) {
         $this->om = $om;
 
@@ -132,6 +132,7 @@ class ResourceManager
         $this->translator = $translator;
         $this->platformConfigHandler = $platformConfigHandler;
         $this->filesDirectory = $container->getParameter('claroline.param.files_directory');
+        $this->serializer = $serializer;
 
         $this->resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
         $this->resourceNodeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
@@ -298,27 +299,6 @@ class ResourceManager
     }
 
     /**
-     * Checks if an array of serialized resources share the same parent.
-     *
-     * @param array $nodes
-     *
-     * @return bool
-     */
-    public function haveSameParents(array $nodes)
-    {
-        $firstRes = array_pop($nodes);
-        $tmp = $firstRes['parent_id'];
-
-        foreach ($nodes as $node) {
-            if ($tmp !== $node['parent_id']) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * Set the right of a resource.
      * If $rights = array(), the $parent node rights will be copied.
      *
@@ -385,26 +365,6 @@ class ResourceManager
         }
     }
 
-    public function openResourceForPortal(ResourceNode $node)
-    {
-        $this->rightsManager->editPerms(
-            1,
-            $this->roleManager->getRoleByName('ROLE_USER'),
-            $node,
-            false,
-            [],
-            true
-        );
-        $this->rightsManager->editPerms(
-            1,
-            $this->roleManager->getRoleByName('ROLE_ANONYMOUS'),
-            $node,
-            false,
-            [],
-            true
-        );
-    }
-
     /**
      * Checks if an array of resource type name exists.
      * Expects an array of types array(array('name' => 'type'),...).
@@ -441,68 +401,6 @@ class ResourceManager
         }
 
         return $validTypes;
-    }
-
-    /**
-     * Insert the resource $resource at the 'index' position.
-     *
-     * @param ResourceNode $node
-     * @param int          $index
-     *
-     * @return ResourceNode
-     */
-    public function insertAtIndex(ResourceNode $node, $index)
-    {
-        $this->om->startFlushSuite();
-
-        if ($index > $node->getIndex()) {
-            $this->shiftLeftAt($node->getParent(), $index);
-            $node->setIndex($index);
-        } else {
-            $this->shiftRightAt($node->getParent(), $index);
-            $node->setIndex($index);
-        }
-
-        $this->om->persist($node);
-        $this->om->forceFlush();
-        $this->reorder($node->getParent());
-        $this->om->endFlushSuite();
-    }
-
-    /**
-     * @param ResourceNode $parent
-     * @param int          $index
-     */
-    public function shiftRightAt(ResourceNode $parent, $index)
-    {
-        $nodes = $parent->getChildren();
-
-        foreach ($nodes as $node) {
-            if ($node->getIndex() >= $index) {
-                $node->setIndex($node->getIndex() + 1);
-            }
-            $this->om->persist($node);
-        }
-
-        $this->om->flush();
-    }
-
-    /**
-     * @param ResourceNode $parent
-     * @param int          $index
-     */
-    public function shiftLeftAt(ResourceNode $parent, $index)
-    {
-        $nodes = $parent->getChildren();
-
-        foreach ($nodes as $node) {
-            if ($node->getIndex() <= $index) {
-                $node->setIndex($node->getIndex() - 1);
-            }
-            $this->om->persist($node);
-        }
-
-        $this->om->flush();
     }
 
     /**
@@ -587,79 +485,6 @@ class ResourceManager
         if ($autoFlush) {
             $this->om->flush();
         }
-    }
-
-    /**
-     * Checks if a resource in a node has a link to the target with a shortcut.
-     *
-     * @param ResourceNode $parent
-     * @param ResourceNode $target
-     *
-     * @return bool
-     *
-     * @deprecated
-     */
-    public function hasLinkTo(ResourceNode $parent, ResourceNode $target)
-    {
-        $nodes = $this->resourceNodeRepo
-            ->findBy(['parent' => $parent, 'class' => 'Claroline\LinkBundle\Entity\Resource\Shortcut']);
-
-        foreach ($nodes as $node) {
-            $shortcut = $this->getResourceFromNode($node);
-            if ($shortcut->getTarget() === $target) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Checks if a path is valid.
-     *
-     * @param array $ancestors
-     *
-     * @return bool
-     */
-    public function isPathValid(array $ancestors)
-    {
-        $continue = true;
-
-        for ($i = 0, $size = count($ancestors); $i < $size; ++$i) {
-            if (isset($ancestors[$i + 1])) {
-                if ($ancestors[$i + 1]->getParent() === $ancestors[$i]) {
-                    $continue = true;
-                } else {
-                    $continue = $this->hasLinkTo($ancestors[$i], $ancestors[$i + 1]);
-                }
-            }
-
-            if (!$continue) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Checks if all the resource in the array are directories.
-     *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode[] $ancestors
-     *
-     * @return bool
-     */
-    public function areAncestorsDirectory(array $ancestors)
-    {
-        array_pop($ancestors);
-
-        foreach ($ancestors as $ancestor) {
-            if ('directory' !== $ancestor->getResourceType()->getName()) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     /**
@@ -932,33 +757,6 @@ class ResourceManager
         }
 
         $this->om->endFlushSuite();
-
-        if (!$softDelete && $resourceNode->getParent()) {
-            $this->reorder($resourceNode->getParent());
-        }
-    }
-
-    /**
-     * Restores a soft deleted resource node.
-     *
-     * @param ResourceNode $resourceNode
-     */
-    public function restore(ResourceNode $resourceNode)
-    {
-        $this->setActive($resourceNode);
-        $workspace = $resourceNode->getWorkspace();
-
-        if ($workspace) {
-            $root = $this->getWorkspaceRoot($workspace);
-            $resourceNode->setParent($root);
-        }
-
-        $name = substr($resourceNode->getName(), 0, strrpos($resourceNode->getName(), '_'));
-        $resourceNode->setName($name);
-        $resourceNode->setName($this->getUniqueName($resourceNode));
-
-        $this->om->persist($resourceNode);
-        $this->om->flush();
     }
 
     public function setActive(ResourceNode $node)
@@ -1250,18 +1048,6 @@ class ResourceManager
     }
 
     /**
-     * @param string          $mimeType
-     * @param ResourceNode    $parent
-     * @param string[]|Role[] $roles
-     *
-     * @return array
-     */
-    public function getByMimeTypeAndParent($mimeType, ResourceNode $parent, array $roles)
-    {
-        return $this->resourceNodeRepo->findByMimeTypeAndParent($mimeType, $parent, $roles);
-    }
-
-    /**
      * @param string $name
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceType
@@ -1289,26 +1075,6 @@ class ResourceManager
     public function getByWorkspace(Workspace $workspace)
     {
         return $this->resourceNodeRepo->findBy(['workspace' => $workspace]);
-    }
-
-    /**
-     * @param Workspace    $workspace
-     * @param ResourceType $resourceType
-     * @param bool         $filterDeleted
-     *
-     * @return ResourceNode[]
-     */
-    public function getByWorkspaceAndResourceType(
-        Workspace $workspace,
-        ResourceType $resourceType,
-        $filterDeleted = false
-    ) {
-        $findBy = ['workspace' => $workspace, 'resourceType' => $resourceType];
-        if ($filterDeleted) {
-            $findBy['active'] = true;
-        }
-
-        return $this->resourceNodeRepo->findBy($findBy, ['name' => 'ASC']);
     }
 
     /**
@@ -1384,21 +1150,17 @@ class ResourceManager
     ) {
         /** @var ResourceNode $newNode */
         $newNode = new ResourceNode();
+
+        $serialized = $this->serializer->serialize($node);
+        unset($serialized['rights']);
+        $this->serializer->get(ResourceNode::class)->deserialize($serialized, $newNode);
+
         $newNode->setResourceType($node->getResourceType());
         $newNode->setCreator($user);
         $newNode->setWorkspace($newParent->getWorkspace());
         $newNode->setParent($newParent);
         $newParent->addChild($newNode);
         $newNode->setName($this->getUniqueName($node, $newParent, true));
-        $newNode->setIcon($node->getIcon());
-        $newNode->setMimeType($node->getMimeType());
-        $newNode->setAccessibleFrom($node->getAccessibleFrom());
-        $newNode->setAccessibleUntil($node->getAccessibleUntil());
-        $newNode->setPublished($node->isPublished());
-        $newNode->setDeletable($node->isDeletable());
-        $newNode->setLicense($node->getLicense());
-        $newNode->setAuthor($node->getAuthor());
-        $newNode->setIndex($index);
 
         if ($withRights) {
             //if everything happens inside the same workspace and no specific rights have been given,
@@ -1419,48 +1181,6 @@ class ResourceManager
     private function getEncoding()
     {
         return 'UTF-8//TRANSLIT';
-    }
-
-    /**
-     * Returns true of the token owns the workspace of the resource node.
-     *
-     * @param ResourceNode   $node
-     * @param TokenInterface $token
-     *
-     * @return bool
-     */
-    public function isWorkspaceOwnerOf(ResourceNode $node, TokenInterface $token)
-    {
-        $workspace = $node->getWorkspace();
-        $managerRoleName = 'ROLE_WS_MANAGER_'.$workspace->getGuid();
-
-        return in_array($managerRoleName, $this->secut->getRoles($token)) ? true : false;
-    }
-
-    /**
-     * Retrieves all descendants of given ResourceNode and updates their
-     * accessibility dates.
-     *
-     * @param ResourceNode $node            A directory
-     * @param \DateTime    $accessibleFrom
-     * @param \DateTime    $accessibleUntil
-     */
-    public function changeAccessibilityDate(
-        ResourceNode $node,
-        $accessibleFrom,
-        $accessibleUntil
-    ) {
-        if ('directory' === $node->getResourceType()->getName()) {
-            $descendants = $this->resourceNodeRepo->findDescendants($node);
-
-            /** @var ResourceNode $descendant */
-            foreach ($descendants as $descendant) {
-                $descendant->setAccessibleFrom($accessibleFrom);
-                $descendant->setAccessibleUntil($accessibleUntil);
-                $this->om->persist($descendant);
-            }
-            $this->om->flush();
-        }
     }
 
     /**
@@ -1506,26 +1226,6 @@ class ResourceManager
     }
 
     /**
-     * Check if a file can be added in the workspace storage dir (disk usage limit).
-     *
-     * @todo move into workspace manager
-     *
-     * @param Workspace    $workspace
-     * @param \SplFileInfo $file
-     *
-     * @return bool
-     */
-    public function checkEnoughStorageSpaceLeft(Workspace $workspace, \SplFileInfo $file)
-    {
-        $workspaceManager = $this->container->get('claroline.manager.workspace_manager');
-        $fileSize = filesize($file);
-        $allowedMaxSize = $this->ut->getRealFileSize($workspace->getMaxStorageSize());
-        $currentStorage = $this->ut->getRealFileSize($workspaceManager->getUsedStorage($workspace));
-
-        return ($currentStorage + $fileSize > $allowedMaxSize) ? false : true;
-    }
-
-    /**
      * Check if a ResourceNode can be added in a Workspace (resource amount limit).
      *
      * @todo move into workspace manager
@@ -1540,35 +1240,6 @@ class ResourceManager
         $maxFileStorage = $workspace->getMaxUploadResources();
 
         return ($maxFileStorage < $workspaceManager->countResources($workspace)) ? true : false;
-    }
-
-    /**
-     * Adds the storage exceeded error in a form.
-     *
-     * @todo move into workspace manager
-     *
-     * @param Form      $form
-     * @param int       $fileSize
-     * @param Workspace $workspace
-     */
-    public function addStorageExceededFormError(Form $form, $fileSize, Workspace $workspace)
-    {
-        $maxSize = $this->ut->getRealFileSize($workspace->getMaxStorageSize());
-        $usedSize = $this->ut->getRealFileSize(
-            $this->container->get('claroline.manager.workspace_manager')->getUsedStorage($workspace)
-        );
-
-        $storageLeft = $maxSize - $usedSize;
-        $fileSize = $this->ut->formatFileSize($this->ut->getRealFileSize($fileSize));
-        $storageLeft = $this->ut->formatFileSize($storageLeft);
-
-        $translator = $this->container->get('translator');
-        $msg = $translator->trans(
-            'storage_limit_exceeded',
-            ['%storageLeft%' => $storageLeft, '%fileSize%' => $fileSize],
-            'platform'
-        );
-        $form->addError(new FormError($msg));
     }
 
     /**
@@ -1709,56 +1380,6 @@ class ResourceManager
         }
 
         $this->om->flush();
-    }
-
-    /**
-     * @param $file
-     *
-     * @deprecated use new import/export system
-     */
-    public function importDirectoriesFromCsv($file)
-    {
-        $data = file_get_contents($file);
-        $data = $this->container->get('claroline.utilities.misc')->formatCsvOutput($data);
-        $lines = str_getcsv($data, PHP_EOL);
-        $this->om->startFlushSuite();
-        $i = 0;
-
-        /** @var ResourceType $resourceType */
-        $resourceType = $this->resourceTypeRepo->findOneBy(['name' => 'directory']);
-
-        foreach ($lines as $line) {
-            $values = str_getcsv($line, ';');
-            $code = $values[0];
-
-            /** @var Workspace $workspace */
-            $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['code' => $code]);
-
-            $name = $values[1];
-            $directory = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneBy([
-                'workspace' => $workspace,
-                'name' => $name,
-                'resourceType' => $resourceType,
-            ]);
-            if (!$directory) {
-                $directory = new Directory();
-                $directory->setName($name);
-                $this->log("Create directory {$name} for workspace {$code}");
-                $this->create($directory, $resourceType, $workspace->getCreator(), $workspace, $this->getWorkspaceRoot($workspace));
-                ++$i;
-            } else {
-                $this->log("Directory {$name} already exists for workspace {$code}");
-            }
-
-            if (0 === $i % 100) {
-                $this->om->forceFlush();
-                $this->om->clear();
-                $resourceType = $this->resourceTypeRepo->findOneBy(['name' => 'directory']);
-                $this->om->merge($resourceType);
-            }
-        }
-
-        $this->om->endFlushSuite();
     }
 
     /**

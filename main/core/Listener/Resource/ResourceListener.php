@@ -265,6 +265,7 @@ class ResourceListener
 
         if (!empty($parent) && 'anon.' !== $user) {
             $newResource = $this->manager->copy($resourceNode, $parent, $user);
+
             $event->setResponse(
                 new JsonResponse($this->serializer->serialize($newResource->getResourceNode()))
             );

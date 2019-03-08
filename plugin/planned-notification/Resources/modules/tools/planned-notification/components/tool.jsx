@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
-
+import {withRouter} from '#/main/app/router'
 import {trans} from '#/main/app/intl/translation'
 import {TabbedPageContainer} from '#/main/core/layout/tabs'
 
@@ -42,11 +42,11 @@ Tool.propTypes = {
   canEdit: T.bool.isRequired
 }
 
-const PlannedNotificationTool = connect(
+const PlannedNotificationTool = withRouter(connect(
   state => ({
     canEdit: select.canEdit(state)
   })
-)(Tool)
+)(Tool))
 
 export {
   PlannedNotificationTool

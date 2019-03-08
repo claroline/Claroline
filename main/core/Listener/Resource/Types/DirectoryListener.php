@@ -237,35 +237,8 @@ class DirectoryListener
         $original = $event->getResource();
 
         $copy = new Directory();
-
-        $copy->setUploadDestination($original->isUploadDestination());
-
-        // summary
-        $copy->setShowSummary($original->getShowSummary());
-        $copy->setOpenSummary($original->getOpenSummary());
-
-        // list
-        $copy->setFilterable($original->isFilterable());
-        $copy->setSortable($original->isSortable());
-        $copy->setPaginated($original->isPaginated());
-        $copy->setColumnsFilterable($original->isColumnsFilterable());
-        $copy->setCount($original->hasCount());
-        $copy->setActions($original->hasActions());
-        $copy->setSortBy($original->getSortBy());
-        $copy->setAvailableSort($original->getAvailableSort());
-        $copy->setPageSize($original->getPageSize());
-        $copy->setAvailablePageSizes($original->getAvailablePageSizes());
-        $copy->setDisplay($original->getDisplay());
-        $copy->setAvailableDisplays($original->getAvailableDisplays());
-        $copy->setSearchMode($original->getSearchMode());
-        $copy->setFilters($original->getFilters());
-        $copy->setAvailableFilters($original->getAvailableFilters());
-        $copy->setAvailableColumns($original->getAvailableColumns());
-        $copy->setDisplayedColumns($original->getDisplayedColumns());
-        $copy->setCard($original->getCard());
-
-        $this->om->persist($copy);
-
+        $serialized = $this->serializer->serialize($original);
+        $copy = $this->serializer->get(Directory::class)->deserialize($serialized, $copy);
         $event->setCopy($copy);
     }
 }

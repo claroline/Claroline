@@ -7,6 +7,7 @@ import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {withRouter} from '#/main/app/router'
 
 import {select} from '#/plugin/planned-notification/tools/planned-notification/selectors'
 import {actions} from '#/plugin/planned-notification/tools/planned-notification/message/actions'
@@ -45,7 +46,7 @@ MessageTabComponent.propTypes = {
   openForm: T.func.isRequired
 }
 
-const MessageTab = connect(
+const MessageTab = withRouter(connect(
   state => ({
     workspace: select.workspace(state)
   }),
@@ -59,7 +60,7 @@ const MessageTab = connect(
       dispatch(actions.open('messages.current', id, defaultValue))
     }
   })
-)(MessageTabComponent)
+)(MessageTabComponent))
 
 export {
   MessageTabActions,

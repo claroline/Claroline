@@ -58,7 +58,7 @@ class PlannedNotificationSerializer
      *
      * @return array
      */
-    public function serialize(PlannedNotification $notification)
+    public function serialize(PlannedNotification $notification, array $options)
     {
         return [
             'id' => $notification->getUuid(),
@@ -82,9 +82,11 @@ class PlannedNotificationSerializer
      *
      * @return PlannedNotification
      */
-    public function deserialize($data, PlannedNotification $notification)
+    public function deserialize($data, PlannedNotification $notification, array $options)
     {
-        $notification->setUuid($data['id']);
+        if (!in_array(Options::GENERATE_UUID, $options)) {
+            $notification->setUuid($data['id']);
+        }
 
         $this->sipe('parameters.action', 'setAction', $data, $notification);
         $this->sipe('parameters.interval', 'setInterval', $data, $notification);

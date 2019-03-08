@@ -15,7 +15,6 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
-use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\GenericDataEvent;
@@ -223,9 +222,34 @@ class FileListener
     public function onCopy(CopyResourceEvent $event)
     {
         /** @var File $file */
-        $file = $event->getResource();
+        $resource = $event->getResource();
+        $destParent = $event->getParent();
+        $workspace = $destParent->getWorkspace();
+        $newFile = new File();
+        $newFile->setSize($resource->getSize());
+        $newFile->setName($resource->getName());
+        $newFile->setMimeType($resource->getMimeType());
+        $hashName = join('.', [
+            'WORKSPACE_'.$workspace->getId(),
+            Uuid::uuid4()->toString(),
+            pathinfo($resource->getHashName(), PATHINFO_EXTENSION),
+        ]);
+        $newFile->setHashName($hashName);
+        $filePath = $this->filesDir.DIRECTORY_SEPARATOR.$resource->getHashName();
+        $newPath = $this->filesDir.DIRECTORY_SEPARATOR.$hashName;
+        $workspaceDir = $this->filesDir.DIRECTORY_SEPARATOR.'WORKSPACE_'.$workspace->getId();
 
-        $newFile = $this->copy($file, $event->getParent());
+        if (!is_dir($workspaceDir)) {
+            mkdir($workspaceDir);
+        }
+
+        try {
+            copy($filePath, $newPath);
+        } catch (\Exception $e) {
+            //do nothing yet
+            //maybe log an error
+        }
+
         $event->setCopy($newFile);
 
         $event->stopPropagation();
@@ -266,45 +290,6 @@ class FileListener
     }
 
     /**
-     * Copies a file (no persistence).
-     *
-     * @param File         $resource
-     * @param ResourceNode $destParent
-     *
-     * @return File
-     */
-    private function copy(File $resource, ResourceNode $destParent)
-    {
-        $workspace = $destParent->getWorkspace();
-        $newFile = new File();
-        $newFile->setSize($resource->getSize());
-        $newFile->setName($resource->getName());
-        $newFile->setMimeType($resource->getMimeType());
-        $hashName = join('.', [
-            'WORKSPACE_'.$workspace->getId(),
-            Uuid::uuid4()->toString(),
-            pathinfo($resource->getHashName(), PATHINFO_EXTENSION),
-        ]);
-        $newFile->setHashName($hashName);
-        $filePath = $this->filesDir.DIRECTORY_SEPARATOR.$resource->getHashName();
-        $newPath = $this->filesDir.DIRECTORY_SEPARATOR.$hashName;
-        $workspaceDir = $this->filesDir.DIRECTORY_SEPARATOR.'WORKSPACE_'.$workspace->getId();
-
-        if (!is_dir($workspaceDir)) {
-            mkdir($workspaceDir);
-        }
-
-        try {
-            copy($filePath, $newPath);
-        } catch (\Exception $e) {
-            //do nothing yet
-            //maybe log an error
-        }
-
-        return $newFile;
-    }
-
-    /**
      * @DI\Observe("generate_resource_user_evaluation_file")
      *
      * @param GenericDataEvent $event
@@ -334,93 +319,5 @@ class FileListener
             $this->om->endFlushSuite();
         }
         $event->stopPropagation();
-    }
-
-    private function uploadDir(
-        $dir,
-        ResourceNode $parent,
-        array $perms,
-        $first = false,
-        $published = true
-    ) {
-        $resources = [];
-        $iterator = new \DirectoryIterator($dir);
-
-        foreach ($iterator as $item) {
-            if ($item->isFile()) {
-                $resources[] = $this->uploadFile($item, $parent, $perms, $published);
-            }
-
-            if ($item->isDir() && !$item->isDot()) {
-                //create new dir
-                $directory = new Directory();
-                $directory->setName($item->getBasename());
-                $resources[] = $this->resourceManager->create(
-                    $directory,
-                    $this->resourceManager->getResourceTypeByName('directory'),
-                    $this->tokenStorage->getToken()->getUser(),
-                    $parent->getWorkspace(),
-                    $parent,
-                    null,
-                    $perms,
-                    $published
-                );
-
-                $this->uploadDir(
-                    $dir.DIRECTORY_SEPARATOR.$item->getBasename(),
-                    $directory->getResourceNode(),
-                    $perms,
-                    false,
-                    $published
-                );
-            }
-        }
-
-        // set order manually as we are inside a flush suite
-        for ($i = 0, $count = count($resources); $i < $count; ++$i) {
-            $resources[$i]->getResourceNode()->setIndex($i + 1);
-        }
-
-        return $resources;
-    }
-
-    private function uploadFile(
-        \DirectoryIterator $file,
-        ResourceNode $parent,
-        array $perms,
-        $published = true
-    ) {
-        $workspaceId = $parent->getWorkspace()->getId();
-        $entityFile = new File();
-        $fileName = $file->getFilename();
-        $size = @filesize($file);
-        $extension = pathinfo($fileName, PATHINFO_EXTENSION);
-
-        // why don't we retrieve it directly from the file info .
-        $mimeType = $this->mimeTypeGuesser->guess($extension);
-
-        $hashName = join('.', [
-            'WORKSPACE_'.$workspaceId,
-            Uuid::uuid4()->toString(),
-            $extension,
-        ]);
-
-        $destination = $this->filesDir.DIRECTORY_SEPARATOR.$hashName;
-        copy($file->getPathname(), $destination);
-        $entityFile->setSize($size);
-        $entityFile->setName($fileName);
-        $entityFile->setHashName($hashName);
-        $entityFile->setMimeType($mimeType);
-
-        return $this->resourceManager->create(
-            $entityFile,
-            $this->resourceManager->getResourceTypeByName('file'),
-            $this->tokenStorage->getToken()->getUser(),
-            $parent->getWorkspace(),
-            $parent,
-            null,
-            $perms,
-            $published
-        );
     }
 }

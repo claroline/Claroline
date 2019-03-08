@@ -11,10 +11,17 @@
 
 namespace Claroline\PlannedNotificationBundle\Listener;
 
+use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\LogRoleSubscribeEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
+use Claroline\CoreBundle\Event\WorkspaceCopyToolEvent;
+use Claroline\PlannedNotificationBundle\Entity\Message;
+use Claroline\PlannedNotificationBundle\Entity\PlannedNotification;
 use Claroline\PlannedNotificationBundle\Manager\PlannedNotificationManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
@@ -41,7 +48,10 @@ class PlannedNotificationListener
      *     "authorization" = @DI\Inject("security.authorization_checker"),
      *     "manager"       = @DI\Inject("claroline.manager.planned_notification_manager"),
      *     "templating"    = @DI\Inject("templating"),
-     *     "tokenStorage"  = @DI\Inject("security.token_storage")
+     *     "tokenStorage"  = @DI\Inject("security.token_storage"),
+     *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
+     *     "crud"          = @DI\Inject("claroline.api.crud"),
+     *     "finder"        = @DI\Inject("claroline.api.finder")
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
@@ -53,12 +63,18 @@ class PlannedNotificationListener
         AuthorizationCheckerInterface $authorization,
         PlannedNotificationManager $manager,
         TwigEngine $templating,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        Crud $crud,
+        FinderProvider $finder,
+        ObjectManager $om
     ) {
         $this->authorization = $authorization;
         $this->manager = $manager;
         $this->templating = $templating;
         $this->tokenStorage = $tokenStorage;
+        $this->om = $om;
+        $this->crud = $crud;
+        $this->finder = $finder;
     }
 
     /**
@@ -110,5 +126,52 @@ class PlannedNotificationListener
                 $this->manager->generateScheduledTasks($event->getAction(), $user, $event->getWorkspace());
             }
         }
+    }
+
+    /**
+     * @DI\Observe("workspace_copy_tool_claroline_planned_notification_tool")
+     *
+     * @param WorkspaceCopyToolEvent $event
+     */
+    public function onWorkspaceToolCopy(WorkspaceCopyToolEvent $event)
+    {
+        $oldWs = $event->getOldWorkspace();
+        $workspace = $event->getNewWorkspace();
+
+        $planned = $this->finder->fetch(PlannedNotification::class, ['workspace' => $oldWs->getUuid()]);
+        $oldMessages = $this->finder->fetch(Message::class, ['workspace' => $oldWs->getUuid()]);
+        $newNotifs = [];
+
+        foreach ($planned as $old) {
+            $new = $this->crud->copy($old, [Options::GENERATE_UUID]);
+            $new->setWorkspace($workspace);
+            $new->emptyRoles();
+
+            foreach ($old->getRoles() as $role) {
+                foreach ($workspace->getRoles() as $wsRole) {
+                    if ($wsRole->getTranslationKey() === $role->getTranslationKey()) {
+                        $new->addRole($wsRole);
+                    }
+                }
+            }
+            $newNotifs[$old->getId()] = $new;
+            $this->om->persist($new);
+        }
+
+        foreach ($oldMessages as $old) {
+            $new = $this->crud->copy($old, [Options::GENERATE_UUID]);
+            $new->setWorkspace($workspace);
+            $new->emptyNotifications();
+
+            foreach ($old->getNotifications() as $oldNotification) {
+                if (isset($newNotifs[$oldNotification->getId()])) {
+                    $new->addNotification($newNotifs[$oldNotification->getId()]);
+                }
+            }
+
+            $this->om->persist($new);
+        }
+
+        $this->om->flush();
     }
 }

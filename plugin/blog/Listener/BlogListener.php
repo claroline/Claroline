@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\BlogBundle\Entity\Blog;
+use Icap\BlogBundle\Entity\BlogOptions;
 use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Manager\PostManager;
@@ -125,9 +126,10 @@ class BlogListener
         $blog = $event->getResource();
 
         $newBlog = new Blog();
+        $newOptions = new BlogOptions();
+        $newBlog->setOptions($newOptions);
 
-        $entityManager->persist($newBlog);
-        $entityManager->flush($newBlog);
+        $this->container->get('icap_blog.manager.blog')->updateOptions($newBlog, $blog->getOptions(), $blog->getInfos());
 
         foreach ($blog->getPosts() as $post) {
             /** @var \Icap\BlogBundle\Entity\Post $newPost */

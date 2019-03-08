@@ -2,6 +2,7 @@
 
 namespace Claroline\PlannedNotificationBundle\Serializer;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\PlannedNotificationBundle\Entity\Message;
@@ -59,9 +60,11 @@ class MessageSerializer
      *
      * @return Message
      */
-    public function deserialize($data, Message $message)
+    public function deserialize($data, Message $message, array $options)
     {
-        $message->setUuid($data['id']);
+        if (!in_array(Options::GENERATE_UUID, $options)) {
+            $message->setUuid($data['id']);
+        }
 
         $this->sipe('title', 'setTitle', $data, $message);
         $this->sipe('content', 'setContent', $data, $message);

@@ -7,6 +7,7 @@ import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {withRouter} from '#/main/app/router'
 
 import {select} from '#/plugin/planned-notification/tools/planned-notification/selectors'
 import {WORKSPACE_REGISTRATION_USER} from '#/plugin/planned-notification/tools/planned-notification/constants'
@@ -57,7 +58,7 @@ NotificationTabComponent.propTypes = {
   openForm: T.func.isRequired
 }
 
-const NotificationTab = connect(
+const NotificationTab = withRouter(connect(
   state => ({
     workspace: select.workspace(state)
   }),
@@ -77,7 +78,7 @@ const NotificationTab = connect(
       dispatch(actions.open('notifications.current', id, defaultValue))
     }
   })
-)(NotificationTabComponent)
+)(NotificationTabComponent))
 
 export {
   NotificationTabActions,

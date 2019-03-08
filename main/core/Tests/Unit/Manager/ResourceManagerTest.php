@@ -134,14 +134,6 @@ class ResourceManagerTest extends MockeryTestCase
         $this->assertEquals($uniquename, $generatedName);
     }
 
-    /**
-     * @dataProvider parentAsArrayProvider
-     */
-    public function testhaveSameParents($parents, $result)
-    {
-        $this->assertEquals($result, $this->getManager()->haveSameParents($parents));
-    }
-
     public function testFindAndSortChildren()
     {
         $resources = [
@@ -161,34 +153,6 @@ class ResourceManagerTest extends MockeryTestCase
         $parent = $parent = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $this->resourceNodeRepo->shouldReceive('findChildren')->once()->andReturn($resources);
         $sorted = $this->getManager()->findAndSortChildren($parent);
-        $this->assertEquals($sorted, $result);
-    }
-
-    public function testSort()
-    {
-        $fullSort = [
-            ['previous_id' => null, 'id' => 1],
-            ['previous_id' => 1, 'id' => 2],
-            ['previous_id' => 2, 'id' => 3],
-            ['previous_id' => 3, 'id' => 4],
-        ];
-
-        $resources = [
-            ['previous_id' => 2, 'id' => 3, 'parent_id' => 42],
-            ['previous_id' => null, 'id' => 1],
-        ];
-
-        $result = [
-            ['previous_id' => null, 'id' => 1],
-            ['previous_id' => 2, 'id' => 3, 'parent_id' => 42],
-        ];
-
-        $parent = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
-        $this->resourceNodeRepo->shouldReceive('find')->once()->andReturn($parent);
-        $manager = $this->getManager(['haveSameParents', 'findAndSortChildren']);
-        $manager->shouldReceive('haveSameParents')->once()->andReturn(true);
-        $manager->shouldReceive('findAndSortChildren')->once()->andReturn($fullSort);
-        $sorted = $manager->sort($resources);
         $this->assertEquals($sorted, $result);
     }
 
@@ -252,30 +216,6 @@ class ResourceManagerTest extends MockeryTestCase
         $this->roleRepo->shouldReceive('findOneBy')->times(2)->andReturn($roleA);
         $this->rightsManager->shouldReceive('create')->times(count($rights) + 2);
         $manager->createRights($res, $rights);
-    }
-
-    /**
-     * @dataProvider areAncestorsDirectoryProvider
-     */
-    public function testAreAncestorsDirectory($ancestors, $expected)
-    {
-        $this->markTestSkipped('Something wrong with the data provider...');
-
-        $result = $this->getManager()->areAncestorsDirectory($ancestors);
-        $this->assertEquals($expected, $result);
-    }
-
-    /**
-     * @dataProvider isPathValidProvider
-     */
-    public function testIsPathValid($breadcrumbs, $expectedResult)
-    {
-        $this->markTestSkipped('Something wrong with the data provider...');
-
-        $manager = $this->getManager(['hasLinkTo']);
-        $manager->shouldReceive('hasLinkTo')->andReturn($expectedResult);
-        $result = $manager->isPathValid($breadcrumbs);
-        $this->assertEquals($result, $expectedResult);
     }
 
     /**
