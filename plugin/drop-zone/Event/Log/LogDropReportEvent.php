@@ -29,7 +29,7 @@ class LogDropReportEvent extends AbstractLogResourceEvent implements NotifiableI
             'report' => [
                 'drop' => $drop,
                 'correction' => $correction,
-                'report_comment' => $correction->getReportComment(),
+                'report_comment' => $correction->getReportedComment(),
                 'dropzoneId' => $dropzone->getId(),
                 'dropId' => $drop->getId(),
                 'correctionId' => $correction->getId(),
