@@ -576,7 +576,9 @@ class WorkspaceManager
             [$role, $user]
         );
 
-        if ($user->getUuid() === $this->container->get('security.token_storage')->getToken()->getUser()->getUuid()) {
+        $tokenUser = $this->container->get('security.token_storage')->getToken()->getUser();
+
+        if (!is_string($tokenUser) && $user->getUuid() === $tokenUser->getUuid()) {
             $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
             $this->container->get('security.token_storage')->setToken($token);
         }
