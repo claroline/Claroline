@@ -1436,6 +1436,26 @@ class ResourceManager
         return $node;
     }
 
+    /**
+     * Restores a soft deleted resource node.
+     *
+     * @param ResourceNode $resourceNode
+     */
+    public function restore(ResourceNode $resourceNode)
+    {
+        $this->setActive($resourceNode);
+        $workspace = $resourceNode->getWorkspace();
+        if ($workspace) {
+            $root = $this->getWorkspaceRoot($workspace);
+            $resourceNode->setParent($root);
+        }
+        $name = substr($resourceNode->getName(), 0, strrpos($resourceNode->getName(), '_'));
+        $resourceNode->setName($name);
+        $resourceNode->setName($this->getUniqueName($resourceNode));
+        $this->om->persist($resourceNode);
+        $this->om->flush();
+    }
+
     public function load(ResourceNode $resourceNode, $embedded = false)
     {
         // maybe use a specific log ?
