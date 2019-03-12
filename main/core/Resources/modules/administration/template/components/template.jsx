@@ -38,6 +38,10 @@ const generateSections = (defaultLocale, locales) => {
           type: 'html',
           label: trans('content'),
           required: true
+        }, {
+          name: 'defineAsDefault',
+          type: 'boolean',
+          label: trans('define_as_default_for_type', {}, 'template')
         }
       ]
     }

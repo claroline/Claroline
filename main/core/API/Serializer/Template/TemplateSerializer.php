@@ -130,6 +130,11 @@ class TemplateSerializer
                 }
             }
         }
+        if (isset($data['defineAsDefault']) && $template->getType()) {
+            $templateType = $template->getType();
+            $templateType->setDefaultTemplate($template->getName());
+            $this->om->persist($templateType);
+        }
 
         return $template;
     }
