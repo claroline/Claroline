@@ -7,14 +7,14 @@ import {trans} from '#/main/app/intl/translation'
  * It also allows to disable and hide some editor properties
  */
 
-export const QUIZ_CONCEPTUALIZATION = 'conceptualization'
-export const QUIZ_FORMATIVE         = 'formative'
-export const QUIZ_SUMMATIVE         = 'summative'
-export const QUIZ_CERTIFICATIVE     = 'certificative'
-export const QUIZ_SURVEY            = 'survey'
-export const QUIZ_CUSTOM            = 'custom'
+const QUIZ_CONCEPTUALIZATION = 'conceptualization'
+const QUIZ_FORMATIVE         = 'formative'
+const QUIZ_SUMMATIVE         = 'summative'
+const QUIZ_CERTIFICATIVE     = 'certificative'
+const QUIZ_SURVEY            = 'survey'
+const QUIZ_CUSTOM            = 'custom'
 
-export const QUIZ_TYPE_DEFAULT = QUIZ_CUSTOM
+const QUIZ_TYPE_DEFAULT = QUIZ_CUSTOM
 
 /**
  * Type : Conceptualization
@@ -118,11 +118,23 @@ const customType = {
   }
 }
 
-export const QUIZ_TYPES = {
+const QUIZ_TYPES = {
   [QUIZ_CONCEPTUALIZATION]: conceptualizationType,
   [QUIZ_FORMATIVE]        : formativeType,
   [QUIZ_SUMMATIVE]        : summativeType,
   [QUIZ_CERTIFICATIVE]    : certificativeType,
   [QUIZ_SURVEY]           : surveyType,
   [QUIZ_CUSTOM]           : customType
+}
+
+export {
+  QUIZ_TYPES,
+  QUIZ_TYPE_DEFAULT,
+
+  QUIZ_CONCEPTUALIZATION,
+  QUIZ_FORMATIVE,
+  QUIZ_SUMMATIVE,
+  QUIZ_CERTIFICATIVE,
+  QUIZ_SURVEY,
+  QUIZ_CUSTOM
 }

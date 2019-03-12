@@ -87,6 +87,16 @@ const ChoiceEditor = props =>
             render: (choiceItem, choiceErrors) => {
               return (
                 <div>choice list</div>
+                /*<Choices
+                  addChoice={(choice) => {
+                    //
+                    const newChoices = props.item.choices.slice()
+                    newChoices.push(choice)
+                    //
+
+                    props.update('choices', newChoices)
+                  }}
+                />*/
               )
             },
             validate: (choiceItem) => {

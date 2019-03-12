@@ -24,6 +24,7 @@ const ItemType = {
       statistics: T.element.isRequired
     }),
 
+    create: T.func,
     validate: T.func
   },
 

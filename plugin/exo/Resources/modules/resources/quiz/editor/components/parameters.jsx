@@ -9,7 +9,7 @@ import {QuizType} from '#/plugin/exo/resources/quiz/components/type'
 import {constants} from '#/plugin/exo/resources/quiz/constants'
 
 const hasOverview = (quiz) => get(quiz, 'parameters.showOverview')
-const hasEnd  = (quiz) => get(quiz, 'parameters.showEndPage')
+const hasEnd = (quiz) => get(quiz, 'parameters.showEndPage')
 
 const EditorParameters = props =>
   <Fragment>
@@ -199,6 +199,7 @@ const EditorParameters = props =>
                   type: 'choice',
                   options: {
                     condensed: true,
+                    choices: {}
                   }
                 }
               ]

@@ -56,38 +56,6 @@ function decorate(item) {
 
 function reduce(item = {}, action) {
   switch (action.type) {
-    case ITEM_CREATE: {
-      const firstChoiceId = makeId()
-      const secondChoiceId = makeId()
-      return decorate(Object.assign({}, item, {
-        multiple: false,
-        random: false,
-        choices: [
-          {
-            id: firstChoiceId,
-            type: 'text/html',
-            data: ''
-          },
-          {
-            id: secondChoiceId,
-            type: 'text/html',
-            data: ''
-          }
-        ],
-        solutions: [
-          {
-            id: firstChoiceId,
-            score: 1,
-            feedback: ''
-          },
-          {
-            id: secondChoiceId,
-            score: 0,
-            feedback: ''
-          }
-        ]
-      }))
-    }
     case UPDATE_PROP: {
       let value = action.value
 
@@ -130,7 +98,7 @@ function reduce(item = {}, action) {
       }
 
       return setChoiceTicks(newItem)
-    }
+    }/*
     case ADD_CHOICE: {
       const newItem = cloneDeep(item)
       const choiceId = makeId()
@@ -151,7 +119,7 @@ function reduce(item = {}, action) {
       const deletable = newItem.choices.length > 2
       newItem.choices.forEach(choice => choice._deletable = deletable)
       return newItem
-    }
+    }*/
     case REMOVE_CHOICE: {
       const newItem = cloneDeep(item)
       const choiceIndex = newItem.choices.findIndex(choice => choice.id === action.id)

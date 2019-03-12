@@ -4,6 +4,7 @@ import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
+import {currentUser} from '#/main/app/security'
 import {makeId} from '#/main/core/scaffolding/id'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {GridSelection} from '#/main/app/content/grid/components/selection'
@@ -47,11 +48,23 @@ class CreationModal extends Component {
             description: trans(`${type.name}_desc`, {}, 'question_types'),
             tags: type.tags
           }))}
-          handleSelect={(type) => {
-            const newItem = merge({id: makeId(), type: type.id}, ItemTypes.defaultProps)
 
-            // TODO : set meta (creator, updated, created)
-            // TODO : call a type def setDefault method (for example to allow choice type to pre create choices)
+          handleSelect={(type) => {
+            let newItem = merge({
+              id: makeId(),
+              type: type.id,
+              meta: {
+                creator: currentUser()
+              }
+            }, ItemTypes.defaultProps)
+
+            // check if the current item type implement a callback for creation
+            // (to append so custom default for example)
+            const itemDefinition = this.state.types.find(t => t.name === type.name)
+            if (itemDefinition && itemDefinition.create instanceof 'function') {
+              newItem = itemDefinition.create(newItem)
+            }
+
             this.props.fadeModal()
             this.props.create(newItem)
           }}

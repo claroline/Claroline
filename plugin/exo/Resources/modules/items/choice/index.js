@@ -1,7 +1,13 @@
-import {trans} from '#/main/app/intl/translation'
+import merge from 'lodash/merge'
 
+import {trans} from '#/main/app/intl/translation'
+import {makeId} from '#/main/core/scaffolding/id'
+
+import {ChoiceItem} from '#/plugin/exo/items/choice/prop-types'
+// components
 import {ChoiceEditor} from "#/plugin/exo/items/choice/components/editor"
 
+// old
 import {ChoicePaper} from './paper.jsx'
 import {ChoicePlayer} from './player.jsx'
 import {ChoiceFeedback} from './feedback.jsx'
@@ -76,6 +82,46 @@ export default {
 
   components: {
     editor: ChoiceEditor
+  },
+
+  validate: () => {
+
+  },
+
+  create: (choiceItem) => {
+    // append default choice props
+    const defaultedItem = merge({}, ChoiceItem.propTypes, choiceItem)
+
+    const firstChoiceId = makeId()
+    const secondChoiceId = makeId()
+
+    // create 2 empty choices
+    defaultedItem.choices = [
+      {
+        id: firstChoiceId,
+        type: 'text/html',
+        data: ''
+      }, {
+        id: secondChoiceId,
+        type: 'text/html',
+        data: ''
+      }
+    ]
+
+    // create solutions for choices
+    defaultedItem.solutions = [
+      {
+        id: firstChoiceId,
+        score: 1,
+        feedback: ''
+      }, {
+        id: secondChoiceId,
+        score: 0,
+        feedback: ''
+      }
+    ]
+
+    return defaultedItem
   },
 
   // old
