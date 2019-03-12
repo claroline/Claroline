@@ -59,9 +59,9 @@ class CreationModal extends Component {
             }, ItemTypes.defaultProps)
 
             // check if the current item type implement a callback for creation
-            // (to append so custom default for example)
+            // (to append so custom defaults for example)
             const itemDefinition = this.state.types.find(t => t.name === type.name)
-            if (itemDefinition && itemDefinition.create instanceof 'function') {
+            if (itemDefinition && typeof itemDefinition.create === 'function') {
               newItem = itemDefinition.create(newItem)
             }
 
