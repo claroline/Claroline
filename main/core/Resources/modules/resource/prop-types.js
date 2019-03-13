@@ -16,6 +16,16 @@ const ResourceType = {
   }
 }
 
+const ResourceComment = {
+  propTypes: {
+    id: T.string,
+    content: T.string,
+    user: T.object,
+    creationDate: T.string,
+    editionDate: T.string
+  }
+}
+
 const ResourceNode = {
   propTypes: {
     id: T.string.isRequired,
@@ -44,7 +54,8 @@ const ResourceNode = {
       views: T.number,
       creator: T.shape({
 
-      })
+      }),
+      commentsActivated: T.bool.isRequired
     }).isRequired,
 
     /**
@@ -78,7 +89,9 @@ const ResourceNode = {
      */
     notifications: T.shape({
       enabled: T.bool
-    })
+    }),
+
+    comments: T.arrayOf(T.shape(ResourceComment.propTypes))
   },
   defaultProps: {
     meta: {
@@ -113,6 +126,7 @@ const UserEvaluation = {
 
 export {
   ResourceType,
+  ResourceComment,
   ResourceNode,
   UserEvaluation
 }

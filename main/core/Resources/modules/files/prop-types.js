@@ -5,11 +5,13 @@ const File = {
     hashName: T.string.isRequired,
     size: T.number.isRequired,
     url: T.string.isRequired,
-    autoDownload: T.bool.isRequired
+    autoDownload: T.bool.isRequired,
+    commentsActivated: T.bool.isRequired
   },
   defaultProps: {
     size: 0,
-    autoDownload: false
+    autoDownload: false,
+    commentsActivated: false
   }
 }
 

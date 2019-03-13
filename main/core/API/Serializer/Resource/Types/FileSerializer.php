@@ -51,6 +51,7 @@ class FileSerializer
             'hashName' => $file->getHashName(),
             'size' => $file->getSize(),
             'autoDownload' => $file->getAutoDownload(),
+            'commentsActivated' => $file->getResourceNode()->isCommentsActivated(),
 
             // We generate URL here because the stream API endpoint uses ResourceNode ID,
             // but the new api only contains the ResourceNode UUID.
@@ -67,5 +68,10 @@ class FileSerializer
         $this->sipe('size', 'setSize', $data, $file);
         $this->sipe('hashName', 'setHashName', $data, $file);
         $this->sipe('autoDownload', 'setAutoDownload', $data, $file);
+
+        if (isset($data['commentsActivated'])) {
+            $resourceNode = $file->getResourceNode();
+            $resourceNode->setCommentsActivated($data['commentsActivated']);
+        }
     }
 }

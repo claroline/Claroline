@@ -86,7 +86,7 @@ const FormData = connect(
               dispatchProps.saveForm(url(
                 typeof ownProps.target === 'function' ? ownProps.target(stateProps.data, stateProps.new) : ownProps.target
               ))
-              if (ownProps.lock.autoUnlock) {
+              if (ownProps.lock && ownProps.lock.autoUnlock) {
                 dispatchProps.unlock(ownProps.lock.className, ownProps.lock.id)
               }
             }

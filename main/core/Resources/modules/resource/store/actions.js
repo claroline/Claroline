@@ -15,6 +15,9 @@ export const RESOURCE_SERVER_ERRORS  = 'RESOURCE_SERVER_ERRORS'
 export const RESOURCE_RESTRICTIONS_DISMISS = 'RESOURCE_RESTRICTIONS_DISMISS'
 export const RESOURCE_RESTRICTIONS_ERROR = 'RESOURCE_RESTRICTIONS_ERROR'
 export const RESOURCE_RESTRICTIONS_UNLOCKED = 'RESOURCE_RESTRICTIONS_UNLOCKED'
+export const RESOURCE_COMMENT_ADD = 'RESOURCE_COMMENT_ADD'
+export const RESOURCE_COMMENT_UPDATE = 'RESOURCE_COMMENT_UPDATE'
+export const RESOURCE_COMMENT_REMOVE = 'RESOURCE_COMMENT_REMOVE'
 
 // action creators
 export const actions = {}
@@ -86,3 +89,7 @@ actions.checkAccessCode = (resourceNode, code, embedded = false) => ({
     error: (response, status, dispatch) => dispatch(actions.fetchResource(resourceNode, embedded))
   }
 })
+
+actions.addResourceComment = makeActionCreator(RESOURCE_COMMENT_ADD, 'comment')
+actions.updateResourceComment = makeActionCreator(RESOURCE_COMMENT_UPDATE, 'comment')
+actions.removeResourceComment = makeActionCreator(RESOURCE_COMMENT_REMOVE, 'commentId')

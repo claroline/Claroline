@@ -5,8 +5,9 @@ import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {copy} from '#/main/app/clipboard'
 import {Routes} from '#/main/app/router'
-import {ResourcePage} from '#/main/core/resource/containers/page'
 
+import {File as FileType} from '#/main/core/files/prop-types'
+import {ResourcePage} from '#/main/core/resource/containers/page'
 import {FilePlayer} from '#/main/core/resources/file/player/components/player'
 import {FileEditor} from '#/main/core/resources/file/editor/components/editor'
 
@@ -31,14 +32,17 @@ const FileResource = props =>
           component: FilePlayer
         }, {
           path: '/edit',
-          component: FileEditor
+          component: FileEditor,
+          onEnter: () => props.resetForm(props.file)
         }
       ]}
     />
   </ResourcePage>
 
 FileResource.propTypes = {
-  url: T.string
+  file: T.shape(FileType.propTypes),
+  url: T.string,
+  resetForm: T.func.isRequired
 }
 
 export {

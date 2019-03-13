@@ -284,6 +284,22 @@ class ResourceNode
      */
     protected $deletable = true;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="comments_activated", type="boolean")
+     */
+    protected $commentsActivated = false;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceComment",
+     *     mappedBy="resourceNode"
+     * )
+     * @ORM\OrderBy({"creationDate" = "DESC"})
+     */
+    protected $comments;
+
     public function __construct()
     {
         $this->refreshUuid();
@@ -291,6 +307,7 @@ class ResourceNode
         $this->rights = new ArrayCollection();
         $this->children = new ArrayCollection();
         $this->logs = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function isHidden()
@@ -918,9 +935,9 @@ class ResourceNode
     private function makePath(self $node, $path = '')
     {
         if ($node->getParent()) {
-            $path = $this->makePath($node->getParent(), $node->getName().'%'.$node->getUuid().SELF::PATH_SEPARATOR.$path);
+            $path = $this->makePath($node->getParent(), $node->getName().'%'.$node->getUuid().self::PATH_SEPARATOR.$path);
         } else {
-            $path = $node->getName().'%'.$node->getUuid().SELF::PATH_SEPARATOR.$path;
+            $path = $node->getName().'%'.$node->getUuid().self::PATH_SEPARATOR.$path;
         }
 
         return $path;
@@ -947,5 +964,63 @@ class ResourceNode
         }
 
         return $ancestors;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCommentsActivated()
+    {
+        return $this->commentsActivated;
+    }
+
+    /**
+     * @param bool $commentsActivated
+     */
+    public function setCommentsActivated($commentsActivated)
+    {
+        $this->commentsActivated = $commentsActivated;
+    }
+
+    /**
+     * Get comments.
+     *
+     * @return ResourceComment[]
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * Add comment.
+     *
+     * @param ResourceComment $comment
+     */
+    public function addComment(ResourceComment $comment)
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+        }
+    }
+
+    /**
+     * Remove comment.
+     *
+     * @param ResourceComment $comment
+     */
+    public function removeComment(ResourceComment $comment)
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+        }
+    }
+
+    /**
+     * Remove all comments.
+     */
+    public function emptyComments()
+    {
+        $this->comments->clear();
     }
 }

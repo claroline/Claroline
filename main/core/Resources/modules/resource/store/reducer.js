@@ -11,7 +11,10 @@ import {
   RESOURCE_RESTRICTIONS_DISMISS,
   RESOURCE_RESTRICTIONS_ERROR,
   RESOURCE_SERVER_ERRORS,
-  RESOURCE_RESTRICTIONS_UNLOCKED
+  RESOURCE_RESTRICTIONS_UNLOCKED,
+  RESOURCE_COMMENT_ADD,
+  RESOURCE_COMMENT_UPDATE,
+  RESOURCE_COMMENT_REMOVE
 } from '#/main/core/resource/store/actions'
 
 const reducer = {
@@ -64,7 +67,37 @@ const reducer = {
      * @param {object} state  - the current node data.
      * @param {object} action - the action. New node data is stored in `resourceNode`
      */
-    [RESOURCE_UPDATE_NODE]: (state, action) => merge({}, state, action.resourceNode)
+    [RESOURCE_UPDATE_NODE]: (state, action) => merge({}, state, action.resourceNode),
+    [RESOURCE_COMMENT_ADD]: (state, action) => {
+      const newState = cloneDeep(state)
+      const comment = newState['comments'].find(c => c.id === action.comment.id)
+
+      if (!comment) {
+        newState['comments'].unshift(action.comment)
+      }
+
+      return newState
+    },
+    [RESOURCE_COMMENT_UPDATE]: (state, action) => {
+      const newState = cloneDeep(state)
+      const index = newState['comments'].findIndex(c => c.id === action.comment.id)
+
+      if (index > -1) {
+        newState['comments'][index] = action.comment
+      }
+
+      return newState
+    },
+    [RESOURCE_COMMENT_REMOVE]: (state, action) => {
+      const newState = cloneDeep(state)
+      const index = newState['comments'].findIndex(c => c.id === action.commentId)
+
+      if (index > -1) {
+        newState['comments'].splice(index, 1)
+      }
+
+      return newState
+    }
   }),
 
   /**

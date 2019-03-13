@@ -19,3 +19,35 @@ actions.download = (resourceNode) => ({
     }
   }
 })
+
+actions.createComment = (comment) => ({
+  [API_REQUEST]: {
+    url: ['apiv2_resourcecomment_create'],
+    request: {
+      method: 'POST',
+      body: JSON.stringify(comment)
+    },
+    success: (data, dispatch) => dispatch(resourceActions.addResourceComment(data))
+  }
+})
+
+actions.editComment = (comment) => ({
+  [API_REQUEST]: {
+    url: ['apiv2_resourcecomment_update', {id: comment.id}],
+    request: {
+      method: 'PUT',
+      body: JSON.stringify(comment)
+    },
+    success: (data, dispatch) => dispatch(resourceActions.updateResourceComment(data))
+  }
+})
+
+actions.deleteComment = (commentId) => ({
+  [API_REQUEST]: {
+    url: ['apiv2_resourcecomment_delete_bulk', {ids: [commentId]}],
+    request: {
+      method: 'DELETE'
+    },
+    success: (data, dispatch) => dispatch(resourceActions.removeResourceComment(commentId))
+  }
+})

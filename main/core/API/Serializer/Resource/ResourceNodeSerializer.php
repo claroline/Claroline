@@ -10,6 +10,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
+use Claroline\CoreBundle\Entity\Resource\ResourceComment;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
@@ -163,6 +164,12 @@ class ResourceNodeSerializer
             }, $resourceNode->getChildren()->toArray());
         }
 
+        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+            $serializedNode['comments'] = array_map(function (ResourceComment $comment) {
+                return $this->serializer->serialize($comment);
+            }, $resourceNode->getComments()->toArray());
+        }
+
         $serializedNode = $this->decorate($resourceNode, $serializedNode, $options);
 
         return $serializedNode;
@@ -264,6 +271,7 @@ class ResourceNodeSerializer
             'published' => $resourceNode->isPublished(),
             'active' => $resourceNode->isActive(),
             'views' => $resourceNode->getViewsCount(),
+            'commentsActivated' => $resourceNode->isCommentsActivated(),
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
@@ -351,6 +359,7 @@ class ResourceNodeSerializer
         $this->sipe('meta.description', 'setDescription', $data, $resourceNode);
         $this->sipe('meta.license', 'setLicense', $data, $resourceNode);
         $this->sipe('meta.authors', 'setAuthor', $data, $resourceNode);
+        $this->sipe('meta.commentsActivated', 'setCommentsActivated', $data, $resourceNode);
 
         // display
         $this->sipe('display.fullscreen', 'setFullscreen', $data, $resourceNode);
