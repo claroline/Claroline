@@ -4,6 +4,7 @@ import {checkPropTypes} from 'prop-types'
 import {url} from '#/main/app/api/router'
 import {authenticate} from '#/main/app/api/authentication'
 import {makeId} from '#/main/core/scaffolding/id'
+import {currentUser} from '#/main/app/security'
 
 import {actions} from '#/main/app/api/store'
 import {ApiRequest as ApiRequestTypes} from '#/main/app/api/prop-types'
@@ -100,7 +101,10 @@ function handleResponseError(dispatch, responseError, originalRequest, error) {
       throw responseError
     }
 
-    if (401 === responseError.status || 403 === responseError.status) { // authentication needed
+    //if we're already registered, no point triggering authentication again
+    const user = currentUser()
+
+    if ((401 === responseError.status || 403 === responseError.status) && !user) { // authentication needed
       return authenticate()
         .then(
           () => apiFetch(originalRequest, dispatch), // re-execute original request,
