@@ -41,7 +41,7 @@ const EditorParameters = props =>
               render: (quiz) => (
                 <QuizType
                   type={get(quiz, 'parameters.type')}
-                  onChange={(type) => props.update('parameters.type', type)}
+                  onChange={(type) => props.update('parameters.type', type.name)}
                 />
               )
             }
@@ -192,7 +192,7 @@ const EditorParameters = props =>
               label: trans('statistics', {}, 'quiz'),
               type: 'boolean',
               linked: [
-                {
+                /*{
                   name: 'parameters.allPapersStatistics',
                   label: trans('statistics_options', {}, 'quiz'),
                   displayed: (quiz) => get(quiz, 'parameters.showStatistics'),
@@ -201,7 +201,7 @@ const EditorParameters = props =>
                     condensed: true,
                     choices: {}
                   }
-                }
+                }*/
               ]
             }
           ]

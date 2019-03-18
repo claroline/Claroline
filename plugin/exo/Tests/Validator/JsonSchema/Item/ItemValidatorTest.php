@@ -6,7 +6,6 @@ use UJM\ExoBundle\Library\Item\ItemDefinitionsCollection;
 use UJM\ExoBundle\Library\Options\Validation;
 use UJM\ExoBundle\Library\Testing\Json\JsonSchemaTestCase;
 use UJM\ExoBundle\Validator\JsonSchema\Content\ContentValidator;
-use UJM\ExoBundle\Validator\JsonSchema\Item\CategoryValidator;
 use UJM\ExoBundle\Validator\JsonSchema\Item\HintValidator;
 use UJM\ExoBundle\Validator\JsonSchema\Item\ItemValidator;
 
@@ -21,11 +20,6 @@ class ItemValidatorTest extends JsonSchemaTestCase
      * @var ItemDefinitionsCollection|\PHPUnit_Framework_MockObject_MockObject
      */
     private $itemDefinitions;
-
-    /**
-     * @var CategoryValidator|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private $categoryValidator;
 
     /**
      * @var HintValidator|\PHPUnit_Framework_MockObject_MockObject
@@ -50,12 +44,6 @@ class ItemValidatorTest extends JsonSchemaTestCase
             ->method('has')
             ->willReturn(true);
 
-        // Do not validate Categories
-        $this->categoryValidator = $this->createMock('UJM\ExoBundle\Validator\JsonSchema\Item\CategoryValidator', [], [], '', false);
-        $this->categoryValidator->expects($this->any())
-            ->method('validateAfterSchema')
-            ->willReturn([]);
-
         // Do not validate Hints
         $this->hintValidator = $this->createMock('UJM\ExoBundle\Validator\JsonSchema\Item\HintValidator', [], [], '', false);
         $this->hintValidator->expects($this->any())
@@ -69,7 +57,7 @@ class ItemValidatorTest extends JsonSchemaTestCase
             ->willReturn([]);
 
         $this->validator = $this->injectJsonSchemaMock(
-            new ItemValidator($this->itemDefinitions, $this->categoryValidator, $this->hintValidator, $this->contentValidator)
+            new ItemValidator($this->itemDefinitions, $this->hintValidator, $this->contentValidator)
         );
     }
 
@@ -138,16 +126,6 @@ class ItemValidatorTest extends JsonSchemaTestCase
             'path' => '/solutions',
             'message' => 'Question requires a "solutions" property',
         ], $errors));
-    }
-
-    public function testCategoryIsValidatedToo()
-    {
-        $questionData = $this->loadExampleData('question/base/examples/valid/with-metadata.json');
-
-        $this->categoryValidator->expects($this->once())
-            ->method('validateAfterSchema');
-
-        $this->validator->validate($questionData);
     }
 
     /**

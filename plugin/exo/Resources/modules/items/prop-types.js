@@ -4,6 +4,8 @@ import {
   SCORE_SUM
 } from '#/plugin/exo/quiz/enums'
 
+import {ScoreType} from '#/plugin/exo/scores/prop-types'
+
 /**
  * Definition of Quiz items.
  * It basically works like ItemDefinition in the PHP API.
@@ -34,6 +36,8 @@ const ItemType = {
 }
 
 const AnswerableItemType = implementPropTypes({}, ItemType, {
+  // Returns the list of score types supported by the item type (arrayOf(ScoreType.propTypes))
+  supportScores: T.func.isRequired,
   validateAnswer: T.func,
   correctAnswer: T.func,
   expectAnswer: T.func,
@@ -49,6 +53,9 @@ const Item = {
     description: T.string,
     meta: T.shape({
 
+    }),
+    score: T.shape({
+      type: T.string.isRequired
     })
   },
 
@@ -84,6 +91,7 @@ const ItemEditor = {
     ).isRequired,
     update: T.func.isRequired
   },
+
   defaultProps: {
     disabled: false
   }

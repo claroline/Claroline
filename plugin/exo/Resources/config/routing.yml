@@ -1,8 +1,3 @@
-# Tool
-ujm_question_bank:
-    resource: "@UJMExoBundle/Controller/Tool/QuestionBankController.php"
-    type: annotation
-
 # JSON API
 
 # Exposes CRUD actions for exercises
@@ -22,12 +17,6 @@ ujm_api_paper:
 # Exposes CRUD actions for questions
 ujm_api_question:
     resource: "@UJMExoBundle/Controller/Api/Item/ItemController.php"
-    type: annotation
-    prefix: /api
-
-# Exposes CRUD actions for categories
-ujm_api_category:
-    resource: "@UJMExoBundle/Controller/Api/Item/CategoryController.php"
     type: annotation
     prefix: /api
 

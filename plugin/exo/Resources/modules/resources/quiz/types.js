@@ -1,7 +1,7 @@
 import {trans} from '#/main/app/intl/translation'
 
 /**
- * Declares all available type of quiz.
+ * Declares all available types of quiz.
  *
  * Each type defines some default values for the quiz parameters.
  * It also allows to disable and hide some editor properties
@@ -10,7 +10,6 @@ import {trans} from '#/main/app/intl/translation'
 const QUIZ_CONCEPTUALIZATION = 'conceptualization'
 const QUIZ_FORMATIVE         = 'formative'
 const QUIZ_SUMMATIVE         = 'summative'
-const QUIZ_CERTIFICATIVE     = 'certificative'
 const QUIZ_SURVEY            = 'survey'
 const QUIZ_CUSTOM            = 'custom'
 
@@ -56,26 +55,9 @@ const formativeType = {
 const summativeType = {
   name: QUIZ_SUMMATIVE,
   meta: {
-    icon: 'fa fa-fw',
+    icon: 'fa fa-fw fa-award',
     label: trans('quiz_summative', {}, 'quiz'),
     description: trans('quiz_summative_desc', {}, 'quiz')
-  },
-  presets: {
-    hiddenProps: [],
-    disabledProps: [],
-    defaultProps: {}
-  }
-}
-
-/**
- * Type : Summative
- */
-const certificativeType = {
-  name: QUIZ_CERTIFICATIVE,
-  meta: {
-    icon: 'fa fa-fw fa-award',
-    label: trans('quiz_certificative', {}, 'quiz'),
-    description: trans('quiz_certificative_desc', {}, 'quiz')
   },
   presets: {
     hiddenProps: [],
@@ -122,7 +104,6 @@ const QUIZ_TYPES = {
   [QUIZ_CONCEPTUALIZATION]: conceptualizationType,
   [QUIZ_FORMATIVE]        : formativeType,
   [QUIZ_SUMMATIVE]        : summativeType,
-  [QUIZ_CERTIFICATIVE]    : certificativeType,
   [QUIZ_SURVEY]           : surveyType,
   [QUIZ_CUSTOM]           : customType
 }
@@ -134,7 +115,6 @@ export {
   QUIZ_CONCEPTUALIZATION,
   QUIZ_FORMATIVE,
   QUIZ_SUMMATIVE,
-  QUIZ_CERTIFICATIVE,
   QUIZ_SURVEY,
   QUIZ_CUSTOM
 }

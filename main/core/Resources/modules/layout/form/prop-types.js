@@ -10,6 +10,7 @@ const FormField = {
     id: T.string.isRequired,
     value: T.any, // depends on type
     error: T.oneOfType([T.string, T.arrayOf(T.string)]),
+    className: T.string,
     placeholder: T.any, // depends on type
     autoComplete: T.string,
     disabled: T.bool,

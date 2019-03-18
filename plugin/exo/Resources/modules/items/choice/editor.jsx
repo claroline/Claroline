@@ -19,8 +19,7 @@ import {
 } from '#/plugin/exo/quiz/enums'
 import {constants} from '#/plugin/exo/resources/quiz/constants'
 import {QCM_MULTIPLE, QCM_SINGLE, actions} from '#/plugin/exo/items/choice/editor'
-import {ScoreRulesGroup} from '#/plugin/exo/data/score-rules/components/group'
-import {ScoreRulesInput} from '#/plugin/exo/data/score-rules/components/input'
+import {ScoreRulesInput} from '#/plugin/exo/data/types/score-rules/components/input'
 
 class ChoiceItem extends Component {
   constructor(props) {

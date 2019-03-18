@@ -1,4 +1,5 @@
 import React from 'react'
+import classes from 'classnames'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {makeId} from '#/main/core/scaffolding/id'
@@ -53,7 +54,7 @@ EnumItem.defaultTypes = {
 }
 
 const EnumInput = (props) =>
-  <div className="enum-group">
+  <div className={classes('enum-control', props.className)}>
     {props.value.length > 0 &&
       <ul>
         {props.value.map((item, index) =>

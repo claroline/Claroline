@@ -1,7 +1,3 @@
-@import "./modals/add-item";
-@import "./modals/import-items";
-@import "./modals/move-question";
-
 @import "./summary";
 @import "./player";
 @import "./editor";
@@ -24,30 +20,47 @@
     white-space: nowrap;
 }
 
-// this is a big c/c from .resource-type
-// todo : move in editor styles
-.quiz-type {
-    height: auto !important; // override default form control
-    display: flex;
-    align-items: center;
+.quiz-type-control {
+    .dropdown {
+        width: 100%;
 
-    .fa {
-        font-size: 40px;
-        margin-right: 10px;
+        &.open {
+            .dropdown-toggle {
+                .form-control-focus();
+            }
+        }
     }
 
-    h1 {
-        padding: 0;
-        margin: 0;
-        font-size: @font-size-large;
-        font-weight: bold;
-    }
+    // this is a big c/c from .resource-type
+    .quiz-type {
+        height: auto !important; // override default form control
+        display: flex !important; // important because of dropdown styles
+        align-items: center;
+        text-align: left;
+        width: 100%;
 
-    p {
-        margin-top: 5px;
-        margin-bottom: 0;
-        font-style: italic;
-        font-size: @font-size-small;
-        color: #777; // todo : use a var
+        .fa {
+            font-size: 40px;
+            margin-right: 10px;
+        }
+
+        h1 {
+            padding: 0;
+            margin: 0;
+            font-size: @font-size-large;
+            font-weight: bold;
+        }
+
+        p {
+            margin-top: 5px;
+            margin-bottom: 0;
+            font-style: italic;
+            font-size: @font-size-small;
+            color: #777; // todo : use a var
+        }
+
+        &.active p {
+            color: white;
+        }
     }
 }

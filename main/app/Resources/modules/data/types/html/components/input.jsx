@@ -177,7 +177,7 @@ class HtmlInput extends Component {
 
   render() {
     return (
-      <div id={`${this.props.id}-container`} className={classes('editor-control text-editor', {
+      <div id={`${this.props.id}-container`} className={classes('editor-control text-editor', this.props.className, {
         minimal: this.state.minimal
       })}>
         <Button

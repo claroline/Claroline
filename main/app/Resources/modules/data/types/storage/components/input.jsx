@@ -1,4 +1,6 @@
 import React from 'react'
+import classes from 'classnames'
+import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
@@ -6,7 +8,7 @@ import {Button} from '#/main/app/action/components/button'
 import {MENU_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
-import {Numeric} from '#/main/core/layout/form/components/field/numeric'
+import {NumberInput} from '#/main/app/data/types/number/components/input'
 
 // TODO : finish implementation
 // TODO : make it more generic by implementing a number with unit type
@@ -20,9 +22,11 @@ const STORAGE_UNITS = {
 }
 
 const StorageInput = props =>
-  <div className="input-group">
-    <Numeric
-      {...props}
+  <div className={classes('input-group', this.props.className, {
+    [`input-group-${this.props.size}`]: !!this.props.size
+  })}>
+    <NumberInput
+      {...omit(props, 'className')}
       value={props.value}
     />
 

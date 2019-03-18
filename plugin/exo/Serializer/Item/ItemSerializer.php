@@ -44,9 +44,6 @@ class ItemSerializer extends AbstractSerializer
     /** @var UserSerializer */
     private $userSerializer;
 
-    /** @var CategorySerializer */
-    private $categorySerializer;
-
     /** @var HintSerializer */
     private $hintSerializer;
 
@@ -70,7 +67,6 @@ class ItemSerializer extends AbstractSerializer
      * @param TokenStorageInterface     $tokenStorage
      * @param ItemDefinitionsCollection $itemDefinitions
      * @param UserSerializer            $userSerializer
-     * @param CategorySerializer        $categorySerializer
      * @param HintSerializer            $hintSerializer
      * @param ResourceContentSerializer $resourceContentSerializer
      * @param ItemObjectSerializer      $itemObjectSerializer
@@ -82,7 +78,6 @@ class ItemSerializer extends AbstractSerializer
      *     "tokenStorage"              = @DI\Inject("security.token_storage"),
      *     "itemDefinitions"           = @DI\Inject("ujm_exo.collection.item_definitions"),
      *     "userSerializer"            = @DI\Inject("ujm_exo.serializer.user"),
-     *     "categorySerializer"        = @DI\Inject("ujm_exo.serializer.category"),
      *     "hintSerializer"            = @DI\Inject("ujm_exo.serializer.hint"),
      *     "resourceContentSerializer" = @DI\Inject("ujm_exo.serializer.resource_content"),
      *     "itemObjectSerializer"      = @DI\Inject("ujm_exo.serializer.item_object"),
@@ -95,7 +90,6 @@ class ItemSerializer extends AbstractSerializer
         TokenStorageInterface $tokenStorage,
         ItemDefinitionsCollection $itemDefinitions,
         UserSerializer $userSerializer,
-        CategorySerializer $categorySerializer,
         HintSerializer $hintSerializer,
         ResourceContentSerializer $resourceContentSerializer,
         ItemObjectSerializer $itemObjectSerializer,
@@ -106,7 +100,6 @@ class ItemSerializer extends AbstractSerializer
         $this->tokenStorage = $tokenStorage;
         $this->itemDefinitions = $itemDefinitions;
         $this->userSerializer = $userSerializer;
-        $this->categorySerializer = $categorySerializer;
         $this->hintSerializer = $hintSerializer;
         $this->resourceContentSerializer = $resourceContentSerializer;
         $this->itemObjectSerializer = $itemObjectSerializer;
@@ -352,8 +345,6 @@ class ItemSerializer extends AbstractSerializer
         }
 
         if ($this->hasOption(Transfer::INCLUDE_ADMIN_META, $options)) {
-            $metadata->model = $question->isModel();
-
             /** @var ExerciseRepository $exerciseRepo */
             $exerciseRepo = $this->om->getRepository('UJMExoBundle:Exercise');
 
@@ -372,11 +363,6 @@ class ItemSerializer extends AbstractSerializer
 
                 return $shared;
             }, $users);
-
-            // Adds category
-            if (!empty($question->getCategory())) {
-                $metadata->category = $this->categorySerializer->serialize($question->getCategory(), $options);
-            }
         }
 
         return $metadata;
@@ -390,15 +376,6 @@ class ItemSerializer extends AbstractSerializer
      */
     public function deserializeMetadata(Item $question, \stdClass $metadata)
     {
-        if (isset($metadata->model)) {
-            $question->setModel($metadata->model);
-        }
-
-        if (isset($metadata->category)) {
-            $category = $this->categorySerializer->deserialize($metadata->category);
-            $question->setCategory($category);
-        }
-
         if (isset($metadata->protectQuestion)) {
             $question->setProtectUpdate($metadata->protectQuestion);
         }

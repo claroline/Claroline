@@ -22,7 +22,7 @@ const FilterInput = props => {
   }
 
   return (
-    <div className="filter-control">
+    <div className={classes('filter-control', props.className)}>
       <div className="filter-property">
         <Select
           id={`${props.id}-property`}

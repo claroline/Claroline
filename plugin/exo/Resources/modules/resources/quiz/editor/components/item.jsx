@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {Await} from '#/main/app/components/await'
@@ -29,6 +30,7 @@ const EditorItem = props =>
 
       return (
         <FormSection
+          {...omit(props, 'formName', 'path', 'index', 'item', 'update')}
           id={props.item.id}
           className="embedded-form-section"
           icon={
@@ -91,9 +93,6 @@ const EditorItem = props =>
 EditorItem.propTypes = {
   formName: T.string.isRequired,
   path: T.string.isRequired,
-  step: T.shape({
-
-  }),
 
   index: T.number.isRequired,
   item: T.shape(

@@ -89,15 +89,8 @@
     }
 }
 
-.item-content-separator {
-    width: @item-content-separator-width;
-}
-
-.feedback-popover {
-    text-align: justify; // justify HTML contents by default (can be overridden through HTMLs WYSIWYG)
-}
-
-.solution-score, .answer-stats {
+.solution-score,
+.answer-stats {
     white-space: nowrap;
     border-radius: @label-border-radius;
     font-size: @label-font-size;
@@ -182,7 +175,8 @@
         color: @selected-answer-color;
     }
 
-    .solution-score, .answer-stats {
+    .solution-score,
+    .answer-stats {
         background: @selected-answer-color;
         color: @selected-answer-bg;
     }
@@ -210,8 +204,4 @@
 
 .feedback-btn {
     padding: 0 !important; // important is needed to override bootstrap .btn
-}
-
-[contenteditable] {
-    user-select: text;
 }

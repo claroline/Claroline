@@ -10,7 +10,6 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\Item\Category;
 use UJM\ExoBundle\Entity\Item\Hint;
 use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Entity\ItemType\ChoiceQuestion;
@@ -279,29 +278,6 @@ class Persister
         $user->setPersonalWorkspace($workspace);
 
         return $user;
-    }
-
-    /**
-     * Creates a category.
-     *
-     * @param string $name
-     * @param User   $user
-     *
-     * @return Category
-     */
-    public function category($name, User $user = null)
-    {
-        $category = new Category();
-        $category->setUuid(uniqid('', true));
-        $category->setName($name);
-
-        if (!empty($user)) {
-            $category->setUser($user);
-        }
-
-        $this->om->persist($category);
-
-        return $category;
     }
 
     /**

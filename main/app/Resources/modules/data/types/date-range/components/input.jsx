@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import classes from 'classnames'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
@@ -26,7 +27,7 @@ class DateRangeInput extends Component {
 
   render() {
     return (
-      <div className="row">
+      <div className={classes('row', this.props.className)}>
         <div className="col-md-6 col-xs-12">
           <DateInput
             id={`${this.props.id}-start`}

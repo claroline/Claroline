@@ -2,31 +2,32 @@
 
 namespace UJM\ExoBundle\Listener\Tool;
 
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 
 /**
  * @DI\Service("ujm_exo.listener.question_bank")
  */
 class QuestionBankListener
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
+    /** @var TwigEngine */
+    private $templating;
 
     /**
+     * ResourcesListener constructor.
+     *
      * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container")
+     *     "templating" = @DI\Inject("templating")
      * })
      *
-     * @param ContainerInterface $container
+     * @param TwigEngine $templating
      */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
+    public function __construct(
+        TwigEngine $templating
+    ) {
+        $this->templating = $templating;
     }
 
     /**
@@ -36,12 +37,15 @@ class QuestionBankListener
      */
     public function onDisplayDesktop(DisplayToolEvent $event)
     {
-        $subRequest = $this->container->get('request_stack')->getMasterRequest()->duplicate([], null, [
-            '_controller' => 'UJMExoBundle:Tool\QuestionBank:open',
-        ]);
+        $content = $this->templating->render(
+            'UJMExoBundle:tool:question_bank.html.twig', [
+                'context' => [
+                    'type' => Tool::DESKTOP,
+                ],
+            ]
+        );
 
-        $response = $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-
-        $event->setContent($response->getContent());
+        $event->setContent($content);
+        $event->stopPropagation();
     }
 }

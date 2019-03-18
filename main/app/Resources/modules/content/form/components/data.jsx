@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 import cloneDeep from 'lodash/cloneDeep'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
@@ -210,19 +211,21 @@ class FormData extends Component {
         }
 
         {primarySections.map(primarySection =>
-          <div
+          <fieldset
             id={primarySection.id || toKey(primarySection.title)}
             key={primarySection.id || toKey(primarySection.title)}
-            className="form-primary-section panel panel-default"
+            className={classes('form-primary-section panel panel-default', primarySection.className)}
           >
-            <fieldset className="panel-body">
-              <Heading level={hLevel} displayed={false}>
-                {primarySection.title}
-              </Heading>
+            <Heading level={hLevel} displayed={false}>
+              {primarySection.title}
+            </Heading>
 
+            <div className="panel-body">
               {this.renderFields(primarySection.fields)}
-            </fieldset>
-          </div>
+
+              {primarySection.render && primarySection.render()}
+            </div>
+          </fieldset>
         )}
 
         {0 !== otherSections.length &&
@@ -234,6 +237,7 @@ class FormData extends Component {
             {otherSections.map(section =>
               <FormSection
                 id={section.id || toKey(section.title)}
+                className={section.className}
                 key={section.id || toKey(section.title)}
                 icon={section.icon}
                 title={section.title}
@@ -241,7 +245,11 @@ class FormData extends Component {
                 errors={this.props.errors}
                 validating={this.props.validating}
               >
-                {this.renderFields(section.fields)}
+                <div className="panel-body" fill={true}>
+                  {this.renderFields(section.fields)}
+
+                  {section.render && section.render()}
+                </div>
               </FormSection>
             )}
           </FormSections>

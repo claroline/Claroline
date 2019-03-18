@@ -1,4 +1,5 @@
 import React from 'react'
+import classes from 'classnames'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
@@ -10,7 +11,9 @@ import {StringInput} from '#/main/app/data/types/string/components/input'
 // todo manage size
 
 const UsernameInput = props =>
-  <div className="input-group">
+  <div className={classes('input-group', this.props.className, {
+    [`input-group-${this.props.size}`]: !!this.props.size
+  })}>
     <span className="input-group-addon">
       <span className="fa fa-fw fa-user" role="presentation" />
     </span>

@@ -12,53 +12,38 @@
 namespace Claroline\CoreBundle\Listener\Tool;
 
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @DI\Service
  */
 class TrashListener
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
     /** @var TwigEngine */
     private $templating;
     /** @var SerializerProvider */
     private $serializer;
-    /** @var ResourceNodeRepository */
-    private $resourceRepository;
 
     /**
      * ResourcesListener constructor.
      *
      * @DI\InjectParams({
-     *     "authorization" = @DI\Inject("security.authorization_checker"),
-     *     "templating"    = @DI\Inject("templating"),
-     *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer"    = @DI\Inject("claroline.api.serializer")
+     *     "templating" = @DI\Inject("templating"),
+     *     "serializer" = @DI\Inject("claroline.api.serializer")
      * })
      *
-     * @param AuthorizationCheckerInterface $authorization
-     * @param TwigEngine                    $templating
-     * @param ObjectManager                 $om
-     * @param SerializerProvider            $serializer
+     * @param TwigEngine         $templating
+     * @param SerializerProvider $serializer
      */
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
         TwigEngine $templating,
-        ObjectManager $om,
         SerializerProvider $serializer
     ) {
-        $this->authorization = $authorization;
         $this->templating = $templating;
         $this->serializer = $serializer;
-        $this->resourceRepository = $om->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
     }
 
     /**

@@ -69,28 +69,11 @@ class Item
     private $dateModify;
 
     /**
-     * A model can not be directly linked to an exercise.
-     * It needs to be duplicated first to keep the original question untouched.
-     *
-     * @ORM\Column(type="boolean")
-     *
-     * @var bool
-     */
-    private $model = false;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
      *
      * @var string
      */
     private $description;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Item\Category")
-     *
-     * @var Category
-     */
-    private $category;
 
     /**
      * The user who have created the question.
@@ -166,6 +149,7 @@ class Item
     public function __construct()
     {
         $this->refreshUuid();
+
         $this->hints = new ArrayCollection();
         $this->objects = new ArrayCollection();
         $this->resources = new ArrayCollection();
@@ -364,22 +348,6 @@ class Item
     }
 
     /**
-     * @param bool $model
-     */
-    public function setModel($model)
-    {
-        $this->model = $model;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isModel()
-    {
-        return $this->model;
-    }
-
-    /**
      * @return User
      */
     public function getCreator()
@@ -393,22 +361,6 @@ class Item
     public function setCreator(User $creator)
     {
         $this->creator = $creator;
-    }
-
-    /**
-     * @return Category
-     */
-    public function getCategory()
-    {
-        return $this->category;
-    }
-
-    /**
-     * @param Category $category
-     */
-    public function setCategory(Category $category = null)
-    {
-        $this->category = $category;
     }
 
     /**

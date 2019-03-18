@@ -7,27 +7,13 @@
 {% endblock %}
 
 {# Title of the Page #}
-{% block title %}{{ 'bank_of_questions' | trans({}, 'quiz') }}{% endblock %}
-{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
-{# Override breadcrumbs #}
-{% block breadcrumb %}
-    {{
-        macros.breadcrumbs([{
-            'name': 'desktop'|trans({}, 'platform'),
-            'href': path('claro_desktop_open')
-        }, {
-            'name': 'bank_of_questions'|trans({}, 'quiz'),
-            'href': ''
-        }])
-    }}
-{% endblock %}
+{% block title %}{{ 'ujm_questions' | trans({}, 'tools') }}{% endblock %}
 
 {# Content of the Page #}
 {% block content %}
     <div
         class="page-container question-bank-container"
-        data-questions="{{ questions | json_encode | raw | escape }}"
-        data-user="{{ currentUser | json_encode | raw | escape }}"
+        data-current-context="{{ context | json_encode | raw | escape }}"
     ></div>
 {% endblock %}
 

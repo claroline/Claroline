@@ -29,7 +29,7 @@ class TimeInput extends PureComponent {
     }
 
     return (
-      <div className={classes('input-group', {
+      <div className={classes('input-group', this.props.className, {
         [`input-group-${this.props.size}`]: !!this.props.size
       })}>
         <input

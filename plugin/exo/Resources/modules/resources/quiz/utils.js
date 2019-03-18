@@ -1,5 +1,7 @@
 import {constants} from '#/plugin/exo/resources/quiz/constants'
 
+// TODO : find a way to merge with path numbering
+
 function getNumbering(type, idx) {
   switch (type) {
     /**

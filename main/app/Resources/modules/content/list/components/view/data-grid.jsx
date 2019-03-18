@@ -93,6 +93,7 @@ const DataGridSort = props =>
         items: props.available.map(column => ({
           type: CALLBACK_BUTTON,
           label: column.label,
+          active: props.current.property && (props.current.property === column.alias || props.current.property === column.name),
           callback: () => props.updateSort(column.alias ? column.alias : column.name)
         }))
       }}

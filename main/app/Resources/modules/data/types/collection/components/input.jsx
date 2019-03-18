@@ -1,4 +1,5 @@
 import React from 'react'
+import classes from 'classnames'
 import cloneDeep from 'lodash/cloneDeep'
 import isEmpty from 'lodash/isEmpty'
 
@@ -12,7 +13,7 @@ import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {DataInput} from '#/main/app/data/components/input'
 
 const CollectionInput = props =>
-  <div id={props.id} className="collection-control">
+  <div id={props.id} className={classes('collection-control', props.className)}>
     {isEmpty(props.value) &&
       <div className="no-item-info">{props.placeholder}</div>
     }

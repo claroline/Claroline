@@ -9,7 +9,7 @@ import {
   RULE_SOURCE_CORRECT,
   RULE_SOURCE_INCORRECT,
   RULE_TARGET_GLOBAL
-} from '#/plugin/exo/items/choice/constants'
+} from '#/plugin/exo/data/types/score-rules/constants'
 
 import {select as quizSelectors} from '#/plugin/exo/quiz/selectors'
 
@@ -44,6 +44,7 @@ const totalScoreOn = paper => {
   return paper.structure.parameters.totalScoreOn && paper.structure.parameters.totalScoreOn > 0 ? paper.structure.parameters.totalScoreOn : null
 }
 
+// TODO : move in scores module
 const itemScoreMax = item => {
   let scoreMax
   const rulesData = {

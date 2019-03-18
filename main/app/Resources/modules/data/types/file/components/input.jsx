@@ -80,7 +80,7 @@ class FileComponent extends Component {
   render() {
     return (
       <div
-        className={classes('file-control', {
+        className={classes('file-control', this.props.className, {
           'highlight': this.context
         })}
         onDrop={this.onFileDrop}

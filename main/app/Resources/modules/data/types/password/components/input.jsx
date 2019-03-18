@@ -30,7 +30,7 @@ class PasswordInput extends PureComponent {
 
   render() {
     return (
-      <div className={classes('input-group', {
+      <div className={classes('input-group', this.props.className, {
         [`input-group-${this.props.size}`]: !!this.props.size
       })}>
         <span className="input-group-addon">

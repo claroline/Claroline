@@ -9,7 +9,7 @@ import {
   RULE_SOURCE_INCORRECT,
   RULE_TARGET_GLOBAL,
   RULE_TARGET_ANSWER
-} from '#/plugin/exo/items/choice/constants'
+} from '#/plugin/exo/data/types/score-rules/constants'
 
 import {
   SHOW_CORRECTION_AT_VALIDATION,

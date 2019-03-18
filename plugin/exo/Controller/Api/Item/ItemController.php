@@ -4,6 +4,7 @@ namespace UJM\ExoBundle\Controller\Api\Item;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -12,13 +13,14 @@ use Symfony\Component\HttpFoundation\Request;
 use UJM\ExoBundle\Controller\Api\AbstractController;
 use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Options\Transfer;
-use UJM\ExoBundle\Library\Validator\ValidationException;
 use UJM\ExoBundle\Manager\Item\ItemManager;
 
 /**
  * Item Controller exposes REST API.
  *
  * @EXT\Route("/questions", options={"expose"=true})
+ *
+ * @todo : use a crud controller instead
  */
 class ItemController extends AbstractController
 {
@@ -101,7 +103,7 @@ class ItemController extends AbstractController
             // Try to update question with data
             try {
                 $question = $this->manager->create($data);
-            } catch (ValidationException $e) {
+            } catch (InvalidDataException $e) {
                 $errors = $e->getErrors();
             }
         }
@@ -144,7 +146,7 @@ class ItemController extends AbstractController
             // Try to update question with data
             try {
                 $question = $this->manager->update($question, $data);
-            } catch (ValidationException $e) {
+            } catch (InvalidDataException $e) {
                 $errors = $e->getErrors();
             }
         }

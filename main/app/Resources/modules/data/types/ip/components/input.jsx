@@ -69,7 +69,7 @@ class IpInput extends Component {
     const valueParts = IPv4.parse(this.props.value)
 
     return (
-      <div id={this.props.id} className="ip-control">
+      <div id={this.props.id} className={classes('ip-control', this.props.className)}>
         <IpPartInput
           id={`${this.props.id}-0`}
           size={this.props.size}

@@ -79,7 +79,7 @@ class LocaleInput extends PureComponent {
     }
 
     return (
-      <div className="locales" role="checklist">
+      <div className={classes('locales', this.props.className)} role="checklist">
         {available.map(locale =>
           <LocaleButton
             key={locale}

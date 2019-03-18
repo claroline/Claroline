@@ -69,27 +69,6 @@ class ItemSerializerTest extends JsonDataTestCase
         );
     }
 
-    public function testAddCategory()
-    {
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    public function testAddDefaultCategoryIfNoOne()
-    {
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    public function testChangeCategory()
-    {
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
     public function testAddHint()
     {
         $this->markTestIncomplete(

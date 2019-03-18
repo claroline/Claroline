@@ -36,7 +36,7 @@ class ImageInputComponent extends PureComponent {
 
   render() {
     return (
-      <fieldset>
+      <fieldset className={this.props.className}>
         {!has(this.props.value, 'id') &&
           <input
             id={this.props.id}

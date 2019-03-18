@@ -10,6 +10,7 @@ import {HtmlInput} from '#/main/app/data/types/html/components/input'
 const TranslatedInput = props =>
   <HtmlInput
     id={props.id}
+    className={props.className}
     value={props.value[getLocale()]}
     minRows={props.minRows}
     disabled={props.disabled}

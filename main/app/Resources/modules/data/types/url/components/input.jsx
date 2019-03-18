@@ -27,13 +27,12 @@ class UrlInput extends PureComponent {
 
   render() {
     return (
-      <div className="input-group">
+      <div className={classes('input-group', this.props.className, {
+        [`input-group-${this.props.size}`]: !!this.props.size
+      })}>
         <input
           id={this.props.id}
           type="text"
-          className={classes('form-control', {
-            [`input-${this.props.size}`]: !!this.props.size
-          })}
           value={this.props.value || ''}
           disabled={this.props.disabled}
           placeholder={this.props.placeholder}

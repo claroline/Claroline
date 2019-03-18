@@ -50,7 +50,8 @@ const DataFormSection = {
           DataFormProperty.propTypes
         ))
       })
-    )).isRequired
+    )),
+    render: T.func
   },
   defaultProps: {
     primary: false,

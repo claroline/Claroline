@@ -19,11 +19,6 @@ class ItemValidator extends JsonSchemaValidator
     private $itemDefinitions;
 
     /**
-     * @var CategoryValidator
-     */
-    private $categoryValidator;
-
-    /**
      * @var HintValidator
      */
     private $hintValidator;
@@ -37,25 +32,21 @@ class ItemValidator extends JsonSchemaValidator
      * ItemValidator constructor.
      *
      * @param ItemDefinitionsCollection $itemDefinitions
-     * @param CategoryValidator         $categoryValidator
      * @param HintValidator             $hintValidator
      * @param ContentValidator          $contentValidator
      *
      * @DI\InjectParams({
      *     "itemDefinitions"   = @DI\Inject("ujm_exo.collection.item_definitions"),
-     *     "categoryValidator" = @DI\Inject("ujm_exo.validator.category"),
      *     "hintValidator"     = @DI\Inject("ujm_exo.validator.hint"),
      *     "contentValidator"  = @DI\Inject("ujm_exo.validator.content")
      * })
      */
     public function __construct(
         ItemDefinitionsCollection $itemDefinitions,
-        CategoryValidator $categoryValidator,
         HintValidator $hintValidator,
         ContentValidator $contentValidator)
     {
         $this->itemDefinitions = $itemDefinitions;
-        $this->categoryValidator = $categoryValidator;
         $this->hintValidator = $hintValidator;
         $this->contentValidator = $contentValidator;
     }
@@ -107,11 +98,6 @@ class ItemValidator extends JsonSchemaValidator
                 'path' => '/type',
                 'message' => 'Unknown question type "'.$question->type.'"',
             ];
-        }
-
-        // Validate category
-        if (isset($question->meta) && isset($question->meta->category)) {
-            $errors = array_merge($errors, $this->categoryValidator->validateAfterSchema($question->meta->category, $options));
         }
 
         // Validate hints

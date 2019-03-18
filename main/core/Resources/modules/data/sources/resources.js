@@ -11,7 +11,7 @@ export default {
   parameters: {
     primaryAction: (resourceNode) => ({ // todo : reuse resource default action
       type: URL_BUTTON,
-      target: [ 'claro_resource_show', {
+      target: ['claro_resource_show', {
         type: resourceNode.meta.type,
         id: resourceNode.id
       }]

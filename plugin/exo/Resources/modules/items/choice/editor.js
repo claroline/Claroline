@@ -15,7 +15,7 @@ import {
   RULE_TYPE_MORE,
   RULE_TYPE_LESS,
   RULE_TYPE_BETWEEN
-} from '#/plugin/exo/items/choice/constants'
+} from '#/plugin/exo/data/types/score-rules/constants'
 
 const UPDATE_PROP = 'UPDATE_PROP'
 const UPDATE_CHOICE = 'UPDATE_CHOICE'
@@ -152,51 +152,6 @@ function validate(item) {
           'fixed_score_choice_at_least_one_correct_answer_error' :
           'fixed_score_choice_no_correct_answer_error'
       )
-    }
-  } else if (item.score.type === SCORE_RULES) {
-    if (!item.score.rules || 1 > item.score.rules.length) {
-      errors.rules = tex('ruled_score_choice_no_rule_error')
-    } else {
-      item.score.rules.forEach((rule, index) => {
-        const error = {}
-        let hasError = false
-
-        if (!rule.type) {
-          error['type'] = trans('value_not_blank', {}, 'validators')
-          hasError = true
-        }
-        if (!rule.source) {
-          error['source'] = trans('value_not_blank', {}, 'validators')
-          hasError = true
-        }
-        if (!rule.target) {
-          error['target'] = trans('value_not_blank', {}, 'validators')
-          hasError = true
-        }
-        if (!rule.points && 0 !== rule.points) {
-          error['points'] = trans('value_not_blank', {}, 'validators')
-          hasError = true
-        }
-        if (-1 < [RULE_TYPE_MORE, RULE_TYPE_LESS].indexOf(rule.type) && !rule.count && 0 !== rule.count) {
-          error['count'] = trans('value_not_blank', {}, 'validators')
-          hasError = true
-        }
-        if (RULE_TYPE_BETWEEN === rule.type && !rule.countMin && 0 !== rule.countMin) {
-          error['countMin'] = trans('value_not_blank', {}, 'validators')
-          hasError = true
-        }
-        if (RULE_TYPE_BETWEEN === rule.type && !rule.countMax && 0 !== rule.countMax) {
-          error['countMax'] = trans('value_not_blank', {}, 'validators')
-          hasError = true
-        }
-
-        if (hasError) {
-          if (!errors.rules) {
-            errors.rules = {}
-          }
-          errors.rules[index] = error
-        }
-      })
     }
   } else {
     if (!item.choices.find(choice => choice._score > 0)) {

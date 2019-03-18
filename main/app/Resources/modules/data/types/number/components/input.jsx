@@ -59,7 +59,7 @@ class NumberInput extends PureComponent {
 
     if (this.props.unit) {
       return (
-        <div className={classes('input-group', {
+        <div className={classes('input-group', this.props.className, {
           [`input-group-${this.props.size}`]: !!this.props.size
         })}>
           <NumberField
@@ -76,7 +76,7 @@ class NumberInput extends PureComponent {
     return (
       <NumberField
         {...fieldProps}
-        className={classes({
+        className={classes(this.props.className, {
           [`input-${this.props.size}`]: !!this.props.size
         })}
       />

@@ -48,6 +48,12 @@ const ResourceFormComponent = (props) =>
           }
         ]
       }, {
+        className: 'embedded-form-section',
+        title: trans('custom'),
+        primary: true,
+        displayed: !!props.children,
+        render: () => props.children
+      }, {
         icon: 'fa fa-fw fa-info',
         title: trans('information'),
         fields: [
@@ -182,9 +188,7 @@ const ResourceFormComponent = (props) =>
         ]
       }
     ]}
-  >
-    {props.children}
-  </FormData>
+  />
 
 ResourceFormComponent.propTypes = {
   level: T.number,

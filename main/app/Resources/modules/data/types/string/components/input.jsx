@@ -18,7 +18,7 @@ class StringInput extends PureComponent {
   render() {
     const commonProps = {
       id: this.props.id,
-      className: classes('form-control', {
+      className: classes('form-control', this.props.className, {
         [`input-${this.props.size}`]: !!this.props.size
       }),
       value: this.props.value || '',
