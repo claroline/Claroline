@@ -1,10 +1,10 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
+import {HtmlInput} from '#/main/app/data/types/html/components/input'
 
-export const OpenPlayer = (props) =>
-  <Textarea
+const OpenPlayer = (props) =>
+  <HtmlInput
     id={`open-${props.item.id}-data`}
     value={props.answer}
     onChange={(value) => props.onChange(value)}
@@ -22,4 +22,8 @@ OpenPlayer.propTypes = {
 
 OpenPlayer.defaultProps = {
   answer: ''
+}
+
+export {
+  OpenPlayer
 }

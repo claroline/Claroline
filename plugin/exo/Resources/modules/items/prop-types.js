@@ -60,6 +60,7 @@ const Item = {
   },
 
   defaultProps: {
+    content: '',
     title: '',
     description: '',
     meta: {

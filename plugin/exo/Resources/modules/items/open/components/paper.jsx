@@ -3,22 +3,22 @@ import {PropTypes as T} from 'prop-types'
 
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {tex} from '#/main/app/intl/translation'
-import {PaperTabs} from '../components/paper-tabs.jsx'
-import {Feedback} from '../components/feedback-btn.jsx'
+import {PaperTabs} from '#/plugin/exo/items/components/paper-tabs'
+import {Feedback} from '#/plugin/exo/items/components/feedback-btn'
 
-export const OpenPaper = props =>
+const OpenPaper = props =>
   <PaperTabs
     id={props.item.id}
     showYours={props.showYours}
     yours={
       <div className="open-paper">
         {props.feedback &&
-        <div className="pull-right">
-          <Feedback
-            id={props.item.id}
-            feedback={props.feedback}
-          />
-        </div>
+          <div className="pull-right">
+            <Feedback
+              id={props.item.id}
+              feedback={props.feedback}
+            />
+          </div>
         }
 
         {props.answer && 0 !== props.answer.length ?
@@ -39,4 +39,8 @@ OpenPaper.propTypes = {
   answer: T.string,
   feedback: T.string,
   showYours: T.bool.isRequired
+}
+
+export {
+  OpenPaper
 }

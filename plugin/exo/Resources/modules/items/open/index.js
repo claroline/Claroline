@@ -1,21 +1,19 @@
-import {trans} from '#/main/app/intl/translation'
+import merge from 'lodash/merge'
 
-import editor from '#/plugin/exo/items/open/editor'
-import {OpenPaper} from '#/plugin/exo/items/open/paper.jsx'
-import {OpenPlayer} from '#/plugin/exo/items/open/player.jsx'
-import {OpenFeedback} from '#/plugin/exo/items/open/feedback.jsx'
-import {OpenEditor} from '#/plugin/exo/items/open/components/editor'
-import {OpenItem as OpenItemTypes} from '#/plugin/exo/items/open/prop-types'
+import {trans} from '#/main/app/intl/translation'
 
 import {CorrectedAnswer} from '#/plugin/exo/quiz/correction/components/corrected-answer'
 
-function getCorrectedAnswer() {
-  return new CorrectedAnswer()
-}
+import {OpenItem} from '#/plugin/exo/items/open/prop-types'
 
-function generateStats() {
-  return {}
-}
+// components
+import {OpenPaper} from '#/plugin/exo/items/open/components/paper'
+import {OpenPlayer} from '#/plugin/exo/items/open/components/player'
+import {OpenFeedback} from '#/plugin/exo/items/open/components/feedback'
+import {OpenEditor} from '#/plugin/exo/items/open/components/editor'
+
+// scores
+import ScoreManual from '#/plugin/exo/scores/manual'
 
 export default {
   type: 'application/x.open+json',
@@ -30,13 +28,12 @@ export default {
     editor: OpenEditor
   },
 
-  create: item => {
-    item.score = OpenItemTypes.defaultProps.score
+  supportScores: () => [
+    ScoreManual
+  ],
 
-    return item
-  },
+  create: (baseItem) => merge({}, baseItem, OpenItem.defaultProps),
 
-  editor,
-  getCorrectedAnswer,
-  generateStats
+  getCorrectedAnswer: () => new CorrectedAnswer(),
+  generateStats: () => ({})
 }

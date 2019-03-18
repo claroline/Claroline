@@ -48,7 +48,7 @@ export default {
    */
   create: (baseItem) => {
     // append default choice props
-    const choiceItem = merge({}, ChoiceItem.defaultProps, baseItem)
+    const choiceItem = merge({}, baseItem, ChoiceItem.defaultProps)
 
     // create 2 empty choices
     const firstChoiceId = makeId()

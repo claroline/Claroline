@@ -6,7 +6,7 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {ItemEditor as ItemEditorTypes} from '#/plugin/exo/items/prop-types'
 import {OpenItem as OpenItemTypes} from '#/plugin/exo/items/open/prop-types'
 
-export const OpenEditor = (props) => 
+const OpenEditor = (props) =>
   <FormData
     className="open-editor"
     embedded={true}
@@ -18,16 +18,9 @@ export const OpenEditor = (props) =>
         primary: true,
         fields: [
           {
-            name: 'maxScore',
-            type: 'number',
-            label: trans('score_max', {}, 'quiz'),
-            required: true
-          },
-          {
             name: 'maxLength',
             type: 'number',
-            label: trans('open_maximum_length', {}, 'quiz'),
-            required: true
+            label: trans('open_maximum_length', {}, 'quiz')
           }
         ]
       }
@@ -37,3 +30,7 @@ export const OpenEditor = (props) =>
 implementPropTypes(OpenEditor, ItemEditorTypes, {
   item: T.shape(OpenItemTypes.propTypes).isRequired
 })
+
+export {
+  OpenEditor
+}
