@@ -1,10 +1,12 @@
 import {trans} from '#/main/app/intl/translation'
 
-import editor from './editor'
-import {MatchPaper} from './paper.jsx'
-import {MatchPlayer} from './player.jsx'
-import {MatchFeedback} from './feedback.jsx'
+import editor from '#/plugin/exo/items/match/editor'
+import {MatchPaper} from '#/plugin/exo/items/match/paper.jsx'
+import {MatchPlayer} from '#/plugin/exo/items/match/player.jsx'
+import {MatchFeedback} from '#/plugin/exo/items/match/feedback.jsx'
+import {MatchEditor} from '#/plugin/exo/items/match/components/editor'
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
+import {MatchItem as MatchItemTypes} from '#/plugin/exo/items/match/prop-types'
 import times from 'lodash/times'
 
 function getCorrectedAnswer(item, answer = {data: []}) {
@@ -15,8 +17,8 @@ function getCorrectedAnswer(item, answer = {data: []}) {
 
     if (userAnswer) {
       solution.score > 0 ?
-          corrected.addExpected(new Answerable(solution.score)):
-          corrected.addUnexpected(new Answerable(solution.score))
+        corrected.addExpected(new Answerable(solution.score)):
+        corrected.addUnexpected(new Answerable(solution.score))
     } else {
       if (solution.score > 0)
         corrected.addMissing(new Answerable(solution.score))
@@ -80,6 +82,19 @@ export default {
   name: 'match',
   tags: [trans('question', {}, 'quiz')],
   answerable: true,
+
+  components: {
+    editor: MatchEditor
+  },
+
+  validate: () => {
+
+  },
+
+  create: (item) => {
+    //return item
+    return Object.assign(item, MatchItemTypes.defaultProps)
+  },
 
   paper: MatchPaper,
   player: MatchPlayer,
