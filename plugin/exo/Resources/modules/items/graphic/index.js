@@ -1,10 +1,12 @@
 import {trans} from '#/main/app/intl/translation'
 
-import editor from './editor'
-import {GraphicPaper} from './paper.jsx'
-import {GraphicPlayer} from './player.jsx'
-import {GraphicFeedback} from './feedback.jsx'
+import editor from '#/plugin/exo/items/graphic/editor'
+import {GraphicPaper} from '#/plugin/exo/items/graphic/paper.jsx'
+import {GraphicEditor} from '#/plugin/exo/items/graphic/components/editor.jsx'
+import {GraphicPlayer} from '#/plugin/exo/items/graphic/player.jsx'
+import {GraphicFeedback} from '#/plugin/exo/items/graphic/feedback.jsx'
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
+import {GraphicItem as GraphicItemTypes} from '#/plugin/exo/items/graphic/prop-types'
 
 function getCorrectedAnswer(item, answers) {
   const corrected = new CorrectedAnswer()
@@ -112,5 +114,14 @@ export default {
   feedback: GraphicFeedback,
   editor,
   getCorrectedAnswer,
-  generateStats
+  generateStats,
+
+  components: {
+    editor: GraphicEditor
+  },
+
+  create: (item) => {
+  //return item
+    return Object.assign(item, GraphicItemTypes.defaultProps)
+  }
 }

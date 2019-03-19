@@ -22,6 +22,16 @@ import {
 
 let AnswerDropZone = props => props.connectDropTarget(props.children)
 
+function blankImage() {
+  return {
+    id: makeId(),
+    type: '',
+    data: '',
+    width: 0,
+    height: 0
+  }
+}
+
 AnswerDropZone.propTypes = {
   connectDropTarget: T.func.isRequired,
   children: T.element.isRequired
