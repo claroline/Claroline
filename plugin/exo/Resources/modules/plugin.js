@@ -16,7 +16,7 @@ registry.add('UJMExoBundle', {
   },
 
   quizItems: {
-    'boolean'  : () => { return import(/* webpackChunkName: "quiz-item-boolean" */   '#/plugin/exo/items/boolean') },
+    // questions
     'choice'   : () => { return import(/* webpackChunkName: "quiz-item-choice" */    '#/plugin/exo/items/choice') },
     'cloze'    : () => { return import(/* webpackChunkName: "quiz-item-cloze" */     '#/plugin/exo/items/cloze') },
     'graphic'  : () => { return import(/* webpackChunkName: "quiz-item-graphic" */   '#/plugin/exo/items/graphic') },
@@ -29,6 +29,7 @@ registry.add('UJMExoBundle', {
     'set'      : () => { return import(/* webpackChunkName: "quiz-item-set" */       '#/plugin/exo/items/set') },
     'words'    : () => { return import(/* webpackChunkName: "quiz-item-boolean" */   '#/plugin/exo/items/words') },
 
+    // contents
     'audio'    : () => { return import(/* webpackChunkName: "quiz-item-audio" */     '#/plugin/exo/contents/audio') },
     'image'    : () => { return import(/* webpackChunkName: "quiz-item-image" */     '#/plugin/exo/contents/image') },
     'text'     : () => { return import(/* webpackChunkName: "quiz-item-text" */      '#/plugin/exo/contents/text') },
