@@ -1,12 +1,18 @@
+import cloneDeep from 'lodash/cloneDeep'
+import merge from 'lodash/merge'
+import times from 'lodash/times'
+
 import {trans} from '#/main/app/intl/translation'
 
-import editor from './editor'
-import {PairPaper} from './paper.jsx'
-import {PairPlayer} from './player.jsx'
-import {PairFeedback} from './feedback.jsx'
+import {makeId} from '#/main/core/scaffolding/id'
+
+import {PairItem as PairItemType} from '#/plugin/exo/items/pair/prop-types'
+import {PairEditor} from "#/plugin/exo/items/pair/components/editor"
+// old
+import {PairPaper} from '#/plugin/exo/items/pair/paper.jsx'
+import {PairPlayer} from '#/plugin/exo/items/pair/player.jsx'
+import {PairFeedback} from '#/plugin/exo/items/pair/feedback.jsx'
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
-import cloneDeep from 'lodash/cloneDeep'
-import times from 'lodash/times'
 
 function getCorrectedAnswer(item, answer = {data: []}) {
   const corrected = new CorrectedAnswer()
@@ -139,10 +145,20 @@ export default {
   tags: [trans('question', {}, 'quiz')],
   answerable: true,
 
+  components: {
+    editor: PairEditor
+  },
+
+  validate: () => {
+
+  },
+
+  create: (pairItem) => merge({}, PairItemType.defaultProps, pairItem),
+
+  // old
   paper: PairPaper,
   player: PairPlayer,
   feedback: PairFeedback,
-  editor,
   getCorrectedAnswer,
   generateStats
 }
