@@ -77,6 +77,7 @@
     "delete_items": "{1} Delete question|[2,Inf[ Delete %count% questions",
     "delete_object": "Delete object",
     "delete_papers": "Delete papers",
+    "direction": "Direction",
     "docimology": "Docimology",
     "docimology_difficulty_index": "Difficulty index",
     "docimology_difficulty_index_help_part_1": "The difficulty index is equivalent to the question success percentage.",
