@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\Misc\OrderingItem;
 use UJM\ExoBundle\Library\Model\PenaltyTrait;
+use UJM\ExoBundle\Library\Options\Direction;
 
 /**
  * An ordering question.
@@ -16,20 +17,6 @@ use UJM\ExoBundle\Library\Model\PenaltyTrait;
 class OrderingQuestion extends AbstractItem
 {
     use PenaltyTrait;
-
-    /**
-     * Items will be displayed with an horizontal layout.
-     *
-     * @var string
-     */
-    const DIRECTION_HORIZONTAL = 'horizontal';
-
-    /**
-     * Items will be displayed with a vertical layout.
-     *
-     * @var string
-     */
-    const DIRECTION_VERTICAL = 'vertical';
 
     /**
      * The user will reorder items within container.
@@ -61,7 +48,7 @@ class OrderingQuestion extends AbstractItem
      *
      * @var string
      */
-    private $direction = self::DIRECTION_VERTICAL;
+    private $direction = Direction::VERTICAL;
 
     /**
      * @ORM\Column(type="string")
@@ -101,9 +88,7 @@ class OrderingQuestion extends AbstractItem
      */
     public function setDirection($direction)
     {
-        if (self::DIRECTION_HORIZONTAL === $direction || self::DIRECTION_VERTICAL === $direction) {
-            $this->direction = $direction;
-        }
+        $this->direction = $direction;
     }
 
     /**

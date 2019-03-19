@@ -48,6 +48,7 @@ class ChoiceQuestionSerializer implements SerializerInterface
         $questionData->random = $choiceQuestion->getShuffle();
         $questionData->multiple = $choiceQuestion->isMultiple();
         $questionData->numbering = $choiceQuestion->getNumbering();
+        $questionData->direction = $choiceQuestion->getDirection();
 
         // Serializes choices
         $choices = $this->serializeChoices($choiceQuestion, $options);

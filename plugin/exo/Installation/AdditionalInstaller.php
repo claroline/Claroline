@@ -14,6 +14,7 @@ use UJM\ExoBundle\Installation\Updater\Updater090200;
 use UJM\ExoBundle\Installation\Updater\Updater100200;
 use UJM\ExoBundle\Installation\Updater\Updater100600;
 use UJM\ExoBundle\Installation\Updater\Updater120000;
+use UJM\ExoBundle\Installation\Updater\Updater120308;
 
 class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterface
 {
@@ -100,6 +101,12 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
 
         if (version_compare($currentVersion, '12.0.0', '<')) {
             $updater = new Updater120000($this->container);
+            $updater->setLogger($this->logger);
+            $updater->postUpdate();
+        }
+
+        if (version_compare($currentVersion, '12.3.8', '<')) {
+            $updater = new Updater120308($this->container);
             $updater->setLogger($this->logger);
             $updater->postUpdate();
         }

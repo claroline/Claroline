@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\Misc\Choice;
 use UJM\ExoBundle\Library\Model\ShuffleTrait;
+use UJM\ExoBundle\Library\Options\Direction;
 use UJM\ExoBundle\Library\Options\ExerciseNumbering;
 
 /**
@@ -46,7 +47,14 @@ class ChoiceQuestion extends AbstractItem
     private $numbering = ExerciseNumbering::NONE;
 
     /**
-     * Constructs a new instance of choices.
+     * @ORM\Column(type="string")
+     *
+     * @var string
+     */
+    private $direction = Direction::VERTICAL;
+
+    /**
+     * ChoiceQuestion constructor.
      */
     public function __construct()
     {
@@ -81,6 +89,11 @@ class ChoiceQuestion extends AbstractItem
         return $this->choices;
     }
 
+    public function setChoices(ArrayCollection $choices)
+    {
+        $this->choices = $choices;
+    }
+
     /**
      * @param Choice $choice
      */
@@ -110,5 +123,21 @@ class ChoiceQuestion extends AbstractItem
     public function getNumbering()
     {
         return $this->numbering;
+    }
+
+    /**
+     * @param string $direction
+     */
+    public function setDirection($direction)
+    {
+        $this->direction = $direction;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDirection()
+    {
+        return $this->direction;
     }
 }

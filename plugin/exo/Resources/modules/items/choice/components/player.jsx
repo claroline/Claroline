@@ -39,37 +39,39 @@ class ChoicePlayer extends Component {
   render() {
     return (
       <div className="choice-item choice-player">
-        {this.state.choices.map((choice, idx) =>
-          <label
-            key={choice.id}
-            className={classes(
-              'answer-item choice-item',
-              this.isChecked(choice.id, this.props.answer) ? 'selected-answer' : null
-            )}
-          >
-            {this.props.item.numbering !== constants.NUMBERING_NONE &&
-              <span>
-                {getNumbering(this.props.item.numbering, idx)}) {'\u00a0'} {/*non breaking whitespace */}
-              </span>
-            }
-            <input
-              checked={this.isChecked(choice.id, this.props.answer)}
-              id={choice.id}
-              className="choice-item-tick"
-              name={this.props.item.id}
-              type={this.props.item.multiple ? 'checkbox': 'radio'}
-              onChange={() => this.props.onChange(this.select(
-                this.props.item.multiple,
-                choice.id,
-                this.props.answer
-              ))}
-            />
+        <div className={classes('choice-answer-items', this.props.item.direction)}>
+          {this.state.choices.map((choice, idx) =>
+            <label
+              key={choice.id}
+              className={classes(
+                'answer-item choice-answer-item',
+                this.isChecked(choice.id, this.props.answer) ? 'selected-answer' : null
+              )}
+            >
+              {this.props.item.numbering !== constants.NUMBERING_NONE &&
+                <span>
+                  {getNumbering(this.props.item.numbering, idx)}) {'\u00a0'} {/*non breaking whitespace */}
+                </span>
+              }
+              <input
+                checked={this.isChecked(choice.id, this.props.answer)}
+                id={choice.id}
+                className="choice-item-tick"
+                name={this.props.item.id}
+                type={this.props.item.multiple ? 'checkbox': 'radio'}
+                onChange={() => this.props.onChange(this.select(
+                  this.props.item.multiple,
+                  choice.id,
+                  this.props.answer
+                ))}
+              />
 
-            <HtmlText className="choice-item-content">
-              {choice.data}
-            </HtmlText>
-          </label>
-        )}
+              <HtmlText className="choice-item-content">
+                {choice.data}
+              </HtmlText>
+            </label>
+          )}
+        </div>
       </div>
     )
   }
@@ -84,7 +86,8 @@ ChoicePlayer.propTypes = {
       data: T.string.isRequired
     })).isRequired,
     random: T.bool.isRequired,
-    multiple: T.bool.isRequired
+    multiple: T.bool.isRequired,
+    direction: T.string.isRequired
   }).isRequired,
   answer: T.arrayOf(T.string),
   onChange: T.func.isRequired

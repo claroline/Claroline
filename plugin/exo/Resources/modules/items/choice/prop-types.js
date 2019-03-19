@@ -15,14 +15,16 @@ const ChoiceItem = {
     })),
     numbering: T.oneOf(Object.keys(quizConstants.QUIZ_NUMBERINGS)),
     multiple: T.bool.isRequired,
-    random: T.bool.isRequired
+    random: T.bool.isRequired,
+    direction: T.oneOf(['vertical', 'horizontal'])
   },
   defaultProps: {
     choices: [],
     solutions: [],
     numbering: quizConstants.NUMBERING_NONE,
     multiple: false,
-    random: false
+    random: false,
+    direction: 'vertical'
   }
 }
 

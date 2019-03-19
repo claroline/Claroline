@@ -15,23 +15,23 @@ class Version20190318105603 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql('
-            ALTER TABLE ujm_question 
+            ALTER TABLE ujm_question
             DROP FOREIGN KEY FK_2F60697712469DE2
         ');
         $this->addSql('
             DROP INDEX IDX_2F60697712469DE2 ON ujm_question
         ');
         $this->addSql('
-            ALTER TABLE ujm_question 
-            DROP category_id, 
+            ALTER TABLE ujm_question
+            DROP category_id,
             DROP model
         ');
         $this->addSql('
-            ALTER TABLE ujm_interaction_hole 
+            ALTER TABLE ujm_interaction_hole
             DROP originalText
         ');
         $this->addSql('
-            ALTER TABLE ujm_hole 
+            ALTER TABLE ujm_hole
             DROP position
         ');
         $this->addSql('
@@ -42,21 +42,21 @@ class Version20190318105603 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql('
-            ALTER TABLE ujm_hole 
+            ALTER TABLE ujm_hole
             ADD position INT DEFAULT NULL
         ');
         $this->addSql('
-            ALTER TABLE ujm_interaction_hole 
+            ALTER TABLE ujm_interaction_hole
             ADD originalText TEXT DEFAULT NULL COLLATE utf8_unicode_ci
         ');
         $this->addSql('
-            ALTER TABLE ujm_question 
-            ADD category_id INT DEFAULT NULL, 
+            ALTER TABLE ujm_question
+            ADD category_id INT DEFAULT NULL,
             ADD model TINYINT(1) NOT NULL
         ');
         $this->addSql('
-            ALTER TABLE ujm_question 
-            ADD CONSTRAINT FK_2F60697712469DE2 FOREIGN KEY (category_id) 
+            ALTER TABLE ujm_question
+            ADD CONSTRAINT FK_2F60697712469DE2 FOREIGN KEY (category_id)
             REFERENCES ujm_category (id)
         ');
         $this->addSql('

@@ -1,40 +1,53 @@
-.choice-player,
-.choice-editor,
-.choice-feedback,
-.choice-paper {
-  .choice-item {
-    display: flex;
-    align-items: flex-start;
+.choice-answer-items {
+  display: flex;
+  margin: -(floor(@answer-item-margin-bottom / 2));
 
-    .choice-item-tick {
-      flex-shrink: 0;
-      align-self: flex-start; // make sure tick is always in the top left corner
-      margin-top: 4px; // same as checkboxes/radios
-      margin-right: floor(@grid-gutter-width / 2);
+  // remove <ul> styles
+  padding: 0;
+  list-style-type: none;
+
+  &.horizontal {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  &.vertical {
+    flex-direction: column;
+  }
+
+  + .btn {
+    margin-top: @answer-item-margin-bottom;
+  }
+}
+
+.choice-answer-item {
+  flex: 1;
+  margin: floor(@answer-item-margin-bottom / 2);
+  display: flex;
+  align-items: flex-start;
+
+  .choice-item-tick {
+    flex-shrink: 0;
+    align-self: flex-start; // make sure tick is always in the top left corner
+    margin-top: 4px; // same as checkboxes/radios
+    margin-right: floor(@grid-gutter-width / 2);
+  }
+
+  .choice-item-content {
+    flex: 1;
+
+    > p { // remove margin on tinyMCE container
+      margin-bottom: 0;
     }
+  }
 
-    .choice-item-content {
-      flex: 1;
-
-      > p { // remove margin on tinyMCE container
-        margin-bottom: 0;
-      }
-    }
-
-    .choice-item-feedback {
-      margin-left: floor(@grid-gutter-width / 2);
-    }
+  .choice-item-feedback {
+    margin-left: floor(@grid-gutter-width / 2);
   }
 }
 
 .choice-editor {
-  .choice-items {
-    padding: 0;
-    margin: 0;
-    list-style-type: none;
-  }
-
-  .choice-item {
+  .choice-answer-item {
     .text-fields {
       flex: 1;
       margin-right: floor(@grid-gutter-width / 2);
@@ -53,7 +66,7 @@
 }
 
 .choice-player {
-  .choice-item {
+  .choice-answer-item {
     cursor: pointer;
 
     &:hover:not(.selected-answer) {
