@@ -1,12 +1,20 @@
 import {trans} from '#/main/app/intl/translation'
 
 import { stripDiacritics } from '#/main/core/scaffolding/text/strip-diacritics'
-import editor, {SUM_CELL, SUM_COL, SUM_ROW} from './editor'
-import {GridPaper} from './paper.jsx'
-import {GridPlayer} from './player.jsx'
-import {GridFeedback} from './feedback.jsx'
+import editor, {SUM_CELL, SUM_COL, SUM_ROW} from '#/plugin/exo/items/grid/editor'
+
+import {GridEditor} from '#/plugin/exo/items/grid/components/editor.jsx'
+import {GridPaper} from '#/plugin/exo/items/grid/paper.jsx'
+import {GridPlayer} from '#/plugin/exo/items/grid/player.jsx'
+import {GridFeedback} from '#/plugin/exo/items/grid/feedback.jsx'
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
-import {utils} from './utils/utils'
+import {utils} from '#/plugin/exo/items/grid/utils/utils'
+
+// scores
+import ScoreFixed from '#/plugin/exo/scores/fixed'
+import ScoreSum from '#/plugin/exo/scores/sum'
+
+import {GridItem as GridItemTypes} from '#/plugin/exo/items/grid/prop-types'
 
 function getCorrectedAnswer(item, answer = {data: []}) {
   if (item.score.type === 'fixed') {
@@ -211,5 +219,15 @@ export default {
   feedback: GridFeedback,
   editor,
   getCorrectedAnswer,
-  generateStats
+  generateStats,
+
+  components: {
+    editor: GridEditor
+  },
+
+  create: (item) => {
+    return Object.assign(item, GridItemTypes.defaultProps)
+  },
+
+  supportScores:(item) => [ScoreSum, ScoreFixed]
 }
