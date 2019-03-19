@@ -20,10 +20,10 @@ const ItemType = {
     answerable: T.bool.isRequired,
 
     components: T.shape({
-      player: T.element.isRequired,
+      //player: T.element.isRequired,
       editor: T.element.isRequired,
-      paper: T.element.isRequired,
-      statistics: T.element.isRequired
+      //paper: T.element.isRequired,
+      //statistics: T.element.isRequired
     }),
 
     create: T.func,

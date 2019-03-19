@@ -7,6 +7,9 @@ import {ClozeFeedback} from './feedback.jsx'
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
 import {utils} from './utils/utils'
 
+// scores
+import ScoreSum from '#/plugin/exo/scores/sum'
+
 function getCorrectedAnswer(item, answers = null) {
   const corrected = new CorrectedAnswer()
 
@@ -111,6 +114,10 @@ export default {
   name: 'cloze',
   tags: [trans('question', {}, 'quiz')],
   answerable: true,
+
+  supportScores: () => [
+    ScoreSum
+  ],
 
   paper: ClozePaper,
   player: ClozePlayer,

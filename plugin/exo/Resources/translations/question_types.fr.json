@@ -26,5 +26,5 @@
     "boolean": "Vrai / Faux",
     "boolean_desc": "Choisir entre deux réponses : vrai / faux, oui / non ou toute autre paire personnalisée.",
     "selection_desc": "Rechercher, choisir ou surligner des zones de texte.",
-    "selection": "Selection"
+    "selection": "Sélection"
 }

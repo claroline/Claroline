@@ -208,23 +208,4 @@ class ExerciseListener
         $event->setCopy($newExercise);
         $event->stopPropagation();
     }
-
-    /**
-     * @DI\Observe("publication_change_ujm_exercise")
-     *
-     * @param PublicationChangeEvent $event
-     */
-    public function onPublicationChange(PublicationChangeEvent $event)
-    {
-        /** @var Exercise $exercise */
-        $exercise = $event->getResource();
-
-        if ($exercise->getResourceNode()->isPublished()) {
-            $this->exerciseManager->publish($exercise);
-        } else {
-            $this->exerciseManager->unpublish($exercise);
-        }
-
-        $event->stopPropagation();
-    }
 }

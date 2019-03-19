@@ -4,6 +4,7 @@ namespace UJM\ExoBundle\Manager\Attempt;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
+use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -11,10 +12,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Event\Log\LogExerciseEvaluatedEvent;
-use UJM\ExoBundle\Library\Mode\CorrectionMode;
-use UJM\ExoBundle\Library\Mode\MarkMode;
+use UJM\ExoBundle\Library\Options\ShowCorrectionAt;
+use UJM\ExoBundle\Library\Options\ShowScoreAt;
 use UJM\ExoBundle\Library\Options\Transfer;
-use UJM\ExoBundle\Library\Validator\ValidationException;
 use UJM\ExoBundle\Manager\Item\ItemManager;
 use UJM\ExoBundle\Repository\PaperRepository;
 use UJM\ExoBundle\Serializer\Attempt\PaperSerializer;
@@ -198,18 +198,9 @@ class PaperManager
      * Deletes all the papers associated with an exercise.
      *
      * @param Exercise $exercise
-     *
-     * @throws ValidationException if the exercise has been published at least once
      */
     public function deleteAll(Exercise $exercise)
     {
-        if ($exercise->wasPublishedOnce()) {
-            throw new ValidationException('Papers cannot be deleted', [[
-                'path' => '',
-                'message' => 'exercise has been published once.',
-            ]]);
-        }
-
         $papers = $this->repository->findBy([
             'exercise' => $exercise,
         ]);
@@ -225,19 +216,9 @@ class PaperManager
      * Deletes a paper.
      *
      * @param Paper $paper
-     *
-     * @throws ValidationException if the exercise has been published at least once
      */
     public function delete(Paper $paper)
     {
-        if ($paper->getExercise()->wasPublishedOnce()) {
-            // Question is used, we can't delete it
-            throw new ValidationException('Paper can not be deleted', [[
-                'path' => '',
-                'message' => 'exercise has been published once.',
-            ]]);
-        }
-
         $this->om->remove($paper);
         $this->om->flush();
     }
@@ -305,70 +286,6 @@ class PaperManager
     }
 
     /**
-     * Returns the max min and average score for a given exercise.
-     *
-     * @param Exercise $exercise
-     * @param float    $scoreOn
-     *
-     * @return \stdClass
-     */
-    public function getMinMaxAverageScores(Exercise $exercise, $scoreOn)
-    {
-        $papers = $this->repository->findBy([
-            'exercise' => $exercise,
-        ]);
-
-        $scores = $this->getPapersScores($papers, $scoreOn);
-
-        $result = new \stdClass();
-        $result->min = 0 === count($scores) ? 0 : min($scores);
-        $result->max = 0 === count($scores) ? 0 : max($scores);
-        $average = 0 === count($scores) ? 0 : array_sum($scores) / count($scores);
-        $result->avg = $average !== floor($average) ? floatval(number_format($average, 2)) : $average;
-
-        return $result;
-    }
-
-    /**
-     * Returns the number of fully, partially successfull and missed papers for a given exercise.
-     *
-     * @param Exercise $exercise
-     * @param float    $scoreOn
-     *
-     * @return \stdClass
-     */
-    public function getPapersSuccessDistribution(Exercise $exercise, $scoreOn)
-    {
-        $papers = $this->repository->findBy([
-            'exercise' => $exercise,
-        ]);
-
-        $nbSuccess = 0;
-        $nbMissed = 0;
-        $nbPartialSuccess = 0;
-
-        $scores = $this->getPapersScores($papers, $scoreOn);
-
-        /* @var Paper $paper */
-        foreach ($scores as $score) {
-            if ($score === floatval(0)) {
-                ++$nbMissed;
-            } elseif ($score === floatval($scoreOn)) {
-                ++$nbSuccess;
-            } else {
-                ++$nbPartialSuccess;
-            }
-        }
-
-        $papersSuccessDistribution = new \stdClass();
-        $papersSuccessDistribution->nbSuccess = $nbSuccess;
-        $papersSuccessDistribution->nbMissed = $nbMissed;
-        $papersSuccessDistribution->nbPartialSuccess = $nbPartialSuccess;
-
-        return $papersSuccessDistribution;
-    }
-
-    /**
      * Check if the solution of the Paper is available to User.
      *
      * @param Exercise $exercise
@@ -380,20 +297,20 @@ class PaperManager
     {
         $correctionMode = $exercise->getCorrectionMode();
         switch ($correctionMode) {
-            case CorrectionMode::AFTER_END:
+            case ShowCorrectionAt::AFTER_END:
                 $available = !empty($paper->getEnd());
                 break;
 
-            case CorrectionMode::AFTER_LAST_ATTEMPT:
+            case ShowCorrectionAt::AFTER_LAST_ATTEMPT:
                 $available = 0 === $exercise->getMaxAttempts() || $paper->getNumber() === $exercise->getMaxAttempts();
                 break;
 
-            case CorrectionMode::AFTER_DATE:
+            case ShowCorrectionAt::AFTER_DATE:
                 $now = new \DateTime();
                 $available = empty($exercise->getDateCorrection()) || $now >= $exercise->getDateCorrection();
                 break;
 
-            case CorrectionMode::NEVER:
+            case ShowCorrectionAt::NEVER:
             default:
                 $available = false;
                 break;
@@ -414,13 +331,13 @@ class PaperManager
     {
         $markMode = $exercise->getMarkMode();
         switch ($markMode) {
-            case MarkMode::AFTER_END:
+            case ShowScoreAt::AFTER_END:
                 $available = !empty($paper->getEnd());
                 break;
-            case MarkMode::NEVER:
+            case ShowScoreAt::NEVER:
                 $available = false;
                 break;
-            case MarkMode::WITH_CORRECTION:
+            case ShowScoreAt::WITH_CORRECTION:
             default:
                 $available = $this->isSolutionAvailable($exercise, $paper);
                 break;
@@ -434,6 +351,8 @@ class PaperManager
      *
      * @param Paper $paper
      * @param bool  $finished
+     *
+     * @return ResourceEvaluation
      */
     public function generateResourceEvaluation(Paper $paper, $finished)
     {
@@ -441,10 +360,11 @@ class PaperManager
         $total = $totalScoreOn ? $totalScoreOn : $this->calculateTotal($paper);
         $score = $this->calculateScore($paper, $total);
         $successScore = $paper->getExercise()->getSuccessScore();
-        $data = [];
-        $data['paper'] = [
-            'id' => $paper->getId(),
-            'uuid' => $paper->getUuid(),
+        $data = [
+            'paper' => [
+                'id' => $paper->getId(),
+                'uuid' => $paper->getUuid(),
+            ],
         ];
 
         if ($finished) {
@@ -501,7 +421,7 @@ class PaperManager
      */
     public function replaceUser(User $from, User $to)
     {
-        $papers = $this->repository->findByUser($from);
+        $papers = $this->repository->findBy(['user' => $from]);
 
         if (count($papers) > 0) {
             foreach ($papers as $paper) {

@@ -9,6 +9,9 @@ import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/componen
 import {MatchItem as MatchItemTypes} from '#/plugin/exo/items/match/prop-types'
 import times from 'lodash/times'
 
+// scores
+import ScoreSum from '#/plugin/exo/scores/sum'
+
 function getCorrectedAnswer(item, answer = {data: []}) {
   const corrected = new CorrectedAnswer()
 
@@ -87,14 +90,15 @@ export default {
     editor: MatchEditor
   },
 
+  supportScores: () => [
+    ScoreSum
+  ],
+
   validate: () => {
 
   },
 
-  create: (item) => {
-    //return item
-    return Object.assign(item, MatchItemTypes.defaultProps)
-  },
+  create: (item) => Object.assign(item, MatchItemTypes.defaultProps),
 
   paper: MatchPaper,
   player: MatchPlayer,

@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Library\Mode\MarkMode;
+use UJM\ExoBundle\Library\Options\ShowScoreAt;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Library\Validator\ValidationException;
 use UJM\ExoBundle\Manager\Attempt\PaperManager;
@@ -97,7 +97,7 @@ class PaperController extends AbstractController
             $this->authorization->isGranted('MANAGE_PAPERS', $collection)
         )) {
             $params['hiddenFilters']['user'] = $user->getid();
-        } elseif (MarkMode::NEVER !== $exercise->getMarkMode()) {
+        } elseif (ShowScoreAt::NEVER !== $exercise->getMarkMode()) {
             $serializationOptions[] = Transfer::INCLUDE_USER_SCORE;
         }
 

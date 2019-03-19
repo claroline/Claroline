@@ -7,11 +7,11 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\Item\Item;
-use UJM\ExoBundle\Library\Mode\CorrectionMode;
-use UJM\ExoBundle\Library\Mode\MarkMode;
 use UJM\ExoBundle\Library\Model\AttemptParametersTrait;
 use UJM\ExoBundle\Library\Options\ExerciseNumbering;
 use UJM\ExoBundle\Library\Options\ExerciseType;
+use UJM\ExoBundle\Library\Options\ShowCorrectionAt;
+use UJM\ExoBundle\Library\Options\ShowScoreAt;
 
 /**
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ExerciseRepository")
@@ -35,9 +35,9 @@ class Exercise extends AbstractResource
      *
      * @var string
      *
-     * @ORM\Column(name="correction_mode", type="string", length=255)
+     * @ORM\Column(name="correction_mode", type="string")
      */
-    private $correctionMode = CorrectionMode::AFTER_END;
+    private $correctionMode = ShowCorrectionAt::AFTER_END;
 
     /**
      * Date of availability of the corrections.
@@ -53,9 +53,9 @@ class Exercise extends AbstractResource
      *
      * @var string
      *
-     * @ORM\Column(name="mark_mode", type="string", length=255)
+     * @ORM\Column(name="mark_mode", type="string")
      */
-    private $markMode = MarkMode::WITH_CORRECTION;
+    private $markMode = ShowScoreAt::WITH_CORRECTION;
 
     /**
      * Add a button to stop the Exercise before the end.

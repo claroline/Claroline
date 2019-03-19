@@ -191,37 +191,6 @@ class ExerciseManager
     }
 
     /**
-     * Publishes an exercise.
-     *
-     * @param Exercise $exercise
-     *
-     * @throws \LogicException if the exercise is already published
-     */
-    public function publish(Exercise $exercise)
-    {
-        if (!$exercise->wasPublishedOnce()) {
-            $this->paperManager->deleteAll($exercise);
-            $exercise->setPublishedOnce(true);
-        }
-
-        $exercise->getResourceNode()->setPublished(true);
-        $this->om->persist($exercise);
-
-        $this->om->flush();
-    }
-
-    /**
-     * Unpublishes an exercise.
-     *
-     * @param Exercise $exercise
-     */
-    public function unpublish(Exercise $exercise)
-    {
-        $exercise->getResourceNode()->setPublished(false);
-        $this->om->flush();
-    }
-
-    /**
      * Creates a copy of a quiz definition.
      * (aka it creates a new entity if needed and generate new IDs for quiz data).
      *

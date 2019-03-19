@@ -7,6 +7,10 @@ import {SelectionFeedback} from './feedback.jsx'
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
 import times from 'lodash/times'
 
+// scores
+import ScoreFixed from '#/plugin/exo/scores/fixed'
+import ScoreSum from '#/plugin/exo/scores/sum'
+
 function getCorrectedAnswer(item, answer) {
   const corrected = new CorrectedAnswer()
 
@@ -90,6 +94,11 @@ export default {
   name: 'selection',
   tags: [trans('question', {}, 'quiz')],
   answerable: true,
+
+  supportScores: () => [
+    ScoreFixed,
+    ScoreSum
+  ],
 
   paper: SelectionPaper,
   player: SelectionPlayer,

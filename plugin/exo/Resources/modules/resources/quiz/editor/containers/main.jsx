@@ -14,7 +14,7 @@ const EditorMain = withRouter(
       formName: selectors.FORM_NAME,
       validating: formSelectors.validating(formSelectors.form(state, selectors.FORM_NAME)),
       pendingChanges: formSelectors.pendingChanges(formSelectors.form(state, selectors.FORM_NAME)),
-      errors: !formSelectors.valid(formSelectors.form(state, selectors.FORM_NAME)),
+      errors: formSelectors.errors(formSelectors.form(state, selectors.FORM_NAME)),
 
       quizId: formSelectors.value(formSelectors.form(state, selectors.FORM_NAME), 'id'),
       workspace: resourceSelectors.workspace(state),

@@ -9,15 +9,19 @@ import {Item as ItemTypes, ItemType as ItemTypeTypes} from '#/plugin/exo/items/p
 import {ItemType} from '#/plugin/exo/items/components/type'
 
 const ItemEditor = props => {
-  const supportedScores = props.definition.supportScores(props.item)
+  let supportedScores, currentScore, availableScores
+  if (props.definition.answerable) {
+    supportedScores = props.definition.supportScores(props.item)
 
-  const currentScore = supportedScores.find(score => score.name === get(props.item, 'score.type'))
-  const availableScores = supportedScores.reduce((scoreChoices, current) => Object.assign(scoreChoices, {
-    [current.name]: current.meta.label
-  }), {})
+    currentScore = supportedScores.find(score => score.name === get(props.item, 'score.type'))
+    availableScores = supportedScores.reduce((scoreChoices, current) => Object.assign(scoreChoices, {
+      [current.name]: current.meta.label
+    }), {})
+  }
 
   return (
     <FormData
+      className="quiz-item item-editor"
       embedded={props.embedded}
       name={props.formName}
       meta={true}
@@ -40,8 +44,7 @@ const ItemEditor = props => {
               type: 'html',
               required: true
             }
-          ],
-
+          ]
         }, {
           title: trans('custom'),
           primary: true,

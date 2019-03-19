@@ -6,12 +6,9 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Step;
-use UJM\ExoBundle\Library\Mode\CorrectionMode;
-use UJM\ExoBundle\Library\Mode\MarkMode;
 use UJM\ExoBundle\Library\Options\Picking;
 use UJM\ExoBundle\Library\Options\Recurrence;
 use UJM\ExoBundle\Library\Options\ShowCorrectionAt;
-use UJM\ExoBundle\Library\Options\ShowScoreAt;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Library\Serializer\SerializerInterface;
 use UJM\ExoBundle\Manager\Item\ItemManager;
@@ -170,32 +167,8 @@ class ExerciseSerializer implements SerializerInterface
         $parameters->allPapersStatistics = $exercise->isAllPapersStatistics();
         $parameters->showFullCorrection = !$exercise->isMinimalCorrection();
 
-        switch ($exercise->getMarkMode()) {
-            case MarkMode::AFTER_END:
-                $parameters->showScoreAt = ShowScoreAt::AFTER_END;
-                break;
-            case MarkMode::WITH_CORRECTION:
-                $parameters->showScoreAt = ShowScoreAt::WITH_CORRECTION;
-                break;
-            case MarkMode::NEVER:
-                $parameters->showScoreAt = ShowScoreAt::NEVER;
-                break;
-        }
-
-        switch ($exercise->getCorrectionMode()) {
-            case CorrectionMode::AFTER_END:
-                $parameters->showCorrectionAt = ShowCorrectionAt::AFTER_END;
-                break;
-            case CorrectionMode::AFTER_LAST_ATTEMPT:
-                $parameters->showCorrectionAt = ShowCorrectionAt::AFTER_LAST_ATTEMPT;
-                break;
-            case CorrectionMode::AFTER_DATE:
-                $parameters->showCorrectionAt = ShowCorrectionAt::AFTER_DATE;
-                break;
-            case CorrectionMode::NEVER:
-                $parameters->showCorrectionAt = ShowCorrectionAt::NEVER;
-                break;
-        }
+        $parameters->showScoreAt = $exercise->getMarkMode();
+        $parameters->showCorrectionAt = $exercise->getCorrectionMode();
 
         // score of parameter
         $parameters->totalScoreOn = $exercise->getTotalScoreOn();
@@ -301,17 +274,7 @@ class ExerciseSerializer implements SerializerInterface
         }
 
         if (isset($parameters->showScoreAt)) {
-            switch ($parameters->showScoreAt) {
-                case ShowScoreAt::AFTER_END:
-                    $exercise->setMarkMode(MarkMode::AFTER_END);
-                    break;
-                case ShowScoreAt::WITH_CORRECTION:
-                    $exercise->setMarkMode(MarkMode::WITH_CORRECTION);
-                    break;
-                case ShowScoreAt::NEVER:
-                    $exercise->setMarkMode(MarkMode::NEVER);
-                    break;
-            }
+            $exercise->setMarkMode($parameters->showScoreAt);
         }
 
         if (isset($parameters->totalScoreOn)) {
@@ -326,21 +289,11 @@ class ExerciseSerializer implements SerializerInterface
         $exercise->setSuccessScore($success);
 
         if (isset($parameters->showCorrectionAt)) {
+            $exercise->setCorrectionMode($parameters->showCorrectionAt);
+
             $correctionDate = null;
-            switch ($parameters->showCorrectionAt) {
-                case ShowCorrectionAt::AFTER_END:
-                    $exercise->setCorrectionMode(CorrectionMode::AFTER_END);
-                    break;
-                case ShowCorrectionAt::AFTER_LAST_ATTEMPT:
-                    $exercise->setCorrectionMode(CorrectionMode::AFTER_LAST_ATTEMPT);
-                    break;
-                case ShowCorrectionAt::AFTER_DATE:
-                    $exercise->setCorrectionMode(CorrectionMode::AFTER_DATE);
-                    $correctionDate = \DateTime::createFromFormat('Y-m-d\TH:i:s', $parameters->correctionDate);
-                    break;
-                case ShowCorrectionAt::NEVER:
-                    $exercise->setCorrectionMode(CorrectionMode::NEVER);
-                    break;
+            if (ShowCorrectionAt::AFTER_DATE === $parameters->showCorrectionAt) {
+                $correctionDate = \DateTime::createFromFormat('Y-m-d\TH:i:s', $parameters->correctionDate);
             }
 
             $exercise->setDateCorrection($correctionDate);

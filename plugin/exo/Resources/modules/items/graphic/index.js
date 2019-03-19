@@ -8,6 +8,8 @@ import {GraphicFeedback} from '#/plugin/exo/items/graphic/feedback.jsx'
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
 import {GraphicItem as GraphicItemTypes} from '#/plugin/exo/items/graphic/prop-types'
 
+import ScoreSum from '#/plugin/exo/scores/sum'
+
 function getCorrectedAnswer(item, answers) {
   const corrected = new CorrectedAnswer()
 
@@ -120,8 +122,9 @@ export default {
     editor: GraphicEditor
   },
 
-  create: (item) => {
-  //return item
-    return Object.assign(item, GraphicItemTypes.defaultProps)
-  }
+  supportScores: () => [
+    ScoreSum
+  ],
+
+  create: (item) => Object.assign(item, GraphicItemTypes.defaultProps)
 }

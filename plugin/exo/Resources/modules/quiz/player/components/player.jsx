@@ -33,9 +33,9 @@ import {constants} from '#/plugin/exo/resources/quiz/constants'
 
 const CurrentStep = props =>
   <section className="current-step">
-    <h2 className="h4 h-first">
+    <h3 className="h2 h-first">
       {props.step.title ? props.step.title : trans('step', {}, 'quiz') + ' ' + props.number}
-    </h2>
+    </h3>
 
     {props.step.description &&
       <HtmlText className="step-description">{props.step.description}</HtmlText>

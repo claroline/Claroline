@@ -14,6 +14,9 @@ import {PairPlayer} from '#/plugin/exo/items/pair/player.jsx'
 import {PairFeedback} from '#/plugin/exo/items/pair/feedback.jsx'
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
 
+// scores
+import ScoreSum from '#/plugin/exo/scores/sum'
+
 function getCorrectedAnswer(item, answer = {data: []}) {
   const corrected = new CorrectedAnswer()
 
@@ -149,9 +152,9 @@ export default {
     editor: PairEditor
   },
 
-  validate: () => {
-
-  },
+  supportScores: () => [
+    ScoreSum
+  ],
 
   create: (pairItem) => merge({}, PairItemType.defaultProps, pairItem),
 

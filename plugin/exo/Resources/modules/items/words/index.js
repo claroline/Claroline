@@ -9,6 +9,9 @@ import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/componen
 import {WordsItem as WordsItemTypes} from '#/plugin/exo/items/words/prop-types'
 import {utils} from './utils/utils'
 
+// scores
+import ScoreSum from '#/plugin/exo/scores/sum'
+
 function getCorrectedAnswer(item, answer = {data: ''}) {
   const corrected = new CorrectedAnswer()
 
@@ -86,8 +89,9 @@ export default {
     editor: WordsEditor
   },
 
-  validate: () => {
-  },
+  supportScores: () => [
+    ScoreSum
+  ],
 
   create: item => {
     return Object.assign(item, WordsItemTypes.defaultProps)

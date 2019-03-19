@@ -11,6 +11,9 @@ import {SetPlayer} from '#/plugin/exo/items/set/player.jsx'
 import {SetFeedback} from '#/plugin/exo/items/set/feedback.jsx'
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
 
+// scores
+import ScoreSum from '#/plugin/exo/scores/sum'
+
 function getCorrectedAnswer(item, answer = {data: []}) {
   const corrected = new CorrectedAnswer()
 
@@ -97,9 +100,9 @@ export default {
     editor: SetEditor
   },
 
-  validate: () => {
-
-  },
+  supportScores: () => [
+    ScoreSum
+  ],
 
   create: (setItem) => merge({}, SetItemType.defaultProps, setItem),
 
