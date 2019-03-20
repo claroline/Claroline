@@ -2,6 +2,7 @@ import {connect} from 'react-redux'
 
 import {withRouter} from '#/main/app/router'
 
+import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {actions as explorerActions, selectors as explorerSelectors} from '#/main/core/resource/explorer/store'
 import {selectors} from '#/main/core/tools/resources/store'
 import {ResourcesTool as ResourcesToolComponent} from '#/main/core/tools/resources/components/tool'
@@ -9,6 +10,7 @@ import {ResourcesTool as ResourcesToolComponent} from '#/main/core/tools/resourc
 const ResourcesTool = withRouter(
   connect(
     (state) => ({
+      contextType: toolSelectors.contextType(state),
       loading: explorerSelectors.loading(explorerSelectors.explorer(state, selectors.STORE_NAME)),
       current: explorerSelectors.currentNode(explorerSelectors.explorer(state, selectors.STORE_NAME))
     }),
