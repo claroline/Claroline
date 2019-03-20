@@ -21,7 +21,7 @@ const ItemType = {
 
     components: T.shape({
       //player: T.element.isRequired,
-      editor: T.element.isRequired,
+      editor: T.func.isRequired,
       //paper: T.element.isRequired,
       //statistics: T.element.isRequired
     }),

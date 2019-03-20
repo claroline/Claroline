@@ -12,6 +12,7 @@ import {SolutionScore} from '#/plugin/exo/items/components/score'
 import {AnswerStats} from '#/plugin/exo/items/components/stats'
 import {PaperTabs} from '#/plugin/exo/items/components/paper-tabs'
 import {WarningIcon} from '#/plugin/exo/items/choice/components/warning-icon'
+import {ChoiceItem as ChoiceItemTypes} from '#/plugin/exo/items/choice/prop-types'
 
 export const ChoicePaper = props => {
   return (
@@ -147,18 +148,9 @@ export const ChoicePaper = props => {
 }
 
 ChoicePaper.propTypes = {
-  item: T.shape({
-    id: T.string.isRequired,
-    score: T.shape({
-      type: T.string.isRequired
-    }),
-    choices: T.arrayOf(T.shape({
-      id: T.string.isRequired,
-      data: T.string.isRequired
-    })).isRequired,
-    multiple: T.bool.isRequired,
-    solutions: T.arrayOf(T.object)
-  }).isRequired,
+  item: T.shape(
+    ChoiceItemTypes.propTypes
+  ).isRequired,
   answer: T.array,
   showScore: T.bool.isRequired,
   showYours: T.bool.isRequired,

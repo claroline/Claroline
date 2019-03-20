@@ -5,21 +5,20 @@ import {trans} from '#/main/app/intl/translation'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {MODAL_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
+import {FormSections} from '#/main/app/content/form/components/sections'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 
 import {MODAL_ITEM_CREATION} from '#/plugin/exo/items/modals/creation'
 import {MODAL_ITEM_IMPORT} from '#/plugin/exo/items/modals/import'
 import {getNumbering} from '#/plugin/exo/resources/quiz/utils'
 import {EditorItem} from '#/plugin/exo/resources/quiz/editor/components/item'
-import {selectors} from '#/plugin/exo/resources/quiz/editor/store/selectors'
 
 // TODO : lock edition of protected items
 
 const EditorStep = props => {
-  const numbering = getNumbering(props.numbering, props.index)
+  const numbering = getNumbering(props.numberingType, props.index)
 
   return (
     <Fragment>
@@ -89,7 +88,7 @@ const EditorStep = props => {
                 formName={props.formName}
                 path={`${props.path}.items[${itemIndex}]`}
 
-                index={itemIndex}
+                numbering={getNumbering(props.numberingType, props.index, itemIndex)}
                 item={item}
                 update={(prop, value) => props.update(`items[${itemIndex}].${prop}`, value)}
               />
@@ -128,9 +127,9 @@ const EditorStep = props => {
 EditorStep.propsTypes = {
   formName: T.string.isRequired,
   path: T.string.isRequired,
+  numberingType: T.string.isRequired,
 
   index: T.number.isRequired,
-  numbering: T.string.isRequired,
   title: T.string,
   actions: T.arrayOf(T.shape(
     ActionTypes.propTypes

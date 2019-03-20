@@ -9,7 +9,7 @@ export default {
     description: trans('score_manual_desc', {}, 'quiz')
   },
 
-  configure: (score) => [
+  configure: () => [
     {
       name: 'max',
       label: trans('score_max', {}, 'quiz'),

@@ -184,6 +184,7 @@ class FieldList extends Component {
 FieldList.propTypes = {
   id: T.string.isRequired,
   placeholder: T.string,
+  className: T.string,
   value: T.arrayOf(T.shape({
 
   })),

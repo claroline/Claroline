@@ -39,7 +39,7 @@ function createFormDefinition(sections, data) {
     .map(section => {
       // adds defaults to the section configuration
       const defaultedSection = merge({}, DataFormSection.defaultProps, section)
-      if (isDisplayed(defaultedSection, data) && (0 !== defaultedSection.fields.length || defaultedSection.render)) {
+      if (isDisplayed(defaultedSection, data)) {
         // section has fields and is displayed keep it
         defaultedSection.fields = defaultedSection.fields
         // adds default to fields
@@ -47,7 +47,11 @@ function createFormDefinition(sections, data) {
           // filters hidden fields
           .filter(field => isDisplayed(field, data))
 
-        return defaultedSection
+        if (0 !== defaultedSection.fields.length || defaultedSection.render) {
+          return defaultedSection
+        }
+
+        return null
       }
 
       // only keep the section if it has fields

@@ -126,6 +126,7 @@ const Choices = props =>
         <Choice
           key={choice.id}
           id={choice.id}
+          type={choice.type}
           data={choice.data}
           score={choice.score}
           feedback={choice.feedback}
@@ -214,6 +215,7 @@ const ChoiceEditor = props =>
 
                   choices={choiceItem.choices.map(choice => ({
                     id: choice.id,
+                    type: choice.type,
                     data: choice.data
                   }))}
 

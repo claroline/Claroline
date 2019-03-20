@@ -1,9 +1,10 @@
 import {trans} from '#/main/app/intl/translation'
 
-import editor from './editor'
-import {VideoContentPlayer} from './player.jsx'
-import {VideoContentThumbnail} from './thumbnail.jsx'
-import {VideoContentModal} from './modal.jsx'
+import {VideoEditor} from '#/plugin/exo/contents/video/components/editor'
+
+import {VideoContentPlayer} from '#/plugin/exo/contents/video/components/player'
+import {VideoContentThumbnail} from '#/plugin/exo/contents/video/components/thumbnail'
+import {VideoContentModal} from '#/plugin/exo/contents/video/components/modal'
 
 export default {
   type: 'video',
@@ -11,11 +12,11 @@ export default {
   tags: [trans('content')],
   answerable: false,
 
-  icon: 'fa fa-video-camera',
+  components: {
+    editor: VideoEditor
+  },
+
   player: VideoContentPlayer,
-  browseFiles: 'video',
   thumbnail: VideoContentThumbnail,
-  modal: VideoContentModal,
-  editable: false,
-  editor
+  modal: VideoContentModal
 }

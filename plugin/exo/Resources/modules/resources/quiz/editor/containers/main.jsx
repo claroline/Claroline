@@ -84,7 +84,7 @@ const EditorMain = withRouter(
        */
       moveStep(stepId, position) {
         dispatch(actions.moveStep(stepId, position))
-      },
+      }
     })
   )(EditorMainComponent)
 )

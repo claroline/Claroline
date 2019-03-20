@@ -1,9 +1,10 @@
 import {trans} from '#/main/app/intl/translation'
 
-import editor from './editor'
-import {AudioContentPlayer} from './player.jsx'
-import {AudioContentThumbnail} from './thumbnail.jsx'
-import {AudioContentModal} from './modal.jsx'
+import {AudioEditor} from '#/plugin/exo/contents/audio/components/editor'
+
+import {AudioContentPlayer} from '#/plugin/exo/contents/audio/components/player'
+import {AudioContentThumbnail} from '#/plugin/exo/contents/audio/components/thumbnail'
+import {AudioContentModal} from '#/plugin/exo/contents/audio/components/modal'
 
 export default {
   type: 'audio',
@@ -11,11 +12,11 @@ export default {
   tags: [trans('content')],
   answerable: false,
 
-  icon: 'fa fa-volume-up',
+  components: {
+    editor: AudioEditor
+  },
+
   player: AudioContentPlayer,
-  browseFiles: 'audio',
   thumbnail: AudioContentThumbnail,
-  modal: AudioContentModal,
-  editable: false,
-  editor
+  modal: AudioContentModal
 }

@@ -17,17 +17,6 @@ class TimeInput extends PureComponent {
   }
 
   render() {
-    const commonProps = {
-      id: this.props.id,
-      className: classes('form-control', {
-        [`input-${this.props.size}`]: !!this.props.size
-      }),
-      value: this.props.value || '',
-      disabled: this.props.disabled,
-      onChange: this.onChange,
-      autoComplete: this.props.autoComplete
-    }
-
     return (
       <div className={classes('input-group', this.props.className, {
         [`input-group-${this.props.size}`]: !!this.props.size

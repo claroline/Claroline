@@ -1,10 +1,8 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {trans} from '#/main/app/intl/translation'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {MenuButton} from '#/main/app/buttons/menu/components/button'
-
 
 import {QUIZ_TYPES} from '#/plugin/exo/resources/quiz/types'
 

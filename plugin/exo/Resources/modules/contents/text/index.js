@@ -1,9 +1,10 @@
 import {trans} from '#/main/app/intl/translation'
 
-import editor from './editor'
-import {TextContentPlayer} from './player.jsx'
-import {TextContentThumbnail} from './thumbnail.jsx'
-import {TextContentModal} from './modal.jsx'
+import {TextEditor} from '#/plugin/exo/contents/text/components/editor'
+
+import {TextContentPlayer} from '#/plugin/exo/contents/text/components/player'
+import {TextContentThumbnail} from '#/plugin/exo/contents/text/components/thumbnail'
+import {TextContentModal} from '#/plugin/exo/contents/text/components/modal'
 
 export default {
   type: 'text',
@@ -11,11 +12,11 @@ export default {
   tags: [trans('content')],
   answerable: false,
 
-  mimeType: 'text/html',
-  icon: 'fa fa-align-justify',
+  components: {
+    editor: TextEditor
+  },
+
   player: TextContentPlayer,
   thumbnail: TextContentThumbnail,
-  modal: TextContentModal,
-  editable: true,
-  editor
+  modal: TextContentModal
 }

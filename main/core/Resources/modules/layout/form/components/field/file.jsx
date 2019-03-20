@@ -3,7 +3,6 @@ import {connect} from 'react-redux'
 import has from 'lodash/has'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {trans} from '#/main/app/intl/translation'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {actions} from '#/main/app/api/store'
 

@@ -34,7 +34,7 @@ const StorageInput = props =>
       <Button
         id={`units-${props.id}`}
         className="btn"
-        type={CALLBACK_BUTTON}
+        type={MENU_BUTTON}
         label="KB"
         menu={{
           label: trans('units'),

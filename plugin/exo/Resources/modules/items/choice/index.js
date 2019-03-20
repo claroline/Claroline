@@ -31,7 +31,7 @@ export default {
   supportScores: (item) => {
     const supportedScores = [
       ScoreFixed,
-      ScoreSum,
+      ScoreSum
     ]
 
     if (item.multiple) {

@@ -1,25 +1,9 @@
 import invariant from 'invariant'
-import difference from 'lodash/difference'
 
 import textContent from './text'
 import imageContent from './image'
 import audioContent from './audio'
 import videoContent from './video'
-
-const typeProperties = [
-  'type',
-  'mimeType',
-  'content',
-  'editable',
-  'editor',
-  'player',
-  'validate',
-  'icon',
-  'altIcon',
-  'browseFiles',
-  'thumbnail',
-  'modal'
-]
 
 let registeredContentTypes = {}
 let defaultRegistered = false
@@ -71,28 +55,8 @@ function assertValidItemType(definition) {
     makeError('mime type must be a string', definition)
   )
   invariant(
-    definition.editor,
-    makeError('editor is mandatory', definition)
-  )
-  invariant(
-    definition.editor.component,
-    makeError('editor component is mandatory', definition)
-  )
-  invariant(
-    definition.editor.reduce,
-    makeError('editor reduce is mandatory', definition)
-  )
-  invariant(
-    typeof definition.editor.reduce === 'function',
-    makeError('editor reduce must be a function', definition)
-  )
-  invariant(
     definition.player,
     makeError('player component is mandatory', definition)
-  )
-  invariant(
-    definition.icon,
-    makeError('icon component is mandatory', definition)
   )
 }
 

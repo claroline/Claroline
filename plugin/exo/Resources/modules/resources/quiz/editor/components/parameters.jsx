@@ -14,7 +14,7 @@ const hasEnd = (quiz) => get(quiz, 'parameters.showEndPage')
 const EditorParameters = props =>
   <Fragment>
     <h3 className="h2 step-title">
-      {constants.NUMBERING_NONE !== props.numbering &&
+      {constants.NUMBERING_NONE !== props.numberingType &&
         <span className="h-numbering">
           <span className="fa fa-cog" />
         </span>
@@ -240,7 +240,7 @@ const EditorParameters = props =>
 
 EditorParameters.propTypes = {
   formName: T.string.isRequired,
-  numbering: T.string.isRequired,
+  numberingType: T.string.isRequired,
   workspace: T.object,
   update: T.func.isRequired
 }

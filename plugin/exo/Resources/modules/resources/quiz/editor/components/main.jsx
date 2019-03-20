@@ -114,7 +114,7 @@ class EditorMain extends Component {
                 render: () => (
                   <EditorParameters
                     formName={this.props.formName}
-                    numbering={this.props.numberingType}
+                    numberingType={this.props.numberingType}
                     workspace={this.props.workspace}
                     update={this.props.update}
                   />
@@ -130,8 +130,9 @@ class EditorMain extends Component {
                       <EditorStep
                         formName={this.props.formName}
                         path={`steps[${stepIndex}]`}
+                        numberingType={this.props.numberingType}
+
                         index={stepIndex}
-                        numbering={this.props.numberingType}
                         title={currentStep.title}
                         items={currentStep.items}
                         errors={get(this.props.errors, `steps[${stepIndex}]`)}
@@ -172,6 +173,7 @@ EditorMain.propTypes = {
   )),
 
   update: T.func.isRequired,
+  save: T.func.isRequired,
   addStep: T.func.isRequired,
   copyStep: T.func.isRequired,
   moveStep: T.func.isRequired,

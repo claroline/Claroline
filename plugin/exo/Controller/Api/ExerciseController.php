@@ -122,46 +122,6 @@ class ExerciseController extends AbstractController
     }
 
     /**
-     * Publishes an exercise.
-     *
-     * @EXT\Route("/{id}/publish", name="exercise_publish")
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
-     *
-     * @param Exercise $exercise
-     *
-     * @return JsonResponse
-     */
-    public function publishAction(Exercise $exercise)
-    {
-        $this->assertHasPermission('ADMINISTRATE', $exercise);
-
-        $this->exerciseManager->publish($exercise);
-
-        return new JsonResponse(null, 204);
-    }
-
-    /**
-     * Unpublishes an exercise.
-     *
-     * @EXT\Route("/{id}/unpublish", name="exercise_unpublish")
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
-     *
-     * @param Exercise $exercise
-     *
-     * @return JsonResponse
-     */
-    public function unpublishAction(Exercise $exercise)
-    {
-        $this->assertHasPermission('ADMINISTRATE', $exercise);
-
-        $this->exerciseManager->unpublish($exercise);
-
-        return new JsonResponse(null, 204);
-    }
-
-    /**
      * download json quiz.
      *
      * @EXT\Route("/{id}/export", name="exercise_export")

@@ -24,7 +24,7 @@ const ItemEditor = props => {
       className="quiz-item item-editor"
       embedded={props.embedded}
       name={props.formName}
-      meta={true}
+      meta={props.meta}
       dataPart={props.path}
       disabled={props.disabled}
       sections={[
@@ -37,12 +37,18 @@ const ItemEditor = props => {
               label: trans('type'),
               type: 'string',
               hideLabel: true,
-              render: () => <ItemType name={props.definition.name} size="lg" />
+              displayed: props.meta,
+              render: () => {
+                const CurrentType = <ItemType name={props.definition.name} size="lg" />
+
+                return CurrentType
+              }
             }, {
               name: 'content',
               label: trans('question', {}, 'quiz'),
               type: 'html',
-              required: true
+              required: true,
+              displayed: props.definition.answerable
             }
           ]
         }, {
@@ -139,6 +145,7 @@ const ItemEditor = props => {
 
 ItemEditor.propTypes = {
   embedded: T.bool,
+  meta: T.bool,
   formName: T.string.isRequired,
   path: T.string,
   disabled: T.bool,
@@ -162,6 +169,7 @@ ItemEditor.propTypes = {
 
 ItemEditor.defaultProps = {
   embedded: false,
+  meta: false,
   disabled: false
 }
 

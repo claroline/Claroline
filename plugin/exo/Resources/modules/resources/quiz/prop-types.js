@@ -4,8 +4,7 @@ import {
   QUIZ_PICKING_DEFAULT,
   SHUFFLE_NEVER,
   SHOW_CORRECTION_AT_VALIDATION,
-  SHOW_SCORE_AT_CORRECTION,
-  SCORE_SUM
+  SHOW_SCORE_AT_CORRECTION
 } from '#/plugin/exo/quiz/enums'
 
 import {QUIZ_TYPE_DEFAULT} from '#/plugin/exo/resources/quiz/types'

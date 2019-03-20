@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
@@ -11,7 +11,6 @@ import {getItem} from '#/plugin/exo/items'
 import {Item as ItemTypes} from '#/plugin/exo/items/prop-types'
 import {ItemIcon} from '#/plugin/exo/items/components/icon'
 import {ItemEditor} from '#/plugin/exo/items/components/editor'
-import {getNumbering} from '#/plugin/exo/resources/quiz/utils'
 
 const EditorItem = props =>
   <Await
@@ -33,10 +32,17 @@ const EditorItem = props =>
           {...omit(props, 'formName', 'path', 'index', 'item', 'update')}
           id={props.item.id}
           className="embedded-form-section"
-          icon={
-            <ItemIcon name={itemDefinition.name} className="panel-title-icon" />
+          icon={props.numbering ?
+            <span className="h-numbering">{props.numbering}</span> :
+            <span />
           }
-          title={itemTitle}
+          title={
+            <Fragment>
+              <ItemIcon name={itemDefinition.name} className="panel-title-icon" />
+
+              {itemTitle}
+            </Fragment>
+          }
           actions={[
             {
               name: 'copy',
@@ -94,7 +100,7 @@ EditorItem.propTypes = {
   formName: T.string.isRequired,
   path: T.string.isRequired,
 
-  index: T.number.isRequired,
+  numbering: T.string,
   item: T.shape(
     ItemTypes.propTypes
   ).isRequired,
