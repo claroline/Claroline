@@ -5,7 +5,9 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
+import {url} from '#/main/app/api'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
+import {URL_BUTTON} from '#/main/app/buttons'
 
 import {
   ResourceNode as ResourceNodeTypes,
@@ -66,8 +68,11 @@ class ResourcePage extends Component {
         title={this.props.resourceNode.name}
         subtitle={this.props.subtitle}
         path={[].concat(ancestors.map(ancestorNode => ({
+          type: URL_BUTTON,
           label: ancestorNode.name,
-          target: ['claro_resource_show_short', {id: ancestorNode.id}]
+          target: this.props.resourceNode.workspace ?
+            url(['claro_workspace_open_tool', {workspaceId: get(this.props.resourceNode, 'workspace.autoId'), toolName: 'resource_manager'}]) + `#/${ancestorNode.id}` :
+            url(['claro_desktop_open_tool', {toolName: 'resource_manager'}]) + `#/${ancestorNode.id}`
         })), this.props.path)}
         poster={this.props.resourceNode.poster ? this.props.resourceNode.poster.url : undefined}
         icon={get(this.props.resourceNode, 'display.showIcon') && (this.props.userEvaluation ?
