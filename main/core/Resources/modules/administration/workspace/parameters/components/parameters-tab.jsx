@@ -58,18 +58,6 @@ const Parameters = () => {
               displayed: true
             }
           ]
-        },
-        {
-          icon: 'fa fa-fw fa-tags',
-          title: trans('limits'),
-          defaultOpened: true,
-          fields: [
-            {
-              name: 'workspace.default_tag',
-              label: trans('default_workspace_tag'),
-              type: 'string'
-            }
-          ]
         }
       ]}
     />

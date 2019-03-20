@@ -110,6 +110,12 @@ const Parameters = (props) => {
                 label: trans('redirect_after_login_url'),
                 displayed: (data) => data.authentication.redirect_after_login_option === 'URL',
                 hideLabel: true
+              }, {
+                name: 'workspace.default_tag',
+                label: trans('default_workspace_tag'),
+                type: 'string',
+                displayed: (data) => data.authentication.redirect_after_login_option === 'WORKSPACE_TAG',
+                hideLabel: true
               }]
             }, {
               name: 'registration.auto_logging',
