@@ -1,11 +1,13 @@
 import {trans} from '#/main/app/intl/translation'
 
-import editor from './editor'
-import {ClozePaper} from './paper.jsx'
-import {ClozePlayer} from './player.jsx'
-import {ClozeFeedback} from './feedback.jsx'
+import editor from '#/plugin/exo/items/cloze/editor'
+import {ClozePaper} from '#/plugin/exo/items/cloze/paper.jsx'
+import {ClozePlayer} from '#/plugin/exo/items/cloze/player.jsx'
+import {ClozeFeedback} from '#/plugin/exo/items/cloze/feedback.jsx'
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
-import {utils} from './utils/utils'
+import {ClozeEditor} from '#/plugin/exo/items/cloze/components/editor.jsx'
+import {utils} from '#/plugin/exo/items/cloze/utils/utils'
+import {ClozeItem as ClozeItemTypes} from '#/plugin/exo/items/cloze/prop-types'
 
 // scores
 import ScoreSum from '#/plugin/exo/scores/sum'
@@ -124,5 +126,13 @@ export default {
   feedback: ClozeFeedback,
   editor,
   getCorrectedAnswer,
-  generateStats
+  generateStats,
+
+  components: {
+    editor: ClozeEditor
+  },
+
+  create: (item) => {
+    return Object.assign(item, ClozeItemTypes.defaultProps)
+  }
 }
