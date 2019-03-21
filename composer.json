@@ -8,7 +8,7 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "2.14",
-        "mockery/mockery": "0.9.6",
+        "mockery/mockery": "0.9.9",
         "mikey179/vfsStream": "1.6.4",
         "phpmd/phpmd": "@stable",
         "phpunit/phpunit": "7.1.5",
