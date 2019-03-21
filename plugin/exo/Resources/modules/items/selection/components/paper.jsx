@@ -1,11 +1,11 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {tex} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 
-import {PaperTabs} from '../components/paper-tabs.jsx'
-import {SelectionText} from './utils/selection-text.jsx'
-import {getReactAnswerSelections} from './utils/selection-answer.jsx'
+import {PaperTabs} from '#/plugin/exo/items/components/paper-tabs.jsx'
+import {SelectionText} from '#/plugin/exo/items/selection/utils/selection-text'
+import {getReactAnswerSelections} from '#/plugin/exo/items/selection/utils/selection-answer'
 
 export const SelectionPaper = (props) => {
   return (
@@ -20,11 +20,11 @@ export const SelectionPaper = (props) => {
           {props.item.mode === 'find' &&
             <div className="panel-body">
               <span className="btn btn-danger" style={{ cursor: 'default'}}>
-                {tex('selection_missing_click')} <span className="badge">{props.item.penalty}</span>
+                {trans('selection_missing_click', {}, 'quiz')} <span className="badge">{props.item.penalty}</span>
               </span>
               {'\u00a0'}
               <span className="btn btn-primary" style={{ cursor: 'default'}}>
-                {tex('try_used')} <span className="badge"> {props.answer ? props.answer.tries: 0} </span>
+                {trans('try_used', {}, 'quiz')} <span className="badge"> {props.answer ? props.answer.tries: 0} </span>
               </span>
             </div>
           }

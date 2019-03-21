@@ -1,6 +1,8 @@
 import $ from 'jquery'
 import cloneDeep from 'lodash/cloneDeep'
 
+import {constants} from '#/plugin/exo/items/selection/constants'
+
 export const utils = {}
 
 utils.makeTextHtml = (text, elements) => {
@@ -95,7 +97,7 @@ utils.getRealOffsetFromBegin = (toSort, begin) => {
 utils.cleanItem = (item) => {
   //here we remove the unused selections
   const _text = item._text
-  const elements = item.mode === 'find' ? item.solutions: item.selections
+  const elements = item.mode === constants.MODE_FIND ? item.solutions: item.selections
   const tmp = document.createElement('div')
   const ids = []
   let toRemove = []
@@ -144,11 +146,11 @@ utils.cleanItem = (item) => {
 utils.getSelectionText = (item, selectionId = null) => {
   if (!selectionId) selectionId = item._selectionId
 
-  const selection = item.mode === 'find' ?
-    item.solutions.find(solution => solution.selectionId === selectionId):
+  const selection = item.mode === constants.MODE_FIND ?
+    item.solutions.find(solution => solution.selectionId === selectionId) :
     item.selections.find(selection => selection.id === selectionId)
 
-  const string = item.text.substring(selection.begin, selection.end)
+  const string = selection ? item.text.substring(selection.begin, selection.end) : ''
 
   const tmp = document.createElement('div')
   tmp.innerHTML = string

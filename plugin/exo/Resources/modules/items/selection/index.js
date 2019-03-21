@@ -1,11 +1,14 @@
+import merge from 'lodash/merge'
+import times from 'lodash/times'
+
 import {trans} from '#/main/app/intl/translation'
 
-import editor from './editor'
-import {SelectionPaper} from './paper.jsx'
-import {SelectionPlayer} from './player.jsx'
-import {SelectionFeedback} from './feedback.jsx'
+import {SelectionItem as SelectionItemType} from '#/plugin/exo/items/selection/prop-types'
+import {SelectionEditor} from "#/plugin/exo/items/selection/components/editor"
+import {SelectionPlayer} from '#/plugin/exo/items/selection/components/player'
+import {SelectionPaper} from '#/plugin/exo/items/selection/components/paper'
+import {SelectionFeedback} from '#/plugin/exo/items/selection/components/feedback'
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
-import times from 'lodash/times'
 
 // scores
 import ScoreFixed from '#/plugin/exo/scores/fixed'
@@ -95,15 +98,22 @@ export default {
   tags: [trans('question', {}, 'quiz')],
   answerable: true,
 
-  supportScores: () => [
-    ScoreFixed,
-    ScoreSum
-  ],
+  components: {
+    editor: SelectionEditor
+  },
+
+  supportScores: () => [ScoreFixed, ScoreSum],
+
+  /**
+   * Create a new selection item.
+   *
+   * @param {object} baseItem
+   */
+  create: (baseItem) => merge({}, baseItem, SelectionItemType.defaultProps),
 
   paper: SelectionPaper,
   player: SelectionPlayer,
   feedback: SelectionFeedback,
-  editor,
   getCorrectedAnswer,
   generateStats
 }

@@ -2,12 +2,12 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import cloneDeep from 'lodash/cloneDeep'
 
-import {tex} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 
-import {utils} from './utils/utils'
-import {getOffsets} from './utils/selection'
-import {getReactAnswerInputs} from './utils/selection-input.jsx'
-import {SelectionText} from './utils/selection-text.jsx'
+import {utils} from '#/plugin/exo/items/selection/utils/utils'
+import {getOffsets} from '#/plugin/exo/items/selection/utils/selection'
+import {getReactAnswerInputs} from '#/plugin/exo/items/selection/utils/selection-input.jsx'
+import {SelectionText} from '#/plugin/exo/items/selection/utils/selection-text.jsx'
 
 class SelectionPlayer extends Component {
   constructor(props) {
@@ -75,16 +75,16 @@ class SelectionPlayer extends Component {
         {this.props.item.mode === 'find' && leftTries > 0 &&
           <div className='select-tries'>
             <span className="btn btn-danger" style={{ cursor: 'default'}}>
-              {tex('selection_missing_click')} <span className="badge">{this.props.item.penalty}</span>
+              {trans('selection_missing_click', {}, 'quiz')} <span className="badge">{this.props.item.penalty}</span>
             </span>
             {'\u00a0'}
             <span className="btn btn-primary" style={{ cursor: 'default'}}>
-              {tex('left_tries')} <span className="badge">{leftTries}</span>
+              {trans('left_tries', {}, 'quiz')} <span className="badge">{leftTries}</span>
             </span>
           </div>
         }
         {this.props.item.mode === 'find' && leftTries <= 0 &&
-          <div style={{textAlign:'center'}} className='selection-error'>{tex('no_try_left')}</div>
+          <div style={{textAlign:'center'}} className='selection-error'>{trans('no_try_left', {}, 'quiz')}</div>
         }
         {this.props.item.mode !== 'find' &&
           <SelectionText

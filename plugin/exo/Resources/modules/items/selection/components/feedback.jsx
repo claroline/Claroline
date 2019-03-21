@@ -1,8 +1,8 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {SelectionText} from './utils/selection-text.jsx'
-import {getReactAnswerSelections} from './utils/selection-answer.jsx'
+import {SelectionText} from '#/plugin/exo/items/selection/utils/selection-text'
+import {getReactAnswerSelections} from '#/plugin/exo/items/selection/utils/selection-answer'
 
 export const SelectionFeedback = (props) => {
   const elements = props.item.mode === 'find' ? props.item.solutions: props.item.selections
