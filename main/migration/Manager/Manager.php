@@ -11,12 +11,12 @@
 
 namespace Claroline\MigrationBundle\Manager;
 
-use Psr\Log\LoggerAwareTrait;
-use Psr\Log\LogLevel;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Claroline\MigrationBundle\Generator\Generator;
 use Claroline\MigrationBundle\Generator\Writer;
 use Claroline\MigrationBundle\Migrator\Migrator;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LogLevel;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * API entry point.
@@ -125,8 +125,7 @@ class Manager
 
         foreach ($drivers as $driver) {
             $deletedVersions = $this->writer->deleteUpperMigrationClasses($bundle, $driver, $currentVersion);
-
-            if (count($deletedVersions) > 0) {
+            if ($deletedVersions && count($deletedVersions) > 0) {
                 $hasDeleted = true;
 
                 foreach ($deletedVersions as $version) {
@@ -149,7 +148,7 @@ class Manager
      */
     public function getAvailablePlatforms()
     {
-        $platforms = array();
+        $platforms = [];
 
         foreach ($this->getSupportedDrivers() as $driverName => $driverClass) {
             $driver = new $driverClass();
@@ -161,19 +160,19 @@ class Manager
 
     private function getSupportedDrivers()
     {
-        return array(
+        return [
             'pdo_mysql' => 'Doctrine\DBAL\Driver\PDOMySql\Driver',
-        );
+        ];
     }
 
     private function doMigrate(Bundle $bundle, $version, $direction)
     {
-        $action = $direction === Migrator::DIRECTION_UP ? 'Ugprading' : 'Downgrading';
+        $action = Migrator::DIRECTION_UP === $direction ? 'Ugprading' : 'Downgrading';
         $this->log("{$action} bundle '{$bundle->getName()}'...");
         $queries = $this->migrator->migrate($bundle, $version, $direction);
         $currentVersion = $this->migrator->getCurrentVersion($bundle);
         $this->log(
-            count($queries) === 0 ?
+            !$queries || 0 === count($queries) ?
                 "Nothing to execute: bundle is already at version {$currentVersion}" :
                 "Done: bundle is now at version {$currentVersion}"
         );

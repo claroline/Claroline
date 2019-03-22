@@ -83,7 +83,7 @@ class SerializerProviderTest extends TransactionalTestCase
         }, $provider->all());
 
         $classes = array_filter($classes, function ($class) use ($provider) {
-            return $provider->hasSchema($class[0]) && $provider->getSampleDirectory($class[0]);
+            return $provider->hasSchema($class[0]) && $provider->getSampleDirectory($class[0]) && class_exists($class[0]);
         });
 
         return $classes;

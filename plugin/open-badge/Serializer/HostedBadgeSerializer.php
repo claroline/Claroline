@@ -7,7 +7,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service()
- * @DI\Tag("claroline.serializer")
  */
 class HostedBadgeSerializer
 {
@@ -23,10 +22,5 @@ class HostedBadgeSerializer
             'type' => 'hosted',
             //'id' => $this->router->generate('apiv2_open_badge__assertion', ['assertion' => $assertion->getUuid()], UrlGeneratorInterface::ABSOLUTE_URL),
         ];
-    }
-
-    public function getClass()
-    {
-        return self::class;
     }
 }
