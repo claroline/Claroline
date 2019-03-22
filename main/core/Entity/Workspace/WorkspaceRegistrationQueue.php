@@ -89,7 +89,6 @@ class WorkspaceRegistrationQueue
     public function setUser($user)
     {
         $this->user = $user;
-        $user->addWorkspaceUserQueue($this);
     }
 
     /**
