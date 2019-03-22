@@ -425,7 +425,7 @@ class Organization
         $found = null;
 
         foreach ($this->userOrganizationReferences as $ref) {
-            if ($ref->getUser()->getId() === $user->getId()) {
+            if ($ref->getUser()->getId() === $user->getId() && !$ref->isMain()) {
                 $found = $ref;
             }
         }

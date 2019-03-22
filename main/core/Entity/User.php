@@ -1229,6 +1229,8 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
 
         if ($found) {
             $this->userOrganizationReferences->removeElement($found);
+            //this is the line doing all the work. I'm not sure the previous one is usefull
+            $found->getOrganization()->removeUser($this);
         }
     }
 
