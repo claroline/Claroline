@@ -194,11 +194,22 @@ class PathSerializer
      */
     private function deserializeSteps($stepsData, Path $path)
     {
-        $path->emptySteps();
+        $currentSteps = $path->getSteps();
 
         foreach ($stepsData as $stepIndex => $stepData) {
             $step = $this->deserializeStep($stepData, ['path' => $path, 'order' => $stepIndex]);
             $path->addStep($step);
+        }
+
+        $ids = array_map(function ($data) {
+            return $data['id'];
+        }, $stepsData);
+
+        foreach ($currentSteps as $currentStep) {
+            if (!in_array($currentStep->getUuid(), $ids)) {
+                $currentStep->setPath(null);
+                $this->om->persist($currentStep);
+            }
         }
     }
 

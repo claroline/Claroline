@@ -36,7 +36,7 @@ class Path extends AbstractResource
      *
      * @var ArrayCollection|Step[]
      *
-     * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\Step", mappedBy="path", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\Step", mappedBy="path", cascade={"persist", "remove"}, orphanRemoval=true)
      * @ORM\OrderBy({
      *     "order" = "ASC"
      * })
