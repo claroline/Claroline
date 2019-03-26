@@ -7,8 +7,10 @@ use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Event\Log\LogExerciseUpdateEvent;
 use UJM\ExoBundle\Library\Item\Definition\AnswerableItemDefinitionInterface;
 use UJM\ExoBundle\Library\Item\ItemDefinitionsCollection;
 use UJM\ExoBundle\Library\Options\Transfer;
@@ -46,8 +48,14 @@ class ExerciseManager
     /** @var PaperManager */
     private $paperManager;
 
+    /** @var ClaroUtilities */
+    private $utils;
+
     /** @var ItemDefinitionsCollection */
     private $definitions;
+
+    /** @var EventDispatcherInterface */
+    private $eventDispatcher;
 
     /**
      * ExerciseManager constructor.
@@ -60,7 +68,8 @@ class ExerciseManager
      *     "itemManager"     = @DI\Inject("ujm_exo.manager.item"),
      *     "paperManager"    = @DI\Inject("ujm_exo.manager.paper"),
      *     "utils"           = @DI\Inject("claroline.utilities.misc"),
-     *     "definitions"     = @DI\Inject("ujm_exo.collection.item_definitions")
+     *     "definitions"     = @DI\Inject("ujm_exo.collection.item_definitions"),
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher")
      * })
      *
      * @param ObjectManager             $om
@@ -71,6 +80,7 @@ class ExerciseManager
      * @param PaperManager              $paperManager
      * @param ItemDefinitionsCollection $definitions
      * @param ClaroUtilities            $utils
+     * @param EventDispatcherInterface  $eventDispatcher
      */
     public function __construct(
         ObjectManager $om,
@@ -80,7 +90,8 @@ class ExerciseManager
         ItemManager $itemManager,
         PaperManager $paperManager,
         ClaroUtilities $utils,
-        ItemDefinitionsCollection $definitions
+        ItemDefinitionsCollection $definitions,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->om = $om;
         $this->repository = $this->om->getRepository('UJMExoBundle:Exercise');
@@ -91,6 +102,7 @@ class ExerciseManager
         $this->paperManager = $paperManager;
         $this->definitions = $definitions;
         $this->utils = $utils;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -135,6 +147,10 @@ class ExerciseManager
 
         // Invalidate unfinished papers
         $this->repository->invalidatePapers($exercise);
+
+        // Log exercise update
+        $event = new LogExerciseUpdateEvent($exercise, (array)$this->serializer->serialize($exercise));
+        $this->eventDispatcher->dispatch('log', $event);
 
         return $exercise;
     }
