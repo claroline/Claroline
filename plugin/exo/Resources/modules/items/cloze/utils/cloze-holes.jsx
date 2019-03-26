@@ -28,11 +28,13 @@ const HoleInput = props =>
       disabled={props.disabled}
       type="text"
       value={props.value}
+      size={props.size}
       onChange={e => props.onChange(e.target.value)}
     />
 
 HoleInput.propTypes = {
   value: T.string,
+  size: T.number,
   disabled: T.bool,
   choices: T.arrayOf(T.string),
   onChange: T.func.isRequired
@@ -50,6 +52,7 @@ const PlayerHole = props =>
   <span className="cloze-hole">
     <HoleInput
       value={props.answer}
+      size={props.size}
       choices={props.choices}
       disabled={false}
       onChange={props.onChange}
@@ -57,6 +60,7 @@ const PlayerHole = props =>
   </span>
 
 PlayerHole.propTypes = {
+  size: T.number,
   answer: T.string,
   choices: T.arrayOf(T.string),
   onChange: T.func.isRequired
@@ -71,6 +75,7 @@ const SolutionHole = props =>
       disabled={props.disabled}
       choices={props.choices}
       onChange={props.onChange}
+      size={props.size}
     />
 
     {props.solution && props.solution.feedback &&
@@ -89,6 +94,7 @@ SolutionHole.propTypes = {
   id: T.string.isRequired,
   answer: T.string,
   choices: T.arrayOf(T.string),
+  size: T.number,
   disabled: T.bool,
   className: T.string,
   showScore: T.bool.isRequired,
@@ -113,6 +119,7 @@ const UserAnswerHole = props => {
         'correct-answer': solution && 0 < solution.score,
         'incorrect-answer': !solution || 0 >= solution.score
       })}
+      size={props.size}
       answer={props.answer}
       showScore={props.showScore}
       choices={props.choices}
@@ -126,6 +133,7 @@ const UserAnswerHole = props => {
 UserAnswerHole.propTypes = {
   id: T.string.isRequired,
   answer: T.string,
+  size: T.number,
   choices: T.arrayOf(T.string),
   showScore: T.bool,
   solutions: T.arrayOf(T.shape({
@@ -161,6 +169,7 @@ class ExpectedAnswerHole extends Component {
         })}
         answer={this.state.answer}
         choices={this.props.choices}
+        size={this.props.size}
         showScore={this.props.showScore}
         solution={solution}
         disabled={!this.props.choices || 0 === this.props.choices.length}
@@ -173,6 +182,7 @@ class ExpectedAnswerHole extends Component {
 ExpectedAnswerHole.propTypes = {
   id: T.string.isRequired,
   choices: T.arrayOf(T.string),
+  size: T.number,
   showScore: T.bool.isRequired,
   solutions: T.arrayOf(T.shape({
     text: T.string.isRequired,

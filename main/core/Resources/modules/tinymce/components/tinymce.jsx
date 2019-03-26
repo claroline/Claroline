@@ -67,8 +67,10 @@ class Editor extends Component {
   }
 
   componentWillUnmount() {
-    this.editor.destroy()
-    this.editor = null
+    if (this.editor) {
+      this.editor.destroy()
+      this.editor = null
+    }
   }
 
   updateText() {

@@ -11,7 +11,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {makeId} from '#/main/core/scaffolding/id'
-import {Textarea} from '#/main/core/layout/form/components/field/textarea'
+import {HtmlInput} from '#/main/app/data/types/html/components/input'
 
 import {makeDraggable, makeDroppable} from '#/plugin/exo/utils/dragAndDrop'
 import {ItemEditor as ItemEditorTypes} from '#/plugin/exo/items/prop-types'
@@ -301,7 +301,7 @@ class Pair extends Component {
 
           {this.state.showFeedback &&
           <div className="feedback-container">
-              <Textarea
+              <HtmlInput
                 id={`${this.props.pair.itemIds[0]}-${this.props.pair.itemIds[1]}-feedback`}
                 value={this.props.pair.feedback}
                 onChange={(value) => this.props.onUpdate('feedback', value, this.props.index)}
@@ -459,19 +459,19 @@ class Odd extends Component {
     return (
       <div className="answer-item item unexpected-answer">
         <div className="text-fields">
-          <Textarea
+          <HtmlInput
             id={`odd-${this.props.odd.id}-data`}
             value={this.props.odd.data}
             onChange={(value) => this.props.onUpdate('data', value)}
           />
           {this.state.showFeedback &&
-          <div className="feedback-container">
-              <Textarea
+            <div className="feedback-container">
+              <HtmlInput
                 id={`odd-${this.props.odd.id}-feedback`}
                 value={this.props.solution.feedback}
                 onChange={(value) => this.props.onUpdate('feedback', value)}
               />
-          </div>
+            </div>
           }
         </div>
         <div className="right-controls">
@@ -552,7 +552,7 @@ let Item = props => {
   return (
     <div className="answer-item item">
       <div className="text-fields">
-        <Textarea
+        <HtmlInput
           id={`${props.item.id}-data`}
           value={props.item.data}
           onChange={(value) => props.onUpdate('data', value)}

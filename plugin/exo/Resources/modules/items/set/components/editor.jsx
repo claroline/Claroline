@@ -11,7 +11,7 @@ import {Button} from '#/main/app/action/components/button'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {makeId} from '#/main/core/scaffolding/id'
-import {Textarea} from '#/main/core/layout/form/components/field/textarea'
+import {HtmlInput} from '#/main/app/data/types/html/components/input'
 
 import {makeDraggable, makeDroppable} from '#/plugin/exo/utils/dragAndDrop'
 import {ItemEditor as ItemEditorType} from '#/plugin/exo/items/prop-types'
@@ -229,7 +229,7 @@ class Association extends Component {
 
           {this.state.showFeedback &&
             <div className="feedback-container">
-              <Textarea
+              <HtmlInput
                 id={`${this.props.association.itemId}-${this.props.association.setId}-feedback`}
                 value={this.props.association.feedback}
                 onChange={(value) => this.props.onUpdate('feedback', value, this.props.association.setId, this.props.association.itemId)}
@@ -282,7 +282,7 @@ const Set = (props) =>
   <div className="set answer-item">
     <div className="set-heading">
       <div className="text-fields">
-        <Textarea
+        <HtmlInput
           id={`${props.set.id}-data`}
           value={props.set.data}
           onChange={(value) => props.onUpdate('data', value)}
@@ -369,7 +369,7 @@ SetList.propTypes = {
 let Item = (props) =>
   <div className="set-item answer-item">
     <div className="text-fields">
-      <Textarea
+      <HtmlInput
         id={`${props.item.id}-data`}
         value={props.item.data}
         onChange={(value) => props.onUpdate('data', value)}
@@ -469,14 +469,14 @@ class Odd extends Component {
     return (
       <div className={classes('set-item answer-item', {'expected-answer' : this.props.solution.score > 0}, {'unexpected-answer': this.props.solution.score < 1})}>
         <div className="text-fields">
-          <Textarea
+          <HtmlInput
             id={`odd-${this.props.odd.id}-data`}
             value={this.props.odd.data}
             onChange={(value) => this.props.onUpdate('data', value)}
           />
           {this.state.showFeedback &&
             <div className="feedback-container">
-              <Textarea
+              <HtmlInput
                 id={`odd-${this.props.odd.id}-feedback`}
                 value={this.props.solution.feedback}
                 onChange={(value) => this.props.onUpdate('feedback', value)}
@@ -585,7 +585,7 @@ const SetEditor = (props) =>
             label: trans('sets', {}, 'quiz'),
             hideLabel: true,
             required: true,
-            render: (setItem, setErrors) => {
+            render: (setItem) => {
               return (
                 <div className="set-items row">
                   <div className="col-md-5 col-sm-5 col-xs-5">
@@ -612,9 +612,6 @@ const SetEditor = (props) =>
                   </div>
                 </div>
               )
-            },
-            validate: (setItem) => {
-              return undefined
             }
           }
         ]

@@ -213,6 +213,7 @@ class Match extends Component {
 
     this.handleTextEditorSwitch = this.handleTextEditorSwitch.bind(this)
     this.handleWindowResize = this.handleWindowResize.bind(this)
+    this.removeConnection = this.removeConnection.bind(this)
   }
 
   handleTextEditorSwitch(event) {

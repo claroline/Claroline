@@ -210,14 +210,14 @@ class MainField extends Component {
 
     return (<fieldset className="cloze-field">
       <FormGroup
-        id="cloze-text"
+        id={`cloze-text-${this.props.item.id}`}
         className="cloze-text"
         label={trans('text')}
         warnOnly={!this.props.validating}
         error={get(this.props.item, '_errors.text')}
       >
         <Textarea
-          id="cloze-text"
+          id={`cloze-text-${this.props.item.id}`}
           value={this.state.text}
           onChange={(value) => {
             //TODO: optimize this
@@ -318,7 +318,6 @@ class MainField extends Component {
 
 
           addKeyword={() => {
-            alert('add')
             const newItem = cloneDeep(this.props.item)
             const hole = getHoleFromId(newItem, this.props.item._holeId)
             const solution = getSolutionFromHole(newItem, hole)
@@ -328,7 +327,6 @@ class MainField extends Component {
             solution.answers.push(keyword)
 
             updateHoleChoices(hole, solution)
-            console.log(newItem.holes)
             this.props.update('holes', newItem.holes)
             this.props.update('solutions', newItem.solutions)
           }}
@@ -342,7 +340,7 @@ class MainField extends Component {
             updateHoleChoices(hole, solution)
 
             answers.forEach(keyword => keyword._deletable = answers.length > 1)
-            console.log(newItem.holes)
+
             this.props.update('holes', newItem.holes)
             this.props.update('solutions', newItem.solutions)
           }}
@@ -353,8 +351,6 @@ class MainField extends Component {
             const answer = solution.answers.find(answer => answer._id === keywordId)
 
             answer[property] = newValue
-            console.log(hole)
-            console.log(solution)
             updateHoleChoices(hole, solution)
 
             this.props.update('holes', newItem.holes)

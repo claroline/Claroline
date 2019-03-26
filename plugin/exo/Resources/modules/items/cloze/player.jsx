@@ -18,6 +18,7 @@ export const ClozePlayer = props =>
         component: (
           <PlayerHole
             id={hole.id}
+            size={hole.size}
             answer={answer ? answer.answerText : ''}
             choices={hole.choices}
             onChange={(newAnswer) => {

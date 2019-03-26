@@ -29,6 +29,7 @@ export const ClozePaper = (props) => {
                   id={hole.id}
                   answer={answer ? answer.answerText : null}
                   choices={hole.choices}
+                  size={hole.size}
                   showScore={props.showScore}
                   solutions={solution.answers}
                 />
@@ -52,6 +53,7 @@ export const ClozePaper = (props) => {
                   showScore={props.showScore}
                   id={hole.id}
                   choices={hole.choices}
+                  size={hole.size}
                   solutions={solution.answers}
                 />
               )

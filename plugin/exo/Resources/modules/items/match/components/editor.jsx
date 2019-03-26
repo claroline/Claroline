@@ -87,6 +87,7 @@ class MatchElements extends Component {
 
     this.handleTextEditorSwitch = this.handleTextEditorSwitch.bind(this)
     this.handleWindowResize = this.handleWindowResize.bind(this)
+    this.removeConnection = this.removeConnection.bind(this)
   }
 
   handleTextEditorSwitch(event) {
@@ -260,7 +261,7 @@ class MatchElements extends Component {
   }
 
   removeConnection(firstId, secondId){
-    this.jsPlumbInstance.detach(this.state.jsPlumbConnection)
+    this.jsPlumbInstance.deleteConnection(this.state.jsPlumbConnection)
     this.setState({
       popover: {
         visible: false
