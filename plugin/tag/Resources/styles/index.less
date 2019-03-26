@@ -2,6 +2,11 @@
 @import "variables";
 @import "mixins";
 
+
+// -
+// Modal
+// ---
+
 .tags {
     list-style-type: none;
     margin: 0;
@@ -61,6 +66,95 @@
 
         .tags-fetching {
             background-color: #DEE1E8;
+        }
+    }
+}
+
+
+// -
+// Data Input
+// ---
+
+.tags-control {
+    .form-control {
+        display: flex;
+        flex-wrap: wrap;
+        padding: (@padding-base-vertical - 2px) (@padding-base-horizontal - 2px);
+
+        .tag,
+        input[type=text] {
+            margin: 2px;
+        }
+
+        input[type=text] {
+            flex: 1;
+            border: none;
+            padding: 0;
+            line-height: @line-height-base;
+
+            &:focus {
+                border: none;
+                outline: 0;
+            }
+        }
+    }
+
+    .tag {
+        .btn-link {
+            border: none;
+            padding: 0;
+            color: @label-color;
+            margin-left: @icon-text-spacer;
+        }
+    }
+
+    .dropdown-menu {
+        padding: @dropdown-menu-padding-v;
+
+        .btn {
+            margin-top: @dropdown-menu-padding-v;
+
+            .fa {
+                margin-right: @icon-text-spacer; // because of an ugly rule on `.dropdown-menu .fa`
+            }
+        }
+    }
+
+    .tags {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        list-style: none;
+        padding: 0;
+        margin: -5px;
+
+        > li {
+            flex: 1 1 25%;
+            max-width: 25%;
+            padding: 5px;
+        }
+    }
+
+    .tag-preview {
+        height: 100%;
+        display: block;
+        text-align: left;
+        border-radius: @border-radius-base;
+        padding: 5px;
+
+        .label {
+            margin-right: 5px;
+        }
+
+        .tag-description {
+            text-align: justify;
+            font-size: @font-size-small;
+        }
+
+        &:focus,
+        &:hover {
+            background: #efefef;
         }
     }
 }

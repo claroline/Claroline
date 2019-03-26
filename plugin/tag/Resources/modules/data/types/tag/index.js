@@ -11,7 +11,7 @@ import {TagInput} from '#/plugin/tag/data/types/tag/components/input'
 const dataType = {
   name: 'tag',
   meta: {
-    icon: 'fa fa-fw fa-tag',
+    icon: 'fa fa-fw fa-tags',
     label: trans('tag', {}, 'data'),
     description: trans('tag_desc', {}, 'data')
   },

@@ -1,12 +1,21 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
-const TagDisplay = () =>
-  <div>
+import {toKey} from '#/main/core/scaffolding/text/utils'
 
-  </div>
+const TagDisplay = (props) =>
+  <Fragment>
+    {props.data.map(tag =>
+      <span key={toKey(tag)} className="label label-info">{tag}</span>
+    )}
+  </Fragment>
 
 TagDisplay.propTypes = {
+  data: T.arrayOf(T.string).isRequired
+}
 
+TagDisplay.defaultProps = {
+  data: []
 }
 
 export {

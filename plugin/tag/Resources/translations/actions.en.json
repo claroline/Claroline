@@ -1,3 +1,5 @@
 {
-  "show-tags": "Show tags"
+  "add-tags": "Add tags",
+  "show-tags": "Show tags",
+  "create-named-tag": "Create a tag \"%tagName%\""
 }

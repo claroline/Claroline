@@ -1,17 +1,27 @@
-import React from 'react'
+import React, {Fragment} from 'react'
+
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
+import {toKey} from '#/main/core/scaffolding/text/utils'
 import {DataCell as DataCellTypes} from '#/main/app/data/types/prop-types'
 
-const TagCell = () =>
-  <div>
-  </div>
+const TagCell = (props) => {
+  if (0 !== props.data.length) {
+    return (
+      <Fragment>
+        {props.data.map(tag =>
+          <span key={toKey(tag)} className="label label-info">{tag}</span>
+        )}
+      </Fragment>
+    )
+  }
+
+  return '-'
+}
 
 implementPropTypes(TagCell, DataCellTypes, {
-  data: T.shape({
-    id: T.string,
-    name: T.string,
-    color: T.string
-  })
+  data: T.arrayOf(T.string)
+}, {
+  data: []
 })
 
 export {
