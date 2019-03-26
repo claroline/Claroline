@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
+import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
@@ -90,6 +91,66 @@ const EditorParameters = props =>
             }
           ]
         }, {
+          icon: 'fa fa-fw fa-dice',
+          title: trans('picking', {}, 'quiz'),
+          fields: [
+            {
+              name: 'picking.type',
+              label: trans('quiz_picking_type', {}, 'quiz'),
+              type: 'choice',
+              required: true,
+              options: {
+                noEmpty: true,
+                condensed: true,
+                choices: constants.QUIZ_PICKINGS
+              },
+              linked: [
+                // Standard picking
+                {
+                  name: 'picking.randomPick',
+                  label: trans('random_picking', {}, 'quiz'),
+                  type: 'choice',
+                  displayed: (quiz) => constants.QUIZ_PICKING_DEFAULT === get(quiz, 'picking.type'),
+                  required: true,
+                  options: {
+                    inline: true,
+                    condensed: false,
+                    choices: constants.SHUFFLE_MODES
+                  },
+                  linked: [
+                    {
+                      name: 'picking.pick',
+                      label: trans('number_steps_draw', {}, 'quiz'),
+                      help: trans('number_steps_draw_help', {}, 'quiz'),
+                      type: 'number',
+                      displayed: (quiz) => constants.SHUFFLE_NEVER !== get(quiz, 'picking.randomPick'),
+                      required: true,
+                      options: {
+                        min: 0
+                      }
+                    }
+                  ]
+                }, {
+                  name: 'picking.randomOrder',
+                  label: trans('random_order', {}, 'quiz'),
+                  type: 'choice',
+                  displayed: (quiz) => constants.QUIZ_PICKING_DEFAULT === get(quiz, 'picking.type'),
+                  required: true,
+                  options: {
+                    inline: true,
+                    condensed: false,
+                    choices: constants.SHUFFLE_ALWAYS !== props.randomPick ?
+                      constants.SHUFFLE_MODES
+                      :
+                      omit(constants.SHUFFLE_MODES, constants.SHUFFLE_ONCE)
+                  }
+                }
+
+                // Tag picking
+              ]
+            }
+          ]
+        }, {
           icon: ' fa fa-fw fa-play',
           title: trans('attempts', {}, 'quiz'),
           fields: [
@@ -98,10 +159,10 @@ const EditorParameters = props =>
               type: 'boolean',
               label: trans('show_progression_gauge', {}, 'quiz')
             }, {
-              name: 'parameters._hasDuration',
+              name: 'parameters.timeLimited',
               label: trans('limit_quiz_duration', {}, 'quiz'),
               type: 'boolean',
-              calculated: (quiz) => get(quiz, 'parameters.duration') || get(quiz, 'parameters._hasDuration'),
+              calculated: (quiz) => get(quiz, 'parameters.duration') || get(quiz, 'parameters.timeLimited'),
               onChange: (checked) => {
                 if (!checked) {
                   props.update('parameters.duration', 0)
@@ -114,7 +175,7 @@ const EditorParameters = props =>
                   name: 'parameters.duration',
                   label: trans('duration'),
                   type: 'time',
-                  displayed: (quiz) => get(quiz, 'parameters.duration') || get(quiz, 'parameters._hasDuration'),
+                  displayed: (quiz) => get(quiz, 'parameters.duration') || get(quiz, 'parameters.timeLimited'),
                   required: true
                 }
               ]
@@ -176,6 +237,33 @@ const EditorParameters = props =>
               label: trans('anonymize_results', {}, 'quiz'),
               type: 'boolean'
             }, {
+              name: 'parameters.showCorrectionAt',
+              label: trans('results_availability', {}, 'quiz'),
+              type: 'choice',
+              required: true,
+              options: {
+                condensed: true,
+                noEmpty: true,
+                choices: constants.QUIZ_RESULTS_AVAILABILITY
+              },
+              onChange: (quizResults) => {
+                if (constants.QUIZ_RESULTS_AT_DATE !== quizResults) {
+                  props.update('parameters.correctionDate', null)
+                }
+              },
+              linked: [
+                {
+                  name: 'parameters.correctionDate',
+                  label: trans('access_date'),
+                  type: 'date',
+                  required: true,
+                  displayed: (quiz) => constants.QUIZ_RESULTS_AT_DATE === get(quiz, 'parameters.showCorrectionAt'),
+                  options: {
+                    time: true
+                  }
+                }
+              ]
+            }, {
               name: 'parameters.hasExpectedAnswers',
               label: trans('has_expected_answers', {}, 'quiz'),
               type: 'boolean',
@@ -192,16 +280,29 @@ const EditorParameters = props =>
               label: trans('statistics', {}, 'quiz'),
               type: 'boolean',
               linked: [
-                /*{
+                {
                   name: 'parameters.allPapersStatistics',
-                  label: trans('statistics_options', {}, 'quiz'),
+                  label: trans('calculation_mode', {}, 'quiz'),
                   displayed: (quiz) => get(quiz, 'parameters.showStatistics'),
                   type: 'choice',
+                  required: true,
                   options: {
+                    noEmpty: true,
                     condensed: true,
-                    choices: {}
+                    choices: {
+                      all: trans('statistics_all_attempts', {}, 'quiz'),
+                      finished: trans('statistics_finished_attempts', {}, 'quiz'),
+                    }
+                  },
+                  calculated: (quiz) => get(quiz, 'parameters.allPapersStatistics') ? 'all' : 'finished',
+                  onChange: (mode) => {
+                    if ('all' === mode) {
+                      props.update('parameters.allPapersStatistics', true)
+                    } else {
+                      props.update('parameters.allPapersStatistics', false)
+                    }
                   }
-                }*/
+                }
               ]
             }
           ]
@@ -209,28 +310,81 @@ const EditorParameters = props =>
           icon: 'fa fa-fw fa-key',
           title: trans('access_restrictions'),
           fields: [
-            // TODO : add checkboxes
             {
-              name: 'parameters.maxAttempts',
-              label: trans('maximum_attempts', {}, 'quiz'),
-              type: 'number',
-              options: {
-                min: 0
-              }
+              name: 'parameters._maxAttempts',
+              label: trans('restrict_user_attempts', {}, 'quiz'),
+              help: trans('restrict_user_attempts_help', {}, 'quiz'),
+              type: 'boolean',
+              calculated: (quiz) => get(quiz, 'parameters._maxAttempts') || 0 < get(quiz, 'parameters.maxAttempts'),
+              onChange: (restrict) => {
+                if (restrict) {
+                  props.update('parameters.maxAttempts', null)
+                } else {
+                  props.update('parameters.maxAttempts', 0)
+                }
+              },
+              linked: [
+                {
+                  name: 'parameters.maxAttempts',
+                  label: trans('attempts_count', {}, 'quiz'),
+                  type: 'number',
+                  required: true,
+                  displayed: (quiz) => get(quiz, 'parameters._maxAttempts') || 0 < get(quiz, 'parameters.maxAttempts'),
+                  options: {
+                    min: 0
+                  }
+                }
+              ]
             }, {
-              name: 'parameters.maxAttemptsPerDay',
-              label: trans('maximum_attempts_per_day', {}, 'quiz'),
-              type: 'number',
-              options: {
-                min: 0
-              }
+              name: 'parameters._maxAttemptsPerDay',
+              label: trans('restrict_user_attempts_per_day', {}, 'quiz'),
+              help: trans('restrict_user_attempts_per_day_help', {}, 'quiz'),
+              type: 'boolean',
+              calculated: (quiz) => get(quiz, 'parameters._maxAttemptsPerDay') || 0 < get(quiz, 'parameters.maxAttemptsPerDay'),
+              onChange: (restrict) => {
+                if (restrict) {
+                  props.update('parameters.maxAttemptsPerDay', null)
+                } else {
+                  props.update('parameters.maxAttemptsPerDay', 0)
+                }
+              },
+              linked: [
+                {
+                  name: 'parameters.maxAttemptsPerDay',
+                  label: trans('attempts_count', {}, 'quiz'),
+                  type: 'number',
+                  required: true,
+                  displayed: (quiz) => get(quiz, 'parameters._maxAttemptsPerDay') || 0 < get(quiz, 'parameters.maxAttemptsPerDay'),
+                  options: {
+                    min: 0
+                  }
+                }
+              ]
             }, {
-              name: 'parameters.maxPapers',
-              label: trans('maximum_papers', {}, 'quiz'),
-              type: 'number',
-              options: {
-                min: 0
-              }
+              name: 'parameters._maxPapers',
+              label: trans('restrict_total_attempts', {}, 'quiz'),
+              help: trans('restrict_total_attempts_help', {}, 'quiz'),
+              type: 'boolean',
+              calculated: (quiz) => get(quiz, 'parameters._maxPapers') || 0 < get(quiz, 'parameters.maxPapers'),
+              onChange: (restrict) => {
+                if (restrict) {
+                  props.update('parameters.maxPapers', null)
+                } else {
+                  props.update('parameters.maxPapers', 0)
+                }
+              },
+              linked: [
+                {
+                  name: 'parameters.maxPapers',
+                  label: trans('attempts_count', {}, 'quiz'),
+                  type: 'number',
+                  required: true,
+                  displayed: (quiz) => get(quiz, 'parameters._maxPapers') || 0 < get(quiz, 'parameters.maxPapers'),
+                  options: {
+                    min: 0
+                  }
+                }
+              ]
             }
           ]
         }
@@ -241,6 +395,7 @@ const EditorParameters = props =>
 EditorParameters.propTypes = {
   formName: T.string.isRequired,
   numberingType: T.string.isRequired,
+  randomPick: T.string,
   workspace: T.object,
   update: T.func.isRequired
 }

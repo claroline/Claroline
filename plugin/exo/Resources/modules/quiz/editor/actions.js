@@ -13,7 +13,7 @@ import {makeId} from '#/plugin/exo/utils/utils'
 import {denormalize} from '#/plugin/exo/quiz/normalizer'
 import {formatQuizForTimer} from '#/plugin/exo/quiz/decorators'
 
-import {ITEM_UPDATE_TAGS} from '#/plugin/tag/actions'
+//import {ITEM_UPDATE_TAGS} from '#/plugin/tag/actions'
 
 export const ITEM_CREATE = 'ITEM_CREATE'
 export const ITEM_UPDATE = 'ITEM_UPDATE'
@@ -79,7 +79,7 @@ export const quizChangeActions = [
   OBJECT_CHANGE,
   OBJECT_REMOVE,
   OBJECT_MOVE,
-  ITEM_UPDATE_TAGS
+  //ITEM_UPDATE_TAGS
 ]
 
 export const actions = {}

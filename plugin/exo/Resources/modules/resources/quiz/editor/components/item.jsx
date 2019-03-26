@@ -32,17 +32,16 @@ const EditorItem = props =>
           {...omit(props, 'formName', 'path', 'index', 'item', 'update')}
           id={props.item.id}
           className="embedded-form-section"
-          icon={props.numbering ?
-            <span className="h-numbering">{props.numbering}</span> :
-            <span />
-          }
-          title={
+          icon={
             <Fragment>
-              <ItemIcon name={itemDefinition.name} className="panel-title-icon" />
+              {props.numbering &&
+                <span className="h-numbering">{props.numbering}</span>
+              }
 
-              {itemTitle}
+              <ItemIcon name={itemDefinition.name} className="panel-title-icon" />
             </Fragment>
           }
+          title={itemTitle}
           actions={[
             {
               name: 'copy',

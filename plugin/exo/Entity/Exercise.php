@@ -64,7 +64,7 @@ class Exercise extends AbstractResource
      *
      * @ORM\Column(type="boolean")
      */
-    private $interruptible = false;
+    private $interruptible = true;
 
     /**
      * Show overview to users or directly start the quiz.
@@ -173,7 +173,7 @@ class Exercise extends AbstractResource
      *
      * @ORM\Column(type="string")
      */
-    private $type = ExerciseType::SUMMATIVE;
+    private $type = ExerciseType::CUSTOM;
 
     /**
      * @ORM\OneToMany(targetEntity="Step", mappedBy="exercise", cascade={"all"}, orphanRemoval=true)
@@ -267,20 +267,9 @@ class Exercise extends AbstractResource
     public function __construct()
     {
         $this->refreshUuid();
+
         $this->dateCorrection = new \DateTime();
         $this->steps = new ArrayCollection();
-    }
-
-    public function getTitle()
-    {
-        return !empty($this->resourceNode) ? $this->resourceNode->getName() : null;
-    }
-
-    public function setTitle($title)
-    {
-        if (!empty($this->resourceNode)) {
-            $this->resourceNode->setName($title);
-        }
     }
 
     /**

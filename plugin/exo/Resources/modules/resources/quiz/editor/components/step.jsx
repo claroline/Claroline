@@ -75,7 +75,6 @@ const EditorStep = props => {
             size="lg"
             icon="fa fa-question"
             title={trans('no_item_info', {}, 'quiz')}
-            help={trans('no_item_help', {}, 'quiz')}
           />
         }
 

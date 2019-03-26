@@ -18,9 +18,15 @@ const numberingType = createSelector(
   (quiz) => get(quiz, 'parameters.numbering')
 )
 
+const randomPick = createSelector(
+  [quiz],
+  (quiz) => get(quiz, 'picking.randomPick')
+)
+
 export const selectors = {
   STORE_NAME,
   FORM_NAME,
   steps,
-  numberingType
+  numberingType,
+  randomPick
 }

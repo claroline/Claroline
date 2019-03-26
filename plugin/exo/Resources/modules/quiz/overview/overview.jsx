@@ -16,7 +16,7 @@ const Parameters = props =>
   <ul className="exercise-parameters">
     <li className="exercise-parameter">
       <span className="fa fa-fw fa-check-square-o icon-with-text-right" />
-      {tex('availability_of_correction')} :
+      {tex('results_availability')} :
       &nbsp;
       <b>
         {props.showCorrectionAt === SHOW_CORRECTION_AT_DATE ?
@@ -25,24 +25,28 @@ const Parameters = props =>
         }
       </b>
     </li>
+
     <li className="exercise-parameter">
       <span className="fa fa-fw fa-percent icon-with-text-right" />
       {tex('availability_of_score')} :
       &nbsp;
       <b>{tex(markModes.find(mode => mode[0] === props.showScoreAt)[1])}</b>
     </li>
+
     <li className="exercise-parameter">
       <span className="fa fa-fw fa-sign-out icon-with-text-right" />
       {tex('test_exit')} :
       &nbsp;
       <b>{props.interruptible ? trans('yes') : trans('no')}</b>
     </li>
+
     <li className="exercise-parameter">
       <span className="fa fa-fw fa-files-o icon-with-text-right" />
-      {tex('maximum_tries')} :
+      {tex('maximum_attempts')} :
       &nbsp;
       <b>{props.maxAttempts ? props.maxAttempts : '-'}</b>
     </li>
+
     {props.timeLimited &&
       <li className="exercise-parameter">
         <span className="fa fa-fw fa-clock-o icon-with-text-right" />

@@ -70,7 +70,8 @@ class ExerciseSerializer implements SerializerInterface
     {
         $exerciseData = new \stdClass();
         $exerciseData->id = $exercise->getUuid();
-        $exerciseData->title = $exercise->getTitle();
+
+        $exerciseData->title = $exercise->getResourceNode()->getName(); // TODO : remove me. it's required by the json schema
 
         if (!in_array(Transfer::MINIMAL, $options)) {
             if (!empty($exercise->getDescription())) {

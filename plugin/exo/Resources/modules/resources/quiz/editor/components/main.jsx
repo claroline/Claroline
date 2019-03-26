@@ -115,6 +115,7 @@ class EditorMain extends Component {
                   <EditorParameters
                     formName={this.props.formName}
                     numberingType={this.props.numberingType}
+                    randomPick={this.props.randomPick}
                     workspace={this.props.workspace}
                     update={this.props.update}
                   />
@@ -168,6 +169,7 @@ EditorMain.propTypes = {
   quizId: T.string.isRequired,
   workspace: T.object,
   numberingType: T.string,
+  randomPick: T.string,
   steps: T.arrayOf(T.shape(
     StepTypes.propTypes
   )),

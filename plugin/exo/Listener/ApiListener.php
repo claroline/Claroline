@@ -31,15 +31,9 @@ class ApiListener
      *     "paperManager"  = @DI\Inject("ujm_exo.manager.paper")
      * })
      *
-<<<<<<< Updated upstream
-     * @param ItemManager     $itemManager
-     * @param ShareManager    $sharedManager
-     * @param PaperManager    $paperManager
-=======
      * @param ItemManager  $itemManager
      * @param ShareManager $sharedManager
      * @param PaperManager $paperManager
->>>>>>> Stashed changes
      */
     public function __construct(
         ItemManager $itemManager,

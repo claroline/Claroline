@@ -19,6 +19,7 @@ const EditorMain = withRouter(
       quizId: formSelectors.value(formSelectors.form(state, selectors.FORM_NAME), 'id'),
       workspace: resourceSelectors.workspace(state),
       numberingType: selectors.numberingType(state),
+      randomPick: selectors.randomPick(state),
       steps: selectors.steps(state)
     }),
     (dispatch, ownProps) => ({

@@ -1,17 +1,18 @@
-import {shuffle, sampleSize} from 'lodash/collection'
-import moment from 'moment'
-import cloneDeep from 'lodash/cloneDeep'
+import merge from 'lodash/merge'
+import sampleSize from 'lodash/sampleSize'
+import shuffle from 'lodash/shuffle'
 
-import {tex} from '#/main/app/intl/translation'
+import {currentUser} from '#/main/app/security'
+import {now} from '#/main/app/intl/date'
+import {makeId} from '#/main/core/scaffolding/id'
 
-import {makeId} from './../../utils/utils'
-import defaults from './../defaults'
+import {Step} from '#/plugin/exo/resources/quiz/prop-types'
 import {
   SHUFFLE_ONCE,
   SHUFFLE_ALWAYS,
   QUIZ_PICKING_DEFAULT,
   QUIZ_PICKING_TAGS
-} from './../enums'
+} from '#/plugin/exo/quiz/enums'
 
 // TODO : apply shuffle on answer items
 
@@ -25,15 +26,13 @@ import {
  *
  * @returns {{number: number, anonymized: boolean, structure}}
  */
-export function generatePaper(quiz, steps, items, previousPaper = null) {
+function generatePaper(quiz, steps, items, previousPaper = null) {
   return {
     id: makeId(),
     finished: false,
-    startDate: moment().format('YYYY-MM-DD[T]HH:mm:ss'),
+    startDate: now(),
     endDate: null,
-    user: {
-      name: tex('you')
-    },
+    user: currentUser(),
     number: previousPaper ? previousPaper.number + 1 : 1,
     anonymized: quiz.parameters.anonymizeAttempts,
     structure: generateStructure(quiz, steps, items, previousPaper)
@@ -132,9 +131,11 @@ function generateStructureByTags(quiz, steps, items, previousPaper = null) {
   // Create steps and fill it with the correct number of questions
   let pickedSteps = []
   while (0 < pickedItems.length) {
-    const pickedStep = cloneDeep(defaults.step)
-    pickedStep.id = makeId()
-    pickedStep.items = pickedItems.splice(0, picking.pageSize)
+    const pickedStep = merge({}, Step.defaultProps, {
+      id: makeId(),
+      items: pickedItems.splice(0, picking.pageSize)
+    })
+
     pickedSteps.push(pickedStep)
   }
 
@@ -182,4 +183,8 @@ function pick(originalSet, count = 0) {
   }
 
   return picked
+}
+
+export {
+  generatePaper
 }

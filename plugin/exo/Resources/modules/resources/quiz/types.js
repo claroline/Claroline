@@ -13,8 +13,6 @@ const QUIZ_SUMMATIVE         = 'summative'
 const QUIZ_SURVEY            = 'survey'
 const QUIZ_CUSTOM            = 'custom'
 
-const QUIZ_TYPE_DEFAULT = QUIZ_CUSTOM
-
 /**
  * Type : Conceptualization
  */
@@ -110,7 +108,6 @@ const QUIZ_TYPES = {
 
 export {
   QUIZ_TYPES,
-  QUIZ_TYPE_DEFAULT,
 
   QUIZ_CONCEPTUALIZATION,
   QUIZ_FORMATIVE,

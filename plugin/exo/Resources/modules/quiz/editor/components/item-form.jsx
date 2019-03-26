@@ -12,7 +12,6 @@ import {ToggleableSet} from '#/main/core/layout/form/components/fieldset/togglea
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import ObjectsEditor from './item-objects-editor'
-import TagsEditor from '#/plugin/tag/item-tags-editor'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
 
 // TODO: add categories, define-as-model
@@ -56,15 +55,6 @@ const Metadata = props =>
       <ObjectsEditor
         showModal={props.showModal}
         validating={props.validating}
-        item={props.item}
-      />
-    </FormGroup>
-
-    <FormGroup
-      id={`item-${props.item.id}-tags`}
-      label={trans('tags')}
-    >
-      <TagsEditor
         item={props.item}
       />
     </FormGroup>

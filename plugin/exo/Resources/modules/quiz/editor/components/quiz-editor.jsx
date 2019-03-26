@@ -27,13 +27,10 @@ import {
   QUIZ_PICKING_TAGS,
   SHOW_CORRECTION_AT_DATE,
   TOTAL_SCORE_ON_CUSTOM,
-  TOTAL_SCORE_ON_DEFAULT,
-  STATISTICS_ALL_PAPERS,
-  statisticsModes
+  TOTAL_SCORE_ON_DEFAULT
 } from '#/plugin/exo/quiz/enums'
 import select from '#/plugin/exo/quiz/editor/selectors'
 import {ValidationStatus} from '#/plugin/exo/quiz/editor/components/validation-status.jsx'
-import {RandomPicking} from '#/plugin/exo/quiz/editor/components/random-picking.jsx'
 import {TagPicking} from '#/plugin/exo/quiz/editor/components/tag-picking.jsx'
 
 const TOTAL_SCORE_ON_DEFAULT_VALUE = 100
@@ -85,74 +82,6 @@ Picking.propTypes = {
   items: T.object.isRequired,
   validating: T.bool.isRequired,
   errors: T.object,
-  onChange: T.func.isRequired
-}
-
-const Correction = props =>
-  <fieldset>
-    <FormGroup
-      id="quiz-showCorrectionAt"
-      label={tex('availability_of_correction')}
-    >
-      <select
-        id="quiz-showCorrectionAt"
-        value={props.parameters.showCorrectionAt}
-        className="form-control"
-        onChange={e => props.onChange('parameters.showCorrectionAt', e.target.value)}
-      >
-        {correctionModes.map(mode =>
-          <option key={mode[0]} value={mode[0]}>{tex(mode[1])}</option>
-        )}
-      </select>
-    </FormGroup>
-    {props.parameters.showCorrectionAt === SHOW_CORRECTION_AT_DATE &&
-      <div className="sub-fields">
-        <DateGroup
-          id="quiz-correctionDate"
-          label={tex('correction_date')}
-          value={props.parameters.correctionDate}
-          onChange={date => props.onChange('parameters.correctionDate', date)}
-          time={true}
-        />
-      </div>
-    }
-
-    <ActivableSet
-      id="quiz-showStatistics"
-      label={tex('statistics')}
-      activated={props.parameters.showStatistics}
-      onChange={checked => props.onChange('parameters.showStatistics', checked)}
-    >
-      <FormGroup
-        id="quiz-allPapersStatistics"
-        label={tex('statistics_options')}
-      >
-        <select
-          id="quiz-allPapersStatistics"
-          value={props.parameters.allPapersStatistics}
-          className="form-control"
-          onChange={e => props.onChange('parameters.allPapersStatistics', e.target.value === 'true')}
-        >
-          {statisticsModes.map(mode =>
-            <option key={mode[0]} value={mode[0] === STATISTICS_ALL_PAPERS}>
-              {tex(mode[1])}
-            </option>
-          )}
-        </select>
-      </FormGroup>
-    </ActivableSet>
-  </fieldset>
-
-Correction.propTypes = {
-  parameters: T.shape({
-    showCorrectionAt: T.string.isRequired,
-    showFullCorrection: T.bool.isRequired,
-    showStatistics: T.bool.isRequired,
-    allPapersStatistics: T.bool.isRequired,
-    showFeedback: T.bool.isRequired,
-    anonymizeAttempts: T.bool.isRequired,
-    correctionDate: T.string
-  }).isRequired,
   onChange: T.func.isRequired
 }
 

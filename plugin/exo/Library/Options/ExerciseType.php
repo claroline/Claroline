@@ -10,15 +10,25 @@ final class ExerciseType
     /**
      * @var string
      */
-    const SUMMATIVE = 'summative';
-
-    /**
-     * @var string
-     */
-    const EVALUATIVE = 'evaluative';
+    const CONCEPTUALIZATION = 'conceptualization';
 
     /**
      * @var string
      */
     const FORMATIVE = 'formative';
+
+    /**
+     * @var string
+     */
+    const SUMMATIVE = 'summative';
+
+    /**
+     * @var string
+     */
+    const SURVEY = 'survey';
+
+    /**
+     * @var string
+     */
+    const CUSTOM = 'custom';
 }

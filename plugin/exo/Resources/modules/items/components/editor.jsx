@@ -88,10 +88,6 @@ const ItemEditor = props => {
               name: 'objects',
               label: trans('contents'),
               type: 'string'
-            }, {
-              name: 'resources',
-              label: trans('resources'),
-              type: 'resources'
             }
           ]
         }, {

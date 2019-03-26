@@ -61,6 +61,16 @@ const BankTool = props =>
                 },
                 displayed: true
               }, {
+                name: 'tags',
+                type: 'tag',
+                label: trans('tags'),
+                displayable: true,
+                displayed: true,
+                sortable: false,
+                options: {
+                  objectClass: 'UJM\\ExoBundle\\Entity\\Item\\Item'
+                }
+              }, {
                 name: 'meta.created',
                 label: trans('creation_date'),
                 type: 'date',

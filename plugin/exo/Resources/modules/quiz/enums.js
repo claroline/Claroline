@@ -48,11 +48,3 @@ export const SCORE_RULES = 'rules'
 
 export const TOTAL_SCORE_ON_DEFAULT = 'default'
 export const TOTAL_SCORE_ON_CUSTOM = 'custom'
-
-export const STATISTICS_ALL_PAPERS = 'default'
-export const STATISTICS_FINISHED_PAPERS_ONLY = 'custom'
-
-export const statisticsModes = [
-  [STATISTICS_ALL_PAPERS, 'compute_from_all_papers'],
-  [STATISTICS_FINISHED_PAPERS_ONLY, 'compute_from_finished_papers_only']
-]

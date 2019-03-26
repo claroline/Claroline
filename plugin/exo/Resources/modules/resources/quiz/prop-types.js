@@ -1,13 +1,11 @@
 import {PropTypes as T} from 'prop-types'
 
 import {
-  QUIZ_PICKING_DEFAULT,
   SHUFFLE_NEVER,
-  SHOW_CORRECTION_AT_VALIDATION,
   SHOW_SCORE_AT_CORRECTION
 } from '#/plugin/exo/quiz/enums'
 
-import {QUIZ_TYPE_DEFAULT} from '#/plugin/exo/resources/quiz/types'
+import {constants} from '#/plugin/exo/resources/quiz/constants'
 
 const Step = {
   propTypes: {
@@ -30,8 +28,8 @@ const Step = {
   defaultProps: {
     picking: {
       pick: 0,
-      randomOrder: SHUFFLE_NEVER,
-      randomPick: SHUFFLE_NEVER
+      randomOrder: constants.SHUFFLE_NEVER,
+      randomPick: constants.SHUFFLE_NEVER
     },
     parameters: {
       duration: 0,
@@ -62,28 +60,29 @@ const Quiz = {
 
     },
     parameters: {
-      type: QUIZ_TYPE_DEFAULT,
+      type: constants.QUIZ_TYPE_DEFAULT,
       showMetadata: true,
       duration: 0,
       maxAttempts: 0,
       maxAttemptsPerDay: 0,
       mandatoryQuestions: false,
       maxPapers: 0,
-      interruptible: false,
-      showCorrectionAt: SHOW_CORRECTION_AT_VALIDATION,
+      interruptible: true,
+      showCorrectionAt: constants.QUIZ_RESULTS_AT_VALIDATION,
       correctionDate: '',
       anonymizeAttempts: false,
       showScoreAt: SHOW_SCORE_AT_CORRECTION,
       showStatistics: false,
       showFullCorrection: true,
       showEndConfirm: true,
-      endMessage: ''
+      endMessage: '',
+      allPapersStatistics: false
     },
     picking: {
-      type: QUIZ_PICKING_DEFAULT,
+      type: constants.QUIZ_PICKING_DEFAULT,
       pick: 0,
-      randomOrder: SHUFFLE_NEVER,
-      randomPick: SHUFFLE_NEVER
+      randomOrder: constants.SHUFFLE_NEVER,
+      randomPick: constants.SHUFFLE_NEVER
     },
     steps: []
   }
