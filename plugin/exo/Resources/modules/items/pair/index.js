@@ -8,10 +8,9 @@ import {makeId} from '#/main/core/scaffolding/id'
 
 import {PairItem as PairItemType} from '#/plugin/exo/items/pair/prop-types'
 import {PairEditor} from "#/plugin/exo/items/pair/components/editor"
-// old
-import {PairPaper} from '#/plugin/exo/items/pair/paper.jsx'
-import {PairPlayer} from '#/plugin/exo/items/pair/player.jsx'
-import {PairFeedback} from '#/plugin/exo/items/pair/feedback.jsx'
+import {PairPaper} from '#/plugin/exo/items/pair/components/paper'
+import {PairPlayer} from '#/plugin/exo/items/pair/components/player'
+import {PairFeedback} from '#/plugin/exo/items/pair/components/feedback'
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
 
 // scores

@@ -2,12 +2,14 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import has from 'lodash/has'
+
 import {tex} from '#/main/app/intl/translation'
-import {Feedback} from './../components/feedback-btn.jsx'
-import {SolutionScore} from './../components/score.jsx'
-import {AnswerStats} from '../components/stats.jsx'
-import {PaperTabs} from './../components/paper-tabs.jsx'
-import {utils} from './utils/utils'
+
+import {Feedback} from '#/plugin/exo/items/components/feedback-btn'
+import {SolutionScore} from '#/plugin/exo/items/components/score'
+import {AnswerStats} from '#/plugin/exo/items/components/stats'
+import {PaperTabs} from '#/plugin/exo/items/components/paper-tabs'
+import {utils} from '#/plugin/exo/items/pair/utils/utils'
 import {WarningIcon} from '#/plugin/exo/components/warning-icon'
 
 export const PairPaper = props => {
@@ -69,7 +71,7 @@ export const PairPaper = props => {
           <div className="col-md-5 items-col">
             <ul>
               {expectedAnswers.odd.map((o) =>
-                <li key={`your-answer-orphean-${o.id}`}>
+                <li key={`your-answer-orphean-${o.item.id}`}>
                   <div className={classes(
                     'item',
                     {'selected-answer': o.score}
@@ -111,11 +113,11 @@ export const PairPaper = props => {
           <div className="col-md-5 items-col">
             <ul>
               {expectedAnswers.odd.map((o) =>
-                <li key={`your-answer-orphean-${o.id}`}>
+                <li key={`your-answer-orphean-${o.item.id}`}>
                   <div className="item selected-answer">
                     <div className="item-data" dangerouslySetInnerHTML={{__html: o.item.data}} />
                     <AnswerStats stats={{
-                      value: props.stats.unpaired[o.item.id] ? props.stats.unpaired[o.item.id] : 0,
+                      value: props.stats.unpaired && props.stats.unpaired[o.item.id] ? props.stats.unpaired[o.item.id] : 0,
                       total: props.stats.total
                     }} />
                   </div>

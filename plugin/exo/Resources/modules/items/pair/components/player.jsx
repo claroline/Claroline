@@ -7,11 +7,12 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
 
 import {tex, trans} from '#/main/app/intl/translation'
-import {utils} from './utils/utils'
-import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
-import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {PairItemDragPreview} from './pair-item-drag-preview.jsx'
+import {Button} from '#/main/app/action/components/button'
+
+import {makeDraggable, makeDroppable} from '#/plugin/exo/utils/dragAndDrop'
+import {utils} from '#/plugin/exo/items/pair/utils/utils'
+import {PairItemDragPreview} from '#/plugin/exo/items/pair/components/pair-item-drag-preview'
 
 let DropBox = props => props.connectDropTarget (
   <div className={classes(
@@ -151,7 +152,7 @@ class PairPlayer extends Component {
 
     this.state = {
       items: utils.pairItemsWithDisplayOption(props.item.items),
-      answerItems: utils.generateAnswerPairItems(props.item.items, props.item.rows)
+      answerItems: utils.generateAnswerPairItems(props.item.items, props.item.rows, props.answer)
     }
   }
 

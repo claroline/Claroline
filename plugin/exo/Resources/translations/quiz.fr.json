@@ -299,6 +299,7 @@
     "pair_random_needs_pin_item": "Au moins un élément doit être épinglé pour pouvoir utiliser la propriété random.",
     "pair_shuffle_pairs": "Ordre des paires aléatoire.",
     "pair_solution_at_least_two_items": "Une paire doit avoir deux éléments.",
+    "pair_unpin_this_item": "Désépingler cet élément",
     "paper": "Passage",
     "papers": "Copies",
     "paper_finished": "Terminé",

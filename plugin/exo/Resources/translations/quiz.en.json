@@ -299,6 +299,7 @@
     "pair_random_needs_pin_item": "You must pin at least one item to use random.",
     "pair_shuffle_pairs": "Shuffle pair order.",
     "pair_solution_at_least_two_items": "A pair must have two items.",
+    "pair_unpin_this_item": "Unpin this item",
     "paper": "Paper",
     "papers": "Papers",
     "paper_finished": "Finished",

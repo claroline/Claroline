@@ -77,7 +77,7 @@ utils.switchItemDisplay = (items, id, display) => {
   return items.map(item => item.id === id ? Object.assign({}, item, {display: display}) : item)
 }
 
-utils.generateAnswerPairItems = (items, rows) => {
+utils.generateAnswerPairItems = (items, rows, answer = []) => {
   let data = []
   times(rows, i => data[i] = [-1, -1])
   Array.apply(null, {length: rows}).map((x, i) => {
@@ -86,6 +86,34 @@ utils.generateAnswerPairItems = (items, rows) => {
       data[i][item.coordinates[0]] = Object.assign({}, item, {removable: false})
     }
   })
+  answer.forEach((a) => {
+    const itemX = items.find(i => i.id === a[0])
+    const itemY = items.find(i => i.id === a[1])
+    // search first if one of the answer pair is in the pinned items
+    const row = data.find(d => (-1 !== d[0] && d[0].id === a[0]) || (-1 !== d[1] && d[1].id === a[1]))
+
+    if (row) {
+      // if existing pair answer is associated to a pinned item, set the second pair value with the given answer
+      if (-1 === row[0] && itemX) {
+        row[0] = Object.assign({}, itemX, {removable: true})
+      } else if (-1 === row[1] && itemY) {
+        row[1] = Object.assign({}, itemY, {removable: true})
+      }
+    } else {
+      // initialize existing pair answer into the first empty pair answer found
+      const emptyRow = data.find(d => -1 === d[0] && -1 === d[1])
+
+      if (emptyRow) {
+        if (itemX) {
+          emptyRow[0] = Object.assign({}, itemX, {removable: true})
+        }
+        if (itemY) {
+          emptyRow[1] = Object.assign({}, itemY, {removable: true})
+        }
+      }
+    }
+  })
+
   return data
 }
 

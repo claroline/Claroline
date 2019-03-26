@@ -172,7 +172,7 @@ const dropPairItem = (pairData, item, solutions, saveCallback) => {
   saveCallback('solutions', newSolutions)
 }
 
-const addItemCoodinates = (itemId, brotherId, coordinates, items, saveCallback) => {
+const addItemCoordinates = (itemId, brotherId, coordinates, items, saveCallback) => {
   const newItems = cloneDeep(items)
   const itemToUpdate = newItems.find(i => i.id === itemId)
 
@@ -240,16 +240,21 @@ class Pair extends Component {
                 {this.props.showPins &&
                   <Button
                     id={`pair-${this.props.index}-${this.props.pair.itemIds[0]}-pin-me`}
-                    className="pull-right btn-link btn-pin-item"
+                    className={classes(
+                      'pull-right btn-link btn-pin-item',
+                      {disabled: !utils.pairItemHasCoords(this.props.pair.itemIds[0], this.props.items, this.props.index)}
+                    )}
                     type={CALLBACK_BUTTON}
                     icon="fa fa-fw fa-thumb-tack"
-                    label={trans('pair_pin_this_item', {}, 'quiz')}
+                    label={utils.pairItemHasCoords(this.props.pair.itemIds[0], this.props.items, this.props.index) ?
+                      trans('pair_unpin_this_item', {}, 'quiz') :
+                      trans('pair_pin_this_item', {}, 'quiz')
+                    }
                     callback={() => this.props.onAddItemCoordinates(
                       this.props.pair.itemIds[0],
                       this.props.pair.itemIds[1],
                       [0, this.props.index]
                     )}
-                    disabled={!utils.pairItemHasCoords(this.props.pair.itemIds[0], this.props.items, this.props.index)}
                     tooltip="top"
                   />
                 }
@@ -267,11 +272,16 @@ class Pair extends Component {
                 {this.props.showPins &&
                   <Button
                     id={`pair-${this.props.index}-${this.props.pair.itemIds[1]}-pin-me`}
-                    className="pull-right btn-link btn-pin-item"
+                    className={classes(
+                      'pull-right btn-link btn-pin-item',
+                      {disabled: !utils.pairItemHasCoords(this.props.pair.itemIds[1], this.props.items, this.props.index)}
+                    )}
                     type={CALLBACK_BUTTON}
                     icon="fa fa-fw fa-thumb-tack"
-                    label={trans('pair_pin_this_item', {}, 'quiz')}
-                    disabled={!utils.pairItemHasCoords(this.props.pair.itemIds[1], this.props.items, this.props.index)}
+                    label={utils.pairItemHasCoords(this.props.pair.itemIds[1], this.props.items, this.props.index) ?
+                      trans('pair_unpin_this_item', {}, 'quiz') :
+                      trans('pair_pin_this_item', {}, 'quiz')
+                    }
                     callback={() => this.props.onAddItemCoordinates(
                       this.props.pair.itemIds[1],
                       this.props.pair.itemIds[0],
@@ -408,7 +418,7 @@ class PairList extends Component {
                 onDrop={(source, target) => this.onItemDrop(source, target)}
                 onUpdate={(property, value, index) => updatePair(property, value, index, this.props.solutions, this.props.onChange)}
                 onDelete={(leftId, rightId) => removePair(leftId, rightId, this.props.solutions, this.props.onChange)}
-                onAddItemCoodinates={(itemId, brotherId, coordinates) => addItemCoodinates(itemId, brotherId, coordinates, this.props.items, this.props.onChange)}
+                onAddItemCoordinates={(itemId, brotherId, coordinates) => addItemCoordinates(itemId, brotherId, coordinates, this.props.items, this.props.onChange)}
                 index={index}
                 showPins={this.state.pinIsAllowed}
                 items={this.props.items}
