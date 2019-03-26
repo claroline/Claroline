@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import classes from 'classnames'
 
-import {trans, tex} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {actions} from './../actions'
 import {selectors as correctionSelectors} from './../selectors'
@@ -25,7 +25,7 @@ class AnswerRow extends Component {
             {this.props.data && 0 !== this.props.data.length ?
               <HtmlText className="answer-item">{this.props.data}</HtmlText>
               :
-              <div className="no-answer">{tex('no_answer')}</div>
+              <div className="no-answer">{trans('no_answer', {}, 'quiz')}</div>
             }
 
             {this.state.showFeedback &&
@@ -57,7 +57,7 @@ class AnswerRow extends Component {
               className="btn-link"
               type={CALLBACK_BUTTON}
               icon="fa fa-fw fa-comments-o"
-              label={tex('feedback')}
+              label={trans('feedback', {}, 'quiz')}
               callback={() => this.setState({showFeedback: !this.state.showFeedback})}
             />
           </div>
@@ -78,8 +78,12 @@ AnswerRow.propTypes = {
   updateFeedback: T.func.isRequired
 }
 
-let Answers = props =>
-  <div className="answers-list">
+let Answers = props => {
+  if (!props.question) {
+    return (<div>{trans('please_wait')}</div>)
+  }
+
+  return (<div className="answers-list">
     <h2 className="question-title">
       {props.question.title || props.question.content}
 
@@ -106,10 +110,11 @@ let Answers = props =>
         />
       ) :
       <div className="alert alert-warning">
-        {tex('no_answer_to_correct')}
+        {trans('no_answer_to_correct', {}, 'quiz')}
       </div>
     }
   </div>
+  )}
 
 Answers.propTypes = {
   question: T.shape({

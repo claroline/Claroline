@@ -6,7 +6,9 @@ const quizId = quizSelectors.id
 
 const correction = createSelector(
   [quizSelectors.resource],
-  (resource) => resource.correction
+  (resource) => {
+    return resource.correction
+  }
 )
 
 const questionsFetched = createSelector(
@@ -34,7 +36,8 @@ const questions = createSelector(
 const answers = createSelector(
   [correction],
   (correction) => {
-    return correction.answers.filter(a => a.questionId === correction.currentQuestionId)
+
+    return correction.answers ? correction.answers.filter(a => a.questionId === correction.currentQuestionId): []
   }
 )
 

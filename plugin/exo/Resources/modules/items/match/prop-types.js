@@ -27,7 +27,9 @@ const MatchItem = {
   defaultProps: {
     firstSet: [],
     secondSet: [],
-    solutions: []
+    solutions: [],
+    random: false,
+    penalty: 0
   }
 }
 
