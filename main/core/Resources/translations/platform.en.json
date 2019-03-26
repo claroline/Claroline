@@ -1440,6 +1440,7 @@
     "last_modified_at": "modified on %date%",
     "not_published": "not published",
     "access_restrictions": "Access restrictions",
+    "access_date": "Access date",
     "access_dates": "Access period",
     "restrict_by_dates": "Restrict by dates",
     "rich_text_tools": "Rich text tools",

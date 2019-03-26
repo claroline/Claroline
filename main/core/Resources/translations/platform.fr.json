@@ -1472,6 +1472,7 @@
     "last_modified_at": "modifié le %date%",
     "not_published": "non publié",
     "access_restrictions": "Restrictions d'accès",
+    "access_date": "Date d'accès",
     "access_dates": "Période d'accès",
     "restrict_by_dates": "Restreindre par dates",
     "rich_text_tools": "Outils de texte riche",

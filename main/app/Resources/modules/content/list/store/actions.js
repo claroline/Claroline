@@ -56,6 +56,7 @@ actions.fetchData = (listName, target, invalidate = false) => (dispatch, getStat
 
   return dispatch({
     [API_REQUEST]: {
+      silent: true,
       url: url(target) + listSelect.queryString(listState),
       success: (response, dispatch) => {
         if (listSelect.currentPage(listState) !== response.page) {

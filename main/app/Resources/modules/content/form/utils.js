@@ -17,7 +17,7 @@ function createFieldDefinition(field, data) {
   if (defaultedField.linked && 0 !== defaultedField.linked.length) {
     defaultedField.linked = defaultedField.linked
       // adds default to fields
-      .map(field => merge({}, DataFormProperty.defaultProps, field))
+      .map(field => createFieldDefinition(field, data))
       // filters hidden fields
       .filter(field => isDisplayed(field, data))
   }

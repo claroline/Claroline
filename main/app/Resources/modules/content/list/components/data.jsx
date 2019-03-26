@@ -4,6 +4,7 @@ import invariant from 'invariant'
 import isEqual from 'lodash/isEqual'
 
 import {Heading} from '#/main/core/layout/components/heading'
+import {ContentLoader} from '#/main/app/content/components/loader'
 
 import {constants as listConst} from '#/main/app/content/list/constants'
 import {
@@ -164,11 +165,17 @@ class ListData extends Component {
           filters={filtersTool}
         />
 
-        {0 === this.props.totalResults &&
+        {this.props.loading &&
+          <ContentLoader
+
+          />
+        }
+
+        {(!this.props.loading && 0 === this.props.totalResults) &&
           <ListEmpty hasFilters={this.props.filters && 0 < this.props.filters.current.length} />
         }
 
-        {0 !== this.props.totalResults &&
+        {(!this.props.loading && 0 !== this.props.totalResults) &&
           React.createElement(listConst.DISPLAY_MODES[this.state.display.current].component, Object.assign({},
             listConst.DISPLAY_MODES[this.state.display.current].options,
             {
@@ -184,7 +191,7 @@ class ListData extends Component {
           ))
         }
 
-        {0 !== this.props.totalResults && (this.props.count || this.props.pagination) &&
+        {(!this.props.loading && 0 !== this.props.totalResults) && (this.props.count || this.props.pagination) &&
           <ListFooter
             count={this.props.count}
             totalResults={this.props.totalResults}
@@ -200,6 +207,7 @@ ListData.propTypes = {
   level: T.number,
   displayLevel: T.number,
   title: T.string,
+  loading: T.bool,
 
   /**
    * The data list to display.
@@ -302,6 +310,7 @@ ListData.propTypes = {
 
 ListData.defaultProps = {
   level: 2,
+  loading: false,
   count: false,
   display: {
     available: Object.keys(listConst.DISPLAY_MODES),

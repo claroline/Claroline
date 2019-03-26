@@ -1,3 +1,113 @@
+
+.content-loader {
+    flex: 1;
+    text-align: center;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    color: #585858;
+    font-family: @headings-font-family;
+    font-size: 18px;
+    //font-weight: bold;
+    padding: 15px;
+    background: #ebebeb;
+    border-radius: @border-radius-base;
+
+    .content-loader-animation {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        background: #ebebeb;
+        border-radius: 50%;
+        margin-bottom: @component-margin-bottom;
+
+        border: 2px solid white;
+    }
+
+    .hourglass {
+        //margin-bottom: @component-margin-bottom - 4px;
+    }
+
+    .progress {
+        background: white;
+    }
+
+    .content-loader-sizing-variant(120px);
+}
+
+// sizing
+.content-loader-sm {
+    .content-loader-sizing-variant(80px);
+}
+
+.content-loader-lg {
+    .content-loader-sizing-variant(160px);
+}
+
+@hourglass-border-color: #585858; // #444444
+
+.hourglass {
+    overflow: visible !important;
+
+    .hourglass-cap {
+        fill: @hourglass-border-color;
+    }
+
+    .hourglass-border {
+        stroke: @hourglass-border-color;
+    }
+
+    .primary {
+        .hourglass-liquid {
+            //fill: @brand-primary;
+            fill: lighten(@brand-primary, 35%);
+        }
+    }
+
+    .secondary {
+        .hourglass-liquid {
+            //fill: @brand-secondary;
+            fill: lighten(@brand-secondary, 35%);
+        }
+    }
+
+
+}
+
+// mixins
+.content-loader-sizing-variant(@size) {
+    .content-loader-animation {
+        width: @size * 2;
+        height: @size * 2;
+    }
+
+    .hourglass {
+        width: @size;
+        height: @size;
+    }
+
+    .progress {
+        width: @size;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+// All of the rules below are deprecated and will be removed ASAP
+
 .please-wait {
     position: absolute;
     top: 5px;
@@ -16,12 +126,6 @@
     width: 200px;
 
     .box-shadow(@loader-box-shadow);
-}
-
-.loading-row {
-    height: 100px;
-    text-align: center !important;
-    line-height: 80px;
 }
 
 .loading {

@@ -1,3 +1,11 @@
+.input-group {
+    .form-control {
+        &.focus { // required by fake form-control inputs for advanced types
+            z-index: 3; // make sure input overlaps addons
+        }
+    }
+}
+
 .input-group-btn {
     > .btn {
         &:hover,

@@ -94,9 +94,11 @@ function displayDate(apiDate, long = false, withTime = false) {
 }
 
 /**
- * Returns a date object based on api received date
+ * Returns a date object based on api received date.
+ *
  * @param {String} apiDate
- * @returns {Date | false} - Returns a date object or false if apiDate is not valid
+ *
+ * @return {Date|false} - Returns a date object or false if apiDate is not valid
  */
 function apiToDateObject(apiDate) {
   return isValidDate(apiDate, getApiFormat()) && moment(apiDate, getApiFormat()).toDate()
@@ -104,7 +106,9 @@ function apiToDateObject(apiDate) {
 
 /**
  * Gets API now value.
+ *
  * @param {boolean} local
+ *
  * @return {string}
  */
 function now(local = true) {
