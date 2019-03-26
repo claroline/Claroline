@@ -94,9 +94,8 @@ utils.getRealOffsetFromBegin = (toSort, begin) => {
   return toSort.reduce((acc, val) => { return acc + utils.getHtmlLength(val)}, 0)
 }
 
-utils.cleanItem = (item) => {
+utils.cleanItem = (item, _text) => {
   //here we remove the unused selections
-  const _text = item._text
   const elements = item.mode === constants.MODE_FIND ? item.solutions: item.selections
   const tmp = document.createElement('div')
   const ids = []
@@ -137,15 +136,13 @@ utils.cleanItem = (item) => {
   })
 
   //also we just check the text is correct
-  let text = utils.getTextFromDecorated(item._text)
+  let text = utils.getTextFromDecorated(_text)
 
   //that'all for now folks !
   return Object.assign({}, item, {selections, solutions, text})
 }
 
-utils.getSelectionText = (item, selectionId = null) => {
-  if (!selectionId) selectionId = item._selectionId
-
+utils.getSelectionText = (item, selectionId) => {
   const selection = item.mode === constants.MODE_FIND ?
     item.solutions.find(solution => solution.selectionId === selectionId) :
     item.selections.find(selection => selection.id === selectionId)

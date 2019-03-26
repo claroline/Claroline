@@ -5,7 +5,6 @@ export const ClozeItem = {
   propsTypes: {
     id: T.string.isRequired,
     text: T.string.isRequired,
-    _text: T.string.isRequired,
     _errors: T.object,
     _popover: T.bool,
     _holeId: T.string,

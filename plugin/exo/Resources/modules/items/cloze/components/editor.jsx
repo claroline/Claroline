@@ -108,7 +108,10 @@ class MainField extends Component {
     this.selection = null
     this.word = null
     this.fnTextUpdate = () => {}
-    this.state = { allowCloze: true }
+    this.state = {
+      allowCloze: true,
+      text: undefined
+    }
     this.changeEditorMode = this.changeEditorMode.bind(this)
   }
 
@@ -144,7 +147,7 @@ class MainField extends Component {
       // Replace hole with the best answer text
       const regex = new RegExp(`(\\[\\[${this.props.item._holeId}\\]\\])`, 'gi')
       newItem.text = newItem.text.replace(regex, bestAnswer ? bestAnswer.text : '')
-      newItem._text = utils.setEditorHtml(newItem.text, newItem.holes, newItem.solutions)
+      this.setState({text: utils.setEditorHtml(newItem.text, newItem.holes, newItem.solutions)})
 
       if (newItem._holeId && newItem._holeId === this.props.item._holeId) {
         newItem._popover = false
@@ -156,7 +159,6 @@ class MainField extends Component {
     this.props.update('_popover', newItem._popover)
     this.props.update('_holeId', newItem._holeId)
     this.props.update('text', newItem.text)
-    this.props.update('_text', newItem._text)
   }
 
   changeEditorMode(editorState) {
@@ -188,18 +190,24 @@ class MainField extends Component {
     newItem.solutions.push(solution)
     newItem._popover = true
     newItem._holeId = hole.id
-    newItem._text = this.fnTextUpdate(utils.makeTinyHtml(hole, solution))
-    newItem.text = utils.getTextWithPlacerHoldersFromHtml(newItem._text)
+
+    const text = this.fnTextUpdate(utils.makeTinyHtml(hole, solution))
+    newItem.text = utils.getTextWithPlacerHoldersFromHtml(text)
 
     this.props.update('holes', newItem.holes)
     this.props.update('solutions', newItem.solutions)
     this.props.update('_popover', newItem._popover)
     this.props.update('_holeId', newItem._holeId)
-    this.props.update('_text', newItem._text)
     this.props.update('text', newItem.text)
+
+    this.setState({text: text})
   }
 
   render() {
+    if (this.props.item.text && undefined === this.state.text) {
+      this.setState({text: utils.setEditorHtml(this.props.item.text, this.props.item.holes, this.props.item.solutions)})
+    }
+
     return (<fieldset className="cloze-field">
       <FormGroup
         id="cloze-text"
@@ -210,12 +218,11 @@ class MainField extends Component {
       >
         <Textarea
           id="cloze-text"
-          value={this.props.item._text}
+          value={this.state.text}
           onChange={(value) => {
             //TODO: optimize this
             let item = Object.assign({}, this.props.item, {
-              text: utils.getTextWithPlacerHoldersFromHtml(value),
-              _text: value
+              text: utils.getTextWithPlacerHoldersFromHtml(value)
             })
 
             const holesToRemove = []
@@ -238,9 +245,10 @@ class MainField extends Component {
             }
 
             this.props.update('text', item.text)
-            this.props.update('_text', item._text)
             this.props.update('holes', item.holes)
             this.props.update('solutions', item.solutions)
+
+            this.setState({text: value})
           }}
           onSelect={this.onSelect.bind(this)}
           onClick={this.onHoleClick.bind(this)}
@@ -283,15 +291,15 @@ class MainField extends Component {
             // Replace hole with the best answer text
             const regex = new RegExp(`(\\[\\[${this.props.item._holeId}\\]\\])`, 'gi')
             newItem.text = newItem.text.replace(regex, bestAnswer ? bestAnswer.text : '')
-            newItem._text = utils.setEditorHtml(newItem.text, newItem.holes, newItem.solutions)
 
             if (newItem._holeId && newItem._holeId === this.props.item._holeId) {
               this.props.update('_popover', false)
             }
 
             this.props.update('text', newItem.text)
-            this.props.update('_text', newItem._text)
             this.props.update('holes', newItem.holes)
+
+            this.setState({text: utils.setEditorHtml(newItem.text, newItem.holes, newItem.solutions)})
           }}
           onChange={(property, value) => {
             const newItem = cloneDeep(this.props.item)
@@ -388,7 +396,6 @@ ClozeEditor.propTypes = {
   item: T.shape({
     id: T.string.isRequired,
     text: T.string.isRequired,
-    _text: T.string.isRequired,
     _errors: T.object,
     _popover: T.bool,
     _holeId: T.string,

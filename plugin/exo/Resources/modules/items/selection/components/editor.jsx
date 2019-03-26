@@ -21,14 +21,12 @@ import {constants} from '#/plugin/exo/items/selection/constants'
 import {ItemEditor as ItemEditorType} from '#/plugin/exo/items/prop-types'
 import {SelectionItem as SelectionItemType} from '#/plugin/exo/items/selection/prop-types'
 
-const addSelection = (begin, end, item, saveCallback) => {
+const addSelection = (begin, end, item, _text, saveCallback) => {
   const newSolutions = item.solutions ? cloneDeep(item.solutions): []
   const newSelections = item.selections ? cloneDeep(item.selections): []
   const id = makeId()
   let sum = 0
   let text = ''
-  let newItem = {}
-  let cleanItem = {}
 
   switch(item.mode) {
     case constants.MODE_SELECT:
@@ -47,25 +45,16 @@ const addSelection = (begin, end, item, saveCallback) => {
         score: 1
       })
 
-      text = utils.getTextFromDecorated(item._text)
+      text = utils.getTextFromDecorated(_text)
 
-      newItem = Object.assign({}, item, {
-        selections: newSelections,
-        _selectionPopover: true,
-        _selectionId: id,
-        solutions: newSolutions,
-        text: text,
-        _text: utils.makeTextHtml(text, newSelections)
-      })
+      saveCallback('solutions', newSolutions)
+      saveCallback('selections', newSelections)
+      saveCallback('text', text)
 
-      cleanItem = utils.cleanItem(newItem)
-      saveCallback('solutions', cleanItem.solutions)
-      saveCallback('selections', cleanItem.selections)
-      saveCallback('text', cleanItem.text)
-      saveCallback('_text', cleanItem._text)
-      saveCallback('_selectionId', cleanItem._selectionId)
-      saveCallback('_selectionPopover', cleanItem._selectionPopover)
-      break
+      return {
+        selectionId: id,
+        text: utils.makeTextHtml(text, newSelections)
+      }
     case constants.MODE_FIND:
       sum = utils.getRealOffsetFromBegin(newSolutions, begin)
 
@@ -78,25 +67,16 @@ const addSelection = (begin, end, item, saveCallback) => {
         _displayedEnd: end
       })
 
-      text = utils.getTextFromDecorated(item._text)
+      text = utils.getTextFromDecorated(_text)
 
-      newItem = Object.assign({}, item, {
-        _selectionPopover: true,
-        _selectionId: id,
-        solutions: newSolutions,
-        tries: item.tries + 1,
-        text: text,
-        _text: utils.makeTextHtml(text, newSolutions)
-      })
+      saveCallback('solutions', newSolutions)
+      saveCallback('tries', item.tries + 1)
+      saveCallback('text', text)
 
-      cleanItem = utils.cleanItem(newItem)
-      saveCallback('solutions', cleanItem.solutions)
-      saveCallback('tries', cleanItem.tries)
-      saveCallback('text', cleanItem.text)
-      saveCallback('_text', cleanItem._text)
-      saveCallback('_selectionId', cleanItem._selectionId)
-      saveCallback('_selectionPopover', cleanItem._selectionPopover)
-      break
+      return {
+        selectionId: id,
+        text: utils.makeTextHtml(text, newSolutions)
+      }
     case constants.MODE_HIGHLIGHT:
       sum = utils.getRealOffsetFromBegin(newSelections, begin)
 
@@ -117,25 +97,16 @@ const addSelection = (begin, end, item, saveCallback) => {
         }]
       })
 
-      text = utils.getTextFromDecorated(item._text)
+      text = utils.getTextFromDecorated(_text)
 
-      newItem = Object.assign({}, item, {
-        selections: newSelections,
-        _selectionPopover: true,
-        _selectionId: id,
-        solutions: newSolutions,
-        text: text,
-        _text: utils.makeTextHtml(text, newSelections)
-      })
+      saveCallback('solutions', newSolutions)
+      saveCallback('selections', newSelections)
+      saveCallback('text', text)
 
-      cleanItem = utils.cleanItem(newItem)
-      saveCallback('solutions', cleanItem.solutions)
-      saveCallback('selections', cleanItem.selections)
-      saveCallback('text', cleanItem.text)
-      saveCallback('_text', cleanItem._text)
-      saveCallback('_selectionId', cleanItem._selectionId)
-      saveCallback('_selectionPopover', cleanItem._selectionPopover)
-      break
+      return {
+        selectionId: id,
+        text: utils.makeTextHtml(text, newSelections)
+      }
   }
 }
 
@@ -169,7 +140,7 @@ const updateAnswer = (property, value, id, item, saveCallback) => {
   saveCallback('solutions', newSolutions)
 }
 
-const removeSelection = (selectionId, item, saveCallback) => {
+const removeSelection = (selectionId, item, _text, saveCallback) => {
   const newSolutions = cloneDeep(item.solutions)
   let newItem = {}
   let cleanItem = {}
@@ -183,34 +154,36 @@ const removeSelection = (selectionId, item, saveCallback) => {
       newSolutions.splice(newSolutions.findIndex(s => s.selectionId === selectionId), 1)
       newItem = Object.assign({}, item, {
         selections: newSelections,
-        solutions: newSolutions,
-        _text: utils.makeTextHtml(item.text, newSelections)
+        solutions: newSolutions
       })
-      cleanItem = utils.cleanItem(newItem)
+      cleanItem = utils.cleanItem(newItem, _text)
 
       saveCallback('solutions', cleanItem.solutions)
       saveCallback('selections', cleanItem.selections)
-      saveCallback('_text', cleanItem._text)
-      break
+
+      return {
+        text: utils.makeTextHtml(item.text, newSelections)
+      }
     case constants.MODE_FIND:
       //this is only valid for the default 'visible' one
       newSolutions.splice(newSolutions.findIndex(s => s.selectionId === selectionId), 1)
       newItem = Object.assign({}, item, {
         solutions: newSolutions,
-        _text: utils.makeTextHtml(item.text, newSolutions),
         tries: item.tries - 1
       })
-      cleanItem = utils.cleanItem(newItem)
+      cleanItem = utils.cleanItem(newItem, _text)
 
       saveCallback('solutions', cleanItem.solutions)
       saveCallback('tries', cleanItem.tries)
-      saveCallback('_text', cleanItem._text)
-      break
+
+      return {
+        text: utils.makeTextHtml(item.text, newSolutions)
+      }
   }
 }
 
-const recomputePositions = (item, offsets, oldText) => {
-  if (oldText === item._text) {
+const recomputePositions = (item, offsets, oldText, text) => {
+  if (oldText === text) {
     return item
   }
   let toSort = constants.MODE_FIND === item.mode ? item.solutions : item.selections
@@ -229,7 +202,7 @@ const recomputePositions = (item, offsets, oldText) => {
     //element._displayedBegin = getOffsets(document.getElementById(item.id))
     idx++
 
-    const amount = item._text.length - oldText.length
+    const amount = text.length - oldText.length
 
     if (offsets.trueStart < element._displayedBegin) {
       element._displayedBegin += amount
@@ -345,27 +318,18 @@ class SelectionForm extends Component {
 
   getSelection() {
     return this.props.item.selections ?
-      this.props.item.selections.find(selection => selection.id === this.props.item._selectionId) :
-      {id: this.props.item._selectionId}
+      this.props.item.selections.find(selection => selection.id === this.props.selectionId) :
+      {id: this.props.selectionId}
   }
 
   getSolution() {
-    return this.props.item.solutions.find(solution => solution.selectionId === this.props.item._selectionId)
-  }
-
-  closePopover() {
-    this.props.update('_selectionPopover', false)
-  }
-
-  removeAndClose() {
-    removeSelection(this.props.item._selectionId, this.props.item, this.props.update)
-    this.closePopover()
+    return this.props.item.solutions.find(solution => solution.selectionId === this.props.selectionId)
   }
 
   render() {
     // Let's calculate the popover position
     // It will be positioned just under the edit button
-    const btnElement = document.querySelector(`.edit-selection-btn[data-selection-id="${this.props.item._selectionId}"]`)
+    const btnElement = document.querySelector(`.edit-selection-btn[data-selection-id="${this.props.selectionId}"]`)
 
     let left = btnElement ? btnElement.offsetLeft : 0
     let top  = btnElement ? btnElement.offsetTop : 0
@@ -399,32 +363,32 @@ class SelectionForm extends Component {
 
     return (
       <Popover
-        id={this.props.item._selectionId}
+        id={this.props.selectionId}
         positionLeft={left}
         positionTop={top}
         placement="bottom"
         title={
           <div>
-            {utils.getSelectionText(this.props.item)}
+            {utils.getSelectionText(this.props.item, this.props.selectionId)}
 
             <div className="popover-actions">
               <Button
-                id={`selection-${this.props.item._selectionId}-delete`}
+                id={`selection-${this.props.selectionId}-delete`}
                 className="btn-link"
                 type={CALLBACK_BUTTON}
                 icon="fa fa-fw fa-trash-o"
                 label={trans('delete', {}, 'quiz')}
-                callback={this.removeAndClose.bind(this)}
+                callback={this.props.onRemove}
                 tooltip="top"
               />
 
               <Button
-                id={`selection-${this.props.item._selectionId}-close`}
+                id={`selection-${this.props.selectionId}-close`}
                 className="btn-link"
                 type={CALLBACK_BUTTON}
                 icon="fa fa-fw fa-times"
                 label={trans('close', {}, 'quiz')}
-                callback={this.closePopover.bind(this)}
+                callback={this.props.onClose}
                 tooltip="top"
               />
             </div>
@@ -445,6 +409,7 @@ class SelectionForm extends Component {
               key={key}
               answer={answer}
               item={this.props.item}
+              selectionId={this.props.selectionId}
               update={this.props.update}
             />
           )
@@ -459,7 +424,7 @@ class SelectionForm extends Component {
             disabled={this.getSolution().answers.length >= this.props.item.colors.length}
             callback={() => {
               const newSolutions = cloneDeep(this.props.item.solutions)
-              const solution = newSolutions.find(s => s.selectionId === this.props.item._selectionId)
+              const solution = newSolutions.find(s => s.selectionId === this.props.selectionId)
 
               if (solution) {
                 solution.answers.push({score: 0, colorId: this.props.item.colors[0].id, _answerId: makeId()})
@@ -472,9 +437,9 @@ class SelectionForm extends Component {
         {this.state.showFeedback &&
           <div className="feedback-container selection-form-row">
             <Textarea
-              id={`choice-${this.props.item._selectionId}-feedback`}
+              id={`choice-${this.props.selectionId}-feedback`}
               value={this.props.item.feedback}
-              onChange={(text) => updateAnswer('feedback', text, this.props.item._selectionId, this.props.item, this.props.update)}
+              onChange={(text) => updateAnswer('feedback', text, this.props.selectionId, this.props.item, this.props.update)}
             />
           </div>
         }
@@ -485,7 +450,10 @@ class SelectionForm extends Component {
 
 SelectionForm.propTypes = {
   item: T.shape(SelectionItemType.propTypes).isRequired,
-  update: T.func.isRequired
+  selectionId: T.string.isRequired,
+  update: T.func.isRequired,
+  onClose: T.func.isRequired,
+  onRemove: T.func.isRequired
 }
 
 class ColorElement extends Component {
@@ -605,7 +573,7 @@ class HighlightAnswer extends Component {
               className="fa fa-trash-o pointer checkbox"
               onClick={() => {
                 const newSolutions = cloneDeep(this.props.item.solutions)
-                const solution = newSolutions.find(s => s.selectionId === this.props.item._selectionId)
+                const solution = newSolutions.find(s => s.selectionId === this.props.selectionId)
 
                 if (solution) {
                   solution.answers.splice(solution.answers.findIndex(a => a._answerId === this.props.answer._answerId), 1)
@@ -631,6 +599,7 @@ class HighlightAnswer extends Component {
 
 HighlightAnswer.propTypes = {
   item: T.shape(SelectionItemType.propTypes).isRequired,
+  selectionId: T.string.isRequired,
   update: T.func.isRequired,
   answer: T.shape({
     colorId: T.string.isRequired,
@@ -651,7 +620,10 @@ class SelectionText extends Component {
       trueEnd: null,
       start: null,
       end: null,
-      allowSelection: true
+      allowSelection: true,
+      text: undefined,
+      selectionId: null,
+      selectionPopover : false
     }
     this.changeEditorMode = this.changeEditorMode.bind(this)
     this.isSelectionCreationAllowed = this.isSelectionCreationAllowed.bind(this)
@@ -659,7 +631,7 @@ class SelectionText extends Component {
   }
 
   updateText() {
-    utils.makeTextHtml(this.props.item._text, this.props.item.solutions)
+    utils.makeTextHtml(this.state.text, this.props.item.solutions)
   }
 
   onSelect(selected, cb, offsets) {
@@ -678,16 +650,17 @@ class SelectionText extends Component {
   }
 
   addSelection(item) {
-    addSelection(this.state.trueStart, this.state.trueEnd, item, this.props.update)
+    const data = addSelection(this.state.trueStart, this.state.trueEnd, item, this.state.text, this.props.update)
+    this.setState({text: data.text, selectionId: data.selectionId}, () => this.setState({selectionPopover: true}))
   }
 
   onSelectionClick(el) {
     if (el.classList.contains('edit-selection-btn')) {
-      this.props.update('_selectionPopover', true)
-      this.props.update('_selectionId', el.dataset.selectionId)
+      this.setState({selectionId: el.dataset.selectionId, selectionPopover: true})
     } else {
       if (el.classList.contains('delete-selection-btn')) {
-        removeSelection(el.dataset.selectionId, this.props.item, this.props.update)
+        const data = removeSelection(el.dataset.selectionId, this.props.item, this.state.text, this.props.update)
+        this.setState({text: data.text})
       }
     }
   }
@@ -717,6 +690,60 @@ class SelectionText extends Component {
   }
 
   render() {
+    if (this.props.item.text && undefined === this.state.text) {
+      let data = this.props.item.mode === constants.MODE_FIND ? this.props.item.solutions : this.props.item.selections
+
+      if (!data) {
+        data = []
+      }
+      this.setState({text: utils.makeTextHtml(this.props.item.text, data)})
+
+      if (constants.MODE_HIGHLIGHT === this.props.item.mode) {
+        const solutions = cloneDeep(this.props.item.solutions)
+
+        solutions.forEach(solution => {
+          let answers = []
+          solution.answers.forEach(answer => {
+            answers.push(Object.assign({}, answer, {_answerId: makeId()}))
+          })
+          solution.answers = answers
+        })
+
+        const colors = cloneDeep(this.props.item.colors)
+
+        colors.forEach(color => {
+          color._autoOpen = false
+        })
+
+        this.props.update('solutions', solutions)
+        this.props.update('colors', colors)
+      }
+
+      //setting true positions here
+      const sol = constants.MODE_FIND === this.props.item.mode ? this.props.item.solutions : this.props.item.selections
+
+      if (sol) {
+        const toSort = cloneDeep(sol)
+        toSort.sort((a, b) => a.begin - b.begin)
+        let idx = 0
+
+        toSort.forEach(element => {
+          //this is where the word really start
+          let begin = utils.getHtmlLength(element) * idx + element.begin + utils.getFirstSpan(element).length
+          let selection = utils.getSelectionText(this.props.item, element.selectionId || element.id)
+          element._displayedBegin = begin
+          element._displayedEnd = begin + selection.length
+          idx++
+        })
+
+        if (constants.MODE_FIND === this.props.item.mode) {
+          this.props.update('solutions', toSort)
+        } else {
+          this.props.update('selections', toSort)
+        }
+      }
+    }
+
     return (
       <div>
         <FormGroup
@@ -729,18 +756,18 @@ class SelectionText extends Component {
             onChange={(text, offsets) => {
               // we need to update the positions here because if we add text BEFORE our marks, then everything is screwed up
               const newItem = Object.assign({}, this.props.item, {
-                text: utils.getTextFromDecorated(text),
-                _text: text
+                text: utils.getTextFromDecorated(text)
               })
-              const positionItem = recomputePositions(newItem, offsets, this.props.item._text)
-              const cleanItem = utils.cleanItem(positionItem)
+              const positionItem = recomputePositions(newItem, offsets, this.state.text, text)
+              const cleanItem = utils.cleanItem(positionItem, text)
               this.props.update('solutions', cleanItem.solutions ? cleanItem.solutions : [])
               this.props.update('selections', cleanItem.selections ? cleanItem.selections : [])
               this.props.update('text', cleanItem.text)
-              this.props.update('_text', cleanItem._text)
+
+              this.setState({text: text})
             }}
             onClick={this.onSelectionClick}
-            value={this.props.item._text}
+            value={this.state.text}
             updateText={this.updateText}
             onChangeMode={this.changeEditorMode}
           />
@@ -756,10 +783,16 @@ class SelectionText extends Component {
           callback={() => this.addSelection(this.props.item)}
         />
 
-        {this.props.item._selectionPopover &&
+        {this.state.selectionPopover &&
           <SelectionForm
             item={this.props.item}
+            selectionId={this.state.selectionId}
             update={this.props.update}
+            onClose={() => this.setState({selectionPopover: false})}
+            onRemove={() => {
+              const data = removeSelection(this.state.selectionId, this.props.item, this.state.text, this.props.update)
+              this.setState({text: data.text, selectionPopover: false})
+            }}
           />
         }
       </div>

@@ -24,18 +24,13 @@ const SelectionItem = {
     globalScore: T.bool.isRequired,
     mode: T.string.isRequired,
     penalty: T.number.isRequired,
-    tries: T.number,
-    _selectionPopover: T.bool,
-    _text: T.string,
-    _selectionId: T.string
+    tries: T.number
   },
   defaultProps: {
     text: '',
     mode: constants.MODE_SELECT,
     globalScore: false,
     solutions: [],
-    _selectionPopover: false,
-    _text: '',
     penalty: 0
   }
 }
