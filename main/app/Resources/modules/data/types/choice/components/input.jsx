@@ -40,6 +40,7 @@ implementPropTypes(ChoiceInput, FormFieldTypes, {
   multiple: T.bool,
   condensed: T.bool
 }, {
+  choices: {},
   multiple: false,
   condensed: false
 })
