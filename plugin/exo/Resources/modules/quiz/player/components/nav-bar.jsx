@@ -153,7 +153,7 @@ const PlayerNav = props =>
   <nav className="player-nav">
     <div className="backward">
       {(props.previous) &&
-        <PreviousButton onClick={() => props.navigateTo(props.previous)} />
+        <PreviousButton onClick={() => props.navigateToAndValidate(props.previous)} />
       }
     </div>
 
