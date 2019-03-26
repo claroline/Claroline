@@ -86,8 +86,8 @@ const OverviewComponent = props =>
       },
       score: {
         displayed: props.quiz.parameters.showScoreAt !== SHOW_SCORE_AT_NEVER,
-        current: props.userEvaluation.score,
-        total: props.userEvaluation.scoreMax
+        current: props.userEvaluation ? props.userEvaluation.score : undefined,
+        total: props.userEvaluation ? props.userEvaluation.scoreMax : undefined
       }
     }}
     actions={[

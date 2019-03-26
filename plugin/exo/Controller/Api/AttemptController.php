@@ -174,7 +174,7 @@ class AttemptController extends AbstractController
         $this->assertHasPermission('OPEN', $paper->getExercise());
         $this->assertHasPaperAccess($paper, $user);
 
-        $this->attemptManager->end($paper, true);
+        $this->attemptManager->end($paper, true, !empty($user));
         $userEvaluation = !empty($user) ?
             $this->resourceEvalManager->getResourceUserEvaluation($paper->getExercise()->getResourceNode(), $user) :
             null;

@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
+import {currentUser} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 import {ResourcePage} from '#/main/core/resource/containers/page'
@@ -18,6 +19,8 @@ import {Answers}    from '#/plugin/exo/quiz/correction/components/answers'
 import {Statistics} from '#/plugin/exo/quiz/statistics/components/statistics'
 
 import {EditorMain} from '#/plugin/exo/resources/quiz/editor/containers/main'
+
+const authenticatedUser = currentUser()
 
 const QuizResource = props =>
   <ResourcePage
@@ -125,7 +128,7 @@ const QuizResource = props =>
         }, {
           path: '/papers/:id', // todo : declare inside papers module
           component: Paper,
-          onEnter: (params) => props.loadCurrentPaper(props.quizId, params.id),
+          onEnter: (params) => authenticatedUser ? props.loadCurrentPaper(props.quizId, params.id) : false,
           onLeave: () => props.resetCurrentPaper()
         }, {
           path: '/correction/questions',

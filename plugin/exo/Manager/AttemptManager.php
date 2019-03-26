@@ -276,8 +276,9 @@ class AttemptManager
      *
      * @param Paper $paper
      * @param bool  $finished
+     * @param bool  $generateEvaluation
      */
-    public function end(Paper $paper, $finished = true)
+    public function end(Paper $paper, $finished = true, $generateEvaluation = true)
     {
         $this->om->startFlushSuite();
 
@@ -289,7 +290,10 @@ class AttemptManager
         $totalScoreOn = $paper->getExercise()->getTotalScoreOn();
         $score = $this->paperManager->calculateScore($paper, $totalScoreOn);
         $paper->setScore($score);
-        $this->paperManager->generateResourceEvaluation($paper, $finished);
+
+        if ($generateEvaluation) {
+            $this->paperManager->generateResourceEvaluation($paper, $finished);
+        }
         $this->om->persist($paper);
         $this->om->endFlushSuite();
 
