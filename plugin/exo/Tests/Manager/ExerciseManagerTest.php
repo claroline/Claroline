@@ -61,7 +61,7 @@ class ExerciseManagerTest extends JsonDataTestCase
     }
 
     /**
-     * @expectedException \UJM\ExoBundle\Library\Validator\ValidationException
+     * @expectedException \Claroline\CoreBundle\Validator\Exception\InvalidDataException
      */
     public function testUpdateWithInvalidData()
     {

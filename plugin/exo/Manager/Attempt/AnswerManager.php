@@ -3,11 +3,11 @@
 namespace UJM\ExoBundle\Manager\Attempt;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Options\Validation;
-use UJM\ExoBundle\Library\Validator\ValidationException;
 use UJM\ExoBundle\Serializer\Attempt\AnswerSerializer;
 use UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerValidator;
 
@@ -64,7 +64,7 @@ class AnswerManager
      *
      * @return Answer
      *
-     * @throws ValidationException
+     * @throws InvalidDataException
      */
     public function create(Item $question, \stdClass $answerData)
     {
@@ -81,13 +81,13 @@ class AnswerManager
      *
      * @return Answer
      *
-     * @throws ValidationException
+     * @throws InvalidDataException
      */
     public function update(Item $question, Answer $answer, \stdClass $answerData, $noFlush = false)
     {
         $errors = $this->validator->validate($answerData, [Validation::QUESTION => $question->getInteraction()]);
         if (count($errors) > 0) {
-            throw new ValidationException('Answer is not valid', $errors);
+            throw new InvalidDataException('Answer is not valid', $errors);
         }
 
         // Update Answer with new data

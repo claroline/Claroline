@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Controller\Api;
 
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -10,7 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Library\Validator\ValidationException;
 use UJM\ExoBundle\Manager\CorrectionManager;
 
 /**
@@ -93,7 +93,7 @@ class CorrectionController extends AbstractController
                 // Try to save submitted correction
                 try {
                     $this->correctionManager->save($data);
-                } catch (ValidationException $e) {
+                } catch (InvalidDataException $e) {
                     $errors = $e->getErrors();
                 }
             }

@@ -7,7 +7,7 @@ import {findArea} from './player'
 import {PaperTabs} from '../components/paper-tabs.jsx'
 import {PointableImage} from './components/pointable-image.jsx'
 import {AnswerTable} from './components/answer-table.jsx'
-import {AnswerStatsTable} from './components/answer-stats-table.jsx'
+import {AnswerStatsTable} from '#/plugin/exo/items/cloze/components/stats'
 import {tex} from '#/main/app/intl/translation'
 
 export const GraphicPaper = props => {

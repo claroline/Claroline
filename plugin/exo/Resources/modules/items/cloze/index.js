@@ -1,13 +1,15 @@
 import {trans} from '#/main/app/intl/translation'
 
-import editor from '#/plugin/exo/items/cloze/editor'
-import {ClozePaper} from '#/plugin/exo/items/cloze/paper.jsx'
-import {ClozePlayer} from '#/plugin/exo/items/cloze/player.jsx'
-import {ClozeFeedback} from '#/plugin/exo/items/cloze/feedback.jsx'
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
-import {ClozeEditor} from '#/plugin/exo/items/cloze/components/editor.jsx'
-import {utils} from '#/plugin/exo/items/cloze/utils/utils'
+
 import {ClozeItem as ClozeItemTypes} from '#/plugin/exo/items/cloze/prop-types'
+import {utils} from '#/plugin/exo/items/cloze/utils'
+
+// components
+import {ClozeEditor} from '#/plugin/exo/items/cloze/components/editor'
+import {ClozePaper} from '#/plugin/exo/items/cloze/components/paper'
+import {ClozePlayer} from '#/plugin/exo/items/cloze/components/player'
+import {ClozeFeedback} from '#/plugin/exo/items/cloze/components/feedback'
 
 // scores
 import ScoreSum from '#/plugin/exo/scores/sum'
@@ -124,7 +126,6 @@ export default {
   paper: ClozePaper,
   player: ClozePlayer,
   feedback: ClozeFeedback,
-  editor,
   getCorrectedAnswer,
   generateStats,
 

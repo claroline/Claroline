@@ -3,11 +3,11 @@
 namespace UJM\ExoBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Item\Item;
-use UJM\ExoBundle\Library\Validator\ValidationException;
 use UJM\ExoBundle\Manager\Attempt\AnswerManager;
 use UJM\ExoBundle\Manager\Attempt\PaperManager;
 use UJM\ExoBundle\Repository\PaperRepository;
@@ -103,7 +103,7 @@ class CorrectionManager
      *
      * @param array $correctedAnswers
      *
-     * @throws ValidationException
+     * @throws InvalidDataException
      */
     public function save(array $correctedAnswers = [])
     {
@@ -116,7 +116,7 @@ class CorrectionManager
             ]);
 
             if (empty($answer)) {
-                throw new ValidationException('Submitted answers are invalid', [[
+                throw new InvalidDataException('Submitted answers are invalid', [[
                     'path' => "/{$index}",
                     'message' => 'answer does not exists',
                 ]]);

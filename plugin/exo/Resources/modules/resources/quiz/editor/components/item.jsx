@@ -5,6 +5,7 @@ import omit from 'lodash/omit'
 import {trans} from '#/main/app/intl/translation'
 import {Await} from '#/main/app/components/await'
 import {FormSection} from '#/main/app/content/form/components/sections'
+import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {getItem} from '#/plugin/exo/items'
@@ -58,13 +59,6 @@ const EditorItem = props =>
               modal: [],
               group: trans('management')
             }, {
-              name: 'share',
-              type: MODAL_BUTTON,
-              icon: 'fa fa-fw fa-share',
-              label: trans('share', {}, 'actions'),
-              modal: [],
-              group: trans('community')
-            }, {
               name: 'delete',
               type: CALLBACK_BUTTON,
               icon: 'fa fa-fw fa-trash-o',
@@ -103,7 +97,9 @@ EditorItem.propTypes = {
   item: T.shape(
     ItemTypes.propTypes
   ).isRequired,
-
+  actions: T.arrayOf(T.shape(
+    ActionTypes.propTypes
+  )),
   update: T.func.isRequired
 }
 

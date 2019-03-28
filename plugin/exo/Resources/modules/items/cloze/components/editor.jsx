@@ -5,9 +5,8 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import {makeId} from '#/main/core/scaffolding/id'
 import {keywords as keywordsUtils} from '#/plugin/exo/utils/keywords'
-import {utils} from '#/plugin/exo/items/cloze/utils/utils'
+import {utils} from '#/plugin/exo/items/cloze/utils'
 import {trans, tex} from '#/main/app/intl/translation'
-import {select} from '#/plugin/exo/items/cloze/selectors'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea'
 import {FormGroup} from '#/main/app/content/form/components/group'
 import {ClozeItem as ClozeItemTypes} from '#/plugin/exo/items/grid/prop-types'
@@ -141,7 +140,7 @@ class MainField extends Component {
       let bestAnswer
       if (solution && 0 !== solution.length) {
         // Retrieve the best answer
-        bestAnswer = select.getBestAnswer(solution[0].answers)
+        bestAnswer = utils.getBestAnswer(solution[0].answers)
       }
 
       // Replace hole with the best answer text
@@ -285,7 +284,7 @@ class MainField extends Component {
             let bestAnswer
             if (solution && 0 !== solution.length) {
               // Retrieve the best answer
-              bestAnswer = select.getBestAnswer(solution[0].answers)
+              bestAnswer = utils.getBestAnswer(solution[0].answers)
             }
 
             // Replace hole with the best answer text

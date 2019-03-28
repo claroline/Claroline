@@ -23,44 +23,17 @@
         padding-left: @grid-gutter-width;
     }
 
-    // Hints
-    .hint-items  {
-        > ul {
-            padding-left: 0;
-            list-style-type: none;
-            margin: 0;
-        }
-    }
-
-    .hint-item {
+    .hint-control {
+        flex: 1;
         display: flex;
-        align-items: flex-start;
-        background: @answer-item-bg;
-        border: 1px solid @answer-item-border;
-        padding: @answer-item-padding;
-        margin-bottom: @answer-item-margin-bottom;
-        .border-radius(@answer-item-border-radius);
-        .box-shadow(@answer-item-box-shadow);
 
-        .btn-link,
-        .btn {
-            padding-left: 4px;
-            padding-right: 4px;
+        .hint-value {
+            flex-grow: 1;
         }
-    }
 
-    .hint-value {
-        flex-grow: 1;
-    }
-
-    .hint-penalty {
-        width: 60px;
-        margin: 0 floor(@grid-gutter-width / 2);
-    }
-
-    .no-hint-info {
-        margin-bottom: @form-group-margin-bottom;
-        font-style: italic;
-        text-align: center;
+        .hint-penalty {
+            width: 60px;
+            margin-left: floor(@grid-gutter-width / 2);
+        }
     }
 }

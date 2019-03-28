@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
-import {PropTypes as T} from 'prop-types'
+import React from 'react'
 import classes from 'classnames'
 import merge from 'lodash/merge'
 
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {Liquid} from '#/main/app/animation/components/liquid'
 
 import {constants} from '#/main/core/layout/gauge/constants'
@@ -85,7 +85,7 @@ const LiquidGauge = props => {
   )
 }
 
-LiquidGauge.propTypes = merge({}, GaugeTypes.propTypes, {
+implementPropTypes(LiquidGauge, GaugeTypes, {
   /**
    * An unique identifier for the Gauge.
    */
@@ -95,9 +95,7 @@ LiquidGauge.propTypes = merge({}, GaugeTypes.propTypes, {
    * Makes the liquid wave.
    */
   wave: T.bool
-})
-
-LiquidGauge.defaultProps = merge({}, GaugeTypes.defaultProps, {
+}, {
   wave: true
 })
 

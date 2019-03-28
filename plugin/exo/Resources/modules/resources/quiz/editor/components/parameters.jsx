@@ -5,6 +5,8 @@ import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
+import {ChoiceInput} from '#/main/app/data/types/choice/components/input'
+import {NumberInput} from '#/main/app/data/types/number/components/input'
 
 import {QuizType} from '#/plugin/exo/resources/quiz/components/type'
 import {constants} from '#/plugin/exo/resources/quiz/constants'
@@ -39,12 +41,16 @@ const EditorParameters = props =>
               label: trans('type'),
               type: 'string',
               required: true,
-              render: (quiz) => (
-                <QuizType
-                  type={get(quiz, 'parameters.type')}
-                  onChange={(type) => props.update('parameters.type', type.name)}
-                />
-              )
+              render: (quiz) => {
+                const Type = (
+                  <QuizType
+                    type={get(quiz, 'parameters.type')}
+                    onChange={(type) => props.update('parameters.type', type.name)}
+                  />
+                )
+
+                return Type
+              }
             }
           ]
         }, {
@@ -95,6 +101,15 @@ const EditorParameters = props =>
           title: trans('picking', {}, 'quiz'),
           fields: [
             {
+              name: 'parameters.hasExpectedAnswers',
+              label: trans('has_expected_answers', {}, 'quiz'),
+              type: 'boolean'
+            }, {
+              name: 'parameters.mandatoryQuestions',
+              label: trans('make_questions_mandatory', {}, 'quiz'),
+              type: 'boolean'
+              // TODO : add help text
+            }, {
               name: 'picking.type',
               label: trans('quiz_picking_type', {}, 'quiz'),
               type: 'choice',
@@ -103,6 +118,11 @@ const EditorParameters = props =>
                 noEmpty: true,
                 condensed: true,
                 choices: constants.QUIZ_PICKINGS
+              },
+              onChange: (pickingType) => {
+                if (constants.QUIZ_PICKING_TAGS === pickingType) {
+                  props.update('picking.randomPick', constants.SHUFFLE_ALWAYS)
+                }
               },
               linked: [
                 // Standard picking
@@ -130,11 +150,76 @@ const EditorParameters = props =>
                       }
                     }
                   ]
-                }, {
+                },
+
+                // Tag picking
+                {
+                  name: 'picking.randomPick',
+                  label: trans('random_picking', {}, 'quiz'),
+                  type: 'choice',
+                  displayed: (quiz) => constants.QUIZ_PICKING_TAGS === get(quiz, 'picking.type'),
+                  required: true,
+                  options: {
+                    inline: true,
+                    condensed: false,
+                    choices: omit(constants.SHUFFLE_MODES, constants.SHUFFLE_NEVER)
+                  },
+                  linked: [
+                    {
+                      name: 'picking.pageSize',
+                      label: trans('number_question_page', {}, 'quiz'),
+                      type: 'number',
+                      required: true,
+                      options: {
+                        min: 1
+                      }
+                    }, {
+                      name: 'picking.pick',
+                      label: trans('tags_to_pick', {}, 'quiz'),
+                      help: trans('picking_tag_input_help', {}, 'quiz'),
+                      type: 'collection',
+                      required: true,
+                      options: {
+                        placeholder: trans('no_picked_tag', {}, 'quiz'),
+                        button: trans('add-tag', {}, 'actions'),
+                        render: (pickedTag = {}, pickedTagErrors, pickedTagIndex) => {
+                          const TagPicking = (
+                            <div className="tag-control">
+                              <ChoiceInput
+                                id={`picking-pick-tag-${pickedTagIndex}`}
+                                size="sm"
+                                multiple={false}
+                                noEmpty={false}
+                                condensed={true}
+                                placeholder={trans('quiz_select_picking_tags', {}, 'quiz')}
+                                choices={props.tags.reduce((acc, current) => Object.assign({}, {
+                                  [current]: current
+                                }), {})}
+                                value={pickedTag[0]}
+                                onChange={value => props.update(`picking.pick[${pickedTagIndex}][0]`, value)}
+                              />
+
+                              <NumberInput
+                                id={`picking-pick-count-${pickedTagIndex}`}
+                                size="sm"
+                                min={1}
+                                value={pickedTag[1]}
+                                onChange={value => props.update(`picking.pick[${pickedTagIndex}][1]`, value)}
+                              />
+                            </div>
+                          )
+
+                          return TagPicking
+                        }
+                      }
+                    }
+                  ]
+                },
+
+                {
                   name: 'picking.randomOrder',
                   label: trans('random_order', {}, 'quiz'),
                   type: 'choice',
-                  displayed: (quiz) => constants.QUIZ_PICKING_DEFAULT === get(quiz, 'picking.type'),
                   required: true,
                   options: {
                     inline: true,
@@ -145,8 +230,6 @@ const EditorParameters = props =>
                       omit(constants.SHUFFLE_MODES, constants.SHUFFLE_ONCE)
                   }
                 }
-
-                // Tag picking
               ]
             }
           ]
@@ -179,11 +262,6 @@ const EditorParameters = props =>
                   required: true
                 }
               ]
-            }, {
-              name: 'parameters.mandatoryQuestions',
-              label: trans('make_questions_mandatory', {}, 'quiz'),
-              type: 'boolean'
-              // TODO : add help text
             }, {
               name: 'parameters.showFeedback',
               label: trans('show_feedback', {}, 'quiz'),
@@ -264,17 +342,10 @@ const EditorParameters = props =>
                 }
               ]
             }, {
-              name: 'parameters.hasExpectedAnswers',
-              label: trans('has_expected_answers', {}, 'quiz'),
-              type: 'boolean',
-              linked: [
-                {
-                  name: 'parameters.showFullCorrection',
-                  label: trans('show_expected_answers', {}, 'quiz'),
-                  displayed: (quiz) => get(quiz, 'parameters.hasExpectedAnswers'),
-                  type: 'boolean'
-                }
-              ]
+              name: 'parameters.showFullCorrection',
+              label: trans('show_expected_answers', {}, 'quiz'),
+              displayed: (quiz) => get(quiz, 'parameters.hasExpectedAnswers'),
+              type: 'boolean'
             }, {
               name: 'parameters.showStatistics',
               label: trans('statistics', {}, 'quiz'),
@@ -304,6 +375,53 @@ const EditorParameters = props =>
                   }
                 }
               ]
+            }
+          ]
+        }, {
+          icon: 'fa fa-fw fa-percentage',
+          title: trans('score'),
+          displayed: (quiz) => get(quiz, 'parameters.hasExpectedAnswers'),
+          fields: [
+            {
+              name: 'parameters.showScoreAt',
+              label: trans('score_availability', {}, 'quiz'),
+              type: 'choice',
+              required: true,
+              options: {
+                condensed: true,
+                noEmpty: true,
+                choices: constants.QUIZ_SCORE_AVAILABILITY
+              }
+            }/*{
+              name: 'score.type',
+              label: trans('calculation_mode', {}, 'quiz'),
+              type: 'choice',
+              required: true,
+              options: {
+                noEmpty: true,
+                condensed: true,
+                // get the list of score supported by the current type
+                choices: availableScores
+              },
+              linked: currentScore ? currentScore
+                // generate the list of fields for the score type
+                  .configure(get(props.item, 'score'))
+                  .map(scoreProp => Object.assign({}, scoreProp, {
+                    name: `score.${scoreProp.name}`
+                  })) : []
+            }*/
+          ]
+        }, {
+          icon: 'fa fa-fw fa-award',
+          title: trans('evaluation'),
+          fields: [
+            {
+              name: 'parameters',
+              label: trans('', {}, 'quiz'),
+              type: 'choice',
+              options: {
+
+              }
             }
           ]
         }, {
@@ -396,6 +514,7 @@ EditorParameters.propTypes = {
   formName: T.string.isRequired,
   numberingType: T.string.isRequired,
   randomPick: T.string,
+  tags: T.array.isRequired,
   workspace: T.object,
   update: T.func.isRequired
 }

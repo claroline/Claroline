@@ -9,7 +9,6 @@ import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 
 import {trans, tex} from '#/main/app/intl/translation'
 import {Heading} from '#/main/core/layout/components/heading'
-import {ActivableSet} from '#/main/core/layout/form/components/fieldset/activable-set.jsx'
 import {FormGroup} from '#/main/app/content/form/components/group.jsx'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
 import {DateGroup} from '#/main/core/layout/form/components/group/date-group.jsx'

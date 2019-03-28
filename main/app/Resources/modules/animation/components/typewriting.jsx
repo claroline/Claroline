@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 class AnimationTypewriting extends Component {

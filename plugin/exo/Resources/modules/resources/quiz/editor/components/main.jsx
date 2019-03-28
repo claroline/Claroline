@@ -12,7 +12,7 @@ import {Step as StepTypes} from '#/plugin/exo/resources/quiz/prop-types'
 import {EditorParameters} from '#/plugin/exo/resources/quiz/editor/components/parameters'
 import {EditorStep} from '#/plugin/exo/resources/quiz/editor/components/step'
 import {EditorSummary} from '#/plugin/exo/resources/quiz/editor/components/summary'
-import {MODAL_STEP_POSITION} from '#/plugin/exo/resources/quiz/editor/modals/position'
+import {MODAL_STEP_POSITION} from '#/plugin/exo/resources/quiz/editor/modals/step-position'
 
 class EditorMain extends Component {
   getStepActions(step, index) {
@@ -116,6 +116,7 @@ class EditorMain extends Component {
                     formName={this.props.formName}
                     numberingType={this.props.numberingType}
                     randomPick={this.props.randomPick}
+                    tags={this.props.tags}
                     workspace={this.props.workspace}
                     update={this.props.update}
                   />
@@ -169,6 +170,7 @@ EditorMain.propTypes = {
   quizId: T.string.isRequired,
   workspace: T.object,
   numberingType: T.string,
+  tags: T.array.isRequired,
   randomPick: T.string,
   steps: T.arrayOf(T.shape(
     StepTypes.propTypes

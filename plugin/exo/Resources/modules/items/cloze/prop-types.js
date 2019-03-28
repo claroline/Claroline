@@ -1,15 +1,12 @@
 import {PropTypes as T} from 'prop-types'
-import {makeId} from '#/plugin/exo/utils/utils'
 
-export const ClozeItem = {
+const ClozeItem = {
   propsTypes: {
     id: T.string.isRequired,
     text: T.string.isRequired,
-    _errors: T.object,
-    _popover: T.bool,
-    _holeId: T.string,
     holes: T.arrayOf(T.shape({
       id: T.string.isRequired
+      // TODO : add missing props
     })).isRequired,
     solutions: T.arrayOf(T.shape({
       holeId: T.string.isRequired
@@ -19,4 +16,8 @@ export const ClozeItem = {
     solutions: [],
     holes: []
   }
+}
+
+export {
+  ClozeItem
 }

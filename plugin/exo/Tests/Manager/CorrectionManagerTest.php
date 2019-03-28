@@ -93,7 +93,7 @@ class CorrectionManagerTest extends JsonDataTestCase
     }
 
     /**
-     * @expectedException \UJM\ExoBundle\Library\Validator\ValidationException
+     * @expectedException \Claroline\CoreBundle\Validator\Exception\InvalidDataException
      */
     public function testSaveUnknownAnswer()
     {

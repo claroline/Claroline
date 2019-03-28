@@ -4,7 +4,7 @@ import times from 'lodash/times'
 import {trans} from '#/main/app/intl/translation'
 
 import {SetItem as SetItemType} from '#/plugin/exo/items/set/prop-types'
-import {SetEditor} from "#/plugin/exo/items/set/components/editor"
+import {SetEditor} from '#/plugin/exo/items/set/components/editor'
 // old
 import {SetPaper} from '#/plugin/exo/items/set/paper.jsx'
 import {SetPlayer} from '#/plugin/exo/items/set/player.jsx'

@@ -34,7 +34,7 @@ class ItemManagerTest extends TransactionalTestCase
     }
 
     /**
-     * @expectedException \UJM\ExoBundle\Library\Validator\ValidationException
+     * @expectedException \Claroline\CoreBundle\Validator\Exception\InvalidDataException
      */
     public function testCreateWithInvalidData()
     {
@@ -51,7 +51,7 @@ class ItemManagerTest extends TransactionalTestCase
     }
 
     /**
-     * @expectedException \UJM\ExoBundle\Library\Validator\ValidationException
+     * @expectedException \Claroline\CoreBundle\Validator\Exception\InvalidDataException
      */
     public function testUpdateWithInvalidData()
     {

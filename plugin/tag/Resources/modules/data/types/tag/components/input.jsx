@@ -115,17 +115,23 @@ class TagInput extends Component {
     this.setState({listOpened: false})
   }
 
-  create(tagName) {
-    fetch(
-      url(['apiv2_tag_create']), {
-        method: 'POST' ,
-        credentials: 'include',
-        body: JSON.stringify({
-          name: tagName
+  create() {
+    fetch(url(['apiv2_tag_create']), {
+      method: 'POST' ,
+      credentials: 'include',
+      body: JSON.stringify({
+        name: this.state.currentTag
+      })
+    })
+      .then(response => response.json())
+      .then(tag => {
+        this.props.onChange([].concat(this.props.value, [tag.name]))
+
+        this.setState({
+          listOpened: false,
+          currentTag: ''
         })
       })
-      /*.then(response => response.json())
-      .then(results => this.setState({results: results.data, isFetching: false}))*/
   }
 
   select(tags = []) {
@@ -191,6 +197,12 @@ class TagInput extends Component {
         isFetching: false,
         results: []
       })
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.pending) {
+      this.pending.cancel()
     }
   }
 

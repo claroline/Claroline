@@ -4,6 +4,8 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
+import {HtmlInput} from '#/main/app/data/types/html/components/input'
+import {NumberInput} from '#/main/app/data/types/number/components/input'
 
 import {Item as ItemTypes, ItemType as ItemTypeTypes} from '#/plugin/exo/items/prop-types'
 import {ItemType} from '#/plugin/exo/items/components/type'
@@ -125,7 +127,32 @@ const ItemEditor = props => {
               label: trans('hints', {}, 'quiz'),
               type: 'collection', // TODO
               options: {
-                type: 'string'
+                placeholder: trans('no_hint_info', {}, 'quiz'),
+                button: trans('add_hint', {}, 'quiz'),
+                render: (hint = {}, hintErrors = {}, hintIndex) => {
+                  const HintEditor = (
+                    <div className="hint-control">
+                      <HtmlInput
+                        id={`hint-${hintIndex}-text`}
+                        className="hint-value"
+                        value={hint.value}
+                        size="sm"
+                        onChange={value => props.update(`hints[${hintIndex}].value`, value)}
+                      />
+
+                      <NumberInput
+                        id={`hint-${hintIndex}-penalty`}
+                        className="hint-penalty"
+                        min={0}
+                        value={hint.penalty}
+                        size="sm"
+                        onChange={value => props.update(`hints[${hintIndex}].penalty`, value)}
+                      />
+                    </div>
+                  )
+
+                  return HintEditor
+                }
               }
             }, {
               name: 'feedback',

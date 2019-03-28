@@ -25,6 +25,14 @@ function createFieldDefinition(field, data) {
   return defaultedField
 }
 
+function createFieldsetDefinition(fields, data) {
+  return fields
+    // adds default to fields
+    .map(field => createFieldDefinition(field, data))
+    // filters hidden fields
+    .filter(field => isDisplayed(field, data))
+}
+
 /**
  * Fills definition with missing default values.
  * (It excludes sections with no fields)
@@ -41,11 +49,7 @@ function createFormDefinition(sections, data) {
       const defaultedSection = merge({}, DataFormSection.defaultProps, section)
       if (isDisplayed(defaultedSection, data)) {
         // section has fields and is displayed keep it
-        defaultedSection.fields = defaultedSection.fields
-        // adds default to fields
-          .map(field => createFieldDefinition(field, data))
-          // filters hidden fields
-          .filter(field => isDisplayed(field, data))
+        defaultedSection.fields = createFieldsetDefinition(defaultedSection.fields, data)
 
         if (0 !== defaultedSection.fields.length || defaultedSection.render) {
           return defaultedSection
@@ -93,6 +97,8 @@ function cleanErrors(errors, newErrors) {
 }
 
 export {
+  createFieldDefinition,
+  createFieldsetDefinition,
   createFormDefinition,
   cleanErrors
 }

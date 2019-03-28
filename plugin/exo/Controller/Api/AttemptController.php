@@ -6,6 +6,7 @@ use Claroline\CoreBundle\API\Serializer\Resource\ResourceUserEvaluationSerialize
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,7 +15,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Library\Validator\ValidationException;
 use UJM\ExoBundle\Manager\Attempt\PaperManager;
 use UJM\ExoBundle\Manager\AttemptManager;
 
@@ -144,7 +144,7 @@ class AttemptController extends AbstractController
         } else {
             try {
                 $this->attemptManager->submit($paper, $data, $request->getClientIp());
-            } catch (ValidationException $e) {
+            } catch (InvalidDataException $e) {
                 $errors = $e->getErrors();
             }
         }

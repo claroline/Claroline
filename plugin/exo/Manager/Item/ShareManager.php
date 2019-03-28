@@ -5,9 +5,9 @@ namespace UJM\ExoBundle\Manager\Item;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Item\Shared;
-use UJM\ExoBundle\Library\Validator\ValidationException;
 use UJM\ExoBundle\Repository\ItemRepository;
 
 /**
@@ -50,13 +50,13 @@ class ShareManager
      * @param \stdClass $shareRequest - an object containing the questions and users to link
      * @param User      $user
      *
-     * @throws ValidationException
+     * @throws InvalidDataException
      */
     public function share(\stdClass $shareRequest, User $user)
     {
         $errors = $this->validateShareRequest($shareRequest);
         if (count($errors) > 0) {
-            throw new ValidationException('Share request is not valid', $errors);
+            throw new InvalidDataException('Share request is not valid', $errors);
         }
 
         $adminRights = isset($shareRequest->adminRights) && $shareRequest->adminRights;

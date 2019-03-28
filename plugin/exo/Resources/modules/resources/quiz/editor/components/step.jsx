@@ -1,11 +1,12 @@
 import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
+import uniqBy from 'lodash/uniqBy'
 
 import {trans} from '#/main/app/intl/translation'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {Button} from '#/main/app/action/components/button'
-import {MODAL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {FormSections} from '#/main/app/content/form/components/sections'
 import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
@@ -90,6 +91,36 @@ const EditorStep = props => {
                 numbering={getNumbering(props.numberingType, props.index, itemIndex)}
                 item={item}
                 update={(prop, value) => props.update(`items[${itemIndex}].${prop}`, value)}
+                actions={[
+                  {
+                    name: 'copy',
+                    type: MODAL_BUTTON,
+                    icon: 'fa fa-fw fa-clone',
+                    label: trans('copy', {}, 'actions'),
+                    modal: [],
+                    group: trans('management')
+                  }, {
+                    name: 'move',
+                    type: MODAL_BUTTON,
+                    icon: 'fa fa-fw fa-arrows',
+                    label: trans('move', {}, 'actions'),
+                    modal: [],
+                    group: trans('management')
+                  }, {
+                    name: 'delete',
+                    type: CALLBACK_BUTTON,
+                    icon: 'fa fa-fw fa-trash-o',
+                    label: trans('delete', {}, 'actions'),
+                    callback: () => true,
+                    confirm: {
+                      title: trans('deletion'),
+                      //subtitle: props.item.title || trans('', {}, 'question_types'),
+                      message: trans('remove_item_confirm_message', {}, 'quiz')
+                    },
+                    dangerous: true,
+                    group: trans('management')
+                  }
+                ]}
               />
             )}
           </FormSections>
@@ -113,8 +144,7 @@ const EditorStep = props => {
             icon="fa fa-fw fa-upload"
             label={trans('add_question_from_existing', {}, 'quiz')}
             modal={[MODAL_ITEM_IMPORT, {
-              // TODO : removes duplicates items
-              import: (items) => props.update('items', [].concat(props.items, items))
+              import: (items) => props.update('items', uniqBy([].concat(props.items, items), (item) => item.id))
             }]}
           />
         </div>

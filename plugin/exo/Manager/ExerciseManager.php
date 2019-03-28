@@ -149,7 +149,7 @@ class ExerciseManager
         $this->repository->invalidatePapers($exercise);
 
         // Log exercise update
-        $event = new LogExerciseUpdateEvent($exercise, (array)$this->serializer->serialize($exercise));
+        $event = new LogExerciseUpdateEvent($exercise, (array) $this->serializer->serialize($exercise));
         $this->eventDispatcher->dispatch('log', $event);
 
         return $exercise;
@@ -182,9 +182,6 @@ class ExerciseManager
 
         // Populate new entities with original data
         $newExercise = $this->createCopy($exerciseData, null);
-
-        // need to init publishedOnce according to current publication state
-        $newExercise->setPublishedOnce($exercise->getResourceNode()->isPublished());
 
         // Save copy to db
         $this->om->flush();

@@ -18,7 +18,7 @@ const PlayerMain = (props) =>
           if (-1 !== stepIndex) {
             const currentStep = props.steps[stepIndex]
 
-            return (
+            const Step = (
               <PlayerStep
                 index={stepIndex}
                 numbering={props.numberingType}
@@ -27,6 +27,8 @@ const PlayerMain = (props) =>
                 items={currentStep.items}
               />
             )
+
+            return Step
           }
 
           routeProps.history.push('/')
@@ -44,7 +46,7 @@ PlayerMain.propTypes = {
   numberingType: T.string,
   steps: T.arrayOf(T.shape(
     StepTypes.propTypes
-  )),
+  ))
 }
 
 export {

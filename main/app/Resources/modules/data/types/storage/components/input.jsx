@@ -22,8 +22,8 @@ const STORAGE_UNITS = {
 }
 
 const StorageInput = props =>
-  <div className={classes('input-group', this.props.className, {
-    [`input-group-${this.props.size}`]: !!this.props.size
+  <div className={classes('input-group', props.className, {
+    [`input-group-${props.size}`]: !!props.size
   })}>
     <NumberInput
       {...omit(props, 'className')}

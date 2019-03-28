@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Controller\Api;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,7 +17,6 @@ use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Library\Options\ShowScoreAt;
 use UJM\ExoBundle\Library\Options\Transfer;
-use UJM\ExoBundle\Library\Validator\ValidationException;
 use UJM\ExoBundle\Manager\Attempt\PaperManager;
 use UJM\ExoBundle\Manager\ExerciseManager;
 
@@ -150,7 +150,7 @@ class PaperController extends AbstractController
 
         try {
             $this->paperManager->deleteAll($exercise);
-        } catch (ValidationException $e) {
+        } catch (InvalidDataException $e) {
             return new JsonResponse($e->getErrors(), 422);
         }
 
@@ -175,7 +175,7 @@ class PaperController extends AbstractController
 
         try {
             $this->paperManager->delete($paper);
-        } catch (ValidationException $e) {
+        } catch (InvalidDataException $e) {
             return new JsonResponse($e->getErrors(), 422);
         }
 

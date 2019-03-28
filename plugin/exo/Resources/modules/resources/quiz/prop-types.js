@@ -1,10 +1,5 @@
 import {PropTypes as T} from 'prop-types'
 
-import {
-  SHUFFLE_NEVER,
-  SHOW_SCORE_AT_CORRECTION
-} from '#/plugin/exo/quiz/enums'
-
 import {constants} from '#/plugin/exo/resources/quiz/constants'
 
 const Step = {
@@ -71,7 +66,7 @@ const Quiz = {
       showCorrectionAt: constants.QUIZ_RESULTS_AT_VALIDATION,
       correctionDate: '',
       anonymizeAttempts: false,
-      showScoreAt: SHOW_SCORE_AT_CORRECTION,
+      showScoreAt: constants.QUIZ_SCORE_AT_CORRECTION,
       showStatistics: false,
       showFullCorrection: true,
       showEndConfirm: true,

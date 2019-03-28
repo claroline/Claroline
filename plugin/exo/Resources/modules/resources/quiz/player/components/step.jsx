@@ -24,7 +24,7 @@ const PlayerStep = props => {
       }
 
       {props.items.map(item =>
-        <div className="item-player">ITEM</div>
+        <div key={item.id} className="item-player">{item.title}</div>
       )}
     </div>
   )

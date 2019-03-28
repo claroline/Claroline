@@ -3,7 +3,7 @@ import merge from 'lodash/merge'
 import {trans} from '#/main/app/intl/translation'
 
 import {OrderingItem as OrderingItemType} from '#/plugin/exo/items/ordering/prop-types'
-import {OrderingEditor} from "#/plugin/exo/items/ordering/components/editor"
+import {OrderingEditor} from '#/plugin/exo/items/ordering/components/editor'
 // old
 import {OrderingPaper} from '#/plugin/exo/items/ordering/paper.jsx'
 import {OrderingPlayer} from '#/plugin/exo/items/ordering/player.jsx'

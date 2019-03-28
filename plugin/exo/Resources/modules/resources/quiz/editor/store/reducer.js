@@ -10,10 +10,10 @@ import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
 import {Quiz, Step} from '#/plugin/exo/resources/quiz/prop-types'
 import {
-  QUIZ_ADD_STEP,
-  QUIZ_COPY_STEP,
-  QUIZ_MOVE_STEP,
-  QUIZ_REMOVE_STEP
+  QUIZ_STEP_ADD,
+  QUIZ_STEP_COPY,
+  QUIZ_STEP_MOVE,
+  QUIZ_STEP_REMOVE
 } from '#/plugin/exo/resources/quiz/editor/store/actions'
 
 function setDefaults(quiz) {
@@ -59,10 +59,10 @@ function pushStep(step, steps, position) {
 
 export const reducer = makeFormReducer('resource.editor', {}, {
   pendingChanges: makeReducer(false, {
-    [QUIZ_ADD_STEP]: () => true,
-    [QUIZ_COPY_STEP]: () => true,
-    [QUIZ_MOVE_STEP]: () => true,
-    [QUIZ_REMOVE_STEP]: () => true
+    [QUIZ_STEP_ADD]: () => true,
+    [QUIZ_STEP_COPY]: () => true,
+    [QUIZ_STEP_MOVE]: () => true,
+    [QUIZ_STEP_REMOVE]: () => true
   }),
   originalData: makeReducer({}, {
     [RESOURCE_LOAD]: (state, action) => setDefaults(action.resourceData.quiz) || state
@@ -80,10 +80,10 @@ export const reducer = makeFormReducer('resource.editor', {}, {
      *
      * @param {object} state - the quiz object @see Quiz.propTypes
      */
-    [QUIZ_ADD_STEP]: (state, action) => {
+    [QUIZ_STEP_ADD]: (state, action) => {
       const newState = cloneDeep(state)
-      const newStep = createStep(action.step)
 
+      const newStep = createStep(action.step)
       newState.steps.push(newStep)
 
       return newState
@@ -94,7 +94,7 @@ export const reducer = makeFormReducer('resource.editor', {}, {
      *
      * @param {object} state - the quiz object @see Quiz.propTypes
      */
-    [QUIZ_COPY_STEP]: (state, action) => {
+    [QUIZ_STEP_COPY]: (state, action) => {
       const newState = cloneDeep(state)
 
       const original = newState.steps.find(step => step.id === action.id)
@@ -117,7 +117,7 @@ export const reducer = makeFormReducer('resource.editor', {}, {
      *
      * @param {object} state - the quiz object @see Quiz.propTypes
      */
-    [QUIZ_MOVE_STEP]: (state, action) => {
+    [QUIZ_STEP_MOVE]: (state, action) => {
       const newState = cloneDeep(state)
 
       const currentPos = newState.steps.findIndex(step => step.id === action.id)
@@ -135,7 +135,7 @@ export const reducer = makeFormReducer('resource.editor', {}, {
      *
      * @param {object} state - the quiz object @see Quiz.propTypes
      */
-    [QUIZ_REMOVE_STEP]: (state, action) => {
+    [QUIZ_STEP_REMOVE]: (state, action) => {
       const newState = cloneDeep(state)
 
       const stepPosition = newState.steps.findIndex(step => step.id === action.id)

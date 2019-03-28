@@ -5,7 +5,7 @@ import has from 'lodash/has'
 
 import {tex} from '#/main/app/intl/translation'
 import {Feedback} from './../components/feedback-btn.jsx'
-import {SolutionScore} from './../components/score.jsx'
+import {SolutionScore} from '#/plugin/exo/components/score'
 import {AnswerStats} from '../components/stats.jsx'
 import {PaperTabs} from './../components/paper-tabs.jsx'
 import {utils} from './utils/utils'

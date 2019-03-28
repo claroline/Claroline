@@ -1,5 +1,6 @@
 import {createSelector} from 'reselect'
 import get from 'lodash/get'
+import uniq from 'lodash/uniq'
 
 import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
 
@@ -13,6 +14,11 @@ const steps = createSelector(
   (quiz) => quiz.steps || []
 )
 
+const items = createSelector(
+  [steps],
+  (steps) => [].concat(...steps.map(step => step.items || []))
+)
+
 const numberingType = createSelector(
   [quiz],
   (quiz) => get(quiz, 'parameters.numbering')
@@ -23,10 +29,16 @@ const randomPick = createSelector(
   (quiz) => get(quiz, 'picking.randomPick')
 )
 
+const tags = createSelector(
+  [items],
+  (items) => uniq(Object.keys(items).map(key => items[key]).reduce((tags, item) => [...tags.concat(item.tags)], []))
+)
+
 export const selectors = {
   STORE_NAME,
   FORM_NAME,
   steps,
   numberingType,
-  randomPick
+  randomPick,
+  tags
 }

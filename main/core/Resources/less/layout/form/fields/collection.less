@@ -21,6 +21,7 @@
         display: flex;
         flex-direction: row;
         align-items: center;
+        justify-content: space-between;
         background: @gray-lighter;
         border: 1px solid transparent;
         padding: 5px;
@@ -49,4 +50,14 @@
     .btn-add {
         margin-top: 5px;
     }
+}
+
+.has-warning .no-item-info {
+    color: @state-warning-text;
+    border-color: @state-warning-text;
+}
+
+.has-error .no-item-info {
+    color: @state-danger-text;
+    border-color: @state-danger-text;
 }

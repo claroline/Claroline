@@ -6,7 +6,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import {utils} from './utils'
 import {WarningIcon} from '#/plugin/exo/components/warning-icon'
 import {Feedback} from '../../components/feedback-btn.jsx'
-import {SolutionScore} from '../../components/score.jsx'
+import {SolutionScore} from '#/plugin/exo/components/score'
 import {SCORE_SUM} from './../../../quiz/enums'
 
 /**

@@ -10,7 +10,7 @@ import NavItem from 'react-bootstrap/lib/NavItem'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 
 import {Feedback} from '../components/feedback-btn.jsx'
-import {SolutionScore} from '../components/score.jsx'
+import {SolutionScore} from '#/plugin/exo/components/score'
 import {AnswerStats} from '../components/stats.jsx'
 import {utils} from './utils/utils'
 

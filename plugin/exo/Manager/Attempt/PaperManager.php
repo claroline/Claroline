@@ -384,7 +384,7 @@ class PaperManager
 
         if (isset($structure->steps)) {
             foreach ($structure->steps as $step) {
-                $nbQuestions += count($step->items);
+                $nbQuestions += count($step->items); // TODO : remove content items
             }
         }
         $nbAnswers = 0;

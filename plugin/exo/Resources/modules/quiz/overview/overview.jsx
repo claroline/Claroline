@@ -16,7 +16,7 @@ const Parameters = props =>
   <ul className="exercise-parameters">
     <li className="exercise-parameter">
       <span className="fa fa-fw fa-check-square-o icon-with-text-right" />
-      {tex('results_availability')} :
+      {trans('results_availability', {}, 'quiz')} :
       &nbsp;
       <b>
         {props.showCorrectionAt === SHOW_CORRECTION_AT_DATE ?
@@ -28,7 +28,7 @@ const Parameters = props =>
 
     <li className="exercise-parameter">
       <span className="fa fa-fw fa-percent icon-with-text-right" />
-      {tex('availability_of_score')} :
+      {trans('score_availability', {}, 'quiz')} :
       &nbsp;
       <b>{tex(markModes.find(mode => mode[0] === props.showScoreAt)[1])}</b>
     </li>

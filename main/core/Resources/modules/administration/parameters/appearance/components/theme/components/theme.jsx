@@ -32,7 +32,6 @@ import {LINK_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
 import {FormGroup}    from '#/main/app/content/form/components/group.jsx'
 import {CheckGroup}   from '#/main/core/layout/form/components/group/check-group.jsx'
 import {TextGroup}    from '#/main/core/layout/form/components/group/text-group.jsx'
-import {ToggleableSet} from '#/main/core/layout/form/components/fieldset/toggleable-set.jsx'
 
 /*import {Color}        from './fields/color.jsx'
 import {FontSize}     from './fields/font-size.jsx'
@@ -77,28 +76,23 @@ const GeneralSection = props =>
         onChange={() => true}
       />
 
-      <ToggleableSet
-        showText={trans('show_advanced_options')}
-        hideText={trans('hide_advanced_options')}
-      >
-        <CheckGroup
-          id="theme-enabled"
-          label={trans('theme_enabled', {}, 'theme')}
-          value={props.theme.meta.enabled}
-          disabled={props.theme.meta.default || props.theme.current}
-          onChange={checked => props.updateProperty('meta.enabled', checked)}
-          help={trans('theme_enabled_help', {}, 'theme')}
-        />
+      <CheckGroup
+        id="theme-enabled"
+        label={trans('theme_enabled', {}, 'theme')}
+        value={props.theme.meta.enabled}
+        disabled={props.theme.meta.default || props.theme.current}
+        onChange={checked => props.updateProperty('meta.enabled', checked)}
+        help={trans('theme_enabled_help', {}, 'theme')}
+      />
 
-        <CheckGroup
-          id="theme-extend-default"
-          label={trans('theme_extend_default', {}, 'theme')}
-          value={props.theme.parameters.extendDefault}
-          disabled={!props.theme.meta.custom}
-          onChange={checked => props.updateProperty('parameters.extendDefault', checked)}
-          help={trans('theme_extend_default_help', {}, 'theme')}
-        />
-      </ToggleableSet>
+      <CheckGroup
+        id="theme-extend-default"
+        label={trans('theme_extend_default', {}, 'theme')}
+        value={props.theme.parameters.extendDefault}
+        disabled={!props.theme.meta.custom}
+        onChange={checked => props.updateProperty('parameters.extendDefault', checked)}
+        help={trans('theme_extend_default_help', {}, 'theme')}
+      />
     </fieldset>
   </div>
 

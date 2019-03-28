@@ -2,13 +2,13 @@
 
 namespace UJM\ExoBundle\Controller\Api;
 
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Library\Validator\ValidationException;
 use UJM\ExoBundle\Manager\QTIManager;
 
 /**
@@ -55,7 +55,7 @@ class QTIController extends AbstractController
         $data = $this->decodeRequestData($request);
         try {
             $questions = $this->qtiManager->importItems($data);
-        } catch (ValidationException $e) {
+        } catch (InvalidDataException $e) {
             $errors = $e->getErrors();
         }
 

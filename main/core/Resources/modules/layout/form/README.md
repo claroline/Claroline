@@ -28,16 +28,6 @@ A form group embed the following features :
   #### TextGroup
   `import {TextGroup} from '#/main/core/layout/form/components/group/text-group.jsx'`
 
-## Field sets
-`#/main/core/layout/form/components/fieldset/*-set.jsx`
-
-### Components
-  #### ActivableSet
-  `import {ActivableSet} from '#/main/core/layout/form/components/fieldset/activable-set.jsx'`
-
-  #### ToggleableSet
-  `import {ToggleableSet} from '#/main/core/layout/form/components/fieldset/toggleable-set.jsx'`
-
 ## Fields
 `#/main/core/layout/form/components/field/*.jsx`
 

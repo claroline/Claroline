@@ -1,6 +1,6 @@
 import {checkPropTypes} from 'prop-types'
 
-import {getApps, getApp} from '#/main/app/plugins'
+import {getApps} from '#/main/app/plugins'
 import {ItemType, AnswerableItemType} from '#/plugin/exo/items/prop-types'
 
 const APP_NAME = 'quizItems'

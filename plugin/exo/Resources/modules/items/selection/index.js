@@ -4,7 +4,7 @@ import times from 'lodash/times'
 import {trans} from '#/main/app/intl/translation'
 
 import {SelectionItem as SelectionItemType} from '#/plugin/exo/items/selection/prop-types'
-import {SelectionEditor} from "#/plugin/exo/items/selection/components/editor"
+import {SelectionEditor} from '#/plugin/exo/items/selection/components/editor'
 import {SelectionPlayer} from '#/plugin/exo/items/selection/components/player'
 import {SelectionPaper} from '#/plugin/exo/items/selection/components/paper'
 import {SelectionFeedback} from '#/plugin/exo/items/selection/components/feedback'

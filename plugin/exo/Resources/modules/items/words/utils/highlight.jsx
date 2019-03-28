@@ -4,8 +4,7 @@ import classes from 'classnames'
 
 import {utils} from './utils'
 import {Feedback} from '../../components/feedback-btn.jsx'
-import {SolutionScore} from '../../components/score.jsx'
-
+import {SolutionScore} from '#/plugin/exo/components/score'
 
 export const Highlight = props => {
   return(
