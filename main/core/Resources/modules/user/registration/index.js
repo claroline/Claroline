@@ -15,6 +15,7 @@ bootstrap(
     },
     user: {
       data: {
+        code: initialData.code,
         roles: initialData.defaultWorkspaces.map(workspace => workspace.registration.defaultRole)
       }
     }

@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -72,7 +73,7 @@ class RedirectController extends Controller
      *
      * @return RedirectResponse
      */
-    public function urlSubscriptionGenerateAction(Workspace $workspace)
+    public function urlSubscriptionGenerateAction(Workspace $workspace, Request $request)
     {
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
@@ -85,10 +86,12 @@ class RedirectController extends Controller
 
             return $this->redirectToRoute('claro_workspace_subscription_url_generate_anonymous', [
                 'workspace' => $workspace->getId(),
+                '_code' => $request->query->get('_code'),
             ]);
         } else {
             return $this->redirectToRoute('claro_workspace_subscription_url_generate_user', [
                 'workspace' => $workspace->getId(),
+                '_code' => $request->query->get('_code'),
             ]);
         }
     }

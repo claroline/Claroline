@@ -463,6 +463,7 @@ class UserSerializer extends GenericSerializer
         $this->sipe('firstName', 'setFirstName', $data, $user);
         $this->sipe('lastName', 'setLastName', $data, $user);
         $this->sipe('email', 'setEmail', $data, $user);
+        $this->sipe('code', 'setCode', $data, $user);
         //don't trim the password just in case
         $this->sipe('plainPassword', 'setPlainPassword', $data, $user, false);
 

@@ -430,6 +430,13 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     protected $wkUserQueues;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(nullable=true)
+     */
+    protected $code;
+
     public function __construct()
     {
         parent::__construct();
@@ -1348,5 +1355,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function addWorkspaceUserQueue(WorkspaceRegistrationQueue $wkUserQueue)
     {
         $this->wkUserQueues->add($wkUserQueue);
+    }
+
+    public function setCode($code)
+    {
+        $this->code = $code;
+    }
+
+    public function getCode()
+    {
+        return $this->code;
     }
 }

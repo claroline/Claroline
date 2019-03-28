@@ -74,7 +74,7 @@ class WorkspaceParametersController extends Controller
      *
      * @return array
      */
-    public function anonymousSubscriptionAction(Workspace $workspace)
+    public function anonymousSubscriptionAction(Workspace $workspace, Request $request)
     {
         $configHandler = $this->container->get('claroline.config.platform_config_handler');
 
@@ -88,6 +88,7 @@ class WorkspaceParametersController extends Controller
 
         return [
             'workspace' => $workspace,
+            'code' => $request->query->get('_code'),
             'facets' => $profilerSerializer->serialize([Options::REGISTRATION]),
             'termOfService' => $configHandler->getParameter('terms_of_service') ? $tosManager->getTermsOfService() : null,
             'options' => [
@@ -127,6 +128,8 @@ class WorkspaceParametersController extends Controller
 
         // If user is admin or registration validation is disabled, subscribe user
         if ($this->authorization->isGranted('ROLE_ADMIN') || !$workspace->getRegistrationValidation()) {
+            $code = $request->query->get('_code');
+            $user->setCode($code);
             $this->workspaceManager->addUserAction($workspace, $user);
 
             return new RedirectResponse(

@@ -34,7 +34,7 @@ export const reducer = {
   }),
   user: makeFormReducer('user', {
     new: true,
-    data: {roles: []}
+    data: {roles: [], code: null}
   }, {
     data: makeReducer({}, {
       [LIST_TOGGLE_SELECT+'/workspaces']: (state, action) => {
