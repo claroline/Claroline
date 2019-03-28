@@ -195,32 +195,34 @@ class PathSerializer
     private function deserializeSteps($stepsData, Path $path)
     {
         $currentSteps = $path->getSteps();
+        $ids = [];
 
         foreach ($stepsData as $stepIndex => $stepData) {
-            $step = $this->deserializeStep($stepData, ['path' => $path, 'order' => $stepIndex]);
+            $step = $this->deserializeStep($stepData, $ids, ['path' => $path, 'order' => $stepIndex]);
             $path->addStep($step);
         }
-
-        $ids = array_map(function ($data) {
-            return $data['id'];
-        }, $stepsData);
 
         foreach ($currentSteps as $currentStep) {
             if (!in_array($currentStep->getUuid(), $ids)) {
                 $currentStep->setPath(null);
+                $currentStep->setParent(null);
                 $this->om->persist($currentStep);
+                $path->removeStep($currentStep);
             }
         }
     }
 
     /**
      * @param array $data
+     * @param array $stepIds
      * @param array $options
      *
      * @return Step
      */
-    private function deserializeStep($data, array $options = [])
+    private function deserializeStep($data, array &$stepIds, array $options = [])
     {
+        $stepIds[] = $data['id'];
+
         $step = $this->stepRepo->findOneBy(['uuid' => $data['id']]); // TODO : don't call DB, retrieve it from $path
 
         if (empty($step)) {
@@ -290,7 +292,7 @@ class PathSerializer
                     'parent' => $step,
                     'order' => $childIndex,
                 ];
-                $child = $this->deserializeStep($childData, $childOptions);
+                $child = $this->deserializeStep($childData, $stepIds, $childOptions);
                 $step->addChild($child);
             }
         }

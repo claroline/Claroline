@@ -12,9 +12,12 @@
 namespace Innova\PathBundle\Controller\API;
 
 use Claroline\AppBundle\Annotations\ApiMeta;
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
+use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Manager\UserProgressionManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -92,6 +95,84 @@ class PathController extends AbstractCrudController
                 'status' => $status,
             ],
         ]);
+    }
+
+    /**
+     * Fetch user progressions for path.
+     *
+     * @EXT\Route(
+     *     "/{id}/progressions/fetch",
+     *     name="innova_path_progressions_fetch"
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "path",
+     *     class="InnovaPathBundle:Path\Path",
+     *     options={"mapping": {"id": "uuid"}}
+     * )
+     *
+     * @param Path    $path
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function progressionsFetchAction(Path $path, Request $request)
+    {
+        $node = $path->getResourceNode();
+
+        if (!$this->authorization->isGranted('EDIT', new ResourceCollection([$node]))) {
+            throw new AccessDeniedException('Operation "EDIT" cannot be done on object'.get_class($node));
+        }
+
+        $params = $request->query->all();
+
+        if (!isset($params['hiddenFilters'])) {
+            $params['hiddenFilters'] = [];
+        }
+        $params['hiddenFilters']['resourceNode'] = [$node->getUuid()];
+        $data = $this->finder->search(ResourceUserEvaluation::class, $params, [Options::SERIALIZE_MINIMAL]);
+
+        return new JsonResponse($data, 200);
+    }
+
+    /**
+     * Fetch user progressions for path.
+     *
+     * @EXT\Route(
+     *     "/{id}/user/{user}/steps/progression/fetch",
+     *     name="innova_path_user_steps_progression_fetch"
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "path",
+     *     class="InnovaPathBundle:Path\Path",
+     *     options={"mapping": {"id": "uuid"}}
+     * )
+     * @EXT\ParamConverter(
+     *     "user",
+     *     class="ClarolineCoreBundle:User",
+     *     options={"mapping": {"user": "uuid"}}
+     * )
+     *
+     * @param Path $path
+     * @param User $user
+     *
+     * @return JsonResponse
+     */
+    public function userStepsProgressionFetchAction(Path $path, User $user)
+    {
+        $node = $path->getResourceNode();
+
+        if (!$this->authorization->isGranted('EDIT', new ResourceCollection([$node]))) {
+            throw new AccessDeniedException('Operation "EDIT" cannot be done on object'.get_class($node));
+        }
+        $data = $this->userProgressionManager->getStepsProgressionForUser($path, $user);
+
+        if (empty($data)) {
+            $data = new \stdClass();
+        }
+
+        return new JsonResponse($data, 200);
     }
 
     public function getName()

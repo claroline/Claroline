@@ -260,4 +260,27 @@ class UserProgressionManager
             'stepsToDo' => $stepsUuids,
         ];
     }
+
+    /**
+     * Get all steps progression for an user.
+     *
+     * @param Path $path
+     * @param User $user
+     *
+     * @return array
+     */
+    public function getStepsProgressionForUser(Path $path, User $user)
+    {
+        $stepsProgression = [];
+
+        foreach ($path->getSteps() as $step) {
+            $userProgression = $this->repository->findOneBy(['step' => $step, 'user' => $user]);
+
+            if ($userProgression) {
+                $stepsProgression[$step->getUuid()] = $userProgression->getStatus();
+            }
+        }
+
+        return $stepsProgression;
+    }
 }

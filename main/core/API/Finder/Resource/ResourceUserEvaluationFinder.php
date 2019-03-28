@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\API\Finder\Resource;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -21,20 +22,27 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class ResourceUserEvaluationFinder extends AbstractFinder
 {
-    private $usedJoin = [];
-
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation';
+        return ResourceUserEvaluation::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
-    {
+    public function configureQueryBuilder(
+        QueryBuilder $qb,
+        array $searches = [],
+        array $sortBy = null,
+        array $options = ['count' => false, 'page' => 0, 'limit' => -1]
+    ) {
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'user':
                     $qb->join('obj.user', 'u');
                     $qb->andWhere("u.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+                case 'resourceNode':
+                    $qb->join('obj.resourceNode', 'r');
+                    $qb->andWhere("r.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
                 case 'fromDate':
@@ -44,6 +52,19 @@ class ResourceUserEvaluationFinder extends AbstractFinder
                 case 'untilDate':
                     $qb->andWhere("obj.date <= :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
+                    break;
+                case 'progression':
+                    if ($filterValue) {
+                        $qb->andWhere("obj.progression = :{$filterName}");
+                        $qb->setParameter($filterName, $filterValue);
+                    } else {
+                        $qb->andWhere(
+                            $qb->expr()->orX(
+                                'obj.progression IS NULL',
+                                'obj.progression = 0'
+                            )
+                        );
+                    }
                     break;
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);

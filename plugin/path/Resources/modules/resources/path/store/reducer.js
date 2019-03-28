@@ -14,6 +14,7 @@ import {
 } from '#/plugin/path/resources/path/store/actions'
 
 import {reducer as editorReducer} from '#/plugin/path/resources/path/editor/store/reducer'
+import {reducer as dashboardReducer} from '#/plugin/path/resources/path/dashboard/store/reducer'
 import {getStepPath} from '#/plugin/path/resources/path/editor/utils'
 
 const reducer = combineReducers({
@@ -49,7 +50,8 @@ const reducer = combineReducers({
 
       return newState
     }
-  })
+  }),
+  dashboard: dashboardReducer
 })
 
 export {

@@ -114,6 +114,7 @@ const ResourceNode = {
 const UserEvaluation = {
   propTypes: {
     id: T.number.isRequired,
+    userName: T.string.isRequired,
     date: T.string,
     status: T.string.isRequired,
     duration: T.number,
