@@ -12,7 +12,6 @@
 namespace HeVinci\CompetencyBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Entity\Level;
@@ -40,17 +39,15 @@ class ScaleSerializer
      * ScaleSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param ObjectManager      $om
      * @param SerializerProvider $serializer
      */
-    public function __construct(ObjectManager $om, SerializerProvider $serializer)
+    public function __construct(ObjectManager $om)
     {
         $this->om = $om;
-        $this->serializer = $serializer;
 
         $this->competencyRepo = $om->getRepository(Competency::class);
         $this->levelRepo = $om->getRepository(Level::class);

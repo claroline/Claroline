@@ -46,8 +46,7 @@ class Facet
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Facet\PanelFacet",
      *     mappedBy="facet",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
+     *     cascade={"all"}
      * )
      * @ORM\OrderBy({"position" = "ASC"})
      *
@@ -211,7 +210,7 @@ class Facet
     public function setIsMain($boolean)
     {
         $this->setMain(
-            !is_bool($boolean) ? $boolean === 'true' : $boolean
+            !is_bool($boolean) ? 'true' === $boolean : $boolean
         );
     }
 

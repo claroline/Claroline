@@ -2,17 +2,23 @@
 
 namespace Claroline\ForumBundle\Serializer;
 
+use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
+use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CoreBundle\Entity\File\PublicFile;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
+use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
+use Claroline\ForumBundle\Manager\Manager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -23,8 +29,6 @@ class SubjectSerializer
 {
     use SerializerTrait;
 
-    private $serializerProvider;
-    private $container;
     private $fileUt;
     private $eventDispatcher;
     private $om;
@@ -54,31 +58,35 @@ class SubjectSerializer
 
     /**
      * @DI\InjectParams({
-     *     "provider"        = @DI\Inject("claroline.api.serializer"),
-     *     "container"       = @DI\Inject("service_container"),
+     *     "finder"          = @DI\Inject("claroline.api.finder"),
      *     "fileUt"          = @DI\Inject("claroline.utilities.file"),
      *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "fileSerializer"  = @DI\Inject("claroline.serializer.public_file"),
+     *     "manager"         = @DI\Inject("claroline.manager.forum_manager"),
+     *     "userSerializer"  = @DI\Inject("claroline.serializer.user")
      * })
      *
-     * @param SerializerProvider       $provider
-     * @param ContainerInterface       $container
      * @param FileUtilities            $fileUt
      * @param EventDispatcherInterface $eventDispatcher
      * @param ObjectManager            $om
      */
     public function __construct(
-        SerializerProvider $provider,
-        ContainerInterface $container,
+        FinderProvider $finder,
         FileUtilities $fileUt,
+        PublicFileSerializer $fileSerializer,
         EventDispatcherInterface $eventDispatcher,
-        ObjectManager $om
+        ObjectManager $om,
+        UserSerializer $userSerializer,
+        Manager $manager
     ) {
-        $this->serializerProvider = $provider;
-        $this->container = $container;
+        $this->finder = $finder;
         $this->fileUt = $fileUt;
         $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
+        $this->fileSerializer = $fileSerializer;
+        $this->userSerializer = $userSerializer;
+        $this->manager = $manager;
 
         $this->messageRepo = $om->getRepository(Message::class);
     }
@@ -108,22 +116,20 @@ class SubjectSerializer
           'title' => $subject->getTitle(),
           'meta' => $this->serializeMeta($subject, $options),
           'restrictions' => $this->serializeRestrictions($subject, $options),
-          'poster' => $subject->getPoster() ? $this->container->get('claroline.serializer.public_file')->serialize($subject->getPoster()) : null,
+          'poster' => $subject->getPoster() ? $this->fileSerializer->serialize($subject->getPoster()) : null,
         ];
     }
 
     public function serializeMeta(Subject $subject, array $options = [])
     {
-        $finder = $this->container->get('claroline.api.finder');
-
         return [
             'views' => $subject->getViewCount(),
-            'messages' => $finder->fetch('Claroline\ForumBundle\Entity\Message', ['subject' => $subject->getUuid(), 'parent' => null], null, 0, 0, true),
+            'messages' => $this->finder->fetch(Message::class, ['subject' => $subject->getUuid(), 'parent' => null], null, 0, 0, true),
             /*
             'lastMessages' => array_map(function ($message) {
                 return $this->serializerProvider->serialize($message);
             }, $finder->fetch('Claroline\ForumBundle\Entity\Message', ['subject' => $subject->getUuid(), 'parent' => null], ['sortBy' => 'dateCreation', 'direction' => 0], 0, 1)),*/
-            'creator' => !empty($subject->getCreator()) ? $this->serializerProvider->serialize($subject->getCreator(), [Options::SERIALIZE_MINIMAL]) : null,
+            'creator' => !empty($subject->getCreator()) ? $this->userSerializer->serialize($subject->getCreator(), [Options::SERIALIZE_MINIMAL]) : null,
             'created' => $subject->getCreationDate()->format('Y-m-d\TH:i:s'),
             'updated' => $subject->getModificationDate()->format('Y-m-d\TH:i:s'),
             'sticky' => $subject->isSticked(),
@@ -191,10 +197,7 @@ class SubjectSerializer
                 $subject->setAuthor($data['meta']['creator']['name']);
 
                 // TODO: reuse value from token Storage if new
-                $creator = $this->serializerProvider->deserialize(
-                    'Claroline\CoreBundle\Entity\User',
-                    $data['meta']['creator']
-                );
+                $creator = $this->om->getObject($data['meta']['creator'], User::class);
 
                 if ($creator) {
                     $subject->setCreator($creator);
@@ -206,10 +209,7 @@ class SubjectSerializer
         }
 
         if (!empty($data['forum'])) {
-            $forum = $this->serializerProvider->deserialize(
-                'Claroline\ForumBundle\Entity\Forum',
-                $data['forum']
-            );
+            $forum = $this->om->getObject($data['forum'], Forum::class) ?? new Forum();
 
             if ($forum) {
                 $subject->setForum($forum);
@@ -217,15 +217,12 @@ class SubjectSerializer
         }
 
         if (isset($data['poster'])) {
-            $poster = $this->serializerProvider->deserialize(
-                'Claroline\CoreBundle\Entity\File\PublicFile',
-                $data['poster']
-            );
+            $poster = $this->om->getObject($data['poster'], PublicFile::class);
             $subject->setPoster($poster);
 
             $this->fileUt->createFileUse(
               $poster,
-              'Claroline\CoreBundle\Entity\Workspace',
+              Workspace::class,
               $subject->getUuid()
           );
         }
@@ -284,8 +281,6 @@ class SubjectSerializer
 
     private function isHot(Subject $subject)
     {
-        $manager = $this->container->get('claroline.manager.forum_manager');
-
-        return in_array($subject->getUuid(), $manager->getHotSubjects($subject->getForum()));
+        return in_array($subject->getUuid(), $this->manager->getHotSubjects($subject->getForum()));
     }
 }

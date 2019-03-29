@@ -96,7 +96,7 @@ class PlannedNotificationListener
             ]
         );
         $event->setContent($content);
-        $event->stopPropagation();
+        // /    $event->stopPropagation();
     }
 
     /**

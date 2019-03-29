@@ -13,7 +13,6 @@ namespace UJM\LtiBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -33,8 +32,6 @@ class LtiResourceSerializer
 
     /** @var RequestStack */
     private $requestStack;
-    /** @var SerializerProvider */
-    private $serializer;
     /** @var TokenStorageInterface */
     private $tokenStorage;
     /** @var TranslatorInterface */
@@ -50,7 +47,7 @@ class LtiResourceSerializer
      * @DI\InjectParams({
      *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
      *     "requestStack"     = @DI\Inject("request_stack"),
-     *     "serializer"       = @DI\Inject("claroline.api.serializer"),
+     *     "ltiAppSerializer" = @DI\Inject("claroline.serializer.lti.app"),
      *     "tokenStorage"     = @DI\Inject("security.token_storage"),
      *     "translator"       = @DI\Inject("translator"),
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
@@ -66,13 +63,13 @@ class LtiResourceSerializer
     public function __construct(
         ObjectManager $om,
         RequestStack $requestStack,
-        SerializerProvider $serializer,
+        LtiAppSerializer $ltiAppSerializer,
         TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator,
         WorkspaceManager $workspaceManager
     ) {
         $this->requestStack = $requestStack;
-        $this->serializer = $serializer;
+        $this->ltiAppSerializer = $ltiAppSerializer;
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
         $this->workspaceManager = $workspaceManager;
@@ -95,7 +92,7 @@ class LtiResourceSerializer
             'openInNewTab' => $ltiResource->getOpenInNewTab(),
             'ratio' => $ltiResource->getRatio(),
             'ltiApp' => $ltiResource->getLtiApp() ?
-                $this->serializer->serialize($ltiResource->getLtiApp(), [Options::SERIALIZE_MINIMAL]) :
+                $this->ltiAppSerializer->serialize($ltiResource->getLtiApp(), [Options::SERIALIZE_MINIMAL]) :
                 null,
             'ltiData' => $this->serializeLtiData($ltiResource),
         ];

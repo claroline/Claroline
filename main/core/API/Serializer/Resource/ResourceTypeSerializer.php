@@ -25,9 +25,8 @@ class ResourceTypeSerializer
      *
      * @param ResourceActionManager $actionManager
      */
-    public function __construct(
-        ResourceActionManager $actionManager
-    ) {
+    public function __construct(ResourceActionManager $actionManager)
+    {
         $this->actionManager = $actionManager;
     }
 

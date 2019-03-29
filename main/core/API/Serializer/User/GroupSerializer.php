@@ -22,16 +22,21 @@ class GroupSerializer
      * GroupSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.api.serializer"),
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager")
+     *     "organizationSerializer" = @DI\Inject("claroline.serializer.organization"),
+     *     "roleSerializer"         = @DI\Inject("claroline.serializer.role"),
+     *     "om"                     = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param SerializerProvider $serializer
      */
-    public function __construct(SerializerProvider $serializer, ObjectManager $om)
-    {
-        $this->serializer = $serializer;
+    public function __construct(
+        ObjectManager $om,
+        OrganizationSerializer $organizationSerializer,
+        RoleSerializer $roleSerializer
+    ) {
         $this->om = $om;
+        $this->organizationSerializer = $organizationSerializer;
+        $this->roleSerializer = $roleSerializer;
     }
 
     public function getClass()
@@ -53,10 +58,10 @@ class GroupSerializer
             'id' => $group->getUuid(),
             'name' => $group->getName(),
             'roles' => array_map(function (Role $role) use ($options) {
-                return $this->serializer->serialize($role, $options);
+                return $this->roleSerializer->serialize($role, $options);
             }, $group->getEntityRoles()->toArray()),
             'organizations' => array_map(function (Organization $organization) use ($options) {
-                return $this->serializer->serialize($organization, $options);
+                return $this->organizationSerializer->serialize($organization, $options);
             }, $group->getOrganizations()->toArray()),
         ];
     }
@@ -76,12 +81,8 @@ class GroupSerializer
 
         if (isset($data['organizations'])) {
             $group->setOrganizations(
-                array_map(function ($organization) use ($options) {
-                    return $this->serializer->deserialize(
-                        'Claroline\CoreBundle\Entity\Organization\Organization',
-                        $organization,
-                        $options
-                    );
+                array_map(function ($organization) {
+                    return $this->om->getObject($organization, Organization::class);
                 }, $data['organizations'])
             );
         }
@@ -90,7 +91,7 @@ class GroupSerializer
         //it's usefull if we want to create a user with a list of roles
         if (isset($data['roles'])) {
             foreach ($data['roles'] as $role) {
-                $role = $this->serializer->deserialize('Claroline\CoreBundle\Entity\Role', $role);
+                $role = $this->om->getObject($role, Role::class);
                 if ($role && $role->getId()) {
                     $group->addRole($role);
                 }

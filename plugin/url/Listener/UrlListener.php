@@ -2,11 +2,11 @@
 
 namespace HeVinci\UrlBundle\Listener;
 
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use HeVinci\UrlBundle\Entity\Url;
+use HeVinci\UrlBundle\Serializer\UrlSerializer;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -14,19 +14,19 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class UrlListener
 {
-    /** @var SerializerProvider */
+    /** @var UrlSerializer */
     private $serializer;
 
     /**
      * UrlListener constructor.
      *
      * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
+     *     "serializer" = @DI\Inject("claroline.serializer.url")
      * })
      *
-     * @param SerializerProvider $serializer
+     * @param UrlSerializer $serializer
      */
-    public function __construct(SerializerProvider $serializer)
+    public function __construct(UrlSerializer $serializer)
     {
         $this->serializer = $serializer;
     }

@@ -27,17 +27,16 @@ class ChapterSerializer
      * ChapterSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "om"        = @DI\Inject("claroline.persistence.object_manager"),
-     *     "container" = @DI\Inject("service_container")
+     *     "om"        = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param ObjectManager      $om
      * @param ContainerInterface $container
      */
-    public function __construct(ObjectManager $om, ContainerInterface $container)
+    public function __construct(ObjectManager $om)
     {
         $this->om = $om;
-        $this->chapterRepository = $container->get('doctrine.orm.entity_manager')->getRepository('IcapLessonBundle:Chapter');
+        $this->chapterRepository = $om->getRepository('IcapLessonBundle:Chapter');
     }
 
     /**
@@ -45,7 +44,7 @@ class ChapterSerializer
      */
     public function getClass()
     {
-        return 'Icap\LessonBundle\Entity\Chapter';
+        return Chapter::class;
     }
 
     /**

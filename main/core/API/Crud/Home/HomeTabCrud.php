@@ -15,20 +15,17 @@ class HomeTabCrud
     /**
      * @DI\InjectParams({
      *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "containerCrud"  = @DI\Inject("claroline.crud.widget_container"),
-     *     "instanceCrud"   = @DI\Inject("claroline.crud.widget_instance")
+     *     "containerCrud"  = @DI\Inject("claroline.crud.widget_container")
      * })
      *
      * @param ObjectManager $om
      */
     public function __construct(
       ObjectManager $om,
-      WidgetContainerCrud $containerCrud,
-      WidgetInstanceCrud $instanceCrud
+      WidgetContainerCrud $containerCrud
     ) {
         $this->om = $om;
         $this->containerCrud = $containerCrud;
-        $this->instanceCrud = $instanceCrud;
     }
 
     /**
@@ -41,10 +38,6 @@ class HomeTabCrud
         $homeTab = $event->getObject();
 
         foreach ($homeTab->getWidgetContainers() as $container) {
-            foreach ($container->getInstances() as $instance) {
-                $this->instanceCrud->delete($instance);
-                $this->om->remove($instance);
-            }
             $this->containerCrud->delete($container);
             $this->om->remove($container);
         }

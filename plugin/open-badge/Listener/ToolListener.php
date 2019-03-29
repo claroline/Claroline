@@ -12,7 +12,6 @@
 namespace Claroline\OpenBadgeBundle\Listener;
 
 use Claroline\AppBundle\API\FinderProvider;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
@@ -35,9 +34,6 @@ class ToolListener
     /** @var FinderProvider */
     private $finder;
 
-    /** @var SerializerProvider */
-    private $serializer;
-
     /**
      * HomeListener constructor.
      *
@@ -45,27 +41,23 @@ class ToolListener
      *     "authorization" = @DI\Inject("security.authorization_checker"),
      *     "tokenStorage"  = @DI\Inject("security.token_storage"),
      *     "templating"    = @DI\Inject("templating"),
-     *     "finder"        = @DI\Inject("claroline.api.finder"),
-     *     "serializer"    = @DI\Inject("claroline.api.serializer")
+     *     "finder"        = @DI\Inject("claroline.api.finder")
      * })
      *
      * @param TokenStorageInterface         $tokenStorage
      * @param TwigEngine                    $templating
      * @param FinderProvider                $finder
-     * @param SerializerProvider            $serializer
      * @param AuthorizationCheckerInterface $authorization
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         TwigEngine $templating,
         FinderProvider $finder,
-        SerializerProvider $serializer,
         AuthorizationCheckerInterface $authorization
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->templating = $templating;
         $this->finder = $finder;
-        $this->serializer = $serializer;
         $this->authorization = $authorization;
     }
 

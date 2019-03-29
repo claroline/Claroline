@@ -13,7 +13,6 @@ namespace HeVinci\CompetencyBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Entity\CompetencyAbility;
@@ -30,9 +29,6 @@ class CompetencySerializer
 
     /** @var ObjectManager */
     private $om;
-    /** @var SerializerProvider */
-    private $serializer;
-
     private $competencyRepo;
     private $scaleRepo;
 
@@ -40,17 +36,18 @@ class CompetencySerializer
      * CompetencySerializer constructor.
      *
      * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
+     *     "om"                          = @DI\Inject("claroline.persistence.object_manager"),
+     *     "competencyAbilitySerializer" = @DI\Inject("claroline.serializer.competency_ability"),
+     *     "scaleSerializer"             = @DI\Inject("claroline.serializer.competency.scale")
      * })
      *
-     * @param ObjectManager      $om
-     * @param SerializerProvider $serializer
+     * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $om, SerializerProvider $serializer)
+    public function __construct(ObjectManager $om, CompetencyAbilitySerializer $competencyAbilitySerializer, ScaleSerializer $scaleSerializer)
     {
         $this->om = $om;
-        $this->serializer = $serializer;
+        $this->competencyAbilitySerializer = $competencyAbilitySerializer;
+        $this->scaleSerializer = $scaleSerializer;
 
         $this->competencyRepo = $om->getRepository(Competency::class);
         $this->scaleRepo = $om->getRepository(Scale::class);
@@ -77,9 +74,9 @@ class CompetencySerializer
             'name' => $competency->getName(),
             'description' => $competency->getDescription(),
             'parent' => $competency->getParent() ? $this->serialize($competency->getParent(), [Options::SERIALIZE_MINIMAL]) : null,
-            'scale' => $this->serializer->serialize($competency->getScale(), [Options::SERIALIZE_MINIMAL]),
+            'scale' => $this->scaleSerializer->serialize($competency->getScale(), [Options::SERIALIZE_MINIMAL]),
             'abilities' => array_map(function (CompetencyAbility $competencyAbility) {
-                return $this->serializer->serialize($competencyAbility, [Options::SERIALIZE_MINIMAL]);
+                return $this->competencyAbilitySerializer->serialize($competencyAbility, [Options::SERIALIZE_MINIMAL]);
             }, $competency->getCompetencyAbilities()->toArray()),
         ];
 

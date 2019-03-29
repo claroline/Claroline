@@ -2,7 +2,6 @@
 
 namespace Icap\WikiBundle\Listener\Resource;
 
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
 use Claroline\CoreBundle\Event\GenericDataEvent;
@@ -14,6 +13,7 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\WikiBundle\Entity\Wiki;
 use Icap\WikiBundle\Manager\SectionManager;
 use Icap\WikiBundle\Manager\WikiManager;
+use Icap\WikiBundle\Serializer\WikiSerializer;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Templating\EngineInterface;
@@ -34,9 +34,6 @@ class WikiListener
     /** @var ObjectManager */
     private $om;
 
-    /** @var SerializerProvider */
-    private $serializer;
-
     /** @var WikiManager */
     private $wikiManager;
 
@@ -53,7 +50,7 @@ class WikiListener
      *     "templating"        = @DI\Inject("templating"),
      *     "tokenStorage"      = @DI\Inject("security.token_storage"),
      *     "objectManager"     = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer"        = @DI\Inject("claroline.api.serializer"),
+     *     "serializer"        = @DI\Inject("claroline.serializer.wiki"),
      *     "wikiManager"       = @DI\Inject("icap.wiki.manager"),
      *     "sectionManager"    = @DI\Inject("icap.wiki.section_manager"),
      *     "evaluationManager" = @DI\Inject("claroline.manager.resource_evaluation_manager")
@@ -71,7 +68,7 @@ class WikiListener
         EngineInterface $templating,
         TokenStorageInterface $tokenStorage,
         ObjectManager $objectManager,
-        SerializerProvider $serializer,
+        WikiSerializer $serializer,
         WikiManager $wikiManager,
         SectionManager $sectionManager,
         ResourceEvaluationManager $evaluationManager

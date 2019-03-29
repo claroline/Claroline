@@ -11,7 +11,7 @@
 
 namespace Icap\SocialmediaBundle\Controller;
 
-use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Icap\SocialmediaBundle\Entity\LikeAction;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -27,19 +27,19 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class LikeActionController extends Controller
 {
-    /** @var SerializerProvider */
+    /** @var ResourceNodeSerializer */
     private $serializer;
 
     /**
      * LikeActionController constructor.
      *
      * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
+     *     "serializer" = @DI\Inject("claroline.serializer.resource_node")
      * })
      *
-     * @param SerializerProvider $serializer
+     * @param ResourceNodeSerializer $serializer
      */
-    public function __construct(SerializerProvider $serializer)
+    public function __construct(ResourceNodeSerializer $serializer)
     {
         $this->serializer = $serializer;
     }

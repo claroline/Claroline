@@ -4,6 +4,8 @@ namespace Claroline\CoreBundle\API\Serializer\Task;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Task\ScheduledTask;
 use Claroline\CoreBundle\Entity\User;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -24,8 +26,9 @@ class ScheduledTaskSerializer
      * ScheduledTaskSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
+     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
+     *     "workspaceSerializer" = @DI\Inject("claroline.serializer.workspace"),
+     *     "userSerializer"      = @DI\Inject("claroline.serializer.user")
      * })
      *
      * @param ObjectManager      $om
@@ -33,10 +36,12 @@ class ScheduledTaskSerializer
      */
     public function __construct(
         ObjectManager  $om,
-        SerializerProvider $serializer
+        WorkspaceSerializer $workspaceSerializer,
+        UserSerializer $userSerializer
     ) {
         $this->om = $om;
-        $this->serializer = $serializer;
+        $this->workspaceSerializer = $workspaceSerializer;
+        $this->userSerializer = $userSerializer;
     }
 
     /**
@@ -58,9 +63,9 @@ class ScheduledTaskSerializer
                 'lastExecution' => $scheduledTask->getExecutionDate() ? $scheduledTask->getExecutionDate()->format('Y-m-d\TH:i:s') : null,
             ],
             'users' => array_map(function (User $user) {
-                return $this->serializer->serialize($user);
+                return $this->userSerializer->serialize($user);
             }, $scheduledTask->getUsers()),
-            'workspace' => $scheduledTask->getWorkspace() ? $this->serializer->serialize($scheduledTask->getWorkspace(), ['minimal']) : null,
+            'workspace' => $scheduledTask->getWorkspace() ? $this->workspaceSerializer->serialize($scheduledTask->getWorkspace(), ['minimal']) : null,
             'group' => $scheduledTask->getGroup() ? [ // todo : use GroupSerializer when available
                 'id' => $scheduledTask->getGroup()->getId(),
                 'name' => $scheduledTask->getGroup()->getName(),

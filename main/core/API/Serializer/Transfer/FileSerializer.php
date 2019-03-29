@@ -27,9 +27,8 @@ class FileSerializer
      *
      * @param PublicFileSerializer $fileSerializer
      */
-    public function __construct(
-        PublicFileSerializer $fileSerializer
-    ) {
+    public function __construct(PublicFileSerializer $fileSerializer)
+    {
         $this->fileSerializer = $fileSerializer;
     }
 

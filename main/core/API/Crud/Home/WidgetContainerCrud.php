@@ -14,14 +14,16 @@ class WidgetContainerCrud
 {
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
+     *     "instanceCrud" = @DI\Inject("claroline.crud.widget_instance")
      * })
      *
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $om)
+    public function __construct(ObjectManager $om, WidgetInstanceCrud $instanceCrud)
     {
         $this->om = $om;
+        $this->instanceCrud = $instanceCrud;
     }
 
     /**
@@ -38,6 +40,11 @@ class WidgetContainerCrud
 
     public function delete($container)
     {
+        foreach ($container->getInstances() as $instance) {
+            $this->instanceCrud->delete($instance);
+            $this->om->remove($instance);
+        }
+
         foreach ($container->getWidgetContainerConfigs() as $config) {
             $this->om->remove($config);
         }

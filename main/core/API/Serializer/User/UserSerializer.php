@@ -7,11 +7,13 @@ use Claroline\AppBundle\API\Serializer\GenericSerializer;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\Facet\FieldFacetValueSerializer;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
-use Claroline\CoreBundle\Entity\File\PublicFile;
+use  Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
@@ -70,14 +72,16 @@ class UserSerializer extends GenericSerializer
      * UserManager constructor.
      *
      * @DI\InjectParams({
-     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
-     *     "authChecker"     = @DI\Inject("security.authorization_checker"),
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "config"          = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "facetManager"    = @DI\Inject("claroline.manager.facet_manager"),
-     *     "fileSerializer"  = @DI\Inject("claroline.serializer.public_file"),
-     *     "container"       = @DI\Inject("service_container"),
-     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher")
+     *     "tokenStorage"              = @DI\Inject("security.token_storage"),
+     *     "authChecker"               = @DI\Inject("security.authorization_checker"),
+     *     "om"                        = @DI\Inject("claroline.persistence.object_manager"),
+     *     "config"                    = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "facetManager"              = @DI\Inject("claroline.manager.facet_manager"),
+     *     "fileSerializer"            = @DI\Inject("claroline.serializer.public_file"),
+     *     "organizationSerializer"    = @DI\Inject("claroline.serializer.organization"),
+     *     "container"                 = @DI\Inject("service_container"),
+     *     "eventDispatcher"           = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "fieldFacetValueSerializer" = @DI\Inject("claroline.serializer.field_facet_value")
      * })
      *
      * @param TokenStorageInterface         $tokenStorage
@@ -97,7 +101,9 @@ class UserSerializer extends GenericSerializer
         FacetManager $facetManager,
         PublicFileSerializer $fileSerializer,
         ContainerInterface $container,
-        StrictDispatcher $eventDispatcher
+        StrictDispatcher $eventDispatcher,
+        OrganizationSerializer $organizationSerializer,
+        FieldFacetValueSerializer $fieldFacetValueSerializer
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authChecker = $authChecker;
@@ -107,6 +113,8 @@ class UserSerializer extends GenericSerializer
         $this->fileSerializer = $fileSerializer;
         $this->container = $container;
         $this->eventDispatcher = $eventDispatcher;
+        $this->organizationSerializer = $organizationSerializer;
+        $this->fieldFacetValueSerializer = $fieldFacetValueSerializer;
 
         $this->organizationRepo = $om->getRepository('ClarolineCoreBundle:Organization\Organization');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
@@ -202,14 +210,12 @@ class UserSerializer extends GenericSerializer
                 }, $user->getGroups()->toArray()),
             ]);
 
-            $serializer = $this->container->get('claroline.api.serializer');
-
             if ($user->getMainOrganization()) {
-                $serializedUser['mainOrganization'] = $serializer->serialize($user->getMainOrganization());
+                $serializedUser['mainOrganization'] = $this->organizationSerializer->serialize($user->getMainOrganization());
             }
 
-            $serializedUser['administratedOrganizations'] = array_map(function ($organization) use ($serializer) {
-                return $serializer->serialize($organization);
+            $serializedUser['administratedOrganizations'] = array_map(function ($organization) {
+                return $this->organizationSerializer->serialize($organization);
             }, $user->getAdministratedOrganizations()->toArray());
         }
 
@@ -475,14 +481,10 @@ class UserSerializer extends GenericSerializer
             $this->deserializeRestrictions($data['restrictions'], $user);
         }
 
-        //avoid recursive dependencies
-        $serializer = $this->container->get('claroline.api.serializer');
-
         if (isset($data['mainOrganization'])) {
-            $user->setMainOrganization($serializer->deserialize(
-                'Claroline\CoreBundle\Entity\Organization\Organization',
-                $data['mainOrganization']
-            ));
+            $organization = $this->om->getObject($data['mainOrganization'], Organization::class);
+            $user->addOrganization($organization);
+            $user->setMainOrganization($organization);
         }
 
         //only add role here. If we want to remove them, use the crud remove method instead
@@ -528,9 +530,7 @@ class UserSerializer extends GenericSerializer
         //it's useful if we want to create a user with a list of roles
         if (isset($data['groups'])) {
             foreach ($data['groups'] as $group) {
-                /** @var Group $group */
-                $group = $this->container->get('claroline.api.serializer')
-                    ->deserialize('Claroline\CoreBundle\Entity\Group', $group);
+                $group = $this->om->getObject($group, Group::class);
 
                 if ($group && $group->getId()) {
                     $user->addGroup($group);
@@ -572,15 +572,14 @@ class UserSerializer extends GenericSerializer
                     ->findOneBy([
                         'user' => $user,
                         'fieldFacet' => $fieldFacet,
-                    ]);
+                    ]) ?? new FieldFacetValue();
 
                 $user->addFieldFacet(
-                    $serializer->deserialize(FieldFacetValue::class, [
-                        'id' => $fieldFacetValue ? $fieldFacetValue->getUuid() : null,
+                    $this->fieldFacetValueSerializer->deserialize([
                         'name' => $fieldFacet->getName(),
                         'value' => $data['profile'][$fieldFacet->getUuid()],
                         'fieldFacet' => ['id' => $fieldFacet->getUuid()],
-                    ])
+                    ], $fieldFacetValue)
                 );
             }
         }

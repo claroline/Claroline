@@ -3,11 +3,11 @@
 namespace Claroline\ForumBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\MessageSerializer as AbstractMessageSerializer;
 use Claroline\ForumBundle\Entity\Message;
+use Claroline\ForumBundle\Entity\Subject;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -37,27 +37,23 @@ class MessageSerializer
      * MessageSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "serializer"        = @DI\Inject("claroline.api.serializer"),
      *     "messageSerializer" = @DI\Inject("claroline.serializer.message"),
      *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
      *     "subjectSerializer" = @DI\Inject("claroline.serializer.forum_subject"),
      *     "fileSerializer"    = @DI\Inject("claroline.serializer.public_file")
      * })
      *
-     * @param SerializerProvider        $serializer
      * @param AbstractMessageSerializer $messageSerializer
      * @param ObjectManager             $om
      * @param SubjectSerializer         $subjectSerializer
      * @param PublicFileSerializer      $fileSerializer
      */
     public function __construct(
-        SerializerProvider $serializer,
         AbstractMessageSerializer $messageSerializer,
         ObjectManager $om,
         SubjectSerializer $subjectSerializer,
         PublicFileSerializer $fileSerializer
     ) {
-        $this->serializer = $serializer;
         $this->messageSerializer = $messageSerializer;
         $this->om = $om;
         $this->subjectSerializer = $subjectSerializer;
@@ -134,10 +130,7 @@ class MessageSerializer
         $message = $this->messageSerializer->deserialize($data, $message, $options);
 
         if (isset($data['subject'])) {
-            $subject = $this->serializer->deserialize(
-                'Claroline\ForumBundle\Entity\Subject',
-                $data['subject']
-            );
+            $subject = $this->om->getObject($data['subject'], Subject::class);
 
             if (!empty($subject)) {
                 $message->setSubject($subject);

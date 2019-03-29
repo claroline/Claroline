@@ -31,7 +31,6 @@ class FieldFacetValueSerializer
      *
      * @DI\InjectParams({
      *     "fieldFacetSerializer" = @DI\Inject("claroline.serializer.field_facet"),
-     *     "userSerializer"       = @DI\Inject("claroline.serializer.user"),
      *     "container"            = @DI\Inject("service_container")
      * })
      *
@@ -41,11 +40,9 @@ class FieldFacetValueSerializer
      */
     public function __construct(
         FieldFacetSerializer $fieldFacetSerializer,
-        UserSerializer $userSerializer,
         ContainerInterface $container
     ) {
         $this->fieldFacetSerializer = $fieldFacetSerializer;
-        $this->userSerializer = $userSerializer;
         $this->container = $container;
     }
 
@@ -72,7 +69,15 @@ class FieldFacetValueSerializer
 
         if (!in_array(static::OPTION_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
-                'user' => $fieldFacetValue->getUser() ? $this->userSerializer->serialize($fieldFacetValue->getUser()) : null,
+                'user' => $fieldFacetValue->getUser() ? [
+                  'autoId' => $fieldFacetValue->getUser()->getId(), //for old compatibility purposes
+                  'id' => $fieldFacetValue->getUser()->getUuid(),
+                  'name' => $fieldFacetValue->getUser()->getFirstName().' '.$fieldFacetValue->getUser()->getLastName(),
+                  'firstName' => $fieldFacetValue->getUser()->getFirstName(),
+                  'lastName' => $fieldFacetValue->getUser()->getLastName(),
+                  'username' => $fieldFacetValue->getUser()->getUsername(),
+                  'email' => $fieldFacetValue->getUser()->getEmail(),
+                  ] : null,
                 'fieldFacet' => $this->fieldFacetSerializer->serialize($fieldFacetValue->getFieldFacet()),
             ]);
         }

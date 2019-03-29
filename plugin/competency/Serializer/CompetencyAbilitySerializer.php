@@ -13,7 +13,6 @@ namespace HeVinci\CompetencyBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Entity\Competency;
@@ -31,9 +30,6 @@ class CompetencyAbilitySerializer
 
     /** @var ObjectManager */
     private $om;
-    /** @var SerializerProvider */
-    private $serializer;
-
     private $abilityRepo;
     private $competencyRepo;
     private $levelRepo;
@@ -42,17 +38,18 @@ class CompetencyAbilitySerializer
      * CompetencyAbilitySerializer constructor.
      *
      * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
+     *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
+     *     "abilitySerializer" = @DI\Inject("claroline.serializer.ability"),
+     *     "levelSerializer"   = @DI\Inject("claroline.serializer.competency.scale.level")
      * })
      *
-     * @param ObjectManager      $om
-     * @param SerializerProvider $serializer
+     * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $om, SerializerProvider $serializer)
+    public function __construct(ObjectManager $om, AbilitySerializer $abilitySerializer, LevelSerializer $levelSerializer)
     {
         $this->om = $om;
-        $this->serializer = $serializer;
+        $this->abilitySerializer = $abilitySerializer;
+        $this->levelSerializer = $levelSerializer;
 
         $this->abilityRepo = $om->getRepository(Ability::class);
         $this->competencyRepo = $om->getRepository(Competency::class);
@@ -77,11 +74,11 @@ class CompetencyAbilitySerializer
     {
         $serialized = [
             'id' => $competencyAbility->getUuid(),
-            'level' => $this->serializer->serialize($competencyAbility->getLevel(), [Options::SERIALIZE_MINIMAL]),
+            'level' => $this->levelSerializer->serialize($competencyAbility->getLevel(), [Options::SERIALIZE_MINIMAL]),
             'competency' => [
                 'id' => $competencyAbility->getCompetency()->getUuid(),
             ],
-            'ability' => $this->serializer->serialize($competencyAbility->getAbility(), [Options::SERIALIZE_MINIMAL]),
+            'ability' => $this->abilitySerializer->serialize($competencyAbility->getAbility(), [Options::SERIALIZE_MINIMAL]),
         ];
 
         return $serialized;

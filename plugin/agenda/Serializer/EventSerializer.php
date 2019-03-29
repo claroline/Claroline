@@ -6,6 +6,9 @@ use Claroline\AgendaBundle\Entity\Event;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -25,16 +28,21 @@ class EventSerializer
      * RoleSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "serializer"     = @DI\Inject("claroline.api.serializer"),
-     *     "authorization"  = @DI\Inject("security.authorization_checker"),
+     *     "workspaceSerializer" = @DI\Inject("claroline.serializer.workspace"),
+     *     "userSerializer"      = @DI\Inject("claroline.serializer.user"),
+     *     "authorization"       = @DI\Inject("security.authorization_checker")
      * })
      *
      * @param SerializerProvider $serializer
      */
-    public function __construct(SerializerProvider $serializer, AuthorizationCheckerInterface $authorization)
-    {
-        $this->serializer = $serializer;
+    public function __construct(
+      AuthorizationCheckerInterface $authorization,
+      WorkspaceSerializer $workspaceSerializer,
+      UserSerializer $userSerializer
+    ) {
         $this->authorization = $authorization;
+        $this->workspaceSerializer = $workspaceSerializer;
+        $this->userSerializer = $userSerializer;
     }
 
     /**
@@ -56,9 +64,9 @@ class EventSerializer
             'color' => $event->getPriority(),
             'allDay' => $event->isAllDay(),
             'durationEditable' => !$event->isTask() && false !== $event->isEditable(),
-            'owner' => $this->serializer->serialize($event->getUser()),
+            'owner' => $this->userSerializer->serialize($event->getUser()),
             'description' => $event->getDescription(),
-            'workspace' => $event->getWorkspace() ? $this->serializer->serialize($event->getWorkspace(), [Options::SERIALIZE_MINIMAL]) : null,
+            'workspace' => $event->getWorkspace() ? $this->workspaceSerializer->serialize($event->getWorkspace(), [Options::SERIALIZE_MINIMAL]) : null,
             'className' => 'event_'.$event->getId(),
             'editable' => $editable,
             'meta' => $this->serializeMeta($event),
@@ -90,7 +98,7 @@ class EventSerializer
         $this->sipe('isEditable', 'setIsEditable', $data, $event);
 
         if (isset($data['workspace'])) {
-            $workspace = $this->serializer->deserialize('Claroline\CoreBundle\Entity\Workspace\Workspace', $data['workspace']);
+            $workspace = $this->_om->getObject($data['workspace'], Workspace::class);
             if ($workspace->getId()) {
                 $event->setWorkspace($workspace);
             }

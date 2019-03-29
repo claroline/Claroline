@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Event\Resource\File\LoadFileEvent;
 use Claroline\VideoPlayerBundle\Entity\Track;
 use Claroline\VideoPlayerBundle\Manager\VideoPlayerManager;
+use Claroline\VideoPlayerBundle\Serializer\TrackSerializer;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -16,7 +17,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class VideoListener
 {
-    /** @var SerializerProvider */
+    /** @var TrackSerializer */
     private $serializer;
 
     /** @var VideoPlayerManager */
@@ -26,7 +27,7 @@ class VideoListener
      * VideoListener constructor.
      *
      * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.api.serializer"),
+     *     "serializer" = @DI\Inject("claroline.serializer.video.track"),
      *     "manager"    = @DI\Inject("claroline.manager.video_player_manager")
      * })
      *
@@ -34,7 +35,7 @@ class VideoListener
      * @param VideoPlayerManager $manager
      */
     public function __construct(
-        SerializerProvider $serializer,
+        TrackSerializer $serializer,
         VideoPlayerManager $manager)
     {
         $this->serializer = $serializer;

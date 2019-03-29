@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\API\Serializer\Facet;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Entity\Role;
@@ -18,19 +19,18 @@ class FacetSerializer
 {
     use SerializerTrait;
 
-    /** @var SerializerProvider */
-    private $serializer;
-
     /**
      * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
+     *     "roleSerializer" = @DI\Inject("claroline.serializer.role"),
+     *     "pfSerializer"   = @DI\Inject("claroline.serializer.panel_facet")
      * })
      *
      * @param SerializerProvider $serializer
      */
-    public function __construct(SerializerProvider $serializer)
+    public function __construct(RoleSerializer $roleSerializer, PanelFacetSerializer $pfSerializer)
     {
-        $this->serializer = $serializer; // bad
+        $this->roleSerializer = $roleSerializer;
+        $this->pfSerializer = $pfSerializer;
     }
 
     /**
@@ -57,13 +57,13 @@ class FacetSerializer
             'creation' => $facet->getForceCreationForm(),
           ],
           'roles' => array_map(function (Role $role) {
-              return $this->serializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
+              return $this->roleSerializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
           }, $facet->getRoles()->toArray()),
           'meta' => [
               'main' => $facet->isMain(),
           ],
           'sections' => array_map(function ($panel) use ($options) { // todo check user rights
-              return $this->serializer->serialize($panel, $options);
+              return $this->pfSerializer->serialize($panel, $options);
           }, $facet->getPanelFacets()->toArray()),
         ];
     }
@@ -73,7 +73,7 @@ class FacetSerializer
      * @param Facet $facet
      * @param array $options
      */
-    public function deserialize(array $data, Facet $facet = null, array $options = [])
+    public function deserialize(array $data, Facet $facet, array $options = [])
     {
         $this->sipe('id', 'setUuid', $data, $facet);
         $this->sipe('title', 'setName', $data, $facet);
@@ -86,11 +86,10 @@ class FacetSerializer
 
             foreach ($data['sections'] as $section) {
                 //check if section exists first
-                $panelFacet = $this->serializer->deserialize(PanelFacet::class, $section, $options);
+                $panelFacet = $this->_om->getObject($section, PanelFacet::class) ?? new PanelFacet();
+                $this->pfSerializer->deserialize($section, $panelFacet, $options);
                 $panelFacet->setFacet($facet);
             }
         }
-
-        // todo deserialize roles here too
     }
 }

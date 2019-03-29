@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\API\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\AbstractMessage;
 use Claroline\CoreBundle\Entity\User;
@@ -23,16 +22,14 @@ class MessageSerializer
 
     /**
      * @DI\InjectParams({
-     *      "serializer"     = @DI\Inject("claroline.api.serializer"),
      *      "userSerializer" = @DI\Inject("claroline.serializer.user")
      * })
      *
      * @param UserSerializer $userSerializer
      */
-    public function __construct(SerializerProvider $serializer, UserSerializer $userSerializer)
+    public function __construct(UserSerializer $userSerializer)
     {
         $this->userSerializer = $userSerializer;
-        $this->serializer = $serializer;
     }
 
     public function getClass()
@@ -122,7 +119,8 @@ class MessageSerializer
 
             if (isset($data['meta']['creator'])) {
                 $message->setAuthor($data['meta']['creator']['name']);
-                $creator = $this->serializer->deserialize(User::class, $data['meta']['creator']);
+                //_om is set by the trait
+                $creator = $this->_om->getObject($data['meta']['creator'], User::class);
 
                 if ($creator) {
                     $message->setCreator($creator);

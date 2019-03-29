@@ -39,21 +39,27 @@ actions.reset = (formName, data = {}, isNew = false) => ({
 
 //the dispatch retuned in the success function isn't the same as the first one
 //async request doesn't work with the usual way otherwise
-actions.getItemLock = (className, id) => (dispatch) => dispatch({
-  [API_REQUEST]: {
-    url: ['apiv2_object_lock_get', {class: className, id}],
-    request: {
-      method: 'GET'
-    },
-    success: (response) => {
-      if (response.value) {
-        return dispatch(actions.validateLock(response, className, id))
-      }
+actions.getItemLock = (className, id) => (dispatch) => {
+  if (id) {
+    dispatch({
+      [API_REQUEST]: {
+        url: ['apiv2_object_lock_get', {class: className, id}],
+        request: {
+          method: 'GET'
+        },
+        success: (response) => {
+          if (response.value) {
+            return dispatch(actions.validateLock(response, className, id))
+          }
 
-      dispatch(actions.lockItem(className, id))
-    }
+          dispatch(actions.lockItem(className, id))
+        }
+      }
+    })
+  } else {
+    //something went wrong (ie removed element)
   }
-})
+}
 
 actions.validateLock = (lock) => (dispatch) => {
   if (lock.user.username !== currentUser().username) {

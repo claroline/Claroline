@@ -13,9 +13,9 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\AbstractApiController;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
@@ -48,7 +48,7 @@ class FileController extends AbstractApiController
     private $om;
     /** @var string */
     private $fileDir;
-    /** @var SerializerProvider */
+    /** @var ResourceNodeSerializer */
     private $serializer;
     /** @var ResourceManager */
     private $resourceManager;
@@ -68,7 +68,7 @@ class FileController extends AbstractApiController
      *     "session"         = @DI\Inject("session"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "fileDir"         = @DI\Inject("%claroline.param.files_directory%"),
-     *     "serializer"      = @DI\Inject("claroline.api.serializer"),
+     *     "serializer"      = @DI\Inject("claroline.serializer.resource_node"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
      *     "fileUtils"       = @DI\Inject("claroline.utilities.file"),
@@ -90,7 +90,7 @@ class FileController extends AbstractApiController
         SessionInterface $session,
         ObjectManager $om,
         $fileDir,
-        SerializerProvider $serializer,
+        ResourceNodeSerializer $serializer,
         ResourceManager $resourceManager,
         RoleManager $roleManager,
         FileUtilities $fileUtils,

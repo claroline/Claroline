@@ -41,7 +41,7 @@ class LogSerializer
 
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Log\Log';
+        return Log::class;
     }
 
     public function getIdentifiers()

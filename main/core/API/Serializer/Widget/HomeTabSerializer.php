@@ -7,6 +7,10 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Finder\Home\WidgetContainerFinder;
+use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
+use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
+use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Entity\Tab\HomeTabConfig;
@@ -36,10 +40,13 @@ class HomeTabSerializer
      * ContactSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "serializer"            = @DI\Inject("claroline.api.serializer"),
-     *     "lockManager"           = @DI\Inject("claroline.manager.lock_manager"),
-     *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
-     *     "widgetContainerFinder" = @DI\Inject("claroline.api.finder.widget_container")
+     *     "lockManager"               = @DI\Inject("claroline.manager.lock_manager"),
+     *     "om"                        = @DI\Inject("claroline.persistence.object_manager"),
+     *     "widgetContainerFinder"     = @DI\Inject("claroline.api.finder.widget_container"),
+     *     "widgetContainerSerializer" = @DI\Inject("claroline.serializer.widget_container"),
+     *     "workspaceSerializer"       = @DI\Inject("claroline.serializer.workspace"),
+     *     "userSerializer"            = @DI\Inject("claroline.serializer.user"),
+     *     "publicFileSerializer"      = @DI\Inject("claroline.serializer.public_file")
      * })
      *
      * @param SerializerProvider    $serializer
@@ -47,15 +54,21 @@ class HomeTabSerializer
      * @param WidgetContainerFinder $widgetContainerFinder
      */
     public function __construct(
-        SerializerProvider $serializer,
         ObjectManager $om,
         LockManager $lockManager,
-        WidgetContainerFinder $widgetContainerFinder
+        WidgetContainerFinder $widgetContainerFinder,
+        WidgetContainerSerializer $widgetContainerSerializer,
+        WorkspaceSerializer $workspaceSerializer,
+        UserSerializer $userSerializer,
+        PublicFileSerializer $publicFileSerializer
     ) {
-        $this->serializer = $serializer;
         $this->om = $om;
         $this->lockManager = $lockManager;
         $this->widgetContainerFinder = $widgetContainerFinder;
+        $this->widgetContainerSerializer = $widgetContainerSerializer;
+        $this->workspaceSerializer = $workspaceSerializer;
+        $this->userSerializer = $userSerializer;
+        $this->publicFileSerializer = $publicFileSerializer;
     }
 
     public function getClass()
@@ -95,11 +108,11 @@ class HomeTabSerializer
 
         if ($homeTab->getPoster()) {
             $file = $this->om
-                ->getRepository('Claroline\CoreBundle\Entity\File\PublicFile')
+                ->getRepository(PublicFile::class)
                 ->findOneBy(['url' => $homeTab->getPoster()]);
 
             if ($file) {
-                $poster = $this->serializer->serialize($file);
+                $poster = $this->publicFileSerializer->serialize($file);
             }
         }
 
@@ -121,14 +134,14 @@ class HomeTabSerializer
             'display' => [
                 'color' => $homeTabConfig->getColor(),
             ],
-            'user' => $homeTab->getUser() ? $this->serializer->serialize($homeTab->getUser(), [Options::SERIALIZE_MINIMAL]) : null,
+            'user' => $homeTab->getUser() ? $this->userSerializer->serialize($homeTab->getUser(), [Options::SERIALIZE_MINIMAL]) : null,
             'widgets' => array_map(function ($container) use ($options) {
-                return $this->serializer->serialize($container, $options);
+                return $this->widgetContainerSerializer->serialize($container, $options);
             }, $containers),
         ];
 
         if (!in_array(Options::REFRESH_UUID, $options)) {
-            $data['workspace'] = $homeTab->getWorkspace() ? $this->serializer->serialize($homeTab->getWorkspace(), [Options::SERIALIZE_MINIMAL]) : null;
+            $data['workspace'] = $homeTab->getWorkspace() ? $this->workspaceSerializer->serialize($homeTab->getWorkspace(), [Options::SERIALIZE_MINIMAL]) : null;
         }
 
         return $data;
@@ -182,12 +195,12 @@ class HomeTabSerializer
         }
 
         if (isset($data['workspace'])) {
-            $workspace = $this->serializer->deserialize(Workspace::class, $data['workspace']);
+            $workspace = $this->om->getObject($data['workspace'], Workspace::class);
             $homeTab->setWorkspace($workspace);
         }
 
         if (isset($data['user'])) {
-            $user = $this->serializer->deserialize(User::class, $data['user'], $options);
+            $user = $this->om->getObject($data['user'], User::class);
             $homeTab->setUser($user);
         }
 
@@ -196,9 +209,10 @@ class HomeTabSerializer
         $containerIds = [];
 
         if (isset($data['widgets'])) {
-            foreach ($data['widgets'] as $position => $widgetContainer) {
+            foreach ($data['widgets'] as $position => $widgetContainerData) {
                 /** @var WidgetContainer $widgetContainer */
-                $widgetContainer = $this->serializer->deserialize(WidgetContainer::class, $widgetContainer, $options);
+                $widgetContainer = $this->findInCollection($homeTab, 'getWidgetContainers', $widgetContainerData['id']) ?? new WidgetContainer();
+                $this->widgetContainerSerializer->deserialize($widgetContainerData, $widgetContainer, $options);
                 $widgetContainer->setHomeTab($homeTab);
                 $widgetContainerConfig = $widgetContainer->getWidgetContainerConfigs()[0];
                 $widgetContainerConfig->setPosition($position);

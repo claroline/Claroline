@@ -5,10 +5,10 @@ namespace Claroline\AnnouncementBundle\Controller\API;
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
 use Claroline\AnnouncementBundle\Manager\AnnouncementManager;
+use Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -40,7 +40,7 @@ class AnnouncementController
      *
      * @DI\InjectParams({
      *     "manager"    = @DI\Inject("claroline.manager.announcement_manager"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer"),
+     *     "serializer" = @DI\Inject("claroline.serializer.announcement"),
      *     "crud"       = @DI\Inject("claroline.api.crud"),
      *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
      *     "finder"     = @DI\Inject("claroline.api.finder")
@@ -48,7 +48,7 @@ class AnnouncementController
      *
      * @param AnnouncementManager $managersuppression
      */
-    public function __construct(AnnouncementManager $manager, SerializerProvider $serializer, Crud $crud, ObjectManager $om, FinderProvider $finder)
+    public function __construct(AnnouncementManager $manager, AnnouncementSerializer $serializer, Crud $crud, ObjectManager $om, FinderProvider $finder)
     {
         $this->manager = $manager;
         $this->serializer = $serializer;

@@ -8,9 +8,13 @@ use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ForumBundle\Entity\Forum;
+use Claroline\ForumBundle\Entity\Message;
+use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Validation\User;
+use Claroline\ForumBundle\Manager\Manager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @DI\Service("claroline.serializer.forum")
@@ -26,14 +30,24 @@ class ForumSerializer
      * ForumSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container")
+     *     "finder"          = @DI\Inject("claroline.api.finder"),
+     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
+     *     "manager"         = @DI\Inject("claroline.manager.forum_manager")
      * })
      *
      * @param FinderProvider $finder
      */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
+    public function __construct(
+        FinderProvider $finder,
+        TokenStorageInterface $tokenStorage,
+        Manager $manager,
+        EventDispatcherInterface $eventDispatcher
+    ) {
+        $this->finder = $finder;
+        $this->tokenStorage = $tokenStorage;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->manager = $manager;
     }
 
     use SerializerTrait;
@@ -69,14 +83,10 @@ class ForumSerializer
      */
     public function serialize(Forum $forum, array $options = [])
     {
-        $finder = $this->container->get('claroline.api.finder');
-        $currentUser = $this->container->get('security.token_storage')->getToken()->getUser();
+        $currentUser = $this->tokenStorage->getToken()->getUser();
 
         if (!is_string($currentUser)) {
-            $forumUser = $this->container->get('claroline.manager.forum_manager')->getValidationUser(
-                $currentUser,
-                $forum
-            );
+            $forumUser = $this->manager->getValidationUser($currentUser, $forum);
         } else {
             $forumUser = new User();
         }
@@ -108,12 +118,12 @@ class ForumSerializer
               'moderator' => $this->checkPermission('EDIT', $forum->getResourceNode()), // TODO : data about current user should not be here
             ],
             'meta' => [
-              'users' => $finder->fetch('Claroline\ForumBundle\Entity\Validation\User', ['forum' => $forum->getUuid()], null, 0, 0, true),
-              'subjects' => $finder->fetch('Claroline\ForumBundle\Entity\Subject', ['forum' => $forum->getUuid()], null, 0, 0, true),
+              'users' => $this->finder->fetch(User::class, ['forum' => $forum->getUuid()], null, 0, 0, true),
+              'subjects' => $this->finder->fetch(Subject::class, ['forum' => $forum->getUuid()], null, 0, 0, true),
               //probably an issue with the validate_none somewhere
-              'messages' => $finder->fetch('Claroline\ForumBundle\Entity\Message', ['forum' => $forum->getUuid()], null, 0, 0, true),
+              'messages' => $this->finder->fetch(Message::class, ['forum' => $forum->getUuid()], null, 0, 0, true),
               'myMessages' => !is_string($currentUser) ?
-                  $finder->fetch('Claroline\ForumBundle\Entity\Message', ['forum' => $forum->getUuid(), 'creator' => $currentUser->getUsername()], null, 0, 0, true) :
+                  $this->finder->fetch(Message::class, ['forum' => $forum->getUuid(), 'creator' => $currentUser->getUsername()], null, 0, 0, true) :
                   0, // TODO : data about current user should not be here
               'tags' => $this->getTags($forum),
               'notified' => $forumUser->isNotified(),
@@ -157,11 +167,11 @@ class ForumSerializer
 
         foreach ($subjects as $subject) {
             $event = new GenericDataEvent([
-                'class' => 'Claroline\ForumBundle\Entity\Subject',
+                'class' => Subject::class,
                 'ids' => [$subject->getUuid()],
             ]);
 
-            $this->container->get('event_dispatcher')->dispatch(
+            $this->eventDispatcher->dispatch(
                 'claroline_retrieve_used_tags_by_class_and_ids',
                 $event
             );

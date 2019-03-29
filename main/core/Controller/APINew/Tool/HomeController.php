@@ -13,9 +13,9 @@ namespace Claroline\CoreBundle\Controller\APINew\Tool;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\AbstractApiController;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\Widget\HomeTabSerializer;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Entity\Widget\WidgetContainer;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
@@ -34,7 +34,7 @@ class HomeController extends AbstractApiController
     private $finder;
     /** @var Crud */
     private $crud;
-    /** @var SerializerProvider */
+    /** @var HomeTabSerializer */
     private $serializer;
     /** @var ObjectManager */
     private $om;
@@ -48,20 +48,20 @@ class HomeController extends AbstractApiController
      *     "finder"      = @DI\Inject("claroline.api.finder"),
      *     "lockManager" = @DI\Inject("claroline.manager.lock_manager"),
      *     "crud"        = @DI\Inject("claroline.api.crud"),
-     *     "serializer"  = @DI\Inject("claroline.api.serializer"),
+     *     "serializer"  = @DI\Inject("claroline.serializer.home_tab"),
      *     "om"          = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
-     * @param FinderProvider     $finder
-     * @param Crud               $crud
-     * @param SerializerProvider $serializer
-     * @param ObjectManager      $om
+     * @param FinderProvider    $finder
+     * @param Crud              $crud
+     * @param HomeTabSerializer $serializer
+     * @param ObjectManager     $om
      */
     public function __construct(
         FinderProvider $finder,
         Crud $crud,
         LockManager $lockManager,
-        SerializerProvider $serializer,
+        HomeTabSerializer $serializer,
         ObjectManager $om
     ) {
         $this->finder = $finder;
@@ -69,58 +69,6 @@ class HomeController extends AbstractApiController
         $this->lockManager = $lockManager;
         $this->serializer = $serializer;
         $this->om = $om;
-    }
-
-    /**
-     * @EXT\Route("/lock", name="apiv2_home_lock", options={"method_prefix"=false})
-     * @EXT\Method("PUT")
-     *
-     * @param Request $request
-     * @param string  $context
-     * @param string  $contextId
-     *
-     * @return JsonResponse
-     */
-    public function lockTabAction(Request $request)
-    {
-        // grab tabs data
-        $tabs = $this->decodeIdsString($request, HomeTab::class);
-
-        $this->om->startFlushSuite();
-
-        foreach ($tabs as $tab) {
-            $this->lockManager->lock(HomeTab::class, $tab->getUuid());
-        }
-
-        $this->om->endFlushSuite();
-
-        return new JsonResponse();
-    }
-
-    /**
-     * @EXT\Route("/unlock", name="apiv2_home_unlock", options={"method_prefix"=false})
-     * @EXT\Method("PUT")
-     *
-     * @param Request $request
-     * @param string  $context
-     * @param string  $contextId
-     *
-     * @return JsonResponse
-     */
-    public function unlockTabAction(Request $request)
-    {
-        // grab tabs data
-        $tabs = $this->decodeIdsString($request, HomeTab::class);
-
-        $this->om->startFlushSuite();
-
-        foreach ($tabs as $tab) {
-            $this->lockManager->unlock(HomeTab::class, $tab->getUuid());
-        }
-
-        $this->om->endFlushSuite();
-
-        return new JsonResponse();
     }
 
     /**
@@ -240,15 +188,19 @@ class HomeController extends AbstractApiController
           ));
         }
 
-        foreach ($installedContainers as $container) {
-            if (!in_array($container->getUuid(), $containerIds)) {
-                $this->crud->delete($container);
-            }
-        }
-
         foreach ($installedInstances as $instance) {
             if (!in_array($instance->getUuid(), $instanceIds)) {
                 $this->crud->delete($instance);
+            } else {
+                $this->om->refresh($instance);
+            }
+        }
+
+        foreach ($installedContainers as $container) {
+            if (!in_array($container->getUuid(), $containerIds)) {
+                $this->crud->delete($container);
+            } else {
+                $this->om->refresh($container);
             }
         }
 
@@ -258,6 +210,8 @@ class HomeController extends AbstractApiController
             if (!in_array($installedTab->getUuid(), $ids)) {
                 // the tab no longer exist we can remove it
                 $this->crud->delete($installedTab);
+            } else {
+                $this->om->refresh($installedTab);
             }
         }
     }

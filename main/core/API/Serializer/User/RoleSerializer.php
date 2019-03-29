@@ -8,6 +8,7 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\ToolsOptions;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Finder\Workspace\OrderedToolFinder;
+use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
@@ -27,9 +28,6 @@ class RoleSerializer
 {
     use SerializerTrait;
 
-    /** @var SerializerProvider */
-    private $serializer;
-
     /** @var ObjectManager */
     private $om;
 
@@ -46,22 +44,25 @@ class RoleSerializer
      * RoleSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "serializer"        = @DI\Inject("claroline.api.serializer"),
-     *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
-     *     "orderedToolFinder" =  @DI\Inject("claroline.api.finder.ordered_tool")
+     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
+     *     "orderedToolFinder"   = @DI\Inject("claroline.api.finder.ordered_tool"),
+     *     "workspaceSerializer" = @DI\Inject("claroline.serializer.workspace"),
+     *     "userSerializer"      = @DI\Inject("claroline.serializer.user")
      * })
      *
      * @param SerializerProvider $serializer
      * @param ObjectManager      $om
      */
     public function __construct(
-        SerializerProvider $serializer,
         ObjectManager $om,
-        OrderedToolFinder $orderedToolFinder
+        OrderedToolFinder $orderedToolFinder,
+        WorkspaceSerializer $workspaceSerializer,
+        UserSerializer $userSerializer
     ) {
-        $this->serializer = $serializer;
         $this->om = $om;
         $this->orderedToolFinder = $orderedToolFinder;
+        $this->workspaceSerializer = $workspaceSerializer;
+        $this->userSerializer = $userSerializer;
 
         $this->orderedToolRepo = $this->om->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
         $this->toolRightsRepo = $this->om->getRepository('ClarolineCoreBundle:Tool\ToolRights');
@@ -106,11 +107,11 @@ class RoleSerializer
             $serialized['restrictions'] = $this->serializeRestrictions($role);
 
             if ($workspace = $role->getWorkspace()) {
-                $serialized['workspace'] = $this->serializer->serialize($workspace, [Options::SERIALIZE_MINIMAL]);
+                $serialized['workspace'] = $this->workspaceSerializer->serialize($workspace, [Options::SERIALIZE_MINIMAL]);
             }
 
             if (Role::USER_ROLE === $role->getType()) {
-                $serialized['user'] = $this->serializer->serialize($role->getUsers()->toArray()[0], [Options::SERIALIZE_MINIMAL]);
+                $serialized['user'] = $this->userSerializer->serialize($role->getUsers()->toArray()[0], [Options::SERIALIZE_MINIMAL]);
             }
 
             // easier request than count users which will go into mysql cache so I'm not too worried about looping here.

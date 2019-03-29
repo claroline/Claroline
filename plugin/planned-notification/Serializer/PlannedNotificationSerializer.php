@@ -4,8 +4,9 @@ namespace Claroline\PlannedNotificationBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
+use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\PlannedNotificationBundle\Entity\PlannedNotification;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -18,9 +19,6 @@ class PlannedNotificationSerializer
 {
     use SerializerTrait;
 
-    /** @var SerializerProvider */
-    private $serializer;
-
     private $messageRepo;
     private $roleRepo;
     private $workspaceRepo;
@@ -29,20 +27,27 @@ class PlannedNotificationSerializer
      * PlannedNotificationSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
+     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
+     *     "workspaceSerializer" = @DI\Inject("claroline.serializer.workspace"),
+     *     "roleSerializer"      = @DI\Inject("claroline.serializer.role"),
+     *     "messageSerializer"   = @DI\Inject("claroline.serializer.planned_notification.message")
      * })
      *
-     * @param ObjectManager      $om
-     * @param SerializerProvider $serializer
+     * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $om, SerializerProvider $serializer)
-    {
-        $this->serializer = $serializer;
-
+    public function __construct(
+        ObjectManager $om,
+        WorkspaceSerializer $workspaceSerializer,
+        RoleSerializer $roleSerializer,
+        MessageSerializer $messageSerializer
+    ) {
         $this->messageRepo = $om->getRepository('Claroline\PlannedNotificationBundle\Entity\Message');
         $this->roleRepo = $om->getRepository('Claroline\CoreBundle\Entity\Role');
         $this->workspaceRepo = $om->getRepository('Claroline\CoreBundle\Entity\Workspace\Workspace');
+
+        $this->workspaceSerializer = $workspaceSerializer;
+        $this->roleSerializer = $roleSerializer;
+        $this->messageSerializer = $messageSerializer;
     }
 
     /**
@@ -62,8 +67,8 @@ class PlannedNotificationSerializer
     {
         return [
             'id' => $notification->getUuid(),
-            'message' => $this->serializer->serialize($notification->getMessage()),
-            'workspace' => $this->serializer->serialize($notification->getWorkspace(), [Options::SERIALIZE_MINIMAL]),
+            'message' => $this->messageSerializer->serialize($notification->getMessage()),
+            'workspace' => $this->workspaceSerializer->serialize($notification->getWorkspace(), [Options::SERIALIZE_MINIMAL]),
             'parameters' => [
                 'action' => $notification->getAction(),
                 'interval' => $notification->getInterval(),
@@ -71,7 +76,7 @@ class PlannedNotificationSerializer
                 'byMessage' => $notification->isByMessage(),
             ],
             'roles' => array_map(function (Role $role) {
-                return $this->serializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
+                return $this->roleSerializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
             }, $notification->getRoles()->toArray()),
         ];
     }

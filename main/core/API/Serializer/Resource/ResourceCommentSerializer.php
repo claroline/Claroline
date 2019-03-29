@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceComment;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
@@ -20,9 +21,6 @@ class ResourceCommentSerializer
 {
     use SerializerTrait;
 
-    /** @var SerializerProvider */
-    private $serializer;
-
     private $resourceNodeRepo;
     private $userRepo;
 
@@ -30,19 +28,18 @@ class ResourceCommentSerializer
      * ResourceCommentSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
+     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
+     *     "userSerializer" = @DI\Inject("claroline.serializer.user")
      * })
      *
      * @param ObjectManager      $om
      * @param SerializerProvider $serializer
      */
-    public function __construct(ObjectManager $om, SerializerProvider $serializer)
+    public function __construct(ObjectManager $om, UserSerializer $userSerializer)
     {
-        $this->serializer = $serializer;
-
         $this->resourceNodeRepo = $om->getRepository(ResourceNode::class);
         $this->userRepo = $om->getRepository(User::class);
+        $this->userSerializer = $userSerializer;
     }
 
     /**
@@ -58,7 +55,7 @@ class ResourceCommentSerializer
         $serialized = [
             'id' => $comment->getUuid(),
             'content' => $comment->getContent(),
-            'user' => $comment->getUser() ? $this->serializer->serialize($comment->getUser(), [Options::SERIALIZE_MINIMAL]) : null,
+            'user' => $comment->getUser() ? $this->userSerializer->serialize($comment->getUser(), [Options::SERIALIZE_MINIMAL]) : null,
             'creationDate' => $comment->getCreationDate() ? DateNormalizer::normalize($comment->getCreationDate()) : null,
             'editionDate' => $comment->getEditionDate() ? DateNormalizer::normalize($comment->getEditionDate()) : null,
         ];

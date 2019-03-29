@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\API\Serializer\Facet;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetChoice;
@@ -18,9 +17,6 @@ class FieldFacetSerializer
 {
     use SerializerTrait;
 
-    /** @var SerializerProvider */
-    private $serializer;
-
     /** @var ObjectManager */
     private $om;
 
@@ -28,19 +24,18 @@ class FieldFacetSerializer
 
     /**
      * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.api.serializer"),
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
+     *     "ffcSerializer" = @DI\Inject("claroline.serializer.field_facet_choice")
      * })
      *
      * @param SerializerProvider $serializer
      * @param ObjectManager      $om
      */
-    public function __construct(SerializerProvider $serializer, ObjectManager $om)
+    public function __construct(ObjectManager $om, FieldFacetChoiceSerializer $ffcSerializer)
     {
-        $this->serializer = $serializer; // bad
         $this->om = $om;
-
-        $this->fieldFacetChoiceRepo = $om->getRepository('Claroline\CoreBundle\Entity\Facet\FieldFacetChoice');
+        $this->ffcSerializer = $ffcSerializer;
+        $this->fieldFacetChoiceRepo = $om->getRepository(FieldFacetChoice::class);
     }
 
     /**
@@ -75,9 +70,7 @@ class FieldFacetSerializer
 
         if (in_array($fieldFacet->getType(), [FieldFacet::CHOICE_TYPE, FieldFacet::CASCADE_TYPE])) {
             $serialized['options']['choices'] = array_map(function (FieldFacetChoice $choice) {
-                return $this->serializer
-                    ->get('Claroline\CoreBundle\Entity\Facet\FieldFacetChoice')
-                    ->serialize($choice);
+                return $this->ffcSerializer->serialize($choice);
             }, $fieldFacet->getRootFieldFacetChoices());
         }
 
@@ -126,9 +119,7 @@ class FieldFacetSerializer
                 $choice->setFieldFacet($field);
                 $isNew = true;
             }
-            $newChoice = $this->serializer
-                ->get('Claroline\CoreBundle\Entity\Facet\FieldFacetChoice')
-                ->deserialize($choiceData, $choice);
+            $newChoice = $this->ffcSerializer->deserialize($choiceData, $choice);
             $this->om->persist($newChoice);
 
             $field->addFieldChoice($newChoice);
@@ -174,9 +165,7 @@ class FieldFacetSerializer
                 $choice->setFieldFacet($field);
                 $isNew = true;
             }
-            $newChoice = $this->serializer
-                ->get('Claroline\CoreBundle\Entity\Facet\FieldFacetChoice')
-                ->deserialize($choiceData, $choice);
+            $newChoice = $this->ffcSerializer->deserialize($choiceData, $choice);
             $this->om->persist($newChoice);
 
             $parent->addChild($newChoice);

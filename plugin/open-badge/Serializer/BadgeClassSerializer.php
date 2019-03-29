@@ -4,8 +4,12 @@ namespace Claroline\OpenBadgeBundle\Serializer;
 
 use Claroline\AppBundle\API\Options as APIOptions;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
+use Claroline\CoreBundle\API\Serializer\User\GroupSerializer;
+use Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer;
+use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
@@ -30,15 +34,19 @@ class BadgeClassSerializer
 
     /**
      * @DI\InjectParams({
-     *     "fileUt"             = @DI\Inject("claroline.utilities.file"),
-     *     "router"             = @DI\Inject("router"),
-     *     "serializer"         = @DI\Inject("claroline.api.serializer"),
-     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "criteriaSerializer" = @DI\Inject("claroline.serializer.open_badge.criteria"),
-     *     "imageSerializer"    = @DI\Inject("claroline.serializer.open_badge.image"),
-     *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
-     *     "profileSerializer"  = @DI\Inject("claroline.serializer.open_badge.profile"),
-     *     "tokenStorage"       = @DI\Inject("security.token_storage"),
+     *     "fileUt"                 = @DI\Inject("claroline.utilities.file"),
+     *     "router"                 = @DI\Inject("router"),
+     *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
+     *     "criteriaSerializer"     = @DI\Inject("claroline.serializer.open_badge.criteria"),
+     *     "imageSerializer"        = @DI\Inject("claroline.serializer.open_badge.image"),
+     *     "eventDispatcher"        = @DI\Inject("event_dispatcher"),
+     *     "profileSerializer"      = @DI\Inject("claroline.serializer.open_badge.profile"),
+     *     "tokenStorage"           = @DI\Inject("security.token_storage"),
+     *     "workspaceSerializer"    = @DI\Inject("claroline.serializer.workspace"),
+     *     "userSerializer"         = @DI\Inject("claroline.serializer.user"),
+     *     "groupSerializer"        = @DI\Inject("claroline.serializer.group"),
+     *     "organizationSerializer" = @DI\Inject("claroline.serializer.organization"),
+     *     "publicFileSerializer"   = @DI\Inject("claroline.serializer.public_file")
      * })
      *
      * @param Router $router
@@ -46,23 +54,31 @@ class BadgeClassSerializer
     public function __construct(
         FileUtilities $fileUt,
         RouterInterface $router,
-        SerializerProvider $serializer,
         ObjectManager $om,
         CriteriaSerializer $criteriaSerializer,
         ProfileSerializer $profileSerializer,
         EventDispatcherInterface $eventDispatcher,
+        WorkspaceSerializer $workspaceSerializer,
+        UserSerializer $userSerializer,
+        GroupSerializer $groupSerializer,
         ImageSerializer $imageSerializer,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        OrganizationSerializer $organizationSerializer,
+        PublicFileSerializer $publicFileSerializer
     ) {
         $this->router = $router;
         $this->fileUt = $fileUt;
-        $this->serializer = $serializer;
+        $this->workspaceSerializer = $workspaceSerializer;
+        $this->userSerializer = $userSerializer;
+        $this->groupSerializer = $groupSerializer;
         $this->om = $om;
         $this->criteriaSerializer = $criteriaSerializer;
         $this->profileSerializer = $profileSerializer;
         $this->imageSerializer = $imageSerializer;
         $this->eventDispatcher = $eventDispatcher;
         $this->tokenStorage = $tokenStorage;
+        $this->publicFileSerializer = $publicFileSerializer;
+        $this->organizationSerializer = $organizationSerializer;
     }
 
     /**
@@ -83,11 +99,11 @@ class BadgeClassSerializer
             'duration' => $badge->getDurationValidation(),
             'image' => $badge->getImage() && $this->om->getRepository(PublicFile::class)->findOneBy([
                   'url' => $badge->getImage(),
-              ]) ? $this->serializer->serialize($this->om->getRepository(PublicFile::class)->findOneBy([
+              ]) ? $this->publicFileSerializer->serialize($this->om->getRepository(PublicFile::class)->findOneBy([
                   'url' => $badge->getImage(),
               ])
             ) : null,
-            'issuer' => $this->serializer->serialize($badge->getIssuer()),
+            'issuer' => $this->organizationSerializer->serialize($badge->getIssuer()),
             //only in non list mode I guess
             'tags' => $this->serializeTags($badge),
         ];
@@ -115,12 +131,12 @@ class BadgeClassSerializer
                'updated' => $badge->getUpdated()->format('Y-m-d\TH:i:s'),
                'enabled' => $badge->getEnabled(),
             ];
-            $data['workspace'] = $badge->getWorkspace() ? $this->serializer->serialize($badge->getWorkspace(), [APIOptions::SERIALIZE_MINIMAL]) : null;
+            $data['workspace'] = $badge->getWorkspace() ? $this->workspaceSerializer->serialize($badge->getWorkspace(), [APIOptions::SERIALIZE_MINIMAL]) : null;
             $data['allowedUsers'] = array_map(function (User $user) {
-                return $this->serializer->serialize($user);
+                return $this->userSerializer->serialize($user);
             }, $badge->getAllowedIssuers()->toArray());
             $data['allowedGroups'] = array_map(function (Group $group) {
-                return $this->serializer->serialize($group);
+                return $this->groupSerializer->serialize($group);
             }, $badge->getAllowedIssuersGroups()->toArray());
         }
 
@@ -145,17 +161,11 @@ class BadgeClassSerializer
         $this->sipe('issuingMode', 'setIssuingMode', $data, $badge);
 
         if (isset($data['issuer'])) {
-            $badge->setIssuer($this->serializer->deserialize(
-                Organization::class,
-                $data['issuer']
-            ));
+            $badge->setIssuer($this->om->getObject($data['issuer'], Organization::class));
         }
 
         if (isset($data['image']) && isset($data['image']['id'])) {
-            $thumbnail = $this->serializer->deserialize(
-                PublicFile::class,
-                $data['image']
-            );
+            $thumbnail = $this->om->getObject($data['image'], PublicFile::class);
             $badge->setImage($data['image']['url']);
             $this->fileUt->createFileUse(
                 $thumbnail,
@@ -182,7 +192,7 @@ class BadgeClassSerializer
         if (isset($data['allowedUsers'])) {
             $allowed = [];
             foreach ($data['allowedUsers'] as $user) {
-                $allowed[] = $this->serializer->deserialize(User::class, $user);
+                $allowed[] = $this->om->getObject($user, User::class);
             }
             $badge->setAllowedIssuers($allowed);
         }
@@ -190,7 +200,7 @@ class BadgeClassSerializer
         if (isset($data['allowedGroups'])) {
             $allowed = [];
             foreach ($data['allowedGroups'] as $group) {
-                $allowed[] = $this->serializer->deserialize(Group::class, $group);
+                $allowed[] = $this->om->getObject($group, Group::class);
             }
             $badge->setAllowedIssuersGroups($allowed);
         }

@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Controller\APINew\Tool\Workspace;
 
 use Claroline\AppBundle\API\FinderProvider;
-use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\CoreBundle\API\Serializer\Log\LogSerializer;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\LogManager;
@@ -37,7 +37,7 @@ class LogController
     /** @var FinderProvider */
     private $finder;
 
-    /** @var SerializerProvider */
+    /** @var LogSerializer */
     private $serializer;
 
     /** @var LogManager */
@@ -47,7 +47,7 @@ class LogController
      * @DI\InjectParams({
      *     "authorizationChecker"   = @DI\Inject("security.authorization_checker"),
      *     "finder"                 = @DI\Inject("claroline.api.finder"),
-     *     "serializer"             = @DI\Inject("claroline.api.serializer"),
+     *     "serializer"             = @DI\Inject("claroline.serializer.log"),
      *     "logManager"             = @DI\Inject("claroline.log.manager")
      * })
      *
@@ -55,13 +55,13 @@ class LogController
      *
      * @param AuthorizationCheckerInterface $authorizationChecker
      * @param FinderProvider                $finder
-     * @param SerializerProvider            $serializer
+     * @param LogSerializer                 $serializer
      * @param LogManager                    $logManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker,
         FinderProvider $finder,
-        SerializerProvider $serializer,
+        LogSerializer $serializer,
         LogManager $logManager
     ) {
         $this->authorizationChecker = $authorizationChecker;

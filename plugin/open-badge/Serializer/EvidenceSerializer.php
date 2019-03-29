@@ -3,7 +3,7 @@
 namespace Claroline\OpenBadgeBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\OpenBadgeBundle\Entity\Evidence;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -20,16 +20,16 @@ class EvidenceSerializer
 
     /**
      * @DI\InjectParams({
-     *     "router"     = @DI\Inject("router"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer"),
+     *     "router"                 = @DI\Inject("router"),
+     *     "resourceNodeSerializer" = @DI\Inject("claroline.serializer.resource_node"),
      * })
      *
      * @param Router $router
      */
-    public function __construct(RouterInterface $router, SerializerProvider $serializer)
+    public function __construct(RouterInterface $router, ResourceNodeSerializer $resourceNodeSerializer)
     {
         $this->router = $router;
-        $this->serializer = $serializer;
+        $this->resourceNodeSerializer = $resourceNodeSerializer;
     }
 
     /**
@@ -53,7 +53,7 @@ class EvidenceSerializer
             $data['type'] = 'Evidence';
         } else {
             $data['resources'] = array_map(function (ResourceNode $node) {
-                return $this->serializer->serialize($node);
+                return $this->resourceNodeSerializer->serialize($node);
             }, $evidence->getResourceEvidences()->toArray());
         }
 
@@ -77,7 +77,8 @@ class EvidenceSerializer
         if (isset($data['resources'])) {
             $resources = [];
             foreach ($data['resources'] as $resource) {
-                $resources[] = $this->serializer->deserialize(ResourceNode::class, $resource);
+                $node = $this->_om->getObject($resource, ResourceNode::class);
+                $resources[] = $this->resourceNodeSerializer->deserialize($resource, $node);
             }
             $evidence->setResourceEvidences($resources);
         }

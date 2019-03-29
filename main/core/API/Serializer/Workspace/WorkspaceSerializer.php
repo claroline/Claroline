@@ -7,6 +7,10 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
+use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
+use Claroline\CoreBundle\API\Serializer\User\OrganizationSerializer;
+use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
@@ -61,15 +65,18 @@ class WorkspaceSerializer
      * WorkspaceSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "authorization"    = @DI\Inject("security.authorization_checker"),
-     *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
-     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "resourceManager"  = @DI\Inject("claroline.manager.resource_manager"),
-     *     "serializer"       = @DI\Inject("claroline.api.serializer"),
-     *     "utilities"        = @DI\Inject("claroline.utilities.misc"),
-     *     "fileUt"           = @DI\Inject("claroline.utilities.file"),
-     *     "tokenStorage"     = @DI\Inject("security.token_storage"),
-     *     "finder"           = @DI\Inject("claroline.api.finder")
+     *     "authorization"        = @DI\Inject("security.authorization_checker"),
+     *     "om"                   = @DI\Inject("claroline.persistence.object_manager"),
+     *     "workspaceManager"     = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "resourceManager"      = @DI\Inject("claroline.manager.resource_manager"),
+     *     "utilities"            = @DI\Inject("claroline.utilities.misc"),
+     *     "fileUt"               = @DI\Inject("claroline.utilities.file"),
+     *     "tokenStorage"         = @DI\Inject("security.token_storage"),
+     *     "finder"               = @DI\Inject("claroline.api.finder"),
+     *     "userSerializer"       = @DI\Inject("claroline.serializer.user"),
+     *     "orgaSerializer"       = @DI\Inject("claroline.serializer.organization"),
+     *     "publicFileSerializer" = @DI\Inject("claroline.serializer.public_file"),
+     *     "resNodeSerializer"    = @DI\Inject("claroline.serializer.resource_node")
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
@@ -88,20 +95,26 @@ class WorkspaceSerializer
         ObjectManager $om,
         WorkspaceManager $workspaceManager,
         ResourceManager $resourceManager,
-        SerializerProvider $serializer,
         ClaroUtilities $utilities,
         FileUtilities $fileUt,
-        FinderProvider $finder
+        FinderProvider $finder,
+        UserSerializer $userSerializer,
+        OrganizationSerializer $orgaSerializer,
+        PublicFileSerializer $publicFileSerializer,
+        ResourceNodeSerializer $resNodeSerializer
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
         $this->om = $om;
         $this->workspaceManager = $workspaceManager;
         $this->resourceManager = $resourceManager;
-        $this->serializer = $serializer;
         $this->utilities = $utilities;
         $this->fileUt = $fileUt;
         $this->finder = $finder;
+        $this->userSerializer = $userSerializer;
+        $this->orgaSerializer = $orgaSerializer;
+        $this->publicFileSerializer = $publicFileSerializer;
+        $this->resNodeSerializer = $resNodeSerializer;
     }
 
     /**
@@ -135,13 +148,13 @@ class WorkspaceSerializer
             'code' => $workspace->getCode(),
             'thumbnail' => $workspace->getThumbnail() && $this->om->getRepository(PublicFile::class)->findOneBy([
                   'url' => $workspace->getThumbnail(),
-              ]) ? $this->serializer->serialize($this->om->getRepository(PublicFile::class)->findOneBy([
+              ]) ? $this->publicFileSerializer->serialize($this->om->getRepository(PublicFile::class)->findOneBy([
                   'url' => $workspace->getThumbnail(),
               ])
             ) : null,
             'poster' => $workspace->getPoster() && $this->om->getRepository(PublicFile::class)->findOneBy([
                   'url' => $workspace->getPoster(),
-              ]) ? $this->serializer->serialize(
+              ]) ? $this->publicFileSerializer->serialize(
                 $this->om->getRepository(PublicFile::class)->findOneBy([
                     'url' => $workspace->getPoster(),
               ])
@@ -184,15 +197,20 @@ class WorkspaceSerializer
                     }, array_values(array_unique(array_merge($this->workspaceManager->getRolesWithAccess($workspace), $workspace->getRoles()->toArray()))));
                 } else {
                     $serialized['roles'] = array_map(function (Role $role) {
-                        return $this->serializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
+                        return [
+                            'id' => $role->getUuid(),
+                            'name' => $role->getName(),
+                            'type' => $role->getType(), // TODO : should be a string for better data readability
+                            'translationKey' => $role->getTranslationKey(),
+                        ];
                     }, array_values(array_unique(array_merge($this->workspaceManager->getRolesWithAccess($workspace), $workspace->getRoles()->toArray()))));
                 }
 
                 $serialized['managers'] = array_map(function (User $manager) {
-                    return $this->serializer->serialize($manager, [Options::SERIALIZE_MINIMAL]);
+                    return $this->userSerializer->serialize($manager, [Options::SERIALIZE_MINIMAL]);
                 }, $this->workspaceManager->getManagers($workspace));
                 $serialized['organizations'] = array_map(function ($organization) {
-                    return $this->serializer->serialize($organization);
+                    return $this->orgaSerializer->serialize($organization);
                 }, $workspace->getOrganizations()->toArray());
             }
         }
@@ -204,7 +222,10 @@ class WorkspaceSerializer
                 ->findByWorkspace($workspace);
 
             $serialized['groups'] = array_map(function (Group $group) {
-                return $this->serializer->serialize($group, [Options::SERIALIZE_MINIMAL]);
+                return [
+                  'id' => $group->getUuid(),
+                  'name' => $group->getName(),
+                ];
             }, $groups);
         }
 
@@ -239,7 +260,7 @@ class WorkspaceSerializer
             'description' => $workspace->getDescription(),
             'created' => DateNormalizer::normalize($workspace->getCreated()),
             'updated' => DateNormalizer::normalize($workspace->getCreated()), // todo implement
-            'creator' => $workspace->getCreator() ? $this->serializer->serialize($workspace->getCreator(), [Options::SERIALIZE_MINIMAL]) : null,
+            'creator' => $workspace->getCreator() ? $this->userSerializer->serialize($workspace->getCreator(), [Options::SERIALIZE_MINIMAL]) : null,
         ];
 
         if (!in_array(Options::SERIALIZE_LIST, $options)) {
@@ -279,7 +300,7 @@ class WorkspaceSerializer
                 ->findOneBy(['id' => $details['workspace_opening_resource']]);
 
             if (!empty($resource)) {
-                $openingData['target'] = $this->serializer->serialize($resource);
+                $openingData['target'] = $this->resNodeSerializer->serialize($resource);
             }
         }
 
@@ -302,7 +323,7 @@ class WorkspaceSerializer
                 ->findOneBy(['id' => $options['workspace_opening_resource']]);
 
             if (!empty($resource)) {
-                $openResource = $this->serializer->serialize($resource);
+                $openResource = $this->resNodeSerializer->serialize($resource);
             }
         }
 
@@ -357,7 +378,12 @@ class WorkspaceSerializer
                   'type' => $workspace->getDefaultRole()->getType(),
                 ];
             } else {
-                $defaultRole = $this->serializer->serialize($workspace->getDefaultRole(), [Options::SERIALIZE_MINIMAL]);
+                $defaultRole = [
+                    'id' => $workspace->getDefaultRole()->getUuid(),
+                    'name' => $workspace->getDefaultRole()->getName(),
+                    'type' => $workspace->getDefaultRole()->getType(), // TODO : should be a string for better data readability
+                    'translationKey' => $workspace->getDefaultRole()->getTranslationKey(),
+                ];
             }
         } else {
             $defaultRole = null;
@@ -394,37 +420,19 @@ class WorkspaceSerializer
         $this->sipe('name', 'setName', $data, $workspace);
 
         if (isset($data['thumbnail']) && isset($data['thumbnail']['id'])) {
-            $thumbnail = $this->serializer->deserialize(
-                PublicFile::class,
-                $data['thumbnail']
-            );
+            $thumbnail = $this->om->getObject($data['thumbnail'], PublicFile::class);
             $workspace->setThumbnail($data['thumbnail']['url']);
-            $this->fileUt->createFileUse(
-                $thumbnail,
-                'Claroline\CoreBundle\Entity\Workspace',
-                $workspace->getUuid()
-            );
+            $this->fileUt->createFileUse($thumbnail, Workspace::class, $workspace->getUuid());
         }
 
         if (isset($data['poster']) && isset($data['poster']['id'])) {
-            $poster = $this->serializer->deserialize(
-                PublicFile::class,
-                $data['poster']
-            );
+            $poster = $this->om->getObject($data['thumbnail'], PublicFile::class);
             $workspace->setPoster($data['poster']['url']);
-            $this->fileUt->createFileUse(
-                $poster,
-                'Claroline\CoreBundle\Entity\Workspace',
-                $workspace->getUuid()
-            );
+            $this->fileUt->createFileUse($poster, Workspace::class, $workspace->getUuid());
         }
 
         if (isset($data['extra']) && isset($data['extra']['model'])) {
-            $model = $this->serializer->deserialize(
-              'Claroline\CoreBundle\Entity\Workspace\Workspace',
-              ['code' => $data['extra']['model']]
-            );
-
+            $model = $this->om->getRepository(Workspace::class)->findOneByCode($data['extra']['model']);
             $workspace->setWorkspaceModel($model);
         }
 
@@ -449,10 +457,7 @@ class WorkspaceSerializer
         $this->sipe('registration.selfUnregistration', 'setSelfUnregistration', $data, $workspace);
 
         if (isset($data['registration']) && isset($data['registration']['defaultRole'])) {
-            $defaultRole = $this->serializer->deserialize(
-                'Claroline\CoreBundle\Entity\Role',
-                $data['registration']['defaultRole']
-            );
+            $defaultRole = $this->om->getObject($data['registration']['defaultRole'], Role::class);
             $workspace->setDefaultRole($defaultRole);
         }
 

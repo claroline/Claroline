@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Manager\Workspace\Transfer\Resources;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -34,7 +33,6 @@ class Listener
      *
      * @DI\InjectParams({
      *     "filesDir"     = @DI\Inject("%claroline.param.files_directory%"),
-     *     "serializer"   = @DI\Inject("claroline.api.serializer"),
      *     "finder"       = @DI\Inject("claroline.api.finder"),
      *     "crud"         = @DI\Inject("claroline.api.crud"),
      *     "tokenStorage" = @DI\Inject("security.token_storage"),
@@ -46,7 +44,6 @@ class Listener
      */
     public function __construct(
         $filesDir,
-        SerializerProvider $serializer,
         FinderProvider $finder,
         Crud $crud,
         TokenStorage $tokenStorage,
@@ -54,7 +51,6 @@ class Listener
         ObjectManager $om
     ) {
         $this->filesDir = $filesDir;
-        $this->serializer = $serializer;
         $this->om = $om;
         $this->finder = $finder;
         $this->crud = $crud;
