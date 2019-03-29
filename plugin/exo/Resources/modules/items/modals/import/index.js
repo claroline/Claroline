@@ -7,7 +7,7 @@
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {ImportModal} from '#/plugin/exo/items/modals/import/components/modal'
+import {ImportModal} from '#/plugin/exo/items/modals/import/containers/modal'
 
 const MODAL_ITEM_IMPORT = 'MODAL_QUIZ_ITEM_IMPORT'
 

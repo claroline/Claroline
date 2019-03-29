@@ -387,6 +387,8 @@ export class ClozeEditor extends Component {
 }
 
 ClozeEditor.propTypes = {
+  formName: T.string.isRequired,
+  path: T.string.isRequired,
   item: T.shape({
     id: T.string.isRequired,
     text: T.string.isRequired,

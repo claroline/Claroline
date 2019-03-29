@@ -1,7 +1,5 @@
 import React, {Component} from 'react'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import get from 'lodash/get'
-
 
 import {FormData} from '#/main/app/content/form/containers/data'
 import {ItemEditor as ItemEditorTypes} from '#/plugin/exo/items/prop-types'
@@ -11,12 +9,11 @@ import {makeId} from '#/plugin/exo/utils/utils'
 import {asset} from '#/main/app/config/asset'
 import {trans} from '#/main/app/intl/translation'
 import {makeDroppable} from '#/plugin/exo//utils/dragAndDrop'
-import {ContentError} from '#/main/app/content/components/error'
-import {ImageInput} from '#/plugin/exo/items/graphic/components/image-input.jsx'
-import {ModeSelector} from '#/plugin/exo/items/graphic/components/mode-selector.jsx'
-import {AreaPopover} from '#/plugin/exo/items/graphic/components/area-popover.jsx'
-import {ResizeDragLayer} from '#/plugin/exo/items/graphic/components/resize-drag-layer.jsx'
-import {AnswerAreaDraggable} from '#/plugin/exo/items/graphic/components/answer-area.jsx'
+import {ImageInput} from '#/plugin/exo/items/graphic/components/image-input'
+import {ModeSelector} from '#/plugin/exo/items/graphic/components/mode-selector'
+import {AreaPopover} from '#/plugin/exo/items/graphic/components/area-popover'
+import {ResizeDragLayer} from '#/plugin/exo/items/graphic/components/resize-drag-layer'
+import {AnswerAreaDraggable} from '#/plugin/exo/items/graphic/components/answer-area'
 import {GraphicItem as GraphicItemTypes} from '#/plugin/exo/items/graphic/prop-types'
 
 import {
@@ -148,7 +145,7 @@ class GraphicElement extends Component {
         solutions: this.props.item.solutions.map(
           solution => Object.assign({}, solution, {_selected: false})
         ),
-        _popover: Object.assign({}, item._popover, {open: false})
+        _popover: Object.assign({}, this.props.item._popover, {open: false})
       })
 
       this.props.update('solutions', newItem.solutions)
@@ -164,7 +161,7 @@ class GraphicElement extends Component {
 
       if (prevProps.item.image.data !== this.props.item.image.data) {
         if (!this.props.item.image.data) {
-          this.imgContainer.innerHTML = tex('graphic_pick', {}, 'quiz')
+          this.imgContainer.innerHTML = trans('graphic_pick', {}, 'quiz')
         } else {
           img.src = this.props.item.image.data
         }
@@ -548,7 +545,7 @@ class GraphicElement extends Component {
   }
 }
 
-export const GraphicEditor = (props) =>
+const GraphicEditor = (props) =>
   <FormData
     className="graphic-editor"
     embedded={true}
@@ -562,12 +559,29 @@ export const GraphicEditor = (props) =>
           {
             name: '_mode',
             required: true,
-            render: (item, errors) => <ModeSelector currentMode={props.item._mode} onChange={mode => props.update('_mode', mode)}/>
-          },
-          {
+            render: (item) => {
+              const ModeComponent = (
+                <ModeSelector
+                  currentMode={props.item._mode}
+                  onChange={mode => props.update('_mode', mode)}
+                />
+              )
+
+              return ModeComponent
+            }
+          }, {
             name: 'data',
             required: true,
-            render: (item, errors) => <GraphicElement {...props} item={item}/>
+            render: (item) => {
+              const GraphicComponent = (
+                <GraphicElement
+                  {...props}
+                  item={item}
+                />
+              )
+
+              return GraphicComponent
+            }
           }
         ]
       }
@@ -577,3 +591,7 @@ export const GraphicEditor = (props) =>
 implementPropTypes(GraphicEditor, ItemEditorTypes, {
   item: T.shape(GraphicItemTypes.propTypes).isRequired
 })
+
+export {
+  GraphicEditor
+}

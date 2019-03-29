@@ -113,18 +113,20 @@ const addSelection = (begin, end, item, _text, saveCallback) => {
 const updateAnswer = (property, value, id, item, saveCallback) => {
   const newSolutions = cloneDeep(item.solutions)
 
-  switch(item.mode) {
+  let answer = null
+  let solution = null
+
+  switch (item.mode) {
     case constants.MODE_SELECT:
     case constants.MODE_FIND:
-      const solution = newSolutions.find(s => s.selectionId === id)
+      solution = newSolutions.find(s => s.selectionId === id)
 
       if (solution) {
         solution[property] = value
       }
       break
-    case constants.MODE_HIGHLIGHT:
-      let answer = null
 
+    case constants.MODE_HIGHLIGHT:
       newSolutions.forEach(s => {
         if (!answer) {
           answer = s.answers.find(answer => answer._answerId === id)
@@ -144,12 +146,13 @@ const removeSelection = (selectionId, item, _text, saveCallback) => {
   const newSolutions = cloneDeep(item.solutions)
   let newItem = {}
   let cleanItem = {}
+  let newSelections = []
 
-  switch(item.mode) {
+  switch (item.mode) {
     case constants.MODE_SELECT:
     case constants.MODE_HIGHLIGHT:
       //this is only valid for the default 'visible' one
-      const newSelections = cloneDeep(item.selections)
+      newSelections = cloneDeep(item.selections)
       newSelections.splice(newSelections.findIndex(s => s.id === selectionId), 1)
       newSolutions.splice(newSolutions.findIndex(s => s.selectionId === selectionId), 1)
       newItem = Object.assign({}, item, {
@@ -933,8 +936,8 @@ const SelectionEditor = (props) =>
                 label: trans('selection_colors', {}, 'quiz'),
                 hideLabel: true,
                 displayed: (item) => constants.MODE_HIGHLIGHT === item.mode,
-                render: (selectionItem, selectionErrors) => {
-                  return (
+                render: (selectionItem) => {
+                  const SelectionColors = (
                     <div>
                       <div>{trans('possible_color_choices', {}, 'quiz')}</div>
                       {selectionItem.colors && selectionItem.colors.map((color, index) =>
@@ -947,6 +950,7 @@ const SelectionEditor = (props) =>
                           autoOpen={color._autoOpen}
                         />
                       )}
+
                       <Button
                         id="add-color-btn"
                         className="btn btn-default"
@@ -965,6 +969,8 @@ const SelectionEditor = (props) =>
                       />
                     </div>
                   )
+
+                  return SelectionColors
                 }
               }
             ]
@@ -973,16 +979,15 @@ const SelectionEditor = (props) =>
             label: trans('selections', {}, 'quiz'),
             hideLabel: true,
             required: true,
-            render: (selectionItem, selectionErrors) => {
-              return (
+            render: (selectionItem) => {
+              const Selection = (
                 <SelectionText
                   item={selectionItem}
                   update={props.update}
                 />
               )
-            },
-            validate: (selectionItem) => {
-              return undefined
+
+              return Selection
             }
           }
         ]

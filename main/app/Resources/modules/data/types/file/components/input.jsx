@@ -4,7 +4,6 @@ import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {trans} from '#/main/app/intl/translation'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {actions} from '#/main/app/api/store'
 
@@ -47,34 +46,34 @@ class FileComponent extends Component {
 
     // grab files from event to upload them
     const files = getEventFiles(e)
-    console.log(files)
     if (!isEmpty(files)) {
       // upload dropped files
+      this.onChange(files)
     }
   }
 
   onFileSelect() {
     if (!isEmpty(this.input.files)) {
-      if (!this.props.multiple) {
-        const file = this.input.files[0]
-        if (this.props.autoUpload) {
-          this.props.uploadFile(file, this.props.uploadUrl, this.props.onChange)
-        } else {
-          this.props.onChange(file)
-        }
-      } else {
-        // Only manages multiple files if autoUpload is false
-        if (this.props.autoUpload) {
-          this.props.uploadFile(this.input.files[0], this.props.uploadUrl, this.props.onChange)
-        } else {
-          this.props.onChange(this.input.files)
-        }
-      }
+      this.onChange(this.input.files)
     }
   }
 
   onChange(files) {
-
+    if (!this.props.multiple) {
+      const file = files[0]
+      if (this.props.autoUpload) {
+        this.props.uploadFile(file, this.props.uploadUrl, this.props.onChange)
+      } else {
+        this.props.onChange(file)
+      }
+    } else {
+      // Only manages multiple files if autoUpload is false
+      if (this.props.autoUpload) {
+        this.props.uploadFile(files[0], this.props.uploadUrl, this.props.onChange)
+      } else {
+        this.props.onChange(files)
+      }
+    }
   }
 
   render() {

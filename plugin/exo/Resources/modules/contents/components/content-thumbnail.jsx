@@ -73,13 +73,6 @@ let ContentThumbnail = props => props.connectDropTarget(
     }}
   >
     <span className="content-thumbnail-topbar">
-      {props.hasErrors &&
-        <ValidationStatus
-          id={`${props.id}-thumb-tip`}
-          validating={props.validating}
-        />
-      }
-
       <Actions
         hasDeleteBtn={props.canDelete}
         hasEditBtn={props.canEdit}

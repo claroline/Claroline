@@ -4,7 +4,7 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {actions, selectors} from '#/main/core/resource/modals/creation/store'
+import {selectors} from '#/main/core/resource/modals/creation/store'
 
 import {QuizType} from '#/plugin/exo/resources/quiz/components/type'
 

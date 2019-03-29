@@ -133,7 +133,7 @@ const ItemEditor = props => {
               options: {
                 placeholder: trans('no_hint_info', {}, 'quiz'),
                 button: trans('add_hint', {}, 'quiz'),
-                render: (hint = {}, hintErrors = {}, hintIndex) => {
+                render: (hint = {}, hintErrors, hintIndex) => {
                   const HintEditor = (
                     <div className="hint-control">
                       <HtmlInput

@@ -300,13 +300,13 @@ class Pair extends Component {
           </div>
 
           {this.state.showFeedback &&
-          <div className="feedback-container">
+            <div className="feedback-container">
               <HtmlInput
                 id={`${this.props.pair.itemIds[0]}-${this.props.pair.itemIds[1]}-feedback`}
                 value={this.props.pair.feedback}
                 onChange={(value) => this.props.onUpdate('feedback', value, this.props.index)}
               />
-          </div>
+            </div>
           }
 
           <div className="checkbox">
@@ -673,7 +673,7 @@ const PairEditor = props =>
             label: trans('pairs', {}, 'quiz'),
             hideLabel: true,
             required: true,
-            render: (pairItem, pairErrors) => {
+            render: (pairItem) => {
               return (
                 <div className="row pair-items">
                   <div className="col-md-5 col-sm-5 items-col">
@@ -698,9 +698,6 @@ const PairEditor = props =>
                   </div>
                 </div>
               )
-            },
-            validate: (pairItem) => {
-              return undefined
             }
           }
         ]

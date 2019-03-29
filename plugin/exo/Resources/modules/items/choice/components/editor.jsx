@@ -226,7 +226,7 @@ const ChoiceEditor = props =>
                 }
               }), choiceItem.multiple)
 
-              return (
+              const ChoicesComponent = (
                 <Choices
                   direction={choiceItem.direction}
                   multiple={choiceItem.multiple}
@@ -301,8 +301,10 @@ const ChoiceEditor = props =>
                       props.update('solutions', updatedSolutions)
                     }
                   }}
-               />
+                />
               )
+
+              return ChoicesComponent
             }
           }, {
             name: 'direction',

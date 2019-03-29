@@ -5,7 +5,7 @@
   "license": "GPL-3.0",
   "repository": "https://github.com/claroline/Distribution",
   "dependencies": {
-    "bootstrap": "3.3.6",
+    "bootstrap": "^3.4.1",
     "bootstrap-additions": "0.3.1",
     "bootstrap-colorpicker": "2.3.0",
     "bootstrap-datepicker": "1.6.0",

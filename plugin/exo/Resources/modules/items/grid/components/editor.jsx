@@ -16,9 +16,7 @@ import Overlay from 'react-bootstrap/lib/Overlay'
 import {KeywordsPopover} from '#/plugin/exo/components/keywords'
 
 import {utils} from '#/plugin/exo/items/grid/utils/utils'
-import {resizeArea} from '#/plugin/exo/items/graphic/resize'
 import {makeId} from '#/plugin/exo/utils/utils'
-import {asset} from '#/main/app/config/asset'
 import {trans} from '#/main/app/intl/translation'
 import {GridItem as GridItemTypes} from '#/plugin/exo/items/grid/prop-types'
 
@@ -498,7 +496,7 @@ const GridTable = props =>
           updateSolutionAnswer={(cellId, keyword, parameter, value) => {
             const newItem = cloneDeep(props.item)
             const cellToUpdate = newItem.cells.find(cell => cell.id === cellId)
-            const solution = newItem.solutions.find(solution => cellId === cellToUpdate.id)
+            const solution = newItem.solutions.find(solution => cellId === solution.id)
             const answer = solution.answers.find(answer => answer._id === keyword)
 
             answer[parameter] = value
@@ -699,27 +697,32 @@ export const GridEditor = (props) => {
           }, {
             name: 'grid',
             required: true,
-            render: (item, errors) =>
-              <div className="grid-body">
-                <GridTable
-                  item={item}
-                  validating={props.validating}
-                  onChange={props.onChange}
-                  update={props.update}
-                  removeRow={(row) => {
-                    const newItem = cloneDeep(item)
-                    deleteRow(row, newItem, true)
-                    props.update('cells', newItem.cells)
-                  }}
-                  removeColumn={(col) => {
-                    const newItem = cloneDeep(item)
-                    deleteCol(row, newItem, true)
-                    props.update('cells', newItem.cells)
-                  }}
-                  openPopover={(cellId) => props.update('_popover', cellId)}
-                  closePopover={() =>rops.update('_popover', null) }
-                />
-              </div>
+            render: (item) => {
+              const Grid = (
+                <div className="grid-body">
+                  <GridTable
+                    item={item}
+                    validating={props.validating}
+                    onChange={props.onChange}
+                    update={props.update}
+                    removeRow={(row) => {
+                      const newItem = cloneDeep(item)
+                      deleteRow(row, newItem, true)
+                      props.update('cells', newItem.cells)
+                    }}
+                    removeColumn={(col) => {
+                      const newItem = cloneDeep(item)
+                      deleteCol(col, newItem, true)
+                      props.update('cells', newItem.cells)
+                    }}
+                    openPopover={(cellId) => props.update('_popover', cellId)}
+                    closePopover={() => props.update('_popover', null) }
+                  />
+                </div>
+              )
+
+              return Grid
+            }
           }
         ]
       }

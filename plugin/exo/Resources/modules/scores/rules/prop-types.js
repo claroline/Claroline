@@ -1,4 +1,4 @@
-import {PropTypes as T} from 'prop-types'
+//import {PropTypes as T} from 'prop-types'
 
 const ScoreRules = {
   propTypes: {

@@ -173,7 +173,7 @@ class SetDefinition extends AbstractDefinition
     public function getStatistics(AbstractItem $setQuestion, array $answersData, $total)
     {
         $sets = [];
-        $unused = [];;
+        $unused = [];
         $unusedItems = [];
 
         foreach ($setQuestion->getProposals()->toArray() as $item) {

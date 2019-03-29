@@ -141,7 +141,10 @@ const EditorStep = props => {
             icon="fa fa-fw fa-upload"
             label={trans('add_question_from_existing', {}, 'quiz')}
             modal={[MODAL_ITEM_IMPORT, {
-              import: (items) => props.update('items', uniqBy([].concat(props.items, items), (item) => item.id))
+              selectAction: (items) => ({
+                type: CALLBACK_BUTTON,
+                callback: () => props.update('items', uniqBy([].concat(props.items, items), (item) => item.id))
+              })
             }]}
           />
         </div>

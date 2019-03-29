@@ -31,7 +31,7 @@ export default {
     }
   ],
 
-  calculate: (item) => {
+  calculate: () => {
 
   }
 }

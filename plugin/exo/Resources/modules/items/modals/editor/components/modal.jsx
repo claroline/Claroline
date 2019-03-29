@@ -15,6 +15,8 @@ const EditorModal = props => {
       title={trans('edition')}
       {...omit(props)}
     >
+      <FormData />
+
       <Button
         type={CALLBACK_BUTTON}
         label={trans('save', {}, 'actions')}

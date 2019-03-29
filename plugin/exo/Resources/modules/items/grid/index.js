@@ -230,5 +230,8 @@ export default {
     return Object.assign(item, GridItemTypes.defaultProps)
   },
 
-  supportScores:(item) => [ScoreSum, ScoreFixed]
+  supportScores: () => [
+    ScoreSum,
+    ScoreFixed
+  ]
 }

@@ -394,22 +394,21 @@ const OrderingEditor = props =>
                 props.update('items', props.item.items.filter(i => undefined !== i._position))
                 props.update('solutions', props.item.solutions.filter(s => undefined !== s.position))
               }
-            },
+            }
           }, {
             name: 'orderings',
             label: trans('orderings', {}, 'quiz'),
             hideLabel: true,
             required: true,
-            render: (orderingItem, orderingErrors) => {
-              return (
+            render: (orderingItem) => {
+              const Items = (
                 <OrderingItems
                   item={orderingItem}
                   onChange={props.update}
                 />
               )
-            },
-            validate: (orderingItem) => {
-              return undefined
+
+              return Items
             }
           }
         ]

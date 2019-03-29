@@ -12,7 +12,7 @@ export default {
   // no additional configuration
   configure: () => [],
 
-  calculate: (item) => {
+  calculate: () => {
 
   }
 }

@@ -4,10 +4,8 @@ import times from 'lodash/times'
 
 import {trans} from '#/main/app/intl/translation'
 
-import {makeId} from '#/main/core/scaffolding/id'
-
 import {PairItem as PairItemType} from '#/plugin/exo/items/pair/prop-types'
-import {PairEditor} from "#/plugin/exo/items/pair/components/editor"
+import {PairEditor} from '#/plugin/exo/items/pair/components/editor'
 import {PairPaper} from '#/plugin/exo/items/pair/components/paper'
 import {PairPlayer} from '#/plugin/exo/items/pair/components/player'
 import {PairFeedback} from '#/plugin/exo/items/pair/components/feedback'

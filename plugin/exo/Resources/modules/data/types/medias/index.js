@@ -1,5 +1,3 @@
-import {trans} from '#/main/app/intl/translation'
-import {chain, lengthInRange, match, string} from '#/main/core/validation'
 
 import {MediasDisplay} from '#/plugin/exo/data/types/medias/components/display'
 import {MediasInput} from '#/plugin/exo/data/types/medias/components/input'

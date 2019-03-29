@@ -60,13 +60,13 @@ const CopyModal = props => {
                   condensed: true,
                   noEmpty: true,
                   choices: isEmpty(stepChoices) ? {
-                      first: trans('first')
-                    } : {
-                      first: trans('first'),
-                      before: trans('before'),
-                      after: trans('after'),
-                      last: trans('last')
-                    }
+                    first: trans('first')
+                  } : {
+                    first: trans('first'),
+                    before: trans('before'),
+                    after: trans('after'),
+                    last: trans('last')
+                  }
                 },
                 onChange: (order) => {
                   if (-1 !== ['first', 'last'].indexOf(order)) {

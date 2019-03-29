@@ -249,9 +249,9 @@ class DisplayHighlightAnswer extends Component {
               {this.props.solutions.filter(solution => solution.score > 0).map(solution => {
                 return (
                   <option key={Math.random()} value={solution.colorId} style={{backgroundColor: this.props.colors.find(color => color.id === solution.colorId).code || 'white'}}>
-                   {'\u00a0'}{'\u00a0'}{'\u00a0'}{'\u00a0'}
+                    {'\u00a0'}{'\u00a0'}{'\u00a0'}{'\u00a0'}
                   </option>
-                 )
+                )
               })}
             </select>
           </span>

@@ -105,27 +105,6 @@ function assertValidItemType(definition) {
     definition.paper,
     makeError('paper component is mandatory', definition)
   )
-
-  // allow props for new implementation
-  /*const extraProperties = difference(Object.keys(definition), typeProperties)
-
-  if (extraProperties.length > 0) {
-    invariant(
-      false,
-      makeError(`unknown property '${extraProperties[0]}'`, definition)
-    )
-  }*/
-}
-
-function getOptionalFunction(definition, name, defaultFunc) {
-  if (typeof definition[name] !== 'undefined') {
-    invariant(
-      typeof definition[name] === 'function',
-      makeError(`${name} must be a function`, definition)
-    )
-    return definition[name]
-  }
-  return defaultFunc
 }
 
 function makeError(message, definition) {

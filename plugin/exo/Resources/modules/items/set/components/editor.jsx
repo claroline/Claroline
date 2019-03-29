@@ -586,7 +586,7 @@ const SetEditor = (props) =>
             hideLabel: true,
             required: true,
             render: (setItem) => {
-              return (
+              const Set = (
                 <div className="set-items row">
                   <div className="col-md-5 col-sm-5 col-xs-5">
                     <ItemList
@@ -612,6 +612,8 @@ const SetEditor = (props) =>
                   </div>
                 </div>
               )
+
+              return Set
             }
           }
         ]
