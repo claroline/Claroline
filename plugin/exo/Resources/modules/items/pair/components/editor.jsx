@@ -674,7 +674,7 @@ const PairEditor = props =>
             hideLabel: true,
             required: true,
             render: (pairItem) => {
-              return (
+              const Pair = (
                 <div className="row pair-items">
                   <div className="col-md-5 col-sm-5 items-col">
                     <ItemList
@@ -698,6 +698,8 @@ const PairEditor = props =>
                   </div>
                 </div>
               )
+
+              return Pair
             }
           }
         ]

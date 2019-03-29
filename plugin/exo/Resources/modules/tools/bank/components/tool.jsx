@@ -3,11 +3,8 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {ToolPage} from '#/main/core/tool/containers/page'
-import {ListData} from '#/main/app/content/list/containers/data'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {getPlainText} from '#/main/app/data/types/html/utils'
 
-import {getItems} from '#/plugin/exo/items'
 import {ItemList} from '#/plugin/exo/items/components/list'
 
 const BankTool = props =>

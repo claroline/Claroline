@@ -562,7 +562,7 @@ const GraphicEditor = (props) =>
             render: (item) => {
               const ModeComponent = (
                 <ModeSelector
-                  currentMode={props.item._mode}
+                  currentMode={item._mode}
                   onChange={mode => props.update('_mode', mode)}
                 />
               )

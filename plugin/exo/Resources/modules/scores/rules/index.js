@@ -9,7 +9,7 @@ export default {
     description: trans('score_rules_desc', {}, 'quiz')
   },
 
-  configure: (score) => [
+  configure: () => [
     {
       name: 'rules',
       label: trans('rules', {}, 'quiz'),

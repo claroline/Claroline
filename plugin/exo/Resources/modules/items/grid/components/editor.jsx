@@ -435,7 +435,7 @@ const GridTable = props =>
           _popover={props.item._popover}
           removeRow={() => props.removeRow(rowIndex)}
           updateScore={(newScore) => {
-            const newItem = cloneDeep(grid)
+            const newItem = cloneDeep(props.item)
             const cellsInRow = utils.getCellsByRow(rowIndex, newItem.cells)
             cellsInRow.forEach(cell => {
               const solutionToUpdate = newItem.solutions.find(solution => solution.cellId === cell.id)
@@ -548,7 +548,7 @@ const GridTable = props =>
                 value={utils.getColScore(colIndex, props.item.cells, props.item.solutions)}
                 className="form-control grid-score"
                 onChange={e => {
-                  const newItem = cloneDeep(grid)
+                  const newItem = cloneDeep(props.item)
                   const cellsInRow = utils.getCellsByCol(colIndex, newItem.cells)
                   cellsInRow.forEach(cell => {
                     const solutionToUpdate = newItem.solutions.find(solution => solution.cellId === cell.id)
@@ -598,7 +598,7 @@ GridTable.propTypes = {
   removeColumn: T.func.isRequired,
   openPopover: T.func.isRequired,
   closePopover: T.func.isRequired,
-  onChange: T.func.isRequired
+  update: T.func.isRequired
 }
 
 export const GridEditor = (props) => {
@@ -631,7 +631,7 @@ export const GridEditor = (props) => {
             type: 'number',
             name: 'penalty',
             label: trans('grid_editor_penalty_label', {}, 'quiz'),
-            displayed: (data) => props.item.score.type === SCORE_SUM
+            displayed: (item) => item.score.type === SCORE_SUM
           }, {
             type: 'number',
             name: 'rows',
@@ -703,7 +703,6 @@ export const GridEditor = (props) => {
                   <GridTable
                     item={item}
                     validating={props.validating}
-                    onChange={props.onChange}
                     update={props.update}
                     removeRow={(row) => {
                       const newItem = cloneDeep(item)

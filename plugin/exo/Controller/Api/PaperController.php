@@ -93,10 +93,10 @@ class PaperController extends AbstractController
         $serializationOptions = [];
 
         $collection = new ResourceCollection([$exercise->getResourceNode()]);
-        if (!($this->authorization->isGranted('ADMINISTRATE', $collection) ||
-            $this->authorization->isGranted('MANAGE_PAPERS', $collection)
-        )) {
-            $params['hiddenFilters']['user'] = $user->getid();
+        if (!$this->authorization->isGranted('ADMINISTRATE', $collection) &&
+            !$this->authorization->isGranted('MANAGE_PAPERS', $collection)
+        ) {
+            $params['hiddenFilters']['user'] = $user->getId();
         } elseif (ShowScoreAt::NEVER !== $exercise->getMarkMode()) {
             $serializationOptions[] = Transfer::INCLUDE_USER_SCORE;
         }

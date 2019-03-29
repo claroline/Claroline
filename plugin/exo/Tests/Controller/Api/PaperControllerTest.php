@@ -135,9 +135,9 @@ class PaperControllerTest extends TransactionalTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(1, count($content));
+        $this->assertEquals(1, $content->totalResults);
 
-        $this->assertEquals($pa1->getUuid(), $content[0]->id);
+        $this->assertEquals($pa1->getUuid(), $content->data[0]->id);
     }
 
     /**
@@ -160,11 +160,12 @@ class PaperControllerTest extends TransactionalTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(4, count($content));
-        $this->assertEquals($pa1->getUuid(), $content[0]->id);
-        $this->assertEquals($pa2->getUuid(), $content[1]->id);
-        $this->assertEquals($pa3->getUuid(), $content[2]->id);
-        $this->assertEquals($pa4->getUuid(), $content[3]->id);
+
+        $this->assertEquals(4, $content->totalResults);
+        $this->assertEquals($pa1->getUuid(), $content->data[0]->id);
+        $this->assertEquals($pa2->getUuid(), $content->data[1]->id);
+        $this->assertEquals($pa3->getUuid(), $content->data[2]->id);
+        $this->assertEquals($pa4->getUuid(), $content->data[3]->id);
     }
 
     /**
