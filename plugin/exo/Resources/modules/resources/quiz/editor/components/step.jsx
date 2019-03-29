@@ -62,10 +62,7 @@ const EditorStep = props => {
               }, {
                 name: 'description',
                 label: trans('description'),
-                type: 'string',
-                options: {
-                  long: true
-                }
+                type: 'html'
               }
             ]
           }

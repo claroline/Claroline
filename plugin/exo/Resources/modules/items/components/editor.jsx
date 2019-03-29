@@ -56,13 +56,17 @@ const ItemEditor = props => {
         }, {
           title: trans('custom'),
           primary: true,
-          render: () => createElement(props.definition.components.editor, {
-            formName: props.formName,
-            path: props.path,
-            disabled: props.disabled,
-            item: props.item,
-            update: props.update
-          })
+          render: () => {
+            const CustomSection = createElement(props.definition.components.editor, {
+              formName: props.formName,
+              path: props.path,
+              disabled: props.disabled,
+              item: props.item,
+              update: props.update
+            })
+
+            return CustomSection
+          }
         }, {
           icon: 'fa fa-fw fa-info',
           title: trans('information'),

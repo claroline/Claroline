@@ -14,8 +14,6 @@ import {FormSections, FormSection} from '#/main/app/content/form/components/sect
 import {createFormDefinition} from '#/main/app/content/form/utils'
 import {DataFormSection as DataFormSectionTypes} from '#/main/app/content/form/prop-types'
 
-import {DataInput} from '#/main/app/data/components/input'
-
 const FormData = (props) => {
   const hLevel = props.level + (props.title ? 1 : 0)
   let hDisplay

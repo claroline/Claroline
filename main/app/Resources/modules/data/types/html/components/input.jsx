@@ -10,8 +10,6 @@ import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {Tinymce} from '#/main/core/tinymce/components/tinymce'
 import {getOffsets} from '#/main/core/scaffolding/text/selection'
 
-// todo : manage input size
-
 // see https://github.com/lovasoa/react-contenteditable
 class ContentEditable extends Component {
   constructor(props) {
@@ -103,10 +101,13 @@ class ContentEditable extends Component {
         contentEditable={!this.props.disabled}
         role="textbox"
         className={classes('form-control', {
+          [`input-${this.props.size}`]: !!this.props.size,
           disabled: this.props.disabled
         })}
         aria-multiline={true}
-        style={{minHeight: `${this.props.minRows * 32}px`}}
+        style={{
+          minHeight: `${this.props.minRows * 32}px`
+        }}
         onMouseUp={this.getSelection}
       />
     )
@@ -116,6 +117,7 @@ class ContentEditable extends Component {
 // TODO : manage max height like TinyMCE and CodeMirror
 ContentEditable.propTypes = {
   id: T.string.isRequired,
+  size: T.oneOf(['sm', 'lg']),
   minRows: T.number.isRequired,
   content: T.string.isRequired,
   onChange: T.func.isRequired,
@@ -146,6 +148,7 @@ class HtmlInput extends Component {
     return (
       <ContentEditable
         id={this.props.id}
+        size={this.props.size}
         minRows={this.props.minRows}
         content={this.props.value || ''}
         disabled={this.props.disabled}

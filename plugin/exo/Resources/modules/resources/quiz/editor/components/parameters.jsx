@@ -42,14 +42,14 @@ const EditorParameters = props =>
               type: 'string',
               required: true,
               render: (quiz) => {
-                const Type = (
+                const CurrentType = (
                   <QuizType
                     type={get(quiz, 'parameters.type')}
                     onChange={(type) => props.update('parameters.type', type.name)}
                   />
                 )
 
-                return Type
+                return CurrentType
               }
             }
           ]
@@ -362,7 +362,7 @@ const EditorParameters = props =>
                     condensed: true,
                     choices: {
                       all: trans('statistics_all_attempts', {}, 'quiz'),
-                      finished: trans('statistics_finished_attempts', {}, 'quiz'),
+                      finished: trans('statistics_finished_attempts', {}, 'quiz')
                     }
                   },
                   calculated: (quiz) => get(quiz, 'parameters.allPapersStatistics') ? 'all' : 'finished',
@@ -414,6 +414,7 @@ const EditorParameters = props =>
         }, {
           icon: 'fa fa-fw fa-award',
           title: trans('evaluation'),
+          displayed: (quiz) => get(quiz, 'parameters.hasExpectedAnswers'),
           fields: [
             {
               name: 'parameters',

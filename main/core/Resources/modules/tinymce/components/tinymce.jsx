@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 
 import {withModal} from '#/main/app/overlay/modal/withModal'
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
@@ -99,7 +100,10 @@ class Editor extends Component {
       <textarea
         id={this.props.id}
         ref={(el) => this.textarea = el}
-        className="form-control"
+        className={classes('form-control', {
+          [`input-${this.props.size}`]: !!this.props.size,
+          disabled: this.props.disabled
+        })}
         defaultValue={this.props.content}
       />
     )
@@ -108,6 +112,7 @@ class Editor extends Component {
 
 Editor.propTypes = {
   id: T.string.isRequired,
+  size: T.oneOf(['sm', 'lg']),
   content: T.string.isRequired,
   onChange: T.func.isRequired,
   onSelect: T.func,

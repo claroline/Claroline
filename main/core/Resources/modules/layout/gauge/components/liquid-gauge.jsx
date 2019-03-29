@@ -1,6 +1,5 @@
 import React from 'react'
 import classes from 'classnames'
-import merge from 'lodash/merge'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {Liquid} from '#/main/app/animation/components/liquid'

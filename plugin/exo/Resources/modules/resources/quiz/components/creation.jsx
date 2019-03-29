@@ -23,12 +23,16 @@ const QuizCreation = props =>
             label: trans('type'),
             type: 'string',
             required: true,
-            render: (quiz) => (
-              <QuizType
-                type={get(quiz, 'parameters.type')}
-                onChange={props.changeType}
-              />
-            )
+            render: (quiz) => {
+              const CurrentType = (
+                <QuizType
+                  type={get(quiz, 'parameters.type')}
+                  onChange={props.changeType}
+                />
+              )
+
+              return CurrentType
+            }
           }
         ]
       }

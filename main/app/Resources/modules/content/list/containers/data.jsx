@@ -78,6 +78,10 @@ AutoloadedListData.propTypes = {
   sorting: T.object,
   pagination: T.object,
   selection: T.object,
+  fetch: T.shape({
+    url: T.oneOfType([T.string, T.array]).isRequired,
+    autoload: T.bool
+  }),
   fetchData: T.func
 }
 
