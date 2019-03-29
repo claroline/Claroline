@@ -18,19 +18,24 @@ class AnswerRepository extends EntityRepository
      *
      * @param Item     $question
      * @param Exercise $exercise
+     * @param bool     $finishedPapersOnly
      *
      * @return Answer[]
      */
-    public function findByQuestion(Item $question, Exercise $exercise = null)
+    public function findByQuestion(Item $question, Exercise $exercise = null, $finishedPapersOnly = false)
     {
-        return $this->createQueryBuilder('a')
+        $qb = $this->createQueryBuilder('a')
             ->join('a.paper', 'p', 'WITH', 'p.exercise = :exercise')
             ->where('a.questionId = :question')
             ->setParameters([
                 'exercise' => $exercise,
                 'question' => $question->getUuid(),
-            ])
-            ->getQuery()
-            ->getResult();
+            ]);
+
+        if ($finishedPapersOnly) {
+            $qb->andWhere('p.end IS NOT NULL');
+        }
+
+        return $qb->getQuery()->getResult();
     }
 }

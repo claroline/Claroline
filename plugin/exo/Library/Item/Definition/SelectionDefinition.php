@@ -259,7 +259,7 @@ class SelectionDefinition extends AbstractDefinition
         }
     }
 
-    public function getStatistics(AbstractItem $selectionQuestion, array $answersData)
+    public function getStatistics(AbstractItem $selectionQuestion, array $answersData, $total)
     {
         // TODO: Implement getStatistics() method.
 

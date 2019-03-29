@@ -135,11 +135,12 @@ class OpenDefinition extends AbstractDefinition
      * Not implemented because not relevant.
      *
      * @param AbstractItem $openQuestion
-     * @param array        $answers
+     * @param array        $answersData
+     * @param int          $total
      *
      * @return array
      */
-    public function getStatistics(AbstractItem $openQuestion, array $answers)
+    public function getStatistics(AbstractItem $openQuestion, array $answersData, $total)
     {
         return [];
     }

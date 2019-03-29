@@ -9,6 +9,7 @@ import {reduceCorrection} from '#/plugin/exo/quiz/correction/reducer'
 
 import {reducer as editorReducer, selectors as editorSelectors} from '#/plugin/exo/resources/quiz/editor/store'
 import {reducer as playerReducer, selectors as playerSelectors} from '#/plugin/exo/resources/quiz/player/store'
+import {reducer as statisticsReducer} from '#/plugin/exo/quiz/statistics/store'
 
 export const reducer = combineReducers({
   quiz: makeReducer({}, {
@@ -30,5 +31,7 @@ export const reducer = combineReducers({
 
   papers: papersReducer,
 
-  correction: reduceCorrection
+  correction: reduceCorrection,
+
+  statistics: statisticsReducer
 })

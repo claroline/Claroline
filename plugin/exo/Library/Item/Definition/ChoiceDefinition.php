@@ -152,24 +152,21 @@ class ChoiceDefinition extends AbstractDefinition
         });
     }
 
-    public function getStatistics(AbstractItem $choiceQuestion, array $answersData)
+    public function getStatistics(AbstractItem $choiceQuestion, array $answersData, $total)
     {
         $choices = [];
 
         foreach ($answersData as $answerData) {
             foreach ($answerData as $choiceId) {
-                if (!isset($choices[$choiceId])) {
-                    // First answer to have this solution
-                    $choices[$choiceId] = new \stdClass();
-                    $choices[$choiceId]->id = $choiceId;
-                    $choices[$choiceId]->count = 0;
-                }
-
-                ++$choices[$choiceId]->count;
+                $choices[$choiceId] = isset($choices[$choiceId]) ? $choices[$choiceId] + 1 : 1;
             }
         }
 
-        return array_values($choices);
+        return [
+            'choices' => $choices,
+            'total' => $total,
+            'unanswered' => $total - count($answersData),
+        ];
     }
 
     /**

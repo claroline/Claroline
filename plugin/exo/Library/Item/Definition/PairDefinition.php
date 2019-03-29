@@ -180,11 +180,77 @@ class PairDefinition extends AbstractDefinition
         });
     }
 
-    public function getStatistics(AbstractItem $pairQuestion, array $answers)
+    public function getStatistics(AbstractItem $pairQuestion, array $answersData, $total)
     {
-        // TODO: Implement getStatistics() method.
+        $paired = [];
+        $unpaired = [];
+        $unusedItems = [];
+        $valid = [];
 
-        return [];
+        foreach ($pairQuestion->getItems()->toArray() as $item) {
+            $unusedItems[$item->getUuid()] = true;
+        }
+        // Initialize acceptable pairs
+        foreach ($pairQuestion->getRows()->toArray() as $row) {
+            $rowItems = $row->getItems();
+
+            if (2 === count($rowItems)) {
+                $item0Id = $rowItems[0]->getItem()->getUuid();
+                $item1Id = $rowItems[1]->getItem()->getUuid();
+
+                if (!isset($valid[$item0Id])) {
+                    $valid[$item0Id] = [];
+                }
+                $valid[$item0Id][$item1Id] = true;
+
+                if ($row->isOrdered()) {
+                    if (!isset($valid[$item1Id])) {
+                        $valid[$item1Id] = [];
+                    }
+                    $valid[$item1Id][$item0Id] = true;
+                }
+            }
+        }
+        // Build remaining acceptable pairs to group inversed pairs together
+        foreach ($pairQuestion->getItems()->toArray() as $i1) {
+            foreach ($pairQuestion->getItems()->toArray() as $i2) {
+                if ((!isset($valid[$i1->getUuid()]) || !isset($valid[$i1->getUuid()][$i2->getUuid()])) &&
+                    (!isset($valid[$i2->getUuid()]) || !isset($valid[$i2->getUuid()][$i1->getUuid()]))
+                ) {
+                    if (!isset($valid[$i1->getUuid()])) {
+                        $valid[$i1->getUuid()] = [];
+                    }
+                    $valid[$i1->getUuid()][$i2->getUuid()] = true;
+                }
+            }
+        }
+        foreach ($answersData as $answerData) {
+            $unusedTemp = array_merge($unusedItems);
+
+            foreach ($answerData as $pair) {
+                $first = isset($valid[$pair[0]]) && isset($valid[$pair[0]][$pair[1]]) ? $pair[0] : $pair[1];
+                $second = isset($valid[$pair[0]]) && isset($valid[$pair[0]][$pair[1]]) ? $pair[1] : $pair[0];
+
+                if (!isset($paired[$first])) {
+                    $paired[$first] = [];
+                }
+                $paired[$first][$second] = isset($paired[$first][$second]) ? $paired[$first][$second] + 1 : 1;
+                $unusedTemp[$first] = false;
+                $unusedTemp[$second] = false;
+            }
+            foreach ($unusedTemp as $itemId => $value) {
+                if ($value) {
+                    $unpaired[$itemId] = isset($unpaired[$itemId]) ? $unpaired[$itemId] + 1 : 1;
+                }
+            }
+        }
+
+        return [
+            'paired' => $paired,
+            'unpaired' => $unpaired,
+            'total' => $total,
+            'unanswered' => $total - count($answersData),
+        ];
     }
 
     /**

@@ -85,11 +85,9 @@ const PaperComponent = props => {
                     feedback: getAnswerFeedback(item.id, props.paper.answers),
                     showScore: showScore,
                     showExpected: props.showExpectedAnswers,
-                    showStats: props.showStatistics,
+                    showStats: !!(props.showStatistics && props.stats && props.stats[item.id]),
                     showYours: true,
-                    stats: props.showStatistics ?
-                      getDefinition(item.type).generateStats(item, props.papers, props.allPapersStatistics) :
-                      {}
+                    stats: props.showStatistics && props.stats && props.stats[item.id] ? props.stats[item.id] : {}
                   }
                 )}
 
@@ -122,8 +120,7 @@ PaperComponent.propTypes = {
   numbering: T.string,
   showExpectedAnswers: T.bool.isRequired,
   showStatistics: T.bool.isRequired,
-  allPapersStatistics: T.bool.isRequired,
-  papers: T.object.isRequired
+  stats: T.object
 }
 
 const Paper = connect(
@@ -133,8 +130,7 @@ const Paper = connect(
     paper: paperSelect.currentPaper(state),
     showExpectedAnswers: quizSelect.papersShowExpectedAnswers(state),
     showStatistics: quizSelect.papersShowStatistics(state),
-    allPapersStatistics: quizSelect.allPapersStatistics(state),
-    papers: paperSelect.papers(state)
+    stats: quizSelect.statistics(state)
   })
 )(PaperComponent)
 

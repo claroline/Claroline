@@ -148,7 +148,7 @@ class BooleanDefinition extends AbstractDefinition
         });
     }
 
-    public function getStatistics(AbstractItem $question, array $answersData)
+    public function getStatistics(AbstractItem $question, array $answersData, $total)
     {
         // TODO: Implement getStatistics() method.
 

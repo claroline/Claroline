@@ -128,7 +128,13 @@ const QuizResource = props =>
         }, {
           path: '/papers/:id', // todo : declare inside papers module
           component: Paper,
-          onEnter: (params) => authenticatedUser ? props.loadCurrentPaper(props.quizId, params.id) : false,
+          onEnter: (params) => {
+            authenticatedUser ? props.loadCurrentPaper(props.quizId, params.id) : false
+
+            if (props.showStatistics) {
+              props.statistics(props.quizId)
+            }
+          },
           onLeave: () => props.resetCurrentPaper()
         }, {
           path: '/correction/questions',
@@ -145,7 +151,7 @@ const QuizResource = props =>
           path: '/statistics',
           component: Statistics,
           disabled: !props.papersAdmin && !props.showStatistics,
-          onEnter: () => props.statistics()
+          onEnter: () => props.statistics(props.quizId)
         }
       ]}
       redirect={[

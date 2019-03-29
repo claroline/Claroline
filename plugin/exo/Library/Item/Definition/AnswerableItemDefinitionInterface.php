@@ -49,10 +49,11 @@ interface AnswerableItemDefinitionInterface
      *
      * @param AbstractItem $question
      * @param array        $answersData
+     * @param int          $total
      *
      * @return \stdClass
      */
-    public function getStatistics(AbstractItem $question, array $answersData);
+    public function getStatistics(AbstractItem $question, array $answersData, $total);
 
     public function getCsvTitles(AbstractItem $item);
 

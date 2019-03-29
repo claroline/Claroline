@@ -390,11 +390,63 @@ class GridDefinition extends AbstractDefinition
         return $expected;
     }
 
-    public function getStatistics(AbstractItem $pairQuestion, array $answers)
+    public function getStatistics(AbstractItem $gridQuestion, array $answersData, $total)
     {
-        // TODO: Implement getStatistics() method.
+        $cells = [];
+        $answered = [];
+        $nbUnanswered = $total - count($answersData);
 
-        return [];
+        // Create an array with cellId => cellObject for easy search
+        $cellsMap = [];
+        /** @var Cell $cell */
+        foreach ($gridQuestion->getCells() as $cell) {
+            $cellsMap[$cell->getUuid()] = $cell;
+            $answered[$cell->getUuid()] = 0;
+        }
+
+        foreach ($answersData as $answerData) {
+            foreach ($answerData as $cellAnswer) {
+                if (!empty($cellAnswer->text)) {
+                    $answered[$cellAnswer->cellId] = isset($answered[$cellAnswer->cellId]) ?
+                        $answered[$cellAnswer->cellId] + 1 :
+                        1;
+
+                    if (!isset($cells[$cellAnswer->cellId])) {
+                        $cells[$cellAnswer->cellId] = [];
+                    }
+
+                    $choice = isset($cellsMap[$cellAnswer->cellId]) ?
+                      $cellsMap[$cellAnswer->cellId]->getChoice($cellAnswer->text) :
+                      null;
+
+                    if ($choice) {
+                        $cells[$cellAnswer->cellId][$choice->getText()] = isset($cells[$cellAnswer->cellId][$choice->getText()]) ?
+                            $cells[$cellAnswer->cellId][$choice->getText()] + 1 :
+                            1;
+                    } else {
+                        $cells[$cellAnswer->cellId]['_others'] = isset($cells[$cellAnswer->cellId]['_others']) ?
+                            $cells[$cellAnswer->cellId]['_others'] + 1 :
+                            1;
+                    }
+                }
+            }
+        }
+        foreach ($gridQuestion->getCells() as $cell) {
+            $cellId = $cell->getUuid();
+
+            if (0 < count($answersData) - $answered[$cellId]) {
+                if (!isset($cells[$cellId])) {
+                    $cells[$cellId] = [];
+                }
+                $cells[$cellId]['_unanswered'] = count($answersData) - $answered[$cellId];
+            }
+        }
+
+        return [
+            'cells' => $cells,
+            'total' => $total,
+            'unanswered' => $nbUnanswered,
+        ];
     }
 
     /**

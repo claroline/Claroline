@@ -166,52 +166,63 @@ class ClozeDefinition extends AbstractDefinition
      *
      * @return array
      */
-    public function getStatistics(AbstractItem $clozeQuestion, array $answersData)
+    public function getStatistics(AbstractItem $clozeQuestion, array $answersData, $total)
     {
+        $holes = [];
+        $answered = [];
+        $nbUnanswered = $total - count($answersData);
+
         // Create an array with holeId => holeObject for easy search
         $holesMap = [];
         /** @var Hole $hole */
         foreach ($clozeQuestion->getHoles() as $hole) {
             $holesMap[$hole->getUuid()] = $hole;
+            $answered[$hole->getUuid()] = 0;
         }
-
-        $holes = [];
 
         foreach ($answersData as $answerData) {
             foreach ($answerData as $holeAnswer) {
                 if (!empty($holeAnswer->answerText)) {
-                    if (!isset($holes[$holeAnswer->holeId])) {
-                        $holes[$holeAnswer->holeId] = new \stdClass();
-                        $holes[$holeAnswer->holeId]->id = $holeAnswer->holeId;
-                        $holes[$holeAnswer->holeId]->answered = 0;
+                    $answered[$holeAnswer->holeId] = isset($answered[$holeAnswer->holeId]) ?
+                        $answered[$holeAnswer->holeId] + 1 :
+                        1;
 
-                        // Answers counters for each keyword of the hole
-                        $holes[$holeAnswer->holeId]->keywords = [];
+                    if (!isset($holes[$holeAnswer->holeId])) {
+                        $holes[$holeAnswer->holeId] = [];
                     }
 
-                    // Increment the hole answers count
-                    ++$holes[$holeAnswer->holeId]->answered;
+                    $keyword = isset($holesMap[$holeAnswer->holeId]) ?
+                        $holesMap[$holeAnswer->holeId]->getKeyword($holeAnswer->answerText) :
+                        null;
 
-                    $keyword = isset($holesMap[$holeAnswer->holeId]) ? $holesMap[$holeAnswer->holeId]->getKeyword($holeAnswer->answerText) : null;
                     if ($keyword) {
-                        if (!isset($holes[$holeAnswer->holeId]->keywords[$keyword->getId()])) {
-                            // Initialize the Hole keyword counter if it's the first time we find it
-                            $holes[$holeAnswer->holeId]->keywords[$keyword->getId()] = new \stdClass();
-                            // caseSensitive & text is the primary key for api transfers
-                            $holes[$holeAnswer->holeId]->keywords[$keyword->getId()]->caseSensitive = $keyword->isCaseSensitive();
-                            $holes[$holeAnswer->holeId]->keywords[$keyword->getId()]->text = $keyword->getText();
-                            $holes[$holeAnswer->holeId]->keywords[$keyword->getId()]->count = 0;
-                        }
-
-                        ++$holes[$holeAnswer->holeId]->keywords[$keyword->getId()]->count;
-
-                        break;
+                        $holes[$holeAnswer->holeId][$keyword->getText()] = isset($holes[$holeAnswer->holeId][$keyword->getText()]) ?
+                            $holes[$holeAnswer->holeId][$keyword->getText()] + 1 :
+                            1;
+                    } else {
+                        $holes[$holeAnswer->holeId]['_others'] = isset($holes[$holeAnswer->holeId]['_others']) ?
+                            $holes[$holeAnswer->holeId]['_others'] + 1 :
+                            1;
                     }
                 }
             }
         }
+        foreach ($clozeQuestion->getHoles() as $hole) {
+            $holeId = $hole->getUuid();
 
-        return array_values($holes);
+            if (0 < count($answersData) - $answered[$holeId]) {
+                if (!isset($holes[$holeId])) {
+                    $holes[$holeId] = [];
+                }
+                $holes[$holeId]['_unanswered'] = count($answersData) - $answered[$holeId];
+            }
+        }
+
+        return [
+            'holes' => $holes,
+            'total' => $total,
+            'unanswered' => $nbUnanswered,
+        ];
     }
 
     /**

@@ -35,6 +35,11 @@ const quiz = createSelector(
   (resource) => resource.quiz
 )
 
+const statistics = createSelector(
+  resource,
+  (resource) => resource.statistics
+)
+
 const id = createSelector(
   quiz,
   (quiz) => quiz.id
@@ -125,6 +130,7 @@ export default {
   items,
   empty,
   papers,
+  statistics,
   papersAdmin,
   docimologyAdmin,
   registered,
@@ -152,6 +158,7 @@ export const select = {
   items,
   empty,
   papers,
+  statistics,
   papersAdmin,
   docimologyAdmin,
   registered,

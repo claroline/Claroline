@@ -15,7 +15,7 @@ import {select} from '#/plugin/exo/quiz/selectors'
 import {actions as correctionActions} from '#/plugin/exo/quiz/correction/actions'
 import {actions as papersActions} from '#/plugin/exo/quiz/papers/actions'
 import {actions as playerActions} from '#/plugin/exo/quiz/player/actions'
-import {actions as statisticsActions} from '#/plugin/exo/quiz/statistics/actions'
+import {actions as statisticsActions} from '#/plugin/exo/quiz/statistics/store'
 
 const QuizResource = DragNDropContext(
   withRouter(
@@ -34,8 +34,8 @@ const QuizResource = DragNDropContext(
           testMode(testMode) {
             dispatch(playerActions.setTestMode(testMode))
           },
-          statistics() {
-            dispatch(statisticsActions.displayStatistics())
+          statistics(quizId) {
+            dispatch(statisticsActions.fetchStatistics(quizId))
           },
           correction(questionId = null) {
             if (!questionId) {

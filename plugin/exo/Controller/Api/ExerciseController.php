@@ -16,6 +16,7 @@ use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Manager\DocimologyManager;
 use UJM\ExoBundle\Manager\ExerciseManager;
+use UJM\ExoBundle\Manager\Item\ItemManager;
 
 /**
  * Exercise API Controller exposes REST API.
@@ -33,27 +34,34 @@ class ExerciseController extends AbstractController
     /** @var DocimologyManager */
     private $docimologyManager;
 
+    /** @var ItemManager */
+    private $itemManager;
+
     /**
      * ExerciseController constructor.
      *
      * @DI\InjectParams({
      *     "authorization"     = @DI\Inject("security.authorization_checker"),
      *     "exerciseManager"   = @DI\Inject("ujm_exo.manager.exercise"),
-     *     "docimologyManager" = @DI\Inject("ujm_exo.manager.docimology")
+     *     "docimologyManager" = @DI\Inject("ujm_exo.manager.docimology"),
+     *     "itemManager"       = @DI\Inject("ujm_exo.manager.item")
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param ExerciseManager               $exerciseManager
      * @param DocimologyManager             $docimologyManager
+     * @param ItemManager                   $itemManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ExerciseManager $exerciseManager,
-        DocimologyManager $docimologyManager
+        DocimologyManager $docimologyManager,
+        ItemManager $itemManager
     ) {
         $this->authorization = $authorization;
         $this->exerciseManager = $exerciseManager;
         $this->docimologyManager = $docimologyManager;
+        $this->itemManager = $itemManager;
     }
 
     /**
@@ -176,6 +184,35 @@ class ExerciseController extends AbstractController
             'exercise' => $this->exerciseManager->serialize($exercise, [Transfer::MINIMAL]),
             'statistics' => $this->docimologyManager->getStatistics($exercise, 100),
         ];
+    }
+
+    /**
+     * Gets statistics of an Exercise.
+     *
+     * @EXT\Route("/{id}/statistics", name="exercise_statistics")
+     * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
+     * @EXT\Method("GET")
+     *
+     * @param Exercise $exercise
+     *
+     * @return JsonResponse
+     */
+    public function statisticsAction(Exercise $exercise)
+    {
+        if (!$exercise->hasStatistics()) {
+            $this->assertHasPermission('EDIT', $exercise);
+        }
+        $statistics = [];
+        $finishedOnly = !$exercise->isAllPapersStatistics();
+
+        foreach ($exercise->getSteps() as $step) {
+            foreach ($step->getQuestions() as $question) {
+                $itemStats = $this->itemManager->getStatistics($question, $exercise, $finishedOnly);
+                $statistics[$question->getUuid()] = !empty($itemStats->solutions) ? $itemStats->solutions : new \stdClass();
+            }
+        }
+
+        return new JsonResponse($statistics);
     }
 
     private function assertHasPermission($permission, Exercise $exercise)

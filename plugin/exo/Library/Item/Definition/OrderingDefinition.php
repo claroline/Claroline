@@ -148,11 +148,48 @@ class OrderingDefinition extends AbstractDefinition
         });
     }
 
-    public function getStatistics(AbstractItem $question, array $answersData)
+    public function getStatistics(AbstractItem $question, array $answersData, $total)
     {
-        // TODO: Implement getStatistics() method.
+        $orders = [];
+        $unused = [];
+        $unusedItems = [];
 
-        return [];
+        foreach ($question->getItems()->toArray() as $item) {
+            $unusedItems[$item->getUuid()] = true;
+        }
+        foreach ($answersData as $answerData) {
+            $unusedTemp = array_merge($unusedItems);
+            $orderingKey = '';
+
+            usort($answerData, function ($a, $b) {
+                return $a['position'] - $b['position'];
+            });
+
+            foreach ($answerData as $orderingAnswer) {
+                $orderingKey .= $orderingAnswer->itemId;
+                $unusedTemp[$orderingAnswer->itemId] = false;
+            }
+            if (!isset($orders[$orderingKey])) {
+                $orders[$orderingKey] = [
+                    'data' => $answerData,
+                    'count' => 0,
+                ];
+            }
+            ++$orders[$orderingKey]['count'];
+
+            foreach ($unusedTemp as $itemId => $value) {
+                if ($value) {
+                    $unused[$itemId] = isset($unused[$itemId]) ? $unused[$itemId] + 1 : 1;
+                }
+            }
+        }
+
+        return [
+            'orders' => $orders,
+            'unused' => $unused,
+            'total' => $total,
+            'unanswered' => $total - count($answersData),
+        ];
     }
 
     /**
