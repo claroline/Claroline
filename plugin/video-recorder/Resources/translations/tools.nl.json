@@ -1,7 +1,0 @@
-{
-    "submit_config_label": "De instellingen opslaan",
-    "video_recorder_configuration_max_recording_time": "Maximale opnametijd (Seconden, 0 = oneindig)",
-    "config_update_error": "Probleem tijdens het bijwerken van de configuratie van de videorecorder.",
-    "config_update_success": "Configuratie van de videorecorder met succes bijgewerkt.",
-    "innova_video_recorder_tool": "Configuratie van videorecorder (voor het hele platform)"
-}

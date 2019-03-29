@@ -7,8 +7,6 @@ plugin:
       class: Claroline\CoreBundle\Entity\Resource\File
       tags: [content]
       exportable: false
-      activity_rules:
-        - action: resource-read
       actions:
           # Edits the underlying resource file
           - name: change_file

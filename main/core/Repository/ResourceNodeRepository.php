@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\AbstractQuery;
@@ -40,8 +39,6 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
     }
 
     /**
-     * Finds a resource node by its id or guid.
-     *
      * @param string|int $id The id or guid of the node
      *
      * @return ResourceNode|null
@@ -224,47 +221,6 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
     }
 
     /**
-     * Returns the root directories of workspaces a user is registered to.
-     *
-     * @param User $user
-     *
-     * @return array[array] An array of resources represented as arrays
-     */
-    public function findWorkspaceRootsByUser(User $user)
-    {
-        $dql = $this->builder->selectAsArray()
-            ->whereParentIsNull()
-            ->whereInUserWorkspace($user)
-            ->orderByPath()
-            ->getDql();
-        $query = $this->_em->createQuery($dql);
-        $query->setParameters($this->builder->getParameters());
-
-        return $this->executeQuery($query);
-    }
-
-    /**
-     * Returns the roots directories a user is granted access.
-     *
-     * @param array $roles
-     *
-     * @return array[array] An array of resources represented as arrays
-     */
-    public function findWorkspaceRootsByRoles(array $roles)
-    {
-        $dql = $this->builder->selectAsArray()
-            ->whereParentIsNull()
-            ->whereHasRoleIn($roles)
-            ->orderByName()
-            ->getDql();
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameters($this->builder->getParameters());
-
-        return $this->executeQuery($query);
-    }
-
-    /**
      * Returns an array of different file types with the number of resources that
      * belong to this type.
      *
@@ -308,72 +264,6 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
     }
 
     /**
-     * Returns the workspace name and code of the resources whose ids are passed
-     * as argument.
-     *
-     * @param array $resourceIds
-     *
-     * @return array
-     *
-     * @throws \InvalidArgumentException if the resource ids array is empty
-     */
-    public function findWorkspaceInfoByIds(array $nodesIds)
-    {
-        if (0 === count($nodesIds)) {
-            throw new \InvalidArgumentException('Resource ids array cannot be empty');
-        }
-
-        $dql = '
-            SELECT r.id AS id, w.code AS code, w.name AS name
-            FROM Claroline\CoreBundle\Entity\Resource\ResourceNode r
-            JOIN r.workspace w
-            WHERE r.id IN (:nodeIds)
-            ORDER BY w.name ASC
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('nodeIds', $nodesIds);
-
-        return $query->getResult();
-    }
-
-    public function findByMimeTypeAndParent($mimeType, ResourceNode $parent, array $roles)
-    {
-        if (!$this->isWorkspaceManager($parent, $roles)) {
-            $dql = $this->builder->selectAsEntity(false, 'Claroline\CoreBundle\Entity\Resource\File')
-                ->whereParentIs($parent)
-                ->whereMimeTypeIs('%'.$mimeType.'%')
-                ->whereHasRoleIn($roles)
-                ->getDql();
-        } else {
-            $dql = $this->builder->selectAsEntity(false, 'Claroline\CoreBundle\Entity\Resource\File')
-                ->whereParentIs($parent)
-                ->whereMimeTypeIs('%'.$mimeType.'%')
-                ->getDql();
-        }
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameters($this->builder->getParameters());
-        $resources = $query->getResult();
-
-        return $resources;
-    }
-
-    public function findByWorkspaceAndResourceType(Workspace $workspace, ResourceType $resourceType)
-    {
-        $qb = $this->createQueryBuilder('resourceNode');
-        $qb->select('resourceNode')
-            ->where('resourceNode.workspace = :workspace')
-            ->andWhere('resourceNode.resourceType = :resourceType');
-
-        return $qb->getQuery()->execute(
-            [
-                ':workspace' => $workspace,
-                ':resourceType' => $resourceType,
-            ]
-        );
-    }
-
-    /**
      * @param string $name
      * @param array  $extraDatas
      * @param bool   $executeQuery
@@ -400,29 +290,6 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
             ->setParameter(':name', "%{$name}%");
 
         return $executeQuery ? $queryBuilder->getQuery()->getResult() : $queryBuilder;
-    }
-
-    /**
-     * @param string $search
-     * @param array  $extraData
-     *
-     * @return array
-     */
-    public function findByNameForAjax($search, $extraData)
-    {
-        $resultArray = [];
-
-        /** @var ResourceNode[] $resourceNodes */
-        $resourceNodes = $this->findByName($search, $extraData);
-
-        foreach ($resourceNodes as $resourceNode) {
-            $resultArray[] = [
-                'id' => $resourceNode->getId(),
-                'text' => $resourceNode->getPathForDisplay(),
-            ];
-        }
-
-        return $resultArray;
     }
 
     /**
@@ -482,72 +349,5 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
         }
 
         return $isWorkspaceManager;
-    }
-
-    public function findByWorkspaceAndMimeType(Workspace $workspace, $mimeType)
-    {
-        $dql = '
-            SELECT r FROM Claroline\CoreBundle\Entity\Resource\ResourceNode r
-            WHERE r.workspace = :workspace
-            and r.mimeType LIKE :mimeType
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('workspace', $workspace);
-        $query->setParameter('mimeType', "%{$mimeType}%");
-
-        return $query->getResult();
-    }
-
-    public function findResourcesByIds(array $roles, $user, array $ids)
-    {
-        //if we usurpate a role, then it's like we're anonymous.
-        if (in_array('ROLE_USURPATE_WORKSPACE_ROLE', $roles)) {
-            $user = 'anon.';
-        }
-        if (0 === count($roles)) {
-            throw new \RuntimeException('Roles cannot be empty');
-        }
-        if (0 === count($ids)) {
-            throw new \RuntimeException('List of id cannot be empty');
-        }
-        $this->builder->selectAsArray(true)
-            ->whereIdIn($ids)
-            ->whereActiveIs(true)
-            ->whereHasRoleIn($roles)
-            ->whereIsAccessible($user);
-
-        $query = $this->_em->createQuery($this->builder->getDql());
-        $query->setParameters($this->builder->getParameters());
-
-        $children = $this->executeQuery($query);
-        $childrenWithMaxRights = [];
-
-        foreach ($children as $child) {
-            if (!isset($childrenWithMaxRights[$child['id']])) {
-                $childrenWithMaxRights[$child['id']] = $child;
-            }
-
-            foreach ($childrenWithMaxRights as $id => $childMaxRights) {
-                if ($id === $child['id']) {
-                    $childrenWithMaxRights[$id]['mask'] |= $child['mask'];
-                }
-            }
-        }
-        $returnedArray = [];
-
-        foreach ($childrenWithMaxRights as $childMaxRights) {
-            $returnedArray[] = $childMaxRights;
-        }
-
-        //and now we order by index
-        usort($returnedArray, function ($a, $b) {
-            if ($a['index_dir'] === $b['index_dir']) {
-                return 0;
-            }
-
-            return ($a['index_dir'] < $b['index_dir']) ? -1 : 1;
-        });
-
-        return $returnedArray;
     }
 }

@@ -4,7 +4,7 @@ namespace Claroline\RssBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\RssBundle\Entity\Resource\RssFeed;
-use Claroline\RssReaderBundle\Library\ReaderProvider;
+use Claroline\RssBundle\Library\ReaderProvider;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**

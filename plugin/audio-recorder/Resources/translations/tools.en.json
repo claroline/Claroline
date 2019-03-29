@@ -1,8 +1,0 @@
-{
-    "audio_recorder_configuration_max_recording_time": "Maximum recording time (Secondes, 0 = infinite)",
-    "audio_recorder_configuration_max_try": "Maximum recording attempts",
-    "config_update_error": "Problem while updating audio recorder configuration.",
-    "config_update_success": "Audio recorder configuration updated successfully.",
-    "innova_audio_recorder_tool": "Audio recorder configuration (whole platform).",
-    "submit_config_label": "Save configuration"
-}

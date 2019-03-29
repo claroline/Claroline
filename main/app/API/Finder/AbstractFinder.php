@@ -113,6 +113,10 @@ abstract class AbstractFinder implements FinderInterface
             $query = $qb->getQuery();
         }
 
+        if (in_array(Options::SQL_QUERY, $options)) {
+            return $query;
+        }
+
         if (in_array(Options::SQL_ARRAY_MAP, $options)) {
             return $query->getArrayResult();
         }
@@ -233,6 +237,30 @@ abstract class AbstractFinder implements FinderInterface
         $sql = $query->getSql();
         //we may find a way to turn the getExtraSelect() into something nice here but not many idea on how to do it.
         //the qb getAllAliases() func doesn't return what's needed
+        $sql = preg_replace('/ AS \S+/', ',', $sql);
+        $sql = str_replace(', FROM', ' FROM', $sql);
+
+        foreach ($this->getAliases() as $property => $alias) {
+            $sql = str_replace(', '.$property, ', '.$property.' AS '.$alias, $sql);
+        }
+
+        return $sql;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSqlWithParameters(Query $query)
+    {
+        $sql = $query->getSql();
+        $params = $query->getParameters();
+
+        if (!empty($params)) {
+            foreach ($params as $param) {
+                $sql = join(var_export($param->getValue(), true), explode('?', $sql, 2));
+            }
+        }
+
         $sql = preg_replace('/ AS \S+/', ',', $sql);
         $sql = str_replace(', FROM', ' FROM', $sql);
 

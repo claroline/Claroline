@@ -179,7 +179,7 @@ class IconManager
      * @param string    $baseMime  (image|video)
      * @param Workspace $workspace
      *
-     * @return null|string
+     * @return string|null
      */
     public function createFromFile($filePath, $baseMime, Workspace $workspace = null)
     {
@@ -293,7 +293,6 @@ class IconManager
     {
         return [
             ['res_default.png', 'custom/default'],
-            ['res_activity.png', 'custom/activity'],
             ['res_file.png', 'custom/file'],
             ['res_folder.png', 'custom/directory'],
             ['res_text.png', 'text/plain'],

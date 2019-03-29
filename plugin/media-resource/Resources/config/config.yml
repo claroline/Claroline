@@ -1,8 +1,0 @@
-plugin:
-  has_options: false
-  icon: res_file.png
-
-  resources:
-    - name: innova_media_resource
-      class: Innova\MediaResourceBundle\Entity\MediaResource
-      exportable: false

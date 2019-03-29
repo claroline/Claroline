@@ -14,12 +14,6 @@ plugin:
             - name: moderate
               decoder: moderate
 
-          activity_rules:
-            - action: resource-read
-            - action: resource-icap_blog-post_create
-            - action: resource-icap_blog-post_read
-            - action: resource-icap_blog-comment_create
-
     data_sources:
         - name: blog_posts
           type: list

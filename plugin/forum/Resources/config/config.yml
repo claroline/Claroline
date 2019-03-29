@@ -9,10 +9,7 @@ plugin:
           exportable: true
           actions:
               - name: post
-          activity_rules:
-              - action: resource-read
-              - action: resource-claroline_forum-create_message
-
+              
     data_sources:
         - name: forum_messages
           type: list

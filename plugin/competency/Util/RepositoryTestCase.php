@@ -129,11 +129,6 @@ abstract class RepositoryTestCase extends TransactionalTestCase
             $this->defaults['workspace'] = $workspace;
         }
 
-        if (!isset($this->defaults['activity_type'])) {
-            $type = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('activity');
-            $this->defaults['activity_type'] = $type;
-        }
-
         $node = new ResourceNode();
         $node->setName($name);
         $node->setCreator($this->defaults['user']);

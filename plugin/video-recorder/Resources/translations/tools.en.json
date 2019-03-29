@@ -1,7 +1,0 @@
-{
-    "config_update_error": "Problem while updating configuration of video recorder.",
-    "config_update_success": "Configuration of video recorder updated successfully.",
-    "innova_video_recorder_tool": "Configuration of video recorder (whole platform)",
-    "submit_config_label": "Save configuration",
-    "video_recorder_configuration_max_recording_time": "Maximum recording time (Secondes, 0 = infinite)"
-}

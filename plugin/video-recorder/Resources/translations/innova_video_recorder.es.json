@@ -1,6 +1,0 @@
-{
-    "ok": "Validar",
-    "resource_name_placeholder": "El nombre del recurso es obligatorio.",
-    "validate": "Validar",
-    "video_recorder_configuration_max_recording_time": "Tiempo de grabación máximum (segundos, 0 = infinito) "
-}

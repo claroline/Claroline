@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Library\Installation\Plugin;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Action\AdditionalAction;
-use Claroline\CoreBundle\Entity\Activity\ActivityRuleAction;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
@@ -178,7 +177,6 @@ class DatabaseWriter
             ->findBy(['plugin' => $plugin->getGeneratedId()]);
 
         foreach ($resourceTypes as $resourceType) {
-            $this->deleteActivityRules($resourceType);
             // delete all icons for this resource type in icon sets
             $this->iconSetManager->deleteAllResourceIconItemsForMimeType('custom/'.$resourceType->getName());
         }
@@ -403,7 +401,6 @@ class DatabaseWriter
         $this->em->flush();
 
         $this->updateIcons($resourceConfiguration, $resourceType, $pluginBundle);
-        $this->updateActivityRules($resourceConfiguration['activity_rules'], $resourceType);
 
         return $resourceType;
     }
@@ -626,7 +623,6 @@ class DatabaseWriter
 
         $this->setResourceTypeDefaultMask($resourceConfiguration['default_rights'], $resourceType);
         $this->persistIcons($resourceConfiguration, $resourceType, $pluginBundle);
-        $this->persistActivityRules($resourceConfiguration['activity_rules'], $resourceType);
 
         return $resourceType;
     }
@@ -856,56 +852,6 @@ class DatabaseWriter
         }
 
         $this->persistAdminTool($adminToolConfiguration, $plugin, $adminTool);
-    }
-
-    /**
-     * @param array        $rules
-     * @param ResourceType $resourceType
-     */
-    private function persistActivityRules($rules, ResourceType $resourceType)
-    {
-        $activityRuleActionRepository = $this->em
-            ->getRepository('Claroline\CoreBundle\Entity\Activity\ActivityRuleAction');
-
-        foreach ($rules as $rule) {
-            $ruleAction = $activityRuleActionRepository->findOneBy(
-                ['action' => $rule['action'], 'resourceType' => $resourceType]
-            );
-
-            if (is_null($ruleAction)) {
-                $ruleAction = new ActivityRuleAction();
-                $ruleAction->setResourceType($resourceType);
-                $ruleAction->setAction($rule['action']);
-            }
-
-            $this->em->persist($ruleAction);
-        }
-        $this->em->flush();
-    }
-
-    /**
-     * @param ResourceType $resourceType
-     */
-    private function deleteActivityRules(ResourceType $resourceType)
-    {
-        $aRuleActionRepo = $this->em
-            ->getRepository('Claroline\CoreBundle\Entity\Activity\ActivityRuleAction');
-        $ruleActions = $aRuleActionRepo->findBy(['resourceType' => $resourceType]);
-
-        foreach ($ruleActions as $ruleAction) {
-            $this->em->remove($ruleAction);
-        }
-        $this->em->flush();
-    }
-
-    /**
-     * @param array        $rules
-     * @param ResourceType $resourceType
-     */
-    private function updateActivityRules($rules, ResourceType $resourceType)
-    {
-        $this->deleteActivityRules($resourceType);
-        $this->persistActivityRules($rules, $resourceType);
     }
 
     /**
