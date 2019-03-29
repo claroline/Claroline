@@ -3,12 +3,14 @@ import times from 'lodash/times'
 
 import {trans} from '#/main/app/intl/translation'
 
+import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
 import {SelectionItem as SelectionItemType} from '#/plugin/exo/items/selection/prop-types'
+
+// components
 import {SelectionEditor} from '#/plugin/exo/items/selection/components/editor'
 import {SelectionPlayer} from '#/plugin/exo/items/selection/components/player'
 import {SelectionPaper} from '#/plugin/exo/items/selection/components/paper'
 import {SelectionFeedback} from '#/plugin/exo/items/selection/components/feedback'
-import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
 
 // scores
 import ScoreFixed from '#/plugin/exo/scores/fixed'

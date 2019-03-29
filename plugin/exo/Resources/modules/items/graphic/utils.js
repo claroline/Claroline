@@ -1,6 +1,7 @@
-import {SHAPE_RECT} from './enums'
 
-export function findArea(pointer, solutions) {
+import {SHAPE_RECT} from '#/plugin/exo/items/graphic/enums'
+
+function findArea(pointer, solutions) {
   return solutions.find(solution => {
     if (solution.area.shape === SHAPE_RECT)  {
       return (
@@ -19,4 +20,8 @@ export function findArea(pointer, solutions) {
     // inside the circle if distance to center <= radius
     return x * x + y * y <= r * r
   })
+}
+
+export const utils = {
+  findArea
 }

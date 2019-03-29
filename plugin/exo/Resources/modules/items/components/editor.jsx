@@ -92,8 +92,8 @@ const ItemEditor = props => {
           fields: [
             {
               name: 'objects',
-              label: trans('contents'),
-              type: 'string'
+              label: trans('medias'),
+              type: 'medias'
             }
           ]
         }, {

@@ -9,8 +9,7 @@ import {utils} from '#/plugin/exo/items/cloze/utils'
 import {trans, tex} from '#/main/app/intl/translation'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea'
 import {FormGroup} from '#/main/app/content/form/components/group'
-import {ClozeItem as ClozeItemTypes} from '#/plugin/exo/items/grid/prop-types'
-import {KeywordsPopover} from '#/plugin/exo/items/components/keywords.jsx'
+import {KeywordsPopover} from '#/plugin/exo/components/keywords'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 function getHoleFromId(item, holeId) {

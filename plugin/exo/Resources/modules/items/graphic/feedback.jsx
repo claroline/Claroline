@@ -4,14 +4,14 @@ import {PropTypes as T} from 'prop-types'
 import {asset} from '#/main/app/config/asset'
 import {POINTER_CORRECT, POINTER_WRONG} from './enums'
 import {PointableImage} from './components/pointable-image.jsx'
-import {findArea} from './player'
+import {utils} from '#/plugin/exo/items/graphic/utils'
 
 export const GraphicFeedback = props =>
   <PointableImage
     src={props.item.image.data || asset(props.item.image.url)}
     absWidth={props.item.image.width}
     pointers={props.answer.map(coords => {
-      const area = findArea(coords, props.item.solutions)
+      const area = utils.findArea(coords, props.item.solutions)
       return {
         absX: coords.x,
         absY: coords.y,

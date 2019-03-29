@@ -189,6 +189,9 @@ class ItemSerializer extends AbstractSerializer
             if (!$this->hasOption(Transfer::MINIMAL, $options)) {
                 $this->mapEntityToObject([
                     'description' => 'description',
+                    'tags' => function (Item $question) {
+                        return $this->serializeTags($question);
+                    },
                 ], $question, $questionData);
             }
         }

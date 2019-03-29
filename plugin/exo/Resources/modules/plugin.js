@@ -11,6 +11,7 @@ registry.add('UJMExoBundle', {
   },
   data: {
     types: {
+      'medias'     : () => { return import(/* webpackChunkName: "exo-data-medias" */      '#/plugin/exo/data/types/medias') },
       'score_rules': () => { return import(/* webpackChunkName: "exo-data-score_rules" */ '#/plugin/exo/data/types/score-rules') }
     }
   },

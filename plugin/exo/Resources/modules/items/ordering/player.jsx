@@ -4,12 +4,12 @@ import cloneDeep from 'lodash/cloneDeep'
 import classes from 'classnames'
 
 import {trans, tex} from '#/main/app/intl/translation'
-import {MODE_INSIDE, MODE_BESIDE, DIRECTION_HORIZONTAL, DIRECTION_VERTICAL} from './editor'
-import {makeSortable, SORT_HORIZONTAL, SORT_VERTICAL} from './../../utils/sortable'
-import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {OrderingItemDragPreview} from './ordering-item-drag-preview.jsx'
+import {constants} from '#/plugin/exo/items/ordering/constants'
+import {makeSortable, SORT_HORIZONTAL, SORT_VERTICAL} from '#/plugin/exo/utils/sortable'
+import {makeDraggable, makeDroppable} from '#/plugin/exo/utils/dragAndDrop'
+import {OrderingItemDragPreview} from '#/plugin/exo/items/ordering/ordering-item-drag-preview'
 
 let DropBox = props => {
   return props.connectDropTarget(
@@ -110,7 +110,7 @@ class OrderingPlayer extends Component {
   }
 
   componentDidMount() {
-    if (this.props.item.mode === MODE_INSIDE && (this.props.answer.length === 0 || !this.props.answer)) {
+    if (this.props.item.mode === constants.MODE_INSIDE && (this.props.answer.length === 0 || !this.props.answer)) {
       const answers = []
       this.props.item.items.forEach((item, index) => {
         answers.push({
@@ -166,11 +166,11 @@ class OrderingPlayer extends Component {
       <div className="ordering-player">
         <div className="row">
           <div className={classes(
-            {'horizontal': this.props.item.direction === DIRECTION_HORIZONTAL},
-            {'col-md-12': this.props.item.mode === MODE_INSIDE},
-            {'col-md-6': this.props.item.direction === DIRECTION_VERTICAL && this.props.item.mode === MODE_BESIDE}
+            {'horizontal': this.props.item.direction === constants.DIRECTION_HORIZONTAL},
+            {'col-md-12': this.props.item.mode === constants.MODE_INSIDE},
+            {'col-md-6': this.props.item.direction === constants.DIRECTION_VERTICAL && this.props.item.mode === constants.MODE_BESIDE}
           )}>
-            {this.props.item.mode === MODE_INSIDE ?
+            {this.props.item.mode === constants.MODE_INSIDE ?
               this.props.answer.map((a, index) =>
                 <SortableItem
                   id={a.itemId}
@@ -178,7 +178,7 @@ class OrderingPlayer extends Component {
                   data={a._data}
                   canDelete={false}
                   index={index}
-                  sortDirection={this.props.item.direction === DIRECTION_VERTICAL ? SORT_VERTICAL : SORT_HORIZONTAL}
+                  sortDirection={this.props.item.direction === constants.DIRECTION_VERTICAL ? SORT_VERTICAL : SORT_HORIZONTAL}
                   onSort={(id, swapId) => this.props.onChange(
                     this.onSort(id, swapId)
                   )}/>
@@ -187,11 +187,12 @@ class OrderingPlayer extends Component {
               this.props.item.items.filter(item => undefined === this.props.answer.find(answer => answer.itemId === item.id)).map((item) =>
                 <DraggableItem
                   item={item}
-                  key={item.id}/>
+                  key={item.id}
+                />
               )
             }
           </div>
-          {this.props.item.direction === DIRECTION_VERTICAL && this.props.item.mode === MODE_BESIDE &&
+          {this.props.item.direction === constants.DIRECTION_VERTICAL && this.props.item.mode === constants.MODE_BESIDE &&
             <div className="col-md-6 answer-zone">
               {this.props.answer.map((a, index) =>
                 <SortableItem
@@ -210,7 +211,7 @@ class OrderingPlayer extends Component {
             </div>
           }
         </div>
-        {this.props.item.direction === DIRECTION_HORIZONTAL && this.props.item.mode === MODE_BESIDE &&
+        {this.props.item.direction === constants.DIRECTION_HORIZONTAL && this.props.item.mode === constants.MODE_BESIDE &&
           <div className="row">
             <div className="col-md-12 answer-zone horizontal">
               {this.props.answer.map((a, index) =>
@@ -251,4 +252,6 @@ OrderingPlayer.defaultProps = {
   answer: []
 }
 
-export {OrderingPlayer}
+export {
+  OrderingPlayer
+}

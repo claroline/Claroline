@@ -6,8 +6,8 @@
     "add_new_picture": "Add a new picture",
     "add_object": "Add an object",
     "add_proposal": "Add a proposal",
-    "add_question_from_existing": "Import one/many question(s)",
-    "add_question_from_new": "Create new question",
+    "add_question_from_existing": "Import some questions",
+    "add_question_from_new": "Create a question or content",
     "add_rule": "Add a rule",
     "add_step": "Add a step",
     "add_zone_answer": "Add an answer zone",
@@ -265,8 +265,7 @@
     "open": "Open",
     "open_creation": "Open creation",
     "open_edition": "Open Edition",
-    "open_maximum_length": "Answer maximum length (char number)",
-    "open_maximum_length_help": "Leave this value to 0 if there is no maximum length for the answer",
+    "open_maximum_length": "Maximum length (char number)",
     "orders": "Instructions",
     "ordering_item_empty_data_error": "Item data can not be empty.",
     "ordering_no_correct_answer_error": "At least one valid answer must be set.",
@@ -312,7 +311,7 @@
     "questions": "Questions",
     "question_graphic_nb_pointers": "{0} There is no more pointer to place on the picture.|{1} There is still %count% pointer to place on the picture.|]1,Inf[ There are still %count% pointers to place on the picture.",
     "question_graphic_set_pointers": "Click on the picture to place a pointer",
-    "question_objects": "Question object(s)",
+    "question_objects": "Question objects",
     "question_open_keywords_info": "Your answer needs to contain the following keywords to be correct",
     "question_share": "Share",
     "question_show_quizzes": "Show in quizzes",
@@ -538,5 +537,6 @@
     "restrict_user_attempts_per_day": "Restrict the number of attempts available per user per day",
     "restrict_user_attempts_per_day_help": "Once all his daily attempts have been made, the user will have to wait the next day to be able to answer the quiz again.",
     "restrict_total_attempts": "Restrict the total number of attempts available for the quiz",
-    "restrict_total_attempts_help": "Once all attempts have been made (all users mingled), no one will be able to answer the quiz."
+    "restrict_total_attempts_help": "Once all attempts have been made (all users mingled), no one will be able to answer the quiz.",
+    "restrict_answer_length": "Restrict the length of answers"
 }

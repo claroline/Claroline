@@ -1,13 +1,14 @@
 import {trans} from '#/main/app/intl/translation'
 
-import editor from '#/plugin/exo/items/words/editor'
-import {WordsPaper} from '#/plugin/exo/items/words/paper.jsx'
-import {WordsPlayer} from '#/plugin/exo/items/words/player.jsx'
-import {WordsFeedback} from '#/plugin/exo/items/words/feedback.jsx'
-import {WordsEditor} from '#/plugin/exo/items/words/components/editor'
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
 import {WordsItem as WordsItemTypes} from '#/plugin/exo/items/words/prop-types'
-import {utils} from './utils/utils'
+import {utils} from '#/plugin/exo/items/words/utils/utils'
+
+// components
+import {WordsPaper} from '#/plugin/exo/items/words/paper'
+import {WordsPlayer} from '#/plugin/exo/items/words/player'
+import {WordsFeedback} from '#/plugin/exo/items/words/feedback'
+import {WordsEditor} from '#/plugin/exo/items/words/components/editor'
 
 // scores
 import ScoreSum from '#/plugin/exo/scores/sum'
@@ -82,7 +83,6 @@ export default {
   paper: WordsPaper,
   player: WordsPlayer,
   feedback: WordsFeedback,
-  editor,
   getCorrectedAnswer,
   generateStats,
   components: {

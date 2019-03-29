@@ -7,9 +7,9 @@ import cloneDeep from 'lodash/cloneDeep'
 import {WordsItem as WordsItemTypes} from '#/plugin/exo/items/words/prop-types'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {ItemEditor as ItemEditorTypes} from '#/plugin/exo/items/prop-types'
-import {KeywordItems} from '#/plugin/exo/items/components/keywords.jsx'
+import {KeywordItems} from '#/plugin/exo/components/keywords'
 
-export const WordsEditor = (props) => 
+const WordsEditor = (props) =>
   <FormData
     className="words-editor"
     embedded={true}
@@ -25,8 +25,7 @@ export const WordsEditor = (props) =>
             type: 'boolean',
             label: trans('words_show_case_sensitive_option', {}, 'quiz'),
             required: true
-          },
-          {
+          }, {
             name: 'solutions',
             render: (item, wordErrors) => {
               const KeyWordItems = 
@@ -78,3 +77,7 @@ export const WordsEditor = (props) =>
 implementPropTypes(WordsEditor, ItemEditorTypes, {
   item: T.shape(WordsItemTypes.propTypes).isRequired
 })
+
+export {
+  WordsEditor
+}

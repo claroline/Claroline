@@ -12,7 +12,7 @@ import {WarningIcon} from '#/plugin/exo/components/warning-icon'
 import {utils} from './utils/utils'
 import {PaperTabs} from '../components/paper-tabs.jsx'
 import {SCORE_SUM} from './../../quiz/enums'
-import {MODE_INSIDE, MODE_BESIDE, DIRECTION_HORIZONTAL, DIRECTION_VERTICAL} from './editor'
+import {constants} from '#/plugin/exo/items/ordering/constants'
 
 const OrderingPaper = props => {
   return (
@@ -26,12 +26,12 @@ const OrderingPaper = props => {
           <div className="row">
             <div
               className={classes(
-                {'horizontal': props.item.direction === DIRECTION_HORIZONTAL},
-                {'col-md-12': props.item.mode === MODE_INSIDE},
-                {'col-md-6': props.item.direction === DIRECTION_VERTICAL && props.item.mode === MODE_BESIDE}
+                {'horizontal': props.item.direction === constants.DIRECTION_HORIZONTAL},
+                {'col-md-12': props.item.mode === constants.MODE_INSIDE},
+                {'col-md-6': props.item.direction === constants.DIRECTION_VERTICAL && props.item.mode === constants.MODE_BESIDE}
               )}
             >
-              {props.item.mode === MODE_INSIDE ?
+              {props.item.mode === constants.MODE_INSIDE ?
                 props.answer.map((a) =>
                   <div
                     key={a.itemId}
@@ -75,7 +75,7 @@ const OrderingPaper = props => {
                 )
               }
             </div>
-            {props.item.direction === DIRECTION_VERTICAL && props.item.mode === MODE_BESIDE &&
+            {props.item.direction === constants.DIRECTION_VERTICAL && props.item.mode === constants.MODE_BESIDE &&
               <div className="col-md-6 answer-zone">
                 {props.answer.map((a) =>
                   <div
@@ -99,7 +99,7 @@ const OrderingPaper = props => {
               </div>
             }
           </div>
-          {props.item.direction === DIRECTION_HORIZONTAL && props.item.mode === MODE_BESIDE &&
+          {props.item.direction === constants.DIRECTION_HORIZONTAL && props.item.mode === constants.MODE_BESIDE &&
             <div className="row">
               <div className="col-md-12 answer-zone horizontal">
                 {props.answer.map((a) =>
@@ -131,12 +131,12 @@ const OrderingPaper = props => {
           <div className="row">
             <div
               className={classes(
-                {'horizontal': props.item.direction === DIRECTION_HORIZONTAL},
-                {'col-md-12': props.item.mode === MODE_INSIDE},
-                {'col-md-6': props.item.direction === DIRECTION_VERTICAL && props.item.mode === MODE_BESIDE}
+                {'horizontal': props.item.direction === constants.DIRECTION_HORIZONTAL},
+                {'col-md-12': props.item.mode === constants.MODE_INSIDE},
+                {'col-md-6': props.item.direction === constants.DIRECTION_VERTICAL && props.item.mode === constants.MODE_BESIDE}
               )}
             >
-              {props.item.mode === MODE_INSIDE ?
+              {props.item.mode === constants.MODE_INSIDE ?
                 props.item.solutions.map((solution) =>
                   <div key={solution.itemId} className="item text-info bg-info">
                     <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === solution.itemId).data}}/>
@@ -164,7 +164,7 @@ const OrderingPaper = props => {
                 )
               }
             </div>
-            {props.item.direction === DIRECTION_VERTICAL && props.item.mode === MODE_BESIDE &&
+            {props.item.direction === constants.DIRECTION_VERTICAL && props.item.mode === constants.MODE_BESIDE &&
               <div className="col-md-6 answer-zone">
                 {props.item.solutions.filter(solution => solution.score > 0).map((solution) =>
                   <div key={solution.itemId} className="item text-info bg-info">
@@ -181,7 +181,7 @@ const OrderingPaper = props => {
               </div>
             }
           </div>
-          {props.item.direction === DIRECTION_HORIZONTAL && props.item.mode === MODE_BESIDE &&
+          {props.item.direction === constants.DIRECTION_HORIZONTAL && props.item.mode === constants.MODE_BESIDE &&
             <div className="row">
               <div className="col-md-12 answer-zone horizontal">
                 {props.item.solutions.filter(solution => solution.score > 0).map((solution) =>
@@ -206,13 +206,13 @@ const OrderingPaper = props => {
           <div className="row">
             <div
               className={classes(
-                {'horizontal': props.item.direction === DIRECTION_HORIZONTAL && props.item.mode === MODE_BESIDE},
-                {'col-md-6': props.item.direction === DIRECTION_VERTICAL && props.item.mode === MODE_BESIDE}
+                {'horizontal': props.item.direction === constants.DIRECTION_HORIZONTAL && props.item.mode === constants.MODE_BESIDE},
+                {'col-md-6': props.item.direction === constants.DIRECTION_VERTICAL && props.item.mode === constants.MODE_BESIDE}
               )}
             >
-              {props.item.mode === MODE_INSIDE ?
+              {props.item.mode === constants.MODE_INSIDE ?
                 <div className={classes('col-md-12 answer-zone',
-                  {'horizontal': props.item.direction === DIRECTION_HORIZONTAL}
+                  {'horizontal': props.item.direction === constants.DIRECTION_HORIZONTAL}
                 )}>
                   {props.item.solutions.map((solution) =>
                     <div key={solution.itemId} className="item selected-answer text-info bg-info">
@@ -240,7 +240,7 @@ const OrderingPaper = props => {
                   </div>
                 )
               }
-              {props.item.mode === MODE_INSIDE && props.stats.orders &&
+              {props.item.mode === constants.MODE_INSIDE && props.stats.orders &&
                 Object.values(props.stats.orders).map((o) => {
                   const data = o.data.slice()
                   const key = utils.getKey(data)
@@ -248,7 +248,7 @@ const OrderingPaper = props => {
                   if (props.stats.orders[key] && !utils.isInSolutions(key, props.item.solutions)) {
                     return (
                       <div key={`stats-unexpected-${key}`} className={classes('col-md-12 answer-zone',
-                        {'horizontal': props.item.direction === DIRECTION_HORIZONTAL}
+                        {'horizontal': props.item.direction === constants.DIRECTION_HORIZONTAL}
                       )}>
                         {props.stats.orders[key].data.map((d) =>
                           <div key={d.itemId} className="item item-bg">
@@ -266,7 +266,7 @@ const OrderingPaper = props => {
                   }
                 })
               }
-              {props.item.mode === MODE_BESIDE &&
+              {props.item.mode === constants.MODE_BESIDE &&
                 props.item.items.filter(i => has(props, ['props', 'stats', 'unused', i.id]) && !utils.isInOddsSolutions(i.id, props.item.solutions)).map((i) =>
                   <div key={`stats-unused-${i.id}`} className="item item-bg">
                     <div className="item-data" dangerouslySetInnerHTML={{__html: i.data}}/>
@@ -279,7 +279,7 @@ const OrderingPaper = props => {
                 )
               }
             </div>
-            {props.item.direction === DIRECTION_VERTICAL && props.item.mode === MODE_BESIDE &&
+            {props.item.direction === constants.DIRECTION_VERTICAL && props.item.mode === constants.MODE_BESIDE &&
               <div className="col-md-6">
                 <div className="answer-zone">
                   {props.item.solutions.filter(solution => solution.score > 0).map((solution) =>
@@ -296,7 +296,7 @@ const OrderingPaper = props => {
                     }}/>
                   </div>
                 </div>
-                {props.item.direction === DIRECTION_VERTICAL && props.item.mode === MODE_BESIDE && props.stats.orders &&
+                {props.item.direction === constants.DIRECTION_VERTICAL && props.item.mode === constants.MODE_BESIDE && props.stats.orders &&
                   Object.values(props.stats.orders).map((o) => {
                     const data = o.data.slice()
                     const key = utils.getKey(data)
@@ -324,7 +324,7 @@ const OrderingPaper = props => {
               </div>
             }
           </div>
-          {props.item.direction === DIRECTION_HORIZONTAL && props.item.mode === MODE_BESIDE &&
+          {props.item.direction === constants.DIRECTION_HORIZONTAL && props.item.mode === constants.MODE_BESIDE &&
             <div className="row">
               <div className="col-md-12 answer-zone horizontal">
                 {props.item.solutions.filter(solution => solution.score > 0).map((solution) =>
@@ -343,7 +343,7 @@ const OrderingPaper = props => {
               </div>
             </div>
           }
-          {props.item.direction === DIRECTION_HORIZONTAL && props.item.mode === MODE_BESIDE &&
+          {props.item.direction === constants.DIRECTION_HORIZONTAL && props.item.mode === constants.MODE_BESIDE &&
             Object.values(props.stats.orders).map((o) => {
               const data = o.data.slice()
               const key = utils.getKey(data)
@@ -411,4 +411,6 @@ OrderingPaper.defaultProps = {
   answer: []
 }
 
-export {OrderingPaper}
+export {
+  OrderingPaper
+}

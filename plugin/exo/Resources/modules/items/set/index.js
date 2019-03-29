@@ -3,13 +3,14 @@ import times from 'lodash/times'
 
 import {trans} from '#/main/app/intl/translation'
 
-import {SetItem as SetItemType} from '#/plugin/exo/items/set/prop-types'
-import {SetEditor} from '#/plugin/exo/items/set/components/editor'
-// old
-import {SetPaper} from '#/plugin/exo/items/set/paper.jsx'
-import {SetPlayer} from '#/plugin/exo/items/set/player.jsx'
-import {SetFeedback} from '#/plugin/exo/items/set/feedback.jsx'
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
+import {SetItem as SetItemType} from '#/plugin/exo/items/set/prop-types'
+
+// components
+import {SetEditor} from '#/plugin/exo/items/set/components/editor'
+import {SetPaper} from '#/plugin/exo/items/set/paper'
+import {SetPlayer} from '#/plugin/exo/items/set/player'
+import {SetFeedback} from '#/plugin/exo/items/set/feedback'
 
 // scores
 import ScoreSum from '#/plugin/exo/scores/sum'

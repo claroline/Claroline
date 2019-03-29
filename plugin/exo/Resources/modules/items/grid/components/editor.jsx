@@ -7,13 +7,13 @@ import isEmpty from 'lodash/isEmpty'
 
 import {FormData} from '#/main/app/content/form/containers/data'
 import {ItemEditor as ItemEditorTypes} from '#/plugin/exo/items/prop-types'
-import {SUM_CELL, SUM_COL, SUM_ROW} from '#/plugin/exo/items/grid/editor'
+import {SUM_CELL, SUM_COL, SUM_ROW} from '#/plugin/exo/items/grid/constants'
 import {SCORE_SUM, SCORE_FIXED} from '#/plugin/exo/quiz/enums'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {ColorPicker} from '#/main/core/layout/form/components/field/color-picker'
 import Overlay from 'react-bootstrap/lib/Overlay'
-import {KeywordsPopover} from '#/plugin/exo/items/components/keywords.jsx'
+import {KeywordsPopover} from '#/plugin/exo/components/keywords'
 
 import {utils} from '#/plugin/exo/items/grid/utils/utils'
 import {resizeArea} from '#/plugin/exo/items/graphic/resize'
@@ -283,7 +283,7 @@ class GridCell extends Component {
                 color: this.props.cell.color
               }}
             >
-              {trans('grid_choice_select_empty'), {}, 'quiz'}&nbsp;
+              {trans('grid_choice_select_empty', {}, 'quiz')}&nbsp;
               <span className="caret" />
             </button>
             <ul className="dropdown-menu" aria-labelledby={`choice-drop-down-${this.props.cell.id}`}>

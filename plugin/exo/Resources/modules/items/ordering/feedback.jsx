@@ -3,11 +3,11 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {HtmlText} from '#/main/core/layout/components/html-text'
-
-import {Feedback} from '../components/feedback-btn.jsx'
+import {Feedback} from '#/plugin/exo/items/components/feedback-btn'
 import {WarningIcon} from '#/plugin/exo/components/warning-icon'
-import {utils} from './utils/utils'
-import {MODE_INSIDE, MODE_BESIDE, DIRECTION_HORIZONTAL, DIRECTION_VERTICAL} from './editor'
+
+import {utils} from '#/plugin/exo/items/ordering/utils/utils'
+import {constants} from '#/plugin/exo/items/ordering/constants'
 
 const OrderingFeedback = props =>  {
   return (
@@ -15,12 +15,12 @@ const OrderingFeedback = props =>  {
       <div className="row">
         <div
           className={classes({
-            'horizontal': props.item.direction === DIRECTION_HORIZONTAL,
-            'col-md-12': props.item.mode === MODE_INSIDE,
-            'col-md-6': props.item.direction === DIRECTION_VERTICAL && props.item.mode === MODE_BESIDE
+            'horizontal': props.item.direction === constants.DIRECTION_HORIZONTAL,
+            'col-md-12': props.item.mode === constants.MODE_INSIDE,
+            'col-md-6': props.item.direction === constants.DIRECTION_VERTICAL && props.item.mode === constants.MODE_BESIDE
           })}
         >
-          {props.item.mode === MODE_INSIDE ?
+          {props.item.mode === constants.MODE_INSIDE ?
             props.answer.map((a) =>
               <div key={a.itemId} className={classes(
                 'item',
@@ -57,7 +57,7 @@ const OrderingFeedback = props =>  {
             )
           }
         </div>
-        {props.item.direction === DIRECTION_VERTICAL && props.item.mode === MODE_BESIDE &&
+        {props.item.direction === constants.DIRECTION_VERTICAL && props.item.mode === constants.MODE_BESIDE &&
           <div className="col-md-6 answer-zone">
             {props.answer.map((a) =>
               <div key={a.itemId} className={classes(
@@ -77,7 +77,7 @@ const OrderingFeedback = props =>  {
           </div>
         }
       </div>
-      {props.item.direction === DIRECTION_HORIZONTAL && props.item.mode === MODE_BESIDE &&
+      {props.item.direction === constants.DIRECTION_HORIZONTAL && props.item.mode === constants.MODE_BESIDE &&
         <div className="row">
           <div className="col-md-12 answer-zone horizontal">
             {props.answer.map((a) =>
@@ -119,4 +119,6 @@ OrderingFeedback.defaultProps = {
   answer: []
 }
 
-export {OrderingFeedback}
+export {
+  OrderingFeedback
+}

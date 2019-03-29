@@ -1,14 +1,16 @@
 import {trans} from '#/main/app/intl/translation'
 
-import { stripDiacritics } from '#/main/core/scaffolding/text/strip-diacritics'
-import editor, {SUM_CELL, SUM_COL, SUM_ROW} from '#/plugin/exo/items/grid/editor'
-
-import {GridEditor} from '#/plugin/exo/items/grid/components/editor.jsx'
-import {GridPaper} from '#/plugin/exo/items/grid/paper.jsx'
-import {GridPlayer} from '#/plugin/exo/items/grid/player.jsx'
-import {GridFeedback} from '#/plugin/exo/items/grid/feedback.jsx'
+import {stripDiacritics} from '#/main/core/scaffolding/text/strip-diacritics'
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
+
 import {utils} from '#/plugin/exo/items/grid/utils/utils'
+import {SUM_CELL, SUM_COL, SUM_ROW} from '#/plugin/exo/items/grid/constants'
+
+// components
+import {GridEditor} from '#/plugin/exo/items/grid/components/editor'
+import {GridPaper} from '#/plugin/exo/items/grid/paper'
+import {GridPlayer} from '#/plugin/exo/items/grid/player'
+import {GridFeedback} from '#/plugin/exo/items/grid/feedback'
 
 // scores
 import ScoreFixed from '#/plugin/exo/scores/fixed'
@@ -217,7 +219,6 @@ export default {
   paper: GridPaper,
   player: GridPlayer,
   feedback: GridFeedback,
-  editor,
   getCorrectedAnswer,
   generateStats,
 

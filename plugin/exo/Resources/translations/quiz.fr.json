@@ -6,8 +6,8 @@
     "add_new_picture": "Ajouter une nouvelle image",
     "add_object": "Ajouter un objet",
     "add_proposal": "Ajouter une proposition",
-    "add_question_from_existing": "Importer une/des question(s)",
-    "add_question_from_new": "Créer une nouvelle question",
+    "add_question_from_existing": "Importer des questions",
+    "add_question_from_new": "Créer une question ou un contenu",
     "add_rule": "Ajouter une règle",
     "add_step": "Ajouter une étape",
     "add_zone_answer": "Ajouter une zone de réponse",
@@ -265,8 +265,7 @@
     "open": "Ouverte",
     "open_creation": "Création d'une question ouverte",
     "open_edition": "Edition d'une question ouverte",
-    "open_maximum_length": "Longueur maximum de la réponse (nombre de caractères)",
-    "open_maximum_length_help": "Laissez cette valeur à 0 si il n'y a pas de longueur maximum pour la réponse",
+    "open_maximum_length": "Longueur maximum (nombre de caractères)",
     "orders": "Consignes",
     "ordering_item_empty_data_error": "Les données d'un item ne peuvent pas être vides.",
     "ordering_no_correct_answer_error": "Il doit y avoir au moins une solution valide.",
@@ -312,7 +311,7 @@
     "questions": "Questions",
     "question_graphic_nb_pointers": "{0} Il ne reste plus aucun pointeur à placer sur l'image.|{1} Il reste %count% pointeur à placer sur l'image.|]1,Inf[ Il reste %count% pointeurs à placer sur l'image.",
     "question_graphic_set_pointers": "Cliquez sur l'image pour placer un pointeur",
-    "question_objects": "Objet(s) de la question",
+    "question_objects": "Objets de la question",
     "question_open_keywords_info": "Votre réponse doit contenir les mots clés suivant pour obtenir les points",
     "question_share": "Partager",
     "question_show_quizzes": "Voir dans les questionnaires",
@@ -538,5 +537,6 @@
     "restrict_user_attempts_per_day": "Restreindre le nombre de tentatives disponibles par utilisateur et par jour",
     "restrict_user_attempts_per_day_help": "Une fois toutes ses tentatives journalières effectuées, l'utilisateur devra attendre le lendemain pour pouvoir à nouveau répondre au questionnaire.",
     "restrict_total_attempts": "Restreindre le nombre total de tentatives disponibles pour le questionnaire",
-    "restrict_total_attempts_help": "Une fois toutes les tentatives effectuées (tout utilisateur confondu), plus personne ne pourra répondre au questionnaire."
+    "restrict_total_attempts_help": "Une fois toutes les tentatives effectuées (tout utilisateur confondu), plus personne ne pourra répondre au questionnaire.",
+    "restrict_answer_length": "Restreindre la longueur des réponses"
 }

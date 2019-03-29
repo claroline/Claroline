@@ -1,6 +1,6 @@
 import {PropTypes as T} from 'prop-types'
 import {makeId} from '#/plugin/exo/utils/utils'
-import {SUM_CELL, SUM_COL, SUM_ROW} from '#/plugin/exo/items/grid/editor'
+import {SUM_CELL, SUM_COL, SUM_ROW} from '#/plugin/exo/items/grid/constants'
 
 function makeDefaultCell(x, y) {
   return {

@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {Feedback} from './../components/feedback-btn.jsx'
 import {utils} from './utils/utils'
 import {WarningIcon} from '#/plugin/exo/components/warning-icon'
-import {SUM_CELL} from './editor'
+import {SUM_CELL} from '#/plugin/exo/items/grid/constants'
 import {SCORE_SUM} from './../../quiz/enums'
 
 class YourGridCell extends Component {

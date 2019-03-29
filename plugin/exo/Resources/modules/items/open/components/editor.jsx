@@ -18,9 +18,25 @@ const OpenEditor = (props) =>
         primary: true,
         fields: [
           {
-            name: 'maxLength',
-            type: 'number',
-            label: trans('open_maximum_length', {}, 'quiz')
+            name: '_restrictLength',
+            label: trans('restrict_answer_length', {}, 'quiz'),
+            type: 'boolean',
+            onChange: (checked) => {
+              if (checked) {
+                props.update('maxLength', null) // force user to fill the field
+              } else {
+                props.update('maxLength', 0)
+              }
+            },
+            linked: [
+              {
+                name: 'maxLength',
+                type: 'number',
+                label: trans('open_maximum_length', {}, 'quiz'),
+                required: true,
+                displayed: (openItem) => openItem._restrictLength || 0 < openItem.maxLength
+              }
+            ]
           }
         ]
       }

@@ -1,13 +1,15 @@
 import {trans} from '#/main/app/intl/translation'
 
-import editor from '#/plugin/exo/items/graphic/editor'
-import {GraphicPaper} from '#/plugin/exo/items/graphic/paper.jsx'
-import {GraphicEditor} from '#/plugin/exo/items/graphic/components/editor.jsx'
-import {GraphicPlayer} from '#/plugin/exo/items/graphic/player.jsx'
-import {GraphicFeedback} from '#/plugin/exo/items/graphic/feedback.jsx'
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
 import {GraphicItem as GraphicItemTypes} from '#/plugin/exo/items/graphic/prop-types'
 
+// components
+import {GraphicPaper} from '#/plugin/exo/items/graphic/paper'
+import {GraphicEditor} from '#/plugin/exo/items/graphic/components/editor'
+import {GraphicPlayer} from '#/plugin/exo/items/graphic/player'
+import {GraphicFeedback} from '#/plugin/exo/items/graphic/feedback'
+
+// scores
 import ScoreSum from '#/plugin/exo/scores/sum'
 
 function getCorrectedAnswer(item, answers) {
@@ -114,7 +116,6 @@ export default {
   paper: GraphicPaper,
   player: GraphicPlayer,
   feedback: GraphicFeedback,
-  editor,
   getCorrectedAnswer,
   generateStats,
 

@@ -6,7 +6,7 @@ import {tex} from '#/main/app/intl/translation'
 import {POINTER_PLACED} from './enums'
 import {PointableImage} from './components/pointable-image.jsx'
 
-export class GraphicPlayer extends Component {
+class GraphicPlayer extends Component {
   constructor(props) {
     super(props)
     this.onClickImage = this.onClickImage.bind(this)
@@ -94,4 +94,8 @@ GraphicPlayer.propTypes = {
     pointers: T.number.isRequired
   }).isRequired,
   onChange: T.func.isRequired
+}
+
+export {
+  GraphicPlayer
 }

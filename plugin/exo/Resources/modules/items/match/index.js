@@ -1,13 +1,15 @@
+import times from 'lodash/times'
+
 import {trans} from '#/main/app/intl/translation'
 
-import editor from '#/plugin/exo/items/match/editor'
-import {MatchPaper} from '#/plugin/exo/items/match/paper.jsx'
-import {MatchPlayer} from '#/plugin/exo/items/match/player.jsx'
-import {MatchFeedback} from '#/plugin/exo/items/match/feedback.jsx'
-import {MatchEditor} from '#/plugin/exo/items/match/components/editor'
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
 import {MatchItem as MatchItemTypes} from '#/plugin/exo/items/match/prop-types'
-import times from 'lodash/times'
+
+// components
+import {MatchPaper} from '#/plugin/exo/items/match/paper'
+import {MatchPlayer} from '#/plugin/exo/items/match/player'
+import {MatchFeedback} from '#/plugin/exo/items/match/feedback'
+import {MatchEditor} from '#/plugin/exo/items/match/components/editor'
 
 // scores
 import ScoreSum from '#/plugin/exo/scores/sum'
@@ -103,7 +105,6 @@ export default {
   paper: MatchPaper,
   player: MatchPlayer,
   feedback: MatchFeedback,
-  editor,
   getCorrectedAnswer,
   generateStats
 }

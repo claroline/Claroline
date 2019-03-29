@@ -9,7 +9,7 @@ import {AnswerStats} from '../components/stats.jsx'
 import {PaperTabs} from './../components/paper-tabs.jsx'
 import {utils} from './utils/utils'
 import {WarningIcon} from '#/plugin/exo/components/warning-icon'
-import {SUM_CELL, SUM_COL, SUM_ROW} from './editor'
+import {SUM_CELL, SUM_COL, SUM_ROW} from '#/plugin/exo/items/grid/constants'
 import {SCORE_SUM, SCORE_FIXED} from './../../quiz/enums'
 
 

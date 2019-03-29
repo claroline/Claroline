@@ -224,6 +224,7 @@ class StepSerializer implements SerializerInterface
                 // Update order of the Item in the Step
                 $stepQuestion->setOrder($index);
             }
+
             if (isset($itemData->meta->mandatory)) {
                 $stepQuestion->setMandatory($itemData->meta->mandatory);
             }

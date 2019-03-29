@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {asset} from '#/main/app/config/asset'
 import {POINTER_CORRECT, POINTER_WRONG, SHAPE_RECT} from './enums'
-import {findArea} from './player'
+import {utils} from '#/plugin/exo/items/graphic/utils'
 import {PaperTabs} from '../components/paper-tabs.jsx'
 import {PointableImage} from './components/pointable-image.jsx'
 import {AnswerTable} from './components/answer-table.jsx'
@@ -13,7 +13,7 @@ import {tex} from '#/main/app/intl/translation'
 export const GraphicPaper = props => {
   const pointedAreas = props.item.solutions
     .filter(solution =>
-      !!props.answer.find(coords => findArea(coords, [solution]))
+      !!props.answer.find(coords => utils.findArea(coords, [solution]))
     )
     .map((solution, idx) => Object.assign(getAreaPosition(solution.area), {
       number: idx + 1,
@@ -41,7 +41,7 @@ export const GraphicPaper = props => {
               src={props.item.image.data || asset(props.item.image.url)}
               absWidth={props.item.image.width}
               pointers={props.answer.map(coords => {
-                const area = findArea(coords, props.item.solutions)
+                const area = utils.findArea(coords, props.item.solutions)
                 return {
                   absX: coords.x,
                   absY: coords.y,
