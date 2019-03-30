@@ -41,7 +41,7 @@
         "jms/di-extra-bundle": "1.8.2",
         "jms/security-extra-bundle": "1.6.1",
         "jms/serializer-bundle": "1.5.0",
-        "json-quiz/json-quiz": "dev-master",
+        "claroline/json-quiz": "dev-master",
         "knplabs/knp-menu-bundle": "2.2.1",
         "knplabs/knp-snappy-bundle": "1.5.2",
         "meyfa/php-svg": "0.8.0",
