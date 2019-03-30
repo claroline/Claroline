@@ -105,7 +105,7 @@ class JsonSchema
     private function uriToFile($uri)
     {
         $uri = str_replace($this->baseUri, '', $uri);
-        $schemaDir = realpath("{$this->kernelDir}/../vendor/json-quiz/json-quiz/format");
+        $schemaDir = realpath("{$this->kernelDir}/../vendor/claroline/json-quiz/format");
 
         return $schemaDir.'/'.$uri;
     }

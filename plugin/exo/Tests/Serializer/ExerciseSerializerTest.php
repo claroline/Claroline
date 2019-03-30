@@ -79,10 +79,9 @@ class ExerciseSerializerTest extends JsonDataTestCase
         $data = $this->serializer->serialize($this->exercise);
 
         $this->assertInstanceOf('\stdClass', $data);
+
         $this->assertTrue(!empty($data->id));
-        $this->assertTrue(!empty($data->title));
         $this->assertTrue(!empty($data->description));
-        $this->assertTrue(!empty($data->meta));
         $this->assertTrue(!empty($data->parameters));
         $this->assertTrue(!empty($data->steps));
 

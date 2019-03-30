@@ -51,6 +51,14 @@ before_install:
   - nvm install 6.12
 
 before_script:
+  # add swap for composer
+  - sudo swapon -s
+  - sudo fallocate -l 4G /swapfile
+  - sudo chmod 600 /swapfile
+  - sudo mkswap /swapfile
+  - sudo swapon /swapfile
+  - sudo swapon -s
+
   # get and configure claroline platform
   - curl -L https://github.com/claroline/Claroline/archive/${TRAVIS_BRANCH}.tar.gz | tar xzv
   - cd Claroline-${TRAVIS_BRANCH}
