@@ -108,7 +108,12 @@ const EditorStep = props => {
                     type: CALLBACK_BUTTON,
                     icon: 'fa fa-fw fa-trash-o',
                     label: trans('delete', {}, 'actions'),
-                    callback: () => true,
+                    callback: () => {
+                      const newItems = props.items.slice()
+
+                      newItems.splice(itemIndex, 1)
+                      props.update(`items`, newItems)
+                    },
                     confirm: {
                       title: trans('deletion'),
                       //subtitle: props.item.title || trans('', {}, 'question_types'),

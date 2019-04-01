@@ -5,7 +5,7 @@ import isEmpty from 'lodash/isEmpty'
 import classes from 'classnames'
 import Popover from 'react-bootstrap/lib/Popover'
 
-import {trans, tex} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
 import {ContentError} from '#/main/app/content/components/error'
@@ -30,18 +30,15 @@ class KeywordItem extends Component {
 
   render() {
     return (
-      <li className={
-        classes(
-          'keyword-item answer-item',
-          {'expected-answer': this.props.showScore && this.props.keyword.score > 0 || this.props.keyword.expected },
-          {'unexpected-answer': this.props.keyword.score <= 0 && !this.props.keyword.expected }
-        )
-      }>
+      <li className={classes('keyword-item answer-item', {
+        'expected-answer': this.props.showScore && this.props.keyword.score > 0 || this.props.keyword.expected,
+        'unexpected-answer': this.props.keyword.score <= 0 && !this.props.keyword.expected
+      })}>
         {!this.props.showScore &&
           <div className="keyword-expected">
             <TooltipOverlay
               id={`tooltip-${this.props.keyword._id}-keyword-expected`}
-              tip={tex('grid_expected_keyword')}
+              tip={trans('grid_expected_keyword', {}, 'quiz')}
             >
               <input
                 id={`keyword-${this.props.keyword._id}-expected`}
@@ -57,10 +54,10 @@ class KeywordItem extends Component {
           <input
             type="text"
             id={`keyword-${this.props.keyword._id}-text`}
-            title={tex('response')}
+            title={trans('response', {}, 'quiz')}
             value={this.props.keyword.text}
             className="form-control"
-            placeholder={tex('keyword')}
+            placeholder={trans('keyword', {}, 'quiz')}
             onChange={e => this.props.updateKeyword('text', e.target.value)}
           />
 
@@ -78,13 +75,13 @@ class KeywordItem extends Component {
         <div className="keyword-case-sensitive">
           <TooltipOverlay
             id={`tooltip-${this.props.keyword._id}-keyword-case-sensitive`}
-            tip={tex('words_case_sensitive')}
+            tip={trans('words_case_sensitive')}
           >
             <input
               id={`keyword-${this.props.keyword._id}-case-sensitive`}
               type="checkbox"
               disabled={!this.props.showCaseSensitive}
-              title={tex('words_case_sensitive')}
+              title={trans('words_case_sensitive')}
               checked={this.props.keyword.caseSensitive}
               onChange={e => this.props.updateKeyword('caseSensitive', e.target.checked)}
             />
@@ -95,7 +92,7 @@ class KeywordItem extends Component {
           {this.props.showScore &&
             <input
               id={`keyword-${this.props.keyword._id}-score`}
-              title={tex('score')}
+              title={trans('score', {}, 'quiz')}
               type="number"
               className="form-control keyword-score"
               value={this.props.keyword.score}
@@ -108,7 +105,7 @@ class KeywordItem extends Component {
             className="btn-link"
             type={CALLBACK_BUTTON}
             icon="fa fa-fw fa-comments-o"
-            label={tex('words_feedback_info')}
+            label={trans('words_feedback_info', {}, 'quiz')}
             callback={() => this.setState({showFeedback: !this.state.showFeedback})}
             tooltip="top"
           />
@@ -187,14 +184,13 @@ const KeywordItems = props =>
       )}
     </ul>
 
-    <button
-      type="button"
-      className="add-keyword btn btn-block btn-default"
-      onClick={props.addKeyword}
-    >
-      <span className="fa fa-fw fa-plus" />
-      {tex('words_add_word')}
-    </button>
+    <Button
+      type={CALLBACK_BUTTON}
+      className="add-keyword btn btn-block"
+      icon="fa fa-fw fa-plus"
+      label={trans('words_add_word', {}, 'quiz')}
+      callback={props.addKeyword}
+    />
   </div>
 
 KeywordItems.propTypes = {
@@ -308,7 +304,7 @@ const KeywordsPopover = props =>
 
     <CheckGroup
       id={`keywords-show-${props.id}-list`}
-      label={tex('submit_a_list')}
+      label={trans('submit_a_list', {}, 'quiz')}
       value={props._multiple}
       onChange={checked => props.onChange('_multiple', checked)}
     />

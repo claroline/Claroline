@@ -6,7 +6,6 @@ import {trans} from '#/main/app/intl/translation'
 import {Await} from '#/main/app/components/await'
 import {FormSection} from '#/main/app/content/form/components/sections'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
-import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {getItem} from '#/plugin/exo/items'
 import {Item as ItemTypes} from '#/plugin/exo/items/prop-types'
@@ -43,36 +42,7 @@ const EditorItem = props =>
             </Fragment>
           }
           title={itemTitle}
-          actions={[
-            {
-              name: 'copy',
-              type: MODAL_BUTTON,
-              icon: 'fa fa-fw fa-clone',
-              label: trans('copy', {}, 'actions'),
-              modal: [],
-              group: trans('management')
-            }, {
-              name: 'move',
-              type: MODAL_BUTTON,
-              icon: 'fa fa-fw fa-arrows',
-              label: trans('move', {}, 'actions'),
-              modal: [],
-              group: trans('management')
-            }, {
-              name: 'delete',
-              type: CALLBACK_BUTTON,
-              icon: 'fa fa-fw fa-trash-o',
-              label: trans('delete', {}, 'actions'),
-              callback: () => true,
-              confirm: {
-                title: trans('deletion'),
-                subtitle: itemTitle,
-                message: trans('remove_item_confirm_message', {}, 'quiz')
-              },
-              dangerous: true,
-              group: trans('management')
-            }
-          ]}
+          actions={props.actions}
         >
           <ItemEditor
             embedded={true}
