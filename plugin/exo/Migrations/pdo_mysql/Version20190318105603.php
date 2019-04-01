@@ -27,28 +27,12 @@ class Version20190318105603 extends AbstractMigration
             DROP model
         ');
         $this->addSql('
-            ALTER TABLE ujm_interaction_hole
-            DROP originalText
-        ');
-        $this->addSql('
-            ALTER TABLE ujm_hole
-            DROP position
-        ');
-        $this->addSql('
             ALTER TABLE ujm_step CHANGE pick pick LONGTEXT NOT NULL
         ');
     }
 
     public function down(Schema $schema)
     {
-        $this->addSql('
-            ALTER TABLE ujm_hole
-            ADD position INT DEFAULT NULL
-        ');
-        $this->addSql('
-            ALTER TABLE ujm_interaction_hole
-            ADD originalText TEXT DEFAULT NULL COLLATE utf8_unicode_ci
-        ');
         $this->addSql('
             ALTER TABLE ujm_question
             ADD category_id INT DEFAULT NULL,
