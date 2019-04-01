@@ -8,11 +8,10 @@ import {StringInput} from '#/main/app/data/types/string/components/input'
 // todo check uniqueness (maybe do it in the data type)
 // todo add username requirements
 // todo use app/input instead of string
-// todo manage size
 
 const UsernameInput = props =>
-  <div className={classes('input-group', this.props.className, {
-    [`input-group-${this.props.size}`]: !!this.props.size
+  <div className={classes('input-group', props.className, {
+    [`input-group-${props.size}`]: !!props.size
   })}>
     <span className="input-group-addon">
       <span className="fa fa-fw fa-user" role="presentation" />
