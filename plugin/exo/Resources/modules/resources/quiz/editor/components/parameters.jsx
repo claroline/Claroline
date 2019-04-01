@@ -265,6 +265,7 @@ const EditorParameters = props =>
             }, {
               name: 'parameters.showFeedback',
               label: trans('show_feedback', {}, 'quiz'),
+              displayed: (quiz) => get(quiz, 'parameters.hasExpectedAnswers'),
               type: 'boolean'
               // TODO : add help text
             }, {

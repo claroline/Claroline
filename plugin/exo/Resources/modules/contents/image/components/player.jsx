@@ -9,7 +9,6 @@ export const ImageContentPlayer = (props) =>
 
 ImageContentPlayer.propTypes = {
   item: T.shape({
-    id: T.string.isRequired,
     url: T.string.isRequired
   }).isRequired
 }

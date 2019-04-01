@@ -7,7 +7,7 @@ import {ImageContentThumbnail} from '#/plugin/exo/contents/image/components/thum
 import {ImageContentModal} from '#/plugin/exo/contents/image/components/modal'
 
 export default {
-  type: 'image',
+  type: 'image/*',
   name: 'image',
   tags: [trans('content')],
   answerable: false,

@@ -85,9 +85,9 @@ class FileComponent extends Component {
         onDrop={this.onFileDrop}
       >
         {this.context &&
-        <div className="files-drop-placeholder">
-          Déposez vos fichiers ici
-        </div>
+          <div className="files-drop-placeholder">
+            Déposez vos fichiers ici
+          </div>
         }
 
         <input
@@ -116,22 +116,22 @@ class FileComponent extends Component {
         </button>
 
         {!isEmpty(this.props.value) &&
-        <div className="file-thumbnails">
-          <FileThumbnail
-            type={getType(this.props.value.mimeType)}
-            data={this.props.value}
-            canEdit={false}
-            canExpand={false}
-            canDownload={false}
-            handleDelete={() => {
-              if (this.props.value.id) {
-                this.props.deleteFile(this.props.value.id, this.props.onChange)
-              } else {
-                this.props.onChange(null)
-              }
-            }}
-          />
-        </div>
+          <div className="file-thumbnails">
+            <FileThumbnail
+              type={getType(this.props.value.mimeType)}
+              data={this.props.value}
+              canEdit={false}
+              canExpand={false}
+              canDownload={false}
+              handleDelete={() => {
+                if (this.props.value.id) {
+                  this.props.deleteFile(this.props.value.id, this.props.onChange)
+                } else {
+                  this.props.onChange(null)
+                }
+              }}
+            />
+          </div>
         }
       </div>
     )

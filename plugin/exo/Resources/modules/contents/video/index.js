@@ -7,7 +7,7 @@ import {VideoContentThumbnail} from '#/plugin/exo/contents/video/components/thum
 import {VideoContentModal} from '#/plugin/exo/contents/video/components/modal'
 
 export default {
-  type: 'video',
+  type: 'video/*',
   name: 'video',
   tags: [trans('content')],
   answerable: false,

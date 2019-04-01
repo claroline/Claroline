@@ -18,10 +18,21 @@ const VideoEditor = props =>
         primary: true,
         fields: [
           {
-            name: 'file',
+            name: '_file',
             label: trans('file'),
             type: 'file',
-            required: true
+            required: true,
+            calculated: (item) => ({
+              url: item.url,
+              mimeType: item.type
+            }),
+            onChange: (file) => {
+              props.update('data', file.url)
+              props.update('type', file.mimeType)
+            },
+            options: {
+              types: ['video/*']
+            }
           }
         ]
       }

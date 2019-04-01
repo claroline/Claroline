@@ -18,10 +18,21 @@ const ImageEditor = props =>
         primary: true,
         fields: [
           {
-            name: 'file',
+            name: '_file',
             label: trans('file'),
-            type: 'image',
-            required: true
+            type: 'file',
+            required: true,
+            calculated: (item) => ({
+              url: item.url,
+              mimeType: item.type
+            }),
+            onChange: (file) => {
+              props.update('data', file.url)
+              props.update('type', file.mimeType)
+            },
+            options: {
+              types: ['image/*']
+            }
           }
         ]
       }

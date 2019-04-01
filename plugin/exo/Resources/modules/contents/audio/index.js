@@ -7,7 +7,7 @@ import {AudioContentThumbnail} from '#/plugin/exo/contents/audio/components/thum
 import {AudioContentModal} from '#/plugin/exo/contents/audio/components/modal'
 
 export default {
-  type: 'audio',
+  type: 'audio/*',
   name: 'audio',
   tags: [trans('content')],
   answerable: false,

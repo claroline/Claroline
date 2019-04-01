@@ -18,10 +18,17 @@ const AudioEditor = props =>
         primary: true,
         fields: [
           {
-            name: 'file',
+            name: '_file',
             label: trans('file'),
             type: 'file',
-            required: true
+            required: true,
+            onChange: (file) => {
+              props.update('data', file.url)
+              props.update('type', file.mimeType)
+            },
+            options: {
+              types: ['audio/*']
+            }
           }
         ]
       }
