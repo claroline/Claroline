@@ -219,7 +219,7 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
             $updater->postUpdate();
         }
 
-        if (version_compare($currentVersion, '99.99.99', '<')) {
+        if (version_compare($currentVersion, '99.99.99', '>')) {
             $updater = new Updater\RemovingRescourceTypesUpdater($this->container, $this->logger);
 
             $updater->setLogger($this->logger);
