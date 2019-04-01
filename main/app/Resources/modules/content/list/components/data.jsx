@@ -166,9 +166,7 @@ class ListData extends Component {
         />
 
         {this.props.loading &&
-          <ContentLoader
-
-          />
+          <ContentLoader />
         }
 
         {(!this.props.loading && 0 === this.props.totalResults) &&

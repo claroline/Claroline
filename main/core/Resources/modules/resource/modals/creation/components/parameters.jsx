@@ -1,6 +1,7 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 
+import {theme} from '#/main/app/config'
 import {Await} from '#/main/app/components/await'
 
 import {getResource} from '#/main/core/resources'
@@ -22,7 +23,15 @@ const ResourceParameters = (props) =>
         if (module.Creation) {
           const creationApp = module.Creation()
 
-          return React.createElement(creationApp.component)
+          return (
+            <Fragment>
+              {React.createElement(creationApp.component)}
+
+              {creationApp.styles && creationApp.styles.map(styleName =>
+                <link key={styleName} rel="stylesheet" type="text/css" href={theme(styleName)} />
+              )}
+            </Fragment>
+          )
         }
       }}
     />

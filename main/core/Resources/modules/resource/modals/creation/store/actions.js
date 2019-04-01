@@ -50,7 +50,7 @@ actions.updateNode = (prop, value) => formActions.updateProp(selectors.STORE_NAM
  * @param {string} prop  - the name of the resource's prop to update
  * @param {*}      value - the new value for the resource's prop
  */
-actions.updateResource = (prop, value) => formActions.updateProp(selectors.STORE_NAME, `${selectors.FORM_RESOURCE_PART}.${prop}`, value)
+actions.updateResource = (prop, value) => formActions.updateProp(selectors.STORE_NAME, prop ? `${selectors.FORM_RESOURCE_PART}.${prop}`:selectors.FORM_RESOURCE_PART, value)
 
 /**
  * Saves the new resource.

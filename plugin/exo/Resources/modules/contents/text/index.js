@@ -7,7 +7,7 @@ import {TextContentThumbnail} from '#/plugin/exo/contents/text/components/thumbn
 import {TextContentModal} from '#/plugin/exo/contents/text/components/modal'
 
 export default {
-  type: 'text',
+  type: 'text/html',
   name: 'text',
   tags: [trans('content')],
   answerable: false,

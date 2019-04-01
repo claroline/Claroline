@@ -11,12 +11,14 @@ registerDefaultContentItemTypes()
  * Quiz creation application.
  */
 export const Creation = () => ({
-  component: QuizCreation
+  component: QuizCreation,
+  styles: ['claroline-distribution-plugin-exo-quiz-resource']
 })
 
 /**
  * Quiz resource application.
  */
 export const App = () => ({
-  component: QuizResource
+  component: QuizResource,
+  styles: ['claroline-distribution-plugin-exo-quiz-resource']
 })

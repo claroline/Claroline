@@ -7,8 +7,9 @@ const QuizCreation = connect(
   null,
   (dispatch) => ({
     changeType(newType) {
-      dispatch(actions.updateResource('parameters.type', newType))
-      // TODO : add presets
+      dispatch(actions.updateResource(null, Object.assign({
+        parameters: {type: newType.name}
+      }, newType.defaultProps || {})))
     }
   })
 )(QuizCreationComponent)

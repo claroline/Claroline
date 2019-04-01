@@ -335,7 +335,7 @@
     "raz": "=> Pour remettre tous les pointeurs à leurs position initiale, appuyez sur \"c\".",
     "remove_advanced_edition": "Édition simple",
     "remove_object_confirm_message": "Êtes-vous sûr de vouloir supprimer cet objet ?",
-    "remove_question_confirm_message": "Êtes-vous sûr de vouloir supprimer cette question ?",
+    "remove_item_confirm_message": "Êtes-vous sûr de vouloir supprimer cette question ?",
     "remove_step_confirm_message": "Êtes-vous sûr de vouloir supprimer cette étape ?",
     "reset": "Réinitialiser",
     "resize_zone": "Pour redimensionner une image, placez votre souris sur son coin inférieur droit et, tout en maintenant le clic gauche, faites-la glisser.",
@@ -528,6 +528,7 @@
     "quiz_conceptualization": "Prise de représentation",
     "quiz_formative": "Exercice formatif",
     "quiz_summative": "Evaluation",
+    "quiz_certification": "Certification",
     "quiz_survey": "Sondage",
     "quiz_custom": "Questionnaire personnalisé",
 
@@ -538,5 +539,7 @@
     "restrict_user_attempts_per_day_help": "Une fois toutes ses tentatives journalières effectuées, l'utilisateur devra attendre le lendemain pour pouvoir à nouveau répondre au questionnaire.",
     "restrict_total_attempts": "Restreindre le nombre total de tentatives disponibles pour le questionnaire",
     "restrict_total_attempts_help": "Une fois toutes les tentatives effectuées (tout utilisateur confondu), plus personne ne pourra répondre au questionnaire.",
-    "restrict_answer_length": "Restreindre la longueur des réponses"
+    "restrict_answer_length": "Restreindre la longueur des réponses",
+    "select_quiz_type": "Sélectionnez le type du quiz",
+    "select_quiz_type_help": "Le type définit les paramètres par défaut et active/désactive certaines fonctionnalités du quiz."
 }

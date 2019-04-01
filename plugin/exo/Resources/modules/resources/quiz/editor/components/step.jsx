@@ -112,7 +112,7 @@ const EditorStep = props => {
                       const newItems = props.items.slice()
 
                       newItems.splice(itemIndex, 1)
-                      props.update(`items`, newItems)
+                      props.update('items', newItems)
                     },
                     confirm: {
                       title: trans('deletion'),

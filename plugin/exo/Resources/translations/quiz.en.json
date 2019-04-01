@@ -335,7 +335,7 @@
     "raz": "=> To reset all pointers' position, press \"c\".",
     "remove_advanced_edition": "Simple edition",
     "remove_object_confirm_message": "Are you sure you want to delete this object ?",
-    "remove_question_confirm_message": "Are you sure you want to delete this question?",
+    "remove_item_confirm_message": "Are you sure you want to delete this question?",
     "remove_step_confirm_message": "Are you sure you want to delete this step?",
     "reset": "Reset",
     "resize_zone": "To re-size the picture, place your mouse on its bottom right corner, keep left mouse button down, and move your mouse.",
@@ -528,6 +528,7 @@
     "quiz_conceptualization": "Conceptualization",
     "quiz_formative": "Formative exercise",
     "quiz_summative": "Evaluation",
+    "quiz_certification": "Certification",
     "quiz_survey": "Survey",
     "quiz_custom": "Custom quiz",
 
@@ -538,5 +539,7 @@
     "restrict_user_attempts_per_day_help": "Once all his daily attempts have been made, the user will have to wait the next day to be able to answer the quiz again.",
     "restrict_total_attempts": "Restrict the total number of attempts available for the quiz",
     "restrict_total_attempts_help": "Once all attempts have been made (all users mingled), no one will be able to answer the quiz.",
-    "restrict_answer_length": "Restrict the length of answers"
+    "restrict_answer_length": "Restrict the length of answers",
+    "select_quiz_type": "Select the type of quiz",
+    "select_quiz_type_help": "The type sets the default settings and enables / disables some features of the quiz."
 }

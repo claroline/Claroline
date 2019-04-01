@@ -10,6 +10,7 @@ import {trans} from '#/main/app/intl/translation'
 const QUIZ_CONCEPTUALIZATION = 'conceptualization'
 const QUIZ_FORMATIVE         = 'formative'
 const QUIZ_SUMMATIVE         = 'summative'
+const QUIZ_CERTIFICATION     = 'evaluative'
 const QUIZ_SURVEY            = 'survey'
 const QUIZ_CUSTOM            = 'custom'
 
@@ -23,11 +24,9 @@ const conceptualizationType = {
     label: trans('quiz_conceptualization', {}, 'quiz'),
     description: trans('quiz_conceptualization_desc', {}, 'quiz')
   },
-  presets: {
-    hiddenProps: [],
-    disabledProps: [],
-    defaultProps: {}
-  }
+  hiddenProps: [],
+  disabledProps: [],
+  defaultProps: {}
 }
 
 /**
@@ -36,15 +35,13 @@ const conceptualizationType = {
 const formativeType = {
   name: QUIZ_FORMATIVE,
   meta: {
-    icon: 'fa fa-fw fa-graduation-cap',
+    icon: 'fa fa-fw fa-chart-line',
     label: trans('quiz_formative', {}, 'quiz'),
     description: trans('quiz_formative_desc', {}, 'quiz')
   },
-  presets: {
-    hiddenProps: [],
-    disabledProps: [],
-    defaultProps: {}
-  }
+  hiddenProps: [],
+  disabledProps: [],
+  defaultProps: {}
 }
 
 /**
@@ -57,11 +54,24 @@ const summativeType = {
     label: trans('quiz_summative', {}, 'quiz'),
     description: trans('quiz_summative_desc', {}, 'quiz')
   },
-  presets: {
-    hiddenProps: [],
-    disabledProps: [],
-    defaultProps: {}
-  }
+  hiddenProps: [],
+  disabledProps: [],
+  defaultProps: {}
+}
+
+/**
+ * Type : Certification
+ */
+const certificationType = {
+  name: QUIZ_CERTIFICATION,
+  meta: {
+    icon: 'fa fa-fw fa-graduation-cap',
+    label: trans('quiz_certification', {}, 'quiz'),
+    description: trans('quiz_certification_desc', {}, 'quiz')
+  },
+  hiddenProps: [],
+  disabledProps: [],
+  defaultProps: {}
 }
 
 /**
@@ -74,11 +84,9 @@ const surveyType = {
     label: trans('quiz_survey', {}, 'quiz'),
     description: trans('quiz_survey_desc', {}, 'quiz')
   },
-  presets: {
-    hiddenProps: [],
-    disabledProps: [],
-    defaultProps: {}
-  }
+  hiddenProps: [],
+  disabledProps: [],
+  defaultProps: {}
 }
 
 /**
@@ -91,17 +99,16 @@ const customType = {
     label: trans('quiz_custom', {}, 'quiz'),
     description: trans('quiz_custom_desc', {}, 'quiz')
   },
-  presets: {
-    hiddenProps: [],
-    disabledProps: [],
-    defaultProps: {}
-  }
+  hiddenProps: [],
+  disabledProps: [],
+  defaultProps: {}
 }
 
 const QUIZ_TYPES = {
   [QUIZ_CONCEPTUALIZATION]: conceptualizationType,
   [QUIZ_FORMATIVE]        : formativeType,
   [QUIZ_SUMMATIVE]        : summativeType,
+  [QUIZ_CERTIFICATION]    : certificationType,
   [QUIZ_SURVEY]           : surveyType,
   [QUIZ_CUSTOM]           : customType
 }
@@ -112,6 +119,7 @@ export {
   QUIZ_CONCEPTUALIZATION,
   QUIZ_FORMATIVE,
   QUIZ_SUMMATIVE,
+  QUIZ_CERTIFICATION,
   QUIZ_SURVEY,
   QUIZ_CUSTOM
 }

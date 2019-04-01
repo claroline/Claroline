@@ -13,6 +13,7 @@ const QuizCreation = props =>
     level={5}
     name={selectors.STORE_NAME}
     dataPart={selectors.FORM_RESOURCE_PART}
+    embedded={true}
     sections={[
       {
         title: trans('general'),
