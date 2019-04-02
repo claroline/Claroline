@@ -4,10 +4,10 @@ import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/componen
 import {GraphicItem as GraphicItemTypes} from '#/plugin/exo/items/graphic/prop-types'
 
 // components
-import {GraphicPaper} from '#/plugin/exo/items/graphic/paper'
+import {GraphicPaper} from '#/plugin/exo/items/graphic/components/paper'
 import {GraphicEditor} from '#/plugin/exo/items/graphic/components/editor'
-import {GraphicPlayer} from '#/plugin/exo/items/graphic/player'
-import {GraphicFeedback} from '#/plugin/exo/items/graphic/feedback'
+import {GraphicPlayer} from '#/plugin/exo/items/graphic/components/player'
+import {GraphicFeedback} from '#/plugin/exo/items/graphic/components/feedback'
 
 // scores
 import ScoreSum from '#/plugin/exo/scores/sum'
@@ -35,15 +35,11 @@ function getCorrectedAnswer(item, answers) {
 }
 
 function isPointInArea(area, x, y) {
-
   if (area.shape !== 'circle') {
-    const res =
-      x >= area.coords[0].x &&
+    return x >= area.coords[0].x &&
       x <= area.coords[1].x &&
       y >= area.coords[0].y &&
       y <= area.coords[1].y
-
-    return res
   } else {
     const size = area.radius * 2
     // must be circle
@@ -64,6 +60,7 @@ function generateStats(item, papers, withAllParpers) {
     unanswered: 0,
     total: 0
   }
+
   Object.values(papers).forEach(p => {
     if (withAllParpers || p.finished) {
       let total = 0

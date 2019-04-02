@@ -1,7 +1,9 @@
 import React from 'react'
 import {shallow} from 'enzyme'
-import {spyConsole, renew, ensure, mockGlobals} from '#/main/core/scaffolding/tests'
-import {ImageInput} from './image-input.jsx'
+
+import {spyConsole, renew, ensure} from '#/main/core/scaffolding/tests'
+
+import {ImageInput} from '#/plugin/exo/items/graphic/components/image-input'
 
 describe('<ImageInput/>', () => {
   beforeEach(() => {

@@ -5,7 +5,7 @@ import classes from 'classnames'
 import {tex} from '#/main/app/intl/translation'
 import {TooltipOverlay} from '#/main/app/overlay/tooltip/components/overlay'
 
-import {MODE_RECT, MODE_CIRCLE, MODE_SELECT} from './../enums'
+import {MODE_RECT, MODE_CIRCLE, MODE_SELECT} from '#/plugin/exo/items/graphic/constants'
 
 const ModeButton = props =>
   <TooltipOverlay id={props.id} tip={props.tip}>

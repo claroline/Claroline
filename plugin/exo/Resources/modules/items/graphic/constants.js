@@ -5,6 +5,7 @@ export const MODE_SELECT = 'select'
 export const MAX_IMG_SIZE = 1024 * 1024 * 5
 
 export const AREA_DEFAULT_SIZE = 60
+export const AREA_GUTTER = 8
 
 export const SHAPE_RECT = 'rect'
 export const SHAPE_CIRCLE = 'circle'

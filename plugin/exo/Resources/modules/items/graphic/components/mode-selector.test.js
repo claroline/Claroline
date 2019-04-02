@@ -1,8 +1,10 @@
 import React from 'react'
 import {mount} from 'enzyme'
-import {spyConsole, renew, ensure, mockGlobals} from '#/main/core/scaffolding/tests'
-import {MODE_RECT, MODE_CIRCLE} from './../enums'
-import {ModeSelector} from './mode-selector.jsx'
+
+import {spyConsole, renew, ensure} from '#/main/core/scaffolding/tests'
+
+import {MODE_RECT, MODE_CIRCLE} from '#/plugin/exo/items/graphic/constants'
+import {ModeSelector} from '#/plugin/exo/items/graphic/components/mode-selector'
 
 describe('<ModeSelector/>', () => {
   beforeEach(() => {

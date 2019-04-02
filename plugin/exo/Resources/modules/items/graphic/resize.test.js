@@ -1,4 +1,4 @@
-import {resizeArea} from './resize'
+import {resizeArea} from '#/plugin/exo/items/graphic/resize'
 import {ensure} from '#/main/core/scaffolding/tests'
 import {
   SHAPE_RECT,
@@ -11,7 +11,7 @@ import {
   DIR_SW,
   DIR_W,
   DIR_NW
-} from './enums'
+} from '#/plugin/exo/items/graphic/constants'
 
 describe('Resize function', () => {
   describe('on rectangular areas', () => {

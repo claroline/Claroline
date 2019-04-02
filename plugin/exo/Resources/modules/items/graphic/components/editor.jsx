@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import get from 'lodash/get'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 
 import {FormData} from '#/main/app/content/form/containers/data'
@@ -25,7 +26,7 @@ import {
   MODE_RECT,
   SHAPE_CIRCLE,
   AREA_DEFAULT_SIZE
-} from '#/plugin/exo/items/graphic/enums'
+} from '#/plugin/exo/items/graphic/constants'
 
 let AnswerDropZone = props => props.connectDropTarget(props.children)
 
@@ -39,15 +40,13 @@ AnswerDropZone = makeDroppable(AnswerDropZone, [
   TYPE_AREA_RESIZER
 ])
 
-const blankImage = () => {
-  return {
-    id: makeId(),
-    type: '',
-    data: '',
-    width: 0,
-    height: 0
-  }
-}
+const blankImage = () => ({
+  id: makeId(),
+  type: '',
+  data: '',
+  width: 0,
+  height: 0
+})
 
 const toAbs = (length, imgProps) => {
   const sizeRatio = imgProps.width / imgProps._clientWidth
@@ -187,14 +186,14 @@ class GraphicElement extends Component {
       const newItem = selectImage(this.props.item, {_type: file.type})
       this.props.update('image', newItem.image)
       this.props.update('solutions', newItem.solutions)
-      this.props.update('pointers', newItem.solutions)
+      this.props.update('pointers', newItem.solutions.length)
     }
 
     if (file.size > MAX_IMG_SIZE) {
       const newItem = selectImage(this.props.item, {_size: file.size})
       this.props.update('image', newItem.image)
       this.props.update('solutions', newItem.solutions)
-      this.props.update('pointers', newItem.solutions)
+      this.props.update('pointers', newItem.solutions.length)
     }
 
     const reader = new window.FileReader()
@@ -212,7 +211,7 @@ class GraphicElement extends Component {
         })
         this.props.update('image', newItem.image)
         this.props.update('solutions', newItem.solutions)
-        this.props.update('pointers', newItem.solutions)
+        this.props.update('pointers', newItem.solutions.length)
       }
     }
     reader.readAsDataURL(file)
@@ -336,9 +335,14 @@ class GraphicElement extends Component {
       <div>
         <div className="top-controls">
           <ImageInput onSelect={file => this.onSelectImage(file)}/>
+
+          <ModeSelector
+            currentMode={this.props.item._mode}
+            onChange={mode => this.props.update('_mode', mode)}
+          />
         </div>
 
-        {this.props.item._popover.open &&
+        {get(this.props.item, '_popover.open') &&
           <AreaPopover
             left={this.props.item._popover.left}
             top={this.props.item._popover.top}
@@ -489,7 +493,7 @@ class GraphicElement extends Component {
               <div>
                 <div className="img-container" ref={el => this.imgContainer = el}/>
                 <ResizeDragLayer
-                  canDrag={!this.props.item._popover.open}
+                  canDrag={!get(this.props.item, '_popover.open')}
                   areas={this.props.item.solutions.map(
                     solution => this.getClientArea(solution.area)
                   )}
@@ -520,8 +524,7 @@ class GraphicElement extends Component {
                       this.props.update('solutions', newItem.solutions)
                       this.props.update('_popover', newItem._popover)
                     }}
-                    canDrag={!this.props.item._popover.open
-                      || this.props.item._popover.areaId !== solution.area.id}
+                    canDrag={!get(this.props.item, '_popover.open') || this.props.item._popover.areaId !== solution.area.id}
                     togglePopover={(areaId, left, top) => {
                       const hasPopover = this.props.item._popover.open
                         && this.props.item._popover.areaId === solution.area.id
@@ -557,20 +560,9 @@ const GraphicEditor = (props) =>
         primary: true,
         fields: [
           {
-            name: '_mode',
-            required: true,
-            render: (item) => {
-              const ModeComponent = (
-                <ModeSelector
-                  currentMode={item._mode}
-                  onChange={mode => props.update('_mode', mode)}
-                />
-              )
-
-              return ModeComponent
-            }
-          }, {
             name: 'data',
+            label: trans('image'),
+            hideLabel: true,
             required: true,
             render: (item) => {
               const GraphicComponent = (
@@ -589,7 +581,9 @@ const GraphicEditor = (props) =>
   />
 
 implementPropTypes(GraphicEditor, ItemEditorTypes, {
-  item: T.shape(GraphicItemTypes.propTypes).isRequired
+  item: T.shape(
+    GraphicItemTypes.propTypes
+  ).isRequired
 })
 
 export {

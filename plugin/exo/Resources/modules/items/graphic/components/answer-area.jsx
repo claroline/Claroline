@@ -6,10 +6,11 @@ import tinycolor from 'tinycolor2'
 import {tex, trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {makeDraggable} from './../../../utils/dragAndDrop'
-import {AreaResizer, AreaResizerDraggable} from './area-resizer.jsx'
-import {AnswerAreaDragPreview} from './answer-area-drag-preview.jsx'
+import {makeDraggable} from '#/plugin/exo/utils/dragAndDrop'
+import {AreaResizer, AreaResizerDraggable} from '#/plugin/exo/items/graphic/components/area-resizer'
+import {AnswerAreaDragPreview} from '#/plugin/exo/items/graphic/components/answer-area-drag-preview'
 import {
+  AREA_GUTTER,
   SHAPE_RECT,
   SHAPE_CIRCLE,
   TYPE_ANSWER_AREA,
@@ -21,10 +22,9 @@ import {
   DIR_SW,
   DIR_W,
   DIR_NW
-} from './../enums'
+} from '#/plugin/exo/items/graphic/constants'
 
 const FRAME_GUTTER = 6
-export const AREA_GUTTER = 8
 const BORDER_WIDTH = 2
 const RESIZER_SIZE = 12
 

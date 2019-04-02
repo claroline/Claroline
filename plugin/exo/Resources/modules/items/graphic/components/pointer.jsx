@@ -6,7 +6,7 @@ import Overlay from 'react-bootstrap/lib/Overlay'
 
 import {HtmlText} from '#/main/core/layout/components/html-text'
 
-import {POINTER_PLACED, POINTER_CORRECT, POINTER_WRONG} from './../enums'
+import {POINTER_PLACED, POINTER_CORRECT, POINTER_WRONG} from '#/plugin/exo/items/graphic/constants'
 
 const POINTER_WIDTH = 32
 const SEGMENT_WIDTH = 6

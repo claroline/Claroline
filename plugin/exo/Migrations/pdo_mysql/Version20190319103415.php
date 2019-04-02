@@ -34,6 +34,10 @@ class Version20190319103415 extends AbstractMigration
             UPDATE ujm_exercise SET mark_mode = "never" WHERE mark_mode = "3"
         ');
 
+        $this->addSql('
+            UPDATE ujm_exercise SET `type` = "custom"
+        ');
+
         // update CorrectionMode
         $this->addSql('
             UPDATE ujm_exercise SET correction_mode = "validation" WHERE correction_mode = "1"

@@ -2,8 +2,8 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {asset} from '#/main/app/config/asset'
-import {POINTER_CORRECT, POINTER_WRONG} from './enums'
-import {PointableImage} from './components/pointable-image.jsx'
+import {POINTER_CORRECT, POINTER_WRONG} from '#/plugin/exo/items/graphic/constants'
+import {PointableImage} from '#/plugin/exo/items/graphic/components/pointable-image'
 import {utils} from '#/plugin/exo/items/graphic/utils'
 
 export const GraphicFeedback = props =>

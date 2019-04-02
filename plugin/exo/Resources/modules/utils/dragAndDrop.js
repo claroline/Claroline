@@ -1,6 +1,7 @@
 import {DragSource, DropTarget} from 'react-dnd'
-import {DefaultPreviewComponent} from './default-preview-component.jsx'
-import {TYPE_AREA_RESIZER} from './../items/graphic/enums'
+
+import {DefaultPreviewComponent} from '#/plugin/exo/utils/default-preview-component'
+import {TYPE_AREA_RESIZER} from '#/plugin/exo/items/graphic/constants'
 
 export function makeDraggable(component, type, previewComponent = null, itemFactory = null) {
   const source = {

@@ -2,9 +2,11 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import tinycolor from 'tinycolor2'
-import {SHAPE_RECT} from './../enums'
-import {AnswerStats} from './../../components/stats.jsx'
+
 import {tex} from '#/main/app/intl/translation'
+
+import {SHAPE_RECT} from '#/plugin/exo/items/graphic/constants'
+import {AnswerStats} from '#/plugin/exo/items/components/stats'
 
 export const AnswerStatsTable = props =>
   <div className="answers-table">

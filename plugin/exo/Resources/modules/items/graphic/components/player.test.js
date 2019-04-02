@@ -1,9 +1,11 @@
 import React from 'react'
 import {mount} from 'enzyme'
+
 import {spyConsole, renew, ensure} from '#/main/core/scaffolding/tests'
-import {SHAPE_RECT, SHAPE_CIRCLE} from './enums'
+
+import {SHAPE_RECT, SHAPE_CIRCLE} from '#/plugin/exo/items/graphic/constants'
 import {utils} from '#/plugin/exo/items/graphic/utils'
-import {GraphicPlayer} from './player.jsx'
+import {GraphicPlayer} from '#/plugin/exo/items/graphic/player'
 
 describe('Graphic player', () => {
   describe('findArea', () => {

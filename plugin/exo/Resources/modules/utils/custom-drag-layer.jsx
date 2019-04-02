@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {DragLayer} from 'react-dnd'
 
-import {TYPE_AREA_RESIZER} from './../items/graphic/enums'
+import {TYPE_AREA_RESIZER} from '#/plugin/exo/items/graphic/constants'
 
 function getItemStyles(props) {
   const { currentOffset } = props

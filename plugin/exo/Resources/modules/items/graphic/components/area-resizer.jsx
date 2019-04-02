@@ -1,8 +1,9 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import {makeDraggable} from './../../../utils/dragAndDrop'
-import {TYPE_AREA_RESIZER, DIRECTIONS} from './../enums'
+
+import {makeDraggable} from '#/plugin/exo/utils/dragAndDrop'
+import {TYPE_AREA_RESIZER, DIRECTIONS} from '#/plugin/exo/items/graphic/constants'
 
 export const AreaResizer = props => {
   if (props.isDragging && props.areaEl) {

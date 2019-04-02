@@ -3,8 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import Popover from 'react-bootstrap/lib/Popover'
 
-import {trans, tex} from '#/main/app/intl/translation'
-import {FormGroup} from '#/main/app/content/form/components/group.jsx'
+import {trans} from '#/main/app/intl/translation'
+import {FormGroup} from '#/main/app/content/form/components/group'
 import {ColorPicker} from '#/main/core/layout/form/components/field/color-picker'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
@@ -28,17 +28,18 @@ export class AreaPopover extends Component {
         positionTop={this.props.top}
         title={
           <div>
-            {tex('graphic_area_edit')}
+            {trans('graphic_area_edit', {}, 'quiz')}
 
             <div className="popover-actions">
               <Button
                 id="area-popover-delete"
-                className="btn-link-default"
+                className="btn-link"
                 type={CALLBACK_BUTTON}
                 icon="fa fa-fw fa-trash-o"
                 label={trans('delete', {}, 'actions')}
                 callback={this.props.onDelete}
                 tooltip="top"
+                dangerous={true}
               />
 
               <Button
@@ -78,8 +79,9 @@ export class AreaPopover extends Component {
               className="btn-link"
               type={CALLBACK_BUTTON}
               icon="fa fa-fw fa-comments-o"
-              label={tex('graphic_feedback_info')}
+              label={trans('graphic_feedback_info', {}, 'quiz')}
               callback={() => this.setState({showFeedback: !this.state.showFeedback})}
+              tooltip="left"
             />
           </div>
         </div>
@@ -87,7 +89,7 @@ export class AreaPopover extends Component {
         {this.state.showFeedback &&
           <FormGroup
             id="area-feedback"
-            label={tex('feedback')}
+            label={trans('feedback', {}, 'quiz')}
             hideLabel={true}
             className="feedback-container form-last"
           >

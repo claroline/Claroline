@@ -3,8 +3,8 @@ import {PropTypes as T} from 'prop-types'
 
 import {asset} from '#/main/app/config/asset'
 import {tex} from '#/main/app/intl/translation'
-import {POINTER_PLACED} from './enums'
-import {PointableImage} from './components/pointable-image.jsx'
+import {POINTER_PLACED} from '#/plugin/exo/items/graphic/constants'
+import {PointableImage} from '#/plugin/exo/items/graphic/components/pointable-image'
 
 class GraphicPlayer extends Component {
   constructor(props) {

@@ -1,17 +1,9 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {
-  AREA_GUTTER
-} from './answer-area.jsx'
+import {AREA_GUTTER, SHAPE_RECT} from '#/plugin/exo/items/graphic/constants'
 
-import {
-  SHAPE_RECT
-} from './../enums'
-
-
-export const AnswerAreaDragPreview = props => {
-
+const AnswerAreaDragPreview = props => {
   const isRect = props.shape === SHAPE_RECT
   const def = props.geometry
   const width = isRect ? def.coords[1].x - def.coords[0].x : def.radius * 2
@@ -37,4 +29,8 @@ export const AnswerAreaDragPreview = props => {
 AnswerAreaDragPreview.propTypes = {
   shape: T.string.isRequired,
   geometry: T.object.isRequired
+}
+
+export {
+  AnswerAreaDragPreview
 }

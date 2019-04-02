@@ -47,7 +47,7 @@ const AnswerableItemType = implementPropTypes({}, ItemType, {
 const Item = {
   propTypes: {
     id: T.string.isRequired,
-    content: T.string.isRequired,
+    content: T.string,
     description: T.string,
     meta: T.shape({
 

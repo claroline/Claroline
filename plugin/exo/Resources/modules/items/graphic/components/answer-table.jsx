@@ -8,7 +8,7 @@ import Overlay from 'react-bootstrap/lib/Overlay'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {transChoice} from '#/main/app/intl/translation'
 
-import {SHAPE_RECT} from './../enums'
+import {SHAPE_RECT} from '#/plugin/exo/items/graphic/constants'
 
 class HoverFeedback extends Component {
   constructor(props) {

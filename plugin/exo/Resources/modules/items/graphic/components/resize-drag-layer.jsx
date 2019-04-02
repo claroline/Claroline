@@ -1,9 +1,10 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {DragLayer} from 'react-dnd'
-import {TYPE_AREA_RESIZER} from './../enums'
-import {resizeArea} from './../resize'
-import {AnswerArea} from './answer-area.jsx'
+
+import {TYPE_AREA_RESIZER} from '#/plugin/exo/items/graphic/constants'
+import {resizeArea} from '#/plugin/exo/items/graphic/resize'
+import {AnswerArea} from '#/plugin/exo/items/graphic/components/answer-area'
 
 // this class doesn't hold any state but the drag layer decorator
 // requires it to be a "full" component, not a stateless function

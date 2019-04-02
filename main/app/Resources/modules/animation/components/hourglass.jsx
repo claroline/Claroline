@@ -119,13 +119,14 @@ class Hourglass extends Component {
 
         clearInterval(this.liquidFlow)
         // no more liquid to flow, flip the hourglass
-        setTimeout(this.flip, 100)
+        this.flipping = setTimeout(this.flip, 100)
       }
     }, 100)
   }
 
   componentWillUnmount() {
     clearInterval(this.liquidFlow)
+    clearTimeout(this.flipping)
   }
 
   render() {

@@ -1,5 +1,5 @@
 
-import {SHAPE_RECT} from '#/plugin/exo/items/graphic/enums'
+import {SHAPE_RECT} from '#/plugin/exo/items/graphic/constants'
 
 function findArea(pointer, solutions) {
   return solutions.find(solution => {

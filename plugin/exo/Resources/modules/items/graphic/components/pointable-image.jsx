@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import tinycolor from 'tinycolor2'
-import {Pointer} from './pointer.jsx'
-import {SHAPE_RECT} from './../enums'
+
+import {Pointer} from '#/plugin/exo/items/graphic/components/pointer'
+import {SHAPE_RECT} from '#/plugin/exo/items/graphic/constants'
 
 export class PointableImage extends Component {
   constructor(props) {

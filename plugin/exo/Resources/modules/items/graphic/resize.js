@@ -8,7 +8,7 @@ import {
   DIR_SW,
   DIR_W,
   DIR_NW
-} from './enums'
+} from '#/plugin/exo/items/graphic/constants'
 
 export function resizeArea(area, resizerPosition, offsetX, offsetY) {
   if (area.shape === SHAPE_RECT) {

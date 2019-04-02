@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+
 import {tex} from '#/main/app/intl/translation'
 
 export class ImageInput extends Component {
