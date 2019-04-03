@@ -4,63 +4,86 @@
     display: flex;
     flex-direction: column;
 
+    list-style-type: none;
     width: @quiz-summary-width;
-    //overflow: auto;
     background: @quiz-summary-bg;
     padding: @quiz-summary-padding;
-    border-radius: @summary-border-radius;
     box-shadow: @quiz-summary-box-shadow-v;
-
+    border-radius: @summary-border-radius;
     margin-top: @component-margin-bottom;
     margin-bottom: @component-margin-bottom;
     margin-right: @grid-gutter-width; // fake bootstrap grid
 
     .quiz-navlink {
         position: relative;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-        align-items: center;
-
         width: 100px;
         height: 100px;
         font-size: @quiz-summary-font;
-        border-radius: 2px;
-
-        background: @quiz-summary-link-bg;
-        color: @quiz-summary-link-color;
-        border: 1px solid @quiz-summary-link-color;
 
         + .quiz-navlink {
             margin-top: @quiz-summary-padding;
         }
 
-        > .fa {
-            font-size: 28px;
-        }
-
         .step-toolbar {
             position: absolute;
+            z-index: 2;
             right: 0;
             top: 0;
 
             .step-toolbar-btn {
                 padding: 4px;
             }
+
+            .dropdown-toggle {
+                color: @quiz-summary-link-color;
+
+                &:hover {
+                    color: @quiz-summary-link-hover-color;
+                }
+
+                &.active,
+                &:active,
+                &:focus {
+                    color: @quiz-summary-link-active-color;
+                }
+            }
         }
 
-        &:hover {
-            color: @quiz-summary-link-hover-color;
+        > button,
+        > a {
+            padding: 4px;
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            left: 0;
             background: @quiz-summary-link-bg;
-            border-color: @quiz-summary-link-hover-color;
-        }
+            color: @quiz-summary-link-color;
+            border: 1px solid @quiz-summary-link-color;
+            border-radius: 2px;
+            text-align: center;
 
-        &.active,
-        &:active,
-        &:focus {
-            color: @quiz-summary-link-active-color;
-            background: @quiz-summary-link-active-bg;
-            border-color: @quiz-summary-link-active-color;
+            > .fa {
+                font-size: 28px;
+            }
+
+            &:hover {
+                color: @quiz-summary-link-hover-color;
+                background: @quiz-summary-link-bg;
+                border-color: @quiz-summary-link-hover-color;
+            }
+
+            &.active,
+            &:active,
+            &:focus {
+                color: @quiz-summary-link-active-color;
+                background: @quiz-summary-link-active-bg;
+                border-color: @quiz-summary-link-active-color;
+            }
         }
     }
 }
