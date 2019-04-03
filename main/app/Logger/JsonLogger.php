@@ -135,7 +135,7 @@ class JsonLogger implements LoggerInterface
     {
         $data = $this->cache ? $this->cache : json_decode(file_get_contents($this->file), true);
 
-        if ($property) {
+        if ($property && $data) {
             return ArrayUtils::get($data, $property);
         }
 

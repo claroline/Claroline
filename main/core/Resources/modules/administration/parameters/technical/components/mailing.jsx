@@ -128,7 +128,7 @@ const MailingForm = (props) =>
                 [mailer.name]: mailer.label
               }), {})
             },
-            linked: (props.mailer && mailers.find(mailer => mailer.name === props.mailer.transport)) || []
+            linked: props.mailer ? mailers.find(mailer => mailer.name === props.mailer.transport).fields: []
           }
         ]
       }
@@ -143,7 +143,7 @@ MailingForm.propTypes = {
 
 const Mailing = connect(
   (state) => ({
-    parameters: formSelectors.data(formSelectors.form(state, 'parameters')).mailer
+    mailer: formSelectors.data(formSelectors.form(state, 'parameters')).mailer
   })
 )(MailingForm)
 
