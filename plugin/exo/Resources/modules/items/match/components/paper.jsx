@@ -9,10 +9,10 @@ import NavItem from 'react-bootstrap/lib/NavItem'
 
 import {HtmlText} from '#/main/core/layout/components/html-text'
 
-import {Feedback} from '../components/feedback-btn.jsx'
+import {Feedback} from '#/plugin/exo/items/components/feedback-btn'
 import {SolutionScore} from '#/plugin/exo/components/score'
-import {AnswerStats} from '../components/stats.jsx'
-import {utils} from './utils/utils'
+import {AnswerStats} from '#/plugin/exo/items/components/stats'
+import {utils} from '#/plugin/exo/items/match/utils'
 
 function getPopoverPosition(connectionClass, id){
   const containerRect =  document.getElementById('popover-container-' + id).getBoundingClientRect()

@@ -92,3 +92,13 @@ utils.getKey = (word, solutions) => {
 
   return key
 }
+
+utils.escapeRegExp = (str) => {
+  return str.replace(/[\-\[\]\/{}()*+?.\\\^$|]/g, '\\$&')
+}
+
+utils.containsKeyword = (keyword, caseSensitive, text = '') => {
+  const regex = new RegExp(utils.escapeRegExp(keyword), caseSensitive ? '': 'i')
+
+  return regex.test(text)
+}

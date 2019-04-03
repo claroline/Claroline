@@ -9,7 +9,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {constants} from '#/plugin/exo/items/ordering/constants'
 import {makeSortable, SORT_HORIZONTAL, SORT_VERTICAL} from '#/plugin/exo/utils/sortable'
 import {makeDraggable, makeDroppable} from '#/plugin/exo/utils/dragAndDrop'
-import {OrderingItemDragPreview} from '#/plugin/exo/items/ordering/ordering-item-drag-preview'
+import {OrderingItemDragPreview} from '#/plugin/exo/items/ordering/components/ordering-item-drag-preview'
 
 let DropBox = props => {
   return props.connectDropTarget(

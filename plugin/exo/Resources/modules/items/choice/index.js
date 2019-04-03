@@ -19,15 +19,26 @@ import ScoreRules from '#/plugin/exo/scores/rules'
 import ScoreSum from '#/plugin/exo/scores/sum'
 
 export default {
-  type: 'application/x.choice+json',
   name: 'choice',
+  type: 'application/x.choice+json',
   tags: [trans('question', {}, 'quiz')],
   answerable: true,
+
+  paper: ChoicePaper,
+  player: ChoicePlayer,
+  feedback: ChoiceFeedback,
 
   components: {
     editor: ChoiceEditor
   },
 
+  /**
+   * List all available score modes for a choice item.
+   *
+   * @param {object} item
+   *
+   * @return {Array}
+   */
   supportScores: (item) => {
     const supportedScores = [
       ScoreFixed,
@@ -45,6 +56,8 @@ export default {
    * Create a new choice item.
    *
    * @param {object} baseItem
+   *
+   * @return {object}
    */
   create: (baseItem) => {
     // append default choice props
@@ -82,7 +95,14 @@ export default {
     return choiceItem
   },
 
-  // correctAnswer
+  /**
+   * Correct an answer submitted to a choice item.
+   *
+   * @param {object} item
+   * @param {object} answers
+   *
+   * @return {CorrectedAnswer}
+   */
   getCorrectedAnswer: (item, answers = null) => {
     const corrected = new CorrectedAnswer()
 
@@ -103,49 +123,5 @@ export default {
     })
 
     return corrected
-  },
-
-  generateStats: (item, papers, withAllPapers) => {
-    const stats = {
-      choices: {},
-      unanswered: 0,
-      total: 0
-    }
-
-    Object.values(papers).forEach(p => {
-      if (withAllPapers || p.finished) {
-        let total = 0
-        let nbAnswered = 0
-        // compute the number of times the item is present in the structure of the paper
-        p.structure.steps.forEach(s => {
-          s.items.forEach(i => {
-            if (i.id === item.id) {
-              ++total
-              ++stats.total
-            }
-          })
-        })
-        // compute the number of times the item has been answered
-        p.answers.forEach(a => {
-          if (a.questionId === item.id && a.data) {
-            ++nbAnswered
-            a.data.forEach(d => {
-              if (!stats.choices[d]) {
-                stats.choices[d] = 0
-              }
-              ++stats.choices[d]
-            })
-          }
-        })
-        stats.unanswered += total - nbAnswered
-      }
-    })
-
-    return stats
-  },
-
-  // old
-  paper: ChoicePaper,
-  player: ChoicePlayer,
-  feedback: ChoiceFeedback
+  }
 }

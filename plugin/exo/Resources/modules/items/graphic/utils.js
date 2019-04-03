@@ -22,6 +22,27 @@ function findArea(pointer, solutions) {
   })
 }
 
+function isPointInArea(area, x, y) {
+  if (area.shape !== 'circle') {
+    return x >= area.coords[0].x &&
+      x <= area.coords[1].x &&
+      y >= area.coords[0].y &&
+      y <= area.coords[1].y
+  } else {
+    const size = area.radius * 2
+    // must be circle
+    const r = size / 2
+
+    // coordinates relative to the circle center
+    x = Math.abs(area.center.x - x)
+    y = Math.abs(area.center.y - y)
+
+    // inside the circle if distance to center <= radius
+    return x * x + y * y <= r * r
+  }
+}
+
 export const utils = {
-  findArea
+  findArea,
+  isPointInArea
 }

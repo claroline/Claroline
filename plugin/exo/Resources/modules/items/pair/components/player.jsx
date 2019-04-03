@@ -11,7 +11,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
 
 import {makeDraggable, makeDroppable} from '#/plugin/exo/utils/dragAndDrop'
-import {utils} from '#/plugin/exo/items/pair/utils/utils'
+import {utils} from '#/plugin/exo/items/pair/utils'
 import {PairItemDragPreview} from '#/plugin/exo/items/pair/components/pair-item-drag-preview'
 
 let DropBox = props => props.connectDropTarget (

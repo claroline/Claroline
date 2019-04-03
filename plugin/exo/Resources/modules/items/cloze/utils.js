@@ -274,3 +274,15 @@ utils.getAnswerSolution = (solutions, answerText) => {
       (!answer.caseSensitive && stripDiacritics(answer.text).toUpperCase() === stripDiacritics(answerText).toUpperCase()) // case insensitive
   })
 }
+
+utils.findSolutionExpectedAnswer = (solution) => {
+  let expected = null
+
+  solution.answers.forEach(answer => {
+    if (!expected || expected.score < answer.score) {
+      expected = answer
+    }
+  })
+
+  return expected
+}

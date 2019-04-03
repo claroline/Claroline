@@ -1,6 +1,5 @@
 import {PropTypes as T} from 'prop-types'
 
-
 const MatchItem = {
   propTypes: {
     id: T.string.isRequired,
@@ -21,8 +20,7 @@ const MatchItem = {
       secondId: T.string.isRequired,
       score: T.number.isRequired,
       feedback: T.string
-    })).isRequired,
-    _errors: T.object
+    })).isRequired
   },
   defaultProps: {
     firstSet: [],

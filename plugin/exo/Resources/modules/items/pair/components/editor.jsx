@@ -15,7 +15,7 @@ import {HtmlInput} from '#/main/app/data/types/html/components/input'
 
 import {makeDraggable, makeDroppable} from '#/plugin/exo/utils/dragAndDrop'
 import {ItemEditor as ItemEditorTypes} from '#/plugin/exo/items/prop-types'
-import {utils} from '#/plugin/exo/items/pair/utils/utils'
+import {utils} from '#/plugin/exo/items/pair/utils'
 import {PairItem as PairItemType} from '#/plugin/exo/items/pair/prop-types'
 import {PairItemDragPreview} from '#/plugin/exo/items/pair/components/pair-item-drag-preview.jsx'
 

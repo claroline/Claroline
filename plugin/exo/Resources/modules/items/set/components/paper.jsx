@@ -4,11 +4,11 @@ import classes from 'classnames'
 import has from 'lodash/has'
 
 import {tex} from '#/main/app/intl/translation'
-import {Feedback} from './../components/feedback-btn.jsx'
+import {Feedback} from '#/plugin/exo/items/components/feedback-btn'
 import {SolutionScore} from '#/plugin/exo/components/score'
-import {AnswerStats} from '../components/stats.jsx'
-import {PaperTabs} from './../components/paper-tabs.jsx'
-import {utils} from './utils/utils'
+import {AnswerStats} from '#/plugin/exo/items/components/stats'
+import {PaperTabs} from '#/plugin/exo/items/components/paper-tabs'
+import {utils} from '#/plugin/exo/items/set/utils'
 import {WarningIcon} from '#/plugin/exo/components/warning-icon'
 
 export const SetPaper = props => {

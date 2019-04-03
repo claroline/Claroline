@@ -4,7 +4,7 @@ import {
   jsPlumbDefaultConfig,
   jsPlumbEnabledConfig,
   associationTypes
-} from './../enums'
+} from '#/plugin/exo/items/match/constants'
 
 export const utils = {}
 
@@ -36,4 +36,9 @@ utils.resetJsPlumb = () => {
 
 utils.isPresentInSolutions = (firstId, secondId, solutions) => {
   return solutions.findIndex(s => s.firstId == firstId && s.secondId === secondId) !== -1
+}
+
+utils.findAnswer = (solution, answers) => {
+  if (!answers) answers = []
+  return answers.find(answer => (answer.firstId === solution.firstId) && (answer.secondId === solution.secondId))
 }

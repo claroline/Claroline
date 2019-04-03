@@ -2,16 +2,16 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {utils} from './utils'
-import {Feedback} from '../../components/feedback-btn.jsx'
+import {utils} from '#/plugin/exo/items/words/utils'
+import {Feedback} from '#/plugin/exo/items/components/feedback-btn'
 import {SolutionScore} from '#/plugin/exo/components/score'
 
-export const Highlight = props => {
+const Highlight = props => {
   return(
     <div>
       {utils.split(props.text, props.solutions).map((el, key) =>
         <span key={key}>
-          <span dangerouslySetInnerHTML={{__html: el.text}}></span>{'\u00a0'}
+          <span dangerouslySetInnerHTML={{__html: el.text}}/>{'\u00a0'}
           <span className={classes({
             'word-success': el.score > 0,
             'word-danger': el.score <= 0
@@ -32,4 +32,8 @@ Highlight.propTypes = {
   solutions: T.array.isRequired,
   showScore: T.bool.isRequired,
   className: T.string
+}
+
+export {
+  Highlight
 }

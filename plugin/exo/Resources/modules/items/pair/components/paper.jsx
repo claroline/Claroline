@@ -9,7 +9,7 @@ import {Feedback} from '#/plugin/exo/items/components/feedback-btn'
 import {SolutionScore} from '#/plugin/exo/components/score'
 import {AnswerStats} from '#/plugin/exo/items/components/stats'
 import {PaperTabs} from '#/plugin/exo/items/components/paper-tabs'
-import {utils} from '#/plugin/exo/items/pair/utils/utils'
+import {utils} from '#/plugin/exo/items/pair/utils'
 import {WarningIcon} from '#/plugin/exo/components/warning-icon'
 
 export const PairPaper = props => {

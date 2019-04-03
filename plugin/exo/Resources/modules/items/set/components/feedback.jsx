@@ -2,8 +2,8 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {utils} from './utils/utils'
-import {Feedback} from '../components/feedback-btn.jsx'
+import {utils} from '#/plugin/exo/items/set/utils'
+import {Feedback} from '#/plugin/exo/items/components/feedback-btn'
 import {WarningIcon} from '#/plugin/exo/components/warning-icon'
 
 export const SetFeedback = props =>

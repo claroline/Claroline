@@ -4,7 +4,7 @@ import classes from 'classnames'
 import shuffle from 'lodash/shuffle'
 
 import {HtmlText} from '#/main/core/layout/components/html-text'
-import {utils} from './utils/utils'
+import {utils} from '#/plugin/exo/items/match/utils'
 
 /* If any previous answer draw them */
 function drawAnswers(answers, jsPlumbInstance){

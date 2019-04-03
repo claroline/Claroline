@@ -3,11 +3,12 @@ import classes from 'classnames'
 import {PropTypes as T} from 'prop-types'
 
 import {tex} from '#/main/app/intl/translation'
-import {Highlight} from './utils/highlight.jsx'
-import {Feedback} from '../components/feedback-btn.jsx'
 import {SolutionScore} from '#/plugin/exo/components/score'
-import {AnswerStats} from '../components/stats.jsx'
-import {PaperTabs} from '../components/paper-tabs.jsx'
+import {Feedback} from '#/plugin/exo/items/components/feedback-btn'
+import {AnswerStats} from '#/plugin/exo/items/components/stats'
+import {PaperTabs} from '#/plugin/exo/items/components/paper-tabs'
+
+import {Highlight} from '#/plugin/exo/items/words/components/highlight'
 
 const AnswerTable = (props) => {
   return(

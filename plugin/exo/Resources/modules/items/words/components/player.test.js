@@ -1,7 +1,7 @@
 import React from 'react'
 import {mount} from 'enzyme'
 import {spyConsole, renew, ensure, mockGlobals} from '#/main/core/scaffolding/tests'
-import {WordsPlayer} from './player.jsx'
+import {WordsPlayer} from '#/plugin/exo/items/words/components/player'
 
 describe('<WordsPlayer/>', () => {
   beforeEach(() => {

@@ -16,24 +16,41 @@ import {OpenEditor} from '#/plugin/exo/items/open/components/editor'
 import ScoreManual from '#/plugin/exo/scores/manual'
 
 export default {
-  type: 'application/x.open+json',
   name: 'open',
+  type: 'application/x.open+json',
   tags: [trans('question', {}, 'quiz')],
   answerable: true,
 
   paper: OpenPaper,
   player: OpenPlayer,
   feedback: OpenFeedback,
+
   components: {
     editor: OpenEditor
   },
 
+  /**
+   * List all available score modes for a open item.
+   *
+   * @return {Array}
+   */
   supportScores: () => [
     ScoreManual
   ],
 
+  /**
+   * Create a new open item.
+   *
+   * @param {object} baseItem
+   *
+   * @return {object}
+   */
   create: (baseItem) => merge({}, baseItem, OpenItem.defaultProps),
 
-  getCorrectedAnswer: () => new CorrectedAnswer(),
-  generateStats: () => ({})
+  /**
+   * Correct an answer submitted to a open item.
+   *
+   * @return {CorrectedAnswer}
+   */
+  getCorrectedAnswer: () => new CorrectedAnswer()
 }

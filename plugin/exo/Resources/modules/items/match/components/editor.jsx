@@ -1,8 +1,6 @@
 import React, {Component} from 'react'
 import {trans} from '#/main/app/intl/translation'
 
-import merge from 'lodash/merge'
-import set from 'lodash/set'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {ItemEditor as ItemEditorTypes} from '#/plugin/exo/items/prop-types'
 import Popover from 'react-bootstrap/lib/Popover'
@@ -14,7 +12,7 @@ import {MatchItem as MatchItemTypes} from '#/plugin/exo/items/match/prop-types'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {utils} from '#/plugin/exo/items/match/utils/utils'
+import {utils} from '#/plugin/exo/items/match/utils'
 import {makeId} from '#/plugin/exo/utils/utils'
 import {FormData} from '#/main/app/content/form/containers/data'
 

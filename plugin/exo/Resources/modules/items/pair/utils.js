@@ -1,3 +1,4 @@
+import cloneDeep from 'lodash/cloneDeep'
 import times from 'lodash/times'
 
 export const utils = {}
@@ -281,4 +282,8 @@ utils.isPresentInSolutions = (firstId, secondId, solutions) => {
   })
 
   return isPresent
+}
+
+utils.findUserAnswer = (solution, answer) => {
+  return answer.data.find(answer =>  JSON.stringify(cloneDeep(solution.itemIds).sort()) === JSON.stringify(cloneDeep(answer).sort()))
 }

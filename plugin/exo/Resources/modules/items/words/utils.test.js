@@ -1,4 +1,4 @@
-import {utils} from './utils'
+import {utils} from '#/plugin/exo/items/words/utils'
 import {ensure} from '#/main/core/scaffolding/tests'
 
 describe('Test splitting function', () => {

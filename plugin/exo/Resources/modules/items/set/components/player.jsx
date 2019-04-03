@@ -4,11 +4,12 @@ import {PropTypes as T} from 'prop-types'
 
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
+
 import {tex, trans} from '#/main/app/intl/translation'
-import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
+import {makeDraggable, makeDroppable} from '#/plugin/exo/utils/dragAndDrop'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {SetItemDragPreview} from './set-item-drag-preview.jsx'
+import {SetItemDragPreview} from '#/plugin/exo/items/set/components/set-item-drag-preview'
 
 let DropBox = props => {
   return props.connectDropTarget (
