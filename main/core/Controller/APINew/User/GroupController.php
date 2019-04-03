@@ -55,7 +55,7 @@ class GroupController extends AbstractCrudController
           }, $user->getOrganizations())];
 
         return new JsonResponse($this->finder->search(
-            'Claroline\CoreBundle\Entity\Group',
+            Group::class,
             array_merge($request->query->all(), ['hiddenFilters' => $filters])
         ));
     }
@@ -81,7 +81,7 @@ class GroupController extends AbstractCrudController
           }, $user->getAdministratedOrganizations()->toArray())];
 
         return new JsonResponse($this->finder->search(
-            'Claroline\CoreBundle\Entity\Group',
+            Group::class,
             array_merge($request->query->all(), ['hiddenFilters' => $filters])
         ));
     }

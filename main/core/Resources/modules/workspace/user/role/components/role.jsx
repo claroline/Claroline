@@ -221,7 +221,7 @@ const Role = connect(
         definition: GroupList.definition,
         card: GroupList.card,
         fetch: {
-          url: ['apiv2_group_list_managed'],
+          url: ['apiv2_group_list_registerable'],
           autoload: true
         },
         handleSelect: (selected) => dispatch(actions.addGroups(roleId, selected))
