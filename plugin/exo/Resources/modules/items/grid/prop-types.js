@@ -1,6 +1,8 @@
 import {PropTypes as T} from 'prop-types'
+
 import {makeId} from '#/plugin/exo/utils/utils'
-import {SUM_CELL} from '#/plugin/exo/items/grid/constants'
+import {constants} from '#/plugin/exo/items/grid/constants'
+import {SCORE_SUM} from '#/plugin/exo/quiz/enums'
 
 function makeDefaultCell(x, y) {
   return {
@@ -49,8 +51,9 @@ const GridItem = {
   defaultProps: {
     random: false,
     penalty: 0,
+    sumMode: constants.SUM_CELL,
     score: {
-      type: SUM_CELL
+      type: SCORE_SUM
     },
     cells: [
       makeDefaultCell(0,0),

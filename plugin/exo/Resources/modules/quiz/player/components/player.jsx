@@ -59,6 +59,7 @@ const CurrentStep = props =>
               {React.createElement(getDefinition(item.type).player, {
                 item: item,
                 answer: props.answers[item.id] && props.answers[item.id].data ? props.answers[item.id].data : undefined,
+                disabled: !props.answersEditable && props.answers[item.id] && 0 < props.answers[item.id].tries,
                 onChange: (answerData) => props.updateAnswer(item.id, answerData)
               })}
             </ItemPlayer>
@@ -89,6 +90,7 @@ CurrentStep.propTypes = {
   items: T.array.isRequired,
   answers: T.object.isRequired,
   feedbackEnabled: T.bool.isRequired,
+  answersEditable: T.bool.isRequired,
 
   updateAnswer: T.func.isRequired,
   showHint: T.func.isRequired
@@ -173,6 +175,7 @@ class PlayerComponent extends Component {
             items={this.props.items}
             answers={this.props.answers}
             feedbackEnabled={this.props.feedbackEnabled}
+            answersEditable={this.props.answersEditable}
             updateAnswer={this.props.updateAnswer}
             showHint={(questionId, hint) => this.props.showHint(this.props.quizId, this.props.paper.id, questionId, hint)}
           />
@@ -188,8 +191,14 @@ class PlayerComponent extends Component {
             showFeedback={this.props.showFeedback}
             feedbackEnabled={this.props.feedbackEnabled}
             navigateTo={(step) => this.props.navigateTo(this.props.quizId, this.props.paper.id, step, this.props.answers, false, false)}
-            navigateToAndValidate={(step) => this.props.navigateTo(this.props.quizId, this.props.paper.id, step, this.props.answers, this.props.currentStepSend, false)}
-            openFeedbackAndValidate={(step) => this.props.navigateTo(this.props.quizId, this.props.paper.id, step, this.props.answers, this.props.currentStepSend, true)}
+            navigateToAndValidate={(step) => {
+              const confirm = !this.props.answersEditable && 0 < Object.values(this.props.answers).filter(a => 0 === a.tries).length
+              this.props.navigateTo(this.props.quizId, this.props.paper.id, step, this.props.answers, this.props.currentStepSend, false, confirm)}
+            }
+            openFeedbackAndValidate={(step) => {
+              const confirm = !this.props.answersEditable && 0 < Object.values(this.props.answers).filter(a => 0 === a.tries).length
+              this.props.navigateTo(this.props.quizId, this.props.paper.id, step, this.props.answers, this.props.currentStepSend, true, confirm)
+            }}
             submit={() => this.props.submit(this.props.quizId, this.props.paper.id, this.props.answers)}
             finish={() => this.props.finish(this.props.quizId, this.props.paper, this.props.answers, this.props.showFeedback, this.props.showEndConfirm, this.props.history.push)}
             currentStepSend={this.props.currentStepSend}
@@ -227,6 +236,7 @@ PlayerComponent.propTypes = {
   showEndConfirm: T.bool.isRequired,
   feedbackEnabled: T.bool.isRequired,
   currentStepSend: T.bool.isRequired,
+  answersEditable: T.bool.isRequired,
 
   start: T.func.isRequired,
   updateAnswer: T.func.isRequired,
@@ -264,7 +274,8 @@ const Player = withRouter(connect(
     numbering: selectQuiz.quizNumbering(state),
     isTimed: selectQuiz.parameters(state).timeLimited,
     duration: selectQuiz.parameters(state).duration,
-    isProgressionDisplayed: selectQuiz.parameters(state).progressionDisplayed
+    isProgressionDisplayed: selectQuiz.parameters(state).progressionDisplayed,
+    answersEditable: selectQuiz.parameters(state).answersEditable
   }),
   dispatch => ({
     start() {
@@ -274,8 +285,16 @@ const Player = withRouter(connect(
     updateAnswer(questionId, answerData) {
       dispatch(actions.updateAnswer(questionId, answerData))
     },
-    navigateTo(quizId, paperId, nextStep, pendingAnswers, currentStepSend, openFeedback) {
-      dispatch(actions.navigateTo(quizId, paperId, nextStep, pendingAnswers, currentStepSend, openFeedback))
+    navigateTo(quizId, paperId, nextStep, pendingAnswers, currentStepSend, openFeedback, confirm = false) {
+      if (confirm) {
+        dispatch(modalActions.showModal(MODAL_CONFIRM, {
+          title: trans('validate_step_title', {}, 'quiz'),
+          question: trans('validate_step_question', {}, 'quiz'),
+          handleConfirm: () => dispatch(actions.navigateTo(quizId, paperId, nextStep, pendingAnswers, currentStepSend, openFeedback))
+        }))
+      } else {
+        dispatch(actions.navigateTo(quizId, paperId, nextStep, pendingAnswers, currentStepSend, openFeedback))
+      }
     },
     submit(quizId, paperId, answers) {
       dispatch(actions.submit(quizId, paperId, answers))

@@ -2,13 +2,14 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {asset} from '#/main/app/config/asset'
+import {trans} from '#/main/app/intl/translation'
+
 import {POINTER_CORRECT, POINTER_WRONG, SHAPE_RECT} from '#/plugin/exo/items/graphic/constants'
 import {utils} from '#/plugin/exo/items/graphic/utils'
 import {PaperTabs} from '#/plugin/exo/items/components/paper-tabs'
 import {PointableImage} from '#/plugin/exo/items/graphic/components/pointable-image'
 import {AnswerTable} from '#/plugin/exo/items/graphic/components/answer-table'
-import {AnswerStatsTable} from '#/plugin/exo/items/cloze/components/stats'
-import {tex} from '#/main/app/intl/translation'
+import {AnswerStatsTable} from '#/plugin/exo/items/graphic/components/answer-stats-table'
 
 export const GraphicPaper = props => {
   const pointedAreas = props.item.solutions
@@ -53,7 +54,7 @@ export const GraphicPaper = props => {
             />
           </div>
           {pointedAreas.length > 0 &&
-            <AnswerTable title={tex('your_answers')} areas={pointedAreas} showScore={props.showScore} highlightScore={true}/>
+            <AnswerTable title={trans('your_answers', {}, 'quiz')} areas={pointedAreas} showScore={props.showScore} highlightScore={true}/>
           }
         </div>
       }
@@ -67,7 +68,7 @@ export const GraphicPaper = props => {
               areas={expectedAreas}
             />
           </div>
-          <AnswerTable title={tex('expected_answers')} areas={expectedAreas} showScore={props.showScore} highlightScore={false}/>
+          <AnswerTable title={trans('expected_answers', {}, 'quiz')} areas={expectedAreas} showScore={props.showScore} highlightScore={false}/>
         </div>
       }
       stats={
@@ -80,7 +81,7 @@ export const GraphicPaper = props => {
               areas={expectedAreas}
             />
           </div>
-          <AnswerStatsTable title={tex('stats')} areas={expectedAreas} stats={props.stats}/>
+          <AnswerStatsTable title={trans('stats', {}, 'quiz')} areas={expectedAreas} stats={props.stats}/>
         </div>
       }
     />

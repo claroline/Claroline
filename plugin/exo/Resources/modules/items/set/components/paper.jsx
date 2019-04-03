@@ -3,13 +3,14 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import has from 'lodash/has'
 
-import {tex} from '#/main/app/intl/translation'
-import {Feedback} from '#/plugin/exo/items/components/feedback-btn'
+import {trans} from '#/main/app/intl/translation'
+
 import {SolutionScore} from '#/plugin/exo/components/score'
+import {WarningIcon} from '#/plugin/exo/components/warning-icon'
+import {Feedback} from '#/plugin/exo/items/components/feedback-btn'
 import {AnswerStats} from '#/plugin/exo/items/components/stats'
 import {PaperTabs} from '#/plugin/exo/items/components/paper-tabs'
 import {utils} from '#/plugin/exo/items/set/utils'
-import {WarningIcon} from '#/plugin/exo/components/warning-icon'
 
 export const SetPaper = props => {
   return (
@@ -144,7 +145,7 @@ export const SetPaper = props => {
                       <div className="item-content" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(item.itemId, props.item.items)}} />
 
                       <AnswerStats stats={{
-                        value: props.stats.unused[item.itemId] ? props.stats.unused[item.itemId] : 0,
+                        value: props.stats.unused && props.stats.unused[item.itemId] ? props.stats.unused[item.itemId] : 0,
                         total: props.stats.total
                       }} />
                     </div>
@@ -216,7 +217,7 @@ export const SetPaper = props => {
             </div>
           </div>
           <div className='answer-item unanswered-item'>
-            <div>{tex('unanswered')}</div>
+            <div>{trans('unanswered', {}, 'quiz')}</div>
 
             <AnswerStats stats={{
               value: props.stats.unanswered ? props.stats.unanswered : 0,

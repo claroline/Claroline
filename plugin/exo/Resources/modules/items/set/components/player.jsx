@@ -36,19 +36,22 @@ const Association = props =>
   <div className="association answer-item selected">
     <div className="association-data" dangerouslySetInnerHTML={{__html: props.association._itemData}} />
 
-    <Button
-      id={`ass-${props.association.itemId}-${props.association.setId}-delete`}
-      className="btn-link"
-      type={CALLBACK_BUTTON}
-      icon="fa fa-fw fa-trash-o"
-      label={trans('delete', {}, 'actions')}
-      callback={() => props.handleItemRemove(props.association.setId, props.association.itemId)}
-      tooltip="top"
-    />
+    {props.removable &&
+      <Button
+        id={`ass-${props.association.itemId}-${props.association.setId}-delete`}
+        className="btn-link"
+        type={CALLBACK_BUTTON}
+        icon="fa fa-fw fa-trash-o"
+        label={trans('delete', {}, 'actions')}
+        callback={() => props.handleItemRemove(props.association.setId, props.association.itemId)}
+        tooltip="top"
+      />
+    }
   </div>
 
 Association.propTypes = {
   association: T.object.isRequired,
+  removable: T.bool.isRequired,
   handleItemRemove: T.func.isRequired
 }
 
@@ -59,16 +62,19 @@ const Set = props =>
     <ul>
       {props.associations.map(ass =>
         <li key={`${ass.itemId}-${ass.setId}`}>
-          <Association handleItemRemove={props.onAssociationItemRemove} association={ass} />
+          <Association handleItemRemove={props.onAssociationItemRemove} association={ass} removable={!props.disabled}/>
         </li>
       )}
     </ul>
 
-    <DropBox object={props.set} onDrop={props.onDrop} />
+    {!props.disabled &&
+      <DropBox object={props.set} onDrop={props.onDrop} />
+    }
   </div>
 
 Set.propTypes = {
   set: T.object.isRequired,
+  disabled: T.bool.isRequired,
   onDrop: T.func.isRequired,
   associations: T.arrayOf(T.object).isRequired,
   onAssociationItemRemove: T.func.isRequired
@@ -83,6 +89,7 @@ const SetList = props =>
           onDrop={props.onAssociationItemDrop}
           onAssociationItemRemove={props.onAssociationItemRemove}
           set={set}
+          disabled={props.disabled}
         />
       </li>
     )}
@@ -92,6 +99,7 @@ const SetList = props =>
 SetList.propTypes = {
   sets: T.arrayOf(T.object).isRequired,
   answers: T.arrayOf(T.object).isRequired,
+  disabled: T.bool.isRequired,
   onAssociationItemRemove: T.func.isRequired,
   onAssociationItemDrop: T.func.isRequired
 }
@@ -106,17 +114,17 @@ let Item = props => {
             placement="top"
             overlay={
               <Tooltip id={`item-${props.item.id}-drag`}>{trans('move')}</Tooltip>
-            }>
+            }
+          >
             <span
+              title={trans('move')}
               draggable="true"
-              className={classes(
-                'tooltiped-button',
-                'btn btn-link-default',
-                'fa fa-fw',
-                'fa-arrows',
-                'drag-handle'
-              )}
-            />
+              className="tooltiped-button btn"
+            >
+              {props.draggable &&
+                <span className="fa fa-arrows drag-handle"/>
+              }
+            </span>
           </OverlayTrigger>
         </div>
       )}
@@ -126,7 +134,8 @@ let Item = props => {
 
 Item.propTypes = {
   connectDragSource: T.func.isRequired,
-  item: T.object.isRequired
+  item: T.object.isRequired,
+  draggable: T.bool.isRequired
 }
 
 Item = makeDraggable(
@@ -139,14 +148,15 @@ const ItemList = props =>
   <ul>
     { props.items.map((item) =>
       <li key={item.id}>
-        <Item item={item}/>
+        <Item item={item} draggable={props.draggable}/>
       </li>
     )}
   </ul>
 
 
 ItemList.propTypes = {
-  items:  T.arrayOf(T.object).isRequired
+  items:  T.arrayOf(T.object).isRequired,
+  draggable: T.bool.isRequired
 }
 
 class SetPlayer extends Component {
@@ -179,7 +189,7 @@ class SetPlayer extends Component {
     return (
       <div className="set-player row">
         <div className="items-col col-md-5 col-sm-5 col-xs-5">
-          <ItemList items={this.props.item.items} />
+          <ItemList items={this.props.item.items} draggable={!this.props.disabled}/>
         </div>
 
         <div className="sets-col col-md-7 col-sm-7 col-xs-7">
@@ -187,7 +197,9 @@ class SetPlayer extends Component {
             onAssociationItemRemove={(setId, itemId) => this.handleAssociationItemRemove(setId, itemId)}
             onAssociationItemDrop={(source, target) => this.handleAssociationItemDrop(source, target)}
             answers={this.props.answer}
-            sets={this.props.item.sets} />
+            sets={this.props.item.sets}
+            disabled={this.props.disabled}
+          />
         </div>
       </div>
     )
@@ -202,11 +214,13 @@ SetPlayer.propTypes = {
     items: T.arrayOf(T.object).isRequired
   }).isRequired,
   answer: T.array.isRequired,
+  disabled: T.bool.isRequired,
   onChange: T.func.isRequired
 }
 
 SetPlayer.defaultProps = {
-  answer: []
+  answer: [],
+  disabled: false
 }
 
 export {SetPlayer}

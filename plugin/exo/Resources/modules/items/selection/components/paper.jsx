@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 
-import {PaperTabs} from '#/plugin/exo/items/components/paper-tabs.jsx'
+import {PaperTabs} from '#/plugin/exo/items/components/paper-tabs'
 import {SelectionText} from '#/plugin/exo/items/selection/utils/selection-text'
 import {getReactAnswerSelections} from '#/plugin/exo/items/selection/utils/selection-answer'
 

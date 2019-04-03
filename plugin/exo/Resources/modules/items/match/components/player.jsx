@@ -84,43 +84,45 @@ class MatchPlayer extends Component {
       drawAnswers(this.props.answer, this.jsPlumbInstance)
     }, 500)
 
-    // use this event to create new answers
-    this.jsPlumbInstance.bind('beforeDrop', (connection) => {
-      // check that the connection is not already in jsPlumbConnections before creating it
-      const list = this.jsPlumbInstance.getConnections().filter(el => el.sourceId === connection.sourceId && el.targetId === connection.targetId)
+    if (!this.props.disabled) {
+      // use this event to create new answers
+      this.jsPlumbInstance.bind('beforeDrop', (connection) => {
+        // check that the connection is not already in jsPlumbConnections before creating it
+        const list = this.jsPlumbInstance.getConnections().filter(el => el.sourceId === connection.sourceId && el.targetId === connection.targetId)
 
-      if (list.length > 0) {
-        return false
-      }
+        if (list.length > 0) {
+          return false
+        }
 
-      //connection.connection.setType('selected')
-      const firstId = connection.sourceId.replace('source_', '')
-      const secondId = connection.targetId.replace('target_', '')
+        //connection.connection.setType('selected')
+        const firstId = connection.sourceId.replace('source_', '')
+        const secondId = connection.targetId.replace('target_', '')
 
-      // add answer
-      this.props.onChange(
-        [{firstId: firstId, secondId: secondId}].concat(this.props.answer)
-      )
+        // add answer
+        this.props.onChange(
+          [{firstId: firstId, secondId: secondId}].concat(this.props.answer)
+        )
 
-      return true
-    })
+        return true
+      })
 
-    // remove jsPlumb connection
-    this.jsPlumbInstance.bind('click', (connection) => {
-      // this will fire beforeDetach interceptor
-      this.jsPlumbInstance.detach(connection)
-    })
+      // remove jsPlumb connection
+      this.jsPlumbInstance.bind('click', (connection) => {
+        // this will fire beforeDetach interceptor
+        this.jsPlumbInstance.detach(connection)
+      })
 
-    // remove answer
-    this.jsPlumbInstance.bind('beforeDetach', (connection) => {
-      const firstId = connection.sourceId.replace('source_', '')
-      const secondId = connection.targetId.replace('target_', '')
       // remove answer
-      this.props.onChange(
-        this.props.answer.filter(answer => answer.firstId !== firstId || answer.secondId !== secondId)
-      )
-      return true
-    })
+      this.jsPlumbInstance.bind('beforeDetach', (connection) => {
+        const firstId = connection.sourceId.replace('source_', '')
+        const secondId = connection.targetId.replace('target_', '')
+        // remove answer
+        this.props.onChange(
+          this.props.answer.filter(answer => answer.firstId !== firstId || answer.secondId !== secondId)
+        )
+        return true
+      })
+    }
   }
 
   componentWillUnmount(){
@@ -215,11 +217,13 @@ MatchPlayer.propTypes = {
     })).isRequired
   }).isRequired,
   answer: T.array.isRequired,
+  disabled: T.bool.isRequired,
   onChange: T.func.isRequired
 }
 
 MatchPlayer.defaultProps = {
-  answer: []
+  answer: [],
+  disabled: false
 }
 
 export {MatchPlayer}

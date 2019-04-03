@@ -7,7 +7,8 @@ const WordsPlayer = (props) =>
   <Textarea
     id={`open-${props.item.id}-data`}
     value={props.answer}
-    onChange={(value) => props.onChange(value)}
+    disabled={props.disabled}
+    onChange={(value) => props.disabled ? false : props.onChange(value)}
   />
 
 WordsPlayer.propTypes = {
@@ -15,11 +16,13 @@ WordsPlayer.propTypes = {
     id: T.string.isRequired
   }).isRequired,
   answer: T.string,
+  disabled: T.bool.isRequired,
   onChange: T.func.isRequired
 }
 
 WordsPlayer.defaultProps = {
-  answer: ''
+  answer: '',
+  disabled: false
 }
 
 export {

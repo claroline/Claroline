@@ -59,6 +59,7 @@ class ChoicePlayer extends Component {
                 className="choice-item-tick"
                 name={this.props.item.id}
                 type={this.props.item.multiple ? 'checkbox': 'radio'}
+                disabled={this.props.disabled}
                 onChange={() => this.props.onChange(this.select(
                   this.props.item.multiple,
                   choice.id,
@@ -90,11 +91,13 @@ ChoicePlayer.propTypes = {
     direction: T.string.isRequired
   }).isRequired,
   answer: T.arrayOf(T.string),
+  disabled: T.bool.isRequired,
   onChange: T.func.isRequired
 }
 
 ChoicePlayer.defaultProps = {
-  answer: []
+  answer: [],
+  disabled: false
 }
 
 export {

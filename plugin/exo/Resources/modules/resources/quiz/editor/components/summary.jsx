@@ -24,7 +24,7 @@ const StepLink = props =>
     <LinkButton
       target={`/edit/${props.id}`}
     >
-      {props.title ? props.title : trans('step', {number: props.number}, 'quiz')}
+      {props.title ? props.title.substr(0, 30) : trans('step', {number: props.number}, 'quiz')}
     </LinkButton>
   </li>
 
@@ -67,7 +67,7 @@ class EditorSummary extends Component {
             key={step.id}
             id={step.id}
             number={index + 1}
-            title={step.title.substr(0, 30)}
+            title={step.title}
             actions={step.actions}
           />
         )}

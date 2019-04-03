@@ -195,8 +195,8 @@ class PairDefinition extends AbstractDefinition
             $rowItems = $row->getItems();
 
             if (2 === count($rowItems)) {
-                $item0Id = $rowItems[0]->getItem()->getUuid();
-                $item1Id = $rowItems[1]->getItem()->getUuid();
+                $item0Id = $rowItems[0]->getUuid();
+                $item1Id = $rowItems[1]->getUuid();
 
                 if (!isset($valid[$item0Id])) {
                     $valid[$item0Id] = [];

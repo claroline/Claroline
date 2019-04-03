@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import Popover from 'react-bootstrap/lib/Popover'
 
-import {tex} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 
 import {utils} from '#/plugin/exo/items/match/utils'
@@ -139,7 +139,7 @@ export class MatchFeedback extends Component
     return (
       <div className="match-feedback">
         <span className="help-block">
-          <span className="fa fa-info-circle"></span> {tex('match_player_click_link_help')}
+          <span className="fa fa-info-circle"></span> {trans('match_player_click_link_help', {}, 'quiz')}
         </span>
 
         <div className="match-items row" ref={(el) => { this.container = el }} id={`match-question-paper-${this.props.item.id}-first`}>

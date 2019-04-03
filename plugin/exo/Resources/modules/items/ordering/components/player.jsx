@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import cloneDeep from 'lodash/cloneDeep'
 import classes from 'classnames'
 
-import {trans, tex} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {constants} from '#/plugin/exo/items/ordering/constants'
@@ -16,7 +16,7 @@ let DropBox = props => {
     <div className={classes('drop-container', {
       'on-hover': props.isOver})}
     >
-      {tex('set_drop_item')}
+      {trans('set_drop_item', {}, 'quiz')}
     </div>
   )
 }
@@ -31,23 +31,22 @@ DropBox.propTypes = {
 DropBox = makeDroppable(DropBox, 'ITEM')
 
 let SortableItem = props => {
-  return props.connectDropTarget (
-    props.connectDragSource(
-      <div className="item">
-        <div className="item-data" dangerouslySetInnerHTML={{__html: props.data}} />
-        <div className="item-actions">
-          {props.canDelete &&
-            <Button
-              id={`answer-${props.index}-delete`}
-              className="btn"
-              type={CALLBACK_BUTTON}
-              icon="fa fa-fw fa-trash-o"
-              label={trans('delete', {}, 'actions')}
-              callback={props.onDelete}
-              tooltip="top"
-            />
-          }
-
+  const element =
+    <div className="item">
+      <div className="item-data" dangerouslySetInnerHTML={{__html: props.data}} />
+      <div className="item-actions">
+        {props.canDelete &&
+          <Button
+            id={`answer-${props.index}-delete`}
+            className="btn"
+            type={CALLBACK_BUTTON}
+            icon="fa fa-fw fa-trash-o"
+            label={trans('delete', {}, 'actions')}
+            callback={props.onDelete}
+            tooltip="top"
+          />
+        }
+        {props.sortable &&
           <span
             title={trans('move')}
             draggable="true"
@@ -55,14 +54,16 @@ let SortableItem = props => {
           >
             <span className="fa fa-arrows drag-handle"/>
           </span>
-        </div>
+        }
       </div>
-    )
-  )
+    </div>
+
+  return props.sortable ? props.connectDropTarget (props.connectDragSource(element)) : element
 }
 
 SortableItem.propTypes = {
   data: T.string.isRequired,
+  sortable: T.bool.isRequired,
   canDelete: T.bool.isRequired,
   onDelete: T.func,
   connectDragSource: T.func.isRequired,
@@ -78,23 +79,28 @@ SortableItem = makeSortable(
 )
 
 let DraggableItem = props => {
-  return props.connectDragSource(
+  const element =
     <div className="item">
-      <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.data}} />      
-      <span
-        title={trans('move')}
-        draggable="true"
-        className="tooltiped-button btn"
-      >
-        <span className="fa fa-arrows drag-handle"/>
-      </span>
+      <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.data}} />
+
+      {props.draggable &&
+        <span
+          title={trans('move')}
+          draggable="true"
+          className="tooltiped-button btn"
+        >
+          <span className="fa fa-arrows drag-handle"/>
+        </span>
+      }
     </div>
-  )
+
+  return props.draggable ? props.connectDragSource(element) : element
 }
 
 DraggableItem.propTypes = {
   connectDragSource: T.func.isRequired,
-  item: T.object.isRequired
+  item: T.object.isRequired,
+  draggable: T.bool.isRequired
 }
 
 DraggableItem = makeDraggable(
@@ -176,6 +182,7 @@ class OrderingPlayer extends Component {
                   id={a.itemId}
                   key={a.itemId}
                   data={a._data}
+                  sortable={!this.props.disabled}
                   canDelete={false}
                   index={index}
                   sortDirection={this.props.item.direction === constants.DIRECTION_VERTICAL ? SORT_VERTICAL : SORT_HORIZONTAL}
@@ -188,6 +195,7 @@ class OrderingPlayer extends Component {
                 <DraggableItem
                   item={item}
                   key={item.id}
+                  draggable={!this.props.disabled}
                 />
               )
             }
@@ -199,7 +207,8 @@ class OrderingPlayer extends Component {
                   id={a.itemId}
                   key={a.itemId}
                   data={a._data}
-                  canDelete={true}
+                  sortable={!this.props.disabled}
+                  canDelete={!this.props.disabled}
                   onDelete={() => this.onDelete(a.itemId)}
                   sortDirection={SORT_VERTICAL}
                   index={index}
@@ -207,7 +216,9 @@ class OrderingPlayer extends Component {
                     this.onSort(id, swapId)
                   )}/>
               )}
-              <DropBox onDrop={(source) => this.onItemDrop(source)}/>
+              {!this.props.disabled &&
+                <DropBox onDrop={(source) => this.onItemDrop(source)}/>
+              }
             </div>
           }
         </div>
@@ -219,7 +230,8 @@ class OrderingPlayer extends Component {
                   id={a.itemId}
                   key={a.itemId}
                   data={a._data}
-                  canDelete={true}
+                  sortable={!this.props.disabled}
+                  canDelete={!this.props.disabled}
                   onDelete={() => this.onDelete(a.itemId)}
                   sortDirection={SORT_HORIZONTAL}
                   index={index}
@@ -227,7 +239,9 @@ class OrderingPlayer extends Component {
                     this.onSort(id, swapId)
                   )}/>
               )}
-              <DropBox onDrop={(source) => this.onItemDrop(source)}/>
+              {!this.props.disabled &&
+                <DropBox onDrop={(source) => this.onItemDrop(source)}/>
+              }
             </div>
           </div>
         }
@@ -245,11 +259,13 @@ OrderingPlayer.propTypes = {
     items: T.arrayOf(T.object).isRequired
   }).isRequired,
   answer: T.array.isRequired,
+  disabled: T.bool.isRequired,
   onChange: T.func.isRequired
 }
 
 OrderingPlayer.defaultProps = {
-  answer: []
+  answer: [],
+  disabled: false
 }
 
 export {

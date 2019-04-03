@@ -184,14 +184,15 @@ class SelectionDefinition extends AbstractDefinition
                case $question::MODE_HIGHLIGHT:
                   $foundElements = [];
 
-                  foreach ($answers->highlights as $highlightAnswer) {
-                      if ($colorSelection = $question->getColorSelection(['color_uuid' => $highlightAnswer->colorId, 'selection_uuid' => $highlightAnswer->selectionId])) {
-                          $colorSelection->getScore() > 0 ? $corrected->addExpected($colorSelection) : $corrected->addUnexpected($colorSelection);
+                  if (isset($answers->highlights)) {
+                      foreach ($answers->highlights as $highlightAnswer) {
+                          if ($colorSelection = $question->getColorSelection(['color_uuid' => $highlightAnswer->colorId, 'selection_uuid' => $highlightAnswer->selectionId])) {
+                              $colorSelection->getScore() > 0 ? $corrected->addExpected($colorSelection) : $corrected->addUnexpected($colorSelection);
 
-                          $foundElements[] = ['color_uuid' => $highlightAnswer->colorId, 'selection_uuid' => $highlightAnswer->selectionId];
+                              $foundElements[] = ['color_uuid' => $highlightAnswer->colorId, 'selection_uuid' => $highlightAnswer->selectionId];
+                          }
                       }
                   }
-
                   $bestAnswers = $this->expectAnswer($question);
                   $elements = array_map(function ($colorSelection) {
                       //id always returns null as of now

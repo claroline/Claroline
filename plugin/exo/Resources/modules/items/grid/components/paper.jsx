@@ -2,15 +2,17 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import has from 'lodash/has'
-import {tex} from '#/main/app/intl/translation'
-import {Feedback} from './../components/feedback-btn.jsx'
+
+import {trans} from '#/main/app/intl/translation'
+
+import {Feedback} from '#/plugin/exo/items/components/feedback-btn'
 import {SolutionScore} from '#/plugin/exo/components/score'
-import {AnswerStats} from '../components/stats.jsx'
-import {PaperTabs} from './../components/paper-tabs.jsx'
-import {utils} from './utils/utils'
+import {AnswerStats} from '#/plugin/exo/items/components/stats'
+import {PaperTabs} from '#/plugin/exo/items/components/paper-tabs'
+import {utils} from '#/plugin/exo/items/grid/utils/utils'
 import {WarningIcon} from '#/plugin/exo/components/warning-icon'
-import {SUM_CELL, SUM_COL, SUM_ROW} from '#/plugin/exo/items/grid/constants'
-import {SCORE_SUM, SCORE_FIXED} from './../../quiz/enums'
+import {constants} from '#/plugin/exo/items/grid/constants'
+import {SCORE_SUM, SCORE_FIXED} from '#/plugin/exo/quiz/enums'
 
 
 class ExpectedGridCell extends Component {
@@ -257,7 +259,7 @@ class GridPaper extends Component {
       const text = answer.text
       const solution = this.props.item.solutions.find(solution => solution.cellId === cell.id)
       // also depends on score or expected depending on score mode
-      if (this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_CELL) {
+      if (this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === constants.SUM_CELL) {
         return undefined !== solution.answers.find(answer => ((answer.caseSensitive && answer.text === text) || (answer.text.toLowerCase() === text.toLowerCase())) && answer.score > 0)
       } else {
         return undefined !== solution.answers.find(answer => ((answer.caseSensitive && answer.text === text) || (answer.text.toLowerCase() === text.toLowerCase())) && answer.expected)
@@ -409,13 +411,13 @@ class GridPaper extends Component {
     const successStyle = {backgroundColor: '#d4ffb0', color: '#468847'}
     if (this.props.item.score.type === SCORE_FIXED) {
       return this.noErrorInGrid() ? successStyle : errorStyle
-    } else if (this.props.item.sumMode === SUM_CELL) {
+    } else if (this.props.item.sumMode === constants.SUM_CELL) {
       if (cell.input) {
         return valid ? successStyle : errorStyle
       } else {
         return {backgroundColor: cell.background}
       }
-    } else if (this.props.item.sumMode === SUM_ROW) {
+    } else if (this.props.item.sumMode === constants.SUM_ROW) {
       // if no expected answer in the row then background set for the cell
       if (!utils.atLeastOneSolutionInRow(cell.coordinates[1], this.props.item.cells, this.props.item.solutions)) {
         return cell.background
@@ -459,7 +461,7 @@ class GridPaper extends Component {
             <div className="grid-body">
               <table className="grid-table">
                 <tbody>
-                  {this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_COL &&
+                  {this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === constants.SUM_COL &&
                     <tr>
                       {[...Array(this.props.item.cols)].map((x, i) =>
                         <td key={`grid-col-score-col-${i}`} style={{padding: '8px'}}>
@@ -477,7 +479,7 @@ class GridPaper extends Component {
                   }
                   {[...Array(this.props.item.rows)].map((x, i) =>
                     <tr key={`grid-row-${i}`}>
-                      {this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_ROW &&
+                      {this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === constants.SUM_ROW &&
                         <td key={`grid-row-score-col-${i}`} style={{padding: '8px', verticalAlign: 'middle'}}>
                           { utils.atLeastOneSolutionInRow(i, this.props.item.cells, this.props.item.solutions) &&
                             <span className={classes(
@@ -512,7 +514,7 @@ class GridPaper extends Component {
                                 isValid={valid}
                                 answers={this.props.answer}
                                 solutions={this.props.item.solutions}
-                                showScore={this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_CELL}
+                                showScore={this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === constants.SUM_CELL}
                                 cell={cell}
                                 penalty={this.props.item.penalty}/>
                             </td>
@@ -532,7 +534,7 @@ class GridPaper extends Component {
             <div className="grid-body">
               <table className="grid-table">
                 <tbody>
-                  {this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_COL &&
+                  {this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === constants.SUM_COL &&
                     <tr>
                       {[...Array(this.props.item.cols)].map((x, i) =>
                         <td key={`grid-col-score-col-${i}`} style={{padding: '8px'}}>
@@ -547,7 +549,7 @@ class GridPaper extends Component {
                   }
                   {[...Array(this.props.item.rows)].map((x, i) =>
                     <tr key={`grid-row-${i}`}>
-                      {this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_ROW &&
+                      {this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === constants.SUM_ROW &&
                         <td key={`grid-row-score-col-${i}`} style={{padding: '8px', verticalAlign: 'middle'}}>
                           { utils.atLeastOneSolutionInRow(i, this.props.item.cells, this.props.item.solutions) &&
                             <span className="text-info">
@@ -578,7 +580,7 @@ class GridPaper extends Component {
                                 showScore = {this.props.showScore}
                                 answers={this.props.answer}
                                 solutions={this.props.item.solutions}
-                                isSumCellMode={this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_CELL}
+                                isSumCellMode={this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === constants.SUM_CELL}
                                 cell={cell}/>
                             </td>
                           )
@@ -656,7 +658,7 @@ class GridPaper extends Component {
                                   key={`others-answer-${cell.id}-${i}`}
                                   className='answer-item stats-answer'
                                 >
-                                  <div>{tex('other_answers')}</div>
+                                  <div>{trans('other_answers', {}, 'quiz')}</div>
 
                                   <AnswerStats stats={{
                                     value: this.props.stats.cells[cell.id]['_others'],
@@ -669,7 +671,7 @@ class GridPaper extends Component {
                                   key={`unanswered-answer-${cell.id}-${i}`}
                                   className='answer-item unanswered-item'
                                 >
-                                  <div>{tex('unanswered')}</div>
+                                  <div>{trans('unanswered', {}, 'quiz')}</div>
 
                                   <AnswerStats stats={{
                                     value: this.props.stats.cells[cell.id]['_unanswered'],
@@ -688,7 +690,7 @@ class GridPaper extends Component {
               </table>
             </div>
             <div className='answer-item unanswered-item'>
-              <div>{tex('unanswered')}</div>
+              <div>{trans('unanswered', {}, 'quiz')}</div>
 
               <AnswerStats stats={{
                 value: this.props.stats.unanswered ? this.props.stats.unanswered : 0,

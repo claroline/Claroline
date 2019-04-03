@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import has from 'lodash/has'
 
-import {tex} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {Feedback} from '#/plugin/exo/items/components/feedback-btn'
 import {SolutionScore} from '#/plugin/exo/components/score'
@@ -234,7 +234,7 @@ const OrderingPaper = props => {
                     <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === solution.itemId).data}}/>
 
                     <AnswerStats stats={{
-                      value: props.stats.unused[solution.itemId] ? props.stats.unused[solution.itemId] : 0,
+                      value: props.stats.unused && props.stats.unused[solution.itemId] ? props.stats.unused[solution.itemId] : 0,
                       total: props.stats.total
                     }}/>
                   </div>
@@ -371,7 +371,7 @@ const OrderingPaper = props => {
             })
           }
           <div className='answer-item unanswered-item'>
-            <div>{tex('unanswered')}</div>
+            <div>{trans('unanswered', {}, 'quiz')}</div>
 
             <AnswerStats stats={{
               value: props.stats.unanswered ? props.stats.unanswered : 0,

@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {Feedback} from './../components/feedback-btn.jsx'
-import {utils} from './utils/utils'
+
+import {Feedback} from '#/plugin/exo/items/components/feedback-btn'
+import {utils} from '#/plugin/exo/items/grid/utils/utils'
 import {WarningIcon} from '#/plugin/exo/components/warning-icon'
-import {SUM_CELL} from '#/plugin/exo/items/grid/constants'
-import {SCORE_SUM} from './../../quiz/enums'
+import {constants} from '#/plugin/exo/items/grid/constants'
+import {SCORE_SUM} from '#/plugin/exo/quiz/enums'
 
 class YourGridCell extends Component {
   constructor(props) {
@@ -94,7 +95,7 @@ class GridFeedback extends Component {
       const text = answer.text
       const solution = this.props.item.solutions.find(solution => solution.cellId === cell.id)
       // also depends on score or expected depending on score mode
-      if (this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_CELL) {
+      if (this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === constants.SUM_CELL) {
         return undefined !== solution.answers.find(answer => ((answer.caseSensitive && answer.text === text) || (answer.text.toLowerCase() === text.toLowerCase())) && answer.score > 0)
       } else {
         return undefined !== solution.answers.find(answer => ((answer.caseSensitive && answer.text === text) || (answer.text.toLowerCase() === text.toLowerCase())) && answer.expected)

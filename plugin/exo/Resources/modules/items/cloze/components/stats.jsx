@@ -14,7 +14,7 @@ const AnswerStatsTable = props =>
     <h3>
       <span className="badge">{props.title}</span>
     </h3>
-    {props.solution.answers.map((answer, idx) => {
+    {props.solution && props.solution.answers && props.solution.answers.map((answer, idx) => {
       const key = utils.getKey(props.solution.holeId, answer.text, props.solutions)
 
       return (
@@ -31,7 +31,7 @@ const AnswerStatsTable = props =>
         </div>
       )
     })}
-    {props.stats.holes[props.solution.holeId] && props.stats.holes[props.solution.holeId]['_others'] &&
+    {props.solution && props.stats.holes[props.solution.holeId] && props.stats.holes[props.solution.holeId]['_others'] &&
       <div className="answer-item">
         <div>{tex('other_answers')}</div>
         <div>
@@ -42,7 +42,7 @@ const AnswerStatsTable = props =>
         </div>
       </div>
     }
-    {props.stats.holes[props.solution.holeId] && props.stats.holes[props.solution.holeId]['_unanswered'] &&
+    {props.solution && props.stats.holes[props.solution.holeId] && props.stats.holes[props.solution.holeId]['_unanswered'] &&
       <div className="answer-item unanswered-item">
         <div>{tex('unanswered')}</div>
         <div>

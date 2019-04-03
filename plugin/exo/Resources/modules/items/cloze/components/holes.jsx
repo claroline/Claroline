@@ -54,7 +54,7 @@ const PlayerHole = props =>
       value={props.answer}
       size={props.size}
       choices={props.choices}
-      disabled={false}
+      disabled={props.disabled}
       onChange={props.onChange}
     />
   </span>
@@ -63,6 +63,7 @@ PlayerHole.propTypes = {
   size: T.number,
   answer: T.string,
   choices: T.arrayOf(T.string),
+  disabled: T.bool.isRequired,
   onChange: T.func.isRequired
 }
 

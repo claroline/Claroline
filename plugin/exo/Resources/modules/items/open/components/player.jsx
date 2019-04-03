@@ -7,7 +7,8 @@ const OpenPlayer = (props) =>
   <HtmlInput
     id={`open-${props.item.id}-data`}
     value={props.answer}
-    onChange={(value) => props.onChange(value)}
+    disabled={props.disabled}
+    onChange={(value) => props.disabled ? false : props.onChange(value)}
   />
 
 OpenPlayer.propTypes = {
@@ -17,11 +18,13 @@ OpenPlayer.propTypes = {
     maxLength: T.number.isRequired
   }).isRequired,
   answer: T.string,
+  disabled: T.bool.isRequired,
   onChange: T.func.isRequired
 }
 
 OpenPlayer.defaultProps = {
-  answer: ''
+  answer: '',
+  disabled: false
 }
 
 export {

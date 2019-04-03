@@ -189,32 +189,34 @@ utils.getYourAnswers = (answers, item) => {
     orpheans: []
   }
 
-  answers.forEach(answer => {
-    // search for corresponding solution
-    let solution = item.solutions.find(solution => solution.itemIds.length === 2 && solution.itemIds.indexOf(answer[0]) !== -1 && solution.itemIds.indexOf(answer[1]) !== -1)
-    let valid = undefined !== solution && solution.score > 0
-    if (valid && solution.ordered) {
-      valid = answer[0] === solution.itemIds[0] && answer[1] === solution.itemIds[1]
-    }
-    const leftItemData = item.items.find(item => item.id === answer[0]).data
-    const rightItemData = item.items.find(item => item.id === answer[1]).data
+  if (answers) {
+    answers.forEach(answer => {
+      // search for corresponding solution
+      let solution = item.solutions.find(solution => solution.itemIds.length === 2 && solution.itemIds.indexOf(answer[0]) !== -1 && solution.itemIds.indexOf(answer[1]) !== -1)
+      let valid = undefined !== solution && solution.score > 0
+      if (valid && solution.ordered) {
+        valid = answer[0] === solution.itemIds[0] && answer[1] === solution.itemIds[1]
+      }
+      const leftItemData = item.items.find(item => item.id === answer[0]).data
+      const rightItemData = item.items.find(item => item.id === answer[1]).data
 
-    // not a real solution could be an odd !
-    if (solution === undefined) {
-      solution = item.solutions.find(solution => solution.itemIds.length === 1 && ( solution.itemIds[0] === answer[0] || solution.itemIds[0] === answer[1]))
-    }
+      // not a real solution could be an odd !
+      if (solution === undefined) {
+        solution = item.solutions.find(solution => solution.itemIds.length === 1 && ( solution.itemIds[0] === answer[0] || solution.itemIds[0] === answer[1]))
+      }
 
-    yourAnswers.answers.push({
-      leftItem: {id: answer[0], data:leftItemData},
-      rightItem: {id: answer[1], data:rightItemData},
-      valid: valid,
-      feedback: undefined !== solution ? solution.feedback : '',
-      score: undefined !== solution ? solution.score : ''
+      yourAnswers.answers.push({
+        leftItem: {id: answer[0], data:leftItemData},
+        rightItem: {id: answer[1], data:rightItemData},
+        valid: valid,
+        feedback: undefined !== solution ? solution.feedback : '',
+        score: undefined !== solution ? solution.score : ''
+      })
     })
-  })
+  }
 
   item.items.forEach(el => {
-    const answerFound = answers.find(answer => answer.indexOf(el.id) !== -1)
+    const answerFound = answers ? answers.find(answer => answer.indexOf(el.id) !== -1) : undefined
     if (undefined === answerFound) {
       const solution = item.solutions.filter(solution => solution.itemIds.length === 1).find(solution => solution.itemIds[0] === el.id)
 

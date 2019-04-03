@@ -6,8 +6,8 @@ import {trans} from '#/main/app/intl/translation'
 
 import {utils} from '#/plugin/exo/items/selection/utils/utils'
 import {getOffsets} from '#/plugin/exo/items/selection/utils/selection'
-import {getReactAnswerInputs} from '#/plugin/exo/items/selection/utils/selection-input.jsx'
-import {SelectionText} from '#/plugin/exo/items/selection/utils/selection-text.jsx'
+import {getReactAnswerInputs} from '#/plugin/exo/items/selection/utils/selection-input'
+import {SelectionText} from '#/plugin/exo/items/selection/utils/selection-text'
 
 class SelectionPlayer extends Component {
   constructor(props) {
@@ -92,7 +92,7 @@ class SelectionPlayer extends Component {
             id={'selection-text-box-' + this.props.item.id}
             anchorPrefix="selection-element-yours"
             text={this.props.item.text}
-            selections={getReactAnswerInputs(this.props.item, this.getOnAnswer(), this.answers)}
+            selections={getReactAnswerInputs(this.props.item, this.getOnAnswer(), this.props.answer, this.props.disabled)}
           />
         }
         {this.props.item.mode === 'find' &&
@@ -107,7 +107,7 @@ class SelectionPlayer extends Component {
   }
 
   componentDidMount() {
-    if (this.props.item.mode === 'find') {
+    if (this.props.item.mode === 'find' && !this.props.disabled) {
       document.getElementById('selection-text-box-' + this.props.item.id).addEventListener(
         'click',
         () => {
@@ -139,6 +139,7 @@ class SelectionPlayer extends Component {
 SelectionPlayer.propTypes = {
   item: T.object,
   answer: T.object,
+  disabled: T.bool.isRequired,
   onChange: T.func.isRequired
 }
 

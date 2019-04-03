@@ -2,7 +2,7 @@ import React from 'react'
 import classes from 'classnames'
 import {PropTypes as T} from 'prop-types'
 
-import {tex} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 import {SolutionScore} from '#/plugin/exo/components/score'
 import {Feedback} from '#/plugin/exo/items/components/feedback-btn'
 import {AnswerStats} from '#/plugin/exo/items/components/stats'
@@ -59,7 +59,7 @@ const AnswerStatsTable = (props) => {
       )}
       {!props.isCorrect && props.stats.words['_others'] &&
         <div className="word-item answer-item">
-          <span className="word-label">{tex('other_answers')}</span>
+          <span className="word-label">{trans('other_answers', {}, 'quiz')}</span>
           <AnswerStats stats={{
             value: props.stats.words['_others'],
             total: props.stats.total
@@ -103,7 +103,7 @@ export const WordsPaper = (props) => {
             solutions={props.item.solutions}
             showScore={props.showScore}
           /> :
-          <div className="no-answer">{tex('no_answer')}</div>
+          <div className="no-answer">{trans('no_answer', {}, 'quiz')}</div>
       }
       expected={
         <div className="row">
@@ -127,7 +127,7 @@ export const WordsPaper = (props) => {
           </div>
           <div className="row">
             <div className='answer-item unanswered-item'>
-              <div>{tex('unanswered')}</div>
+              <div>{trans('unanswered', {}, 'quiz')}</div>
 
               <AnswerStats stats={{
                 value: props.stats.unanswered ? props.stats.unanswered : 0,

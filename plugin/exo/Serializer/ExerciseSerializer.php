@@ -151,6 +151,7 @@ class ExerciseSerializer implements SerializerInterface
         $parameters->interruptible = $exercise->isInterruptible();
         $parameters->numbering = $exercise->getNumbering();
         $parameters->mandatoryQuestions = $exercise->getMandatoryQuestions();
+        $parameters->answersEditable = $exercise->isAnswersEditable();
 
         // Visibility parameters
         $parameters->showOverview = $exercise->getShowOverview();
@@ -298,6 +299,10 @@ class ExerciseSerializer implements SerializerInterface
             }
 
             $exercise->setDateCorrection($correctionDate);
+        }
+
+        if (isset($parameters->answersEditable)) {
+            $exercise->setAnswersEditable($parameters->answersEditable);
         }
     }
 

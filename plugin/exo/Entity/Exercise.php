@@ -262,6 +262,11 @@ class Exercise extends AbstractResource
     private $progressionDisplayed = true;
 
     /**
+     * @ORM\Column(name="answers_editable", type="boolean", options={"default" = 1})
+     */
+    private $answersEditable = true;
+
+    /**
      * Exercise constructor.
      */
     public function __construct()
@@ -805,5 +810,21 @@ class Exercise extends AbstractResource
     public function setProgressionDisplayed($progressionDisplayed)
     {
         $this->progressionDisplayed = $progressionDisplayed;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAnswersEditable()
+    {
+        return $this->answersEditable;
+    }
+
+    /**
+     * @param bool $answersEditable
+     */
+    public function setAnswersEditable($answersEditable)
+    {
+        $this->answersEditable = $answersEditable;
     }
 }

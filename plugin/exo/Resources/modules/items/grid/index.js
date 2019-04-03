@@ -3,13 +3,13 @@ import {trans} from '#/main/app/intl/translation'
 import {stripDiacritics} from '#/main/core/scaffolding/text/strip-diacritics'
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
 
-import {SUM_CELL, SUM_COL, SUM_ROW} from '#/plugin/exo/items/grid/constants'
+import {constants} from '#/plugin/exo/items/grid/constants'
 
 // components
 import {GridEditor} from '#/plugin/exo/items/grid/components/editor'
-import {GridPaper} from '#/plugin/exo/items/grid/paper'
-import {GridPlayer} from '#/plugin/exo/items/grid/player'
-import {GridFeedback} from '#/plugin/exo/items/grid/feedback'
+import {GridPaper} from '#/plugin/exo/items/grid/components/paper'
+import {GridPlayer} from '#/plugin/exo/items/grid/components/player'
+import {GridFeedback} from '#/plugin/exo/items/grid/components/feedback'
 
 // scores
 import ScoreFixed from '#/plugin/exo/scores/fixed'
@@ -23,13 +23,13 @@ function getCorrectedAnswer(item, answer = {data: []}) {
   }
 
   switch(item.sumMode) {
-    case SUM_CELL: {
+    case constants.SUM_CELL: {
       return getCorrectAnswerForSumCellsMode(item, answer)
     }
-    case SUM_ROW: {
+    case constants.SUM_ROW: {
       return getCorrectAnswerForRowSumMode(item, answer)
     }
-    case SUM_COL: {
+    case constants.SUM_COL: {
       return getCorrectAnswerForColSumMode(item, answer)
     }
   }

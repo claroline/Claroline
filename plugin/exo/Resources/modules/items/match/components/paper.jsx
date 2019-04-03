@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import {tex} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 import Tab from 'react-bootstrap/lib/Tab'
 import Nav from 'react-bootstrap/lib/Nav'
 import Popover from 'react-bootstrap/lib/Popover'
@@ -180,17 +180,17 @@ export class MatchPaper extends Component
           <Nav bsStyle="tabs">
             {this.props.showYours &&
               <NavItem eventKey="first" onSelect={() => this.handleSelect('first')}>
-                <span className="fa fa-fw fa-user" /> {tex('your_answer')}
+                <span className="fa fa-fw fa-user" /> {trans('your_answer', {}, 'quiz')}
               </NavItem>
             }
             {this.props.showExpected &&
               <NavItem eventKey="second" onSelect={() => this.handleSelect('second')}>
-                <span className="fa fa-fw fa-check" /> {tex('expected_answer')}
+                <span className="fa fa-fw fa-check" /> {trans('expected_answer', {}, 'quiz')}
               </NavItem>
             }
             {this.props.showStats &&
               <NavItem eventKey="third" onSelect={() => this.handleSelect('third')}>
-                <span className="fa fa-fw fa-bar-chart" /> {tex('stats')}
+                <span className="fa fa-fw fa-bar-chart" /> {trans('stats', {}, 'quiz')}
               </NavItem>
             }
           </Nav>
@@ -198,7 +198,7 @@ export class MatchPaper extends Component
             <Tab.Content animation>
               <Tab.Pane eventKey="first">
                 <span className="help-block">
-                  <span className="fa fa-info-circle" />{tex('match_player_click_link_help')}
+                  <span className="fa fa-info-circle" />{trans('match_player_click_link_help', {}, 'quiz')}
                 </span>
                 <div id={`match-question-paper-${this.props.item.id}-first`} className="match-items row">
                   <div className="item-col col-md-5 col-sm-5 col-xs-5">
@@ -242,7 +242,7 @@ export class MatchPaper extends Component
               {this.props.showExpected &&
                 <Tab.Pane eventKey="second">
                   <span className="help-block" style={{visibility:'hidden'}} >
-                    <span className="fa fa-info-circle" />{tex('match_player_click_link_help')}
+                    <span className="fa fa-info-circle" />{trans('match_player_click_link_help', {}, 'quiz')}
                   </span>
                   <div id={`match-question-paper-${this.props.item.id}-second`} className="match-items row">
                     <div className="item-col col-md-5 col-sm-5 col-xs-5">
@@ -379,7 +379,7 @@ export class MatchPaper extends Component
                       )}
                       <div className='answer-item unanswered-item'>
                         <div className="match-item-content">
-                          {tex('unanswered')}
+                          {trans('unanswered', {}, 'quiz')}
                         </div>
 
                         <AnswerStats stats={{

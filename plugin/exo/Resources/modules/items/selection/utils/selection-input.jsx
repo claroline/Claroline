@@ -8,7 +8,7 @@ import {utils} from './utils'
 /**
  * utility method for building the selection array
  */
-export function getReactAnswerInputs(item, onAnswer) {
+export function getReactAnswerInputs(item, onAnswer, answer, disabled) {
   return cloneDeep(item.selections).map(selection => {
     selection.selectionId = selection.id
 
@@ -29,6 +29,12 @@ export function getReactAnswerInputs(item, onAnswer) {
             colors={item.colors}
             onAnswer={onAnswer}
             className={element.className || ''}
+            isAnswered={answer && answer.selections && -1 < answer.selections.indexOf(elId)}
+            answerColorId={answer && answer.highlights && answer.highlights.find(h => h.selectionId === elId) ?
+              answer.highlights.find(h => h.selectionId === elId).colorId :
+              undefined
+            }
+            disabled={disabled}
           />
         )
       }
@@ -48,6 +54,8 @@ export class SelectionInput extends Component {
           text={this.props.text}
           className={this.props.className}
           onAnswer={this.props.onAnswer}
+          checked={this.props.isAnswered}
+          disabled={this.props.disabled}
         />)
       }
       case 'highlight': {
@@ -57,6 +65,8 @@ export class SelectionInput extends Component {
           className={this.props.className}
           colors={this.props.colors}
           onAnswer={this.props.onAnswer}
+          answerColorId={this.props.answerColorId}
+          disabled={this.props.disabled}
         />)
       }
     }
@@ -66,6 +76,12 @@ export class SelectionInput extends Component {
 export class DisplayHighlightInput extends Component {
   constructor(props) {
     super(props)
+
+    if (props.answerColorId) {
+      this.state = {
+        answer: {colorId: props.answerColorId}
+      }
+    }
   }
 
   changeSolution(colorId) {
@@ -85,15 +101,16 @@ export class DisplayHighlightInput extends Component {
           <select
             value={this.state ? this.state.answer.colorId: ''}
             className="select-highlight"
-            onChange={(e) => this.changeSolution(e.target.value)}
+            disabled={this.props.disabled}
+            onChange={(e) => this.props.disabled ? false : this.changeSolution(e.target.value)}
           >
             <option disabled value=''> -- select a color -- </option>
             {this.props.colors.map(color => {
               return (
                 <option key={this.props.id + color.id} value={color.id} style={{backgroundColor: color.code}}>
-                 {'\u00a0'}{'\u00a0'}{'\u00a0'}
+                  {'\u00a0'}{'\u00a0'}{'\u00a0'}
                 </option>
-               )
+              )
             })}
           </select>
         </span>
@@ -105,12 +122,14 @@ export class DisplayHighlightInput extends Component {
 class DisplaySelectInput extends Component {
   constructor(props) {
     super(props)
-    this.state = {checked: false}
+    this.state = {checked: props.checked || false}
   }
 
   onClick() {
-    this.props.onAnswer(this.props.id, !this.state.checked)
-    this.setState({checked: !this.state.checked})
+    if (!this.props.disabled) {
+      this.props.onAnswer(this.props.id, !this.state.checked)
+      this.setState({checked: !this.state.checked})
+    }
   }
 
   render() {
@@ -134,14 +153,19 @@ SelectionInput.propTypes = {
   colors: T.arrayOf(T.shape({
     id: T.string.isRequired,
     code: T.string.isRequired
-  }))
+  })),
+  isAnswered: T.bool,
+  answerColorId: T.string,
+  disabled: T.bool
 }
 
 DisplaySelectInput.propTypes = {
   id: T.string.isRequired,
   text: T.string.isRequired,
   onAnswer: T.func.isRequired,
-  className: T.string
+  className: T.string,
+  checked: T.bool,
+  disabled: T.bool
 }
 
 DisplayHighlightInput.propTypes = {
@@ -152,5 +176,7 @@ DisplayHighlightInput.propTypes = {
     code: T.string.isRequired
   })).isRequired,
   onAnswer: T.func.isRequired,
-  className: T.string
+  className: T.string,
+  answerColorId: T.string,
+  disabled: T.bool
 }

@@ -21,6 +21,7 @@ export const ClozePlayer = props =>
             size={hole.size}
             answer={answer ? answer.answerText : ''}
             choices={hole.choices}
+            disabled={props.disabled}
             onChange={(newAnswer) => {
               const answers = cloneDeep(props.answer)
 
@@ -53,9 +54,11 @@ ClozePlayer.propTypes = {
     holeId: T.string.isRequired,
     answerText: T.string.isRequired
   })),
+  disabled: T.bool.isRequired,
   onChange: T.func.isRequired
 }
 
 ClozePlayer.defaultProps = {
-  answer: []
+  answer: [],
+  disabled: false
 }

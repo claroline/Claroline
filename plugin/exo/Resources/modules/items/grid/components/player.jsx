@@ -2,8 +2,9 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import cloneDeep from 'lodash/cloneDeep'
 
-import {tex} from '#/main/app/intl/translation'
-import {utils} from './utils/utils'
+import {trans} from '#/main/app/intl/translation'
+
+import {utils} from '#/plugin/exo/items/grid/utils/utils'
 
 class GridCell extends Component {
   constructor(props) {
@@ -42,7 +43,7 @@ class GridCell extends Component {
             <div className="dropdown">
               <button className="btn btn-default dropdown-toggle" type="button" id={`choice-drop-down-${this.props.cell.id}`} data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                 {this.getTextValue() === '' ?
-                  <span>{tex('grid_choice_select_empty')}</span>
+                  <span>{trans('grid_choice_select_empty', {}, 'quiz')}</span>
                   :
                   <span>{this.getTextValue()}</span>
                 }
@@ -53,9 +54,8 @@ class GridCell extends Component {
                   {return choice !== this.getTextValue() &&
                      <li
                        key={`choice-${index}`}
-                       onClick={() => this.props.onChange(
-                         this.setTextAnswer(choice)
-                       )}>
+                       onClick={() => this.props.disabled ? false : this.props.onChange(this.setTextAnswer(choice))}
+                     >
                        <a style={{color:this.props.cell.color}}>{choice}</a>
                      </li>
                   }
@@ -69,9 +69,8 @@ class GridCell extends Component {
               className="form-control"
               id={`${this.props.cell.id}-data`}
               value={this.getTextValue()}
-              onChange={(e) => this.props.onChange(
-                this.setTextAnswer(e.target.value)
-              )}
+              disabled={this.props.disabled}
+              onChange={(e) => this.props.disabled ? false : this.props.onChange(this.setTextAnswer(e.target.value))}
               style={{color:this.props.cell.color}}
             />
           }
@@ -83,6 +82,7 @@ class GridCell extends Component {
 
 GridCell.propTypes = {
   cell: T.object.isRequired,
+  disabled: T.bool.isRequired,
   onChange: T.func.isRequired,
   answers: T.array.isRequired
 }
@@ -118,6 +118,7 @@ class GridPlayer extends Component {
                       }>
                       <GridCell
                         answers={this.props.answer}
+                        disabled={this.props.disabled}
                         onChange={this.props.onChange}
                         cell={utils.getCellByCoordinates(j, i, this.props.item.cells)}/>
                     </td>
@@ -151,12 +152,14 @@ GridPlayer.propTypes = {
       color: T.string.isRequired
     }).isRequired
   }).isRequired,
+  disabled: T.bool.isRequired,
   onChange: T.func.isRequired,
   answer: T.array.isRequired
 }
 
 GridPlayer.defaultProps = {
-  answer: []
+  answer: [],
+  disabled: false
 }
 
 export {GridPlayer}
