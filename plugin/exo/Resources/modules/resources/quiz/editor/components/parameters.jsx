@@ -393,6 +393,39 @@ const EditorParameters = props =>
                 noEmpty: true,
                 choices: constants.QUIZ_SCORE_AVAILABILITY
               }
+            }, {
+              name: '_scoreMode',
+              label: trans('quiz_total_score_on', {}, 'quiz'),
+              type: 'choice',
+              required: true,
+              calculated: (quiz) => constants.TOTAL_SCORE_ON_CUSTOM === get(quiz, '_scoreMode') || 0 < get(quiz, 'parameters.totalScoreOn') ? constants.TOTAL_SCORE_ON_CUSTOM:constants.TOTAL_SCORE_ON_DEFAULT,
+              onChange: (value) => {
+                if (constants.TOTAL_SCORE_ON_DEFAULT === value) {
+                  props.update('parameters.totalScoreOn', 0)
+                } else {
+                  props.update('parameters.totalScoreOn', null)
+                }
+              },
+              options: {
+                condensed: true,
+                noEmpty: true,
+                choices: {
+                  [constants.TOTAL_SCORE_ON_DEFAULT]: trans('quiz_total_score_on_mode_default', {}, 'quiz'),
+                  [constants.TOTAL_SCORE_ON_CUSTOM]: trans('quiz_total_score_on_mode_custom', {}, 'quiz')
+                }
+              },
+              linked: [
+                {
+                  name: 'parameters.totalScoreOn',
+                  label: trans('quiz_total_score', {}, 'quiz'),
+                  type: 'number',
+                  displayed: (quiz) => constants.TOTAL_SCORE_ON_CUSTOM === get(quiz, '_scoreMode') || 0 < get(quiz, 'parameters.totalScoreOn'),
+                  required: true,
+                  options: {
+                    min: 1
+                  }
+                }
+              ]
             }/*{
               name: 'score.type',
               label: trans('calculation_mode', {}, 'quiz'),
@@ -418,11 +451,14 @@ const EditorParameters = props =>
           displayed: (quiz) => get(quiz, 'parameters.hasExpectedAnswers'),
           fields: [
             {
-              name: 'parameters',
-              label: trans('', {}, 'quiz'),
-              type: 'choice',
+              name: 'parameters.successScore',
+              label: trans('quiz_success_score', {}, 'quiz'),
+              type: 'number',
+              required: true,
               options: {
-
+                min: 0,
+                max: 100,
+                unit: '%'
               }
             }
           ]
