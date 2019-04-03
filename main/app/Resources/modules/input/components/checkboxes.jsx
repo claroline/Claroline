@@ -21,11 +21,11 @@ const Checkboxes = props => {
   }
 
   return (
-    <fieldset>
+    <fieldset id={props.id}>
       {choiceValues.map(choiceValue =>
         <Checkbox
           key={choiceValue}
-          id={toKey(choiceValue)}
+          id={`${props.id}-${toKey(choiceValue)}`}
           label={props.choices[choiceValue]}
           checked={props.value ? -1 !== props.value.indexOf(parseValue(choiceValue)) : false}
           disabled={props.disabled || -1 !== props.disabledChoices.indexOf(choiceValue)}

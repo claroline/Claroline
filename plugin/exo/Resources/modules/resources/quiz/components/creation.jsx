@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {selectors} from '#/main/core/resource/modals/creation/store'
 
@@ -28,7 +29,10 @@ const QuizCreation = props =>
               const CurrentType = (
                 <QuizType
                   type={get(quiz, 'parameters.type')}
-                  onChange={props.changeType}
+                  selectAction={(type) => ({
+                    type: CALLBACK_BUTTON,
+                    callback: () => props.changeType(type)
+                  })}
                 />
               )
 

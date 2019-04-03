@@ -15,10 +15,10 @@ export const PairFeedback = (props) => {
           {yourAnswers.orpheans.map((item) =>
             <li key={`your-answer-orphean-${item.id}`}>
               <div className={classes(
-                  'answer-item item',
-                  {'incorrect-answer': !item.score && 0 !== item.score},
-                  {'correct-answer': item.score || item.score === 0}
-                )}>
+                'answer-item item',
+                {'incorrect-answer': !item.score && 0 !== item.score},
+                {'correct-answer': item.score || item.score === 0}
+              )}>
                 <WarningIcon valid={item.score || item.score === 0} />
                 <div className="item-content" dangerouslySetInnerHTML={{__html: item.data}} />
               </div>
@@ -32,11 +32,10 @@ export const PairFeedback = (props) => {
           {yourAnswers.answers.map((answer) =>
             <li key={`your-answer-id-${answer.leftItem.id}-${answer.rightItem.id}`}>
               <div className={classes(
-                  'item',
-                  {'correct-answer': answer.valid},
-                  {'incorrect-answer': !answer.valid}
-                )}
-              >
+                'item',
+                {'correct-answer': answer.valid},
+                {'incorrect-answer': !answer.valid}
+              )}>
                 <WarningIcon valid={answer.valid} />
 
                 <div className="item-content" dangerouslySetInnerHTML={{__html: answer.leftItem.data}} />

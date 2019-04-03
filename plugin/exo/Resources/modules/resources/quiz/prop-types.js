@@ -69,8 +69,10 @@ const Quiz = {
       showScoreAt: constants.QUIZ_SCORE_AT_CORRECTION,
       showStatistics: false,
       showFullCorrection: true,
+      showFeedback: false,
       showEndConfirm: true,
       endMessage: '',
+      endNavigation: true,
       allPapersStatistics: false
     },
     picking: {

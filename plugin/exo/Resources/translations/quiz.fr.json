@@ -526,12 +526,21 @@
     "horizontal": "Horizontale",
 
     "quiz_conceptualization": "Prise de représentation",
+    "quiz_conceptualization_desc": "Découvrir les connaissances préalables des utilisateurs.",
     "quiz_formative": "Exercice formatif",
+    "quiz_formative_desc": "Aider les utilisateurs à progresser.",
     "quiz_summative": "Evaluation",
+    "quiz_summative_desc": "Evaluer les compétences acquises par les utilisateurs.",
     "quiz_certification": "Certification",
+    "quiz_certification_desc": "Attester de la maîtrise des compétences des utilisateurs.",
     "quiz_survey": "Sondage",
+    "quiz_survey_desc": "Connaître l'avis des utilisateurs.",
     "quiz_custom": "Questionnaire personnalisé",
+    "quiz_custom_desc": "Questionner les utilisateurs avec des paramètres personnalisés, sans restrictions.",
 
+    "has_expected_answers": "Définir une ou plusieurs bonne(s) réponse(s) pour les questions",
+    "has_expected_answers_help": "Cette option permet de choisir quelles sont les réponses attendues par les utilisateurs.",
+    "has_expected_answers_help_score": "Cette option est requise pour activer les options de notation.",
     "attempts_count": "Nombre de tentatives",
     "restrict_user_attempts": "Restreindre le nombre de tentatives disponibles par utilisateur",
     "restrict_user_attempts_help": "Une fois toutes ses tentatives effectuées, l'utilisateur ne pourra plus répondre au questionnaire.",
@@ -541,5 +550,9 @@
     "restrict_total_attempts_help": "Une fois toutes les tentatives effectuées (tout utilisateur confondu), plus personne ne pourra répondre au questionnaire.",
     "restrict_answer_length": "Restreindre la longueur des réponses",
     "select_quiz_type": "Sélectionnez le type du quiz",
-    "select_quiz_type_help": "Le type définit les paramètres par défaut et active/désactive certaines fonctionnalités du quiz."
+    "select_quiz_type_help": "Le type définit les paramètres par défaut et active/désactive certaines fonctionnalités du quiz.",
+    "change_quiz_type_confirm": "Changement du type du questionnaire",
+    "change_quiz_type_message": "Êtes-vous sûr de vouloir changer le type du questionnaire ? Ce changement va remplacer une partie de la configuration actuelle.",
+    "attempts_pick": "Génération des tentatives",
+    "attempts_play": "Déroulement des tentatives"
 }

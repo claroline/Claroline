@@ -16,7 +16,8 @@ const EditorMain = withRouter(
       pendingChanges: formSelectors.pendingChanges(formSelectors.form(state, selectors.FORM_NAME)),
       errors: formSelectors.errors(formSelectors.form(state, selectors.FORM_NAME)),
 
-      quizId: formSelectors.value(formSelectors.form(state, selectors.FORM_NAME), 'id'),
+      quizId: selectors.quizId(state),
+      quizType: selectors.quizType(state),
       workspace: resourceSelectors.workspace(state),
       numberingType: selectors.numberingType(state),
       tags: selectors.tags(state),

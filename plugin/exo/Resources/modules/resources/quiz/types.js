@@ -1,4 +1,10 @@
+import cloneDeep from 'lodash/cloneDeep'
+import merge from 'lodash/merge'
+
 import {trans} from '#/main/app/intl/translation'
+
+import {Quiz} from '#/plugin/exo/resources/quiz/prop-types'
+import {constants} from '#/plugin/exo/resources/quiz/constants'
 
 /**
  * Declares all available types of quiz.
@@ -40,8 +46,24 @@ const formativeType = {
     description: trans('quiz_formative_desc', {}, 'quiz')
   },
   hiddenProps: [],
-  disabledProps: [],
-  defaultProps: {}
+  disabledProps: [
+    'parameters.hasExpectedAnswers'
+  ],
+
+  defaultProps: {},
+  requiredProps: {
+    parameters: {
+      hasExpectedAnswers: true,
+      showFeedback: true,
+      showFullCorrection: true,
+      showCorrectionAt: constants.QUIZ_RESULTS_AT_VALIDATION,
+      showScoreAt: constants.QUIZ_SCORE_AT_CORRECTION
+    },
+    picking: {
+      randomOrder: constants.SHUFFLE_ALWAYS,
+      randomPick: constants.SHUFFLE_ALWAYS
+    }
+  }
 }
 
 /**
@@ -55,8 +77,17 @@ const summativeType = {
     description: trans('quiz_summative_desc', {}, 'quiz')
   },
   hiddenProps: [],
-  disabledProps: [],
-  defaultProps: {}
+  disabledProps: [
+    'parameters.hasExpectedAnswers'
+  ],
+
+  defaultProps: {},
+  requiredProps: {
+    parameters: {
+      hasExpectedAnswers: true,
+      showEndConfirm: true
+    }
+  }
 }
 
 /**
@@ -69,9 +100,21 @@ const certificationType = {
     label: trans('quiz_certification', {}, 'quiz'),
     description: trans('quiz_certification_desc', {}, 'quiz')
   },
+
   hiddenProps: [],
-  disabledProps: [],
-  defaultProps: {}
+  disabledProps: [
+    'parameters.hasExpectedAnswers',
+    'parameters.interruptible'
+  ],
+
+  defaultProps: {},
+  requiredProps: {
+    parameters: {
+      hasExpectedAnswers: true,
+      interruptible: false,
+      showEndConfirm: true
+    }
+  }
 }
 
 /**
@@ -84,9 +127,26 @@ const surveyType = {
     label: trans('quiz_survey', {}, 'quiz'),
     description: trans('quiz_survey_desc', {}, 'quiz')
   },
-  hiddenProps: [],
-  disabledProps: [],
-  defaultProps: {}
+  hiddenProps: [
+    'parameters.hasExpectedAnswers'
+  ],
+  disabledProps: [
+    'parameters.anonymizeAttempts'
+  ],
+
+  defaultProps: {
+    parameters: {
+      showCorrectionAt: constants.QUIZ_RESULTS_AT_NEVER
+    }
+  },
+  requiredProps: {
+    parameters: {
+      anonymizeAttempts: true,
+      hasExpectedAnswers: false,
+      showStatistics: true,
+      showCorrectionAt: constants.QUIZ_SCORE_AT_NEVER
+    }
+  }
 }
 
 /**
@@ -101,7 +161,8 @@ const customType = {
   },
   hiddenProps: [],
   disabledProps: [],
-  defaultProps: {}
+  defaultProps: {},
+  requiredProps: {}
 }
 
 const QUIZ_TYPES = {
@@ -113,6 +174,57 @@ const QUIZ_TYPES = {
   [QUIZ_CUSTOM]           : customType
 }
 
+function configureTypeFields(quizType, fields = []) {
+  const typePresets = QUIZ_TYPES[quizType]
+
+  return fields
+    // hides fields
+    .filter(field => -1 === typePresets.hiddenProps.indexOf(field.name))
+    // disables fields
+    .map(field => {
+      field.disabled = -1 !== typePresets.disabledProps.indexOf(field.name) || field.disabled
+
+      if (field.linked) {
+        field.linked = configureTypeFields(quizType, field.linked)
+      }
+
+      return field
+    })
+}
+
+/**
+ * Applies type presets to the quiz form.
+ * It disables and hides fields which are not related with the type.
+ *
+ * @param {string} quizType
+ * @param {Array}  formDefinition
+ *
+ * @return {Array}
+ */
+function configureTypeEditor(quizType, formDefinition = []) {
+  const updatedForm = cloneDeep(formDefinition)
+
+  return updatedForm.map(section => {
+    section.fields = configureTypeFields(quizType, section.fields)
+
+    return section
+  })
+}
+
+/**
+ * Sets the quiz parameters based on the preset of a quiz type.
+ *
+ * @param {string} quizType
+ * @param {object} quizData
+ */
+function setTypePresets(quizType, quizData) {
+  const presets = QUIZ_TYPES[quizType]
+
+  return merge({}, Quiz.defaultProps, presets.defaultProps, quizData, {
+    parameters: {type: quizType}
+  }, presets.requiredProps)
+}
+
 export {
   QUIZ_TYPES,
 
@@ -121,5 +233,8 @@ export {
   QUIZ_SUMMATIVE,
   QUIZ_CERTIFICATION,
   QUIZ_SURVEY,
-  QUIZ_CUSTOM
+  QUIZ_CUSTOM,
+
+  configureTypeEditor,
+  setTypePresets
 }

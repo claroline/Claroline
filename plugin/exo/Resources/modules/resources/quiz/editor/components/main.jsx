@@ -114,6 +114,7 @@ class EditorMain extends Component {
                 render: () => (
                   <EditorParameters
                     formName={this.props.formName}
+                    quizType={this.props.quizType}
                     numberingType={this.props.numberingType}
                     randomPick={this.props.randomPick}
                     tags={this.props.tags}
@@ -168,6 +169,7 @@ EditorMain.propTypes = {
   errors: T.object,
 
   quizId: T.string.isRequired,
+  quizType: T.string.isRequired,
   workspace: T.object,
   numberingType: T.string,
   tags: T.array.isRequired,

@@ -23,7 +23,7 @@ const ButtonComponent = props => {
       id: props.id || (typeof props.label === 'string' ? toKey(props.label) : undefined),
       confirm: props.confirm ? Object.assign({}, props.confirm, {
         // append some defaults from action spec
-        icon: props.icon,
+        icon: props.confirm.icon || props.icon,
         title: props.confirm.title || props.label,
         button: props.confirm.button || props.label
       }) : undefined

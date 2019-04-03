@@ -526,12 +526,21 @@
     "horizontal": "Horizontal",
 
     "quiz_conceptualization": "Conceptualization",
+    "quiz_conceptualization_desc": "Discover the prior knowledge of users.",
     "quiz_formative": "Formative exercise",
+    "quiz_formative_desc": "Help users to progress.",
     "quiz_summative": "Evaluation",
+    "quiz_summative_desc": "Evaluate skills acquired by users.",
     "quiz_certification": "Certification",
+    "quiz_certification_desc": "Attest the skills of the users.",
     "quiz_survey": "Survey",
+    "quiz_survey_desc": "Know the opinion of users.",
     "quiz_custom": "Custom quiz",
+    "quiz_custom_desc": "Question users with custom settings, without restrictions.",
 
+    "has_expected_answers": "Define one or more correct answer(s) for questions",
+    "has_expected_answers_help": "This option allows you to choose which answers are expected by the users.",
+    "has_expected_answers_help_score": "This option is required to enable the rating options.",
     "attempts_count": "Number of attempts",
     "restrict_user_attempts": "Restrict the number of attempts available per user",
     "restrict_user_attempts_help": "Once all his attempts have been made, the user will no longer be able to answer the quiz.",
@@ -541,5 +550,9 @@
     "restrict_total_attempts_help": "Once all attempts have been made (all users mingled), no one will be able to answer the quiz.",
     "restrict_answer_length": "Restrict the length of answers",
     "select_quiz_type": "Select the type of quiz",
-    "select_quiz_type_help": "The type sets the default settings and enables / disables some features of the quiz."
+    "select_quiz_type_help": "The type sets the default settings and enables / disables some features of the quiz.",
+    "change_quiz_type_confirm": "Change in the type of quiz",
+    "change_quiz_type_message": "Are you sure you want to change the type of quiz? This change will replace some parts of the current configuration.",
+    "attempts_pick": "Generation of attempts",
+    "attempts_play": "Progress of the attempts"
 }

@@ -258,7 +258,7 @@ class MatchElements extends Component {
     }, 100)
   }
 
-  removeConnection(firstId, secondId){
+  removeConnection(/*firstId, secondId*/){
     this.jsPlumbInstance.deleteConnection(this.state.jsPlumbConnection)
     this.setState({
       popover: {
@@ -268,9 +268,9 @@ class MatchElements extends Component {
       current: null
     })
     // also delete the corresponding solution in props
-    this.props.onChange(
+    /*this.props.onChange(
       actions.removeSolution(firstId, secondId)
-    )
+    )*/
   }
 
   closePopover(){
@@ -491,11 +491,12 @@ class MatchLinkPopover extends Component {
 }
 
 MatchLinkPopover.propTypes = {
+  path: T.string.isRequired,
   popover: T.object.isRequired,
   solution: T.object.isRequired,
   handlePopoverClose: T.func.isRequired,
   handleConnectionDelete: T.func.isRequired,
-  onChange: T.func.isRequired
+  update: T.func.isRequired
 }
 
 class MatchItem extends Component{
@@ -561,6 +562,7 @@ class MatchItem extends Component{
 }
 
 MatchItem.propTypes = {
+  path: T.string.isRequired,
   type: T.string.isRequired,
   item: T.object.isRequired,
   onMount: T.func.isRequired,
@@ -601,7 +603,7 @@ class MatchEditor extends Component {
             {
               name: 'solutions',
               required: true,
-              render: (item, errors) => {
+              render: (item) => {
                 return <MatchElements {...this.props} item={item} />
               }
             }

@@ -2,8 +2,8 @@ import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {CallbackButton} from '#/main/app/buttons/callback/components/button'
-import {MenuButton} from '#/main/app/buttons/menu/components/button'
+import {Button} from '#/main/app/action/components/button'
+import {MENU_BUTTON} from '#/main/app/buttons'
 
 import {QUIZ_TYPES} from '#/plugin/exo/resources/quiz/types'
 
@@ -33,51 +33,56 @@ const QuizType = props => {
 
   return (
     <div className="quiz-type-control">
-      <MenuButton
+      <Button
         id="quiz-type"
         className="quiz-type form-control"
-        menu={
-          <ul role="menu" className="dropdown-menu dropdown-menu-full">
-            {Object.keys(QUIZ_TYPES).map(typeName => (
-              <li key={typeName} role="presentation">
-                <CallbackButton
-                  className="quiz-type"
-                  active={typeName === props.type}
-                  callback={() => props.onChange(QUIZ_TYPES[typeName])}
-                >
-                  <CurrentType
-                    icon={QUIZ_TYPES[typeName].meta.icon}
-                    label={QUIZ_TYPES[typeName].meta.label}
-                    description={QUIZ_TYPES[typeName].meta.description}
-                  />
-                </CallbackButton>
-              </li>
-            ))}
-          </ul>
-        }
-      >
-        {current &&
+        type={MENU_BUTTON}
+        label={current ?
           <CurrentType
+            key="label"
             icon={current.meta.icon}
             label={current.meta.label}
             description={current.meta.description}
-          />
-        }
-
-        {!current &&
+          /> :
           <CurrentType
+            key="label"
             label={trans('select_quiz_type', {}, 'quiz')}
             description={trans('select_quiz_type_help', {}, 'quiz')}
           />
         }
-      </MenuButton>
+        menu={
+          <ul role="menu" className="dropdown-menu dropdown-menu-full">
+            {Object.keys(QUIZ_TYPES).map(typeName => {
+              const select = props.selectAction(typeName)
+
+              return (
+                <li key={typeName} role="presentation">
+                  <Button
+                    {...select}
+                    className="quiz-type"
+                    active={typeName === props.type}
+                    label={
+                      <CurrentType
+                        key="label"
+                        icon={QUIZ_TYPES[typeName].meta.icon}
+                        label={QUIZ_TYPES[typeName].meta.label}
+                        description={QUIZ_TYPES[typeName].meta.description}
+                      />
+                    }
+                  />
+                </li>
+              )
+            })}
+          </ul>
+        }
+      />
     </div>
   )
 }
 
 QuizType.propTypes = {
   type: T.string,
-  onChange: T.func.isRequired
+  selectAction: T.func.isRequired
 }
 
 export {

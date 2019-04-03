@@ -9,6 +9,16 @@ const FORM_NAME = 'resource.editor'
 
 const quiz = (state) => formSelectors.data(formSelectors.form(state, FORM_NAME))
 
+const quizId = createSelector(
+  [quiz],
+  (quiz) => quiz.id
+)
+
+const quizType = createSelector(
+  [quiz],
+  (quiz) => get(quiz, 'parameters.type')
+)
+
 const steps = createSelector(
   [quiz],
   (quiz) => quiz.steps || []
@@ -37,6 +47,8 @@ const tags = createSelector(
 export const selectors = {
   STORE_NAME,
   FORM_NAME,
+  quizId,
+  quizType,
   steps,
   numberingType,
   randomPick,

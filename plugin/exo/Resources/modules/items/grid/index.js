@@ -3,7 +3,6 @@ import {trans} from '#/main/app/intl/translation'
 import {stripDiacritics} from '#/main/core/scaffolding/text/strip-diacritics'
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
 
-import {utils} from '#/plugin/exo/items/grid/utils/utils'
 import {SUM_CELL, SUM_COL, SUM_ROW} from '#/plugin/exo/items/grid/constants'
 
 // components

@@ -4,12 +4,14 @@ import get from 'lodash/get'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {ChoiceInput} from '#/main/app/data/types/choice/components/input'
 import {NumberInput} from '#/main/app/data/types/number/components/input'
 
 import {QuizType} from '#/plugin/exo/resources/quiz/components/type'
 import {constants} from '#/plugin/exo/resources/quiz/constants'
+import {QUIZ_TYPES, configureTypeEditor, setTypePresets} from '#/plugin/exo/resources/quiz/types'
 
 const hasOverview = (quiz) => get(quiz, 'parameters.showOverview')
 const hasEnd = (quiz) => get(quiz, 'parameters.showEndPage')
@@ -31,7 +33,7 @@ const EditorParameters = props =>
       displayLevel={2}
       embedded={true}
       name={props.formName}
-      sections={[
+      sections={configureTypeEditor(props.quizType, [
         {
           title: trans('general'),
           primary: true,
@@ -45,7 +47,17 @@ const EditorParameters = props =>
                 const CurrentType = (
                   <QuizType
                     type={get(quiz, 'parameters.type')}
-                    onChange={(type) => props.update('parameters.type', type.name)}
+                    selectAction={(type) => ({
+                      type: CALLBACK_BUTTON,
+                      callback: () => props.update(null, setTypePresets(type, quiz)),
+                      confirm: {
+                        icon: 'fa fa-fw fa-warning',
+                        title: trans('change_quiz_type_confirm', {}, 'quiz'),
+                        subtitle: get(QUIZ_TYPES[get(quiz, 'parameters.type')], 'meta.label') + ' > ' + get(QUIZ_TYPES[type], 'meta.label'),
+                        message: trans('change_quiz_type_message', {}, 'quiz'),
+                        button: trans('change', {}, 'actions')
+                      }
+                    })}
                   />
                 )
 
@@ -98,12 +110,16 @@ const EditorParameters = props =>
           ]
         }, {
           icon: 'fa fa-fw fa-dice',
-          title: trans('picking', {}, 'quiz'),
+          title: trans('attempts_pick', {}, 'quiz'),
           fields: [
             {
               name: 'parameters.hasExpectedAnswers',
               label: trans('has_expected_answers', {}, 'quiz'),
-              type: 'boolean'
+              type: 'boolean',
+              help: [
+                trans('has_expected_answers_help', {}, 'quiz'),
+                trans('has_expected_answers_help_score', {}, 'quiz')
+              ]
             }, {
               name: 'parameters.mandatoryQuestions',
               label: trans('make_questions_mandatory', {}, 'quiz'),
@@ -235,7 +251,7 @@ const EditorParameters = props =>
           ]
         }, {
           icon: ' fa fa-fw fa-play',
-          title: trans('attempts', {}, 'quiz'),
+          title: trans('attempts_play', {}, 'quiz'),
           fields: [
             {
               name: 'parameters.progressionDisplayed',
@@ -544,12 +560,13 @@ const EditorParameters = props =>
             }
           ]
         }
-      ]}
+      ])}
     />
   </Fragment>
 
 EditorParameters.propTypes = {
   formName: T.string.isRequired,
+  quizType: T.string.isRequired,
   numberingType: T.string.isRequired,
   randomPick: T.string,
   tags: T.array.isRequired,

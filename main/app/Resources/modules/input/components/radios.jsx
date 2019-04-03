@@ -57,11 +57,11 @@ const Radios = props => {
   }
 
   return (
-    <fieldset>
+    <fieldset id={props.id}>
       {choiceValues.map(choiceValue =>
         <Radio
           key={choiceValue}
-          id={toKey(choiceValue)}
+          id={`${props.id}-${toKey(choiceValue)}`}
           label={props.choices[choiceValue]}
           value={choiceValue}
           inline={props.inline}
