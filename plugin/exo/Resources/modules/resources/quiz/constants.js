@@ -1,10 +1,5 @@
 import {trans} from '#/main/app/intl/translation'
 
-import {QUIZ_CUSTOM} from '#/plugin/exo/resources/quiz/types'
-
-const QUIZ_TYPE_DEFAULT = QUIZ_CUSTOM
-
-
 // Shuffle
 const SHUFFLE_NEVER  = 'never'
 const SHUFFLE_ALWAYS = 'always'
@@ -70,8 +65,6 @@ const TOTAL_SCORE_ON_DEFAULT = 'default'
 const TOTAL_SCORE_ON_CUSTOM = 'custom'
 
 export const constants = {
-  QUIZ_TYPE_DEFAULT,
-
   // shuffle
   SHUFFLE_NEVER,
   SHUFFLE_ALWAYS,

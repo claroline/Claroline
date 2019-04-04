@@ -1,15 +1,12 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
 
-import {trans, tex} from '#/main/app/intl/translation'
-import {LINK_BUTTON} from '#/main/app/buttons'
-import {selectors as resourceSelect} from '#/main/core/resource/store'
+import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {UserEvaluation as UserEvaluationType} from '#/main/core/resource/prop-types'
 import {ResourceOverview} from '#/main/core/resource/components/overview'
 
-import {select} from '#/plugin/exo/quiz/selectors'
 import {correctionModes, markModes, SHOW_CORRECTION_AT_DATE, SHOW_SCORE_AT_NEVER} from '#/plugin/exo/quiz/enums'
 
 const Parameters = props =>
@@ -21,7 +18,7 @@ const Parameters = props =>
       <b>
         {props.showCorrectionAt === SHOW_CORRECTION_AT_DATE ?
           props.correctionDate :
-          tex(correctionModes.find(mode => mode[0] === props.showCorrectionAt)[1])
+          trans(correctionModes.find(mode => mode[0] === props.showCorrectionAt)[1], {}, 'quiz')
         }
       </b>
     </li>
@@ -30,19 +27,19 @@ const Parameters = props =>
       <span className="fa fa-fw fa-percent icon-with-text-right" />
       {trans('score_availability', {}, 'quiz')} :
       &nbsp;
-      <b>{tex(markModes.find(mode => mode[0] === props.showScoreAt)[1])}</b>
+      <b>{trans(markModes.find(mode => mode[0] === props.showScoreAt)[1], {}, 'quiz')}</b>
     </li>
 
     <li className="exercise-parameter">
       <span className="fa fa-fw fa-sign-out icon-with-text-right" />
-      {tex('test_exit')} :
+      {trans('test_exit', {}, 'quiz')} :
       &nbsp;
       <b>{props.interruptible ? trans('yes') : trans('no')}</b>
     </li>
 
     <li className="exercise-parameter">
       <span className="fa fa-fw fa-files-o icon-with-text-right" />
-      {tex('maximum_attempts')} :
+      {trans('maximum_attempts', {}, 'quiz')} :
       &nbsp;
       <b>{props.maxAttempts ? props.maxAttempts : '-'}</b>
     </li>
@@ -76,7 +73,7 @@ Parameters.defaultProps = {
   timeLimited: false
 }
 
-const OverviewComponent = props =>
+const OverviewMain = props =>
   <ResourceOverview
     contentText={props.quiz.description ||
       <span className="empty-text">{trans('no_description')}</span>
@@ -84,9 +81,9 @@ const OverviewComponent = props =>
     progression={{
       status: props.userEvaluation ? props.userEvaluation.status : undefined,
       statusTexts: {
-        opened: tex('exercise_status_opened_message'),
-        passed: tex('exercise_status_passed_message'),
-        failed: tex('exercise_status_failed_message')
+        opened: trans('exercise_status_opened_message', {}, 'quiz'),
+        passed: trans('exercise_status_passed_message', {}, 'quiz'),
+        failed: trans('exercise_status_failed_message', {}, 'quiz')
       },
       score: {
         displayed: props.quiz.parameters.showScoreAt !== SHOW_SCORE_AT_NEVER,
@@ -97,8 +94,8 @@ const OverviewComponent = props =>
     actions={[
       {
         type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-play icon-with-text-right',
-        label: tex('exercise_start'),
+        icon: 'fa fa-fw fa-play',
+        label: trans('exercise_start', {}, 'quiz'),
         target: '/play',
         primary: true,
         disabled: false
@@ -120,7 +117,7 @@ const OverviewComponent = props =>
     </section>
   </ResourceOverview>
 
-OverviewComponent.propTypes = {
+OverviewMain.propTypes = {
   empty: T.bool.isRequired,
   editable: T.bool.isRequired,
   quiz: T.shape({
@@ -128,18 +125,11 @@ OverviewComponent.propTypes = {
     parameters: T.object.isRequired,
     picking: T.object.isRequired
   }).isRequired,
-  userEvaluation: T.shape(UserEvaluationType.propTypes)
+  userEvaluation: T.shape(
+    UserEvaluationType.propTypes
+  )
 }
 
-const Overview = connect(
-  (state) => ({
-    empty: select.empty(state),
-    editable: hasPermission('edit', resourceSelect.resourceNode(state)),
-    quiz: select.quiz(state),
-    userEvaluation: resourceSelect.resourceEvaluation(state)
-  })
-)(OverviewComponent)
-
 export {
-  Overview
+  OverviewMain
 }

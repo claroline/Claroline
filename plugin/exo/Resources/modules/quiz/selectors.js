@@ -176,3 +176,31 @@ export const select = {
   papersShowStatistics,
   allPapersStatistics
 }
+
+export const selectors = {
+  STORE_NAME,
+  resource,
+  id,
+  quiz,
+  steps,
+  items,
+  empty,
+  papers,
+  statistics,
+  papersAdmin,
+  docimologyAdmin,
+  registered,
+  description,
+  meta,
+  parameters,
+  title,
+  viewMode,
+  noItems,
+  firstStepId,
+  hasOverview,
+  testMode,
+  quizNumbering,
+  papersShowExpectedAnswers,
+  papersShowStatistics,
+  allPapersStatistics
+}

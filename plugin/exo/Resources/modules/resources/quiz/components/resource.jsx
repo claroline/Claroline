@@ -9,7 +9,6 @@ import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 
 import {CustomDragLayer} from '#/plugin/exo/utils/custom-drag-layer'
 
-import {Overview}   from '#/plugin/exo/quiz/overview/overview'
 import {Player}     from '#/plugin/exo/quiz/player/components/player'
 import {AttemptEnd} from '#/plugin/exo/quiz/player/components/attempt-end'
 import {Papers}     from '#/plugin/exo/quiz/papers/components/papers'
@@ -18,7 +17,8 @@ import {Questions}  from '#/plugin/exo/quiz/correction/components/questions'
 import {Answers}    from '#/plugin/exo/quiz/correction/components/answers'
 import {Statistics} from '#/plugin/exo/quiz/statistics/components/statistics'
 
-import {EditorMain} from '#/plugin/exo/resources/quiz/editor/containers/main'
+import {EditorMain}   from '#/plugin/exo/resources/quiz/editor/containers/main'
+import {OverviewMain} from '#/plugin/exo/resources/quiz/overview/containers/main'
 
 const authenticatedUser = currentUser()
 
@@ -101,7 +101,7 @@ const QuizResource = props =>
         {
           path: '/',
           exact: true,
-          component: Overview,
+          component: OverviewMain,
           disabled: !props.hasOverview
         }, {
           path: '/edit',

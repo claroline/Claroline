@@ -1,6 +1,7 @@
 import {PropTypes as T} from 'prop-types'
 
 import {constants} from '#/plugin/exo/resources/quiz/constants'
+import {QUIZ_TYPE_DEFAULT} from '#/plugin/exo/resources/quiz/types'
 
 const Step = {
   propTypes: {
@@ -55,7 +56,7 @@ const Quiz = {
 
     },
     parameters: {
-      type: constants.QUIZ_TYPE_DEFAULT,
+      type: QUIZ_TYPE_DEFAULT,
       showMetadata: true,
       duration: 0,
       maxAttempts: 0,

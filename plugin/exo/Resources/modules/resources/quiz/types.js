@@ -3,7 +3,6 @@ import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
 
-import {Quiz} from '#/plugin/exo/resources/quiz/prop-types'
 import {constants} from '#/plugin/exo/resources/quiz/constants'
 
 /**
@@ -19,6 +18,8 @@ const QUIZ_SUMMATIVE         = 'summative'
 const QUIZ_CERTIFICATION     = 'evaluative'
 const QUIZ_SURVEY            = 'survey'
 const QUIZ_CUSTOM            = 'custom'
+
+const QUIZ_TYPE_DEFAULT = QUIZ_CUSTOM
 
 /**
  * Type : Conceptualization
@@ -220,13 +221,14 @@ function configureTypeEditor(quizType, formDefinition = []) {
 function setTypePresets(quizType, quizData) {
   const presets = QUIZ_TYPES[quizType]
 
-  return merge({}, Quiz.defaultProps, presets.defaultProps, quizData, {
+  return merge({}, presets.defaultProps, quizData, {
     parameters: {type: quizType}
   }, presets.requiredProps)
 }
 
 export {
   QUIZ_TYPES,
+  QUIZ_TYPE_DEFAULT,
 
   QUIZ_CONCEPTUALIZATION,
   QUIZ_FORMATIVE,
