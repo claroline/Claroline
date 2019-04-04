@@ -289,7 +289,7 @@ class ExerciseManager
                 ], ';');
             }
 
-            $this->om->clear('UJM\ExoBundle\Entity\Attempt\Paper');
+            $this->om->clear(Paper::class);
         }
 
         fclose($handle);
@@ -441,7 +441,7 @@ class ExerciseManager
                 $flattenedData[] = $flattenedAnswers;
             }
 
-            $this->om->clear('UJM\ExoBundle\Entity\Attempt\Paper');
+            $this->om->clear(Paper::class);
 
             foreach ($flattenedData as $item) {
                 fputcsv($fp, $item, ';');

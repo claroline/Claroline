@@ -37,9 +37,3 @@ ujm_api_share:
     resource: "@UJMExoBundle/Controller/Api/Item/ShareController.php"
     type: annotation
     prefix: /api
-
-# Exposes actions to import/export exercises and questions in QTI format
-ujm_api_qti:
-    resource: "@UJMExoBundle/Controller/Api/QTIController.php"
-    type: annotation
-    prefix: /api

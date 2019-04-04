@@ -48,7 +48,7 @@ class PaperSerializer extends AbstractSerializer
 
     public function getClass()
     {
-        return 'UJM\ExoBundle\Entity\Attempt\Paper';
+        return Paper::class;
     }
 
     /**
