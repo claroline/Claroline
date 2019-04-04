@@ -3,14 +3,17 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import cloneDeep from 'lodash/cloneDeep'
 
+import {trans} from '#/main/app/intl/translation'
 import {makeId} from '#/main/core/scaffolding/id'
+import {FormData} from '#/main/app/content/form/containers/data'
+import {FormGroup} from '#/main/app/content/form/components/group'
+import {HtmlInput} from '#/main/app/data/types/html/components/input'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
+
+import {KeywordsPopover} from '#/plugin/exo/components/keywords'
 import {keywords as keywordsUtils} from '#/plugin/exo/utils/keywords'
 import {utils} from '#/plugin/exo/items/cloze/utils'
-import {trans, tex} from '#/main/app/intl/translation'
-import {Textarea} from '#/main/core/layout/form/components/field/textarea'
-import {FormGroup} from '#/main/app/content/form/components/group'
-import {KeywordsPopover} from '#/plugin/exo/components/keywords'
-import {FormData} from '#/main/app/content/form/containers/data'
 
 function getHoleFromId(item, holeId) {
   return item.holes.find(hole => hole.id === holeId)
@@ -24,8 +27,7 @@ function updateHoleChoices(hole, holeSolution) {
   }
 }
 
-function getSolutionFromHole(item, hole)
-{
+function getSolutionFromHole(item, hole) {
   return item.solutions.find(solution => solution.holeId === hole.id)
 }
 
@@ -48,7 +50,7 @@ const HolePopover = props => {
       id={props.hole.id}
       positionLeft={left}
       positionTop={top}
-      title={tex('cloze_edit_hole')}
+      title={trans('cloze_edit_hole', {}, 'quiz')}
       keywords={props.solution.answers}
       _multiple={props.hole._multiple}
       _errors={get(props, '_errors')}
@@ -64,7 +66,7 @@ const HolePopover = props => {
     >
       <FormGroup
         id={`item-${props.hole.id}-size`}
-        label={tex('size')}
+        label={trans('size', {}, 'quiz')}
         warnOnly={!props.validating}
         error={get(props, '_errors.size')}
       >
@@ -206,16 +208,11 @@ class MainField extends Component {
       this.setState({text: utils.setEditorHtml(this.props.item.text, this.props.item.holes, this.props.item.solutions)})
     }
 
-    return (<fieldset className="cloze-field">
-      <FormGroup
-        id={`cloze-text-${this.props.item.id}`}
-        className="cloze-text"
-        label={trans('text')}
-        warnOnly={!this.props.validating}
-        error={get(this.props.item, '_errors.text')}
-      >
-        <Textarea
+    return (
+      <fieldset className="cloze-field">
+        <HtmlInput
           id={`cloze-text-${this.props.item.id}`}
+          className="component-container"
           value={this.state.text}
           onChange={(value) => {
             //TODO: optimize this
@@ -252,139 +249,145 @@ class MainField extends Component {
           onClick={this.onHoleClick.bind(this)}
           onChangeMode={this.changeEditorMode}
         />
-      </FormGroup>
 
-      <button
-        type="button"
-        className="btn btn-block btn-default"
-        disabled={!this.state.allowCloze}
-        onClick={() => this.addHole(this.props.item)}
-      >
-        <span className="fa fa-fw fa-plus" />
-        {tex('create_cloze')}
-      </button>
-
-      {(this.props.item._popover && this.props.item._holeId) &&
-        <HolePopover
-          hole={this.props.item.holes.find(hole => hole.id === this.props.item._holeId)}
-          solution={this.props.item.solutions.find(solution => solution.holeId === this.props.item._holeId)}
-          close={() => this.props.update('_popover', false)}
-          remove={() => {
-            const newItem = cloneDeep(this.props.item)
-            const holes = newItem.holes
-            const solutions = newItem.solutions
-
-            // Remove from holes list
-            holes.splice(holes.findIndex(hole => hole.id === this.props.item._holeId), 1)
-
-            // Remove from solutions
-            const solution = solutions.splice(solutions.findIndex(solution => solution.holeId === this.props.item._holeId), 1)
-
-            let bestAnswer
-            if (solution && 0 !== solution.length) {
-              // Retrieve the best answer
-              bestAnswer = utils.getBestAnswer(solution[0].answers)
-            }
-
-            // Replace hole with the best answer text
-            const regex = new RegExp(`(\\[\\[${this.props.item._holeId}\\]\\])`, 'gi')
-            newItem.text = newItem.text.replace(regex, bestAnswer ? bestAnswer.text : '')
-
-            if (newItem._holeId && newItem._holeId === this.props.item._holeId) {
-              this.props.update('_popover', false)
-            }
-
-            this.props.update('text', newItem.text)
-            this.props.update('holes', newItem.holes)
-
-            this.setState({text: utils.setEditorHtml(newItem.text, newItem.holes, newItem.solutions)})
-          }}
-          onChange={(property, value) => {
-            const newItem = cloneDeep(this.props.item)
-            const hole = getHoleFromId(newItem, newItem._holeId)
-
-            if (['size', '_multiple'].indexOf(property) > -1) {
-              hole[property] = value
-            } else {
-              throw `${property} is not a valid hole attribute`
-            }
-
-            updateHoleChoices(hole, getSolutionFromHole(newItem, hole))
-            this.props.update('holes', newItem.holes)
-            this.props.update('solutions', newItem.solutions)
-          }}
-
-
-          addKeyword={() => {
-            const newItem = cloneDeep(this.props.item)
-            const hole = getHoleFromId(newItem, this.props.item._holeId)
-            const solution = getSolutionFromHole(newItem, hole)
-            const keyword = keywordsUtils.createNew()
-            keyword._deletable = solution.answers.length > 0
-
-            solution.answers.push(keyword)
-
-            updateHoleChoices(hole, solution)
-            this.props.update('holes', newItem.holes)
-            this.props.update('solutions', newItem.solutions)
-          }}
-          removeKeyword={(keywordId) => {
-            const newItem = cloneDeep(this.props.item)
-            const hole = getHoleFromId(newItem, this.props.item._holeId)
-            const solution = getSolutionFromHole(newItem, hole)
-            const answers = solution.answers
-            answers.splice(answers.findIndex(answer => answer._id === keywordId), 1)
-
-            updateHoleChoices(hole, solution)
-
-            answers.forEach(keyword => keyword._deletable = answers.length > 1)
-
-            this.props.update('holes', newItem.holes)
-            this.props.update('solutions', newItem.solutions)
-          }}
-          updateKeyword={(keywordId, property, newValue) => {
-            const newItem = cloneDeep(this.props.item)
-            const hole = getHoleFromId(newItem, this.props.item._holeId)
-            const solution = getSolutionFromHole(newItem, hole)
-            const answer = solution.answers.find(answer => answer._id === keywordId)
-
-            answer[property] = newValue
-            updateHoleChoices(hole, solution)
-
-            this.props.update('holes', newItem.holes)
-            this.props.update('solutions', newItem.solutions)
-          }}
-          validating={this.props.validating}
-          _errors={get(this.props.item, '_errors.'+this.props.item._holeId)}
+        <Button
+          type={CALLBACK_BUTTON}
+          className="btn btn-block"
+          icon="fa fa-fw fa-plus"
+          label={trans('create_cloze', {}, 'quiz')}
+          disabled={!this.state.allowCloze}
+          callback={() => this.addHole(this.props.item)}
         />
-      }
-    </fieldset>)
+
+        {(this.props.item._popover && this.props.item._holeId) &&
+          <HolePopover
+            hole={this.props.item.holes.find(hole => hole.id === this.props.item._holeId)}
+            solution={this.props.item.solutions.find(solution => solution.holeId === this.props.item._holeId)}
+            close={() => this.props.update('_popover', false)}
+            remove={() => {
+              const newItem = cloneDeep(this.props.item)
+              const holes = newItem.holes
+              const solutions = newItem.solutions
+
+              // Remove from holes list
+              holes.splice(holes.findIndex(hole => hole.id === this.props.item._holeId), 1)
+
+              // Remove from solutions
+              const solution = solutions.splice(solutions.findIndex(solution => solution.holeId === this.props.item._holeId), 1)
+
+              let bestAnswer
+              if (solution && 0 !== solution.length) {
+                // Retrieve the best answer
+                bestAnswer = utils.getBestAnswer(solution[0].answers)
+              }
+
+              // Replace hole with the best answer text
+              const regex = new RegExp(`(\\[\\[${this.props.item._holeId}\\]\\])`, 'gi')
+              newItem.text = newItem.text.replace(regex, bestAnswer ? bestAnswer.text : '')
+
+              if (newItem._holeId && newItem._holeId === this.props.item._holeId) {
+                this.props.update('_popover', false)
+              }
+
+              this.props.update('text', newItem.text)
+              this.props.update('holes', newItem.holes)
+
+              this.setState({text: utils.setEditorHtml(newItem.text, newItem.holes, newItem.solutions)})
+            }}
+            onChange={(property, value) => {
+              const newItem = cloneDeep(this.props.item)
+              const hole = getHoleFromId(newItem, newItem._holeId)
+
+              if (['size', '_multiple'].indexOf(property) > -1) {
+                hole[property] = value
+              } else {
+                throw `${property} is not a valid hole attribute`
+              }
+
+              updateHoleChoices(hole, getSolutionFromHole(newItem, hole))
+              this.props.update('holes', newItem.holes)
+              this.props.update('solutions', newItem.solutions)
+            }}
+
+
+            addKeyword={() => {
+              const newItem = cloneDeep(this.props.item)
+              const hole = getHoleFromId(newItem, this.props.item._holeId)
+              const solution = getSolutionFromHole(newItem, hole)
+              const keyword = keywordsUtils.createNew()
+              keyword._deletable = solution.answers.length > 0
+
+              solution.answers.push(keyword)
+
+              updateHoleChoices(hole, solution)
+              this.props.update('holes', newItem.holes)
+              this.props.update('solutions', newItem.solutions)
+            }}
+            removeKeyword={(keywordId) => {
+              const newItem = cloneDeep(this.props.item)
+              const hole = getHoleFromId(newItem, this.props.item._holeId)
+              const solution = getSolutionFromHole(newItem, hole)
+              const answers = solution.answers
+              answers.splice(answers.findIndex(answer => answer._id === keywordId), 1)
+
+              updateHoleChoices(hole, solution)
+
+              answers.forEach(keyword => keyword._deletable = answers.length > 1)
+
+              this.props.update('holes', newItem.holes)
+              this.props.update('solutions', newItem.solutions)
+            }}
+            updateKeyword={(keywordId, property, newValue) => {
+              const newItem = cloneDeep(this.props.item)
+              const hole = getHoleFromId(newItem, this.props.item._holeId)
+              const solution = getSolutionFromHole(newItem, hole)
+              const answer = solution.answers.find(answer => answer._id === keywordId)
+
+              answer[property] = newValue
+              updateHoleChoices(hole, solution)
+
+              this.props.update('holes', newItem.holes)
+              this.props.update('solutions', newItem.solutions)
+            }}
+            validating={this.props.validating}
+            _errors={get(this.props.item, '_errors.'+this.props.item._holeId)}
+          />
+        }
+      </fieldset>
+    )
   }
 }
 
-export class ClozeEditor extends Component {
+const ClozeEditor = props =>
+  <FormData
+    className="cloze-editor"
+    embedded={true}
+    name={props.formName}
+    dataPart={props.path}
+    sections={[
+      {
+        title: trans('general'),
+        primary: true,
+        fields: [
+          {
+            name: 'clozeText',
+            label: trans('text'),
+            render: (item, errors) => {
+              const ClozeText = (
+                <MainField
+                  {...props}
+                  item={item}
+                  errors={errors}
+                />
+              )
 
-
-  render() {
-    return (<FormData
-      className="cloze-editor"
-      embedded={true}
-      name={this.props.formName}
-      dataPart={this.props.path}
-      sections={[
-        {
-          title: trans('general'),
-          primary: true,
-          fields: [
-            {
-              name: 'clozeText',
-              render: (item, errors) => <MainField {...this.props} item={item} errors={errors}/>
-            }]
-        }
-      ]}
-    />
-    )}
-}
+              return ClozeText
+            }
+          }
+        ]
+      }
+    ]}
+  />
 
 ClozeEditor.propTypes = {
   formName: T.string.isRequired,
@@ -402,6 +405,9 @@ ClozeEditor.propTypes = {
       holeId: T.string.isRequired
     })).isRequired
   }),
-  onChange: T.func.isRequired,
-  validating: T.bool.isRequired
+  update: T.func.isRequired
+}
+
+export {
+  ClozeEditor
 }
