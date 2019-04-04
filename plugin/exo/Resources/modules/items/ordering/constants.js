@@ -12,8 +12,8 @@ const DIRECTION_VERTICAL = 'vertical'
 const DIRECTION_HORIZONTAL = 'horizontal'
 
 const DIRECTION_CHOICES = {
-  [DIRECTION_VERTICAL]: trans('ordering_direction_vertical', {}, 'quiz'),
-  [DIRECTION_HORIZONTAL]: trans('ordering_direction_horizontal', {}, 'quiz')
+  [DIRECTION_VERTICAL]: trans('vertical', {}, 'quiz'),
+  [DIRECTION_HORIZONTAL]: trans('horizontal', {}, 'quiz')
 }
 
 export const constants = {

@@ -12,7 +12,7 @@ import {makeId} from '#/main/core/scaffolding/id'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea'
 
 import {makeSortable, SORT_HORIZONTAL, SORT_VERTICAL} from '#/plugin/exo/utils/sortable'
-import {SCORE_SUM, SCORE_FIXED} from '#/plugin/exo/quiz/enums'
+import {SCORE_FIXED} from '#/plugin/exo/quiz/enums'
 import {constants} from '#/plugin/exo/items/ordering/constants'
 import {ItemEditor as ItemEditorType} from '#/plugin/exo/items/prop-types'
 import {OrderingItem as OrderingItemType} from '#/plugin/exo/items/ordering/prop-types'
@@ -345,40 +345,13 @@ const OrderingEditor = props =>
         primary: true,
         fields: [
           {
-            name: 'fixedScore',
-            label: trans('fixed_score', {}, 'quiz'),
-            type: 'boolean',
-            onChange: (value) => props.update('score', Object.assign({}, props.item.score, {type: value ? SCORE_FIXED : SCORE_SUM})),
-            linked: [
-              {
-                name: 'penalty',
-                type: 'number',
-                label: trans('ordering_editor_penalty_label', {}, 'quiz'),
-                options: {
-                  min: 0
-                },
-                displayed: (item) => SCORE_SUM === item.score.type
-              }, {
-                name: 'score.success',
-                type: 'number',
-                label: trans('fixed_score_on_success', {}, 'quiz'),
-                options: {
-                  min: 0
-                },
-                displayed: (item) => SCORE_FIXED === item.score.type
-              }, {
-                name: 'score.failure',
-                type: 'number',
-                label: trans('fixed_score_on_failure', {}, 'quiz'),
-                displayed: (item) => SCORE_FIXED === item.score.type
-              }
-            ]
-          }, {
             name: 'direction',
             label: trans('direction', {}, 'quiz'),
             type: 'choice',
             required: true,
             options: {
+              noEmpty: true,
+              condensed: true,
               choices: constants.DIRECTION_CHOICES
             }
           }, {
@@ -387,6 +360,8 @@ const OrderingEditor = props =>
             type: 'choice',
             required: true,
             options: {
+              noEmpty: true,
+              condensed: true,
               choices: constants.MODE_CHOICES
             },
             onChange: (value) => {
