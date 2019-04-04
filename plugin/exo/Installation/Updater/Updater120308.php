@@ -25,6 +25,7 @@ class Updater120308 extends Updater
         $i = 0;
         $total = count($boolQs);
 
+        /** @var BooleanQuestion $boolQ */
         foreach ($boolQs as $boolQ) {
             ++$i;
             $this->log("Migrating $i/$total...");
