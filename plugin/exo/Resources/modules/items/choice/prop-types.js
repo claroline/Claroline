@@ -9,7 +9,7 @@ const ChoiceItem = {
       id: T.string.isRequired
     })).isRequired,
     solutions: T.arrayOf(T.shape({
-      id: T.string.isRequire, // the id of the linked choice
+      id: T.string.isRequired, // the id of the linked choice
       score: T.number,
       feedback: T.string
     })),

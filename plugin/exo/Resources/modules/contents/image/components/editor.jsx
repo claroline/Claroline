@@ -22,12 +22,12 @@ const ImageEditor = props =>
             label: trans('file'),
             type: 'file',
             required: true,
-            calculated: (item) => ({
+            calculated: (item) => item.url ? ({
               url: item.url,
               mimeType: item.type
-            }),
+            }) : null,
             onChange: (file) => {
-              props.update('data', file.url)
+              props.update('url', file.url)
               props.update('type', file.mimeType)
             },
             options: {
