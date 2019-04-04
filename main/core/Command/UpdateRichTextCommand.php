@@ -180,7 +180,7 @@ class UpdateRichTextCommand extends ContainerAwareCommand
             'Claroline\CoreBundle\Entity\Content' => ['content'],
             'Claroline\CoreBundle\Entity\Resource\Revision' => ['content'],
             'Claroline\AgendaBundle\Entity\Event' => ['description'],
-            'Claroline\CoreBundle\Entity\Resource\Activity' => ['description'],
+            'Claroline\AnnouncementBundle\Entity\Announcement' => ['content'],
             'Innova\PathBundle\Entity\Path\Path' => ['description'],
             'Innova\PathBundle\Entity\Step' => ['description'],
             'Claroline\CoreBundle\Entity\Widget\Type\SimpleWidget' => ['content'],
