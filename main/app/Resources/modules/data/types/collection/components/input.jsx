@@ -91,7 +91,7 @@ const CollectionInput = props =>
       icon="fa fa-fw fa-plus"
       label={props.button}
       disabled={props.disabled || (props.max && props.value && props.max <= props.value.length)}
-      callback={() => props.onChange([].concat(props.value || [], [undefined]))}
+      callback={() => props.onChange([].concat(props.value || [], [props.defaultItem]))}
     />
   </div>
 
@@ -101,6 +101,7 @@ implementPropTypes(CollectionInput, FormFieldTypes, {
   max: T.number,
   placeholder: T.string,
   button: T.string,
+  defaultItem: T.any,
 
   // items def
   type: T.string,
@@ -109,7 +110,8 @@ implementPropTypes(CollectionInput, FormFieldTypes, {
 }, {
   value: [],
   placeholder: trans('no_item'),
-  button: trans('add')
+  button: trans('add'),
+  defaultItem: undefined
 })
 
 export {

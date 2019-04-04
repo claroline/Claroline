@@ -674,25 +674,33 @@ const PairEditor = props =>
             hideLabel: true,
             required: true,
             render: (pairItem) => {
+              const decoratedSolutions = cloneDeep(pairItem.solutions)
+              const realSolutions = utils.getRealSolutionList(decoratedSolutions)
+              decoratedSolutions.forEach(s => s._deletable = 1 < realSolutions.length)
+
+              const decoratedItems = cloneDeep(pairItem.items)
+              const itemDeletable = 2 < utils.getRealItemlist(decoratedItems, decoratedSolutions).length
+              decoratedItems.forEach(el => el._deletable = itemDeletable)
+
               const Pair = (
                 <div className="row pair-items">
                   <div className="col-md-5 col-sm-5 items-col">
                     <ItemList
-                      solutions={pairItem.solutions}
-                      items={pairItem.items}
+                      solutions={decoratedSolutions}
+                      items={decoratedItems}
                       onChange={props.update}
                     />
                     <hr/>
                     <OddList
-                      solutions={pairItem.solutions}
-                      items={pairItem.items}
+                      solutions={decoratedSolutions}
+                      items={decoratedItems}
                       onChange={props.update}
                     />
                   </div>
                   <div className="col-md-7 col-sm-7 pairs-col">
                     <PairList
-                      solutions={pairItem.solutions}
-                      items={pairItem.items}
+                      solutions={decoratedSolutions}
+                      items={decoratedItems}
                       onChange={props.update}
                     />
                   </div>

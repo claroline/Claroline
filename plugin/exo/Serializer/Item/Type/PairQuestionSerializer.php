@@ -73,7 +73,7 @@ class PairQuestionSerializer implements SerializerInterface
     {
         $usedCoordinates = [];
 
-        return array_map(function (GridItem $item) use ($pairQuestion, $options, &$usedCoordinates) {
+        return array_values(array_map(function (GridItem $item) use ($pairQuestion, $options, &$usedCoordinates) {
             $itemData = $this->contentSerializer->serialize($item, $options);
             $itemData->id = $item->getUuid();
 
@@ -88,7 +88,7 @@ class PairQuestionSerializer implements SerializerInterface
             }
 
             return $itemData;
-        }, $pairQuestion->getItems()->toArray());
+        }, $pairQuestion->getItems()->toArray()));
     }
 
     private function generateNewCoords($coords, $rows, array &$usedCoords)
