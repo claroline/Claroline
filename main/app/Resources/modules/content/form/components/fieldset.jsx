@@ -31,7 +31,7 @@ class FormField extends Component {
   render() {
     return (
       <DataInput
-        id={this.props.name.replace(/\./g, '-')}
+        id={this.props.id}
         type={this.props.type}
         label={this.props.label}
         hideLabel={this.props.hideLabel}
@@ -54,6 +54,7 @@ class FormField extends Component {
 }
 
 FormField.propTypes = {
+  id: T.string.isRequired,
   name: T.string.isRequired,
   type: T.string.isRequired,
   label: T.string.isRequired,
@@ -90,6 +91,14 @@ class FormFieldset extends Component {
     this.setErrors = this.setErrors.bind(this)
   }
 
+  getFieldId(field) {
+    let id = this.props.id ? `${this.props.id}-` : ''
+
+    id += field.name.replace(/\./g, '-')
+
+    return id
+  }
+
   renderFields(fields) {
     let rendered = []
 
@@ -98,7 +107,7 @@ class FormFieldset extends Component {
         rendered.push(
           <FormGroup
             key={field.name}
-            id={field.name.replace(/\./g, '-')}
+            id={this.getFieldId(field)}
             label={field.label}
             hideLabel={field.hideLabel}
             help={field.help}
@@ -113,6 +122,7 @@ class FormFieldset extends Component {
         rendered.push(
           <FormField
             key={field.name}
+            id={this.getFieldId(field)}
             name={field.name}
             type={field.type}
             label={field.label}
@@ -165,6 +175,7 @@ class FormFieldset extends Component {
 
     return (
       <fieldset
+        id={this.props.id}
         className={this.props.className}
         disabled={this.props.disabled}
       >
@@ -177,6 +188,7 @@ class FormFieldset extends Component {
 }
 
 FormFieldset.propTypes = {
+  id: T.string,
   className: T.string,
   disabled: T.bool,
   size: T.oneOf(['sm', 'lg']),

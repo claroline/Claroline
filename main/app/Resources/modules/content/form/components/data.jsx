@@ -14,6 +14,14 @@ import {FormSections, FormSection} from '#/main/app/content/form/components/sect
 import {createFormDefinition} from '#/main/app/content/form/utils'
 import {DataFormSection as DataFormSectionTypes} from '#/main/app/content/form/prop-types'
 
+function getSectionId(section, formId = null) {
+  let id = formId ? `${formId}-` : ''
+
+  id += section.id || toKey(section.title)
+
+  return id
+}
+
 const FormData = (props) => {
   const hLevel = props.level + (props.title ? 1 : 0)
   let hDisplay
@@ -55,7 +63,7 @@ const FormData = (props) => {
 
       {primarySections.map(primarySection =>
         <div
-          id={primarySection.id || toKey(primarySection.title)}
+          id={`${getSectionId(primarySection, props.id)}-section`}
           key={primarySection.id || toKey(primarySection.title)}
           className={classes('form-primary-section panel panel-default', primarySection.className)}
         >
@@ -64,6 +72,7 @@ const FormData = (props) => {
           </Heading>
 
           <FormFieldset
+            id={getSectionId(primarySection, props.id)}
             className="panel-body"
             disabled={props.disabled || primarySection.disabled}
             fields={primarySection.fields}
@@ -86,7 +95,7 @@ const FormData = (props) => {
         >
           {otherSections.map(section =>
             <FormSection
-              id={section.id || toKey(section.title)}
+              id={`${getSectionId(section, props.id)}-section`}
               className={section.className}
               key={section.id || toKey(section.title)}
               icon={section.icon}
@@ -96,6 +105,7 @@ const FormData = (props) => {
               validating={props.validating}
             >
               <FormFieldset
+                id={getSectionId(section, props.id)}
                 fill={true}
                 className="panel-body"
                 disabled={props.disabled || section.disabled}

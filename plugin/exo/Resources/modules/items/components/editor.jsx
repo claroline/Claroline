@@ -23,6 +23,7 @@ const ItemEditor = props => {
 
   return (
     <FormData
+      id={`form-${props.item.id}`}
       className="quiz-item item-editor"
       embedded={props.embedded}
       name={props.formName}
