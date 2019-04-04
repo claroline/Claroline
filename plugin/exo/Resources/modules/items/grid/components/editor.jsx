@@ -693,19 +693,31 @@ export const GridEditor = (props) =>
             name: 'grid',
             required: true,
             render: (item) => {
+              const decoratedItem = cloneDeep(item)
+              decoratedItem.solutions.forEach(s => {
+                if (s.answers) {
+                  s.answers.forEach(a => {
+                    if (a['_id'] === undefined) {
+                      a['_id'] = makeId()
+                    }
+                    a['_deletable'] = 1 < s.answers.length
+                  })
+                }
+              })
+
               const Grid = (
                 <div className="grid-body">
                   <GridTable
-                    item={item}
+                    item={decoratedItem}
                     validating={props.validating}
                     update={props.update}
                     removeRow={(row) => {
-                      const newItem = cloneDeep(item)
+                      const newItem = cloneDeep(decoratedItem)
                       deleteRow(row, newItem, true)
                       props.update('cells', newItem.cells)
                     }}
                     removeColumn={(col) => {
-                      const newItem = cloneDeep(item)
+                      const newItem = cloneDeep(decoratedItem)
                       deleteCol(col, newItem, true)
                       props.update('cells', newItem.cells)
                     }}

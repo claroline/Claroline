@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import cloneDeep from 'lodash/cloneDeep'
+import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
 
@@ -41,7 +42,14 @@ class GridCell extends Component {
           }
           {this.props.cell.choices.length > 0 &&
             <div className="dropdown">
-              <button className="btn btn-default dropdown-toggle" type="button" id={`choice-drop-down-${this.props.cell.id}`} data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <button
+                className={classes('btn btn-default dropdown-toggle', {disabled: this.props.disabled})}
+                type="button"
+                id={`choice-drop-down-${this.props.cell.id}`}
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="true"
+              >
                 {this.getTextValue() === '' ?
                   <span>{trans('grid_choice_select_empty', {}, 'quiz')}</span>
                   :

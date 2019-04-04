@@ -4,12 +4,14 @@ import {connect} from 'react-redux'
 import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
-import {HtmlText} from '#/main/core/layout/components/html-text'
-import {actions} from './../actions'
-import {selectors as correctionSelectors} from './../selectors'
-import {Textarea} from '#/main/core/layout/form/components/field/textarea'
-import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {Button} from '#/main/app/action/components/button'
+
+import {HtmlText} from '#/main/core/layout/components/html-text'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea'
+
+import {actions} from '#/plugin/exo/quiz/correction/actions'
+import {selectors as correctionSelectors} from '#/plugin/exo/quiz/correction/selectors'
 
 class AnswerRow extends Component {
   constructor(props) {
@@ -85,7 +87,9 @@ let Answers = props => {
 
   return (<div className="answers-list">
     <h2 className="question-title">
-      {props.question.title || props.question.content}
+      <HtmlText>
+        {props.question.title || props.question.content}
+      </HtmlText>
 
       {props.answers.length > 0 &&
         <button

@@ -102,13 +102,15 @@ class GridQuestionSerializer implements SerializerInterface
 
         foreach ($gridQuestion->getCells()->toArray() as $cell) {
             $cellChoices = $cell->getChoices()->toArray();
+
             if (!empty($cellChoices)) {
                 $solutionData = new \stdClass();
                 $solutionData->cellId = $cell->getUuid();
-                $solutionData->answers = array_map(function (CellChoice $choice) use ($options) {
-                    return $this->cellChoiceSerializer->serialize($choice, $options);
-                }, $cellChoices);
+                $solutionData->answers = [];
 
+                foreach ($cellChoices as $choice) {
+                    $solutionData->answers[] = $this->cellChoiceSerializer->serialize($choice, $options);
+                }
                 $solutions[] = $solutionData;
             }
         }
@@ -197,21 +199,24 @@ class GridQuestionSerializer implements SerializerInterface
             if (!empty($cellData->data)) {
                 $cell->setData($cellData->data);
             }
-
-            $cell->setInput($cellData->input);
-
             if (!empty($cellData->choices)) {
                 $cell->setSelector(true);
             } else {
                 $cell->setSelector(false);
             }
+            $hasSolution = false;
 
             foreach ($solutions as $solution) {
                 if ($solution->cellId === $cellData->id) {
                     $this->deserializeCellChoices($cell, $solution->answers, $options);
+                    $hasSolution = true;
                     break;
                 }
             }
+            if (!$hasSolution) {
+                $this->deserializeCellChoices($cell, [], $options);
+            }
+            $cell->setInput($hasSolution);
 
             $gridQuestion->addCell($cell);
         }

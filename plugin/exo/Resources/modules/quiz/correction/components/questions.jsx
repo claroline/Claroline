@@ -2,13 +2,18 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {tex, trans} from '#/main/app/intl/translation'
-import {selectors as correctionSelectors} from './../selectors'
+import {trans} from '#/main/app/intl/translation'
 import {TooltipOverlay} from '#/main/app/overlay/tooltip/components/overlay'
+
+import {HtmlText} from '#/main/core/layout/components/html-text'
+
+import {selectors as correctionSelectors} from '#/plugin/exo/quiz/correction/selectors'
 
 export const QuestionRow = props =>
   <tr>
-    <td>{props.question.title || props.question.content}</td>
+    <td>
+      <HtmlText>{props.question.title || props.question.content}</HtmlText>
+    </td>
     <td>{props.answers.length}</td>
     <td className="actions-cell text-right">
       <TooltipOverlay
@@ -42,8 +47,8 @@ const Questions = props =>
       <table className="table table-striped table-hover">
         <thead>
           <tr>
-            <th>{tex('question')}</th>
-            <th>{tex('number_of_papers_to_correct')}</th>
+            <th>{trans('question', {}, 'quiz')}</th>
+            <th>{trans('number_of_papers_to_correct', {}, 'quiz')}</th>
             <th></th>
           </tr>
         </thead>
@@ -56,7 +61,7 @@ const Questions = props =>
     </div> :
     <div className="questions-list">
       <div className="alert alert-warning">
-        {tex('no_question_to_correct')}
+        {trans('no_question_to_correct', {}, 'quiz')}
       </div>
     </div>
 
