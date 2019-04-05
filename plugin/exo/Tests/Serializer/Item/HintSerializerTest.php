@@ -82,7 +82,7 @@ class HintSerializerTest extends JsonDataTestCase
     {
         $serialized = $this->serializer->serialize(new Hint());
 
-        $this->assertTrue(!isset($serialized->penalty));
+        $this->assertEquals(0, $serialized->penalty);
     }
 
     public function testSerializedDataWithSolutions()

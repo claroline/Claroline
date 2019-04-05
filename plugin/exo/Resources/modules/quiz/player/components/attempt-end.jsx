@@ -2,18 +2,20 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {trans, tex} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {ScoreGauge} from '#/main/core/layout/evaluation/components/score-gauge'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 
-import {select as playerSelectors} from './../selectors'
-import quizSelectors from './../../selectors'
-import {selectors as paperSelectors} from './../../papers/selectors'
-import {utils as paperUtils} from './../../papers/utils'
+import {select as playerSelect} from '#/plugin/exo/quiz/player/selectors'
+import {selectors as playerSelectors} from '#/plugin/exo/resources/quiz/player/store'
+import quizSelectors from '#/plugin/exo/quiz/selectors'
+import {selectors as paperSelectors} from '#/plugin/exo/quiz/papers/selectors'
+import {utils as paperUtils} from '#/plugin/exo/quiz/papers/utils'
 
 // TODO : merge with PlayerRestrictions
 
@@ -40,8 +42,8 @@ const AttemptEndComponent = props => {
           {props.endMessage ?
             <HtmlText>{props.endMessage}</HtmlText> :
             <div>
-              <h2 className="h4">{tex('attempt_end_title')}</h2>
-              <p>{tex('attempt_end_info')}</p>
+              <h2 className="h4">{trans('attempt_end_title', {}, 'quiz')}</h2>
+              <p>{trans('attempt_end_info', {}, 'quiz')}</p>
             </div>
           }
 
@@ -54,7 +56,7 @@ const AttemptEndComponent = props => {
                   name: 'restart',
                   type: LINK_BUTTON,
                   icon: 'fa fa-fw fa-redo',
-                  label: tex('exercise_restart'),
+                  label: trans('exercise_restart', {}, 'quiz'),
                   target: '/play',
                   exact: true,
                   primary: true,
@@ -63,7 +65,7 @@ const AttemptEndComponent = props => {
                   name: 'correction',
                   type: LINK_BUTTON,
                   icon: 'fa fa-fw fa-check-double',
-                  label: tex('view_paper'),
+                  label: trans('view_paper', {}, 'quiz'),
                   target: `/papers/${props.paper.id}`,
                   displayed: showCorrection,
                   primary: true
@@ -71,7 +73,7 @@ const AttemptEndComponent = props => {
                   name: 'statistics',
                   type: LINK_BUTTON,
                   icon: 'fa fa-fw fa-bar-chart',
-                  label: tex('statistics'),
+                  label: trans('statistics', {}, 'quiz'),
                   target: '/statistics',
                   displayed: props.showStatistics
                 }, {
@@ -113,10 +115,10 @@ const AttemptEnd = connect(
   (state) => ({
     workspaceId: resourceSelect.workspaceId(state),
     admin: hasPermission('edit', resourceSelect.resourceNode(state)) || quizSelectors.papersAdmin(state),
-    paper: playerSelectors.paper(state),
-    endMessage: playerSelectors.quizEndMessage(state),
-    endNavigation: playerSelectors.quizEndNavigation(state),
-    answers: playerSelectors.answers(state),
+    paper: playerSelect.paper(state),
+    endMessage: playerSelect.quizEndMessage(state),
+    endNavigation: playerSelect.quizEndNavigation(state),
+    answers: playerSelect.answers(state),
     showStatistics: quizSelectors.parameters(state).showStatistics,
     maxAttempts: quizSelectors.parameters(state).maxAttempts,
     maxAttemptsPerDay: quizSelectors.parameters(state).maxAttemptsPerDay,

@@ -26,10 +26,7 @@ class HintSerializer implements SerializerInterface
     {
         $hintData = new \stdClass();
         $hintData->id = $hint->getUuid();
-
-        if (0 !== $hint->getPenalty()) {
-            $hintData->penalty = $hint->getPenalty();
-        }
+        $hintData->penalty = $hint->getPenalty();
 
         if (in_array(Transfer::INCLUDE_SOLUTIONS, $options)) {
             $hintData->value = $hint->getData();

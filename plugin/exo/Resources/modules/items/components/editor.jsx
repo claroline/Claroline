@@ -136,7 +136,7 @@ const ItemEditor = props => {
               options: {
                 placeholder: trans('no_hint_info', {}, 'quiz'),
                 button: trans('add_hint', {}, 'quiz'),
-                defaultItem: {id: makeId()},
+                defaultItem: {id: makeId(), penalty: 0},
                 render: (hint = {}, hintErrors, hintIndex) => {
                   const HintEditor = (
                     <div className="hint-control">
