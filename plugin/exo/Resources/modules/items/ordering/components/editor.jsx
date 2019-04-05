@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, Fragment, forwardRef} from 'react'
 import cloneDeep from 'lodash/cloneDeep'
 import classes from 'classnames'
 
@@ -109,6 +109,7 @@ const removeItem = (itemId, items, solutions, saveCallback) => {
 class Item extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
       showFeedback: false
     }
@@ -193,9 +194,9 @@ Item.propTypes = {
   isOdd: T.bool.isRequired
 }
 
-let OrderingItem = (props) =>
+let OrderingItem = forwardRef((props, ref) =>
   props.connectDropTarget (
-    <div className="item-container">
+    <div className="item-container" ref={ref}>
       <Item {...props} />
       {props.connectDragSource(
         <span
@@ -212,6 +213,9 @@ let OrderingItem = (props) =>
       )}
     </div>
   )
+)
+
+OrderingItem.displayName = 'OrderingItem'
 
 OrderingItem.propTypes = {
   item: T.shape(OrderingItemType.propTypes).isRequired,
@@ -231,13 +235,10 @@ OrderingItem.propTypes = {
 
 OrderingItem = makeSortable(OrderingItem, 'ORDERING_ITEM', OrderingItemDragPreview)
 
-const OrderingOdd = props => {
-  return (
-    <div className="item-container negative-score">
-      <Item {...props} />
-    </div>
-  )
-}
+const OrderingOdd = props =>
+  <div className="item-container negative-score">
+    <Item {...props} />
+  </div>
 
 OrderingOdd.propTypes = {
   item: T.shape(OrderingItemType.propTypes).isRequired,
@@ -251,36 +252,52 @@ OrderingOdd.propTypes = {
 
 const ItemList = (props) =>
   <ul>
-    {props.item.items.filter(i => props.isOdd ? undefined === i._position : undefined !== i._position).map((el, index) =>
-      <li
-        className={constants.DIRECTION_VERTICAL === props.item.direction ? constants.DIRECTION_VERTICAL : constants.DIRECTION_HORIZONTAL}
-        key={el.id}>
-        {props.isOdd ?
-          <OrderingOdd
-            id={el.id}
-            data={el.data}
-            score={el._score}
-            feedback={el._feedback}
-            deletable={true}
-            fixedScore={SCORE_FIXED === props.item.score.type}
-            {...props}
-          /> :
-          <OrderingItem
-            sortDirection={constants.DIRECTION_VERTICAL === props.item.direction ? SORT_VERTICAL : SORT_HORIZONTAL}
-            onSort={(a, b) => moveItem(a, b, props.item.items, props.item.solutions, props.onChange)}
-            id={el.id}
-            data={el.data}
-            score={el._score}
-            feedback={el._feedback}
-            position={index}
-            index={index}
-            fixedScore={props.item.score.type === SCORE_FIXED}
-            deletable={el._deletable}
-            {...props}
-          />
-        }
-      </li>
-    )}
+    {props.item.items
+      .map(item => {
+        const solution = props.item.solutions.find(s => s.itemId === item.id)
+
+        return ({
+          id: item.id,
+          data: item.data,
+          _score: solution.score,
+          _position: solution.position || undefined,
+          _feedback: solution.feedback || '',
+          _deletable: props.item.solutions.filter(solution => undefined !== solution.position).length > 2
+        })
+      })
+      .filter(i => props.isOdd ? undefined === i._position : undefined !== i._position)
+      .map((el, index) =>
+        <li
+          className={constants.DIRECTION_VERTICAL === props.item.direction ? constants.DIRECTION_VERTICAL : constants.DIRECTION_HORIZONTAL}
+          key={el.id}
+        >
+          {props.isOdd ?
+            <OrderingOdd
+              id={el.id}
+              data={el.data}
+              score={el._score}
+              feedback={el._feedback}
+              deletable={true}
+              fixedScore={SCORE_FIXED === props.item.score.type}
+              {...props}
+            /> :
+            <OrderingItem
+              sortDirection={constants.DIRECTION_VERTICAL === props.item.direction ? SORT_VERTICAL : SORT_HORIZONTAL}
+              onSort={(a, b) => moveItem(a, b, props.item.items, props.item.solutions, props.onChange)}
+              id={el.id}
+              data={el.data}
+              score={el._score}
+              feedback={el._feedback}
+              position={index}
+              index={index}
+              fixedScore={props.item.score.type === SCORE_FIXED}
+              deletable={el._deletable}
+              {...props}
+            />
+          }
+        </li>
+      )
+    }
   </ul>
 
 ItemList.propTypes = {
@@ -290,22 +307,20 @@ ItemList.propTypes = {
 }
 
 const OrderingItems = (props) =>
-  <div>
+  <Fragment>
     <div className="items-row">
       <ItemList
         {...props}
         isOdd={false}
       />
-      <div className="item-footer">
-        <button
-          type="button"
-          className="btn btn-default"
-          onClick={() => addItem(props.item.items, props.item.solutions, false, props.onChange)}
-        >
-          <span className="fa fa-plus"/>
-          {trans('ordering_add_item', {}, 'quiz')}
-        </button>
-      </div>
+
+      <Button
+        type={CALLBACK_BUTTON}
+        className="btn btn-block"
+        icon="fa fa-fw fa-plus"
+        label={trans('ordering_add_item', {}, 'quiz')}
+        callback={() => addItem(props.item.items, props.item.solutions, false, props.onChange)}
+      />
     </div>
 
     {props.item.mode === constants.MODE_BESIDE &&
@@ -314,22 +329,22 @@ const OrderingItems = (props) =>
           {...props}
           isOdd={true}
         />
-        <div className="item-footer">
-          <button
-            type="button"
-            className="btn btn-default"
-            onClick={() => addItem(props.item.items, props.item.solutions, true, props.onChange)}
-          >
-            <span className="fa fa-plus"/>
-            {trans('ordering_add_odd', {}, 'quiz')}
-          </button>
-        </div>
+
+        <Button
+          type={CALLBACK_BUTTON}
+          className="btn btn-block"
+          icon="fa fa-fw fa-plus"
+          label={trans('ordering_add_odd', {}, 'quiz')}
+          callback={() => addItem(props.item.items, props.item.solutions, true, props.onChange)}
+        />
       </div>
     }
-  </div>
+  </Fragment>
 
 OrderingItems.propTypes = {
-  item: T.shape(OrderingItemType.propTypes).isRequired,
+  item: T.shape(
+    OrderingItemType.propTypes
+  ).isRequired,
   onChange: T.func.isRequired
 }
 
@@ -395,4 +410,6 @@ implementPropTypes(OrderingEditor, ItemEditorType, {
   item: T.shape(OrderingItemType.propTypes).isRequired
 })
 
-export {OrderingEditor}
+export {
+  OrderingEditor
+}

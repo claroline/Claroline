@@ -21,7 +21,7 @@ const GraphicItem = {
         color: T.string.isRequired
       }).isRequired
     })).isRequired,
-    _currentColor: T.string.isRequired,
+    _currentColor: T.string,
     _popover: T.shape({
       areaId: T.string.isRequired,
       open: T.bool.isRequired,

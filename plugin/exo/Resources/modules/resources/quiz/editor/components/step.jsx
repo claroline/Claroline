@@ -81,7 +81,7 @@ const EditorStep = props => {
             {props.items.map((item, itemIndex) =>
               <EditorItem
                 id={item.id}
-                key={item.id}
+                key={itemIndex}
                 formName={props.formName}
                 path={`${props.path}.items[${itemIndex}]`}
 

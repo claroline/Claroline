@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, forwardRef} from 'react'
 import {PropTypes as T} from 'prop-types'
 import cloneDeep from 'lodash/cloneDeep'
 import classes from 'classnames'
@@ -14,8 +14,8 @@ import {OrderingItemDragPreview} from '#/plugin/exo/items/ordering/components/or
 let DropBox = props => {
   return props.connectDropTarget(
     <div className={classes('drop-container', {
-      'on-hover': props.isOver})}
-    >
+      'on-hover': props.isOver
+    })}>
       {trans('set_drop_item', {}, 'quiz')}
     </div>
   )
@@ -30,9 +30,9 @@ DropBox.propTypes = {
 
 DropBox = makeDroppable(DropBox, 'ITEM')
 
-let SortableItem = props => {
+let SortableItem = forwardRef((props, ref) => {
   const element =
-    <div className="item">
+    <div className="item" ref={ref}>
       <div className="item-data" dangerouslySetInnerHTML={{__html: props.data}} />
       <div className="item-actions">
         {props.canDelete &&
@@ -59,7 +59,9 @@ let SortableItem = props => {
     </div>
 
   return props.sortable ? props.connectDropTarget (props.connectDragSource(element)) : element
-}
+})
+
+SortableItem.displayName = 'SortableItem'
 
 SortableItem.propTypes = {
   data: T.string.isRequired,

@@ -8,7 +8,7 @@ import {hasPermission} from '#/main/app/security'
 import {getTimeDiff} from '#/main/app/intl/date'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box.jsx'
+import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
 
 import quizSelect from '#/plugin/exo/quiz/selectors'
 import {selectors as paperSelect} from '#/plugin/exo/quiz/papers/selectors'
