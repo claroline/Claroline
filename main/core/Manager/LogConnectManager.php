@@ -30,6 +30,7 @@ use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("claroline.manager.log_connect")
@@ -44,6 +45,9 @@ class LogConnectManager
      */
     private $om;
 
+    /** @var TranslatorInterface */
+    private $translator;
+
     private $logRepo;
     private $orderedToolRepo;
     private $adminToolRepo;
@@ -56,17 +60,20 @@ class LogConnectManager
 
     /**
      * @DI\InjectParams({
-     *     "finder" = @DI\Inject("claroline.api.finder"),
-     *     "om"     = @DI\Inject("claroline.persistence.object_manager")
+     *     "finder"     = @DI\Inject("claroline.api.finder"),
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
+     *     "translator" = @DI\Inject("translator")
      * })
      *
-     * @param FinderProvider $finder
-     * @param ObjectManager  $om
+     * @param FinderProvider      $finder
+     * @param ObjectManager       $om
+     * @param TranslatorInterface $translator
      */
-    public function __construct(FinderProvider $finder, ObjectManager $om)
+    public function __construct(FinderProvider $finder, ObjectManager $om, TranslatorInterface $translator)
     {
         $this->finder = $finder;
         $this->om = $om;
+        $this->translator = $translator;
 
         $this->logRepo = $om->getRepository('ClarolineCoreBundle:Log\Log');
         $this->orderedToolRepo = $om->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
@@ -431,6 +438,45 @@ class LogConnectManager
         }
 
         $this->om->endFlushSuite();
+    }
+
+    public function exportConnectionsToCsv($class, array $filters = [], $sortBy = null, $output = null)
+    {
+        $connections = $this->finder->get($class)->find($filters, $sortBy);
+
+        if (null === $output) {
+            $output = 'php://output';
+        }
+        $fp = fopen($output, 'w+');
+        fputcsv($fp, [
+            $this->translator->trans('date', [], 'platform'),
+            $this->translator->trans('user', [], 'platform'),
+            $this->translator->trans('duration', [], 'platform'),
+        ], ';', '"');
+
+        foreach ($connections as $connection) {
+            $duration = $connection->getDuration();
+            $durationString = null;
+
+            if (!is_null($duration)) {
+                $hours = floor($duration / 3600);
+                $duration %= 3600;
+                $minutes = floor($duration / 60);
+                $seconds = $duration % 60;
+
+                $durationString = "{$hours}:";
+                $durationString .= 10 > $minutes ? "0{$minutes}:" : "{$minutes}:";
+                $durationString .= 10 > $seconds ? "0{$seconds}" : "{$seconds}";
+            }
+            fputcsv($fp, [
+                $connection->getConnectionDate()->format('Y-m-d H:i:s'),
+                $connection->getUser()->getFirstName().' '.$connection->getUser()->getLastName(),
+                $durationString,
+            ], ';', '"');
+        }
+        fclose($fp);
+
+        return $fp;
     }
 
     private function getLogConnectPlatform(User $user)

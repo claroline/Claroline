@@ -28,7 +28,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @EXT\Route("/log_connect")
@@ -47,9 +46,6 @@ class LogConnectController
     /** @var ToolManager */
     private $toolManager;
 
-    /** @var TranslatorInterface */
-    private $translator;
-
     /**
      * CourseController constructor.
      *
@@ -57,28 +53,24 @@ class LogConnectController
      *     "authorization"     = @DI\Inject("security.authorization_checker"),
      *     "finder"            = @DI\Inject("claroline.api.finder"),
      *     "logConnectManager" = @DI\Inject("claroline.manager.log_connect"),
-     *     "toolManager"       = @DI\Inject("claroline.manager.tool_manager"),
-     *     "translator"        = @DI\Inject("translator")
+     *     "toolManager"       = @DI\Inject("claroline.manager.tool_manager")
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param FinderProvider                $finder
      * @param LogConnectManager             $logConnectManager
      * @param ToolManager                   $toolManager
-     * @param TranslatorInterface           $translator
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         FinderProvider $finder,
         LogConnectManager $logConnectManager,
-        ToolManager $toolManager,
-        TranslatorInterface $translator
+        ToolManager $toolManager
     ) {
         $this->authorization = $authorization;
         $this->finder = $finder;
         $this->logConnectManager = $logConnectManager;
         $this->toolManager = $toolManager;
-        $this->translator = $translator;
     }
 
     public function getName()
@@ -111,7 +103,7 @@ class LogConnectController
             ]];
 
         return new JsonResponse(
-            $this->finder->search('Claroline\CoreBundle\Entity\Log\Connection\LogConnectPlatform', array_merge(
+            $this->finder->search(LogConnectPlatform::class, array_merge(
                 $request->query->all(),
                 $hiddenFilters
             ))
@@ -144,56 +136,19 @@ class LogConnectController
             $property = 1 === $direction ? $query['sortBy'] : substr($query['sortBy'], 1);
             $sortBy = ['property' => $property, 'direction' => $direction];
         }
-
         if (!$isAdmin) {
             $filters['organizations'] = array_map(function (Organization $organization) {
                 return $organization->getUuid();
             }, $user->getAdministratedOrganizations()->toArray());
         }
-        $connections = $this->finder->get(LogConnectPlatform::class)->find($filters, $sortBy);
-
-        // Prepare CSV file
-        $handle = fopen('php://output', 'w+');
-        fputcsv($handle, [
-            $this->translator->trans('date', [], 'platform'),
-            $this->translator->trans('user', [], 'platform'),
-            $this->translator->trans('duration', [], 'platform'),
-        ], ';', '"');
-
-        foreach ($connections as $connection) {
-            $duration = $connection->getDuration();
-            $durationString = null;
-
-            if (!is_null($duration)) {
-                $hours = floor($duration / 3600);
-                $duration %= 3600;
-                $minutes = floor($duration / 60);
-                $seconds = $duration % 60;
-
-                $durationString = "{$hours}:";
-                $durationString .= 10 > $minutes ? "0{$minutes}:" : "{$minutes}:";
-                $durationString .= 10 > $seconds ? "0{$seconds}" : "{$seconds}";
-            }
-            fputcsv($handle, [
-                $connection->getConnectionDate()->format('Y-m-d H:i:s'),
-                $connection->getUser()->getFirstName().' '.$connection->getUser()->getLastName(),
-                $durationString,
-            ], ';', '"');
-        }
-        fclose($handle);
-
         $downloadDate = date('Y-m-d_H-i-s');
 
-        return new StreamedResponse(
-            function () use ($handle) {
-                $handle;
-            },
-            200,
-            [
-                'Content-Type' => 'application/force-download',
-                'Content-Disposition' => 'attachment; filename="connection_time_platform_'.$downloadDate.'.csv"',
-            ]
-        );
+        return new StreamedResponse(function () use ($filters, $sortBy) {
+            $this->logConnectManager->exportConnectionsToCsv(LogConnectPlatform::class, $filters, $sortBy);
+        }, 200, [
+            'Content-Type' => 'application/force-download',
+            'Content-Disposition' => 'attachment; filename="connection_time_platform_'.$downloadDate.'.csv"',
+        ]);
     }
 
     /**
@@ -217,7 +172,7 @@ class LogConnectController
         $this->checkWorkspaceToolAccess($workspace);
 
         return new JsonResponse(
-            $this->finder->search('Claroline\CoreBundle\Entity\Log\Connection\LogConnectWorkspace', array_merge(
+            $this->finder->search(LogConnectWorkspace::class, array_merge(
                 $request->query->all(),
                 [
                     'hiddenFilters' => [
@@ -258,51 +213,14 @@ class LogConnectController
             $sortBy = ['property' => $property, 'direction' => $direction];
         }
         $filters['workspace'] = $workspace->getUuid();
-
-        $connections = $this->finder->get(LogConnectWorkspace::class)->find($filters, $sortBy);
-
-        // Prepare CSV file
-        $handle = fopen('php://output', 'w+');
-        fputcsv($handle, [
-            $this->translator->trans('date', [], 'platform'),
-            $this->translator->trans('user', [], 'platform'),
-            $this->translator->trans('duration', [], 'platform'),
-        ], ';', '"');
-
-        foreach ($connections as $connection) {
-            $duration = $connection->getDuration();
-            $durationString = null;
-
-            if (!is_null($duration)) {
-                $hours = floor($duration / 3600);
-                $duration %= 3600;
-                $minutes = floor($duration / 60);
-                $seconds = $duration % 60;
-
-                $durationString = "{$hours}:";
-                $durationString .= 10 > $minutes ? "0{$minutes}:" : "{$minutes}:";
-                $durationString .= 10 > $seconds ? "0{$seconds}" : "{$seconds}";
-            }
-            fputcsv($handle, [
-                $connection->getConnectionDate()->format('Y-m-d H:i:s'),
-                $connection->getUser()->getFirstName().' '.$connection->getUser()->getLastName(),
-                $durationString,
-            ], ';', '"');
-        }
-        fclose($handle);
-
         $downloadDate = date('Y-m-d_H-i-s');
 
-        return new StreamedResponse(
-            function () use ($handle) {
-                $handle;
-            },
-            200,
-            [
-                'Content-Type' => 'application/force-download',
-                'Content-Disposition' => 'attachment; filename="connection_time_workspace_'.$workspace->getUuid().'_'.$downloadDate.'.csv"',
-            ]
-        );
+        return new StreamedResponse(function () use ($filters, $sortBy) {
+            $this->logConnectManager->exportConnectionsToCsv(LogConnectWorkspace::class, $filters, $sortBy);
+        }, 200, [
+            'Content-Type' => 'application/force-download',
+            'Content-Disposition' => 'attachment; filename="connection_time_workspace_'.$workspace->getUuid().'_'.$downloadDate.'.csv"',
+        ]);
     }
 
     /**
@@ -332,7 +250,7 @@ class LogConnectController
         }
 
         return new JsonResponse(
-            $this->finder->search('Claroline\CoreBundle\Entity\Log\Connection\LogConnectResource', array_merge(
+            $this->finder->search(LogConnectResource::class, array_merge(
                 $request->query->all(),
                 ['hiddenFilters' => $hiddenFilters]
             ))
@@ -374,50 +292,14 @@ class LogConnectController
         if (!$this->authorization->isGranted('administrate', $resource->getWorkspace())) {
             $filters['user'] = $user->getUuid();
         }
-        $connections = $this->finder->get(LogConnectResource::class)->find($filters, $sortBy);
-
-        // Prepare CSV file
-        $handle = fopen('php://output', 'w+');
-        fputcsv($handle, [
-            $this->translator->trans('date', [], 'platform'),
-            $this->translator->trans('user', [], 'platform'),
-            $this->translator->trans('duration', [], 'platform'),
-        ], ';', '"');
-
-        foreach ($connections as $connection) {
-            $duration = $connection->getDuration();
-            $durationString = null;
-
-            if (!is_null($duration)) {
-                $hours = floor($duration / 3600);
-                $duration %= 3600;
-                $minutes = floor($duration / 60);
-                $seconds = $duration % 60;
-
-                $durationString = "{$hours}:";
-                $durationString .= 10 > $minutes ? "0{$minutes}:" : "{$minutes}:";
-                $durationString .= 10 > $seconds ? "0{$seconds}" : "{$seconds}";
-            }
-            fputcsv($handle, [
-                $connection->getConnectionDate()->format('Y-m-d H:i:s'),
-                $connection->getUser()->getFirstName().' '.$connection->getUser()->getLastName(),
-                $durationString,
-            ], ';', '"');
-        }
-        fclose($handle);
-
         $downloadDate = date('Y-m-d_H-i-s');
 
-        return new StreamedResponse(
-            function () use ($handle) {
-                $handle;
-            },
-            200,
-            [
-                'Content-Type' => 'application/force-download',
-                'Content-Disposition' => 'attachment; filename="connection_time_resource_'.$resource->getUuid().'_'.$downloadDate.'.csv"',
-            ]
-        );
+        return new StreamedResponse(function () use ($filters, $sortBy) {
+            $this->logConnectManager->exportConnectionsToCsv(LogConnectResource::class, $filters, $sortBy);
+        }, 200, [
+            'Content-Type' => 'application/force-download',
+            'Content-Disposition' => 'attachment; filename="connection_time_resource_'.$resource->getUuid().'_'.$downloadDate.'.csv"',
+        ]);
     }
 
     /**
