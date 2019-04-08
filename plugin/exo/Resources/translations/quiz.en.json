@@ -557,5 +557,6 @@
     "change_quiz_type_confirm": "Change in the type of quiz",
     "change_quiz_type_message": "Are you sure you want to change the type of quiz? This change will replace some parts of the current configuration.",
     "attempts_pick": "Generation of attempts",
-    "attempts_play": "Progress of the attempts"
+    "attempts_play": "Progress of the attempts",
+    "answers": "Answers"
 }

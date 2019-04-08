@@ -87,7 +87,7 @@ const EditorStep = props => {
 
                 numbering={getNumbering(props.numberingType, props.index, itemIndex)}
                 item={item}
-                update={(prop, value) => props.update(`items[${itemIndex}].${prop}`, value)}
+                update={(prop, value) => props.update(prop ? `items[${itemIndex}].${prop}`:`items[${itemIndex}]`, value)}
                 actions={[
                   {
                     name: 'copy',

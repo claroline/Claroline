@@ -3,6 +3,7 @@ import times from 'lodash/times'
 import {trans} from '#/main/app/intl/translation'
 
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
+import {emptyAnswer} from '#/plugin/exo/items/utils'
 
 import {MatchItem as MatchItemTypes} from '#/plugin/exo/items/match/prop-types'
 import {utils} from '#/plugin/exo/items/match/utils'
@@ -46,7 +47,10 @@ export default {
    *
    * @return {object}
    */
-  create: (baseItem) => Object.assign(baseItem, MatchItemTypes.defaultProps),
+  create: (baseItem) => Object.assign(baseItem, MatchItemTypes.defaultProps, {
+    firstSet: [emptyAnswer()],
+    secondSet: [emptyAnswer(), emptyAnswer()]
+  }),
 
   /**
    * Correct an answer submitted to a match item.

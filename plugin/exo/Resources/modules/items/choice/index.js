@@ -1,9 +1,9 @@
 import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
-import {makeId} from '#/main/core/scaffolding/id'
 
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
+import {emptyAnswer} from '#/plugin/exo/items/utils'
 
 import {ChoiceItem} from '#/plugin/exo/items/choice/prop-types'
 
@@ -60,39 +60,25 @@ export default {
    * @return {object}
    */
   create: (baseItem) => {
-    // append default choice props
-    const choiceItem = merge({}, baseItem, ChoiceItem.defaultProps)
-
     // create 2 empty choices
-    const firstChoiceId = makeId()
-    const secondChoiceId = makeId()
+    const firstChoice = emptyAnswer()
+    const secondChoice = emptyAnswer()
 
-    choiceItem.choices = [
-      {
-        id: firstChoiceId,
-        type: 'text/html',
-        data: ''
-      }, {
-        id: secondChoiceId,
-        type: 'text/html',
-        data: ''
-      }
-    ]
-
-    // create solutions for choices
-    choiceItem.solutions = [
-      {
-        id: firstChoiceId,
-        score: 1,
-        feedback: ''
-      }, {
-        id: secondChoiceId,
-        score: 0,
-        feedback: ''
-      }
-    ]
-
-    return choiceItem
+    return merge({}, baseItem, ChoiceItem.defaultProps, {
+      choices: [firstChoice, secondChoice],
+      // create solutions for choices
+      solutions: [
+        {
+          id: firstChoice.id,
+          score: 1,
+          feedback: ''
+        }, {
+          id: secondChoice.id,
+          score: 0,
+          feedback: ''
+        }
+      ]
+    })
   },
 
   /**

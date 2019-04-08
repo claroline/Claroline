@@ -557,5 +557,6 @@
     "change_quiz_type_confirm": "Changement du type du questionnaire",
     "change_quiz_type_message": "Êtes-vous sûr de vouloir changer le type du questionnaire ? Ce changement va remplacer une partie de la configuration actuelle.",
     "attempts_pick": "Génération des tentatives",
-    "attempts_play": "Déroulement des tentatives"
+    "attempts_play": "Déroulement des tentatives",
+    "answers": "Réponses"
 }
