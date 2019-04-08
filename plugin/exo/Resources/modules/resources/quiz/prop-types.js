@@ -22,6 +22,7 @@ const Step = {
     }))
   },
   defaultProps: {
+    items: [],
     picking: {
       pick: 0,
       randomOrder: constants.SHUFFLE_NEVER,
