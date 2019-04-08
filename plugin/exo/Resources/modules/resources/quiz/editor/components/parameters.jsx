@@ -261,7 +261,7 @@ const EditorParameters = props =>
               name: 'parameters.timeLimited',
               label: trans('limit_quiz_duration', {}, 'quiz'),
               type: 'boolean',
-              calculated: (quiz) => get(quiz, 'parameters.duration') || get(quiz, 'parameters.timeLimited'),
+              calculated: (quiz) => 0 < get(quiz, 'parameters.duration') || get(quiz, 'parameters.timeLimited'),
               onChange: (checked) => {
                 if (!checked) {
                   props.update('parameters.duration', 0)
@@ -274,7 +274,7 @@ const EditorParameters = props =>
                   name: 'parameters.duration',
                   label: trans('duration'),
                   type: 'time',
-                  displayed: (quiz) => get(quiz, 'parameters.duration') || get(quiz, 'parameters.timeLimited'),
+                  displayed: (quiz) => 0 < get(quiz, 'parameters.duration') || get(quiz, 'parameters.timeLimited'),
                   required: true
                 }
               ]
