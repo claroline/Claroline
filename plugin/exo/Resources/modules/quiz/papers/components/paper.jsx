@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import classes from 'classnames'
 import Panel from 'react-bootstrap/lib/Panel'
 
-import {tex} from '#/main/app/intl/translation'
+import {tex, trans} from '#/main/app/intl/translation'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/app/security'
 import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
@@ -56,53 +56,56 @@ const PaperComponent = props => {
         {tex('correction')}&nbsp;{props.paper ? props.paper.number : ''}
       </h2>
 
-      {props.paper && props.paper.structure.steps.map((step, idx) =>
-        <div key={idx} className="quiz-item item-paper">
-          <h3 className={classes('h4', 0 === idx && 'h-first')}>
-            {step.title ? step.title : tex('step') + ' ' + (idx + 1)}
-          </h3>
+      {props.paper && props.paper.structure.steps
+        .filter(step => step.items && 0 < step.items.length)
+        .map((step, idx) =>
+          <div key={idx} className="quiz-item item-paper">
+            <h3 className={classes('h4', 0 === idx && 'h-first')}>
+              {step.title || trans('step', {number: idx + 1}, 'quiz')}
+            </h3>
 
-          {step.items.map((item, idxItem) => {
-            const tmp = document.createElement('div')
-            tmp.innerHTML = item.feedback
-            const displayFeedback = (/\S/.test(tmp.textContent)) && item.feedback
+            {step.items.map((item, idxItem) => {
+              const tmp = document.createElement('div')
+              tmp.innerHTML = item.feedback
+              const displayFeedback = (/\S/.test(tmp.textContent)) && item.feedback
 
-            return isQuestionType(item.type) ?
-              <Panel key={item.id}>
-                {showScore && getAnswerScore(item.id, props.paper.answers) !== undefined && getAnswerScore(item.id, props.paper.answers) !== null &&
-                  <ScoreBox className="pull-right" score={getAnswerScore(item.id, props.paper.answers)} scoreMax={paperSelect.itemScoreMax(item)}/>
-                }
-                {item.title &&
-                  <h4 className="item-title">{item.title}</h4>
-                }
-
-                <ItemMetadata item={item} numbering={props.numbering !== constants.NUMBERING_NONE ? (idx + 1) + '.' + getNumbering(props.numbering, idxItem): null} />
-
-                {React.createElement(
-                  getDefinition(item.type).paper,
-                  {
-                    item, answer: getAnswer(item.id, props.paper.answers),
-                    feedback: getAnswerFeedback(item.id, props.paper.answers),
-                    showScore: showScore,
-                    showExpected: props.showExpectedAnswers,
-                    showStats: !!(props.showStatistics && props.stats && props.stats[item.id]),
-                    showYours: true,
-                    stats: props.showStatistics && props.stats && props.stats[item.id] ? props.stats[item.id] : {}
+              return isQuestionType(item.type) ?
+                <Panel key={item.id}>
+                  {showScore && getAnswerScore(item.id, props.paper.answers) !== undefined && getAnswerScore(item.id, props.paper.answers) !== null &&
+                    <ScoreBox className="pull-right" score={getAnswerScore(item.id, props.paper.answers)} scoreMax={paperSelect.itemScoreMax(item)}/>
                   }
-                )}
+                  {item.title &&
+                    <h4 className="item-title">{item.title}</h4>
+                  }
 
-                {displayFeedback &&
-                  <div className="item-feedback">
-                    <span className="fa fa-comment" />
-                    <div dangerouslySetInnerHTML={{__html: item.feedback}} />
-                  </div>
-                }
-              </Panel>
-              :
-              ''
-          })}
-        </div>
-      )}
+                  <ItemMetadata item={item} numbering={props.numbering !== constants.NUMBERING_NONE ? (idx + 1) + '.' + getNumbering(props.numbering, idxItem): null} />
+
+                  {React.createElement(
+                    getDefinition(item.type).paper,
+                    {
+                      item, answer: getAnswer(item.id, props.paper.answers),
+                      feedback: getAnswerFeedback(item.id, props.paper.answers),
+                      showScore: showScore,
+                      showExpected: props.showExpectedAnswers,
+                      showStats: !!(props.showStatistics && props.stats && props.stats[item.id]),
+                      showYours: true,
+                      stats: props.showStatistics && props.stats && props.stats[item.id] ? props.stats[item.id] : {}
+                    }
+                  )}
+
+                  {displayFeedback &&
+                    <div className="item-feedback">
+                      <span className="fa fa-comment" />
+                      <div dangerouslySetInnerHTML={{__html: item.feedback}} />
+                    </div>
+                  }
+                </Panel>
+                :
+                ''
+            })}
+          </div>
+        )
+      }
     </div>
   )
 }

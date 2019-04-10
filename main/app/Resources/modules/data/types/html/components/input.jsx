@@ -98,6 +98,7 @@ class ContentEditable extends Component {
         onInput={this.emitChange}
         onBlur={this.emitChange}
         dangerouslySetInnerHTML={{__html: this.props.content}}
+        placeholder={this.props.placeholder}
         contentEditable={!this.props.disabled}
         role="textbox"
         className={classes('form-control', {
@@ -120,6 +121,7 @@ ContentEditable.propTypes = {
   size: T.oneOf(['sm', 'lg']),
   minRows: T.number.isRequired,
   content: T.string.isRequired,
+  placeholder: T.string,
   onChange: T.func.isRequired,
   onSelect: T.func,
   onClick: T.func,
@@ -150,6 +152,7 @@ class HtmlInput extends Component {
         id={this.props.id}
         size={this.props.size}
         minRows={this.props.minRows}
+        placeholder={this.props.placeholder}
         content={this.props.value || ''}
         disabled={this.props.disabled}
         onChange={this.props.onChange}
@@ -163,6 +166,7 @@ class HtmlInput extends Component {
     return (
       <Tinymce
         id={this.props.id}
+        placeholder={this.props.placeholder}
         content={this.props.value || ''}
         workspace={this.props.workspace}
         disabled={this.props.disabled}

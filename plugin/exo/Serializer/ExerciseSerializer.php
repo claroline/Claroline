@@ -172,6 +172,9 @@ class ExerciseSerializer implements SerializerInterface
         $parameters->showScoreAt = $exercise->getMarkMode();
         $parameters->showCorrectionAt = $exercise->getCorrectionMode();
 
+        $parameters->successMessage = $exercise->getSuccessMessage();
+        $parameters->failureMessage = $exercise->getFailureMessage();
+
         // score of parameter
         $parameters->totalScoreOn = $exercise->getTotalScoreOn();
         // success score
@@ -273,6 +276,13 @@ class ExerciseSerializer implements SerializerInterface
 
         if (isset($parameters->maxPapers)) {
             $exercise->setMaxPapers($parameters->maxPapers);
+        }
+
+        if (isset($parameters->successMessage)) {
+            $exercise->setSuccessMessage($parameters->successMessage);
+        }
+        if (isset($parameters->failureMessage)) {
+            $exercise->setFailureMessage($parameters->failureMessage);
         }
 
         if (isset($parameters->showScoreAt)) {

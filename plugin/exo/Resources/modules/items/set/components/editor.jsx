@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react'
+import React, {Component} from 'react'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
 import cloneDeep from 'lodash/cloneDeep'
@@ -9,39 +9,39 @@ import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
 import {FormData} from '#/main/app/content/form/containers/data'
+import {FormGroup} from '#/main/app/content/form/components/group'
 import {HtmlText} from '#/main/core/layout/components/html-text'
-import {makeId} from '#/main/core/scaffolding/id'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
 
+import {emptyAnswer} from '#/plugin/exo/items/utils'
 import {makeDraggable, makeDroppable} from '#/plugin/exo/utils/dragAndDrop'
 import {ItemEditor as ItemEditorType} from '#/plugin/exo/items/prop-types'
 import {SetItem as SetItemType} from '#/plugin/exo/items/set/prop-types'
+import {utils} from '#/plugin/exo/items/set/utils'
 import {SetItemDragPreview} from '#/plugin/exo/items/set/components/set-item-drag-preview.jsx'
 
-const addItem = (items, solutions, isOdd, saveCallback) => {
+const addItem = (items, saveCallback) => {
   const newItems = cloneDeep(items)
-  const newSolutions = cloneDeep(solutions)
-  const id = makeId()
-  newItems.push({
-    id: id,
-    type: 'text/html',
-    data: ''
-  })
 
-  if (isOdd) {
-    newSolutions.odd.push({
-      itemId: id,
-      score: 0,
-      feedback: ''
-    })
-    saveCallback('solutions', newSolutions)
-  }
-
-  // consider items that are not in solutions.odd
-  const itemDeletable = 1 < newItems.filter(i => undefined === newSolutions.odd.find(o => o.itemId === i.id)).length
-  newItems.filter(i => undefined === newSolutions.odd.find(o => o.itemId === i.id)).forEach(i => i._deletable = itemDeletable)
+  const newItem = emptyAnswer()
+  newItems.push(newItem)
 
   saveCallback('items', newItems)
+
+  return newItem
+}
+
+const addOdd = (items, solutions, saveCallback) => {
+  const newItem = addItem(items, saveCallback)
+
+  const newSolutions = cloneDeep(solutions)
+  newSolutions.odd.push({
+    itemId: newItem.id,
+    score: 0,
+    feedback: ''
+  })
+
+  saveCallback('solutions', newSolutions)
 }
 
 const updateItem = (property, value, itemId, items, solutions, isOdd, saveCallback) => {
@@ -76,7 +76,7 @@ const updateItem = (property, value, itemId, items, solutions, isOdd, saveCallba
   }
 }
 
-const removeItem = (itemId, items, solutions, isOdd, saveCallback) => {
+const removeItem = (itemId, items, solutions, saveCallback) => {
   const newItems = cloneDeep(items)
   const index = newItems.findIndex(i => i.id === itemId)
 
@@ -84,18 +84,17 @@ const removeItem = (itemId, items, solutions, isOdd, saveCallback) => {
     newItems.splice(index, 1)
     const newSolutions = cloneDeep(solutions)
 
-    if (isOdd) {
-      // remove item from solution odds
+    // remove item from solution odds
+    if (newSolutions.odd) {
       newSolutions.odd.forEach((odd) => {
         if (odd.itemId === itemId){
           const idx = newSolutions.odd.findIndex(o => o.itemId === itemId)
           newSolutions.odd.splice(idx, 1)
         }
       })
-    } else {
-      // consider items that are not in solutions.odd
-      const itemDeletable = 1 < newItems.filter(i => undefined === newSolutions.odd.find(o => o.itemId === i.id)).length
-      newItems.filter(i => undefined === newSolutions.odd.find(o => o.itemId === i.id)).forEach(i => i._deletable = itemDeletable)
+    }
+
+    if (newSolutions.associations) {
       // remove item from solution associations
       newSolutions.associations.forEach((ass) => {
         if (ass.itemId === itemId){
@@ -112,12 +111,7 @@ const removeItem = (itemId, items, solutions, isOdd, saveCallback) => {
 
 const addSet = (sets, saveCallback) => {
   const newSets = cloneDeep(sets)
-  newSets.push({
-    id: makeId(),
-    type: 'text/html',
-    data: ''
-  })
-  newSets.forEach(s => s._deletable = 1 < newSets.length)
+  newSets.push(emptyAnswer())
 
   saveCallback('sets', newSets)
 }
@@ -135,7 +129,6 @@ const removeSet = (setId, sets, solutions, saveCallback) => {
   const newSolutions = cloneDeep(solutions)
   const index = newSets.findIndex(s => s.id === setId)
   newSets.splice(index, 1)
-  newSets.forEach(s => s._deletable = 1 < newSets.length)
   // remove set from solution
   newSolutions.associations.forEach((ass, idx) => {
     if (ass.setId === setId){
@@ -153,8 +146,7 @@ const addAssociation = (setId, itemId, itemData, solutions, saveCallback) => {
     itemId: itemId,
     setId: setId,
     score: 1,
-    feedback: '',
-    _itemData: itemData
+    feedback: ''
   })
 
   saveCallback('solutions', newSolutions)
@@ -165,7 +157,6 @@ const updateAssociation = (property, value, setId, itemId, solutions, saveCallba
   const formattedValue = 'score' === property ? parseFloat(value) : value
   const association = newSolutions.associations.find(a => a.setId === setId && a.itemId === itemId)
   association[property] = formattedValue
-
 
   saveCallback('solutions', newSolutions)
 }
@@ -194,6 +185,7 @@ let DropBox = props => props.connectDropTarget(
   <div className={classes('set-drop-placeholder', {
     hover: props.isOver
   })}>
+    <span className="fa fa-fw fa-share fa-rotate-90 icon-with-text-right" />
     {trans('set_drop_item', {}, 'quiz')}
   </div>
 )
@@ -229,13 +221,12 @@ class Association extends Component {
           </HtmlText>
 
           {this.state.showFeedback &&
-            <div className="feedback-container">
-              <HtmlInput
-                id={`${this.props.association.itemId}-${this.props.association.setId}-feedback`}
-                value={this.props.association.feedback}
-                onChange={(value) => this.props.onUpdate('feedback', value, this.props.association.setId, this.props.association.itemId)}
-              />
-            </div>
+            <HtmlInput
+              id={`${this.props.association.itemId}-${this.props.association.setId}-feedback`}
+              className="feedback-control"
+              value={this.props.association.feedback}
+              onChange={(value) => this.props.onUpdate('feedback', value, this.props.association.setId, this.props.association.itemId)}
+            />
           }
         </div>
 
@@ -287,6 +278,7 @@ const Set = (props) =>
         <HtmlInput
           id={`set-${props.set.id}-data`}
           value={props.set.data}
+          placeholder={trans('set', {number: props.index + 1}, 'quiz')}
           onChange={(value) => props.onUpdate('data', value)}
           minRows={1}
         />
@@ -299,7 +291,7 @@ const Set = (props) =>
           type={CALLBACK_BUTTON}
           icon="fa fa-fw fa-trash-o"
           label={trans('delete', {}, 'actions')}
-          disabled={!props.set._deletable}
+          disabled={!props.deletable}
           callback={() => props.onDelete()}
           tooltip="top"
           dangerous={true}
@@ -323,9 +315,12 @@ const Set = (props) =>
   </div>
 
 Set.propTypes = {
+  index: T.number.isRequired,
   set: T.object.isRequired,
+  deletable: T.bool.isRequired,
   associations: T.arrayOf(T.object).isRequired,
   solutions: T.object.isRequired,
+
   onChange: T.func.isRequired,
   onDrop: T.func.isRequired,
   onUpdate: T.func.isRequired,
@@ -333,12 +328,17 @@ Set.propTypes = {
 }
 
 const SetList = (props) =>
-  <Fragment>
+  <FormGroup
+    id="item-sets"
+    label={trans('sets', {}, 'quiz')}
+  >
     <ul>
-      {props.sets.map((set) =>
+      {props.sets.map((set, setIndex) =>
         <li key={`set-id-${set.id}`}>
           <Set
+            index={setIndex}
             set={set}
+            deletable={1 < props.sets.length}
             associations={props.solutions.associations.filter(association => association.setId === set.id) || []}
             solutions={props.solutions}
             onChange={props.onChange}
@@ -357,7 +357,7 @@ const SetList = (props) =>
       label={trans('set_add_set', {}, 'quiz')}
       callback={() => addSet(props.sets, props.onChange)}
     />
-  </Fragment>
+  </FormGroup>
 
 SetList.propTypes = {
   sets: T.arrayOf(T.object).isRequired,
@@ -372,9 +372,10 @@ let Item = (props) =>
   <div className="set-answer-item answer-item">
     <div className="text-fields">
       <HtmlInput
-        id={`${props.item.id}-data`}
+        id={`item-${props.item.id}-data`}
         value={props.item.data}
         onChange={(value) => props.onUpdate('data', value)}
+        placeholder={trans('item', {number: props.index + 1}, 'quiz')}
         minRows={1}
       />
     </div>
@@ -386,8 +387,8 @@ let Item = (props) =>
         type={CALLBACK_BUTTON}
         icon="fa fa-fw fa-trash-o"
         label={trans('delete', {}, 'actions')}
-        disabled={!props.item._deletable}
-        callback={() => props.onDelete()}
+        disabled={!props.deletable}
+        callback={props.onDelete}
         tooltip="top"
         dangerous={true}
       />
@@ -414,23 +415,30 @@ let Item = (props) =>
   </div>
 
 Item.propTypes = {
-  connectDragSource: T.func.isRequired,
+  index: T.number.isRequired,
   item: T.object.isRequired,
+  deletable: T.bool.isRequired,
   onUpdate: T.func.isRequired,
-  onDelete: T.func.isRequired
+  onDelete: T.func.isRequired,
+  connectDragSource: T.func.isRequired
 }
 
 Item = makeDraggable(Item, 'ITEM', SetItemDragPreview)
 
 const ItemList = (props) =>
-  <Fragment>
+  <FormGroup
+    id="item-items"
+    label={trans('items', {}, 'quiz')}
+  >
     <ul>
-      {props.items.filter(i => undefined === props.solutions.odd.find(o => o.itemId === i.id)).map((item) =>
+      {props.items.map((item, itemIndex) =>
         <li key={item.id}>
           <Item
+            index={itemIndex}
             item={item}
+            deletable={1 < props.items.length}
             onUpdate={(property, value) => updateItem(property, value, item.id, props.items, props.solutions, false, props.onChange)}
-            onDelete={() => removeItem(item.id, props.items, props.solutions, false, props.onChange)}
+            onDelete={() => props.delete(item.id)}
           />
         </li>
       )}
@@ -441,16 +449,18 @@ const ItemList = (props) =>
       className="btn btn-block"
       icon="fa fa-fw fa-plus"
       label={trans('set_add_item', {}, 'quiz')}
-      callback={() => addItem(props.items, props.solutions, false, props.onChange)}
+      callback={props.add}
     />
-  </Fragment>
+  </FormGroup>
 
 ItemList.propTypes = {
-  items:  T.arrayOf(T.object).isRequired,
+  items: T.arrayOf(T.object).isRequired,
   solutions: T.object.isRequired,
-  onChange: T.func.isRequired
-}
+  onChange: T.func.isRequired,
 
+  add: T.func.isRequired,
+  delete: T.func.isRequired
+}
 
 class Odd extends Component {
   constructor(props) {
@@ -470,28 +480,31 @@ class Odd extends Component {
           <HtmlInput
             id={`odd-${this.props.odd.id}-data`}
             value={this.props.odd.data}
+            placeholder={trans('odd', {number: this.props.index + 1}, 'quiz')}
             onChange={(value) => this.props.onUpdate('data', value)}
             minRows={1}
           />
+
           {this.state.showFeedback &&
-            <div className="feedback-container">
-              <HtmlInput
-                id={`odd-${this.props.odd.id}-feedback`}
-                value={this.props.solution.feedback}
-                onChange={(value) => this.props.onUpdate('feedback', value)}
-              />
-            </div>
+            <HtmlInput
+              id={`odd-${this.props.odd.id}-feedback`}
+              className="feedback-control"
+              value={this.props.solution.feedback}
+              onChange={(value) => this.props.onUpdate('feedback', value)}
+            />
           }
         </div>
+
         <div className="right-controls">
           <input
             title={trans('score', {}, 'quiz')}
             type="number"
-            max="0"
+            max={0}
             className="form-control score"
             value={this.props.solution.score}
             onChange={(e) => this.props.onUpdate('score', e.target.value)}
           />
+
           <Button
             id={`odd-${this.props.odd.id}-feedback-toggle`}
             className="btn-link"
@@ -508,7 +521,7 @@ class Odd extends Component {
             type={CALLBACK_BUTTON}
             icon="fa fa-fw fa-trash-o"
             label={trans('delete', {}, 'actions')}
-            callback={() => this.props.onDelete()}
+            callback={this.props.onDelete}
             tooltip="top"
             dangerous={true}
           />
@@ -519,6 +532,7 @@ class Odd extends Component {
 }
 
 Odd.propTypes = {
+  index: T.number.isRequired,
   odd: T.object.isRequired,
   solution: T.object.isRequired,
   onUpdate: T.func.isRequired,
@@ -526,33 +540,47 @@ Odd.propTypes = {
 }
 
 const OddList = (props) =>
-  <Fragment>
-    <ul>
-      {props.items.filter(item => undefined !== props.solutions.odd.find(o => o.itemId === item.id)).map((oddItem) =>
-        <li key={oddItem.id}>
-          <Odd
-            odd={oddItem}
-            solution={props.solutions.odd.find(o => o.itemId === oddItem.id)}
-            onUpdate={(property, value) => updateItem(property, value, oddItem.id, props.items, props.solutions, true, props.onChange)}
-            onDelete={() => removeItem(oddItem.id, props.items, props.solutions, true, props.onChange)}
-          />
-        </li>
-      )}
-    </ul>
+  <FormGroup
+    id="item-odds"
+    label={trans('odds', {}, 'quiz')}
+    optional={true}
+  >
+    {0 === props.items.length &&
+      <div className="no-item-info">{trans('no_odd_info', {}, 'quiz')}</div>
+    }
+
+    {0 < props.items.length &&
+      <ul>
+        {props.items.map((oddItem, oddIndex) =>
+          <li key={oddItem.id}>
+            <Odd
+              index={oddIndex}
+              odd={oddItem}
+              solution={props.solutions.odd.find(o => o.itemId === oddItem.id)}
+              onUpdate={(property, value) => updateItem(property, value, oddItem.id, props.items, props.solutions, true, props.onChange)}
+              onDelete={() => props.delete(oddItem.id)}
+            />
+          </li>
+        )}
+      </ul>
+    }
 
     <Button
       type={CALLBACK_BUTTON}
       className="btn btn-block"
       icon="fa fa-fw fa-plus"
       label={trans('set_add_odd', {}, 'quiz')}
-      callback={() => addItem(props.items, props.solutions, true, props.onChange)}
+      callback={props.add}
     />
-  </Fragment>
+  </FormGroup>
 
 OddList.propTypes = {
   items: T.arrayOf(T.object).isRequired,
   solutions: T.object.isRequired,
-  onChange: T.func.isRequired
+  onChange: T.func.isRequired,
+
+  add: T.func.isRequired,
+  delete: T.func.isRequired
 }
 
 const SetEditor = (props) =>
@@ -567,33 +595,31 @@ const SetEditor = (props) =>
         primary: true,
         fields: [
           {
-            name: 'penalty',
-            label: trans('editor_penalty_label', {}, 'quiz'),
-            type: 'number',
-            required: true,
-            options: {
-              min: 0
-            }
-          }, {
+            className: 'form-last',
             name: 'sets',
             label: trans('answers', {}, 'quiz'),
+            hideLabel: true,
             required: true,
             render: (setItem) => {
               const Set = (
                 <div className="row">
                   <div className="items-col col-md-5 col-sm-5 col-xs-5">
                     <ItemList
-                      items={setItem.items}
+                      items={setItem.items.filter(item => !utils.isOdd(item.id, setItem.solutions))}
                       solutions={setItem.solutions}
                       onChange={props.update}
+
+                      add={() => addItem(setItem.items, props.update)}
+                      delete={(itemId) => removeItem(itemId, setItem.items, setItem.solutions, props.update)}
                     />
 
-                    <hr className="item-content-separator" />
-
                     <OddList
-                      items={setItem.items}
+                      items={setItem.items.filter(item => utils.isOdd(item.id, setItem.solutions))}
                       solutions={setItem.solutions}
                       onChange={props.update}
+
+                      add={() => addOdd(setItem.items, setItem.solutions, props.update)}
+                      delete={(itemId) => removeItem(itemId, setItem.items, setItem.solutions, props.update)}
                     />
                   </div>
 
@@ -617,6 +643,14 @@ const SetEditor = (props) =>
               trans('shuffle_answers_results_help', {}, 'quiz')
             ],
             type: 'boolean'
+          }, {
+            name: 'penalty',
+            label: trans('editor_penalty_label', {}, 'quiz'),
+            type: 'number',
+            required: true,
+            options: {
+              min: 0
+            }
           }
         ]
       }
@@ -627,4 +661,6 @@ implementPropTypes(SetEditor, ItemEditorType, {
   item: T.shape(SetItemType.propTypes).isRequired
 })
 
-export {SetEditor}
+export {
+  SetEditor
+}

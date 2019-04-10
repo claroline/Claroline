@@ -487,6 +487,14 @@ const EditorParameters = props =>
                 max: 100,
                 unit: '%'
               }
+            }, {
+              name: 'parameters.successMessage',
+              label: trans('success_message', {}, 'quiz'),
+              type: 'html'
+            }, {
+              name: 'parameters.failureMessage',
+              label: trans('failure_message', {}, 'quiz'),
+              type: 'html'
             }
           ]
         }, {

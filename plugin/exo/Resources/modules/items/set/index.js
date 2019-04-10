@@ -4,6 +4,7 @@ import times from 'lodash/times'
 import {trans} from '#/main/app/intl/translation'
 
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
+import {emptyAnswer} from '#/plugin/exo/items/utils'
 
 import {SetItem as SetItemType} from '#/plugin/exo/items/set/prop-types'
 
@@ -47,7 +48,10 @@ export default {
    *
    * @return {object}
    */
-  create: (baseItem) => merge({}, SetItemType.defaultProps, baseItem),
+  create: (baseItem) => merge({}, baseItem, SetItemType.defaultProps, {
+    sets: [emptyAnswer()],
+    items: [emptyAnswer()]
+  }),
 
   /**
    * Correct an answer submitted to a set item.

@@ -28,7 +28,7 @@ const OpenEditor = (props) =>
               choices: {
                 text: trans('text')
               }
-            },
+            }
           }, {
             name: '_restrictLength',
             label: trans('restrict_answer_length', {}, 'quiz'),

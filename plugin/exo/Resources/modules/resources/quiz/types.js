@@ -86,6 +86,7 @@ const summativeType = {
   requiredProps: {
     parameters: {
       hasExpectedAnswers: true,
+      showFeedback: false,
       showEndConfirm: true
     }
   }
@@ -112,6 +113,7 @@ const certificationType = {
   requiredProps: {
     parameters: {
       hasExpectedAnswers: true,
+      showFeedback: false,
       interruptible: false,
       showEndConfirm: true
     }
@@ -144,6 +146,7 @@ const surveyType = {
     parameters: {
       anonymizeAttempts: true,
       hasExpectedAnswers: false,
+      showFeedback: false,
       showStatistics: true,
       showCorrectionAt: constants.QUIZ_SCORE_AT_NEVER
     }

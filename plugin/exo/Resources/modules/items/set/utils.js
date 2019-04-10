@@ -46,19 +46,7 @@ utils.getAnswerOddScore = (answer, odd) => {
   return undefined !== solution ? solution.score : ''
 }
 
-utils.isItemInOddList = (itemId, solutions) => {
-  let isPresent = false
-
-  if (solutions.odd) {
-    solutions.odd.forEach(o => {
-      if (o.itemId === itemId) {
-        isPresent = true
-      }
-    })
-  }
-
-  return isPresent
-}
+utils.isOdd = (itemId, solutions) => solutions.odd && -1 < solutions.odd.findIndex(odd => odd.itemId === itemId)
 
 utils.isItemInSet = (itemId, setId, solutions) => {
   let isPresent = false

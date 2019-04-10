@@ -1,6 +1,8 @@
 import cloneDeep from 'lodash/cloneDeep'
 import times from 'lodash/times'
 
+// TODO : remove duplicated methods
+
 export const utils = {}
 
 /**
@@ -49,6 +51,10 @@ utils.pairItemHasCoords = (itemId, items, index) => {
   }
   const found = items.find(item => item.id === itemId)
   return  undefined !== found.coordinates && found.coordinates[1] === index
+}
+
+utils.hasPinnedItems = (items) => {
+  return -1 < items.findIndex(item => item.hasOwnProperty('coordinates'))
 }
 
 utils.canAddSolution = (solutions, pairToUpdate, item) => {

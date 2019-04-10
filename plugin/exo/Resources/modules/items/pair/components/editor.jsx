@@ -9,7 +9,7 @@ import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
-
+import {FormGroup} from '#/main/app/content/form/components/group'
 import {makeId} from '#/main/core/scaffolding/id'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
 
@@ -198,11 +198,11 @@ const removeAllCoordinates = (items, saveCallback) => {
 }
 
 let DropBox = props => props.connectDropTarget(
-  <div className={classes(
-    'pair-item-placeholder drop-placeholder placeholder-md placeholder-hover',
-    {hover: props.isOver}
-  )}>
-    <span className="fa fa-fw fa-share fa-rotate-90" />
+  <div className={classes('pair-item-placeholder drop-placeholder placeholder-md placeholder-hover', {
+    hover: props.isOver
+  })}
+  >
+    <span className="fa fa-fw fa-share fa-rotate-90 icon-with-text-right" />
     {trans('set_drop_item', {}, 'quiz')}
   </div>
 )
@@ -227,11 +227,10 @@ class Pair extends Component {
 
   render() {
     return (
-      <div className={classes(
-        'pair answer-item',
-        {'unexpected-answer' : this.props.pair.score < 1},
-        {'expected-answer' : this.props.pair.score > 0}
-      )}>
+      <div className={classes('pair answer-item', {
+        'unexpected-answer' : this.props.pair.score < 1,
+        'expected-answer' : this.props.pair.score > 0
+      })}>
         <div className="text-fields">
           <div className="form-group">
             {this.props.pair.itemIds[0] === -1 ?
@@ -300,13 +299,12 @@ class Pair extends Component {
           </div>
 
           {this.state.showFeedback &&
-            <div className="feedback-container">
-              <HtmlInput
-                id={`${this.props.pair.itemIds[0]}-${this.props.pair.itemIds[1]}-feedback`}
-                value={this.props.pair.feedback}
-                onChange={(value) => this.props.onUpdate('feedback', value, this.props.index)}
-              />
-            </div>
+            <HtmlInput
+              id={`${this.props.pair.itemIds[0]}-${this.props.pair.itemIds[1]}-feedback`}
+              className="feedback-control"
+              value={this.props.pair.feedback}
+              onChange={(value) => this.props.onUpdate('feedback', value, this.props.index)}
+            />
           }
 
           <div className="checkbox">
@@ -370,13 +368,6 @@ Pair.propTypes = {
 }
 
 class PairList extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      pinIsAllowed: props.items.filter(item => item.hasOwnProperty('coordinates')).length > 0
-    }
-  }
-
   /**
    * handle item drop
    * @var {source} source (source.item is the object that has been dropped)
@@ -389,30 +380,13 @@ class PairList extends Component {
       dropPairItem(target.object, source.item, this.props.solutions, this.props.onChange)
     }
   }
-
-  handlePinnableChange(checked) {
-    this.setState({pinIsAllowed: !this.state.pinIsAllowed})
-    if (!checked) {
-      removeAllCoordinates(this.props.items, this.props.onChange)
-    }
-  }
-
   render(){
     return (
-      <div className="pairs">
-        <div className="checkbox">
-          <label>
-            <input
-              type="checkbox"
-              checked={this.state.pinIsAllowed}
-              onChange={(e) => this.handlePinnableChange(e.target.checked)}
-            />
-            {trans('pair_allow_pin_function', {}, 'quiz')}
-          </label>
-        </div>
-
-        <hr />
-
+      <FormGroup
+        id="item-pairs"
+        className="pairs"
+        label={trans('pairs', {}, 'quiz')}
+      >
         <ul>
           {utils.getRealSolutionList(this.props.solutions).map((pair, index) =>
             <li key={`pair-${index}`}>
@@ -423,7 +397,7 @@ class PairList extends Component {
                 onDelete={(leftId, rightId) => removePair(leftId, rightId, this.props.solutions, this.props.onChange)}
                 onAddItemCoordinates={(itemId, brotherId, coordinates) => addItemCoordinates(itemId, brotherId, coordinates, this.props.items, this.props.onChange)}
                 index={index}
-                showPins={this.state.pinIsAllowed}
+                showPins={this.props.pin}
                 items={this.props.items}
               />
             </li>
@@ -437,7 +411,7 @@ class PairList extends Component {
           label={trans('pair_add_pair', {}, 'quiz')}
           callback={() => addPair(this.props.solutions, this.props.onChange)}
         />
-      </div>
+      </FormGroup>
     )
   }
 }
@@ -445,12 +419,14 @@ class PairList extends Component {
 PairList.propTypes = {
   items: T.arrayOf(T.object).isRequired,
   solutions: T.arrayOf(T.object).isRequired,
+  pin: T.bool.isRequired,
   onChange: T.func.isRequired
 }
 
 class Odd extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
       showFeedback: false
     }
@@ -463,17 +439,18 @@ class Odd extends Component {
           <HtmlInput
             id={`odd-${this.props.odd.id}-data`}
             value={this.props.odd.data}
+            placeholder={trans('odd', {number: this.props.index + 1}, 'quiz')}
             onChange={(value) => this.props.onUpdate('data', value)}
             minRows={1}
           />
+
           {this.state.showFeedback &&
-            <div className="feedback-container">
-              <HtmlInput
-                id={`odd-${this.props.odd.id}-feedback`}
-                value={this.props.solution.feedback}
-                onChange={(value) => this.props.onUpdate('feedback', value)}
-              />
-            </div>
+            <HtmlInput
+              id={`odd-${this.props.odd.id}-feedback`}
+              className="feedback-control"
+              value={this.props.solution.feedback}
+              onChange={(value) => this.props.onUpdate('feedback', value)}
+            />
           }
         </div>
 
@@ -514,35 +491,52 @@ class Odd extends Component {
 }
 
 Odd.propTypes = {
+  index: T.number.isRequired,
   odd: T.object.isRequired,
   solution: T.object.isRequired,
   onUpdate: T.func.isRequired,
   onDelete: T.func.isRequired
 }
 
-const OddList= props =>
-  <div className="odd-list">
-    <ul>
-      {utils.getOddlist(props.items, props.solutions).map((oddItem, index) =>
-        <li key={`odd-${index}-${oddItem.id}`}>
-          <Odd
-            odd={oddItem}
-            solution={utils.getOddSolution(oddItem, props.solutions)}
-            onUpdate={(property, value) => updateItem(property, value, oddItem.id, props.items, props.solutions, true, props.onChange)}
-            onDelete={() => removeItem(oddItem.id, props.items, props.solutions, true, props.onChange)}
-          />
-        </li>
-      )}
-    </ul>
+const OddList= props => {
+  const odd = utils.getOddlist(props.items, props.solutions)
 
-    <Button
-      type={CALLBACK_BUTTON}
-      className="btn btn-block"
-      icon="fa fa-fw fa-plus"
-      label={trans('set_add_odd', {}, 'quiz')}
-      callback={() => addItem(props.items, props.solutions, true, props.onChange)}
-    />
-  </div>
+  return (
+    <FormGroup
+      id="item-odds"
+      label={trans('odds', {}, 'quiz')}
+      optional={true}
+    >
+      {0 === odd.length &&
+        <div className="no-item-info">{trans('no_odd_info', {}, 'quiz')}</div>
+      }
+
+      {0 < odd.length &&
+        <ul>
+          {odd.map((oddItem, index) =>
+            <li key={`odd-${index}-${oddItem.id}`}>
+              <Odd
+                index={index}
+                odd={oddItem}
+                solution={utils.getOddSolution(oddItem, props.solutions)}
+                onUpdate={(property, value) => updateItem(property, value, oddItem.id, props.items, props.solutions, true, props.onChange)}
+                onDelete={() => removeItem(oddItem.id, props.items, props.solutions, true, props.onChange)}
+              />
+            </li>
+          )}
+        </ul>
+      }
+
+      <Button
+        type={CALLBACK_BUTTON}
+        className="btn btn-block"
+        icon="fa fa-fw fa-plus"
+        label={trans('set_add_odd', {}, 'quiz')}
+        callback={() => addItem(props.items, props.solutions, true, props.onChange)}
+      />
+    </FormGroup>
+  )
+}
 
 OddList.propTypes = {
   items: T.arrayOf(T.object).isRequired,
@@ -556,6 +550,7 @@ let Item = props =>
       <HtmlInput
         id={`${props.item.id}-data`}
         value={props.item.data}
+        placeholder={trans('item', {number: props.index + 1}, 'quiz')}
         onChange={(value) => props.onUpdate('data', value)}
         minRows={1}
       />
@@ -582,14 +577,14 @@ let Item = props =>
               <Tooltip id={`item-${props.item.id}-drag`}>{trans('move')}</Tooltip>
             }
           >
-              <span
-                role="button"
-                title={trans('move')}
-                draggable="true"
-                className="btn-link default drag-handle"
-              >
-                <span className="fa fa-fw fa-arrows" />
-              </span>
+            <span
+              role="button"
+              title={trans('move')}
+              draggable="true"
+              className="btn-link default drag-handle"
+            >
+              <span className="fa fa-fw fa-arrows" />
+            </span>
           </OverlayTrigger>
         </div>
       )}
@@ -598,6 +593,7 @@ let Item = props =>
 
 Item.propTypes = {
   connectDragSource: T.func.isRequired,
+  index: T.number.isRequired,
   item: T.object.isRequired,
   onUpdate: T.func.isRequired,
   onDelete: T.func.isRequired
@@ -606,11 +602,15 @@ Item.propTypes = {
 Item = makeDraggable(Item, 'ITEM', PairItemDragPreview)
 
 const ItemList = props =>
-  <div className="item-list">
+  <FormGroup
+    id="item-items"
+    label={trans('items', {}, 'quiz')}
+  >
     <ul>
-      {utils.getRealItemlist(props.items, props.solutions).map((item) =>
+      {utils.getRealItemlist(props.items, props.solutions).map((item, index) =>
         <li key={item.id}>
           <Item
+            index={index}
             item={item}
             onUpdate={(property, value) => updateItem(property, value, item.id, props.items, props.solutions, false, props.onChange)}
             onDelete={() => removeItem(item.id, props.items, props.solutions, false, props.onChange)}
@@ -626,7 +626,7 @@ const ItemList = props =>
       label={trans('set_add_item', {}, 'quiz')}
       callback={() => addItem(props.items, props.solutions, false, props.onChange)}
     />
-  </div>
+  </FormGroup>
 
 ItemList.propTypes = {
   items:  T.arrayOf(T.object).isRequired,
@@ -646,16 +646,9 @@ const PairEditor = props =>
         primary: true,
         fields: [
           {
-            name: 'penalty',
-            label: trans('editor_penalty_label', {}, 'quiz'),
-            type: 'number',
-            required: true,
-            options: {
-              min: 0
-            }
-          }, {
             name: 'pairs',
             label: trans('answers', {}, 'quiz'),
+            hideLabel: true,
             required: true,
             render: (pairItem) => {
               const decoratedSolutions = cloneDeep(pairItem.solutions)
@@ -674,16 +667,18 @@ const PairEditor = props =>
                       items={decoratedItems}
                       onChange={props.update}
                     />
-                    <hr/>
+
                     <OddList
                       solutions={decoratedSolutions}
                       items={decoratedItems}
                       onChange={props.update}
                     />
                   </div>
+
                   <div className="col-md-7 col-sm-7 pairs-col">
                     <PairList
                       solutions={decoratedSolutions}
+                      pin={utils.hasPinnedItems(pairItem.items) || pairItem._pinItems}
                       items={decoratedItems}
                       onChange={props.update}
                     />
@@ -694,6 +689,16 @@ const PairEditor = props =>
               return Pair
             }
           }, {
+            name: '_pinItems',
+            label: trans('pair_allow_pin_function', {}, 'quiz'),
+            type: 'boolean',
+            calculated: (pairItem) => utils.hasPinnedItems(pairItem.items) || pairItem._pinItems,
+            onChange: (checked) => {
+              if (!checked) {
+                removeAllCoordinates(props.item.items, props.update)
+              }
+            }
+          }, {
             name: 'random',
             label: trans('shuffle_answers', {}, 'quiz'),
             help: [
@@ -701,6 +706,14 @@ const PairEditor = props =>
               trans('shuffle_answers_results_help', {}, 'quiz')
             ],
             type: 'boolean'
+          }, {
+            name: 'penalty',
+            label: trans('editor_penalty_label', {}, 'quiz'),
+            type: 'number',
+            required: true,
+            options: {
+              min: 0
+            }
           }
         ]
       }

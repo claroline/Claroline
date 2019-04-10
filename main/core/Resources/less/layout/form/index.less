@@ -6,22 +6,6 @@
 @import "form-stepper";
 
 
-// Fixes checkbox and radio button display issue on inline
-// Combine with change in form_theme.html.twig and form_theme_vertical.html.twig
-form {
-    // this is kept for the Twig form
-    // this is no longer needed in new UIs as all forms are vertical
-    &.form-horizontal {
-        label > input {
-            &[type=checkbox],
-            &[type=radio] {
-                position: relative;
-                margin-left: 0;
-            }
-        }
-    }
-}
-
 .read-only {
     background: #eee;
     border-radius: @input-border-radius;
@@ -79,30 +63,6 @@ form {
 // -
 // Fieldset
 // ---
-
-.activable-set {
-    margin-bottom: @form-group-margin-bottom;
-
-    > .sub-fields {
-        margin-top: @form-group-margin-bottom;
-    }
-}
-
-.toggleable-set {
-    .toggleable-set-group {
-        padding: @panel-body-padding;
-        border: 1px dashed #ccc; // same color than sub-fields
-        margin-bottom: 5px;
-        border-radius: @border-radius-base;
-        background: #f9f9f9;
-    }
-
-    .toggleable-set-toggle .fa {
-        margin-right: @icon-text-spacer;
-        width: 20px - @icon-text-spacer; // small cheat to have the same spacing than checkbox (currently 20px)
-        text-align: center;
-    }
-}
 
 // todo : we may need a more specific namespacing
 .sub-fields {
@@ -225,4 +185,26 @@ form {
 // meant to be used on a `.form-group`
 .form-last {
     margin-bottom: 0 !important;
+}
+
+// TODO : merge with placeholders
+.no-item-info {
+    font-style: italic;
+    text-align: center;
+
+    // todo use vars
+    line-height: 30px;
+    border: 1px dashed #999;
+    border-radius: 4px;
+    padding: 5px;
+    color: #999;
+}
+.has-warning .no-item-info {
+    color: @state-warning-text;
+    border-color: @state-warning-text;
+}
+
+.has-error .no-item-info {
+    color: @state-danger-text;
+    border-color: @state-danger-text;
 }

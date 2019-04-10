@@ -5,7 +5,7 @@ import {PropTypes as T} from 'prop-types'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
 
-import {tex, trans} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {makeDraggable, makeDroppable} from '#/plugin/exo/utils/dragAndDrop'
 import {Button} from '#/main/app/action/components/button'
@@ -120,15 +120,15 @@ let Item = props =>
             <Tooltip id={`item-${props.item.id}-drag`}>{trans('move')}</Tooltip>
           }
         >
-            <span
-              title={trans('move', {}, 'quiz')}
-              draggable="true"
-              className="btn-link default drag-handle"
-            >
-              {props.draggable &&
+          <span
+            title={trans('move', {}, 'quiz')}
+            draggable="true"
+            className="btn-link default drag-handle"
+          >
+            {props.draggable &&
               <span className="fa fa-arrows"/>
-              }
-            </span>
+            }
+          </span>
         </OverlayTrigger>
       </div>
     )}

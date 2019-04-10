@@ -119,6 +119,7 @@ class KeywordItem extends Component {
             callback={() => this.props.keyword._deletable && this.props.removeKeyword()}
             disabled={!this.props.keyword._deletable}
             tooltip="top"
+            dangerous={true}
           />
         </div>
       </li>

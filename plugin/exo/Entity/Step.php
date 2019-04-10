@@ -54,7 +54,7 @@ class Step
     private $exercise;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection|StepItem[]
      *
      * @ORM\OneToMany(targetEntity="StepItem", mappedBy="step", cascade={"all"}, orphanRemoval=true)
      * @ORM\OrderBy({"order" = "ASC"})
@@ -199,6 +199,8 @@ class Step
      * Avoids the need to manually initialize a StepItem object to hold the relation.
      *
      * @param Item $question - the question to add to the step
+     *
+     * @return StepItem
      */
     public function addQuestion(Item $question)
     {

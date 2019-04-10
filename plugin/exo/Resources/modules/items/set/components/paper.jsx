@@ -194,19 +194,20 @@ const SetPaper = props =>
                           </div>
                         </li>
                       )}
+
                       {props.item.items.map((item) => has(props, ['stats', 'sets', set.id, item.id]) &&
                         !utils.isItemInSet(item.id, set.id, props.item.solutions) ?
-                          <li key={`stats-unexpected-association-${set.id}-${item.id}`}>
-                            <div className="association answer-item set-answer-item stats-answer">
-                              <div className="item-content" dangerouslySetInnerHTML={{__html: item.data}} />
+                        <li key={`stats-unexpected-association-${set.id}-${item.id}`}>
+                          <div className="association answer-item set-answer-item stats-answer">
+                            <div className="item-content" dangerouslySetInnerHTML={{__html: item.data}} />
 
-                              <AnswerStats stats={{
-                                value: props.stats.sets[set.id][item.id],
-                                total: props.stats.total
-                              }} />
-                            </div>
-                          </li> :
-                          ''
+                            <AnswerStats stats={{
+                              value: props.stats.sets[set.id][item.id],
+                              total: props.stats.total
+                            }} />
+                          </div>
+                        </li> :
+                        ''
                       )}
                     </ul>
                   </div>

@@ -17,37 +17,42 @@ import {getNumbering} from '#/plugin/exo/utils/numbering'
 
 const Statistics = props =>
   <div className="quiz-statistics">
-    {props.quiz.steps.map((step, idx) =>
-      <div key={idx} className="quiz-item item-paper">
-        <h3 className="h4">
-          {step.title ? step.title : trans('step', {}, 'quiz') + ' ' + (idx + 1)}
-        </h3>
-        {step.items.map((item, idxItem) => {
-          return isQuestionType(item.type) && props.stats && props.stats[item.id] &&
-            <Panel key={item.id}>
-              {item.title &&
-                <h4 className="item-title">{item.title}</h4>
-              }
+    {props.quiz
+      .filter(step => step.items && 0 < step.items.length)
+      .steps.map((step, idx) =>
+        <div key={idx} className="quiz-item item-paper">
+          <h3 className="h4">
+            {step.title || trans('step', {number: idx + 1}, 'quiz')}
+          </h3>
 
-              <ItemMetadata
-                item={item}
-                numbering={props.numbering !== constants.NUMBERING_NONE ? (idx + 1) + '.' + getNumbering(props.numbering, idxItem): null}
-              />
-              {React.createElement(
-                getDefinition(item.type).paper,
-                {
-                  item,
-                  showYours: false,
-                  showExpected: false,
-                  showStats: true,
-                  showScore: false,
-                  stats: props.stats && props.stats[item.id] ? props.stats[item.id] : {}
+          {step.items.map((item, idxItem) => {
+            return isQuestionType(item.type) && props.stats && props.stats[item.id] &&
+              <Panel key={item.id}>
+                {item.title &&
+                  <h4 className="item-title">{item.title}</h4>
                 }
-              )}
-            </Panel>
-        })}
-      </div>
-    )}
+
+                <ItemMetadata
+                  item={item}
+                  numbering={props.numbering !== constants.NUMBERING_NONE ? (idx + 1) + '.' + getNumbering(props.numbering, idxItem): null}
+                />
+
+                {React.createElement(
+                  getDefinition(item.type).paper,
+                  {
+                    item,
+                    showYours: false,
+                    showExpected: false,
+                    showStats: true,
+                    showScore: false,
+                    stats: props.stats && props.stats[item.id] ? props.stats[item.id] : {}
+                  }
+                )}
+              </Panel>
+          })}
+        </div>
+      )
+    }
 
     {props.workspaceId &&
       <Button

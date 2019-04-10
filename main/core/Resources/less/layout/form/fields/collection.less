@@ -5,18 +5,6 @@
         list-style-type: none;
     }
 
-    .no-item-info {
-        font-style: italic;
-        text-align: center;
-
-        // todo use vars
-        line-height: 30px;
-        border: 1px dashed #999;
-        border-radius: 4px;
-        padding: 5px;
-        color: #999;
-    }
-
     .collection-item {
         display: flex;
         flex-direction: row;
@@ -50,14 +38,4 @@
     .btn-add {
         margin-top: 5px;
     }
-}
-
-.has-warning .no-item-info {
-    color: @state-warning-text;
-    border-color: @state-warning-text;
-}
-
-.has-error .no-item-info {
-    color: @state-danger-text;
-    border-color: @state-danger-text;
 }

@@ -33,15 +33,15 @@ const Papers = props =>
       }}
       definition={[
         {
-          name: 'user',
-          label: trans('user'),
-          displayed: true,
-          render: (rowData) => rowData.user ? rowData.user.name : trans('anonymous')
-        }, {
           name: 'number',
           label: '#',
           displayed: true,
           type: 'number'
+        }, {
+          name: 'user',
+          label: trans('user'),
+          displayed: true,
+          render: (rowData) => rowData.user ? rowData.user.name : trans('anonymous')
         }, {
           name: 'startDate',
           alias: 'start',

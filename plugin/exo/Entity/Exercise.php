@@ -24,6 +24,15 @@ class Exercise extends AbstractResource
     use AttemptParametersTrait;
 
     /**
+     * Type of the Exercise.
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     */
+    private $type = ExerciseType::CUSTOM;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="description", type="text", nullable=true)
@@ -112,6 +121,20 @@ class Exercise extends AbstractResource
     private $attemptsReachedMessage = '';
 
     /**
+     * @ORM\Column(name="success_message", type="text", nullable=true)
+     *
+     * @var string
+     */
+    private $successMessage = '';
+
+    /**
+     * @ORM\Column(name="failure_message", type="text", nullable=true)
+     *
+     * @var string
+     */
+    private $failureMessage = '';
+
+    /**
      * Show navigation buttons on the end page.
      *
      * @ORM\Column(name="end_navigation", type="boolean")
@@ -147,17 +170,6 @@ class Exercise extends AbstractResource
     private $minimalCorrection = false;
 
     /**
-     * Flag indicating whether the exercise has been published at least
-     * one time. An exercise that has never been published has all its
-     * existing papers deleted at the first publication.
-     *
-     * @var bool
-     *
-     * @ORM\Column(name="published", type="boolean")
-     */
-    private $wasPublishedOnce = false;
-
-    /**
      * If true, the users who pass the exercise are anonymized in papers.
      *
      * @var bool
@@ -165,23 +177,6 @@ class Exercise extends AbstractResource
      * @ORM\Column(name="anonymous", type="boolean", nullable=true)
      */
     private $anonymizeAttempts = false;
-
-    /**
-     * Type of the Exercise.
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string")
-     */
-    private $type = ExerciseType::CUSTOM;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Step", mappedBy="exercise", cascade={"all"}, orphanRemoval=true)
-     * @ORM\OrderBy({"order" = "ASC"})
-     *
-     * @var ArrayCollection|Step[]
-     */
-    private $steps;
 
     /**
      * Show feedback flag.
@@ -265,6 +260,14 @@ class Exercise extends AbstractResource
      * @ORM\Column(name="answers_editable", type="boolean", options={"default" = 1})
      */
     private $answersEditable = true;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Step", mappedBy="exercise", cascade={"all"}, orphanRemoval=true)
+     * @ORM\OrderBy({"order" = "ASC"})
+     *
+     * @var ArrayCollection|Step[]
+     */
+    private $steps;
 
     /**
      * Exercise constructor.
@@ -437,6 +440,26 @@ class Exercise extends AbstractResource
         return $this->attemptsReachedMessage;
     }
 
+    public function setSuccessMessage($successMessage)
+    {
+        $this->successMessage = $successMessage;
+    }
+
+    public function getSuccessMessage()
+    {
+        return $this->successMessage;
+    }
+
+    public function setFailureMessage($failureMessage)
+    {
+        $this->failureMessage = $failureMessage;
+    }
+
+    public function getFailureMessage()
+    {
+        return $this->failureMessage;
+    }
+
     /**
      * Set show overview.
      *
@@ -515,22 +538,6 @@ class Exercise extends AbstractResource
     public function isMinimalCorrection()
     {
         return $this->minimalCorrection;
-    }
-
-    /**
-     * @return bool
-     */
-    public function wasPublishedOnce()
-    {
-        return $this->wasPublishedOnce;
-    }
-
-    /**
-     * @param bool $wasPublishedOnce
-     */
-    public function setPublishedOnce($wasPublishedOnce)
-    {
-        $this->wasPublishedOnce = $wasPublishedOnce;
     }
 
     /**
