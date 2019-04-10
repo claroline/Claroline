@@ -127,8 +127,8 @@ class DropController
      *
      * @EXT\Route("/{id}/drops/{teamId}", name="claro_dropzone_drop_create", defaults={"teamId"=null})
      * @EXT\ParamConverter("dropzone", class="ClarolineDropZoneBundle:Dropzone", options={"mapping": {"id": "uuid"}})
-     * @EXT\ParamConverter("team",     class="ClarolineTeamBundle:Team",         options={"mapping": {"teamId": "id"}})
-     * @EXT\ParamConverter("user",     converter="current_user",                 options={"allowAnonymous"=false})
+     * @EXT\ParamConverter("team", class="ClarolineTeamBundle:Team", options={"mapping": {"teamId": "uuid"}})
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @EXT\Method("POST")
      *
      * @param Dropzone $dropzone
@@ -140,10 +140,10 @@ class DropController
     public function createAction(Dropzone $dropzone, User $user, Team $team = null)
     {
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
+
         if (!empty($team)) {
             $this->checkTeamUser($team, $user);
         }
-
         try {
             if (empty($team)) {
                 // creates a User drop
@@ -184,6 +184,8 @@ class DropController
 
         try {
             $this->manager->submitDrop($drop, $user);
+            $progression = $dropzone->isPeerReview() ? 50 : 100;
+            $this->manager->updateDropProgression($dropzone, $drop, $progression);
 
             return new JsonResponse($this->manager->serializeDrop($drop));
         } catch (\Exception $e) {
@@ -262,6 +264,8 @@ class DropController
                         $documents[] = $this->manager->serializeDocument($document);
                         break;
                 }
+                $progression = $dropzone->isPeerReview() ? 0 : 50;
+                $this->manager->updateDropProgression($dropzone, $drop, $progression);
             }
 
             return new JsonResponse($documents);
@@ -449,7 +453,7 @@ class DropController
 
     private function checkTeamUser(Team $team, User $user)
     {
-        if (!in_array($user, $team->getUsers())) {
+        if (!$user->hasRole($team->getRole()->getName())) {
             throw new AccessDeniedException();
         }
     }
@@ -457,6 +461,8 @@ class DropController
     /**
      * @param Request $request
      * @param string  $class
+     *
+     * @return array
      */
     protected function decodeIdsString(Request $request, $class)
     {

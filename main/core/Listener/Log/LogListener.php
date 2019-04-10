@@ -377,15 +377,9 @@ class LogListener
                     $event->getResource(),
                     $user,
                     new \DateTime(),
-                    AbstractResourceEvaluation::STATUS_OPENED,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    false,
-                    false,
-                    true
+                    ['status' => AbstractResourceEvaluation::STATUS_OPENED],
+                    ['status' => true],
+                    false
                 );
             }
         }

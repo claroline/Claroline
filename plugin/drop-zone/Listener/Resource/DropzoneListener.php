@@ -214,7 +214,7 @@ class DropzoneListener
 
                 /* Unregisters user from unfinished drops associated to team he doesn't belong to anymore */
                 foreach ($teamDrops as $teamDrop) {
-                    if (!$teamDrop->isFinished() && !in_array($teamDrop->getTeamId(), $teamsIds)) {
+                    if (!$teamDrop->isFinished() && !in_array($teamDrop->getTeamUuid(), $teamsIds)) {
                         /* Unregisters user from unfinished drop */
                         $this->dropzoneManager->unregisterUserFromTeamDrop($teamDrop, $user);
                     } else {
@@ -234,7 +234,7 @@ class DropzoneListener
                     $errorMessage = $this->translator->trans('more_than_one_drop_error', [], 'dropzone');
                 }
                 if (!empty($myDrop)) {
-                    $teamId = $myDrop->getTeamId();
+                    $teamId = $myDrop->getTeamUuid();
                 }
                 $finishedPeerDrops = $this->dropzoneManager->getFinishedPeerDrops($dropzone, $user, $teamId);
                 break;

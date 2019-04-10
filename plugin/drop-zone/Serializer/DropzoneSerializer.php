@@ -7,6 +7,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\DropZoneBundle\Entity\Criterion;
 use Claroline\DropZoneBundle\Entity\Dropzone;
+use Claroline\DropZoneBundle\Manager\DropzoneManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -20,6 +21,9 @@ class DropzoneSerializer
     /** @var CriterionSerializer */
     private $criterionSerializer;
 
+    /** @var DropzoneManager */
+    private $dropzoneManager;
+
     /** @var ObjectManager */
     private $om;
 
@@ -28,15 +32,21 @@ class DropzoneSerializer
      *
      * @DI\InjectParams({
      *     "criterionSerializer" = @DI\Inject("claroline.serializer.dropzone.criterion"),
+     *     "dropzoneManager"     = @DI\Inject("claroline.manager.dropzone_manager"),
      *     "om"                  = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param CriterionSerializer $criterionSerializer
+     * @param DropzoneManager     $dropzoneManager
      * @param ObjectManager       $om
      */
-    public function __construct(CriterionSerializer $criterionSerializer, ObjectManager $om)
-    {
+    public function __construct(
+        CriterionSerializer $criterionSerializer,
+        DropzoneManager $dropzoneManager,
+        ObjectManager $om
+    ) {
         $this->criterionSerializer = $criterionSerializer;
+        $this->dropzoneManager = $dropzoneManager;
         $this->om = $om;
     }
 
@@ -65,32 +75,19 @@ class DropzoneSerializer
      */
     public function deserialize($data, Dropzone $dropzone)
     {
-        $dropzone->setInstruction($data['instruction']);
+        $this->sipe('instruction', 'setInstruction', $data, $dropzone);
 
         if (isset($data['parameters'])) {
-            $this->deserializeParameters($data['parameters'], $dropzone);
+            $this->deserializeParameters($data, $dropzone);
         }
 
-        if (isset($data['display'])) {
-            if (isset($data['display']['correctionInstruction'])) {
-                $dropzone->setCorrectionInstruction($data['display']['correctionInstruction']);
-            }
-            if (isset($data['display']['successMessage'])) {
-                $dropzone->setSuccessMessage($data['display']['successMessage']);
-            }
-            if (isset($data['display']['failMessage'])) {
-                $dropzone->setFailMessage($data['display']['failMessage']);
-            }
-            if (isset($data['display']['showScore'])) {
-                $dropzone->setDisplayNotationToLearners($data['display']['showScore']);
-            }
-            if (isset($data['display']['showFeedback'])) {
-                $dropzone->setDisplayNotationMessageToLearners($data['display']['showFeedback']);
-            }
-            if (isset($data['display']['displayCorrectionsToLearners'])) {
-                $dropzone->setDisplayCorrectionsToLearners($data['display']['displayCorrectionsToLearners']);
-            }
-        }
+        $this->sipe('display.correctionInstruction', 'setCorrectionInstruction', $data, $dropzone);
+        $this->sipe('display.successMessage', 'setSuccessMessage', $data, $dropzone);
+        $this->sipe('display.failMessage', 'setFailMessage', $data, $dropzone);
+        $this->sipe('display.showScore', 'setDisplayNotationToLearners', $data, $dropzone);
+        $this->sipe('display.showFeedback', 'setDisplayNotationMessageToLearners', $data, $dropzone);
+        $this->sipe('display.displayCorrectionsToLearners', 'setDisplayCorrectionsToLearners', $data, $dropzone);
+        $this->sipe('display.correctorDisplayed', 'setCorrectorDisplayed', $data, $dropzone);
 
         if (isset($data['planning'])) {
             $this->deserializePlanning($data['planning'], $dropzone);
@@ -127,45 +124,29 @@ class DropzoneSerializer
         ];
     }
 
-    private function deserializeParameters(array $parametersData, Dropzone $dropzone)
+    private function deserializeParameters(array $data, Dropzone $dropzone)
     {
-        $dropzone->setPeerReview('peer' === $parametersData['reviewType']);
+        if (isset($data['parameters']['reviewType'])) {
+            $dropzone->setPeerReview('peer' === $data['parameters']['reviewType']);
+        }
+        $this->sipe('parameters.dropType', 'setDropType', $data, $dropzone);
+        $this->sipe('parameters.documents', 'setAllowedDocuments', $data, $dropzone);
+        $this->sipe('parameters.expectedCorrectionTotal', 'setExpectedCorrectionTotal', $data, $dropzone);
+        $this->sipe('parameters.scoreToPass', 'setScoreToPass', $data, $dropzone);
+        $this->sipe('parameters.commentInCorrectionEnabled', 'setCommentInCorrectionEnabled', $data, $dropzone);
+        $this->sipe('parameters.commentInCorrectionForced', 'setCommentInCorrectionForced', $data, $dropzone);
+        $this->sipe('parameters.correctionDenialEnabled', 'setCorrectionDenialEnabled', $data, $dropzone);
+        $this->sipe('parameters.criteriaEnabled', 'setCriteriaEnabled', $data, $dropzone);
+        $this->sipe('parameters.criteriaTotal', 'setCriteriaTotal', $data, $dropzone);
+        $this->sipe('parameters.autoCloseDropsAtDropEndDate', 'setAutoCloseDropsAtDropEndDate', $data, $dropzone);
 
-        if (isset($parametersData['dropType'])) {
-            $dropzone->setDropType($parametersData['dropType']);
+        if (!empty($data['parameters']['scoreMax']) && $data['parameters']['scoreMax'] !== $dropzone->getScoreMax()) {
+            $this->dropzoneManager->updateScoreByScoreMax($dropzone, $dropzone->getScoreMax(), $data['parameters']['scoreMax']);
+            $dropzone->setScoreMax($data['parameters']['scoreMax']);
         }
 
-        $dropzone->setAllowedDocuments($parametersData['documents']);
-
-        if (isset($parametersData['expectedCorrectionTotal'])) {
-            $dropzone->setExpectedCorrectionTotal($parametersData['expectedCorrectionTotal']);
-        }
-        if (isset($parametersData['scoreMax'])) {
-            $dropzone->setScoreMax($parametersData['scoreMax']);
-        }
-        if (isset($parametersData['scoreToPass'])) {
-            $dropzone->setScoreToPass($parametersData['scoreToPass']);
-        }
-        if (isset($parametersData['commentInCorrectionEnabled'])) {
-            $dropzone->setCommentInCorrectionEnabled($parametersData['commentInCorrectionEnabled']);
-        }
-        if (isset($parametersData['commentInCorrectionForced'])) {
-            $dropzone->setCommentInCorrectionForced($parametersData['commentInCorrectionForced']);
-        }
-        if (isset($parametersData['correctionDenialEnabled'])) {
-            $dropzone->setCorrectionDenialEnabled($parametersData['correctionDenialEnabled']);
-        }
-        if (isset($parametersData['criteriaEnabled'])) {
-            $dropzone->setCriteriaEnabled($parametersData['criteriaEnabled']);
-        }
-        if (isset($parametersData['criteriaEnabled']) && $parametersData['criteriaEnabled'] && isset($parametersData['criteria'])) {
-            $this->deserializeCriteria($dropzone, $parametersData['criteria']);
-        }
-        if (isset($parametersData['criteriaTotal'])) {
-            $dropzone->setCriteriaTotal($parametersData['criteriaTotal']);
-        }
-        if (isset($parametersData['autoCloseDropsAtDropEndDate'])) {
-            $dropzone->setAutoCloseDropsAtDropEndDate($parametersData['autoCloseDropsAtDropEndDate']);
+        if (isset($data['parameters']['criteriaEnabled']) && $data['parameters']['criteriaEnabled'] && isset($data['parameters']['criteria'])) {
+            $this->deserializeCriteria($dropzone, $data['parameters']['criteria']);
         }
     }
 
@@ -223,6 +204,7 @@ class DropzoneSerializer
             'showScore' => $dropzone->getDisplayNotationToLearners(),
             'showFeedback' => $dropzone->getDisplayNotationMessageToLearners(),
             'displayCorrectionsToLearners' => $dropzone->getDisplayCorrectionsToLearners(),
+            'correctorDisplayed' => $dropzone->isCorrectorDisplayed(),
         ];
     }
 

@@ -152,7 +152,7 @@ const Overview = connect(
                 title: trans('team_selection_title', {}, 'dropzone'),
                 items: teams.map(t => ({
                   type: t.id,
-                  name: t.name,
+                  label: t.name,
                   icon: 'fa fa-users'
                 })),
                 handleSelect: (type) => dispatch(actions.initializeMyDrop(dropzoneId, type.type, navigate))

@@ -233,7 +233,7 @@ class BlogTrackingManager
             $node,
             $user,
             $date,
-            AbstractResourceEvaluation::STATUS_PARTICIPATED
-            );
+            ['status' => AbstractResourceEvaluation::STATUS_PARTICIPATED]
+        );
     }
 }

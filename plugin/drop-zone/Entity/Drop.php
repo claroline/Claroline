@@ -138,6 +138,13 @@ class Drop
     protected $teamId;
 
     /**
+     * @ORM\Column(name="team_uuid", nullable=true)
+     *
+     * @var string
+     */
+    protected $teamUuid;
+
+    /**
      * @ORM\Column(name="team_name", nullable=true)
      *
      * @var string
@@ -399,6 +406,22 @@ class Drop
     public function setTeamId($teamId)
     {
         $this->teamId = $teamId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTeamUuid()
+    {
+        return $this->teamUuid;
+    }
+
+    /**
+     * @param string $teamUuid
+     */
+    public function setTeamUuid($teamUuid)
+    {
+        $this->teamUuid = $teamUuid;
     }
 
     /**

@@ -69,7 +69,7 @@ class DropSerializer
             'autoClosedDrop' => $drop->getAutoClosedDrop(),
             'unlockedDrop' => $drop->isUnlockedDrop(),
             'unlockedUser' => $drop->isUnlockedUser(),
-            'teamId' => $drop->getTeamId(),
+            'teamId' => $drop->getTeamUuid(),
             'teamName' => $drop->getTeamName(),
             'documents' => $this->getDocuments($drop),
             'corrections' => $this->getCorrections($drop),
@@ -121,7 +121,7 @@ class DropSerializer
             $drop->setUnlockedUser($data['unlockedUser']);
         }
         if (isset($data['teamId'])) {
-            $drop->setTeamId($data['teamId']);
+            $drop->setTeamUuid($data['teamId']);
         }
         if (isset($data['teamName'])) {
             $drop->setTeamName($data['teamName']);

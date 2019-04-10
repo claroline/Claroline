@@ -335,7 +335,7 @@ class DropzoneController
      * @EXT\ParamConverter(
      *     "team",
      *     class="ClarolineTeamBundle:Team",
-     *     options={"mapping": {"teamId": "id"}}
+     *     options={"mapping": {"teamId": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
@@ -349,7 +349,7 @@ class DropzoneController
     {
         $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
         $this->checkTeamUser($team, $user);
-        $drop = $this->manager->getPeerDrop($dropzone, $user, $team->getId(), $team->getName());
+        $drop = $this->manager->getPeerDrop($dropzone, $user, $team->getUuid(), $team->getName());
         $data = empty($drop) ? null : $this->manager->serializeDrop($drop);
 
         return new JsonResponse($data);
@@ -436,7 +436,7 @@ class DropzoneController
             return;
         }
         if (!$correction->isFinished()) {
-            if ($correction->getUser() === $user || $correction->getTeamId() === $teamId) {
+            if ($correction->getUser() === $user || $correction->getTeamUuid() === $teamId) {
                 return;
             }
         }
@@ -453,7 +453,7 @@ class DropzoneController
         if ($this->authorization->isGranted('EDIT', $collection)) {
             return;
         }
-        if ($drop->getUser() === $user || $drop->getTeamId() === $teamId) {
+        if ($drop->getUser() === $user || $drop->getTeamUuid() === $teamId) {
             return;
         }
 
@@ -462,7 +462,7 @@ class DropzoneController
 
     private function checkTeamUser(Team $team, User $user)
     {
-        if (!in_array($user, $team->getUsers())) {
+        if (!$user->hasRole($team->getRole()->getName())) {
             throw new AccessDeniedException();
         }
     }

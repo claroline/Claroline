@@ -20,6 +20,22 @@ import {MODAL_ADD_DOCUMENT} from '#/plugin/drop-zone/resources/dropzone/player/c
 import {MODAL_CORRECTION} from '#/plugin/drop-zone/resources/dropzone/correction/components/modal/correction-modal'
 import {MODAL_RESOURCE_EXPLORER} from '#/main/core/modals/resources'
 
+const getTitle = (dropzone, correction, index) => {
+  let title = ''
+
+  if (dropzone.display.correctorDisplayed) {
+    if (dropzone.parameters.dropType === constants.DROP_TYPE_TEAM) {
+      title = trans('correction_from', {name: correction.teamName}, 'dropzone')
+    } else {
+      title = trans('correction_from', {name: `${correction.user.firstName} ${correction.user.lastName}`}, 'dropzone')
+    }
+  } else {
+    title = trans('correction_n', {number: index}, 'dropzone')
+  }
+
+  return title
+}
+
 const Corrections = props =>
   <table className="table corrections-table">
     <thead>
@@ -48,7 +64,7 @@ const Corrections = props =>
                 className="pointer-hand"
                 onClick={() => {
                   props.showModal(MODAL_CORRECTION, {
-                    title: trans('correction_n', {number: idx + 1}, 'dropzone'),
+                    title: getTitle(props.dropzone, c, idx + 1),
                     correction: c,
                     dropzone: props.dropzone,
                     showDenialBox: props.dropzone.parameters.correctionDenialEnabled,
@@ -56,7 +72,8 @@ const Corrections = props =>
                   })
                 }}
               >
-                {trans('correction_n', {number: idx + 1}, 'dropzone')}
+
+                {getTitle(props.dropzone, c, idx + 1)}
               </a>
             </td>
             <td>{c.startDate}</td>

@@ -202,17 +202,19 @@ class UserProgressionManager
         return $this->resourceEvalManager->createResourceEvaluation(
             $step->getPath()->getResourceNode(),
             $user,
-            new \DateTime(),
-            $statusData['status'],
-            $statusData['score'],
             null,
-            $statusData['scoreMax'],
-            null,
-            $progression,
-            null,
-            null,
-            $evaluationData,
-            true
+            [
+                'status' => $statusData['status'],
+                'score' => $statusData['score'],
+                'scoreMax' => $statusData['scoreMax'],
+                'progression' => $progression,
+                'data' => $evaluationData,
+            ],
+            [
+                'status' => true,
+                'score' => true,
+                'progression' => true,
+            ]
         );
     }
 

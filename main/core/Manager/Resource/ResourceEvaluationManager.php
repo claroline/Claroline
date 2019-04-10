@@ -92,16 +92,8 @@ class ResourceEvaluationManager
         ResourceNode $node,
         User $user = null,
         \DateTime $date = null,
-        $status = null,
-        $score = null,
-        $scoreMin = null,
-        $scoreMax = null,
-        $customScore = null,
-        $progression = null,
-        $duration = null,
-        $comment = null,
-        $data = null,
-        $forceStatus = false
+        array $data = [],
+        array $forced = []
     ) {
         $this->om->startFlushSuite();
         $resourceUserEvaluation = $this->getResourceUserEvaluation($node, $user);
@@ -109,17 +101,36 @@ class ResourceEvaluationManager
         $evaluation->setResourceUserEvaluation($resourceUserEvaluation);
         $evaluationDate = $date ? $date : new \DateTime();
         $evaluation->setDate($evaluationDate);
-        $evaluation->setStatus($status);
-        $evaluation->setScore($score);
-        $evaluation->setScoreMin($scoreMin);
-        $evaluation->setScoreMax($scoreMax);
-        $evaluation->setCustomScore($customScore);
-        $evaluation->setProgression($progression);
-        $evaluation->setDuration($duration);
-        $evaluation->setComment($comment);
-        $evaluation->setData($data);
+
+        if (isset($data['status'])) {
+            $evaluation->setStatus($data['status']);
+        }
+        if (isset($data['score'])) {
+            $evaluation->setScore($data['score']);
+        }
+        if (isset($data['scoreMin'])) {
+            $evaluation->setScoreMin($data['scoreMin']);
+        }
+        if (isset($data['scoreMax'])) {
+            $evaluation->setScoreMax($data['scoreMax']);
+        }
+        if (isset($data['customScore'])) {
+            $evaluation->setCustomScore($data['customScore']);
+        }
+        if (isset($data['progression'])) {
+            $evaluation->setProgression($data['progression']);
+        }
+        if (isset($data['duration'])) {
+            $evaluation->setDuration($data['duration']);
+        }
+        if (isset($data['comment'])) {
+            $evaluation->setComment($data['comment']);
+        }
+        if (isset($data['data'])) {
+            $evaluation->setData($data['data']);
+        }
         $this->persistResourceEvaluation($evaluation);
-        $this->updateResourceUserEvaluation($evaluation, $forceStatus);
+        $this->updateResourceUserEvaluation($evaluation, $forced);
         $this->eventDispatcher->dispatch('resource_evaluation', new ResourceEvaluationEvent($resourceUserEvaluation));
         $this->om->endFlushSuite();
 
@@ -130,13 +141,8 @@ class ResourceEvaluationManager
         ResourceNode $node,
         User $user = null,
         \DateTime $date = null,
-        $status = null,
-        $score = null,
-        $scoreMin = null,
-        $scoreMax = null,
-        $customScore = null,
-        $duration = null,
-        $forceStatus = false,
+        array $data = [],
+        array $forced = [],
         $incAttempts = true,
         $incOpenings = false
     ) {
@@ -146,35 +152,71 @@ class ResourceEvaluationManager
         if (!empty($date)) {
             $rue->setDate($date);
         }
-        if (!empty($duration)) {
-            $rueDuration = $rue->getDuration() ? $rue->getDuration() : 0;
-            $rueDuration += $duration;
-            $rue->setDuration($rueDuration);
-        }
-        if ($forceStatus) {
-            $rue->setScore($score);
-            $rue->setScoreMax($scoreMax);
-            $rue->setScoreMin($scoreMin);
-            $rue->setCustomScore($customScore);
-        } elseif (!empty($score)) {
-            $newScore = empty($scoreMax) ? $score : $score / $scoreMax;
 
-            $rueScore = $rue->getScore() ? $rue->getScore() : 0;
-            $rueScoreMax = $rue->getScoreMax();
-            $oldScore = empty($rueScoreMax) ? $rueScore : $rueScore / $rueScoreMax;
-
-            if ($newScore >= $oldScore) {
-                $rue->setScore($score);
-                $rue->setScoreMax($scoreMax);
-                $rue->setScoreMin($scoreMin);
+        if (isset($data['duration'])) {
+            if (isset($forced['duration']) && $forced['duration']) {
+                $rue->setDuration($data['duration']);
+            } else {
+                $rueDuration = $rue->getDuration() ? $rue->getDuration() : 0;
+                $rueDuration += $data['duration'];
+                $rue->setDuration($rueDuration);
             }
         }
-        if ($forceStatus ||
-            empty($rue->getStatus()) ||
-            $statusPriority[$status] > $statusPriority[$rue->getStatus()]
-        ) {
-            $rue->setStatus($status);
+
+        if (isset($data['score'])) {
+            if (isset($forced['score']) && $forced['score']) {
+                $rue->setScore($data['score']);
+
+                if (isset($data['scoreMax'])) {
+                    $rue->setScoreMax($data['scoreMax']);
+                }
+                if (isset($data['scoreMin'])) {
+                    $rue->setScoreMin($data['scoreMin']);
+                }
+                if (isset($data['customScore'])) {
+                    $rue->setCustomScore($data['customScore']);
+                }
+            } else {
+                $newScore = empty($data['scoreMax']) ? $data['score'] : $data['score'] / $data['scoreMax'];
+
+                $rueScore = $rue->getScore();
+                $rueScoreMax = $rue->getScoreMax();
+                $oldScore = empty($rueScoreMax) ? $rueScore : $rueScore / $rueScoreMax;
+
+                if (is_null($oldScore) || $newScore >= $oldScore) {
+                    $rue->setScore($data['score']);
+
+                    if (isset($data['scoreMax'])) {
+                        $rue->setScoreMax($data['scoreMax']);
+                    }
+                    if (isset($data['scoreMin'])) {
+                        $rue->setScoreMin($data['scoreMin']);
+                    }
+                }
+            }
         }
+
+        if (isset($data['progression'])) {
+            if (isset($forced['progression']) && $forced['progression']) {
+                $rue->setProgression($data['progression']);
+            } else {
+                $rueProgression = $rue->getProgression();
+
+                if (is_null($rueProgression) || $data['progression'] > $rueProgression) {
+                    $rue->setProgression($data['progression']);
+                }
+            }
+        }
+
+        if (isset($data['status'])) {
+            if ((isset($forced['status']) && $forced['status']) ||
+                empty($rue->getStatus()) ||
+                $statusPriority[$data['status']] > $statusPriority[$rue->getStatus()]
+            ) {
+                $rue->setStatus($data['status']);
+            }
+        }
+
         if ($incAttempts) {
             $nbAttempts = $rue->getNbAttempts() ? $rue->getNbAttempts() : 0;
             ++$nbAttempts;
@@ -188,11 +230,8 @@ class ResourceEvaluationManager
         $this->persistResourceUserEvaluation($rue);
     }
 
-    private function updateResourceUserEvaluation(
-        ResourceEvaluation $evaluation,
-        $forceStatus = false,
-        $incAttempts = true
-    ) {
+    private function updateResourceUserEvaluation(ResourceEvaluation $evaluation, array $forced = [], $incAttempts = true)
+    {
         $rue = $evaluation->getResourceUserEvaluation();
         $rue->setDate($evaluation->getDate());
 
@@ -201,21 +240,25 @@ class ResourceEvaluationManager
         $scoreMax = $evaluation->getScoreMax();
         $scoreMin = $evaluation->getScoreMin();
         $progression = $evaluation->getProgression();
+        $status = $evaluation->getStatus();
+        $rueStatus = $rue->getStatus();
 
         $statusPriority = AbstractResourceEvaluation::STATUS_PRIORITY;
 
-        if (!empty($duration)) {
+        if (isset($forced['duration']) && $forced['duration']) {
+            $rue->setDuration($duration);
+        } elseif (!is_null($duration)) {
             $rueDuration = $rue->getDuration() ? $rue->getDuration() : 0;
             $rueDuration += $duration;
             $rue->setDuration($rueDuration);
         }
-        if ($forceStatus) {
+
+        if (isset($forced['score']) && $forced['score']) {
             $rue->setScore($score);
             $rue->setScoreMax($scoreMax);
             $rue->setScoreMin($scoreMin);
             $rue->setCustomScore($evaluation->getCustomScore());
-            $rue->setProgression($progression);
-        } elseif (!empty($score) || !is_null($progression)) {
+        } elseif (!is_null($score)) {
             $newScore = empty($scoreMax) ? $score : $score / $scoreMax;
 
             $rueScore = $rue->getScore();
@@ -227,19 +270,26 @@ class ResourceEvaluationManager
                 $rue->setScoreMax($scoreMax);
                 $rue->setScoreMin($evaluation->getScoreMin());
             }
+        }
+
+        if (isset($forced['progression']) && $forced['progression']) {
+            $rue->setProgression($progression);
+        } elseif (!is_null($progression)) {
             $rueProgression = $rue->getProgression();
 
             if (is_null($rueProgression) || $progression > $rueProgression) {
                 $rue->setProgression($progression);
             }
         }
-        if ($forceStatus ||
-            empty($rue->getStatus()) ||
+
+        if ((isset($forced['status']) && $forced['status']) ||
+            empty($rueStatus) ||
             ($evaluation->isSuccessful() && !$rue->isSuccessful()) ||
-            $statusPriority[$evaluation->getStatus()] > $statusPriority[$rue->getStatus()]
+            ($status && $statusPriority[$status] > $statusPriority[$rueStatus])
         ) {
-            $rue->setStatus($evaluation->getStatus());
+            $rue->setStatus($status);
         }
+
         if ($incAttempts) {
             $nbAttempts = $rue->getNbAttempts() ? $rue->getNbAttempts() : 0;
             ++$nbAttempts;

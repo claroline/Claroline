@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * This file is part of the Claroline Connect package.
  *
@@ -535,15 +534,14 @@ class ScormManager
             $scorm->getResourceNode(),
             $tracking->getUser(),
             $tracking->getLatestDate(),
-            $status,
-            $score,
-            $scoreMin,
-            $scoreMax,
-            null,
-            null,
-            $duration,
-            null,
-            $data
+            [
+                'status' => $status,
+                'score' => $score,
+                'scoreMin' => $scoreMin,
+                'scoreMax' => $scoreMax,
+                'duration' => $duration,
+                'data' => $data,
+            ]
         );
     }
 

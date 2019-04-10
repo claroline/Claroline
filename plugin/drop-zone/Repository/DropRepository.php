@@ -34,7 +34,7 @@ class DropRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findUserFinishedPeerDrops(Dropzone $dropzone, User $user, $teamId = null)
+    public function findUserFinishedPeerDrops(Dropzone $dropzone, User $user)
     {
         $dql = '
             SELECT drop
@@ -45,7 +45,7 @@ class DropRepository extends EntityRepository
             JOIN c.user cu
             WHERE d = :dropzone
             AND drop.finished = true
-            AND drop.teamId IS NULL
+            AND drop.teamUuid IS NULL
             AND c.finished = true
             AND u != :user
             AND cu = :user
@@ -66,10 +66,10 @@ class DropRepository extends EntityRepository
             JOIN drop.corrections c
             WHERE d = :dropzone
             AND drop.finished = true
-            AND drop.teamId IS NOT NULL
-            AND drop.teamId != :teamId
+            AND drop.teamUuid IS NOT NULL
+            AND drop.teamUuid != :teamId
             AND c.finished = true
-            AND c.teamId = :teamId
+            AND c.teamUuid = :teamId
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('dropzone', $dropzone);
@@ -89,7 +89,7 @@ class DropRepository extends EntityRepository
             JOIN c.user cu
             WHERE d = :dropzone
             AND drop.finished = true
-            AND drop.teamId IS NULL
+            AND drop.teamUuid IS NULL
             AND c.finished = false
             AND u != :user
             AND cu = :user
@@ -110,10 +110,10 @@ class DropRepository extends EntityRepository
             JOIN drop.corrections c
             WHERE d = :dropzone
             AND drop.finished = true
-            AND drop.teamId IS NOT NULL
-            AND drop.teamId != :teamId
+            AND drop.teamUuid IS NOT NULL
+            AND drop.teamUuid != :teamId
             AND c.finished = false
-            AND c.teamId = :teamId
+            AND c.teamUuid = :teamId
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('dropzone', $dropzone);
@@ -131,7 +131,7 @@ class DropRepository extends EntityRepository
             JOIN drop.user u
             WHERE d = :dropzone
             AND drop.finished = true
-            AND drop.teamId IS NULL
+            AND drop.teamUuid IS NULL
             AND u != :user
             AND NOT EXISTS (
               SELECT cor
@@ -140,7 +140,7 @@ class DropRepository extends EntityRepository
               JOIN cor.user coru
               WHERE cd = drop
               AND coru = :user
-              AND cor.teamId IS NULL
+              AND cor.teamUuid IS NULL
             )
         ';
         $query = $this->_em->createQuery($dql);
@@ -158,14 +158,14 @@ class DropRepository extends EntityRepository
             JOIN drop.dropzone d
             WHERE d = :dropzone
             AND drop.finished = true
-            AND drop.teamId IS NOT NULL
-            AND drop.teamId != :teamId
+            AND drop.teamUuid IS NOT NULL
+            AND drop.teamUuid != :teamId
             AND NOT EXISTS (
               SELECT cor
               FROM Claroline\DropZoneBundle\Entity\Correction cor
               JOIN cor.drop cd
               WHERE cd = drop
-              AND cor.teamId = :teamId
+              AND cor.teamUuid = :teamId
             )
         ';
         $query = $this->_em->createQuery($dql);
@@ -183,7 +183,7 @@ class DropRepository extends EntityRepository
             JOIN drop.dropzone d
             WHERE d = :dropzone
             AND drop.finished = false
-            AND drop.teamId IN (:teamsIds)
+            AND drop.teamUuid IN (:teamsIds)
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('dropzone', $dropzone);

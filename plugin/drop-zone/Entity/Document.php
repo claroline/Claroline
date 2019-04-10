@@ -265,7 +265,7 @@ class Document
     }
 
     /**
-     * @return array|ResourceNode|null|string
+     * @return array|ResourceNode|string|null
      */
     public function getData()
     {

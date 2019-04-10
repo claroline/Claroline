@@ -38,6 +38,7 @@
     "denied_corrections": "Corrections refusées",
     "deny_correction": "Refuser la correction",
     "display_corrections_to_learners": "Afficher les corrections aux apprenants",
+    "display_corrector": "Afficher le correcteur",
     "display_notation_message_to_learners": "Afficher un message de réussite ou d'échec aux apprenants",
     "display_notation_to_learners": "Afficher le score aux apprenants",
     "document": "Document",

@@ -38,6 +38,7 @@ const DropzoneType = {
       displayCorrectionsToLearners: T.bool.isRequired,
       showFeedback: T.bool.isRequired,
       showScore: T.bool.isRequired,
+      correctorDisplayed: T.bool.isRequired,
       failMessage: T.string,
       successMessage: T.string
     }).isRequired,

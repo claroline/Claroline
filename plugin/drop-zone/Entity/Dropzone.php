@@ -301,6 +301,15 @@ class Dropzone extends AbstractResource
     protected $criteria;
 
     /**
+     * Display the name of the corrector.
+     *
+     * @ORM\Column(name="corrector_displayed", type="boolean", nullable=false)
+     *
+     * @var bool
+     */
+    protected $correctorDisplayed = false;
+
+    /**
      * Dropzone constructor.
      */
     public function __construct()
@@ -677,5 +686,15 @@ class Dropzone extends AbstractResource
             (!empty($this->reviewStartDate) && $currentDate >= $this->reviewStartDate) &&
             (!empty($this->reviewEndDate) && $currentDate <= $this->reviewEndDate)
         ));
+    }
+
+    public function isCorrectorDisplayed()
+    {
+        return $this->correctorDisplayed;
+    }
+
+    public function setCorrectorDisplayed($correctorDisplayed)
+    {
+        $this->correctorDisplayed = $correctorDisplayed;
     }
 }
