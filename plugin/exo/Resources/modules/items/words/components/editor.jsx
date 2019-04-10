@@ -27,6 +27,8 @@ const WordsEditor = (props) =>
             required: true
           }, {
             name: 'solutions',
+            label: trans('keywords'),
+            required: true,
             render: (item, wordErrors) => {
               const KeyWordItems = 
                 <KeywordItems

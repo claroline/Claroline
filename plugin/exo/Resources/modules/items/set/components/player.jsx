@@ -6,21 +6,19 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
 
 import {tex, trans} from '#/main/app/intl/translation'
+import {HtmlText} from '#/main/core/layout/components/html-text'
 import {makeDraggable, makeDroppable} from '#/plugin/exo/utils/dragAndDrop'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {SetItemDragPreview} from '#/plugin/exo/items/set/components/set-item-drag-preview'
 
-let DropBox = props => {
-  return props.connectDropTarget (
-    <div className={classes(
-      'set-drop-placeholder',
-      {'hover': props.isOver}
-    )}>
-      {tex('set_drop_item')}
-    </div>
-  )
-}
+let DropBox = props => props.connectDropTarget(
+  <div className={classes('set-drop-placeholder', {
+    'hover': props.isOver
+  })}>
+    {trans('set_drop_item', {}, 'quiz')}
+  </div>
+)
 
 DropBox.propTypes = {
   connectDropTarget: T.func.isRequired,
@@ -33,8 +31,10 @@ DropBox.propTypes = {
 DropBox = makeDroppable(DropBox, 'ITEM')
 
 const Association = props =>
-  <div className="association answer-item selected">
-    <div className="association-data" dangerouslySetInnerHTML={{__html: props.association._itemData}} />
+  <div className="association answer-item set-answer-item selected">
+    <HtmlText className="item-content">
+      {props.association._itemData}
+    </HtmlText>
 
     {props.removable &&
       <Button
@@ -56,8 +56,10 @@ Association.propTypes = {
 }
 
 const Set = props =>
-  <div className="set answer-item">
-    <div className="set-heading" dangerouslySetInnerHTML={{__html: props.set.data}} />
+  <div className="set">
+    <HtmlText className="set-heading">
+      {props.set.data}
+    </HtmlText>
 
     <ul>
       {props.associations.map(ass =>
@@ -104,33 +106,33 @@ SetList.propTypes = {
   onAssociationItemDrop: T.func.isRequired
 }
 
-let Item = props => {
-  return (
-    <div className="set-item answer-item">
-      <div className="item-content" dangerouslySetInnerHTML={{__html: props.item.data}} />
-      {props.connectDragSource(
-        <div>
-          <OverlayTrigger
-            placement="top"
-            overlay={
-              <Tooltip id={`item-${props.item.id}-drag`}>{trans('move')}</Tooltip>
-            }
-          >
+let Item = props =>
+  <div className="set-answer-item answer-item">
+    <HtmlText className="item-content">
+      {props.item.data}
+    </HtmlText>
+
+    {props.connectDragSource(
+      <div>
+        <OverlayTrigger
+          placement="top"
+          overlay={
+            <Tooltip id={`item-${props.item.id}-drag`}>{trans('move')}</Tooltip>
+          }
+        >
             <span
-              title={trans('move')}
+              title={trans('move', {}, 'quiz')}
               draggable="true"
-              className="tooltiped-button btn"
+              className="btn-link default drag-handle"
             >
               {props.draggable &&
-                <span className="fa fa-arrows drag-handle"/>
+              <span className="fa fa-arrows"/>
               }
             </span>
-          </OverlayTrigger>
-        </div>
-      )}
-    </div>
-  )
-}
+        </OverlayTrigger>
+      </div>
+    )}
+  </div>
 
 Item.propTypes = {
   connectDragSource: T.func.isRequired,
@@ -138,21 +140,16 @@ Item.propTypes = {
   draggable: T.bool.isRequired
 }
 
-Item = makeDraggable(
-  Item,
-  'ITEM',
-  SetItemDragPreview
-)
+Item = makeDraggable(Item, 'ITEM', SetItemDragPreview)
 
 const ItemList = props =>
   <ul>
-    { props.items.map((item) =>
+    {props.items.map((item) =>
       <li key={item.id}>
-        <Item item={item} draggable={props.draggable}/>
+        <Item item={item} draggable={props.draggable} />
       </li>
     )}
   </ul>
-
 
 ItemList.propTypes = {
   items:  T.arrayOf(T.object).isRequired,
@@ -162,6 +159,9 @@ ItemList.propTypes = {
 class SetPlayer extends Component {
   constructor(props) {
     super(props)
+
+    this.handleAssociationItemRemove = this.handleAssociationItemRemove.bind(this)
+    this.handleAssociationItemDrop = this.handleAssociationItemDrop.bind(this)
   }
 
   handleAssociationItemRemove(setId, itemId) {
@@ -176,7 +176,6 @@ class SetPlayer extends Component {
      * @var {target} target item (set)
      */
   handleAssociationItemDrop(source, target) {
-
     if (undefined === this.props.answer.find(el => el.setId === target.object.id && el.itemId === source.item.id)){
       // do something to add to solution
       this.props.onChange(
@@ -187,15 +186,15 @@ class SetPlayer extends Component {
 
   render() {
     return (
-      <div className="set-player row">
+      <div className="set-item set-player row">
         <div className="items-col col-md-5 col-sm-5 col-xs-5">
           <ItemList items={this.props.item.items} draggable={!this.props.disabled}/>
         </div>
 
         <div className="sets-col col-md-7 col-sm-7 col-xs-7">
           <SetList
-            onAssociationItemRemove={(setId, itemId) => this.handleAssociationItemRemove(setId, itemId)}
-            onAssociationItemDrop={(source, target) => this.handleAssociationItemDrop(source, target)}
+            onAssociationItemRemove={this.handleAssociationItemRemove}
+            onAssociationItemDrop={this.handleAssociationItemDrop}
             answers={this.props.answer}
             sets={this.props.item.sets}
             disabled={this.props.disabled}
@@ -223,4 +222,6 @@ SetPlayer.defaultProps = {
   disabled: false
 }
 
-export {SetPlayer}
+export {
+  SetPlayer
+}

@@ -350,6 +350,7 @@ class Pair extends Component {
             disabled={!this.props.pair._deletable}
             callback={() => this.props.onDelete(this.props.pair.itemIds[0], this.props.pair.itemIds[1])}
             tooltip="top"
+            dangerous={true}
           />
         </div>
       </div>
@@ -409,7 +410,9 @@ class PairList extends Component {
             {trans('pair_allow_pin_function', {}, 'quiz')}
           </label>
         </div>
+
         <hr />
+
         <ul>
           {utils.getRealSolutionList(this.props.solutions).map((pair, index) =>
             <li key={`pair-${index}`}>
@@ -426,16 +429,14 @@ class PairList extends Component {
             </li>
           )}
         </ul>
-        <div className="footer">
-          <button
-            type="button"
-            className="btn btn-default"
-            onClick={() => addPair(this.props.solutions, this.props.onChange)}
-          >
-            <span className="fa fa-fw fa-plus"/>
-            {trans('pair_add_pair', {}, 'quiz')}
-          </button>
-        </div>
+
+        <Button
+          type={CALLBACK_BUTTON}
+          className="btn btn-block"
+          icon="fa fa-fw fa-plus"
+          label={trans('pair_add_pair', {}, 'quiz')}
+          callback={() => addPair(this.props.solutions, this.props.onChange)}
+        />
       </div>
     )
   }
@@ -463,6 +464,7 @@ class Odd extends Component {
             id={`odd-${this.props.odd.id}-data`}
             value={this.props.odd.data}
             onChange={(value) => this.props.onUpdate('data', value)}
+            minRows={1}
           />
           {this.state.showFeedback &&
             <div className="feedback-container">
@@ -474,6 +476,7 @@ class Odd extends Component {
             </div>
           }
         </div>
+
         <div className="right-controls">
           <input
             title={trans('score', {}, 'quiz')}
@@ -502,6 +505,7 @@ class Odd extends Component {
             label={trans('delete', {}, 'actions')}
             callback={() => this.props.onDelete()}
             tooltip="top"
+            dangerous={true}
           />
         </div>
       </div>
@@ -519,7 +523,7 @@ Odd.propTypes = {
 const OddList= props =>
   <div className="odd-list">
     <ul>
-      { utils.getOddlist(props.items, props.solutions).map((oddItem, index) =>
+      {utils.getOddlist(props.items, props.solutions).map((oddItem, index) =>
         <li key={`odd-${index}-${oddItem.id}`}>
           <Odd
             odd={oddItem}
@@ -530,16 +534,14 @@ const OddList= props =>
         </li>
       )}
     </ul>
-    <div className="footer">
-      <button
-        type="button"
-        className="btn btn-default"
-        onClick={() => addItem(props.items, props.solutions, true, props.onChange)}
-      >
-        <span className="fa fa-fw fa-plus"/>
-        {trans('set_add_odd', {}, 'quiz')}
-      </button>
-    </div>
+
+    <Button
+      type={CALLBACK_BUTTON}
+      className="btn btn-block"
+      icon="fa fa-fw fa-plus"
+      label={trans('set_add_odd', {}, 'quiz')}
+      callback={() => addItem(props.items, props.solutions, true, props.onChange)}
+    />
   </div>
 
 OddList.propTypes = {
@@ -548,55 +550,51 @@ OddList.propTypes = {
   onChange: T.func.isRequired
 }
 
-let Item = props => {
-  return (
-    <div className="answer-item item">
-      <div className="text-fields">
-        <HtmlInput
-          id={`${props.item.id}-data`}
-          value={props.item.data}
-          onChange={(value) => props.onUpdate('data', value)}
-        />
-      </div>
+let Item = props =>
+  <div className="answer-item item">
+    <div className="text-fields">
+      <HtmlInput
+        id={`${props.item.id}-data`}
+        value={props.item.data}
+        onChange={(value) => props.onUpdate('data', value)}
+        minRows={1}
+      />
+    </div>
 
-      <div className="right-controls">
-        <Button
-          id={`set-item-${props.item.id}-delete`}
-          className="btn-link"
-          type={CALLBACK_BUTTON}
-          icon="fa fa-fw fa-trash-o"
-          label={trans('delete', {}, 'actions')}
-          disabled={!props.item._deletable}
-          callback={() => props.onDelete()}
-          tooltip="top"
-        />
+    <div className="right-controls">
+      <Button
+        id={`set-item-${props.item.id}-delete`}
+        className="btn-link"
+        type={CALLBACK_BUTTON}
+        icon="fa fa-fw fa-trash-o"
+        label={trans('delete', {}, 'actions')}
+        disabled={!props.item._deletable}
+        callback={() => props.onDelete()}
+        tooltip="top"
+        dangerous={true}
+      />
 
-        {props.connectDragSource(
-          <div>
-            <OverlayTrigger
-              placement="top"
-              overlay={
-                <Tooltip id={`item-${props.item.id}-drag`}>{trans('move')}</Tooltip>
-              }>
+      {props.connectDragSource(
+        <div>
+          <OverlayTrigger
+            placement="top"
+            overlay={
+              <Tooltip id={`item-${props.item.id}-drag`}>{trans('move')}</Tooltip>
+            }
+          >
               <span
                 role="button"
                 title={trans('move')}
                 draggable="true"
-                className={classes(
-                  'btn',
-                  'btn-link-default',
-                  'drag-handle'
-                )}
+                className="btn-link default drag-handle"
               >
                 <span className="fa fa-fw fa-arrows" />
               </span>
-            </OverlayTrigger>
-          </div>
-        )}
-      </div>
+          </OverlayTrigger>
+        </div>
+      )}
     </div>
-  )
-}
+  </div>
 
 Item.propTypes = {
   connectDragSource: T.func.isRequired,
@@ -605,39 +603,30 @@ Item.propTypes = {
   onDelete: T.func.isRequired
 }
 
-Item = makeDraggable(
-  Item,
-  'ITEM',
-  PairItemDragPreview
-)
+Item = makeDraggable(Item, 'ITEM', PairItemDragPreview)
 
-const ItemList = props => {
-  return (
-    <div className="item-list">
-      <ul>
-        {utils.getRealItemlist(props.items, props.solutions).map((item) =>
-          <li key={item.id}>
-            <Item
-              item={item}
-              onUpdate={(property, value) => updateItem(property, value, item.id, props.items, props.solutions, false, props.onChange)}
-              onDelete={() => removeItem(item.id, props.items, props.solutions, false, props.onChange)}
-            />
-          </li>
-        )}
-      </ul>
-      <div className="footer">
-        <button
-          type="button"
-          className="btn btn-default"
-          onClick={() => addItem(props.items, props.solutions, false, props.onChange)}
-        >
-          <span className="fa fa-fw fa-plus"/>
-          {trans('set_add_item', {}, 'quiz')}
-        </button>
-      </div>
-    </div>
-  )
-}
+const ItemList = props =>
+  <div className="item-list">
+    <ul>
+      {utils.getRealItemlist(props.items, props.solutions).map((item) =>
+        <li key={item.id}>
+          <Item
+            item={item}
+            onUpdate={(property, value) => updateItem(property, value, item.id, props.items, props.solutions, false, props.onChange)}
+            onDelete={() => removeItem(item.id, props.items, props.solutions, false, props.onChange)}
+          />
+        </li>
+      )}
+    </ul>
+
+    <Button
+      type={CALLBACK_BUTTON}
+      className="btn btn-block"
+      icon="fa fa-fw fa-plus"
+      label={trans('set_add_item', {}, 'quiz')}
+      callback={() => addItem(props.items, props.solutions, false, props.onChange)}
+    />
+  </div>
 
 ItemList.propTypes = {
   items:  T.arrayOf(T.object).isRequired,
@@ -665,13 +654,8 @@ const PairEditor = props =>
               min: 0
             }
           }, {
-            name: 'random',
-            label: trans('pair_shuffle_pairs', {}, 'quiz'),
-            type: 'boolean'
-          }, {
             name: 'pairs',
-            label: trans('pairs', {}, 'quiz'),
-            hideLabel: true,
+            label: trans('answers', {}, 'quiz'),
             required: true,
             render: (pairItem) => {
               const decoratedSolutions = cloneDeep(pairItem.solutions)
@@ -709,6 +693,14 @@ const PairEditor = props =>
 
               return Pair
             }
+          }, {
+            name: 'random',
+            label: trans('shuffle_answers', {}, 'quiz'),
+            help: [
+              trans('shuffle_answers_help', {}, 'quiz'),
+              trans('shuffle_answers_results_help', {}, 'quiz')
+            ],
+            type: 'boolean'
           }
         ]
       }

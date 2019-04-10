@@ -3,55 +3,55 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {utils} from '#/plugin/exo/items/set/utils'
+import {HtmlText} from '#/main/core/layout/components/html-text'
 import {Feedback} from '#/plugin/exo/items/components/feedback-btn'
 import {WarningIcon} from '#/plugin/exo/components/warning-icon'
 
-export const SetFeedback = props =>
-  <div className="set-paper">
-    <div className="items-col">
+const SetFeedback = props =>
+  <div className="set-item set-paper row">
+    <div className="items-col col-md-5 col-sm-5 col-xs-5">
 
     </div>
-    <div className="sets-col">
+
+    <div className="sets-col col-md-7 col-sm-7 col-xs-7">
       <ul>
         {props.item.sets.map((set) =>
           <li key={`your-answer-set-id-${set.id}`}>
             <div className="set">
-              <div className="set-heading">
-                <div className="set-heading-content" dangerouslySetInnerHTML={{__html: set.data}} />
-              </div>
-              <div className="set-body">
-                <ul>
-                  { props.answer && props.answer.length > 0 && utils.getSetItems(set.id, props.answer).map(answer =>
-                    <li key={`your-answer-assocation-${answer.itemId}-${answer.setId}`}>
-                      { utils.answerInSolutions(answer, props.item.solutions.associations) ?
-                        <div className={classes(
-                          'association',
-                          {'correct-answer': utils.isValidAnswer(answer, props.item.solutions.associations)},
-                          {'incorrect-answer': !utils.isValidAnswer(answer, props.item.solutions.associations)}
-                        )}>
-                          <WarningIcon valid={utils.isValidAnswer(answer, props.item.solutions.associations)}/>
-                          <div className="association-data" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(answer.itemId, props.item.items)}} />
-                          <Feedback
-                            id={`ass-${answer.itemId}-${answer.setId}-feedback`}
-                            feedback={utils.getAnswerSolutionFeedback(answer, props.item.solutions.associations)}
-                          />
-                        </div>
-                        :
-                        <div className="association bg-danger text-danger">
-                          <WarningIcon valid={false}/>
-                          <div className="association-data" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(answer.itemId, props.item.items)}} />
-                          {utils.getAnswerOddFeedback(answer, props.item.solutions.odd) !== '' &&
-                          <Feedback
-                            id={`ass-${answer.itemId}-${answer.setId}-feedback`}
-                            feedback={utils.getAnswerOddFeedback(answer, props.item.solutions.odd)}
-                          />
-                          }
-                        </div>
-                      }
-                    </li>
-                  )}
-                </ul>
-              </div>
+              <HtmlText className="set-heading">
+                {set.data}
+              </HtmlText>
+
+              <ul>
+                {props.answer && props.answer.length > 0 && utils.getSetItems(set.id, props.answer).map(answer =>
+                  <li key={`your-answer-assocation-${answer.itemId}-${answer.setId}`}>
+                    {utils.answerInSolutions(answer, props.item.solutions.associations) ?
+                      <div className={classes('association answer-item set-answer-item', {
+                        'correct-answer': utils.isValidAnswer(answer, props.item.solutions.associations),
+                        'incorrect-answer': !utils.isValidAnswer(answer, props.item.solutions.associations)
+                      })}>
+                        <WarningIcon valid={utils.isValidAnswer(answer, props.item.solutions.associations)}/>
+                        <div className="item-content" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(answer.itemId, props.item.items)}} />
+                        <Feedback
+                          id={`ass-${answer.itemId}-${answer.setId}-feedback`}
+                          feedback={utils.getAnswerSolutionFeedback(answer, props.item.solutions.associations)}
+                        />
+                      </div>
+                      :
+                      <div className="association answer-item set-answer-item incorrect-answer">
+                        <WarningIcon valid={false}/>
+                        <div className="item-content" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(answer.itemId, props.item.items)}} />
+                        {utils.getAnswerOddFeedback(answer, props.item.solutions.odd) !== '' &&
+                        <Feedback
+                          id={`ass-${answer.itemId}-${answer.setId}-feedback`}
+                          feedback={utils.getAnswerOddFeedback(answer, props.item.solutions.odd)}
+                        />
+                        }
+                      </div>
+                    }
+                  </li>
+                )}
+              </ul>
             </div>
           </li>
         )}
@@ -70,4 +70,8 @@ SetFeedback.propTypes = {
     solutions: T.object
   }).isRequired,
   answer: T.array
+}
+
+export {
+  SetFeedback
 }

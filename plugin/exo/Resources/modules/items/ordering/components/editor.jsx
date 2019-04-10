@@ -1,6 +1,5 @@
 import React, {Component, Fragment, forwardRef} from 'react'
 import cloneDeep from 'lodash/cloneDeep'
-import classes from 'classnames'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
@@ -9,7 +8,7 @@ import {Button} from '#/main/app/action/components/button'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {makeId} from '#/main/core/scaffolding/id'
-import {Textarea} from '#/main/core/layout/form/components/field/textarea'
+import {HtmlInput} from '#/main/app/data/types/html/components/input'
 
 import {makeSortable, SORT_HORIZONTAL, SORT_VERTICAL} from '#/plugin/exo/utils/sortable'
 import {SCORE_FIXED} from '#/plugin/exo/quiz/enums'
@@ -119,14 +118,16 @@ class Item extends Component {
     return (
       <div className="item">
         <div className="text-fields">
-          <Textarea
+          <HtmlInput
             id={`item-${this.props.id}-data`}
             value={this.props.data}
             onChange={(data) => updateItem('data', data, this.props.id, this.props.item.items, this.props.item.solutions, this.props.onChange)}
+            minRows={1}
           />
+
           {this.props.item.direction === constants.DIRECTION_VERTICAL && this.state.showFeedback &&
             <div className="feedback-container">
-              <Textarea
+              <HtmlInput
                 id={`item-${this.props.id}-feedback`}
                 value={this.props.feedback}
                 onChange={(text) => updateItem('feedback', text, this.props.id, this.props.item.items, this.props.item.solutions, this.props.onChange)}
@@ -134,6 +135,7 @@ class Item extends Component {
             </div>
           }
         </div>
+
         <div className="right-controls">
           {!this.props.fixedScore &&
             <input
@@ -146,6 +148,7 @@ class Item extends Component {
               onChange={(e) => updateItem('score', e.target.value, this.props.id, this.props.item.items, this.props.item.solutions, this.props.onChange)}
             />
           }
+
           <Button
             id={`item-${this.props.id}-feedback-toggle`}
             className="btn-link"
@@ -161,15 +164,17 @@ class Item extends Component {
             className="btn-link"
             type={CALLBACK_BUTTON}
             icon="fa fa-fw fa-trash-o"
-            label={trans('delete')}
+            label={trans('delete', {}, 'actions')}
             callback={() => removeItem(this.props.id, this.props.item.items, this.props.item.solutions, this.props.onChange)}
             disabled={!this.props.deletable}
             tooltip="top"
+            dangerous={true}
           />
         </div>
+
         {this.props.item.direction === constants.DIRECTION_HORIZONTAL && this.state.showFeedback &&
           <div className="feedback-container">
-            <Textarea
+            <HtmlInput
               id={`item-${this.props.id}-feedback`}
               value={this.props.feedback}
               onChange={(text) => updateItem('feedback', text, this.props.id, this.props.item.items, this.props.item.solutions, this.props.onChange)}
@@ -198,17 +203,14 @@ let OrderingItem = forwardRef((props, ref) =>
   props.connectDropTarget (
     <div className="item-container" ref={ref}>
       <Item {...props} />
+
       {props.connectDragSource(
         <span
-          title={trans('move')}
+          title={trans('move', {}, 'actions')}
           draggable="true"
-          className={classes(
-            'tooltiped-button',
-            'btn',
-            'drag-handle'
-          )}
+          className="btn-link default drag-handle"
         >
-          <span className="fa fa-arrows"/>
+          <span className="fa fa-fw fa-arrows"/>
         </span>
       )}
     </div>
@@ -387,8 +389,7 @@ const OrderingEditor = props =>
             }
           }, {
             name: 'orderings',
-            label: trans('orderings', {}, 'quiz'),
-            hideLabel: true,
+            label: trans('answer', {}, 'quiz'),
             required: true,
             render: (orderingItem) => {
               const Items = (

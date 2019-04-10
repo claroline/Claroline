@@ -55,6 +55,7 @@ class Choice extends Component {
             id={`choice-${this.props.id}-data`}
             value={this.props.data}
             onChange={data => this.props.update('data', data)}
+            minRows={1}
           />
 
           {this.state.showFeedback &&

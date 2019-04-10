@@ -13,19 +13,6 @@
 }
 
 .pair-editor {
-  .items-col,
-  .pairs-col {
-    ul {
-      padding: 0;
-      margin: 0;
-      list-style-type: none;
-    }
-
-    .footer {
-      text-align: center;
-    }
-  }
-
   .pair,
   .item {
     display: flex;
@@ -64,6 +51,7 @@
       border: 1px solid white;
       padding: @padding-base-vertical @padding-base-horizontal;
       border-radius: @border-radius-base;
+      min-height: @input-height-base;
 
       .item-content {
         text-overflow: ellipsis;

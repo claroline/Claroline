@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, Fragment} from 'react'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
 import cloneDeep from 'lodash/cloneDeep'
@@ -9,7 +9,7 @@ import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
 import {FormData} from '#/main/app/content/form/containers/data'
-
+import {HtmlText} from '#/main/core/layout/components/html-text'
 import {makeId} from '#/main/core/scaffolding/id'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
 
@@ -182,10 +182,6 @@ const removeAssociation = (setId, itemId, solutions, saveCallback) => {
 
 /**
  * handle item drop
- * @var {source} dropped item (item)
- * @var {target} target item (set)
- * @var solutions
- * @var saveCallback
  */
 const dropItem = (source, target, solutions, saveCallback) => {
   // add solution (check the item is not already inside before adding it)
@@ -223,9 +219,14 @@ class Association extends Component {
 
   render(){
     return (
-      <div className={classes('association answer-item', {'expected-answer' : this.props.association.score > 0}, {'unexpected-answer': this.props.association.score <= 0})}>
+      <div className={classes('association set-answer-item answer-item', {
+        'expected-answer' : this.props.association.score > 0,
+        'unexpected-answer': this.props.association.score <= 0
+      })}>
         <div className="text-fields">
-          <div className="association-data" dangerouslySetInnerHTML={{__html: this.props.association._itemData}} />
+          <HtmlText className="form-control">
+            {this.props.association._itemData}
+          </HtmlText>
 
           {this.state.showFeedback &&
             <div className="feedback-container">
@@ -242,7 +243,7 @@ class Association extends Component {
           <input
             title={trans('score', {}, 'quiz')}
             type="number"
-            className="form-control association-score"
+            className="form-control score"
             value={this.props.association.score}
             onChange={(e) => this.props.onUpdate('score', e.target.value, this.props.association.setId, this.props.association.itemId)}
           />
@@ -265,6 +266,7 @@ class Association extends Component {
             label={trans('delete', {}, 'actions')}
             callback={() => this.props.onDelete(this.props.association.setId, this.props.association.itemId)}
             tooltip="top"
+            dangerous={true}
           />
         </div>
       </div>
@@ -279,13 +281,14 @@ Association.propTypes = {
 }
 
 const Set = (props) =>
-  <div className="set answer-item">
+  <div className="set">
     <div className="set-heading">
       <div className="text-fields">
         <HtmlInput
-          id={`${props.set.id}-data`}
+          id={`set-${props.set.id}-data`}
           value={props.set.data}
           onChange={(value) => props.onUpdate('data', value)}
+          minRows={1}
         />
       </div>
 
@@ -299,6 +302,7 @@ const Set = (props) =>
           disabled={!props.set._deletable}
           callback={() => props.onDelete()}
           tooltip="top"
+          dangerous={true}
         />
       </div>
     </div>
@@ -329,7 +333,7 @@ Set.propTypes = {
 }
 
 const SetList = (props) =>
-  <div className="sets">
+  <Fragment>
     <ul>
       {props.sets.map((set) =>
         <li key={`set-id-${set.id}`}>
@@ -345,17 +349,15 @@ const SetList = (props) =>
         </li>
       )}
     </ul>
-    <div className="footer">
-      <button
-        type="button"
-        className="btn btn-default"
-        onClick={() => addSet(props.sets, props.onChange)}
-      >
-        <span className="fa fa-fw fa-plus"/>
-        {trans('set_add_set', {}, 'quiz')}
-      </button>
-    </div>
-  </div>
+
+    <Button
+      type={CALLBACK_BUTTON}
+      className="btn btn-block"
+      icon="fa fa-fw fa-plus"
+      label={trans('set_add_set', {}, 'quiz')}
+      callback={() => addSet(props.sets, props.onChange)}
+    />
+  </Fragment>
 
 SetList.propTypes = {
   sets: T.arrayOf(T.object).isRequired,
@@ -367,14 +369,16 @@ SetList.propTypes = {
 }
 
 let Item = (props) =>
-  <div className="set-item answer-item">
+  <div className="set-answer-item answer-item">
     <div className="text-fields">
       <HtmlInput
         id={`${props.item.id}-data`}
         value={props.item.data}
         onChange={(value) => props.onUpdate('data', value)}
+        minRows={1}
       />
     </div>
+
     <div className="right-controls">
       <Button
         id={`set-item-${props.item.id}-delete`}
@@ -385,6 +389,7 @@ let Item = (props) =>
         disabled={!props.item._deletable}
         callback={() => props.onDelete()}
         tooltip="top"
+        dangerous={true}
       />
 
       {props.connectDragSource(
@@ -393,19 +398,15 @@ let Item = (props) =>
             placement="top"
             overlay={
               <Tooltip id={`set-item-${props.item.id}-drag`}>{trans('move')}</Tooltip>
-            }>
+            }
+          >
             <span
-              title={trans('move')}
+              title={trans('move', {}, 'actions')}
               draggable="true"
-              className={classes(
-                'tooltiped-button',
-                'btn',
-                'btn-link-default',
-                'fa fa-fw',
-                'fa-arrows',
-                'drag-handle'
-              )}
-            />
+              className="btn-link default drag-handle"
+            >
+              <span className="fa fa-fw fa-arrows" />
+            </span>
           </OverlayTrigger>
         </div>
       )}
@@ -419,14 +420,10 @@ Item.propTypes = {
   onDelete: T.func.isRequired
 }
 
-Item = makeDraggable(
-  Item,
-  'ITEM',
-  SetItemDragPreview
-)
+Item = makeDraggable(Item, 'ITEM', SetItemDragPreview)
 
 const ItemList = (props) =>
-  <div className="item-list">
+  <Fragment>
     <ul>
       {props.items.filter(i => undefined === props.solutions.odd.find(o => o.itemId === i.id)).map((item) =>
         <li key={item.id}>
@@ -438,17 +435,15 @@ const ItemList = (props) =>
         </li>
       )}
     </ul>
-    <div className="footer text-center">
-      <button
-        type="button"
-        className="btn btn-default"
-        onClick={() => addItem(props.items, props.solutions, false, props.onChange)}
-      >
-        <span className="fa fa-fw fa-plus"/>
-        {trans('set_add_item', {}, 'quiz')}
-      </button>
-    </div>
-  </div>
+
+    <Button
+      type={CALLBACK_BUTTON}
+      className="btn btn-block"
+      icon="fa fa-fw fa-plus"
+      label={trans('set_add_item', {}, 'quiz')}
+      callback={() => addItem(props.items, props.solutions, false, props.onChange)}
+    />
+  </Fragment>
 
 ItemList.propTypes = {
   items:  T.arrayOf(T.object).isRequired,
@@ -467,12 +462,16 @@ class Odd extends Component {
 
   render(){
     return (
-      <div className={classes('set-item answer-item', {'expected-answer' : this.props.solution.score > 0}, {'unexpected-answer': this.props.solution.score < 1})}>
+      <div className={classes('set-answer-item answer-item', {
+        'expected-answer' : this.props.solution.score > 0,
+        'unexpected-answer': this.props.solution.score < 1
+      })}>
         <div className="text-fields">
           <HtmlInput
             id={`odd-${this.props.odd.id}-data`}
             value={this.props.odd.data}
             onChange={(value) => this.props.onUpdate('data', value)}
+            minRows={1}
           />
           {this.state.showFeedback &&
             <div className="feedback-container">
@@ -489,7 +488,7 @@ class Odd extends Component {
             title={trans('score', {}, 'quiz')}
             type="number"
             max="0"
-            className="form-control odd-score"
+            className="form-control score"
             value={this.props.solution.score}
             onChange={(e) => this.props.onUpdate('score', e.target.value)}
           />
@@ -511,6 +510,7 @@ class Odd extends Component {
             label={trans('delete', {}, 'actions')}
             callback={() => this.props.onDelete()}
             tooltip="top"
+            dangerous={true}
           />
         </div>
       </div>
@@ -526,7 +526,7 @@ Odd.propTypes = {
 }
 
 const OddList = (props) =>
-  <div className="odd-list">
+  <Fragment>
     <ul>
       {props.items.filter(item => undefined !== props.solutions.odd.find(o => o.itemId === item.id)).map((oddItem) =>
         <li key={oddItem.id}>
@@ -539,17 +539,15 @@ const OddList = (props) =>
         </li>
       )}
     </ul>
-    <div className="footer">
-      <button
-        type="button"
-        className="btn btn-default"
-        onClick={() => addItem(props.items, props.solutions, true, props.onChange)}
-      >
-        <span className="fa fa-fw fa-plus"/>
-        {trans('set_add_odd', {}, 'quiz')}
-      </button>
-    </div>
-  </div>
+
+    <Button
+      type={CALLBACK_BUTTON}
+      className="btn btn-block"
+      icon="fa fa-fw fa-plus"
+      label={trans('set_add_odd', {}, 'quiz')}
+      callback={() => addItem(props.items, props.solutions, true, props.onChange)}
+    />
+  </Fragment>
 
 OddList.propTypes = {
   items: T.arrayOf(T.object).isRequired,
@@ -577,23 +575,19 @@ const SetEditor = (props) =>
               min: 0
             }
           }, {
-            name: 'random',
-            label: trans('set_shuffle_labels_and_proposals', {}, 'quiz'),
-            type: 'boolean'
-          }, {
             name: 'sets',
-            label: trans('sets', {}, 'quiz'),
-            hideLabel: true,
+            label: trans('answers', {}, 'quiz'),
             required: true,
             render: (setItem) => {
               const Set = (
-                <div className="set-items row">
-                  <div className="col-md-5 col-sm-5 col-xs-5">
+                <div className="row">
+                  <div className="items-col col-md-5 col-sm-5 col-xs-5">
                     <ItemList
                       items={setItem.items}
                       solutions={setItem.solutions}
                       onChange={props.update}
                     />
+
                     <hr className="item-content-separator" />
 
                     <OddList
@@ -603,7 +597,7 @@ const SetEditor = (props) =>
                     />
                   </div>
 
-                  <div className="col-md-7 col-sm-7 col-xs-7">
+                  <div className="sets-col col-md-7 col-sm-7 col-xs-7">
                     <SetList
                       sets={setItem.sets}
                       solutions={setItem.solutions}
@@ -615,6 +609,14 @@ const SetEditor = (props) =>
 
               return Set
             }
+          }, {
+            name: 'random',
+            label: trans('shuffle_answers', {}, 'quiz'),
+            help: [
+              trans('shuffle_answers_help', {}, 'quiz'),
+              trans('shuffle_answers_results_help', {}, 'quiz')
+            ],
+            type: 'boolean'
           }
         ]
       }

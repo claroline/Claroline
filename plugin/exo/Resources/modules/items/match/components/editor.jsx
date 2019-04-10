@@ -5,7 +5,6 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import Popover from 'react-bootstrap/lib/Popover'
 
-import {makeId} from '#/plugin/exo/utils/utils'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
@@ -176,6 +175,7 @@ class MatchItem extends Component{
             value={this.props.item.data}
             onChange={data => this.props.update('data', data)}
             onChangeMode={this.props.repaint}
+            minRows={1}
           />
         </div>
 
@@ -207,10 +207,9 @@ MatchItem.propTypes = {
   onMount: T.func.isRequired,
   onUnmount: T.func.isRequired,
   update: T.func.isRequired,
-  repaint: T.func.isRequired,
+  repaint: T.func.isRequired
 }
 
-// todo : make onClick={(event) => this.handlePopoverFocusOut(event)} work
 class MatchElements extends Component {
   constructor(props) {
     super(props)
@@ -427,14 +426,6 @@ class MatchElements extends Component {
         type = 'unexpected'
       }
       conn.setType(type)
-    }
-  }
-
-  // click outside the popover but inside the question items row will close the popover
-  handlePopoverFocusOut(event) {
-    const elem = event.target.closest('#popover-place-holder-' + this.props.item.id)
-    if (null === elem){
-      this.closePopover()
     }
   }
 

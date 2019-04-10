@@ -18,6 +18,18 @@ const OpenEditor = (props) =>
         primary: true,
         fields: [
           {
+            name: 'contentType',
+            label: trans('expected_answer', {}, 'quiz'),
+            type: 'choice',
+            required: true,
+            options: {
+              noEmpty: true,
+              condensed: true,
+              choices: {
+                text: trans('text')
+              }
+            },
+          }, {
             name: '_restrictLength',
             label: trans('restrict_answer_length', {}, 'quiz'),
             type: 'boolean',
