@@ -226,7 +226,7 @@ class AnnouncementController
 
         $users = $this->finder->fetch(
             User::class,
-            ['role' => array_map(function ($role) {
+            ['unionRole' => array_map(function ($role) {
                 return $role->getUuid();
             }, $roles),
         ]);
