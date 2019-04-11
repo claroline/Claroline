@@ -6,7 +6,6 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
@@ -187,24 +186,6 @@ class ExerciseListener
         );
 
         $event->setResponse(new Response($content));
-        $event->stopPropagation();
-    }
-
-    /**
-     * Copies an Exercise resource.
-     *
-     * @DI\Observe("copy_ujm_exercise")
-     *
-     * @param CopyResourceEvent $event
-     */
-    public function onCopy(CopyResourceEvent $event)
-    {
-        /** @var Exercise $resource */
-        $resource = $event->getResource();
-
-        $newExercise = $this->exerciseManager->copy($resource);
-
-        $event->setCopy($newExercise);
         $event->stopPropagation();
     }
 }

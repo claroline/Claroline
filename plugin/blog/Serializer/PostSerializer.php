@@ -58,7 +58,7 @@ class PostSerializer
      */
     public function getClass()
     {
-        return 'Icap\BlogBundle\Entity\Post';
+        return Post::class;
     }
 
     /**
@@ -154,7 +154,11 @@ class PostSerializer
         if (empty($post)) {
             $post = new Post();
         }
-        $this->sipe('id', 'setUuid', $data, $post);
+
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $post);
+        }
+
         if (isset($data['title'])) {
             $post->setTitle($data['title']);
         }

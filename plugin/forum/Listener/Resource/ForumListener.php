@@ -12,14 +12,17 @@
 namespace Claroline\ForumBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
+use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
+use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
+use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Manager\Manager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -121,30 +124,33 @@ class ForumListener
     }
 
     /**
-     * Create a forum resource.
-     *
-     * @DI\Observe("resource.claroline_forum.create")
-     *
-     * @param DeleteResourceEvent $event
+     * @DI\Observe("transfer.claroline_forum.export")
      */
-    public function onCreate(CreateResourceEvent $event)
+    public function onExport(ExportObjectEvent $exportEvent)
     {
+        $forum = $exportEvent->getObject();
+        $data = [
+          'subjects' => array_map(function (Subject $subject) {
+              return $this->serializer->serialize($subject);
+          }, $forum->getSubjects()->toArray()),
+        ];
+        $exportEvent->overwrite('_data', $data);
     }
 
     /**
-     * Copies a forum resource.
-     *
-     * @DI\Observe("copy_claroline_forum")
-     *
-     * @param CopyResourceEvent $event
+     * @DI\Observe("transfer.claroline_forum.import.after")
      */
-    public function onCopy(CopyResourceEvent $event)
+    public function onImport(ImportObjectEvent $event)
     {
-        $resource = $event->getResource();
-        $new = $this->crud->copy($resource);
+        $data = $event->getData();
+        $forum = $event->getObject();
 
-        $event->setCopy($new);
-        $event->stopPropagation();
+        foreach ($data['_data']['subjects'] as $subjectsData) {
+            unset($subjectsData['forum']);
+            $subject = $this->serializer->deserialize($subjectsData, new Subject(), [Options::REFRESH_UUID]);
+            $subject->setForum($forum);
+            $this->om->persist($subject);
+        }
     }
 
     /**

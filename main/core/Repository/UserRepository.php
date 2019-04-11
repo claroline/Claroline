@@ -679,7 +679,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
         $resB = $query->getResult();
         $resB = $resB ? $resB : [];
 
-        return array_merge($resA, $resB);
+        return array_unique(array_merge($resA, $resB));
     }
 
     /**

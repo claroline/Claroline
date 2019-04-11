@@ -89,7 +89,7 @@ class WikiManager
         return $this->wikiSerializer->serialize($wiki);
     }
 
-    public function copyWiki(Wiki $orgWiki, $loggedUser)
+    public function copyWiki(Wiki $orgWiki, Wiki $newWiki, $loggedUser)
     {
         $orgRoot = $orgWiki->getRoot();
 

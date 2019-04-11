@@ -11,7 +11,6 @@
 
 namespace Claroline\LinkBundle\Listener\Resource\Types;
 
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
@@ -103,17 +102,5 @@ class ShortcutListener
     public function delete(DeleteResourceEvent $event)
     {
         $event->stopPropagation();
-    }
-
-    /**
-     * Copies a shortcut.
-     *
-     * @DI\Observe("resource.shortcut.copy")
-     *
-     * @param CopyResourceEvent $event
-     */
-    public function copy(CopyResourceEvent $event)
-    {
-        // TODO : implement
     }
 }

@@ -152,7 +152,7 @@ class ScormListener
     }
 
     /**
-     * @DI\Observe("copy_claroline_scorm")
+     * @DI\Observe("resource.claroline_scorm.copy")
      *
      * @param CopyResourceEvent $event
      */
@@ -161,7 +161,7 @@ class ScormListener
         $resource = $event->getResource();
         $workspace = $resource->getResourceNode()->getWorkspace();
         $newWorkspace = $event->getCopiedNode()->getWorkspace();
-        $copy = new Scorm();
+        $copy = $event->getCopy();
         $hashName = $resource->getHashName();
         $copy->setHashName($hashName);
         $copy->setName($resource->getName());

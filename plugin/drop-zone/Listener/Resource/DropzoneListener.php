@@ -137,7 +137,7 @@ class DropzoneListener
     }
 
     /**
-     * @DI\Observe("copy_claroline_dropzone")
+     * @DI\Observe("resource.claroline_dropzone.copy")
      *
      * @param CopyResourceEvent $event
      */
@@ -146,7 +146,7 @@ class DropzoneListener
         /** @var Dropzone $dropzone */
         $dropzone = $event->getResource();
 
-        $copy = $this->dropzoneManager->copyDropzone($dropzone);
+        $copy = $this->dropzoneManager->copyDropzone($dropzone, $event->getCopy());
 
         $event->setCopy($copy);
         $event->stopPropagation();

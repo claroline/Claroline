@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Listener\Resource\Types;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\Text;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
@@ -93,19 +92,6 @@ class TextListener
 
         $event->setResponse(new Response($content));
         $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("copy_text")
-     *
-     * @param CopyResourceEvent $event
-     */
-    public function copy(CopyResourceEvent $event)
-    {
-        $copy = new Text();
-        $serialized = $this->serializer->serialize($event->getResource());
-        $copy = $this->serializer->get(Text::class)->deserialize($serialized, $copy);
-        $event->setCopy($copy);
     }
 
     /**

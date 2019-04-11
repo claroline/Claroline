@@ -63,6 +63,6 @@ class AnnouncementAggregateSerializer
 
     public function getClass()
     {
-        return 'Claroline\AnnouncementBundle\Entity\AnnouncementAggregate';
+        return AnnouncementAggregate::class;
     }
 }

@@ -17,6 +17,7 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\TransferProvider;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -117,10 +118,7 @@ class TransferController extends AbstractCrudController
     {
         $data = json_decode($request->getContent(), true);
 
-        $publicFile = $this->serializer->deserialize(
-            'Claroline\CoreBundle\Entity\File\PublicFile',
-            $data['file']
-        );
+        $publicFile = $this->om->getObject($data['file'], PublicFile::class) ?? new PublicFile();
 
         $this->container->get('claroline.manager.api_manager')->import(
             $publicFile,

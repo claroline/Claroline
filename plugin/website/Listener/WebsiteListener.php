@@ -103,7 +103,7 @@ class WebsiteListener
     }
 
     /**
-     * @DI\Observe("copy_icap_website")
+     * @DI\Observe("resoure.icap_website.copy")
      *
      * @param CopyResourceEvent $event
      */
@@ -111,7 +111,7 @@ class WebsiteListener
     {
         $website = $event->getResource();
 
-        $newWebsite = $this->container->get('icap.website.manager')->copyWebsite($website);
+        $newWebsite = $this->container->get('icap.website.manager')->copyWebsite($website, $event->getCopy());
 
         $event->setCopy($newWebsite);
         $event->stopPropagation();

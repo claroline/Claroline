@@ -9,8 +9,8 @@ export default (workspaces) => ({ // TODO : collection
   type: URL_BUTTON,
   icon: 'fa fa-fw fa-download',
   label: trans('export', {}, 'actions'),
-  displayed: hasPermission('export', workspaces[0]) && false, // currently broken
-  target: ['claro_workspace_export', {workspace: workspaces[0].id}],
-  group: trans('transfer'),
+  displayed: !!workspaces.find(workspace => hasPermission('administrate', workspace)),
+  target: ['apiv2_workspace_export', {id: workspaces[0].id}],
+  group: trans('management'),
   scope: ['object']
 })

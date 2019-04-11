@@ -11,6 +11,7 @@ use Claroline\AppBundle\API\ValidatorProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\API\Serializer\Workspace\FullSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Role;
@@ -21,6 +22,7 @@ use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Manager\Workspace\Transfer\OrderedToolTransfer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 /**
@@ -29,6 +31,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 class TransferManager
 {
     use PermissionCheckerTrait;
+    use LoggableTrait;
 
     /** @var ObjectManager */
     private $om;
@@ -87,11 +90,11 @@ class TransferManager
      *
      * @return object
      */
-    public function create(array $data)
+    public function create(array $data, Workspace $workspace)
     {
         $options = [Options::LIGHT_COPY, Options::REFRESH_UUID];
         // gets entity from raw data.
-        $workspace = $this->deserialize($data, $options);
+        $workspace = $this->deserialize($data, $workspace, $options);
         $this->importFiles($data, $workspace);
 
         // creates the entity if allowed
@@ -148,11 +151,41 @@ class TransferManager
     {
         $serialized = $this->serializer->serialize($workspace, [Options::REFRESH_UUID]);
 
+        //if roles duplicatas, remove them
+        $roles = $serialized['roles'];
+
+        foreach ($roles as $role) {
+            $uniques[$role['translationKey']] = ['type' => $role['type']];
+        }
+
+        $roles = [];
+        foreach ($uniques as $key => $val) {
+            $val['translationKey'] = $key;
+            $roles[] = $val;
+        }
+
+        $serialized['roles'] = $roles;
+
+        //we want to load  the ressources first
+        $ot = $workspace->getOrderedTools()->toArray();
+
+        $idx = 0;
+
+        foreach ($ot as $key => $tool) {
+            if ('resource_manager' === $tool->getName()) {
+                $idx = $key;
+            }
+        }
+
+        $first = $ot[$idx];
+        unset($ot[$idx]);
+        array_unshift($ot, $first);
+
         $serialized['orderedTools'] = array_map(function (OrderedTool $tool) {
             $data = $this->ots->serialize($tool, [Options::SERIALIZE_TOOL, Options::REFRESH_UUID]);
 
             return $data;
-        }, $workspace->getOrderedTools()->toArray());
+        }, $ot);
 
         return $serialized;
     }
@@ -165,15 +198,21 @@ class TransferManager
      *
      * @return Workspace
      */
-    public function deserialize(array $data, array $options = [])
+    public function deserialize(array $data, Workspace $workspace, array $options = [])
     {
+        $data = $this->replaceResourceIds($data);
+
         $defaultRole = $data['registration']['defaultRole'];
         unset($data['registration']['defaultRole']);
-        $workspace = $this->serializer->deserialize(Workspace::class, $data, $options);
+        //we don't want new workspaces to be considered as models
+        $data['meta']['model'] = false;
 
+        $workspace = $this->serializer->deserialize($data, $workspace, $options);
+
+        $this->log('Deserializing the roles...');
         foreach ($data['roles'] as $roleData) {
             $roleData['workspace']['uuid'] = $workspace->getUuid();
-            $role = $this->serializer->deserialize(Role::class, $roleData);
+            $role = $this->serializer->deserialize($roleData, new Role());
             $role->setWorkspace($workspace);
             $this->om->persist($role);
         }
@@ -189,8 +228,10 @@ class TransferManager
 
         $data['root']['meta']['workspace']['uuid'] = $workspace->getUuid();
 
+        $this->log('Deserializing the tools...');
         foreach ($data['orderedTools'] as $orderedToolData) {
             $orderedTool = new OrderedTool();
+            $this->ots->setLogger($this->logger);
             $this->ots->deserialize($orderedToolData, $orderedTool, [], $workspace);
         }
 
@@ -219,7 +260,7 @@ class TransferManager
     public function importFiles($data, Workspace $workspace)
     {
         if (isset($data['archive'])) {
-            $object = $this->serializer->deserialize(PublicFile::class, $data['archive']);
+            $object = $this->om->getObject($data['archive'], PublicFile::class);
             $filebag = new FileBag();
             $archive = new \ZipArchive();
             if ($archive->open($this->fileUts->getPath($object))) {
@@ -258,5 +299,27 @@ class TransferManager
         }
 
         return $data;
+    }
+
+    public function replaceResourceIds($serialized)
+    {
+        $replaced = json_encode($serialized);
+
+        foreach ($serialized['orderedTools'] as $tool) {
+            if ('resource_manager' === $tool['name']) {
+                $nodes = $tool['data']['nodes'];
+
+                foreach ($nodes as $data) {
+                    $uuid = Uuid::uuid4()->toString();
+
+                    if (isset($data['id'])) {
+                        $replaced = str_replace($data['id'], $uuid, $replaced);
+                        $this->log('Replacing id '.$data['id'].' by '.$uuid);
+                    }
+                }
+            }
+        }
+
+        return json_decode($replaced, true);
     }
 }

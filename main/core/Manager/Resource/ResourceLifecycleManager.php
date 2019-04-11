@@ -105,13 +105,13 @@ class ResourceLifecycleManager
         return $event;
     }
 
-    public function copy(ResourceNode $copiedNode, ResourceNode $originalNode)
+    public function copy($originalResource, $copiedResource)
     {
         /** @var CopyResourceEvent $event */
         $event = $this->dispatcher->dispatch(
-            static::eventName('copy', $copiedNode),
+            static::eventName('copy', $copiedResource->getResourceNode()),
             CopyResourceEvent::class,
-            [$this->getResourceFromNode($originalNode), $copiedNode]
+            [$originalResource, $copiedResource]
         );
 
         return $event;

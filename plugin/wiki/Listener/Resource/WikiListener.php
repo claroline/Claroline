@@ -123,7 +123,7 @@ class WikiListener
     }
 
     /**
-     * @DI\Observe("copy_icap_wiki")
+     * @DI\Observe("resource.icap_wiki.wiki")
      *
      * @param CopyResourceEvent $event
      */
@@ -131,7 +131,7 @@ class WikiListener
     {
         /** @var Wiki $wiki */
         $wiki = $event->getResource();
-        $newWiki = $this->wikiManager->copyWiki($wiki, $this->tokenStorage->getToken()->getUser());
+        $newWiki = $this->wikiManager->copyWiki($wiki, $event->getCopy(), $this->tokenStorage->getToken()->getUser());
 
         $event->setCopy($newWiki);
         $event->stopPropagation();

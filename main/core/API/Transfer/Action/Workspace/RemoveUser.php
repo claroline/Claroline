@@ -6,6 +6,9 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Transfer\Action\AbstractAction;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -34,19 +37,13 @@ class RemoveUser extends AbstractAction
 
     public function execute(array $data, &$successData = [])
     {
-        $user = $this->serializer->deserialize(
-            'Claroline\CoreBundle\Entity\User',
-            $data['user']
-        );
+        $user = $this->om->getObject($data['user'], User::class);
 
         if (!$user->getId()) {
             throw new \Exception('User '.$this->printError($data['user'])." doesn't exists.");
         }
 
-        $workspace = $this->serializer->deserialize(
-            'Claroline\CoreBundle\Entity\Workspace\Workspace',
-            $data['workspace']
-        );
+        $workspace = $this->om->getObject($data['workspace'], Workspace::class);
 
         if (!$workspace->getId()) {
             throw new \Exception('Workspace '.$this->printError($data['workspace'])." doesn't exists.");
@@ -87,15 +84,15 @@ class RemoveUser extends AbstractAction
           'claroline' => [
             'requiredAtCreation' => ['translationKey'],
             'ids' => ['translationKey'],
-            'class' => 'Claroline\CoreBundle\Entity\Role',
+            'class' => Role::class,
           ],
         ];
 
         $schema = json_decode(json_encode($roleSchema));
 
         return [
-          'workspace' => 'Claroline\CoreBundle\Entity\Workspace\Workspace',
-          'user' => 'Claroline\CoreBundle\Entity\User',
+          'workspace' => Workspace::class,
+          'user' => User::class,
           'role' => $schema,
         ];
     }

@@ -66,7 +66,9 @@ class WebsiteManagerTest extends TransactionalTestCase
             $this->websitePageParams['title'] = 'Page'.($i + 1);
             $this->pageManager->processForm($this->website, $page, $this->websitePageParams, 'POST');
         }
-        $this->websiteManager->copyWebsite($this->website);
+        $new = new Website();
+
+        $this->websiteManager->copyWebsite($this->website, $new);
         $this->assertEquals(2, count($websiteRepo->findAll()), 'Test if copy of Website was created');
         $this->assertEquals(8, count($pageRepo->findAll()), 'Test if all pages were correctly created in Website copy');
     }

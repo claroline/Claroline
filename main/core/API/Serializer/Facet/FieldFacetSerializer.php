@@ -77,9 +77,12 @@ class FieldFacetSerializer
         return $serialized;
     }
 
-    public function deserialize(array $data, FieldFacet $field = null)
+    public function deserialize(array $data, FieldFacet $field, array $options = [])
     {
-        $this->sipe('id', 'setUuid', $data, $field);
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $field);
+        }
+
         $this->sipe('label', 'setLabel', $data, $field);
         $this->sipe('type', 'setType', $data, $field);
         $this->sipe('required', 'setRequired', $data, $field);
@@ -134,7 +137,6 @@ class FieldFacetSerializer
                 }
             }
         }
-        $this->om->startFlushSuite();
 
         /* Removes previous choices that are not used anymore */
         foreach ($oldChoices as $oldChoice) {
@@ -142,7 +144,6 @@ class FieldFacetSerializer
                 $this->om->remove($oldChoice);
             }
         }
-        $this->om->endFlushSuite();
     }
 
     private function deserializeChildrenChoices(array $choicesData, FieldFacetChoice $parent, FieldFacet $field)

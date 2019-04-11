@@ -7,7 +7,6 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\ToolManager;
@@ -17,7 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UJM\LtiBundle\Entity\LtiApp;
-use UJM\LtiBundle\Entity\LtiResource;
 
 /**
  * @DI\Service
@@ -110,25 +108,6 @@ class LtiListener
             }, $ltiApps),
         ]);
 
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("copy_ujm_lti_resource")
-     *
-     * @param CopyResourceEvent $event
-     */
-    public function onCopy(CopyResourceEvent $event)
-    {
-        /** @var LtiResource $resource */
-        $resource = $event->getResource();
-
-        $copy = new LtiResource();
-        $copy->setName($resource->getName());
-        $copy->setLtiApp($resource->getLtiApp());
-        $copy->setOpenInNewTab($resource->getOpenInNewTab());
-
-        $event->setCopy($copy);
         $event->stopPropagation();
     }
 }

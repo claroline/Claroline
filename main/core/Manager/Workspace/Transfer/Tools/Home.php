@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Manager\Workspace\Transfer\Tools;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -15,6 +16,8 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class Home
 {
+    use LoggableTrait;
+
     /**
      * WorkspaceSerializer constructor.
      *
@@ -56,11 +59,11 @@ class Home
         return ['tabs' => $tabs];
     }
 
-    public function deserialize(array $data, Workspace $workspace)
+    public function deserialize(array $data, Workspace $workspace, array $options)
     {
         foreach ($data['tabs'] as $tab) {
             // do not update tabs set by the administration tool
-            $new = $this->crud->update(HomeTab::class, $tab);
+            $new = $this->crud->create(HomeTab::class, $tab, $options);
             $new->setWorkspace($workspace);
         }
     }

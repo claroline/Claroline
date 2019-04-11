@@ -206,9 +206,9 @@ class WorkspaceSerializer
                     }, array_values(array_unique(array_merge($this->workspaceManager->getRolesWithAccess($workspace), $workspace->getRoles()->toArray()))));
                 }
 
-                $serialized['managers'] = array_unique(array_map(function (User $manager) {
+                $serialized['managers'] = array_map(function (User $manager) {
                     return $this->userSerializer->serialize($manager, [Options::SERIALIZE_MINIMAL]);
-                }, $this->workspaceManager->getManagers($workspace)));
+                }, $this->workspaceManager->getManagers($workspace));
                 $serialized['organizations'] = array_map(function ($organization) {
                     return $this->orgaSerializer->serialize($organization);
                 }, $workspace->getOrganizations()->toArray());

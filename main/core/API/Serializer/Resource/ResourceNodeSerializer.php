@@ -112,7 +112,7 @@ class ResourceNodeSerializer
             //also used for the export. It's not pretty.
 
             'autoId' => $resourceNode->getId(),
-            'id' => $this->getUuid($resourceNode, $options),
+            'id' => $resourceNode->getUuid(),
             'name' => $resourceNode->getName(),
             'path' => $resourceNode->getAncestors(),
             'meta' => $this->serializeMeta($resourceNode, $options),
@@ -143,25 +143,15 @@ class ResourceNodeSerializer
             ]);
         }
 
-        // TODO : remove me. Can be retrieved from `path`
+        //maybe don't remove me, it's used by the export system
         $parent = $resourceNode->getParent();
+
         if (!empty($parent)) {
             $serializedNode['parent'] = [
                 'id' => $parent->getUuid(),
                 'autoId' => $parent->getId(), // TODO : remove me
                 'name' => $parent->getName(),
             ];
-        }
-
-        if (in_array(Options::SERIALIZE_RESOURCE, $options)) {
-            $resource = $this->om->getRepository($resourceNode->getClass())->findOneBy(['resourceNode' => $resourceNode]);
-            $serializedNode['resource'] = $this->serializer->serialize($resource);
-        }
-
-        if (in_array(Options::IS_RECURSIVE, $options)) {
-            $serializedNode['children'] = array_map(function (ResourceNode $node) use ($options) {
-                return $this->serialize($node, $options);
-            }, $resourceNode->getChildren()->toArray());
         }
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
@@ -316,6 +306,7 @@ class ResourceNodeSerializer
     public function deserialize(array $data, ResourceNode $resourceNode, array $options = [])
     {
         $this->sipe('name', 'setName', $data, $resourceNode);
+        $this->sipe('id', 'setUuid', $data, $resourceNode);
 
         if (isset($data['meta']['workspace'])) {
             /** @var Workspace $workspace */
@@ -411,24 +402,28 @@ class ResourceNodeSerializer
                 );
             }
 
-            //if we update (we need the id anyway)
-            if ($resourceNode->getId()) {
-                $this->newRightsManager->update(
-                    $resourceNode,
-                    $role,
-                    $this->maskManager->encodeMask($right['permissions'], $resourceNode->getResourceType()),
-                    $creationPerms,
-                    $recursive
-                );
-            //otherwise the old one will do the trick
+            if ($role) {
+                //if we update (we need the id anyway)
+                if ($resourceNode->getId()) {
+                    $this->newRightsManager->update(
+                      $resourceNode,
+                      $role,
+                      $this->maskManager->encodeMask($right['permissions'], $resourceNode->getResourceType()),
+                      $creationPerms,
+                      $recursive
+                  );
+                //otherwise the old one will do the trick
+                } else {
+                    $this->rightsManager->editPerms(
+                      $right['permissions'],
+                      $role->getName(),
+                      $resourceNode,
+                      false,
+                      $creationPerms
+                  );
+                }
             } else {
-                $this->rightsManager->editPerms(
-                    $right['permissions'],
-                    $right['name'],
-                    $resourceNode,
-                    false,
-                    $creationPerms
-                );
+                //role not found ... how to retrieve it ?
             }
         }
     }

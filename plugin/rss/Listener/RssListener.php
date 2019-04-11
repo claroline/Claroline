@@ -3,10 +3,8 @@
 namespace Claroline\RssBundle\Listener;
 
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\RssBundle\Entity\RssFeed;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -56,23 +54,6 @@ class RssListener
      */
     public function onDelete(DeleteResourceEvent $event)
     {
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("copy_rss_feed")
-     *
-     * @param CopyResourceEvent $event
-     */
-    public function onCopy(CopyResourceEvent $event)
-    {
-        /** @var Url $resource */
-        $resource = $event->getResource();
-
-        $copy = new RssFeed();
-        $copy->setUrl($resource->getUrl());
-
-        $event->setCopy($copy);
         $event->stopPropagation();
     }
 }

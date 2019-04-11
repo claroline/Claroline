@@ -60,10 +60,10 @@ class ImportCsvCommand extends ContainerAwareCommand
 
             $id = $input->getArgument('id');
             $action = $input->getArgument('action');
-            $publicFile = $this->getContainer()->get('claroline.api.serializer')->deserialize(
-              'Claroline\CoreBundle\Entity\File\PublicFile',
-              ['id' => $id]
-          );
+            $publicFile = $this->getContainer()->get('claroline.persistence.object_manager')->getObject(
+                ['id' => $id],
+                'Claroline\CoreBundle\Entity\File\PublicFile'
+            );
 
             $this->getContainer()->get('claroline.manager.api_manager')->import(
               $publicFile,

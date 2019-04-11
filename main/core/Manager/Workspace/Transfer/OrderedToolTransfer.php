@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Manager\Workspace\Transfer;
 
 use Claroline\AppBundle\API\Options;
+use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\API\Serializer\Tool\ToolSerializer;
 use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use Claroline\CoreBundle\Entity\Role;
@@ -19,6 +20,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class OrderedToolTransfer
 {
+    use LoggableTrait;
+
     /** @var ToolSerializer */
     private $toolSerializer;
 
@@ -113,7 +116,9 @@ class OrderedToolTransfer
             $serviceName = 'claroline.transfer.'.$orderedTool->getTool()->getName();
 
             if ($this->container->has($serviceName)) {
-                $this->container->get($serviceName)->deserialize($data['data'], $orderedTool->getWorkspace());
+                $importer = $this->container->get($serviceName);
+                $importer->setLogger($this->logger);
+                $importer->deserialize($data['data'], $orderedTool->getWorkspace(), [Options::REFRESH_UUID]);
             }
         }
     }

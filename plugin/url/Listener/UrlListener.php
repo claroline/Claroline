@@ -2,7 +2,6 @@
 
 namespace HeVinci\UrlBundle\Listener;
 
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use HeVinci\UrlBundle\Entity\Url;
@@ -57,25 +56,6 @@ class UrlListener
      */
     public function onDelete(DeleteResourceEvent $event)
     {
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("copy_hevinci_url")
-     *
-     * @param CopyResourceEvent $event
-     */
-    public function onCopy(CopyResourceEvent $event)
-    {
-        /** @var Url $resource */
-        $resource = $event->getResource();
-
-        $copy = new Url();
-        $copy->setName($resource->getName());
-        $copy->setUrl($resource->getUrl());
-        $copy->setInternalUrl($resource->getInternalUrl());
-
-        $event->setCopy($copy);
         $event->stopPropagation();
     }
 }

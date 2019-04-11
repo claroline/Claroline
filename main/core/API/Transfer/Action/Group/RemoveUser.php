@@ -3,9 +3,10 @@
 namespace Claroline\CoreBundle\API\Transfer\Action\Group;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Transfer\Action\AbstractAction;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\User;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -18,39 +19,29 @@ class RemoveUser extends AbstractAction
      * Action constructor.
      *
      * @DI\InjectParams({
-     *     "crud"       = @DI\Inject("claroline.api.crud"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
+     *     "crud" = @DI\Inject("claroline.api.crud"),
+     *     "om"   = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param Crud $crud
      */
-    public function __construct(Crud $crud, SerializerProvider $serializer)
+    public function __construct(Crud $crud, ObjectManager $om)
     {
         $this->crud = $crud;
-        $this->serializer = $serializer;
+        $this->om = $om;
     }
 
     public function execute(array $data, &$successData = [])
     {
-        $user = $this->serializer->deserialize(
-            'Claroline\CoreBundle\Entity\User',
-            $data->user[0]
-        );
-
-        $group = $this->serializer->deserialize(
-            'Claroline\CoreBundle\Entity\Group',
-            $data->group[0]
-        );
+        $user = $this->om->getObject($data['user'][0], User::class);
+        $group = $this->om->getObject($data['group'][0], Group::class);
 
         $this->crud->patch($user, 'group', 'remove', [$group]);
     }
 
     public function getSchema()
     {
-        return [
-          'group' => 'Claroline\CoreBundle\Entity\Group',
-          'user' => 'Claroline\CoreBundle\Entity\User',
-        ];
+        return ['group' => Group::class, 'user' => User::class];
     }
 
     /**

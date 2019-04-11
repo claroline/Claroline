@@ -169,7 +169,14 @@ class SerializerProvider
             return $object;
         }
 
-        return $this->get($object)->serialize($object, $options);
+        $data = $this->get($object)->serialize($object, $options);
+
+        //if a serializer wants to return a stdClass, we want an array
+        if (is_object($data)) {
+            $data = json_decode(json_encode($data), true);
+        }
+
+        return $data;
     }
 
     /**
@@ -181,33 +188,14 @@ class SerializerProvider
      *
      * @return mixed - the resulting entity of deserialization
      */
-    public function deserialize($class, $data, $options = [])
+    public function deserialize($data, $object, $options = [])
     {
         // search for the correct serializer
-        if ($meta = $this->om->getClassMetaData($class)) {
+        if ($meta = $this->om->getClassMetaData(get_class($object))) {
             $class = $meta->name;
         }
 
-        $object = null;
         $serializer = $this->get($class);
-
-        if (!in_array(Options::NO_FETCH, $options)) {
-            //first find by uuid and id
-            $object = $this->om->getObject($data, $class);
-            //maybe move that chunk of code somewhere else
-            //or remove it as it doens't do anyhting anymore I think
-            if (!$object) {
-                foreach (array_keys($data) as $property) {
-                    if (in_array($property, $this->getIdentifiers($class)) && !$object) {
-                        $object = $this->om->getRepository($class)->findOneBy([$property => $data[$property]]);
-                    }
-                }
-            }
-        }
-
-        if (!$object) {
-            $object = new $class();
-        }
 
         if (method_exists($serializer, 'deserialize')) {
             $serializer->deserialize($data, $object, $options);

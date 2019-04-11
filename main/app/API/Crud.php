@@ -86,7 +86,8 @@ class Crud
         }
 
         // gets entity from raw data.
-        $object = $this->serializer->deserialize($class, $data, $options);
+        $object = new $class();
+        $object = $this->serializer->deserialize($data, $object, $options);
 
         // creates the entity if allowed
         $this->checkPermission('CREATE', $object, [], true);
@@ -129,7 +130,7 @@ class Crud
             $oldData = [];
         }
 
-        $object = $this->serializer->deserialize($class, $data, $options);
+        $object = $this->serializer->deserialize($data, $oldObject, $options);
 
         if ($this->dispatch('update', 'pre', [$object, $options, $oldData])) {
             $this->om->save($object);
@@ -185,11 +186,12 @@ class Crud
     public function copy($object, array $options = [])
     {
         $this->checkPermission('COPY', $object, [], true);
+        $class = get_class($object);
+        $new = new $class();
 
-        $new = $this->serializer->deserialize(
-          get_class($object),
+        $this->serializer->deserialize(
           $this->serializer->serialize($object),
-          [Options::NO_FETCH]
+          $new
         );
 
         $this->om->persist($new);

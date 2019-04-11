@@ -117,7 +117,7 @@ class HomeTabSerializer
         }
 
         $data = [
-            'id' => $this->getUuid($homeTab, $options),
+            'id' => $homeTab->getUuid(),
             'title' => $homeTabConfig->getName(),
             'longTitle' => $homeTabConfig->getLongTitle(),
             'centerTitle' => $homeTabConfig->isCenterTitle(),
@@ -161,7 +161,10 @@ class HomeTabSerializer
             $homeTabConfig->setPosition($data['position']);
         }
 
-        $this->sipe('id', 'setUuid', $data, $homeTab);
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $homeTab);
+        }
+
         $this->sipe('title', 'setName', $data, $homeTabConfig);
         $this->sipe('longTitle', 'setLongTitle', $data, $homeTabConfig);
         $this->sipe('centerTitle', 'setCenterTitle', $data, $homeTabConfig);
@@ -210,8 +213,14 @@ class HomeTabSerializer
 
         if (isset($data['widgets'])) {
             foreach ($data['widgets'] as $position => $widgetContainerData) {
-                /** @var WidgetContainer $widgetContainer */
-                $widgetContainer = $this->findInCollection($homeTab, 'getWidgetContainers', $widgetContainerData['id']) ?? new WidgetContainer();
+                /* @var WidgetContainer $widgetContainer */
+
+                if (!in_array(Options::REFRESH_UUID, $options)) {
+                    $widgetContainer = $this->findInCollection($homeTab, 'getWidgetContainers', $widgetContainerData['id']) ?? new WidgetContainer();
+                } else {
+                    $widgetContainer = new WidgetContainer();
+                }
+
                 $this->widgetContainerSerializer->deserialize($widgetContainerData, $widgetContainer, $options);
                 $widgetContainer->setHomeTab($homeTab);
                 $widgetContainerConfig = $widgetContainer->getWidgetContainerConfigs()[0];

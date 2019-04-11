@@ -139,7 +139,7 @@ class WebResourceListener
     }
 
     /**
-     * @DI\Observe("copy_claroline_web_resource")
+     * @DI\Observe("resource.claroline_web_resource.copy")
      *
      * @param CopyResourceEvent $event
      */
@@ -148,7 +148,7 @@ class WebResourceListener
         /** @var File $webResource */
         $webResource = $event->getResource();
 
-        $file = $this->copy($webResource);
+        $file = $this->copy($webResource, $event->getCopy());
         $event->setCopy($file);
         $event->stopPropagation();
     }
@@ -190,12 +190,11 @@ class WebResourceListener
      *
      * @return File
      */
-    private function copy(File $resource)
+    private function copy(File $resource, File $file)
     {
         $ds = DIRECTORY_SEPARATOR;
         $hash = $this->getHash($resource);
 
-        $file = new File();
         $file->setSize($resource->getSize());
         $file->setName($resource->getName());
         $file->setMimeType($resource->getMimeType());

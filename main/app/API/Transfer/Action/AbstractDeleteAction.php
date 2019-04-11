@@ -30,10 +30,7 @@ abstract class AbstractDeleteAction extends AbstractAction
 
     public function execute(array $data, &$successData = [])
     {
-        $object = $this->serializer->deserialize(
-            $this->getClass(),
-            $data[$this->getAction()[0]]
-        );
+        $object = $this->om->getObject($data[$this->getAction()[0]], $this->getClass());
 
         if ($object->getId()) {
             $this->crud->delete($object);

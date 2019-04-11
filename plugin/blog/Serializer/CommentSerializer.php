@@ -62,7 +62,7 @@ class CommentSerializer
      */
     public function getClass()
     {
-        return 'Icap\BlogBundle\Entity\Comment';
+        return Comment::class;
     }
 
     /**
@@ -126,7 +126,11 @@ class CommentSerializer
         if (empty($comment)) {
             $comment = new Comment();
         }
-        $this->sipe('id', 'setUuid', $data, $comment);
+
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $comment);
+        }
+
         if (isset($data['message'])) {
             $comment->setMessage($data['message']);
         }

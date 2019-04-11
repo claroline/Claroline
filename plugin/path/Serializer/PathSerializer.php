@@ -111,9 +111,12 @@ class PathSerializer
      *
      * @return Path
      */
-    public function deserialize($data, Path $path)
+    public function deserialize($data, Path $path, array $options = [])
     {
-        $this->sipe('id', 'setUuid', $data, $path);
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $path);
+        }
+
         $this->sipe('display.description', 'setDescription', $data, $path);
         $this->sipe('display.showOverview', 'setShowOverview', $data, $path);
         $this->sipe('display.showSummary', 'setShowSummary', $data, $path);
@@ -124,7 +127,7 @@ class PathSerializer
         $this->sipe('opening.secondaryResources', 'setSecondaryResourcesTarget', $data, $path);
 
         if (isset($data['steps'])) {
-            $this->deserializeSteps($data['steps'], $path);
+            $this->deserializeSteps($data['steps'], $path, $options);
         }
 
         return $path;
@@ -192,13 +195,13 @@ class PathSerializer
      * @param array $stepsData
      * @param Path  $path
      */
-    private function deserializeSteps($stepsData, Path $path)
+    private function deserializeSteps($stepsData, Path $path, array $options = [])
     {
         $currentSteps = $path->getSteps();
         $ids = [];
 
         foreach ($stepsData as $stepIndex => $stepData) {
-            $step = $this->deserializeStep($stepData, $ids, ['path' => $path, 'order' => $stepIndex]);
+            $step = $this->deserializeStep($stepData, $ids, ['path' => $path, 'order' => $stepIndex, 'options' => $options]);
             $path->addStep($step);
         }
 
@@ -223,12 +226,14 @@ class PathSerializer
     {
         $stepIds[] = $data['id'];
 
-        $step = $this->stepRepo->findOneBy(['uuid' => $data['id']]); // TODO : don't call DB, retrieve it from $path
-
-        if (empty($step)) {
+        if (isset($options['options']) && in_array(Options::REFRESH_UUID, $options['options'])) {
             $step = new Step();
+            $stepIds[] = $step->getUuid();
+        } else {
+            $step = $this->stepRepo->findOneBy(['uuid' => $data['id']]) ?? new Step();
             $step->setUuid($data['id']);
         }
+
         if (isset($data['title'])) {
             $step->setTitle($data['title']);
         }
@@ -291,6 +296,7 @@ class PathSerializer
                     'path' => $options['path'],
                     'parent' => $step,
                     'order' => $childIndex,
+                    'options' => $options['options'],
                 ];
                 $child = $this->deserializeStep($childData, $stepIds, $childOptions);
                 $step->addChild($child);

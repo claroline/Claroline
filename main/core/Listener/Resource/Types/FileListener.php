@@ -17,7 +17,9 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
+use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
@@ -30,6 +32,7 @@ use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -106,8 +109,8 @@ class FileListener
         SerializerProvider $serializer,
         ResourceManager $resourceManager,
         ResourceEvaluationManager $resourceEvalManager,
-        FileUtilities $fileUtils)
-    {
+        FileUtilities $fileUtils
+    ) {
         $this->tokenStorage = $tokenStorage;
         $this->om = $om;
         $this->eventDispatcher = $eventDispatcher;
@@ -215,7 +218,39 @@ class FileListener
     }
 
     /**
-     * @DI\Observe("copy_file")
+     * @DI\Observe("transfer.export.import")
+     */
+    public function onExportFile(ExportObjectEvent $exportEvent)
+    {
+        $file = $exportEvent->getObject();
+        $path = $this->filesDir.DIRECTORY_SEPARATOR.$file->getHashName();
+        $file = $exportEvent->getObject();
+        $newPath = uniqid().'.'.pathinfo($file->getHashName(), PATHINFO_EXTENSION);
+        //get the filePath
+        $exportEvent->addFile($newPath, $path);
+        $exportEvent->overwrite('_path', $newPath);
+    }
+
+    /**
+     * @DI\Observe("transfer.file.import")
+     */
+    public function onImportFile(ImportObjectEvent $event)
+    {
+        $data = $event->getData();
+        $bag = $event->getFileBag();
+
+        if ($bag) {
+            $fileSystem = new Filesystem();
+            try {
+                $fileSystem->rename($bag->get($data['_path']), $this->filesDir.DIRECTORY_SEPARATOR.$data['hashName']);
+            } catch (\Exception $e) {
+            }
+        }
+        //move filebags elements here
+    }
+
+    /**
+     * @DI\Observe("resource.file.copy")
      *
      * @param CopyResourceEvent $event
      */
@@ -225,9 +260,7 @@ class FileListener
         $resource = $event->getResource();
         $destParent = $event->getParent();
         $workspace = $destParent->getWorkspace();
-        $newFile = new File();
-        $newFile->setSize($resource->getSize());
-        $newFile->setName($resource->getName());
+        $newFile = $event->getCopy();
         $newFile->setMimeType($resource->getMimeType());
         $hashName = join('.', [
             'WORKSPACE_'.$workspace->getId(),

@@ -3,7 +3,6 @@
 namespace Claroline\SlideshowBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\SlideshowBundle\Entity\Resource\Slideshow;
@@ -59,22 +58,6 @@ class SlideshowListener
      * @param DeleteResourceEvent $event
      */
     public function onDelete(DeleteResourceEvent $event)
-    {
-        // TODO : implement
-
-        $event->stopPropagation();
-    }
-
-    /**
-     * Fired when a ResourceNode of type Slideshow is duplicated.
-     *
-     * @DI\Observe("copy_claro_slideshow")
-     *
-     * @param CopyResourceEvent $event
-     *
-     * @throws \Exception
-     */
-    public function onCopy(CopyResourceEvent $event)
     {
         // TODO : implement
 

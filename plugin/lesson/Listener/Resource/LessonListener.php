@@ -131,8 +131,7 @@ class LessonListener
         /** @var Lesson $lesson */
         $lesson = $event->getResource();
 
-        $newLesson = new Lesson();
-        $newLesson->setName($lesson->getResourceNode()->getName());
+        $newLesson = $event->getCopy();
         $newRoot = new Chapter();
         $newRoot->setLesson($newLesson);
         $newLesson->setRoot($newRoot);

@@ -195,7 +195,7 @@ class ClacoFormSerializer
      *
      * @return ClacoForm
      */
-    public function deserialize($data, ClacoForm $clacoForm)
+    public function deserialize($data, ClacoForm $clacoForm, array $options = [])
     {
         // TODO : remove and call all setters individually
         $this->sipe('details', 'setDetails', $data, $clacoForm);
@@ -224,30 +224,32 @@ class ClacoFormSerializer
         $newFieldsUuids = [];
         $clacoForm->emptyFields();
 
-        foreach ($data['fields'] as $fieldData) {
-            if (isset($fieldData['id'])) {
-                $newFieldsUuids[] = $fieldData['id'];
-            }
-            $field = isset($fieldData['id']) ? $this->fieldRepo->findOneBy(['uuid' => $fieldData['id']]) : null;
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            foreach ($data['fields'] as $fieldData) {
+                if (isset($fieldData['id'])) {
+                    $newFieldsUuids[] = $fieldData['id'];
+                }
+                $field = isset($fieldData['id']) ? $this->fieldRepo->findOneBy(['uuid' => $fieldData['id']]) : null;
 
-            if (empty($field)) {
-                $field = new Field();
-                $field->setClacoForm($clacoForm);
-            }
-            $newField = $this->fieldSerializer->deserialize($fieldData, $field);
-            $this->om->persist($newField);
+                if (empty($field)) {
+                    $field = new Field();
+                    $field->setClacoForm($clacoForm);
+                }
+                $newField = $this->fieldSerializer->deserialize($fieldData, $field);
+                $this->om->persist($newField);
 
-            $clacoForm->addField($newField);
+                $clacoForm->addField($newField);
+            }
+            $this->om->startFlushSuite();
+
+            /* Removes previous fields that are not used anymore */
+            foreach ($oldFields as $field) {
+                if (!in_array($field->getUuid(), $newFieldsUuids)) {
+                    $this->deleteField($field);
+                }
+            }
+            $this->om->endFlushSuite();
         }
-        $this->om->startFlushSuite();
-
-        /* Removes previous fields that are not used anymore */
-        foreach ($oldFields as $field) {
-            if (!in_array($field->getUuid(), $newFieldsUuids)) {
-                $this->deleteField($field);
-            }
-        }
-        $this->om->endFlushSuite();
 
         // entry list config
         // todo : big c/c from Claroline\CoreBundle\API\Serializer\Widget\Type\ListWidgetSerializer

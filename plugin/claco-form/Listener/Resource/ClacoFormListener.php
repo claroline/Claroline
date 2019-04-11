@@ -11,17 +11,26 @@
 
 namespace Claroline\ClacoFormBundle\Listener\Resource;
 
+use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
+use Claroline\ClacoFormBundle\Entity\Entry;
+use Claroline\ClacoFormBundle\Entity\Field;
+use Claroline\ClacoFormBundle\Entity\FieldValue;
 use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
+use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
+use Claroline\CoreBundle\Event\ExportObjectEvent;
+use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\RoleManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -44,6 +53,7 @@ class ClacoFormListener
      *     "roleManager"           = @DI\Inject("claroline.manager.role_manager"),
      *     "serializer"            = @DI\Inject("claroline.api.serializer"),
      *     "tokenStorage"          = @DI\Inject("security.token_storage"),
+     *     "finder"                = @DI\Inject("claroline.api.finder")
      * })
      *
      * @param ClacoFormManager             $clacoFormManager
@@ -56,6 +66,7 @@ class ClacoFormListener
     public function __construct(
         ClacoFormManager $clacoFormManager,
         ObjectManager $om,
+        FinderProvider $finder,
         PlatformConfigurationHandler $platformConfigHandler,
         RoleManager $roleManager,
         SerializerProvider $serializer,
@@ -67,6 +78,7 @@ class ClacoFormListener
         $this->roleManager = $roleManager;
         $this->serializer = $serializer;
         $this->tokenStorage = $tokenStorage;
+        $this->finder = $finder;
     }
 
     /**
@@ -113,18 +125,108 @@ class ClacoFormListener
     }
 
     /**
-     * @DI\Observe("copy_claroline_claco_form")
+     * @DI\Observe("resource.claroline_claco_form.copy")
      *
      * @param CopyResourceEvent $event
      */
     public function onCopy(CopyResourceEvent $event)
     {
         $clacoForm = $event->getResource();
-        $newNode = $event->getCopiedNode();
-        $copy = $this->clacoFormManager->copyClacoForm($clacoForm, $newNode);
+        $copy = $event->getCopy()->getResourceNode();
+        $copy = $this->clacoFormManager->copyClacoForm($clacoForm, $copy);
 
         $event->setCopy($copy);
         $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("transfer.claroline_claco_form.export")
+     */
+    public function onExport(ExportObjectEvent $exportEvent)
+    {
+        $clacoForm = $exportEvent->getObject();
+        $data = $exportEvent->getData();
+        $params['hiddenFilters']['clacoForm'] = $clacoForm->getId();
+        $data['_data']['entries'] = $this->finder->search(Entry::class, $params)['data'];
+
+        $exportEvent->setData($data);
+    }
+
+    /**
+     * @DI\Observe("transfer.claroline_claco_form.import.before")
+     */
+    public function onImportBefore(ImportObjectEvent $event)
+    {
+        $data = $event->getData();
+        $replaced = json_encode($data);
+
+        foreach ($data['fields'] as $field) {
+            $uuid = Uuid::uuid4()->toString();
+            $replaced = str_replace($field['id'], $uuid, $replaced);
+        }
+
+        $data = json_decode($replaced, true);
+        $event->setData($data);
+    }
+
+    /**
+     * @DI\Observe("transfer.claroline_claco_form.import.after")
+     */
+    public function onImportAfter(ImportObjectEvent $event)
+    {
+        $data = $event->getData();
+        $clacoForm = $event->getObject();
+
+        foreach ($data['categories'] as $dataCategory) {
+            $category = new Category();
+            $category = $this->serializer->deserialize($dataCategory, $category, [Options::REFRESH_UUID]);
+            $category->setClacoForm($clacoForm);
+            $this->om->persist($category);
+        }
+
+        foreach ($data['keywords'] as $dataKeyword) {
+            $keyword = new Keyword();
+            $keyword = $this->serializer->deserialize($dataKeyword, $keyword, [Options::REFRESH_UUID]);
+            $keyword->setClacoForm($clacoForm);
+            $this->om->persist($keyword);
+        }
+
+        $fields = [];
+
+        foreach ($data['fields'] as $fieldData) {
+            $newField = new Field();
+            $newField->setClacoForm($clacoForm);
+            $newField = $this->serializer->deserialize($fieldData, $newField);
+            $this->om->persist($newField);
+            $clacoForm->addField($newField);
+            $this->om->persist($clacoForm);
+            $fields[] = $newField;
+        }
+
+        foreach ($data['_data']['entries'] as $dataEntry) {
+            $entry = new Entry();
+            $this->serializer->deserialize($dataEntry, $entry, [Options::REFRESH_UUID]);
+            $entry->setClacoForm($clacoForm);
+            $this->om->persist($entry);
+
+            foreach ($fields as $field) {
+                $uuid = $field->getUuid();
+                if (isset($dataEntry['values'][$uuid])) {
+                    $fieldValue = new FieldValue();
+                    $fieldValue->setEntry($entry);
+                    $fieldValue->setField($field);
+
+                    $fielFacetValue = new FieldFacetValue();
+                    $fielFacetValue->setUser($entry->getUser());
+                    $fielFacetValue->setFieldFacet($field->getFieldFacet());
+                    $fielFacetValue->setValue($dataEntry['values'][$uuid]);
+                    $fieldValue->setFieldFacetValue($fielFacetValue);
+
+                    $this->om->persist($fielFacetValue);
+                    $this->om->persist($fieldValue);
+                }
+            }
+        }
     }
 
     /**

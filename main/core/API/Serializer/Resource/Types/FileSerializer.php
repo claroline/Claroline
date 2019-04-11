@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Resource\Types;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\Entity\Resource\File;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -46,9 +47,8 @@ class FileSerializer
      */
     public function serialize(File $file)
     {
-        return [
+        $options = [
             'id' => $file->getId(),
-            'hashName' => $file->getHashName(),
             'size' => $file->getSize(),
             'autoDownload' => $file->getAutoDownload(),
             'commentsActivated' => $file->getResourceNode()->isCommentsActivated(),
@@ -61,12 +61,20 @@ class FileSerializer
                 'node' => $file->getResourceNode()->getId(),
             ]),
         ];
+
+        return $options;
     }
 
-    public function deserialize($data, File $file)
+    public function deserialize($data, File $file, array $options = [])
     {
         $this->sipe('size', 'setSize', $data, $file);
-        $this->sipe('hashName', 'setHashName', $data, $file);
+
+        if (in_array(Options::REFRESH_UUID, $options)) {
+            $file->setHashName($file->getResourceNode()->getWorkspace()->getCode().DIRECTORY_SEPARATOR.$file->getResourceNode()->getUuid());
+        } else {
+            $this->sipe('hashName', 'setHashName', $data, $file);
+        }
+
         $this->sipe('autoDownload', 'setAutoDownload', $data, $file);
 
         if (isset($data['commentsActivated'])) {

@@ -164,7 +164,10 @@ class SubjectSerializer
           'first' => true,
         ]);
 
-        $this->sipe('id', 'setUuid', $data, $subject);
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $subject);
+        }
+
         $this->sipe('title', 'setTitle', $data, $subject);
         $this->sipe('meta.sticky', 'setSticked', $data, $subject);
         $this->sipe('meta.closed', 'setClosed', $data, $subject);

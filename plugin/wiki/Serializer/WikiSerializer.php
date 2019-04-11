@@ -2,6 +2,7 @@
 
 namespace Icap\WikiBundle\Serializer;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Icap\WikiBundle\Entity\Wiki;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -85,12 +86,15 @@ class WikiSerializer
      *
      * @return Wiki - The deserialized wiki object
      */
-    public function deserialize($data, Wiki $wiki = null)
+    public function deserialize($data, Wiki $wiki = null, array $options = [])
     {
         if (empty($wiki)) {
             $wiki = new Wiki();
         }
-        $this->sipe('id', 'setUuid', $data, $wiki);
+
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $wiki);
+        }
 
         if (isset($data['mode'])) {
             $wiki->setMode($this->getModeIntValue($data['mode']));

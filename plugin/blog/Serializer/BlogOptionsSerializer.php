@@ -2,6 +2,7 @@
 
 namespace Icap\BlogBundle\Serializer;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\BlogOptions;
@@ -209,7 +210,11 @@ class BlogOptionsSerializer
         if (empty($blogOptions)) {
             $blogOptions = new BlogOptions();
         }
-        $this->sipe('id', 'setUuid', $data, $blogOptions);
+
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $blogOptions);
+        }
+
         $this->sipe('authorizeComment', 'setAuthorizeComment', $data, $blogOptions);
         $this->sipe('authorizeAnonymousComment', 'setAuthorizeAnonymousComment', $data, $blogOptions);
         $this->sipe('postPerPage', 'setPostPerPage', $data, $blogOptions);

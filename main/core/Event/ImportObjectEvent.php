@@ -10,10 +10,11 @@ class ImportObjectEvent extends Event
     /**
      * TODO: write doc.
      */
-    public function __construct(FileBag $fileBag, array $data)
+    public function __construct(FileBag $fileBag = null, array $data = [], $object = null)
     {
         $this->fileBag = $fileBag;
         $this->data = $data;
+        $this->object = $object;
     }
 
     public function getFileBag()
@@ -24,5 +25,15 @@ class ImportObjectEvent extends Event
     public function getData()
     {
         return $this->data;
+    }
+
+    public function setData($data)
+    {
+        $this->data = $data;
+    }
+
+    public function getObject()
+    {
+        return $this->object;
     }
 }

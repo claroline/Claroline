@@ -122,7 +122,7 @@ class PathListener
     /**
      * Fired when a ResourceNode of type Path is duplicated.
      *
-     * @DI\Observe("copy_innova_path")
+     * @DI\Observe("resource.innova_path.copy")
      *
      * @param CopyResourceEvent $event
      *
@@ -150,17 +150,7 @@ class PathListener
             $nodesCopy = $this->copyResources($pathNodes, $resourcesCopyDir->getResourceNode());
         }
 
-        // Create new Path
-        $path = new Path();
-
-        // Set up new Path properties
-        $path->setName($pathToCopy->getName());
-        $path->setDescription($pathToCopy->getDescription());
-        $path->setShowOverview($pathToCopy->getShowOverview());
-        $path->setShowSummary($pathToCopy->getShowSummary());
-        $path->setOpenSummary($pathToCopy->getOpenSummary());
-        $path->setNumbering($pathToCopy->getNumbering());
-        $path->setStructure('');
+        $path = $event->getCopy();
 
         $stepsMapping = [];
 

@@ -70,14 +70,11 @@ class WorkspaceCrud
      */
     public function preCreate(CreateEvent $event)
     {
-        $this->om->startFlushSuite();
-
         $workspace = $this->manager->createWorkspace($event->getObject());
         $options = $event->getOptions();
         $user = $this->tokenStorage->getToken() ?
             $this->tokenStorage->getToken()->getUser() :
             $this->userManager->getDefaultClarolineAdmin();
-
         $model = $workspace->getWorkspaceModel() ? $workspace->getWorkspaceModel() : $this->manager->getDefaultModel();
         $workspace->setWorkspaceModel($model);
 
@@ -90,15 +87,16 @@ class WorkspaceCrud
             $workspace->addOrganization($organization);
         }
 
+        //this is for workspace creation: TODO remove that because it's very confusing
         if (in_array(Options::LIGHT_COPY, $options)) {
-            $this->om->endFlushSuite();
+            $this->om->flush();
 
             return $workspace;
         }
 
         $workspace = $this->manager->copy($model, $workspace, false);
 
-        $this->om->endFlushSuite();
+        $this->om->flush();
 
         return $workspace;
     }

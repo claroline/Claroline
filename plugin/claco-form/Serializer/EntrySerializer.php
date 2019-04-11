@@ -148,7 +148,7 @@ class EntrySerializer
      *
      * @return Entry
      */
-    public function deserialize($data, Entry $entry)
+    public function deserialize($data, Entry $entry, array $options = [])
     {
         $this->sipe('title', 'setTitle', $data, $entry);
         $this->sipe('status', 'setStatus', $data, $entry);

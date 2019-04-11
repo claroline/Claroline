@@ -76,7 +76,7 @@ class WebsiteManager
      *
      * @return Website
      */
-    public function copyWebsite(Website $orgWebsite)
+    public function copyWebsite(Website $orgWebsite, Website $newWebsite)
     {
         $orgRoot = $orgWebsite->getRoot();
         $orgOptions = $orgWebsite->getOptions();
@@ -84,7 +84,6 @@ class WebsiteManager
         array_unshift($websitePages, $orgRoot);
         $newWebsitePagesMap = [];
 
-        $newWebsite = new Website($orgWebsite->isTest());
         foreach ($websitePages as $websitePage) {
             $newWebsitePage = new WebsitePage();
             $newWebsitePage->setWebsite($newWebsite);

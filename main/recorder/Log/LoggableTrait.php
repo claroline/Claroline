@@ -2,12 +2,12 @@
 
 namespace Claroline\BundleRecorder\Log;
 
-use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
 trait LoggableTrait
 {
-    use LoggerAwareTrait;
+    protected $logger;
 
     public function log($message, $logLevel = null)
     {
@@ -18,5 +18,15 @@ trait LoggableTrait
             }
             $this->logger->log($logLevel, $time.$message);
         }
+    }
+
+    /**
+     * Sets a logger.
+     *
+     * @param LoggerInterface $logger
+     */
+    public function setLogger(LoggerInterface $logger = null)
+    {
+        $this->logger = $logger;
     }
 }

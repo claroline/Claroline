@@ -4,10 +4,8 @@ namespace Icap\BibliographyBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Icap\BibliographyBundle\Entity\BookReference;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -53,36 +51,6 @@ class BibliographyListener
             'bookReference' => $this->serializer->serialize($event->getResource()),
         ]);
 
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("copy_icap_bibliography")
-     *
-     * @param CopyResourceEvent $event
-     */
-    public function onCopy(CopyResourceEvent $event)
-    {
-        /** @var BookReference $old */
-        $old = $event->getResource();
-        $new = new BookReference();
-
-        $new->setAuthor($old->getAuthor());
-        $new->setDescription($old->getDescription());
-        $new->setAbstract($old->getAbstract());
-        $new->setIsbn($old->getIsbn());
-        $new->setPublisher($old->getPublisher());
-        $new->setPrinter($old->getPrinter());
-        $new->setPublicationYear($old->getPublicationYear());
-        $new->setLanguage($old->getLanguage());
-        $new->setPageCount($old->getPageCount());
-        $new->setUrl($old->getUrl());
-        $new->setCoverUrl($old->getCoverUrl());
-
-        $this->om->persist($new);
-        $this->om->flush();
-
-        $event->setCopy($new);
         $event->stopPropagation();
     }
 

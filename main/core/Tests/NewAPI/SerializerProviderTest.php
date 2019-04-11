@@ -56,7 +56,8 @@ class SerializerProviderTest extends TransactionalTestCase
             if ($file->isFile()) {
                 $originalData = \file_get_contents($file->getPathName());
                 //let's test the deserializer
-                $object = $this->provider->deserialize($class, json_decode($originalData, true));
+                $object = new $class();
+                $object = $this->provider->deserialize(json_decode($originalData, true), $object);
                 //can we serialize it ?
                 $data = $this->provider->serialize($object);
 

@@ -123,7 +123,10 @@ class FieldSerializer
      */
     public function deserialize($data, Field $field, array $options = [])
     {
-        $this->sipe('id', 'setUuid', $data, $field);
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $field);
+        }
+
         $this->sipe('label', 'setName', $data, $field);
         $this->sipe('type', 'setType', $data, $field);
         $this->sipe('required', 'setRequired', $data, $field);
@@ -136,15 +139,16 @@ class FieldSerializer
 
         $fieldFacet = $field->getFieldFacet();
 
-        if (empty($field->getFieldFacet())) {
+        if (!$fieldFacet) {
             $clacoForm = $field->getClacoForm();
             $fieldFacet = new FieldFacet();
             $fieldFacet->setResourceNode($clacoForm->getResourceNode());
             $this->om->persist($fieldFacet);
         }
-        $newFieldFacet = $this->fieldFacetSerializer->deserialize($data, $fieldFacet, $options);
-        $this->om->persist($newFieldFacet);
-        $field->setFieldFacet($newFieldFacet);
+
+        $fieldFacet = $this->fieldFacetSerializer->deserialize($data, $fieldFacet, $options);
+        $this->om->persist($fieldFacet);
+        $field->setFieldFacet($fieldFacet);
 
         if (isset($data['options']['choices'])) {
             unset($data['options']['choices']);

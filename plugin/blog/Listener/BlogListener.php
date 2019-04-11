@@ -2,17 +2,20 @@
 
 namespace Icap\BlogBundle\Listener;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
+use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
+use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\BlogBundle\Entity\Blog;
-use Icap\BlogBundle\Entity\BlogOptions;
 use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Manager\PostManager;
+use Icap\BlogBundle\Serializer\CommentSerializer;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -114,7 +117,51 @@ class BlogListener
     }
 
     /**
-     * @DI\Observe("copy_icap_blog")
+     * @DI\Observe("transfer.icap_blog.export")
+     */
+    public function onExport(ExportObjectEvent $exportEvent)
+    {
+        $blog = $exportEvent->getObject();
+        $data = [
+          'posts' => array_map(function (Post $post) {
+              return $this->container->get('claroline.serializer.blog.post')->serialize($post, [
+                CommentSerializer::INCLUDE_COMMENTS, CommentSerializer::FETCH_COMMENTS,
+              ]);
+          }, $blog->getPosts()->toArray()),
+        ];
+        $exportEvent->overwrite('_data', $data);
+    }
+
+    /**
+     * @DI\Observe("transfer.icap_blog.import.after")
+     */
+    public function onImport(ImportObjectEvent $event)
+    {
+        $data = $event->getData();
+        $blog = $event->getObject();
+        $om = $this->container->get('claroline.persistence.object_manager');
+
+        foreach ($data['_data']['posts'] as $postData) {
+            $post = $this->container->get('claroline.serializer.blog.post')->deserialize($postData, new Post(), [Options::REFRESH_UUID]);
+            $post->setBlog($blog)
+              ->setAuthor($this->container->get('security.token_storage')->getToken()->getUser());
+
+            foreach ($postData['comments'] as $commentData) {
+                $comment = $this->container->get('claroline.serializer.blog.comment')->deserialize($commentData, new Comment(), [Options::REFRESH_UUID]);
+
+                $this->container->get('icap.blog.manager.comment')
+                  ->createComment($blog, $post, $this->commentSerializer->deserialize($data, null), $comment['isPublished']);
+
+                $om->persist($comment);
+            }
+
+            $post->setBlog($blog);
+            $om->persist($post);
+        }
+    }
+
+    /**
+     * @DI\Observe("resource.icap_blog.copy")
      *
      * @param CopyResourceEvent $event
      */
@@ -125,9 +172,7 @@ class BlogListener
         /** @var \Icap\BlogBundle\Entity\Blog $blog */
         $blog = $event->getResource();
 
-        $newBlog = new Blog();
-        $newOptions = new BlogOptions();
-        $newBlog->setOptions($newOptions);
+        $newBlog = $event->getCopy();
 
         $this->container->get('icap_blog.manager.blog')->updateOptions($newBlog, $blog->getOptions(), $blog->getInfos());
 

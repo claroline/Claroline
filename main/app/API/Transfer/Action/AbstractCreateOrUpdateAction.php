@@ -5,6 +5,7 @@ namespace Claroline\AppBundle\API\Transfer\Action;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\TransferProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 abstract class AbstractCreateOrUpdateAction extends AbstractAction
@@ -17,22 +18,25 @@ abstract class AbstractCreateOrUpdateAction extends AbstractAction
      * @DI\InjectParams({
      *     "crud" = @DI\Inject("claroline.api.crud"),
      *     "serializer" = @DI\Inject("claroline.api.serializer"),
-     *     "transfer" = @DI\Inject("claroline.api.transfer")
+     *     "transfer" = @DI\Inject("claroline.api.transfer"),
+     *     "om" = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param Crud $crud
      */
-    public function __construct(Crud $crud, SerializerProvider $serializer, TransferProvider $transfer)
+    public function __construct(Crud $crud, SerializerProvider $serializer, TransferProvider $transfer, ObjectManager $om)
     {
         $this->crud = $crud;
         $this->serializer = $serializer;
         $this->transfer = $transfer;
+        $this->om = $om;
     }
 
     public function execute(array $data, &$successData = [])
     {
         //search the object. It'll look for the 1st identifier it finds so be carreful
-        $object = $this->serializer->deserialize($this->getClass(), $data);
+        $object = $this->om->getObject($data, $this->getClass()) ?? new $this->getClass();
+        $object = $this->serializer->deserialize($data, $object);
         $serializedclass = $this->getAction()[0];
         $action = !$object->getId() ? self::MODE_CREATE : self::MODE_UPDATE;
         $action = $serializedclass.'_'.$action;

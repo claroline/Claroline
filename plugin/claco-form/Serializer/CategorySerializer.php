@@ -97,12 +97,12 @@ class CategorySerializer
      *
      * @return Category
      */
-    public function deserialize($data, Category $category)
+    public function deserialize($data, Category $category, array $options = [])
     {
         $this->sipe('name', 'setName', $data, $category);
         $this->sipe('details', 'setDetails', $data, $category);
 
-        if (isset($data['clacoForm']['id'])) {
+        if (isset($data['clacoForm']['id']) && !in_array(Options::REFRESH_UUID, $options)) {
             $clacoForm = $this->clacoFormRepo->findOneBy(['uuid' => $data['clacoForm']['id']]);
 
             if (!empty($clacoForm)) {

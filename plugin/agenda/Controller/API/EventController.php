@@ -14,6 +14,8 @@ namespace Claroline\AgendaBundle\Controller\API;
 use Claroline\AgendaBundle\Entity\Event;
 use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\CoreBundle\Entity\File\PublicFile;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -90,7 +92,7 @@ class EventController extends AbstractCrudController
           }
         );
 
-        $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->find($id);
+        $workspace = $this->om->getRepository(Workspace::class)->find($id);
         $name = $workspace ? $workspace->getName() : 'desktop';
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
@@ -117,10 +119,9 @@ class EventController extends AbstractCrudController
         $data = json_decode($request->getContent(), true);
         $file = $data['file'];
         $workspace = $data['workspace'];
-        $workspace = $workspace['id'] ?
-            $this->serializer->deserialize('Claroline\CoreBundle\Entity\Workspace\Workspace', $workspace) :
-            null;
-        $file = $this->serializer->deserialize('Claroline\CoreBundle\Entity\File\PublicFile', $file);
+        $workspace = $workspace['id'] ? $this->om->getObject($workspace, Workspace::class) : null;
+        $fileEntity = $this->om->getObject($file, PublicFile::class) ?? new PublicFile();
+        $file = $this->serializer->deserialize($file, $fileEntity);
         $fileData = $this->container->get('claroline.utilities.file')->getContents($file);
         $events = $this->container->get('claroline.manager.agenda_manager')->import($fileData, $workspace);
 

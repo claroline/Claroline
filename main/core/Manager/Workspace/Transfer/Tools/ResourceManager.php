@@ -8,8 +8,8 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;
@@ -22,6 +22,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
  */
 class ResourceManager
 {
+    use LoggableTrait;
+
     /**
      * WorkspaceSerializer constructor.
      *
@@ -61,52 +63,92 @@ class ResourceManager
      */
     public function serialize(Workspace $workspace, array $options): array
     {
-        $root = $this->om->getRepository(ResourceNode::class)->findOneBy(['parent' => null, 'workspace' => $workspace->getId()]);
+        $root = $this->om->getRepository(ResourceNode::class)
+          ->findOneBy(['parent' => null, 'workspace' => $workspace->getId()]);
 
-        return ['root' => $this->serializer->serialize($root, array_merge($options, [Options::IS_RECURSIVE, Options::SERIALIZE_RESOURCE, Options::SERIALIZE_MINIMAL]))];
+        return $this->recursiveSerialize($root, $options);
     }
 
-    public function deserialize(array $data, Workspace $workspace)
+    private function recursiveSerialize(ResourceNode $root, array $options, array $data = ['nodes' => [], 'resources' => []])
     {
-        return $this->deserializeResources($data['root'], $workspace);
-    }
+        $node = $this->serializer->serialize($root, array_merge($options, [Options::SERIALIZE_MINIMAL]));
+        $resource = array_merge(
+            $this->serializer->serialize($this->om->getRepository($root->getClass())->findOneBy(['resourceNode' => $root])),
+            ['_nodeId' => $root->getUuid(), '_class' => $node['meta']['className'], '_type' => $node['meta']['type']]
+        );
 
-    private function deserializeResources(array $data, Workspace $workspace)
-    {
-        $node = $this->deserializeResource($data, $workspace);
+        $data['nodes'][] = $node;
+        $data['resources'][] = $resource;
 
-        foreach ($data['children'] as $child) {
-            $child = $this->deserializeResources($child, $workspace);
-            $child->setParent($node);
+        foreach ($root->getChildren() as $child) {
+            $data = $this->recursiveSerialize($child, $options, $data);
         }
 
-        return $node;
+        return $data;
     }
 
-    private function deserializeResource(array $data, Workspace $workspace)
+    public function deserialize(array $data, Workspace $workspace, array $options)
     {
-        $rights = $data['rights'];
-        unset($data['rights']);
-        $node = $this->serializer->deserialize(ResourceNode::class, $data);
-        $node->setWorkspace($workspace);
-        $this->serializer->get(ResourceNode::class)->deserialize(['rights' => $rights], $node);
-        if ($this->tokenStorage->getToken()) {
-            $node->setCreator($this->tokenStorage->getToken()->getUser());
-        } else {
-            $creator = $this->userManager->getDefaultClarolineAdmin();
-            $node->setCreator($creator);
-        }
-        $this->om->persist($node);
-        $resourceType = $this->om->getRepository(ResourceType::class)->findOneByName($data['meta']['type']);
-        $class = $resourceType->getClass();
+        $created = $this->deserializeNodes($data['nodes'], $workspace);
+        $this->deserializeResources($data['resources'], $workspace, $created);
         $this->om->flush();
-        $resource = new $class();
-        $resource = $this->serializer->deserialize($class, $data['resource']);
-        $resource->setResourceNode($node);
-        $this->om->persist($resource);
-        $this->om->flush();
+    }
 
-        return $node;
+    private function deserializeNodes(array $nodes, Workspace $workspace)
+    {
+        $created = [];
+
+        foreach ($nodes as $data) {
+            $rights = $data['rights'];
+            unset($data['rights']);
+            $node = $this->om->getObject($data, ResourceNode::class) ?? new ResourceNode();
+            $node = $this->serializer->deserialize($data, $node);
+            $node->setWorkspace($workspace);
+            $this->serializer->get(ResourceNode::class)->deserialize(['rights' => $rights], $node);
+
+            if ($this->tokenStorage->getToken()) {
+                $node->setCreator($this->tokenStorage->getToken()->getUser());
+            } else {
+                $creator = $this->userManager->getDefaultClarolineAdmin();
+                $node->setCreator($creator);
+            }
+
+            $created[$node->getUuid()] = $node;
+            if (isset($data['parent'])) {
+                $node->setParent($created[$data['parent']['id']]);
+            }
+
+            $this->om->persist($node);
+        }
+
+        return $created;
+    }
+
+    private function deserializeResources(array $resources, Workspace $workspace, array $nodes)
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($resources as $data) {
+            $resource = new $data['_class']();
+            $resource->setResourceNode($nodes[$data['_nodeId']]);
+            $event = $this->dispatcher->dispatch(
+                'transfer.'.$nodes[$data['_nodeId']]->getResourceType()->getName().'.import.before',
+                'Claroline\\CoreBundle\\Event\\ImportObjectEvent',
+                [null, $data, $resource]
+            );
+            $data = $event->getData();
+            $this->dispatchCrud('create', 'pre', [$resource, [Options::WORKSPACE_COPY]]);
+            $this->serializer->deserialize($data, $resource, [Options::REFRESH_UUID]);
+            $this->dispatchCrud('create', 'post', [$resource, [Options::WORKSPACE_COPY]]);
+            $this->dispatcher->dispatch(
+                'transfer.'.$nodes[$data['_nodeId']]->getResourceType()->getName().'.import.after',
+                'Claroline\\CoreBundle\\Event\\ImportObjectEvent',
+                [null, $data, $resource]
+            );
+            $this->om->persist($resource);
+        }
+
+        $this->om->endFlushSuite();
     }
 
     /**
@@ -116,14 +158,18 @@ class ResourceManager
     {
         $data = $event->getData();
 
-        if (isset($data['root'])) {
+        foreach ($data['resources'] as $key => $serialized) {
+            $node = $this->om->getRepository(ResourceNode::class)->findOneByUuid($serialized['_nodeId']);
+            $resource = $this->om->getRepository($serialized['_class'])->findOneBy(['resourceNode' => $node]);
+
+            /** @var ExportObjectEvent $new */
             $new = $this->dispatcher->dispatch(
-                'transfer_export_claroline_corebundle_entity_resource_resourcenode',
+                'transfer.'.$node->getResourceType()->getName().'.export',
                 ExportObjectEvent::class,
-                [new \StdClass(), $event->getFileBag(), $data['root']]
+                [$resource, $event->getFileBag(), $serialized]
             );
 
-            $event->overwrite('root', $new->getData());
+            $event->overwrite('resources.'.$key, $new->getData());
         }
     }
 
@@ -132,14 +178,39 @@ class ResourceManager
      */
     public function onImport(ImportObjectEvent $event)
     {
+        $this->log('Importing resource files...');
         $data = $event->getData();
 
-        if (isset($data['root'])) {
+        foreach ($data['resources'] as $serialized) {
             $this->dispatcher->dispatch(
-              'transfer_import_claroline_corebundle_entity_resource_resourcenode',
-              'Claroline\\CoreBundle\\Event\\ImportObjectEvent',
-              [$event->getFileBag(), $data['root']]
+                'transfer.'.$serialized['_type'].'.import',
+                'Claroline\\CoreBundle\\Event\\ImportObjectEvent',
+                [$event->getFileBag(), $serialized]
             );
         }
+    }
+
+    /**
+     * We dispatch 2 events: a generic one and an other with a custom name.
+     * Listen to what you want. Both have their uses.
+     *
+     * @param string $action (create, copy, delete, patch, update)
+     * @param string $when   (post, pre)
+     * @param array  $args
+     *
+     * @return bool
+     *
+     * Same dispatcher than the crud one
+     */
+    public function dispatchCrud($action, $when, array $args)
+    {
+        $name = 'crud_'.$when.'_'.$action.'_object';
+        $eventClass = ucfirst($action);
+        $generic = $this->dispatcher->dispatch($name, 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
+        $className = $this->om->getMetadataFactory()->getMetadataFor(get_class($args[0]))->getName();
+        $serializedName = $name.'_'.strtolower(str_replace('\\', '_', $className));
+        $specific = $this->dispatcher->dispatch($serializedName, 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
+
+        return $generic->isAllowed() && $specific->isAllowed();
     }
 }

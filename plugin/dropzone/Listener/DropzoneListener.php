@@ -181,7 +181,7 @@ class DropzoneListener
     }
 
     /**
-     * @DI\Observe("copy_icap_dropzone")
+     * @DI\Observe("resource.icap_dropzone.copy")
      *
      * @param CopyResourceEvent $event
      */
@@ -190,28 +190,7 @@ class DropzoneListener
         $em = $this->container->get('doctrine.orm.entity_manager');
         /** @var Dropzone $resource */
         $resource = $event->getResource();
-
-        $newDropzone = new Dropzone();
-        $newDropzone->setName($resource->getName());
-        $newDropzone->setAllowCommentInCorrection($resource->getAllowCommentInCorrection());
-        $newDropzone->setAllowRichText($resource->getAllowRichText());
-        $newDropzone->setAllowUpload($resource->getAllowUpload());
-        $newDropzone->setAllowUrl($resource->getAllowUrl());
-        $newDropzone->setAllowWorkspaceResource($resource->getAllowWorkspaceResource());
-        $newDropzone->setDisplayNotationMessageToLearners($resource->getDisplayNotationMessageToLearners());
-        $newDropzone->setDisplayNotationToLearners($resource->getDisplayNotationToLearners());
-        $newDropzone->setEditionState($resource->getEditionState());
-        $newDropzone->setEndAllowDrop($resource->getEndAllowDrop());
-        $newDropzone->setEndReview($resource->getEndReview());
-        $newDropzone->setExpectedTotalCorrection($resource->getExpectedTotalCorrection());
-        $newDropzone->setInstruction($resource->getInstruction());
-        $newDropzone->setManualPlanning($resource->getManualPlanning());
-        $newDropzone->setManualState($resource->getManualState());
-        $newDropzone->setMinimumScoreToPass($resource->getMinimumScoreToPass());
-        $newDropzone->setPeerReview($resource->getPeerReview());
-        $newDropzone->setStartAllowDrop($resource->getStartAllowDrop());
-        $newDropzone->setStartReview($resource->getStartReview());
-        $newDropzone->setTotalCriteriaColumn($resource->getTotalCriteriaColumn());
+        $newDropzone = $event->getCopy();
 
         $oldCriteria = $resource->getPeerReviewCriteria();
 

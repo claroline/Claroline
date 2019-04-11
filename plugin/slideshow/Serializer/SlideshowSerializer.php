@@ -2,6 +2,7 @@
 
 namespace Claroline\SlideshowBundle\Serializer;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
@@ -111,7 +112,7 @@ class SlideshowSerializer
      *
      * @return Slideshow
      */
-    public function deserialize($data, Slideshow $slideshow)
+    public function deserialize($data, Slideshow $slideshow, array $options = [])
     {
         $this->sipe('autoPlay', 'setAutoPlay', $data, $slideshow);
         $this->sipe('interval', 'setInterval', $data, $slideshow);
@@ -144,7 +145,10 @@ class SlideshowSerializer
 
                 $slide->setOrder($slideOrder);
 
-                $this->sipe('id', 'setUuid', $slideData, $slide);
+                if (!in_array(Options::REFRESH_UUID, $options)) {
+                    $this->sipe('id', 'setUuid', $data, $slideshow);
+                }
+
                 $this->sipe('meta.title', 'setTitle', $slideData, $slide);
                 $this->sipe('meta.description', 'setDescription', $slideData, $slide);
 

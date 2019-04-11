@@ -19,7 +19,6 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
@@ -220,25 +219,5 @@ class DirectoryListener
     public function onDelete(DeleteResourceEvent $event)
     {
         $event->stopPropagation();
-    }
-
-    /**
-     * Copies a directory.
-     *
-     * @DI\Observe("copy_directory")
-     *
-     * @param copyResourceEvent $event
-     *
-     * @todo use serializer later (will be done by the core)
-     */
-    public function onCopy(CopyResourceEvent $event)
-    {
-        /** @var Directory $original */
-        $original = $event->getResource();
-
-        $copy = new Directory();
-        $serialized = $this->serializer->serialize($original);
-        $copy = $this->serializer->get(Directory::class)->deserialize($serialized, $copy);
-        $event->setCopy($copy);
     }
 }

@@ -142,7 +142,7 @@ class WorkspaceController extends AbstractCrudController
         $data = $this->decodeRequest($request);
 
         if (isset($data['archive'])) {
-            $workspace = $this->importer->create($data);
+            $workspace = $this->importer->create($data, new Workspace());
             $this->toolManager->addMissingWorkspaceTools($workspace);
 
             return new JsonResponse(
@@ -184,10 +184,20 @@ class WorkspaceController extends AbstractCrudController
     public function copyBulkAction(Request $request, $class)
     {
         //add params for the copy here
-        $this->options['copyBulk'] = 1 === (int) $request->query->get('model') || 'true' === $request->query->get('model') ?
-          [Options::WORKSPACE_MODEL] : [];
+        $isModel = 1 === (int) $request->query->get('model') || 'true' === $request->query->get('model') ? true : false;
 
-        return parent::copyBulkAction($request, $class);
+        $serializer = $this->serializer;
+        $copies = [];
+
+        foreach ($this->decodeIdsString($request, $class) as $workspace) {
+            $new = new Workspace();
+            $new->setCode($workspace->getCode().uniqid());
+            $copies[] = $this->workspaceManager->copy($workspace, $new, $isModel);
+        }
+
+        return new JsonResponse(array_map(function ($copy) use ($serializer) {
+            return $serializer->serialize($copy, $this->options['get']);
+        }, $copies), 200);
     }
 
     /**
@@ -250,7 +260,7 @@ class WorkspaceController extends AbstractCrudController
      *    name="apiv2_workspace_export"
      * )
      * @Method("GET")
-     * @ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
+     * @ParamConverter("workspace", options={"mapping": {"id": "id"}})
      *
      * @param Request   $request
      * @param Workspace $workspace

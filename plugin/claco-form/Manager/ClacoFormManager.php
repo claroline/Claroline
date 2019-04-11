@@ -1026,7 +1026,7 @@ class ClacoFormManager
         return $data;
     }
 
-    public function copyClacoForm(ClacoForm $clacoForm, ResourceNode $newNode)
+    public function copyClacoForm(ClacoForm $clacoForm, ClacoForm $newClacoForm)
     {
         $categoryLinks = [];
         $keywordLinks = [];
@@ -1037,8 +1037,6 @@ class ClacoFormManager
         $fields = $clacoForm->getFields();
         $entries = $this->getAllEntries($clacoForm);
 
-        $newClacoForm = $this->copyResource($clacoForm);
-
         foreach ($categories as $category) {
             $newCategory = $this->copyCategory($newClacoForm, $category);
             $categoryLinks[$category->getId()] = $newCategory;
@@ -1048,7 +1046,7 @@ class ClacoFormManager
             $keywordLinks[$keyword->getId()] = $newKeyword;
         }
         foreach ($fields as $field) {
-            $links = $this->copyField($newClacoForm, $newNode, $field, $categoryLinks);
+            $links = $this->copyField($newClacoForm, $newClacoForm->getResourceNode(), $field, $categoryLinks);
 
             foreach ($links['fields'] as $key => $value) {
                 $fieldLinks[$key] = $value;
@@ -1060,17 +1058,6 @@ class ClacoFormManager
         foreach ($entries as $entry) {
             $this->copyEntry($newClacoForm, $entry, $categoryLinks, $keywordLinks, $fieldLinks, $fieldFacetLinks);
         }
-
-        return $newClacoForm;
-    }
-
-    private function copyResource(ClacoForm $clacoForm)
-    {
-        $newClacoForm = new ClacoForm();
-        $newClacoForm->setName($clacoForm->getName());
-        $newClacoForm->setTemplate($clacoForm->getTemplate());
-        $newClacoForm->setDetails($clacoForm->getDetails());
-        $this->om->persist($newClacoForm);
 
         return $newClacoForm;
     }
@@ -1101,7 +1088,7 @@ class ClacoFormManager
         return $newKeyword;
     }
 
-    private function copyField(ClacoForm $newClacoForm, ResourceNode $newNode, Field $field, array $categoryLinks)
+    private function copyField(ClacoForm $newClacoForm, ClacoForm $newNode, Field $field, array $categoryLinks)
     {
         $links = [
             'fields' => [],
