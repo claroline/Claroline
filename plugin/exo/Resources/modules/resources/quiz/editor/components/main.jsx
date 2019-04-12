@@ -80,6 +80,12 @@ class EditorMain extends Component {
     ]
   }
 
+  getItemActions(step, item, index) {
+    return [
+
+    ]
+  }
+
   render() {
     return (
       <Form
@@ -136,6 +142,7 @@ class EditorMain extends Component {
                         numberingType={this.props.numberingType}
 
                         index={stepIndex}
+                        id={currentStep.id}
                         title={currentStep.title}
                         items={currentStep.items}
                         errors={get(this.props.errors, `steps[${stepIndex}]`)}

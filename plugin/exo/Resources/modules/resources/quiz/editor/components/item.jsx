@@ -48,7 +48,7 @@ const EditorItem = props =>
             embedded={true}
             formName={props.formName}
             path={props.path}
-            disabled={false}
+            disabled={!props.item.rights.edit}
 
             definition={itemDefinition}
             item={props.item}

@@ -13,6 +13,7 @@ import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder'
 
 import {MODAL_ITEM_CREATION} from '#/plugin/exo/items/modals/creation'
 import {MODAL_ITEM_IMPORT} from '#/plugin/exo/items/modals/import'
+import {MODAL_ITEM_POSITION} from '#/plugin/exo/resources/quiz/editor/modals/item-position'
 import {getNumbering} from '#/plugin/exo/resources/quiz/utils'
 import {EditorItem} from '#/plugin/exo/resources/quiz/editor/components/item'
 
@@ -90,6 +91,14 @@ const EditorStep = props => {
                 update={(prop, value) => props.update(prop ? `items[${itemIndex}].${prop}`:`items[${itemIndex}]`, value)}
                 actions={[
                   {
+                    name: 'lock',
+                    type: CALLBACK_BUTTON,
+                    icon: 'fa fa-fw fa-lock',
+                    label: trans('lock', {}, 'actions'),
+                    callback: () => true,
+                    disabled: true,
+                    group: trans('management')
+                  }, {
                     name: 'copy',
                     type: MODAL_BUTTON,
                     icon: 'fa fa-fw fa-clone',
@@ -101,7 +110,18 @@ const EditorStep = props => {
                     type: MODAL_BUTTON,
                     icon: 'fa fa-fw fa-arrows',
                     label: trans('move', {}, 'actions'),
-                    modal: [],
+                    modal: [MODAL_ITEM_POSITION, {
+                      icon: 'fa fa-fw fa-arrows',
+                      title: trans('movement'),
+                      step: {
+                        id: props.id,
+                        title: props.title || trans('step', {number: props.index + 1}, 'quiz')
+                      },
+                      steps: (props.steps || []).map((s, i) => ({
+                        id: s.id,
+                        title: s.title || trans('step', {number: i + 1}, 'quiz')
+                      }))
+                    }],
                     group: trans('management')
                   }, {
                     name: 'delete',
@@ -164,6 +184,7 @@ EditorStep.propsTypes = {
   numberingType: T.string.isRequired,
 
   index: T.number.isRequired,
+  id: T.string.isRequired,
   title: T.string,
   actions: T.arrayOf(T.shape(
     ActionTypes.propTypes
