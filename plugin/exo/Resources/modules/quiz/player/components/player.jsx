@@ -142,7 +142,7 @@ class PlayerComponent extends Component {
             {this.props.isTimed && this.props.duration > 0 && this.props.paper.startDate &&
               <div className="timer-container">
                 <Timer
-                  totalTime={this.props.duration * 60}
+                  totalTime={this.props.duration}
                   startDate={this.props.paper.startDate}
                   type="user"
                   onTimeOver={() => {
