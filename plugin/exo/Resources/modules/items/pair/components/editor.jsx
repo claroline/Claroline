@@ -300,7 +300,7 @@ class Pair extends Component {
 
           {this.state.showFeedback &&
             <HtmlInput
-              id={`${this.props.pair.itemIds[0]}-${this.props.pair.itemIds[1]}-feedback`}
+              id={`pair-${this.props.pair.itemIds[0]}-${this.props.pair.itemIds[1]}-feedback`}
               className="feedback-control"
               value={this.props.pair.feedback}
               onChange={(value) => this.props.onUpdate('feedback', value, this.props.index)}
@@ -360,7 +360,7 @@ Pair.propTypes = {
   pair: T.object.isRequired,
   onDrop: T.func.isRequired,
   index: T.number.isRequired,
-  showPins: T.bool.isRequired,
+  showPins: T.bool,
   items: T.arrayOf(T.object).isRequired,
   onUpdate: T.func.isRequired,
   onDelete: T.func.isRequired,
@@ -368,6 +368,12 @@ Pair.propTypes = {
 }
 
 class PairList extends Component {
+  constructor(props) {
+    super(props)
+
+    this.onItemDrop = this.onItemDrop.bind(this)
+  }
+
   /**
    * handle item drop
    * @var {source} source (source.item is the object that has been dropped)
@@ -392,7 +398,7 @@ class PairList extends Component {
             <li key={`pair-${index}`}>
               <Pair
                 pair={pair}
-                onDrop={(source, target) => this.onItemDrop(source, target)}
+                onDrop={this.onItemDrop}
                 onUpdate={(property, value, index) => updatePair(property, value, index, this.props.solutions, this.props.onChange)}
                 onDelete={(leftId, rightId) => removePair(leftId, rightId, this.props.solutions, this.props.onChange)}
                 onAddItemCoordinates={(itemId, brotherId, coordinates) => addItemCoordinates(itemId, brotherId, coordinates, this.props.items, this.props.onChange)}
@@ -419,7 +425,7 @@ class PairList extends Component {
 PairList.propTypes = {
   items: T.arrayOf(T.object).isRequired,
   solutions: T.arrayOf(T.object).isRequired,
-  pin: T.bool.isRequired,
+  pin: T.bool,
   onChange: T.func.isRequired
 }
 
@@ -548,7 +554,7 @@ let Item = props =>
   <div className="answer-item item">
     <div className="text-fields">
       <HtmlInput
-        id={`${props.item.id}-data`}
+        id={`item-${props.item.id}-data`}
         value={props.item.data}
         placeholder={trans('item', {number: props.index + 1}, 'quiz')}
         onChange={(value) => props.onUpdate('data', value)}

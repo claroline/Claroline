@@ -14,7 +14,7 @@ import {SetItemDragPreview} from '#/plugin/exo/items/set/components/set-item-dra
 
 let DropBox = props => props.connectDropTarget(
   <div className={classes('set-drop-placeholder', {
-    'hover': props.isOver
+    hover: props.isOver
   })}>
     {trans('set_drop_item', {}, 'quiz')}
   </div>

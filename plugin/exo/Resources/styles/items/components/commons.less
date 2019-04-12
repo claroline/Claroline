@@ -124,6 +124,15 @@
     font-weight: normal;
 }
 
+.draggable-answer-item {
+    cursor: move;
+
+    &:hover:not(.selected-answer) {
+        background: darken(@answer-item-bg, 10%);
+        border-color: darken(@answer-item-border, 10%);
+    }
+}
+
 .expected-answer {
     color: @expected-answer-color;
     border-color: @expected-answer-border;

@@ -72,7 +72,7 @@ class Choice extends Component {
           {!this.props.fixedScore &&
             <NumberInput
               id={`choice-${this.props.id}-score`}
-              className="choice-score"
+              className="score"
               value={this.props.score}
               onChange={score => this.props.update('score', score)}
             />

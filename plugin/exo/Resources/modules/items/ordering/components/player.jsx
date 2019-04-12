@@ -11,15 +11,13 @@ import {makeSortable, SORT_HORIZONTAL, SORT_VERTICAL} from '#/plugin/exo/utils/s
 import {makeDraggable, makeDroppable} from '#/plugin/exo/utils/dragAndDrop'
 import {OrderingItemDragPreview} from '#/plugin/exo/items/ordering/components/ordering-item-drag-preview'
 
-let DropBox = props => {
-  return props.connectDropTarget(
-    <div className={classes('drop-container', {
-      'on-hover': props.isOver
-    })}>
-      {trans('set_drop_item', {}, 'quiz')}
-    </div>
-  )
-}
+let DropBox = props => props.connectDropTarget(
+  <div className={classes('drop-container', {
+    'on-hover': props.isOver
+  })}>
+    {trans('set_drop_item', {}, 'quiz')}
+  </div>
+)
 
 DropBox.propTypes = {
   connectDropTarget: T.func.isRequired,
@@ -32,28 +30,24 @@ DropBox = makeDroppable(DropBox, 'ITEM')
 
 let SortableItem = forwardRef((props, ref) => {
   const element =
-    <div className="item" ref={ref}>
+    <div className="item answer-item" ref={ref}>
       <div className="item-data" dangerouslySetInnerHTML={{__html: props.data}} />
       <div className="item-actions">
         {props.canDelete &&
           <Button
             id={`answer-${props.index}-delete`}
-            className="btn"
+            className="btn-link"
             type={CALLBACK_BUTTON}
             icon="fa fa-fw fa-trash-o"
             label={trans('delete', {}, 'actions')}
             callback={props.onDelete}
             tooltip="top"
+            dangerous={true}
           />
         }
+
         {props.sortable &&
-          <span
-            title={trans('move')}
-            draggable="true"
-            className="tooltiped-button btn"
-          >
-            <span className="fa fa-arrows drag-handle"/>
-          </span>
+          <span className="fa fa-arrows" />
         }
       </div>
     </div>
@@ -82,17 +76,11 @@ SortableItem = makeSortable(
 
 let DraggableItem = props => {
   const element =
-    <div className="item">
+    <div className="item answer-item">
       <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.data}} />
 
       {props.draggable &&
-        <span
-          title={trans('move')}
-          draggable="true"
-          className="tooltiped-button btn"
-        >
-          <span className="fa fa-arrows drag-handle"/>
-        </span>
+      <span className="fa fa-arrows" />
       }
     </div>
 

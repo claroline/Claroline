@@ -372,6 +372,7 @@ const ClozeEditor = props =>
           {
             name: 'clozeText',
             label: trans('text'),
+            required: true,
             render: (item, errors) => {
               const ClozeText = (
                 <MainField

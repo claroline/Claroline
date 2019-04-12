@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
-import Tooltip from 'react-bootstrap/lib/Tooltip'
 import cloneDeep from 'lodash/cloneDeep'
 import classes from 'classnames'
+
+import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
+import Tooltip from 'react-bootstrap/lib/Tooltip'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
@@ -18,7 +19,7 @@ import {makeDraggable, makeDroppable} from '#/plugin/exo/utils/dragAndDrop'
 import {ItemEditor as ItemEditorType} from '#/plugin/exo/items/prop-types'
 import {SetItem as SetItemType} from '#/plugin/exo/items/set/prop-types'
 import {utils} from '#/plugin/exo/items/set/utils'
-import {SetItemDragPreview} from '#/plugin/exo/items/set/components/set-item-drag-preview.jsx'
+import {SetItemDragPreview} from '#/plugin/exo/items/set/components/set-item-drag-preview'
 
 const addItem = (items, saveCallback) => {
   const newItems = cloneDeep(items)
@@ -124,60 +125,60 @@ const updateSet = (property, value, setId, sets, saveCallback) => {
   saveCallback('sets', newSets)
 }
 
-const removeSet = (setId, sets, solutions, saveCallback) => {
+const removeSet = (setId, sets, associations, saveCallback) => {
   const newSets = cloneDeep(sets)
-  const newSolutions = cloneDeep(solutions)
+  const newAssociations = cloneDeep(associations)
   const index = newSets.findIndex(s => s.id === setId)
   newSets.splice(index, 1)
   // remove set from solution
-  newSolutions.associations.forEach((ass, idx) => {
+  newAssociations.forEach((ass, idx) => {
     if (ass.setId === setId){
-      newSolutions.associations.splice(idx, 1)
+      newAssociations.splice(idx, 1)
     }
   })
 
   saveCallback('sets', newSets)
-  saveCallback('solutions', newSolutions)
+  saveCallback('solutions.associations', newAssociations)
 }
 
-const addAssociation = (setId, itemId, itemData, solutions, saveCallback) => {
-  const newSolutions = cloneDeep(solutions)
-  newSolutions.associations.push({
+const addAssociation = (setId, itemId, itemData, associations, saveCallback) => {
+  const newAssociations = cloneDeep(associations)
+  newAssociations.push({
     itemId: itemId,
     setId: setId,
     score: 1,
     feedback: ''
   })
 
-  saveCallback('solutions', newSolutions)
+  saveCallback('solutions.associations', newAssociations)
 }
 
-const updateAssociation = (property, value, setId, itemId, solutions, saveCallback) => {
-  const newSolutions = cloneDeep(solutions)
+const updateAssociation = (property, value, setId, itemId, associations, saveCallback) => {
+  const newAssociations = cloneDeep(associations)
   const formattedValue = 'score' === property ? parseFloat(value) : value
-  const association = newSolutions.associations.find(a => a.setId === setId && a.itemId === itemId)
+  const association = newAssociations.find(a => a.setId === setId && a.itemId === itemId)
   association[property] = formattedValue
 
-  saveCallback('solutions', newSolutions)
+  saveCallback('solutions.associations', newAssociations)
 }
 
-const removeAssociation = (setId, itemId, solutions, saveCallback) => {
-  const newSolutions = cloneDeep(solutions)
-  const index = newSolutions.associations.findIndex(a => a.itemId === itemId && a.setId === setId)
+const removeAssociation = (setId, itemId, associations, saveCallback) => {
+  const newAssociations = cloneDeep(associations)
+  const index = newAssociations.findIndex(a => a.itemId === itemId && a.setId === setId)
 
   if (-1 < index) {
-    newSolutions.associations.splice(index, 1)
-    saveCallback('solutions', newSolutions)
+    newAssociations.splice(index, 1)
+    saveCallback('solutions.associations', newAssociations)
   }
 }
 
 /**
  * handle item drop
  */
-const dropItem = (source, target, solutions, saveCallback) => {
+const dropItem = (source, target, associations, saveCallback) => {
   // add solution (check the item is not already inside before adding it)
-  if (undefined === solutions.associations.find(a => a.setId === target.object.id && a.itemId === source.item.id)){
-    addAssociation(target.object.id, source.item.id, source.item.data, solutions, saveCallback)
+  if (undefined === associations.find(a => a.setId === target.object.id && a.itemId === source.item.id)){
+    addAssociation(target.object.id, source.item.id, source.item.data, associations, saveCallback)
   }
 }
 
@@ -216,13 +217,21 @@ class Association extends Component {
         'unexpected-answer': this.props.association.score <= 0
       })}>
         <div className="text-fields">
-          <HtmlText className="form-control">
-            {this.props.association._itemData}
-          </HtmlText>
+          {this.props.association._itemData &&
+            <HtmlText className="form-control">
+              {this.props.association._itemData}
+            </HtmlText>
+          }
+
+          {!this.props.association._itemData &&
+            <span className="form-control input-placeholder">
+              {trans('item', {number: this.props.association._itemIndex + 1}, 'quiz')}
+            </span>
+          }
 
           {this.state.showFeedback &&
             <HtmlInput
-              id={`${this.props.association.itemId}-${this.props.association.setId}-feedback`}
+              id={`association-${this.props.association.itemId}-${this.props.association.setId}-feedback`}
               className="feedback-control"
               value={this.props.association.feedback}
               onChange={(value) => this.props.onUpdate('feedback', value, this.props.association.setId, this.props.association.itemId)}
@@ -292,7 +301,7 @@ const Set = (props) =>
           icon="fa fa-fw fa-trash-o"
           label={trans('delete', {}, 'actions')}
           disabled={!props.deletable}
-          callback={() => props.onDelete()}
+          callback={props.onDelete}
           tooltip="top"
           dangerous={true}
         />
@@ -304,8 +313,8 @@ const Set = (props) =>
         <li key={`${ass.itemId}-${ass.setId}`}>
           <Association
             association={ass}
-            onUpdate={(property, value, setId, itemId) => updateAssociation(property, value, setId, itemId, props.solutions, props.onChange)}
-            onDelete={(setId, itemId) => removeAssociation(setId, itemId, props.solutions, props.onChange)}
+            onUpdate={(property, value, setId, itemId) => updateAssociation(property, value, setId, itemId, props.associations, props.onChange)}
+            onDelete={(setId, itemId) => removeAssociation(setId, itemId, props.associations, props.onChange)}
           />
         </li>
       )}
@@ -319,7 +328,6 @@ Set.propTypes = {
   set: T.object.isRequired,
   deletable: T.bool.isRequired,
   associations: T.arrayOf(T.object).isRequired,
-  solutions: T.object.isRequired,
 
   onChange: T.func.isRequired,
   onDrop: T.func.isRequired,
@@ -339,12 +347,11 @@ const SetList = (props) =>
             index={setIndex}
             set={set}
             deletable={1 < props.sets.length}
-            associations={props.solutions.associations.filter(association => association.setId === set.id) || []}
-            solutions={props.solutions}
+            associations={props.associations.filter(association => association.setId === set.id) || []}
             onChange={props.onChange}
-            onDrop={(source, target) => dropItem(source, target, props.solutions, props.onChange)}
+            onDrop={(source, target) => dropItem(source, target, props.associations, props.onChange)}
             onUpdate={(property, value) => updateSet(property, value, set.id, props.sets, props.onChange)}
-            onDelete={() => removeSet(set.id, props.sets, props.solutions, props.onChange)}
+            onDelete={() => removeSet(set.id, props.sets, props.associations, props.onChange)}
           />
         </li>
       )}
@@ -361,10 +368,7 @@ const SetList = (props) =>
 
 SetList.propTypes = {
   sets: T.arrayOf(T.object).isRequired,
-  solutions: T.shape({
-    associations: T.arrayOf(T.object).isRequired,
-    odds: T.arrayOf(T.object)
-  }).isRequired,
+  associations: T.arrayOf(T.object).isRequired,
   onChange: T.func.isRequired
 }
 
@@ -398,7 +402,7 @@ let Item = (props) =>
           <OverlayTrigger
             placement="top"
             overlay={
-              <Tooltip id={`set-item-${props.item.id}-drag`}>{trans('move')}</Tooltip>
+              <Tooltip id={`set-item-${props.item.id}-drag`}>{trans('move', {}, 'actions')}</Tooltip>
             }
           >
             <span
@@ -601,11 +605,14 @@ const SetEditor = (props) =>
             hideLabel: true,
             required: true,
             render: (setItem) => {
+              const items = setItem.items
+                .filter(item => !utils.isOdd(item.id, setItem.solutions))
+
               const Set = (
                 <div className="row">
                   <div className="items-col col-md-5 col-sm-5 col-xs-5">
                     <ItemList
-                      items={setItem.items.filter(item => !utils.isOdd(item.id, setItem.solutions))}
+                      items={items}
                       solutions={setItem.solutions}
                       onChange={props.update}
 
@@ -626,7 +633,14 @@ const SetEditor = (props) =>
                   <div className="sets-col col-md-7 col-sm-7 col-xs-7">
                     <SetList
                       sets={setItem.sets}
-                      solutions={setItem.solutions}
+                      associations={setItem.solutions.associations.map(association => {
+                        const itemIndex = items.findIndex(item => association.itemId === item.id)
+
+                        return Object.assign({
+                          _itemIndex: itemIndex,
+                          _itemData: items[itemIndex].data
+                        }, association)
+                      })}
                       onChange={props.update}
                     />
                   </div>

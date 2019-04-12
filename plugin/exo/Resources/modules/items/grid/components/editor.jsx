@@ -601,7 +601,7 @@ GridTable.propTypes = {
   update: T.func.isRequired
 }
 
-export const GridEditor = (props) =>
+const GridEditor = (props) =>
   <FormData
     className="grid-editor"
     embedded={true}
@@ -625,15 +625,15 @@ export const GridEditor = (props) =>
           }, {
             name: 'penalty',
             type: 'number',
-            label: trans('grid_editor_penalty_label', {}, 'quiz'),
+            label: trans('editor_penalty_label', {}, 'quiz'),
             displayed: (item) => item.score.type === SCORE_SUM
           }, {
             name: 'rows',
             type: 'number',
             label: trans('grid_table_rows', {}, 'quiz'),
             options: {
-              min: '1',
-              max: '12'
+              min: 1,
+              max: 12
             },
             onChange: (value) => {
               const newItem = cloneDeep(props.item)
@@ -657,8 +657,8 @@ export const GridEditor = (props) =>
             type: 'number',
             label: trans('grid_table_cols', {}, 'quiz'),
             options: {
-              min: '1',
-              max: '12'
+              min: 1,
+              max: 12
             },
             onChange: (value) => {
               const newItem = cloneDeep(props.item)
@@ -686,8 +686,8 @@ export const GridEditor = (props) =>
             type: 'number',
             label: trans('grid_table_border', {}, 'quiz'),
             options: {
-              min: '0',
-              max: '6'
+              min: 0,
+              max: 6
             }
           }, {
             name: 'grid',
@@ -738,3 +738,7 @@ export const GridEditor = (props) =>
 implementPropTypes(GridEditor, ItemEditorTypes, {
   item: T.shape(GridItemTypes.propTypes).isRequired
 })
+
+export {
+  GridEditor
+}

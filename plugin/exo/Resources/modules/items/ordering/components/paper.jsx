@@ -138,7 +138,7 @@ const OrderingPaper = props => {
             >
               {props.item.mode === constants.MODE_INSIDE ?
                 props.item.solutions.map((solution) =>
-                  <div key={solution.itemId} className="item text-info bg-info">
+                  <div key={solution.itemId} className="item answer-item text-info bg-info">
                     <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === solution.itemId).data}}/>
                     <Feedback
                       id={`oredering-answer-${solution.itemId}-feedback`}
@@ -151,7 +151,7 @@ const OrderingPaper = props => {
                 )
                 :
                 props.item.solutions.filter(solution => solution.score < 1).map((solution) =>
-                  <div key={solution.itemId} className="item item-bg">
+                  <div key={solution.itemId} className="item answer-item">
                     <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === solution.itemId).data}}/>
                     <Feedback
                       id={`oredering-solution-${solution.itemId}-feedback`}
@@ -167,7 +167,7 @@ const OrderingPaper = props => {
             {props.item.direction === constants.DIRECTION_VERTICAL && props.item.mode === constants.MODE_BESIDE &&
               <div className="col-md-6 answer-zone">
                 {props.item.solutions.filter(solution => solution.score > 0).map((solution) =>
-                  <div key={solution.itemId} className="item text-info bg-info">
+                  <div key={solution.itemId} className="item answer-item text-info bg-info">
                     <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === solution.itemId).data}}/>
                     <Feedback
                       id={`oredering-answer-${solution.itemId}-feedback`}
@@ -185,7 +185,7 @@ const OrderingPaper = props => {
             <div className="row">
               <div className="col-md-12 answer-zone horizontal">
                 {props.item.solutions.filter(solution => solution.score > 0).map((solution) =>
-                  <div key={solution.itemId} className="item text-info bg-info">
+                  <div key={solution.itemId} className="item answer-item text-info bg-info">
                     <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === solution.itemId).data}}/>
                     <Feedback
                       id={`oredering-answer-${solution.itemId}-feedback`}
@@ -215,7 +215,7 @@ const OrderingPaper = props => {
                   {'horizontal': props.item.direction === constants.DIRECTION_HORIZONTAL}
                 )}>
                   {props.item.solutions.map((solution) =>
-                    <div key={solution.itemId} className="item selected-answer text-info bg-info">
+                    <div key={solution.itemId} className="item answer-item selected-answer text-info bg-info">
                       <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === solution.itemId).data}}/>
                     </div>
                   )}
@@ -230,7 +230,7 @@ const OrderingPaper = props => {
                 </div>
                 :
                 props.item.solutions.filter(solution => solution.score < 1).map((solution) =>
-                  <div key={solution.itemId} className="item selected-answer">
+                  <div key={solution.itemId} className="item answer-item selected-answer">
                     <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === solution.itemId).data}}/>
 
                     <AnswerStats stats={{
@@ -251,7 +251,7 @@ const OrderingPaper = props => {
                         {'horizontal': props.item.direction === constants.DIRECTION_HORIZONTAL}
                       )}>
                         {props.stats.orders[key].data.map((d) =>
-                          <div key={d.itemId} className="item item-bg">
+                          <div key={d.itemId} className="item answer-item">
                             <div className="item-data" dangerouslySetInnerHTML={{__html: d._data}}/>
                           </div>
                         )}
@@ -268,7 +268,7 @@ const OrderingPaper = props => {
               }
               {props.item.mode === constants.MODE_BESIDE &&
                 props.item.items.filter(i => has(props, ['props', 'stats', 'unused', i.id]) && !utils.isInOddsSolutions(i.id, props.item.solutions)).map((i) =>
-                  <div key={`stats-unused-${i.id}`} className="item item-bg">
+                  <div key={`stats-unused-${i.id}`} className="item answer-item">
                     <div className="item-data" dangerouslySetInnerHTML={{__html: i.data}}/>
 
                     <AnswerStats stats={{
@@ -283,7 +283,7 @@ const OrderingPaper = props => {
               <div className="col-md-6">
                 <div className="answer-zone">
                   {props.item.solutions.filter(solution => solution.score > 0).map((solution) =>
-                    <div key={solution.itemId} className="item text-info bg-info">
+                    <div key={solution.itemId} className="item answer-item text-info bg-info">
                       <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === solution.itemId).data}}/>
                     </div>
                   )}
@@ -305,12 +305,12 @@ const OrderingPaper = props => {
                       return (
                         <div key={`stats-unexpected-${key}`} className="answer-zone">
                           {props.stats.orders[key].data.map((d) =>
-                            <div key={d.itemId} className="item item-bg">
+                            <div key={d.itemId} className="item answer-item">
                               <div className="item-data" dangerouslySetInnerHTML={{__html: d._data}}/>
                             </div>
                           )}
 
-                          <div className="item stats-item">
+                          <div className="item answer-item stats-item">
                             <AnswerStats stats={{
                               value: props.stats.orders[key].count,
                               total: props.stats.total
@@ -328,11 +328,11 @@ const OrderingPaper = props => {
             <div className="row">
               <div className="col-md-12 answer-zone horizontal">
                 {props.item.solutions.filter(solution => solution.score > 0).map((solution) =>
-                  <div key={solution.itemId} className="item text-info bg-info">
+                  <div key={solution.itemId} className="item answer-item text-info bg-info">
                     <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === solution.itemId).data}}/>
                   </div>
                 )}
-                <div className="item stats-item stats-success">
+                <div className="item answer-item stats-item stats-success">
                   <AnswerStats stats={{
                     value: has(props.stats, ['orders', utils.getKey(props.item.solutions.filter(solution => solution.score > 0))]) ?
                       props.stats.orders[utils.getKey(props.item.solutions.filter(solution => solution.score > 0))].count :
@@ -353,12 +353,12 @@ const OrderingPaper = props => {
                   <div key={`stats-unexpected-${key}`} className="row">
                     <div className="col-md-12 answer-zone horizontal">
                       {props.stats.orders[key].data.map((d) =>
-                        <div key={d.itemId} className="item item-bg">
+                        <div key={d.itemId} className="item answer-item">
                           <div className="item-data" dangerouslySetInnerHTML={{__html: d._data}}/>
                         </div>
                       )}
 
-                      <div className="item stats-item">
+                      <div className="item answer-item stats-item">
                         <AnswerStats stats={{
                           value: props.stats.orders[key].count,
                           total: props.stats.total

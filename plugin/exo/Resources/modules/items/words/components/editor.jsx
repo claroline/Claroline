@@ -21,11 +21,6 @@ const WordsEditor = (props) =>
         primary: true,
         fields: [
           {
-            name: '_wordsCaseSensitive',
-            type: 'boolean',
-            label: trans('words_show_case_sensitive_option', {}, 'quiz'),
-            required: true
-          }, {
             name: 'solutions',
             label: trans('keywords'),
             required: true,
@@ -70,6 +65,11 @@ const WordsEditor = (props) =>
                 
               return KeyWordItems
             }
+          }, {
+            name: '_wordsCaseSensitive',
+            type: 'boolean',
+            label: trans('words_show_case_sensitive_option', {}, 'quiz'),
+            required: true
           }
         ]
       }

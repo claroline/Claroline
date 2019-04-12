@@ -6,7 +6,7 @@ import classes from 'classnames'
 import Popover from 'react-bootstrap/lib/Popover'
 
 import {trans} from '#/main/app/intl/translation'
-import {Textarea} from '#/main/core/layout/form/components/field/textarea'
+import {HtmlInput} from '#/main/app/data/types/html/components/input'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
 import {ContentError} from '#/main/app/content/components/error'
 import {TooltipOverlay} from '#/main/app/overlay/tooltip/components/overlay'
@@ -54,34 +54,33 @@ class KeywordItem extends Component {
           <input
             type="text"
             id={`keyword-${this.props.keyword._id}-text`}
-            title={trans('response', {}, 'quiz')}
+            title={trans('keyword', {}, 'quiz')}
             value={this.props.keyword.text}
             className="form-control"
-            placeholder={trans('keyword', {}, 'quiz')}
+            placeholder={trans('keyword', {number: this.props.index + 1}, 'quiz')}
             onChange={e => this.props.updateKeyword('text', e.target.value)}
           />
 
           {this.state.showFeedback &&
-            <div className="feedback-container">
-              <Textarea
-                id={`keyword-${this.props.keyword._id}-feedback`}
-                value={this.props.keyword.feedback}
-                onChange={feedback => this.props.updateKeyword('feedback', feedback)}
-              />
-            </div>
+            <HtmlInput
+              id={`keyword-${this.props.keyword._id}-feedback`}
+              className="feedback-control"
+              value={this.props.keyword.feedback}
+              onChange={feedback => this.props.updateKeyword('feedback', feedback)}
+            />
           }
         </div>
 
         <div className="keyword-case-sensitive">
           <TooltipOverlay
             id={`tooltip-${this.props.keyword._id}-keyword-case-sensitive`}
-            tip={trans('words_case_sensitive')}
+            tip={trans('words_case_sensitive', {}, 'quiz')}
           >
             <input
               id={`keyword-${this.props.keyword._id}-case-sensitive`}
               type="checkbox"
               disabled={!this.props.showCaseSensitive}
-              title={trans('words_case_sensitive')}
+              title={trans('words_case_sensitive', {}, 'quiz')}
               checked={this.props.keyword.caseSensitive}
               onChange={e => this.props.updateKeyword('caseSensitive', e.target.checked)}
             />
@@ -94,7 +93,7 @@ class KeywordItem extends Component {
               id={`keyword-${this.props.keyword._id}-score`}
               title={trans('score', {}, 'quiz')}
               type="number"
-              className="form-control keyword-score"
+              className="form-control score keyword-score"
               value={this.props.keyword.score}
               onChange={e => this.props.updateKeyword('score', parseFloat(e.target.value))}
             />
@@ -128,6 +127,7 @@ class KeywordItem extends Component {
 }
 
 KeywordItem.propTypes = {
+  index: T.number.isRequired,
   keyword: T.shape({
     _id: T.string.isRequired,
     text: T.string.isRequired,
@@ -173,9 +173,10 @@ const KeywordItems = props =>
     }
 
     <ul>
-      {props.keywords.map(keyword =>
+      {props.keywords.map((keyword, index) =>
         <KeywordItem
           key={keyword._id}
+          index={index}
           keyword={keyword}
           showCaseSensitive={props.showCaseSensitive}
           showScore={props.showScore}

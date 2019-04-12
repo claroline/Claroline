@@ -116,19 +116,18 @@ class MatchLinkPopover extends Component {
         </div>
 
         {this.state.showFeedback &&
-          <div className="feedback-container">
-            <HtmlInput
-              id={`solution-${this.props.solution.firstId}-${this.props.solution.secondId}-feedback`}
-              value={this.props.solution.feedback}
-              onChange={
-                feedback => {
-                  const newSolution = cloneDeep(this.props.solution)
-                  newSolution.feedback = feedback
-                  this.props.update(this.props.path, newSolution)
-                }
+          <HtmlInput
+            id={`solution-${this.props.solution.firstId}-${this.props.solution.secondId}-feedback`}
+            className="feedback-control"
+            value={this.props.solution.feedback}
+            onChange={
+              feedback => {
+                const newSolution = cloneDeep(this.props.solution)
+                newSolution.feedback = feedback
+                this.props.update(this.props.path, newSolution)
               }
-            />
-          </div>
+            }
+          />
         }
       </Popover>
     )
@@ -549,11 +548,6 @@ const MatchEditor = props =>
         primary: true,
         fields: [
           {
-            name: 'penalty',
-            type: 'number',
-            label: trans('editor_penalty_label', {}, 'quiz'),
-            required: true
-          }, {
             name: 'solutions',
             label: trans('answers', {}, 'quiz'),
             required: true,
@@ -572,6 +566,11 @@ const MatchEditor = props =>
               trans('shuffle_answers_results_help', {}, 'quiz')
             ],
             type: 'boolean'
+          }, {
+            name: 'penalty',
+            type: 'number',
+            label: trans('editor_penalty_label', {}, 'quiz'),
+            required: true
           }
         ]
       }
