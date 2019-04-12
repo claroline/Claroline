@@ -80,11 +80,11 @@ class EditorMain extends Component {
     ]
   }
 
-  getItemActions(step, item, index) {
+  /*getItemActions(step, item, index) {
     return [
 
     ]
-  }
+  }*/
 
   render() {
     return (
