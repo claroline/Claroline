@@ -105,6 +105,7 @@ class Editor extends Component {
           disabled: this.props.disabled
         })}
         defaultValue={this.props.content}
+        placeholder={this.props.placeholder}
       />
     )
   }
@@ -118,6 +119,7 @@ Editor.propTypes = {
   onSelect: T.func,
   onClick: T.func,
   disabled: T.bool,
+  placeholder: T.string,
 
   showModal: T.func.isRequired,
   workspace: T.shape(

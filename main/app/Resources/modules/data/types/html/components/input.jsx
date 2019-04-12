@@ -107,7 +107,7 @@ class ContentEditable extends Component {
         })}
         aria-multiline={true}
         style={{
-          minHeight: `${this.props.minRows * 32}px`
+          minHeight: `${this.props.minRows * 34}px`
         }}
         onMouseUp={this.getSelection}
       />
