@@ -218,7 +218,23 @@ class FileListener
     }
 
     /**
-     * @DI\Observe("transfer.export.import")
+     * @DI\Observe("transfer.file.import.before")
+     */
+    public function onImportBefore(ImportObjectEvent $event)
+    {
+        $data = $event->getData();
+        $replaced = json_encode($event->getExtra());
+
+        $hashName = pathinfo($data['hashName'], PATHINFO_BASENAME);
+        $uuid = Uuid::uuid4()->toString();
+        $replaced = str_replace($hashName, $uuid, $replaced);
+
+        $data = json_decode($replaced, true);
+        $event->setExtra($data);
+    }
+
+    /**
+     * @DI\Observe("transfer.file.export")
      */
     public function onExportFile(ExportObjectEvent $exportEvent)
     {
@@ -232,17 +248,17 @@ class FileListener
     }
 
     /**
-     * @DI\Observe("transfer.file.import")
+     * @DI\Observe("transfer.file.import.after")
      */
     public function onImportFile(ImportObjectEvent $event)
     {
         $data = $event->getData();
         $bag = $event->getFileBag();
-
         if ($bag) {
             $fileSystem = new Filesystem();
             try {
-                $fileSystem->rename($bag->get($data['_path']), $this->filesDir.DIRECTORY_SEPARATOR.$data['hashName']);
+                $ds = DIRECTORY_SEPARATOR;
+                $fileSystem->copy($bag->get($data['_path']), $this->filesDir.$ds.$data['hashName']);
             } catch (\Exception $e) {
             }
         }

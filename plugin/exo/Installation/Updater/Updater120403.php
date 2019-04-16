@@ -43,7 +43,7 @@ class Updater120403 extends Updater
                 FROM UJM\ExoBundle\Entity\Attempt\Paper AS p
                 WHERE p.structure LIKE "%application/x.boolean+json%"
             ')
-            ->getResults();
+            ->getResult();
 
         $i = 0;
         $total = count($papers);
@@ -92,9 +92,9 @@ class Updater120403 extends Updater
         $this->log('Convert boolean answers...');
 
         $sql = '
-            UPDATE ujm_response AS r 
+            UPDATE ujm_response AS r
             JOIN ujm_question AS q ON (q.uuid = r.question_id)
-            SET r.response = CONCAT("[", r.response, "]") 
+            SET r.response = CONCAT("[", r.response, "]")
             WHERE r.response IS NOT NULL AND r.response != ""
               AND q.id IS NOT NULL
               AND q.mime_type = "application/x.choice+json"

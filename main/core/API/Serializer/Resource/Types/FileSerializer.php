@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Resource\Types;
 
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\Entity\Resource\File;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -52,6 +51,7 @@ class FileSerializer
             'size' => $file->getSize(),
             'autoDownload' => $file->getAutoDownload(),
             'commentsActivated' => $file->getResourceNode()->isCommentsActivated(),
+            'hashName' => $file->getHashName(),
 
             // We generate URL here because the stream API endpoint uses ResourceNode ID,
             // but the new api only contains the ResourceNode UUID.
@@ -68,13 +68,7 @@ class FileSerializer
     public function deserialize($data, File $file, array $options = [])
     {
         $this->sipe('size', 'setSize', $data, $file);
-
-        if (in_array(Options::REFRESH_UUID, $options)) {
-            $file->setHashName($file->getResourceNode()->getWorkspace()->getCode().DIRECTORY_SEPARATOR.$file->getResourceNode()->getUuid());
-        } else {
-            $this->sipe('hashName', 'setHashName', $data, $file);
-        }
-
+        $this->sipe('hashName', 'setHashName', $data, $file);
         $this->sipe('autoDownload', 'setAutoDownload', $data, $file);
 
         if (isset($data['commentsActivated'])) {

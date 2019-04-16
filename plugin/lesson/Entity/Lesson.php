@@ -59,18 +59,24 @@ class Lesson extends AbstractResource
      */
     public function createRoot(LifecycleEventArgs $event)
     {
-        if (null === $this->getRoot()) {
-            $em = $event->getEntityManager();
-            $rootLesson = $this->getRoot();
-            if (null === $rootLesson) {
-                $rootLesson = new Chapter();
-                $rootLesson->setLesson($this);
-                $rootLesson->setTitle('root_'.$this->getId());
-                $this->setRoot($rootLesson);
+        $em = $event->getEntityManager();
+        $rootLesson = $this->buildRoot();
 
-                $em->getRepository('IcapLessonBundle:Chapter')->persistAsFirstChild($rootLesson);
-                $em->flush();
-            }
+        $em->getRepository('IcapLessonBundle:Chapter')->persistAsFirstChild($rootLesson);
+        $em->flush();
+    }
+
+    public function buildRoot()
+    {
+        $rootLesson = $this->getRoot();
+
+        if (!$rootLesson) {
+            $rootLesson = new Chapter();
+            $rootLesson->setLesson($this);
+            $rootLesson->setTitle('root_'.$this->getId());
+            $this->setRoot($rootLesson);
         }
+
+        return $rootLesson;
     }
 }

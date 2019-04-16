@@ -911,7 +911,7 @@ class WorkspaceManager
         $fileBag = new FileBag();
         //these are the new workspace datas
         $data = $transferManager->serialize($workspace);
-        $data = $transferManager->exportFiles($data, $fileBag);
+        $data = $transferManager->exportFiles($data, $fileBag, $workspace);
 
         if ($this->logger) {
             $transferManager->setLogger($this->logger);
@@ -927,8 +927,8 @@ class WorkspaceManager
 
         $options = [Options::LIGHT_COPY, Options::REFRESH_UUID];
         // gets entity from raw data.
-        $workspace = $transferManager->deserialize($data, $newWorkspace, $options);
-        $transferManager->importFiles($data, $workspace);
+        $workspace = $transferManager->deserialize($data, $newWorkspace, $options, $fileBag);
+        $workspace->setIsModel($model);
 
         $this->om->persist($workspace);
         $this->om->flush();

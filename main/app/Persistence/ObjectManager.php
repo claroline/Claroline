@@ -157,6 +157,14 @@ class ObjectManager extends ObjectManagerDecorator
     }
 
     /**
+     * @return QueryBuilder
+     */
+    public function createQuery()
+    {
+        return $this->wrapped->createQuery();
+    }
+
+    /**
      * Starts a transaction.
      *
      * @throws UnsupportedMethodException if the method is not supported by

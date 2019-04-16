@@ -95,7 +95,6 @@ class TransferManager
         $options = [Options::LIGHT_COPY, Options::REFRESH_UUID];
         // gets entity from raw data.
         $workspace = $this->deserialize($data, $workspace, $options);
-        $this->importFiles($data, $workspace);
 
         // creates the entity if allowed
         $this->checkPermission('CREATE', $workspace, [], true);
@@ -125,7 +124,7 @@ class TransferManager
     {
         $fileBag = new FileBag();
         $data = $this->serialize($workspace);
-        $data = $this->exportFiles($data, $fileBag);
+        $data = $this->exportFiles($data, $fileBag, $workspace);
         $archive = new \ZipArchive();
         $pathArch = $this->tempFileManager->generate();
         $archive->open($pathArch, \ZipArchive::CREATE);
@@ -198,7 +197,7 @@ class TransferManager
      *
      * @return Workspace
      */
-    public function deserialize(array $data, Workspace $workspace, array $options = [])
+    public function deserialize(array $data, Workspace $workspace, array $options = [], FileBag $bag = null)
     {
         $data = $this->replaceResourceIds($data);
 
@@ -228,18 +227,32 @@ class TransferManager
 
         $data['root']['meta']['workspace']['uuid'] = $workspace->getUuid();
 
+        $this->log('Get filebag');
+
+        if (!$bag) {
+            $bag = $this->getFileBag($data);
+        }
+
+        $this->log('Pre import data update...');
+
+        foreach ($data['orderedTools'] as $orderedToolData) {
+            $this->ots->setLogger($this->logger);
+            $data = $this->ots->dispatchPreEvent($data, $orderedToolData);
+        }
+
         $this->log('Deserializing the tools...');
+
         foreach ($data['orderedTools'] as $orderedToolData) {
             $orderedTool = new OrderedTool();
             $this->ots->setLogger($this->logger);
-            $this->ots->deserialize($orderedToolData, $orderedTool, [], $workspace);
+            $this->ots->deserialize($orderedToolData, $orderedTool, [], $workspace, $bag);
         }
 
         return $workspace;
     }
 
     //once everything is serialized, we add files to the archive.
-    public function exportFiles($data, FileBag $fileBag)
+    public function exportFiles($data, FileBag $fileBag, Workspace $workspace)
     {
         foreach ($data['orderedTools'] as $key => $orderedToolData) {
             //copied from crud
@@ -248,7 +261,7 @@ class TransferManager
             if (isset($orderedToolData['data'])) {
                 /** @var ExportObjectEvent $event */
                 $event = $this->dispatcher->dispatch($name, ExportObjectEvent::class, [
-                    new \StdClass(), $fileBag, $orderedToolData['data'],
+                    new \StdClass(), $fileBag, $orderedToolData['data'], $workspace,
                 ]);
                 $data['orderedTools'][$key]['data'] = $event->getData();
             }
@@ -257,11 +270,14 @@ class TransferManager
         return $data;
     }
 
-    public function importFiles($data, Workspace $workspace)
+    private function getFileBag(array $data = [])
     {
+        $filebag = new FileBag();
+
         if (isset($data['archive'])) {
+            $this->log('Get filebag from the archive...');
             $object = $this->om->getObject($data['archive'], PublicFile::class);
-            $filebag = new FileBag();
+
             $archive = new \ZipArchive();
             if ($archive->open($this->fileUts->getPath($object))) {
                 $dest = sys_get_temp_dir().'/'.uniqid();
@@ -280,27 +296,13 @@ class TransferManager
 
                     $filebag->add($fileName, $location);
                 }
-
-                foreach ($data['orderedTools'] as $orderedToolData) {
-                    //copied from crud
-                    $name = 'import_tool_'.$orderedToolData['name'];
-                    //use an other even. StdClass is not pretty
-                    if (isset($orderedToolData['data'])) {
-                        $this->dispatcher->dispatch(
-                            $name,
-                            'Claroline\\CoreBundle\\Event\\ImportObjectEvent',
-                            [$filebag, $orderedToolData['data']]
-                        );
-                    }
-                }
-            } else {
-                throw new \Exception('Archive could not be opened');
             }
         }
 
-        return $data;
+        return $filebag;
     }
 
+    //todo: move in resourcemanager tool transfer
     public function replaceResourceIds($serialized)
     {
         $replaced = json_encode($serialized);

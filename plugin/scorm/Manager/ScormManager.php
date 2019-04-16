@@ -948,7 +948,7 @@ class ScormManager
      * @param File      $file
      * @param string    $hashName  name of the destination directory
      */
-    private function unzipScormArchive(Workspace $workspace, File $file, $hashName)
+    public function unzipScormArchive(Workspace $workspace, File $file, $hashName)
     {
         $zip = new \ZipArchive();
         $zip->open($file);
@@ -958,6 +958,7 @@ class ScormManager
         if (!file_exists($destinationDir)) {
             mkdir($destinationDir, 0777, true);
         }
+
         $zip->extractTo($destinationDir);
         $zip->close();
     }

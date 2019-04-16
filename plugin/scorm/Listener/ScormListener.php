@@ -13,6 +13,8 @@ namespace Claroline\ScormBundle\Listener;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Event\ExportObjectEvent;
+use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
@@ -22,7 +24,9 @@ use Claroline\ScormBundle\Entity\Sco;
 use Claroline\ScormBundle\Entity\Scorm;
 use Claroline\ScormBundle\Manager\ScormManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -149,6 +153,71 @@ class ScormListener
         }
         $this->om->remove($event->getResource());
         $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("transfer.claroline_scorm.import.before")
+     */
+    public function onImportBefore(ImportObjectEvent $event)
+    {
+        $data = $event->getData();
+        $replaced = json_encode($event->getExtra());
+
+        $hashName = pathinfo($data['hashName'], PATHINFO_BASENAME).'.zip';
+        $uuid = Uuid::uuid4()->toString();
+        $replaced = str_replace($hashName, $uuid, $replaced);
+
+        foreach ($data['scos'] as $sco) {
+            $replaced = $this->replaceScosIds($sco, $replaced);
+        }
+
+        $data = json_decode($replaced, true);
+        $event->setExtra($data);
+    }
+
+    private function replaceScosIds(array $sco, $string)
+    {
+        $uuid = Uuid::uuid4()->toString();
+        $string = str_replace($sco['id'], $uuid, $string);
+
+        if (isset($sco['children'])) {
+            foreach ($sco['children'] as $child) {
+                $this->replaceScosIds($child, $string);
+            }
+        }
+
+        return $string;
+    }
+
+    /**
+     * @DI\Observe("transfer.claroline_scorm.export")
+     */
+    public function onExportFile(ExportObjectEvent $exportEvent)
+    {
+        $file = $exportEvent->getObject();
+        $ds = DIRECTORY_SEPARATOR;
+        $path = $this->filesDir.$ds.'scorm'.$ds.$file->getResourceNode()->getWorkspace()->getUuid().$ds.$file->getHashName();
+        $file = $exportEvent->getObject();
+        $newPath = uniqid().'.'.pathinfo($file->getHashName(), PATHINFO_EXTENSION);
+        //get the filePath
+        $exportEvent->addFile($newPath, $path);
+        $exportEvent->overwrite('_path', $newPath);
+    }
+
+    /**
+     * @DI\Observe("transfer.claroline_scorm.import.after")
+     */
+    public function onImportFile(ImportObjectEvent $event)
+    {
+        $data = $event->getData();
+        $bag = $event->getFileBag();
+        $workspace = $event->getWorkspace();
+
+        if ($bag) {
+            $file = new File($bag->get($data['_path']));
+            $this->scormManager->parseScormArchive($file);
+            $this->scormManager->unzipScormArchive($workspace, $file, $data['hashName']);
+        }
     }
 
     /**

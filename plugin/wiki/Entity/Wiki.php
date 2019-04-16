@@ -169,22 +169,27 @@ class Wiki extends AbstractResource
      */
     public function createRoot(LifecycleEventArgs $event)
     {
-        if (null === $this->getRoot()) {
-            $em = $event->getEntityManager();
-            $rootSection = $this->getRoot();
-            if (null === $rootSection) {
-                $rootSection = new Section();
-                $rootSection->setWiki($this);
-                if (null !== $this->getResourceNode()) {
-                    $rootSection->setAuthor($this->getResourceNode()->getCreator());
-                } else {
-                    $rootSection->setAuthor($this->getWikiCreator());
-                }
-                $this->setRoot($rootSection);
+        $em = $event->getEntityManager();
+        $rootSection = $this->buildRoot();
+        $em->getRepository('IcapWikiBundle:Section')->persistAsFirstChild($rootSection);
+        $em->flush();
+    }
 
-                $em->getRepository('IcapWikiBundle:Section')->persistAsFirstChild($rootSection);
-                $em->flush();
+    public function buildRoot()
+    {
+        $rootSection = $this->getRoot();
+
+        if (!$rootSection) {
+            $rootSection = new Section();
+            $rootSection->setWiki($this);
+            if (null !== $this->getResourceNode()) {
+                $rootSection->setAuthor($this->getResourceNode()->getCreator());
+            } else {
+                $rootSection->setAuthor($this->getWikiCreator());
             }
+            $this->setRoot($rootSection);
         }
+
+        return $rootSection;
     }
 }

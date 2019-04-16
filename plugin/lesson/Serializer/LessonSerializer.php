@@ -43,7 +43,7 @@ class LessonSerializer
      */
     public function getClass()
     {
-        return 'Icap\LessonBundle\Entity\Lesson';
+        return Lesson::class;
     }
 
     /**

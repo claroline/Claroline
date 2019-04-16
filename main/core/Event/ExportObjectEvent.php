@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Event;
 use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\EventDispatcher\Event;
 
 class ExportObjectEvent extends Event
@@ -28,11 +29,13 @@ class ExportObjectEvent extends Event
     public function __construct(
         $object,
         FileBag $fileBag,
-        array $data = []
+        array $data = [],
+        Workspace $workspace = null
     ) {
         $this->object = $object;
         $this->data = $data;
         $this->fileBag = $fileBag;
+        $this->workspace = $workspace;
     }
 
     /**
@@ -53,6 +56,11 @@ class ExportObjectEvent extends Event
     public function getData()
     {
         return $this->data;
+    }
+
+    public function getWorkspace()
+    {
+        return $this->workspace;
     }
 
     public function addFile($path, $file)

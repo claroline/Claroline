@@ -158,7 +158,7 @@ class ClacoFormListener
     public function onImportBefore(ImportObjectEvent $event)
     {
         $data = $event->getData();
-        $replaced = json_encode($data);
+        $replaced = json_encode($event->getExtra());
 
         foreach ($data['fields'] as $field) {
             $uuid = Uuid::uuid4()->toString();
@@ -166,7 +166,7 @@ class ClacoFormListener
         }
 
         $data = json_decode($replaced, true);
-        $event->setData($data);
+        $event->setExtra($data);
     }
 
     /**

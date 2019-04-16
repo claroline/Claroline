@@ -4,6 +4,8 @@ namespace Icap\LessonBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Event\ExportObjectEvent;
+use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
@@ -144,6 +146,63 @@ class LessonListener
 
         $event->setCopy($newLesson);
         $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("transfer.icap_lesson.export")
+     */
+    public function onExport(ExportObjectEvent $exportEvent)
+    {
+        $lesson = $exportEvent->getObject();
+
+        $data = [
+          'root' => $this->chapterManager->serializeChapterTree($lesson),
+        ];
+
+        $exportEvent->overwrite('_data', $data);
+    }
+
+    /**
+     * @DI\Observe("transfer.icap_lesson.import.after")
+     */
+    public function onImport(ImportObjectEvent $event)
+    {
+        $data = $event->getData();
+        $lesson = $event->getObject();
+
+        $rootChapter = $data['_data']['root'];
+        $lesson->buildRoot();
+        $root = $lesson->getRoot();
+
+        if (isset($rootChapter['children'])) {
+            $children = $rootChapter['children'];
+
+            foreach ($children as $child) {
+                $chapter = $this->importChapter($child, $lesson);
+                $chapter->setLesson($lesson);
+                $chapter->setParent($root);
+                $this->om->persist($chapter);
+            }
+        }
+    }
+
+    private function importChapter(array $data = [], Lesson $lesson)
+    {
+        $chapter = new Chapter();
+        $chapter->setTitle($data['title']);
+        $chapter->setText($data['text']);
+
+        if (isset($data['children'])) {
+            foreach ($data['children'] as $child) {
+                $childChap = $this->importChapter($child, $lesson);
+                $childChap->setParent($chapter);
+            }
+        }
+
+        $chapter->setLesson($lesson);
+        $this->om->persist($chapter);
+
+        return $chapter;
     }
 
     /**

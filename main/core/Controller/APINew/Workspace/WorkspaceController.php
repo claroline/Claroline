@@ -141,6 +141,7 @@ class WorkspaceController extends AbstractCrudController
     {
         $data = $this->decodeRequest($request);
 
+        //THIS IS FOR WORKSPACE IMPORT FROM ARCHIVE. IT'S CURRENTLY NOT TESTED (AND THEREFORE BROKEN)
         if (isset($data['archive'])) {
             $workspace = $this->importer->create($data, new Workspace());
             $this->toolManager->addMissingWorkspaceTools($workspace);

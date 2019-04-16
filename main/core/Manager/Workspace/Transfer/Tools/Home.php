@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Manager\Workspace\Transfer\Tools;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -59,7 +60,7 @@ class Home
         return ['tabs' => $tabs];
     }
 
-    public function deserialize(array $data, Workspace $workspace, array $options)
+    public function deserialize(array $data, Workspace $workspace, array $options, FileBag $bag)
     {
         foreach ($data['tabs'] as $tab) {
             // do not update tabs set by the administration tool

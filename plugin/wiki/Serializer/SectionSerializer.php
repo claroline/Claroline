@@ -47,7 +47,7 @@ class SectionSerializer
     ) {
         $this->contributionSerializer = $contributionSerializer;
         $this->userSerializer = $userSerializer;
-        $this->userRepo = $om->getRepository('Claroline\CoreBundle\Entity\User');
+        $this->userRepo = $om->getRepository(User::class);
     }
 
     /**
@@ -55,7 +55,7 @@ class SectionSerializer
      */
     public function getClass()
     {
-        return 'Icap\WikiBundle\Entity\Section';
+        return Section::class;
     }
 
     /**

@@ -14,6 +14,8 @@ namespace Claroline\WebResourceBundle\Listener;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\File;
+use Claroline\CoreBundle\Event\ExportObjectEvent;
+use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
@@ -23,6 +25,7 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\WebResourceBundle\Manager\WebResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -106,6 +109,55 @@ class WebResourceListener
         ]);
 
         $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("transfer.claroline_web_resource.import.before")
+     */
+    public function onImportBefore(ImportObjectEvent $event)
+    {
+        $data = $event->getData();
+        $replaced = json_encode($event->getExtra());
+
+        $hashName = pathinfo($data['hashName'], PATHINFO_BASENAME);
+        $uuid = Uuid::uuid4()->toString();
+        $replaced = str_replace($hashName, $uuid, $replaced);
+
+        $data = json_decode($replaced, true);
+        $event->setExtra($data);
+    }
+
+    /**
+     * @DI\Observe("transfer.claroline_web_resource.export")
+     */
+    public function onExportFile(ExportObjectEvent $exportEvent)
+    {
+        $file = $exportEvent->getObject();
+        $workspace = $exportEvent->getWorkspace();
+        $ds = DIRECTORY_SEPARATOR;
+        $path = $this->uploadDir.$ds.'webresource'.$ds.$workspace->getUuid().$ds.$file->getHashName();
+        //probably make it a zip here
+        $file = $exportEvent->getObject();
+        $newPath = uniqid().'.'.pathinfo($file->getHashName(), PATHINFO_EXTENSION);
+        //get the filePath
+        $exportEvent->addFile($newPath, $path);
+        $exportEvent->overwrite('_path', $newPath);
+    }
+
+    /**
+     * @DI\Observe("transfer.claroline_web_resource.import.after")
+     */
+    public function onImportFile(ImportObjectEvent $event)
+    {
+        $data = $event->getData();
+        $bag = $event->getFileBag();
+        $workspace = $event->getWorkspace();
+
+        $fileSystem = new Filesystem();
+
+        $ds = DIRECTORY_SEPARATOR;
+        $filesPath = $this->uploadDir.$ds.'webresource'.$ds.$workspace->getUuid().$ds.$data['hashName'];
+        $fileSystem->mirror($bag->get($data['_path']), $filesPath);
     }
 
     /**

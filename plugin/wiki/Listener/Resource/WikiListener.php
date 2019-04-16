@@ -4,12 +4,16 @@ namespace Icap\WikiBundle\Listener\Resource;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
+use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
+use Claroline\CoreBundle\Event\ImportObjectEvent;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Icap\WikiBundle\Entity\Contribution;
+use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Entity\Wiki;
 use Icap\WikiBundle\Manager\SectionManager;
 use Icap\WikiBundle\Manager\WikiManager;
@@ -135,6 +139,68 @@ class WikiListener
 
         $event->setCopy($newWiki);
         $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("transfer.icap_wiki.export")
+     */
+    public function onExport(ExportObjectEvent $exportEvent)
+    {
+        $wiki = $exportEvent->getObject();
+
+        $data = [
+          'root' => $this->sectionManager->getSerializedSectionTree($wiki, null, true),
+        ];
+
+        $exportEvent->overwrite('_data', $data);
+    }
+
+    /**
+     * @DI\Observe("transfer.icap_wiki.import.after")
+     */
+    public function onImport(ImportObjectEvent $event)
+    {
+        $data = $event->getData();
+        $wiki = $event->getObject();
+
+        $rootSection = $data['_data']['root'];
+        $wiki->buildRoot();
+        $root = $wiki->getRoot();
+
+        if (isset($rootSection['children'])) {
+            $children = $rootSection['children'];
+
+            foreach ($children as $child) {
+                $section = $this->importSection($child, $wiki);
+                $section->setWiki($wiki);
+                $section->setParent($root);
+
+                $this->om->getRepository(Section::class)->persistAsLastChildOf($section, $root);
+            }
+        }
+    }
+
+    private function importSection(array $data = [], Wiki $wiki)
+    {
+        $section = new Section();
+        $contrib = new Contribution();
+        $contrib->setTitle($data['activeContribution']['title']);
+        $contrib->setText($data['activeContribution']['text']);
+        $contrib->setSection($section);
+        $section->setActiveContribution($contrib);
+        $this->om->persist($contrib);
+
+        if (isset($data['children'])) {
+            foreach ($data['children'] as $child) {
+                $childSec = $this->importSection($child, $wiki);
+                $childSec->setParent($section);
+                $this->om->getRepository(Section::class)->persistAsLastChildOf($childSec, $section);
+            }
+        }
+
+        $section->setWiki($wiki);
+
+        return $section;
     }
 
     /**

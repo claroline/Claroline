@@ -12,7 +12,6 @@
 namespace Claroline\ForumBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
@@ -25,6 +24,7 @@ use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Manager\Manager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -138,6 +138,23 @@ class ForumListener
     }
 
     /**
+     * @DI\Observe("transfer.claroline_forum.import.before")
+     */
+    public function onImportBefore(ImportObjectEvent $event)
+    {
+        $data = $event->getData();
+        $replaced = json_encode($event->getExtra());
+
+        foreach ($data['_data']['subjects'] as $subjectsData) {
+            $uuid = Uuid::uuid4()->toString();
+            $replaced = str_replace($subjectsData['id'], $uuid, $replaced);
+        }
+
+        $data = json_decode($replaced, true);
+        $event->setExtra($data);
+    }
+
+    /**
      * @DI\Observe("transfer.claroline_forum.import.after")
      */
     public function onImport(ImportObjectEvent $event)
@@ -147,7 +164,7 @@ class ForumListener
 
         foreach ($data['_data']['subjects'] as $subjectsData) {
             unset($subjectsData['forum']);
-            $subject = $this->serializer->deserialize($subjectsData, new Subject(), [Options::REFRESH_UUID]);
+            $subject = $this->serializer->deserialize($subjectsData, new Subject());
             $subject->setForum($forum);
             $this->om->persist($subject);
         }
