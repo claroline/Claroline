@@ -71,25 +71,25 @@ class HintSerializerTest extends JsonDataTestCase
     {
         $serialized = $this->serializer->serialize($this->hint);
 
-        $this->assertInstanceOf('\stdClass', $serialized);
-        $this->assertEquals(2, $serialized->penalty);
+        $this->assertTrue(is_array($serialized));
+        $this->assertEquals(2, $serialized['penalty']);
 
         // Checks solutions are not included
-        $this->assertTrue(!isset($serialized->value));
+        $this->assertTrue(!isset($serialized['value']));
     }
 
     public function testSerializedDataWithNoPenalty()
     {
         $serialized = $this->serializer->serialize(new Hint());
 
-        $this->assertEquals(0, $serialized->penalty);
+        $this->assertEquals(0, $serialized['penalty']);
     }
 
     public function testSerializedDataWithSolutions()
     {
         $serialized = $this->serializer->serialize($this->hint, [Transfer::INCLUDE_SOLUTIONS]);
 
-        $this->assertEquals('hint text', $serialized->value);
+        $this->assertEquals('hint text', $serialized['value']);
     }
 
     public function testDeserializedDataAreCorrectlySet()
@@ -129,12 +129,12 @@ class HintSerializerTest extends JsonDataTestCase
     /**
      * Compares the data between a hint entity and a hint raw object.
      *
-     * @param Hint      $hint
-     * @param \stdClass $hintData
+     * @param Hint  $hint
+     * @param array $hintData
      */
-    private function compareHintAndData(Hint $hint, \stdClass $hintData)
+    private function compareHintAndData(Hint $hint, array $hintData)
     {
-        $this->assertEquals($hintData->penalty, $hint->getPenalty());
-        $this->assertEquals($hintData->value, $hint->getData());
+        $this->assertEquals($hintData['penalty'], $hint->getPenalty());
+        $this->assertEquals($hintData['value'], $hint->getData());
     }
 }

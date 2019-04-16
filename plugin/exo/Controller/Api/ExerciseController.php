@@ -208,7 +208,7 @@ class ExerciseController extends AbstractController
         foreach ($exercise->getSteps() as $step) {
             foreach ($step->getQuestions() as $question) {
                 $itemStats = $this->itemManager->getStatistics($question, $exercise, $finishedOnly);
-                $statistics[$question->getUuid()] = !empty($itemStats->solutions) ? $itemStats->solutions : new \stdClass();
+                $statistics[$question->getUuid()] = !empty($itemStats['solutions']) ? $itemStats['solutions'] : new \stdClass();
             }
         }
 

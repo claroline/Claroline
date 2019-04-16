@@ -2,20 +2,23 @@
 
 namespace UJM\ExoBundle\Serializer\Item\Type;
 
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\MatchQuestion;
 use UJM\ExoBundle\Entity\Misc\Association;
 use UJM\ExoBundle\Entity\Misc\Label;
 use UJM\ExoBundle\Entity\Misc\Proposal;
 use UJM\ExoBundle\Library\Options\Transfer;
-use UJM\ExoBundle\Library\Serializer\SerializerInterface;
 use UJM\ExoBundle\Serializer\Content\ContentSerializer;
 
 /**
  * @DI\Service("ujm_exo.serializer.question_match")
+ * @DI\Tag("claroline.serializer")
  */
-class MatchQuestionSerializer implements SerializerInterface
+class MatchQuestionSerializer
 {
+    use SerializerTrait;
+
     /**
      * @var ContentSerializer
      */
@@ -41,25 +44,25 @@ class MatchQuestionSerializer implements SerializerInterface
      * @param MatchQuestion $matchQuestion
      * @param array         $options
      *
-     * @return \stdClass
+     * @return array
      */
-    public function serialize($matchQuestion, array $options = [])
+    public function serialize(MatchQuestion $matchQuestion, array $options = [])
     {
-        $questionData = new \stdClass();
-
-        $questionData->random = $matchQuestion->getShuffle();
-        $questionData->penalty = $matchQuestion->getPenalty();
+        $serialized = [
+            'random' => $matchQuestion->getShuffle(),
+            'penalty' => $matchQuestion->getPenalty(),
+        ];
 
         $firstSet = array_map(function (Proposal $proposal) use ($options) {
             $itemData = $this->contentSerializer->serialize($proposal, $options);
-            $itemData->id = $proposal->getUuid();
+            $itemData['id'] = $proposal->getUuid();
 
             return $itemData;
         }, $matchQuestion->getProposals()->toArray());
 
         $secondSet = array_map(function (Label $label) use ($options) {
             $itemData = $this->contentSerializer->serialize($label, $options);
-            $itemData->id = $label->getUuid();
+            $itemData['id'] = $label->getUuid();
 
             return $itemData;
         }, $matchQuestion->getLabels()->toArray());
@@ -69,14 +72,14 @@ class MatchQuestionSerializer implements SerializerInterface
             shuffle($secondSet);
         }
 
-        $questionData->firstSet = $firstSet;
-        $questionData->secondSet = $secondSet;
+        $serialized['firstSet'] = $firstSet;
+        $serialized['secondSet'] = $secondSet;
 
         if (in_array(Transfer::INCLUDE_SOLUTIONS, $options)) {
-            $questionData->solutions = $this->serializeSolutions($matchQuestion);
+            $serialized['solutions'] = $this->serializeSolutions($matchQuestion);
         }
 
-        return $questionData;
+        return $serialized;
     }
 
     private function serializeSolutions(MatchQuestion $matchQuestion)
@@ -84,13 +87,14 @@ class MatchQuestionSerializer implements SerializerInterface
         $solutions = [];
 
         foreach ($matchQuestion->getAssociations() as $association) {
-            $solutionData = new \stdClass();
-            $solutionData->firstId = $association->getProposal()->getUuid();
-            $solutionData->secondId = $association->getLabel()->getUuid();
-            $solutionData->score = $association->getScore();
+            $solutionData = [
+                'firstId' => $association->getProposal()->getUuid(),
+                'secondId' => $association->getLabel()->getUuid(),
+                'score' => $association->getScore(),
+            ];
 
             if ($association->getFeedback()) {
-                $solutionData->feedback = $association->getFeedback();
+                $solutionData['feedback'] = $association->getFeedback();
             }
 
             $solutions[] = $solutionData;
@@ -102,31 +106,28 @@ class MatchQuestionSerializer implements SerializerInterface
     /**
      * Converts raw data into a Match question entity.
      *
-     * @param \stdClass     $data
+     * @param array         $data
      * @param MatchQuestion $matchQuestion
      * @param array         $options
      *
      * @return MatchQuestion
      */
-    public function deserialize($data, $matchQuestion = null, array $options = [])
+    public function deserialize($data, MatchQuestion $matchQuestion = null, array $options = [])
     {
         if (empty($matchQuestion)) {
             $matchQuestion = new MatchQuestion();
         }
 
-        if (isset($data->penaty)) {
-            if (!empty($data->penalty) || 0 === $data->penalty) {
-                $matchQuestion->setPenalty($data->penalty);
+        if (isset($data['penaty'])) {
+            if (!empty($data['penalty']) || 0 === $data['penalty']) {
+                $matchQuestion->setPenalty($data['penalty']);
             }
         }
+        $this->sipe('random', 'setShuffle', $data, $matchQuestion);
 
-        if (isset($data->random)) {
-            $matchQuestion->setShuffle($data->random);
-        }
-
-        $this->deserializeLabels($matchQuestion, $data->secondSet, $options);
-        $this->deserializeProposals($matchQuestion, $data->firstSet, $options);
-        $this->deserializeSolutions($matchQuestion, $data->solutions);
+        $this->deserializeLabels($matchQuestion, $data['secondSet'], $options);
+        $this->deserializeProposals($matchQuestion, $data['firstSet'], $options);
+        $this->deserializeSolutions($matchQuestion, $data['solutions']);
 
         return $matchQuestion;
     }
@@ -147,7 +148,7 @@ class MatchQuestionSerializer implements SerializerInterface
             // Searches for an existing Label entity.
             foreach ($secondSetEntities as $entityIndex => $entityLabel) {
                 /** @var Label $entityLabel */
-                if ($entityLabel->getUuid() === $secondSetData->id) {
+                if ($entityLabel->getUuid() === $secondSetData['id']) {
                     $label = $entityLabel;
                     unset($secondSetEntities[$entityIndex]);
                     break;
@@ -155,7 +156,7 @@ class MatchQuestionSerializer implements SerializerInterface
             }
 
             $label = $label ?: new Label();
-            $label->setUuid($secondSetData->id);
+            $label->setUuid($secondSetData['id']);
             $label->setOrder($index);
 
             // Deserialize firstSet content
@@ -186,7 +187,7 @@ class MatchQuestionSerializer implements SerializerInterface
             // Search for an existing Proposal entity.
             foreach ($firstSetEntities as $entityIndex => $entityProposal) {
                 /* @var Label $entityProposal */
-                if ($entityProposal->getUuid() === $firstSetData->id) {
+                if ($entityProposal->getUuid() === $firstSetData['id']) {
                     $proposal = $entityProposal;
 
                     unset($firstSetEntities[$entityIndex]);
@@ -195,7 +196,7 @@ class MatchQuestionSerializer implements SerializerInterface
             }
 
             $proposal = $proposal ?: new Proposal();
-            $proposal->setUuid($firstSetData->id);
+            $proposal->setUuid($firstSetData['id']);
             $proposal->setOrder($index);
 
             // Deserialize proposal content
@@ -225,7 +226,7 @@ class MatchQuestionSerializer implements SerializerInterface
             // Search for an existing Proposal entity.
             foreach ($associationsEntities as $entityIndex => $entityAssociation) {
                 /* @var Association $entityAssociation */
-                if ($entityAssociation->getProposal()->getUuid() === $solution->firstId && $entityAssociation->getLabel()->getUuid() === $solution->secondId) {
+                if ($entityAssociation->getProposal()->getUuid() === $solution['firstId'] && $entityAssociation->getLabel()->getUuid() === $solution['secondId']) {
                     $association = $entityAssociation;
 
                     unset($associationsEntities[$entityIndex]);
@@ -238,24 +239,24 @@ class MatchQuestionSerializer implements SerializerInterface
                 $association = new Association();
                 // add association label
                 foreach ($matchQuestion->getLabels() as $label) {
-                    if ($label->getUuid() === $solution->secondId) {
+                    if ($label->getUuid() === $solution['secondId']) {
                         $association->setLabel($label);
                         break;
                     }
                 }
                 // add association proposal
                 foreach ($matchQuestion->getProposals() as $proposal) {
-                    if ($proposal->getUuid() === $solution->firstId) {
+                    if ($proposal->getUuid() === $solution['firstId']) {
                         $association->setProposal($proposal);
                         break;
                     }
                 }
             }
 
-            $association->setScore($solution->score);
+            $association->setScore($solution['score']);
 
-            if (isset($solution->feedback)) {
-                $association->setFeedback($solution->feedback);
+            if (isset($solution['feedback'])) {
+                $association->setFeedback($solution['feedback']);
             }
             $matchQuestion->addAssociation($association);
         }

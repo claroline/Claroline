@@ -40,7 +40,7 @@ abstract class JsonDataTestCase extends TransactionalTestCase
     {
         $json = file_get_contents("{$this->formatDir}/$uri");
 
-        return json_decode($json);
+        return json_decode($json, true);
     }
 
     /**
@@ -54,6 +54,6 @@ abstract class JsonDataTestCase extends TransactionalTestCase
     {
         $json = file_get_contents("{$this->dataDir}/$uri");
 
-        return json_decode($json);
+        return json_decode($json, true);
     }
 }

@@ -70,7 +70,7 @@ abstract class AbstractDefinition implements ItemDefinitionInterface, Exportable
      * @param AbstractItem $question
      * @param array        $options
      *
-     * @return \stdClass
+     * @return array
      */
     public function serializeQuestion(AbstractItem $question, array $options = [])
     {
@@ -80,13 +80,13 @@ abstract class AbstractDefinition implements ItemDefinitionInterface, Exportable
     /**
      * Deserializes question data.
      *
-     * @param \stdClass    $questionData
+     * @param array        $questionData
      * @param AbstractItem $question
      * @param array        $options
      *
      * @return AbstractItem
      */
-    public function deserializeQuestion(\stdClass $questionData, AbstractItem $question = null, array $options = [])
+    public function deserializeQuestion(array $questionData, AbstractItem $question = null, array $options = [])
     {
         return $this->getQuestionSerializer()->deserialize($questionData, $question, $options);
     }

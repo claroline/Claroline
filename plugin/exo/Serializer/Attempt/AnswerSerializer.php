@@ -2,88 +2,81 @@
 
 namespace UJM\ExoBundle\Serializer\Attempt;
 
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Library\Options\Transfer;
-use UJM\ExoBundle\Library\Serializer\AbstractSerializer;
 
 /**
  * Serializer for answer data.
  *
  * @DI\Service("ujm_exo.serializer.answer")
+ * @DI\Tag("claroline.serializer")
  */
-class AnswerSerializer extends AbstractSerializer
+class AnswerSerializer
 {
+    use SerializerTrait;
+
     /**
      * Converts an Answer into a JSON-encodable structure.
      *
      * @param Answer $answer
      * @param array  $options
      *
-     * @return \stdClass
+     * @return array
      */
-    public function serialize($answer, array $options = [])
+    public function serialize(Answer $answer, array $options = [])
     {
-        $answerData = new \stdClass();
-
-        $this->mapEntityToObject([
-            'id' => 'uuid',
-            'questionId' => 'questionId',
-            'tries' => 'tries',
-            'usedHints' => function (Answer $answer) use ($options) {
-                return array_map(function ($hintId) use ($options) {
-                    return $options['hints'][$hintId];
-                }, $answer->getUsedHints());
-            },
-        ], $answer, $answerData);
+        $serialized = [
+            'id' => $answer->getUuid(),
+            'questionId' => $answer->getQuestionId(),
+            'tries' => $answer->getTries(),
+            'usedHints' => array_map(function ($hintId) use ($options) {
+                return $options['hints'][$hintId];
+            }, $answer->getUsedHints()),
+        ];
 
         if (!empty($answer->getData())) {
-            $answerData->data = json_decode($answer->getData());
+            $serialized['data'] = json_decode($answer->getData(), true);
         }
         // Adds user score
-        if ($this->hasOption(Transfer::INCLUDE_USER_SCORE, $options)) {
-            $this->mapEntityToObject([
-                'score' => 'score',
-                'feedback' => 'feedback',
-            ], $answer, $answerData);
+        if (in_array(Transfer::INCLUDE_USER_SCORE, $options)) {
+            $serialized = array_merge($serialized, [
+                'score' => $answer->getScore(),
+                'feedback' => $answer->getFeedback(),
+            ]);
         }
 
-        return $answerData;
+        return $serialized;
     }
 
     /**
      * Converts raw data into a Answer entity.
      *
-     * @param \stdClass $data
-     * @param Answer    $answer
-     * @param array     $options
+     * @param array  $data
+     * @param Answer $answer
+     * @param array  $options
      *
      * @return Answer
      */
-    public function deserialize($data, $answer = null, array $options = [])
+    public function deserialize($data, Answer $answer = null, array $options = [])
     {
         $answer = $answer ?: new Answer();
-        $answer->setUuid($data->id);
-        $answer->setQuestionId($data->questionId);
 
-        $this->mapObjectToEntity([
-            'questionId' => 'questionId',
-            'tries' => 'tries',
-            'score' => 'score',
-            'feedback' => 'feedback',
-            'usedHints' => function (Answer $answer, \stdClass $data) {
-                if (!empty($data->usedHints)) {
-                    foreach ($data->usedHints as $usedHint) {
-                        $answer->addUsedHint($usedHint->id);
-                    }
-                }
-            },
-            'data' => function (Answer $answer, \stdClass $data) {
-                if (!empty($data->data)) {
-                    $answer->setData(json_encode($data->data));
-                }
-            },
-        ], $data, $answer);
+        $this->sipe('id', 'setUuid', $data, $answer);
+        $this->sipe('questionId', 'setQuestionId', $data, $answer);
+        $this->sipe('tries', 'setTries', $data, $answer);
+        $this->sipe('score', 'setScore', $data, $answer);
+        $this->sipe('feedback', 'setFeedback', $data, $answer);
+
+        if (isset($data['usedHints'])) {
+            foreach ($data['usedHints'] as $usedHint) {
+                $answer->addUsedHint($usedHint['id']);
+            }
+        }
+        if (!empty($data['data'])) {
+            $answer->setData(json_encode($data['data']));
+        }
 
         return $answer;
     }

@@ -2,25 +2,28 @@
 
 namespace UJM\ExoBundle\Serializer\Item\Type;
 
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\BooleanQuestion;
 use UJM\ExoBundle\Entity\Misc\BooleanChoice;
 use UJM\ExoBundle\Library\Options\Transfer;
-use UJM\ExoBundle\Library\Serializer\SerializerInterface;
 use UJM\ExoBundle\Serializer\Content\ContentSerializer;
 
 /**
  * @DI\Service("ujm_exo.serializer.question_boolean")
+ * @DI\Tag("claroline.serializer")
  */
-class BooleanQuestionSerializer implements SerializerInterface
+class BooleanQuestionSerializer
 {
+    use SerializerTrait;
+
     /**
      * @var ContentSerializer
      */
     private $contentSerializer;
 
     /**
-     * ChoiceQuestionSerializer constructor.
+     * BooleanQuestionSerializer constructor.
      *
      * @param ContentSerializer $contentSerializer
      *
@@ -39,43 +42,42 @@ class BooleanQuestionSerializer implements SerializerInterface
      * @param BooleanQuestion $question
      * @param array           $options
      *
-     * @return \stdClass
+     * @return array
      */
-    public function serialize($question, array $options = [])
+    public function serialize(BooleanQuestion $question, array $options = [])
     {
-        $questionData = new \stdClass();
-
         // Serializes choices
         $choices = $this->serializeChoices($question, $options);
+
         if (in_array(Transfer::SHUFFLE_ANSWERS, $options)) {
             shuffle($choices);
         }
 
-        $questionData->choices = $choices;
+        $serialized = ['choices' => $choices];
 
         if (in_array(Transfer::INCLUDE_SOLUTIONS, $options)) {
-            $questionData->solutions = $this->serializeSolutions($question);
+            $serialized['solutions'] = $this->serializeSolutions($question);
         }
 
-        return $questionData;
+        return $serialized;
     }
 
     /**
      * Converts raw data into a Boolean question entity.
      *
-     * @param \stdClass       $data
+     * @param array           $data
      * @param BooleanQuestion $question
      * @param array           $options
      *
      * @return BooleanQuestion
      */
-    public function deserialize($data, $question = null, array $options = [])
+    public function deserialize($data, BooleanQuestion $question = null, array $options = [])
     {
         if (empty($question)) {
             $question = new BooleanQuestion();
         }
 
-        $this->deserializeChoices($question, $data->choices, $data->solutions, $options);
+        $this->deserializeChoices($question, $data['choices'], $data['solutions'], $options);
 
         return $question;
     }
@@ -92,7 +94,7 @@ class BooleanQuestionSerializer implements SerializerInterface
     {
         return array_map(function (BooleanChoice $choice) use ($options) {
             $choiceData = $this->contentSerializer->serialize($choice, $options);
-            $choiceData->id = $choice->getUuid();
+            $choiceData['id'] = $choice->getUuid();
 
             return $choiceData;
         }, $question->getChoices()->toArray());
@@ -116,7 +118,7 @@ class BooleanQuestionSerializer implements SerializerInterface
             // Searches for an existing choice entity.
             foreach ($choiceEntities as $entityIndex => $entityChoice) {
                 /** @var BooleanChoice $entityChoice */
-                if ($entityChoice->getUuid() === $choiceData->id) {
+                if ($entityChoice->getUuid() === $choiceData['id']) {
                     $choice = $entityChoice;
                     unset($choiceEntities[$entityIndex]);
                     break;
@@ -124,18 +126,20 @@ class BooleanQuestionSerializer implements SerializerInterface
             }
 
             $choice = $choice ?: new BooleanChoice();
-            $choice->setUuid($choiceData->id);
+            $choice->setUuid($choiceData['id']);
 
             // Deserialize choice content
             $choice = $this->contentSerializer->deserialize($choiceData, $choice, $options);
 
             // Set choice score and feedback
             $choice->setScore(0);
+
             foreach ($solutions as $solution) {
-                if ($solution->id === $choiceData->id) {
-                    $choice->setScore($solution->score);
-                    if (isset($solution->feedback)) {
-                        $choice->setFeedback($solution->feedback);
+                if ($solution['id'] === $choiceData['id']) {
+                    $choice->setScore($solution['score']);
+
+                    if (isset($solution['feedback'])) {
+                        $choice->setFeedback($solution['feedback']);
                     }
 
                     break;
@@ -161,12 +165,13 @@ class BooleanQuestionSerializer implements SerializerInterface
     private function serializeSolutions(BooleanQuestion $question)
     {
         return array_map(function (BooleanChoice $choice) {
-            $solutionData = new \stdClass();
-            $solutionData->id = $choice->getUuid();
-            $solutionData->score = $choice->getScore();
+            $solutionData = [
+                'id' => $choice->getUuid(),
+                'score' => $choice->getScore(),
+            ];
 
             if ($choice->getFeedback()) {
-                $solutionData->feedback = $choice->getFeedback();
+                $solutionData['feedback'] = $choice->getFeedback();
             }
 
             return $solutionData;

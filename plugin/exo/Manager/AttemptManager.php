@@ -217,9 +217,9 @@ class AttemptManager
     /**
      * Submits user answers to a paper.
      *
-     * @param Paper       $paper
-     * @param \stdClass[] $answers
-     * @param string      $clientIp
+     * @param Paper  $paper
+     * @param array  $answers
+     * @param string $clientIp
      *
      * @throws InvalidDataException - if there is any invalid answer
      *
@@ -232,7 +232,8 @@ class AttemptManager
         $this->om->startFlushSuite();
 
         foreach ($answers as $answerData) {
-            $question = $paper->getQuestion($answerData->questionId);
+            $question = $paper->getQuestion($answerData['questionId']);
+
             if (empty($question)) {
                 throw new InvalidDataException('Submitted answers are invalid', [[
                     'path' => '/questionId',
@@ -240,7 +241,7 @@ class AttemptManager
                 ]]);
             }
 
-            $existingAnswer = $paper->getAnswer($answerData->questionId);
+            $existingAnswer = $paper->getAnswer($answerData['questionId']);
             $decodedQuestion = $this->itemSerializer->deserialize($question, new Item());
 
             try {
@@ -313,13 +314,15 @@ class AttemptManager
     public function useHint(Paper $paper, $questionId, $hintId, $clientIp)
     {
         $question = $paper->getQuestion($questionId);
+
         if (empty($question)) {
             throw new \LogicException("Question {$questionId} and paper {$paper->getId()} are not related");
         }
 
         $hint = null;
-        foreach ($question->hints as $questionHint) {
-            if ($hintId === $questionHint->id) {
+
+        foreach ($question['hints'] as $questionHint) {
+            if ($hintId === $questionHint['id']) {
                 $hint = $questionHint;
                 break;
             }
@@ -331,11 +334,12 @@ class AttemptManager
         }
 
         // Retrieve or create the answer for the question
-        $answer = $paper->getAnswer($question->id);
+        $answer = $paper->getAnswer($question['id']);
+
         if (empty($answer)) {
             $answer = new Answer();
             $answer->setTries(0); // Using an hint is not a try. This will be updated when user will submit his answer
-            $answer->setQuestionId($question->id);
+            $answer->setQuestionId($question['id']);
             $answer->setIp($clientIp);
 
             // Link the new answer to the paper

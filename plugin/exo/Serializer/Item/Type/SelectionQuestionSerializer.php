@@ -2,100 +2,97 @@
 
 namespace UJM\ExoBundle\Serializer\Item\Type;
 
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\SelectionQuestion;
 use UJM\ExoBundle\Entity\Misc\Color;
 use UJM\ExoBundle\Entity\Misc\ColorSelection;
 use UJM\ExoBundle\Entity\Misc\Selection;
 use UJM\ExoBundle\Library\Options\Transfer;
-use UJM\ExoBundle\Library\Serializer\SerializerInterface;
 
 /**
  * @DI\Service("ujm_exo.serializer.question_selection")
+ * @DI\Tag("claroline.serializer")
  */
-class SelectionQuestionSerializer implements SerializerInterface
+class SelectionQuestionSerializer
 {
+    use SerializerTrait;
+
     /**
      * Converts a Selection question into a JSON-encodable structure.
      *
      * @param SelectionQuestion $selectionQuestion
      * @param array             $options
      *
-     * @return \stdClass
+     * @return array
      */
-    public function serialize($selectionQuestion, array $options = [])
+    public function serialize(SelectionQuestion $selectionQuestion, array $options = [])
     {
-        $questionData = new \stdClass();
-        $questionData->text = $selectionQuestion->getText();
-        $questionData->mode = $selectionQuestion->getMode();
+        $serialized = [
+            'text' => $selectionQuestion->getText(),
+            'mode' => $selectionQuestion->getMode(),
+        ];
 
         if ($selectionQuestion->getPenalty()) {
-            $questionData->penalty = $selectionQuestion->getPenalty();
+            $serialized['penalty'] = $selectionQuestion->getPenalty();
         }
 
         if ($selectionQuestion->getTries()) {
-            $questionData->tries = $selectionQuestion->getTries();
+            $serialized['tries'] = $selectionQuestion->getTries();
         }
 
         switch ($selectionQuestion->getMode()) {
            case SelectionQuestion::MODE_FIND:
-              $questionData->tries = $selectionQuestion->getTries();
+               $serialized['tries'] = $selectionQuestion->getTries();
               break;
            case SelectionQuestion::MODE_SELECT:
-              $questionData->selections = $this->serializeSelections($selectionQuestion);
+               $serialized['selections'] = $this->serializeSelections($selectionQuestion);
               break;
            case SelectionQuestion::MODE_HIGHLIGHT:
-              $questionData->selections = $this->serializeSelections($selectionQuestion);
-              $questionData->colors = $this->serializeColors($selectionQuestion);
+               $serialized['selections'] = $this->serializeSelections($selectionQuestion);
+               $serialized['colors'] = $this->serializeColors($selectionQuestion);
               break;
         }
 
         if (in_array(Transfer::INCLUDE_SOLUTIONS, $options)) {
-            $questionData->solutions = $this->serializeSolutions($selectionQuestion);
+            $serialized['solutions'] = $this->serializeSolutions($selectionQuestion);
         }
 
-        return $questionData;
+        return $serialized;
     }
 
     /**
      * Converts raw data into a Selection question entity.
      *
-     * @param \stdClass         $data
+     * @param array             $data
      * @param SelectionQuestion $selectionQuestion
      * @param array             $options
      *
-     * @return ClozeQuestion
+     * @return SelectionQuestion
      */
-    public function deserialize($data, $selectionQuestion = null, array $options = [])
+    public function deserialize($data, SelectionQuestion $selectionQuestion = null, array $options = [])
     {
         if (empty($selectionQuestion)) {
             $selectionQuestion = new SelectionQuestion();
         }
-
-        $selectionQuestion->setText($data->text);
-        $selectionQuestion->setMode($data->mode);
-
-        if (isset($data->tries)) {
-            $selectionQuestion->setTries($data->tries);
-        }
+        $this->sipe('text', 'setText', $data, $selectionQuestion);
+        $this->sipe('mode', 'setMode', $data, $selectionQuestion);
+        $this->sipe('tries', 'setTries', $data, $selectionQuestion);
+        $this->sipe('penalty', 'setPenalty', $data, $selectionQuestion);
 
         // colors must be deserialized first because they might be useful for selections
-        if (isset($data->colors)) {
-            $this->deserializeColors($selectionQuestion, $data->colors);
+        if (isset($data['colors'])) {
+            $this->deserializeColors($selectionQuestion, $data['colors']);
         }
 
-        if (property_exists($data, 'penalty')) {
-            $selectionQuestion->setPenalty($data->penalty);
+        $options['selection_mode'] = $data['mode'];
+
+        if (isset($data['selections']) && 'find' !== $data['mode']) {
+            $this->deserializeSelections($selectionQuestion, $data['selections'], $data['solutions'], $options);
         }
 
-        $options['selection_mode'] = $data->mode;
-
-        if (isset($data->selections) && 'find' !== $data->mode) {
-            $this->deserializeSelections($selectionQuestion, $data->selections, $data->solutions, $options);
-        }
-
-        if (isset($data->solutions) && 'find' === $data->mode) {
-            $this->deserializeSolutions($selectionQuestion, $data->solutions, $options);
+        if (isset($data['solutions']) && 'find' === $data['mode']) {
+            $this->deserializeSolutions($selectionQuestion, $data['solutions'], $options);
         }
 
         return $selectionQuestion;
@@ -111,23 +108,21 @@ class SelectionQuestionSerializer implements SerializerInterface
     private function serializeSelections(SelectionQuestion $selectionQuestion)
     {
         return array_map(function (Selection $selection) use ($selectionQuestion) {
-            $selectionData = new \stdClass();
-            $selectionData->id = $selection->getUuid();
-            $selectionData->begin = $selection->getBegin();
-            $selectionData->end = $selection->getEnd();
-
-            return $selectionData;
+            return [
+                'id' => $selection->getUuid(),
+                'begin' => $selection->getBegin(),
+                'end' => $selection->getEnd(),
+            ];
         }, $selectionQuestion->getSelections()->toArray());
     }
 
     private function serializeColors(SelectionQuestion $selectionQuestion)
     {
         return array_map(function (Color $color) {
-            $colorData = new \stdClass();
-            $colorData->id = $color->getUuid();
-            $colorData->code = $color->getColorCode();
-
-            return $colorData;
+            return [
+                'id' => $color->getUuid(),
+                'code' => $color->getColorCode(),
+            ];
         }, $selectionQuestion->getColors()->toArray());
     }
 
@@ -141,7 +136,7 @@ class SelectionQuestionSerializer implements SerializerInterface
             // Searches for an existing color entity.
             foreach ($colorEntities as $entityIndex => $colorEntity) {
                 /* @var Color $colorEntity */
-                if ($colorEntity->getUuid() === $colorData->id) {
+                if ($colorEntity->getUuid() === $colorData['id']) {
                     $color = $colorEntity;
                     unset($colorEntities[$entityIndex]);
                     break;
@@ -149,8 +144,8 @@ class SelectionQuestionSerializer implements SerializerInterface
             }
 
             $color = $color ?: new Color();
-            $color->setUuid($colorData->id);
-            $color->setColorCode($colorData->code);
+            $color->setUuid($colorData['id']);
+            $color->setColorCode($colorData['code']);
 
             $selectionQuestion->addColor($color);
         }
@@ -178,7 +173,7 @@ class SelectionQuestionSerializer implements SerializerInterface
 
             foreach ($selectionEntities as $entityIndex => $selectionEntity) {
                 /** @var Selection $selectionEntity */
-                if ($selectionEntity->getUuid() === $selectionData->id) {
+                if ($selectionEntity->getUuid() === $selectionData['id']) {
                     $selection = $selectionEntity;
                     unset($selectionEntities[$entityIndex]);
                     break;
@@ -186,28 +181,28 @@ class SelectionQuestionSerializer implements SerializerInterface
             }
 
             $selection = $selection ?: new Selection();
-            $selection->setUuid($selectionData->id);
+            $selection->setUuid($selectionData['id']);
 
             $solutionsD = array_values(array_filter($solutions, function ($solution) use ($selectionData) {
-                return $solution->selectionId === $selectionData->id;
+                return $solution['selectionId'] === $selectionData['id'];
             }));
 
-            if (isset($solutionsD[0]) && isset($solutionsD[0]->feedback)) {
-                $selection->setFeedback($solutionsD[0]->feedback);
+            if (isset($solutionsD[0]) && isset($solutionsD[0]['feedback'])) {
+                $selection->setFeedback($solutionsD[0]['feedback']);
             }
 
-            $selection->setBegin($selectionData->begin);
-            $selection->setEnd($selectionData->end);
+            $selection->setBegin($selectionData['begin']);
+            $selection->setEnd($selectionData['end']);
 
             foreach ($solutions as $solutionData) {
-                if ($solutionData->selectionId === $selectionData->id) {
+                if ($solutionData['selectionId'] === $selectionData['id']) {
                     switch ($options['selection_mode']) {
                       case SelectionQuestion::MODE_SELECT:
-                        $selection->setScore($solutionData->score);
+                        $selection->setScore($solutionData['score']);
                         break;
                       case SelectionQuestion::MODE_HIGHLIGHT:
                         $selection->setScore(0);
-                        $this->deserializeColorSelection($selection, $solutionData->answers, $selectionQuestion->getColors()->toArray());
+                        $this->deserializeColorSelection($selection, $solutionData['answers'], $selectionQuestion->getColors()->toArray());
                         break;
                       }
                 }
@@ -230,7 +225,7 @@ class SelectionQuestionSerializer implements SerializerInterface
             $colorSelection = null;
 
             foreach ($colorSelectionsEntities as $entityIndex => $selectionEntity) {
-                if ($selectionEntity->getColor()->getUuid() === $answerData->colorId) {
+                if ($selectionEntity->getColor()->getUuid() === $answerData['colorId']) {
                     $colorSelection = $selectionEntity;
                     unset($colorSelectionsEntities[$entityIndex]);
                     break;
@@ -242,17 +237,17 @@ class SelectionQuestionSerializer implements SerializerInterface
             }
 
             $colorE = array_values(array_filter($colors, function ($color) use ($answerData) {
-                return $color->getUuid() === $answerData->colorId;
+                return $color->getUuid() === $answerData['colorId'];
             }))[0];
 
             $colorSelection->setColor($colorE);
 
-            if (property_exists($answerData, 'feedback')) {
-                $colorSelection->setFeedback($answerData->feedback);
+            if (isset($answerData['feedback'])) {
+                $colorSelection->setFeedback($answerData['feedback']);
             }
 
             $colorSelection->setSelection($selection);
-            $colorSelection->setScore($answerData->score);
+            $colorSelection->setScore($answerData['score']);
             $selection->addColorSelection($colorSelection);
         }
 
@@ -279,7 +274,7 @@ class SelectionQuestionSerializer implements SerializerInterface
 
             foreach ($selectionEntities as $entityIndex => $selectionEntity) {
                 /** @var Selection $selectionEntity */
-                if ($selectionEntity->getUuid() === $solutionData->selectionId) {
+                if ($selectionEntity->getUuid() === $solutionData['selectionId']) {
                     $selection = $selectionEntity;
                     unset($selectionEntities[$entityIndex]);
                     break;
@@ -287,15 +282,15 @@ class SelectionQuestionSerializer implements SerializerInterface
             }
 
             $selection = $selection ?: new Selection();
-            $selection->setUuid($solutionData->selectionId);
+            $selection->setUuid($solutionData['selectionId']);
 
-            if (isset($solutionData->feedback)) {
-                $selection->setFeedback($solutionData->feedback);
+            if (isset($solutionData['feedback'])) {
+                $selection->setFeedback($solutionData['feedback']);
             }
 
-            $selection->setBegin($solutionData->begin);
-            $selection->setEnd($solutionData->end);
-            $selection->setScore($solutionData->score);
+            $selection->setBegin($solutionData['begin']);
+            $selection->setEnd($solutionData['end']);
+            $selection->setScore($solutionData['score']);
             $selectionQuestion->addSelection($selection);
         }
 
@@ -310,35 +305,35 @@ class SelectionQuestionSerializer implements SerializerInterface
         switch ($selectionQuestion->getMode()) {
          case SelectionQuestion::MODE_FIND:
             return array_map(function (Selection $selection) {
-                $solutionData = new \stdClass();
-                $solutionData->selectionId = $selection->getUuid();
-                $solutionData->score = $selection->getScore();
-                $solutionData->begin = $selection->getBegin();
-                $solutionData->end = $selection->getEnd();
-                $solutionData->feedback = $selection->getFeedback();
-
-                return $solutionData;
+                return [
+                    'selectionId' => $selection->getUuid(),
+                    'score' => $selection->getScore(),
+                    'begin' => $selection->getBegin(),
+                    'end' => $selection->getEnd(),
+                    'feedback' => $selection->getFeedback(),
+                ];
             }, $selectionQuestion->getSelections()->toArray());
          case SelectionQuestion::MODE_SELECT:
              return array_map(function (Selection $selection) {
-                 $solutionData = new \stdClass();
-                 $solutionData->selectionId = $selection->getUuid();
-                 $solutionData->score = $selection->getScore();
-                 $solutionData->feedback = $selection->getFeedback();
-
-                 return $solutionData;
+                 return [
+                     'selectionId' => $selection->getUuid(),
+                     'score' => $selection->getScore(),
+                     'feedback' => $selection->getFeedback(),
+                 ];
              }, $selectionQuestion->getSelections()->toArray());
          case SelectionQuestion::MODE_HIGHLIGHT:
              return array_map(function (Selection $selection) {
-                 $solutionData = new \stdClass();
-                 $solutionData->selectionId = $selection->getUuid();
-                 $solutionData->answers = [];
+                 $solutionData = [
+                     'selectionId' => $selection->getUuid(),
+                     'answers' => [],
+                 ];
+
                  foreach ($selection->getColorSelections()->toArray() as $colorSelection) {
-                     $answer = new \stdClass();
-                     $answer->score = $colorSelection->getScore();
-                     $answer->colorId = $colorSelection->getColor()->getUuid();
-                     $answer->feedback = $colorSelection->getFeedback();
-                     $solutionData->answers[] = $answer;
+                     $solutionData['answers'][] = [
+                         'score' => $colorSelection->getScore(),
+                         'colorId' => $colorSelection->getColor()->getUuid(),
+                         'feedback' => $colorSelection->getFeedback(),
+                     ];
                  }
 
                  return $solutionData;

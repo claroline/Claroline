@@ -343,7 +343,7 @@ const OrderingPaper = props => {
               </div>
             </div>
           }
-          {props.item.direction === constants.DIRECTION_HORIZONTAL && props.item.mode === constants.MODE_BESIDE &&
+          {props.item.direction === constants.DIRECTION_HORIZONTAL && props.item.mode === constants.MODE_BESIDE && props.stats.orders &&
             Object.values(props.stats.orders).map((o) => {
               const data = o.data.slice()
               const key = utils.getKey(data)

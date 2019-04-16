@@ -2,56 +2,56 @@
 
 namespace UJM\ExoBundle\Serializer\Item\Type;
 
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\OpenQuestion;
 use UJM\ExoBundle\Library\Options\Transfer;
-use UJM\ExoBundle\Library\Serializer\SerializerInterface;
 
 /**
  * @DI\Service("ujm_exo.serializer.question_open")
+ * @DI\Tag("claroline.serializer")
  */
-class OpenQuestionSerializer implements SerializerInterface
+class OpenQuestionSerializer
 {
+    use SerializerTrait;
+
     /**
      * Converts a Open question into a JSON-encodable structure.
      *
      * @param OpenQuestion $openQuestion
      * @param array        $options
      *
-     * @return \stdClass
+     * @return array
      */
-    public function serialize($openQuestion, array $options = [])
+    public function serialize(OpenQuestion $openQuestion, array $options = [])
     {
-        $questionData = new \stdClass();
-
-        $questionData->contentType = 'text';
-        $questionData->maxLength = $openQuestion->getAnswerMaxLength();
+        $serialized = [
+            'contentType' => 'text',
+            'maxLength' => $openQuestion->getAnswerMaxLength(),
+        ];
 
         if (in_array(Transfer::INCLUDE_SOLUTIONS, $options)) {
-            $questionData->solutions = [];
+            $serialized['solutions'] = [];
         }
 
-        return $questionData;
+        return $serialized;
     }
 
     /**
      * Converts raw data into an Open question entity.
      *
-     * @param \stdClass    $data
+     * @param array        $data
      * @param OpenQuestion $openQuestion
      * @param array        $options
      *
      * @return OpenQuestion
      */
-    public function deserialize($data, $openQuestion = null, array $options = [])
+    public function deserialize($data, OpenQuestion $openQuestion = null, array $options = [])
     {
         if (empty($openQuestion)) {
             $openQuestion = new OpenQuestion();
         }
-
-        if (isset($data->maxLength)) {
-            $openQuestion->setAnswerMaxLength($data->maxLength);
-        }
+        $this->sipe('maxLength', 'setAnswerMaxLength', $data, $openQuestion);
 
         return $openQuestion;
     }

@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Serializer\Item;
 
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
@@ -19,7 +20,6 @@ use UJM\ExoBundle\Entity\Item\ItemResource;
 use UJM\ExoBundle\Entity\Item\Shared;
 use UJM\ExoBundle\Library\Item\ItemDefinitionsCollection;
 use UJM\ExoBundle\Library\Options\Transfer;
-use UJM\ExoBundle\Library\Serializer\AbstractSerializer;
 use UJM\ExoBundle\Repository\ExerciseRepository;
 use UJM\ExoBundle\Serializer\Content\ResourceContentSerializer;
 use UJM\ExoBundle\Serializer\UserSerializer;
@@ -30,8 +30,10 @@ use UJM\ExoBundle\Serializer\UserSerializer;
  * @DI\Service("ujm_exo.serializer.item")
  * @DI\Tag("claroline.serializer")
  */
-class ItemSerializer extends AbstractSerializer
+class ItemSerializer
 {
+    use SerializerTrait;
+
     /** @var ObjectManager */
     private $om;
 
@@ -107,171 +109,139 @@ class ItemSerializer extends AbstractSerializer
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function getClass()
-    {
-        return 'UJM\ExoBundle\Entity\Item\Item';
-    }
-
     /**
      * Converts a Item into a JSON-encodable structure.
      *
      * @param Item  $question
      * @param array $options
      *
-     * @return \stdClass
+     * @return array
      */
-    public function serialize($question, array $options = [])
+    public function serialize(Item $question, array $options = [])
     {
         // Serialize specific data for the item type
-        $questionData = $this->serializeQuestionType($question, $options);
+        $serialized = $this->serializeQuestionType($question, $options);
 
         if (1 === preg_match('#^application\/x\.[^/]+\+json$#', $question->getMimeType())) {
             $canEdit = $this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User ?
                 $this->container->get('ujm_exo.manager.item')->canEdit($question, $this->tokenStorage->getToken()->getUser()) :
                 false;
-            $rights = [
-              'edit' => $canEdit,
-            ];
             // Adds minimal information
-            $this->mapEntityToObject([
-                'id' => 'uuid',
-                'autoId' => 'id',
-                'type' => 'mimeType',
-                'content' => 'content',
-                'title' => 'title',
-                'meta' => function (Item $question) use ($options) {
-                    return $this->serializeMetadata($question, $options);
-                },
-                'score' => function (Item $question) {
-                    return json_decode($question->getScoreRule());
-                },
-                'rights' => function () use ($rights) {
-                    return $rights;
-                },
-            ], $question, $questionData);
+            $serialized = array_merge($serialized, [
+                'id' => $question->getUuid(),
+                'autoId' => $question->getId(),
+                'type' => $question->getMimeType(),
+                'content' => $question->getContent(),
+                'title' => $question->getTitle(),
+                'meta' => $this->serializeMetadata($question, $options),
+                'score' => json_decode($question->getScoreRule(), true),
+                'rights' => ['edit' => $canEdit],
+            ]);
 
             // Adds full definition of the item
-            if (!$this->hasOption(Transfer::MINIMAL, $options)) {
-                $this->mapEntityToObject([
-                    'description' => 'description',
-                    'hints' => function (Item $question) use ($options) {
-                        return $this->serializeHints($question, $options);
-                    },
-                    'objects' => function (Item $question) {
-                        return $this->serializeObjects($question);
-                    },
-                    'resources' => function (Item $question) {
-                        return $this->serializeResources($question);
-                    },
-                    'tags' => function (Item $question) {
-                        return $this->serializeTags($question);
-                    },
-                ], $question, $questionData);
+            if (!in_array(Transfer::MINIMAL, $options)) {
+                $serialized = array_merge($serialized, [
+                    'description' => $question->getDescription(),
+                    'hints' => $this->serializeHints($question, $options),
+                    'objects' => $this->serializeObjects($question),
+                    'resources' => $this->serializeResources($question),
+                    'tags' => $this->serializeTags($question),
+                ]);
 
                 // Adds item feedback
-                if ($this->hasOption(Transfer::INCLUDE_SOLUTIONS, $options)) {
-                    $this->mapEntityToObject([
-                        'feedback' => 'feedback',
-                    ], $question, $questionData);
+                if (in_array(Transfer::INCLUDE_SOLUTIONS, $options)) {
+                    $serialized['feedback'] = $question->getFeedback();
                 }
             }
         } else {
-            $this->mapEntityToObject([
-                'id' => 'uuid',
-                'type' => 'mimeType',
-                'title' => 'title',
-                'meta' => function (Item $question) use ($options) {
-                    return $this->serializeMetadata($question, $options);
-                },
-            ], $question, $questionData);
+            $serialized = array_merge($serialized, [
+                'id' => $question->getUuid(),
+                'type' => $question->getMimeType(),
+                'title' => $question->getTitle(),
+                'meta' => $this->serializeMetadata($question, $options),
+            ]);
 
             // Adds full definition of the item
-            if (!$this->hasOption(Transfer::MINIMAL, $options)) {
-                $this->mapEntityToObject([
-                    'description' => 'description',
-                    'tags' => function (Item $question) {
-                        return $this->serializeTags($question);
-                    },
-                ], $question, $questionData);
+            if (!in_array(Transfer::MINIMAL, $options)) {
+                $serialized = array_merge($serialized, [
+                    'description' => $question->getDescription(),
+                    'tags' => $this->serializeTags($question),
+                ]);
             }
         }
 
-        return $questionData;
+        return $serialized;
     }
 
     /**
      * Converts raw data into a Item entity.
      *
-     * @param \stdClass $data
-     * @param Item      $item
-     * @param array     $options
+     * @param array $data
+     * @param Item  $item
+     * @param array $options
      *
      * @return Item
      */
-    public function deserialize($data, $item = null, array $options = [])
+    public function deserialize($data, Item $item = null, array $options = [])
     {
-        if (!$this->hasOption(Transfer::NO_FETCH, $options) && empty($item) && !empty($data->id)) {
+        if (!in_array(Transfer::NO_FETCH, $options) && empty($item) && !empty($data['id'])) {
             // Loads the Item from DB if already exist
-            $item = $this->om->getRepository('UJMExoBundle:Item\Item')->findOneBy([
-                'uuid' => $data->id,
-            ]);
+            $item = $this->om->getRepository(Item::class)->findOneBy(['uuid' => $data['id']]);
         }
 
         $item = $item ?: new Item();
-        $item->setUuid($data->id);
+        $this->sipe('id', 'setUuid', $data, $item);
 
-        if ($this->hasOption(Transfer::REFRESH_UUID, $options)) {
+        if (in_array(Transfer::REFRESH_UUID, $options)) {
             $item->refreshUuid();
         }
 
         // Sets the creator of the Item if not set
         $creator = $item->getCreator();
+
         if (empty($creator) || !($creator instanceof User)) {
             $token = $this->tokenStorage->getToken();
+
             if (!empty($token) && $token->getUser() instanceof User) {
                 $item->setCreator($token->getUser());
             }
         }
 
-        if (1 === preg_match('#^application\/x\.[^/]+\+json$#', $data->type)) {
+        if (1 === preg_match('#^application\/x\.[^/]+\+json$#', $data['type'])) {
             // question item
-            // Map data to entity (dataProperty => entityProperty/function to call)
-            $this->mapObjectToEntity([
-                'type' => 'mimeType',
-                'content' => 'content',
-                'title' => 'title',
-                'description' => 'description',
-                'feedback' => 'feedback',
-                'hints' => function (Item $item, \stdClass $data) use ($options) {
-                    return $this->deserializeHints($item, $data->hints, $options);
-                },
-                'objects' => function (Item $item, \stdClass $data) use ($options) {
-                    return $this->deserializeObjects($item, $data->objects, $options);
-                },
-                'resources' => function (Item $item, \stdClass $data) use ($options) {
-                    return $this->deserializeResources($item, $data->resources, $options);
-                },
-                'meta' => function (Item $item, \stdClass $data) {
-                    return $this->deserializeMetadata($item, $data->meta);
-                },
-                'score' => function (Item $item, \stdClass $data) {
-                    $score = $this->sanitizeScore($data->score);
-                    $item->setScoreRule(json_encode($score));
-                },
-            ], $data, $item);
+            $this->sipe('type', 'setMimeType', $data, $item);
+            $this->sipe('content', 'setContent', $data, $item);
+            $this->sipe('title', 'setTitle', $data, $item);
+            $this->sipe('description', 'setDescription', $data, $item);
+            $this->sipe('feedback', 'setFeedback', $data, $item);
+
+            if (isset($data['hints'])) {
+                $this->deserializeHints($item, $data['hints'], $options);
+            }
+            if (isset($data['objects'])) {
+                $this->deserializeObjects($item, $data['objects'], $options);
+            }
+            if (isset($data['resources'])) {
+                $this->deserializeResources($item, $data['resources'], $options);
+            }
+            if (isset($data['meta'])) {
+                $this->deserializeMetadata($item, $data['meta']);
+            }
+            if (isset($data['score'])) {
+                $score = $this->sanitizeScore($data['score']);
+                $item->setScoreRule(json_encode($score));
+            }
         } else {
             // content item
-            $this->mapObjectToEntity([
-                'type' => 'mimeType',
-                'title' => 'title',
-                'description' => 'description',
-            ], $data, $item);
+            $this->sipe('type', 'setMimeType', $data, $item);
+            $this->sipe('title', 'setTitle', $data, $item);
+            $this->sipe('description', 'setDescription', $data, $item);
         }
 
         $this->deserializeQuestionType($item, $data, $options);
 
-        if (isset($data->tags)) {
-            $this->deserializeTags($item, $data->tags, $options);
+        if (isset($data['tags'])) {
+            $this->deserializeTags($item, $data['tags'], $options);
         }
 
         return $item;
@@ -284,7 +254,7 @@ class ItemSerializer extends AbstractSerializer
      * @param Item  $question
      * @param array $options
      *
-     * @return \stdClass
+     * @return array
      */
     private function serializeQuestionType(Item $question, array $options = [])
     {
@@ -298,11 +268,11 @@ class ItemSerializer extends AbstractSerializer
      * Deserializes Item data specific to its type.
      * Forwards the serialization to the correct handler.
      *
-     * @param Item      $question
-     * @param \stdClass $data
-     * @param array     $options
+     * @param Item  $question
+     * @param array $data
+     * @param array $options
      */
-    private function deserializeQuestionType(Item $question, \stdClass $data, array $options = [])
+    private function deserializeQuestionType(Item $question, array $data, array $options = [])
     {
         $type = $this->itemDefinitions->getConvertedType($question->getMimeType());
         $definition = $this->itemDefinitions->get($type);
@@ -310,7 +280,7 @@ class ItemSerializer extends AbstractSerializer
         // Deserialize item type data
         $type = $definition->deserializeQuestion($data, $question->getInteraction(), $options);
         $type->setQuestion($question);
-        if ($this->hasOption(Transfer::REFRESH_UUID, $options)) {
+        if (in_array(Transfer::REFRESH_UUID, $options)) {
             $definition->refreshIdentifiers($question->getInteraction());
         }
     }
@@ -321,48 +291,45 @@ class ItemSerializer extends AbstractSerializer
      * @param Item  $question
      * @param array $options
      *
-     * @return \stdClass
+     * @return array
      */
     private function serializeMetadata(Item $question, array $options = [])
     {
-        $metadata = new \stdClass();
+        $metadata = ['protectQuestion' => $question->getProtectUpdate()];
 
         $creator = $question->getCreator();
 
-        $metadata->protectQuestion = $question->getProtectUpdate();
-
         if (!empty($creator)) {
-            $metadata->creator = $this->userSerializer->serialize($creator, $options);
+            $metadata['creator'] = $this->userSerializer->serialize($creator, $options);
             // TODO : remove me. for retro compatibility with old schema
-            $metadata->authors = [
-                $this->userSerializer->serialize($creator, $options),
-            ];
+            $metadata['authors'] = [$this->userSerializer->serialize($creator, $options)];
         }
 
         if ($question->getDateCreate()) {
-            $metadata->created = DateNormalizer::normalize($question->getDateCreate());
+            $metadata['created'] = DateNormalizer::normalize($question->getDateCreate());
         }
 
         if ($question->getDateModify()) {
-            $metadata->updated = DateNormalizer::normalize($question->getDateModify());
+            $metadata['updated'] = DateNormalizer::normalize($question->getDateModify());
         }
 
-        if ($this->hasOption(Transfer::INCLUDE_ADMIN_META, $options)) {
+        if (in_array(Transfer::INCLUDE_ADMIN_META, $options)) {
             /** @var ExerciseRepository $exerciseRepo */
-            $exerciseRepo = $this->om->getRepository('UJMExoBundle:Exercise');
+            $exerciseRepo = $this->om->getRepository(Exercise::class);
 
             // Gets exercises that use this item
             $exercises = $exerciseRepo->findByQuestion($question);
-            $metadata->usedBy = array_map(function (Exercise $exercise) {
+            $metadata['usedBy'] = array_map(function (Exercise $exercise) {
                 return $exercise->getUuid();
             }, $exercises);
 
             // Gets users who have access to this item
-            $users = $this->om->getRepository('UJMExoBundle:Item\Shared')->findBy(['question' => $question]);
-            $metadata->sharedWith = array_map(function (Shared $sharedQuestion) use ($options) {
-                $shared = new \stdClass();
-                $shared->adminRights = $sharedQuestion->hasAdminRights();
-                $shared->user = $this->userSerializer->serialize($sharedQuestion->getUser(), $options);
+            $users = $this->om->getRepository(Shared::class)->findBy(['question' => $question]);
+            $metadata['sharedWith'] = array_map(function (Shared $sharedQuestion) use ($options) {
+                $shared = [
+                    'adminRights' => $sharedQuestion->hasAdminRights(),
+                    'user' => $this->userSerializer->serialize($sharedQuestion->getUser(), $options),
+                ];
 
                 return $shared;
             }, $users);
@@ -374,14 +341,12 @@ class ItemSerializer extends AbstractSerializer
     /**
      * Deserializes Item metadata.
      *
-     * @param Item      $question
-     * @param \stdClass $metadata
+     * @param Item  $question
+     * @param array $metadata
      */
-    public function deserializeMetadata(Item $question, \stdClass $metadata)
+    public function deserializeMetadata(Item $question, array $metadata)
     {
-        if (isset($metadata->protectQuestion)) {
-            $question->setProtectUpdate($metadata->protectQuestion);
-        }
+        $this->sipe('protectQuestion', 'setProtectUpdate', $metadata, $question);
     }
 
     /**
@@ -418,7 +383,7 @@ class ItemSerializer extends AbstractSerializer
             // Searches for an existing hint entity.
             foreach ($hintEntities as $entityIndex => $entityHint) {
                 /** @var Hint $entityHint */
-                if ($entityHint->getUuid() === $hintData->id) {
+                if ($entityHint->getUuid() === $hintData['id']) {
                     $existingHint = $entityHint;
                     unset($hintEntities[$entityIndex]);
                     break;
@@ -474,7 +439,7 @@ class ItemSerializer extends AbstractSerializer
             // Searches for an existing object entity.
             foreach ($objectEntities as $entityIndex => $entityObject) {
                 /** @var ItemObject $entityObject */
-                if ($entityObject->getUuid() === $objectData->id) {
+                if ($entityObject->getUuid() === $objectData['id']) {
                     $existingObject = $entityObject;
                     unset($objectEntities[$entityIndex]);
                     break;
@@ -532,7 +497,7 @@ class ItemSerializer extends AbstractSerializer
             // Searches for an existing resource entity.
             foreach ($resourceEntities as $entityIndex => $entityResource) {
                 /** @var ItemResource $entityResource */
-                if ((string) $entityResource->getId() === $resourceData->id) {
+                if ((string) $entityResource->getId() === $resourceData['id']) {
                     $existingResource = $entityResource;
                     unset($resourceEntities[$entityIndex]);
                     break;
@@ -567,26 +532,25 @@ class ItemSerializer extends AbstractSerializer
      *
      * @param $score
      *
-     * @return \stdClass
+     * @return array
      */
     private function sanitizeScore($score)
     {
-        $sanitized = new \stdClass();
+        $sanitized = ['type' => $score['type']];
 
-        $sanitized->type = $score->type;
-        switch ($score->type) {
+        switch ($score['type']) {
             case 'fixed':
-                $sanitized->success = $score->success;
-                $sanitized->failure = $score->failure;
+                $sanitized['success'] = $score['success'];
+                $sanitized['failure'] = $score['failure'];
                 break;
 
             case 'manual':
-                $sanitized->max = $score->max;
+                $sanitized['max'] = $score['max'];
                 break;
 
             case 'rules':
-                $sanitized->noWrongChoice = isset($score->noWrongChoice) ? $score->noWrongChoice : false;
-                $sanitized->rules = $score->rules;
+                $sanitized['noWrongChoice'] = isset($score['noWrongChoice']) ? $score['noWrongChoice'] : false;
+                $sanitized['rules'] = $score['rules'];
                 break;
         }
 
@@ -621,8 +585,9 @@ class ItemSerializer extends AbstractSerializer
      */
     private function deserializeTags(Item $question, array $tags = [], array $options = [])
     {
-        if ($this->hasOption(Transfer::PERSIST_TAG, $options)) {
+        if (in_array(Transfer::PERSIST_TAG, $options)) {
             $user = null;
+
             if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {
                 $user = $this->tokenStorage->getToken()->getUser();
             }

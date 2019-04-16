@@ -29,6 +29,7 @@
     "max_attempts_reached_title": "Sorry, you can not pass the quiz anymore.",
     "score_availability": "Availability of score",
     "average": "Average",
+    "back_to_the_quiz": "Back to the quiz",
     "calculation_measure_difficulty": "It's calculated on the basis of the number of applicants who have correctly answered, divided by total number of applicants.",
     "case_sensitive": "Case sensitive",
     "cercle": "Circle",

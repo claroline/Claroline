@@ -2,25 +2,28 @@
 
 namespace UJM\ExoBundle\Serializer\Item\Type;
 
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\OpenQuestion;
 use UJM\ExoBundle\Entity\Misc\Keyword;
 use UJM\ExoBundle\Library\Options\Transfer;
-use UJM\ExoBundle\Library\Serializer\SerializerInterface;
 use UJM\ExoBundle\Serializer\Misc\KeywordSerializer;
 
 /**
  * @DI\Service("ujm_exo.serializer.question_words")
+ * @DI\Tag("claroline.serializer")
  */
-class WordsQuestionSerializer implements SerializerInterface
+class WordsQuestionSerializer
 {
+    use SerializerTrait;
+
     /**
      * @var KeywordSerializer
      */
     private $keywordSerializer;
 
     /**
-     * ClozeQuestionSerializer constructor.
+     * WordsQuestionSerializer constructor.
      *
      * @param KeywordSerializer $keywordSerializer
      *
@@ -39,35 +42,35 @@ class WordsQuestionSerializer implements SerializerInterface
      * @param OpenQuestion $wordsQuestion
      * @param array        $options
      *
-     * @return \stdClass
+     * @return array
      */
-    public function serialize($wordsQuestion, array $options = [])
+    public function serialize(OpenQuestion $wordsQuestion, array $options = [])
     {
-        $questionData = new \stdClass();
+        $serialized = [];
 
         if (in_array(Transfer::INCLUDE_SOLUTIONS, $options)) {
-            $questionData->solutions = $this->serializeSolutions($wordsQuestion, $options);
+            $serialized['solutions'] = $this->serializeSolutions($wordsQuestion, $options);
         }
 
-        return $questionData;
+        return $serialized;
     }
 
     /**
      * Converts raw data into an Words question entity.
      *
-     * @param \stdClass    $data
+     * @param array        $data
      * @param OpenQuestion $wordsQuestion
      * @param array        $options
      *
      * @return OpenQuestion
      */
-    public function deserialize($data, $wordsQuestion = null, array $options = [])
+    public function deserialize($data, OpenQuestion $wordsQuestion = null, array $options = [])
     {
         if (empty($wordsQuestion)) {
             $wordsQuestion = new OpenQuestion();
         }
 
-        $this->deserializeSolutions($wordsQuestion, $data->solutions, $options);
+        $this->deserializeSolutions($wordsQuestion, $data['solutions'], $options);
 
         return $wordsQuestion;
     }

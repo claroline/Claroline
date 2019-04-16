@@ -2,18 +2,21 @@
 
 namespace UJM\ExoBundle\Serializer\Item\Type;
 
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\ChoiceQuestion;
 use UJM\ExoBundle\Entity\Misc\Choice;
 use UJM\ExoBundle\Library\Options\Transfer;
-use UJM\ExoBundle\Library\Serializer\SerializerInterface;
 use UJM\ExoBundle\Serializer\Content\ContentSerializer;
 
 /**
  * @DI\Service("ujm_exo.serializer.question_choice")
+ * @DI\Tag("claroline.serializer")
  */
-class ChoiceQuestionSerializer implements SerializerInterface
+class ChoiceQuestionSerializer
 {
+    use SerializerTrait;
+
     /**
      * @var ContentSerializer
      */
@@ -39,58 +42,53 @@ class ChoiceQuestionSerializer implements SerializerInterface
      * @param ChoiceQuestion $choiceQuestion
      * @param array          $options
      *
-     * @return \stdClass
+     * @return array
      */
-    public function serialize($choiceQuestion, array $options = [])
+    public function serialize(ChoiceQuestion $choiceQuestion, array $options = [])
     {
-        $questionData = new \stdClass();
-
-        $questionData->random = $choiceQuestion->getShuffle();
-        $questionData->multiple = $choiceQuestion->isMultiple();
-        $questionData->numbering = $choiceQuestion->getNumbering();
-        $questionData->direction = $choiceQuestion->getDirection();
+        $serialized = [
+            'random' => $choiceQuestion->getShuffle(),
+            'multiple' => $choiceQuestion->isMultiple(),
+            'numbering' => $choiceQuestion->getNumbering(),
+            'direction' => $choiceQuestion->getDirection(),
+        ];
 
         // Serializes choices
         $choices = $this->serializeChoices($choiceQuestion, $options);
+
         if ($choiceQuestion->getShuffle() && in_array(Transfer::SHUFFLE_ANSWERS, $options)) {
             shuffle($choices);
         }
 
-        $questionData->choices = $choices;
+        $serialized['choices'] = $choices;
 
         if (in_array(Transfer::INCLUDE_SOLUTIONS, $options)) {
-            $questionData->solutions = $this->serializeSolutions($choiceQuestion);
+            $serialized['solutions'] = $this->serializeSolutions($choiceQuestion);
         }
 
-        return $questionData;
+        return $serialized;
     }
 
     /**
      * Converts raw data into a Choice question entity.
      *
-     * @param \stdClass      $data
+     * @param array          $data
      * @param ChoiceQuestion $choiceQuestion
      * @param array          $options
      *
      * @return ChoiceQuestion
      */
-    public function deserialize($data, $choiceQuestion = null, array $options = [])
+    public function deserialize($data, ChoiceQuestion $choiceQuestion = null, array $options = [])
     {
         if (empty($choiceQuestion)) {
             $choiceQuestion = new ChoiceQuestion();
         }
 
-        $choiceQuestion->setMultiple($data->multiple);
+        $this->sipe('multiple', 'setMultiple', $data, $choiceQuestion);
+        $this->sipe('random', 'setShuffle', $data, $choiceQuestion);
+        $this->sipe('numbering', 'setNumbering', $data, $choiceQuestion);
 
-        if (isset($data->random)) {
-            $choiceQuestion->setShuffle($data->random);
-        }
-
-        if (isset($data->numbering)) {
-            $choiceQuestion->setNumbering($data->numbering);
-        }
-
-        $this->deserializeChoices($choiceQuestion, $data->choices, $data->solutions, $options);
+        $this->deserializeChoices($choiceQuestion, $data['choices'], $data['solutions'], $options);
 
         return $choiceQuestion;
     }
@@ -109,7 +107,7 @@ class ChoiceQuestionSerializer implements SerializerInterface
         return array_map(function (Choice $choice) use ($options) {
             $choiceData = $this->contentSerializer->serialize($choice, $options);
             // TODO : finish content management. For now the choice id overlaps the content ID.
-            $choiceData->id = $choice->getUuid();
+            $choiceData['id'] = $choice->getUuid();
 
             return $choiceData;
         }, $choiceQuestion->getChoices()->toArray());
@@ -133,7 +131,7 @@ class ChoiceQuestionSerializer implements SerializerInterface
             // Searches for an existing choice entity.
             foreach ($choiceEntities as $entityIndex => $entityChoice) {
                 /** @var Choice $entityChoice */
-                if ($entityChoice->getUuid() === $choiceData->id) {
+                if ($entityChoice->getUuid() === $choiceData['id']) {
                     $choice = $entityChoice;
                     unset($choiceEntities[$entityIndex]);
                     break;
@@ -141,8 +139,7 @@ class ChoiceQuestionSerializer implements SerializerInterface
             }
 
             $choice = $choice ?: new Choice();
-            $choice->setUuid($choiceData->id);
-
+            $choice->setUuid($choiceData['id']);
             $choice->setOrder($index);
 
             // Deserialize choice content
@@ -150,13 +147,14 @@ class ChoiceQuestionSerializer implements SerializerInterface
 
             // Set choice score and feedback
             $choice->setScore(0);
-            foreach ($solutions as $solution) {
-                if ($solution->id === $choiceData->id) {
-                    $choice->setScore($solution->score);
-                    if (isset($solution->feedback)) {
-                        $choice->setFeedback($solution->feedback);
-                    }
 
+            foreach ($solutions as $solution) {
+                if ($solution['id'] === $choiceData['id']) {
+                    $choice->setScore($solution['score']);
+
+                    if (isset($solution['feedback'])) {
+                        $choice->setFeedback($solution['feedback']);
+                    }
                     break;
                 }
             }
@@ -184,12 +182,13 @@ class ChoiceQuestionSerializer implements SerializerInterface
     private function serializeSolutions(ChoiceQuestion $choiceQuestion)
     {
         return array_map(function (Choice $choice) {
-            $solutionData = new \stdClass();
-            $solutionData->id = $choice->getUuid();
-            $solutionData->score = $choice->getScore();
+            $solutionData = [
+                'id' => $choice->getUuid(),
+                'score' => $choice->getScore(),
+            ];
 
             if ($choice->getFeedback()) {
-                $solutionData->feedback = $choice->getFeedback();
+                $solutionData['feedback'] = $choice->getFeedback();
             }
 
             return $solutionData;

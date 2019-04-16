@@ -2,6 +2,8 @@
 
 namespace UJM\ExoBundle\Serializer;
 
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use UJM\ExoBundle\Entity\Exercise;
@@ -10,7 +12,6 @@ use UJM\ExoBundle\Library\Options\Picking;
 use UJM\ExoBundle\Library\Options\Recurrence;
 use UJM\ExoBundle\Library\Options\ShowCorrectionAt;
 use UJM\ExoBundle\Library\Options\Transfer;
-use UJM\ExoBundle\Library\Serializer\SerializerInterface;
 use UJM\ExoBundle\Manager\Item\ItemManager;
 
 /**
@@ -19,8 +20,10 @@ use UJM\ExoBundle\Manager\Item\ItemManager;
  * @DI\Service("ujm_exo.serializer.exercise")
  * @DI\Tag("claroline.serializer")
  */
-class ExerciseSerializer implements SerializerInterface
+class ExerciseSerializer
 {
+    use SerializerTrait;
+
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
@@ -29,11 +32,6 @@ class ExerciseSerializer implements SerializerInterface
 
     /** @var ItemManager */
     private $itemManager;
-
-    public function getClass()
-    {
-        return Exercise::class;
-    }
 
     /**
      * ExerciseSerializer constructor.
@@ -64,63 +62,57 @@ class ExerciseSerializer implements SerializerInterface
      * @param Exercise $exercise
      * @param array    $options
      *
-     * @return \stdClass
+     * @return array
      */
-    public function serialize($exercise, array $options = [])
+    public function serialize(Exercise $exercise, array $options = [])
     {
-        $exerciseData = new \stdClass();
-        $exerciseData->id = $exercise->getUuid();
-
-        $exerciseData->title = $exercise->getResourceNode()->getName(); // TODO : remove me. it's required by the json schema
+        $serialized = [
+            'id' => $exercise->getUuid(),
+            'title' => $exercise->getResourceNode()->getName(), // TODO : remove me. it's required by the json schema
+        ];
 
         if (!in_array(Transfer::MINIMAL, $options)) {
             if (!empty($exercise->getDescription())) {
-                $exerciseData->description = $exercise->getDescription();
+                $serialized['description'] = $exercise->getDescription();
             }
-
-            $exerciseData->parameters = $this->serializeParameters($exercise);
-            $exerciseData->picking = $this->serializePicking($exercise);
-            $exerciseData->steps = $this->serializeSteps($exercise, $options);
+            $serialized['parameters'] = $this->serializeParameters($exercise);
+            $serialized['picking'] = $this->serializePicking($exercise);
+            $serialized['steps'] = $this->serializeSteps($exercise, $options);
         }
 
-        return $exerciseData;
+        return $serialized;
     }
 
     /**
      * Converts raw data into an Exercise entity.
      *
-     * @param \stdClass $data
-     * @param Exercise  $exercise
-     * @param array     $options
+     * @param array    $data
+     * @param Exercise $exercise
+     * @param array    $options
      *
      * @return Exercise
      */
-    public function deserialize($data, $exercise = null, array $options = [])
+    public function deserialize($data, Exercise $exercise = null, array $options = [])
     {
         $exercise = $exercise ?: new Exercise();
 
-        if (isset($data->id)) {
-            $exercise->setUuid($data->id);
-        }
+        $this->sipe('id', 'setUuid', $data, $exercise);
+        $this->sipe('description', 'setDescription', $data, $exercise);
 
         if (in_array(Transfer::REFRESH_UUID, $options)) {
             $exercise->refreshUuid();
         }
 
-        if (isset($data->description)) {
-            $exercise->setDescription($data->description);
+        if (!empty($data['parameters'])) {
+            $this->deserializeParameters($exercise, $data['parameters']);
         }
 
-        if (!empty($data->parameters)) {
-            $this->deserializeParameters($exercise, $data->parameters);
+        if (!empty($data['picking'])) {
+            $this->deserializePicking($exercise, $data['picking']);
         }
 
-        if (!empty($data->picking)) {
-            $this->deserializePicking($exercise, $data->picking);
-        }
-
-        if (!empty($data->steps)) {
-            $this->deserializeSteps($exercise, $data->steps, $options);
+        if (!empty($data['steps'])) {
+            $this->deserializeSteps($exercise, $data['steps'], $options);
         }
 
         return $exercise;
@@ -131,57 +123,44 @@ class ExerciseSerializer implements SerializerInterface
      *
      * @param Exercise $exercise
      *
-     * @return \stdClass
+     * @return array
      */
     private function serializeParameters(Exercise $exercise)
     {
-        $parameters = new \stdClass();
-
-        $parameters->type = $exercise->getType();
-
-        // Attempt parameters
-        $parameters->maxAttempts = $exercise->getMaxAttempts();
-        $parameters->maxAttemptsPerDay = $exercise->getMaxAttemptsPerDay();
-        $parameters->maxPapers = $exercise->getMaxPapers();
-        $parameters->showFeedback = $exercise->getShowFeedback();
-        $parameters->progressionDisplayed = $exercise->isProgressionDisplayed();
-        $parameters->timeLimited = $exercise->isTimeLimited(); // todo : remove me
-        $parameters->duration = $exercise->getDuration();
-        $parameters->anonymizeAttempts = $exercise->getAnonymizeAttempts();
-        $parameters->interruptible = $exercise->isInterruptible();
-        $parameters->numbering = $exercise->getNumbering();
-        $parameters->mandatoryQuestions = $exercise->getMandatoryQuestions();
-        $parameters->answersEditable = $exercise->isAnswersEditable();
-
-        // Visibility parameters
-        $parameters->showOverview = $exercise->getShowOverview();
-        $parameters->showEndConfirm = $exercise->getShowEndConfirm();
-        $parameters->showEndPage = $exercise->getShowEndPage();
+        $parameters = [
+            'type' => $exercise->getType(),
+            'maxAttempts' => $exercise->getMaxAttempts(),
+            'maxAttemptsPerDay' => $exercise->getMaxAttemptsPerDay(),
+            'maxPapers' => $exercise->getMaxPapers(),
+            'showFeedback' => $exercise->getShowFeedback(),
+            'progressionDisplayed' => $exercise->isProgressionDisplayed(),
+            'timeLimited' => $exercise->isTimeLimited(), // todo : remove me
+            'duration' => $exercise->getDuration(),
+            'anonymizeAttempts' => $exercise->getAnonymizeAttempts(),
+            'interruptible' => $exercise->isInterruptible(),
+            'numbering' => $exercise->getNumbering(),
+            'mandatoryQuestions' => $exercise->getMandatoryQuestions(),
+            'answersEditable' => $exercise->isAnswersEditable(),
+            'showOverview' => $exercise->getShowOverview(),
+            'showEndConfirm' => $exercise->getShowEndConfirm(),
+            'showEndPage' => $exercise->getShowEndPage(),
+            'endNavigation' => $exercise->hasEndNavigation(),
+            'showMetadata' => $exercise->isMetadataVisible(),
+            'showStatistics' => $exercise->hasStatistics(),
+            'allPapersStatistics' => $exercise->isAllPapersStatistics(),
+            'showFullCorrection' => !$exercise->isMinimalCorrection(),
+            'showScoreAt' => $exercise->getMarkMode(),
+            'showCorrectionAt' => $exercise->getCorrectionMode(),
+            'successMessage' => $exercise->getSuccessMessage(),
+            'failureMessage' => $exercise->getFailureMessage(),
+            'totalScoreOn' => $exercise->getTotalScoreOn(),
+            'successScore' => $exercise->getSuccessScore(),
+            'correctionDate' => $exercise->getDateCorrection() ? DateNormalizer::normalize($exercise->getDateCorrection()) : null,
+        ];
 
         if (!empty($exercise->getEndMessage())) {
-            $parameters->endMessage = $exercise->getEndMessage();
+            $parameters['endMessage'] = $exercise->getEndMessage();
         }
-
-        $parameters->endNavigation = $exercise->hasEndNavigation();
-
-        $parameters->showMetadata = $exercise->isMetadataVisible();
-        $parameters->showStatistics = $exercise->hasStatistics();
-        $parameters->allPapersStatistics = $exercise->isAllPapersStatistics();
-        $parameters->showFullCorrection = !$exercise->isMinimalCorrection();
-
-        $parameters->showScoreAt = $exercise->getMarkMode();
-        $parameters->showCorrectionAt = $exercise->getCorrectionMode();
-
-        $parameters->successMessage = $exercise->getSuccessMessage();
-        $parameters->failureMessage = $exercise->getFailureMessage();
-
-        // score of parameter
-        $parameters->totalScoreOn = $exercise->getTotalScoreOn();
-        // success score
-        $parameters->successScore = $exercise->getSuccessScore();
-
-        $correctionDate = $exercise->getDateCorrection();
-        $parameters->correctionDate = !empty($correctionDate) ? $correctionDate->format('Y-m-d\TH:i:s') : null;
 
         return $parameters;
     }
@@ -189,186 +168,104 @@ class ExerciseSerializer implements SerializerInterface
     /**
      * Deserializes Exercise parameters.
      *
-     * @param Exercise  $exercise
-     * @param \stdClass $parameters
+     * @param Exercise $exercise
+     * @param array    $parameters
      */
-    private function deserializeParameters(Exercise $exercise, \stdClass $parameters)
+    private function deserializeParameters(Exercise $exercise, array $parameters)
     {
-        if (isset($parameters->type)) {
-            $exercise->setType($parameters->type);
-        }
+        $this->sipe('type', 'setType', $parameters, $exercise);
+        $this->sipe('maxAttempts', 'setMaxAttempts', $parameters, $exercise);
+        $this->sipe('showFeedback', 'setShowFeedback', $parameters, $exercise);
+        $this->sipe('timeLimited', 'setTimeLimited', $parameters, $exercise);
+        $this->sipe('progressionDisplayed', 'setProgressionDisplayed', $parameters, $exercise);
+        $this->sipe('duration', 'setDuration', $parameters, $exercise);
+        $this->sipe('anonymizeAttempts', 'setAnonymizeAttempts', $parameters, $exercise);
+        $this->sipe('interruptible', 'setInterruptible', $parameters, $exercise);
+        $this->sipe('showOverview', 'setShowOverview', $parameters, $exercise);
+        $this->sipe('showEndConfirm', 'setShowEndConfirm', $parameters, $exercise);
+        $this->sipe('showEndPage', 'setShowEndPage', $parameters, $exercise);
+        $this->sipe('endMessage', 'setEndMessage', $parameters, $exercise);
+        $this->sipe('endNavigation', 'setEndNavigation', $parameters, $exercise);
+        $this->sipe('showMetadata', 'setMetadataVisible', $parameters, $exercise);
+        $this->sipe('showStatistics', 'setStatistics', $parameters, $exercise);
+        $this->sipe('allPapersStatistics', 'setAllPapersStatistics', $parameters, $exercise);
+        $this->sipe('numbering', 'setNumbering', $parameters, $exercise);
+        $this->sipe('mandatoryQuestions', 'setMandatoryQuestions', $parameters, $exercise);
+        $this->sipe('maxAttemptsPerDay', 'setMaxAttemptsPerDay', $parameters, $exercise);
+        $this->sipe('maxPapers', 'setMaxPapers', $parameters, $exercise);
+        $this->sipe('successMessage', 'setSuccessMessage', $parameters, $exercise);
+        $this->sipe('failureMessage', 'setFailureMessage', $parameters, $exercise);
+        $this->sipe('showScoreAt', 'setMarkMode', $parameters, $exercise);
+        $this->sipe('totalScoreOn', 'setTotalScoreOn', $parameters, $exercise);
+        $this->sipe('answersEditable', 'setAnswersEditable', $parameters, $exercise);
 
-        if (isset($parameters->maxAttempts)) {
-            $exercise->setMaxAttempts($parameters->maxAttempts);
+        if (isset($parameters['showFullCorrection'])) {
+            $exercise->setMinimalCorrection(!$parameters['showFullCorrection']);
         }
-
-        if (isset($parameters->showFeedback)) {
-            $exercise->setShowFeedback($parameters->showFeedback);
-        }
-
-        if (isset($parameters->timeLimited)) {
-            $exercise->setTimeLimited($parameters->timeLimited);
-        }
-
-        if (isset($parameters->progressionDisplayed)) {
-            $exercise->setProgressionDisplayed($parameters->progressionDisplayed);
-        }
-
-        if (isset($parameters->duration)) {
-            $exercise->setDuration($parameters->duration);
-        }
-
-        if (isset($parameters->anonymizeAttempts)) {
-            $exercise->setAnonymizeAttempts($parameters->anonymizeAttempts);
-        }
-
-        if (isset($parameters->interruptible)) {
-            $exercise->setInterruptible($parameters->interruptible);
-        }
-
-        if (isset($parameters->showOverview)) {
-            $exercise->setShowOverview($parameters->showOverview);
-        }
-
-        if (isset($parameters->showEndConfirm)) {
-            $exercise->setShowEndConfirm($parameters->showEndConfirm);
-        }
-
-        if (isset($parameters->showEndPage)) {
-            $exercise->setShowEndPage($parameters->showEndPage);
-        }
-
-        if (isset($parameters->endMessage)) {
-            $exercise->setEndMessage($parameters->endMessage);
-        }
-
-        if (isset($parameters->endNavigation)) {
-            $exercise->setEndNavigation($parameters->endNavigation);
-        }
-
-        if (isset($parameters->showMetadata)) {
-            $exercise->setMetadataVisible($parameters->showMetadata);
-        }
-
-        if (isset($parameters->showStatistics)) {
-            $exercise->setStatistics($parameters->showStatistics);
-        }
-
-        if (isset($parameters->allPapersStatistics)) {
-            $exercise->setAllPapersStatistics($parameters->allPapersStatistics);
-        }
-
-        if (isset($parameters->showFullCorrection)) {
-            $exercise->setMinimalCorrection(!$parameters->showFullCorrection);
-        }
-
-        if (isset($parameters->numbering)) {
-            $exercise->setNumbering($parameters->numbering);
-        }
-
-        if (isset($parameters->mandatoryQuestions)) {
-            $exercise->setMandatoryQuestions($parameters->mandatoryQuestions);
-        }
-
-        if (isset($parameters->maxAttemptsPerDay)) {
-            $exercise->setMaxAttemptsPerDay($parameters->maxAttemptsPerDay);
-        }
-
-        if (isset($parameters->maxPapers)) {
-            $exercise->setMaxPapers($parameters->maxPapers);
-        }
-
-        if (isset($parameters->successMessage)) {
-            $exercise->setSuccessMessage($parameters->successMessage);
-        }
-        if (isset($parameters->failureMessage)) {
-            $exercise->setFailureMessage($parameters->failureMessage);
-        }
-
-        if (isset($parameters->showScoreAt)) {
-            $exercise->setMarkMode($parameters->showScoreAt);
-        }
-
-        if (isset($parameters->totalScoreOn)) {
-            $exercise->setTotalScoreOn($parameters->totalScoreOn);
-        }
-        $success = isset($parameters->successScore) &&
-            '' !== $parameters->successScore &&
-            $parameters->successScore >= 0 &&
-            $parameters->successScore <= 100 ?
-            $parameters->successScore :
+        $success = isset($parameters['successScore']) &&
+            '' !== $parameters['successScore'] &&
+            0 <= $parameters['successScore'] &&
+            100 >= $parameters['successScore'] ?
+            $parameters['successScore'] :
             null;
         $exercise->setSuccessScore($success);
 
-        if (isset($parameters->showCorrectionAt)) {
-            $exercise->setCorrectionMode($parameters->showCorrectionAt);
+        if (isset($parameters['showCorrectionAt'])) {
+            $exercise->setCorrectionMode($parameters['showCorrectionAt']);
 
             $correctionDate = null;
-            if (ShowCorrectionAt::AFTER_DATE === $parameters->showCorrectionAt) {
-                $correctionDate = \DateTime::createFromFormat('Y-m-d\TH:i:s', $parameters->correctionDate);
+
+            if (ShowCorrectionAt::AFTER_DATE === $parameters['showCorrectionAt']) {
+                $correctionDate = DateNormalizer::denormalize($parameters['correctionDate']);
             }
-
             $exercise->setDateCorrection($correctionDate);
-        }
-
-        if (isset($parameters->answersEditable)) {
-            $exercise->setAnswersEditable($parameters->answersEditable);
         }
     }
 
     private function serializePicking(Exercise $exercise)
     {
-        $picking = new \stdClass();
+        $picking = [
+            'type' => $exercise->getPicking(),
+            'randomOrder' => $exercise->getRandomOrder(),
+            'randomPick' => $exercise->getRandomPick(),
+        ];
 
-        $picking->type = $exercise->getPicking();
-        $picking->randomOrder = $exercise->getRandomOrder();
-        $picking->randomPick = $exercise->getRandomPick();
-
-        switch ($picking->type) {
+        switch ($picking['type']) {
             case Picking::TAGS:
                 $tagPicking = $exercise->getPick();
-
-                $picking->pick = $tagPicking['tags'];
-                $picking->pageSize = $tagPicking['pageSize'];
-
+                $picking['pick'] = $tagPicking['tags'];
+                $picking['pageSize'] = $tagPicking['pageSize'];
                 break;
             case Picking::STANDARD:
             default:
-                $picking->pick = $exercise->getPick();
-
+                $picking['pick'] = $exercise->getPick();
                 break;
         }
 
         return $picking;
     }
 
-    private function deserializePicking(Exercise $exercise, \stdClass $picking)
+    private function deserializePicking(Exercise $exercise, array $picking)
     {
-        $exercise->setPicking($picking->type);
+        $this->sipe('type', 'setPicking', $picking, $exercise);
+        $this->sipe('randomOrder', 'setRandomOrder', $picking, $exercise);
+        $this->sipe('randomPick', 'setRandomPick', $picking, $exercise);
 
-        if (isset($picking->randomOrder)) {
-            $exercise->setRandomOrder($picking->randomOrder);
-        }
-
-        if (isset($picking->randomPick)) {
-            $exercise->setRandomPick($picking->randomPick);
-        }
-
-        switch ($picking->type) {
+        switch ($picking['type']) {
             case Picking::TAGS:
                 // updates tags picking params
                 $exercise->setPick([
-                    'tags' => $picking->pick,
-                    'pageSize' => $picking->pageSize,
+                    'tags' => $picking['pick'],
+                    'pageSize' => $picking['pageSize'],
                 ]);
 
                 break;
             case Picking::STANDARD:
             default:
                 // updates steps picking params
-                if (isset($picking->randomPick)) {
-                    if (Recurrence::ONCE === $picking->randomPick || Recurrence::ALWAYS === $picking->randomPick) {
-                        $exercise->setPick($picking->pick);
+                if (isset($picking['randomPick'])) {
+                    if (Recurrence::ONCE === $picking['randomPick'] || Recurrence::ALWAYS === $picking['randomPick']) {
+                        $exercise->setPick($picking['pick']);
                     } else {
                         $exercise->setPick(0);
                     }
@@ -391,11 +288,9 @@ class ExerciseSerializer implements SerializerInterface
      */
     private function serializeSteps(Exercise $exercise, array $options = [])
     {
-        $steps = $exercise->getSteps()->toArray();
-
         return array_map(function (Step $step) use ($options) {
             return $this->stepSerializer->serialize($step, $options);
-        }, $steps);
+        }, $exercise->getSteps()->toArray());
     }
 
     /**
@@ -416,7 +311,7 @@ class ExerciseSerializer implements SerializerInterface
             // Searches for an existing step entity.
             foreach ($stepEntities as $entityIndex => $entityStep) {
                 /** @var Step $entityStep */
-                if ($entityStep->getUuid() === $stepData->id) {
+                if ($entityStep->getUuid() === $stepData['id']) {
                     $existingStep = $entityStep;
                     unset($stepEntities[$entityIndex]);
                     break;

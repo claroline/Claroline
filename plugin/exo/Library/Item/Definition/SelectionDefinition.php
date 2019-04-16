@@ -146,7 +146,7 @@ class SelectionDefinition extends AbstractDefinition
                   }, $bestAnswers);
 
                   if ($question->getPenalty() > 0) {
-                      $penaltyTimes = $answers->tries - count($foundUuids);
+                      $penaltyTimes = $answers['tries'] - count($foundUuids);
 
                       for ($i = 0; $i < $penaltyTimes; ++$i) {
                           $unexpected = new Selection();
@@ -164,7 +164,7 @@ class SelectionDefinition extends AbstractDefinition
                   return $corrected;
 
                case $question::MODE_SELECT:
-                  foreach ($answers->selections as $selectionId) {
+                  foreach ($answers['selections'] as $selectionId) {
                       $selection = $question->getSelection($selectionId);
                       $selection->getScore() > 0 ? $corrected->addExpected($selection) : $corrected->addUnexpected($selection);
                   }
@@ -175,7 +175,7 @@ class SelectionDefinition extends AbstractDefinition
                   }, $bestAnswers);
 
                   foreach ($uuids as $uuid) {
-                      if (!in_array($uuid, $answers->selections)) {
+                      if (!in_array($uuid, $answers['selections'])) {
                           $corrected->addMissing($question->getSelection($uuid));
                       }
                   }
@@ -184,12 +184,12 @@ class SelectionDefinition extends AbstractDefinition
                case $question::MODE_HIGHLIGHT:
                   $foundElements = [];
 
-                  if (isset($answers->highlights)) {
-                      foreach ($answers->highlights as $highlightAnswer) {
-                          if ($colorSelection = $question->getColorSelection(['color_uuid' => $highlightAnswer->colorId, 'selection_uuid' => $highlightAnswer->selectionId])) {
+                  if (isset($answers['highlights'])) {
+                      foreach ($answers['highlights'] as $highlightAnswer) {
+                          if ($colorSelection = $question->getColorSelection(['color_uuid' => $highlightAnswer['colorId'], 'selection_uuid' => $highlightAnswer['selectionId']])) {
                               $colorSelection->getScore() > 0 ? $corrected->addExpected($colorSelection) : $corrected->addUnexpected($colorSelection);
 
-                              $foundElements[] = ['color_uuid' => $highlightAnswer->colorId, 'selection_uuid' => $highlightAnswer->selectionId];
+                              $foundElements[] = ['color_uuid' => $highlightAnswer['colorId'], 'selection_uuid' => $highlightAnswer['selectionId']];
                           }
                       }
                   }
@@ -292,7 +292,7 @@ class SelectionDefinition extends AbstractDefinition
 
     public function getCsvAnswers(AbstractItem $item, Answer $answer)
     {
-        $data = json_decode($answer->getData());
+        $data = json_decode($answer->getData(), true);
         $strcsv = '';
         $answers = $this->correctAnswer($item, $data);
 
@@ -301,7 +301,7 @@ class SelectionDefinition extends AbstractDefinition
 
             $expected = $answers->getExpected();
 
-            $strcsv = "[tries: {$data->tries}, answers: [";
+            $strcsv = "[tries: {$data['tries']}, answers: [";
             $i = 0;
 
             foreach ($expected as $expectedAnswer) {

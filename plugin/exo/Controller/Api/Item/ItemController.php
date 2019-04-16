@@ -199,7 +199,7 @@ class ItemController extends AbstractController
             ];
         } else {
             try {
-                $this->manager->deleteBulk(json_decode($request->getContent()), $user);
+                $this->manager->deleteBulk(json_decode($request->getContent(), true), $user);
             } catch (\Exception $e) {
                 return new JsonResponse($e->getMessage(), 422);
             }

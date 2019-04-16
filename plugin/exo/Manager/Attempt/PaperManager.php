@@ -87,7 +87,7 @@ class PaperManager
      * @param Paper $paper
      * @param array $options
      *
-     * @return \stdClass
+     * @return array
      */
     public function serialize(Paper $paper, array $options = [])
     {
@@ -154,10 +154,11 @@ class PaperManager
     {
         $total = 0;
 
-        $structure = json_decode($paper->getStructure());
-        foreach ($structure->steps as $step) {
-            foreach ($step->items as $item) {
-                if (1 === preg_match('#^application\/x\.[^/]+\+json$#', $item->type)) {
+        $structure = json_decode($paper->getStructure(), true);
+
+        foreach ($structure['steps'] as $step) {
+            foreach ($step['items'] as $item) {
+                if (1 === preg_match('#^application\/x\.[^/]+\+json$#', $item['type'])) {
                     $total += $this->itemManager->calculateTotal($item);
                 }
             }
@@ -380,11 +381,11 @@ class PaperManager
             $status = AbstractResourceEvaluation::STATUS_INCOMPLETE;
         }
         $nbQuestions = 0;
-        $structure = json_decode($paper->getStructure());
+        $structure = json_decode($paper->getStructure(), true);
 
-        if (isset($structure->steps)) {
-            foreach ($structure->steps as $step) {
-                $nbQuestions += count($step->items); // TODO : remove content items
+        if (isset($structure['steps'])) {
+            foreach ($structure['steps'] as $step) {
+                $nbQuestions += count($step['items']); // TODO : remove content items
             }
         }
         $nbAnswers = 0;

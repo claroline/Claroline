@@ -44,20 +44,20 @@ interface ItemDefinitionInterface
      * @param AbstractItem $question
      * @param array        $options
      *
-     * @return \stdClass
+     * @return array
      */
     public function serializeQuestion(AbstractItem $question, array $options = []);
 
     /**
      * Deserializes question data.
      *
-     * @param \stdClass    $data
+     * @param array        $data
      * @param AbstractItem $question
      * @param array        $options
      *
      * @return AbstractItem
      */
-    public function deserializeQuestion(\stdClass $data, AbstractItem $question = null, array $options = []);
+    public function deserializeQuestion(array $data, AbstractItem $question = null, array $options = []);
 
     /**
      * Generates new UUIDs for the Item entities.

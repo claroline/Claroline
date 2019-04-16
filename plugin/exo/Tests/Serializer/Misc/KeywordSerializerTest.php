@@ -67,7 +67,7 @@ class KeywordSerializerTest extends JsonDataTestCase
     {
         $keywordData = $this->serializer->serialize($this->keyword);
 
-        $this->assertInstanceOf('\stdClass', $keywordData);
+        $this->assertTrue(is_array($keywordData));
         $this->compareKeywordAndData($this->keyword, $keywordData);
     }
 
@@ -111,14 +111,14 @@ class KeywordSerializerTest extends JsonDataTestCase
     /**
      * Compares the data between a keyword entity and a keyword raw object.
      *
-     * @param Keyword   $keyword
-     * @param \stdClass $keywordData
+     * @param Keyword $keyword
+     * @param array   $keywordData
      */
-    private function compareKeywordAndData(Keyword $keyword, \stdClass $keywordData)
+    private function compareKeywordAndData(Keyword $keyword, array $keywordData)
     {
-        $this->assertEquals($keywordData->text, $keyword->getText());
-        $this->assertEquals($keywordData->caseSensitive, $keyword->isCaseSensitive());
-        $this->assertEquals($keywordData->score, $keyword->getScore());
-        $this->assertEquals($keywordData->feedback, $keyword->getFeedback());
+        $this->assertEquals($keywordData['text'], $keyword->getText());
+        $this->assertEquals($keywordData['caseSensitive'], $keyword->isCaseSensitive());
+        $this->assertEquals($keywordData['score'], $keyword->getScore());
+        $this->assertEquals($keywordData['feedback'], $keyword->getFeedback());
     }
 }

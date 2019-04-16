@@ -2,66 +2,63 @@
 
 namespace UJM\ExoBundle\Serializer\Misc;
 
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Misc\CellChoice;
-use UJM\ExoBundle\Library\Serializer\SerializerInterface;
 
 /**
  * Serializer for CellChoice data.
  *
  * @DI\Service("ujm_exo.serializer.cell_choice")
+ * @DI\Tag("claroline.serializer")
  */
-class CellChoiceSerializer implements SerializerInterface
+class CellChoiceSerializer
 {
+    use SerializerTrait;
+
     /**
      * Converts a CellChoice into a JSON-encodable structure.
      *
      * @param CellChoice $choice
      * @param array      $options
      *
-     * @return \stdClass
+     * @return array
      */
-    public function serialize($choice, array $options = [])
+    public function serialize(CellChoice $choice, array $options = [])
     {
-        $choiceData = new \stdClass();
-        $choiceData->text = $choice->getText();
-        $choiceData->caseSensitive = $choice->isCaseSensitive();
-        $choiceData->score = $choice->getScore();
-        $choiceData->expected = $choice->isExpected();
+        $serialized = [
+            'text' => $choice->getText(),
+            'caseSensitive' => $choice->isCaseSensitive(),
+            'score' => $choice->getScore(),
+            'expected' => $choice->isExpected(),
+        ];
 
         if ($choice->getFeedback()) {
-            $choiceData->feedback = $choice->getFeedback();
+            $serialized['feedback'] = $choice->getFeedback();
         }
 
-        return $choiceData;
+        return $serialized;
     }
 
     /**
      * Converts raw data into a Keyword entity.
      *
-     * @param \stdClass  $data
+     * @param array      $data
      * @param CellChoice $choice
      * @param array      $options
      *
      * @return CellChoice
      */
-    public function deserialize($data, $choice = null, array $options = [])
+    public function deserialize($data, CellChoice $choice = null, array $options = [])
     {
         if (empty($choice)) {
             $choice = new CellChoice();
         }
-
-        $choice->setText($data->text);
-        $choice->setCaseSensitive($data->caseSensitive);
-        $choice->setScore($data->score);
-
-        if (!empty($data->expected)) {
-            $choice->setExpected($data->expected);
-        }
-
-        if (isset($data->feedback)) {
-            $choice->setFeedback($data->feedback);
-        }
+        $this->sipe('text', 'setText', $data, $choice);
+        $this->sipe('caseSensitive', 'setCaseSensitive', $data, $choice);
+        $this->sipe('score', 'setScore', $data, $choice);
+        $this->sipe('expected', 'setExpected', $data, $choice);
+        $this->sipe('feedback', 'setFeedback', $data, $choice);
 
         return $choice;
     }
@@ -70,7 +67,7 @@ class CellChoiceSerializer implements SerializerInterface
      * Updates a collection of cel choices entities from raw data.
      * The one which are not in `$cellChoiceCollection` are removed from the entity collection.
      *
-     * @param \stdClass[]  $cellChoiceCollection
+     * @param array        $cellChoiceCollection
      * @param CellChoice[] $cellChoiceEntities
      * @param array        $options
      *
@@ -85,8 +82,8 @@ class CellChoiceSerializer implements SerializerInterface
 
             // Searches for an existing keyword entity.
             foreach ($cellChoiceEntities as $entityCellChoice) {
-                if ($entityCellChoice->getText() === $cellChoiceData->text
-                    && $entityCellChoice->isCaseSensitive() === $cellChoiceData->caseSensitive) {
+                if ($entityCellChoice->getText() === $cellChoiceData['text']
+                    && $entityCellChoice->isCaseSensitive() === $cellChoiceData['caseSensitive']) {
                     $cellChoice = $entityCellChoice;
                     break;
                 }

@@ -49,14 +49,14 @@ class StepSerializerTest extends JsonDataTestCase
     {
         $data = $this->serializer->serialize($this->step);
 
-        $this->assertInstanceOf('\stdClass', $data);
-        $this->assertTrue(!empty($data->id));
-        $this->assertTrue(!empty($data->title));
-        $this->assertTrue(!empty($data->parameters));
-        $this->assertTrue(isset($data->items));
+        $this->assertTrue(is_array($data));
+        $this->assertTrue(!empty($data['id']));
+        $this->assertTrue(!empty($data['title']));
+        $this->assertTrue(!empty($data['parameters']));
+        $this->assertTrue(isset($data['items']));
 
-        $this->assertEquals('Step title', $data->title);
-        $this->assertEquals(10, $data->parameters->maxAttempts);
+        $this->assertEquals('Step title', $data['title']);
+        $this->assertEquals(10, $data['parameters']['maxAttempts']);
     }
 
     public function testDeserializedDataAreCorrectlySet()
@@ -66,10 +66,10 @@ class StepSerializerTest extends JsonDataTestCase
         $step = $this->serializer->deserialize($stepData);
 
         $this->assertInstanceOf('\UJM\ExoBundle\Entity\Step', $step);
-        $this->assertEquals($stepData->id, $step->getUuid());
+        $this->assertEquals($stepData['id'], $step->getUuid());
 
         // Checks some parameters
-        $this->assertEquals($stepData->parameters->maxAttempts, $step->getMaxAttempts());
+        $this->assertEquals($stepData['parameters']['maxAttempts'], $step->getMaxAttempts());
     }
 
     public function testDeserializedDataWithItemsAreCorrectlySet()
@@ -78,8 +78,8 @@ class StepSerializerTest extends JsonDataTestCase
 
         $step = $this->serializer->deserialize($stepData);
 
-        $this->assertTrue(isset($stepData->items));
-        $this->assertCount(count($stepData->items), $step->getStepQuestions());
+        $this->assertTrue(isset($stepData['items']));
+        $this->assertCount(count($stepData['items']), $step->getStepQuestions());
     }
 
     public function testAddItem()

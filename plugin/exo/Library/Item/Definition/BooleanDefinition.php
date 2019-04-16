@@ -175,7 +175,7 @@ class BooleanDefinition extends AbstractDefinition
 
     public function getCsvAnswers(AbstractItem $item, Answer $answer)
     {
-        $data = json_decode($answer->getData());
+        $data = json_decode($answer->getData(), true);
         $answer = null;
 
         foreach ($item->getChoices() as $choice) {

@@ -29,6 +29,7 @@
     "max_attempts_reached_title": "Désolé, vous ne pouvez plus répondre à ce questionnaire.",
     "score_availability": "Disponibilité du score",
     "average": "Moyenne",
+    "back_to_the_quiz": "Retour au questionnaire",
     "calculation_measure_difficulty": "Il se calcule avec le nombre de candidats ayant répondu correctement divisé par le nombre total de répondants.",
     "case_sensitive": "Respecter la casse",
     "cercle": "Cercle",

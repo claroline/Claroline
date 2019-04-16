@@ -327,7 +327,7 @@ class Paper
      *
      * @param $questionUuid
      *
-     * @return \stdClass
+     * @return array
      */
     public function getQuestion($questionUuid)
     {
@@ -337,9 +337,9 @@ class Paper
             $this->decodeStructure();
         }
 
-        foreach ($this->decodedStructure->steps as $step) {
-            foreach ($step->items as $item) {
-                if ($item->id === $questionUuid) {
+        foreach ($this->decodedStructure['steps'] as $step) {
+            foreach ($step['items'] as $item) {
+                if ($item['id'] === $questionUuid) {
                     $question = $item;
                     break 2;
                 }
@@ -396,6 +396,6 @@ class Paper
 
     private function decodeStructure()
     {
-        $this->decodedStructure = json_decode($this->structure);
+        $this->decodedStructure = json_decode($this->structure, true);
     }
 }

@@ -73,24 +73,23 @@ class DocimologyManager
      * @param Exercise $exercise
      * @param float    $maxScore
      *
-     * @return \stdClass
+     * @return array
      */
     public function getStatistics(Exercise $exercise, $maxScore)
     {
-        $statistics = new \stdClass();
-        $statistics->maxScore = $maxScore;
-        $statistics->nbSteps = $exercise->getSteps()->count();
-        $statistics->nbQuestions = $this->exerciseRepository->countExerciseQuestion($exercise);
-        $statistics->nbPapers = $this->paperManager->countExercisePapers($exercise);
-        $statistics->nbRegisteredUsers = $this->paperManager->countPapersUsers($exercise);
-        $statistics->nbAnonymousUsers = $this->paperManager->countAnonymousPapers($exercise);
-        $statistics->minMaxAndAvgScores = $this->getMinMaxAverageScores($exercise, $maxScore);
-        $statistics->paperSuccessDistribution = $this->getPapersSuccessDistribution($exercise, $maxScore);
-        $statistics->paperScoreDistribution = $this->getPaperScoreDistribution($exercise, $maxScore);
-        $statistics->questionsDifficultyIndex = $this->getQuestionsDifficultyIndex($exercise);
-        $statistics->discriminationCoefficient = $this->getDiscriminationCoefficient($exercise);
-
-        return $statistics;
+        return [
+            'maxScore' => $maxScore,
+            'nbSteps' => $exercise->getSteps()->count(),
+            'nbQuestions' => $this->exerciseRepository->countExerciseQuestion($exercise),
+            'nbPapers' => $this->paperManager->countExercisePapers($exercise),
+            'nbRegisteredUsers' => $this->paperManager->countPapersUsers($exercise),
+            'nbAnonymousUsers' => $this->paperManager->countAnonymousPapers($exercise),
+            'minMaxAndAvgScores' => $this->getMinMaxAverageScores($exercise, $maxScore),
+            'paperSuccessDistribution' => $this->getPapersSuccessDistribution($exercise, $maxScore),
+            'paperScoreDistribution' => $this->getPaperScoreDistribution($exercise, $maxScore),
+            'questionsDifficultyIndex' => $this->getQuestionsDifficultyIndex($exercise),
+            'discriminationCoefficient' => $this->getDiscriminationCoefficient($exercise),
+        ];
     }
 
     /**
@@ -99,7 +98,7 @@ class DocimologyManager
      * @param Exercise $exercise
      * @param float    $scoreOn
      *
-     * @return \stdClass
+     * @return array
      */
     public function getMinMaxAverageScores(Exercise $exercise, $scoreOn)
     {
@@ -109,11 +108,12 @@ class DocimologyManager
 
         $scores = $this->getPapersScores($papers, $scoreOn);
 
-        $result = new \stdClass();
-        $result->min = 0 === count($scores) ? 0 : min($scores);
-        $result->max = 0 === count($scores) ? 0 : max($scores);
+        $result = [
+            'min' => 0 === count($scores) ? 0 : min($scores),
+            'max' => 0 === count($scores) ? 0 : max($scores),
+        ];
         $average = 0 === count($scores) ? 0 : array_sum($scores) / count($scores);
-        $result->avg = $average !== floor($average) ? floatval(number_format($average, 2)) : $average;
+        $result['avg'] = $average !== floor($average) ? floatval(number_format($average, 2)) : $average;
 
         return $result;
     }
@@ -124,7 +124,7 @@ class DocimologyManager
      * @param Exercise $exercise
      * @param float    $scoreOn
      *
-     * @return \stdClass
+     * @return array
      */
     public function getPapersSuccessDistribution(Exercise $exercise, $scoreOn)
     {
@@ -149,12 +149,11 @@ class DocimologyManager
             }
         }
 
-        $papersSuccessDistribution = new \stdClass();
-        $papersSuccessDistribution->nbSuccess = $nbSuccess;
-        $papersSuccessDistribution->nbMissed = $nbMissed;
-        $papersSuccessDistribution->nbPartialSuccess = $nbPartialSuccess;
-
-        return $papersSuccessDistribution;
+        return [
+            'nbSuccess' => $nbSuccess,
+            'nbMissed' => $nbMissed,
+            'nbPartialSuccess' => $nbPartialSuccess,
+        ];
     }
 
     /**
@@ -163,7 +162,7 @@ class DocimologyManager
      * @param Exercise $exercise
      * @param float    $scoreOn
      *
-     * @return \stdClass
+     * @return array
      */
     public function getPaperScoreDistribution(Exercise $exercise, $scoreOn)
     {
@@ -177,16 +176,17 @@ class DocimologyManager
         $uniqueScores = array_unique($scores, SORT_NUMERIC);
         sort($uniqueScores);
 
-        $paperScoreDistribution = new \stdClass();
+        $paperScoreDistribution = [];
+
         foreach ($uniqueScores as $key) {
             $matchingScores = array_filter($scores, function ($score) use ($key) {
                 return floatval($score) === floatval($key);
             });
-            $statsData = new \stdClass();
-            $statsData->yData = count($matchingScores);
-            $statsData->xData = $key;
 
-            $paperScoreDistribution->{$key} = $statsData;
+            $paperScoreDistribution[$key] = [
+                'yData' => count($matchingScores),
+                'xData' => $key,
+            ];
         }
 
         return $paperScoreDistribution;
@@ -204,17 +204,18 @@ class DocimologyManager
         /** @var Paper $paper */
         foreach ($papers as $paper) {
             // base success compution on paper structure
-            $structure = json_decode($paper->getStructure());
-            foreach ($structure->steps as $step) {
-                foreach ($step->items as $item) {
+            $structure = json_decode($paper->getStructure(), true);
+
+            foreach ($structure['steps'] as $step) {
+                foreach ($step['items'] as $item) {
                     // since the compution is based on the structure the same item can come several times
-                    if (!array_key_exists($item->id, $questionStatistics)) {
-                        $itemEntity = $itemRepository->findOneBy(['uuid' => $item->id]);
+                    if (!array_key_exists($item['id'], $questionStatistics)) {
+                        $itemEntity = $itemRepository->findOneBy(['uuid' => $item['id']]);
                         $questionStats = $this->itemManager->getStatistics($itemEntity, $exercise);
-                        $questionData = new \stdClass();
-                        $questionData->yData = $questionStats->successPercent;
-                        $questionData->xData = $itemEntity->getTitle() ? strip_tags($itemEntity->getTitle()) : strip_tags($itemEntity->getContent());
-                        $questionStatistics[$item->id] = $questionData;
+                        $questionStatistics[$item['id']] = [
+                            'yData' => $questionStats['successPercent'],
+                            'xData' => $itemEntity->getTitle() ? strip_tags($itemEntity->getTitle()) : strip_tags($itemEntity->getContent()),
+                        ];
                     }
                 }
             }
@@ -244,7 +245,7 @@ class DocimologyManager
         // exercise standard deviation
         $standardDeviationE = $this->getStandardDeviation($exerciseScores);
         // get average score per exercise
-        $exerciseAverageScore = $this->getMinMaxAverageScores($exercise, $reportScoreOn)->avg;
+        $exerciseAverageScore = $this->getMinMaxAverageScores($exercise, $reportScoreOn)['avg'];
         // all scores obtained per question
         $questionsScores = [];
         // all average scores per question
@@ -257,36 +258,38 @@ class DocimologyManager
         /** @var Paper $paper */
         foreach ($papers as $paper) {
             // base success compution on paper structure
-            $structure = json_decode($paper->getStructure());
-            foreach ($structure->steps as $step) {
-                foreach (array_filter($step->items, function ($item) {
-                    return ItemType::isSupported($item->type);
+            $structure = json_decode($paper->getStructure(), true);
+
+            foreach ($structure['steps'] as $step) {
+                foreach (array_filter($step['items'], function ($item) {
+                    return ItemType::isSupported($item['type']);
                 }) as $item) {
                     // since the compution is based on the structure the same item can come several times
-                    if (!array_key_exists($item->id, $discriminationCoef)) {
-                        $itemEntity = $itemRepository->findOneBy(['uuid' => $item->id]);
+                    if (!array_key_exists($item['id'], $discriminationCoef)) {
+                        $itemEntity = $itemRepository->findOneBy(['uuid' => $item['id']]);
                         // set questions scores
-                        $questionsScores[$item->id] = $this->itemManager->getItemScores($exercise, $itemEntity);
+                        $questionsScores[$item['id']] = $this->itemManager->getItemScores($exercise, $itemEntity);
                         // get average score for the item
-                        $questionsAvgScores[$item->id] = array_sum($questionsScores[$item->id]) / count($questionsScores[$item->id]);
+                        $questionsAvgScores[$item['id']] = array_sum($questionsScores[$item['id']]) / count($questionsScores[$item['id']]);
                         $i = 0;
-                        foreach ($questionsScores[$item->id] as $score) {
-                            $questionsMarginMark[$item->id][] = ($score - $questionsAvgScores[$item->id]) * ($exerciseScores[$i] - $exerciseAverageScore);
+
+                        foreach ($questionsScores[$item['id']] as $score) {
+                            $questionsMarginMark[$item['id']][] = ($score - $questionsAvgScores[$item['id']]) * ($exerciseScores[$i] - $exerciseAverageScore);
                             ++$i;
                         }
 
-                        $questionProductMarginMark = $questionsMarginMark[$item->id];
+                        $questionProductMarginMark = $questionsMarginMark[$item['id']];
                         $sumPenq = array_sum($questionProductMarginMark);
                         $sumPenq = round($sumPenq, 3);
-                        $standardDeviationQ = $this->getStandardDeviation($questionsScores[$item->id]);
+                        $standardDeviationQ = $this->getStandardDeviation($questionsScores[$item['id']]);
                         $n = count($questionProductMarginMark);
                         $nSxSy = $n * $standardDeviationQ * $standardDeviationE;
                         $coef = $nSxSy === floatval(0) ? 0 : round($sumPenq / ($nSxSy), 3);
 
-                        $itemDiscriminationCoef = new \stdClass();
-                        $itemDiscriminationCoef->xData = $itemEntity->getTitle() ? strip_tags($itemEntity->getTitle()) : strip_tags($itemEntity->getContent());
-                        $itemDiscriminationCoef->yData = $coef;
-                        $discriminationCoef[$item->id] = $itemDiscriminationCoef;
+                        $discriminationCoef[$item['id']] = [
+                            'xData' => $itemEntity->getTitle() ? strip_tags($itemEntity->getTitle()) : strip_tags($itemEntity->getContent()),
+                            'yData' => $coef,
+                        ];
                     }
                 }
             }
@@ -326,8 +329,8 @@ class DocimologyManager
      * Get scores for a paper.
      * If $scoreOn is not null then all scores are reported on this value.
      *
-     * @param Exercise $exercise
-     * @param float    $scoreOn
+     * @param array $papers
+     * @param float $scoreOn
      *
      * @return array
      */
@@ -336,11 +339,12 @@ class DocimologyManager
         $scores = [];
         /** @var Paper $paper */
         foreach ($papers as $paper) {
-            $structure = json_decode($paper->getStructure());
-            if (!isset($structure->parameters->totalScoreOn) || floatval($structure->parameters->totalScoreOn) === floatval(0)) {
+            $structure = json_decode($paper->getStructure(), true);
+
+            if (!isset($structure['parameters']['totalScoreOn']) || floatval($structure['parameters']['totalScoreOn']) === floatval(0)) {
                 $totalScoreOn = $this->paperManager->calculateTotal($paper);
             } else {
-                $totalScoreOn = floatval($structure->parameters->totalScoreOn);
+                $totalScoreOn = floatval($structure['parameters']['totalScoreOn']);
             }
 
             $score = $this->paperManager->calculateScore($paper, $totalScoreOn);

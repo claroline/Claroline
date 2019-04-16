@@ -123,8 +123,8 @@ class OrderingDefinition extends AbstractDefinition
 
         if (is_array($answer)) {
             foreach ($answer as $givenAnswer) {
-                $item = $question->getItem($givenAnswer->itemId);
-                if (!empty($item->getPosition()) && $item->getPosition() === $givenAnswer->position) {
+                $item = $question->getItem($givenAnswer['itemId']);
+                if (!empty($item->getPosition()) && $item->getPosition() === $givenAnswer['position']) {
                     $corrected->addExpected($item);
                 } else {
                     $penalty = new GenericPenalty($question->getPenalty());
@@ -162,12 +162,12 @@ class OrderingDefinition extends AbstractDefinition
             $orderingKey = '';
 
             usort($answerData, function ($a, $b) {
-                return $a->position - $b->position;
+                return $a['position'] - $b['position'];
             });
 
             foreach ($answerData as $orderingAnswer) {
-                $orderingKey .= $orderingAnswer->itemId;
-                $unusedTemp[$orderingAnswer->itemId] = false;
+                $orderingKey .= $orderingAnswer['itemId'];
+                $unusedTemp[$orderingAnswer['itemId']] = false;
             }
             if (!isset($orders[$orderingKey])) {
                 $orders[$orderingKey] = [
@@ -212,13 +212,13 @@ class OrderingDefinition extends AbstractDefinition
 
     public function getCsvAnswers(AbstractItem $item, Answer $answer)
     {
-        $data = json_decode($answer->getData());
+        $data = json_decode($answer->getData(), true);
         $items = $item->getItems();
         $answers = [];
 
         foreach ($data as $el) {
             foreach ($items as $item) {
-                if ($item->getUuid() === $el->itemId) {
+                if ($item->getUuid() === $el['itemId']) {
                     $answers[] = $item->getData();
                 }
             }

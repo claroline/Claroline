@@ -162,6 +162,6 @@ class OpenDefinition extends AbstractDefinition
 
     public function getCsvAnswers(AbstractItem $item, Answer $answer)
     {
-        return [json_decode($answer->getData())];
+        return [json_decode($answer->getData(), true)];
     }
 }

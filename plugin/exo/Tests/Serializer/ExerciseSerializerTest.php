@@ -78,17 +78,17 @@ class ExerciseSerializerTest extends JsonDataTestCase
     {
         $data = $this->serializer->serialize($this->exercise);
 
-        $this->assertInstanceOf('\stdClass', $data);
+        $this->assertTrue(is_array($data));
 
-        $this->assertTrue(!empty($data->id));
-        $this->assertTrue(!empty($data->description));
-        $this->assertTrue(!empty($data->parameters));
-        $this->assertTrue(!empty($data->steps));
+        $this->assertTrue(!empty($data['id']));
+        $this->assertTrue(!empty($data['description']));
+        $this->assertTrue(!empty($data['parameters']));
+        $this->assertTrue(!empty($data['steps']));
 
         // Checks parameters that need transformation
-        $this->assertEquals('never', $data->picking->randomOrder);
-        $this->assertEquals('never', $data->picking->randomPick);
-        $this->assertEquals(0, $data->picking->pick);
+        $this->assertEquals('never', $data['picking']['randomOrder']);
+        $this->assertEquals('never', $data['picking']['randomPick']);
+        $this->assertEquals(0, $data['picking']['pick']);
     }
 
     /**
@@ -99,9 +99,9 @@ class ExerciseSerializerTest extends JsonDataTestCase
     {
         $data = $this->serializer->serialize($this->exercise, [Transfer::MINIMAL]);
 
-        $this->assertFalse(property_exists($data, 'steps'));
-        $this->assertFalse(property_exists($data, 'parameters'));
-        $this->assertFalse(property_exists($data, 'description'));
+        $this->assertFalse(isset($data['steps']));
+        $this->assertFalse(isset($data['parameters']));
+        $this->assertFalse(isset($data['description']));
     }
 
     /**
@@ -114,15 +114,15 @@ class ExerciseSerializerTest extends JsonDataTestCase
         $exercise = $this->serializer->deserialize($exerciseData);
 
         $this->assertInstanceOf('\UJM\ExoBundle\Entity\Exercise', $exercise);
-        $this->assertEquals($exerciseData->id, $exercise->getUuid());
+        $this->assertEquals($exerciseData['id'], $exercise->getUuid());
 
         // Checks some parameters
-        $this->assertEquals($exerciseData->picking->randomOrder, $exercise->getRandomOrder());
-        $this->assertEquals($exerciseData->picking->randomPick, $exercise->getRandomPick());
-        $this->assertEquals($exerciseData->picking->pick, $exercise->getPick());
+        $this->assertEquals($exerciseData['picking']['randomOrder'], $exercise->getRandomOrder());
+        $this->assertEquals($exerciseData['picking']['randomPick'], $exercise->getRandomPick());
+        $this->assertEquals($exerciseData['picking']['pick'], $exercise->getPick());
 
         // Checks there is the correct number of steps
-        $this->assertCount(count($exerciseData->steps), $exercise->getSteps());
+        $this->assertCount(count($exerciseData['steps']), $exercise->getSteps());
     }
 
     /**
@@ -135,12 +135,12 @@ class ExerciseSerializerTest extends JsonDataTestCase
         $updatedExercise = $this->serializer->deserialize($exerciseData, $this->exercise);
 
         // Checks some parameters
-        $this->assertEquals($exerciseData->picking->randomOrder, $updatedExercise->getRandomOrder());
-        $this->assertEquals($exerciseData->picking->randomPick, $updatedExercise->getRandomPick());
-        $this->assertEquals($exerciseData->picking->pick, $updatedExercise->getPick());
+        $this->assertEquals($exerciseData['picking']['randomOrder'], $updatedExercise->getRandomOrder());
+        $this->assertEquals($exerciseData['picking']['randomPick'], $updatedExercise->getRandomPick());
+        $this->assertEquals($exerciseData['picking']['pick'], $updatedExercise->getPick());
 
         // Checks there is the correct number of steps
-        $this->assertCount(count($exerciseData->steps), $this->exercise->getSteps());
+        $this->assertCount(count($exerciseData['steps']), $this->exercise->getSteps());
 
         // Checks no new entity have been created
         $nbBefore = count($this->om->getRepository('UJMExoBundle:Exercise')->findAll());

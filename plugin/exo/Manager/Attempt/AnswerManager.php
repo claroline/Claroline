@@ -59,14 +59,14 @@ class AnswerManager
     /**
      * Validates and creates a new Answer from raw data.
      *
-     * @param Item      $question
-     * @param \stdClass $answerData
+     * @param Item  $question
+     * @param array $answerData
      *
      * @return Answer
      *
      * @throws InvalidDataException
      */
-    public function create(Item $question, \stdClass $answerData)
+    public function create(Item $question, array $answerData)
     {
         return $this->update($question, new Answer(), $answerData);
     }
@@ -74,16 +74,16 @@ class AnswerManager
     /**
      * Validates and updates an Answer entity with raw data.
      *
-     * @param Item      $question
-     * @param Answer    $answer
-     * @param \stdClass $answerData
-     * @param bool      $noFlush
+     * @param Item   $question
+     * @param Answer $answer
+     * @param array  $answerData
+     * @param bool   $noFlush
      *
      * @return Answer
      *
      * @throws InvalidDataException
      */
-    public function update(Item $question, Answer $answer, \stdClass $answerData, $noFlush = false)
+    public function update(Item $question, Answer $answer, array $answerData, $noFlush = false)
     {
         $errors = $this->validator->validate($answerData, [Validation::QUESTION => $question->getInteraction()]);
         if (count($errors) > 0) {
@@ -109,7 +109,7 @@ class AnswerManager
      * @param Answer $answer
      * @param array  $options
      *
-     * @return \stdClass
+     * @return array
      */
     public function serialize(Answer $answer, array $options = [])
     {

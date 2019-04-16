@@ -152,7 +152,7 @@ const SetPaper = props =>
                 </li>
               )}
               {props.item.items
-                .filter(item => has(props, ['stats', 'unused', item.id]) && !utils.isItemInOddList(item.id, props.item.solutions))
+                .filter(item => has(props, ['stats', 'unused', item.id]) && !utils.isOdd(item.id, props.item.solutions))
                 .map((item) =>
                   <li key={`stats-unexpected-${item.id}`}>
                     <div className="answer-item set-answer-item stats-answer">

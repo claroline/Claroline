@@ -84,12 +84,12 @@ class CorrectionManagerTest extends JsonDataTestCase
         // Checks returned questions
         $this->assertTrue(is_array($toCorrect['questions']));
         $this->assertCount(1, $toCorrect['questions']);
-        $this->assertEquals($this->questions[0]->getUuid(), $toCorrect['questions'][0]->id);
+        $this->assertEquals($this->questions[0]->getUuid(), $toCorrect['questions'][0]['id']);
 
         // Checks returned answers
         $this->assertTrue(is_array($toCorrect['answers']));
         $this->assertCount(1, $toCorrect['answers']);
-        $this->assertEquals($this->answers[0]->getUuid(), $toCorrect['answers'][0]->id);
+        $this->assertEquals($this->answers[0]->getUuid(), $toCorrect['answers'][0]['id']);
     }
 
     /**
@@ -97,23 +97,25 @@ class CorrectionManagerTest extends JsonDataTestCase
      */
     public function testSaveUnknownAnswer()
     {
-        $toCorrect = new \stdClass();
-        $toCorrect->id = uniqid(); // Unknown answer
-        $toCorrect->questionId = uniqid();
-        $toCorrect->score = 5;
-        $toCorrect->feedback = 'this is a feedback';
+        $toCorrect = [
+            'id' => uniqid(), // Unknown answer
+            'questionId' => uniqid(),
+            'score' => 5,
+            'feedback' => 'this is a feedback',
+        ];
 
         $this->manager->save([$toCorrect]);
     }
 
     public function testSave()
     {
-        $toCorrect = new \stdClass();
-        $toCorrect->id = $this->answers[0]->getUuid();
-        $toCorrect->questionId = $this->answers[0]->getQuestionId();
-        $toCorrect->score = 5;
-        $toCorrect->feedback = 'this is a feedback';
-        $toCorrect->type = 'application/x.open+json';
+        $toCorrect = [
+            'id' => $this->answers[0]->getUuid(),
+            'questionId' => $this->answers[0]->getQuestionId(),
+            'score' => 5,
+            'feedback' => 'this is a feedback',
+            'type' => 'application/x.open+json',
+        ];
 
         // Paper score have never been calculated for now
         // We just take obtained score in test data (we can do it because their is no penalty)
@@ -132,11 +134,11 @@ class CorrectionManagerTest extends JsonDataTestCase
         ]);
 
         $this->assertFalse(is_null($updatedAnswer));
-        $this->assertEquals($toCorrect->score, $updatedAnswer->getScore());
-        $this->assertEquals($toCorrect->feedback, $updatedAnswer->getFeedback());
+        $this->assertEquals($toCorrect['score'], $updatedAnswer->getScore());
+        $this->assertEquals($toCorrect['feedback'], $updatedAnswer->getFeedback());
 
         // Checks paper score have been updated too
-        $this->assertEquals($this->paper->getScore(), $previousScore + $toCorrect->score);
+        $this->assertEquals($this->paper->getScore(), $previousScore + $toCorrect['score']);
     }
 
     public function testSaveWithPenalties()
@@ -145,12 +147,13 @@ class CorrectionManagerTest extends JsonDataTestCase
         $this->answers[0]->addUsedHint($this->hints[0]->getUuid());
         $this->om->flush();
 
-        $toCorrect = new \stdClass();
-        $toCorrect->id = $this->answers[0]->getUuid();
-        $toCorrect->questionId = $this->answers[0]->getQuestionId();
-        $toCorrect->score = 5;
-        $toCorrect->feedback = 'this is a feedback';
-        $toCorrect->type = 'application/x.open+json';
+        $toCorrect = [
+            'id' => $this->answers[0]->getUuid(),
+            'questionId' => $this->answers[0]->getQuestionId(),
+            'score' => 5,
+            'feedback' => 'this is a feedback',
+            'type' => 'application/x.open+json',
+        ];
 
         $this->manager->save([$toCorrect]);
 
@@ -160,6 +163,6 @@ class CorrectionManagerTest extends JsonDataTestCase
         ]);
 
         // Checks the score include hint penalty
-        $this->assertEquals($toCorrect->score - $this->hints[0]->getPenalty(), $updatedAnswer->getScore());
+        $this->assertEquals($toCorrect['score'] - $this->hints[0]->getPenalty(), $updatedAnswer->getScore());
     }
 }

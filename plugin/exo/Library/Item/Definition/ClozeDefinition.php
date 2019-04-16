@@ -122,9 +122,9 @@ class ClozeDefinition extends AbstractDefinition
 
         if (!is_null($answer)) {
             foreach ($answer as $holeAnswer) {
-                $hole = $question->getHole($holeAnswer->holeId);
+                $hole = $question->getHole($holeAnswer['holeId']);
                 if ($hole) {
-                    $keyword = $hole->getKeyword($holeAnswer->answerText);
+                    $keyword = $hole->getKeyword($holeAnswer['answerText']);
                     if (!empty($keyword)) {
                         if (0 < $keyword->getScore()) {
                             $corrected->addExpected($keyword);
@@ -182,26 +182,26 @@ class ClozeDefinition extends AbstractDefinition
 
         foreach ($answersData as $answerData) {
             foreach ($answerData as $holeAnswer) {
-                if (!empty($holeAnswer->answerText)) {
-                    $answered[$holeAnswer->holeId] = isset($answered[$holeAnswer->holeId]) ?
-                        $answered[$holeAnswer->holeId] + 1 :
+                if (!empty($holeAnswer['answerText'])) {
+                    $answered[$holeAnswer['holeId']] = isset($answered[$holeAnswer['holeId']]) ?
+                        $answered[$holeAnswer['holeId']] + 1 :
                         1;
 
-                    if (!isset($holes[$holeAnswer->holeId])) {
-                        $holes[$holeAnswer->holeId] = [];
+                    if (!isset($holes[$holeAnswer['holeId']])) {
+                        $holes[$holeAnswer['holeId']] = [];
                     }
 
-                    $keyword = isset($holesMap[$holeAnswer->holeId]) ?
-                        $holesMap[$holeAnswer->holeId]->getKeyword($holeAnswer->answerText) :
+                    $keyword = isset($holesMap[$holeAnswer['holeId']]) ?
+                        $holesMap[$holeAnswer['holeId']]->getKeyword($holeAnswer['answerText']) :
                         null;
 
                     if ($keyword) {
-                        $holes[$holeAnswer->holeId][$keyword->getText()] = isset($holes[$holeAnswer->holeId][$keyword->getText()]) ?
-                            $holes[$holeAnswer->holeId][$keyword->getText()] + 1 :
+                        $holes[$holeAnswer['holeId']][$keyword->getText()] = isset($holes[$holeAnswer['holeId']][$keyword->getText()]) ?
+                            $holes[$holeAnswer['holeId']][$keyword->getText()] + 1 :
                             1;
                     } else {
-                        $holes[$holeAnswer->holeId]['_others'] = isset($holes[$holeAnswer->holeId]['_others']) ?
-                            $holes[$holeAnswer->holeId]['_others'] + 1 :
+                        $holes[$holeAnswer['holeId']]['_others'] = isset($holes[$holeAnswer['holeId']]['_others']) ?
+                            $holes[$holeAnswer['holeId']]['_others'] + 1 :
                             1;
                     }
                 }
@@ -276,13 +276,13 @@ class ClozeDefinition extends AbstractDefinition
 
     public function getCsvAnswers(AbstractItem $item, Answer $answer)
     {
-        $data = json_decode($answer->getData());
+        $data = json_decode($answer->getData(), true);
         $answers = [];
         $answeredHoles = [];
 
         if (is_array($data)) {
             foreach ($data as $answer) {
-                $answeredHoles[$answer->holeId] = $answer->answerText;
+                $answeredHoles[$answer['holeId']] = $answer['answerText'];
             }
         }
 

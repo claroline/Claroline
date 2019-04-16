@@ -2,23 +2,26 @@
 
 namespace UJM\ExoBundle\Serializer;
 
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\User;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Library\Options\Transfer;
-use UJM\ExoBundle\Library\Serializer\AbstractSerializer;
 
 /**
  * Serializer for user data.
  *
  * @DI\Service("ujm_exo.serializer.user")
+ * @DI\Tag("claroline.serializer")
  *
  * @todo : use standard core serializer
  */
-class UserSerializer extends AbstractSerializer
+class UserSerializer
 {
+    use SerializerTrait;
+
     /** @var ObjectManager */
     private $om;
 
@@ -36,9 +39,7 @@ class UserSerializer extends AbstractSerializer
      * @param ObjectManager        $om
      * @param PublicFileSerializer $fileSerializer
      */
-    public function __construct(
-        ObjectManager $om,
-        PublicFileSerializer $fileSerializer)
+    public function __construct(ObjectManager $om, PublicFileSerializer $fileSerializer)
     {
         $this->om = $om;
         $this->fileSerializer = $fileSerializer;
@@ -50,26 +51,25 @@ class UserSerializer extends AbstractSerializer
      * @param User  $user
      * @param array $options
      *
-     * @return \stdClass
+     * @return array
      */
-    public function serialize($user, array $options = [])
+    public function serialize(User $user, array $options = [])
     {
-        $userData = new \stdClass();
+        $serialized = [
+            'id' => $user->getUuid(),
+            'name' => trim($user->getFirstName().' '.$user->getLastName()),
+            'picture' => $this->serializePicture($user),
+            'firstName' => $user->getFirstName(),
+            'lastName' => $user->getLastName(),
+            'username' => $user->getUsername(),
+            'publicUrl' => $user->getPublicUrl(),
+        ];
 
-        $userData->id = $user->getUuid();
-        $userData->name = trim($user->getFirstName().' '.$user->getLastName());
-
-        $userData->picture = $this->serializePicture($user);
-        $userData->firstName = $user->getFirstName();
-        $userData->lastName = $user->getLastName();
-        $userData->username = $user->getUsername();
-        $userData->publicUrl = $user->getPublicUrl();
-
-        if (!$this->hasOption(Transfer::MINIMAL, $options)) {
-            $userData->email = $user->getEmail();
+        if (!in_array(Transfer::MINIMAL, $options)) {
+            $serialized['email'] = $user->getEmail();
         }
 
-        return $userData;
+        return $serialized;
     }
 
     /**
@@ -77,17 +77,17 @@ class UserSerializer extends AbstractSerializer
      *
      * Note : we don't allow to update users here, so this method only returns the untouched entity instance.
      *
-     * @param \stdClass $data
-     * @param null      $user
-     * @param array     $options
+     * @param \array $data
+     * @param User   $user
+     * @param array  $options
      *
      * @return User
      */
-    public function deserialize($data, $user = null, array $options = [])
+    public function deserialize($data, User $user = null, array $options = [])
     {
         if (empty($user)) {
             /** @var User $user */
-            $user = $this->om->getRepository('ClarolineCoreBundle:User')->find($data->id);
+            $user = $this->om->getRepository(User::class)->findOneBy(['uuid' => $data['id']]);
         }
 
         return $user;

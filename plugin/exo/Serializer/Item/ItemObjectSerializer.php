@@ -2,65 +2,66 @@
 
 namespace UJM\ExoBundle\Serializer\Item;
 
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Item\ItemObject;
 use UJM\ExoBundle\Library\Options\Transfer;
-use UJM\ExoBundle\Library\Serializer\SerializerInterface;
 
 /**
  * Serializer for item object data.
  *
  * @DI\Service("ujm_exo.serializer.item_object")
+ * @DI\Tag("claroline.serializer")
  */
-class ItemObjectSerializer implements SerializerInterface
+class ItemObjectSerializer
 {
+    use SerializerTrait;
+
     /**
      * Converts a ItemObject into a JSON-encodable structure.
      *
      * @param ItemObject $itemObject
      * @param array      $options
      *
-     * @return \stdClass
+     * @return array
      */
-    public function serialize($itemObject, array $options = [])
+    public function serialize(ItemObject $itemObject, array $options = [])
     {
-        $itemObjectData = new \stdClass();
-        $itemObjectData->id = $itemObject->getUuid();
-        $itemObjectData->type = $itemObject->getMimeType();
+        $serialized = [
+            'id' => $itemObject->getUuid(),
+            'type' => $itemObject->getMimeType(),
+        ];
 
         if (1 === preg_match('#^text\/[^/]+$#', $itemObject->getMimeType())) {
-            $itemObjectData->data = $itemObject->getData();
+            $serialized['data'] = $itemObject->getData();
         } else {
-            $itemObjectData->url = $itemObject->getData();
+            $serialized['url'] = $itemObject->getData();
         }
 
-        return $itemObjectData;
+        return $serialized;
     }
 
     /**
      * Converts raw data into a ItemObject entity.
      *
-     * @param \stdClass  $data
+     * @param array      $data
      * @param ItemObject $itemObject
      * @param array      $options
      *
      * @return ItemObject
      */
-    public function deserialize($data, $itemObject = null, array $options = [])
+    public function deserialize($data, ItemObject $itemObject = null, array $options = [])
     {
         $itemObject = $itemObject ?: new ItemObject();
 
-        $itemObject->setUuid($data->id);
+        $this->sipe('id', 'setUuid', $data, $itemObject);
+
         if (in_array(Transfer::REFRESH_UUID, $options)) {
             $itemObject->refreshUuid();
         }
-        $itemObject->setMimeType($data->type);
-
-        if (isset($data->data)) {
-            $itemObject->setData($data->data);
-        } elseif (isset($data->url)) {
-            $itemObject->setData($data->url);
-        }
+        $this->sipe('type', 'setMimeType', $data, $itemObject);
+        $this->sipe('url', 'setData', $data, $itemObject);
+        $this->sipe('data', 'setData', $data, $itemObject);
 
         return $itemObject;
     }

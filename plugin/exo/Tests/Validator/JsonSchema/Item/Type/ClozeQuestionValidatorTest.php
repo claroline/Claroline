@@ -57,7 +57,7 @@ class ClozeQuestionValidatorTest extends JsonSchemaTestCase
     {
         $questionData = $this->loadExampleData('question/cloze/examples/valid/multiple-answers.json');
 
-        $this->keywordValidator->expects($this->exactly(count($questionData->solutions)))
+        $this->keywordValidator->expects($this->exactly(count($questionData['solutions'])))
             ->method('validateCollection');
 
         $this->validator->validate($questionData, [Validation::REQUIRE_SOLUTIONS]);

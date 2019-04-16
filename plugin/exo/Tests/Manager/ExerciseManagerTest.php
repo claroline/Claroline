@@ -45,8 +45,8 @@ class ExerciseManagerTest extends JsonDataTestCase
         $data = $this->manager->serialize($this->exercise);
 
         // Checks the result of the serializer is returned
-        $this->assertInstanceOf('\stdClass', $data);
-        $this->assertEquals($this->exercise->getUuid(), $data->id);
+        $this->assertTrue(is_array($data));
+        $this->assertEquals($this->exercise->getUuid(), $data['id']);
     }
 
     public function testUpdate()
@@ -56,8 +56,8 @@ class ExerciseManagerTest extends JsonDataTestCase
         $this->manager->update($this->exercise, $validData);
 
         // Checks some props
-        $this->assertEquals($this->exercise->getType(), $validData->parameters->type);
-        $this->assertCount($this->exercise->getSteps()->count(), $validData->steps);
+        $this->assertEquals($this->exercise->getType(), $validData['parameters']['type']);
+        $this->assertCount($this->exercise->getSteps()->count(), $validData['steps']);
     }
 
     /**

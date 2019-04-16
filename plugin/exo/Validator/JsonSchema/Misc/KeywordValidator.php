@@ -46,26 +46,27 @@ class KeywordValidator extends JsonSchemaValidator
 
         $maxScore = -1;
         $keywordsData = []; // We will store text and caseSensitive to check there is no duplicate
+
         foreach ($keywords as $index => $keyword) {
             // Validate keyword
             $errors = array_merge($errors, $this->validateAfterSchema($keyword, $options));
 
             if (empty($errors)) {
-                if ($keyword->score > $maxScore) {
-                    $maxScore = $keyword->score;
+                if ($keyword['score'] > $maxScore) {
+                    $maxScore = $keyword['score'];
                 }
 
                 // Checks for duplicates
-                if (isset($keywordsData[$keyword->text]) && in_array($keyword->caseSensitive, $keywordsData[$keyword->text], true)) {
+                if (isset($keywordsData[$keyword['text']]) && in_array($keyword['caseSensitive'], $keywordsData[$keyword['text']], true)) {
                     // Keywords already exists
-                    $caseSensitive = $keyword->caseSensitive ? 'true' : 'false'; // Converts to string to display in logs
+                    $caseSensitive = $keyword['caseSensitive'] ? 'true' : 'false'; // Converts to string to display in logs
                     $errors[] = [
                         'path' => "/{$index}",
-                        'message' => "there is already a keyword with text: '{$keyword->text}' and caseSensitive: '{$caseSensitive}'",
+                        'message' => "there is already a keyword with text: '{$keyword['text']}' and caseSensitive: '{$caseSensitive}'",
                     ];
                 } else {
-                    $keywordsData[$keyword->text] = [];
-                    $keywordsData[$keyword->text][] = $keyword->caseSensitive;
+                    $keywordsData[$keyword['text']] = [];
+                    $keywordsData[$keyword['text']][] = $keyword['caseSensitive'];
                 }
             }
         }

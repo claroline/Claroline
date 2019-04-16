@@ -126,9 +126,11 @@ class MatchDefinition extends AbstractDefinition
         if (is_array($answer)) {
             foreach ($question->getAssociations() as $association) {
                 $found = false;
+
                 foreach ($answer as $index => $givenAnswer) {
-                    if ($association->getProposal()->getUuid() === $givenAnswer->firstId && $association->getLabel()->getUuid() === $givenAnswer->secondId) {
+                    if ($association->getProposal()->getUuid() === $givenAnswer['firstId'] && $association->getLabel()->getUuid() === $givenAnswer['secondId']) {
                         $found = true;
+
                         if (0 < $association->getScore()) {
                             $corrected->addExpected($association);
                         } else {
@@ -179,12 +181,12 @@ class MatchDefinition extends AbstractDefinition
 
         foreach ($answersData as $answerData) {
             foreach ($answerData as $matchAnswer) {
-                if (!empty($matchAnswer->firstId) && !empty($matchAnswer->secondId)) {
-                    if (!isset($matches[$matchAnswer->firstId])) {
-                        $matches[$matchAnswer->firstId] = [];
+                if (!empty($matchAnswer['firstId']) && !empty($matchAnswer['secondId'])) {
+                    if (!isset($matches[$matchAnswer['firstId']])) {
+                        $matches[$matchAnswer['firstId']] = [];
                     }
-                    $matches[$matchAnswer->firstId][$matchAnswer->secondId] = isset($matches[$matchAnswer->firstId][$matchAnswer->secondId]) ?
-                        $matches[$matchAnswer->firstId][$matchAnswer->secondId] + 1 :
+                    $matches[$matchAnswer['firstId']][$matchAnswer['secondId']] = isset($matches[$matchAnswer['firstId']][$matchAnswer['secondId']]) ?
+                        $matches[$matchAnswer['firstId']][$matchAnswer['secondId']] + 1 :
                         1;
                 }
             }
@@ -222,15 +224,16 @@ class MatchDefinition extends AbstractDefinition
 
     public function getCsvAnswers(AbstractItem $item, Answer $answer)
     {
-        $data = json_decode($answer->getData());
+        $data = json_decode($answer->getData(), true);
         $proposals = $item->getProposals();
         $labels = $item->getLabels();
         $answers = [];
 
         foreach ($data as $pair) {
             $answerPair = '[';
+
             foreach ($proposals as $proposal) {
-                if ($proposal->getUuid() === $pair->firstId) {
+                if ($proposal->getUuid() === $pair['firstId']) {
                     $answerPair .= $proposal->getData();
                 }
             }
@@ -238,7 +241,7 @@ class MatchDefinition extends AbstractDefinition
             $answerPair .= ';';
 
             foreach ($labels as $label) {
-                if ($label->getUuid() === $pair->secondId) {
+                if ($label->getUuid() === $pair['secondId']) {
                     $answerPair .= $label->getData();
                 }
             }

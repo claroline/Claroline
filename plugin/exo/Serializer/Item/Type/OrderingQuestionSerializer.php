@@ -2,18 +2,21 @@
 
 namespace UJM\ExoBundle\Serializer\Item\Type;
 
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\OrderingQuestion;
 use UJM\ExoBundle\Entity\Misc\OrderingItem;
 use UJM\ExoBundle\Library\Options\Transfer;
-use UJM\ExoBundle\Library\Serializer\SerializerInterface;
 use UJM\ExoBundle\Serializer\Content\ContentSerializer;
 
 /**
  * @DI\Service("ujm_exo.serializer.question_ordering")
+ * @DI\Tag("claroline.serializer")
  */
-class OrderingQuestionSerializer implements SerializerInterface
+class OrderingQuestionSerializer
 {
+    use SerializerTrait;
+
     /**
      * @var ContentSerializer
      */
@@ -36,31 +39,33 @@ class OrderingQuestionSerializer implements SerializerInterface
     /**
      * Converts an Ordering question into a JSON-encodable structure.
      *
-     * @param Ordering $question
-     * @param array    $options
+     * @param OrderingQuestion $question
+     * @param array            $options
      *
-     * @return \stdClass
+     * @return array
      */
-    public function serialize($question, array $options = [])
+    public function serialize(OrderingQuestion $question, array $options = [])
     {
-        $questionData = new \stdClass();
+        $serialized = [
+            'mode' => $question->getMode(),
+            'direction' => $question->getDirection(),
+            'penalty' => $question->getPenalty(),
+        ];
 
-        $questionData->mode = $question->getMode();
-        $questionData->direction = $question->getDirection();
-        $questionData->penalty = $question->getPenalty();
         // Serializes items
         $items = $this->serializeItems($question, $options);
+
         // shuffle items only in player
         if (in_array(Transfer::SHUFFLE_ANSWERS, $options)) {
             shuffle($items);
         }
-        $questionData->items = $items;
+        $serialized['items'] = $items;
 
         if (in_array(Transfer::INCLUDE_SOLUTIONS, $options)) {
-            $questionData->solutions = $this->serializeSolutions($question);
+            $serialized['solutions'] = $this->serializeSolutions($question);
         }
 
-        return $questionData;
+        return $serialized;
     }
 
     /**
@@ -75,7 +80,7 @@ class OrderingQuestionSerializer implements SerializerInterface
     {
         return array_map(function (OrderingItem $item) use ($options) {
             $itemData = $this->contentSerializer->serialize($item, $options);
-            $itemData->id = $item->getUuid();
+            $itemData['id'] = $item->getUuid();
 
             return $itemData;
         }, $question->getItems()->toArray());
@@ -84,23 +89,24 @@ class OrderingQuestionSerializer implements SerializerInterface
     /**
      * Serializes Question solutions.
      *
-     * @param Ordering $question
+     * @param OrderingQuestion $question
      *
      * @return array
      */
     private function serializeSolutions(OrderingQuestion $question)
     {
         return array_map(function (OrderingItem $item) {
-            $solutionData = new \stdClass();
-            $solutionData->itemId = $item->getUuid();
-            $solutionData->score = $item->getScore();
+            $solutionData = [
+                'itemId' => $item->getUuid(),
+                'score' => $item->getScore(),
+            ];
 
             if ($item->getFeedback()) {
-                $solutionData->feedback = $item->getFeedback();
+                $solutionData['feedback'] = $item->getFeedback();
             }
 
             if ($item->getPosition()) {
-                $solutionData->position = $item->getPosition();
+                $solutionData['position'] = $item->getPosition();
             }
 
             return $solutionData;
@@ -110,26 +116,26 @@ class OrderingQuestionSerializer implements SerializerInterface
     /**
      * Converts raw data into an Ordering question entity.
      *
-     * @param \stdClass $data
-     * @param Ordering  $question
-     * @param array     $options
+     * @param array            $data
+     * @param OrderingQuestion $question
+     * @param array            $options
      *
-     * @return Ordering
+     * @return OrderingQuestion
      */
-    public function deserialize($data, $question = null, array $options = [])
+    public function deserialize($data, OrderingQuestion $question = null, array $options = [])
     {
         if (empty($question)) {
             $question = new OrderingQuestion();
         }
 
-        if (!empty($data->penalty) || 0 === $data->penalty) {
-            $question->setPenalty($data->penalty);
+        if (!empty($data['penalty']) || 0 === $data['penalty']) {
+            $question->setPenalty($data['penalty']);
         }
 
-        $question->setDirection($data->direction);
-        $question->setMode($data->mode);
+        $this->sipe('direction', 'setDirection', $data, $question);
+        $this->sipe('mode', 'setMode', $data, $question);
 
-        $this->deserializeItems($question, $data->items, $data->solutions, $options);
+        $this->deserializeItems($question, $data['items'], $data['solutions'], $options);
 
         return $question;
     }
@@ -152,7 +158,7 @@ class OrderingQuestionSerializer implements SerializerInterface
             // Searches for an existing item entity.
             foreach ($itemEntities as $entityIndex => $entityItem) {
                 /** @var OrderingItem $entityItem */
-                if ($entityItem->getUuid() === $itemData->id) {
+                if ($entityItem->getUuid() === $itemData['id']) {
                     $item = $entityItem;
                     unset($itemEntities[$entityIndex]);
                     break;
@@ -160,21 +166,22 @@ class OrderingQuestionSerializer implements SerializerInterface
             }
 
             $item = $item ?: new OrderingItem();
-            $item->setUuid($itemData->id);
+            $item->setUuid($itemData['id']);
 
             // Deserialize item content
             $item = $this->contentSerializer->deserialize($itemData, $item, $options);
 
             // Set item score feedback and order
             foreach ($solutions as $solution) {
-                if ($solution->itemId === $itemData->id) {
-                    $item->setScore($solution->score);
-                    if (isset($solution->feedback)) {
-                        $item->setFeedback($solution->feedback);
+                if ($solution['itemId'] === $itemData['id']) {
+                    $item->setScore($solution['score']);
+
+                    if (isset($solution['feedback'])) {
+                        $item->setFeedback($solution['feedback']);
                     }
 
-                    if (isset($solution->position)) {
-                        $item->setPosition($solution->position);
+                    if (isset($solution['position'])) {
+                        $item->setPosition($solution['position']);
                     }
                     break;
                 }

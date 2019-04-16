@@ -59,14 +59,20 @@ abstract class JsonSchemaValidator implements ValidatorInterface
      */
     public function validate($data, array $options = [])
     {
+        $dataObject = json_decode(json_encode($data));
+
+        if ($dataObject === []) {
+            $dataObject = new \stdClass();
+        }
+
         if (!in_array(Validation::NO_SCHEMA, $options)) {
             // Validate against JSON schema
-            $errors = $this->validateSchema($data);
+            $errors = $this->validateSchema($dataObject);
         }
 
         if (empty($errors)) {
             // Perform additional checks
-            $errors = $this->validateAfterSchema($data, $options);
+            $errors = $this->validateAfterSchema($dataObject, $options);
         }
 
         return $errors;

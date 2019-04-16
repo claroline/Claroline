@@ -98,17 +98,17 @@ class PaperGenerator
     private function generateStructure(Exercise $exercise, Paper $previousPaper = null)
     {
         // The structure of the previous paper if any
-        $previousStructure = !empty($previousPaper) ? json_decode($previousPaper->getStructure()) : null;
+        $previousStructure = !empty($previousPaper) ? json_decode($previousPaper->getStructure(), true) : null;
 
         // Get JSON representation of the full exercise
         $structure = $this->exerciseSerializer->serialize($exercise);
         // Pick questions for each steps and generate structure
-        $structure->steps = $this->pickSteps($exercise, $previousStructure);
+        $structure['steps'] = $this->pickSteps($exercise, $previousStructure);
 
         return $structure;
     }
 
-    private function pickSteps(Exercise $exercise, \stdClass $previousExercise = null)
+    private function pickSteps(Exercise $exercise, array $previousExercise = null)
     {
         switch ($exercise->getPicking()) {
             case Picking::TAGS:
@@ -118,9 +118,9 @@ class PaperGenerator
             default:
                 if (!empty($previousExercise) && Recurrence::ALWAYS !== $exercise->getRandomPick()) {
                     // Just get the list of steps from the previous paper
-                    $steps = array_map(function (\stdClass $pickedStep) use ($exercise) {
-                        return $exercise->getStep($pickedStep->id);
-                    }, $previousExercise->steps);
+                    $steps = array_map(function (array $pickedStep) use ($exercise) {
+                        return $exercise->getStep($pickedStep['id']);
+                    }, $previousExercise['steps']);
                 } else {
                     // Pick a new set of steps
                     $steps = static::pick(
@@ -130,11 +130,13 @@ class PaperGenerator
                 }
 
                 $pickedSteps = [];
+
                 foreach ($steps as $step) {
                     $previousStructure = null;
+
                     if ($previousExercise) {
-                        foreach ($previousExercise->steps as $stepStructure) {
-                            if ($stepStructure->id === $step->getUuid()) {
+                        foreach ($previousExercise['steps'] as $stepStructure) {
+                            if ($stepStructure['id'] === $step->getUuid()) {
                                 $previousStructure = $stepStructure;
                                 break;
                             }
@@ -142,7 +144,7 @@ class PaperGenerator
                     }
 
                     $pickedStep = $this->stepSerializer->serialize($step);
-                    $pickedStep->items = $this->pickItems($step, $previousStructure);
+                    $pickedStep['items'] = $this->pickItems($step, $previousStructure);
                     $pickedSteps[] = $pickedStep;
                 }
 
@@ -171,11 +173,12 @@ class PaperGenerator
 
         // Retrieve the list of items to use
         $items = [];
+
         if (!empty($previousExercise) && Recurrence::ALWAYS !== $exercise->getRandomPick()) {
             // Just get the list of items from the previous paper
-            foreach ($previousExercise->steps as $pickedStep) {
-                foreach ($pickedStep->items as $pickedItem) {
-                    $items[] = $exercise->getQuestion($pickedItem->id);
+            foreach ($previousExercise['steps'] as $pickedStep) {
+                foreach ($pickedStep['items'] as $pickedItem) {
+                    $items[] = $exercise->getQuestion($pickedItem['id']);
                 }
             }
         } else {
@@ -194,6 +197,7 @@ class PaperGenerator
         }, $items);
 
         $pickedItems = [];
+
         if (!empty($previousExercise) && Recurrence::ALWAYS !== $exercise->getRandomPick()) {
             // items are already filtered
             $pickedItems = $serializedItems;
@@ -201,7 +205,7 @@ class PaperGenerator
             // Only pick wanted tags (format : ['tagName', itemCount])
             foreach ($pickConfig['tags'] as $pickedTag) {
                 $taggedItems = array_filter($serializedItems, function ($serializedItem) use ($pickedTag) {
-                    return !empty($serializedItem->tags) && in_array($pickedTag[0], $serializedItem->tags);
+                    return !empty($serializedItem['tags']) && in_array($pickedTag[0], $serializedItem['tags']);
                 });
 
                 // Get the correct number of items with the current tag
@@ -221,7 +225,7 @@ class PaperGenerator
         $pickedSteps = [];
         while (!empty($pickedItems)) {
             $pickedStep = $this->stepSerializer->serialize(new Step());
-            $pickedStep->items = array_splice($pickedItems, 0, $pickConfig['pageSize']);
+            $pickedStep['items'] = array_splice($pickedItems, 0, $pickConfig['pageSize']);
             $pickedSteps[] = $pickedStep;
         }
 
@@ -231,19 +235,19 @@ class PaperGenerator
     /**
      * Pick items for a step according to the step configuration.
      *
-     * @param Step           $step
-     * @param \stdClass|null $previousStep
+     * @param Step       $step
+     * @param array|null $previousStep
      *
      * @return Item[]
      */
-    private function pickItems(Step $step, \stdClass $previousStep = null)
+    private function pickItems(Step $step, array $previousStep = null)
     {
         if (!empty($previousStep) && Recurrence::ALWAYS !== $step->getRandomPick()) {
             // Just get the list of question from previous step
             // We get the entities to reapply shuffle (= redo serialization with shuffle option)
-            $items = array_map(function (\stdClass $pickedItem) use ($step) {
-                return $step->getQuestion($pickedItem->id);
-            }, $previousStep->items);
+            $items = array_map(function (array $pickedItem) use ($step) {
+                return $step->getQuestion($pickedItem['id']);
+            }, $previousStep['items']);
         } else {
             // Pick a new set of questions
             $items = static::pick(

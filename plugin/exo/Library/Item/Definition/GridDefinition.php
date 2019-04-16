@@ -123,9 +123,9 @@ class GridDefinition extends AbstractDefinition
      */
     public function correctAnswer(AbstractItem $question, $answer)
     {
-        $scoreRule = json_decode($question->getQuestion()->getScoreRule());
+        $scoreRule = json_decode($question->getQuestion()->getScoreRule(), true);
 
-        if ('fixed' === $scoreRule->type) {
+        if ('fixed' === $scoreRule['type']) {
             return $this->getCorrectAnswerForFixMode($question, $answer);
         } else {
             // 3 sum submode
@@ -152,10 +152,12 @@ class GridDefinition extends AbstractDefinition
     private function getCorrectAnswerForFixMode(AbstractItem $question, $answer)
     {
         $corrected = new CorrectedAnswer();
+
         if (!is_null($answer)) {
             foreach ($answer as $gridAnswer) {
-                $cell = $question->getCell($gridAnswer->cellId);
-                $choice = $cell->getChoice($gridAnswer->text);
+                $cell = $question->getCell($gridAnswer['cellId']);
+                $choice = $cell->getChoice($gridAnswer['text']);
+
                 if (!empty($choice)) {
                     if ($choice->isExpected()) {
                         $corrected->addExpected($choice);
@@ -169,6 +171,7 @@ class GridDefinition extends AbstractDefinition
             }
         } else {
             $cells = $question->getCells();
+
             foreach ($cells as $cell) {
                 if (0 < count($cell->getChoices())) {
                     $corrected->addMissing($this->findCellExpectedAnswer($cell));
@@ -188,10 +191,12 @@ class GridDefinition extends AbstractDefinition
     private function getCorrectAnswerForSumCellsMode(AbstractItem $question, $answer)
     {
         $corrected = new CorrectedAnswer();
+
         if (!is_null($answer)) {
             foreach ($answer as $gridAnswer) {
-                $cell = $question->getCell($gridAnswer->cellId);
-                $choice = $cell->getChoice($gridAnswer->text);
+                $cell = $question->getCell($gridAnswer['cellId']);
+                $choice = $cell->getChoice($gridAnswer['text']);
+
                 if (!empty($choice)) {
                     if (0 < $choice->getScore()) {
                         $corrected->addExpected($choice);
@@ -205,6 +210,7 @@ class GridDefinition extends AbstractDefinition
             }
         } else {
             $cells = $question->getCells();
+
             foreach ($cells as $cell) {
                 if ($cell->isInput()) {
                     $corrected->addMissing($this->findCellExpectedAnswer($cell));
@@ -230,6 +236,7 @@ class GridDefinition extends AbstractDefinition
             for ($i = 0; $i < $question->getRows(); ++$i) {
                 // get cells where there is at least 1 expected answer for the current row (none possible)
                 $rowCellsUuids = [];
+
                 foreach ($question->getCells() as $cell) {
                     if ($cell->getCoordsY() === $i && $cell->isInput()) {
                         $rowCellsUuids[] = $cell->getUuid();
@@ -244,7 +251,7 @@ class GridDefinition extends AbstractDefinition
                     foreach ($rowCellsUuids as $expectedCellUuid) {
                         // if $expectedCellUuid found in answers
                         $givenAnwser = array_filter($answer, function ($given) use ($expectedCellUuid) {
-                            return $given->cellId === $expectedCellUuid;
+                            return $given['cellId'] === $expectedCellUuid;
                         });
                         if (empty($givenAnwser)) {
                             $all = false;
@@ -253,7 +260,7 @@ class GridDefinition extends AbstractDefinition
                             // check answer
                             $cell = $question->getCell($expectedCellUuid);
                             $currentAnswer = reset($givenAnwser);
-                            $choice = $cell->getChoice($currentAnswer->text);
+                            $choice = $cell->getChoice($currentAnswer['text']);
                             // wrong or empty anwser -> score will not be applied
                             if (empty($choice) || (!empty($choice) && !$choice->isExpected())) {
                                 $all = false;
@@ -284,11 +291,13 @@ class GridDefinition extends AbstractDefinition
     private function getCorrectAnswerForColumnSumMode(AbstractItem $question, $answer)
     {
         $corrected = new CorrectedAnswer();
+
         if (!is_null($answer)) {
             // correct answers per row
             for ($i = 0; $i < $question->getColumns(); ++$i) {
                 // get cells where there is at least 1 expected answers for the current column (none possible)
                 $colCellsUuids = [];
+
                 foreach ($question->getCells() as $cell) {
                     if ($cell->getCoordsX() === $i && $cell->isInput()) {
                         $colCellsUuids[] = $cell->getUuid();
@@ -299,10 +308,11 @@ class GridDefinition extends AbstractDefinition
                 if (!empty($colCellsUuids)) {
                     // score will be applied only if all expected answers are there and valid
                     $all = true;
+
                     foreach ($colCellsUuids as $expectedCellUuid) {
                         // if $expectedCellUuid found in answers
                         $givenAnwser = array_filter($answer, function ($given) use ($expectedCellUuid) {
-                            return $given->cellId === $expectedCellUuid;
+                            return $given['cellId'] === $expectedCellUuid;
                         });
                         if (empty($givenAnwser)) {
                             $all = false;
@@ -310,7 +320,7 @@ class GridDefinition extends AbstractDefinition
                         } else {
                             $cell = $question->getCell($expectedCellUuid);
                             $currentAnswer = reset($givenAnwser);
-                            $choice = $cell->getChoice($currentAnswer->text);
+                            $choice = $cell->getChoice($currentAnswer['text']);
                             // wrong or empty anwser -> score will not be applied
                             if (empty($choice) || (!empty($choice) && !$choice->isExpected())) {
                                 $all = false;
@@ -329,6 +339,7 @@ class GridDefinition extends AbstractDefinition
             }
         } else {
             $cells = $question->getCells();
+
             foreach ($cells as $cell) {
                 if ($cell->isInput()) {
                     $corrected->addMissing($this->findCellExpectedAnswer($cell));
@@ -349,42 +360,43 @@ class GridDefinition extends AbstractDefinition
     public function expectAnswer(AbstractItem $question)
     {
         $expected = [];
+
         switch ($question->getSumMode()) {
-          case GridQuestion::SUM_CELL:
-            foreach ($question->getCells()->toArray() as $cell) {
-                if (0 < count($cell->getChoices())) {
-                    $expected[] = $this->findCellExpectedAnswer($cell);
-                }
-            }
-          break;
-          case GridQuestion::SUM_COLUMN:
-            for ($i = 0; $i < $question->getColumns(); ++$i) {
-                // get cells where there is at least 1 expected answers for the current column (none possible)
-                foreach ($question->getCells() as $cell) {
-                    // found a cell in this col with an expected answer
-                    if ($cell->getCoordsX() === $i && 0 < count($cell->getChoices())) {
-                        // all choices should have the same score
-                        $scoreToApply = $cell->getChoices()[0]->getScore();
-                        $expected[] = new GenericScore($scoreToApply);
-                        break;
+            case GridQuestion::SUM_CELL:
+                foreach ($question->getCells()->toArray() as $cell) {
+                    if (0 < count($cell->getChoices())) {
+                        $expected[] = $this->findCellExpectedAnswer($cell);
                     }
                 }
-            }
-          break;
-          case GridQuestion::SUM_ROW:
-            for ($i = 0; $i < $question->getRows(); ++$i) {
-                // get cells where there is at least 1 expected answers for the current row (none possible)
-                foreach ($question->getCells() as $cell) {
-                    // found a cell in this row with an expected answer
-                    if ($cell->getCoordsY() === $i && 0 < count($cell->getChoices())) {
-                        // all choices should have the same score
-                        $scoreToApply = $cell->getChoices()[0]->getScore();
-                        $expected[] = new GenericScore($scoreToApply);
-                        break;
+                break;
+            case GridQuestion::SUM_COLUMN:
+                for ($i = 0; $i < $question->getColumns(); ++$i) {
+                    // get cells where there is at least 1 expected answers for the current column (none possible)
+                    foreach ($question->getCells() as $cell) {
+                        // found a cell in this col with an expected answer
+                        if ($cell->getCoordsX() === $i && 0 < count($cell->getChoices())) {
+                            // all choices should have the same score
+                            $scoreToApply = $cell->getChoices()[0]->getScore();
+                            $expected[] = new GenericScore($scoreToApply);
+                            break;
+                        }
                     }
                 }
-            }
-          break;
+                break;
+            case GridQuestion::SUM_ROW:
+                for ($i = 0; $i < $question->getRows(); ++$i) {
+                    // get cells where there is at least 1 expected answers for the current row (none possible)
+                    foreach ($question->getCells() as $cell) {
+                        // found a cell in this row with an expected answer
+                        if ($cell->getCoordsY() === $i && 0 < count($cell->getChoices())) {
+                            // all choices should have the same score
+                            $scoreToApply = $cell->getChoices()[0]->getScore();
+                            $expected[] = new GenericScore($scoreToApply);
+                            break;
+                        }
+                    }
+                }
+                break;
         }
 
         return $expected;
@@ -406,26 +418,26 @@ class GridDefinition extends AbstractDefinition
 
         foreach ($answersData as $answerData) {
             foreach ($answerData as $cellAnswer) {
-                if (!empty($cellAnswer->text)) {
-                    $answered[$cellAnswer->cellId] = isset($answered[$cellAnswer->cellId]) ?
-                        $answered[$cellAnswer->cellId] + 1 :
+                if (!empty($cellAnswer['text'])) {
+                    $answered[$cellAnswer['cellId']] = isset($answered[$cellAnswer['cellId']]) ?
+                        $answered[$cellAnswer['cellId']] + 1 :
                         1;
 
-                    if (!isset($cells[$cellAnswer->cellId])) {
-                        $cells[$cellAnswer->cellId] = [];
+                    if (!isset($cells[$cellAnswer['cellId']])) {
+                        $cells[$cellAnswer['cellId']] = [];
                     }
 
-                    $choice = isset($cellsMap[$cellAnswer->cellId]) ?
-                      $cellsMap[$cellAnswer->cellId]->getChoice($cellAnswer->text) :
+                    $choice = isset($cellsMap[$cellAnswer['cellId']]) ?
+                      $cellsMap[$cellAnswer['cellId']]->getChoice($cellAnswer['text']) :
                       null;
 
                     if ($choice) {
-                        $cells[$cellAnswer->cellId][$choice->getText()] = isset($cells[$cellAnswer->cellId][$choice->getText()]) ?
-                            $cells[$cellAnswer->cellId][$choice->getText()] + 1 :
+                        $cells[$cellAnswer['cellId']][$choice->getText()] = isset($cells[$cellAnswer['cellId']][$choice->getText()]) ?
+                            $cells[$cellAnswer['cellId']][$choice->getText()] + 1 :
                             1;
                     } else {
-                        $cells[$cellAnswer->cellId]['_others'] = isset($cells[$cellAnswer->cellId]['_others']) ?
-                            $cells[$cellAnswer->cellId]['_others'] + 1 :
+                        $cells[$cellAnswer['cellId']]['_others'] = isset($cells[$cellAnswer['cellId']]['_others']) ?
+                            $cells[$cellAnswer['cellId']]['_others'] + 1 :
                             1;
                     }
                 }
@@ -489,9 +501,9 @@ class GridDefinition extends AbstractDefinition
 
     public function getCsvAnswers(AbstractItem $item, Answer $answer)
     {
-        $data = json_decode($answer->getData());
+        $data = json_decode($answer->getData(), true);
         $values = array_map(function ($el) {
-            return "[grid-{$el->cellId}: $el->text]";
+            return "[grid-{$el['cellId']}: {$el['text']}]";
         }, $data);
         $compressor = new ArrayCompressor();
 

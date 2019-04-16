@@ -136,6 +136,7 @@ class AttemptController extends AbstractController
         $errors = [];
 
         $data = $this->decodeRequestData($request);
+
         if (empty($data) || !is_array($data)) {
             $errors[] = [
                 'path' => '',

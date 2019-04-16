@@ -124,13 +124,13 @@ class ItemManager
     /**
      * Validates and creates a new Item from raw data.
      *
-     * @param \stdClass $data
+     * @param array $data
      *
      * @return Item
      *
      * @throws InvalidDataException
      */
-    public function create(\stdClass $data)
+    public function create(array $data)
     {
         return $this->update(new Item(), $data);
     }
@@ -138,14 +138,14 @@ class ItemManager
     /**
      * Validates and updates a Item entity with raw data.
      *
-     * @param Item      $question
-     * @param \stdClass $data
+     * @param Item  $question
+     * @param array $data
      *
      * @return Item
      *
      * @throws InvalidDataException
      */
-    public function update(Item $question, \stdClass $data)
+    public function update(Item $question, array $data)
     {
         // Validate received data
         $errors = $this->validator->validate($data, [Validation::REQUIRE_SOLUTIONS]);
@@ -169,7 +169,7 @@ class ItemManager
      * @param Item  $question
      * @param array $options
      *
-     * @return \stdClass
+     * @return array
      */
     public function serialize(Item $question, array $options = [])
     {
@@ -231,7 +231,7 @@ class ItemManager
         // Let the question correct the answer
         $definition = $this->itemDefinitions->get($question->getMimeType());
         /** @var AnswerableItemDefinitionInterface $definition */
-        $corrected = $definition->correctAnswer($question->getInteraction(), json_decode($answer->getData()));
+        $corrected = $definition->correctAnswer($question->getInteraction(), json_decode($answer->getData(), true));
         if (!$corrected instanceof CorrectedAnswer) {
             $corrected = new CorrectedAnswer();
         }
@@ -251,7 +251,7 @@ class ItemManager
             }
         }
 
-        return $this->scoreManager->calculate(json_decode($question->getScoreRule()), $corrected);
+        return $this->scoreManager->calculate(json_decode($question->getScoreRule(), true), $corrected);
     }
 
     /**
@@ -271,7 +271,7 @@ class ItemManager
                 $score = $this->calculateScore($question, $answer);
                 // get total available for the question
                 $expected = $definition->expectAnswer($question->getInteraction());
-                $total = $this->scoreManager->calculateTotal(json_decode($question->getScoreRule()), $expected, $question->getInteraction());
+                $total = $this->scoreManager->calculateTotal(json_decode($question->getScoreRule(), true), $expected, $question->getInteraction());
                 // report the score on 100
                 $score = $total > 0 ? (100 * $score) / $total : 0;
 
@@ -285,11 +285,11 @@ class ItemManager
     /**
      * Calculates the total score of a question.
      *
-     * @param \stdClass $questionData
+     * @param array $questionData
      *
      * @return float
      */
-    public function calculateTotal(\stdClass $questionData)
+    public function calculateTotal(array $questionData)
     {
         // Get entities for score calculation
         $question = $this->serializer->deserialize($questionData, new Item());
@@ -300,7 +300,7 @@ class ItemManager
         // Get the expected answer for the question
         $expected = $definition->expectAnswer($question->getInteraction());
 
-        return $this->scoreManager->calculateTotal(json_decode($question->getScoreRule()), $expected, $question->getInteraction());
+        return $this->scoreManager->calculateTotal(json_decode($question->getScoreRule(), true), $expected, $question->getInteraction());
     }
 
     /**
@@ -310,17 +310,17 @@ class ItemManager
      * @param Exercise $exercise
      * @param bool     $finishedPapersOnly
      *
-     * @return \stdClass
+     * @return array
      */
     public function getStatistics(Item $question, Exercise $exercise = null, $finishedPapersOnly = false)
     {
-        $questionStats = new \stdClass();
+        $questionStats = [];
 
         // We load all the answers for the question (we need to get the entities as the response in DB are not processable as is)
         $answers = $this->answerRepository->findByQuestion($question, $exercise, $finishedPapersOnly);
 
         // Number of Users that have seen the question
-        $questionStats->seen = count($answers);
+        $questionStats['seen'] = count($answers);
 
         // Grab answer data to pass it decoded to the question type
         // it doesn't need to know the whole Answer object
@@ -330,15 +330,17 @@ class ItemManager
         $correctedAnswers = [];
 
         // Number of Users that have answered the question (no blank answer)
-        $questionStats->answered = 0;
+        $questionStats['answered'] = 0;
+
         if (!empty($answers)) {
             // Let the handler of the question type parse and compile the data
             $definition = $this->itemDefinitions->get($question->getMimeType());
-            for ($i = 0; $i < $questionStats->seen; ++$i) {
+
+            for ($i = 0; $i < $questionStats['seen']; ++$i) {
                 $answer = $answers[$i];
                 if (!empty($answer->getData())) {
-                    ++$questionStats->answered;
-                    $answersData[] = json_decode($answer->getData());
+                    ++$questionStats['answered'];
+                    $answersData[] = json_decode($answer->getData(), true);
                 }
 
                 // for each answer get corresponding correction
@@ -350,19 +352,20 @@ class ItemManager
 
             // Let the handler of the question type parse and compile the data
             if ($definition instanceof AnswerableItemDefinitionInterface) {
-                $questionStats->solutions = $definition->getStatistics($question->getInteraction(), $answersData, $questionStats->seen);
+                $questionStats['solutions'] = $definition->getStatistics($question->getInteraction(), $answersData, $questionStats['seen']);
             }
         }
 
         // get the number of good answers among all
         $nbGoodAnswers = 0;
+
         foreach ($correctedAnswers as $corrected) {
             if ($corrected instanceof CorrectedAnswer && 0 === count($corrected->getMissing()) && 0 === count($corrected->getUnexpected())) {
                 ++$nbGoodAnswers;
             }
         }
         // compute question success percentage
-        $questionStats->successPercent = $questionStats->answered > 0 ? (100 * $nbGoodAnswers) / $questionStats->answered : 0;
+        $questionStats['successPercent'] = $questionStats['answered'] > 0 ? (100 * $nbGoodAnswers) / $questionStats['answered'] : 0;
 
         return $questionStats;
     }

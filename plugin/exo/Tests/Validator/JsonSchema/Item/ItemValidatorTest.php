@@ -76,7 +76,7 @@ class ItemValidatorTest extends JsonSchemaTestCase
         $this->assertGreaterThan(0, count($errors));
         $this->assertTrue(in_array([
             'path' => '/type',
-            'message' => 'Unknown question type "'.$questionData->type.'"',
+            'message' => 'Unknown question type "'.$questionData['type'].'"',
         ], $errors));
     }
 
@@ -135,7 +135,7 @@ class ItemValidatorTest extends JsonSchemaTestCase
     {
         $questionData = $this->loadExampleData('question/base/examples/valid/with-hints.json');
 
-        $this->hintValidator->expects($this->exactly(count($questionData->hints)))
+        $this->hintValidator->expects($this->exactly(count($questionData['hints'])))
             ->method('validateAfterSchema');
 
         $this->validator->validate($questionData);

@@ -124,7 +124,7 @@ class GraphicDefinition extends AbstractDefinition
         foreach ($question->getAreas() as $area) {
             if (is_array($answer)) {
                 foreach ($answer as $coords) {
-                    if ($this->isPointInArea($area, $coords->x, $coords->y)) {
+                    if ($this->isPointInArea($area, $coords['x'], $coords['y'])) {
                         if ($area->getScore() > 0) {
                             $corrected->addExpected($area);
                         } else {
@@ -157,11 +157,11 @@ class GraphicDefinition extends AbstractDefinition
             $areasToInc = [];
 
             foreach ($answerData as $areaAnswer) {
-                if (isset($areaAnswer->x) && isset($areaAnswer->y)) {
+                if (isset($areaAnswer['x']) && isset($areaAnswer['y'])) {
                     $isInArea = false;
 
                     foreach ($graphicQuestion->getAreas() as $area) {
-                        if ($this->isPointInArea($area, $areaAnswer->x, $areaAnswer->y)) {
+                        if ($this->isPointInArea($area, $areaAnswer['x'], $areaAnswer['y'])) {
                             $areasToInc[$area->getUuid()] = true;
                             $isInArea = true;
                         }
@@ -245,10 +245,10 @@ class GraphicDefinition extends AbstractDefinition
 
     public function getCsvAnswers(AbstractItem $item, Answer $answer)
     {
-        $data = json_decode($answer->getData());
+        $data = json_decode($answer->getData(), true);
         $answers = [];
         foreach ($data as $point) {
-            $answers[] = "[{$point->x},{$point->y}]";
+            $answers[] = "[{$point['x']},{$point['y']}]";
         }
 
         $compressor = new ArrayCompressor();

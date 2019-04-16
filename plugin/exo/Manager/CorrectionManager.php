@@ -112,7 +112,7 @@ class CorrectionManager
         foreach ($correctedAnswers as $index => $correctedAnswer) {
             /** @var Answer $answer */
             $answer = $this->om->getRepository('UJMExoBundle:Attempt\Answer')->findOneBy([
-                'uuid' => $correctedAnswer->id,
+                'uuid' => $correctedAnswer['id'],
             ]);
 
             if (empty($answer)) {
@@ -157,9 +157,9 @@ class CorrectionManager
         $question = $paper->getQuestion($answer->getQuestionId());
 
         foreach ($answer->getUsedHints() as $usedHint) {
-            foreach ($question->hints as $hint) {
-                if ($usedHint === $hint->id && 0 !== $hint->penalty) {
-                    $answer->setScore($answer->getScore() - $hint->penalty);
+            foreach ($question['hints'] as $hint) {
+                if ($usedHint === $hint['id'] && 0 !== $hint['penalty']) {
+                    $answer->setScore($answer->getScore() - $hint['penalty']);
                 }
             }
         }

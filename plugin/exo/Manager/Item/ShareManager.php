@@ -47,29 +47,29 @@ class ShareManager
     /**
      * Shares a list of question to users.
      *
-     * @param \stdClass $shareRequest - an object containing the questions and users to link
-     * @param User      $user
+     * @param array $shareRequest - an object containing the questions and users to link
+     * @param User  $user
      *
      * @throws InvalidDataException
      */
-    public function share(\stdClass $shareRequest, User $user)
+    public function share(array $shareRequest, User $user)
     {
         $errors = $this->validateShareRequest($shareRequest);
         if (count($errors) > 0) {
             throw new InvalidDataException('Share request is not valid', $errors);
         }
 
-        $adminRights = isset($shareRequest->adminRights) && $shareRequest->adminRights;
+        $adminRights = isset($shareRequest['adminRights']) && $shareRequest['adminRights'];
 
         /** @var ItemRepository $questionRepo */
         $questionRepo = $this->om->getRepository('UJMExoBundle:Item\Item');
         // Loaded questions (we load it to be sure it exist)
-        $questions = $questionRepo->findByUuids($shareRequest->questions);
+        $questions = $questionRepo->findByUuids($shareRequest['questions']);
 
         /** @var UserRepository $userRepo */
         $userRepo = $this->om->getRepository('ClarolineCoreBundle:User');
         // Loaded users (we load it to be sure it exist)
-        $users = $userRepo->findByIds($shareRequest->users);
+        $users = $userRepo->findByIds($shareRequest['users']);
 
         // Share each question with each user
         foreach ($questions as $question) {
@@ -119,29 +119,29 @@ class ShareManager
     /**
      * Validates a share request.
      *
-     * @param \stdClass $shareRequest
+     * @param array $shareRequest
      *
      * @return array
      */
-    private function validateShareRequest(\stdClass $shareRequest)
+    private function validateShareRequest(array $shareRequest)
     {
         $errors = [];
 
-        if (empty($shareRequest->questions) || !is_array($shareRequest->questions)) {
+        if (empty($shareRequest['questions']) || !is_array($shareRequest['questions'])) {
             $errors[] = [
                 'path' => '/questions',
                 'message' => 'should be a list of question ids',
             ];
         }
 
-        if (empty($shareRequest->users) || !is_array($shareRequest->users)) {
+        if (empty($shareRequest['users']) || !is_array($shareRequest['users'])) {
             $errors[] = [
                 'path' => '/users',
                 'message' => 'should be a list of user ids',
             ];
         }
 
-        if (!is_bool($shareRequest->adminRights)) {
+        if (!is_bool($shareRequest['adminRights'])) {
             $errors[] = [
                 'path' => '/adminRights',
                 'message' => 'should be boolean',

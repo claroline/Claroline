@@ -2,56 +2,55 @@
 
 namespace UJM\ExoBundle\Serializer\Item\Type;
 
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\ContentItem;
-use UJM\ExoBundle\Library\Serializer\SerializerInterface;
 
 /**
  * @DI\Service("ujm_exo.serializer.item_content")
+ * @DI\Tag("claroline.serializer")
  */
-class ContentItemSerializer implements SerializerInterface
+class ContentItemSerializer
 {
+    use SerializerTrait;
+
     /**
      * Converts a content item into a JSON-encodable structure.
      *
      * @param ContentItem $contentItem
      * @param array       $options
      *
-     * @return \stdClass
+     * @return array
      */
-    public function serialize($contentItem, array $options = [])
+    public function serialize(ContentItem $contentItem, array $options = [])
     {
-        $itemData = new \stdClass();
+        $serialized = [];
 
         if (1 === preg_match('#^text\/[^/]+$#', $contentItem->getQuestion()->getMimeType())) {
-            $itemData->data = $contentItem->getData();
+            $serialized['data'] = $contentItem->getData();
         } else {
-            $itemData->url = $contentItem->getData();
+            $serialized['url'] = $contentItem->getData();
         }
 
-        return $itemData;
+        return $serialized;
     }
 
     /**
      * Converts raw data into a content item entity.
      *
-     * @param \stdClass   $data
+     * @param array       $data
      * @param ContentItem $contentItem
      * @param array       $options
      *
      * @return ContentItem
      */
-    public function deserialize($data, $contentItem = null, array $options = [])
+    public function deserialize($data, ContentItem $contentItem = null, array $options = [])
     {
         if (empty($contentItem)) {
             $contentItem = new ContentItem();
         }
-
-        if (isset($data->data)) {
-            $contentItem->setData($data->data);
-        } elseif (isset($data->url)) {
-            $contentItem->setData($data->url);
-        }
+        $this->sipe('url', 'setData', $data, $contentItem);
+        $this->sipe('data', 'setData', $data, $contentItem);
 
         return $contentItem;
     }

@@ -102,7 +102,7 @@ class StepValidatorTest extends JsonSchemaTestCase
         $stepData = $this->loadExampleData('step/examples/valid/one-question.json');
 
         // Checks that question items are forwarded to the ItemValidator
-        $this->itemValidator->expects($this->exactly(count($stepData->items)))
+        $this->itemValidator->expects($this->exactly(count($stepData['items'])))
             ->method('validateAfterSchema');
 
         $this->validator->validate($stepData);
@@ -116,7 +116,7 @@ class StepValidatorTest extends JsonSchemaTestCase
         $stepData = $this->loadExampleData('step/examples/valid/one-content.json');
 
         // Checks that content items are forwarded to the ContentValidator
-        $this->contentValidator->expects($this->exactly(count($stepData->items)))
+        $this->contentValidator->expects($this->exactly(count($stepData['items'])))
             ->method('validateAfterSchema');
 
         $this->validator->validate($stepData);

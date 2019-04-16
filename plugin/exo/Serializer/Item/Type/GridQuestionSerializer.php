@@ -2,19 +2,22 @@
 
 namespace UJM\ExoBundle\Serializer\Item\Type;
 
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\GridQuestion;
 use UJM\ExoBundle\Entity\Misc\Cell;
 use UJM\ExoBundle\Entity\Misc\CellChoice;
 use UJM\ExoBundle\Library\Options\Transfer;
-use UJM\ExoBundle\Library\Serializer\SerializerInterface;
 use UJM\ExoBundle\Serializer\Misc\CellChoiceSerializer;
 
 /**
  * @DI\Service("ujm_exo.serializer.question_grid")
+ * @DI\Tag("claroline.serializer")
  */
-class GridQuestionSerializer implements SerializerInterface
+class GridQuestionSerializer
 {
+    use SerializerTrait;
+
     /**
      * @var CellChoiceSerializer
      */
@@ -40,22 +43,24 @@ class GridQuestionSerializer implements SerializerInterface
      * @param GridQuestion $gridQuestion
      * @param array        $options
      *
-     * @return \stdClass
+     * @return array
      */
-    public function serialize($gridQuestion, array $options = [])
+    public function serialize(GridQuestion $gridQuestion, array $options = [])
     {
-        $questionData = new \stdClass();
-        $questionData->penalty = $gridQuestion->getPenalty();
-        $questionData->rows = $gridQuestion->getRows();
-        $questionData->cols = $gridQuestion->getColumns();
-        $questionData->sumMode = $gridQuestion->getSumMode();
-        $questionData->border = $gridQuestion->getGridStyle();
-        $questionData->cells = $this->serializeCells($gridQuestion, $options);
+        $serialized = [
+            'penalty' => $gridQuestion->getPenalty(),
+            'rows' => $gridQuestion->getRows(),
+            'cols' => $gridQuestion->getColumns(),
+            'sumMode' => $gridQuestion->getSumMode(),
+            'border' => $gridQuestion->getGridStyle(),
+            'cells' => $this->serializeCells($gridQuestion, $options),
+        ];
+
         if (in_array(Transfer::INCLUDE_SOLUTIONS, $options)) {
-            $questionData->solutions = $this->serializeSolutions($gridQuestion, $options);
+            $serialized['solutions'] = $this->serializeSolutions($gridQuestion, $options);
         }
 
-        return $questionData;
+        return $serialized;
     }
 
     /**
@@ -67,23 +72,24 @@ class GridQuestionSerializer implements SerializerInterface
     private function serializeCells(GridQuestion $gridQuestion, array $options = [])
     {
         return array_map(function (Cell $cell) use ($options) {
-            $cellData = new \stdClass();
-            $cellData->id = $cell->getUuid();
+            $cellData = [
+                'id' => $cell->getUuid(),
+                'background' => $cell->getBackground(),
+                'color' => $cell->getColor(),
+                'coordinates' => $cell->getCoords(),
+                'input' => $cell->isInput(),
+            ];
             if ($cell->getData()) {
-                $cellData->data = $cell->getData();
+                $cellData['data'] = $cell->getData();
             }
-            $cellData->background = $cell->getBackground();
-            $cellData->color = $cell->getColor();
-            $cellData->coordinates = $cell->getCoords();
-            $cellData->input = $cell->isInput();
             // add a list of choice if needed
             if ($cell->isSelector()) {
                 // We want to render a list of choices
-                $cellData->choices = array_map(function (CellChoice $choice) use ($cellData) {
+                $cellData['choices'] = array_map(function (CellChoice $choice) use ($cellData) {
                     return $choice->getText();
                 }, $cell->getChoices()->toArray());
             } else {
-                $cellData->choices = [];
+                $cellData['choices'] = [];
             }
 
             return $cellData;
@@ -104,12 +110,13 @@ class GridQuestionSerializer implements SerializerInterface
             $cellChoices = $cell->getChoices()->toArray();
 
             if (!empty($cellChoices)) {
-                $solutionData = new \stdClass();
-                $solutionData->cellId = $cell->getUuid();
-                $solutionData->answers = [];
+                $solutionData = [
+                    'cellId' => $cell->getUuid(),
+                    'answers' => [],
+                ];
 
                 foreach ($cellChoices as $choice) {
-                    $solutionData->answers[] = $this->cellChoiceSerializer->serialize($choice, $options);
+                    $solutionData['answers'][] = $this->cellChoiceSerializer->serialize($choice, $options);
                 }
                 $solutions[] = $solutionData;
             }
@@ -121,45 +128,29 @@ class GridQuestionSerializer implements SerializerInterface
     /**
      * Converts raw data into a Grid question entity.
      *
-     * @param \stdClass    $data
+     * @param array        $data
      * @param GridQuestion $gridQuestion
      * @param array        $options
      *
-     * @return PairQuestion
+     * @return GridQuestion
      */
-    public function deserialize($data, $gridQuestion = null, array $options = [])
+    public function deserialize($data, GridQuestion $gridQuestion = null, array $options = [])
     {
         if (empty($gridQuestion)) {
             $gridQuestion = new GridQuestion();
         }
-
-        if (!empty($data->penalty) || 0 === $data->penalty) {
-            $gridQuestion->setPenalty($data->penalty);
+        if (!empty($data['penalty']) || 0 === $data['penalty']) {
+            $gridQuestion->setPenalty($data['penalty']);
         }
-
-        if (!empty($data->data)) {
-            $gridQuestion->setData($data->data);
-        }
-
-        $gridQuestion->setRows($data->rows);
-        $gridQuestion->setColumns($data->cols);
-
-        if (!empty($data->sumMode)) {
-            $gridQuestion->setSumMode($data->sumMode);
-        }
-
-        if ($data->border instanceof \stdClass) {
-            //during the import, we're an instance of /stdClass otherwise I'm not sure
-            //we should remove the array version IMO
-            $gridQuestion->setBorderWidth($data->border->width);
-            $gridQuestion->setBorderColor($data->border->color);
-        } else {
-            $gridQuestion->setBorderWidth($data->border['width']);
-            $gridQuestion->setBorderColor($data->border['color']);
-        }
+        $this->sipe('data', 'setData', $data, $gridQuestion);
+        $this->sipe('rows', 'setRows', $data, $gridQuestion);
+        $this->sipe('cols', 'setColumns', $data, $gridQuestion);
+        $this->sipe('sumMode', 'setSumMode', $data, $gridQuestion);
+        $this->sipe('border.width', 'setBorderWidth', $data, $gridQuestion);
+        $this->sipe('border.color', 'setBorderColor', $data, $gridQuestion);
 
         // Deserialize cells and solutions
-        $this->deserializeCells($gridQuestion, $data->cells, $data->solutions, $options);
+        $this->deserializeCells($gridQuestion, $data['cells'], $data['solutions'], $options);
 
         return $gridQuestion;
     }
@@ -182,7 +173,7 @@ class GridQuestionSerializer implements SerializerInterface
             // Searches for an existing cell entity.
             foreach ($cellEntities as $entityIndex => $entityCell) {
                 /* @var Cell $entityCell */
-                if ($entityCell->getUuid() === $cellData->id) {
+                if ($entityCell->getUuid() === $cellData['id']) {
                     $cell = $entityCell;
                     unset($cellEntities[$entityIndex]);
                     break;
@@ -190,16 +181,16 @@ class GridQuestionSerializer implements SerializerInterface
             }
 
             $cell = $cell ?: new Cell();
-            $cell->setUuid($cellData->id);
-            $cell->setCoordsX($cellData->coordinates[0]);
-            $cell->setCoordsY($cellData->coordinates[1]);
-            $cell->setColor($cellData->color);
-            $cell->setBackground($cellData->background);
+            $cell->setUuid($cellData['id']);
+            $cell->setCoordsX($cellData['coordinates'][0]);
+            $cell->setCoordsY($cellData['coordinates'][1]);
+            $cell->setColor($cellData['color']);
+            $cell->setBackground($cellData['background']);
 
-            if (!empty($cellData->data)) {
-                $cell->setData($cellData->data);
+            if (!empty($cellData['data'])) {
+                $cell->setData($cellData['data']);
             }
-            if (!empty($cellData->choices)) {
+            if (!empty($cellData['choices'])) {
                 $cell->setSelector(true);
             } else {
                 $cell->setSelector(false);
@@ -207,8 +198,8 @@ class GridQuestionSerializer implements SerializerInterface
             $hasSolution = false;
 
             foreach ($solutions as $solution) {
-                if ($solution->cellId === $cellData->id) {
-                    $this->deserializeCellChoices($cell, $solution->answers, $options);
+                if ($solution['cellId'] === $cellData['id']) {
+                    $this->deserializeCellChoices($cell, $solution['answers'], $options);
                     $hasSolution = true;
                     break;
                 }

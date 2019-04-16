@@ -16,10 +16,10 @@ class AbstractController
     protected function decodeRequestData(Request $request)
     {
         $dataRaw = $request->getContent();
-
         $data = null;
+
         if (!empty($dataRaw)) {
-            $data = json_decode($dataRaw);
+            $data = json_decode($dataRaw, true);
         }
 
         return $data;

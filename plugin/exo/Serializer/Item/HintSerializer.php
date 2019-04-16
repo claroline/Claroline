@@ -2,62 +2,62 @@
 
 namespace UJM\ExoBundle\Serializer\Item;
 
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Item\Hint;
 use UJM\ExoBundle\Library\Options\Transfer;
-use UJM\ExoBundle\Library\Serializer\SerializerInterface;
 
 /**
  * Serializer for hint data.
  *
  * @DI\Service("ujm_exo.serializer.hint")
+ * @DI\Tag("claroline.serializer")
  */
-class HintSerializer implements SerializerInterface
+class HintSerializer
 {
+    use SerializerTrait;
+
     /**
      * Converts a Hint into a JSON-encodable structure.
      *
      * @param Hint  $hint
      * @param array $options
      *
-     * @return \stdClass
+     * @return array
      */
-    public function serialize($hint, array $options = [])
+    public function serialize(Hint $hint, array $options = [])
     {
-        $hintData = new \stdClass();
-        $hintData->id = $hint->getUuid();
-        $hintData->penalty = $hint->getPenalty();
+        $serialized = [
+            'id' => $hint->getUuid(),
+            'penalty' => $hint->getPenalty(),
+        ];
 
         if (in_array(Transfer::INCLUDE_SOLUTIONS, $options)) {
-            $hintData->value = $hint->getData();
+            $serialized['value'] = $hint->getData();
         }
 
-        return $hintData;
+        return $serialized;
     }
 
     /**
      * Converts raw data into a Hint entity.
      *
-     * @param \stdClass $data
-     * @param Hint      $hint
-     * @param array     $options
+     * @param array $data
+     * @param Hint  $hint
+     * @param array $options
      *
      * @return Hint
      */
-    public function deserialize($data, $hint = null, array $options = [])
+    public function deserialize($data, Hint $hint = null, array $options = [])
     {
         $hint = $hint ?: new Hint();
-        $hint->setUuid($data->id);
+        $this->sipe('id', 'setUuid', $data, $hint);
+        $this->sipe('penalty', 'setPenalty', $data, $hint);
+        $this->sipe('value', 'setData', $data, $hint);
 
         if (in_array(Transfer::REFRESH_UUID, $options)) {
             $hint->refreshUuid();
         }
-
-        if (!empty($data->penalty) || 0 === $data->penalty) {
-            $hint->setPenalty($data->penalty);
-        }
-
-        $hint->setData($data->value);
 
         return $hint;
     }

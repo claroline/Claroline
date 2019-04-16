@@ -2,21 +2,24 @@
 
 namespace UJM\ExoBundle\Serializer;
 
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Entity\StepItem;
 use UJM\ExoBundle\Library\Options\Recurrence;
 use UJM\ExoBundle\Library\Options\Transfer;
-use UJM\ExoBundle\Library\Serializer\SerializerInterface;
 use UJM\ExoBundle\Serializer\Item\ItemSerializer;
 
 /**
  * Serializer for step data.
  *
  * @DI\Service("ujm_exo.serializer.step")
+ * @DI\Tag("claroline.serializer")
  */
-class StepSerializer implements SerializerInterface
+class StepSerializer
 {
+    use SerializerTrait;
+
     /**
      * @var ItemSerializer
      */
@@ -42,64 +45,58 @@ class StepSerializer implements SerializerInterface
      * @param Step  $step
      * @param array $options
      *
-     * @return \stdClass
+     * @return array
      */
-    public function serialize($step, array $options = [])
+    public function serialize(Step $step, array $options = [])
     {
-        $stepData = new \stdClass();
-        $stepData->id = $step->getUuid();
+        $serialized = [
+            'id' => $step->getUuid(),
+            'parameters' => $this->serializeParameters($step),
+            'picking' => $this->serializePicking($step),
+            'items' => $this->serializeItems($step, $options),
+        ];
 
         if (!empty($step->getTitle())) {
-            $stepData->title = $step->getTitle();
+            $serialized['title'] = $step->getTitle();
         }
-
         if (!empty($step->getDescription())) {
-            $stepData->description = $step->getDescription();
+            $serialized['description'] = $step->getDescription();
         }
 
-        $stepData->parameters = $this->serializeParameters($step);
-        $stepData->picking = $this->serializePicking($step);
-        $stepData->items = $this->serializeItems($step, $options);
-
-        return $stepData;
+        return $serialized;
     }
 
     /**
      * Converts raw data into a Step entity.
      *
-     * @param \stdClass $data
-     * @param Step      $step
-     * @param array     $options
+     * @param array $data
+     * @param Step  $step
+     * @param array $options
      *
      * @return Step
      */
-    public function deserialize($data, $step = null, array $options = [])
+    public function deserialize($data, Step $step = null, array $options = [])
     {
         $step = $step ?: new Step();
-        $step->setUuid($data->id);
+
+        $this->sipe('id', 'setUuid', $data, $step);
+        $this->sipe('title', 'setTitle', $data, $step);
+        $this->sipe('description', 'setDescription', $data, $step);
 
         if (in_array(Transfer::REFRESH_UUID, $options)) {
             $step->refreshUuid();
         }
 
-        if (isset($data->title)) {
-            $step->setTitle($data->title);
+        if (!empty($data['parameters'])) {
+            $this->deserializeParameters($step, $data['parameters']);
         }
 
-        if (isset($data->description)) {
-            $step->setDescription($data->description);
+        if (!empty($data['picking'])) {
+            $this->deserializePicking($step, $data['picking']);
         }
 
-        if (!empty($data->parameters)) {
-            $this->deserializeParameters($step, $data->parameters);
-        }
-
-        if (!empty($data->picking)) {
-            $this->deserializePicking($step, $data->picking);
-        }
-
-        if (!empty($data->items)) {
-            $this->deserializeItems($step, $data->items, $options);
+        if (!empty($data['items'])) {
+            $this->deserializeItems($step, $data['items'], $options);
         }
 
         return $step;
@@ -110,57 +107,46 @@ class StepSerializer implements SerializerInterface
      *
      * @param Step $step
      *
-     * @return \stdClass
+     * @return array
      */
     private function serializeParameters(Step $step)
     {
-        $parameters = new \stdClass();
-
-        // Attempt parameters
-        $parameters->duration = $step->getDuration();
-        $parameters->maxAttempts = $step->getMaxAttempts();
-
-        return $parameters;
+        return [
+            'duration' => $step->getDuration(),
+            'maxAttempts' => $step->getMaxAttempts(),
+        ];
     }
 
     /**
      * Deserializes Step parameters.
      *
-     * @param Step      $step
-     * @param \stdClass $parameters
+     * @param Step  $step
+     * @param array $parameters
      */
-    private function deserializeParameters(Step $step, \stdClass $parameters)
+    private function deserializeParameters(Step $step, array $parameters)
     {
-        if (isset($parameters->maxAttempts)) {
-            $step->setMaxAttempts($parameters->maxAttempts);
-        }
-
-        if (isset($parameters->duration)) {
-            $step->setDuration($parameters->duration);
-        }
+        $this->sipe('maxAttempts', 'setMaxAttempts', $parameters, $step);
+        $this->sipe('duration', 'setDuration', $parameters, $step);
     }
 
     private function serializePicking(Step $step)
     {
-        $picking = new \stdClass();
-
-        $picking->randomOrder = $step->getRandomOrder();
-        $picking->randomPick = $step->getRandomPick();
-        $picking->pick = $step->getPick();
-
-        return $picking;
+        return [
+            'randomOrder' => $step->getRandomOrder(),
+            'randomPick' => $step->getRandomPick(),
+            'pick' => $step->getPick(),
+        ];
     }
 
-    private function deserializePicking(Step $step, \stdClass $picking)
+    private function deserializePicking(Step $step, array $picking)
     {
-        if (isset($picking->randomOrder)) {
-            $step->setRandomOrder($picking->randomOrder);
-        }
+        $this->sipe('randomOrder', 'setRandomOrder', $picking, $step);
 
-        if (isset($picking->randomPick)) {
-            $step->setRandomPick($picking->randomPick);
-            if (Recurrence::ONCE === $picking->randomPick || Recurrence::ALWAYS === $picking->randomPick) {
-                $step->setPick($picking->pick);
+        if (isset($picking['randomPick'])) {
+            $step->setRandomPick($picking['randomPick']);
+
+            if (Recurrence::ONCE === $picking['randomPick'] || Recurrence::ALWAYS === $picking['randomPick']) {
+                $step->setPick($picking['pick']);
             } else {
                 $step->setPick(0);
             }
@@ -178,14 +164,12 @@ class StepSerializer implements SerializerInterface
      */
     public function serializeItems(Step $step, array $options = [])
     {
-        $stepQuestions = $step->getStepQuestions()->toArray();
-
         return array_values(array_map(function (StepItem $stepQuestion) use ($options) {
             $serialized = $this->itemSerializer->serialize($stepQuestion->getQuestion(), $options);
-            $serialized->meta->mandatory = $stepQuestion->isMandatory();
+            $serialized['meta']['mandatory'] = $stepQuestion->isMandatory();
 
             return $serialized;
-        }, $stepQuestions));
+        }, $step->getStepQuestions()->toArray()));
     }
 
     /**
@@ -207,7 +191,7 @@ class StepSerializer implements SerializerInterface
             // Searches for an existing item entity.
             foreach ($stepQuestions as $entityIndex => $entityStepQuestion) {
                 /** @var StepItem $entityStepQuestion */
-                if ($entityStepQuestion->getQuestion()->getUuid() === $itemData->id) {
+                if ($entityStepQuestion->getQuestion()->getUuid() === $itemData['id']) {
                     $stepQuestion = $entityStepQuestion;
                     $item = $stepQuestion->getQuestion();
                     unset($stepQuestions[$entityIndex]);
@@ -225,8 +209,8 @@ class StepSerializer implements SerializerInterface
                 $stepQuestion->setOrder($index);
             }
 
-            if (isset($itemData->meta->mandatory)) {
-                $stepQuestion->setMandatory($itemData->meta->mandatory);
+            if (isset($itemData['meta']['mandatory'])) {
+                $stepQuestion->setMandatory($itemData['meta']['mandatory']);
             }
         }
 

@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Serializer\Content;
 
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -9,15 +10,17 @@ use Claroline\CoreBundle\Entity\Resource\Text;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\RouterInterface;
-use UJM\ExoBundle\Library\Serializer\SerializerInterface;
 
 /**
  * Serializer for resource content.
  *
  * @DI\Service("ujm_exo.serializer.resource_content")
+ * @DI\Tag("claroline.serializer")
  */
-class ResourceContentSerializer implements SerializerInterface
+class ResourceContentSerializer
 {
+    use SerializerTrait;
+
     /**
      * @var ObjectManager
      */
@@ -69,41 +72,39 @@ class ResourceContentSerializer implements SerializerInterface
      * @param ResourceNode $node
      * @param array        $options
      *
-     * @return \stdClass
+     * @return array
      */
-    public function serialize($node, array $options = [])
+    public function serialize(ResourceNode $node, array $options = [])
     {
         // Load Resource from Node
         $resource = $this->resourceManager->getResourceFromNode($node);
         $resourceType = $node->getResourceType()->getName();
 
-        $resourceData = new \stdClass();
-        $resourceData->id = (string) $node->getId();
+        $serialized = ['id' => (string) $node->getId()];
 
         if ('text' === $resourceType) {
             /* @var Text $resource */
-            $resourceData->data = $resource->getContent();
-            $resourceData->type = 'text/html';
+            $serialized = array_merge($serialized, [
+                'data' => $resource->getContent(),
+                'type' => 'text/html',
+            ]);
         } else {
-            $resourceData->type = $node->getMimeType();
+            $serialized['type'] = $node->getMimeType();
 
-            if ('file' === $resourceType
-                && 1 === preg_match('#^([image|audio|video]+\/[^\/]+)$#', $resourceData->type)) {
+            if ('file' === $resourceType && 1 === preg_match('#^([image|audio|video]+\/[^\/]+)$#', $serialized['type'])) {
                 // the file is directly understandable by the browser (img, audio, video) return the file URL
-
                 /* @var File $resource */
-                $resourceData->url = $this->fileDir.DIRECTORY_SEPARATOR.$resource->getHashName();
+                $serialized['url'] = $this->fileDir.DIRECTORY_SEPARATOR.$resource->getHashName();
             } else {
                 // return the url to access the resource
-
-                $resourceData->url = $this->router->generate(
+                $serialized['url'] = $this->router->generate(
                     'claro_resource_open',
                     ['resourceType' => $resourceType, 'node' => $node->getId()]
                 );
             }
         }
 
-        return $resourceData;
+        return $serialized;
     }
 
     /**
@@ -112,16 +113,16 @@ class ResourceContentSerializer implements SerializerInterface
      * The only purpose of this serializer is to expose a common data representation of a resource,
      * it's not made to create/update them so the deserialization only returns an existing ResourceNode
      *
-     * @param \stdClass    $data
+     * @param array        $data
      * @param ResourceNode $resourceNode
      * @param array        $options
      *
      * @return mixed
      */
-    public function deserialize($data, $resourceNode = null, array $options = [])
+    public function deserialize($data, ResourceNode $resourceNode = null, array $options = [])
     {
         if (empty($resourceNode)) {
-            $id = method_exists($data, 'getId') ? $data->getId() : $data->id;
+            $id = method_exists($data, 'getId') ? $data->getId() : $data['id'];
             $resourceNode = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->find($id);
         }
 

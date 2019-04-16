@@ -2,27 +2,30 @@
 
 namespace UJM\ExoBundle\Serializer\Item\Type;
 
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\PairQuestion;
 use UJM\ExoBundle\Entity\Misc\GridItem;
 use UJM\ExoBundle\Entity\Misc\GridOdd;
 use UJM\ExoBundle\Entity\Misc\GridRow;
 use UJM\ExoBundle\Library\Options\Transfer;
-use UJM\ExoBundle\Library\Serializer\SerializerInterface;
 use UJM\ExoBundle\Serializer\Content\ContentSerializer;
 
 /**
  * @DI\Service("ujm_exo.serializer.question_pair")
+ * @DI\Tag("claroline.serializer")
  */
-class PairQuestionSerializer implements SerializerInterface
+class PairQuestionSerializer
 {
+    use SerializerTrait;
+
     /**
      * @var ContentSerializer
      */
     private $contentSerializer;
 
     /**
-     * ChoiceQuestionSerializer constructor.
+     * PairQuestionSerializer constructor.
      *
      * @param ContentSerializer $contentSerializer
      *
@@ -41,32 +44,31 @@ class PairQuestionSerializer implements SerializerInterface
      * @param PairQuestion $pairQuestion
      * @param array        $options
      *
-     * @return \stdClass
+     * @return array
      */
-    public function serialize($pairQuestion, array $options = [])
+    public function serialize(PairQuestion $pairQuestion, array $options = [])
     {
-        $questionData = new \stdClass();
-
-        $questionData->random = $pairQuestion->getShuffle();
-        $questionData->penalty = $pairQuestion->getPenalty();
-
-        // The grid only contains expected answers
-        $questionData->rows = $pairQuestion->getRows()->filter(function (GridRow $row) {
-            return 0 < $row->getScore();
-        })->count();
+        $serialized = [
+            'random' => $pairQuestion->getShuffle(),
+            'penalty' => $pairQuestion->getPenalty(),
+            'rows' => $pairQuestion->getRows()->filter(function (GridRow $row) {
+                return 0 < $row->getScore();
+            })->count(),  // The grid only contains expected answers
+        ];
 
         $items = $this->serializeItems($pairQuestion, $options);
+
         if (in_array(Transfer::SHUFFLE_ANSWERS, $options)) {
             shuffle($items); // shuffle the pool of items
         }
 
-        $questionData->items = $items;
+        $serialized['items'] = $items;
 
         if (in_array(Transfer::INCLUDE_SOLUTIONS, $options)) {
-            $questionData->solutions = $this->serializeSolutions($pairQuestion);
+            $serialized['solutions'] = $this->serializeSolutions($pairQuestion);
         }
 
-        return $questionData;
+        return $serialized;
     }
 
     private function serializeItems(PairQuestion $pairQuestion, array $options = [])
@@ -75,15 +77,15 @@ class PairQuestionSerializer implements SerializerInterface
 
         return array_values(array_map(function (GridItem $item) use ($pairQuestion, $options, &$usedCoordinates) {
             $itemData = $this->contentSerializer->serialize($item, $options);
-            $itemData->id = $item->getUuid();
+            $itemData['id'] = $item->getUuid();
 
             if ($item->getCoords()) {
                 if (in_array(Transfer::SHUFFLE_ANSWERS, $options) && $pairQuestion->getShuffle()) {
                     // Shuffle pinned items in rows
-                    $itemData->coordinates = $this->generateNewCoords($item->getCoords(), $pairQuestion->getRows()->count(), $usedCoordinates);
+                    $itemData['coordinates'] = $this->generateNewCoords($item->getCoords(), $pairQuestion->getRows()->count(), $usedCoordinates);
                 } else {
                     // Just get the coordinates defined by the creator
-                    $itemData->coordinates = $item->getCoords();
+                    $itemData['coordinates'] = $item->getCoords();
                 }
             }
 
@@ -107,28 +109,25 @@ class PairQuestionSerializer implements SerializerInterface
     /**
      * Converts raw data into a Pair question entity.
      *
-     * @param \stdClass    $data
+     * @param array        $data
      * @param PairQuestion $pairQuestion
      * @param array        $options
      *
      * @return PairQuestion
      */
-    public function deserialize($data, $pairQuestion = null, array $options = [])
+    public function deserialize($data, PairQuestion $pairQuestion = null, array $options = [])
     {
         if (empty($pairQuestion)) {
             $pairQuestion = new PairQuestion();
         }
 
-        if (!empty($data->penalty) || 0 === $data->penalty) {
-            $pairQuestion->setPenalty($data->penalty);
+        if (!empty($data['penalty']) || 0 === $data['penalty']) {
+            $pairQuestion->setPenalty($data['penalty']);
         }
+        $this->sipe('random', 'setShuffle', $data, $pairQuestion);
 
-        if (isset($data->random)) {
-            $pairQuestion->setShuffle($data->random);
-        }
-
-        $this->deserializeItems($pairQuestion, $data->items, $options);
-        $this->deserializeSolutions($pairQuestion, $data->solutions);
+        $this->deserializeItems($pairQuestion, $data['items'], $options);
+        $this->deserializeSolutions($pairQuestion, $data['solutions']);
 
         return $pairQuestion;
     }
@@ -143,7 +142,7 @@ class PairQuestionSerializer implements SerializerInterface
             // Searches for an existing choice entity.
             foreach ($itemEntities as $entityIndex => $entityItem) {
                 /** @var GridItem $entityItem */
-                if ($entityItem->getUuid() === $itemData->id) {
+                if ($entityItem->getUuid() === $itemData['id']) {
                     $item = $entityItem;
                     unset($itemEntities[$entityIndex]);
                     break;
@@ -151,11 +150,11 @@ class PairQuestionSerializer implements SerializerInterface
             }
 
             $item = $item ?: new GridItem();
-            $item->setUuid($itemData->id);
+            $item->setUuid($itemData['id']);
 
-            if (isset($itemData->coordinates)) {
-                $item->setCoordsX($itemData->coordinates[0]);
-                $item->setCoordsY($itemData->coordinates[1]);
+            if (isset($itemData['coordinates'])) {
+                $item->setCoordsX($itemData['coordinates'][0]);
+                $item->setCoordsY($itemData['coordinates'][1]);
             } else {
                 // explicitly set coordinates to NULL in case of previous values
                 $item->setCoordsX(null);
@@ -181,7 +180,7 @@ class PairQuestionSerializer implements SerializerInterface
 
         foreach ($solutions as $solution) {
             $solutionEntity = null;
-            if (1 === count($solution->itemIds)) {
+            if (1 === count($solution['itemIds'])) {
                 // This is an odd
                 $solutionEntity = $this->deserializeOddItem($pairQuestion, $solution, $oddEntities);
             } else {
@@ -190,9 +189,9 @@ class PairQuestionSerializer implements SerializerInterface
             }
 
             // Common parts between odd and row
-            $solutionEntity->setScore($solution->score);
-            if (isset($solution->feedback)) {
-                $solutionEntity->setFeedback($solution->feedback);
+            $solutionEntity->setScore($solution['score']);
+            if (isset($solution['feedback'])) {
+                $solutionEntity->setFeedback($solution['feedback']);
             }
         }
 
@@ -206,13 +205,13 @@ class PairQuestionSerializer implements SerializerInterface
         }
     }
 
-    private function deserializeRow(PairQuestion $pairQuestion, \stdClass $rowData, array &$existingRows)
+    private function deserializeRow(PairQuestion $pairQuestion, array $rowData, array &$existingRows)
     {
         $row = null;
         // Retrieve existing row to update
         foreach ($existingRows as $entityIndex => $entityRow) {
             /* @var GridRow $entityRow */
-            if ($rowData->itemIds === $entityRow->getItemIds()) {
+            if ($rowData['itemIds'] === $entityRow->getItemIds()) {
                 // This is the only way we can retrieve an existing row because
                 // it has no unique identifier in the transfer schema
                 // In any other case a new one is created
@@ -228,11 +227,11 @@ class PairQuestionSerializer implements SerializerInterface
             $row = new GridRow();
         }
 
-        if (isset($rowData->ordered)) {
-            $row->setOrdered($rowData->ordered);
+        if (isset($rowData['ordered'])) {
+            $row->setOrdered($rowData['ordered']);
         }
 
-        foreach ($rowData->itemIds as $index => $itemId) {
+        foreach ($rowData['itemIds'] as $index => $itemId) {
             if ($pairQuestion->getItem($itemId)) {
                 $row->addItem($pairQuestion->getItem($itemId), $index);
             }
@@ -243,13 +242,13 @@ class PairQuestionSerializer implements SerializerInterface
         return $row;
     }
 
-    private function deserializeOddItem(PairQuestion $pairQuestion, \stdClass $oddItemData, array &$existingOddItems)
+    private function deserializeOddItem(PairQuestion $pairQuestion, array $oddItemData, array &$existingOddItems)
     {
         $oddItem = null;
         // Retrieve an existing odd to update
         foreach ($existingOddItems as $entityIndex => $entityOdd) {
             /* @var GridOdd $entityOdd */
-            if ($entityOdd->getItem()->getUuid() === $oddItemData->itemIds[0]) {
+            if ($entityOdd->getItem()->getUuid() === $oddItemData['itemIds'][0]) {
                 $oddItem = $entityOdd;
                 unset($existingOddItems[$entityIndex]);
                 break;
@@ -261,7 +260,7 @@ class PairQuestionSerializer implements SerializerInterface
             $oddItem = new GridOdd();
         }
 
-        $oddItem->setItem($pairQuestion->getItem($oddItemData->itemIds[0]));
+        $oddItem->setItem($pairQuestion->getItem($oddItemData['itemIds'][0]));
         $pairQuestion->addOddItem($oddItem);
 
         return $oddItem;
@@ -278,28 +277,29 @@ class PairQuestionSerializer implements SerializerInterface
         return array_merge(
             // Rows
             array_map(function (GridRow $row) {
-                $solution = new \stdClass();
+                $solution = [
+                    'ordered' => $row->isOrdered(),
+                    'itemIds' => array_map(function (GridItem $item) {
+                        return $item->getUuid();
+                    }, $row->getItems()),
+                    'score' => $row->getScore(),
+                ];
 
-                $solution->ordered = $row->isOrdered();
-                $solution->itemIds = array_map(function (GridItem $item) {
-                    return $item->getUuid();
-                }, $row->getItems());
-
-                $solution->score = $row->getScore();
                 if ($row->getFeedback()) {
-                    $solution->feedback = $row->getFeedback();
+                    $solution['feedback'] = $row->getFeedback();
                 }
 
                 return $solution;
             }, $pairQuestion->getRows()->toArray()),
             // Odd items
             array_map(function (GridOdd $odd) {
-                $solution = new \stdClass();
+                $solution = [
+                    'itemIds' => [$odd->getItem()->getUuid()],
+                    'score' => $odd->getScore(),
+                ];
 
-                $solution->itemIds = [$odd->getItem()->getUuid()];
-                $solution->score = $odd->getScore();
                 if ($odd->getFeedback()) {
-                    $solution->feedback = $odd->getFeedback();
+                    $solution['feedback'] = $odd->getFeedback();
                 }
 
                 return $solution;

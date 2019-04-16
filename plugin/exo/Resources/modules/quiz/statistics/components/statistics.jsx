@@ -17,9 +17,9 @@ import {getNumbering} from '#/plugin/exo/utils/numbering'
 
 const Statistics = props =>
   <div className="quiz-statistics">
-    {props.quiz
+    {props.quiz.steps
       .filter(step => step.items && 0 < step.items.length)
-      .steps.map((step, idx) =>
+      .map((step, idx) =>
         <div key={idx} className="quiz-item item-paper">
           <h3 className="h4">
             {step.title || trans('step', {number: idx + 1}, 'quiz')}

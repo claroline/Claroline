@@ -129,6 +129,7 @@ class PairDefinition extends AbstractDefinition
                 // Search for odd items
                 foreach ($answerRow as $answerItem) {
                     $odd = $question->getOddItem($answerItem);
+
                     if (!empty($odd)) {
                         $corrected->addUnexpected($odd);
                         $hasOdd = true;
@@ -281,6 +282,7 @@ class PairDefinition extends AbstractDefinition
                 }
             } else {
                 $match = 0;
+
                 foreach ($items as $item) {
                     if ($row->getItem($item)) {
                         ++$match;
@@ -306,12 +308,13 @@ class PairDefinition extends AbstractDefinition
 
     public function getCsvAnswers(AbstractItem $item, Answer $answer)
     {
-        $data = json_decode($answer->getData());
+        $data = json_decode($answer->getData(), true);
         $items = $item->getItems();
         $answers = [];
 
         foreach ($data as $pair) {
             $answerPair = '[';
+
             foreach ($items as $el) {
                 if ($el->getUuid() === $pair[0]) {
                     $answerPair .= $el->getData();

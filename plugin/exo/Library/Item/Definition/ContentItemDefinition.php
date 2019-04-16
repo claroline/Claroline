@@ -102,7 +102,7 @@ class ContentItemDefinition implements ItemDefinitionInterface
      * @param AbstractItem $item
      * @param array        $options
      *
-     * @return \stdClass
+     * @return array
      */
     public function serializeQuestion(AbstractItem $item, array $options = [])
     {
@@ -112,13 +112,13 @@ class ContentItemDefinition implements ItemDefinitionInterface
     /**
      * Deserializes content item data.
      *
-     * @param \stdClass    $itemData
+     * @param array        $itemData
      * @param AbstractItem $item
      * @param array        $options
      *
      * @return AbstractItem
      */
-    public function deserializeQuestion(\stdClass $itemData, AbstractItem $item = null, array $options = [])
+    public function deserializeQuestion(array $itemData, AbstractItem $item = null, array $options = [])
     {
         return $this->getItemSerializer()->deserialize($itemData, $item, $options);
     }

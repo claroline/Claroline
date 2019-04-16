@@ -49,7 +49,7 @@ class HintManager
      * @param Hint  $hint
      * @param array $options
      *
-     * @return \stdClass
+     * @return array
      */
     public function serialize(Hint $hint, array $options = [])
     {
