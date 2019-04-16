@@ -15,6 +15,7 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Comment;
 use Claroline\ClacoFormBundle\Entity\Entry;
@@ -91,7 +92,8 @@ class ClacoFormController extends Controller
      *     "entrySerializer"       = @DI\Inject("claroline.serializer.clacoform.entry"),
      *     "commentSerializer"     = @DI\Inject("claroline.serializer.clacoform.comment"),
      *     "fieldSerializer"       = @DI\Inject("claroline.serializer.clacoform.field"),
-     *     "entryUserSerializer"   = @DI\Inject("claroline.serializer.clacoform.entry.user")
+     *     "entryUserSerializer"   = @DI\Inject("claroline.serializer.clacoform.entry.user"),
+     *     "om"                    = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
@@ -112,7 +114,8 @@ class ClacoFormController extends Controller
         EntrySerializer $entrySerializer,
         CommentSerializer $commentSerializer,
         FieldSerializer $fieldSerializer,
-        EntryUserSerializer $entryUserSerializer
+        EntryUserSerializer $entryUserSerializer,
+        ObjectManager $om
     ) {
         $this->apiManager = $apiManager;
         $this->archiveDir = $archiveDir;
@@ -132,6 +135,7 @@ class ClacoFormController extends Controller
         $this->commentSerializer = $commentSerializer;
         $this->fieldSerializer = $fieldSerializer;
         $this->entryUserSerializer = $entryUserSerializer;
+        $this->om = $om;
     }
 
     /**
@@ -200,11 +204,11 @@ class ClacoFormController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function entriesDeleteAction()
+    public function entriesDeleteAction(Request $request)
     {
         $entries = [];
         $serializedEntries = [];
-        $entriesParams = $this->apiManager->getParametersByUuid('ids', 'Claroline\ClacoFormBundle\Entity\Entry');
+        $entriesParams = $this->decodeIdsString($request, 'Claroline\ClacoFormBundle\Entity\Entry');
 
         foreach ($entriesParams as $entryParam) {
             if (!$entryParam->isLocked()) {
@@ -264,11 +268,11 @@ class ClacoFormController extends Controller
      *
      * @return JsonResponse
      */
-    public function entriesStatusChangeAction($status)
+    public function entriesStatusChangeAction($status, Request $request)
     {
         $entries = [];
         $serializedEntries = [];
-        $entriesParams = $this->apiManager->getParametersByUuid('ids', 'Claroline\ClacoFormBundle\Entity\Entry');
+        $entriesParams = $this->decodeIdsString($request, 'Claroline\ClacoFormBundle\Entity\Entry');
 
         foreach ($entriesParams as $entryParam) {
             if (!$entryParam->isLocked()) {
@@ -588,9 +592,9 @@ class ClacoFormController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function entriesPdfDownloadAction(User $user)
+    public function entriesPdfDownloadAction(User $user, Request $request)
     {
-        $entries = $this->apiManager->getParametersByUuid('ids', 'Claroline\ClacoFormBundle\Entity\Entry');
+        $entries = $this->decodeIdsString($request, 'Claroline\ClacoFormBundle\Entity\Entry');
         $fileName = count($entries) > 0 ? $entries[0]->getClacoForm()->getResourceNode()->getName() : 'clacoForm';
 
         foreach ($entries as $entry) {
@@ -865,9 +869,9 @@ class ClacoFormController extends Controller
      *
      * @return JsonResponse
      */
-    public function entriesLockSwitchAction($locked)
+    public function entriesLockSwitchAction($locked, Request $request)
     {
-        $entries = $this->apiManager->getParametersByUuid('ids', 'Claroline\ClacoFormBundle\Entity\Entry');
+        $entries = $this->decodeIdsString($request, 'Claroline\ClacoFormBundle\Entity\Entry');
         $clacoForms = [];
 
         foreach ($entries as $entry) {

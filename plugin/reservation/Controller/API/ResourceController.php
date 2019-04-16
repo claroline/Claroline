@@ -93,9 +93,9 @@ class ResourceController extends AbstractCrudController
      *
      * @return StreamedResponse
      */
-    public function exportResourcesAction()
+    public function exportResourcesAction(Request $request)
     {
-        $resources = $this->apiManager->getParametersByUuid('ids', 'FormaLibre\ReservationBundle\Entity\Resource');
+        $resources = $this->decodeIdsString($request, 'FormaLibre\ReservationBundle\Entity\Resource');
 
         $response = new StreamedResponse(function () use ($resources) {
             $file = fopen('php://output', 'w');

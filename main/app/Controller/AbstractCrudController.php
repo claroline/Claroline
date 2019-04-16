@@ -365,19 +365,6 @@ abstract class AbstractCrudController extends AbstractApiController
     /**
      * @param Request $request
      * @param string  $class
-     */
-    protected function decodeIdsString(Request $request, $class)
-    {
-        $ids = $request->query->get('ids');
-
-        $property = is_numeric($ids[0]) ? 'id' : 'uuid';
-
-        return $this->om->findList($class, $property, $ids);
-    }
-
-    /**
-     * @param Request $request
-     * @param string  $class
      * @param string  $property
      */
     protected function decodeQueryParam(Request $request, $class, $property)

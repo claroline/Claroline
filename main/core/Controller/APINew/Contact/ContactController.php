@@ -104,10 +104,10 @@ class ContactController extends AbstractCrudController
      *
      * @return JsonResponse
      */
-    public function contactsCreateAction(User $currentUser)
+    public function contactsCreateAction(User $currentUser, Request $request)
     {
         $serializedContacts = [];
-        $users = $this->apiManager->getParametersByUuid('ids', 'Claroline\CoreBundle\Entity\User');
+        $users = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\User');
         $contacts = $this->contactManager->createContacts($currentUser, $users);
 
         foreach ($contacts as $contact) {

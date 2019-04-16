@@ -224,7 +224,7 @@ class ClacoFormSerializer
         $newFieldsUuids = [];
         $clacoForm->emptyFields();
 
-        if (!in_array(Options::REFRESH_UUID, $options)) {
+        if (!in_array(Options::REFRESH_UUID, $options) && isset($data['fields'])) {
             foreach ($data['fields'] as $fieldData) {
                 if (isset($fieldData['id'])) {
                     $newFieldsUuids[] = $fieldData['id'];
