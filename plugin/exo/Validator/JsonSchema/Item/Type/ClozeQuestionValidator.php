@@ -52,36 +52,36 @@ class ClozeQuestionValidator extends JsonSchemaValidator
      *  - The solutions IDs are consistent with holes IDs
      *  - There is at least one solution with a positive score for each Hole.
      *
-     * @param \stdClass $question
+     * @param array $question
      *
      * @return array
      */
-    public function validateSolutions(\stdClass $question)
+    public function validateSolutions(array $question)
     {
         $errors = [];
 
         // check solution IDs are consistent with hole IDs
-        $holeIds = array_map(function (\stdClass $hole) {
-            return $hole->id;
-        }, $question->holes);
+        $holeIds = array_map(function (array $hole) {
+            return $hole['id'];
+        }, $question['holes']);
 
-        if (count($question->holes) !== count($question->solutions)) {
+        if (count($question['holes']) !== count($question['solutions'])) {
             $errors[] = [
                 'path' => '/solutions',
                 'message' => 'there must be the same number of solutions and holes',
             ];
         }
 
-        foreach ($question->solutions as $index => $solution) {
-            if (!in_array($solution->holeId, $holeIds)) {
+        foreach ($question['solutions'] as $index => $solution) {
+            if (!in_array($solution['holeId'], $holeIds)) {
                 $errors[] = [
                     'path' => "/solutions[{$index}]",
-                    'message' => "id {$solution->holeId} doesn't match any hole id",
+                    'message' => "id {$solution['holeId']} doesn't match any hole id",
                 ];
             }
 
             // Validates hole keywords
-            $errors = array_merge($errors, $this->keywordValidator->validateCollection($solution->answers, [Validation::NO_SCHEMA, Validation::VALIDATE_SCORE]));
+            $errors = array_merge($errors, $this->keywordValidator->validateCollection($solution['answers'], [Validation::NO_SCHEMA, Validation::VALIDATE_SCORE]));
         }
 
         return $errors;

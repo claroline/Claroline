@@ -51,12 +51,12 @@ class WordsQuestionValidator extends JsonSchemaValidator
      * Validates the solution of the question.
      * Sends the keywords collection to the keyword validator.
      *
-     * @param \stdClass $question
+     * @param array $question
      *
      * @return array
      */
-    protected function validateSolutions(\stdClass $question)
+    protected function validateSolutions(array $question)
     {
-        return $this->keywordValidator->validateCollection($question->solutions, [Validation::NO_SCHEMA, Validation::VALIDATE_SCORE]);
+        return $this->keywordValidator->validateCollection($question['solutions'], [Validation::NO_SCHEMA, Validation::VALIDATE_SCORE]);
     }
 }

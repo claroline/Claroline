@@ -31,18 +31,18 @@ class GraphicQuestionValidator extends JsonSchemaValidator
      * Checks :
      *  - There is at least one solution with a positive score.
      *
-     * @param \stdClass $question
+     * @param array $question
      *
      * @return array
      */
-    protected function validateSolutions(\stdClass $question)
+    protected function validateSolutions(array $question)
     {
         $errors = [];
 
         $maxScore = -1;
-        foreach ($question->solutions as $solution) {
-            if ($solution->score > $maxScore) {
-                $maxScore = $solution->score;
+        foreach ($question['solutions'] as $solution) {
+            if ($solution['score'] > $maxScore) {
+                $maxScore = $solution['score'];
             }
         }
 

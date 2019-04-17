@@ -51,14 +51,14 @@ class StepValidator extends JsonSchemaValidator
     {
         $errors = [];
 
-        if (isset($step->parameters)) {
-            $errors = array_merge($errors, $this->validateParameters($step->parameters));
+        if (isset($step['parameters'])) {
+            $errors = array_merge($errors, $this->validateParameters($step['parameters']));
         }
 
-        if (isset($step->picking)) {
-            $errors = array_merge($errors, $this->validatePicking($step->picking));
-            if (isset($step->picking->pick) && isset($step->items)
-                && count($step->items) < $step->picking->pick) {
+        if (isset($step['picking'])) {
+            $errors = array_merge($errors, $this->validatePicking($step['picking']));
+            if (isset($step['picking']['pick']) && isset($step['items'])
+                && count($step['items']) < $step['picking']['pick']) {
                 $errors[] = [
                     'path' => '/picking/pick',
                     'message' => 'the property `pick` cannot be greater than the number of items of the step',
@@ -66,10 +66,10 @@ class StepValidator extends JsonSchemaValidator
             }
         }
 
-        if (isset($step->items)) {
+        if (isset($step['items'])) {
             // Apply custom validation to step items
-            array_map(function (\stdClass $item) use (&$errors, $options) {
-                if (1 === preg_match('#^application\/x\.[^/]+\+json$#', $item->type)) {
+            array_map(function (array $item) use (&$errors, $options) {
+                if (1 === preg_match('#^application\/x\.[^/]+\+json$#', $item['type'])) {
                     // Item is a Question
                     $itemErrors = $this->itemValidator->validateAfterSchema($item, $options);
                 } else {
@@ -80,22 +80,22 @@ class StepValidator extends JsonSchemaValidator
                 if (!empty($itemErrors)) {
                     $errors = array_merge($errors, $itemErrors);
                 }
-            }, $step->items);
+            }, $step['items']);
         }
 
         return $errors;
     }
 
-    private function validateParameters(\stdClass $parameters)
+    private function validateParameters(array $parameters)
     {
         return [];
     }
 
-    private function validatePicking(\stdClass $picking)
+    private function validatePicking(array $picking)
     {
         $errors = [];
 
-        if (isset($picking->randomPick) && Recurrence::NEVER !== $picking->randomPick && !isset($picking->pick)) {
+        if (isset($picking['randomPick']) && Recurrence::NEVER !== $picking['randomPick'] && !isset($picking['pick'])) {
             // Random pick is enabled but the number of steps to pick is missing
             $errors[] = [
                 'path' => '/picking/randomPick',
@@ -104,8 +104,8 @@ class StepValidator extends JsonSchemaValidator
         }
 
         // We can not keep the randomOrder from previous papers as we generate a new subset of items for each attempt
-        if (isset($picking->randomPick) && Recurrence::ALWAYS === $picking->randomPick
-            && isset($picking->randomOrder) && Recurrence::ONCE === $picking->randomOrder) {
+        if (isset($picking['randomPick']) && Recurrence::ALWAYS === $picking['randomPick']
+            && isset($picking['randomOrder']) && Recurrence::ONCE === $picking['randomOrder']) {
             // Incompatible randomOrder and randomPick properties
             $errors[] = [
                 'path' => '/picking/randomOrder',

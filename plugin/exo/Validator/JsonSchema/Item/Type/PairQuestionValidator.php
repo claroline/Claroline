@@ -19,8 +19,8 @@ class PairQuestionValidator extends JsonSchemaValidator
     /**
      * Performs additional validations.
      *
-     * @param \stdClass $question
-     * @param array     $options
+     * @param array $question
+     * @param array $options
      *
      * @return array
      */
@@ -38,21 +38,21 @@ class PairQuestionValidator extends JsonSchemaValidator
     /**
      * Validates the solution of the question.
      *
-     * @param \stdClass $question
+     * @param array $question
      *
      * @return array
      */
-    protected function validateSolutions(\stdClass $question)
+    protected function validateSolutions(array $question)
     {
         $errors = [];
 
         $itemIds = [];
         // there is not 2 items at the same coords
         $usedCoords = [];
-        foreach ($question->items as $index => $item) {
-            $itemIds[] = $item->id;
-            if (!empty($item->coordinates)) {
-                if (in_array($item->coordinates, $usedCoords)) {
+        foreach ($question['items'] as $index => $item) {
+            $itemIds[] = $item['id'];
+            if (!empty($item['coordinates'])) {
+                if (in_array($item['coordinates'], $usedCoords)) {
                     $errors[] = [
                         'path' => "/items[{$index}]",
                         'message' => 'two items cannot be pinned at the same coordinates.',
@@ -61,7 +61,7 @@ class PairQuestionValidator extends JsonSchemaValidator
                 }
 
                 // max Y coordinate < rows
-                if ($question->rows <= $item->coordinates[1]) {
+                if ($question['rows'] <= $item['coordinates'][1]) {
                     $errors[] = [
                         'path' => "/items[{$index}]",
                         'message' => 'pinned items must be in the grid.',
@@ -69,13 +69,13 @@ class PairQuestionValidator extends JsonSchemaValidator
                     break;
                 }
 
-                $usedCoords[] = $item->coordinates;
+                $usedCoords[] = $item['coordinates'];
             }
         }
 
         if (empty($errors)) {
             // no shuffle if no item pinned
-            if (empty($usedCoords) && $question->random) {
+            if (empty($usedCoords) && $question['random']) {
                 $errors[] = [
                     'path' => '/random',
                     'message' => 'you must pin at least one item to use random.',
@@ -83,8 +83,8 @@ class PairQuestionValidator extends JsonSchemaValidator
             }
 
             // solutions references
-            foreach ($question->solutions as $indexSolution => $solution) {
-                foreach ($solution->itemIds as $index => $item) {
+            foreach ($question['solutions'] as $indexSolution => $solution) {
+                foreach ($solution['itemIds'] as $index => $item) {
                     if (!in_array($item, $itemIds)) {
                         $errors[] = [
                             'path' => "solutions[{$indexSolution}]/itemIds[{$index}]",

@@ -28,7 +28,7 @@ class HintValidator extends JsonSchemaValidator
     {
         $errors = [];
 
-        if (in_array(Validation::REQUIRE_SOLUTIONS, $options) && empty($hint->value)) {
+        if (in_array(Validation::REQUIRE_SOLUTIONS, $options) && empty($hint['value'])) {
             $errors[] = [
                 'path' => '/value',
                 'message' => 'Hint requires a "value" property',

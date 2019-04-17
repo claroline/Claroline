@@ -86,12 +86,12 @@ class ContentItemDefinition implements ItemDefinitionInterface
     /**
      * Validates a content item.
      *
-     * @param \stdClass $item
-     * @param array     $options
+     * @param array $item
+     * @param array $options
      *
      * @return array
      */
-    public function validateQuestion(\stdClass $item, array $options = [])
+    public function validateQuestion(array $item, array $options = [])
     {
         return $this->getItemValidator()->validate($item, $options);
     }

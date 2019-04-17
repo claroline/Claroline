@@ -39,11 +39,11 @@ class GridAnswerValidator extends JsonSchemaValidator
         }, $question->getCells()->toArray());
 
         foreach ($answerData as $answer) {
-            if (empty($answer->cellId)) {
+            if (empty($answer['cellId'])) {
                 return ['Answer `cellId` cannot be empty'];
             }
 
-            if (!in_array($answer->cellId, $cellIds)) {
+            if (!in_array($answer['cellId'], $cellIds)) {
                 return ['Answer array identifiers must reference question cells'];
             }
         }

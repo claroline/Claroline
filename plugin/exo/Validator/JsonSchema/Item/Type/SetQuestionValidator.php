@@ -19,8 +19,8 @@ class SetQuestionValidator extends JsonSchemaValidator
     /**
      * Performs additional validations.
      *
-     * @param \stdClass $question
-     * @param array     $options
+     * @param array $question
+     * @param array $options
      *
      * @return array
      */
@@ -44,44 +44,44 @@ class SetQuestionValidator extends JsonSchemaValidator
      *  - An odd `itemId` must match the `items` IDS.
      *  - There is at least one solution with a positive score.
      *
-     * @param \stdClass $question
+     * @param array $question
      *
      * @return array
      */
-    protected function validateSolutions(\stdClass $question)
+    protected function validateSolutions(array $question)
     {
         $errors = [];
 
         // check solution IDs are consistent with set IDs
-        $setIds = array_map(function (\stdClass $set) {
-            return $set->id;
-        }, $question->sets);
+        $setIds = array_map(function (array $set) {
+            return $set['id'];
+        }, $question['sets']);
 
         // check solution IDs are consistent with member IDs
-        $itemIds = array_map(function (\stdClass $item) {
-            return $item->id;
-        }, $question->items);
+        $itemIds = array_map(function (array $item) {
+            return $item['id'];
+        }, $question['items']);
 
         // Validate associations
-        if (!empty($question->solutions->associations)) {
+        if (!empty($question['solutions']['associations'])) {
             $maxScore = -1;
-            foreach ($question->solutions->associations as $index => $association) {
-                if (!in_array($association->setId, $setIds)) {
+            foreach ($question['solutions']['associations'] as $index => $association) {
+                if (!in_array($association['setId'], $setIds)) {
                     $errors[] = [
                         'path' => "/solutions/associations[{$index}]",
-                        'message' => "id {$association->setId} doesn't match any set id",
+                        'message' => "id {$association['setId']} doesn't match any set id",
                     ];
                 }
 
-                if (!in_array($association->itemId, $itemIds)) {
+                if (!in_array($association['itemId'], $itemIds)) {
                     $errors[] = [
                         'path' => "/solutions/associations[{$index}]",
-                        'message' => "id {$association->itemId} doesn't match any item id",
+                        'message' => "id {$association['itemId']} doesn't match any item id",
                     ];
                 }
 
-                if ($association->score > $maxScore) {
-                    $maxScore = $association->score;
+                if ($association['score'] > $maxScore) {
+                    $maxScore = $association['score'];
                 }
             }
 
@@ -95,12 +95,12 @@ class SetQuestionValidator extends JsonSchemaValidator
         }
 
         // Validate odd
-        if (!empty($question->solutions->odd)) {
-            foreach ($question->solutions->odd as $index => $odd) {
-                if (!in_array($odd->itemId, $itemIds)) {
+        if (!empty($question['solutions']['odd'])) {
+            foreach ($question['solutions']['odd'] as $index => $odd) {
+                if (!in_array($odd['itemId'], $itemIds)) {
                     $errors[] = [
                         'path' => "/solutions/odd[{$index}]",
-                        'message' => "id {$odd->itemId} doesn't match any item id",
+                        'message' => "id {$odd['itemId']} doesn't match any item id",
                     ];
                 }
             }

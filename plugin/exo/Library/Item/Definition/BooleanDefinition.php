@@ -82,7 +82,7 @@ class BooleanDefinition extends AbstractDefinition
     /**
      * Gets the boolean question validator.
      *
-     * @return ChoiceQuestionValidator
+     * @return BooleanQuestionValidator
      */
     protected function getQuestionValidator()
     {
@@ -102,7 +102,7 @@ class BooleanDefinition extends AbstractDefinition
     /**
      * Gets question serializer.
      *
-     * @return ChoiceQuestionSerializer
+     * @return BooleanQuestionSerializer
      */
     protected function getQuestionSerializer()
     {

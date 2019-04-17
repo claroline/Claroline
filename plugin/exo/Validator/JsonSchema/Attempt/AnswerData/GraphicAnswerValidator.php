@@ -36,13 +36,13 @@ class GraphicAnswerValidator extends JsonSchemaValidator
         $errors = [];
 
         foreach ($answerData as $index => $coords) {
-            if ($coords->x > $image->getWidth()) {
+            if ($coords['x'] > $image->getWidth()) {
                 $errors[] = [
                     'path' => "/[{$index}].x",
                     'message' => 'Position exceeds image width',
                 ];
             }
-            if ($coords->y > $image->getHeight()) {
+            if ($coords['y'] > $image->getHeight()) {
                 $errors[] = [
                     'path' => "/[{$index}].y",
                     'message' => 'Position exceeds image height',

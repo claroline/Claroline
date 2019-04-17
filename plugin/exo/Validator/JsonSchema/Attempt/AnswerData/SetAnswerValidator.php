@@ -46,14 +46,14 @@ class SetAnswerValidator extends JsonSchemaValidator
         }, $question->getLabels()->toArray());
 
         foreach ($answerData as $answer) {
-            if (!in_array($answer->itemId, $proposalIds)) {
+            if (!in_array($answer['itemId'], $proposalIds)) {
                 $errors[] = [
                     'path' => '/itemId',
                     'message' => 'Answer `itemId` must reference an item from `items`',
                 ];
             }
 
-            if (!in_array($answer->setId, $labelIds)) {
+            if (!in_array($answer['setId'], $labelIds)) {
                 $errors[] = [
                     'path' => '/setId',
                     'message' => 'Answer `setId` must reference an item from `sets`',

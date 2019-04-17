@@ -31,12 +31,12 @@ interface ItemDefinitionInterface
     /**
      * Validates question data.
      *
-     * @param \stdClass $question
-     * @param array     $options
+     * @param array $question
+     * @param array $options
      *
      * @return array
      */
-    public function validateQuestion(\stdClass $question, array $options = []);
+    public function validateQuestion(array $question, array $options = []);
 
     /**
      * Serializes question entity.

@@ -19,7 +19,7 @@ class ChoiceQuestionValidator extends JsonSchemaValidator
     /**
      * Performs additional validations.
      *
-     * @param mixed $question
+     * @param array $question
      * @param array $options
      *
      * @return array
@@ -42,30 +42,30 @@ class ChoiceQuestionValidator extends JsonSchemaValidator
      *  - The solutions IDs are consistent with choices IDs
      *  - There is at least one solution with a positive score.
      *
-     * @param \stdClass $question
+     * @param array $question
      *
      * @return array
      */
-    protected function validateSolutions(\stdClass $question)
+    protected function validateSolutions(array $question)
     {
         $errors = [];
 
         // check solution IDs are consistent with choice IDs
-        $choiceIds = array_map(function (\stdClass $choice) {
-            return $choice->id;
-        }, $question->choices);
+        $choiceIds = array_map(function (array $choice) {
+            return $choice['id'];
+        }, $question['choices']);
 
         $maxScore = -1;
-        foreach ($question->solutions as $index => $solution) {
-            if (!in_array($solution->id, $choiceIds)) {
+        foreach ($question['solutions'] as $index => $solution) {
+            if (!in_array($solution['id'], $choiceIds)) {
                 $errors[] = [
                     'path' => "/solutions[{$index}]",
-                    'message' => "id {$solution->id} doesn't match any choice id",
+                    'message' => "id {$solution['id']} doesn't match any choice id",
                 ];
             }
 
-            if ($solution->score > $maxScore) {
-                $maxScore = $solution->score;
+            if ($solution['score'] > $maxScore) {
+                $maxScore = $solution['score'];
             }
         }
 

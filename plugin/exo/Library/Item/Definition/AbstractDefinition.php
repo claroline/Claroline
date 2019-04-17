@@ -5,7 +5,6 @@ namespace UJM\ExoBundle\Library\Item\Definition;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Library\Options\Validation;
-use UJM\ExoBundle\Library\Serializer\SerializerInterface;
 use UJM\ExoBundle\Library\Validator\ValidatorInterface;
 
 /**
@@ -30,20 +29,18 @@ abstract class AbstractDefinition implements ItemDefinitionInterface, Exportable
 
     /**
      * Gets the question Serializer instance.
-     *
-     * @return SerializerInterface
      */
     abstract protected function getQuestionSerializer();
 
     /**
      * Validates a choice question.
      *
-     * @param \stdClass $question
-     * @param array     $options
+     * @param array $question
+     * @param array $options
      *
      * @return array
      */
-    public function validateQuestion(\stdClass $question, array $options = [])
+    public function validateQuestion(array $question, array $options = [])
     {
         return $this->getQuestionValidator()->validate($question, $options);
     }

@@ -82,7 +82,7 @@ class ScoreManager
                         if ($isRuleValid) {
                             $used[$rule['source']] = true;
 
-                            switch ($rule->target) {
+                            switch ($rule['target']) {
                                 case 'global':
                                     $score += $rule['points'];
                                     break;

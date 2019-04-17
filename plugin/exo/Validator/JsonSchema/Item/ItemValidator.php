@@ -59,8 +59,8 @@ class ItemValidator extends JsonSchemaValidator
     /**
      * Delegates the validation to the correct question type handler.
      *
-     * @param \stdClass $question
-     * @param array     $options
+     * @param array $question
+     * @param array $options
      *
      * @return array
      */
@@ -68,7 +68,7 @@ class ItemValidator extends JsonSchemaValidator
     {
         $errors = [];
 
-        if (empty($question->content)) {
+        if (empty($question['content'])) {
             // No blank content
             $errors[] = [
                 'path' => '/content',
@@ -76,7 +76,7 @@ class ItemValidator extends JsonSchemaValidator
             ];
         }
 
-        if (!isset($question->score)) {
+        if (!isset($question['score'])) {
             // No question with no score
             // this is not in the schema because this will become optional when exercise without scores will be implemented
             $errors[] = [
@@ -85,7 +85,7 @@ class ItemValidator extends JsonSchemaValidator
             ];
         }
 
-        if (in_array(Validation::REQUIRE_SOLUTIONS, $options) && !isset($question->solutions)) {
+        if (in_array(Validation::REQUIRE_SOLUTIONS, $options) && !isset($question['solutions'])) {
             // No question without solutions
             $errors[] = [
                 'path' => '/solutions',
@@ -93,31 +93,31 @@ class ItemValidator extends JsonSchemaValidator
             ];
         }
 
-        if (!$this->itemDefinitions->has($question->type)) {
+        if (!$this->itemDefinitions->has($question['type'])) {
             $errors[] = [
                 'path' => '/type',
-                'message' => 'Unknown question type "'.$question->type.'"',
+                'message' => 'Unknown question type "'.$question['type'].'"',
             ];
         }
 
         // Validate hints
-        if (isset($question->hints)) {
+        if (isset($question['hints'])) {
             array_map(function ($hint) use (&$errors, $options) {
                 $errors = array_merge($errors, $this->hintValidator->validateAfterSchema($hint, $options));
-            }, $question->hints);
+            }, $question['hints']);
         }
 
         // Validate objects
-        if (isset($question->objects)) {
+        if (isset($question['objects'])) {
             array_map(function ($object) use (&$errors, $options) {
                 $errors = array_merge($errors, $this->contentValidator->validateAfterSchema($object, $options));
-            }, $question->objects);
+            }, $question['objects']);
         }
 
         // Validates specific data of the question type
         if (empty($errors)) {
             // Forward to the correct definition
-            $definition = $this->itemDefinitions->get($question->type);
+            $definition = $this->itemDefinitions->get($question['type']);
 
             $errors = array_merge(
                 $errors,

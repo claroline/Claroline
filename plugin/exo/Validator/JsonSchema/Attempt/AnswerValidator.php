@@ -72,12 +72,12 @@ class AnswerValidator extends JsonSchemaValidator
                 'path' => '/questionId',
                 'message' => 'question does not exist',
             ];
-        } elseif (!empty($answer->data) && $this->itemDefinitions->isQuestionType($options[Validation::QUESTION]->getQuestion()->getMimeType())) {
+        } elseif (!empty($answer['data']) && $this->itemDefinitions->isQuestionType($options[Validation::QUESTION]->getQuestion()->getMimeType())) {
             // Forward to item type validator
             $definition = $this->itemDefinitions->get($options[Validation::QUESTION]->getQuestion()->getMimeType());
             $errors = array_merge(
                 $errors,
-                $definition->validateAnswer($answer->data, $options[Validation::QUESTION], array_merge($options, [Validation::NO_SCHEMA]))
+                $definition->validateAnswer($answer['data'], $options[Validation::QUESTION], array_merge($options, [Validation::NO_SCHEMA]))
             );
         }
 

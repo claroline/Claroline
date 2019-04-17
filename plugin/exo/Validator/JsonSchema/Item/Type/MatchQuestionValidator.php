@@ -31,41 +31,41 @@ class MatchQuestionValidator extends JsonSchemaValidator
      * Checks :
      *  - The solutions IDs are consistent with proposals and labels IDs.
      *
-     * @param \stdClass $question
+     * @param array $question
      *
      * @return array
      */
-    public function validateSolutions(\stdClass $question)
+    public function validateSolutions(array $question)
     {
         $errors = [];
 
         // check solution IDs are consistent with proposals IDs
-        $proposalIds = array_map(function (\stdClass $proposal) {
-            return $proposal->id;
-        }, $question->firstSet);
+        $proposalIds = array_map(function (array $proposal) {
+            return $proposal['id'];
+        }, $question['firstSet']);
 
-        $labelIds = array_map(function (\stdClass $label) {
-            return $label->id;
-        }, $question->secondSet);
+        $labelIds = array_map(function (array $label) {
+            return $label['id'];
+        }, $question['secondSet']);
 
         $maxScore = -1;
-        foreach ($question->solutions as $index => $solution) {
-            if (!in_array($solution->firstId, $proposalIds)) {
+        foreach ($question['solutions'] as $index => $solution) {
+            if (!in_array($solution['firstId'], $proposalIds)) {
                 $errors[] = [
                     'path' => "/solutions[{$index}]",
-                    'message' => "id {$solution->firstId} doesn't match any proposal id",
+                    'message' => "id {$solution['firstId']} doesn't match any proposal id",
                 ];
             }
 
-            if (!in_array($solution->secondId, $labelIds)) {
+            if (!in_array($solution['secondId'], $labelIds)) {
                 $errors[] = [
                     'path' => "/solutions[{$index}]",
-                    'message' => "id {$solution->secondId} doesn't match any label id",
+                    'message' => "id {$solution['secondId']} doesn't match any label id",
                 ];
             }
 
-            if ($solution->score > $maxScore) {
-                $maxScore = $solution->score;
+            if ($solution['score'] > $maxScore) {
+                $maxScore = $solution['score'];
             }
         }
 

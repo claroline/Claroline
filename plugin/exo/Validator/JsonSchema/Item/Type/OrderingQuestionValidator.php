@@ -19,7 +19,7 @@ class OrderingQuestionValidator extends JsonSchemaValidator
     /**
      * Performs additional validations.
      *
-     * @param mixed $question
+     * @param array $question
      * @param array $options
      *
      * @return array
@@ -42,30 +42,30 @@ class OrderingQuestionValidator extends JsonSchemaValidator
      *  - The solutions IDs are consistent with item IDs
      *  - There is at least one solution with a positive score.
      *
-     * @param \stdClass $question
+     * @param array $question
      *
      * @return array
      */
-    protected function validateSolutions(\stdClass $question)
+    protected function validateSolutions(array $question)
     {
         $errors = [];
 
         // check solution IDs are consistent with choice IDs
-        $itemIds = array_map(function (\stdClass $item) {
-            return $item->id;
-        }, $question->items);
+        $itemIds = array_map(function (array $item) {
+            return $item['id'];
+        }, $question['items']);
 
         $maxScore = -1;
-        foreach ($question->solutions as $index => $solution) {
-            if (!in_array($solution->itemId, $itemIds)) {
+        foreach ($question['solutions'] as $index => $solution) {
+            if (!in_array($solution['itemId'], $itemIds)) {
                 $errors[] = [
                     'path' => "/solutions[{$index}]",
-                    'message' => "id {$solution->id} doesn't match any item id",
+                    'message' => "id {$solution['itemId']} doesn't match any item id",
                 ];
             }
 
-            if ($solution->score > $maxScore) {
-                $maxScore = $solution->score;
+            if ($solution['score'] > $maxScore) {
+                $maxScore = $solution['score'];
             }
         }
 

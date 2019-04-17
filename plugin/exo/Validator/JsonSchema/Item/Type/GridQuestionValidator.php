@@ -39,8 +39,8 @@ class GridQuestionValidator extends JsonSchemaValidator
     /**
      * Performs additional validations.
      *
-     * @param \stdClass $question
-     * @param array     $options
+     * @param array $question
+     * @param array $options
      *
      * @return array
      */
@@ -58,30 +58,30 @@ class GridQuestionValidator extends JsonSchemaValidator
     /**
      * Validates the solution of the question.
      *
-     * @param \stdClass $question
+     * @param array $question
      *
      * @return array
      */
-    protected function validateSolutions(\stdClass $question)
+    protected function validateSolutions(array $question)
     {
         $errors = [];
 
         // check solution IDs are consistent with cells IDs
-        $cellIds = array_map(function (\stdClass $cell) {
-            return $cell->id;
-        }, $question->cells);
+        $cellIds = array_map(function (array $cell) {
+            return $cell['id'];
+        }, $question['cells']);
 
-        foreach ($question->solutions as $index => $solution) {
+        foreach ($question['solutions'] as $index => $solution) {
             if (!in_array($solution->cellId, $cellIds)) {
                 $errors[] = [
                     'path' => "/solutions[{$index}]",
-                    'message' => "id {$solution->cellId} doesn't match any cell id",
+                    'message' => "id {$solution['cellId']} doesn't match any cell id",
                 ];
             }
             // Validates cell choices
             $errors = array_merge(
               $errors,
-              $this->keywordValidator->validateCollection($solution->answers, [Validation::NO_SCHEMA, Validation::VALIDATE_SCORE])
+              $this->keywordValidator->validateCollection($solution['answers'], [Validation::NO_SCHEMA, Validation::VALIDATE_SCORE])
             );
         }
 

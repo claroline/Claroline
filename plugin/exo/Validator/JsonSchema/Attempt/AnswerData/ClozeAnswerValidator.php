@@ -40,11 +40,11 @@ class ClozeAnswerValidator extends JsonSchemaValidator
         }, $question->getHoles()->toArray());
 
         foreach ($answerData as $answer) {
-            if (empty($answer->holeId)) {
+            if (empty($answer['holeId'])) {
                 return ['Answer `holeId` cannot be empty'];
             }
 
-            if (!in_array($answer->holeId, $holeIds)) {
+            if (!in_array($answer['holeId'], $holeIds)) {
                 return ['Answer array identifiers must reference question holes'];
             }
         }

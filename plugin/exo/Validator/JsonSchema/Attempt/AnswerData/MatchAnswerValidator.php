@@ -46,14 +46,14 @@ class MatchAnswerValidator extends JsonSchemaValidator
         }, $question->getLabels()->toArray());
 
         foreach ($answerData as $answer) {
-            if (!in_array($answer->firstId, $proposalIds)) {
+            if (!in_array($answer['firstId'], $proposalIds)) {
                 $errors[] = [
                     'path' => '/firstId',
                     'message' => 'Answer `firstId` must reference an item from `firstSet`',
                 ];
             }
 
-            if (!in_array($answer->secondId, $labelIds)) {
+            if (!in_array($answer['secondId'], $labelIds)) {
                 $errors[] = [
                     'path' => '/secondId',
                     'message' => 'Answer `firstId` must reference an item from `secondSet`',
