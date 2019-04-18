@@ -11,6 +11,7 @@ export default {
   name: 'audio',
   tags: [trans('content')],
   answerable: false,
+  fileUpload: true,
 
   components: {
     editor: AudioEditor

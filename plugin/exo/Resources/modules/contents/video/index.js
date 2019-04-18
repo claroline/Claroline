@@ -11,6 +11,7 @@ export default {
   name: 'video',
   tags: [trans('content')],
   answerable: false,
+  fileUpload: true,
 
   components: {
     editor: VideoEditor

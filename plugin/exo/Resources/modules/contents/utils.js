@@ -1,14 +1,14 @@
 import invariant from 'invariant'
 
-import textContent from './text'
-import imageContent from './image'
-import audioContent from './audio'
-import videoContent from './video'
+import textContent from '#/plugin/exo/contents/text'
+import imageContent from '#/plugin/exo/contents/image'
+import audioContent from '#/plugin/exo/contents/audio'
+import videoContent from '#/plugin/exo/contents/video'
 
 let registeredContentTypes = {}
 let defaultRegistered = false
 
-export function registerContentItemType(definition) {
+function registerContentItemType(definition) {
   assertValidItemType(definition)
 
   if (registeredContentTypes[definition.type]) {
@@ -22,28 +22,31 @@ export function registerContentItemType(definition) {
   registeredContentTypes[definition.type] = definition
 }
 
-export function registerDefaultContentItemTypes() {
+function registerDefaultContentItemTypes() {
   if (!defaultRegistered) {
     [textContent, imageContent, audioContent, videoContent].forEach(registerContentItemType)
     defaultRegistered = true
   }
 }
 
-export function listContentTypes() {
+function listContentTypes() {
   return Object.keys(registeredContentTypes)
 }
 
-export function getContentDefinition(type) {
+function getContentDefinition(type) {
   const pattern = /^([^/]+)(\/[^/]+)?$/
   const matches = type.match(pattern)
 
   if (matches && matches[1]) {
-    return registeredContentTypes[matches[1]]
+    return Object.values(registeredContentTypes).find(registeredType => registeredType.name === matches[1])
   } else {
     throw new Error(`Unknown content type ${type}`)
   }
 }
 
+function isEditableType(type) {
+  return 'text/html' === type
+}
 
 function assertValidItemType(definition) {
   invariant(
@@ -64,4 +67,12 @@ function makeError(message, definition) {
   const name = definition.name ? definition.name.toString() : '[unnamed]'
 
   return `${message} in '${name}' definition`
+}
+
+export {
+  registerContentItemType,
+  registerDefaultContentItemTypes,
+  listContentTypes,
+  getContentDefinition,
+  isEditableType
 }

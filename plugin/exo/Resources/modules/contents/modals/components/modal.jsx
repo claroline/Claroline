@@ -1,14 +1,11 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
-
 import Modal from 'react-bootstrap/lib/Modal'
 
-import {getContentDefinition} from './../content-types'
+import {getContentDefinition} from '#/plugin/exo/contents/utils'
 
-export const MODAL_CONTENT = 'MODAL_CONTENT'
-
-export class ContentModal  extends Component {
+class ContentModal extends Component {
   render() {
     return (
       <Modal
@@ -50,4 +47,8 @@ ContentModal.propTypes = {
   hideModal: T.func.isRequired,
   data: T.string,
   type: T.string.isRequired
+}
+
+export {
+  ContentModal
 }

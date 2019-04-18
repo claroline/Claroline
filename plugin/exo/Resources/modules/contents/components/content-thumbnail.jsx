@@ -3,20 +3,20 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import classes from 'classnames'
 
-import {makeSortable} from './../../utils/sortable'
-import {trans, tex} from '#/main/app/intl/translation'
-//import {ValidationStatus} from './../../quiz/editor/components/validation-status.jsx'
-import {getContentDefinition} from './../content-types'
+import {trans} from '#/main/app/intl/translation'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
-import {MODAL_CONTENT} from './content-modal.jsx'
-import {ContentThumbnailDragPreview} from './content-thumbnail-drag-preview.jsx'
+
+import {MODAL_CONTENT} from '#/plugin/exo/contents/modals'
+import {makeSortable} from '#/plugin/exo/utils/sortable'
+import {getContentDefinition} from '#/plugin/exo/contents/utils'
+import {ContentThumbnailDragPreview} from '#/plugin/exo/contents/components/content-thumbnail-drag-preview'
 
 const Actions = props =>
   <span className="content-thumbnail-actions">
     {props.hasExpandBtn &&
       <span
         role="button"
-        title={tex('watch_at_the_original_size')}
+        title={trans('watch_at_the_original_size', {}, 'quiz')}
         className="action-button fa fa-external-link"
         onClick={e => {
           e.stopPropagation()

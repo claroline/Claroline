@@ -16,7 +16,7 @@ import {selectors as resourceSelect} from '#/main/core/resource/store'
 
 import {trans} from '#/main/app/intl/translation'
 import {getDefinition, isQuestionType} from '#/plugin/exo/items/item-types'
-import {getContentDefinition} from '#/plugin/exo/contents/content-types'
+import {getContentDefinition} from '#/plugin/exo/contents/utils'
 import selectQuiz from '#/plugin/exo/quiz/selectors'
 import {select} from '#/plugin/exo/quiz/player/selectors'
 import {selectors as papersSelect} from '#/plugin/exo/quiz/papers/selectors'

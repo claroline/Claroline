@@ -96,7 +96,10 @@ const ItemEditor = props => {
             {
               name: 'objects',
               label: trans('medias'),
-              type: 'medias'
+              type: 'medias',
+              options: {
+                path: props.path
+              }
             }
           ]
         }, {

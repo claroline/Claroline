@@ -72,7 +72,7 @@ class GridQuestionValidator extends JsonSchemaValidator
         }, $question['cells']);
 
         foreach ($question['solutions'] as $index => $solution) {
-            if (!in_array($solution->cellId, $cellIds)) {
+            if (!in_array($solution['cellId'], $cellIds)) {
                 $errors[] = [
                     'path' => "/solutions[{$index}]",
                     'message' => "id {$solution['cellId']} doesn't match any cell id",

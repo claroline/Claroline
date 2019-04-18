@@ -11,6 +11,7 @@ export default {
   name: 'image',
   tags: [trans('content')],
   answerable: false,
+  fileUpload: true,
 
   components: {
     editor: ImageEditor

@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {getContentDefinition} from './../content-types'
+import {getContentDefinition} from '#/plugin/exo/contents/utils'
 
 const ContentThumbnailDragPreview = props => {
   return (

@@ -267,6 +267,11 @@ class Item
         }
     }
 
+    public function emptyObjects()
+    {
+        $this->objects->clear();
+    }
+
     /**
      * @return ArrayCollection
      */
