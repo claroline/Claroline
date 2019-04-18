@@ -157,11 +157,13 @@ class ObjectManager extends ObjectManagerDecorator
     }
 
     /**
+     * @param string $dql
+     *
      * @return QueryBuilder
      */
-    public function createQuery()
+    public function createQuery($dql = '')
     {
-        return $this->wrapped->createQuery();
+        return $this->wrapped->createQuery($dql);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Installation\Updater;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\InstallationBundle\Updater\Updater;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Library\Options\Direction;
@@ -35,14 +36,18 @@ class Updater120403 extends Updater
     {
         $this->log('Convert boolean papers...');
 
+        /** @var ObjectManager $om */
         $om = $this->container->get('claroline.persistence.object_manager');
 
         $papers = $om
             ->createQuery('
-                SELECT p
-                FROM UJM\ExoBundle\Entity\Attempt\Paper AS p
-                WHERE p.structure LIKE "%application/x.boolean+json%"
+                SELECT p 
+                FROM UJM\ExoBundle\Entity\Attempt\Paper AS p 
+                WHERE p.structure LIKE :booleanType
             ')
+            ->setParameters([
+                'booleanType' => '%application/x.boolean+json%',
+            ])
             ->getResult();
 
         $i = 0;
