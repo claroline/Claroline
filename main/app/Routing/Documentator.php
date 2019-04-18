@@ -3,6 +3,7 @@
 namespace Claroline\AppBundle\Routing;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
+use Claroline\AppBundle\API\FinderException;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
 use Doctrine\Common\Annotations\Reader;
@@ -134,31 +135,38 @@ class Documentator
                 $finderOptions = array_shift($queryOptions);
                 $finderOptions = explode('=', $finderOptions);
                 $finderClass = isset($finderOptions[1]) ? $finderOptions[1] : $objectClass;
-                $finder = $this->finder->get($finderClass);
-                $finderDoc = [];
 
-                if (method_exists($finder, 'getFilters')) {
-                    $filters = $finder->getFilters();
+                try {
+                    $finder = $this->finder->get($finderClass);
+                    $finderDoc = [];
 
-                    foreach ($filters as $name => $data) {
-                        $addFilter = true;
-                        //check we didn't exclude it here
-                        foreach ($queryOptions as $option) {
-                            if (null !== strpos($option, '!') && substr($option, 1) === $name) {
-                                $addFilter = false;
+                    if (method_exists($finder, 'getFilters')) {
+                        $filters = $finder->getFilters();
+
+                        foreach ($filters as $name => $data) {
+                            $addFilter = true;
+                            //check we didn't exclude it here
+                            foreach ($queryOptions as $option) {
+                                if (null !== strpos($option, '!') && substr($option, 1) === $name) {
+                                    $addFilter = false;
+                                }
+                            }
+
+                            if ($addFilter) {
+                                $finderDoc[] = [
+                                  'name' => "filter[{$name}]",
+                                  'type' => $data['type'],
+                                  'description' => $data['description'],
+                              ];
                             }
                         }
 
-                        if ($addFilter) {
-                            $finderDoc[] = [
-                                'name' => "filter[{$name}]",
-                                'type' => $data['type'],
-                                'description' => $data['description'],
-                            ];
-                        }
+                        $doc = array_merge($finderDoc, $doc);
                     }
-
-                    $doc = array_merge($finderDoc, $doc);
+                } catch (FinderException $e) {
+                    $doc[] = $query;
+                    //no finder found; so we use the doctrine default methods & filters
+                   //todo: write that doc
                 }
             } else {
                 $doc[] = $query;

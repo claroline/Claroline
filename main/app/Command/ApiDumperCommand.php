@@ -27,7 +27,7 @@ class ApiDumperCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $format = $input->getOption('format');
+        $format = $input->getOption('format') ?? 'json';
         $data = [];
         $classes = $this->getContainer()->get('claroline.api.routing.finder')->getHandledClasses();
 
