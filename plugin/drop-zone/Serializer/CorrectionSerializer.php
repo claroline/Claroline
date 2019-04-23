@@ -88,6 +88,8 @@ class CorrectionSerializer
         if (empty($correction)) {
             $correction = $this->correctionRepo->findOneBy(['uuid' => $data['id']]);
         }
+        $correction = $correction ?: new Correction();
+
         if (isset($data['id'])) {
             $correction->setUuid($data['id']);
         }
