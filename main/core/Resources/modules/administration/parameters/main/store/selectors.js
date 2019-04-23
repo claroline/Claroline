@@ -11,6 +11,11 @@ const locales = createSelector(
   (parameters) => parameters.locales
 )
 
+const archives = createSelector(
+  [parameters],
+  (parameters) => parameters.archives
+)
+
 const plugins = state => state.plugins
 
 export const selectors = {
@@ -18,5 +23,6 @@ export const selectors = {
   availableLocales,
   parameters,
   locales,
-  plugins
+  plugins,
+  archives
 }

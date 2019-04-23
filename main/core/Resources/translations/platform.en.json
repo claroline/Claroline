@@ -1718,5 +1718,6 @@
     "object_currently_modified": "The object is being modified by %username% since %date%",
     "update_anyway": "update anyway",
     "choices": "Choices",
-    "medias": "Medias"
+    "medias": "Medias",
+    "archive": "Archive"
 }

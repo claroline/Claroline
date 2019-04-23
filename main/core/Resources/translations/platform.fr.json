@@ -1751,5 +1751,6 @@
     "object_currently_modified": "L'objet est en cours de modification par %username% depuis %date%",
     "update_anyway": "Modifier quand même",
     "choices": "Choix",
-    "medias": "Médias"
+    "medias": "Médias",
+    "archive": "Archive"
 }

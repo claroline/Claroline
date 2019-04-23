@@ -6,6 +6,7 @@ import {Vertical} from '#/main/app/content/tabs/components/vertical'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {Home} from '#/main/core/administration/parameters/main/components/home'
+import {Archive} from '#/main/core/administration/parameters/main/components/archive'
 import {Meta} from '#/main/core/administration/parameters/main/components/meta'
 import {I18n} from '#/main/core/administration/parameters/main/components/i18n'
 import {Plugins} from '#/main/core/administration/parameters/main/components/plugins'
@@ -43,6 +44,10 @@ const Tool = () =>
               icon: 'fa fa-fw fa-wrench',
               title: trans('maintenance'),
               path: '/maintenance'
+            }, {
+              icon: 'fa fa-fw fa-book',
+              title: trans('archive'),
+              path: '/archive'
             }
           ]}
         />
@@ -71,6 +76,10 @@ const Tool = () =>
               path: '/maintenance',
               exact: true,
               component: Maintenance
+            }, {
+              path: '/archive',
+              exact: true,
+              component: Archive
             }
           ]}
         />

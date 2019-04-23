@@ -6,6 +6,7 @@ parameters:
     claroline.param.authentication_directory: "%kernel.root_dir%/config/Authentication/"
     claroline.param.files_directory: "%kernel.root_dir%/../files"
     claroline.param.public_files_directory: "%kernel.root_dir%/../files/data"
+    claroline.param.archive_directory: "%kernel.root_dir%/../files/archives"
     claroline.param.icon_sets_directory: "%claroline.param.public_files_directory%/icon_sets"
     claroline.param.vendor_directory: "%kernel.root_dir%/../vendor"
     claroline.param.claroline_log: "%kernel.root_dir%/logs/claroline_debug.log"

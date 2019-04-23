@@ -66,6 +66,30 @@ abstract class AbstractFinder implements FinderInterface
      */
     abstract public function configureQueryBuilder(QueryBuilder $qb, array $searches, array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1]);
 
+    /**
+     * Might not be fully functional with the unions.
+     */
+    public function delete(array $filters = [])
+    {
+        /** @var QueryBuilder $qb */
+        $qb = $this->om->createQueryBuilder();
+        $qb->delete($this->getClass(), 'obj');
+
+        // filter query - let's the finder implementation process the filters to configure query
+        $query = $this->configureQueryBuilder($qb, $filters);
+
+        if ($query instanceof QueryBuilder) {
+            $qb = $query;
+        }
+
+        if (!($query instanceof NativeQuery)) {
+            // order query if implementation has not done it
+            $query = $qb->getQuery();
+        }
+
+        $query->getResult();
+    }
+
     public function find(array $filters = [], array $sortBy = null, $page = 0, $limit = -1, $count = false, $options = [])
     {
         //sorting is not required when we count stuff

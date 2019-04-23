@@ -21,23 +21,29 @@ class DatabaseManager
 
     /**
      * @DI\InjectParams({
-     *     "om"     = @DI\Inject("claroline.persistence.object_manager"),
-     *     "conn"   = @DI\Inject("doctrine.dbal.default_connection"),
-     *     "finder" = @DI\Inject("claroline.api.finder")
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
+     *     "conn"       = @DI\Inject("doctrine.dbal.default_connection"),
+     *     "finder"     = @DI\Inject("claroline.api.finder"),
+     *     "archiveDir" = @DI\Inject("%claroline.param.archive_directory%")
      * })
      */
-    public function __construct(ObjectManager $om, $conn, FinderProvider $finder)
+    public function __construct(ObjectManager $om, $conn, FinderProvider $finder, $archiveDir)
     {
         $this->om = $om;
         $this->conn = $conn;
         $this->finder = $finder;
+        $this->archiveDir = $archiveDir;
     }
 
-    public function backupRows($class, $searches, $tableName, $batch = null)
+    public function backupRows($class, $searches, $tableName, $batch = null, $selfRemove = false, $dumpCsv = true)
     {
         $query = $this->finder->get($class)->find($searches, null, 0, -1, false, [Options::SQL_QUERY]);
-        $name = '_bkp_'.$tableName.'_'.time();
+        $name = '_bkp_'.$tableName.'_'.$batch;
         $table = $this->om->getMetadataFactory()->getMetadataFor($class)->getTableName();
+
+        if ($dumpCsv) {
+            $this->dumpCsv($class, $searches, $tableName.'_'.$batch);
+        }
 
         try {
             $this->log("backing up $class in $name...");
@@ -45,6 +51,30 @@ class DatabaseManager
         } catch (\Exception $e) {
             $this->log("Couldn't backup $class".$e->getMessage(), LogLevel::ERROR);
         }
+
+        if ($selfRemove) {
+            $this->log('Removing rows...');
+            $this->finder->get($class)->delete($searches);
+        }
+    }
+
+    public function dumpCsv($class, $searches, $name)
+    {
+        $path = $this->archiveDir.DIRECTORY_SEPARATOR.$name.'.csv';
+        $query = $this->finder->get($class)->find($searches, null, 0, -1, false, [Options::SQL_QUERY]);
+        $sql = $this->finder->get($class)->getSqlWithParameters($query);
+        $rows = $this->conn->query($sql);
+        $fp = fopen($path, 'w');
+
+        $firstRow = $rows->fetch();
+        fputcsv($fp, array_keys($firstRow));
+        fputcsv($fp, $firstRow);
+
+        while ($row = $rows->fetch()) {
+            fputcsv($fp, $row);
+        }
+
+        fclose($fp);
     }
 
     public function backupTables($tables)
@@ -63,9 +93,7 @@ class DatabaseManager
 
     private function createBackupFromQuery($name, $query, $table, $type = DatabaseBackup::TYPE_FULL, $batch = null)
     {
-        $this->conn->query("
-            CREATE TABLE $name AS ($query)
-        ");
+        $this->conn->query("CREATE TABLE $name AS ($query)");
         $dbBackup = new DatabaseBackup();
         $dbBackup->setName($name);
         $dbBackup->setTable($table);

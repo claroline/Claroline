@@ -43,7 +43,8 @@ class ParametersSerializer
      *     "filePath"      = @DI\Inject("%claroline.param.platform_options%"),
      *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
      *     "ism"           = @DI\Inject("claroline.manager.icon_set_manager"),
-     *     "om"            = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
+     *     "archivePath"   = @DI\Inject("%claroline.param.archive_directory%")
      * })
      *
      * @param SerializerProvider           $serializer
@@ -58,7 +59,8 @@ class ParametersSerializer
         IconSetManager $ism,
         ObjectManager $om,
         PlatformConfigurationHandler $configHandler,
-        $filePath
+        $filePath,
+        $archivePath
     ) {
         $this->serializer = $serializer;
         $this->finder = $finder;
@@ -66,6 +68,7 @@ class ParametersSerializer
         $this->configHandler = $configHandler;
         $this->om = $om;
         $this->ism = $ism;
+        $this->archivePath = $archivePath;
     }
 
     public function serialize(array $options = [])
@@ -78,6 +81,8 @@ class ParametersSerializer
 
         $data['javascripts'] = $this->serializeJavascripts($data);
         $data['display']['logo'] = $this->serializeAppearanceLogo($data);
+        //maybe move this somewhere else
+        $data['archives'] = $this->serializeArchive($data);
 
         return $data;
     }
@@ -96,6 +101,8 @@ class ParametersSerializer
         $data = $this->getJavascriptsData($data);
         $data = $this->getLogoData($data);
         unset($data['tos']['text']);
+        //maybe move this somewhere else
+        unset($data['archives']);
 
         $data = array_merge($this->serialize([Options::SERIALIZE_MINIMAL]), $data);
         ksort($data);
@@ -155,6 +162,24 @@ class ParametersSerializer
                 $serializer->deserialize($data['tos']['text'], $contentTos, ['property' => 'content']);
             }
         }
+    }
+
+    public function serializeArchive()
+    {
+        if (!is_dir($this->archivePath)) {
+            mkdir($this->archivePath);
+        }
+
+        $iterator = new \DirectoryIterator($this->archivePath);
+        $files = [];
+
+        foreach ($iterator as $element) {
+            if ($element->isFile()) {
+                $files[] = $element->getFilename();
+            }
+        }
+
+        return $files;
     }
 
     public function serializeJavascripts(array $data)

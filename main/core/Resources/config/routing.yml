@@ -133,6 +133,13 @@ claro_admin_resource_icons:
     prefix: admin/parameters/appearance/icon
     type: annotation
 
+claro_admin_archives:
+    resource: "@ClarolineCoreBundle/Controller/Administration/ArchiveController.php"
+    prefix: archive
+    type: annotation
+    options:
+        expose: true
+
 claro_new_api:
     resource: "@ClarolineCoreBundle/Controller/APINew/"
     prefix: apiv2
