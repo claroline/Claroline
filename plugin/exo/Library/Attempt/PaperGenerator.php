@@ -162,12 +162,12 @@ class PaperGenerator
      * Generates steps based on the quiz configuration and a list of items.
      * In this kind of quiz all items are stored in a single step.
      *
-     * @param Exercise  $exercise
-     * @param \stdClass $previousExercise
+     * @param Exercise $exercise
+     * @param array    $previousExercise
      *
      * @return array
      */
-    private function pickStepsByTags(Exercise $exercise, \stdClass $previousExercise = null)
+    private function pickStepsByTags(Exercise $exercise, array $previousExercise = null)
     {
         $pickConfig = $exercise->getPick();
 
