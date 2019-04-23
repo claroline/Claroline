@@ -677,7 +677,7 @@ class DropzoneManager
         $this->om->startFlushSuite();
         $existingCorrection = $this->correctionRepo->findOneBy(['uuid' => $data['id']]);
         $isNew = empty($existingCorrection);
-        $correction = $this->serializer->deserialize('Claroline\DropZoneBundle\Entity\Correction', $data);
+        $correction = $this->serializer->get(Correction::class)->deserialize($data);
         $correction->setUser($user);
         $dropzone = $correction->getDrop()->getDropzone();
 
@@ -867,7 +867,7 @@ class DropzoneManager
      */
     public function saveTool(array $data)
     {
-        $tool = $this->serializer->deserialize('Claroline\DropZoneBundle\Entity\DropzoneTool', $data);
+        $tool = $this->serializer->get(DropzoneTool::class)->deserialize($data);
         $this->om->persist($tool);
         $this->om->flush();
 
