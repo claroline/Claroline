@@ -122,7 +122,7 @@ class Crud
             }
         }
 
-        $oldObject = $this->om->getObject($data, $class);
+        $oldObject = $this->om->getObject($data, $class) ?? new $class();
         $this->checkPermission('EDIT', $oldObject, [], true);
         $oldData = $this->serializer->serialize($oldObject);
 
