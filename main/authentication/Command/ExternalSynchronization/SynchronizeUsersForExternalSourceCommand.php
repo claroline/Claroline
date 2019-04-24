@@ -13,6 +13,7 @@
 namespace Claroline\AuthenticationBundle\Command\ExternalSynchronization;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
+use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -21,7 +22,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class SynchronizeUsersForExternalSourceCommand extends ContainerAwareCommand
+class SynchronizeUsersForExternalSourceCommand extends ContainerAwareCommand implements AdminCliCommand
 {
     use BaseCommandTrait;
 
