@@ -12,7 +12,6 @@
 namespace Claroline\AgendaBundle\Controller\API;
 
 use Claroline\AgendaBundle\Entity\Event;
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -23,11 +22,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
- * @ApiMeta(class="Claroline\AgendaBundle\Entity\Event")
  * @Route("/event")
  */
 class EventController extends AbstractCrudController
 {
+    public function getClass()
+    {
+        return 'Claroline\AgendaBundle\Entity\Event';
+    }
+
     public function getName()
     {
         return 'event';

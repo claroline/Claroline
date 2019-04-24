@@ -11,7 +11,6 @@
 
 namespace Claroline\TagBundle\Controller;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\TagBundle\Entity\Tag;
@@ -23,9 +22,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @ApiMeta(
- *     class="Claroline\TagBundle\Entity\Tag"
- * )
  * @EXT\Route("tag")
  */
 class TagController extends AbstractCrudController
@@ -46,6 +42,11 @@ class TagController extends AbstractCrudController
         TagManager $tagManager
     ) {
         $this->manager = $tagManager;
+    }
+
+    public function getClass()
+    {
+        return Tag::class;
     }
 
     public function getName()

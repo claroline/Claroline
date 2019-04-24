@@ -11,15 +11,10 @@
 
 namespace Claroline\TeamBundle\Controller\API;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**
- * @ApiMeta(
- *     class="Claroline\TeamBundle\Entity\WorkspaceTeamParameters",
- *     ignore={"create", "doc", "deleteBulk", "get", "exist", "copyBulk", "schema", "find", "list"}
- * )
  * @EXT\Route("/workspaceteamparameters")
  */
 class WorkspaceTeamParametersController extends AbstractCrudController
@@ -27,5 +22,15 @@ class WorkspaceTeamParametersController extends AbstractCrudController
     public function getName()
     {
         return 'workspaceteamparameters';
+    }
+
+    public function getClass()
+    {
+        return 'Claroline\TeamBundle\Entity\WorkspaceTeamParameters';
+    }
+
+    public function getIgnore()
+    {
+        return ['create', 'deleteBulk', 'get', 'exist', 'copyBulk', 'schema', 'find', 'list'];
     }
 }

@@ -11,16 +11,19 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\Contact;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**
- * @ApiMeta(class="Claroline\CoreBundle\Entity\Contact\Options")
  * @EXT\Route("/contact_options")
  */
 class OptionsController extends AbstractCrudController
 {
+    public function getClass()
+    {
+        return 'Claroline\CoreBundle\Entity\Contact\Options';
+    }
+
     public function getName()
     {
         return 'contact_options';

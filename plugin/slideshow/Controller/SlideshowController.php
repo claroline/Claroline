@@ -11,16 +11,19 @@
 
 namespace Claroline\SlideshowBundle\Controller;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**
- * @ApiMeta(class="Claroline\SlideshowBundle\Entity\Resource\Slideshow")
  * @EXT\Route("/slideshow")
  */
 class SlideshowController extends AbstractCrudController
 {
+    public function getClass()
+    {
+        return 'Claroline\SlideshowBundle\Entity\Resource\Slideshow';
+    }
+
     public function getName()
     {
         return 'slideshow';

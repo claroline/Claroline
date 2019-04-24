@@ -11,17 +11,19 @@
 
 namespace Claroline\AuthenticationBundle\Controller\API\Oauth;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use FOS\RestBundle\Controller\Annotations\View;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
- * @ApiMeta(class="Claroline\AuthenticationBundle\Entity\Oauth\OauthUser")
  * @Route("/oauth")
  */
 class OauthController extends AbstractCrudController
 {
+    public function getClass()
+    {
+        return 'Claroline\AuthenticationBundle\Entity\Oauth\OauthUser';
+    }
+
     public function getName()
     {
         return 'oauth';

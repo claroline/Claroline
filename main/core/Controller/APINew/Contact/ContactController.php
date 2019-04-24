@@ -11,11 +11,11 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\Contact;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\API\Serializer\Contact\ContactSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CoreBundle\Entity\Contact\Contact;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Manager\ContactManager;
@@ -26,7 +26,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * @ApiMeta(class="Claroline\CoreBundle\Entity\Contact\Contact")
  * @EXT\Route("/contact")
  */
 class ContactController extends AbstractCrudController
@@ -147,5 +146,10 @@ class ContactController extends AbstractCrudController
         $data = $this->finder->search('Claroline\CoreBundle\Entity\User', $params);
 
         return new JsonResponse($data, 200);
+    }
+
+    public function getClass()
+    {
+        return Contact::class;
     }
 }

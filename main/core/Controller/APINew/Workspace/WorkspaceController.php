@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\Workspace;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
+use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
@@ -46,7 +46,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * @ApiMeta(class="Claroline\CoreBundle\Entity\Workspace\Workspace", ignore={})
  * @Route("/workspace")
  */
 class WorkspaceController extends AbstractCrudController
@@ -132,6 +131,13 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="Create a forum",
+     *     body={
+     *         "schema":"$schema"
+     *     }
+     * )
+     *
      * @param Request $request
      * @param string  $class
      *
@@ -177,6 +183,13 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="Copy an array of object of class $class.",
+     *     queryString={
+     *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
+     *     }
+     * )
+     *
      * @param Request $request
      * @param string  $class
      *
@@ -235,6 +248,21 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="List the user registration pending for workspace.",
+     *     queryString={
+     *         "$finder=Claroline\CoreBundle\Entity\User",
+     *         {"name": "page", "type": "integer", "description": "The queried page."},
+     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
+     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
+     *     },
+     *     parameters={
+     *         "id": {
+     *              "type": {"string", "integer"},
+     *              "description": "The workspace id or uuid"
+     *          }
+     *     }
+     * )
      * @Route(
      *    "/{id}/user/pending",
      *    name="apiv2_workspace_list_pending"
@@ -256,6 +284,15 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="Export the workspace as a zip archive.",
+     *     parameters={
+     *         "id": {
+     *              "type": {"string", "integer"},
+     *              "description": "The workspace id or uuid"
+     *          }
+     *     }
+     * )
      * @Route(
      *    "/{id}/export",
      *    name="apiv2_workspace_export"
@@ -278,6 +315,18 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="Validate user registration pending for workspace.",
+     *     queryString={
+     *         {"name": "ids", "type": "array", "description": "the list of user uuids."}
+     *     },
+     *     parameters={
+     *         "id": {
+     *              "type": {"string", "integer"},
+     *              "description": "The workspace uuid"
+     *          }
+     *     }
+     * )
      * @Route(
      *    "/{id}/registration/validate",
      *    name="apiv2_workspace_registration_validate"
@@ -310,6 +359,18 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="Remove user registration pending for workspace.",
+     *     queryString={
+     *         {"name": "ids", "type": "array", "description": "the list of user uuids."}
+     *     },
+     *     parameters={
+     *         "id": {
+     *              "type": {"string", "integer"},
+     *              "description": "The workspace uuid"
+     *          }
+     *     }
+     * )
      * @Route(
      *    "/{id}/registration/remove",
      *    name="apiv2_workspace_registration_remove"
@@ -340,6 +401,18 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="Unregister users from workspace.",
+     *     queryString={
+     *         {"name": "ids", "type": "array", "description": "the list of user uuids."}
+     *     },
+     *     parameters={
+     *         "id": {
+     *              "type": {"string", "integer"},
+     *              "description": "The workspace uuid"
+     *          }
+     *     }
+     * )
      * @Route(
      *    "/{id}/users/unregistrate",
      *    name="apiv2_workspace_unregister_users"
@@ -369,6 +442,18 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="Unregister groups from workspace.",
+     *     queryString={
+     *         {"name": "ids", "type": "array", "description": "the list of group uuids."}
+     *     },
+     *     parameters={
+     *         "id": {
+     *              "type": {"string", "integer"},
+     *              "description": "The workspace uuid"
+     *          }
+     *     }
+     * )
      * @Route(
      *    "/{id}/groups/unregistrate",
      *    name="apiv2_workspace_unregister_groups"
@@ -398,6 +483,13 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="Remove workspaces.",
+     *     queryString={
+     *         {"name": "ids", "type": "array", "description": "the list of workspace uuids."}
+     *     }
+     * )
+     *
      * @param Request $request
      * @param string  $class
      *
@@ -406,7 +498,7 @@ class WorkspaceController extends AbstractCrudController
     public function deleteBulkAction(Request $request, $class)
     {
         /** @var Workspace[] $workspaces */
-        $workspaces = parent::decodeIdsString($request, 'Claroline\CoreBundle\Entity\Workspace\Workspace');
+        $workspaces = parent::decodeIdsString($request, Workspace::class);
         $errors = [];
 
         foreach ($workspaces as $workspace) {
@@ -421,7 +513,7 @@ class WorkspaceController extends AbstractCrudController
             }
         }
         if (empty($errors)) {
-            parent::deleteBulkAction($request, 'Claroline\CoreBundle\Entity\Workspace\Workspace');
+            parent::deleteBulkAction($request, Workspace::class);
 
             return new JsonResponse('success', 200);
         } else {
@@ -443,6 +535,21 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="The manager list of a workspace.",
+     *     queryString={
+     *         "$finder=Claroline\CoreBundle\Entity\User&!role",
+     *         {"name": "page", "type": "integer", "description": "The queried page."},
+     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
+     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
+     *     },
+     *     parameters={
+     *         "id": {
+     *              "type": {"string"},
+     *              "description": "The workspace uuid"
+     *          }
+     *     }
+     * )
      * @Route(
      *    "/{id}/managers",
      *    name="apiv2_workspace_list_managers"
@@ -468,6 +575,15 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="The list of registerable workspaces for the current security token.",
+     *     queryString={
+     *         "$finder",
+     *         {"name": "page", "type": "integer", "description": "The queried page."},
+     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
+     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
+     *     }
+     * )
      * @Route(
      *    "/list/registerable",
      *    name="apiv2_workspace_list_registerable"
@@ -493,6 +609,15 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="The list of registered workspaces for the current security token.",
+     *     queryString={
+     *         "$finder=Claroline\CoreBundle\Entity\Workspace\Workspace&!user",
+     *         {"name": "page", "type": "integer", "description": "The queried page."},
+     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
+     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
+     *     }
+     * )
      * @Route(
      *    "/list/registered",
      *    name="apiv2_workspace_registered_list"
@@ -513,6 +638,15 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="The list of administrated workspaces for the current security token.",
+     *     queryString={
+     *         "$finder=Claroline\CoreBundle\Entity\Workspace\Workspace&!administrated",
+     *         {"name": "page", "type": "integer", "description": "The queried page."},
+     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
+     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
+     *     }
+     * )
      * @Route(
      *    "/list/administrated",
      *    name="apiv2_administrated_list"
@@ -533,6 +667,19 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="Register users in different workspaces.",
+     *     queryString={
+     *         {"name": "users", "type": "array", "description": "The list of user uuids."},
+     *         {"name": "workspaces", "type": "array", "description": "The list of workspace uuids."},
+     *     },
+     *     parameters={
+     *         "role": {
+     *              "type": {"string"},
+     *              "description": "The role translation key"
+     *          }
+     *     }
+     * )
      * @Route(
      *    "/users/register/bulk/{role}",
      *    name="apiv2_workspace_bulk_register_users"
@@ -562,6 +709,19 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="Register users in different workspaces.",
+     *     queryString={
+     *         {"name": "groups", "type": "array", "description": "The list of group uuids."},
+     *         {"name": "workspaces", "type": "array", "description": "The list of workspace uuids."},
+     *     },
+     *     parameters={
+     *         "role": {
+     *              "type": {"string"},
+     *              "description": "The role translation key"
+     *          }
+     *     }
+     * )
      * @Route(
      *    "/groups/register/bulk/{role}",
      *    name="apiv2_workspace_bulk_register_groups"
@@ -591,6 +751,12 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="Get the list of common role translation keys between 2 workspaces.",
+     *     queryString={
+     *         {"name": "workspaces", "type": "array", "description": "The list of workspace uuids."},
+     *     }
+     * )
      * @Route(
      *    "/roles/common",
      *    name="apiv2_workspace_roles_common"
@@ -638,6 +804,18 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="Unregister a user from a list of workspace.",
+     *     queryString={
+     *         {"name": "workspaces", "type": "array", "description": "The list of workspace uuids."},
+     *     },
+     *     parameters={
+     *         "user": {
+     *              "type": {"string"},
+     *              "description": "The user uuid"
+     *          }
+     *     }
+     * )
      * @Route("/unregister/{user}", name="apiv2_workspace_unregister")
      * @Method("DELETE")
      * @ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
@@ -661,6 +839,18 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="Register a user in a list of workspace.",
+     *     queryString={
+     *         {"name": "workspaces", "type": "array", "description": "The list of workspace uuids."},
+     *     },
+     *     parameters={
+     *         "user": {
+     *              "type": {"string"},
+     *              "description": "The user uuid"
+     *          }
+     *     }
+     * )
      * @Route("/register/{user}", name="apiv2_workspace_register")
      * @Method("PATCH")
      * @ParamConverter("user", class = "ClarolineCoreBundle:User",  options={"mapping": {"user": "uuid"}})
@@ -783,6 +973,21 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="List the roles of a workspace.",
+     *     queryString={
+     *         "$finder=Claroline\CoreBundle\Entity\Role&!workspace",
+     *         {"name": "page", "type": "integer", "description": "The queried page."},
+     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
+     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
+     *     },
+     *     parameters={
+     *         "id": {
+     *              "type": {"string"},
+     *              "description": "The workspace uuid"
+     *          }
+     *     }
+     * )
      * @Route("/{id}/role")
      * @Method("GET")
      *
@@ -803,6 +1008,21 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="List the configuratble roles of a workspace for the current security token.",
+     *     queryString={
+     *         "$finder=Claroline\CoreBundle\Entity\Role&!workspaceConfigurable",
+     *         {"name": "page", "type": "integer", "description": "The queried page."},
+     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
+     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
+     *     },
+     *     parameters={
+     *         "id": {
+     *              "type": {"string"},
+     *              "description": "The workspace uuid"
+     *          }
+     *     }
+     * )
      * @Route(
      *    "/{id}/role/configurable",
      *    name="apiv2_workspace_list_roles_configurable"
@@ -823,6 +1043,11 @@ class WorkspaceController extends AbstractCrudController
                 ['hiddenFilters' => ['workspaceConfigurable' => [$id]]]
             ))
         );
+    }
+
+    public function getClass()
+    {
+        return Workspace::class;
     }
 
     public function getOptions()

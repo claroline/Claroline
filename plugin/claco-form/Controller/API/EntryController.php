@@ -11,7 +11,6 @@
 
 namespace Claroline\ClacoFormBundle\Controller\API;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
@@ -23,10 +22,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @ApiMeta(
- *     class="Claroline\ClacoFormBundle\Entity\Entry",
- *     ignore={"exist", "copyBulk", "schema", "find", "list"}
- * )
  * @EXT\Route("/clacoformentry")
  */
 class EntryController extends AbstractCrudController
@@ -52,6 +47,16 @@ class EntryController extends AbstractCrudController
     {
         $this->finder = $finder;
         $this->manager = $manager;
+    }
+
+    public function getClass()
+    {
+        return 'Claroline\ClacoFormBundle\Entity\Entry';
+    }
+
+    public function getIgnore()
+    {
+        return ['exist', 'copyBulk', 'schema', 'find', 'list'];
     }
 
     public function getName()
@@ -226,10 +231,5 @@ class EntryController extends AbstractCrudController
         $previousEntry = array_key_exists($prev, $data) ? $data[$prev] : end($data);
 
         return new JsonResponse($this->serializer->serialize($previousEntry), 200);
-    }
-
-    public function getClass()
-    {
-        return Entry::class;
     }
 }

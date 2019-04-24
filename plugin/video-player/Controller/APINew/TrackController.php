@@ -11,7 +11,6 @@
 
 namespace Claroline\VideoPlayerBundle\Controller\APINew;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -19,7 +18,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @ApiMeta(class="Claroline\VideoPlayerBundle\Entity\Track")
  * @Route("/videotrack")
  */
 class TrackController extends AbstractCrudController
@@ -86,6 +84,11 @@ class TrackController extends AbstractCrudController
         }
 
         return parent::deleteBulkAction($request, $class);
+    }
+
+    public function getClass()
+    {
+        return 'Claroline\VideoPlayerBundle\Entity\Track';
     }
 
     public function getName()

@@ -11,7 +11,6 @@
 
 namespace Claroline\PlannedNotificationBundle\Controller\API;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\PlannedNotificationBundle\Manager\PlannedNotificationManager;
@@ -21,10 +20,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @ApiMeta(
- *     class="Claroline\PlannedNotificationBundle\Entity\Message",
- *     ignore={"exist", "list", "copyBulk", "schema", "find"}
- * )
  * @EXT\Route("/plannednotificationmessage")
  */
 class MessageController extends AbstractCrudController
@@ -44,6 +39,16 @@ class MessageController extends AbstractCrudController
     public function __construct(PlannedNotificationManager $manager)
     {
         $this->manager = $manager;
+    }
+
+    public function getClass()
+    {
+        return 'Claroline\PlannedNotificationBundle\Entity\Message';
+    }
+
+    public function getIgnore()
+    {
+        return ['exist', 'list', 'copyBulk', 'schema', 'find'];
     }
 
     public function getName()

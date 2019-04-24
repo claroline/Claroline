@@ -2,7 +2,6 @@
 
 namespace HeVinci\FavouriteBundle\Controller\API;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\User;
 use HeVinci\FavouriteBundle\Manager\FavouriteManager;
@@ -12,10 +11,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @ApiMeta(
- *     class="HeVinci\FavouriteBundle\Entity\Favourite",
- *     ignore={"create", "update", "deleteBulk", "exist", "list", "copyBulk", "schema", "find", "get"}
- * )
  * @EXT\Route("/favourite")
  */
 class FavouriteController extends AbstractCrudController
@@ -32,6 +27,16 @@ class FavouriteController extends AbstractCrudController
     public function __construct(FavouriteManager $manager)
     {
         $this->manager = $manager;
+    }
+
+    public function getClass()
+    {
+        return 'HeVinci\FavouriteBundle\Entity\Favourite';
+    }
+
+    public function getIgnore()
+    {
+        return ['create', 'update', 'deleteBulk', 'exist', 'list', 'copyBulk', 'schema', 'find', 'get'];
     }
 
     public function getName()

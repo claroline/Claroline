@@ -2,21 +2,26 @@
 
 namespace Icap\BibliographyBundle\Controller\API;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
- * @ApiMeta(
- *     class="Icap\BibliographyBundle\Entity\BookReferenceConfiguration",
- *     ignore={"find", "deleteBulk", "doc", "list", "get", "exist", "create", "copyBulk"}
- * )
  * @Route("/book_reference_configuration")
  * @Security("has_role('ROLE_ADMIN')")
  */
 class BookReferenceConfigurationController extends AbstractCrudController
 {
+    public function getClass()
+    {
+        return 'Icap\BibliographyBundle\Entity\BookReferenceConfiguration';
+    }
+
+    public function getIgnore()
+    {
+        return ['find', 'deleteBulk', 'doc', 'list', 'get', 'exist', 'create', 'copyBulk'];
+    }
+
     /**
      * Get the name of the managed entity.
      *

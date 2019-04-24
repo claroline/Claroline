@@ -11,19 +11,24 @@
 
 namespace Claroline\ClacoFormBundle\Controller\API;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**
- * @ApiMeta(
- *     class="Claroline\ClacoFormBundle\Entity\EntryUser",
- *     ignore={"exist", "copyBulk", "schema", "find", "list", "create", "deleteBulk", "get"}
- * )
  * @EXT\Route("/clacoformentryuser")
  */
 class EntryUserController extends AbstractCrudController
 {
+    public function getClass()
+    {
+        return 'Claroline\ClacoFormBundle\Entity\EntryUser';
+    }
+
+    public function getIgnore()
+    {
+        return ['exist', 'copyBulk', 'schema', 'find', 'list', 'create', 'deleteBulk', 'get'];
+    }
+
     public function getName()
     {
         return 'clacoformentryuser';

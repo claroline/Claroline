@@ -11,19 +11,24 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\Resource\Types;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**
- * @ApiMeta(
- *     class="Claroline\CoreBundle\Entity\Resource\Text",
- *     ignore={"create", "exist", "list", "copyBulk", "deleteBulk", "schema", "find", "get"}
- * )
  * @EXT\Route("resource_text")
  */
 class TextController extends AbstractCrudController
 {
+    public function getClass()
+    {
+        return 'Claroline\CoreBundle\Entity\Resource\Text';
+    }
+
+    public function getIgnore()
+    {
+        return ['create', 'exist', 'list', 'copyBulk', 'deleteBulk', 'schema', 'find', 'get'];
+    }
+
     public function getName()
     {
         return 'resource_text';

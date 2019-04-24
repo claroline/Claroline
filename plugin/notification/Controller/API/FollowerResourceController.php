@@ -2,7 +2,6 @@
 
 namespace Icap\NotificationBundle\Controller\API;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
@@ -13,10 +12,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @ApiMeta(
- *     class="HeVinci\FavouriteBundle\Entity\Favourite",
- *     ignore={"create", "update", "deleteBulk", "exist", "list", "copyBulk", "schema", "find", "get"}
- * )
  * @EXT\Route("/notificationfollower")
  *
  * @todo rewrite using the new resource action system
@@ -35,6 +30,16 @@ class FollowerResourceController extends AbstractCrudController
     public function __construct(NotificationManager $manager)
     {
         $this->manager = $manager;
+    }
+
+    public function getClass()
+    {
+        return 'HeVinci\FavouriteBundle\Entity\Favourite';
+    }
+
+    public function getIgnore()
+    {
+        return ['create', 'update', 'deleteBulk', 'exist', 'list', 'copyBulk', 'schema', 'find', 'get'];
     }
 
     public function getName()

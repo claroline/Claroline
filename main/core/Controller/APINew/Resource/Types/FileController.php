@@ -11,19 +11,24 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\Resource\Types;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**
- * @ApiMeta(
- *     class="Claroline\CoreBundle\Entity\Resource\File",
- *     ignore={"create", "exist", "list", "copyBulk", "deleteBulk", "schema", "find", "get"}
- * )
  * @EXT\Route("resource_file")
  */
 class FileController extends AbstractCrudController
 {
+    public function getClass()
+    {
+        return "Claroline\CoreBundle\Entity\Resource\File";
+    }
+
+    public function getIgnore()
+    {
+        return ['create', 'exist', 'list', 'copyBulk', 'deleteBulk', 'schema', 'find', 'get'];
+    }
+
     public function getName()
     {
         return 'file';

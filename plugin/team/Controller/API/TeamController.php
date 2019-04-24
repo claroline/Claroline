@@ -11,7 +11,6 @@
 
 namespace Claroline\TeamBundle\Controller\API;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\User;
@@ -26,10 +25,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @ApiMeta(
- *     class="Claroline\TeamBundle\Entity\Team",
- *     ignore={"exist", "copyBulk", "schema", "find", "list"}
- * )
  * @EXT\Route("/team")
  */
 class TeamController extends AbstractCrudController
@@ -374,5 +369,15 @@ class TeamController extends AbstractCrudController
         if (!$this->authorization->isGranted(['claroline_team_tool', $rights], $workspace)) {
             throw new AccessDeniedException();
         }
+    }
+
+    public function getClass()
+    {
+        return Team::class;
+    }
+
+    public function getIgnore()
+    {
+        return ['exist', 'copyBulk', 'schema', 'find', 'list'];
     }
 }

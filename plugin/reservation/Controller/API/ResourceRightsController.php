@@ -11,16 +11,19 @@
 
 namespace FormaLibre\ReservationBundle\Controller\API;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
- * @ApiMeta(class="FormaLibre\ReservationBundle\Entity\ResourceRights")
  * @Route("/reservationresourcerights")
  */
 class ResourceRightsController extends AbstractCrudController
 {
+    public function getClass()
+    {
+        return 'FormaLibre\ReservationBundle\Entity\ResourceRights';
+    }
+
     public function getName()
     {
         return 'reservation_resource_rights';

@@ -11,16 +11,19 @@
 
 namespace Claroline\CoreBundle\Controller\APINew;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
- * @ApiMeta(class="Claroline\CoreBundle\Entity\Theme\Theme")
  * @Route("/theme")
  */
 class ThemeController extends AbstractCrudController
 {
+    public function getClass()
+    {
+        return 'Claroline\CoreBundle\Entity\Theme\Theme';
+    }
+
     public function getName()
     {
         return 'theme';

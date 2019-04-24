@@ -11,16 +11,19 @@
 
 namespace Claroline\DropZoneBundle\Controller\API;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**
- * @ApiMeta(class="Claroline\DropZoneBundle\Entity\DropzoneTool")
  * @EXT\Route("/dropzonetool")
  */
 class DropzoneToolController extends AbstractCrudController
 {
+    public function getClass()
+    {
+        return 'Claroline\DropZoneBundle\Entity\DropzoneTool';
+    }
+
     public function getName()
     {
         return 'dropzone_tool';

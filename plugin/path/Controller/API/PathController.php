@@ -11,7 +11,6 @@
 
 namespace Innova\PathBundle\Controller\API;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
@@ -28,7 +27,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @ApiMeta(class="Innova\PathBundle\Entity\Path\Path")
  * @EXT\Route("/path")
  */
 class PathController extends AbstractCrudController
@@ -56,6 +54,11 @@ class PathController extends AbstractCrudController
     ) {
         $this->authorization = $authorization;
         $this->userProgressionManager = $userProgressionManager;
+    }
+
+    public function getClass()
+    {
+        return Path::class;
     }
 
     /**

@@ -11,7 +11,6 @@
 
 namespace Claroline\ClacoFormBundle\Controller\API;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
@@ -21,10 +20,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @ApiMeta(
- *     class="Claroline\ClacoFormBundle\Entity\Category",
- *     ignore={"exist", "copyBulk", "schema", "find", "list"}
- * )
  * @EXT\Route("/clacoformcategory")
  */
 class CategoryController extends AbstractCrudController
@@ -44,6 +39,16 @@ class CategoryController extends AbstractCrudController
     public function __construct(FinderProvider $finder)
     {
         $this->finder = $finder;
+    }
+
+    public function getClass()
+    {
+        return 'Claroline\ClacoFormBundle\Entity\Category';
+    }
+
+    public function getIgnore()
+    {
+        return ['exist', 'copyBulk', 'schema', 'find', 'list'];
     }
 
     public function getName()

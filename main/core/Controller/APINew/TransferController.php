@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Controller\APINew;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
@@ -29,7 +28,6 @@ use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @Route("/transfer")
- * @ApiMeta(class="Claroline\CoreBundle\Entity\Import\File", ignore={"update", "exist", "schema"})
  */
 class TransferController extends AbstractCrudController
 {
@@ -77,6 +75,16 @@ class TransferController extends AbstractCrudController
         $this->router = $router;
         $this->crud = $crud;
         $this->async = $async;
+    }
+
+    public function getClass()
+    {
+        return 'Claroline\CoreBundle\Entity\Import\File';
+    }
+
+    public function getIgnore()
+    {
+        return ['update', 'exist', 'schema'];
     }
 
     /**

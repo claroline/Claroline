@@ -11,7 +11,6 @@
 
 namespace FormaLibre\ReservationBundle\Controller\API;
 
-use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
@@ -25,7 +24,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
- * @ApiMeta(class="FormaLibre\ReservationBundle\Entity\Resource")
  * @Route("/reservationresource")
  */
 class ResourceController extends AbstractCrudController
@@ -48,6 +46,11 @@ class ResourceController extends AbstractCrudController
     {
         $this->apiManager = $apiManager;
         $this->resourceRepo = $om->getRepository('FormaLibreReservationBundle:Resource');
+    }
+
+    public function getClass()
+    {
+        return 'FormaLibre\ReservationBundle\Entity\Resource';
     }
 
     public function getName()

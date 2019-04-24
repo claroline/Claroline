@@ -36,7 +36,7 @@ class ApiDumperCommand extends ContainerAwareCommand
         }
 
         switch ($format) {
-          case 'json': $string = json_encode($data); break;
+          case 'json': $string = json_encode($data, JSON_PRETTY_PRINT); break;
           case 'yml': $string = Yaml::dump($data); break;
         }
 
