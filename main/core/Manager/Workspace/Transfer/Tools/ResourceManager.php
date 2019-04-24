@@ -11,6 +11,7 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;
@@ -122,7 +123,7 @@ class ResourceManager
             $node->setWorkspace($workspace);
             $this->serializer->get(ResourceNode::class)->deserialize(['rights' => $rights], $node);
 
-            if ($this->tokenStorage->getToken()) {
+            if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {
                 $node->setCreator($this->tokenStorage->getToken()->getUser());
             } else {
                 $creator = $this->userManager->getDefaultClarolineAdmin();
