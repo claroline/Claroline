@@ -81,7 +81,9 @@ class BlogSerializer
         $this->sipe('name', 'setName', $data, $blog);
         $this->sipe('infos', 'setInfos', $data, $blog);
 
-        $blog->setOptions($this->blogOptionsSerializer->deserialize($data['options'], $blog->getOptions(), $options));
+        if (isset($data['options'])) {
+            $blog->setOptions($this->blogOptionsSerializer->deserialize($data['options'], $blog->getOptions(), $options));
+        }
 
         return $blog;
     }
