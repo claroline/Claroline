@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Controller\APINew;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Entity\File\PublicFile;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,7 +59,7 @@ class FileController extends AbstractCrudController
 
         foreach ($files as $file) {
             $object = $this->crud->create(
-              'Claroline\CoreBundle\Entity\File\PublicFile',
+              PublicFile::class,
               [],
               ['file' => $file]
           );
@@ -68,6 +69,11 @@ class FileController extends AbstractCrudController
         }
 
         return $objects;
+    }
+
+    public function getClass()
+    {
+        return PublicFile::class;
     }
 
     public function getIgnore()
