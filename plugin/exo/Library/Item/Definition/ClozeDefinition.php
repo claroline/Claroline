@@ -269,8 +269,10 @@ class ClozeDefinition extends AbstractDefinition
 
     public function getCsvTitles(AbstractItem $item)
     {
-        return array_map(function (Hole $hole) {
-            return 'hole-'.$hole->getUuid();
+        $qText = $item->getQuestion()->getTitle() ?? $item->getQuestion()->getContent();
+
+        return array_map(function (Hole $hole) use ($qText) {
+            return $qText.': hole-'.$hole->getUuid();
         }, $item->getHoles()->toArray());
     }
 

@@ -177,6 +177,20 @@ class ItemManager
     }
 
     /**
+     * Deserializes a question.
+     *
+     * @param array $data
+     * @param Item  $item
+     * @param array $options
+     *
+     * @return Item
+     */
+    public function deserialize(array $data, Item $item = null, array $options = [])
+    {
+        return $this->serializer->deserialize($data, $item, $options);
+    }
+
+    /**
      * Deletes an Item.
      * It's only possible if the Item is not used in an Exercise.
      *

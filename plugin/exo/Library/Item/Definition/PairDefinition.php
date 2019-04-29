@@ -301,11 +301,6 @@ class PairDefinition extends AbstractDefinition
         return $found;
     }
 
-    public function getCsvTitles(AbstractItem $item)
-    {
-        return [$item->getQuestion()->getContentText()];
-    }
-
     public function getCsvAnswers(AbstractItem $item, Answer $answer)
     {
         $data = json_decode($answer->getData(), true);

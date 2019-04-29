@@ -11,7 +11,7 @@ use UJM\ExoBundle\Library\Validator\ValidatorInterface;
  * Base class for question definitions.
  * Permits to use separate classes to handle Serialization and Validation.
  */
-abstract class AbstractDefinition implements ItemDefinitionInterface, ExportableCsvAnswerInterface, AnswerableItemDefinitionInterface
+abstract class AbstractDefinition implements ItemDefinitionInterface, AnswerableItemDefinitionInterface
 {
     /**
      * Gets the question Validator instance.
@@ -90,7 +90,7 @@ abstract class AbstractDefinition implements ItemDefinitionInterface, Exportable
 
     public function getCsvTitles(AbstractItem $question)
     {
-        return [$question->getTitle()];
+        return [$question->getQuestion()->getTitle() ?? $question->getQuestion()->getContentText()];
     }
 
     public function getCsvAnswers(AbstractItem $question, Answer $answer)

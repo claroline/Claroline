@@ -194,11 +194,6 @@ class WordsDefinition extends AbstractDefinition
         return $found;
     }
 
-    public function getCsvTitles(AbstractItem $item)
-    {
-        return [$item->getQuestion()->getContentText()];
-    }
-
     public function getCsvAnswers(AbstractItem $item, Answer $answer)
     {
         return [json_decode($answer->getData(), true)];

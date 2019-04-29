@@ -225,11 +225,6 @@ class SetDefinition extends AbstractDefinition
         }
     }
 
-    public function getCsvTitles(AbstractItem $question)
-    {
-        return [$question->getQuestion()->getContentText()];
-    }
-
     public function getCsvAnswers(AbstractItem $item, Answer $answer)
     {
         $data = json_decode($answer->getData(), true);

@@ -106,7 +106,7 @@ class Paper
     /**
      * The submitted answers for this attempt.
      *
-     * @var ArrayCollection
+     * @var Answer[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\Attempt\Answer", mappedBy="paper", cascade={"all"}, orphanRemoval=true)
      */
@@ -315,7 +315,7 @@ class Paper
     /**
      * Gets answers.
      *
-     * @return ArrayCollection
+     * @return Answer[]|ArrayCollection
      */
     public function getAnswers()
     {

@@ -306,7 +306,6 @@ class ExerciseManager
 
         $titles = [['username'], ['lastname'], ['firstname'], ['start'], ['end'], ['status'], ['score'], ['total_score_on']];
         $items = [];
-        $questions = [];
 
         //get the list of titles for the csv (the headers)
         //this is an array of array because some question types will return...
@@ -314,27 +313,16 @@ class ExerciseManager
         foreach ($exercise->getSteps() as $step) {
             foreach ($step->getStepQuestions() as $stepQ) {
                 $item = $stepQ->getQuestion();
-                $items[$item->getId()] = $item;
-                $questions[$stepQ->getQuestion()->getUuid()] = $stepQ->getQuestion();
-                $itemType = $item->getInteraction();
 
+                // only grab supported item types
                 if ($this->definitions->has($item->getMimeType())) {
+                    $items[$item->getUuid()] = $item;
+
                     /** @var AnswerableItemDefinitionInterface $definition */
                     $definition = $this->definitions->get($item->getMimeType());
-                    $subtitles = $definition->getCsvTitles($itemType);
 
-                    // FIXME
-                    if ('application/x.cloze+json' === $item->getMimeType()) {
-                        $qText = $item->getTitle();
-
-                        if (empty($qText)) {
-                            $qText = $item->getContent();
-                        }
-                        foreach ($subtitles as &$holeTitle) {
-                            $holeTitle = $qText.': '.$holeTitle;
-                        }
-                    }
-                    $titles[$item->getUuid()] = $subtitles;
+                    // generate columns for item
+                    $titles[$item->getUuid()] = $definition->getCsvTitles($item->getInteraction());
                 }
             }
         }
@@ -392,42 +380,29 @@ class ExerciseManager
                 $csv['score'] = [$score !== floor($score) ? number_format($score, 2) : $score];
                 $csv['total_score_on'] = [$totalScoreOn];
 
-                $notFound = [];
+                foreach ($items as $item) {
+                    /** @var AnswerableItemDefinitionInterface $itemDefinition */
+                    $itemDefinition = $this->definitions->get($item->getMimeType());
 
-                foreach ($questions as $question) {
-                    $item = $items[$question->getId()];
                     $found = false;
+                    // get question parameters from paper
+                    $itemData = $paper->getQuestion($item->getUuid());
+                    if (!empty($itemData)) {
+                        // get item entities
+                        $paperItem = $this->itemManager->deserialize($itemData, null, [Transfer::NO_FETCH]);
 
-                    foreach ($answers as $answer) {
-                        if ($answer->getQuestionId() === $question->getUuid()) {
-                            if ($this->definitions->has($item->getMimeType())) {
+                        foreach ($answers as $answer) {
+                            if ($answer->getQuestionId() === $item->getUuid()) {
                                 $found = true;
-
-                                /** @var AnswerableItemDefinitionInterface $definition */
-                                $definition = $this->definitions->get($item->getMimeType());
-                                $csv[$answer->getQuestionId()] = $definition->getCsvAnswers($item->getInteraction(), $answer);
+                                $csv[$answer->getQuestionId()] = $itemDefinition->getCsvAnswers($paperItem->getInteraction(), $answer);
                             }
                         }
                     }
 
+                    // question has no answer, we need to add place holders
                     if (!$found) {
-                        $notFound[] = $question->getUuid();
-                        $items[$question->getId()];
-                        $itemType = $item->getInteraction();
-                        $countBlank = 0;
-
-                        if ($this->definitions->has($item->getMimeType())) {
-                            $definition = $this->definitions->get($item->getMimeType());
-                            $countBlank = count($definition->getCsvTitles($itemType));
-                        }
-
-                        $blankData = [];
-
-                        for ($i = 0; $i < $countBlank; ++$i) {
-                            $blankData[] = '';
-                        }
-
-                        $csv[$item->getUuid()] = $blankData;
+                        $countBlank = count($itemDefinition->getCsvTitles($item->getInteraction()));
+                        $csv[$item->getUuid()] = array_pad([], $countBlank, '');
                     }
                 }
 
