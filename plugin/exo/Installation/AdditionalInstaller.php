@@ -17,6 +17,7 @@ use UJM\ExoBundle\Installation\Updater\Updater120000;
 use UJM\ExoBundle\Installation\Updater\Updater120308;
 use UJM\ExoBundle\Installation\Updater\Updater120400;
 use UJM\ExoBundle\Installation\Updater\Updater120403;
+use UJM\ExoBundle\Installation\Updater\Updater120406;
 
 class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterface
 {
