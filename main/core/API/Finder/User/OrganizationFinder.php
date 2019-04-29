@@ -12,6 +12,8 @@
 namespace Claroline\CoreBundle\API\Finder\User;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -50,16 +52,18 @@ class OrganizationFinder extends AbstractFinder
 
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Organization\Organization';
+        return Organization::class;
     }
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
     {
         if (!$this->authChecker->isGranted('ROLE_ADMIN')) {
             $currentUser = $this->tokenStorage->getToken()->getUser();
-            $qb->leftJoin('obj.administrators', 'ua');
-            $qb->andWhere('ua.id = :userId');
-            $qb->setParameter('userId', $currentUser->getId());
+            if ($currentUser instanceof User) {
+                $qb->leftJoin('obj.administrators', 'ua');
+                $qb->andWhere('ua.id = :userId');
+                $qb->setParameter('userId', $currentUser->getId());
+            }
         }
 
         foreach ($searches as $filterName => $filterValue) {
@@ -104,5 +108,12 @@ class OrganizationFinder extends AbstractFinder
         }
 
         return $qb;
+    }
+
+    public function getFilters()
+    {
+        return [
+            '$defaults' => [],
+        ];
     }
 }

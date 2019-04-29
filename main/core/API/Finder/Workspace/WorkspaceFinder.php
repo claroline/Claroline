@@ -233,6 +233,7 @@ class WorkspaceFinder extends AbstractFinder
                 'description' => 'Requires the user filter. Check if the user is the manager aswell',
             ],
 
+            '$defaults' => [],
             //random prop goes here
         ];
     }

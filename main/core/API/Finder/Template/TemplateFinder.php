@@ -70,4 +70,21 @@ class TemplateFinder extends AbstractFinder
 
         return $qb;
     }
+
+    public function getFilters()
+    {
+        return [
+            'type' => [
+                'type' => 'string',
+                'description' => 'The template type uuid',
+            ],
+
+            'typeName' => [
+                'type' => 'string',
+                'description' => 'The template type name',
+            ],
+
+            '$defaults' => [],
+        ];
+    }
 }

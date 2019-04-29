@@ -50,4 +50,11 @@ class ResourceRightsFinder extends AbstractFinder
 
         return $qb;
     }
+
+    public function getFilters()
+    {
+        return [
+            '$defaults' => [],
+        ];
+    }
 }

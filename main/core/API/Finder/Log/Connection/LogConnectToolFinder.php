@@ -84,4 +84,9 @@ class LogConnectToolFinder extends AbstractFinder
 
         return $qb;
     }
+
+    public function getFilters()
+    {
+        return [];
+    }
 }

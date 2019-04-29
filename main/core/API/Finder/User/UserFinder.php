@@ -66,7 +66,7 @@ class UserFinder extends AbstractFinder
 
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\User';
+        return User::class;
     }
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])
@@ -300,5 +300,12 @@ class UserFinder extends AbstractFinder
         $qb->setParameter('workspacesIds', $workspacesIds);
 
         return $qb;
+    }
+
+    public function getFilters()
+    {
+        return [
+            '$defaults' => [],
+        ];
     }
 }

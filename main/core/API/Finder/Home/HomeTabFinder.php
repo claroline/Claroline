@@ -59,7 +59,8 @@ class HomeTabFinder extends AbstractFinder
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'user':
-                    $roles = $this->om->find(User::class, $filterValue)->getRoles();
+                    $user = $this->om->find(User::class, $filterValue);
+                    $roles = $user ? $user->getRoles() : [];
 
                     $qb->leftJoin('obj.user', 'u');
 
@@ -159,5 +160,12 @@ class HomeTabFinder extends AbstractFinder
         }
 
         return $qb;
+    }
+
+    public function getFilters()
+    {
+        return [
+            '$defaults' => [],
+        ];
     }
 }

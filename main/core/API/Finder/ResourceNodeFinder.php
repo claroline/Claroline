@@ -239,4 +239,11 @@ class ResourceNodeFinder extends AbstractFinder
             'c1_.name' => 'resourceType',
           ];
     }
+
+    public function getFilters()
+    {
+        return [
+            '$defaults' => [],
+        ];
+    }
 }

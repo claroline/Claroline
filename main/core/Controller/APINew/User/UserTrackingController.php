@@ -11,7 +11,9 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\User;
 
+use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,12 +29,32 @@ class UserTrackingController extends AbstractCrudController
         return 'usertracking';
     }
 
+    public function getClass()
+    {
+        return ResourceUserEvaluation::class;
+    }
+
     public function getIgnore()
     {
         return ['create', 'deleteBulk', 'exist', 'copyBulk', 'schema', 'find', 'list'];
     }
 
     /**
+     * @ApiDoc(
+     *     description="List the objects of class ResourceUserEvaluation for a user.",
+     *     queryString={
+     *         "$finder",
+     *         {"name": "page", "type": "integer", "description": "The queried page."},
+     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
+     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
+     *     },
+     *     parameters={
+     *         "user": {
+     *              "type": {"string", "integer"},
+     *              "description": "The user uuid"
+     *          }
+     *     }
+     * )
      * @EXT\Route(
      *     "/user/{user}/trackings/list",
      *     name="apiv2_user_trackings_list"

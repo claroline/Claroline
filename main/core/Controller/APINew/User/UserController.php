@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\User;
 
+use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Event\StrictDispatcher;
@@ -70,6 +71,16 @@ class UserController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="List the objects of class $class.",
+     *     queryString={
+     *         "$finder",
+     *         {"name": "page", "type": "integer", "description": "The queried page."},
+     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
+     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
+     *     }
+     * )
+     *
      * @param Request $request
      * @param string  $class
      *
@@ -89,6 +100,12 @@ class UserController extends AbstractCrudController
     use HasGroupsTrait;
 
     /**
+     * @ApiDoc(
+     *     description="Create the personal workspaces of an array of users.",
+     *     queryString={
+     *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
+     *     }
+     * )
      * @Route("/pws/create", name="apiv2_users_pws_create")
      * @Method("POST")
      *
@@ -116,6 +133,12 @@ class UserController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="Remove the personal workspaces of an array of users.",
+     *     queryString={
+     *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
+     *     }
+     * )
      * @Route("/pws/delete", name="apiv2_users_pws_delete")
      * @Method("DELETE")
      *
@@ -145,6 +168,12 @@ class UserController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="Create and log a user.",
+     *     body={
+     *         "schema":"$schema"
+     *     }
+     * )
      * @Route("/user/login", name="apiv2_user_create_and_login")
      * @Method("POST")
      *
@@ -177,7 +206,7 @@ class UserController extends AbstractCrudController
             //try to find orga first
             //first find by vat
             if (isset($data['mainOrganization'])) {
-                if (isset($data['mainOrganization']['vat']) && $data['mainOrganization']['vat'] !== null) {
+                if (isset($data['mainOrganization']['vat']) && null !== $data['mainOrganization']['vat']) {
                     $organization = $organizationRepository
                       ->findOneBy(['vat' => $data['mainOrganization']['vat']]);
                 //then by code
@@ -239,6 +268,15 @@ class UserController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="Get the list of user in that share the current user organizations (and sub organizations).",
+     *     queryString={
+     *         "$finder=Claroline\CoreBundle\Entity\User&!recursiveOrXOrganization",
+     *         {"name": "page", "type": "integer", "description": "The queried page."},
+     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
+     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
+     *     }
+     * )
      * @Route(
      *    "/list/registerable",
      *    name="apiv2_user_list_registerable"
@@ -266,6 +304,15 @@ class UserController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="Get the list of user in that share the current user managed organizations (and sub organizations).",
+     *     queryString={
+     *         "$finder=Claroline\CoreBundle\Entity\User&!recursiveOrXOrganization",
+     *         {"name": "page", "type": "integer", "description": "The queried page."},
+     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
+     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
+     *     }
+     * )
      * @Route(
      *    "/list/managed/organization",
      *    name="apiv2_user_list_managed_organization"
@@ -339,6 +386,15 @@ class UserController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="Get the list of managed workspaces for the current user.",
+     *     queryString={
+     *         "$finder=Claroline\CoreBundle\Entity\Workspace\Workspace&!isManager",
+     *         {"name": "page", "type": "integer", "description": "The queried page."},
+     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
+     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
+     *     }
+     * )
      * @Route(
      *    "/list/managed/workspace",
      *    name="apiv2_user_list_managed_workspace"
@@ -373,6 +429,12 @@ class UserController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="Enable a list of users.",
+     *     queryString={
+     *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
+     *     }
+     * )
      * @Route(
      *    "/users/enable",
      *    name="apiv2_users_enable"
@@ -402,6 +464,12 @@ class UserController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="Disable a list of users.",
+     *     queryString={
+     *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
+     *     }
+     * )
      * @Route(
      *    "/users/disable",
      *    name="apiv2_users_disable"
@@ -431,6 +499,12 @@ class UserController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="Reset a list of user password.",
+     *     queryString={
+     *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
+     *     }
+     * )
      * @Route(
      *    "/password/reset",
      *    name="apiv2_users_password_reset"
@@ -463,6 +537,9 @@ class UserController extends AbstractCrudController
     }
 
     /**
+     * @ApiDoc(
+     *     description="This is the route used by the user picker.",
+     * )
      * @Route(
      *    "/picker",
      *    name="apiv2_users_picker_list"
