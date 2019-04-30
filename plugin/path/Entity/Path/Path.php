@@ -158,7 +158,7 @@ class Path extends AbstractResource
     /**
      * Remove step.
      *
-     * @param \Innova\PathBundle\Entity\Step $step
+     * @param Step $step
      *
      * @return Path
      */
@@ -346,5 +346,16 @@ class Path extends AbstractResource
     public function setSecondaryResourcesTarget($secondaryResourcesTarget)
     {
         $this->secondaryResourcesTarget = $secondaryResourcesTarget;
+    }
+
+    public function hasResources()
+    {
+        foreach ($this->steps as $step) {
+            if ($step->hasResources()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -41,6 +41,7 @@ use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\MessageBundle\Manager\MessageManager;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -1088,7 +1089,7 @@ class ClacoFormManager
         return $newKeyword;
     }
 
-    private function copyField(ClacoForm $newClacoForm, ClacoForm $newNode, Field $field, array $categoryLinks)
+    private function copyField(ClacoForm $newClacoForm, ResourceNode $newNode, Field $field, array $categoryLinks)
     {
         $links = [
             'fields' => [],
@@ -1311,6 +1312,11 @@ class ClacoFormManager
         return $this->entryRepo->findBy(['clacoForm' => $clacoForm, 'user' => $user]);
     }
 
+    /**
+     * @param ClacoForm $clacoForm
+     *
+     * @return Entry[]|ArrayCollection
+     */
     public function getAllEntries(ClacoForm $clacoForm)
     {
         return $this->entryRepo->findBy(['clacoForm' => $clacoForm]);

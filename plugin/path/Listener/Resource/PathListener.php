@@ -5,13 +5,13 @@ namespace Innova\PathBundle\Listener\Resource;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Innova\PathBundle\Entity\Path\Path;
-use Innova\PathBundle\Entity\SecondaryResource;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Manager\UserProgressionManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -133,29 +133,23 @@ class PathListener
         // Start the transaction. We'll copy every resource in one go that way.
         $this->om->startFlushSuite();
 
-        $parent = $event->getParent();
-
-        /** @var Path $pathToCopy */
-        $pathToCopy = $event->getResource();
-        $pathNodes = [];
-        $nodesCopy = [];
-
-        foreach ($pathToCopy->getSteps() as $step) {
-            $this->retrieveStepNodes($step, $pathNodes);
-        }
-        if (count($pathNodes) > 0) {
-            $resourcesCopyDir = $this->createResourcesCopyDirectory($parent, $pathToCopy->getResourceNode()->getName());
-            // A forced flush is required for rights purpose on the copied resources
-            $this->om->forceFlush();
-            $nodesCopy = $this->copyResources($pathNodes, $resourcesCopyDir->getResourceNode());
-        }
-
+        /** @var Path $path */
         $path = $event->getCopy();
+        $pathNode = $path->getResourceNode();
 
-        $stepsMapping = [];
+        if ($path->hasResources()) {
+            // create a directory to store copied resources
+            $resourcesDirectory = $this->createResourcesCopyDirectory($pathNode->getParent(), $pathNode->getName());
+            // A forced flush is required for rights propagation on the copied resources
+            $this->om->forceFlush();
 
-        foreach ($pathToCopy->getRootSteps() as $step) {
-            $this->copyStep($step, $path, $nodesCopy, $stepsMapping);
+            // copy resources for all steps
+            $copiedResources = [];
+            foreach ($path->getSteps() as $step) {
+                if ($step->hasResources()) {
+                    $copiedResources = $this->copyStepResources($step, $resourcesDirectory->getResourceNode(), $copiedResources);
+                }
+            }
         }
 
         $this->om->persist($path);
@@ -165,29 +159,6 @@ class PathListener
         $event->setCopy($path);
 
         $event->stopPropagation();
-    }
-
-    /**
-     * Store in given array all resource nodes present in step.
-     *
-     * @param Step  $step
-     * @param array $nodes
-     */
-    private function retrieveStepNodes(Step $step, array &$nodes)
-    {
-        $primaryResource = $step->getResource();
-        $secondaryResources = $step->getSecondaryResources();
-
-        if (!empty($primaryResource)) {
-            $nodes[$primaryResource->getGuid()] = $primaryResource;
-        }
-        foreach ($secondaryResources as $secondaryResource) {
-            $node = $secondaryResource->getResource();
-            $nodes[$node->getGuid()] = $node;
-        }
-        foreach ($step->getChildren() as $child) {
-            $this->retrieveStepNodes($child, $nodes);
-        }
     }
 
     /**
@@ -204,7 +175,7 @@ class PathListener
         $user = $this->tokenStorage->getToken()->getUser();
 
         $resourcesDir = $this->resourceManager->createResource(
-            'Claroline\CoreBundle\Entity\Resource\Directory',
+            Directory::class,
             $pathName.' ('.$this->translator->trans('resources', [], 'platform').')'
         );
 
@@ -217,73 +188,43 @@ class PathListener
         );
     }
 
-    /**
-     * Copy all given resources nodes.
-     *
-     * @param array        $resources
-     * @param ResourceNode $newParent
-     *
-     * @return array $resourcesCopy
-     */
-    private function copyResources(array $resources, ResourceNode $newParent)
+    private function copyStepResources(Step $step, ResourceNode $destination, array $copiedResources = [])
     {
-        // Get current User
+        // get current User
         $user = $this->tokenStorage->getToken()->getUser();
 
-        $resourcesCopy = [];
-        foreach ($resources as $resourceNode) {
-            $copy = $this->resourceManager->copy($resourceNode, $newParent, $user);
-            if ($copy) {
-                $resourcesCopy[$resourceNode->getGuid()] = $copy->getResourceNode();
+        // copy primary resource
+        if (!empty($step->getResource())) {
+            $resourceNode = $step->getResource();
+            if (!isset($copiedResources[$resourceNode->getUuid()])) {
+                // resource not already copied, create a new copy
+                $resourceCopy = $this->resourceManager->copy($resourceNode, $destination, $user);
+                if ($resourceCopy) {
+                    $copiedResources[$resourceNode->getUuid()] = $resourceCopy->getResourceNode();
+                }
+            }
+
+            // replace resource by the copy
+            $step->setResource($copiedResources[$resourceNode->getUuid()]);
+        }
+
+        // copy secondary resources
+        if (!empty($step->getSecondaryResources())) {
+            foreach ($step->getSecondaryResources() as $secondaryResource) {
+                $resourceNode = $secondaryResource->getResource();
+                if (!isset($copiedResources[$resourceNode->getUuid()])) {
+                    // resource not already copied, create a new copy
+                    $resourceCopy = $this->resourceManager->copy($resourceNode, $destination, $user);
+                    if ($resourceCopy) {
+                        $copiedResources[$resourceNode->getUuid()] = $resourceCopy->getResourceNode();
+                    }
+                }
+
+                // replace resource by the copy
+                $secondaryResource->setResource($copiedResources[$resourceNode->getUuid()]);
             }
         }
 
-        return $resourcesCopy;
-    }
-
-    /**
-     * Copy a step.
-     *
-     * @param Step  $step         The step to copy
-     * @param Path  $pathCopy     The copied path
-     * @param array $nodesCopy    The list of all copied resources nodes
-     * @param array $stepsMapping The mapping between uuid of old steps and uuid of new ones
-     * @param Step  $parent       The step parent of the copy
-     */
-    private function copyStep(Step $step, Path $pathCopy, array $nodesCopy, array &$stepsMapping, Step $parent = null)
-    {
-        $stepCopy = new Step();
-        $stepCopy->setParent($parent);
-        $stepCopy->setPath($pathCopy);
-        $stepCopy->setTitle($step->getTitle());
-        $stepCopy->setDescription($step->getDescription());
-        $stepCopy->setPoster($step->getPoster());
-        $stepCopy->setNumbering($step->getNumbering());
-        $stepCopy->setOrder($step->getOrder());
-
-        $stepsMapping[$step->getUuid()] = $stepCopy->getUuid();
-
-        $primaryResource = $step->getResource();
-        if (!empty($primaryResource) && isset($nodesCopy[$primaryResource->getUuid()])) {
-            $stepCopy->setResource($nodesCopy[$primaryResource->getUuid()]);
-        }
-
-        foreach ($step->getSecondaryResources() as $secondaryResource) {
-            $resource = $secondaryResource->getResource();
-
-            if (isset($nodesCopy[$resource->getUuid()])) {
-                $secondaryResourceCopy = new SecondaryResource();
-                $secondaryResourceCopy->setStep($stepCopy);
-                $secondaryResourceCopy->setResource($nodesCopy[$resource->getUuid()]);
-                $secondaryResourceCopy->setOrder($secondaryResource->getOrder());
-
-                $this->om->persist($secondaryResourceCopy);
-            }
-        }
-
-        foreach ($step->getChildren() as $child) {
-            $this->copyStep($child, $pathCopy, $nodesCopy, $stepsMapping, $stepCopy);
-        }
-        $this->om->persist($stepCopy);
+        return $copiedResources;
     }
 }

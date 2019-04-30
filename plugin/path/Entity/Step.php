@@ -239,6 +239,10 @@ class Step
      */
     public function setPath(Path $path = null)
     {
+        if (!empty($this->path)) {
+            $this->path->removeStep($this);
+        }
+
         $this->path = $path;
 
         if (!empty($path)) {
@@ -286,6 +290,11 @@ class Step
     public function getParent()
     {
         return $this->parent;
+    }
+
+    public function hasResources()
+    {
+        return !empty($this->resource) || !empty($this->secondaryResources);
     }
 
     /**

@@ -128,11 +128,17 @@ class ClacoForm extends AbstractResource
         return $this->fields->clear();
     }
 
+    /**
+     * @return Category[]
+     */
     public function getCategories()
     {
         return $this->categories->toArray();
     }
 
+    /**
+     * @return Keyword[]
+     */
     public function getKeywords()
     {
         return $this->keywords->toArray();

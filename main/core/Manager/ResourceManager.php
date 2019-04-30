@@ -84,6 +84,12 @@ class ResourceManager
     /* @var ContainerInterface */
     private $container;
 
+    /** @var SerializerProvider */
+    private $serializer;
+
+    /** @var ResourceLifecycleManager */
+    private $lifeCycleManager;
+
     /**
      * ResourceManager constructor.
      *
@@ -110,6 +116,7 @@ class ResourceManager
      * @param Utilities                    $secut
      * @param TranslatorInterface          $translator
      * @param PlatformConfigurationHandler $platformConfigHandler
+     * @param SerializerProvider           $serializer
      * @param ResourceLifecycleManager     $lifeCycleManager
      */
     public function __construct(
@@ -542,7 +549,11 @@ class ResourceManager
         $className = $this->om->getMetadataFactory()->getMetadataFor(get_class($resource))->getName();
 
         $serializer = $this->serializer->get($className);
-        $options = method_exists($serializer, 'getCopyOptions') ? $serializer->getCopyOptions() : ['serialize' => [], 'deserialize' => []];
+        $options = ['serialize' => [], 'deserialize' => [Options::REFRESH_UUID]];
+        if (method_exists($serializer, 'getCopyOptions')) {
+            $options = array_merge_recursive($options, $serializer->getCopyOptions());
+        }
+
         $serialized = $serializer->serialize($resource, $options['serialize']);
         $copy = new $className();
         $serializer->deserialize($serialized, $copy, $options['deserialize']);

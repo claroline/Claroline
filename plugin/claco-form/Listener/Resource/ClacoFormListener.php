@@ -132,7 +132,7 @@ class ClacoFormListener
     public function onCopy(CopyResourceEvent $event)
     {
         $clacoForm = $event->getResource();
-        $copy = $event->getCopy()->getResourceNode();
+        $copy = $event->getCopy();
         $copy = $this->clacoFormManager->copyClacoForm($clacoForm, $copy);
 
         $event->setCopy($copy);

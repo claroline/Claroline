@@ -108,6 +108,7 @@ class PathSerializer
     /**
      * @param array $data
      * @param Path  $path
+     * @param array $options
      *
      * @return Path
      */
@@ -115,6 +116,8 @@ class PathSerializer
     {
         if (!in_array(Options::REFRESH_UUID, $options)) {
             $this->sipe('id', 'setUuid', $data, $path);
+        } else {
+            $path->refreshUuid();
         }
 
         $this->sipe('display.description', 'setDescription', $data, $path);
@@ -194,45 +197,49 @@ class PathSerializer
     /**
      * @param array $stepsData
      * @param Path  $path
+     * @param array $options
      */
     private function deserializeSteps($stepsData, Path $path, array $options = [])
     {
-        $currentSteps = $path->getSteps();
+        /** @var Step[] $currentSteps */
+        $currentSteps = $path->getSteps()->toArray();
         $ids = [];
 
         foreach ($stepsData as $stepIndex => $stepData) {
-            $step = $this->deserializeStep($stepData, $ids, ['path' => $path, 'order' => $stepIndex, 'options' => $options]);
-            $path->addStep($step);
+            $step = $this->deserializeStep($path, $stepData, $ids, $options);
+            $step->setOrder($stepIndex);
         }
 
+        $deleted = [];
         foreach ($currentSteps as $currentStep) {
             if (!in_array($currentStep->getUuid(), $ids)) {
+                $deleted[] = $currentStep->getUuid();
                 $currentStep->setPath(null);
                 $currentStep->setParent(null);
-                $this->om->persist($currentStep);
-                $path->removeStep($currentStep);
             }
         }
     }
 
     /**
+     * @param Path  $path
      * @param array $data
      * @param array $stepIds
      * @param array $options
      *
      * @return Step
      */
-    private function deserializeStep($data, array &$stepIds, array $options = [])
+    private function deserializeStep(Path $path, $data, array &$stepIds, array $options = [])
     {
-        $stepIds[] = $data['id'];
-
-        if (isset($options['options']) && in_array(Options::REFRESH_UUID, $options['options'])) {
+        if (in_array(Options::REFRESH_UUID, $options)) {
             $step = new Step();
-            $stepIds[] = $step->getUuid();
         } else {
             $step = $this->stepRepo->findOneBy(['uuid' => $data['id']]) ?? new Step();
             $step->setUuid($data['id']);
         }
+
+        $step->setPath($path);
+
+        $stepIds[] = $step->getUuid();
 
         if (isset($data['title'])) {
             $step->setTitle($data['title']);
@@ -244,11 +251,13 @@ class PathSerializer
             $step->setPoster($data['poster']['url']);
         }
 
-        if (isset($data['display']) && isset($data['display']['numbering'])) {
-            $step->setNumbering($data['display']['numbering']);
-        }
-        if (isset($data['display']) && isset($data['display']['height'])) {
-            $step->setActivityHeight($data['display']['height']);
+        if (isset($data['display'])) {
+            if (isset($data['display']['numbering'])) {
+                $step->setNumbering($data['display']['numbering']);
+            }
+            if (isset($data['display']['height'])) {
+                $step->setActivityHeight($data['display']['height']);
+            }
         }
 
         /* Set primary resource */
@@ -259,16 +268,6 @@ class PathSerializer
 
         if (isset($data['showResourceHeader'])) {
             $step->setShowResourceHeader($data['showResourceHeader']);
-        }
-
-        if (isset($options['path'])) {
-            $step->setPath($options['path']);
-        }
-        if (isset($options['order'])) {
-            $step->setOrder($options['order']);
-        }
-        if (isset($options['parent'])) {
-            $step->setParent($options['parent']);
         }
 
         // Set secondary resources
@@ -292,13 +291,9 @@ class PathSerializer
             $step->emptyChildren();
 
             foreach ($data['children'] as $childIndex => $childData) {
-                $childOptions = [
-                    'path' => $options['path'],
-                    'parent' => $step,
-                    'order' => $childIndex,
-                    'options' => $options['options'],
-                ];
-                $child = $this->deserializeStep($childData, $stepIds, $childOptions);
+                $child = $this->deserializeStep($path, $childData, $stepIds, $options);
+
+                $child->setOrder($childIndex);
                 $step->addChild($child);
             }
         }
