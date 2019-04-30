@@ -34,7 +34,7 @@ class SubjectComponent extends Component {
     super(props)
 
     if (this.props.invalidated || !this.props.loaded) {
-      this.props.reload(this.props.subject.id)
+      this.props.reload(this.props.subject.id, this.props.forum.id)
     }
     this.state = {
       showMessageForm: null
@@ -44,7 +44,7 @@ class SubjectComponent extends Component {
   componentDidUpdate(prevProps) {
     if ((prevProps.invalidated !== this.props.invalidated && this.props.invalidated)
     || (prevProps.loaded !== this.props.loaded && !this.props.loaded)) {
-      this.props.reload(this.props.subject.id)
+      this.props.reload(this.props.subject.id, this.props.forum.id)
     }
   }
 
@@ -293,7 +293,8 @@ SubjectComponent.propTypes = {
     title: T.string
   }),
   forum: T.shape({
-    moderation: T.string.isRequired
+    moderation: T.string.isRequired,
+    id: T.string.isRequired
   }).isRequired,
   createMessage: T.func.isRequired,
   editContent: T.func.isRequired,
@@ -366,8 +367,8 @@ const Subject =  withRouter(withModal(connect(
     deleteMessage(id) {
       dispatch(listActions.deleteData(`${select.STORE_NAME}.subjects.messages`, ['apiv2_forum_message_delete_bulk'], [{id: id}]))
     },
-    reload(id) {
-      dispatch(listActions.fetchData(`${select.STORE_NAME}.subjects.messages`, ['claroline_forum_api_subject_getmessages', {id}]))
+    reload(id, forumId) {
+      dispatch(listActions.fetchData(`${select.STORE_NAME}.subjects.messages`, ['apiv2_forum_subject_get_message', {id, forumId}]))
     },
     toggleSort(sortOrder) {
       dispatch(listActions.updateSortDirection(`${select.STORE_NAME}.subjects.messages`, -sortOrder))

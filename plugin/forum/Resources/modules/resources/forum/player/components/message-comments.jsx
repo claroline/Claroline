@@ -198,8 +198,8 @@ const MessageComments =  withModal(connect(
     deleteComment(id) {
       dispatch(listActions.deleteData('subjects.messages', ['apiv2_forum_message_delete_bulk'], [{id: id}]))
     },
-    reload(id) {
-      dispatch(listActions.fetchData('subjects.messages', ['claroline_forum_api_subject_getmessages', {id}]))
+    reload(id, forumId) {
+      dispatch(listActions.fetchData('subjects.messages', ['apiv2_forum_subject_get_message', {id, forumId}]))
     },
     editContent(message, subjectId, content) {
       dispatch(actions.editContent(message, subjectId, content))

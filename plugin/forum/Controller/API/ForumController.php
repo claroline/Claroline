@@ -69,7 +69,7 @@ class ForumController extends AbstractCrudController
     public function getSubjectsAction($id, Request $request)
     {
         return new JsonResponse(
-            $this->finder->search('Claroline\ForumBundle\Entity\Subject', array_merge(
+            $this->finder->search(Subject::class, array_merge(
                 $request->query->all(),
                 ['hiddenFilters' => ['forum' => [$id], 'moderation' => false]]
             ))
@@ -102,7 +102,7 @@ class ForumController extends AbstractCrudController
         $data = $this->decodeRequest($request);
         $data['forum'] = $serializedForum;
         $object = $this->crud->create(
-            'Claroline\ForumBundle\Entity\Subject',
+            Subject::class,
             $data,
             $this->options['create']
         );

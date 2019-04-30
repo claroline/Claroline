@@ -23,7 +23,10 @@ class SubjectController extends AbstractCrudController
 
     /**
      * @EXT\Route("/{id}/messages")
+     * @EXT\Route("/forum/{forumId}/subjects/{id}/messages", name="apiv2_forum_subject_get_message")
      * @EXT\Method("GET")
+     * @EXT\ParamConverter("subject", class = "ClarolineForumBundle:Subject",  options={"mapping": {"id": "uuid"}})
+     * @EXT\ParamConverter("forum", class = "ClarolineForumBundle:Forum",  options={"mapping": {"forumId": "uuid"}})
 
      * @ApiDoc(
      *     description="Get the messages of a subject",
@@ -46,12 +49,16 @@ class SubjectController extends AbstractCrudController
      *
      * @return JsonResponse
      */
-    public function getMessagesAction($id, Request $request)
+    public function getMessagesAction(Subject $subject, Forum $forum = null, Request $request)
     {
+        if ($forum && ($forum->getId() !== $subject->getForum()->getId())) {
+            throw new \Exception('This subject was not created in the forum.');
+        }
+
         return new JsonResponse(
           $this->finder->search(Message::class, array_merge(
               $request->query->all(),
-              ['hiddenFilters' => ['subject' => $id, 'parent' => null, 'first' => false]]
+              ['hiddenFilters' => ['subject' => $subject->getId(), 'parent' => null, 'first' => false]]
             ))
         );
     }

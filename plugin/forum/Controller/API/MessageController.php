@@ -51,7 +51,7 @@ class MessageController extends AbstractCrudController
         $data['parent'] = $message;
 
         $object = $this->crud->create(
-            'Claroline\ForumBundle\Entity\Message',
+            Message::class,
             $data,
             $this->options['create']
         );
@@ -110,6 +110,6 @@ class MessageController extends AbstractCrudController
 
     public function getClass()
     {
-        return "Claroline\ForumBundle\Entity\Message";
+        return Message::class;
     }
 }
