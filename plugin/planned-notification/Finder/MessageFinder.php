@@ -12,6 +12,7 @@
 namespace Claroline\PlannedNotificationBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\PlannedNotificationBundle\Entity\Message;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -23,7 +24,7 @@ class MessageFinder extends AbstractFinder
 {
     public function getClass()
     {
-        return 'Claroline\PlannedNotificationBundle\Entity\Message';
+        return Message::class;
     }
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, array $options = ['count' => false, 'page' => 0, 'limit' => -1])

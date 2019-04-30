@@ -89,7 +89,7 @@ class PlannedNotificationSerializer
      */
     public function deserialize($data, PlannedNotification $notification, array $options)
     {
-        if (!in_array(Options::GENERATE_UUID, $options)) {
+        if (!in_array(Options::REFRESH_UUID, $options)) {
             $notification->setUuid($data['id']);
         }
 

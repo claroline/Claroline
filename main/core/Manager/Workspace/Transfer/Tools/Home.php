@@ -13,9 +13,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("claroline.transfer.home")
- *  Should probably implements a "Transfer" interface
  */
-class Home
+class Home implements ToolImporterInterface
 {
     use LoggableTrait;
 
@@ -58,6 +57,11 @@ class Home
         });
 
         return ['tabs' => $tabs];
+    }
+
+    public function prepareImport(array $orderedToolData, array $data): array
+    {
+        return $data;
     }
 
     public function deserialize(array $data, Workspace $workspace, array $options, FileBag $bag)

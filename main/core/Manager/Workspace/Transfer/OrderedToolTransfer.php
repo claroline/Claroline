@@ -89,11 +89,10 @@ class OrderedToolTransfer
 
         if ($this->container->has($serviceName)) {
             $importer = $this->container->get($serviceName);
-            $importer->setLogger($this->logger);
-
-            if (method_exists($importer, 'prepareImport')) {
-                $data = $importer->prepareImport($orderedToolData, $data);
+            if (method_exists($importer, 'setLogger')) {
+                $importer->setLogger($this->logger);
             }
+            $data = $importer->prepareImport($orderedToolData, $data);
         }
 
         return $data;
@@ -115,12 +114,10 @@ class OrderedToolTransfer
                 if (isset($restriction['role']['name'])) {
                     $role = $om->getRepository(Role::class)->findOneBy(['name' => $restriction['role']['name']]);
                 } else {
-                    $role = $om->getRepository(Role::class)->findOneBy(
-                [
-                  'translationKey' => $restriction['role']['translationKey'],
-                  'workspace' => $workspace->getId(),
-                ]
-              );
+                    $role = $om->getRepository(Role::class)->findOneBy([
+                        'translationKey' => $restriction['role']['translationKey'],
+                        'workspace' => $workspace->getId(),
+                    ]);
                 }
 
                 $rights = new ToolRights();
@@ -135,8 +132,12 @@ class OrderedToolTransfer
 
             if ($this->container->has($serviceName)) {
                 $importer = $this->container->get($serviceName);
-                $importer->setLogger($this->logger);
-                $importer->deserialize($data['data'], $orderedTool->getWorkspace(), [Options::REFRESH_UUID], $bag);
+                if (method_exists($importer, 'setLogger')) {
+                    $importer->setLogger($this->logger);
+                }
+                if (isset($data['data'])) {
+                    $importer->deserialize($data['data'], $orderedTool->getWorkspace(), [Options::REFRESH_UUID], $bag);
+                }
             }
         }
     }

@@ -14,7 +14,6 @@ namespace Claroline\TeamBundle\Listener;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Event\WorkspaceCopyToolEvent;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\TeamBundle\Entity\Team;
 use Claroline\TeamBundle\Manager\TeamManager;
@@ -103,47 +102,5 @@ class TeamListener
         );
         $event->setContent($content);
         $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("workspace_copy_tool_claroline_team_tool")
-     *
-     * @param WorkspaceCopyToolEvent $event
-     */
-    public function onWorkspaceToolCopy(WorkspaceCopyToolEvent $event)
-    {
-        $oldWs = $event->getOldWorkspace();
-        $workspace = $event->getNewWorkspace();
-        $oldTeams = $this->om->getRepository(Team::class)->findBy(['workspace' => $oldWs]);
-        $roles = $workspace->getRoles();
-
-        foreach ($oldTeams as $team) {
-            $new = new Team();
-            $new->setWorkspace($workspace);
-            $new->setName($team->getName());
-            $new->setDescription($team->getDescription());
-
-            foreach ($roles as $workspaceRole) {
-                if ($workspaceRole->getTranslationKey() === $team->getName()) {
-                    $new->setRole($workspaceRole);
-                }
-            }
-
-            foreach ($roles as $workspaceRole) {
-                if ($workspaceRole->getTranslationKey() === $team->getName().' manager') {
-                    $new->setTeamManagerRole($workspaceRole);
-                }
-            }
-
-            $new->setMaxUsers($team->getMaxUsers());
-            $new->setSelfRegistration($team->isSelfRegistration());
-            $new->setSelfUnregistration($team->isSelfUnregistration());
-            $new->setIsPublic($team->isPublic());
-            $new->setDirDeletable($team->isDirDeletable());
-            //currently, the default ressource will be lost
-            //we should discuss how to handle it later
-
-            $this->om->persist($new);
-        }
     }
 }

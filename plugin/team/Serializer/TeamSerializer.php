@@ -125,12 +125,15 @@ class TeamSerializer
      *
      * @return Team
      */
-    public function deserialize($data, Team $team)
+    public function deserialize($data, Team $team, array $options = [])
     {
         // TODO : rewrite. persist/flush are not allowed in serializers
         $this->om->startFlushSuite();
 
-        $this->sipe('id', 'setUuid', $data, $team);
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $team->setUuid($data['id']);
+        }
+
         $this->sipe('name', 'setName', $data, $team);
         $this->sipe('description', 'setDescription', $data, $team);
         $this->sipe('selfRegistration', 'setSelfRegistration', $data, $team);

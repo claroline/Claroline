@@ -62,7 +62,7 @@ class MessageSerializer
      */
     public function deserialize($data, Message $message, array $options)
     {
-        if (!in_array(Options::GENERATE_UUID, $options)) {
+        if (!in_array(Options::REFRESH_UUID, $options)) {
             $message->setUuid($data['id']);
         }
 

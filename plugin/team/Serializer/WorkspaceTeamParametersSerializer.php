@@ -2,8 +2,10 @@
 
 namespace Claroline\TeamBundle\Serializer;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\TeamBundle\Entity\WorkspaceTeamParameters;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -30,7 +32,7 @@ class WorkspaceTeamParametersSerializer
      */
     public function __construct(ObjectManager $om)
     {
-        $this->workspaceRepo = $om->getRepository('Claroline\CoreBundle\Entity\Workspace\Workspace');
+        $this->workspaceRepo = $om->getRepository(Workspace::class);
     }
 
     /**
@@ -63,9 +65,12 @@ class WorkspaceTeamParametersSerializer
      *
      * @return WorkspaceTeamParameters
      */
-    public function deserialize($data, WorkspaceTeamParameters $parameters)
+    public function deserialize($data, WorkspaceTeamParameters $parameters, array $options = [])
     {
-        $this->sipe('id', 'setUuid', $data, $parameters);
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $parameters->setUuid($data['id']);
+        }
+
         $this->sipe('selfRegistration', 'setSelfRegistration', $data, $parameters);
         $this->sipe('selfUnregistration', 'setSelfUnregistration', $data, $parameters);
         $this->sipe('publicDirectory', 'setIsPublic', $data, $parameters);

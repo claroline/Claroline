@@ -22,7 +22,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 /**
  * @DI\Service("claroline.transfer.resource_manager")
  */
-class ResourceManager
+class ResourceManager implements ToolImporterInterface
 {
     use LoggableTrait;
 
@@ -89,7 +89,7 @@ class ResourceManager
         return $data;
     }
 
-    public function prepareImport(array $orderedToolData, array $data)
+    public function prepareImport(array $orderedToolData, array $data): array
     {
         foreach ($orderedToolData['data']['resources'] as $serialized) {
             $event = $this->dispatcher->dispatch(
