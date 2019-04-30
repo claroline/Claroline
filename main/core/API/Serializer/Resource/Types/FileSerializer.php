@@ -71,7 +71,7 @@ class FileSerializer
         $this->sipe('hashName', 'setHashName', $data, $file);
         $this->sipe('autoDownload', 'setAutoDownload', $data, $file);
 
-        if (isset($data['commentsActivated'])) {
+        if (isset($data['commentsActivated']) && $file->getResourceNode()) {
             $resourceNode = $file->getResourceNode();
             $resourceNode->setCommentsActivated($data['commentsActivated']);
         }

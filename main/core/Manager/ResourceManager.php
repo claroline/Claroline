@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -544,7 +545,7 @@ class ResourceManager
         $options = method_exists($serializer, 'getCopyOptions') ? $serializer->getCopyOptions() : ['serialize' => [], 'deserialize' => []];
         $serialized = $serializer->serialize($resource, $options['serialize']);
         $copy = new $className();
-        $copy = $serializer->deserialize($serialized, $copy, $options['deserialize']);
+        $serializer->deserialize($serialized, $copy, $options['deserialize']);
         $copy->setResourceNode($newNode);
         $original = $this->getResourceFromNode($node);
 
@@ -1156,7 +1157,7 @@ class ResourceManager
 
         $serialized = $this->serializer->serialize($node);
         unset($serialized['rights']);
-        $this->serializer->get(ResourceNode::class)->deserialize($serialized, $newNode);
+        $this->serializer->get(ResourceNode::class)->deserialize($serialized, $newNode, [Options::REFRESH_UUID]);
 
         $newNode->setResourceType($node->getResourceType());
         $newNode->setCreator($user);
