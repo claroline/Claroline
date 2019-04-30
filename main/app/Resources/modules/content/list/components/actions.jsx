@@ -12,11 +12,14 @@ import {
   PromisedAction as PromisedActionTypes
 } from '#/main/app/action/prop-types'
 
+// TODO : maybe manage it in action module (it's duplicated for cards)
 const StaticPrimaryAction = props => {
   if (isEmpty(props.action) || props.action.disabled || (props.action.displayed !== undefined && !props.action.displayed)) {
-    return React.createElement(props.disabledWrapper, {
-      className: props.className
-    }, props.children)
+    return (
+      <span className={props.className}>
+        {props.children}
+      </span>
+    )
   }
 
   return (
@@ -34,7 +37,6 @@ StaticPrimaryAction.propTypes = {
   action: T.shape(merge({}, ActionTypes.propTypes, {
     label: T.node // make label optional
   })),
-  disabledWrapper: T.string,
   children: T.node.isRequired
 }
 
@@ -47,15 +49,14 @@ const ListPrimaryAction = props => {
           <StaticPrimaryAction
             className={props.className}
             action={action}
-            disabledWrapper={props.disabledWrapper}
           >
             {props.children}
           </StaticPrimaryAction>
         )}
         placeholder={
-          React.createElement(props.disabledWrapper, {
-            className: props.className
-          }, props.children)
+          <span className={props.className}>
+            {props.children}
+          </span>
         }
       />
     )
@@ -65,7 +66,6 @@ const ListPrimaryAction = props => {
     <StaticPrimaryAction
       className={props.className}
       action={props.action}
-      disabledWrapper={props.disabledWrapper}
     >
       {props.children}
     </StaticPrimaryAction>
@@ -84,13 +84,7 @@ ListPrimaryAction.propTypes = {
       PromisedActionTypes.propTypes
     )
   ]),
-  disabledWrapper: T.string,
   children: T.node.isRequired
-}
-
-ListPrimaryAction.defaultProps = {
-  disabled: false,
-  disabledWrapper: 'span'
 }
 
 /**

@@ -33,9 +33,16 @@ const DataCard = {
     flags: T.arrayOf(
       T.arrayOf(T.oneOfType([T.string, T.number]))
     ),
-    primaryAction: T.shape(merge({}, Action.propTypes, {
-      label: T.node // make label optional
-    })),
+    primaryAction: T.oneOfType([
+      // a regular action
+      T.shape(merge({}, Action.propTypes, {
+        label: T.node // make label optional
+      })),
+      // a promise that will resolve a list of actions
+      T.shape(
+        PromisedAction.propTypes
+      )
+    ]),
     actions: T.oneOfType([
       // a regular array of actions
       T.arrayOf(T.shape(

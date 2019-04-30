@@ -50,9 +50,16 @@ DataGridItem.propTypes = {
   orientation: T.string.isRequired,
   row: T.object.isRequired,
 
-  primaryAction: T.shape(merge({}, ActionTypes.propTypes, {
-    label: T.node // make label optional
-  })),
+  primaryAction:  T.oneOfType([
+    // a regular action
+    T.shape(merge({}, ActionTypes.propTypes, {
+      label: T.node // make label optional
+    })),
+    // a promise that will resolve a list of actions
+    T.shape(
+      PromisedActionTypes.propTypes
+    )
+  ]),
 
   actions: T.oneOfType([
     // a regular array of actions

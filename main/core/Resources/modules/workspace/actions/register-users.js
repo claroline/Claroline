@@ -11,6 +11,7 @@ import {MODAL_WORKSPACE_ROLES} from '#/main/core/workspace/modals/roles'
  * Registers selected users to some workspaces.
  */
 export default (workspaces, refresher) => ({
+  name: 'register-users',
   type: MODAL_BUTTON,
   icon: 'fa fa-fw fa-user',
   label: trans('register_users'),

@@ -1,26 +1,31 @@
 import React from 'react'
 import classes from 'classnames'
+import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {getPlainText} from '#/main/app/data/types/html/utils'
 import {number} from '#/main/app/intl'
+import {Await} from '#/main/app/components/await'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {Button} from '#/main/app/action/components/button'
 import {TooltipOverlay} from '#/main/app/overlay/tooltip/components/overlay'
 import {Heading} from '#/main/core/layout/components/heading'
 
-import {Action as ActionTypes} from '#/main/app/action/prop-types'
+import {
+  Action as ActionTypes,
+  PromisedAction as PromisedActionTypes
+} from '#/main/app/action/prop-types'
 import {DataCard as DataCardTypes} from '#/main/app/content/card/prop-types'
 
-const CardAction = props => {
-  if (!props.action || props.action.disabled) {
-    // no action defined
+// TODO : maybe manage it in action module (it's duplicated for tables)
+const StaticCardAction = props => {
+  if (isEmpty(props.action) || props.action.disabled || (props.action.displayed !== undefined && !props.action.displayed)) {
     return (
-      <div className={props.className}>
+      <span className={props.className}>
         {props.children}
-      </div>
+      </span>
     )
   }
 
@@ -33,11 +38,58 @@ const CardAction = props => {
   )
 }
 
-CardAction.propTypes = {
+StaticCardAction.propTypes = {
   className: T.string,
   action: T.shape(merge({}, ActionTypes.propTypes, {
     label: T.node // make label optional
   })),
+  children: T.node.isRequired
+}
+
+const CardAction = props => {
+  if (props.action instanceof Promise) {
+    return (
+      <Await
+        for={props.action}
+        then={action => (
+          <StaticCardAction
+            className={props.className}
+            action={action}
+          >
+            {props.children}
+          </StaticCardAction>
+        )}
+        placeholder={
+          <span className={props.className}>
+            {props.children}
+          </span>
+        }
+      />
+    )
+  }
+
+  return (
+    <StaticCardAction
+      className={props.className}
+      action={props.action}
+    >
+      {props.children}
+    </StaticCardAction>
+  )
+}
+
+CardAction.propTypes = {
+  className: T.string,
+  action: T.oneOfType([
+    // a regular action
+    T.shape(merge({}, ActionTypes.propTypes, {
+      label: T.node // make label optional
+    })),
+    // a promise that will resolve a list of actions
+    T.shape(
+      PromisedActionTypes.propTypes
+    )
+  ]),
   children: T.any.isRequired
 }
 
@@ -106,9 +158,16 @@ CardHeader.propTypes = {
   flags: T.arrayOf(
     T.arrayOf(T.oneOfType([T.string, T.number]))
   ),
-  action: T.shape(merge({}, ActionTypes.propTypes, {
-    label: T.node // make label optional
-  }))
+  action: T.oneOfType([
+    // a regular action
+    T.shape(merge({}, ActionTypes.propTypes, {
+      label: T.node // make label optional
+    })),
+    // a promise that will resolve a list of actions
+    T.shape(
+      PromisedActionTypes.propTypes
+    )
+  ])
 }
 
 /**

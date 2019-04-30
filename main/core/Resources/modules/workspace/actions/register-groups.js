@@ -11,6 +11,7 @@ import {MODAL_WORKSPACE_ROLES} from '#/main/core/workspace/modals/roles'
  * Registers selected groups to some workspaces.
  */
 export default (workspaces, refresher) => ({
+  name: 'register-groups',
   type: MODAL_BUTTON,
   icon: 'fa fa-fw fa-users',
   label: trans('register_groups'),

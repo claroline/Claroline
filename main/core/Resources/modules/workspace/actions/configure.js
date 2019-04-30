@@ -5,6 +5,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 // TODO : make it work everywhere (for now it only work in administration)
 
 export default (workspaces) => ({
+  name: 'configure',
   type: LINK_BUTTON,
   icon: 'fa fa-fw fa-cog',
   label: trans('configure', {}, 'actions'),
