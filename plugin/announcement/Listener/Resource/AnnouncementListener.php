@@ -13,6 +13,7 @@ namespace Claroline\AnnouncementBundle\Listener\Resource;
 
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
 use Claroline\AnnouncementBundle\Manager\AnnouncementManager;
+use Claroline\AnnouncementBundle\Serializer\AnnouncementAggregateSerializer;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
@@ -22,6 +23,7 @@ use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\OpenResourceEvent;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use Ramsey\Uuid\Uuid;
 use Symfony\Bundle\TwigBundle\TwigEngine;
@@ -32,6 +34,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AnnouncementListener
 {
+    use PermissionCheckerTrait;
+
     /** @var ObjectManager */
     private $om;
     /** @var TwigEngine */
@@ -106,10 +110,16 @@ class AnnouncementListener
         $resource = $event->getResource();
         $workspace = $resource->getResourceNode()->getWorkspace();
 
+        $options = [];
+        if (!$this->checkPermission('EDIT', $resource->getResourceNode())) {
+            // filter returned posts
+            $options[] = AnnouncementAggregateSerializer::VISIBLE_POSTS_ONLY;
+        }
+
         $content = $this->templating->render(
             'ClarolineAnnouncementBundle:announcement:open.html.twig', [
                 '_resource' => $resource,
-                'announcement' => $this->serializer->serialize($resource),
+                'announcement' => $this->serializer->serialize($resource, $options),
                 'roles' => array_map(function (Role $role) {
                     return $this->serializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
                 }, $workspace->getRoles()->toArray()),

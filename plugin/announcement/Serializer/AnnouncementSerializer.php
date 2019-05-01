@@ -3,6 +3,7 @@
 namespace Claroline\AnnouncementBundle\Serializer;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
+use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -45,6 +46,9 @@ class AnnouncementSerializer
     /** @var FileUtilities */
     private $fileUt;
 
+    /** @var WorkspaceSerializer */
+    private $wsSerializer;
+
     /**
      * AnnouncementSerializer constructor.
      *
@@ -61,6 +65,7 @@ class AnnouncementSerializer
      * @param UserSerializer        $userSerializer
      * @param ObjectManager         $om
      * @param WorkspaceSerializer   $wsSerializer
+     * @param PublicFileSerializer  $publicFileSerializer
      * @param FileUtilities         $fileUt
      */
     public function __construct(
@@ -95,10 +100,10 @@ class AnnouncementSerializer
             'content' => $announce->getContent(),
             'workspace' => $announce->getAggregate()->getResourceNode()->getWorkspace() ?
                 $this->wsSerializer->serialize($announce->getAggregate()->getResourceNode()->getWorkspace(), [Options::SERIALIZE_MINIMAL]) :
-                null,
+                null, // TODO : remove me, can be retrieved from the node
             'meta' => [
                 'resource' => [
-                    'id' => $announce->getAggregate()->getResourceNode()->getUuid(),
+                    'id' => $announce->getAggregate()->getResourceNode()->getUuid(), // TODO : remove me, can be retrieved from the node
                 ],
                 'created' => $announce->getCreationDate()->format('Y-m-d\TH:i:s'),
                 'creator' => $announce->getCreator() ? $this->userSerializer->serialize($announce->getCreator(), [Options::SERIALIZE_MINIMAL]) : null,
@@ -130,12 +135,19 @@ class AnnouncementSerializer
     /**
      * @param array        $data
      * @param Announcement $announce
+     * @param array        $options
      *
      * @return Announcement
      */
-    public function deserialize(array $data, Announcement $announce)
+    public function deserialize(array $data, Announcement $announce = null, array $options = [])
     {
         $announce = $announce ?: new Announcement();
+
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $announce);
+        } else {
+            $announce->refreshUuid();
+        }
 
         $announce->setTitle($data['title']);
         $announce->setContent($data['content']);
@@ -173,6 +185,7 @@ class AnnouncementSerializer
 
         // set aggregate
         if (isset($data['aggregate']['id'])) {
+            /** @var AnnouncementAggregate $aggregate */
             $aggregate = $this->aggregateRepo->findOneBy(['uuid' => $data['aggregate']['id']]);
 
             if (!empty($aggregate)) {

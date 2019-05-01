@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\AnnouncementBundle\Controller\API;
+namespace Claroline\AnnouncementBundle\Controller;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
@@ -9,9 +9,11 @@ use Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -30,10 +32,26 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class AnnouncementController
 {
+    use RequestDecoderTrait;
     use PermissionCheckerTrait;
 
     /** @var AnnouncementManager */
     private $manager;
+
+    /** @var AnnouncementSerializer */
+    private $serializer;
+
+    /** @var Crud */
+    private $crud;
+
+    /** @var ObjectManager */
+    private $om;
+
+    /** @var FinderProvider */
+    private $finder;
+
+    /** @var RoleRepository */
+    private $roleRepo;
 
     /**
      * AnnouncementController constructor.
@@ -46,15 +64,31 @@ class AnnouncementController
      *     "finder"     = @DI\Inject("claroline.api.finder")
      * })
      *
-     * @param AnnouncementManager $managersuppression
+     * @param AnnouncementManager    $manager
+     * @param AnnouncementSerializer $serializer
+     * @param Crud                   $crud
+     * @param ObjectManager          $om
+     * @param FinderProvider         $finder
      */
-    public function __construct(AnnouncementManager $manager, AnnouncementSerializer $serializer, Crud $crud, ObjectManager $om, FinderProvider $finder)
-    {
+    public function __construct(
+        AnnouncementManager $manager,
+        AnnouncementSerializer $serializer,
+        Crud $crud,
+        ObjectManager $om,
+        FinderProvider $finder
+    ) {
         $this->manager = $manager;
         $this->serializer = $serializer;
         $this->crud = $crud;
         $this->om = $om;
         $this->finder = $finder;
+
+        $this->roleRepo = $om->getRepository(Role::class);
+    }
+
+    public function getClass()
+    {
+        return Announcement::class;
     }
 
     /**
@@ -74,6 +108,7 @@ class AnnouncementController
         $data = $this->decodeRequest($request);
         $data['aggregate'] = ['id' => $aggregate->getUuid()];
 
+        /** @var Announcement $announcement */
         $announcement = $this->crud->create($this->getClass(), $data, [
           'announcement_aggregate' => $aggregate,
         ]);
@@ -105,6 +140,7 @@ class AnnouncementController
     {
         $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
 
+        /** @var Announcement $announcement */
         $announcement = $this->crud->update($this->getClass(), $this->decodeRequest($request), [
           'announcement_aggregate' => $aggregate,
         ]);
@@ -134,6 +170,7 @@ class AnnouncementController
     public function deleteAction(AnnouncementAggregate $aggregate, Announcement $announcement)
     {
         $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
+
         $this->crud->delete($announcement, ['announcement_aggregate' => $aggregate]);
 
         return new JsonResponse(null, 204);
@@ -152,6 +189,7 @@ class AnnouncementController
      *
      * @param AnnouncementAggregate $aggregate
      * @param Announcement          $announcement
+     * @param Request               $request
      *
      * @return JsonResponse
      */
@@ -159,6 +197,8 @@ class AnnouncementController
     {
         $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
         $ids = $request->query->all()['filters']['roles'];
+
+        /** @var Role[] $roles */
         $roles = $this->om->findList(Role::class, 'uuid', $ids);
         $node = $announcement->getAggregate()->getResourceNode();
 
@@ -179,7 +219,7 @@ class AnnouncementController
 
         $all = $request->query->all();
         unset($all['filters']['roles']);
-        $parameters = array_merge($all, ['hiddenFilters' => ['unionRole' => array_map(function ($role) {
+        $parameters = array_merge($all, ['hiddenFilters' => ['unionRole' => array_map(function (Role $role) {
             return $role->getUuid();
         }, $roles)]]);
 
@@ -199,13 +239,16 @@ class AnnouncementController
      *
      * @param AnnouncementAggregate $aggregate
      * @param Announcement          $announcement
+     * @param Request               $request
      *
      * @return JsonResponse
      */
     public function sendAction(AnnouncementAggregate $aggregate, Announcement $announcement, Request $request)
     {
         $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
-        $roles = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Role');
+
+        /** @var Role[] $roles */
+        $roles = $this->decodeIdsString($request, Role::class);
 
         $node = $announcement->getAggregate()->getResourceNode();
 
@@ -226,7 +269,7 @@ class AnnouncementController
 
         $users = $this->finder->fetch(
             User::class,
-            ['unionRole' => array_map(function ($role) {
+            ['unionRole' => array_map(function (Role $role) {
                 return $role->getUuid();
             }, $roles),
         ]);
@@ -234,33 +277,5 @@ class AnnouncementController
         $this->manager->sendMessage($announcement, $users);
 
         return new JsonResponse(null, 200);
-    }
-
-    public function getClass()
-    {
-        return Announcement::class;
-    }
-
-    protected function decodeRequest(Request $request)
-    {
-        $decodedRequest = json_decode($request->getContent(), true);
-
-        if (null === $decodedRequest) {
-            throw new InvalidDataException('Invalid request content sent.', []);
-        }
-
-        return $decodedRequest;
-    }
-
-    /**
-     * @param Request $request
-     * @param string  $class
-     */
-    protected function decodeIdsString(Request $request, $class)
-    {
-        $ids = $request->query->get('ids');
-        $property = is_numeric($ids[0]) ? 'id' : 'uuid';
-
-        return $this->om->findList($class, $property, $ids);
     }
 }

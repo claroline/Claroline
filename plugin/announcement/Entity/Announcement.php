@@ -353,7 +353,7 @@ class Announcement
      *
      * @param AnnouncementAggregate $aggregate
      */
-    public function setAggregate(AnnouncementAggregate $aggregate)
+    public function setAggregate(AnnouncementAggregate $aggregate = null)
     {
         $this->aggregate = $aggregate;
     }
