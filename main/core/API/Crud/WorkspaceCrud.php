@@ -12,6 +12,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -31,6 +32,7 @@ class WorkspaceCrud
      *     "userManager"     = @DI\Inject("claroline.manager.user_manager"),
      *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
      *     "orgaManager"     = @DI\Inject("claroline.manager.organization.organization_manager"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager")
      * })
@@ -42,6 +44,7 @@ class WorkspaceCrud
       UserManager $userManager,
       TokenStorageInterface $tokenStorage,
       ResourceManager $resourceManager,
+      RoleManager $roleManager,
       OrganizationManager $orgaManager,
       ObjectManager $om
     ) {
@@ -50,6 +53,7 @@ class WorkspaceCrud
         $this->tokenStorage = $tokenStorage;
         $this->resourceManager = $resourceManager;
         $this->organizationManager = $orgaManager;
+        $this->roleManager = $roleManager;
         $this->om = $om;
     }
 
@@ -72,6 +76,7 @@ class WorkspaceCrud
     {
         $workspace = $this->manager->createWorkspace($event->getObject());
         $options = $event->getOptions();
+
         $user = $this->tokenStorage->getToken() ?
             $this->tokenStorage->getToken()->getUser() :
             $this->userManager->getDefaultClarolineAdmin();
@@ -88,11 +93,14 @@ class WorkspaceCrud
         }
 
         //this is for workspace creation: TODO remove that because it's very confusing
+        //make a search on LIGHT_COPY you'll find what will probably need a change
         if (in_array(Options::LIGHT_COPY, $options)) {
             $this->om->flush();
 
             return $workspace;
         }
+
+        //is this part ever fired anymore ? I don't know
 
         $workspace = $this->manager->copy($model, $workspace, false);
 

@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Event\ImportObjectEvent;
+use Claroline\CoreBundle\Manager\ResourceManager as ResManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -36,7 +37,8 @@ class ResourceManager implements ToolImporterInterface
      *     "tokenStorage"     = @DI\Inject("security.token_storage"),
      *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
      *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
-     *     "eventDispatcher"  = @DI\Inject("claroline.event.event_dispatcher")
+     *     "eventDispatcher"  = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "resourceManager"  = @DI\Inject("claroline.manager.resource_manager")
      * })
      *
 
@@ -48,6 +50,7 @@ class ResourceManager implements ToolImporterInterface
         FinderProvider $finder,
         Crud $crud,
         TokenStorage $tokenStorage,
+        ResManager $resourceManager,
         ObjectManager $om,
         StrictDispatcher $eventDispatcher
       ) {
@@ -58,6 +61,7 @@ class ResourceManager implements ToolImporterInterface
         $this->tokenStorage = $tokenStorage;
         $this->userManager = $userManager;
         $this->dispatcher = $eventDispatcher;
+        $this->resourceManager = $resourceManager;
     }
 
     /**
@@ -108,6 +112,11 @@ class ResourceManager implements ToolImporterInterface
     {
         $created = $this->deserializeNodes($data['nodes'], $workspace);
         $this->deserializeResources($data['resources'], $workspace, $created, $bag);
+
+        $root = $this->resourceManager->getWorkspaceRoot($workspace);
+        $root->setName($workspace->getName());
+        $this->om->persist($root);
+
         $this->om->flush();
     }
 
