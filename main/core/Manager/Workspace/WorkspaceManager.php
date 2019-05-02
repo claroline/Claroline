@@ -941,7 +941,10 @@ class WorkspaceManager
         }
 
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
-        $this->resourceManager->createRights($root);
+
+        if ($root) {
+            $this->resourceManager->createRights($root);
+        }
 
         $this->om->persist($workspace);
         $this->om->flush();

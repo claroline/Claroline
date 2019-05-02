@@ -13,9 +13,8 @@ namespace Claroline\CoreBundle\Command\User;
 
 use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\CoreBundle\Command\AdminCliCommand;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User as UserEntity;
-use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
-use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -58,15 +57,9 @@ class CreateCommand extends ContainerAwareCommand implements AdminCliCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $user = new UserEntity();
-        $user->setFirstName($input->getArgument('user_first_name'));
-        $user->setLastName($input->getArgument('user_last_name'));
-        $user->setUsername($input->getArgument('user_username'));
-        $user->setPlainPassword($input->getArgument('user_password'));
         $email = $input->getArgument('user_email');
         $email = filter_var($email, FILTER_VALIDATE_EMAIL) ?
             $email : $email.'@debug.net';
-        $user->setEmail($email);
 
         if ($input->getOption('admin')) {
             $roleName = PlatformRoles::ADMIN;
@@ -76,10 +69,23 @@ class CreateCommand extends ContainerAwareCommand implements AdminCliCommand
             $roleName = PlatformRoles::USER;
         }
 
-        /** @var UserManager $userManager */
-        $userManager = $this->getContainer()->get('claroline.manager.user_manager');
-        $consoleLogger = ConsoleLogger::get($output);
-        $userManager->setLogger($consoleLogger);
-        $userManager->createUser($user, [], [$roleName]);
+        $crud = $this->getContainer()->get('claroline.api.crud');
+        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+
+        $object = $crud->create(
+            UserEntity::class,
+            [
+              'firstName' => $input->getArgument('user_first_name'),
+              'lastName' => $input->getArgument('user_last_name'),
+              'username' => $input->getArgument('user_username'),
+              'email' => $email,
+              'plainPassword' => $input->getArgument('user_password'),
+             ]
+        );
+
+        $role = $om->getRepository(Role::class)->findOneByName($roleName);
+        $object->addRole($role);
+        $om->persist($object);
+        $om->flush();
     }
 }

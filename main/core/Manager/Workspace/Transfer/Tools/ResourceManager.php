@@ -114,8 +114,11 @@ class ResourceManager implements ToolImporterInterface
         $this->deserializeResources($data['resources'], $workspace, $created, $bag);
 
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
-        $root->setName($workspace->getName());
-        $this->om->persist($root);
+
+        if ($root) {
+            $root->setName($workspace->getName());
+            $this->om->persist($root);
+        }
 
         $this->om->flush();
     }
