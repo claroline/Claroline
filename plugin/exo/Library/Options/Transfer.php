@@ -2,6 +2,8 @@
 
 namespace UJM\ExoBundle\Library\Options;
 
+use Claroline\AppBundle\API\Options as ApiOptions;
+
 /**
  * Defines Serializers options.
  */
@@ -50,7 +52,7 @@ final class Transfer
      *
      * @var string
      */
-    const NO_FETCH = 'noFetch';
+    const NO_FETCH = ApiOptions::NO_FETCH;
 
     /**
      * Persist the tags of the question.
@@ -64,5 +66,5 @@ final class Transfer
      *
      * @var string
      */
-    const REFRESH_UUID = 'refreshUuid';
+    const REFRESH_UUID = ApiOptions::REFRESH_UUID;
 }
