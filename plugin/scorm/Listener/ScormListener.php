@@ -229,7 +229,7 @@ class ScormListener
     {
         $resource = $event->getResource();
         $workspace = $resource->getResourceNode()->getWorkspace();
-        $newWorkspace = $event->getCopiedNode()->getWorkspace();
+        $newWorkspace = $event->getCopy()->getResourceNode()->getWorkspace();
         $copy = $event->getCopy();
         $hashName = $resource->getHashName();
         $copy->setHashName($hashName);
