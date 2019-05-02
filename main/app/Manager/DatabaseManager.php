@@ -67,11 +67,14 @@ class DatabaseManager
         $fp = fopen($path, 'w');
 
         $firstRow = $rows->fetch();
-        fputcsv($fp, array_keys($firstRow));
-        fputcsv($fp, $firstRow);
 
-        while ($row = $rows->fetch()) {
-            fputcsv($fp, $row);
+        if (is_array($firstRow)) {
+            fputcsv($fp, array_keys($firstRow));
+            fputcsv($fp, $firstRow);
+
+            while ($row = $rows->fetch()) {
+                fputcsv($fp, $row);
+            }
         }
 
         fclose($fp);
