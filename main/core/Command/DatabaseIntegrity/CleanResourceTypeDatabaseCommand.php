@@ -35,8 +35,46 @@ class CleanResourceTypeDatabaseCommand extends ContainerAwareCommand
           'innova_video_recorder',
           'innova_media_resource',
         ];
+
+        $databaseManager = $this->getContainer()->get('claroline.manager.database_manager');
+        $databaseManager->setLogger($consoleLogger);
+
+        $databaseManager->dropTables([
+          'media_resource_region_config',
+          'media_resource_region',
+          'media_resource_options',
+          'media_resource',
+          'media_resource_media',
+          'media_resource_help_text',
+          'media_resource_help_link',
+        ], true);
+
         $this->removeResources($types, $consoleLogger);
-        $this->removeTables();
+
+        $databaseManager->dropTables([
+             //surveys
+             'claro_survey_multiple_choice_question_answer',
+             'claro_survey_open_ended_question_answer',
+             'claro_survey_question_answer',
+             'claro_survey_simple_text_question_answer',
+             'claro_survey_answer',
+             'claro_survey_choice',
+             'claro_survey_multiple_choice_question',
+             'claro_survey_question',
+             'claro_survey_question_model',
+             'claro_survey_resource',
+             'claro_survey_question_relation',
+             //activities
+             'claro_activity_parameters',
+             'claro_activity_rule',
+             'claro_activity_rule_action',
+             'claro_activity_evaluation',
+             'claro_activity_past_evaluation',
+             //audio recorder
+             'innova_audio_recorder_configuration',
+             //video_recorder
+             'innova_video_recorder_configuration',
+         ], true);
     }
 
     public function removeResources(array $types, $consoleLogger)
@@ -75,45 +113,5 @@ class CleanResourceTypeDatabaseCommand extends ContainerAwareCommand
 
             $om->flush();
         }
-    }
-
-    public function removeTables()
-    {
-        $databaseManager = $this->getContainer()->get('claroline.manager.database_manager');
-
-        $tables = [
-          //surveys
-          'claro_survey_multiple_choice_question_answer',
-          'claro_survey_open_ended_question_answer',
-          'claro_survey_question_answer',
-          'claro_survey_simple_text_question_answer',
-          'claro_survey_answer',
-          'claro_survey_choice',
-          'claro_survey_multiple_choice_question',
-          'claro_survey_question',
-          'claro_survey_question_model',
-          'claro_survey_resource',
-          'claro_survey_question_relation',
-          //activities
-          'claro_activity_parameters',
-          'claro_activity_rule',
-          'claro_activity_rule_action',
-          'claro_activity_evaluation',
-          'claro_activity_past_evaluation',
-          //audio recorder
-          'innova_audio_recorder_configuration',
-          //video_recorder
-          'innova_video_recorder_configuration',
-          //media ressources
-          'media_resource_region_config',
-          'media_resource_region',
-          'media_resource_options',
-          'media_resource',
-          'media_resource_media',
-          'media_resource_help_text',
-          'media_resource_help_link',
-      ];
-
-        $databaseManager->dropTables($tables, true);
     }
 }
