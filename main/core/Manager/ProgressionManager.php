@@ -93,12 +93,22 @@ class ProgressionManager
         // Get all root resource nodes available for current user in the workspace
         $rootNodes = $this->finder->get(ResourceNode::class)->find($filters, $sortBy);
         $visibleNodesArray = [];
+        $childrenNodesArray = [];
 
         foreach ($visibleNodes as $node) {
             $visibleNodesArray[$node->getUuid()] = $node;
+
+            if ($node->getParent()) {
+                $parentId = $node->getParent()->getUuid();
+
+                if (!isset($childrenNodesArray[$parentId])) {
+                    $childrenNodesArray[$parentId] = [];
+                }
+                $childrenNodesArray[$parentId][] = $node;
+            }
         }
         $items = [];
-        $this->formatNodes($items, $rootNodes, $visibleNodesArray, $user, $levelMax, 0);
+        $this->formatNodes($items, $rootNodes, $visibleNodesArray, $childrenNodesArray, $user, $levelMax, 0);
 
         return $items;
     }
@@ -109,12 +119,20 @@ class ProgressionManager
      * @param array     $items
      * @param array     $nodes
      * @param array     $visibleNodes
+     * @param array     $childrenNodes
      * @param User|null $user
      * @param int       $levelMax
      * @param int       $level
      */
-    private function formatNodes(array &$items, array $nodes, array $visibleNodes, User $user = null, $levelMax = 1, $level = 0)
-    {
+    private function formatNodes(
+        array &$items,
+        array $nodes,
+        array $visibleNodes,
+        array $childrenNodes,
+        User $user = null,
+        $levelMax = 1,
+        $level = 0
+    ) {
         foreach ($nodes as $node) {
             $evaluation = $user ?
                 $this->resourceEvalManager->getResourceUserEvaluation($node, $user, false) :
@@ -125,21 +143,21 @@ class ProgressionManager
             $item['validated'] = !is_null($evaluation) && 0 < $evaluation->getNbOpenings();
             $items[] = $item;
 
-            if ((is_null($levelMax) || $level < $levelMax) && isset($item['children']) && 0 < count($item['children'])) {
+            if ((is_null($levelMax) || $level < $levelMax) && isset($childrenNodes[$node->getUuid()])) {
                 $children = [];
 
-                usort($item['children'], function ($a, $b) {
-                    return strcmp($a['name'], $b['name']);
+                usort($childrenNodes[$node->getUuid()], function ($a, $b) {
+                    return strcmp($a->getName(), $b->getName());
                 });
 
-                foreach ($item['children'] as $child) {
+                foreach ($childrenNodes[$node->getUuid()] as $child) {
                     // Checks if node is visible
-                    if (isset($visibleNodes[$child['id']])) {
-                        $children[] = $visibleNodes[$child['id']];
+                    if (isset($visibleNodes[$child->getUuid()])) {
+                        $children[] = $visibleNodes[$child->getUuid()];
                     }
                 }
                 if (0 < count($children)) {
-                    $this->formatNodes($items, $children, $visibleNodes, $user, $levelMax, $level + 1);
+                    $this->formatNodes($items, $children, $visibleNodes, $childrenNodes, $user, $levelMax, $level + 1);
                 }
             }
         }
