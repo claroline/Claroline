@@ -32,6 +32,7 @@ class UserCrud
         //too many dependencies, simplify this when we can
         $this->container = $container;
         $this->om = $container->get('claroline.persistence.object_manager');
+        $this->finder = $container->get('claroline.api.finder');
         $this->roleManager = $container->get('claroline.manager.role_manager');
         $this->toolManager = $container->get('claroline.manager.tool_manager');
         $this->mailManager = $container->get('claroline.manager.mail_manager');
@@ -48,7 +49,19 @@ class UserCrud
      */
     public function preCreate(CreateEvent $event)
     {
-        $this->create($event->getObject(), $event->getOptions());
+        $user = $this->create($event->getObject(), $event->getOptions());
+
+        $data = $event->getData();
+
+        if (isset($data['groups'])) {
+            foreach ($data['groups'] as $group) {
+                $entity = $this->finder->get(Group::class)->findOneBy($group);
+                $user->addGroup($entity);
+            }
+        }
+
+        $this->om->persist($user);
+        $this->om->flush();
     }
 
     /**
@@ -151,6 +164,8 @@ class UserCrud
         $this->dispatcher->dispatch('user_created_event', UserCreatedEvent::class, ['user' => $user]);
         $this->dispatcher->dispatch('log', 'Log\LogUserCreate', [$user]);
         $this->om->endFlushSuite();
+
+        return $user;
     }
 
     /**

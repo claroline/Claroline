@@ -92,10 +92,10 @@ class Crud
         // creates the entity if allowed
         $this->checkPermission('CREATE', $object, [], true);
 
-        if ($this->dispatch('create', 'pre', [$object, $options])) {
+        if ($this->dispatch('create', 'pre', [$object, $options, $data])) {
             $this->om->save($object);
             if (!in_array(Options::IGNORE_CRUD_POST_EVENT, $options)) {
-                $this->dispatch('create', 'post', [$object, $options]);
+                $this->dispatch('create', 'post', [$object, $options, $data]);
             }
         }
 

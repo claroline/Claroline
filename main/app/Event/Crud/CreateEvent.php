@@ -16,4 +16,21 @@ namespace Claroline\AppBundle\Event\Crud;
  */
 class CreateEvent extends CrudEvent
 {
+    private $data;
+
+    /**
+     * @param mixed $object  - The object created
+     * @param array $options - An array of options
+     */
+    public function __construct($object, array $options = [], array $data = [])
+    {
+        parent::__construct($object, $options);
+
+        $this->data = $data;
+    }
+
+    public function getData()
+    {
+        return $this->data;
+    }
 }
