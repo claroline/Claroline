@@ -294,6 +294,16 @@ class Organization
         return $this->locations;
     }
 
+    public function addLocation(Location $location)
+    {
+        return $this->locations->add($location);
+    }
+
+    public function removeLocation(Location $location)
+    {
+        return $this->locations->removeElement($location);
+    }
+
     public function getAdministrators()
     {
         return $this->administrators;

@@ -406,6 +406,22 @@ class Location
     }
 
     /**
+     * @param Organization $orga
+     */
+    public function addOrganization(Organization $organization)
+    {
+        $organization->addLocation($this);
+    }
+
+    /**
+     * @param Organization $orga
+     */
+    public function removeOrganization(Organization $organization)
+    {
+        $organization->removeLocation($this);
+    }
+
+    /**
      * @param Group $group
      */
     public function addGroup(Group $group)

@@ -14,7 +14,7 @@ actions.open = (formName, id = null) => (dispatch) => {
       [API_REQUEST]: {
         url: ['apiv2_location_get', {id}],
         success: (response, dispatch) => {
-          dispatch(formActions.resetForm(formName, response, true))
+          dispatch(formActions.resetForm(formName, response, false))
         }
       }
     })

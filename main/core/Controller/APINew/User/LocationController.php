@@ -45,12 +45,12 @@ class LocationController extends AbstractCrudController
         $this->container->get('claroline.manager.organization.location_manager')->setCoordinates($location);
 
         return new JsonResponse(
-            $this->serializer->get('Claroline\CoreBundle\Entity\Organization\Location')->serialize($location)
+            $this->serializer->get(Location::class)->serialize($location)
         );
     }
 
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Organization\Location';
+        return Location::class;
     }
 }
