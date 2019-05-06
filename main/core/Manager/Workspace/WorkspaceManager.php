@@ -1034,20 +1034,6 @@ class WorkspaceManager
         return $workspace;
     }
 
-    /**
-     * Retrieves the managers list for a workspace.
-     *
-     * @param Workspace $workspace
-     *
-     * @return User[]
-     */
-    public function getManagers(Workspace $workspace)
-    {
-        $roleManager = $this->roleManager->getManagerRole($workspace);
-
-        return $this->userRepo->findUsersByRolesIncludingGroups([$roleManager]);
-    }
-
     public function getRecentWorkspaceForUser(User $user, array $roles)
     {
         $wsLogs = $this->getLatestWorkspacesByUser($user, $roles);

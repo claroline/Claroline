@@ -90,12 +90,6 @@ class OpenBadgeManager
               case BadgeClass::ISSUING_MODE_WORKSPACE:
                 $workspace = $badge->getWorkspace();
                 if ($workspace) {
-                    $managers = $this->workspaceManager->getManagers($workspace);
-                    foreach ($managers as $manager) {
-                        if ($manager->getId() === $user->getId() || $user->getId() === $workspace->getCreator()->getId()) {
-                            return true;
-                        }
-                    }
                 }
                 break;
               case BadgeClass::ISSUING_MODE_AUTO:
