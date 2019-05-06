@@ -929,6 +929,7 @@ class WorkspaceManager
         $options = [Options::LIGHT_COPY, Options::REFRESH_UUID];
         // gets entity from raw data.
         $workspace = $transferManager->deserialize($data, $newWorkspace, $options, $fileBag);
+
         $workspace->setIsModel($model);
 
         //set the manager

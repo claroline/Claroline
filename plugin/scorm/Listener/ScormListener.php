@@ -214,9 +214,13 @@ class ScormListener
         $workspace = $event->getWorkspace();
 
         if ($bag) {
-            $file = new File($bag->get($data['_path']));
-            $this->scormManager->parseScormArchive($file);
-            $this->scormManager->unzipScormArchive($workspace, $file, $data['hashName']);
+            try {
+                $file = new File($bag->get($data['_path']));
+                $this->scormManager->parseScormArchive($file);
+                $this->scormManager->unzipScormArchive($workspace, $file, $data['hashName']);
+            } catch (\Exception $e) {
+                //scorm was invalid. Proceed as usual.
+            }
         }
     }
 

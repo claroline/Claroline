@@ -15,6 +15,7 @@ use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\CoreBundle\Command\AdminCliCommand;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -69,7 +70,12 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand implements Admin
         $data = json_decode($json, true);
         $data['code'] = $input->getArgument('code');
         $data['archive'] = $this->getContainer()->get('claroline.api.serializer')->serialize($object);
+        $workspace = new Workspace();
+        $workspace->setCode($data['code']);
 
-        $this->getContainer()->get('claroline.manager.workspace.transfer')->create($data);
+        $consoleLogger = ConsoleLogger::get($output);
+        $manager = $this->getContainer()->get('claroline.manager.workspace.transfer');
+        $manager->setLogger($consoleLogger);
+        $manager->create($data, $workspace);
     }
 }
