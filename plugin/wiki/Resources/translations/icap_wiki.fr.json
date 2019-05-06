@@ -65,6 +65,7 @@
     "moderate_message": "Les nouvelles contributions ne sont pas publiées automatiquement et attendent validation d'un administrateur du wiki.",
     "moderate_mode_warning": "<div><strong>Ce Wiki est en mode modéré</strong></div> <div>Toutes les modifications seront disponibles après leur autorisation par un administrateur. L'historique complet d'une section est disponible dans la page 'historique'.</div>",
     "moderation": "Moderation",
+    "move": "Déplacer",
     "move_section": "Déplacer la section",
     "new_section": "Nouvelle section",
     "no_deleted_sections": "Aucune section supprimée",

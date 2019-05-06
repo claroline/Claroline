@@ -65,6 +65,7 @@
     "moderate_message": "Every one can contribute. However, only the administrator and the moderator are allowed to publish.",
     "moderate_mode_warning": "<div><strong>The wiki runs in moderate mode.</strong></div> <div>The changes will only be available after administrator's approval. A complete history of a section's revisions can be found in the \"history\" page.</div>",
     "moderation": "Modération",
+    "move": "Move",
     "move_section": "Move section",
     "new_section": "New section",
     "no_deleted_sections": "There is no removed section",

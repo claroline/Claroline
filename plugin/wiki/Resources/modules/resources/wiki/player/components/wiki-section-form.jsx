@@ -50,7 +50,7 @@ const WikiSectionFormComponent = props =>
           {
             name: 'move.direction',
             type: 'choice',
-            label: trans('move'),
+            label: trans('move', {}, 'icap_wiki'),
             required: false,
             options: {
               condensed: false,
