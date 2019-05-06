@@ -174,6 +174,7 @@ class WorkspaceController extends AbstractCrudController
         $logger = new JsonLogger($logFile);
         $this->workspaceManager->setLogger($logger);
         $workspace = $this->workspaceManager->copy($model, $workspace, false);
+        $workspace = $this->serializer->get(Workspace::class)->deserialize($data, $workspace);
         $logger->end();
 
         return new JsonResponse(
