@@ -31,6 +31,15 @@
       "description": "The plain login password",
       "minLength": 1
     },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "personalWorkspace": {
+          "type": "boolean",
+          "description": "If the user has a personal workspace"
+        }
+      }
+    },
     "groups": {
       "type": "array",
       "uniqueItems": true,

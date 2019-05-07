@@ -43,6 +43,7 @@ abstract class AbstractDeleteAction extends AbstractAction
 
     public function getSchema()
     {
+        //this is so we don't show all properties. See TransferProvider and search $root
         return [$this->getAction()[0] => $this->getClass()];
     }
 }

@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\API\Transfer\Action\User;
 
 use Claroline\AppBundle\API\Transfer\Action\AbstractCreateOrUpdateAction;
+use Claroline\CoreBundle\Entity\User;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -18,6 +19,6 @@ class CreateOrUpdate extends AbstractCreateOrUpdateAction
 
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\User';
+        return User::class;
     }
 }
