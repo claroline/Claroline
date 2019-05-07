@@ -120,11 +120,13 @@ class OrderedToolTransfer
                     ]);
                 }
 
-                $rights = new ToolRights();
-                $rights->setRole($role);
-                $rights->setMask($restriction['mask']);
-                $rights->setOrderedTool($orderedTool);
-                $om->persist($rights);
+                if ($role) {
+                    $rights = new ToolRights();
+                    $rights->setRole($role);
+                    $rights->setMask($restriction['mask']);
+                    $rights->setOrderedTool($orderedTool);
+                    $om->persist($rights);
+                }
             }
 
             //use event instead maybe ? or tagged service
