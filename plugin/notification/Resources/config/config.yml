@@ -29,7 +29,3 @@ plugin:
           group: notifications
           scope: [object, collection] # The action can be executed on multiple resources at once.
           api: [PUT]
-
-    admin_tools:
-        - name: notification_configuration
-          class: bell

@@ -1,7 +1,6 @@
 {
   "webpack": {
     "entry": {
-      "management": "administration/lti/bootstrap"
     }
   }
 }

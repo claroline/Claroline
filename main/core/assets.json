@@ -3,6 +3,7 @@
     "entry": {
       "tinymce": "tinymce/browser",
       "user-management": "administration/user",
+      "integration": "administration/integration/bootstrap",
       "main-settings": "administration/parameters/main/bootstrap",
       "technical-settings": "administration/parameters/technical/bootstrap",
       "appearance-settings": "administration/parameters/appearance/bootstrap",

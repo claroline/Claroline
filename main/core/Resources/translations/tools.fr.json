@@ -29,5 +29,6 @@
     "appearance_settings": "Apparence",
     "users_management": "Gestion des utilisateurs",
     "templates_management": "Gestion des templates",
-    "resource_trash": "Poubelle de ressources"
+    "resource_trash": "Poubelle de ressources",
+    "integration": "Integration"
 }

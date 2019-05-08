@@ -6,15 +6,12 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\ToolManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UJM\LtiBundle\Entity\LtiApp;
 
 /**
@@ -61,29 +58,6 @@ class LtiListener
         $this->toolManager = $toolManager;
 
         $this->ltiAppRepo = $om->getRepository(LtiApp::class);
-    }
-
-    /**
-     * @DI\Observe("administration_tool_LTI")
-     *
-     * @param OpenAdministrationToolEvent $event
-     */
-    public function onAdministrationToolOpen(OpenAdministrationToolEvent $event)
-    {
-        $ltiTool = $this->toolManager->getAdminToolByName('LTI');
-
-        if (is_null($ltiTool) || !$this->authorization->isGranted('OPEN', $ltiTool)) {
-            throw new AccessDeniedException();
-        }
-
-        $content = $this->templating->render('UJMLtiBundle:administration:management.html.twig', [
-            'context' => [
-                'type' => Tool::ADMINISTRATION,
-            ],
-        ]);
-
-        $event->setResponse(new Response($content));
-        $event->stopPropagation();
     }
 
     /**

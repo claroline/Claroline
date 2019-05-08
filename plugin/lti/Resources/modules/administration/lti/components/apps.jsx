@@ -8,7 +8,7 @@ import {DataCard} from '#/main/app/content/card/components/data'
 
 const Apps = () =>
   <ListData
-    name="apps"
+    name="lti.apps"
     fetch={{
       url: ['apiv2_lti_list'],
       autoload: true
