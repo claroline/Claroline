@@ -265,11 +265,11 @@ class TagManager
         return $objects;
     }
 
-    public function getTaggedWorkspacesByRoles(User $user, $tag, $orderedBy = 'id', $order = 'ASC')
+    public function getTaggedWorkspacesByRoles(User $user, $tag, $orderedBy = 'id', $order = 'ASC', $type = 0)
     {
         $roles = $user->getEntityRoles();
 
-        return count($roles) > 0 ? $this->taggedObjectRepo->findTaggedWorkspacesByRoles($tag, $roles, $orderedBy, $order) : [];
+        return count($roles) > 0 ? $this->taggedObjectRepo->findTaggedWorkspacesByRoles($tag, $roles, $orderedBy, $order, $type) : [];
     }
 
     public function removeTaggedObjectsByClassAndIds($class, array $ids)

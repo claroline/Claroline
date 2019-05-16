@@ -153,7 +153,7 @@ class TaggedObjectRepository extends EntityRepository
                 JOIN ot.rights r
                 JOIN r.role rr
                 WHERE ot.workspace = w
-                AND ot.type = :type
+                AND rr.type = :type
                 AND rr IN (:roles)
                 AND BIT_AND(r.mask, :open) = :open
                 ORDER BY ot.order

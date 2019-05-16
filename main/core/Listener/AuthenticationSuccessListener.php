@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Listener;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Form\TermsOfServiceType;
@@ -182,13 +183,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         ) {
             return new RedirectResponse($uri);
         } elseif (
-            $this->configurationHandler->isRedirectOption(PlatformDefaults::$REDIRECT_OPTIONS['URL'])
-            && null !== $url = $this->configurationHandler->getParameter('redirect_after_login_url')
-        ) {
-            return new RedirectResponse($url);
-        } elseif (
             $this->configurationHandler->isRedirectOption(PlatformDefaults::$REDIRECT_OPTIONS['WORKSPACE_TAG'])
-            && null !== $defaultWorkspaceTag = $this->configurationHandler->getParameter('default_workspace_tag')
+            && null !== $defaultWorkspaceTag = $this->configurationHandler->getParameter('workspace.default_tag')
         ) {
             /** @var GenericDataEvent $event */
             $event = $this->eventDispatcher->dispatch(
@@ -200,6 +196,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
                         'user' => $user,
                         'ordered_by' => 'id',
                         'order' => 'ASC',
+                        'type' => Role::WS_ROLE,
                     ],
                 ]
             );
@@ -214,6 +211,11 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
 
                 return new RedirectResponse($route);
             }
+        } elseif (
+            $this->configurationHandler->isRedirectOption(PlatformDefaults::$REDIRECT_OPTIONS['URL'])
+            && null !== $url = $this->configurationHandler->getParameter('redirect_after_login_url')
+        ) {
+            return new RedirectResponse($url);
         }
 
         return new RedirectResponse($this->router->generate('claro_desktop_open'));

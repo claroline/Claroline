@@ -139,7 +139,8 @@ class TagListener
                 $user,
                 $tag,
                 $orderedBy,
-                $order
+                $order,
+                isset($data['type']) ? $data['type'] : null
             );
         }
         $event->setResponse($workspaces);
