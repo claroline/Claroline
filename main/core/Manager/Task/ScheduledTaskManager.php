@@ -107,7 +107,7 @@ class ScheduledTaskManager
         }
 
         $scheduledTask = $this->om->getObject($data, ScheduledTask::class);
-        $this->serializer->deserialize($data, $scheduledTask);
+        $scheduledTask = $this->serializer->deserialize($data, $scheduledTask);
 
         $this->om->persist($scheduledTask);
         $this->om->flush();
