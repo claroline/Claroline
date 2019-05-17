@@ -131,6 +131,7 @@ class EntrySerializer
         if (count($fieldValues) > 0) {
             $serialized['values'] = $this->serializeValues($fieldValues);
         }
+
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
                 'categories' => $this->getCategories($entry),

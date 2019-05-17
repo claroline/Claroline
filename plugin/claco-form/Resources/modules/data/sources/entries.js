@@ -230,7 +230,7 @@ export default (clacoForm, canViewMetadata = false, canEdit = false, canAdminist
             }
 
             return {
-              name: field.id,
+              name: 'values.' + field.id,
               label: field.name,
               type: field.type,
               options: options
