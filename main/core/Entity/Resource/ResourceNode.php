@@ -300,6 +300,12 @@ class ResourceNode
      */
     protected $comments;
 
+    /**
+     * @Gedmo\Slug(fields={"name"})
+     * @ORM\Column(length=128, unique=true, nullable=true)
+     */
+    private $slug;
+
     public function __construct()
     {
         $this->refreshUuid();
@@ -1022,5 +1028,15 @@ class ResourceNode
     public function emptyComments()
     {
         $this->comments->clear();
+    }
+
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    public function setSlug($slug = null)
+    {
+        $this->slug = $slug;
     }
 }
