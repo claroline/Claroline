@@ -127,7 +127,7 @@ class WikiListener
     }
 
     /**
-     * @DI\Observe("resource.icap_wiki.wiki")
+     * @DI\Observe("resource.icap_wiki.copy")
      *
      * @param CopyResourceEvent $event
      */

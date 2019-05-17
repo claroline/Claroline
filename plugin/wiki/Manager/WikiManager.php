@@ -96,7 +96,6 @@ class WikiManager
         array_unshift($sections, $orgRoot);
         $newSectionsMap = [];
 
-        $newWiki = new Wiki();
         $newWiki->setWikiCreator($loggedUser);
 
         foreach ($sections as $section) {
