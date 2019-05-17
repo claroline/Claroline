@@ -8,8 +8,10 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Routing\Documentator;
 use Claroline\AppBundle\API\Routing\Finder;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -185,14 +187,86 @@ abstract class AbstractCrudController extends AbstractApiController
         if (isset($query['options'])) {
             $options = $query['options'];
         }
-        $hiddenFilters = isset($query['hiddenFilters']) ? $query['hiddenFilters'] : [];
-        $query['hiddenFilters'] = array_merge($hiddenFilters, $this->getDefaultHiddenFilters());
+
+        $query['hiddenFilters'] = $this->getDefaultHiddenFilters();
 
         return new JsonResponse($this->finder->search(
             $class,
             $query,
             $options
         ));
+    }
+
+    /**
+     * @ApiDoc(
+     *     description="Export the objects of class $class.",
+     *     queryString={
+     *         "$finder",
+     *         {"name": "page", "type": "integer", "description": "The queried page."},
+     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
+     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
+     *     }
+     * )
+     *
+     * @param Request $request
+     * @param string  $class
+     *
+     * @return JsonResponse
+     */
+    public function csvAction(Request $request, $class)
+    {
+        $query = $request->query->all();
+        $options = $this->options['list'];
+
+        if (isset($query['options'])) {
+            $options = $query['options'];
+        }
+
+        $hiddenFilters = isset($query['hiddenFilters']) ? $query['hiddenFilters'] : [];
+        $query['hiddenFilters'] = array_merge($hiddenFilters, $this->getDefaultHiddenFilters());
+
+        $objects = $this->finder->fetch(
+            $class,
+            $query,
+            $options
+        );
+
+        $data = array_map(function ($object) {
+            return $this->serializer->serialize($object);
+        }, $objects);
+
+        $firstRow = $data[0];
+
+        $arrayUtils = new ArrayUtils();
+        $titles = $arrayUtils->getPropertiesName($firstRow);
+
+        $formatted = [];
+
+        foreach ($data as $el) {
+            $formattedData = [];
+            foreach ($titles as $title) {
+                $formattedData[$title] = $arrayUtils->has($el, $title) ?
+                      $arrayUtils->get($el, $title) : null;
+                $formattedData[$title] = !is_array($formattedData[$title]) ? $formattedData[$title] : json_encode($formattedData[$title]);
+            }
+            $formatted[] = $formattedData;
+        }
+        //get the title list
+
+        $tmpFile = tempnam(sys_get_temp_dir(), 'CSVCLARO').'.csv';
+        $fp = fopen($tmpFile, 'w');
+
+        fputcsv($fp, $titles, ';');
+
+        foreach ($formatted as $item) {
+            fputcsv($fp, $item, ';');
+        }
+
+        fclose($fp);
+
+        $response = new BinaryFileResponse($tmpFile, 200, ['Content-Disposition' => "attachment; filename={$this->getName()}.csv"]);
+
+        return $response;
     }
 
     /**
@@ -407,6 +481,7 @@ abstract class AbstractCrudController extends AbstractApiController
             'schema' => [],
             'find' => [],
             'doc' => [],
+            'export' => [],
         ];
     }
 
@@ -416,8 +491,8 @@ abstract class AbstractCrudController extends AbstractApiController
     private function getDefaultRequirements()
     {
         return [
-          'get' => ['id' => '^(?!.*(schema|copy|parameters|find|doc|\/)).*'],
-          'update' => ['id' => '^(?!.*(schema|parameters|find|doc|\/)).*'],
+          'get' => ['id' => '^(?!.*(schema|copy|parameters|find|doc|csv|\/)).*'],
+          'update' => ['id' => '^(?!.*(schema|parameters|find|doc|csv|\/)).*'],
           'exist' => [],
         ];
     }

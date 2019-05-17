@@ -24,6 +24,7 @@ class ApiLoader extends Loader
       'create' => ['', 'POST'],
       'deleteBulk' => ['', 'DELETE'],
       'list' => ['', 'GET'],
+      'csv' => ['/csv', 'GET'],
       'schema' => ['/schema', 'GET'],
       'find' => ['/find', 'GET'],
       'doc' => ['/doc', 'GET'],

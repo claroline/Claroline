@@ -58,6 +58,7 @@ class ArrayUtils
         if (array_key_exists($key, $object)) {
             return null;
         }
+
         throw new \Exception("Key `{$keys}` doesn't exist for array keys [".implode(',', array_keys($object)).']');
     }
 
@@ -78,5 +79,23 @@ class ArrayUtils
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    public static function getPropertiesName(array $object, $titles = [], $currentPos = null)
+    {
+        $keys = array_keys($object);
+
+        foreach ($keys as $key) {
+            if (is_array($object[$key]) && is_string($key)) {
+                $titles = static::getPropertiesName($object[$key], $titles, is_int($key) ? null : $key);
+            } else {
+                if (is_string($key)) {
+                    $displayName = $currentPos ? $currentPos.'.'.$key : $key;
+                    $titles[] = $displayName;
+                }
+            }
+        }
+
+        return $titles;
     }
 }
