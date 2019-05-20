@@ -683,7 +683,7 @@ class WorkspaceManager
 
             foreach ($scheduledForInsert as $entity) {
                 if (WorkspaceOptions::class === get_class($entity)) {
-                    if ($entity->getWorkspace()->getCode() === $workspace->getCode()) {
+                    if ($entity->getWorkspace() && $entity->getWorkspace()->getCode() === $workspace->getCode()) {
                         $workspaceOptions = $entity;
                     }
                 }
