@@ -262,6 +262,7 @@ class RoleSerializer
             $this->sipe('name', 'setName', $data, $role);
 
             $this->sipe('type', 'setType', $data, $role);
+
             if (isset($data['translationKey'])) {
                 $role->setTranslationKey($data['translationKey']);
                 //this is if it's not a workspace and we send the translationKey role
@@ -279,7 +280,10 @@ class RoleSerializer
             if (isset($data['workspace']['uuid'])) {
                 $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')
                     ->findOneBy(['uuid' => $data['workspace']['uuid']]);
-                $role->setName('ROLE_WS_'.str_replace(' ', '_', strtoupper($data['translationKey'])).'_'.$data['workspace']['uuid']);
+
+                if (!$role->getName()) {
+                    $role->setName('ROLE_WS_'.str_replace(' ', '_', strtoupper($data['translationKey'])).'_'.$data['workspace']['uuid']);
+                }
 
                 if ($workspace) {
                     $role->setWorkspace($workspace);
