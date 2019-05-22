@@ -102,7 +102,8 @@ function getTemplateErrors(template, fields) {
 
 function getTemplateHelp(fields) {
   return [
-    trans('template_variables_message', {}, 'clacoform')
+    trans('template_variables_message', {}, 'clacoform'),
+    `${trans('title')} : %clacoform_entry_title% (${trans('required')})`
   ].concat(fields
     .filter(field => !field.restrictions.hidden)
     .map(field => field.required ?
