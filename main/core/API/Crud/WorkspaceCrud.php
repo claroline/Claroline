@@ -40,13 +40,13 @@ class WorkspaceCrud
      * @param WorkspaceManager $manager
      */
     public function __construct(
-      WorkspaceManager $manager,
-      UserManager $userManager,
-      TokenStorageInterface $tokenStorage,
-      ResourceManager $resourceManager,
-      RoleManager $roleManager,
-      OrganizationManager $orgaManager,
-      ObjectManager $om
+        WorkspaceManager $manager,
+        UserManager $userManager,
+        TokenStorageInterface $tokenStorage,
+        ResourceManager $resourceManager,
+        RoleManager $roleManager,
+        OrganizationManager $orgaManager,
+        ObjectManager $om
     ) {
         $this->manager = $manager;
         $this->userManager = $userManager;

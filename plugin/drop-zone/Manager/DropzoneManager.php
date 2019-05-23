@@ -221,7 +221,7 @@ class DropzoneManager
      */
     public function update(Dropzone $dropzone, array $data)
     {
-        $this->crud->update('Claroline\DropZoneBundle\Entity\Dropzone', $data);
+        $this->crud->update(Dropzone::class, $data);
 
         $uow = $this->om->getUnitOfWork();
         $uow->computeChangeSets();
