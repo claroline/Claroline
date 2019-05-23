@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import Panel from 'react-bootstrap/lib/Panel'
 
+import {trans} from '#/main/app/intl/translation'
 import {withRouter} from '#/main/app/router'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {MODAL_ALERT} from '#/main/app/modals/alert'
@@ -10,24 +11,22 @@ import {actions as modalActions} from '#/main/app/overlay/modal/store'
 
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {Timer} from '#/main/core/layout/gauge/components/timer'
+import {ContentLoader} from '#/main/app/content/components/loader'
 import {ProgressBar} from '#/main/core/layout/components/progress-bar'
-import {ScoreGauge} from '#/main/core/layout/evaluation/components/score-gauge'
+import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 
-import {trans} from '#/main/app/intl/translation'
 import {getDefinition, isQuestionType} from '#/plugin/exo/items/item-types'
 import {getContentDefinition} from '#/plugin/exo/contents/utils'
-import selectQuiz from '#/plugin/exo/quiz/selectors'
+import {getNumbering} from '#/plugin/exo/utils/numbering'
+import {constants} from '#/plugin/exo/resources/quiz/constants'
 import {select} from '#/plugin/exo/quiz/player/selectors'
-import {selectors as papersSelect} from '#/plugin/exo/quiz/papers/selectors'
 import {actions} from '#/plugin/exo/quiz/player/actions'
 import {ItemPlayer} from '#/plugin/exo/items/components/item-player'
 import {ItemFeedback} from '#/plugin/exo/items/components/item-feedback'
 import {ContentItemPlayer} from '#/plugin/exo/contents/components/content-item-player'
 import {PlayerNav} from '#/plugin/exo/quiz/player/components/nav-bar'
 import {PlayerRestrictions} from '#/plugin/exo/quiz/player/components/restrictions'
-import {getNumbering} from '#/plugin/exo/utils/numbering'
-import {constants} from '#/plugin/exo/resources/quiz/constants'
 
 // TODO : rethink the loading paper process (it's a little hacky to make it quickly compatible with Router)
 
@@ -104,7 +103,9 @@ class PlayerComponent extends Component {
       fetching: true,
       error: false
     }
+  }
 
+  componentDidMount() {
     // TODO : display why the user cannot play quiz
     this.props
       .start()
@@ -118,37 +119,39 @@ class PlayerComponent extends Component {
   render() {
     return (
       <div className="quiz-player">
-        {this.props.paper && this.props.paper.structure &&
+        {this.props.progression &&
           <ProgressBar
-            value={papersSelect.paperItemsCount(this.props.paper) ?
-              Math.floor((Object.values(this.props.allAnswers).filter(a => a.data && a.data.length > 0).length / papersSelect.paperItemsCount(this.props.paper)) * 100) :
-              0
-            }
+            value={Math.floor((this.props.progression.current / this.props.progression.total) * 100)}
             size="xs"
             type="user"
           />
         }
-        {(this.props.isProgressionDisplayed || this.props.isTimed) &&
+        {(this.props.progression || this.props.isTimed) &&
           <div className="quiz-gauges-container">
-            {this.props.isProgressionDisplayed && this.props.paper && this.props.paper.structure && this.props.allAnswers && papersSelect.paperItemsCount(this.props.paper) &&
+            {this.props.progression &&
               <div className="quiz-progression-container">
                 <ScoreGauge
-                  userScore={Object.values(this.props.allAnswers).filter(a => a.data && a.data.length > 0).length}
-                  maxScore={papersSelect.paperItemsCount(this.props.paper)}
-                  size="sm"
+                  type="user"
+                  value={this.props.progression.current}
+                  total={this.props.progression.total}
+                  width={70}
+                  height={70}
                 />
               </div>
             }
+
             {this.props.isTimed && this.props.duration > 0 && this.props.paper.startDate &&
               <div className="timer-container">
                 <Timer
+                  type="user"
                   totalTime={this.props.duration}
                   startDate={this.props.paper.startDate}
-                  type="user"
                   onTimeOver={() => {
                     this.props.finish(this.props.quizId, this.props.paper, this.props.answers, this.props.showFeedback, false, this.props.history.push)
                     this.props.showTimeOverMessage()
                   }}
+                  width={70}
+                  height={70}
                 />
               </div>
             }
@@ -156,7 +159,7 @@ class PlayerComponent extends Component {
         }
 
         {this.state.fetching &&
-          <span>{trans('attempt_loading', {}, 'quiz')}</span>
+          <ContentLoader />
         }
 
         {(!this.state.fetching && this.state.error) &&
@@ -217,12 +220,14 @@ PlayerComponent.propTypes = {
   number: T.number.isRequired,
   isTimed: T.bool.isRequired,
   duration: T.number,
-  isProgressionDisplayed: T.bool.isRequired,
+  progression: T.shape({
+    current: T.number.isRequired,
+    total: T.number.isRequired
+  }),
   step: T.object,
   items: T.array.isRequired,
   mandatoryQuestions: T.bool.isRequired,
   answers: T.object.isRequired,
-  allAnswers: T.object.isRequired,
   paper: T.shape({
     id: T.string.isRequired,
     number: T.number.isRequired,
@@ -254,29 +259,42 @@ PlayerComponent.defaultProps = {
 }
 
 const Player = withRouter(connect(
-  state => ({
-    workspaceId: resourceSelect.workspaceId(state),
-    mandatoryQuestions: selectQuiz.parameters(state).mandatoryQuestions,
-    quizId: selectQuiz.id(state),
-    number: select.currentStepNumber(state),
-    step: select.currentStep(state),
-    items: select.currentStepItems(state),
-    paper: select.paper(state),
-    answers: select.currentStepAnswers(state),
-    allAnswers: select.answers(state),
-    next: select.next(state),
-    previous: select.previous(state),
-    showStatistics: selectQuiz.parameters(state).showStatistics,
-    showFeedback: select.showFeedback(state),
-    showEndConfirm: select.showEndConfirm(state),
-    feedbackEnabled: select.feedbackEnabled(state),
-    currentStepSend: select.currentStepSend(state),
-    numbering: selectQuiz.quizNumbering(state),
-    isTimed: selectQuiz.parameters(state).timeLimited,
-    duration: selectQuiz.parameters(state).duration,
-    isProgressionDisplayed: selectQuiz.parameters(state).progressionDisplayed,
-    answersEditable: selectQuiz.parameters(state).answersEditable
-  }),
+  state => {
+    const paper = select.paper(state)
+    return {
+      // general info
+      workspaceId: resourceSelect.workspaceId(state),
+      quizId: select.quizId(state),
+
+      // general attempt info
+      paper: paper,
+      progression: select.progressionDisplayed(state) ? {
+        current: Object.values(select.answers(state)).filter(a => a.data && a.data.length > 0).length,
+        total: select.countItems(state)
+      } : undefined,
+
+      // attempt parameters
+      mandatoryQuestions: select.mandatoryQuestions(state),
+      numbering: select.quizNumbering(state),
+      isTimed: select.isTimed(state),
+      duration: select.duration(state),
+      answersEditable: select.answersEditable(state),
+      showStatistics: select.showStatistics(state),
+      showFeedback: select.showFeedback(state),
+      showEndConfirm: select.showEndConfirm(state),
+      feedbackEnabled: select.feedbackEnabled(state),
+
+      // current step info
+      number: select.currentStepNumber(state),
+      step: select.currentStep(state),
+      items: select.currentStepItems(state),
+      answers: select.currentStepAnswers(state),
+      currentStepSend: select.currentStepSend(state),
+
+      next: select.next(state),
+      previous: select.previous(state)
+    }
+  },
   dispatch => ({
     start() {
       // The return is to be able to link on the Promise (this is not really clean)

@@ -181,13 +181,13 @@ class ClozeQuestionSerializer
 
     private function serializeSolutions(ClozeQuestion $clozeQuestion, array $options = [])
     {
-        return array_map(function (Hole $hole) use ($options) {
+        return array_values(array_map(function (Hole $hole) use ($options) {
             return [
                 'holeId' => $hole->getUuid(),
-                'answers' => array_map(function (Keyword $keyword) use ($options) {
+                'answers' => array_values(array_map(function (Keyword $keyword) use ($options) {
                     return $this->keywordSerializer->serialize($keyword, $options);
-                }, $hole->getKeywords()->toArray()),
+                }, $hole->getKeywords()->toArray())),
             ];
-        }, $clozeQuestion->getHoles()->toArray());
+        }, $clozeQuestion->getHoles()->toArray()));
     }
 }

@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {HtmlText} from '#/main/core/layout/components/html-text'
-import {ObjectsPlayer} from './item-objects.jsx'
+import {ObjectsPlayer} from '#/plugin/exo/items/components/item-objects'
 
 export const Metadata = props =>
   <div className="item-metadata">

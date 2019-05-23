@@ -2,9 +2,6 @@ import React, {Component} from 'react'
 import classes from 'classnames'
 import omit from 'lodash/omit'
 
-import {withModal} from '#/main/app/overlay/modal'
-import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {Button as ButtonTypes} from '#/main/app/buttons/prop-types'
 
@@ -12,7 +9,7 @@ import {Button as ButtonTypes} from '#/main/app/buttons/prop-types'
  * Callback button.
  * Renders a component that will trigger a callback on click.
  */
-class CallbackButtonComponent extends Component {
+class CallbackButton extends Component {
   constructor(props) {
     super(props)
 
@@ -21,31 +18,11 @@ class CallbackButtonComponent extends Component {
 
   onClick(e) {
     if (!this.props.disabled) {
-      if (this.props.confirm) {
-        // show confirmation modal before executing
-        this.props.showModal(MODAL_CONFIRM, {
-          icon: this.props.confirm.icon,
-          title: this.props.confirm.title,
-          subtitle: this.props.confirm.subtitle,
-          question: this.props.confirm.message,
-          confirmButtonText: this.props.confirm.button,
-          dangerous: this.props.dangerous,
-          additional: this.props.confirm.additional,
-          handleConfirm: () => {
-            if (this.props.onClick) {
-              // execute the default click callback if any (mostly to make dropdown works)
-              this.props.onClick(e)
-            }
-            this.props.callback(e)
-          }
-        })
-      } else {
-        if (this.props.onClick) {
-          // execute the default click callback if any (mostly to make dropdown works)
-          this.props.onClick(e)
-        }
-        this.props.callback(e)
+      if (this.props.onClick) {
+        // execute the default click callback if any (mostly to make dropdown works)
+        this.props.onClick(e)
       }
+      this.props.callback(e)
     }
 
     e.preventDefault()
@@ -57,7 +34,7 @@ class CallbackButtonComponent extends Component {
   render() {
     return (
       <button
-        {...omit(this.props, 'active', 'displayed', 'primary', 'dangerous', 'size', 'callback', 'bsRole', 'bsClass', 'confirm', 'showModal')}
+        {...omit(this.props, 'active', 'displayed', 'primary', 'dangerous', 'size', 'callback', 'bsRole', 'bsClass')}
         type="button"
         role="button"
         tabIndex={this.props.tabIndex}
@@ -81,12 +58,9 @@ class CallbackButtonComponent extends Component {
   }
 }
 
-implementPropTypes(CallbackButtonComponent, ButtonTypes, {
-  showModal: T.func.isRequired, // comes from HOC withModal
+implementPropTypes(CallbackButton, ButtonTypes, {
   callback: T.func.isRequired
 })
-
-const CallbackButton = withModal(CallbackButtonComponent)
 
 export {
   CallbackButton

@@ -3,7 +3,7 @@
 namespace UJM\ExoBundle\Manager\Attempt;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use UJM\ExoBundle\Entity\ItemType\AbstractItem;
+use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 
 /**
@@ -44,6 +44,20 @@ class ScoreManager
                 foreach ($correctedAnswer->getUnexpected() as $el) {
                     $score += $el->getScore();
                 }
+
+                if (isset($scoreRule['total']) && 0 < $scoreRule['total']) {
+                    // round score according to config
+                    $answersTotal = array_reduce(
+                        array_merge($correctedAnswer->getExpected(), $correctedAnswer->getMissing()),
+                        function ($totalScore, AnswerPartInterface $answerPart) {
+                            return $totalScore + $answerPart->getScore();
+                        },
+                        0
+                    );
+
+                    $score = ($score / $answersTotal) * $scoreRule['total'];
+                }
+
                 break;
 
             case 'rules':
@@ -103,7 +117,6 @@ class ScoreManager
 
             default:
                 throw new \LogicException("Unknown score type '{$scoreRule['type']}'.");
-                break;
         }
 
         if (null !== $score) {
@@ -117,13 +130,13 @@ class ScoreManager
      * Calculates the maximum score for a question based on a calculation rule
      * and the expected answer.
      *
-     * @param array        $scoreRule
-     * @param array        $expectedAnswers
-     * @param AbstractItem $question
+     * @param array                 $scoreRule
+     * @param AnswerPartInterface[] $expectedAnswers
+     * @param AnswerPartInterface[] $allAnswers
      *
      * @return float|null
      */
-    public function calculateTotal(array $scoreRule, array $expectedAnswers, AbstractItem $question = null)
+    public function calculateTotal(array $scoreRule, array $expectedAnswers, array $allAnswers = [])
     {
         $total = null;
         switch ($scoreRule['type']) {
@@ -133,8 +146,12 @@ class ScoreManager
 
             case 'sum':
                 $total = 0;
-                foreach ($expectedAnswers as $answer) {
-                    $total += $answer->getScore();
+                if (isset($scoreRule['total']) && 0 < $scoreRule['total']) {
+                    $total = $scoreRule['total'];
+                } else {
+                    foreach ($expectedAnswers as $answer) {
+                        $total += $answer->getScore();
+                    }
                 }
 
                 break;
@@ -148,7 +165,7 @@ class ScoreManager
                     'correct' => 0,
                     'incorrect' => 0,
                 ];
-                $nbChoices = !is_null($question) ? count($question->getChoices()->toArray()) : 0;
+                $nbChoices = count($allAnswers);
 
                 // compute best score by source
                 foreach ($scoreRule['rules'] as $rule) {
@@ -193,6 +210,9 @@ class ScoreManager
                     }
                 }
                 $total = $max['correct'] >= $max['incorrect'] ? $max['correct'] : $max['incorrect'];
+                break;
+
+            case 'none':
                 break;
 
             default:

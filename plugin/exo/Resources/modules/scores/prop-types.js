@@ -26,6 +26,13 @@ const ScoreType = {
     }).isRequired,
 
     /**
+     * The score type allows the user to define a score by available answer.
+     *
+     * @var {bool}
+     */
+    hasAnswerScores: T.bool.isRequired,
+
+    /**
      * A function to return the list of configuration field of the score type.
      * NB. fields definition follows the FormData format.
      *
@@ -38,7 +45,14 @@ const ScoreType = {
      *
      * @var {function}
      */
-    calculate: T.func.isRequired
+    calculate: T.func.isRequired,
+
+    /**
+     * A function to calculate the total score of a quiz item based on the score type.
+     *
+     * @var {function}
+     */
+    calculateTotal: T.func.isRequired
   },
 
   defaultProps: {
@@ -46,6 +60,21 @@ const ScoreType = {
   }
 }
 
+const ScoreRule = {
+  propTypes: {
+    type: T.string.isRequired
+    // others props depends on the type
+  },
+  defaultProps: {
+    type: 'sum',
+
+    // not really aesthetic (this is the default for "fixed" type)
+    success: 1,
+    failure: 0
+  }
+}
+
 export {
-  ScoreType
+  ScoreType,
+  ScoreRule
 }

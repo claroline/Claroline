@@ -20,7 +20,6 @@ import {ChoiceItem as ChoiceItemTypes} from '#/plugin/exo/items/choice/prop-type
 import {constants} from '#/plugin/exo/items/choice/constants'
 import {utils} from '#/plugin/exo/items/choice/utils'
 
-import ScoreFixed from '#/plugin/exo/scores/fixed'
 import ScoreRules from '#/plugin/exo/scores/rules'
 import ScoreSum from '#/plugin/exo/scores/sum'
 
@@ -34,21 +33,23 @@ class Choice extends Component {
   render() {
     return (
       <li
-        className={classes('answer-item choice-answer-item', {
+        className={classes('answer-item choice-answer-item', this.props.hasExpectedAnswers && {
           'unexpected-answer' : !this.props.checked,
           'expected-answer' : this.props.checked
         })}
       >
-        <input
-          className="choice-item-tick"
-          disabled={!this.props.fixedScore}
-          type={this.props.multiple ? 'checkbox' : 'radio'}
-          checked={this.props.checked}
-          onChange={() => {
-            // TODO : if not multiple we need to update other choices
-            this.props.update('score', !this.props.checked ? 1 : 0)
-          }}
-        />
+        {this.props.hasExpectedAnswers &&
+          <input
+            className="choice-item-tick"
+            disabled={this.props.hasScore}
+            type={this.props.multiple ? 'checkbox' : 'radio'}
+            checked={this.props.checked}
+            onChange={() => {
+              // TODO : if not multiple we need to update other choices
+              this.props.update('score', !this.props.checked ? 1 : 0)
+            }}
+          />
+        }
 
         <div className="text-fields">
           <HtmlInput
@@ -69,7 +70,7 @@ class Choice extends Component {
         </div>
 
         <div className="right-controls">
-          {!this.props.fixedScore &&
+          {(this.props.hasExpectedAnswers && this.props.hasScore) &&
             <NumberInput
               id={`choice-${this.props.id}-score`}
               className="score"
@@ -118,7 +119,8 @@ Choice.propTypes = {
 
   // from item
   deletable: T.bool.isRequired,
-  fixedScore: T.bool.isRequired,
+  hasExpectedAnswers: T.bool.isRequired,
+  hasScore: T.bool.isRequired,
   multiple: T.bool.isRequired,
 
   update: T.func.isRequired,
@@ -139,7 +141,8 @@ const Choices = props =>
           checked={choice.checked}
 
           multiple={props.multiple}
-          fixedScore={props.fixedScore}
+          hasExpectedAnswers={props.hasExpectedAnswers}
+          hasScore={props.hasAnswerScores}
           deletable={2 < props.choices.length}
 
           update={(prop, value) => props.updateChoice(choice, prop, value)}
@@ -160,7 +163,8 @@ const Choices = props =>
 Choices.propTypes = {
   direction: T.oneOf(['horizontal', 'vertical']).isRequired,
   multiple: T.bool.isRequired,
-  fixedScore: T.bool.isRequired,
+  hasAnswerScores: T.bool.isRequired,
+  hasExpectedAnswers: T.bool.isRequired,
 
   choices: T.arrayOf(T.shape({
     // from choice
@@ -179,170 +183,177 @@ Choices.propTypes = {
   deleteChoice: T.func.isRequired
 }
 
-const ChoiceEditor = props =>
-  <FormData
-    className="choice-item choice-editor"
-    embedded={true}
-    name={props.formName}
-    dataPart={props.path}
-    sections={[
-      {
-        title: trans('general'),
-        primary: true,
-        fields: [
-          {
-            name: '_type',
-            label: trans('expected_answer', {}, 'quiz'),
-            type: 'choice',
-            calculated: (choiceItem) => choiceItem.multiple ? constants.CHOICE_TYPE_MULTIPLE : constants.CHOICE_TYPE_SINGLE,
-            required: true,
-            options: {
-              noEmpty: true,
-              condensed: true,
-              choices: constants.CHOICE_TYPES
-            },
-            onChange: (choiceType) => {
-              props.update('multiple', constants.CHOICE_TYPE_MULTIPLE === choiceType)
+const ChoiceEditor = props => {
+  const choices = utils.setChoiceTicks(props.item.choices.map(choice => {
+    const solution = props.item.solutions.find(solution => solution.id === choice.id)
 
-              if (constants.CHOICE_TYPE_SINGLE === choiceType && ScoreRules.name === get(props.item, 'score.type')) {
-                // reset score type
-                props.update('score.type', ScoreSum.name)
-              }
+    return {
+      id: choice.id,
+      type: choice.type,
+      data: choice.data,
+      feedback: get(solution, 'feedback'),
+      score: get(solution, 'score')
+    }
+  }), props.item.multiple)
+
+  const ChoicesComponent = (
+    <Choices
+      direction={props.item.direction}
+      multiple={props.item.multiple}
+      hasExpectedAnswers={props.item.hasExpectedAnswers}
+      hasAnswerScores={props.hasAnswerScores}
+
+      choices={choices}
+
+      addChoice={() => {
+        const newChoices = props.item.choices.slice()
+        const newSolutions = props.item.solutions.slice()
+
+        const choiceId = makeId()
+
+        // create choice item
+        newChoices.push({
+          id: choiceId,
+          type: 'text/html',
+          data: ''
+        })
+
+        let score = 1
+        if (!props.item.multiple -1 !== newSolutions.findIndex(solution => 0 < solution.score)) {
+          // there is a correct answer so all new one should be incorrect
+          score = 0
+        }
+
+        // create associated solution
+        newSolutions.push({
+          id: choiceId,
+          feedback: '',
+          score: score
+        })
+
+        props.update('choices', newChoices)
+        props.update('solutions', newSolutions)
+      }}
+
+      updateChoice={(choice, prop, value) => {
+        if (-1 !== ['feedback', 'score'].indexOf(prop)) {
+          // update solution
+          const updatedSolutions = cloneDeep(props.item.solutions)
+
+          const toUpdate = updatedSolutions.find(current => current.id === choice.id)
+          if (toUpdate) {
+            if ('score' === prop && !props.hasAnswerScores && !props.item.multiple && value) {
+              // new expected answer, reset score for other answers
+              updatedSolutions.map(solution => solution.score = 0)
             }
-          }, {
-            name: 'choices',
-            label: trans('choices'),
-            required: true,
-            render: (choiceItem) => {
-              const fixedScore = -1 < [ScoreFixed.name, ScoreRules.name].indexOf(get(choiceItem, 'score.type'))
-              const choices = utils.setChoiceTicks(choiceItem.choices.map(choice => {
-                const solution = choiceItem.solutions.find(solution => solution.id === choice.id)
 
-                return {
-                  id: choice.id,
-                  type: choice.type,
-                  data: choice.data,
-                  feedback: get(solution, 'feedback'),
-                  score: get(solution, 'score')
-                }
-              }), choiceItem.multiple)
-
-              const ChoicesComponent = (
-                <Choices
-                  direction={choiceItem.direction}
-                  multiple={choiceItem.multiple}
-                  fixedScore={fixedScore}
-
-                  choices={choices}
-
-                  addChoice={() => {
-                    const newChoices = choiceItem.choices.slice()
-                    const newSolutions = choiceItem.solutions.slice()
-
-                    const choiceId = makeId()
-
-                    // create choice item
-                    newChoices.push({
-                      id: choiceId,
-                      type: 'text/html',
-                      data: ''
-                    })
-
-                    // create associated solution
-                    newSolutions.push({
-                      id: choiceId,
-                      feedback: '',
-                      score: 0
-                    })
-
-                    props.update('choices', newChoices)
-                    props.update('solutions', newSolutions)
-                  }}
-
-                  updateChoice={(choice, prop, value) => {
-                    if (-1 !== ['feedback', 'score'].indexOf(prop)) {
-                      // update solution
-                      const updatedSolutions = cloneDeep(choiceItem.solutions)
-
-                      const toUpdate = updatedSolutions.find(current => current.id === choice.id)
-                      if (toUpdate) {
-                        if ('score' === prop && fixedScore && !choiceItem.multiple && value) {
-                          // new expected answer, reset score for other answers
-                          updatedSolutions.map(solution => solution.score = 0)
-                        }
-
-                        set(toUpdate, prop, value)
-                        props.update('solutions', updatedSolutions)
-                      }
-                    } else {
-                      // update choice
-                      const updatedChoices = cloneDeep(choiceItem.choices)
-                      const toUpdate = updatedChoices.find(current => current.id === choice.id)
-
-                      if (toUpdate) {
-                        set(toUpdate, prop, value)
-                        props.update('choices', updatedChoices)
-                      }
-                    }
-                  }}
-
-                  deleteChoice={(choice) => {
-                    const updatedChoices = cloneDeep(choiceItem.choices)
-                    const updatedSolutions = cloneDeep(choiceItem.solutions)
-
-                    const choicePos = updatedChoices.findIndex(current => current.id === choice.id)
-                    if (-1 !== choicePos) {
-                      // remove it from choices and solutions
-                      updatedChoices.splice(choicePos, 1)
-
-                      const solutionPos = updatedSolutions.findIndex(current => current.id === choice.id)
-                      updatedSolutions.splice(solutionPos, 1)
-
-                      props.update('choices', updatedChoices)
-                      props.update('solutions', updatedSolutions)
-                    }
-                  }}
-                />
-              )
-
-              return ChoicesComponent
-            }
-          }, {
-            name: 'direction',
-            label: trans('choices_direction', {}, 'quiz'),
-            type: 'choice',
-            required: true,
-            options: {
-              noEmpty: true,
-              condensed: true,
-              choices: {
-                vertical: trans('vertical', {}, 'quiz'),
-                horizontal: trans('horizontal', {}, 'quiz')
-              }
-            }
-          }, {
-            name: 'numbering',
-            label: trans('choice_numbering', {}, 'quiz'),
-            type: 'choice',
-            required: true,
-            options: {
-              noEmpty: true,
-              condensed: true,
-              choices: quizConstants.QUIZ_NUMBERINGS
-            }
-          }, {
-            name: 'random',
-            label: trans('shuffle_answers', {}, 'quiz'),
-            help: [
-              trans('shuffle_answers_help', {}, 'quiz'),
-              trans('shuffle_answers_results_help', {}, 'quiz')
-            ],
-            type: 'boolean'
+            set(toUpdate, prop, value)
+            props.update('solutions', updatedSolutions)
           }
-        ]
-      }
-    ]}
-  />
+        } else {
+          // update choice
+          const updatedChoices = cloneDeep(props.item.choices)
+          const toUpdate = updatedChoices.find(current => current.id === choice.id)
+
+          if (toUpdate) {
+            set(toUpdate, prop, value)
+            props.update('choices', updatedChoices)
+          }
+        }
+      }}
+
+      deleteChoice={(choice) => {
+        const updatedChoices = cloneDeep(props.item.choices)
+        const updatedSolutions = cloneDeep(props.item.solutions)
+
+        const choicePos = updatedChoices.findIndex(current => current.id === choice.id)
+        if (-1 !== choicePos) {
+          // remove it from choices and solutions
+          updatedChoices.splice(choicePos, 1)
+
+          const solutionPos = updatedSolutions.findIndex(current => current.id === choice.id)
+          updatedSolutions.splice(solutionPos, 1)
+
+          props.update('choices', updatedChoices)
+          props.update('solutions', updatedSolutions)
+        }
+      }}
+    />
+  )
+  
+  return (
+    <FormData
+      className="choice-item choice-editor"
+      embedded={true}
+      name={props.formName}
+      dataPart={props.path}
+      sections={[
+        {
+          title: trans('general'),
+          primary: true,
+          fields: [
+            {
+              name: '_type',
+              label: trans('expected_answer', {}, 'quiz'),
+              type: 'choice',
+              calculated: (choiceItem) => choiceItem.multiple ? constants.CHOICE_TYPE_MULTIPLE : constants.CHOICE_TYPE_SINGLE,
+              required: true,
+              options: {
+                noEmpty: true,
+                condensed: true,
+                choices: constants.CHOICE_TYPES
+              },
+              onChange: (choiceType) => {
+                props.update('multiple', constants.CHOICE_TYPE_MULTIPLE === choiceType)
+
+                if (constants.CHOICE_TYPE_SINGLE === choiceType && ScoreRules.name === get(props.item, 'score.type')) {
+                  // reset score type
+                  props.update('score.type', ScoreSum.name)
+                }
+              }
+            }, {
+              name: 'choices',
+              label: trans('choices'),
+              required: true,
+              component: ChoicesComponent
+            }, {
+              name: 'direction',
+              label: trans('choices_direction', {}, 'quiz'),
+              type: 'choice',
+              required: true,
+              options: {
+                noEmpty: true,
+                condensed: true,
+                choices: {
+                  vertical: trans('vertical', {}, 'quiz'),
+                  horizontal: trans('horizontal', {}, 'quiz')
+                }
+              }
+            }, {
+              name: 'numbering',
+              label: trans('choice_numbering', {}, 'quiz'),
+              type: 'choice',
+              required: true,
+              options: {
+                noEmpty: true,
+                condensed: true,
+                choices: quizConstants.QUIZ_NUMBERINGS
+              }
+            }, {
+              name: 'random',
+              label: trans('shuffle_answers', {}, 'quiz'),
+              help: [
+                trans('shuffle_answers_help', {}, 'quiz'),
+                trans('shuffle_answers_results_help', {}, 'quiz')
+              ],
+              type: 'boolean'
+            }
+          ]
+        }
+      ]}
+    />
+  )
+}
 
 implementPropTypes(ChoiceEditor, ItemEditorTypes, {
   item: T.shape(

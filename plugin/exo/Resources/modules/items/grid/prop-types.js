@@ -1,12 +1,13 @@
 import {PropTypes as T} from 'prop-types'
 
-import {makeId} from '#/plugin/exo/utils/utils'
+import {makeId} from '#/main/core/scaffolding/id'
+
+import {ScoreRule} from '#/plugin/exo/scores/prop-types'
 import {constants} from '#/plugin/exo/items/grid/constants'
-import {SCORE_SUM} from '#/plugin/exo/quiz/enums'
 
 function makeDefaultCell(x, y) {
   return {
-    id: makeId(),
+    id: makeId(), // FIXME : uuid will not be unique if many grid items are created in the same time.
     data: '',
     coordinates: [x, y],
     background: '#fff',
@@ -23,11 +24,9 @@ const GridItem = {
       id: T.string.isRequired,
       penalty: T.number.isRequired,
       sumMode: T.string,
-      score: T.shape({
-        type: T.string.isRequired,
-        success: T.number.isRequired,
-        failure: T.number.isRequired
-      }),
+      score: T.shape(
+        ScoreRule.propTypes
+      ),
       cells: T.arrayOf(T.shape({
         id: T.string.isRequired,
         data: T.string.isRequired,
@@ -43,7 +42,16 @@ const GridItem = {
         width: T.number.isRequired,
         color: T.string.isRequired
       }).isRequired,
-      solutions: T.arrayOf(T.object).isRequired,
+      solutions: T.arrayOf(T.shape({
+        cellId: T.string.isRequired,
+        answers: T.arrayOf(T.shape({
+          text: T.string,
+          caseSensitive: T.bool,
+          expected: T.bool,
+          score: T.number,
+          feedback: T.string
+        })).isRequired
+      })).isRequired,
       _errors: T.object,
       _popover: T.string
     }).isRequired
@@ -52,9 +60,7 @@ const GridItem = {
     random: false,
     penalty: 0,
     sumMode: constants.SUM_CELL,
-    score: {
-      type: SCORE_SUM
-    },
+    score: ScoreRule.defaultProps,
     cells: [
       makeDefaultCell(0,0),
       makeDefaultCell(0,1),

@@ -1,6 +1,7 @@
 import freeze from 'deep-freeze'
+
 import {ensure} from '#/main/core/scaffolding/tests'
-import {normalize} from './normalizer'
+import {normalize} from '#/plugin/exo/quiz/normalizer'
 
 describe('Normalizer', () => {
   it('produces a new, flattened data structure from raw quiz data', () => {

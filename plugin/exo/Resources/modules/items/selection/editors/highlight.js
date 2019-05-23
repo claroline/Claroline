@@ -2,9 +2,9 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import {makeActionCreator} from '#/main/app/store/actions'
 import {tex} from '#/main/app/intl/translation'
+import {makeId} from '#/main/core/scaffolding/id'
 
-import {makeId} from '../../../utils/utils'
-import {utils} from '../utils/utils'
+import {utils} from '#/plugin/exo/items/selection/utils/utils'
 
 const HIGHLIGHT_ADD_SELECTION = 'HIGHLIGHT_ADD_SELECTION'
 const HIGHLIGHT_UPDATE_ANSWER = 'HIGHLIGHT_UPDATE_ANSWER'

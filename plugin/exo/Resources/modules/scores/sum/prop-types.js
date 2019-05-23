@@ -5,7 +5,7 @@ const ScoreSum = {
   },
 
   defaultProps: {
-
+    // no additional config
   }
 }
 

@@ -28,6 +28,7 @@ module.exports = {
   },
   devServer: {
     hot: true,
+    port: 8080,
     contentBase: paths.output(),
     headers: {
       'Access-Control-Allow-Origin': '*'

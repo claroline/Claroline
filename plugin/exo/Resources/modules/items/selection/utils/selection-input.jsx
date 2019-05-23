@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import cloneDeep from 'lodash/cloneDeep'
 
-import {utils} from './utils'
+import {utils} from '#/plugin/exo/items/selection/utils/utils'
 
 /**
  * utility method for building the selection array

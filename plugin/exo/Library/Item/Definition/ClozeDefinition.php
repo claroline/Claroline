@@ -8,6 +8,7 @@ use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\ClozeQuestion;
 use UJM\ExoBundle\Entity\Misc\Hole;
 use UJM\ExoBundle\Entity\Misc\Keyword;
+use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Serializer\Item\Type\ClozeQuestionSerializer;
@@ -151,13 +152,28 @@ class ClozeDefinition extends AbstractDefinition
     /**
      * @param ClozeQuestion $question
      *
-     * @return array
+     * @return AnswerPartInterface[]
      */
     public function expectAnswer(AbstractItem $question)
     {
         return array_map(function (Hole $hole) {
             return $this->findHoleExpectedAnswer($hole);
         }, $question->getHoles()->toArray());
+    }
+
+    /**
+     * @param ClozeQuestion $question
+     *
+     * @return AnswerPartInterface[]
+     */
+    public function allAnswers(AbstractItem $question)
+    {
+        $answers = [];
+        foreach ($question->getHoles() as $hole) {
+            $answers = array_merge($answers, $hole->getKeywords()->toArray());
+        }
+
+        return $answers;
     }
 
     /**

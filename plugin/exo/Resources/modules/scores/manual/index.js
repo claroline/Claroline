@@ -9,6 +9,8 @@ export default {
     description: trans('score_manual_desc', {}, 'quiz')
   },
 
+  hasAnswerScores: true,
+
   configure: () => [
     {
       name: 'max',
@@ -22,5 +24,7 @@ export default {
   ],
 
   // type requires manual correction
-  calculate: () => null
+  calculate: () => null,
+
+  calculateTotal: (scoreRules) => scoreRules.max
 }

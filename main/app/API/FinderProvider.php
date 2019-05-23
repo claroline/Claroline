@@ -102,6 +102,23 @@ class FinderProvider
      */
     public function search($class, array $finderParams = [], array $serializerOptions = [])
     {
+        $results = $this->searchEntities($class, $finderParams);
+
+        return array_merge($results, [
+            'data' => array_map(function ($result) use ($serializerOptions) {
+                return $this->serializer->serialize($result, $serializerOptions);
+            }, $results['data']),
+        ]);
+    }
+
+    /**
+     * @param $class
+     * @param array $finderParams
+     *
+     * @return array
+     */
+    public function searchEntities($class, array $finderParams = [])
+    {
         $queryParams = self::parseQueryParams($finderParams);
         $page = $queryParams['page'];
         $limit = $queryParams['limit'];
@@ -121,9 +138,7 @@ class FinderProvider
         }
 
         return self::formatPaginatedData(
-            array_map(function ($result) use ($serializerOptions) {
-                return $this->serializer->serialize($result, $serializerOptions);
-            }, $data),
+            $data,
             $count,
             $page,
             $limit,

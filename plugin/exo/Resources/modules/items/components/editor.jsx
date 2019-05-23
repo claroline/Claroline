@@ -12,16 +12,29 @@ import {makeId} from '#/main/core/scaffolding/id'
 import {Item as ItemTypes, ItemType as ItemTypeTypes} from '#/plugin/exo/items/prop-types'
 import {ItemType} from '#/plugin/exo/items/components/type'
 
+import ScoreNone from '#/plugin/exo/scores/none'
+
 const ItemEditor = props => {
   let supportedScores, currentScore, availableScores
   if (props.definition.answerable) {
-    supportedScores = props.definition.supportScores(props.item)
+    supportedScores = [ScoreNone].concat(props.definition.supportScores(props.item) || [])
 
     currentScore = supportedScores.find(score => score.name === get(props.item, 'score.type'))
     availableScores = supportedScores.reduce((scoreChoices, current) => Object.assign(scoreChoices, {
       [current.name]: current.meta.label
     }), {})
   }
+
+  const CurrentType = <ItemType name={props.definition.name} size="lg" />
+
+  const CustomSection = createElement(props.definition.components.editor, {
+    formName: props.formName,
+    path: props.path,
+    disabled: props.disabled,
+    item: props.item,
+    hasAnswerScores: currentScore.hasAnswerScores,
+    update: props.update
+  })
 
   return (
     <FormData
@@ -43,33 +56,32 @@ const ItemEditor = props => {
               type: 'string',
               hideLabel: true,
               displayed: props.meta,
-              render: () => {
-                const CurrentType = <ItemType name={props.definition.name} size="lg" />
-
-                return CurrentType
-              }
+              component: CurrentType
             }, {
               name: 'content',
               label: trans('question', {}, 'quiz'),
               type: 'html',
               required: true,
               displayed: props.definition.answerable
+            }, {
+              name: 'hasExpectedAnswers',
+              label: trans('has_expected_answers', {}, 'quiz'),
+              type: 'boolean',
+              help: [
+                trans('has_expected_answers_help', {}, 'quiz'),
+                trans('has_expected_answers_help_score', {}, 'quiz')
+              ],
+              onChange: (checked) => {
+                if (!checked) {
+                  props.update('score.type', ScoreNone.name)
+                }
+              }
             }
           ]
         }, {
           title: trans('custom'),
           primary: true,
-          render: () => {
-            const CustomSection = createElement(props.definition.components.editor, {
-              formName: props.formName,
-              path: props.path,
-              disabled: props.disabled,
-              item: props.item,
-              update: props.update
-            })
-
-            return CustomSection
-          }
+          component: CustomSection
         }, {
           icon: 'fa fa-fw fa-info',
           title: trans('information'),
@@ -105,7 +117,7 @@ const ItemEditor = props => {
         }, {
           icon: 'fa fa-fw fa-percentage',
           title: trans('score'),
-          displayed: props.definition.answerable,
+          displayed: props.definition.answerable && props.item.hasExpectedAnswers,
           fields: [
             {
               name: 'score.type',

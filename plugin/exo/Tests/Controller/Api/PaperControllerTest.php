@@ -247,7 +247,7 @@ class PaperControllerTest extends TransactionalTestCase
         $this->om->persist($paper);
         $this->om->flush();
 
-        $this->request('DELETE', "/api/exercises/{$this->exercise->getUuid()}/papers/{$paper->getUuid()}", $this->bob);
+        $this->request('DELETE', "/api/exercises/{$this->exercise->getUuid()}/papers?ids[]={$paper->getUuid()}", $this->bob);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
@@ -260,41 +260,8 @@ class PaperControllerTest extends TransactionalTestCase
         $this->om->persist($paper);
         $this->om->flush();
 
-        $this->request('DELETE', "/api/exercises/{$this->exercise->getUuid()}/papers/{$paper->getUuid()}", $this->john);
+        $this->request('DELETE', "/api/exercises/{$this->exercise->getUuid()}/papers?ids[]={$paper->getUuid()}", $this->john);
         $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
-
-        // Checks the papers have really been deleted
-        $papers = $this->om->getRepository('UJMExoBundle:Attempt\Paper')->findBy([
-            'exercise' => $this->exercise,
-        ]);
-
-        $this->assertCount(0, $papers);
-    }
-
-    /**
-     * A "normal" user MUST NOT be able to delete the papers of an exercise.
-     */
-    public function testUserDeleteAllPapers()
-    {
-        $this->request('DELETE', "/api/exercises/{$this->exercise->getUuid()}/papers", $this->bob);
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    /**
-     * An "admin" user MUST be able to delete all the papers of an exercise at once.
-     */
-    public function testAdminDeleteAllPapers()
-    {
-        $pa1 = $this->paperGenerator->create($this->exercise, $this->john);
-        $pa2 = $this->paperGenerator->create($this->exercise, $this->john);
-        $this->om->persist($pa1);
-        $this->om->persist($pa2);
-
-        $this->om->flush();
-
-        $this->request('DELETE', "/api/exercises/{$this->exercise->getUuid()}/papers", $this->john);
-        $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue(empty($this->client->getResponse()->getContent()));
 
         // Checks the papers have really been deleted
         $papers = $this->om->getRepository('UJMExoBundle:Attempt\Paper')->findBy([

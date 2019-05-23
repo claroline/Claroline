@@ -1,7 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {currentUser} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 import {ResourcePage} from '#/main/core/resource/containers/page'
@@ -11,16 +10,12 @@ import {CustomDragLayer} from '#/plugin/exo/utils/custom-drag-layer'
 
 import {Player}     from '#/plugin/exo/quiz/player/components/player'
 import {AttemptEnd} from '#/plugin/exo/quiz/player/components/attempt-end'
-import {Papers}     from '#/plugin/exo/quiz/papers/components/papers'
-import {Paper}      from '#/plugin/exo/quiz/papers/components/paper'
-import {Questions}  from '#/plugin/exo/quiz/correction/components/questions'
-import {Answers}    from '#/plugin/exo/quiz/correction/components/answers'
 import {Statistics} from '#/plugin/exo/quiz/statistics/components/statistics'
 
 import {EditorMain}   from '#/plugin/exo/resources/quiz/editor/containers/main'
 import {OverviewMain} from '#/plugin/exo/resources/quiz/overview/containers/main'
-
-const authenticatedUser = currentUser()
+import {PapersMain}   from '#/plugin/exo/resources/quiz/papers/containers/main'
+import {CorrectionMain}   from '#/plugin/exo/resources/quiz/correction/containers/main'
 
 const QuizResource = props =>
   <ResourcePage
@@ -37,12 +32,14 @@ const QuizResource = props =>
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-play',
         label: trans('start', {}, 'actions'),
+        disabled: props.empty,
         target: '/play'
       }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-play',
         label: trans('test', {}, 'actions'),
         displayed: props.editable,
+        disabled: props.empty,
         target: '/test',
         group: trans('management')
       }, {
@@ -78,7 +75,7 @@ const QuizResource = props =>
         icon: 'fa fa-fw fa-check-square-o',
         label: trans('correct', {}, 'actions'),
         displayed: props.papersAdmin,
-        target: '/correction/questions',
+        target: '/correction',
         group: trans('management')
       }, {
         type: LINK_BUTTON,
@@ -122,31 +119,11 @@ const QuizResource = props =>
           component: AttemptEnd
         }, {
           path: '/papers',
-          exact: true,
-          component: Papers,
-          disabled: !props.registeredUser
+          component: PapersMain
         }, {
-          path: '/papers/:id', // todo : declare inside papers module
-          component: Paper,
-          onEnter: (params) => {
-            authenticatedUser ? props.loadCurrentPaper(props.quizId, params.id) : false
-
-            if (props.showStatistics) {
-              props.statistics(props.quizId)
-            }
-          },
-          onLeave: () => props.resetCurrentPaper()
-        }, {
-          path: '/correction/questions',
-          exact: true,
-          component: Questions,
-          disabled: !props.papersAdmin,
-          onEnter: () => props.correction()
-        }, {
-          path: '/correction/questions/:id', // todo : declare inside correction module
-          component: Answers,
-          disabled: !props.papersAdmin,
-          onEnter: (params = {}) => props.correction(params.id)
+          path: '/correction',
+          component: CorrectionMain,
+          disabled: !props.papersAdmin
         }, {
           path: '/statistics',
           component: Statistics,
@@ -174,6 +151,7 @@ const QuizResource = props =>
 
 QuizResource.propTypes = {
   quizId: T.string,
+  empty: T.bool.isRequired,
   editable: T.bool.isRequired,
   papersAdmin: T.bool.isRequired,
   docimologyAdmin: T.bool.isRequired,
@@ -181,10 +159,7 @@ QuizResource.propTypes = {
   registeredUser: T.bool.isRequired,
   hasOverview: T.bool.isRequired,
   testMode: T.func.isRequired,
-  statistics: T.func.isRequired,
-  correction: T.func.isRequired,
-  loadCurrentPaper: T.func.isRequired,
-  resetCurrentPaper: T.func.isRequired
+  statistics: T.func.isRequired
 }
 
 export {

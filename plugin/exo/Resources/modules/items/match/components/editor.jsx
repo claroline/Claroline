@@ -12,6 +12,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
 
+import {SCORE_SUM} from '#/plugin/exo/quiz/enums'
 import {ItemEditor as ItemEditorTypes} from '#/plugin/exo/items/prop-types'
 import {emptyAnswer} from '#/plugin/exo/items/utils'
 import {MatchItem as MatchItemTypes} from '#/plugin/exo/items/match/prop-types'
@@ -61,6 +62,10 @@ class MatchLinkPopover extends Component {
       <Popover
         id={`popover-${this.props.solution.firstId}-${this.props.solution.secondId}`}
         positionTop={this.props.popover.top}
+        className={classes('', this.props.hasExpectedAnswers && {
+          'unexpected-answer' : 0 >= this.props.solution.score,
+          'expected-answer' : 0 < this.props.solution.score
+        })}
         placement="bottom"
         title={
           <div>
@@ -93,16 +98,29 @@ class MatchLinkPopover extends Component {
         }
       >
         <div className="association">
-          <input
-            className="form-control association-score"
-            type="number"
-            value={this.props.solution.score}
-            onChange={(e) => {
-              const newSolution = cloneDeep(this.props.solution)
-              newSolution.score = parseFloat(e.target.value)
-              this.props.update(this.props.path, newSolution)
-            }}
-          />
+          {this.props.hasExpectedAnswers && this.props.hasScore &&
+            <input
+              className="form-control association-score"
+              type="number"
+              value={this.props.solution.score}
+              onChange={(e) => {
+                const newSolution = cloneDeep(this.props.solution)
+                newSolution.score = parseFloat(e.target.value)
+                this.props.update(this.props.path, newSolution)
+              }}
+            />
+          }
+          {this.props.hasExpectedAnswers && !this.props.hasScore &&
+            <input
+              type="checkbox"
+              checked={0 < this.props.solution.score}
+              onChange={(e) => {
+                const newSolution = cloneDeep(this.props.solution)
+                newSolution.score = e.target.checked ? 1 : 0
+                this.props.update(this.props.path, newSolution)
+              }}
+            />
+          }
 
           <Button
             id={`solution-${this.props.solution.firstId}-${this.props.solution.secondId}-feedback-toggle`}
@@ -139,6 +157,8 @@ MatchLinkPopover.propTypes = {
   popover: T.object.isRequired,
   solution: T.object.isRequired,
   deletable: T.bool.isRequired,
+  hasScore: T.bool.isRequired,
+  hasExpectedAnswers: T.bool.isRequired,
   handlePopoverClose: T.func.isRequired,
   handleConnectionDelete: T.func.isRequired,
   update: T.func.isRequired
@@ -488,13 +508,15 @@ class MatchElements extends Component {
         </div>
 
         <div id={`popover-place-holder-${this.props.item.id}`} className="divide-col col-md-2 col-sm-2 col-xs-2">
-          {this.state.popover.visible &&
+          {this.state.popover.visible && null !== this.state.current && this.props.item.solutions[this.state.current] &&
             <MatchLinkPopover
               handleConnectionDelete={(firstId, secondId) => this.removeConnection(firstId, secondId)}
               handlePopoverClose={() => this.closePopover()}
               popover={this.state.popover}
               solution={this.props.item.solutions[this.state.current]}
               deletable={this.props.item.solutions.length > 1}
+              hasScore={this.props.hasAnswerScores}
+              hasExpectedAnswers={this.props.item.hasExpectedAnswers}
               path={`solutions[${this.state.current}]`}
               update={this.props.update}
             />
@@ -536,46 +558,52 @@ class MatchElements extends Component {
   }
 }
 
-const MatchEditor = props =>
-  <FormData
-    className="match-editor"
-    embedded={true}
-    name={props.formName}
-    dataPart={props.path}
-    sections={[
-      {
-        title: trans('general'),
-        primary: true,
-        fields: [
-          {
-            name: 'solutions',
-            label: trans('answers', {}, 'quiz'),
-            required: true,
-            render: (item) => {
-              const Match = (
-                <MatchElements {...props} item={item} />
-              )
+const MatchEditor = props => {
+  const MatchComponent = (
+    <MatchElements
+      {...props}
+      item={props.item}
+      hasAnswerScores={props.hasAnswerScores}
+    />
+  )
 
-              return Match
+  return (
+    <FormData
+      className="match-editor"
+      embedded={true}
+      name={props.formName}
+      dataPart={props.path}
+      sections={[
+        {
+          title: trans('general'),
+          primary: true,
+          fields: [
+            {
+              name: 'solutions',
+              label: trans('answers', {}, 'quiz'),
+              required: true,
+              component: MatchComponent
+            }, {
+              name: 'random',
+              label: trans('shuffle_answers', {}, 'quiz'),
+              help: [
+                trans('shuffle_answers_help', {}, 'quiz'),
+                trans('shuffle_answers_results_help', {}, 'quiz')
+              ],
+              type: 'boolean'
+            }, {
+              name: 'penalty',
+              type: 'number',
+              label: trans('editor_penalty_label', {}, 'quiz'),
+              required: true,
+              displayed: (item) => item.hasExpectedAnswers && props.hasAnswerScores && item.score.type === SCORE_SUM
             }
-          }, {
-            name: 'random',
-            label: trans('shuffle_answers', {}, 'quiz'),
-            help: [
-              trans('shuffle_answers_help', {}, 'quiz'),
-              trans('shuffle_answers_results_help', {}, 'quiz')
-            ],
-            type: 'boolean'
-          }, {
-            name: 'penalty',
-            type: 'number',
-            label: trans('editor_penalty_label', {}, 'quiz'),
-            required: true
-          }
-        ]
-      }
-    ]}
-  />
+          ]
+        }
+      ]}
+    />
+  )
+}
 
 implementPropTypes(MatchEditor, ItemEditorTypes, {
   item: T.shape(

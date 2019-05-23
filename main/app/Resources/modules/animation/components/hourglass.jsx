@@ -127,6 +127,12 @@ class Hourglass extends Component {
   componentWillUnmount() {
     clearInterval(this.liquidFlow)
     clearTimeout(this.flipping)
+
+    // removes D3 animations
+    this.hourglassNode.interrupt()
+    this.liquidSprayNode.interrupt()
+    this.topLiquidNode.interrupt()
+    this.bottomLiquidNode.interrupt()
   }
 
   render() {

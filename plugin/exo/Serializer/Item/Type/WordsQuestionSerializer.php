@@ -77,9 +77,9 @@ class WordsQuestionSerializer
 
     private function serializeSolutions(OpenQuestion $wordsQuestion, array $options = [])
     {
-        return array_map(function (Keyword $keyword) use ($options) {
+        return array_values(array_map(function (Keyword $keyword) use ($options) {
             return $this->keywordSerializer->serialize($keyword, $options);
-        }, $wordsQuestion->getKeywords()->toArray());
+        }, $wordsQuestion->getKeywords()->toArray()));
     }
 
     /**

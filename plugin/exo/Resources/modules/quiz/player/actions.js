@@ -1,7 +1,7 @@
 import isEmpty from 'lodash/isEmpty'
 import moment from 'moment'
 
-// TODO : remove the use of navigate()
+// TODO : remove the use of navigate() and do redirection in components.
 
 import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
@@ -10,9 +10,9 @@ import {actions as resourceActions} from '#/main/core/resource/store'
 import quizSelectors from '#/plugin/exo/quiz/selectors'
 import {select as playerSelectors} from '#/plugin/exo/quiz/player/selectors'
 import {normalize, denormalizeAnswers, denormalize} from '#/plugin/exo/quiz/player/normalizer'
-import {generatePaper} from '#/plugin/exo/quiz/papers/generator'
-import {actions as paperAction} from '#/plugin/exo/quiz/papers/actions'
-import {utils as paperUtils} from '#/plugin/exo/quiz/papers/utils'
+import {generateAttempt} from '#/plugin/exo/resources/quiz/player/attempt'
+import {actions as paperAction} from '#/plugin/exo/resources/quiz/papers/store/actions'
+import {calculateScore} from '#/plugin/exo/resources/quiz/papers/score'
 
 export const ATTEMPT_START  = 'ATTEMPT_START'
 export const ATTEMPT_FINISH = 'ATTEMPT_FINISH'
@@ -27,7 +27,7 @@ export const actions = {}
 
 actions.setTestMode = makeActionCreator(TEST_MODE_SET, 'testMode')
 actions.startAttempt = makeActionCreator(ATTEMPT_START, 'paper', 'answers')
-actions.finishAttempt = makeActionCreator(ATTEMPT_FINISH, 'paper', 'answers')
+actions.finishAttempt = makeActionCreator(ATTEMPT_FINISH, 'paper')
 actions.openStep = makeActionCreator(STEP_OPEN, 'step')
 actions.updateAnswer = makeActionCreator(ANSWER_UPDATE, 'questionId', 'answerData')
 actions.submitAnswers = makeActionCreator(ANSWERS_SUBMIT, 'quizId', 'paperId', 'answers')
@@ -67,21 +67,6 @@ actions.requestHint = (quizId, paperId, questionId, hintId) => ({
   }
 })
 
-actions.requestEnd = (quizId, paperId, navigate) => ({
-  [API_REQUEST]: {
-    silent: true,
-    url: ['exercise_attempt_finish', {exerciseId: quizId, id: paperId}],
-    request: {
-      method: 'PUT'
-    },
-    success: (data, dispatch) => {
-      const normalized = normalize(data.paper)
-      dispatch(actions.handleAttemptEnd(normalized.paper, navigate))
-      dispatch(resourceActions.updateUserEvaluation(data.userEvaluation))
-    }
-  }
-})
-
 // previous paper seems to never be passed here.
 actions.play = (previousPaper = null) => {
   return (dispatch, getState) => {
@@ -94,7 +79,7 @@ actions.play = (previousPaper = null) => {
       // Offline & Tests : create a new local paper and open the player
       // Promise is to expose the same interface than when there are async calls
       return Promise.resolve(dispatch(
-        actions.initPlayer(generatePaper(
+        actions.initPlayer(generateAttempt(
           quizSelectors.quiz(getState()),
           quizSelectors.steps(getState()),
           quizSelectors.items(getState()),
@@ -163,16 +148,36 @@ actions.finish = (quizId, paper, pendingAnswers = {}, showFeedback = false, navi
   }
 }
 
+actions.requestEnd = (quizId, paperId, navigate) => ({
+  [API_REQUEST]: {
+    silent: true,
+    url: ['exercise_attempt_finish', {exerciseId: quizId, id: paperId}],
+    request: {
+      method: 'PUT'
+    },
+    success: (response, dispatch) => {
+      dispatch(actions.handleAttemptEnd(response.paper, navigate))
+      dispatch(resourceActions.updateUserEvaluation(response.userEvaluation))
+    }
+  }
+})
+
+actions.processEnd = (paper, navigate) => (dispatch, getState) => {
+  const newPaper = denormalize(paper, playerSelectors.answers(getState()))
+
+  // calculate paper score
+  if (!newPaper.score && newPaper.score !== 0) {
+    newPaper.score = calculateScore(newPaper)
+  }
+
+  dispatch(actions.handleAttemptEnd(newPaper, navigate))
+}
+
 actions.handleAttemptEnd = (paper, navigate) => {
   return (dispatch, getState) => {
     // Finish the current attempt
-    dispatch(actions.finishAttempt(paper, playerSelectors.answers(getState())))
-    const newPaper = buildPaper(paper, playerSelectors.answers(getState()))
-
-    if (!newPaper.score && newPaper.score !== 0) {
-      newPaper['score'] = paperUtils.computeScore(newPaper, newPaper.answers)
-    }
-    dispatch(paperAction.addPaper(newPaper))
+    dispatch(actions.finishAttempt(paper))
+    dispatch(paperAction.addPaper(paper))
 
     // We will decide here if we show the correction now or not and where we redirect the user
     if (playerSelectors.hasEndPage(getState())) {
@@ -181,7 +186,7 @@ actions.handleAttemptEnd = (paper, navigate) => {
     } else {
       switch (playerSelectors.showCorrectionAt(getState())) {
         case 'validation': {
-          dispatch(paperAction.setCurrentPaper(newPaper))
+          dispatch(paperAction.setCurrentPaper(paper))
           navigate('papers/' + paper.id)
           break
         }
@@ -191,15 +196,15 @@ actions.handleAttemptEnd = (paper, navigate) => {
           const showPaper = today.diff(correctionDate, 'days') >= 0
 
           if (showPaper) {
-            dispatch(paperAction.setCurrentPaper(newPaper))
+            dispatch(paperAction.setCurrentPaper(paper))
             navigate('papers/' + paper.id)
           } else {
-            navigate('overview')
+            navigate('/')
           }
 
           break
         }
-        default: navigate('overview')
+        default: navigate('/')
       }
     }
   }
@@ -232,10 +237,7 @@ function endQuiz(quizId, paper, navigate, dispatch, getState) {
     return dispatch(actions.requestEnd(quizId, paper.id, navigate))
   } else {
     // Finish the attempt and use quiz config to know what to do next
-    return dispatch(actions.handleAttemptEnd(paper, navigate))
+    return dispatch(actions.processEnd(paper, navigate))
   }
 }
 
-function buildPaper(paper, answers) {
-  return denormalize(paper, answers)
-}

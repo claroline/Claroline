@@ -6,7 +6,7 @@ import {trans} from '#/main/app/intl/translation'
 import {actions as listActions} from '#/main/app/content/list/store'
 import {actions as postActions} from '#/plugin/blog/resources/blog/post/store'
 import {Calendar} from '#/main/core/layout/calendar/components/calendar'
-import {selectors} from '#/plugin/blog/resources/blog/store'
+import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
 
 const BlogCalendarComponent = props =>
   <div key='redactors' className="panel panel-default">

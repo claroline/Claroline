@@ -3,9 +3,7 @@ import times from 'lodash/times'
 
 import {trans} from '#/main/app/intl/translation'
 
-import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
-import {emptyAnswer} from '#/plugin/exo/items/utils'
-
+import {emptyAnswer, CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
 import {SetItem as SetItemType} from '#/plugin/exo/items/set/prop-types'
 
 // components
@@ -61,7 +59,7 @@ export default {
    *
    * @return {CorrectedAnswer}
    */
-  getCorrectedAnswer: (item, answer = {data: []}) => {
+  correctAnswer: (item, answer = {data: []}) => {
     const corrected = new CorrectedAnswer()
 
     item.solutions.associations.forEach(association => {
@@ -81,5 +79,31 @@ export default {
     times(item.solutions.associations.length - found, () => corrected.addPenalty(new Answerable(item.penalty)))
 
     return corrected
+  },
+
+  expectAnswer: (item) => {
+    if (item.solutions && item.solutions.associations) {
+      return item.solutions.associations
+        .filter(solution => 0 < solution.score)
+        .map(solution => new Answerable(solution.score, solution.id))
+    }
+
+    return []
+  },
+
+  allAnswers: (item) => {
+    const answers = []
+
+    if (item.solutions) {
+      if (item.solutions.associations) {
+        item.solutions.associations.map(solution => answers.push(new Answerable(solution.score)))
+      }
+
+      if (item.solutions.odd) {
+        item.solutions.odd.map(odd => answers.push(new Answerable(odd.score)))
+      }
+    }
+
+    return answers
   }
 }

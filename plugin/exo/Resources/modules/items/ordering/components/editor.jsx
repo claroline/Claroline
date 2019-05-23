@@ -140,7 +140,7 @@ class Item extends Component {
         </div>
 
         <div className="right-controls">
-          {!this.props.fixedScore &&
+          {this.props.item.hasExpectedAnswers && this.props.hasScore && !this.props.fixedScore &&
             <input
               title={trans('score', {}, 'quiz')}
               type="number"
@@ -209,7 +209,8 @@ Item.propTypes = {
   deletable: T.bool.isRequired,
   onChange: T.func.isRequired,
   isOdd: T.bool.isRequired,
-  connectDragSource: T.func
+  connectDragSource: T.func,
+  hasScore: T.bool.isRequired
 }
 
 let OrderingItem = forwardRef((props, ref) =>
@@ -235,13 +236,14 @@ OrderingItem.propTypes = {
   connectDragSource: T.func.isRequired,
   connectDropTarget: T.func.isRequired,
   onSort: T.func.isRequired,
-  index: T.number.isRequired
+  index: T.number.isRequired,
+  hasScore: T.bool.isRequired
 }
 
 OrderingItem = makeSortable(OrderingItem, 'ORDERING_ITEM', OrderingItemDragPreview)
 
 const OrderingOdd = props =>
-  <div className="ordering-answer-item answer-item unexpected-answer">
+  <div className={classes('ordering-answer-item answer-item', {'unexpected-answer': props.item.hasExpectedAnswers})}>
     <Item {...props} />
   </div>
 
@@ -252,7 +254,8 @@ OrderingOdd.propTypes = {
   score: T.number.isRequired,
   feedback: T.string,
   fixedScore: T.bool.isRequired,
-  onChange: T.func.isRequired
+  onChange: T.func.isRequired,
+  hasScore: T.bool.isRequired
 }
 
 const ItemList = (props) =>
@@ -281,6 +284,7 @@ const ItemList = (props) =>
               feedback={el._feedback}
               deletable={true}
               fixedScore={SCORE_FIXED === props.item.score.type}
+              hasScore={props.hasScore}
               {...props}
             /> :
             <OrderingItem
@@ -294,6 +298,7 @@ const ItemList = (props) =>
               index={index}
               fixedScore={props.item.score.type === SCORE_FIXED}
               deletable={el._deletable}
+              hasScore={props.hasScore}
               {...props}
             />
           }
@@ -304,6 +309,7 @@ const ItemList = (props) =>
 
 ItemList.propTypes = {
   item: T.shape(OrderingItemType.propTypes).isRequired,
+  hasScore: T.bool.isRequired,
   isOdd: T.bool.isRequired,
   onChange: T.func.isRequired
 }
@@ -355,65 +361,68 @@ OrderingItems.propTypes = {
   item: T.shape(
     OrderingItemType.propTypes
   ).isRequired,
+  hasScore: T.bool.isRequired,
   onChange: T.func.isRequired
 }
 
-const OrderingEditor = props =>
-  <FormData
-    className="ordering-item ordering-editor"
-    embedded={true}
-    name={props.formName}
-    dataPart={props.path}
-    sections={[
-      {
-        title: trans('general'),
-        primary: true,
-        fields: [
-          {
-            name: 'direction',
-            label: trans('direction', {}, 'quiz'),
-            type: 'choice',
-            required: true,
-            options: {
-              noEmpty: true,
-              condensed: true,
-              choices: constants.DIRECTION_CHOICES
-            }
-          }, {
-            name: 'mode',
-            label: trans('mode'),
-            type: 'choice',
-            required: true,
-            options: {
-              noEmpty: true,
-              condensed: true,
-              choices: constants.MODE_CHOICES
-            },
-            onChange: (value) => {
-              if (constants.MODE_INSIDE === value) {
-                props.update('items', props.item.items.filter(i => undefined !== i._position))
-                props.update('solutions', props.item.solutions.filter(s => undefined !== s.position))
-              }
-            }
-          }, {
-            name: 'orderings',
-            label: trans('answer', {}, 'quiz'),
-            required: true,
-            render: (orderingItem) => {
-              const Items = (
-                <OrderingItems
-                  item={orderingItem}
-                  onChange={props.update}
-                />
-              )
+const OrderingEditor = props => {
+  const Items = (
+    <OrderingItems
+      item={props.item}
+      onChange={props.update}
+      hasScore={props.hasAnswerScores}
+    />
+  )
 
-              return Items
+  return (
+    <FormData
+      className="ordering-item ordering-editor"
+      embedded={true}
+      name={props.formName}
+      dataPart={props.path}
+      sections={[
+        {
+          title: trans('general'),
+          primary: true,
+          fields: [
+            {
+              name: 'direction',
+              label: trans('direction', {}, 'quiz'),
+              type: 'choice',
+              required: true,
+              options: {
+                noEmpty: true,
+                condensed: true,
+                choices: constants.DIRECTION_CHOICES
+              }
+            }, {
+              name: 'mode',
+              label: trans('mode'),
+              type: 'choice',
+              required: true,
+              options: {
+                noEmpty: true,
+                condensed: true,
+                choices: constants.MODE_CHOICES
+              },
+              onChange: (value) => {
+                if (constants.MODE_INSIDE === value) {
+                  props.update('items', props.item.items.filter(i => undefined !== i._position))
+                  props.update('solutions', props.item.solutions.filter(s => undefined !== s.position))
+                }
+              }
+            }, {
+              name: 'orderings',
+              label: trans('answer', {}, 'quiz'),
+              required: true,
+              component: Items
             }
-          }
-        ]
-      }
-    ]}
-  />
+          ]
+        }
+      ]}
+    />
+  )
+}
 
 implementPropTypes(OrderingEditor, ItemEditorType, {
   item: T.shape(OrderingItemType.propTypes).isRequired

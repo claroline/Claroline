@@ -2,6 +2,7 @@
   "id": "1",
   "type": "application/x.choice+json",
   "content": "Question ?",
+  "hasExpectedAnswer": true,
   "choices": [
     {
       "id": "1",

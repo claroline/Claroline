@@ -107,23 +107,23 @@ class SelectionQuestionSerializer
      */
     private function serializeSelections(SelectionQuestion $selectionQuestion)
     {
-        return array_map(function (Selection $selection) use ($selectionQuestion) {
+        return array_values(array_map(function (Selection $selection) use ($selectionQuestion) {
             return [
                 'id' => $selection->getUuid(),
                 'begin' => $selection->getBegin(),
                 'end' => $selection->getEnd(),
             ];
-        }, $selectionQuestion->getSelections()->toArray());
+        }, $selectionQuestion->getSelections()->toArray()));
     }
 
     private function serializeColors(SelectionQuestion $selectionQuestion)
     {
-        return array_map(function (Color $color) {
+        return array_values(array_map(function (Color $color) {
             return [
                 'id' => $color->getUuid(),
                 'code' => $color->getColorCode(),
             ];
-        }, $selectionQuestion->getColors()->toArray());
+        }, $selectionQuestion->getColors()->toArray()));
     }
 
     private function deserializeColors(SelectionQuestion $selectionQuestion, $colors)
@@ -304,7 +304,7 @@ class SelectionQuestionSerializer
     {
         switch ($selectionQuestion->getMode()) {
          case SelectionQuestion::MODE_FIND:
-            return array_map(function (Selection $selection) {
+            return array_values(array_map(function (Selection $selection) {
                 return [
                     'selectionId' => $selection->getUuid(),
                     'score' => $selection->getScore(),
@@ -312,17 +312,17 @@ class SelectionQuestionSerializer
                     'end' => $selection->getEnd(),
                     'feedback' => $selection->getFeedback(),
                 ];
-            }, $selectionQuestion->getSelections()->toArray());
+            }, $selectionQuestion->getSelections()->toArray()));
          case SelectionQuestion::MODE_SELECT:
-             return array_map(function (Selection $selection) {
+             return array_values(array_map(function (Selection $selection) {
                  return [
                      'selectionId' => $selection->getUuid(),
                      'score' => $selection->getScore(),
                      'feedback' => $selection->getFeedback(),
                  ];
-             }, $selectionQuestion->getSelections()->toArray());
+             }, $selectionQuestion->getSelections()->toArray()));
          case SelectionQuestion::MODE_HIGHLIGHT:
-             return array_map(function (Selection $selection) {
+             return array_values(array_map(function (Selection $selection) {
                  $solutionData = [
                      'selectionId' => $selection->getUuid(),
                      'answers' => [],
@@ -337,7 +337,7 @@ class SelectionQuestionSerializer
                  }
 
                  return $solutionData;
-             }, $selectionQuestion->getSelections()->toArray());
+             }, $selectionQuestion->getSelections()->toArray()));
       }
     }
 }

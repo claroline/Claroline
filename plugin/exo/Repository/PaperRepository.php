@@ -66,7 +66,7 @@ class PaperRepository extends EntityRepository
      * @param Exercise $exercise
      * @param User     $user
      *
-     * @return Paper[]
+     * @return int
      */
     public function countUserFinishedDayPapers(Exercise $exercise, User $user)
     {
@@ -165,7 +165,7 @@ class PaperRepository extends EntityRepository
      *
      * @return int the number of registered users
      */
-    public function countPapersUsers(Exercise $exercise)
+    public function countUsersPapers(Exercise $exercise)
     {
         return (int) $this->getEntityManager()
           ->createQuery('

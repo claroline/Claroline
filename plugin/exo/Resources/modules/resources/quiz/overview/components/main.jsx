@@ -2,12 +2,14 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {hasPermission} from '#/main/app/security'
+import {displayDuration} from '#/main/app/intl/date'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {UserEvaluation as UserEvaluationType} from '#/main/core/resource/prop-types'
 import {ResourceOverview} from '#/main/core/resource/components/overview'
 
 import {correctionModes, markModes, SHOW_CORRECTION_AT_DATE, SHOW_SCORE_AT_NEVER} from '#/plugin/exo/quiz/enums'
+
+// TODO : show info about number of attempts
 
 const Parameters = props =>
   <ul className="exercise-parameters">
@@ -44,17 +46,12 @@ const Parameters = props =>
       <b>{props.maxAttempts ? props.maxAttempts : '-'}</b>
     </li>
 
-    {props.timeLimited &&
+    {(props.timeLimited && props.duration) &&
       <li className="exercise-parameter">
         <span className="fa fa-fw fa-clock-o icon-with-text-right" />
         {trans('duration')} :
         &nbsp;
-        <b>
-          {props.duration ?
-            `${props.duration} ${props.duration > 1 ? trans('minutes') : trans('minute')}` :
-            '-'
-          }
-        </b>
+        <b>{displayDuration(props.duration)}</b>
       </li>
     }
   </ul>
@@ -75,13 +72,12 @@ Parameters.defaultProps = {
 
 const OverviewMain = props =>
   <ResourceOverview
-    contentText={props.quiz.description ||
-      <span className="empty-text">{trans('no_description')}</span>
-    }
+    contentText={props.quiz.description}
     progression={{
       status: props.userEvaluation ? props.userEvaluation.status : undefined,
       statusTexts: {
         opened: trans('exercise_status_opened_message', {}, 'quiz'),
+        completed: trans('exercise_status_completed_message', {}, 'quiz'),
         passed: trans('exercise_status_passed_message', {}, 'quiz'),
         failed: trans('exercise_status_failed_message', {}, 'quiz')
       },
@@ -89,6 +85,11 @@ const OverviewMain = props =>
         displayed: props.quiz.parameters.showScoreAt !== SHOW_SCORE_AT_NEVER,
         current: props.userEvaluation ? props.userEvaluation.score : undefined,
         total: props.userEvaluation ? props.userEvaluation.scoreMax : undefined
+      },
+      feedback: {
+        displayed: false, // FIXME
+        success: props.quiz.parameters.successMessage,
+        failure: props.quiz.parameters.failureMessage
       }
     }}
     actions={[
@@ -98,7 +99,10 @@ const OverviewMain = props =>
         label: trans('exercise_start', {}, 'quiz'),
         target: '/play',
         primary: true,
-        disabled: false
+        disabled: props.empty,
+        disabledMessages: [
+          trans('start_disabled_empty', {}, 'quiz')
+        ]
       }
     ]}
   >

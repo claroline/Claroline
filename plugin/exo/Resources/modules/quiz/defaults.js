@@ -4,7 +4,7 @@ import {
   SHOW_CORRECTION_AT_VALIDATION,
   SHOW_SCORE_AT_CORRECTION,
   SCORE_SUM
-} from './enums'
+} from '#/plugin/exo/quiz/enums'
 
 // TODO : replace by PropTypes.defaultProps
 

@@ -7,15 +7,10 @@ export const actions = {}
 
 actions.loadStatistics = makeActionCreator(LOAD_STATISTICS, 'stats')
 
-actions.fetchStatistics = (quizId) => {
-  return (dispatch) => {
-    dispatch({
-      [API_REQUEST]: {
-        url: ['exercise_statistics', {id: quizId}],
-        success: (data, dispatch) => {
-          dispatch(actions.loadStatistics(data))
-        }
-      }
-    })
+actions.fetchStatistics = (quizId) => ({
+  [API_REQUEST]: {
+    silent: true,
+    url: ['exercise_statistics', {id: quizId}],
+    success: (data, dispatch) => dispatch(actions.loadStatistics(data))
   }
-}
+})

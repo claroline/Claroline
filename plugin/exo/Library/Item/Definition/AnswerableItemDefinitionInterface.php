@@ -45,13 +45,22 @@ interface AnswerableItemDefinitionInterface
     public function expectAnswer(AbstractItem $question);
 
     /**
+     * Returns all the defined answers of a the question.
+     *
+     * @param AbstractItem $question
+     *
+     * @return AnswerPartInterface[]
+     */
+    public function allAnswers(AbstractItem $question);
+
+    /**
      * Gets statistics on answers given to a question.
      *
      * @param AbstractItem $question
      * @param array        $answersData
      * @param int          $total
      *
-     * @return \stdClass
+     * @return array
      */
     public function getStatistics(AbstractItem $question, array $answersData, $total);
 

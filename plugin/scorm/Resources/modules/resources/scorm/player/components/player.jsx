@@ -8,8 +8,8 @@ import {trans} from '#/main/app/intl/translation'
 import {asset} from '#/main/app/config/asset'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 
+import {APIClass} from '#/plugin/scorm/resources/scorm/player/api'
 import {Scorm as ScormType, Sco as ScoType} from '#/plugin/scorm/resources/scorm/prop-types'
-import {actions} from '#/plugin/scorm/resources/scorm/player/actions'
 import {selectors} from '#/plugin/scorm/resources/scorm/store'
 import {flattenScos, getFirstOpenableSco, generateSummary} from '#/plugin/scorm/resources/scorm/utils'
 
@@ -96,8 +96,11 @@ const Player = connect(
     workspaceUuid: resourceSelect.resourceNode(state).workspace.id
   }),
   dispatch => ({
-    initializeScormAPI(sco, scorm, trackings) {
-      dispatch(actions.initializeAPI(sco, scorm, trackings))
+    initializeScormAPI(sco, scorm, tracking) {
+      window.API = new APIClass(sco, scorm, tracking[sco.id], dispatch)
+      window.api = new APIClass(sco, scorm, tracking[sco.id], dispatch)
+      window.API_1484_11 = new APIClass(sco, scorm, tracking[sco.id], dispatch)
+      window.api_1484_11 = new APIClass(sco, scorm, tracking[sco.id], dispatch)
     }
   })
 )(PlayerComponent)

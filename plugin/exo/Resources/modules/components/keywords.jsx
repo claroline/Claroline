@@ -30,11 +30,11 @@ class KeywordItem extends Component {
 
   render() {
     return (
-      <li className={classes('keyword-item answer-item', {
-        'expected-answer': this.props.showScore && this.props.keyword.score > 0 || this.props.keyword.expected,
-        'unexpected-answer': this.props.keyword.score <= 0 && !this.props.keyword.expected
+      <li className={classes('keyword-item answer-item', this.props.hasExpectedAnswers && {
+        'expected-answer': this.props.keyword.score > 0,
+        'unexpected-answer': this.props.keyword.score <= 0
       })}>
-        {!this.props.showScore &&
+        {this.props.hasExpectedAnswers && !this.props.showScore &&
           <div className="keyword-expected">
             <TooltipOverlay
               id={`tooltip-${this.props.keyword._id}-keyword-expected`}
@@ -43,8 +43,8 @@ class KeywordItem extends Component {
               <input
                 id={`keyword-${this.props.keyword._id}-expected`}
                 type="checkbox"
-                checked={this.props.keyword.expected}
-                onChange={e => this.props.updateKeyword('expected', e.target.checked)}
+                checked={this.props.keyword.score > 0}
+                onChange={e => this.props.updateKeyword('score', e.target.checked ? 1 : 0)}
               />
             </TooltipOverlay>
           </div>
@@ -139,13 +139,15 @@ KeywordItem.propTypes = {
   }).isRequired,
   showCaseSensitive: T.bool.isRequired,
   showScore: T.bool.isRequired,
+  hasExpectedAnswers: T.bool.isRequired,
   updateKeyword: T.func.isRequired,
   removeKeyword: T.func.isRequired
 }
 
 KeywordItem.defaultProps = {
   expected: false,
-  caseSensitive: false
+  caseSensitive: false,
+  hasExpectedAnswers: true
 }
 
 /**
@@ -171,7 +173,6 @@ const KeywordItems = props =>
     {get(props, '_errors.score') &&
       <ContentError error={props._errors.score} warnOnly={!props.validating} />
     }
-
     <ul>
       {props.keywords.map((keyword, index) =>
         <KeywordItem
@@ -180,6 +181,7 @@ const KeywordItems = props =>
           keyword={keyword}
           showCaseSensitive={props.showCaseSensitive}
           showScore={props.showScore}
+          hasExpectedAnswers={props.hasExpectedAnswers}
           updateKeyword={(property, newValue) => props.updateKeyword(keyword._id, property, newValue)}
           removeKeyword={() => props.removeKeyword(keyword._id)}
         />
@@ -206,6 +208,11 @@ KeywordItems.propTypes = {
    * Else it displays an "expected" checkbox.
    */
   showScore: T.bool,
+
+  /**
+   * Enables definition of a correct keyword.
+   */
+  hasExpectedAnswers: T.bool,
 
   /**
    * The list of keywords to edit.
@@ -253,7 +260,8 @@ KeywordItems.propTypes = {
 
 KeywordItems.defaultProps = {
   showCaseSensitive: false,
-  showScore: false
+  showScore: false,
+  hasExpectedAnswers: true
 }
 
 /**
@@ -317,6 +325,7 @@ const KeywordsPopover = props =>
       _errors={get(props, '_errors.keywords')}
       showCaseSensitive={props.showCaseSensitive}
       showScore={props.showScore}
+      hasExpectedAnswers={props.hasExpectedAnswers}
       addKeyword={props.addKeyword}
       updateKeyword={props.updateKeyword}
       removeKeyword={props.removeKeyword}
@@ -381,6 +390,11 @@ KeywordsPopover.propTypes = {
   showScore: T.bool.isRequired,
 
   /**
+   * Define if there are expected answers.
+   */
+  hasExpectedAnswers: T.bool.isRequired,
+
+  /**
    * Custom fields
    */
   children: T.node,
@@ -428,6 +442,10 @@ KeywordsPopover.propTypes = {
    * @param {mixed}  newValue
    */
   updateKeyword: T.func.isRequired
+}
+
+KeywordsPopover.defaultProps = {
+  hasExpectedAnswers: true
 }
 
 export {

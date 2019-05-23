@@ -41,6 +41,9 @@ const Quiz = {
     meta: T.shape({
 
     }),
+    score: T.shape({ // TODO : score propTypes
+      type: T.string.isRequired
+    }),
     parameters: T.shape({
       type: T.string.isRequired
     }),
@@ -55,6 +58,9 @@ const Quiz = {
     description: '',
     meta: {
 
+    },
+    score: {
+      type: 'sum' // TODO : use constants
     },
     parameters: {
       type: QUIZ_TYPE_DEFAULT,
@@ -87,7 +93,23 @@ const Quiz = {
   }
 }
 
+const UserAnswer = {
+  propTypes: {
+    id: T.string.isRequired,
+    questionId: T.string.isRequired,
+    tries: T.number,
+    userHints: T.array,
+    data: T.any // depends on the answered item
+  },
+  defaultProps: {
+    tries: 0,
+    usedHints: [],
+    data: undefined
+  }
+}
+
 export {
   Quiz,
-  Step
+  Step,
+  UserAnswer
 }

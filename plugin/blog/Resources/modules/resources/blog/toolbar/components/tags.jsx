@@ -8,7 +8,7 @@ import {withRouter} from '#/main/app/router'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {TagCloud} from '#/main/app/content/meta/components/tag-cloud'
 
-import {selectors} from '#/plugin/blog/resources/blog/store'
+import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
 import {constants} from '#/plugin/blog/resources/blog/constants'
 import {cleanTag} from '#/plugin/blog/resources/blog/utils'
 import {updateQueryParameters} from '#/plugin/blog/resources/blog/utils'

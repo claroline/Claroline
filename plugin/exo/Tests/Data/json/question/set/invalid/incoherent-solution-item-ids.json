@@ -2,6 +2,7 @@
   "id": "1",
   "type": "application/x.set+json",
   "content": "Question ?",
+  "hasExpectedAnswer": true,
   "sets": [
     {
       "id": "2",

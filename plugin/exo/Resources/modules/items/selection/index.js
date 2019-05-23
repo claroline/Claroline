@@ -3,7 +3,7 @@ import times from 'lodash/times'
 
 import {trans} from '#/main/app/intl/translation'
 
-import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
+import {CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
 import {SelectionItem as SelectionItemType} from '#/plugin/exo/items/selection/prop-types'
 
 // components
@@ -15,19 +15,6 @@ import {SelectionFeedback} from '#/plugin/exo/items/selection/components/feedbac
 // scores
 import ScoreFixed from '#/plugin/exo/scores/fixed'
 import ScoreSum from '#/plugin/exo/scores/sum'
-
-function getCorrectedAnswer(item, answer) {
-  const corrected = new CorrectedAnswer()
-
-  switch (item.mode) {
-    case 'select':
-      return getCorrectedAnswerForSelectMode(item, corrected, answer)
-    case 'find':
-      return getCorrectedAnswerForFindMode(item, corrected, answer)
-    case 'highlight':
-      return getCorrectedAnswerForHighlightMode(item, corrected, answer)
-  }
-}
 
 function getCorrectedAnswerForSelectMode(item, corrected, answer = {data: {selections: []}}) {
   item.solutions.forEach(solution => {
@@ -96,6 +83,10 @@ export default {
   tags: [trans('question', {}, 'quiz')],
   answerable: true,
 
+  paper: SelectionPaper,
+  player: SelectionPlayer,
+  feedback: SelectionFeedback,
+
   components: {
     editor: SelectionEditor
   },
@@ -109,8 +100,60 @@ export default {
    */
   create: (baseItem) => merge({}, baseItem, SelectionItemType.defaultProps),
 
-  paper: SelectionPaper,
-  player: SelectionPlayer,
-  feedback: SelectionFeedback,
-  getCorrectedAnswer
+  correctAnswer: (item, answer) => {
+    const corrected = new CorrectedAnswer()
+
+    switch (item.mode) {
+      case 'select':
+        return getCorrectedAnswerForSelectMode(item, corrected, answer)
+      case 'find':
+        return getCorrectedAnswerForFindMode(item, corrected, answer)
+      case 'highlight':
+        return getCorrectedAnswerForHighlightMode(item, corrected, answer)
+    }
+  },
+
+  expectAnswer: (item) => {
+    const answers = []
+
+    if (item.solutions) {
+      switch (item.mode) {
+        case 'select':
+        case 'find':
+          item.solutions
+            .filter(solution => 0 < solution.score)
+            .map(solution => answers.push(new Answerable(solution.score)))
+
+          break
+
+        case 'highlight':
+          item.solutions.map(solution => {
+            let expected
+            solution.answers.map(answer => {
+              if (!expected || answer.score > expected.score) {
+                expected = answer
+              }
+            })
+
+            if (expected) {
+              answers.push(new Answerable(expected.score))
+            }
+          })
+
+          break
+      }
+    }
+
+    return answers
+  },
+
+  allAnswers: (item) => {
+    if (item.solutions) {
+      return item.solutions
+        .filter(solution => 0 < solution.score)
+        .map(solution => new Answerable(solution.score))
+    }
+
+    return []
+  }
 }

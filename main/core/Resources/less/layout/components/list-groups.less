@@ -2,6 +2,12 @@
     .list-group-item-variant(selected; @state-info-bg; @state-info-text);
 }
 
+.list-group-striped {
+    > .list-group-item:nth-of-type(odd) {
+        background-color: @table-bg-accent;
+    }
+}
+
 .list-group-values {
     .list-group-item {
         display: flex;

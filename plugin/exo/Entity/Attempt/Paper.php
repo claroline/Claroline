@@ -2,7 +2,8 @@
 
 namespace UJM\ExoBundle\Entity\Attempt;
 
-use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,16 +17,8 @@ use UJM\ExoBundle\Entity\Exercise;
  */
 class Paper
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
-    use UuidTrait;
+    use Id;
+    use Uuid;
 
     /**
      * @ORM\Column(name="num_paper", type="integer")
@@ -65,6 +58,11 @@ class Paper
      * @ORM\Column(type="float", nullable=true)
      */
     private $score = null;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $total = null;
 
     /**
      * Anonymize the user information when showing the paper.
@@ -118,18 +116,9 @@ class Paper
     public function __construct()
     {
         $this->refreshUuid();
+
         $this->start = new \DateTime();
         $this->answers = new ArrayCollection();
-    }
-
-    /**
-     * Gets id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**
@@ -201,10 +190,16 @@ class Paper
     /**
      * Gets structure.
      *
+     * @param bool $decoded
+     *
      * @return string
      */
-    public function getStructure()
+    public function getStructure($decoded = false)
     {
+        if ($decoded) {
+            return $this->getDecodedStructure();
+        }
+
         return $this->structure;
     }
 
@@ -273,6 +268,22 @@ class Paper
     }
 
     /**
+     * @param float $total
+     */
+    public function setTotal($total)
+    {
+        $this->total = $total;
+    }
+
+    /**
+     * @return float
+     */
+    public function getTotal()
+    {
+        return $this->total;
+    }
+
+    /**
      * Set anonymized.
      *
      * @param bool $anonymized
@@ -333,11 +344,8 @@ class Paper
     {
         $question = null;
 
-        if (empty($this->decodedStructure)) {
-            $this->decodeStructure();
-        }
-
-        foreach ($this->decodedStructure['steps'] as $step) {
+        $decoded = $this->getDecodedStructure();
+        foreach ($decoded['steps'] as $step) {
             foreach ($step['items'] as $item) {
                 if ($item['id'] === $questionUuid) {
                     $question = $item;
@@ -392,6 +400,15 @@ class Paper
         if ($this->answers->contains($answer)) {
             $this->answers->removeElement($answer);
         }
+    }
+
+    private function getDecodedStructure()
+    {
+        if (empty($this->decodedStructure)) {
+            $this->decodeStructure();
+        }
+
+        return $this->decodedStructure;
     }
 
     private function decodeStructure()

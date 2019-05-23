@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {Feedback} from '#/plugin/exo/items/components/feedback-btn'
+import {FeedbackButton as Feedback} from '#/plugin/exo/buttons/feedback/components/button'
 import {utils} from '#/plugin/exo/items/grid/utils/utils'
 import {WarningIcon} from '#/plugin/exo/components/warning-icon'
 import {constants} from '#/plugin/exo/items/grid/constants'
@@ -34,7 +34,9 @@ class YourGridCell extends Component {
       <div className="grid-cell">
         {this.props.cell.input &&
           <div className="cell-header">
-            <WarningIcon valid={this.props.isValid}/>
+            {this.props.hasExpectedAnswers &&
+              <WarningIcon valid={this.props.isValid}/>
+            }
             <div className="additional-infos">
               <Feedback
                 id={`ass-${this.props.cell.id}-feedback`}
@@ -75,7 +77,8 @@ YourGridCell.propTypes = {
   cell: T.object.isRequired,
   answers: T.array.isRequired,
   solutions: T.array.isRequired,
-  isValid: T.bool.isRequired
+  isValid: T.bool.isRequired,
+  hasExpectedAnswers: T.bool.isRequired
 }
 
 class GridFeedback extends Component {
@@ -170,7 +173,9 @@ class GridFeedback extends Component {
                   {[...Array(this.props.item.cols)].map((x, j) => {
                     const cell = utils.getCellByCoordinates(j, i, this.props.item.cells)
                     const valid = this.isValidAnswer(cell)
-                    const colors = this.getYourAnswerCellColors(cell, valid)
+                    const colors = this.props.item.hasExpectedAnswers ?
+                      this.getYourAnswerCellColors(cell, valid) :
+                      {backgroundColor: cell.background, color: this.props.item.border.color}
                     if(!cell.input) {
                       return(
                         <td
@@ -190,7 +195,9 @@ class GridFeedback extends Component {
                             isValid={valid}
                             answers={this.props.answer}
                             solutions={this.props.item.solutions}
-                            cell={cell}/>
+                            cell={cell}
+                            hasExpectedAnswers={this.props.item.hasExpectedAnswers}
+                          />
                         </td>
                       )
                     }
@@ -227,7 +234,8 @@ GridFeedback.propTypes = {
       width: T.number.isRequired,
       color: T.string.isRequired
     }).isRequired,
-    solutions: T.arrayOf(T.object).isRequired
+    solutions: T.arrayOf(T.object).isRequired,
+    hasExpectedAnswers: T.bool.isRequired
   }).isRequired,
   answer: T.array.isRequired
 }

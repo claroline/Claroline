@@ -1,8 +1,9 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {ContentThumbnail} from './../../contents/components/content-thumbnail.jsx'
 
-export const ObjectsPlayer = props =>
+import {ContentThumbnail} from '#/plugin/exo/contents/components/content-thumbnail'
+
+const ObjectsPlayer = props =>
   <div className="item-object-thumbnail-box">
     {props.item.objects.map((object, index) =>
       <ContentThumbnail
@@ -25,4 +26,8 @@ ObjectsPlayer.propTypes = {
       data: T.string
     })).isRequired
   }).isRequired
+}
+
+export {
+  ObjectsPlayer
 }

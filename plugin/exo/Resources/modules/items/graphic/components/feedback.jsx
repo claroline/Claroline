@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {asset} from '#/main/app/config/asset'
-import {POINTER_CORRECT, POINTER_WRONG} from '#/plugin/exo/items/graphic/constants'
+import {POINTER_PLACED, POINTER_CORRECT, POINTER_WRONG} from '#/plugin/exo/items/graphic/constants'
 import {PointableImage} from '#/plugin/exo/items/graphic/components/pointable-image'
 import {utils} from '#/plugin/exo/items/graphic/utils'
 
@@ -15,10 +15,13 @@ export const GraphicFeedback = props =>
       return {
         absX: coords.x,
         absY: coords.y,
-        type: (area && (area.score > 0)) ? POINTER_CORRECT : POINTER_WRONG,
+        type: props.item.hasExpectedAnswers ?
+          (area && (area.score > 0)) ? POINTER_CORRECT : POINTER_WRONG :
+          POINTER_PLACED,
         feedback: area && area.feedback
       }
     })}
+    hasExpectedAnswers={props.item.hasExpectedAnswers}
   />
 
 GraphicFeedback.propTypes = {
@@ -39,7 +42,8 @@ GraphicFeedback.propTypes = {
         shape: T.string.isRequired,
         color: T.string.isRequired
       }).isRequired
-    })).isRequired
+    })).isRequired,
+    hasExpectedAnswers: T.bool.isRequired
   }).isRequired,
   answer: T.arrayOf(T.shape({
     x: T.number.isRequired,

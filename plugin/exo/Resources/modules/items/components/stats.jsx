@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-export const AnswerStats = props =>
+const AnswerStats = props =>
   <span className="answer-stats">
     {props.stats.value && props.stats.total ? Math.round((props.stats.value /  props.stats.total) * 100) : 0} %
     &nbsp;
@@ -13,4 +13,8 @@ AnswerStats.propTypes = {
     value: T.number.isRequired,
     total: T.number.isRequired
   }).isRequired
+}
+
+export {
+  AnswerStats
 }

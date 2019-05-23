@@ -6,12 +6,17 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Event\Log\LogExerciseEvaluatedEvent;
+use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
+use UJM\ExoBundle\Library\Attempt\GenericScore;
 use UJM\ExoBundle\Library\Options\ShowCorrectionAt;
 use UJM\ExoBundle\Library\Options\ShowScoreAt;
 use UJM\ExoBundle\Library\Options\Transfer;
@@ -45,6 +50,16 @@ class PaperManager
     private $serializer;
 
     /**
+     * @var ItemManager
+     */
+    private $itemManager;
+
+    /**
+     * @var ScoreManager
+     */
+    private $scoreManager;
+
+    /**
      * @var ResourceEvaluationManager
      */
     private $resourceEvalManager;
@@ -53,31 +68,39 @@ class PaperManager
      * PaperManager constructor.
      *
      * @DI\InjectParams({
+     *     "authorization"       = @DI\Inject("security.authorization_checker"),
      *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
      *     "eventDispatcher"     = @DI\Inject("event_dispatcher"),
      *     "serializer"          = @DI\Inject("ujm_exo.serializer.paper"),
      *     "itemManager"         = @DI\Inject("ujm_exo.manager.item"),
+     *     "scoreManager"        = @DI\Inject("ujm_exo.manager.score"),
      *     "resourceEvalManager" = @DI\Inject("claroline.manager.resource_evaluation_manager")
      * })
      *
-     * @param ObjectManager             $om
-     * @param EventDispatcherInterface  $eventDispatcher
-     * @param PaperSerializer           $serializer
-     * @param ItemManager               $itemManager
-     * @param ResourceEvaluationManager $resourceEvalManager
+     * @param AuthorizationCheckerInterface $authorization
+     * @param ObjectManager                 $om
+     * @param EventDispatcherInterface      $eventDispatcher
+     * @param PaperSerializer               $serializer
+     * @param ItemManager                   $itemManager
+     * @param ScoreManager                  $scoreManager
+     * @param ResourceEvaluationManager     $resourceEvalManager
      */
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
         EventDispatcherInterface $eventDispatcher,
         PaperSerializer $serializer,
         ItemManager $itemManager,
+        ScoreManager $scoreManager,
         ResourceEvaluationManager $resourceEvalManager
     ) {
+        $this->authorization = $authorization;
         $this->om = $om;
-        $this->repository = $om->getRepository('UJMExoBundle:Attempt\Paper');
+        $this->repository = $om->getRepository(Paper::class);
         $this->eventDispatcher = $eventDispatcher;
         $this->serializer = $serializer;
         $this->itemManager = $itemManager;
+        $this->scoreManager = $scoreManager;
         $this->resourceEvalManager = $resourceEvalManager;
     }
 
@@ -91,9 +114,12 @@ class PaperManager
      */
     public function serialize(Paper $paper, array $options = [])
     {
+        $collection = new ResourceCollection([$paper->getExercise()->getResourceNode()]);
+        $isAdmin = $this->authorization->isGranted('ADMINISTRATE', $collection) || $this->authorization->isGranted('MANAGE_PAPERS', $collection);
+
         // Adds user score if available and the method options do not already request it
         if (!in_array(Transfer::INCLUDE_USER_SCORE, $options)
-            && $this->isScoreAvailable($paper->getExercise(), $paper)) {
+            && ($isAdmin || $this->isScoreAvailable($paper->getExercise(), $paper))) {
             $options[] = Transfer::INCLUDE_USER_SCORE;
         }
 
@@ -126,21 +152,63 @@ class PaperManager
      * Calculates the score of a Paper.
      *
      * @param Paper $paper
-     * @param float $base
      *
      * @return float
      */
-    public function calculateScore(Paper $paper, $base = null)
+    public function calculateScore(Paper $paper)
     {
-        $score = $this->repository->findScore($paper);
-        if (!empty($base) && $base > 0) {
-            $scoreTotal = $this->calculateTotal($paper);
-            if ($scoreTotal && $scoreTotal !== $base) {
-                $score = ($score / $scoreTotal) * $base;
+        $structure = $paper->getStructure(true);
+
+        if (isset($structure['parameters']) && $structure['parameters']['hasExpectedAnswers']) {
+            // load all answers submitted for the paper
+            /** @var Answer[] $answers */
+            $answers = $this->om->getRepository(Answer::class)->findBy([
+                'paper' => $paper,
+            ]);
+
+            $corrected = new CorrectedAnswer();
+
+            foreach ($structure['steps'] as $step) {
+                foreach ($step['items'] as $itemData) {
+                    $itemAnswer = null;
+
+                    if (1 === preg_match('#^application\/x\.[^/]+\+json$#', $itemData['type'])) {
+                        $item = $this->itemManager->deserialize($itemData);
+                        if ($item->hasExpectedAnswers()) {
+                            $itemTotal = $this->itemManager->calculateTotal($item);
+
+                            // search for a submitted answer for the question
+                            foreach ($answers as $answer) {
+                                if ($answer->getQuestionId() === $item->getUuid()) {
+                                    $itemAnswer = $answer;
+                                    break; // stop searching
+                                }
+                            }
+
+                            if (!$itemAnswer) {
+                                $corrected->addMissing(new GenericScore($itemTotal));
+                            } else {
+                                // get the answer score without hints
+                                // this is required to check if the item has been correctly answered
+                                // we don't want the use of an hint with penalty mark the question has incorrect
+                                // because this is how it works in item scores
+                                $itemScore = $this->itemManager->calculateScore($item, $itemAnswer, false);
+                                if ($itemTotal === $itemScore) {
+                                    // item is fully correct
+                                    $corrected->addExpected(new GenericScore($itemAnswer->getScore()));
+                                } else {
+                                    $corrected->addUnexpected(new GenericScore($itemAnswer->getScore()));
+                                }
+                            }
+                        }
+                    }
+                }
             }
+
+            return $this->scoreManager->calculate($structure['score'], $corrected);
         }
 
-        return $score;
+        return null;
     }
 
     /**
@@ -152,19 +220,26 @@ class PaperManager
      */
     public function calculateTotal(Paper $paper)
     {
-        $total = 0;
+        $structure = $paper->getStructure(true);
 
-        $structure = json_decode($paper->getStructure(), true);
-
-        foreach ($structure['steps'] as $step) {
-            foreach ($step['items'] as $item) {
-                if (1 === preg_match('#^application\/x\.[^/]+\+json$#', $item['type'])) {
-                    $total += $this->itemManager->calculateTotal($item);
+        if (isset($structure['parameters']) && $structure['parameters']['hasExpectedAnswers']) {
+            $items = [];
+            foreach ($structure['steps'] as $step) {
+                foreach ($step['items'] as $itemData) {
+                    if (1 === preg_match('#^application\/x\.[^/]+\+json$#', $itemData['type'])) {
+                        $item = $this->itemManager->deserialize($itemData);
+                        $itemTotal = $this->itemManager->calculateTotal($item);
+                        if ($itemTotal) {
+                            $items[] = new GenericScore($itemTotal);
+                        }
+                    }
                 }
             }
+
+            return $this->scoreManager->calculateTotal($structure['score'], $items, $items);
         }
 
-        return $total;
+        return null;
     }
 
     /**
@@ -196,31 +271,16 @@ class PaperManager
     }
 
     /**
-     * Deletes all the papers associated with an exercise.
+     * Deletes some papers.
      *
-     * @param Exercise $exercise
+     * @param Paper[] $papers
      */
-    public function deleteAll(Exercise $exercise)
+    public function delete(array $papers)
     {
-        $papers = $this->repository->findBy([
-            'exercise' => $exercise,
-        ]);
-
         foreach ($papers as $paper) {
             $this->om->remove($paper);
         }
 
-        $this->om->flush();
-    }
-
-    /**
-     * Deletes a paper.
-     *
-     * @param Paper $paper
-     */
-    public function delete(Paper $paper)
-    {
-        $this->om->remove($paper);
         $this->om->flush();
     }
 
@@ -269,9 +329,9 @@ class PaperManager
      *
      * @return int
      */
-    public function countPapersUsers(Exercise $exercise)
+    public function countUsersPapers(Exercise $exercise)
     {
-        return $this->repository->countPapersUsers($exercise);
+        return $this->repository->countUsersPapers($exercise);
     }
 
     /**
@@ -357,9 +417,7 @@ class PaperManager
      */
     public function generateResourceEvaluation(Paper $paper, $finished)
     {
-        $totalScoreOn = $paper->getExercise()->getTotalScoreOn();
-        $total = $totalScoreOn ? $totalScoreOn : $this->calculateTotal($paper);
-        $score = $this->calculateScore($paper, $total);
+        $score = $this->calculateScore($paper);
         $successScore = $paper->getExercise()->getSuccessScore();
         $data = [
             'paper' => [
@@ -369,10 +427,10 @@ class PaperManager
         ];
 
         if ($finished) {
-            if (is_null($successScore)) {
+            if (is_null($successScore) || empty($paper->getTotal())) {
                 $status = AbstractResourceEvaluation::STATUS_COMPLETED;
             } else {
-                $percentScore = 100 === $totalScoreOn ? $score : $this->calculateScore($paper, 100);
+                $percentScore = ($score * 100);
                 $status = $percentScore >= $successScore ?
                     AbstractResourceEvaluation::STATUS_PASSED :
                     AbstractResourceEvaluation::STATUS_FAILED;
@@ -380,9 +438,9 @@ class PaperManager
         } else {
             $status = AbstractResourceEvaluation::STATUS_INCOMPLETE;
         }
-        $nbQuestions = 0;
-        $structure = json_decode($paper->getStructure(), true);
 
+        $nbQuestions = 0;
+        $structure = $paper->getStructure(true);
         if (isset($structure['steps'])) {
             foreach ($structure['steps'] as $step) {
                 $nbQuestions += count($step['items']); // TODO : remove content items
@@ -403,7 +461,7 @@ class PaperManager
             [
                 'status' => $status,
                 'score' => $score,
-                'scoreMax' => $total,
+                'scoreMax' => $paper->getTotal(),
                 'progression' => $nbQuestions > 0 ? floor(($nbAnswers / $nbQuestions) * 100) : null,
                 'data' => $data,
             ]

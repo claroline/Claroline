@@ -1,9 +1,11 @@
-import {constants} from '#/plugin/blog/resources/blog/constants.js'
-import {actions as listActions} from '#/main/app/content/list/store'
-import {actions as postActions} from '#/plugin/blog/resources/blog/post/store/actions'
-import {selectors} from '#/plugin/blog/resources/blog/store'
 import isEmpty from 'lodash/isEmpty'
 import find from 'lodash/find'
+
+import {actions as listActions} from '#/main/app/content/list/store'
+
+import {constants} from '#/plugin/blog/resources/blog/constants'
+import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
+import {actions as postActions} from '#/plugin/blog/resources/blog/post/store/actions'
 
 function splitArray(array){
   return array.split(',').map(item => item.trim())

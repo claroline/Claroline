@@ -3,12 +3,13 @@
 namespace UJM\ExoBundle\Tests\Manager\Attempt;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use PHPUnit\Framework\TestCase;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Manager\Attempt\PaperManager;
 use UJM\ExoBundle\Serializer\Attempt\PaperSerializer;
 
-class PaperManagerTest extends \PHPUnit\Framework\TestCase
+class PaperManagerTest extends TestCase
 {
     /** @var ObjectManager|\PHPUnit_Framework_MockObject_MockObject */
     private $om;
@@ -23,10 +24,12 @@ class PaperManagerTest extends \PHPUnit\Framework\TestCase
         $this->serializer = $this->mock('UJM\ExoBundle\Serializer\Attempt\PaperSerializer');
 
         $this->manager = new PaperManager(
+            $this->mock('Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface'),
             $this->om,
             $this->mock('Symfony\Component\EventDispatcher\EventDispatcherInterface'),
             $this->serializer,
             $this->mock('UJM\ExoBundle\Manager\Item\ItemManager'),
+            $this->mock('UJM\ExoBundle\Manager\Attempt\ScoreManager'),
             $this->mock('Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager')
         );
     }

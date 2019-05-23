@@ -30,7 +30,7 @@ utils.getRealItemlist = (items, solutions) => {
  * get solutions minus odd
  */
 utils.getRealSolutionList = (solutions) => {
-  return solutions.filter(solution => solution.itemIds.length === 2)
+  return solutions.filter(solution => solution.itemIds.length === 2 && solution.itemIds[0] !== -1 && solution.itemIds[1] !== -1)
 }
 
 utils.getOddSolution = (oddItem, solutions) => {

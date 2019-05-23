@@ -1,7 +1,6 @@
 import {trans} from '#/main/app/intl/translation'
 
-import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
-
+import {CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
 import {ClozeItem as ClozeItemTypes} from '#/plugin/exo/items/cloze/prop-types'
 import {utils} from '#/plugin/exo/items/cloze/utils'
 
@@ -56,7 +55,7 @@ export default {
    *
    * @return {CorrectedAnswer}
    */
-  getCorrectedAnswer: (item, answers = null) => {
+  correctAnswer: (item, answers = null) => {
     const corrected = new CorrectedAnswer()
 
     item.solutions.map(solution => {
@@ -78,5 +77,36 @@ export default {
     })
 
     return corrected
+  },
+
+  expectAnswer: (item) => {
+    const answers = []
+
+    if (item.solutions) {
+      item.solutions.map(solution => {
+        // search for the best answer for each hole
+        let expected
+        solution.answers.map(answer => {
+          if (!expected || answer.score > expected.score) {
+            expected = answer
+          }
+        })
+
+        if (expected) {
+          answers.push(new Answerable(expected.score))
+        }
+      })
+    }
+
+    return answers
+  },
+
+  allAnswers: (item) => {
+    const answers = []
+    if (item.solutions) {
+      item.solutions.map(solution => solution.answers.map(answer => answers.push(new Answerable(answer.score))))
+    }
+
+    return answers
   }
 }

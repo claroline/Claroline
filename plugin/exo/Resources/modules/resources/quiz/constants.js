@@ -60,10 +60,6 @@ const QUIZ_NUMBERINGS = {
   [NUMBERING_LITERAL]: trans('quiz_numbering_literal', {}, 'quiz')
 }
 
-// deprecated
-const TOTAL_SCORE_ON_DEFAULT = 'default'
-const TOTAL_SCORE_ON_CUSTOM = 'custom'
-
 export const constants = {
   // shuffle
   SHUFFLE_NEVER,
@@ -93,8 +89,5 @@ export const constants = {
   NUMBERING_NONE,
   NUMBERING_LITERAL,
   NUMBERING_NUMERIC,
-  QUIZ_NUMBERINGS,
-
-  TOTAL_SCORE_ON_DEFAULT,
-  TOTAL_SCORE_ON_CUSTOM
+  QUIZ_NUMBERINGS
 }

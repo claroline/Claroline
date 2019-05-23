@@ -9,6 +9,7 @@ use UJM\ExoBundle\Entity\ItemType\MatchQuestion;
 use UJM\ExoBundle\Entity\Misc\Association;
 use UJM\ExoBundle\Entity\Misc\Label;
 use UJM\ExoBundle\Entity\Misc\Proposal;
+use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Attempt\GenericPenalty;
 use UJM\ExoBundle\Library\Csv\ArrayCompressor;
@@ -166,13 +167,23 @@ class MatchDefinition extends AbstractDefinition
     /**
      * @param MatchQuestion $question
      *
-     * @return array
+     * @return AnswerPartInterface[]
      */
     public function expectAnswer(AbstractItem $question)
     {
         return array_filter($question->getAssociations()->toArray(), function (Association $association) {
             return 0 < $association->getScore();
         });
+    }
+
+    /**
+     * @param MatchQuestion $question
+     *
+     * @return AnswerPartInterface[]
+     */
+    public function allAnswers(AbstractItem $question)
+    {
+        return $question->getAssociations()->toArray();
     }
 
     public function getStatistics(AbstractItem $matchQuestion, array $answersData, $total)

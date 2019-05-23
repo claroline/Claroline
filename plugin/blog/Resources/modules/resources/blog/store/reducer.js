@@ -1,14 +1,17 @@
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
+
 import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 import {SEARCH_FILTER_ADD, SEARCH_FILTER_REMOVE} from '#/main/app/content/search/store/actions'
-import {reducer as editorReducer} from '#/plugin/blog/resources/blog/editor/store'
-import {reducer as postReducer} from '#/plugin/blog/resources/blog/post/store'
-import {reducer as commentReducer} from '#/plugin/blog/resources/blog/comment/store'
-import {reducer as toolbarReducer} from '#/plugin/blog/resources/blog/toolbar/store'
-import {reducer as moderationReducer} from '#/plugin/blog/resources/blog/moderation/store'
+import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
+
 import {SWITCH_MODE} from '#/plugin/blog/resources/blog/store/actions'
 import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
-import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
+
+import {reducer as editorReducer} from '#/plugin/blog/resources/blog/editor/store/reducer'
+import {reducer as postReducer} from '#/plugin/blog/resources/blog/post/store/reducer'
+import {reducer as commentReducer} from '#/plugin/blog/resources/blog/comment/store/reducer'
+import {reducer as toolbarReducer} from '#/plugin/blog/resources/blog/toolbar/store/reducer'
+import {reducer as moderationReducer} from '#/plugin/blog/resources/blog/moderation/store/reducer'
 
 const reducer = combineReducers({
   calendarSelectedDate: makeReducer('', {

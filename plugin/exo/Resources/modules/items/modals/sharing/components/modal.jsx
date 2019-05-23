@@ -1,12 +1,12 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import cloneDeep from 'lodash/cloneDeep'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
 import {FormGroup} from '#/main/app/content/form/components/group'
 
-import {update} from '#/plugin/exo/utils/utils' // TODO : remove me
 import {UserTypeahead} from '#/plugin/exo/users/components/typeahead'
 
 // TODO : use core UserTypeahead
@@ -46,15 +46,25 @@ class SharingModal extends Component {
   }
 
   selectUser(user) {
-    this.setState(update(this.state, {
-      users: {$push: [user]}
-    }))
+    const selectedUsers = cloneDeep(this.state.users)
+    selectedUsers.push(user)
+
+    this.setState({
+      users: selectedUsers
+    })
   }
 
   deselectUser(user) {
-    this.setState(update(this.state, {
-      users: {$splice: [[this.state.users.indexOf(user), 1]]}
-    }))
+    const selectedUsers = cloneDeep(this.state.users)
+
+    const userPos = selectedUsers.indexOf(user)
+    if (-1 !== userPos) {
+      selectedUsers.splice(userPos, 1)
+    }
+
+    this.setState({
+      users: selectedUsers
+    })
   }
 
   render() {

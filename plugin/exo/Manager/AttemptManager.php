@@ -197,6 +197,12 @@ class AttemptManager
             // Generate a new paper
             $paper = $this->paperGenerator->create($exercise, $user, $lastPaper);
 
+            // Calculate the total score of the paper
+            // This can be recomputed later but it's a slightly heavy task and require the use of the manager.
+            $paper->setTotal(
+                $this->paperManager->calculateTotal($paper)
+            );
+
             // Save the new paper
             $this->om->persist($paper);
             $this->om->flush();
@@ -257,9 +263,10 @@ class AttemptManager
             $answer->setIp($clientIp);
             $answer->setTries($answer->getTries() + 1);
 
-            // Calculate new answer score
-            $score = $this->itemManager->calculateScore($decodedQuestion, $answer);
-            $answer->setScore($score);
+            // Calculate new answer score if needed
+            $answer->setScore(
+                $this->itemManager->calculateScore($decodedQuestion, $answer)
+            );
 
             $paper->addAnswer($answer);
             $submitted[] = $answer;
@@ -288,8 +295,7 @@ class AttemptManager
         }
 
         $paper->setInterrupted(!$finished);
-        $totalScoreOn = $paper->getExercise()->getTotalScoreOn();
-        $score = $this->paperManager->calculateScore($paper, $totalScoreOn);
+        $score = $this->paperManager->calculateScore($paper);
         $paper->setScore($score);
 
         if ($generateEvaluation) {

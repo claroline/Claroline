@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {utils} from '#/plugin/exo/items/pair/utils'
-import {Feedback} from '#/plugin/exo/items/components/feedback-btn'
+import {FeedbackButton as Feedback} from '#/plugin/exo/buttons/feedback/components/button'
 import {WarningIcon} from '#/plugin/exo/components/warning-icon'
 
 export const PairFeedback = (props) => {
@@ -16,10 +16,14 @@ export const PairFeedback = (props) => {
             <li key={`your-answer-orphean-${item.id}`}>
               <div className={classes(
                 'answer-item item',
-                {'incorrect-answer': !item.score && 0 !== item.score},
-                {'correct-answer': item.score || item.score === 0}
+                props.item.hasExpectedAnswers && {
+                  'incorrect-answer': !item.score && 0 !== item.score,
+                  'correct-answer': item.score || item.score === 0
+                }
               )}>
-                <WarningIcon valid={item.score || item.score === 0} />
+                {props.item.hasExpectedAnswers &&
+                  <WarningIcon valid={item.score || item.score === 0} />
+                }
                 <div className="item-content" dangerouslySetInnerHTML={{__html: item.data}} />
               </div>
             </li>
@@ -33,10 +37,15 @@ export const PairFeedback = (props) => {
             <li key={`your-answer-id-${answer.leftItem.id}-${answer.rightItem.id}`}>
               <div className={classes(
                 'item',
-                {'correct-answer': answer.valid},
-                {'incorrect-answer': !answer.valid}
+                props.item.hasExpectedAnswers && {
+                  'correct-answer': answer.valid,
+                  'incorrect-answer': !answer.valid
+                },
+                {'answer-item': !props.item.hasExpectedAnswers}
               )}>
-                <WarningIcon valid={answer.valid} />
+                {props.item.hasExpectedAnswers &&
+                  <WarningIcon valid={answer.valid} />
+                }
 
                 <div className="item-content" dangerouslySetInnerHTML={{__html: answer.leftItem.data}} />
                 <div className="item-content" dangerouslySetInnerHTML={{__html: answer.rightItem.data}} />
@@ -60,7 +69,8 @@ PairFeedback.propTypes = {
     title: T.string,
     description: T.string,
     items: T.array.isRequired,
-    solutions: T.arrayOf(T.object)
+    solutions: T.arrayOf(T.object),
+    hasExpectedAnswers: T.bool.isRequired
   }).isRequired,
   answer: T.array
 }

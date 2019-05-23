@@ -3,6 +3,7 @@
   "type": "application/x.cloze+json",
   "content": "Question ?",
   "text": "Lorem [[1]] dolor sit [[2]].",
+  "hasExpectedAnswer": true,
   "score": {
     "type": "sum"
   },

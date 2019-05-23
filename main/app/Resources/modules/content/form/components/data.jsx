@@ -82,7 +82,8 @@ const FormData = (props) => {
             updateProp={props.updateProp}
             setErrors={props.setErrors}
           >
-            {primarySection.render && primarySection.render()}
+            {primarySection.component}
+            {!primarySection.component && primarySection.render && primarySection.render()}
           </FormFieldset>
         </div>
       )}
@@ -116,7 +117,8 @@ const FormData = (props) => {
                 updateProp={props.updateProp}
                 setErrors={props.setErrors}
               >
-                {section.render && section.render()}
+                {section.component}
+                {!section.component && section.render && section.render()}
               </FormFieldset>
             </FormSection>
           )}

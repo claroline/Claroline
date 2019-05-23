@@ -64,7 +64,7 @@ export class PointableImage extends Component {
               feedback={pointer.feedback}
             />
           )}
-          {this.props.areas.map(area =>
+          {this.props.hasExpectedAnswers && this.props.areas.map(area =>
             <div
               key={area.id}
               style={{
@@ -118,10 +118,12 @@ PointableImage.propTypes = {
     borderRadius: T.number.isRequired,
     color: T.string.isRequired,
     number: T.number
-  }))
+  })),
+  hasExpectedAnswers: T.bool.isRequired
 }
 
 PointableImage.defaultProps = {
   onRef: () => {},
-  areas: []
+  areas: [],
+  hasExpectedAnswers: true
 }

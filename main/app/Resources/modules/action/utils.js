@@ -1,12 +1,47 @@
 import isEmpty from 'lodash/isEmpty'
+import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
-import {MENU_BUTTON} from '#/main/app/buttons'
+import {toKey} from '#/main/core/scaffolding/text/utils'
+import {MENU_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 
 const GROUP_SEPARATOR  = '|'
 const ACTION_SEPARATOR = ' '
 
-// TODO : use reselect to memoize toolbars config
+// TODO : use reselect to memoize actions & toolbars config
+
+function createActionDefinition(action) {
+  // compute id based on received config
+  let actionDef = {
+    id: action.id || (typeof action.label === 'string' && toKey(action.label)) || action.name || undefined
+  }
+
+  // manage confirmation
+  if (action.confirm) {
+    // transform action to display confirm modal first
+    const confirmDef = Object.assign({}, typeof action.confirm === 'object' ? action.confirm : {}, {
+      // append some defaults from action spec
+      icon: action.confirm.icon || action.icon,
+      title: action.confirm.title || action.label,
+      question: action.confirm.message,
+      dangerous: action.dangerous,
+
+      // forward original action to the confirm modal
+      confirmAction: Object.assign({}, omit(action, 'confirm'), {
+        id: actionDef.id ? `${actionDef.id}-confirm` : undefined,
+        label: action.confirm.button || action.label
+      })
+    })
+
+    actionDef = Object.assign(actionDef, {
+      type: MODAL_BUTTON,
+      modal: [MODAL_CONFIRM, confirmDef]
+    })
+  }
+
+  return Object.assign({}, omit(action, 'confirm'), actionDef)
+}
 
 /**
  *
@@ -125,5 +160,6 @@ function buildToolbar(toolbarConfig, actions = [], scope) {
 }
 
 export {
+  createActionDefinition,
   buildToolbar
 }

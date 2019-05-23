@@ -122,18 +122,31 @@ class ItemSerializer
         // Serialize specific data for the item type
         $serialized = $this->serializeQuestionType($question, $options);
 
+        // common props between questions and contents
+        $serialized = array_merge($serialized, [
+            'id' => $question->getUuid(),
+            'type' => $question->getMimeType(),
+            'title' => $question->getTitle(),
+            'meta' => $this->serializeMetadata($question, $options),
+        ]);
+
+        // Adds full definition of the item
+        if (!in_array(Transfer::MINIMAL, $options)) {
+            $serialized = array_merge($serialized, [
+                'description' => $question->getDescription(),
+                'tags' => $this->serializeTags($question),
+            ]);
+        }
+
         if (1 === preg_match('#^application\/x\.[^/]+\+json$#', $question->getMimeType())) {
+            // question items
             $canEdit = $this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User ?
                 $this->container->get('ujm_exo.manager.item')->canEdit($question, $this->tokenStorage->getToken()->getUser()) :
                 false;
             // Adds minimal information
             $serialized = array_merge($serialized, [
-                'id' => $question->getUuid(),
-                'autoId' => $question->getId(),
-                'type' => $question->getMimeType(),
                 'content' => $question->getContent(),
-                'title' => $question->getTitle(),
-                'meta' => $this->serializeMetadata($question, $options),
+                'hasExpectedAnswers' => $question->hasExpectedAnswers(),
                 'score' => json_decode($question->getScoreRule(), true),
                 'rights' => ['edit' => $canEdit],
             ]);
@@ -141,32 +154,15 @@ class ItemSerializer
             // Adds full definition of the item
             if (!in_array(Transfer::MINIMAL, $options)) {
                 $serialized = array_merge($serialized, [
-                    'description' => $question->getDescription(),
                     'hints' => $this->serializeHints($question, $options),
                     'objects' => $this->serializeObjects($question),
                     'resources' => $this->serializeResources($question),
-                    'tags' => $this->serializeTags($question),
                 ]);
 
                 // Adds item feedback
                 if (in_array(Transfer::INCLUDE_SOLUTIONS, $options)) {
                     $serialized['feedback'] = $question->getFeedback();
                 }
-            }
-        } else {
-            $serialized = array_merge($serialized, [
-                'id' => $question->getUuid(),
-                'type' => $question->getMimeType(),
-                'title' => $question->getTitle(),
-                'meta' => $this->serializeMetadata($question, $options),
-            ]);
-
-            // Adds full definition of the item
-            if (!in_array(Transfer::MINIMAL, $options)) {
-                $serialized = array_merge($serialized, [
-                    'description' => $question->getDescription(),
-                    'tags' => $this->serializeTags($question),
-                ]);
             }
         }
 
@@ -207,35 +203,37 @@ class ItemSerializer
             }
         }
 
+        // Deserializes common props between questions and contents
+        $this->sipe('type', 'setMimeType', $data, $item);
+        $this->sipe('title', 'setTitle', $data, $item);
+        $this->sipe('description', 'setDescription', $data, $item);
+
         if (1 === preg_match('#^application\/x\.[^/]+\+json$#', $data['type'])) {
             // question item
-            $this->sipe('type', 'setMimeType', $data, $item);
             $this->sipe('content', 'setContent', $data, $item);
-            $this->sipe('title', 'setTitle', $data, $item);
-            $this->sipe('description', 'setDescription', $data, $item);
             $this->sipe('feedback', 'setFeedback', $data, $item);
+            $this->sipe('hasExpectedAnswers', 'setExpectedAnswers', $data, $item);
 
             if (isset($data['hints'])) {
                 $this->deserializeHints($item, $data['hints'], $options);
             }
+
             if (isset($data['objects'])) {
                 $this->deserializeObjects($item, $data['objects'], $options);
             }
+
             if (isset($data['resources'])) {
                 $this->deserializeResources($item, $data['resources'], $options);
             }
+
             if (isset($data['meta'])) {
                 $this->deserializeMetadata($item, $data['meta']);
             }
+
             if (isset($data['score'])) {
                 $score = $this->sanitizeScore($data['score']);
                 $item->setScoreRule(json_encode($score));
             }
-        } else {
-            // content item
-            $this->sipe('type', 'setMimeType', $data, $item);
-            $this->sipe('title', 'setTitle', $data, $item);
-            $this->sipe('description', 'setDescription', $data, $item);
         }
 
         $this->deserializeQuestionType($item, $data, $options);
@@ -534,6 +532,12 @@ class ItemSerializer
         $sanitized = ['type' => $score['type']];
 
         switch ($score['type']) {
+            case 'sum':
+                if (isset($score['total'])) {
+                    $sanitized['total'] = $score['total'];
+                }
+                break;
+
             case 'fixed':
                 $sanitized['success'] = $score['success'];
                 $sanitized['failure'] = $score['failure'];

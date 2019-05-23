@@ -11,7 +11,7 @@ import {HtmlText} from '#/main/core/layout/components/html-text'
 import {Button} from '#/main/app/action/components/button'
 import {Alert} from '#/main/app/alert/components/alert'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
-import {ScoreGauge} from '#/main/core/layout/evaluation/components/score-gauge'
+import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
 
 const UserProgression = props =>
   <section className="user-progression">
@@ -21,8 +21,12 @@ const UserProgression = props =>
       <div className="panel-body">
         {props.score && props.score.displayed &&
           <ScoreGauge
-            userScore={props.score.current}
-            maxScore={props.score.total}
+            type="user"
+            value={props.score.current}
+            total={props.score.total}
+            width={140}
+            height={140}
+            displayValue={value => undefined === value || null === value ? '?' : value+''}
           />
         }
 
@@ -54,7 +58,7 @@ UserProgression.propTypes = {
   score: T.shape({
     displayed: T.bool,
     current: T.number,
-    total: T.number.isRequired
+    total: T.number
   }),
   details: T.arrayOf(
     T.arrayOf(T.string)
@@ -103,8 +107,9 @@ const UserFeedback = props => {
       <AlertBlock
         type={alertType}
         title={alertTitle}
-        message={alertMessage}
-      />
+      >
+        {alertMessage}
+      </AlertBlock>
     )
   }
 
@@ -203,7 +208,7 @@ ResourceOverview.propTypes = {
     score: T.shape({
       displayed: T.bool.isRequired,
       current: T.number,
-      total: T.number.isRequired
+      total: T.number
     }),
     details: T.arrayOf(
       T.arrayOf(T.string)

@@ -1,9 +1,11 @@
 import React from 'react'
-import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
-import {getComponentByPanelLabel} from '#/plugin/blog/resources/blog/toolbar/utils'
-import {selectors} from '#/plugin/blog/resources/blog/store'
+import {connect} from 'react-redux'
+
 import {withRouter} from '#/main/app/router'
+
+import {getComponentByPanelLabel} from '#/plugin/blog/resources/blog/toolbar/utils'
+import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
 
 const ToolsComponent = (props) =>
   <div>
@@ -30,4 +32,6 @@ const Tools = withRouter(connect(
   })
 )(ToolsComponent))
 
-export {Tools}
+export {
+  Tools
+}

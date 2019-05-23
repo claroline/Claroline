@@ -1,12 +1,12 @@
 import assert from 'assert'
-import {ensure, mockGlobals} from '#/main/core/scaffolding/tests'
+import {ensure} from '#/main/core/scaffolding/tests'
 import {
   registerItemType,
   listItemMimeTypes,
   getDefinition,
   getDecorators,
   resetTypes
-} from './../items/item-types'
+} from '#/plugin/exo/items/item-types'
 
 describe('Registering an item type', () => {
   afterEach(resetTypes)

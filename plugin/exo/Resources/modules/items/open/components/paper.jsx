@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {tex} from '#/main/app/intl/translation'
 import {PaperTabs} from '#/plugin/exo/items/components/paper-tabs'
-import {Feedback} from '#/plugin/exo/items/components/feedback-btn'
+import {FeedbackButton as Feedback} from '#/plugin/exo/buttons/feedback/components/button'
 
 const OpenPaper = props =>
   <PaperTabs

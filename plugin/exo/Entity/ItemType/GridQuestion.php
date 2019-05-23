@@ -100,7 +100,7 @@ class GridQuestion extends AbstractItem
     /**
      * Get cells.
      *
-     * @return ArrayCollection
+     * @return Cell[]|ArrayCollection
      */
     public function getCells()
     {

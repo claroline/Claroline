@@ -16,9 +16,21 @@ utils.expectedId = (id) => {
   return `${id}-expected-answer`
 }
 
-utils.getAnswerClassForSolution = (solution, answers) => {
-  return utils.isSolutionChecked(solution, answers) ?
-    solution.score > 0 ? 'correct-answer' : 'incorrect-answer' : ''
+utils.getAnswerClassForSolution = (solution, answers, hasExpectedAnswer = true) => {
+  const checked = utils.isSolutionChecked(solution, answers)
+  if (checked) {
+    if (hasExpectedAnswer) {
+      if (solution.score > 0) {
+        return 'correct-answer'
+      }
+
+      return 'incorrect-answer'
+    }
+
+    return 'selected-answer'
+  }
+
+  return ''
 }
 
 utils.setChoiceTicks = (choices, multiple = false) => {

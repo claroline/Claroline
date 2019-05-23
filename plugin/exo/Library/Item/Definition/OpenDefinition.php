@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Library\Item\Definition;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
+use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Serializer\Item\Type\OpenQuestionSerializer;
 use UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\OpenAnswerValidator;
@@ -124,9 +125,19 @@ class OpenDefinition extends AbstractDefinition
      *
      * @param AbstractItem $question
      *
-     * @return array
+     * @return AnswerPartInterface[]
      */
     public function expectAnswer(AbstractItem $question)
+    {
+        return [];
+    }
+
+    /**
+     * @param AbstractItem $question
+     *
+     * @return AnswerPartInterface[]
+     */
+    public function allAnswers(AbstractItem $question)
     {
         return [];
     }

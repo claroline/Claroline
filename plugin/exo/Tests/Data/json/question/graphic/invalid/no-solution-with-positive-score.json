@@ -2,6 +2,7 @@
   "id": "1",
   "type": "application/x.graphic+json",
   "content": "Where is Charlie ?",
+  "hasExpectedAnswer": true,
   "image": {
     "id": "12",
     "meta": {

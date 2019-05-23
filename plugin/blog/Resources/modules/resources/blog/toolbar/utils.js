@@ -1,9 +1,9 @@
-import {BlogCalendar} from '#/plugin/blog/resources/blog/toolbar/components/calendar.jsx'
-import {Redactors} from '#/plugin/blog/resources/blog/toolbar/components/redactors.jsx'
-import {Infobar} from '#/plugin/blog/resources/blog/toolbar/components/infobar.jsx'
-import {Tags} from '#/plugin/blog/resources/blog/toolbar/components/tags.jsx'
-import {Archives} from '#/plugin/blog/resources/blog/toolbar/components/archives.jsx'
-import {Exporters} from '#/plugin/blog/resources/blog/toolbar/components/exporters.jsx'
+import {BlogCalendar} from '#/plugin/blog/resources/blog/toolbar/components/calendar'
+import {Redactors} from '#/plugin/blog/resources/blog/toolbar/components/redactors'
+import {Infobar} from '#/plugin/blog/resources/blog/toolbar/components/infobar'
+import {Tags} from '#/plugin/blog/resources/blog/toolbar/components/tags'
+import {Archives} from '#/plugin/blog/resources/blog/toolbar/components/archives'
+import {Exporters} from '#/plugin/blog/resources/blog/toolbar/components/exporters'
 
 function getComponentByPanelLabel(label) {
   if(label === 'infobar'){

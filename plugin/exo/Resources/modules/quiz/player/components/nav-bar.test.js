@@ -1,7 +1,8 @@
 import React from 'react'
 import {shallow, mount} from 'enzyme'
-import {spyConsole, renew, ensure, mockGlobals} from '#/main/core/scaffolding/tests'
-import {PlayerNav} from './nav-bar.jsx'
+
+import {spyConsole, renew, ensure} from '#/main/core/scaffolding/tests'
+import {PlayerNav} from '#/plugin/exo/quiz/player/components/nav-bar'
 
 describe('<PlayerNav/>', () => {
   beforeEach(() => {

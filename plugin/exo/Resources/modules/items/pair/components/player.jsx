@@ -6,7 +6,7 @@ import times from 'lodash/times'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
 
-import {tex, trans} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
 
@@ -14,13 +14,12 @@ import {makeDraggable, makeDroppable} from '#/plugin/exo/utils/dragAndDrop'
 import {utils} from '#/plugin/exo/items/pair/utils'
 import {PairItemDragPreview} from '#/plugin/exo/items/pair/components/pair-item-drag-preview'
 
-let DropBox = props => props.connectDropTarget (
-  <div className={classes(
-    'pair-item-placeholder drop-placeholder placeholder-md placeholder-hover',
-    {'hover': props.isOver}
-  )}>
+let DropBox = props => props.connectDropTarget(
+  <div className={classes('pair-item-placeholder drop-placeholder placeholder-md placeholder-hover', {
+    hover: props.isOver
+  })}>
     <span className="fa fa-fw fa-share fa-rotate-90" />
-    {tex('set_drop_item')}
+    {trans('set_drop_item', {}, 'quiz')}
   </div>
 )
 

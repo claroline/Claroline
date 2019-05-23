@@ -82,6 +82,7 @@ class Persister
     {
         $question = new Item();
         $question->setUuid(uniqid('', true));
+        $question->setExpectedAnswers(true);
         $question->setMimeType(ItemType::CHOICE);
         $question->setTitle($title);
         $question->setContent('Invite...');
@@ -112,6 +113,7 @@ class Persister
     {
         $question = new Item();
         $question->setScoreRule(json_encode(['type' => 'manual', 'max' => 10]));
+        $question->setExpectedAnswers(true);
         $question->setUuid(uniqid('', true));
         $question->setMimeType(ItemType::OPEN);
         $question->setTitle($title);
@@ -166,6 +168,7 @@ class Persister
     {
         $question = new Item();
         $question->setUuid(uniqid('', true));
+        $question->setExpectedAnswers(true);
         $question->setMimeType(ItemType::MATCH);
         $question->setScoreRule('{"type": "sum"}');
         $question->setTitle($title);
@@ -202,6 +205,8 @@ class Persister
     {
         $exercise = new Exercise();
         $exercise->setUuid(uniqid('', true));
+        $exercise->setExpectedAnswers(true);
+        $exercise->setScoreRule(json_encode(['type' => 'sum']));
 
         $exercise->setDescription('This is the description of my exercise');
         if ($user) {

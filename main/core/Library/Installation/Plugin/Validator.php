@@ -61,7 +61,8 @@ class Validator
         $validationErrors = [];
 
         foreach ($this->checkers as $checker) {
-            if (null !== $errors = $checker->check($plugin, $this->isInUpdateMode())) {
+            $errors = $checker->check($plugin, $this->isInUpdateMode());
+            if (!empty($errors)) {
                 $validationErrors = array_merge($validationErrors, $errors);
                 continue;
             }

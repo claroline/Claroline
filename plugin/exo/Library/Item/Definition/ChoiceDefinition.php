@@ -7,6 +7,7 @@ use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\ChoiceQuestion;
 use UJM\ExoBundle\Entity\Misc\Choice;
+use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Csv\ArrayCompressor;
 use UJM\ExoBundle\Library\Item\ItemType;
@@ -143,7 +144,7 @@ class ChoiceDefinition extends AbstractDefinition
     /**
      * @param ChoiceQuestion $question
      *
-     * @return array
+     * @return AnswerPartInterface[]
      */
     public function expectAnswer(AbstractItem $question)
     {
@@ -152,10 +153,19 @@ class ChoiceDefinition extends AbstractDefinition
         });
     }
 
+    /**
+     * @param ChoiceQuestion $question
+     *
+     * @return AnswerPartInterface[]
+     */
+    public function allAnswers(AbstractItem $question)
+    {
+        return $question->getChoices()->toArray();
+    }
+
     public function getStatistics(AbstractItem $choiceQuestion, array $answersData, $total)
     {
         $choices = [];
-
         foreach ($answersData as $answerData) {
             foreach ($answerData as $choiceId) {
                 $choices[$choiceId] = isset($choices[$choiceId]) ? $choices[$choiceId] + 1 : 1;

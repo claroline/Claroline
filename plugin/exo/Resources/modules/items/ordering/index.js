@@ -2,7 +2,7 @@ import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
 
-import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
+import {CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
 import {OrderingItem as OrderingItemType} from '#/plugin/exo/items/ordering/prop-types'
 
 // components
@@ -57,7 +57,7 @@ export default {
    *
    * @return {CorrectedAnswer}
    */
-  getCorrectedAnswer: (item, answers = {data: []}) => {
+  correctAnswer: (item, answers = {data: []}) => {
     const corrected = new CorrectedAnswer()
 
     item.solutions.forEach(solution => {
@@ -75,5 +75,23 @@ export default {
     })
 
     return corrected
+  },
+
+  expectAnswer: (item) => {
+    if (item.solutions) {
+      return item.solutions
+        .filter(solution => 0 < solution.score && undefined !== item.position && null !== item.position)
+        .map(solution => new Answerable(solution.score, solution.id))
+    }
+
+    return []
+  },
+
+  allAnswers: (item) => {
+    if (item.solutions) {
+      return item.solutions.map(solution => new Answerable(solution.score, solution.id))
+    }
+
+    return []
   }
 }

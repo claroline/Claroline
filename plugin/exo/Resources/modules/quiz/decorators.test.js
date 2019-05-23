@@ -1,6 +1,7 @@
 import freeze from 'deep-freeze'
-import {ensure, mockGlobals} from '#/main/core/scaffolding/tests'
-import {decorate} from './decorators'
+
+import {ensure} from '#/main/core/scaffolding/tests'
+import {decorate} from '#/plugin/exo/quiz/decorators'
 import {
   TYPE_QUIZ,
   QUIZ_SUMMATIVE,
@@ -10,7 +11,7 @@ import {
   SHOW_SCORE_AT_CORRECTION,
   SCORE_SUM,
   SCORE_FIXED
-} from './enums'
+} from '#/plugin/exo/quiz/enums'
 
 describe('Decorator', () => {
   it('adds editor state sections and default values to quiz state', () => {

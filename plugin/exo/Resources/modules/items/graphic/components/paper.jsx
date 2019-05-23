@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {asset} from '#/main/app/config/asset'
 import {trans} from '#/main/app/intl/translation'
 
-import {POINTER_CORRECT, POINTER_WRONG, SHAPE_RECT} from '#/plugin/exo/items/graphic/constants'
+import {POINTER_PLACED, POINTER_CORRECT, POINTER_WRONG, SHAPE_RECT} from '#/plugin/exo/items/graphic/constants'
 import {utils} from '#/plugin/exo/items/graphic/utils'
 import {PaperTabs} from '#/plugin/exo/items/components/paper-tabs'
 import {PointableImage} from '#/plugin/exo/items/graphic/components/pointable-image'
@@ -46,14 +46,17 @@ export const GraphicPaper = props => {
                 return {
                   absX: coords.x,
                   absY: coords.y,
-                  type: (area && (area.score > 0)) ? POINTER_CORRECT : POINTER_WRONG,
+                  type: props.item.hasExpectedAnswers ?
+                    (area && (area.score > 0)) ? POINTER_CORRECT : POINTER_WRONG :
+                    POINTER_PLACED,
                   feedback: undefined
                 }
               })}
               areas={pointedAreas}
+              hasExpectedAnswers={props.item.hasExpectedAnswers}
             />
           </div>
-          {pointedAreas.length > 0 &&
+          {props.item.hasExpectedAnswers && pointedAreas.length > 0 &&
             <AnswerTable title={trans('your_answers', {}, 'quiz')} areas={pointedAreas} showScore={props.showScore} highlightScore={true}/>
           }
         </div>
@@ -81,7 +84,12 @@ export const GraphicPaper = props => {
               areas={expectedAreas}
             />
           </div>
-          <AnswerStatsTable title={trans('stats', {}, 'quiz')} areas={expectedAreas} stats={props.stats}/>
+          <AnswerStatsTable
+            title={trans('stats', {}, 'quiz')}
+            areas={expectedAreas}
+            stats={props.stats}
+            hasExpectedAnswers={props.item.hasExpectedAnswers}
+          />
         </div>
       }
     />
@@ -107,7 +115,8 @@ GraphicPaper.propTypes = {
         shape: T.string.isRequired,
         color: T.string.isRequired
       }).isRequired
-    })).isRequired
+    })).isRequired,
+    hasExpectedAnswers: T.bool.isRequired
   }).isRequired,
   answer: T.arrayOf(T.shape({
     x: T.number.isRequired,

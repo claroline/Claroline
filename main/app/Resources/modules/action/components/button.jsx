@@ -4,13 +4,11 @@ import invariant from 'invariant'
 import omit from 'lodash/omit'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {toKey} from '#/main/core/scaffolding/text/utils'
 import {registry as buttonRegistry} from '#/main/app/buttons/registry'
 import {TooltipOverlay} from '#/main/app/overlay/tooltip/components/overlay'
 
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
-
-// todo : move tooltip management inside buttons module
+import {createActionDefinition} from '#/main/app/action/utils'
 
 const ButtonComponent = props => {
   const button = buttonRegistry.get(props.type)
@@ -18,16 +16,7 @@ const ButtonComponent = props => {
   invariant(undefined !== button, `You have requested a non existent button "${props.type}".`)
 
   return React.createElement(button, Object.assign(
-    omit(props, 'type', 'icon', 'label', 'subscript', 'hideLabel'),
-    {
-      id: props.id || (typeof props.label === 'string' ? toKey(props.label) : undefined),
-      confirm: props.confirm ? Object.assign({}, props.confirm, {
-        // append some defaults from action spec
-        icon: props.confirm.icon || props.icon,
-        title: props.confirm.title || props.label,
-        button: props.confirm.button || props.label
-      }) : undefined
-    }
+    omit(props, 'type', 'icon', 'label', 'hideLabel', 'subscript')
   ), [
     props.icon &&
       <span key="button-icon" className={classes('action-icon', props.icon, !props.hideLabel && 'icon-with-text-right')} aria-hidden={true} />,
@@ -48,25 +37,35 @@ implementPropTypes(ButtonComponent, ActionTypes, {
  * @param props
  * @constructor
  */
-const Button = props => props.tooltip ?
-  <TooltipOverlay
-    id={`${props.id || toKey(props.label)}-tip`}
-    position={props.tooltip}
-    tip={props.label}
-    disabled={props.disabled}
-  >
+const Button = props => {
+  const actionDef = createActionDefinition(props)
+
+  if (props.tooltip) {
+    return (
+      <TooltipOverlay
+        id={`${actionDef.id}-tip`}
+        position={actionDef.tooltip}
+        tip={actionDef.label}
+        disabled={actionDef.disabled}
+      >
+        <ButtonComponent
+          {...omit(actionDef, 'tooltip', 'group', 'context', 'scope', 'default')}
+          hideLabel={true}
+        >
+          {props.children}
+        </ButtonComponent>
+      </TooltipOverlay>
+    )
+  }
+
+  return (
     <ButtonComponent
-      {...omit(props, 'tooltip', 'group', 'context', 'scope', 'default')}
-      hideLabel={true}
+      {...omit(actionDef, 'tooltip', 'group', 'context', 'scope', 'default')}
     >
       {props.children}
     </ButtonComponent>
-  </TooltipOverlay> :
-  <ButtonComponent
-    {...omit(props, 'tooltip', 'group', 'context', 'scope', 'default')}
-  >
-    {props.children}
-  </ButtonComponent>
+  )
+}
 
 implementPropTypes(Button, ActionTypes, {
   /**

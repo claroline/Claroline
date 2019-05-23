@@ -51,6 +51,7 @@ const DataFormSection = {
         ))
       })
     )),
+    component: T.node, // TODO : add warn if component and render are defined on the same section
     render: T.func
   },
   defaultProps: {

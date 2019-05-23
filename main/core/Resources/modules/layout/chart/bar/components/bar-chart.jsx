@@ -1,11 +1,11 @@
 import React from 'react'
 
-import { implementPropTypes } from '#/main/app/prop-types'
+import {implementPropTypes} from '#/main/app/prop-types'
+
 import {AxisChart as ChartTypes} from '#/main/core/layout/chart/prop-types'
-import {AxisChart} from '#/main/core/layout/chart/components/axis-chart.jsx'
-import {
-  BAR_CHART
-} from '#/main/core/layout/chart/enums'
+import {AxisChart} from '#/main/core/layout/chart/components/axis-chart'
+
+import {DataSeries} from '#/main/core/layout/chart/bar/components/data-series'
 
 /**
  * Draws a Bar chart
@@ -19,7 +19,7 @@ import {
 const BarChart = props =>
   <AxisChart
     {...props}
-    type={BAR_CHART}
+    dataSeries={DataSeries}
   />
 
 implementPropTypes(BarChart, ChartTypes, {}, {

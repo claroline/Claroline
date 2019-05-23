@@ -9,7 +9,7 @@ import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
 import {constants} from '#/main/core/user/tracking/constants'
 import {ResourceIcon} from '#/main/core/resource/components/icon'
-import {ScoreGauge} from '#/main/core/layout/evaluation/components/score-gauge'
+import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
 
 const EventWrapper = props =>
   <li className={classes('timeline-event-container', {
@@ -60,8 +60,12 @@ const EventWrapper = props =>
         {props.progression && (!!props.progression[0] || !!props.progression[1]) &&
           <div className="timeline-event-progression">
             <ScoreGauge
-              userScore={Math.round(props.progression[0])}
-              maxScore={props.progression[1]}
+              type="user"
+              value={Math.round(props.progression[0])}
+              total={props.progression[1]}
+              width={70}
+              height={70}
+              displayValue={value => undefined === value || null === value ? '?' : value+''}
             />
           </div>
         }

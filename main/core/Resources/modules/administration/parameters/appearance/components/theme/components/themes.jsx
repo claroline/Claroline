@@ -5,20 +5,15 @@ import {withRouter} from 'react-router-dom'
 
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-import {DataCard} from '#/main/app/content/card/components/data'
-
-import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
-import {actions as modalActions} from '#/main/app/overlay/modal/store'
-
-import {actions} from '#/main/core/administration/parameters/appearance/components/theme/actions'
-
 import {
   PageContainer,
   PageHeader,
   PageContent
 } from '#/main/core/layout/page'
-
+import {DataCard} from '#/main/app/content/card/components/data'
 import {ListData} from '#/main/app/content/list/containers/data'
+
+import {actions} from '#/main/core/administration/parameters/appearance/components/theme/actions'
 
 const ThemesPage = props =>
   <PageContainer id="theme-management">
@@ -55,12 +50,24 @@ const ThemesPage = props =>
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-refresh',
             label: trans('rebuild_theme', {}, 'theme'),
+            confirm: {
+              title: transChoice('rebuild_themes', rows.length, {count: rows.length}, 'theme'),
+              message: trans('rebuild_themes_confirm', {
+                theme_list: rows.map(theme => theme.name).join(', ')
+              }, 'theme')
+            },
             callback: () => props.rebuildThemes(rows)
           }, {
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-trash-o',
             label: trans('delete', {}, 'actions'),
             disabled: !rows.find(row => row.meta.custom), // at least one theme should be deletable
+            confirm: {
+              title: transChoice('remove_themes', rows.length, {count: rows.length}, 'theme'),
+              message: trans('remove_themes_confirm', {
+                theme_list: rows.map(theme => theme.name).join(', ')
+              }, 'theme')
+            },
             callback: () => props.removeThemes(rows),
             dangerous: true
           }
@@ -90,29 +97,11 @@ ThemesPage.propTypes = {
 function mapDispatchToProps(dispatch) {
   return {
     rebuildThemes(themes) {
-      dispatch(
-        modalActions.showModal(MODAL_CONFIRM, {
-          title: transChoice('rebuild_themes', themes.length, {count: themes.length}, 'theme'),
-          question: trans('rebuild_themes_confirm', {
-            theme_list: themes.map(theme => theme.name).join(', ')
-          }, 'theme'),
-          handleConfirm: () => dispatch(actions.rebuildThemes(themes))
-        })
-      )
+      dispatch(actions.rebuildThemes(themes))
     },
 
     removeThemes(themes) {
-      dispatch(
-        modalActions.showModal(MODAL_CONFIRM, {
-          icon: 'fa fa-fw fa-trash-o',
-          title: transChoice('remove_themes', themes.length, {count: themes.length}, 'theme'),
-          question: trans('remove_themes_confirm', {
-            theme_list: themes.map(theme => theme.name).join(', ')
-          }, 'theme'),
-          dangerous: true,
-          handleConfirm: () => dispatch(actions.deleteThemes(themes))
-        })
-      )
+      dispatch(actions.deleteThemes(themes))
     }
   }
 }

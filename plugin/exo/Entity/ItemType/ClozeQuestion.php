@@ -33,7 +33,7 @@ class ClozeQuestion extends AbstractItem
      *     orphanRemoval=true
      * )
      *
-     * @var ArrayCollection
+     * @var Hole[]|ArrayCollection
      */
     private $holes;
 
@@ -68,7 +68,7 @@ class ClozeQuestion extends AbstractItem
     /**
      * Gets holes.
      *
-     * @return ArrayCollection
+     * @return Hole[]|ArrayCollection
      */
     public function getHoles()
     {

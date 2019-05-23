@@ -64,7 +64,7 @@ class CorrectionManagerTest extends JsonDataTestCase
 
         // Create a corrected answer (should not be returned by api)
         $answer = new Answer();
-        $answer->setQuestionId($this->questions[0]->getUuid());
+        $answer->setQuestionId($this->questions[1]->getUuid());
         $answer->setIp('127.0.0.1');
         $answer->setScore(5);
         $this->paper->addAnswer($answer);
@@ -122,7 +122,7 @@ class CorrectionManagerTest extends JsonDataTestCase
         $previousScore = 0;
         foreach ($this->answers as $answer) {
             if ($answer->getScore()) {
-                $previousScore += $answer->getScore();
+                $previousScore = $previousScore + $answer->getScore();
             }
         }
 

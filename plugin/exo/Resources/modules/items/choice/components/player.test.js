@@ -1,7 +1,7 @@
 import React from 'react'
 import {mount} from 'enzyme'
-import {spyConsole, renew, ensure, mockGlobals} from '#/main/core/scaffolding/tests'
-import {ChoicePlayer} from './player.jsx'
+import {spyConsole, renew, ensure} from '#/main/core/scaffolding/tests'
+import {ChoicePlayer} from '#/plugin/exo/items/choice/components/player'
 
 describe('<ChoicePlayer/>', () => {
   beforeEach(() => {

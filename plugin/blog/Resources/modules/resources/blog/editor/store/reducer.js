@@ -1,8 +1,12 @@
-import {makeReducer} from '#/main/app/store/reducer'
-import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 import cloneDeep from 'lodash/cloneDeep'
 import find from 'lodash/find'
 import findIndex from 'lodash/findIndex'
+
+import {makeReducer} from '#/main/app/store/reducer'
+import {makeFormReducer} from '#/main/app/content/form/store/reducer'
+
+import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
+
 import {moveItemInArray} from '#/plugin/blog/resources/blog/toolbar/utils'
 import {
   BLOG_OPTIONS_WIDGET_VISIBILITY,
@@ -10,7 +14,6 @@ import {
   BLOG_OPTIONS_WIDGET_DOWN
 } from '#/plugin/blog/resources/blog/editor/store/actions'
 import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
-import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
 const reducer = {
   options: makeFormReducer(selectors.STORE_NAME + '.blog.data.options', {}, {

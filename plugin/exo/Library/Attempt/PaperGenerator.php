@@ -93,12 +93,12 @@ class PaperGenerator
      * @param Exercise $exercise
      * @param Paper    $previousPaper
      *
-     * @return \stdClass
+     * @return array
      */
     private function generateStructure(Exercise $exercise, Paper $previousPaper = null)
     {
         // The structure of the previous paper if any
-        $previousStructure = !empty($previousPaper) ? json_decode($previousPaper->getStructure(), true) : null;
+        $previousStructure = !empty($previousPaper) ? $previousPaper->getStructure(true) : null;
 
         // Get JSON representation of the full exercise
         $structure = $this->exerciseSerializer->serialize($exercise);

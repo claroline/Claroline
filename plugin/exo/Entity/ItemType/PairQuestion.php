@@ -35,7 +35,7 @@ class PairQuestion extends AbstractItem
      *     inverseJoinColumns={@ORM\JoinColumn(name="item_id", referencedColumnName="id", unique=true)}
      * )
      *
-     * @var ArrayCollection
+     * @var GridItem[]|ArrayCollection
      */
     private $items;
 
@@ -47,7 +47,7 @@ class PairQuestion extends AbstractItem
      *     orphanRemoval=true
      * )
      *
-     * @var ArrayCollection
+     * @var GridRow[]|ArrayCollection
      */
     private $rows;
 
@@ -59,7 +59,7 @@ class PairQuestion extends AbstractItem
      *     orphanRemoval=true
      * )
      *
-     * @var ArrayCollection
+     * @var GridOdd[]|ArrayCollection
      */
     private $oddItems;
 
@@ -76,7 +76,7 @@ class PairQuestion extends AbstractItem
     /**
      * Get items.
      *
-     * @return ArrayCollection
+     * @return GridItem[]|ArrayCollection
      */
     public function getItems()
     {
@@ -130,7 +130,7 @@ class PairQuestion extends AbstractItem
     /**
      * Get rows.
      *
-     * @return ArrayCollection
+     * @return GridRow[]|ArrayCollection
      */
     public function getRows()
     {
@@ -165,7 +165,7 @@ class PairQuestion extends AbstractItem
     /**
      * Get odd items.
      *
-     * @return ArrayCollection
+     * @return GridOdd[]|ArrayCollection
      */
     public function getOddItems()
     {

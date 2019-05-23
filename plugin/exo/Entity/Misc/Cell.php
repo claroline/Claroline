@@ -86,7 +86,7 @@ class Cell
      *
      * @var ArrayCollection
      */
-    private $choices = null;
+    private $choices;
 
     /**
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\GridQuestion", inversedBy="cells")

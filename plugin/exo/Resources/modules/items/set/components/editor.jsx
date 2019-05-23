@@ -14,6 +14,7 @@ import {FormGroup} from '#/main/app/content/form/components/group'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
 
+import {SCORE_SUM} from '#/plugin/exo/quiz/enums'
 import {emptyAnswer} from '#/plugin/exo/items/utils'
 import {makeDraggable, makeDroppable} from '#/plugin/exo/utils/dragAndDrop'
 import {ItemEditor as ItemEditorType} from '#/plugin/exo/items/prop-types'
@@ -46,11 +47,12 @@ const addOdd = (items, solutions, saveCallback) => {
 }
 
 const updateItem = (property, value, itemId, items, solutions, isOdd, saveCallback) => {
-  const newItems = cloneDeep(items)
   const formattedValue = 'score' === property ? parseFloat(value) : value
-  const itemToUpdate = newItems.find(i => i.id === itemId)
 
-  if (itemToUpdate) {
+  const itemIndex = items.findIndex(i => i.id === itemId)
+  if (-1 !== itemIndex) {
+    const itemToUpdate = cloneDeep(items[itemIndex])
+
     if (isOdd) {
       if ('data' === property) {
         itemToUpdate[property] = formattedValue
@@ -73,7 +75,7 @@ const updateItem = (property, value, itemId, items, solutions, isOdd, saveCallba
       saveCallback('solutions', newSolutions)
     }
 
-    saveCallback('items', newItems)
+    saveCallback(`items[${itemIndex}]`, itemToUpdate)
   }
 }
 
@@ -212,7 +214,7 @@ class Association extends Component {
 
   render(){
     return (
-      <div className={classes('association set-answer-item answer-item', {
+      <div className={classes('association set-answer-item answer-item', this.props.hasExpectedAnswers && {
         'expected-answer' : this.props.association.score > 0,
         'unexpected-answer': this.props.association.score <= 0
       })}>
@@ -240,13 +242,24 @@ class Association extends Component {
         </div>
 
         <div className="right-controls">
-          <input
-            title={trans('score', {}, 'quiz')}
-            type="number"
-            className="form-control score"
-            value={this.props.association.score}
-            onChange={(e) => this.props.onUpdate('score', e.target.value, this.props.association.setId, this.props.association.itemId)}
-          />
+          {this.props.hasExpectedAnswers && this.props.hasScore &&
+            <input
+              title={trans('score', {}, 'quiz')}
+              type="number"
+              className="form-control score"
+              value={this.props.association.score}
+              onChange={(e) => this.props.onUpdate('score', e.target.value, this.props.association.setId, this.props.association.itemId)}
+            />
+          }
+
+          {this.props.hasExpectedAnswers && !this.props.hasScore &&
+            <input
+              title={trans('score', {}, 'quiz')}
+              type="checkbox"
+              checked={0 < this.props.association.score}
+              onChange={(e) => this.props.onUpdate('score', e.target.checked ? 1 : 0, this.props.association.setId, this.props.association.itemId)}
+            />
+          }
 
           <Button
             id={`ass-${this.props.association.itemId}-${this.props.association.setId}-feedback-toggle`}
@@ -276,6 +289,8 @@ class Association extends Component {
 
 Association.propTypes = {
   association: T.object.isRequired,
+  hasScore: T.bool.isRequired,
+  hasExpectedAnswers: T.bool.isRequired,
   onUpdate: T.func.isRequired,
   onDelete: T.func.isRequired
 }
@@ -309,12 +324,14 @@ const Set = (props) =>
     </div>
 
     <ul>
-      {props.associations.map(ass =>
+      {props.associations.filter(association => association.setId === props.set.id).map(ass =>
         <li key={`${ass.itemId}-${ass.setId}`}>
           <Association
             association={ass}
             onUpdate={(property, value, setId, itemId) => updateAssociation(property, value, setId, itemId, props.associations, props.onChange)}
             onDelete={(setId, itemId) => removeAssociation(setId, itemId, props.associations, props.onChange)}
+            hasScore={props.hasScore}
+            hasExpectedAnswers={props.hasExpectedAnswers}
           />
         </li>
       )}
@@ -328,6 +345,8 @@ Set.propTypes = {
   set: T.object.isRequired,
   deletable: T.bool.isRequired,
   associations: T.arrayOf(T.object).isRequired,
+  hasScore: T.bool.isRequired,
+  hasExpectedAnswers: T.bool.isRequired,
 
   onChange: T.func.isRequired,
   onDrop: T.func.isRequired,
@@ -347,7 +366,9 @@ const SetList = (props) =>
             index={setIndex}
             set={set}
             deletable={1 < props.sets.length}
-            associations={props.associations.filter(association => association.setId === set.id) || []}
+            associations={props.associations || []}
+            hasScore={props.hasScore}
+            hasExpectedAnswers={props.hasExpectedAnswers}
             onChange={props.onChange}
             onDrop={(source, target) => dropItem(source, target, props.associations, props.onChange)}
             onUpdate={(property, value) => updateSet(property, value, set.id, props.sets, props.onChange)}
@@ -369,7 +390,9 @@ const SetList = (props) =>
 SetList.propTypes = {
   sets: T.arrayOf(T.object).isRequired,
   associations: T.arrayOf(T.object).isRequired,
-  onChange: T.func.isRequired
+  onChange: T.func.isRequired,
+  hasScore: T.bool.isRequired,
+  hasExpectedAnswers: T.bool.isRequired
 }
 
 let Item = (props) =>
@@ -435,17 +458,20 @@ const ItemList = (props) =>
     label={trans('items', {}, 'quiz')}
   >
     <ul>
-      {props.items.map((item, itemIndex) =>
-        <li key={item.id}>
-          <Item
-            index={itemIndex}
-            item={item}
-            deletable={1 < props.items.length}
-            onUpdate={(property, value) => updateItem(property, value, item.id, props.items, props.solutions, false, props.onChange)}
-            onDelete={() => props.delete(item.id)}
-          />
-        </li>
-      )}
+      {props.items
+        .filter(item => !utils.isOdd(item.id, props.solutions))
+        .map((item, itemIndex) =>
+          <li key={item.id}>
+            <Item
+              index={itemIndex}
+              item={item}
+              deletable={1 < props.items.length}
+              onUpdate={(property, value) => updateItem(property, value, item.id, props.items, props.solutions, false, props.onChange)}
+              onDelete={() => props.delete(item.id)}
+            />
+          </li>
+        )
+      }
     </ul>
 
     <Button
@@ -476,7 +502,7 @@ class Odd extends Component {
 
   render(){
     return (
-      <div className={classes('set-answer-item answer-item', {
+      <div className={classes('set-answer-item answer-item', this.props.hasExpectedAnswers && {
         'expected-answer' : this.props.solution.score > 0,
         'unexpected-answer': this.props.solution.score < 1
       })}>
@@ -500,14 +526,16 @@ class Odd extends Component {
         </div>
 
         <div className="right-controls">
-          <input
-            title={trans('score', {}, 'quiz')}
-            type="number"
-            max={0}
-            className="form-control score"
-            value={this.props.solution.score}
-            onChange={(e) => this.props.onUpdate('score', e.target.value)}
-          />
+          {this.props.hasExpectedAnswers && this.props.hasScore &&
+            <input
+              title={trans('score', {}, 'quiz')}
+              type="number"
+              max={0}
+              className="form-control score"
+              value={this.props.solution.score}
+              onChange={(e) => this.props.onUpdate('score', e.target.value)}
+            />
+          }
 
           <Button
             id={`odd-${this.props.odd.id}-feedback-toggle`}
@@ -539,6 +567,8 @@ Odd.propTypes = {
   index: T.number.isRequired,
   odd: T.object.isRequired,
   solution: T.object.isRequired,
+  hasScore: T.bool.isRequired,
+  hasExpectedAnswers: T.bool.isRequired,
   onUpdate: T.func.isRequired,
   onDelete: T.func.isRequired
 }
@@ -549,13 +579,13 @@ const OddList = (props) =>
     label={trans('odds', {}, 'quiz')}
     optional={true}
   >
-    {0 === props.items.length &&
+    {0 === props.items.filter(item => utils.isOdd(item.id, props.solutions)).length &&
       <div className="no-item-info">{trans('no_odd_info', {}, 'quiz')}</div>
     }
 
-    {0 < props.items.length &&
+    {0 < props.items.filter(item => utils.isOdd(item.id, props.solutions)).length &&
       <ul>
-        {props.items.map((oddItem, oddIndex) =>
+        {props.items.filter(item => utils.isOdd(item.id, props.solutions)).map((oddItem, oddIndex) =>
           <li key={oddItem.id}>
             <Odd
               index={oddIndex}
@@ -563,6 +593,8 @@ const OddList = (props) =>
               solution={props.solutions.odd.find(o => o.itemId === oddItem.id)}
               onUpdate={(property, value) => updateItem(property, value, oddItem.id, props.items, props.solutions, true, props.onChange)}
               onDelete={() => props.delete(oddItem.id)}
+              hasScore={props.hasScore}
+              hasExpectedAnswers={props.hasExpectedAnswers}
             />
           </li>
         )}
@@ -581,95 +613,100 @@ const OddList = (props) =>
 OddList.propTypes = {
   items: T.arrayOf(T.object).isRequired,
   solutions: T.object.isRequired,
+  hasScore: T.bool.isRequired,
+  hasExpectedAnswers: T.bool.isRequired,
   onChange: T.func.isRequired,
 
   add: T.func.isRequired,
   delete: T.func.isRequired
 }
 
-const SetEditor = (props) =>
-  <FormData
-    className="set-item set-editor"
-    embedded={true}
-    name={props.formName}
-    dataPart={props.path}
-    sections={[
-      {
-        title: trans('general'),
-        primary: true,
-        fields: [
-          {
-            className: 'form-last',
-            name: 'sets',
-            label: trans('answers', {}, 'quiz'),
-            hideLabel: true,
-            required: true,
-            render: (setItem) => {
-              const items = setItem.items
-                .filter(item => !utils.isOdd(item.id, setItem.solutions))
+const SetEditor = (props) => {
+  const Set = (
+    <div className="row">
+      <div key="items" className="items-col col-md-5 col-sm-5 col-xs-5">
+        <ItemList
+          items={props.item.items}
+          solutions={props.item.solutions}
+          onChange={props.update}
 
-              const Set = (
-                <div className="row">
-                  <div className="items-col col-md-5 col-sm-5 col-xs-5">
-                    <ItemList
-                      items={items}
-                      solutions={setItem.solutions}
-                      onChange={props.update}
+          add={() => addItem(props.item.items, props.update)}
+          delete={(itemId) => removeItem(itemId, props.item.items, props.item.solutions, props.update)}
+        />
 
-                      add={() => addItem(setItem.items, props.update)}
-                      delete={(itemId) => removeItem(itemId, setItem.items, setItem.solutions, props.update)}
-                    />
+        <OddList
+          items={props.item.items}
+          solutions={props.item.solutions}
+          onChange={props.update}
+          hasScore={props.hasAnswerScores}
+          hasExpectedAnswers={props.item.hasExpectedAnswers}
 
-                    <OddList
-                      items={setItem.items.filter(item => utils.isOdd(item.id, setItem.solutions))}
-                      solutions={setItem.solutions}
-                      onChange={props.update}
+          add={() => addOdd(props.item.items, props.item.solutions, props.update)}
+          delete={(itemId) => removeItem(itemId, props.item.items, props.item.solutions, props.update)}
+        />
+      </div>
 
-                      add={() => addOdd(setItem.items, setItem.solutions, props.update)}
-                      delete={(itemId) => removeItem(itemId, setItem.items, setItem.solutions, props.update)}
-                    />
-                  </div>
+      <div key="sets" className="sets-col col-md-7 col-sm-7 col-xs-7">
+        <SetList
+          sets={props.item.sets}
+          associations={props.item.solutions.associations.map(association => {
+            const itemIndex = props.item.items.findIndex(item => association.itemId === item.id)
 
-                  <div className="sets-col col-md-7 col-sm-7 col-xs-7">
-                    <SetList
-                      sets={setItem.sets}
-                      associations={setItem.solutions.associations.map(association => {
-                        const itemIndex = items.findIndex(item => association.itemId === item.id)
+            return Object.assign({
+              _itemIndex: itemIndex,
+              _itemData: props.item.items[itemIndex].data
+            }, association)
+          })}
+          onChange={props.update}
+          hasScore={props.hasAnswerScores}
+          hasExpectedAnswers={props.item.hasExpectedAnswers}
+        />
+      </div>
+    </div>
+  )
 
-                        return Object.assign({
-                          _itemIndex: itemIndex,
-                          _itemData: items[itemIndex].data
-                        }, association)
-                      })}
-                      onChange={props.update}
-                    />
-                  </div>
-                </div>
-              )
-
-              return Set
+  return (
+    <FormData
+      className="set-item set-editor"
+      embedded={true}
+      name={props.formName}
+      dataPart={props.path}
+      sections={[
+        {
+          title: trans('general'),
+          primary: true,
+          fields: [
+            {
+              className: 'form-last',
+              name: 'sets',
+              label: trans('answers', {}, 'quiz'),
+              hideLabel: true,
+              required: true,
+              component: Set
+            }, {
+              name: 'random',
+              label: trans('shuffle_answers', {}, 'quiz'),
+              help: [
+                trans('shuffle_answers_help', {}, 'quiz'),
+                trans('shuffle_answers_results_help', {}, 'quiz')
+              ],
+              type: 'boolean'
+            }, {
+              name: 'penalty',
+              label: trans('editor_penalty_label', {}, 'quiz'),
+              type: 'number',
+              required: true,
+              displayed: (item) => item.hasExpectedAnswers && props.hasAnswerScores && item.score.type === SCORE_SUM,
+              options: {
+                min: 0
+              }
             }
-          }, {
-            name: 'random',
-            label: trans('shuffle_answers', {}, 'quiz'),
-            help: [
-              trans('shuffle_answers_help', {}, 'quiz'),
-              trans('shuffle_answers_results_help', {}, 'quiz')
-            ],
-            type: 'boolean'
-          }, {
-            name: 'penalty',
-            label: trans('editor_penalty_label', {}, 'quiz'),
-            type: 'number',
-            required: true,
-            options: {
-              min: 0
-            }
-          }
-        ]
-      }
-    ]}
-  />
+          ]
+        }
+      ]}
+    />
+  )
+}
 
 implementPropTypes(SetEditor, ItemEditorType, {
   item: T.shape(SetItemType.propTypes).isRequired

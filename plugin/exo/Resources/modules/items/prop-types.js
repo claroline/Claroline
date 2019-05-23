@@ -1,8 +1,6 @@
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 
-import {
-  SCORE_SUM
-} from '#/plugin/exo/quiz/enums'
+import {ScoreRule} from '#/plugin/exo/scores/prop-types'
 
 /**
  * Definition of Quiz items.
@@ -25,7 +23,8 @@ const ItemType = {
     }),
 
     create: T.func,
-    validate: T.func
+    validate: T.func,
+    refreshIdentifiers: T.func
   },
 
   defaultProps: {
@@ -39,9 +38,8 @@ const AnswerableItemType = implementPropTypes({}, ItemType, {
   validateAnswer: T.func,
   correctAnswer: T.func,
   expectAnswer: T.func,
+  allAnswers: T.func,
   getStatistics: T.func
-}, {
-
 })
 
 const Item = {
@@ -52,9 +50,10 @@ const Item = {
     meta: T.shape({
 
     }),
-    score: T.shape({
-      type: T.string.isRequired
-    })
+    hasExpectedAnswers: T.bool,
+    score: T.shape(
+      ScoreRule.propTypes
+    )
   },
 
   defaultProps: {
@@ -71,11 +70,8 @@ const Item = {
     hints: [],
     feedback: '',
     objects: [],
-    score: {
-      type: SCORE_SUM,
-      success: 1,
-      failure: 0
-    },
+    hasExpectedAnswers: true,
+    score: ScoreRule.defaultProps,
     tags: []
   }
 }
@@ -88,6 +84,7 @@ const ItemEditor = {
     item: T.shape(
       Item.propTypes
     ).isRequired,
+    hasAnswerScores: T.bool.isRequired,
     update: T.func.isRequired
   },
 

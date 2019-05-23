@@ -3,9 +3,10 @@ import get from 'lodash/get'
 import uniq from 'lodash/uniq'
 
 import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
+import {selectors as quizSelectors} from '#/plugin/exo/resources/quiz/store/selectors'
 
 const STORE_NAME = 'editor'
-const FORM_NAME = 'resource.editor'
+const FORM_NAME = `${quizSelectors.STORE_NAME}.editor`
 
 const quiz = (state) => formSelectors.data(formSelectors.form(state, FORM_NAME))
 
@@ -34,6 +35,11 @@ const numberingType = createSelector(
   (quiz) => get(quiz, 'parameters.numbering')
 )
 
+const score = createSelector(
+  [quiz],
+  (quiz) => get(quiz, 'score')
+)
+
 const randomPick = createSelector(
   [quiz],
   (quiz) => get(quiz, 'picking.randomPick')
@@ -52,5 +58,6 @@ export const selectors = {
   steps,
   numberingType,
   randomPick,
-  tags
+  tags,
+  score
 }

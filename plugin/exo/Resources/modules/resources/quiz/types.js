@@ -9,7 +9,12 @@ import {constants} from '#/plugin/exo/resources/quiz/constants'
  * Declares all available types of quiz.
  *
  * Each type defines some default values for the quiz parameters.
- * It also allows to disable and hide some editor properties
+ * It also allows to disable and hide some editor properties.
+ *
+ * defaultProps : when changing the type of quiz, if the user have replaced one of the default props
+ * it will not be overridden.
+ *
+ * requiredProps: when changing the type quiz, the user defined values will be overridden.
  */
 
 const QUIZ_CONCEPTUALIZATION = 'conceptualization'
@@ -85,6 +90,7 @@ const summativeType = {
   defaultProps: {},
   requiredProps: {
     parameters: {
+      maxAttempts: 1,
       hasExpectedAnswers: true,
       showFeedback: false,
       showEndConfirm: true
@@ -112,6 +118,7 @@ const certificationType = {
   defaultProps: {},
   requiredProps: {
     parameters: {
+      maxAttempts: 1,
       hasExpectedAnswers: true,
       showFeedback: false,
       interruptible: false,
@@ -144,6 +151,7 @@ const surveyType = {
   },
   requiredProps: {
     parameters: {
+      maxAttempts: 1,
       anonymizeAttempts: true,
       hasExpectedAnswers: false,
       showFeedback: false,

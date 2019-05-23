@@ -5,7 +5,7 @@ import has from 'lodash/has'
 
 import {trans} from '#/main/app/intl/translation'
 
-import {Feedback} from '#/plugin/exo/items/components/feedback-btn'
+import {FeedbackButton as Feedback} from '#/plugin/exo/buttons/feedback/components/button'
 import {SolutionScore} from '#/plugin/exo/components/score'
 import {AnswerStats} from '#/plugin/exo/items/components/stats'
 import {WarningIcon} from '#/plugin/exo/components/warning-icon'
@@ -37,13 +37,17 @@ const OrderingPaper = props => {
                     key={a.itemId}
                     className={classes(
                       'item',
-                      utils.getAnswerClass(a, props.answer, props.item.solutions, props.item.score.type)
+                      props.item.hasExpectedAnswers ?
+                        utils.getAnswerClass(a, props.answer, props.item.solutions, props.item.score.type) :
+                        'no-score'
                     )}
                   >
-                    <WarningIcon valid={utils.answerIsValid(a, props.item.solutions)}/>
+                    {props.item.hasExpectedAnswers &&
+                      <WarningIcon valid={utils.answerIsValid(a, props.item.solutions)}/>
+                    }
                     <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === a.itemId).data}}/>
                     <Feedback
-                      id={`oredering-answer-${a.itemId}-feedback`}
+                      id={`ordering-answer-${a.itemId}-feedback`}
                       feedback={props.item.solutions.find(solution => solution.itemId === a.itemId).feedback}
                     />
                     {props.showScore && props.item.score.type === SCORE_SUM && utils.showScore(a, props.item.solutions) &&
@@ -57,14 +61,18 @@ const OrderingPaper = props => {
                     key={solution.itemId}
                     className={classes(
                       'item',
-                      solution.score > 0 ? 'text-danger negative-score' : 'text-success positive-score'
+                      props.item.hasExpectedAnswers ?
+                        solution.score > 0 ? 'text-danger negative-score' : 'text-success positive-score' :
+                        'no-score'
                     )}
                   >
-                    <WarningIcon valid={solution.score < 1}/>
+                    {props.item.hasExpectedAnswers &&
+                      <WarningIcon valid={solution.score < 1}/>
+                    }
                     <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === solution.itemId).data}}/>
                     {solution.score > 0 &&
                       <Feedback
-                        id={`oredering-solution-${solution.itemId}-feedback`}
+                        id={`ordering-solution-${solution.itemId}-feedback`}
                         feedback={solution.feedback}
                       />
                     }
@@ -82,13 +90,17 @@ const OrderingPaper = props => {
                     key={a.itemId}
                     className={classes(
                       'item',
-                      utils.getAnswerClass(a, props.answer, props.item.solutions, props.item.score.type)
+                      props.item.hasExpectedAnswers ?
+                        utils.getAnswerClass(a, props.answer, props.item.solutions, props.item.score.type) :
+                        'no-score'
                     )}
                   >
-                    <WarningIcon valid={utils.answerIsValid(a, props.item.solutions)}/>
+                    {props.item.hasExpectedAnswers &&
+                      <WarningIcon valid={utils.answerIsValid(a, props.item.solutions)}/>
+                    }
                     <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === a.itemId).data}}/>
                     <Feedback
-                      id={`oredering-answer-${a.itemId}-feedback`}
+                      id={`ordering-answer-${a.itemId}-feedback`}
                       feedback={props.item.solutions.find(solution => solution.itemId === a.itemId).feedback}
                     />
                     {props.showScore && props.item.score.type === SCORE_SUM && utils.showScore(a, props.item.solutions) &&
@@ -107,13 +119,17 @@ const OrderingPaper = props => {
                     key={a.itemId}
                     className={classes(
                       'item',
-                      utils.getAnswerClass(a, props.answer, props.item.solutions, props.item.score.type)
+                      props.item.hasExpectedAnswers ?
+                        utils.getAnswerClass(a, props.answer, props.item.solutions, props.item.score.type) :
+                        'no-score'
                     )}
                   >
-                    <WarningIcon valid={utils.answerIsValid(a, props.item.solutions)}/>
+                    {props.item.hasExpectedAnswers &&
+                      <WarningIcon valid={utils.answerIsValid(a, props.item.solutions)}/>
+                    }
                     <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === a.itemId).data}}/>
                     <Feedback
-                      id={`oredering-answer-${a.itemId}-feedback`}
+                      id={`ordering-answer-${a.itemId}-feedback`}
                       feedback={props.item.solutions.find(solution => solution.itemId === a.itemId).feedback}
                     />
                     {props.showScore && props.item.score.type === SCORE_SUM && utils.showScore(a, props.item.solutions) &&
@@ -141,7 +157,7 @@ const OrderingPaper = props => {
                   <div key={solution.itemId} className="item answer-item text-info bg-info">
                     <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === solution.itemId).data}}/>
                     <Feedback
-                      id={`oredering-answer-${solution.itemId}-feedback`}
+                      id={`ordering-answer-${solution.itemId}-feedback`}
                       feedback={solution.feedback}
                     />
                     {props.showScore && props.item.score.type === SCORE_SUM &&
@@ -154,7 +170,7 @@ const OrderingPaper = props => {
                   <div key={solution.itemId} className="item answer-item">
                     <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === solution.itemId).data}}/>
                     <Feedback
-                      id={`oredering-solution-${solution.itemId}-feedback`}
+                      id={`ordering-solution-${solution.itemId}-feedback`}
                       feedback={solution.feedback}
                     />
                     {props.showScore && props.item.score.type === SCORE_SUM &&
@@ -170,7 +186,7 @@ const OrderingPaper = props => {
                   <div key={solution.itemId} className="item answer-item text-info bg-info">
                     <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === solution.itemId).data}}/>
                     <Feedback
-                      id={`oredering-answer-${solution.itemId}-feedback`}
+                      id={`ordering-answer-${solution.itemId}-feedback`}
                       feedback={solution.feedback}
                     />
                     {props.showScore && props.item.score.type === SCORE_SUM &&
@@ -188,7 +204,7 @@ const OrderingPaper = props => {
                   <div key={solution.itemId} className="item answer-item text-info bg-info">
                     <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === solution.itemId).data}}/>
                     <Feedback
-                      id={`oredering-answer-${solution.itemId}-feedback`}
+                      id={`ordering-answer-${solution.itemId}-feedback`}
                       feedback={solution.feedback}
                     />
                     {props.showScore && props.item.score.type === SCORE_SUM &&
@@ -215,11 +231,14 @@ const OrderingPaper = props => {
                   {'horizontal': props.item.direction === constants.DIRECTION_HORIZONTAL}
                 )}>
                   {props.item.solutions.map((solution) =>
-                    <div key={solution.itemId} className="item answer-item selected-answer text-info bg-info">
+                    <div
+                      key={solution.itemId}
+                      className={classes('item answer-item text-info bg-info', {'selected-answer': props.item.hasExpectedAnswers})}
+                    >
                       <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === solution.itemId).data}}/>
                     </div>
                   )}
-                  <div className="item stats-item stats-success">
+                  <div className={classes('item stats-item', {'stats-success': props.item.hasExpectedAnswers})}>
                     <AnswerStats stats={{
                       value: has(props.stats, ['orders', utils.getKey(props.item.solutions.filter(solution => solution.score > 0))]) ?
                         props.stats.orders[utils.getKey(props.item.solutions.filter(solution => solution.score > 0))].count :
@@ -230,7 +249,10 @@ const OrderingPaper = props => {
                 </div>
                 :
                 props.item.solutions.filter(solution => solution.score < 1).map((solution) =>
-                  <div key={solution.itemId} className="item answer-item selected-answer">
+                  <div
+                    key={solution.itemId}
+                    className={classes('item answer-item', {'selected-answer': props.item.hasExpectedAnswers})}
+                  >
                     <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === solution.itemId).data}}/>
 
                     <AnswerStats stats={{
@@ -287,7 +309,7 @@ const OrderingPaper = props => {
                       <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === solution.itemId).data}}/>
                     </div>
                   )}
-                  <div className="item stats-item stats-success">
+                  <div className={classes('item stats-item', {'stats-success': props.item.hasExpectedAnswers})}>
                     <AnswerStats stats={{
                       value: has(props.stats, ['orders', utils.getKey(props.item.solutions.filter(solution => solution.score > 0))]) ?
                         props.stats.orders[utils.getKey(props.item.solutions.filter(solution => solution.score > 0))].count :
@@ -332,7 +354,7 @@ const OrderingPaper = props => {
                     <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.items.find(item => item.id === solution.itemId).data}}/>
                   </div>
                 )}
-                <div className="item answer-item stats-item stats-success">
+                <div className={classes('item answer-item stats-item', {'stats-success': props.item.hasExpectedAnswers})}>
                   <AnswerStats stats={{
                     value: has(props.stats, ['orders', utils.getKey(props.item.solutions.filter(solution => solution.score > 0))]) ?
                       props.stats.orders[utils.getKey(props.item.solutions.filter(solution => solution.score > 0))].count :
@@ -392,7 +414,8 @@ OrderingPaper.propTypes = {
     direction: T.string.isRequired,
     score: T.object.isRequired,
     items: T.arrayOf(T.object).isRequired,
-    solutions: T.arrayOf(T.object).isRequired
+    solutions: T.arrayOf(T.object).isRequired,
+    hasExpectedAnswers: T.bool.isRequired
   }).isRequired,
   answer: T.array.isRequired,
   showScore: T.bool.isRequired,

@@ -1,6 +1,6 @@
 export const utils = {}
 
-utils.split = (text, solutions, highlight = true) => {
+utils.split = (text, solutions, highlight = true, hasExpectedAnswers = true) => {
   if (!text) return [{
     word: '#endoftext#',
     position: null,
@@ -35,7 +35,11 @@ utils.split = (text, solutions, highlight = true) => {
       let regexFlag = 'g'
       if (!el.caseSensitive) regexFlag += 'i'
       const regex = new RegExp('(\\b' + el.word + '\\b)', regexFlag)
-      const icon = el.score > 0 ? 'fa fa-fw fa-check': 'fa fa-fw fa-times'
+      const icon = hasExpectedAnswers ?
+        el.score > 0 ?
+          'fa fa-fw fa-check' :
+          'fa fa-fw fa-times' :
+        ''
       const replacer = `<strong><span class="${icon}"></span>$1</strong>`
       el.text = el.text.replace(regex, replacer)
     })
@@ -94,7 +98,7 @@ utils.getKey = (word, solutions) => {
 }
 
 utils.escapeRegExp = (str) => {
-  return str.replace(/[\-\[\]\/{}()*+?.\\\^$|]/g, '\\$&')
+  return str.replace(/[\-\[\]\/{}()*+?.\\\^$|]/g, '\\$&') // eslint-disable-line no-useless-escape
 }
 
 utils.containsKeyword = (keyword, caseSensitive, text = '') => {

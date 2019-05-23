@@ -2,9 +2,9 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import {makeActionCreator} from '#/main/app/store/actions'
 import {tex} from '#/main/app/intl/translation'
+import {makeId} from '#/main/core/scaffolding/id'
 
-import {makeId} from '../../../utils/utils'
-import {utils} from '../utils/utils'
+import {utils} from '#/plugin/exo/items/selection/utils/utils'
 
 const SELECT_ADD_SELECTION = 'SELECT_ADD_SELECTION'
 const SELECT_UPDATE_ANSWER = 'SELECT_UPDATE_ANSWER'

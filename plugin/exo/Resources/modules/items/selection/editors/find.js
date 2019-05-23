@@ -3,8 +3,8 @@ import cloneDeep from 'lodash/cloneDeep'
 import {tex} from '#/main/app/intl/translation'
 import {makeActionCreator} from '#/main/app/store/actions'
 
-import {makeId} from '../../../utils/utils'
-import {utils} from '../utils/utils'
+import {makeId} from '#/main/core/scaffolding/id'
+import {utils} from '#/plugin/exo/items/selection/utils/utils'
 
 const FIND_ADD_ANSWER = 'FIND_ADD_ANSWER'
 const FIND_UPDATE_ANSWER = 'FIND_UPDATE_ANSWER'

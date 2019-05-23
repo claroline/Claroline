@@ -11,12 +11,14 @@ export const WordsFeedback = props =>
       text={props.answer}
       solutions={props.item.solutions}
       showScore={false}
+      hasExpectedAnswers={props.item.hasExpectedAnswers}
     /> :
     <div className="no-answer">{trans('no_answer', {}, 'quiz')}</div>
 
 WordsFeedback.propTypes = {
   item: T.shape({
-    solutions: T.arrayOf(T.object).isRequired
+    solutions: T.arrayOf(T.object).isRequired,
+    hasExpectedAnswers: T.bool.isRequired
   }).isRequired,
   answer: T.string
 }

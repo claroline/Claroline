@@ -1,16 +1,17 @@
 import React from 'react'
-import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
+import {connect} from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
+import {withRouter} from '#/main/app/router'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {UrlButton} from '#/main/app/buttons/url/components/button'
 import {UserAvatar} from '#/main/core/user/components/avatar'
-import {selectors} from '#/plugin/blog/resources/blog/store'
+
+import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
 import {updateQueryParameters} from '#/plugin/blog/resources/blog/utils'
-import {withRouter} from '#/main/app/router'
 
 const RedactorsComponent = props =>
   <div key='redactors' className="panel panel-default">

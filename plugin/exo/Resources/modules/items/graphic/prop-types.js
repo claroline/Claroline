@@ -1,6 +1,6 @@
 import {PropTypes as T} from 'prop-types'
 
-import {makeId} from '#/plugin/exo/utils/utils'
+import {makeId} from '#/main/core/scaffolding/id'
 
 const GraphicItem = {
   propTypes: {
@@ -19,7 +19,9 @@ const GraphicItem = {
         id: T.string.isRequired,
         shape: T.string.isRequired,
         color: T.string.isRequired
-      }).isRequired
+      }).isRequired,
+      score: T.number,
+      feedback: T.string
     })).isRequired,
     _currentColor: T.string,
     _popover: T.shape({

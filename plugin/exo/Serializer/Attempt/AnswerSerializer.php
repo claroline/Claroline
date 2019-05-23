@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Serializer\Attempt;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
+use UJM\ExoBundle\Library\Options\Score;
 use UJM\ExoBundle\Library\Options\Transfer;
 
 /**
@@ -39,10 +40,16 @@ class AnswerSerializer
         if (!empty($answer->getData())) {
             $serialized['data'] = json_decode($answer->getData(), true);
         }
+
         // Adds user score
         if (in_array(Transfer::INCLUDE_USER_SCORE, $options)) {
+            $score = $answer->getScore();
+            if ($score) {
+                $score = round($score, Score::PRECISION);
+            }
+
             $serialized = array_merge($serialized, [
-                'score' => $answer->getScore(),
+                'score' => $score,
                 'feedback' => $answer->getFeedback(),
             ]);
         }

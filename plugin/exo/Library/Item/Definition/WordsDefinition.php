@@ -7,6 +7,7 @@ use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\OpenQuestion;
 use UJM\ExoBundle\Entity\Misc\Keyword;
+use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Serializer\Item\Type\WordsQuestionSerializer;
@@ -136,13 +137,23 @@ class WordsDefinition extends AbstractDefinition
     /**
      * @param OpenQuestion $question
      *
-     * @return array
+     * @return AnswerPartInterface[]
      */
     public function expectAnswer(AbstractItem $question)
     {
         return array_filter($question->getKeywords()->toArray(), function (Keyword $keyword) {
             return 0 < $keyword->getScore();
         });
+    }
+
+    /**
+     * @param OpenQuestion $question
+     *
+     * @return AnswerPartInterface[]
+     */
+    public function allAnswers(AbstractItem $question)
+    {
+        return $question->getKeywords()->toArray();
     }
 
     /**

@@ -3,9 +3,9 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import has from 'lodash/has'
 
-import {tex} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 
-import {Feedback} from '#/plugin/exo/items/components/feedback-btn'
+import {FeedbackButton as Feedback} from '#/plugin/exo/buttons/feedback/components/button'
 import {SolutionScore} from '#/plugin/exo/components/score'
 import {AnswerStats} from '#/plugin/exo/items/components/stats'
 import {PaperTabs} from '#/plugin/exo/items/components/paper-tabs'
@@ -27,12 +27,13 @@ export const PairPaper = props => {
             <ul>
               {yourAnswers.orpheans.map((item) =>
                 <li key={`your-answer-orphean-${item.id}`}>
-                  <div className={classes(
-                    'answer-item item',
-                    {'correct-answer': item.score},
-                    {'incorrect-answer': !item.score}
-                  )}>
-                    <WarningIcon valid={item.score !== '' && item.score <= 0}/>
+                  <div className={classes('answer-item item', {
+                    'correct-answer': props.item.hasExpectedAnswers && item.score,
+                    'incorrect-answer': props.item.hasExpectedAnswers && !item.score
+                  })}>
+                    {props.item.hasExpectedAnswers &&
+                      <WarningIcon valid={item.score !== '' && item.score <= 0}/>
+                    }
                     <div className="item-content" dangerouslySetInnerHTML={{__html: item.data}} />
                   </div>
                 </li>
@@ -44,19 +45,21 @@ export const PairPaper = props => {
             <ul>
               {yourAnswers.answers.map((answer) =>
                 <li key={`your-answer-id-${answer.leftItem.id}-${answer.rightItem.id}`}>
-                  <div className={classes(
-                    'item',
-                    {'correct-answer': answer.valid},
-                    {'incorrect-answer': !answer.valid}
-                  )}>
-                    <WarningIcon valid={answer.valid}/>
+                  <div className={classes('item', {
+                    'correct-answer': props.item.hasExpectedAnswers && answer.valid,
+                    'incorrect-answer': props.item.hasExpectedAnswers && !answer.valid,
+                    'answer-item': !props.item.hasExpectedAnswers
+                  })}>
+                    {props.item.hasExpectedAnswers &&
+                      <WarningIcon valid={answer.valid}/>
+                    }
                     <div className="item-content" dangerouslySetInnerHTML={{__html: answer.leftItem.data}} />
                     <div className="item-content" dangerouslySetInnerHTML={{__html: answer.rightItem.data}} />
                     <Feedback
                       id={`pair-${answer.leftItem.id}-${answer.rightItem.id}-feedback`}
                       feedback={answer.feedback}
                     />
-                    {props.showScore && answer.score !== '' &&
+                    {props.item.hasExpectedAnswers && props.showScore && answer.score !== '' &&
                       <SolutionScore score={answer.score}/>
                     }
                   </div>
@@ -114,7 +117,10 @@ export const PairPaper = props => {
             <ul>
               {expectedAnswers.odd.map((o) =>
                 <li key={`your-answer-orphean-${o.item.id}`}>
-                  <div className="item selected-answer">
+                  <div className={classes('item', {
+                    'selected-answer': props.item.hasExpectedAnswers,
+                    'stats-answer': !props.item.hasExpectedAnswers
+                  })}>
                     <div className="item-data" dangerouslySetInnerHTML={{__html: o.item.data}} />
                     <AnswerStats stats={{
                       value: props.stats.unpaired && props.stats.unpaired[o.item.id] ? props.stats.unpaired[o.item.id] : 0,
@@ -141,7 +147,10 @@ export const PairPaper = props => {
             <ul>
               {expectedAnswers.answers.map((answer) =>
                 <li key={`expected-answer-id-${answer.leftItem.id}-${answer.rightItem.id}`}>
-                  <div className="item selected-answer">
+                  <div className={classes('item', {
+                    'selected-answer': props.item.hasExpectedAnswers,
+                    'stats-answer': !props.item.hasExpectedAnswers
+                  })}>
                     <div className="item-data" dangerouslySetInnerHTML={{__html: answer.leftItem.data}} />
                     <div className="item-data" dangerouslySetInnerHTML={{__html: answer.rightItem.data}} />
 
@@ -177,7 +186,7 @@ export const PairPaper = props => {
           </div>
           <div className="col-md-12">
             <div className='answer-item unanswered-item'>
-              <div>{tex('unanswered')}</div>
+              <div>{trans('unanswered', {}, 'quiz')}</div>
 
               <AnswerStats stats={{
                 value: props.stats.unanswered ? props.stats.unanswered : 0,
@@ -197,7 +206,8 @@ PairPaper.propTypes = {
     title: T.string,
     description: T.string,
     items: T.arrayOf(T.object).isRequired,
-    solutions: T.arrayOf(T.object).isRequired
+    solutions: T.arrayOf(T.object).isRequired,
+    hasExpectedAnswers: T.bool.isRequired
   }).isRequired,
   answer: T.array,
   showScore: T.bool.isRequired,
@@ -205,8 +215,8 @@ PairPaper.propTypes = {
   showYours: T.bool.isRequired,
   showStats: T.bool.isRequired,
   stats: T.shape({
-    unpaired: T.object,
-    paired: T.object,
+    unpaired: T.oneOfType([T.object, T.array]),
+    paired: T.oneOfType([T.object, T.array]),
     unanswered: T.number,
     total: T.number
   })

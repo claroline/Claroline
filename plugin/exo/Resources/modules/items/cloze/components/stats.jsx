@@ -2,9 +2,11 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
+import {trans} from '#/main/app/intl/translation'
+
 import {HtmlText} from '#/main/core/layout/components/html-text'
+
 import {AnswerStats} from '#/plugin/exo/items/components/stats'
-import {tex} from '#/main/app/intl/translation'
 import {utils} from '#/plugin/exo/items/cloze/utils'
 
 // TODO : move elsewhere it's also used by Graphic item
@@ -18,7 +20,7 @@ const AnswerStatsTable = props =>
       const key = utils.getKey(props.solution.holeId, answer.text, props.solutions)
 
       return (
-        <div key={idx} className={classes('answer-item', {'selected-answer': answer.score > 0})}>
+        <div key={idx} className={classes('answer-item', {'selected-answer': props.hasExpectedAnswers && answer.score > 0})}>
           <HtmlText>{answer.text}</HtmlText>
           <div>
             <AnswerStats stats={{
@@ -33,7 +35,7 @@ const AnswerStatsTable = props =>
     })}
     {props.solution && props.stats.holes[props.solution.holeId] && props.stats.holes[props.solution.holeId]['_others'] &&
       <div className="answer-item">
-        <div>{tex('other_answers')}</div>
+        <div>{trans('other_answers', {}, 'quiz')}</div>
         <div>
           <AnswerStats stats={{
             value: props.stats.holes[props.solution.holeId]['_others'],
@@ -44,7 +46,7 @@ const AnswerStatsTable = props =>
     }
     {props.solution && props.stats.holes[props.solution.holeId] && props.stats.holes[props.solution.holeId]['_unanswered'] &&
       <div className="answer-item unanswered-item">
-        <div>{tex('unanswered')}</div>
+        <div>{trans('unanswered', {}, 'quiz')}</div>
         <div>
           <AnswerStats stats={{
             value: props.stats.holes[props.solution.holeId]['_unanswered'],
@@ -69,7 +71,8 @@ AnswerStatsTable.propTypes = {
     holes: T.object,
     unanswered: T.number,
     total: T.number
-  }).isRequired
+  }).isRequired,
+  hasExpectedAnswers: T.bool.isRequired
 }
 
 const AnswersStatsTable = props =>
@@ -82,11 +85,12 @@ const AnswersStatsTable = props =>
           solutions={props.solutions}
           solution={solution}
           stats={props.stats}
+          hasExpectedAnswers={props.hasExpectedAnswers}
         />
       )
     })}
     <div className="answer-item unanswered-item">
-      <div>{tex('unanswered')}</div>
+      <div>{trans('unanswered', {}, 'quiz')}</div>
       <div>
         <AnswerStats stats={{
           value: props.stats.unanswered ? props.stats.unanswered : 0,
@@ -105,7 +109,8 @@ AnswersStatsTable.propTypes = {
     holes: T.object,
     unanswered: T.number,
     total: T.number
-  }).isRequired
+  }).isRequired,
+  hasExpectedAnswers: T.bool.isRequired
 }
 
 export {

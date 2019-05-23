@@ -6,6 +6,8 @@
  */
 
 import moment from 'moment'
+
+import {trans} from '#/main/app/intl/translation'
 import {getLocale} from '#/main/app/intl/locale'
 
 // configure moment
@@ -93,6 +95,32 @@ function displayDate(apiDate, long = false, withTime = false) {
   return moment.utc(apiDate).format(getDisplayFormat(long, withTime))
 }
 
+function displayDuration(seconds) {
+  const time = moment.duration({seconds: seconds})
+
+  let timeString = ''
+  if ( 0 !== time.years()) {
+    timeString += time.years() + trans('years_short')
+  }
+  if (0 !== time.months()) {
+    timeString += time.months() + trans('months_short')
+  }
+  if (0 !== time.days()) {
+    timeString += time.days() + trans('days_short')
+  }
+  if (0 !== time.hours()) {
+    timeString += time.hours() + trans('hours_short')
+  }
+  if (0 !== time.minutes()) {
+    timeString += time.minutes() + trans('minutes_short')
+  }
+  if (0 !== time.seconds()) {
+    timeString += time.seconds() + trans('seconds_short')
+  }
+
+  return timeString
+}
+
 /**
  * Returns a date object based on api received date.
  *
@@ -116,17 +144,13 @@ function now(local = true) {
 }
 
 function computeElapsedTime(startDate) {
-  const diff = moment().utc().diff(moment(startDate).utc())
-  const duration = moment.duration(diff)
-
-  return duration._data.seconds + duration._data.minutes * 60 + duration._data.hours * 3600 + duration._data.days * 86400
+  return getTimeDiff(startDate, now(false))
 }
 
 function getTimeDiff(startDate, endDate) {
-  const diff = moment(endDate).utc().diff(moment(startDate).utc())
-  const duration = moment.duration(diff)
+  const diff = moment(endDate).diff(moment(startDate))
 
-  return duration._data.seconds + duration._data.minutes * 60 + duration._data.hours * 3600 + duration._data.days * 86400
+  return moment.duration(diff).asSeconds()
 }
 
 function nowAdd(addition, local = true) {
@@ -144,6 +168,6 @@ export {
   dateToDisplayFormat,
   computeElapsedTime,
   getTimeDiff,
-  nowAdd
+  nowAdd,
+  displayDuration
 }
-

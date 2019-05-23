@@ -279,9 +279,11 @@ class PairQuestionSerializer
             array_map(function (GridRow $row) {
                 $solution = [
                     'ordered' => $row->isOrdered(),
-                    'itemIds' => array_map(function (GridItem $item) {
-                        return $item->getUuid();
-                    }, $row->getItems()),
+                    'itemIds' => 0 < count($row->getItems()) ?
+                        array_map(function (GridItem $item) {
+                            return $item->getUuid();
+                        }, $row->getItems()) :
+                        [-1, -1],
                     'score' => $row->getScore(),
                 ];
 

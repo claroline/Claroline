@@ -1,14 +1,16 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {pie} from 'd3-shape'
+
 import {formatData} from '#/main/core/layout/chart/utils'
-import {Arc} from '#/main/core/layout/chart/pie/components/arc.jsx'
+import {Arc} from '#/main/core/layout/chart/pie/components/arc'
 
 const DataSeries = props => {
   const pieInstance = pie().sort(null)
   const formattedData = formatData(props.data)
   const arcData = pieInstance(formattedData.y.values)
   const total = formattedData.y.values.reduce((t, v) => t+v, 0)
+
   return (
     <g>
       {arcData.map((arc, index) => (

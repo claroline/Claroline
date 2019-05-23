@@ -1,7 +1,6 @@
 import {trans} from '#/main/app/intl/translation'
 
-import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
-
+import {CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
 import {GraphicItem as GraphicItemTypes} from '#/plugin/exo/items/graphic/prop-types'
 import {utils} from '#/plugin/exo/items/graphic/utils'
 
@@ -54,7 +53,7 @@ export default {
    *
    * @return {CorrectedAnswer}
    */
-  getCorrectedAnswer: (item, answers = null) => {
+  correctAnswer: (item, answers = null) => {
     const corrected = new CorrectedAnswer()
 
     item.solutions.forEach(solution => {
@@ -74,5 +73,24 @@ export default {
     })
 
     return corrected
+  },
+
+  expectAnswer: (item) => {
+    if (item.solutions) {
+      return item.solutions
+        .filter(solution => 0 < solution.score)
+        .map(solution => new Answerable(solution.score))
+    }
+
+    return []
+  },
+
+  allAnswers: (item) => {
+    if (item.solutions) {
+      return item.solutions
+        .map(solution => new Answerable(solution.score))
+    }
+
+    return []
   }
 }

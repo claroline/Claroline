@@ -46,7 +46,6 @@ MatchItem.propTypes = {
 }
 
 class MatchPlayer extends Component {
-
   constructor(props) {
     super(props)
 

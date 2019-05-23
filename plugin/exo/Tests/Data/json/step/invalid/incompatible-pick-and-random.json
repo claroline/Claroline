@@ -18,6 +18,7 @@
       "id": "1",
       "type": "application/x.choice+json",
       "content": "Question 1 ?",
+      "hasExpectedAnswer": true,
       "score": {
         "type": "sum"
       },
@@ -53,6 +54,7 @@
       "id": "2",
       "type": "application/x.choice+json",
       "content": "Question 2 ?",
+      "hasExpectedAnswer": true,
       "score": {
         "type": "sum"
       },

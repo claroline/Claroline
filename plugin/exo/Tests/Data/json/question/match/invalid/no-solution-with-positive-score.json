@@ -4,6 +4,7 @@
   "content": "Question ?",
   "random": false,
   "penalty": 0,
+  "hasExpectedAnswer": true,
   "firstSet": [
     {
       "id": "2",

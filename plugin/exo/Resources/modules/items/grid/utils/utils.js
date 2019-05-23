@@ -126,5 +126,29 @@ export const utils = {
     })
 
     return answers
+  },
+
+  getNbRows(cells) {
+    let nbRows = 0
+
+    cells.forEach(c => {
+      if (c.coordinates[1] + 1 > nbRows) {
+        nbRows = c.coordinates[1] + 1
+      }
+    })
+
+    return nbRows
+  },
+
+  getNbCols(cells) {
+    let nbCols = 0
+
+    cells.forEach(c => {
+      if (c.coordinates[0] + 1 > nbCols) {
+        nbCols = c.coordinates[0] + 1
+      }
+    })
+
+    return nbCols
   }
 }

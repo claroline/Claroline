@@ -40,6 +40,8 @@ class OrderingQuestion extends AbstractItem
      *     orphanRemoval=true
      * )
      * @ORM\OrderBy({"position" = "ASC"})
+     *
+     * @var OrderingItem[]|ArrayCollection
      */
     private $items;
 
@@ -102,7 +104,7 @@ class OrderingQuestion extends AbstractItem
     /**
      * Get items.
      *
-     * @return ArrayCollection
+     * @return OrderingItem[]|ArrayCollection
      */
     public function getItems()
     {

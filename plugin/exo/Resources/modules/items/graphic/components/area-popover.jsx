@@ -5,9 +5,10 @@ import Popover from 'react-bootstrap/lib/Popover'
 
 import {trans} from '#/main/app/intl/translation'
 import {FormGroup} from '#/main/app/content/form/components/group'
-import {ColorPicker} from '#/main/core/layout/form/components/field/color-picker'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
+
+import {ColorPicker} from '#/main/core/layout/form/components/field/color-picker'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea'
 
 export class AreaPopover extends Component {
@@ -66,13 +67,24 @@ export class AreaPopover extends Component {
           </div>
 
           <div className="right-controls">
-            <input
-              type="number"
-              id="area-score"
-              className="form-control area-score"
-              value={this.props.score}
-              onChange={e => this.props.onChangeScore(parseFloat(e.target.value))}
-            />
+            {this.props.hasExpectedAnswers && !this.props.hasScore &&
+              <input
+                id="expected-answer"
+                type="checkbox"
+                checked={0 < this.props.score}
+                onChange={(e) => this.props.onChangeScore(e.target.checked ? 1 : 0)}
+              />
+            }
+
+            {this.props.hasExpectedAnswers && this.props.hasScore &&
+              <input
+                type="number"
+                id="area-score"
+                className="form-control area-score"
+                value={this.props.score}
+                onChange={e => this.props.onChangeScore(parseFloat(e.target.value))}
+              />
+            }
 
             <Button
               id="area-popover-feedback-tip"
@@ -109,6 +121,8 @@ AreaPopover.propTypes = {
   left: T.number.isRequired,
   top: T.number.isRequired,
   color: T.string.isRequired,
+  hasScore: T.bool.isRequired,
+  hasExpectedAnswers: T.bool.isRequired,
   score: T.number.isRequired,
   feedback: T.string.isRequired,
   onChangeScore: T.func.isRequired,

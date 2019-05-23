@@ -5,7 +5,7 @@ import has from 'lodash/has'
 
 import {trans} from '#/main/app/intl/translation'
 
-import {Feedback} from '#/plugin/exo/items/components/feedback-btn'
+import {FeedbackButton as Feedback} from '#/plugin/exo/buttons/feedback/components/button'
 import {SolutionScore} from '#/plugin/exo/components/score'
 import {AnswerStats} from '#/plugin/exo/items/components/stats'
 import {PaperTabs} from '#/plugin/exo/items/components/paper-tabs'
@@ -188,16 +188,18 @@ class YourGridCell extends Component {
         {this.props.cell.input &&
           <div className={classes(
             'cell-header',
-            {'text-success': this.props.isValid},
-            {'text-danger': !this.props.isValid}
+            {'text-success': this.props.hasExpectedAnswers && this.props.isValid},
+            {'text-danger': this.props.hasExpectedAnswers && !this.props.isValid}
           )}>
-            <WarningIcon valid={this.props.isValid}/>
+            {this.props.hasExpectedAnswers &&
+              <WarningIcon valid={this.props.isValid}/>
+            }
             <div className="additional-infos">
               <Feedback
                 id={`ass-${this.props.cell.id}-feedback`}
                 feedback={this.getSolutionFeedback()}
               />
-              {this.props.showScore &&
+              {this.props.hasExpectedAnswers && this.props.showScore &&
                 <SolutionScore score={this.getSolutionScore()}/>
               }
             </div>
@@ -237,6 +239,7 @@ YourGridCell.propTypes = {
   solutions: T.array.isRequired,
   isValid: T.bool.isRequired,
   showScore: T.bool.isRequired,
+  hasExpectedAnswers: T.bool.isRequired,
   penalty: T.number.isRequired
 }
 
@@ -467,8 +470,8 @@ class GridPaper extends Component {
                         <td key={`grid-col-score-col-${i}`} style={{padding: '8px'}}>
                           { utils.atLeastOneSolutionInCol(i, this.props.item.cells, this.props.item.solutions) &&
                             <span className={classes(
-                              {'text-success': this.getColumnScore(i, false) > 0},
-                              {'text-danger': this.getColumnScore(i, false) < 1}
+                              {'text-success': this.props.item.hasExpectedAnswers && this.getColumnScore(i, false) > 0},
+                              {'text-danger': this.props.item.hasExpectedAnswers && this.getColumnScore(i, false) < 1}
                             )}>
                               <SolutionScore score={this.getColumnScore(i, false)}/>
                             </span>
@@ -483,8 +486,8 @@ class GridPaper extends Component {
                         <td key={`grid-row-score-col-${i}`} style={{padding: '8px', verticalAlign: 'middle'}}>
                           { utils.atLeastOneSolutionInRow(i, this.props.item.cells, this.props.item.solutions) &&
                             <span className={classes(
-                              {'text-success': this.getRowScore(i, false) > 0},
-                              {'text-danger': this.getRowScore(i, false) < 1}
+                              {'text-success': this.props.item.hasExpectedAnswers && this.getRowScore(i, false) > 0},
+                              {'text-danger': this.props.item.hasExpectedAnswers && this.getRowScore(i, false) < 1}
                             )}>
                               <SolutionScore score={this.getRowScore(i, false)}/>
                             </span>
@@ -494,7 +497,9 @@ class GridPaper extends Component {
                       {[...Array(this.props.item.cols)].map((x, j) => {
                         const cell = utils.getCellByCoordinates(j, i, this.props.item.cells)
                         const valid = this.isValidAnswer(cell)
-                        const colors = this.getYourAnswerCellColors(cell, valid)
+                        const colors = this.props.item.hasExpectedAnswers ?
+                          this.getYourAnswerCellColors(cell, valid) :
+                          {backgroundColor: cell.background, color: this.props.item.border.color}
                         if(!cell.input) {
                           return(
                             <td
@@ -515,6 +520,7 @@ class GridPaper extends Component {
                                 answers={this.props.answer}
                                 solutions={this.props.item.solutions}
                                 showScore={this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === constants.SUM_CELL}
+                                hasExpectedAnswers={this.props.item.hasExpectedAnswers}
                                 cell={cell}
                                 penalty={this.props.item.penalty}/>
                             </td>
@@ -621,7 +627,7 @@ class GridPaper extends Component {
                                 return (
                                   <div
                                     key={`expected-answer-${cell.id}-${i}`}
-                                    className='answer-item selected-answer'
+                                    className={classes('answer-item', {'selected-answer': this.props.item.hasExpectedAnswers})}
                                   >
                                     <div>{answer.text}</div>
 
@@ -725,7 +731,8 @@ GridPaper.propTypes = {
       width: T.number.isRequired,
       color: T.string.isRequired
     }).isRequired,
-    solutions: T.arrayOf(T.object).isRequired
+    solutions: T.arrayOf(T.object).isRequired,
+    hasExpectedAnswers: T.bool.isRequired
   }).isRequired,
   answer: T.array.isRequired,
   showScore: T.bool.isRequired,

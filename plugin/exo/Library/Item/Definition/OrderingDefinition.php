@@ -7,6 +7,7 @@ use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\OrderingQuestion;
 use UJM\ExoBundle\Entity\Misc\OrderingItem;
+use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Attempt\GenericPenalty;
 use UJM\ExoBundle\Library\Csv\ArrayCompressor;
@@ -139,13 +140,23 @@ class OrderingDefinition extends AbstractDefinition
     /**
      * @param OrderingQuestion $question
      *
-     * @return array
+     * @return AnswerPartInterface[]
      */
     public function expectAnswer(AbstractItem $question)
     {
         return array_filter($question->getItems()->toArray(), function (OrderingItem $item) {
             return !empty($item->getPosition());
         });
+    }
+
+    /**
+     * @param OrderingQuestion $question
+     *
+     * @return AnswerPartInterface[]
+     */
+    public function allAnswers(AbstractItem $question)
+    {
+        return $question->getItems()->toArray();
     }
 
     public function getStatistics(AbstractItem $question, array $answersData, $total)

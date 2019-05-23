@@ -52,12 +52,15 @@ const Action = {
      *
      * @type {object}
      */
-    confirm: T.shape({
-      title: T.string,
-      subtitle: T.string,
-      message: T.string,
-      button: T.string
-    })
+    confirm: T.oneOfType([
+      T.bool,
+      T.shape({
+        title: T.string,
+        subtitle: T.string,
+        message: T.string,
+        button: T.string
+      })
+    ])
   },
   defaultProps: {
     disabled: false,

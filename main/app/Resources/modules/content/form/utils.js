@@ -1,5 +1,6 @@
 import isObject from 'lodash/isObject'
 import isEmpty from 'lodash/isEmpty'
+import memoize from 'lodash/memoize'
 import merge from 'lodash/merge'
 import mergeWith from 'lodash/mergeWith'
 import omitBy from 'lodash/omitBy'
@@ -10,7 +11,7 @@ function isDisplayed(element, data) {
   return typeof element.displayed === 'function' ? element.displayed(data) : element.displayed
 }
 
-function createFieldDefinition(field, data) {
+function doCreateFieldDefinition(field, data) {
   const defaultedField = merge({}, DataFormProperty.defaultProps, field)
 
   // adds default to linked fields if any
@@ -25,13 +26,17 @@ function createFieldDefinition(field, data) {
   return defaultedField
 }
 
-function createFieldsetDefinition(fields, data) {
+const createFieldDefinition = memoize(doCreateFieldDefinition)
+
+function doCreateFieldsetDefinition(fields, data) {
   return fields
     // adds default to fields
     .map(field => createFieldDefinition(field, data))
     // filters hidden fields
     .filter(field => isDisplayed(field, data))
 }
+
+const createFieldsetDefinition = memoize(doCreateFieldsetDefinition)
 
 /**
  * Fills definition with missing default values.
@@ -42,7 +47,7 @@ function createFieldsetDefinition(fields, data) {
  *
  * @return {Array} - the defaulted definition
  */
-function createFormDefinition(sections, data) {
+function doCreateFormDefinition(sections, data) {
   return sections
     .map(section => {
       // adds defaults to the section configuration
@@ -51,7 +56,7 @@ function createFormDefinition(sections, data) {
         // section has fields and is displayed keep it
         defaultedSection.fields = createFieldsetDefinition(defaultedSection.fields, data)
 
-        if (0 !== defaultedSection.fields.length || defaultedSection.render) {
+        if (0 !== defaultedSection.fields.length || defaultedSection.component || defaultedSection.render) {
           return defaultedSection
         }
 
@@ -64,13 +69,15 @@ function createFormDefinition(sections, data) {
     .filter(section => null !== section)
 }
 
+const createFormDefinition = memoize(doCreateFormDefinition)
+
 /**
  * Removes errors that are now irrelevant (aka undefined) from an error object.
  *
  * @param {object} errors    - the previous error object
  * @param {object} newErrors - the new error object (removed errors are set to `undefined`)
  */
-function cleanErrors(errors, newErrors) {
+function doCleanErrors(errors, newErrors) {
   // manually manage arrays (omitBy works great, but it converts it into objects, which fuck up the react components)
   if (errors instanceof Array || newErrors instanceof Array) {
     if (newErrors) {
@@ -95,6 +102,8 @@ function cleanErrors(errors, newErrors) {
     return (isObject(srcV) ? cleanErrors(objV, srcV) : srcV) || null
   }), isEmpty)
 }
+
+const cleanErrors = memoize(doCleanErrors)
 
 export {
   createFieldDefinition,

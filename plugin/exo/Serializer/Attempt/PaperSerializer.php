@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Attempt\Paper;
+use UJM\ExoBundle\Library\Options\Score;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Serializer\UserSerializer;
 
@@ -64,17 +65,22 @@ class PaperSerializer
             'user' => $paper->getUser() && !$paper->isAnonymized() ? $this->userSerializer->serialize($paper->getUser(), $options) : null,
             'startDate' => $paper->getStart() ? DateNormalizer::normalize($paper->getStart()) : null,
             'endDate' => $paper->getEnd() ? DateNormalizer::normalize($paper->getEnd()) : null,
-            'structure' => json_decode($paper->getStructure(), true),
+            'total' => $paper->getTotal(),
         ];
 
         // Adds detail information
         if (!in_array(Transfer::MINIMAL, $options)) {
+            $serialized['structure'] = $paper->getStructure(true);
             $serialized['answers'] = $this->serializeAnswers($paper, $options);
         }
 
         // Adds user score
-        if (!in_array(Transfer::INCLUDE_USER_SCORE, $options)) {
-            $serialized['score'] = $paper->getScore();
+        if (in_array(Transfer::INCLUDE_USER_SCORE, $options)) {
+            $score = $paper->getScore();
+            if ($score) {
+                $score = round($score, Score::PRECISION);
+            }
+            $serialized['score'] = $score;
         }
 
         return $serialized;
@@ -130,7 +136,7 @@ class PaperSerializer
     {
         // We need to inject the hints available in the structure
         $options['hints'] = [];
-        $decoded = json_decode($paper->getStructure(), true);
+        $decoded = $paper->getStructure(true);
 
         foreach ($decoded['steps'] as $step) {
             foreach ($step['items'] as $item) {

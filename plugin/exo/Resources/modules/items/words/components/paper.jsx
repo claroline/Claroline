@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {SolutionScore} from '#/plugin/exo/components/score'
-import {Feedback} from '#/plugin/exo/items/components/feedback-btn'
+import {FeedbackButton as Feedback} from '#/plugin/exo/buttons/feedback/components/button'
 import {AnswerStats} from '#/plugin/exo/items/components/stats'
 import {PaperTabs} from '#/plugin/exo/items/components/paper-tabs'
 
@@ -47,7 +47,7 @@ const AnswerStatsTable = (props) => {
         <div
           key={solution.text}
           className={classes('word-item answer-item', {
-            'selected-answer': solution.score > 0
+            'selected-answer': props.hasExpectedAnswers && solution.score > 0
           })}
         >
           <span className="word-label">{solution.text}</span>
@@ -81,7 +81,8 @@ AnswerStatsTable.propTypes = {
     unanswered: T.number,
     total: T.number
   }),
-  isCorrect: T.bool
+  isCorrect: T.bool,
+  hasExpectedAnswers: T.bool
 }
 
 export const WordsPaper = (props) => {
@@ -102,6 +103,7 @@ export const WordsPaper = (props) => {
             text={props.answer}
             solutions={props.item.solutions}
             showScore={props.showScore}
+            hasExpectedAnswers={props.item.hasExpectedAnswers}
           /> :
           <div className="no-answer">{trans('no_answer', {}, 'quiz')}</div>
       }
@@ -119,10 +121,20 @@ export const WordsPaper = (props) => {
         <div className="words-stats">
           <div className="row">
             <div className="col-md-6">
-              <AnswerStatsTable solutions={leftSide} stats={props.stats} isCorrect={true}/>
+              <AnswerStatsTable
+                solutions={leftSide}
+                stats={props.stats}
+                isCorrect={true}
+                hasExpectedAnswers={props.item.hasExpectedAnswers}
+              />
             </div>
             <div className="col-md-6">
-              <AnswerStatsTable solutions={rightSide} stats={props.stats} isCorrect={false}/>
+              <AnswerStatsTable
+                solutions={rightSide}
+                stats={props.stats}
+                isCorrect={false}
+                hasExpectedAnswers={props.item.hasExpectedAnswers}
+              />
             </div>
           </div>
           <div className="row">
@@ -146,7 +158,8 @@ WordsPaper.propTypes = {
     id: T.string.isRequired,
     title: T.string.isRequired,
     description: T.string.isRequired,
-    solutions: T.arrayOf(T.object)
+    solutions: T.arrayOf(T.object),
+    hasExpectedAnswers: T.bool.isRequired
   }).isRequired,
   answer: T.string.isRequired,
   showScore: T.bool.isRequired,

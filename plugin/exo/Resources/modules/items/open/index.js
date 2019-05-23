@@ -2,8 +2,7 @@ import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
 
-import {CorrectedAnswer} from '#/plugin/exo/quiz/correction/components/corrected-answer'
-
+import {CorrectedAnswer} from '#/plugin/exo/items/utils'
 import {OpenItem} from '#/plugin/exo/items/open/prop-types'
 
 // components
@@ -52,5 +51,8 @@ export default {
    *
    * @return {CorrectedAnswer}
    */
-  getCorrectedAnswer: () => new CorrectedAnswer()
+  correctAnswer: () => new CorrectedAnswer(),
+
+  expectAnswer: () => [],
+  allAnswers: () => []
 }

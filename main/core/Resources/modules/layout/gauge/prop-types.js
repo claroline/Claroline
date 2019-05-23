@@ -30,7 +30,6 @@ const Gauge = {
   },
   defaultProps: {
     type: 'primary',
-    value: 0,
     width: 100,
     height: 100,
     preFilled: false

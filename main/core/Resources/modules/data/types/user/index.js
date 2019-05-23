@@ -1,7 +1,8 @@
 import {trans} from '#/main/app/intl/translation'
 
 import {UserDisplay} from '#/main/core/data/types/user/components/display'
-import {UserGroup} from '#/main/core//data/types/user/components/group'
+import {UserCell} from '#/main/core//data/types/user/components/cell'
+import {UserInput} from '#/main/core//data/types/user/components/input'
 
 const dataType = {
   name: 'user',
@@ -13,7 +14,8 @@ const dataType = {
   },
   components: {
     details: UserDisplay,
-    form: UserGroup
+    input: UserInput,
+    table: UserCell
   }
 }
 

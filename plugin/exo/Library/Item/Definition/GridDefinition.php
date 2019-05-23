@@ -8,6 +8,7 @@ use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\GridQuestion;
 use UJM\ExoBundle\Entity\Misc\Cell;
 use UJM\ExoBundle\Entity\Misc\CellChoice;
+use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Attempt\GenericPenalty;
 use UJM\ExoBundle\Library\Attempt\GenericScore;
@@ -355,7 +356,7 @@ class GridDefinition extends AbstractDefinition
      *
      * @param GridQuestion $question
      *
-     * @return array
+     * @return AnswerPartInterface[]
      */
     public function expectAnswer(AbstractItem $question)
     {
@@ -400,6 +401,21 @@ class GridDefinition extends AbstractDefinition
         }
 
         return $expected;
+    }
+
+    /**
+     * @param GridQuestion $question
+     *
+     * @return AnswerPartInterface[]
+     */
+    public function allAnswers(AbstractItem $question)
+    {
+        $answers = [];
+        foreach ($question->getCells() as $cell) {
+            $answers = array_merge($answers, $cell->getChoices()->toArray());
+        }
+
+        return $answers;
     }
 
     public function getStatistics(AbstractItem $gridQuestion, array $answersData, $total)

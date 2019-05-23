@@ -135,13 +135,22 @@ class Item
     private $protectUpdate = false;
 
     /**
-     * The is answer mandatory to continue the quizz.
+     * The is answer mandatory to continue the quiz.
      *
      * @var string
      *
      * @ORM\Column(name="mandatory", type="boolean")
+     *
+     * @deprecated. Moved on StepQuestion.
      */
     private $mandatory = false;
+
+    /**
+     * @ORM\Column(name="expected_answers", type="boolean")
+     *
+     * @var bool
+     */
+    private $expectedAnswers = true;
 
     /**
      * Item constructor.
@@ -472,5 +481,21 @@ class Item
     public function getMandatory()
     {
         return $this->isMandatory();
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasExpectedAnswers()
+    {
+        return $this->expectedAnswers;
+    }
+
+    /**
+     * @param bool $expectedAnswers
+     */
+    public function setExpectedAnswers($expectedAnswers)
+    {
+        $this->expectedAnswers = $expectedAnswers;
     }
 }

@@ -26,7 +26,7 @@ import {ListActions, ListPrimaryAction, ListBulkActions} from '#/main/app/conten
 const DataCellContent = props => {
   let cellData
   if (undefined !== props.column.calculated) {
-    cellData = props.column.calculated(props.rowData)
+    cellData = typeof props.column.calculated === 'function' ? props.column.calculated(props.rowData) : props.column.calculated
   } else {
     cellData = get(props.rowData, props.column.name)
   }

@@ -10,9 +10,10 @@ import {getApiFormat} from '#/main/app/intl/date'
 import {trans} from '#/main/app/intl/translation'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {actions as listActions} from '#/main/app/content/list/store'
-import {actions as postActions} from '#/plugin/blog/resources/blog/post/store'
 import {Section, Sections} from '#/main/app/content/components/sections'
-import {selectors} from '#/plugin/blog/resources/blog/store'
+
+import {actions as postActions} from '#/plugin/blog/resources/blog/post/store'
+import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
 
 const ArchivesComponent = props =>
   <div key='redactors' className="panel panel-default">

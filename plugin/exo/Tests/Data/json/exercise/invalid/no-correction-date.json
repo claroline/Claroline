@@ -14,7 +14,8 @@
     "showStatistics": false,
     "showFullCorrection": true,
     "showCorrectionAt": "date",
-    "showScoreAt": "correction"
+    "showScoreAt": "correction",
+    "hasExpectedAnswer": true
   },
   "steps": [
     {
@@ -24,6 +25,7 @@
           "id": "1",
           "type": "application/x.choice+json",
           "content": "Question ?",
+          "hasExpectedAnswer": true,
           "score": {
             "type": "sum"
           },

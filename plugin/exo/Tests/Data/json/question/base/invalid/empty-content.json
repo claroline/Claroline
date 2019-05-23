@@ -6,6 +6,7 @@
   "score": {
     "type": "sum"
   },
+  "hasExpectedAnswer": true,
   "choices": [
     {
       "id": "1",

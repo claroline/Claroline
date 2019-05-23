@@ -52,7 +52,6 @@ const LiquidGauge = props => {
       />
 
       <GaugeText
-        className="gauge-text"
         value={props.value}
         displayValue={props.displayValue}
         margin={fillCircleMargin}

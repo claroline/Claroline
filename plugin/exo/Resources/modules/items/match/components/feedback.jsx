@@ -17,18 +17,20 @@ function getPopoverPosition(connectionClass, id){
   }
 }
 
-export const MatchLinkPopover = props =>
+const MatchLinkPopover = props =>
   <Popover
     id={`popover-${props.solution.firstId}-${props.solution.secondId}`}
     positionTop={props.top}
     placement="bottom"
   >
-    <span className={classes(
-      'fa fa-fw',
-      {'fa-check text-success' : props.solution.score > 0},
-      {'fa-times text-danger' : props.solution.score <= 0 }
-    )}>
-    </span>
+    {props.hasExpectedAnswers &&
+      <span className={classes(
+        'fa fa-fw',
+        {'fa-check text-success' : props.solution.score > 0},
+        {'fa-times text-danger' : props.solution.score <= 0 }
+      )}>
+      </span>
+    }
     {props.solution.feedback &&
       <HtmlText className="match-association-feedback">
         {props.solution.feedback}
@@ -39,7 +41,8 @@ export const MatchLinkPopover = props =>
 
 MatchLinkPopover.propTypes = {
   top: T.number.isRequired,
-  solution: T.object.isRequired
+  solution: T.object.isRequired,
+  hasExpectedAnswers: T.bool.isRequired
 }
 
 const MatchItem = props =>
@@ -55,8 +58,7 @@ MatchItem.propTypes = {
   item: T.object.isRequired
 }
 
-export class MatchFeedback extends Component
-{
+class MatchFeedback extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -75,7 +77,9 @@ export class MatchFeedback extends Component
       const connection = this.jsPlumbInstance.connect({
         source: 'source_' + answer.firstId,
         target: 'target_' + answer.secondId,
-        type: solution && solution.score > 0 ? 'correct' : 'incorrect',
+        type: this.props.item.hasExpectedAnswers ?
+          solution && solution.score > 0 ? 'correct' : 'incorrect' :
+          'default',
         deleteEndpointsOnDetach: true
       })
 
@@ -139,7 +143,7 @@ export class MatchFeedback extends Component
     return (
       <div className="match-feedback">
         <span className="help-block">
-          <span className="fa fa-info-circle"></span> {trans('match_player_click_link_help', {}, 'quiz')}
+          <span className="fa fa-info-circle" /> {trans('match_player_click_link_help', {}, 'quiz')}
         </span>
 
         <div className="match-items row" ref={(el) => { this.container = el }} id={`match-question-paper-${this.props.item.id}-first`}>
@@ -161,6 +165,7 @@ export class MatchFeedback extends Component
               <MatchLinkPopover
                 top={this.state.top}
                 solution={this.state.current}
+                hasExpectedAnswers={this.props.item.hasExpectedAnswers}
               />
             }
           </div>
@@ -198,11 +203,16 @@ MatchFeedback.propTypes = {
     })).isRequired,
     solutions: T.arrayOf(T.object),
     title: T.string,
-    description: T.string
+    description: T.string,
+    hasExpectedAnswers: T.bool.isRequired
   }).isRequired,
   answer: T.array
 }
 
 MatchFeedback.defaultProps = {
   answer: []
+}
+
+export {
+  MatchFeedback
 }

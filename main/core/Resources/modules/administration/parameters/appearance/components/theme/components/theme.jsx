@@ -7,7 +7,6 @@ import isEmpty from 'lodash/isEmpty'
 import set from 'lodash/set'
 
 import {trans, transChoice} from '#/main/app/intl/translation'
-
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
@@ -414,7 +413,10 @@ function mapDispatchToProps(dispatch) {
           question: trans('rebuild_themes_confirm', {
             theme_list: theme.name
           }, 'theme'),
-          handleConfirm: () => dispatch(actions.rebuildThemes([theme]))
+          confirmAction: {
+            type: CALLBACK_BUTTON,
+            callback: () => dispatch(actions.rebuildThemes([theme]))
+          }
         })
       )
     },
@@ -428,7 +430,11 @@ function mapDispatchToProps(dispatch) {
           question: trans('remove_themes_confirm', {
             theme_list: theme.name
           }, 'theme'),
-          handleConfirm: () => dispatch(actions.deleteThemes([theme]))
+          confirmAction: {
+            type: CALLBACK_BUTTON,
+            label: trans('delete', {}, 'actions'),
+            callback: () => dispatch(actions.deleteThemes([theme]))
+          }
         })
       )
     }

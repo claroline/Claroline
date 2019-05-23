@@ -30,7 +30,7 @@ class CellChoiceSerializer
             'text' => $choice->getText(),
             'caseSensitive' => $choice->isCaseSensitive(),
             'score' => $choice->getScore(),
-            'expected' => $choice->isExpected(),
+            'expected' => $choice->isExpected(), // TODO : should use the score to determine this
         ];
 
         if ($choice->getFeedback()) {

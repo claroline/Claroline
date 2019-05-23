@@ -26,7 +26,7 @@ const AnnouncePost = props =>
         <div className="announce-info">
           {props.meta.author ?
             <UserMicro name={props.meta.author} /> :
-            <UserMicro {...props.meta.creator} />
+            <UserMicro {...props.meta.creator} link={true} />
           }
 
           <div className="date">

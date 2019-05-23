@@ -1,12 +1,12 @@
 import {findDOMNode} from 'react-dom'
 import {DragSource, DropTarget} from 'react-dnd'
 import invariant from 'invariant'
-import {DefaultPreviewComponent} from './default-preview-component.jsx'
+
+import {DefaultPreviewComponent} from '#/plugin/exo/utils/default-preview-component'
 
 export const SORT_HORIZONTAL = 'SORT_HORIZONTAL'
 export const SORT_VERTICAL = 'SORT_VERTICAL'
 export const SORT_DETECT = 'SORT_DETECT'
-
 
 
 // see https://gaearon.github.io/react-dnd/examples-sortable-simple.html
@@ -60,7 +60,7 @@ function sortHover(props, monitor, component) {
     return
   }
 
-  const node = findDOMNode(component)
+  const node = findDOMNode(component) // eslint-disable-line react/no-find-dom-node
   const hoverBoundingRect = node.getBoundingClientRect()
 
   let isVerticalSort = false

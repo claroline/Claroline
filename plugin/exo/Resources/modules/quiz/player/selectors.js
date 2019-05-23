@@ -1,68 +1,118 @@
 import {createSelector} from 'reselect'
 
-import {select as quizSelectors} from '#/plugin/exo/quiz/selectors'
+import {selectors as quizSelectors} from '#/plugin/exo/resources/quiz/store/selectors'
+import {selectors as playerSelectors} from '#/plugin/exo/resources/quiz/player/store/selectors'
 
-// TODO : there are duplication with base quiz selectors
+// TODO : merge with new player selectors (when merging both stores)
+
+const quizId = quizSelectors.id
 
 const offline = createSelector(
-  [quizSelectors.testMode],
-  (testMode) => testMode
+  [quizSelectors.resource],
+  (resource) => resource.testMode || false
 )
 const paper = createSelector(
   [quizSelectors.resource],
   (resource) => resource.paper
 )
 
+const answers = createSelector(
+  [quizSelectors.resource],
+  (resource) => resource.answers || {}
+)
+
+const paperStructure = createSelector(
+  [paper],
+  (paper) => paper.structure || {}
+)
+
+const paperParameters = createSelector(
+  [paperStructure],
+  (paperStructure) => paperStructure.parameters || {}
+)
+
+const mandatoryQuestions = createSelector(
+  [paperParameters],
+  (parameters) => parameters.mandatoryQuestions || false
+)
+const answersEditable = createSelector(
+  [paperParameters],
+  (parameters) => parameters.answersEditable || false
+)
+const progressionDisplayed = createSelector(
+  [paperParameters],
+  (parameters) => parameters.progressionDisplayed || false
+)
+const isTimed = createSelector(
+  [paperParameters],
+  (parameters) => parameters.timeLimited || false
+)
+const duration = createSelector(
+  [paperParameters],
+  (parameters) => parameters.duration || 0
+)
+const quizNumbering = createSelector(
+  [paperParameters],
+  (parameters) => parameters.numbering || 'none' // todo : use constant
+)
+const quizEndMessage = createSelector(
+  [paperParameters],
+  (parameters) => parameters.endMessage
+)
+const quizEndNavigation = createSelector(
+  [paperParameters],
+  (parameters) => parameters.endNavigation || false
+)
+const showEndConfirm = createSelector(
+  [paperParameters],
+  (parameters) => parameters.showEndConfirm || false
+)
+const showFeedback = createSelector(
+  [paperParameters],
+  (parameters) => parameters.showFeedback || false
+)
+const showStatistics = createSelector(
+  [paperParameters],
+  (parameters) => parameters.showStatistics || false
+)
+const showCorrectionAt = createSelector(
+  [paperParameters],
+  (parameters) => parameters.showCorrectionAt
+)
+const correctionDate = createSelector(
+  [paperParameters],
+  (parameters) => parameters.correctionDate
+)
+const hasEndPage = createSelector(
+  [paperParameters],
+  (parameters) => parameters.showEndPage || false
+)
+const maxAttempts = createSelector(
+  [paperParameters],
+  (parameters) => parameters.maxAttempts || 0
+)
+const maxAttemptsPerDay = createSelector(
+  [paperParameters],
+  (parameters) => parameters.maxAttemptsPerDay || 0
+)
+
+const hasMoreAttempts = createSelector(
+  [maxAttempts, maxAttemptsPerDay, playerSelectors.userPaperCount, playerSelectors.userPaperDayCount],
+  (maxAttempts, maxAttemptsPerDay, userPaperCount, userPaperDayCount) => (!maxAttempts || maxAttempts > userPaperCount) && (!maxAttemptsPerDay || maxAttemptsPerDay > userPaperDayCount)
+)
+
+const steps = createSelector(
+  [paperStructure],
+  (structure) => structure.steps || []
+)
+
 const currentStepId = createSelector(
   [quizSelectors.resource],
   (resource) => resource.currentStep.id
 )
-
-const answers = createSelector(
-  [quizSelectors.resource],
-  (resource) => resource.answers
-)
-
-const quizMaxAttempts = createSelector(
-  [quizSelectors.parameters],
-  (parameters) => parameters.maxAttempts
-)
-const quizEndMessage = createSelector(
-  [quizSelectors.parameters],
-  (parameters) => parameters.endMessage
-)
-const quizEndNavigation = createSelector(
-  [quizSelectors.parameters],
-  (parameters) => parameters.endNavigation
-)
-const showEndConfirm = createSelector(
-  [quizSelectors.parameters],
-  (parameters) => parameters.showEndConfirm
-)
-const showFeedback = createSelector(
-  [quizSelectors.parameters],
-  (parameters) => parameters.showFeedback
-)
 const feedbackEnabled = createSelector(
   [quizSelectors.resource],
   (resource) => resource.currentStep.feedbackEnabled || false
-)
-const showCorrectionAt = createSelector(
-  [quizSelectors.parameters],
-  (parameters) => parameters.showCorrectionAt
-)
-const correctionDate = createSelector(
-  [quizSelectors.parameters],
-  (parameters) => parameters.correctionDate
-)
-const hasEndPage = createSelector(
-  [quizSelectors.parameters],
-  (parameters) => parameters.showEndPage || false
-)
-
-const steps = createSelector(
-  [paper],
-  (paper) => paper.structure ? paper.structure.steps : []
 )
 
 /**
@@ -157,14 +207,21 @@ const currentStepSend = createSelector(
   (currentStepTries, currentStepMaxAttempts) => currentStepTries < currentStepMaxAttempts || 0 === currentStepMaxAttempts
 )
 
+// TODO : exclude content items
+const countItems = createSelector(
+  [steps],
+  (steps) => steps.reduce((totalCount, step) => totalCount + (step.items || []).reduce((itemCount) => itemCount + 1, 0), 0)
+)
+
 export const select = {
+  quizId,
   offline,
   paper,
   steps,
   answers,
-  quizMaxAttempts,
   showFeedback,
   showEndConfirm,
+  showStatistics,
   feedbackEnabled,
   currentStepId,
   currentStep,
@@ -178,9 +235,19 @@ export const select = {
   currentStepTries,
   currentStepMaxAttempts,
   currentStepSend,
-  showCorrectionAt,
   hasEndPage,
-  correctionDate,
   quizEndMessage,
-  quizEndNavigation
+  quizEndNavigation,
+  mandatoryQuestions,
+  progressionDisplayed,
+  hasMoreAttempts,
+  maxAttempts,
+  maxAttemptsPerDay,
+  countItems,
+  answersEditable,
+  isTimed,
+  duration,
+  quizNumbering,
+  showCorrectionAt,
+  correctionDate
 }

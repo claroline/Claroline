@@ -10,20 +10,23 @@ import{CountGauge} from '#/main/core/layout/gauge/components/count-gauge'
 class Timer extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
       remainingTime: props.totalTime,
       timer: null
     }
+
     this.updateTimer = this.updateTimer.bind(this)
+    this.formatTime = this.formatTime.bind(this)
   }
 
   componentDidMount() {
-    this.setState({timer: setInterval(this.updateTimer, 1000)})
+    this.timer = setInterval(this.updateTimer, 1000)
   }
 
   componentWillUnmount() {
-    if (this.state.timer) {
-      clearInterval(this.state.timer)
+    if (this.timer) {
+      clearInterval(this.timer)
     }
   }
 
@@ -32,24 +35,25 @@ class Timer extends Component {
     const diff = this.props.totalTime - elapsedTime
     const remainingTime = diff > 0 ? diff : 0
 
-    if (this.state.remainingTime > 0) {
+    if (remainingTime > 0) {
       this.setState({
         remainingTime: remainingTime
       })
     } else {
+      if (this.timer) {
+        clearInterval(this.timer)
+      }
+
       if (this.props.onTimeOver) {
         this.props.onTimeOver()
-      }
-      if (this.state.timer) {
-        clearInterval(this.state.timer)
       }
     }
   }
 
-
-  formatTime(time) {
+  formatTime() {
     const endTime = moment().hours(0).minutes(0).seconds(0).milliseconds(0)
-    return endTime.add(time, 'seconds').format('HH:mm:ss')
+
+    return endTime.add(this.state.remainingTime, 'seconds').format('HH:mm:ss')
   }
 
   render() {
@@ -58,16 +62,18 @@ class Timer extends Component {
         className="timer-component"
         value={this.state.remainingTime}
         total={this.props.totalTime}
-        displayValue={() => this.formatTime(this.state.remainingTime)}
+        displayValue={this.formatTime}
         type={this.props.type}
-        width={70}
-        height={70}
+        width={this.props.width}
+        height={this.props.height}
       />
     )
   }
 }
 
 Timer.propTypes = {
+  width: T.number,
+  height: T.number,
   totalTime: T.number.isRequired,
   startDate: T.string.isRequired,
   onTimeOver: T.func,

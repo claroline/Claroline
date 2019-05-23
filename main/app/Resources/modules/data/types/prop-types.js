@@ -132,7 +132,10 @@ const DataProperty = {
      *
      * @type {*} - The computed value. Type depends on the data type.
      */
-    calculated : T.func,
+    calculated : T.oneOfType([
+      T.func, // a func to calculate the value
+      T.any // a raw value
+    ]),
 
     /**
      * A custom rendering function (it receives the whole data object as argument).

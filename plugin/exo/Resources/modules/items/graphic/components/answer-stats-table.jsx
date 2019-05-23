@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import tinycolor from 'tinycolor2'
 
-import {tex} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {SHAPE_RECT} from '#/plugin/exo/items/graphic/constants'
 import {AnswerStats} from '#/plugin/exo/items/components/stats'
@@ -12,7 +12,7 @@ export const AnswerStatsTable = props =>
   <div className="answers-table">
     <h3 className="title">{props.title}</h3>
     {props.areas.map((area, idx) =>
-      <div key={area.id} className={classes('answer-row', {
+      <div key={area.id} className={classes('answer-row', props.hasExpectedAnswers && {
         'selected-answer': area.score > 0,
         'stats-answer': area.score <= 0
       })}>
@@ -38,7 +38,7 @@ export const AnswerStatsTable = props =>
     {props.stats.areas['_others'] &&
       <div className="answer-row stats-answer">
         <span className="info-block">
-          {tex('other_answers')}
+          {trans('other_answers', {}, 'quiz')}
         </span>
         <span className="info-block">
           <AnswerStats stats={{
@@ -50,7 +50,7 @@ export const AnswerStatsTable = props =>
     }
     <div className="answer-row unanswered-item">
       <span className="info-block">
-        {tex('unanswered')}
+        {trans('unanswered', {}, 'quiz')}
       </span>
       <span className="info-block">
         <AnswerStats stats={{
@@ -74,5 +74,6 @@ AnswerStatsTable.propTypes = {
     areas: T.object,
     unanswered: T.number,
     total: T.number
-  })
+  }),
+  hasExpectedAnswers: T.bool.isRequired
 }

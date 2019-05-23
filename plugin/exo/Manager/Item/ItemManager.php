@@ -148,7 +148,15 @@ class ItemManager
     public function update(Item $question, array $data)
     {
         // Validate received data
-        $errors = $this->validator->validate($data, [Validation::REQUIRE_SOLUTIONS]);
+        $validationOptions = [];
+        $dataToValidate = $data;
+
+        if ($question->hasExpectedAnswers()) {
+            $validationOptions[] = Validation::REQUIRE_SOLUTIONS;
+        } elseif (isset($dataToValidate['solutions'])) {
+            unset($dataToValidate['solutions']);
+        }
+        $errors = $this->validator->validate($dataToValidate, $validationOptions);
         if (count($errors) > 0) {
             throw new InvalidDataException('Question is not valid', $errors);
         }
@@ -179,15 +187,15 @@ class ItemManager
     /**
      * Deserializes a question.
      *
-     * @param array $data
-     * @param Item  $item
-     * @param array $options
+     * @param array     $itemData
+     * @param Item|null $item
+     * @param array     $options
      *
      * @return Item
      */
-    public function deserialize(array $data, Item $item = null, array $options = [])
+    public function deserialize(array $itemData, Item $item = null, array $options = [])
     {
-        return $this->serializer->deserialize($data, $item, $options);
+        return $this->serializer->deserialize($itemData, $item ?? new Item(), $options);
     }
 
     /**
@@ -237,35 +245,66 @@ class ItemManager
      *
      * @param Item   $question
      * @param Answer $answer
+     * @param bool   $applyHints
      *
      * @return float
      */
-    public function calculateScore(Item $question, Answer $answer)
+    public function calculateScore(Item $question, Answer $answer, bool $applyHints = true)
     {
-        // Let the question correct the answer
-        $definition = $this->itemDefinitions->get($question->getMimeType());
-        /** @var AnswerableItemDefinitionInterface $definition */
-        $corrected = $definition->correctAnswer($question->getInteraction(), json_decode($answer->getData(), true));
-        if (!$corrected instanceof CorrectedAnswer) {
-            $corrected = new CorrectedAnswer();
-        }
+        if ($question->hasExpectedAnswers()) {
+            // Let the question correct the answer
+            $definition = $this->itemDefinitions->get($question->getMimeType());
+            /** @var AnswerableItemDefinitionInterface $definition */
+            $corrected = $definition->correctAnswer($question->getInteraction(), json_decode($answer->getData(), true));
+            if (!$corrected instanceof CorrectedAnswer) {
+                $corrected = new CorrectedAnswer();
+            }
 
-        // Add hints
-        foreach ($answer->getUsedHints() as $hintId) {
-            // Get hint definition from question data
-            $hint = null;
-            foreach ($question->getHints() as $questionHint) {
-                if ($hintId === $questionHint->getUuid()) {
-                    $hint = $questionHint;
-                    break;
+            // Add hints
+            if ($applyHints) {
+                foreach ($answer->getUsedHints() as $hintId) {
+                    // Get hint definition from question data
+                    $hint = null;
+                    foreach ($question->getHints() as $questionHint) {
+                        if ($hintId === $questionHint->getUuid()) {
+                            $hint = $questionHint;
+                            break;
+                        }
+                    }
+                    if ($hint) {
+                        $corrected->addPenalty($hint);
+                    }
                 }
             }
-            if ($hint) {
-                $corrected->addPenalty($hint);
-            }
+
+            return $this->scoreManager->calculate(json_decode($question->getScoreRule(), true), $corrected);
         }
 
-        return $this->scoreManager->calculate(json_decode($question->getScoreRule(), true), $corrected);
+        return null;
+    }
+
+    /**
+     * Calculates the total score of a question.
+     *
+     * @param Item $question
+     *
+     * @return float
+     */
+    public function calculateTotal(Item $question)
+    {
+        if ($question->hasExpectedAnswers()) {
+            /** @var AnswerableItemDefinitionInterface $definition */
+            $definition = $this->itemDefinitions->get($question->getMimeType());
+
+            // Get the expected answer for the question
+            $expected = $definition->expectAnswer($question->getInteraction());
+            // Get all the defined answers for the question
+            $all = $definition->allAnswers($question->getInteraction());
+
+            return $this->scoreManager->calculateTotal(json_decode($question->getScoreRule(), true), $expected, $all);
+        }
+
+        return null;
     }
 
     /**
@@ -283,38 +322,19 @@ class ItemManager
         if ($definition instanceof AnswerableItemDefinitionInterface) {
             return array_map(function ($answer) use ($question, $definition) {
                 $score = $this->calculateScore($question, $answer);
-                // get total available for the question
-                $expected = $definition->expectAnswer($question->getInteraction());
-                $total = $this->scoreManager->calculateTotal(json_decode($question->getScoreRule(), true), $expected, $question->getInteraction());
-                // report the score on 100
-                $score = $total > 0 ? (100 * $score) / $total : 0;
+
+                if ($score) {
+                    $total = $this->calculateTotal($question);
+
+                    // report the score on 100
+                    $score = $total > 0 ? (100 * $score) / $total : 0;
+                }
 
                 return $score;
             }, $this->answerRepository->findByQuestion($question, $exercise));
         }
 
         return [];
-    }
-
-    /**
-     * Calculates the total score of a question.
-     *
-     * @param array $questionData
-     *
-     * @return float
-     */
-    public function calculateTotal(array $questionData)
-    {
-        // Get entities for score calculation
-        $question = $this->serializer->deserialize($questionData, new Item());
-
-        /** @var AnswerableItemDefinitionInterface $definition */
-        $definition = $this->itemDefinitions->get($question->getMimeType());
-
-        // Get the expected answer for the question
-        $expected = $definition->expectAnswer($question->getInteraction());
-
-        return $this->scoreManager->calculateTotal(json_decode($question->getScoreRule(), true), $expected, $question->getInteraction());
     }
 
     /**

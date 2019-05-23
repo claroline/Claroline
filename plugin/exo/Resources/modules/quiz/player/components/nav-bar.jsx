@@ -1,8 +1,8 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {isQuestionType} from './../../../items/item-types'
+import {isQuestionType} from '#/plugin/exo/items/item-types'
 
-import {trans, tex} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 
 // TODO : replace all button by #/main/app/action/components/button
 
@@ -49,7 +49,7 @@ SubmitButton.propTypes = {
 const FinishButton = props =>
   <button className="btn btn-finish btn-primary" onClick={props.onClick}>
     <span className="fa fa-fw fa-sign-out" />
-    {tex('finish')}
+    {trans('finish', {}, 'actions')}
   </button>
 
 FinishButton.propTypes = {

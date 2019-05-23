@@ -62,7 +62,7 @@ class SelectionQuestion extends AbstractItem
      *     orphanRemoval=true
      * )
      *
-     * @var ArrayCollection
+     * @var Selection[]|ArrayCollection
      */
     private $selections;
 
@@ -73,6 +73,8 @@ class SelectionQuestion extends AbstractItem
      *     cascade={"persist", "remove"},
      *     orphanRemoval=true
      * )
+     *
+     * @var Color[]|ArrayCollection
      */
     private $colors;
 

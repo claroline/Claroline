@@ -3,11 +3,11 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import cloneDeep from 'lodash/cloneDeep'
 
-import {utils} from './utils'
+import {utils} from '#/plugin/exo/items/selection/utils/utils'
 import {WarningIcon} from '#/plugin/exo/components/warning-icon'
-import {Feedback} from '../../components/feedback-btn.jsx'
+import {FeedbackButton as Feedback} from '#/plugin/exo/buttons/feedback/components/button'
 import {SolutionScore} from '#/plugin/exo/components/score'
-import {SCORE_SUM} from './../../../quiz/enums'
+import {SCORE_SUM} from '#/plugin/exo/quiz/enums'
 
 /**
  * utility method for building the selection array
@@ -60,6 +60,7 @@ export function getReactAnswerSelections(item, answer, showScore, displayTrueAns
             colors={item.colors}
             penalty={item.penalty || 0}
             scoreType={item.score.type}
+            hasExpectedAnswers={item.hasExpectedAnswers}
           />
         )
       }
@@ -92,6 +93,7 @@ export class SelectionAnswer extends Component {
           className={this.props.className}
           penalty={this.props.penalty}
           scoreType={this.props.scoreType}
+          hasExpectedAnswers={this.props.hasExpectedAnswers}
         />)
       }
       case 'select': {
@@ -103,6 +105,7 @@ export class SelectionAnswer extends Component {
           answer={this.props.answer}
           id={this.props.solution.selectionId}
           scoreType={this.props.scoreType}
+          hasExpectedAnswers={this.props.hasExpectedAnswers}
         />)
       }
       case 'highlight': {
@@ -116,6 +119,7 @@ export class SelectionAnswer extends Component {
           id={this.props.solution.selectionId}
           penalty={this.props.penalty}
           scoreType={this.props.scoreType}
+          hasExpectedAnswers={this.props.hasExpectedAnswers}
         />)
       }
     }
@@ -148,34 +152,34 @@ SelectionAnswer.propTypes = {
         feedback: T.string
       }))
     })
-  ])
-
+  ]),
+  hasExpectedAnswers: T.bool.isRequired
 }
 
 const DisplayFindAnswer = props => {
-  const cssClasses = {
+  const cssClasses = props.hasExpectedAnswers ? {
     'selection-success': props.solution.score > 0 && props.answer,
     'selection-error': props.solution.score <= 0 && props.answer,
     'selection-info': props.displayTrueAnswer && props.solution.score > 0
-  }
+  } : {'selection-info': props.answer}
 
   return (
     <span className={classes(props.className, cssClasses)}>
 
       <span className='selection-text'>{props.text}</span>
 
-      {(props.showScore && props.answer)  &&
+      {props.hasExpectedAnswers && (props.showScore && props.answer)  &&
         <WarningIcon valid={!!props.solution.score } />
       }
 
-      {(props.solution && props.solution.feedback) && ((props.answer && props.showScore) || props.displayTrueAnswer) &&
+      {(props.solution && props.solution.feedback) && (props.answer || props.displayTrueAnswer) &&
         <Feedback
           id={`${props.id}-feedback`}
           feedback={props.solution.feedback}
         />
       }
 
-      {props.showScore && (props.answer || props.displayTrueAnswer) && props.scoreType === SCORE_SUM &&
+      {props.hasExpectedAnswers && props.showScore && (props.answer || props.displayTrueAnswer) && props.scoreType === SCORE_SUM &&
         <SolutionScore score={props.solution ? props.solution.score : 0} />
       }
     </span>
@@ -184,28 +188,28 @@ const DisplayFindAnswer = props => {
 
 const DisplaySelectAnswer = props => {
 
-  const cssClasses = {
+  const cssClasses = props.hasExpectedAnswers ? {
     'selection-success': props.solution.score > 0 && props.answer,
     'selection-error': props.solution.score <= 0 && props.answer,
     'selection-info': props.displayTrueAnswer && props.solution.score > 0
-  }
+  } : {'selection-info': props.answer}
 
   return (
     <span className={classes(props.className, cssClasses)}>
       <span className='selection-text'>{props.text}</span>
 
-      {props.showScore && props.answer && !props.displayTrueAnswer &&
+      {props.hasExpectedAnswers && props.showScore && props.answer && !props.displayTrueAnswer &&
         <WarningIcon valid={!!props.solution.score} />
       }
 
-      {(props.solution && props.solution.feedback) && ((props.answer && props.showScore) || props.displayTrueAnswer) &&
+      {(props.solution && props.solution.feedback) && (props.answer || props.displayTrueAnswer) &&
         <Feedback
           id={`${props.id}-feedback`}
           feedback={props.solution.feedback}
         />
       }
 
-      {props.showScore && props.answer && props.scoreType === SCORE_SUM &&
+      {props.hasExpectedAnswers && props.showScore && props.answer && props.scoreType === SCORE_SUM &&
         <SolutionScore score={props.solution ? props.solution.score : 0} />
       }
     </span>
@@ -229,11 +233,11 @@ class DisplayHighlightAnswer extends Component {
   }
 
   render() {
-    const cssClasses = {
+    const cssClasses = this.props.hasExpectedAnswers ? {
       'selection-info-color': this.props.displayTrueAnswer,
       'selection-success-color': this.state.solution.score > 0 && !this.props.displayTrueAnswer,
       'selection-error-color': this.state.solution.score <= 0
-    }
+    } : {}
 
     return (
       <span className={classes(this.props.className)}>
@@ -265,7 +269,7 @@ class DisplayHighlightAnswer extends Component {
           </span>
         }
 
-        {this.props.showScore && this.props.answer && !this.props.displayTrueAnswer &&
+        {this.props.hasExpectedAnswers && this.props.showScore && this.props.answer && !this.props.displayTrueAnswer &&
           <span className={classes(cssClasses)}>
             <WarningIcon valid={this.state.solution.score > 0} />
           </span>
@@ -278,7 +282,7 @@ class DisplayHighlightAnswer extends Component {
           />
         }
 
-        {this.props.showScore && (this.props.answer || this.props.displayTrueAnswer) && this.props.scoreType === SCORE_SUM &&
+        {this.props.hasExpectedAnswers && this.props.showScore && (this.props.answer || this.props.displayTrueAnswer) && this.props.scoreType === SCORE_SUM &&
           <span className={classes(cssClasses)}>
             <SolutionScore score={this.state.solution ? this.state.solution.score : this.props.penalty} />
           </span>
@@ -299,7 +303,8 @@ DisplaySelectAnswer.propTypes = {
   solution: T.shape({
     score: T.number.isRequired,
     feedback: T.string
-  })
+  }),
+  hasExpectedAnswers: T.bool.isRequired
 }
 
 DisplayFindAnswer.propTypes = {
@@ -314,7 +319,8 @@ DisplayFindAnswer.propTypes = {
     score: T.number.isRequired,
     feedback: T.string
   }),
-  penalty: T.number.isRequired
+  penalty: T.number.isRequired,
+  hasExpectedAnswers: T.bool.isRequired
 }
 
 DisplayHighlightAnswer.propTypes = {
@@ -336,5 +342,6 @@ DisplayHighlightAnswer.propTypes = {
     score: T.number.isRequired,
     feedback: T.string
   })),
-  penalty: T.number.isRequired
+  penalty: T.number.isRequired,
+  hasExpectedAnswers: T.bool.isRequired
 }

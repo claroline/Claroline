@@ -3,7 +3,7 @@ import times from 'lodash/times'
 
 import {trans} from '#/main/app/intl/translation'
 
-import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
+import {CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
 
 import {PairItem as PairItemType} from '#/plugin/exo/items/pair/prop-types'
 import {utils} from '#/plugin/exo/items/pair/utils'
@@ -58,7 +58,7 @@ export default {
    *
    * @return {CorrectedAnswer}
    */
-  getCorrectedAnswer: (item, answer = {data: []}) => {
+  correctAnswer: (item, answer = {data: []}) => {
     const corrected = new CorrectedAnswer()
 
     //look for good answers
@@ -88,5 +88,31 @@ export default {
     }
 
     return corrected
+  },
+
+  expectAnswer: (item) => {
+    if (item.solutions && item.solutions.associations) {
+      return item.solutions.associations
+        .filter(solution => 0 < solution.score)
+        .map(solution => new Answerable(solution.score, solution.id))
+    }
+
+    return []
+  },
+
+  allAnswers: (item) => {
+    const answers = []
+
+    if (item.solutions) {
+      if (item.solutions.associations) {
+        item.solutions.associations.map(solution => answers.push(new Answerable(solution.score)))
+      }
+
+      if (item.solutions.odd) {
+        item.solutions.odd.map(odd => answers.push(new Answerable(odd.score)))
+      }
+    }
+
+    return answers
   }
 }

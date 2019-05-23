@@ -13,6 +13,7 @@ import {FormGroup} from '#/main/app/content/form/components/group'
 import {makeId} from '#/main/core/scaffolding/id'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
 
+import {SCORE_SUM} from '#/plugin/exo/quiz/enums'
 import {makeDraggable, makeDroppable} from '#/plugin/exo/utils/dragAndDrop'
 import {ItemEditor as ItemEditorTypes} from '#/plugin/exo/items/prop-types'
 import {utils} from '#/plugin/exo/items/pair/utils'
@@ -227,7 +228,7 @@ class Pair extends Component {
 
   render() {
     return (
-      <div className={classes('pair answer-item', {
+      <div className={classes('pair answer-item', this.props.hasExpectedAnswers && {
         'unexpected-answer' : this.props.pair.score < 1,
         'expected-answer' : this.props.pair.score > 0
       })}>
@@ -321,13 +322,24 @@ class Pair extends Component {
         </div>
 
         <div className="right-controls">
-          <input
-            title={trans('score', {}, 'quiz')}
-            type="number"
-            className="form-control association-score"
-            value={this.props.pair.score}
-            onChange={(e) => this.props.onUpdate('score', e.target.value, this.props.index)}
-          />
+          {this.props.hasExpectedAnswers && this.props.hasScore &&
+            <input
+              title={trans('score', {}, 'quiz')}
+              type="number"
+              className="form-control association-score"
+              value={this.props.pair.score}
+              onChange={(e) => this.props.onUpdate('score', e.target.value, this.props.index)}
+            />
+          }
+
+          {this.props.hasExpectedAnswers && !this.props.hasScore &&
+            <input
+              title={trans('score', {}, 'quiz')}
+              type="checkbox"
+              checked={0 < this.props.pair.score}
+              onChange={(e) => this.props.onUpdate('score', e.target.checked ? 1 : 0, this.props.index)}
+            />
+          }
 
           <Button
             id={`ass-${this.props.pair.itemIds[0]}-${this.props.pair.itemIds[1]}-feedback-toggle`}
@@ -364,7 +376,9 @@ Pair.propTypes = {
   items: T.arrayOf(T.object).isRequired,
   onUpdate: T.func.isRequired,
   onDelete: T.func.isRequired,
-  onAddItemCoordinates: T.func.isRequired
+  onAddItemCoordinates: T.func.isRequired,
+  hasScore: T.bool.isRequired,
+  hasExpectedAnswers: T.bool.isRequired
 }
 
 class PairList extends Component {
@@ -405,6 +419,8 @@ class PairList extends Component {
                 index={index}
                 showPins={this.props.pin}
                 items={this.props.items}
+                hasScore={this.props.hasScore}
+                hasExpectedAnswers={this.props.hasExpectedAnswers}
               />
             </li>
           )}
@@ -426,7 +442,9 @@ PairList.propTypes = {
   items: T.arrayOf(T.object).isRequired,
   solutions: T.arrayOf(T.object).isRequired,
   pin: T.bool,
-  onChange: T.func.isRequired
+  onChange: T.func.isRequired,
+  hasScore: T.bool.isRequired,
+  hasExpectedAnswers: T.bool.isRequired
 }
 
 class Odd extends Component {
@@ -440,7 +458,7 @@ class Odd extends Component {
 
   render(){
     return (
-      <div className="answer-item item unexpected-answer">
+      <div className={classes('answer-item item', {'unexpected-answer': this.props.hasExpectedAnswers})}>
         <div className="text-fields">
           <HtmlInput
             id={`odd-${this.props.odd.id}-data`}
@@ -461,14 +479,16 @@ class Odd extends Component {
         </div>
 
         <div className="right-controls">
-          <input
-            title={trans('score', {}, 'quiz')}
-            type="number"
-            max="0"
-            className="form-control odd-score"
-            value={this.props.solution.score}
-            onChange={(e) => this.props.onUpdate('score', e.target.value)}
-          />
+          {this.props.hasExpectedAnswers && this.props.hasScore &&
+            <input
+              title={trans('score', {}, 'quiz')}
+              type="number"
+              max="0"
+              className="form-control odd-score"
+              value={this.props.solution.score}
+              onChange={(e) => this.props.onUpdate('score', e.target.value)}
+            />
+          }
 
           <Button
             id={`odd-${this.props.odd.id}-feedback-toggle`}
@@ -501,7 +521,9 @@ Odd.propTypes = {
   odd: T.object.isRequired,
   solution: T.object.isRequired,
   onUpdate: T.func.isRequired,
-  onDelete: T.func.isRequired
+  onDelete: T.func.isRequired,
+  hasScore: T.bool.isRequired,
+  hasExpectedAnswers: T.bool.isRequired
 }
 
 const OddList= props => {
@@ -527,6 +549,8 @@ const OddList= props => {
                 solution={utils.getOddSolution(oddItem, props.solutions)}
                 onUpdate={(property, value) => updateItem(property, value, oddItem.id, props.items, props.solutions, true, props.onChange)}
                 onDelete={() => removeItem(oddItem.id, props.items, props.solutions, true, props.onChange)}
+                hasScore={props.hasScore}
+                hasExpectedAnswers={props.hasExpectedAnswers}
               />
             </li>
           )}
@@ -547,7 +571,9 @@ const OddList= props => {
 OddList.propTypes = {
   items: T.arrayOf(T.object).isRequired,
   solutions: T.arrayOf(T.object).isRequired,
-  onChange: T.func.isRequired
+  onChange: T.func.isRequired,
+  hasScore: T.bool.isRequired,
+  hasExpectedAnswers: T.bool.isRequired
 }
 
 let Item = props =>
@@ -640,91 +666,97 @@ ItemList.propTypes = {
   onChange: T.func.isRequired
 }
 
-const PairEditor = props =>
-  <FormData
-    className="pair-item pair-editor"
-    embedded={true}
-    name={props.formName}
-    dataPart={props.path}
-    sections={[
-      {
-        title: trans('general'),
-        primary: true,
-        fields: [
-          {
-            name: 'pairs',
-            label: trans('answers', {}, 'quiz'),
-            hideLabel: true,
-            required: true,
-            render: (pairItem) => {
-              const decoratedSolutions = cloneDeep(pairItem.solutions)
-              const realSolutions = utils.getRealSolutionList(decoratedSolutions)
-              decoratedSolutions.forEach(s => s._deletable = 1 < realSolutions.length)
+const PairEditor = props => {
+  const decoratedSolutions = cloneDeep(props.item.solutions)
+  const realSolutions = utils.getRealSolutionList(decoratedSolutions)
+  decoratedSolutions.forEach(s => s._deletable = 1 < realSolutions.length)
 
-              const decoratedItems = cloneDeep(pairItem.items)
-              const itemDeletable = 2 < utils.getRealItemlist(decoratedItems, decoratedSolutions).length
-              decoratedItems.forEach(el => el._deletable = itemDeletable)
+  const decoratedItems = cloneDeep(props.item.items)
+  const itemDeletable = 2 < utils.getRealItemlist(decoratedItems, decoratedSolutions).length
+  decoratedItems.forEach(el => el._deletable = itemDeletable)
 
-              const Pair = (
-                <div className="row pair-items">
-                  <div className="col-md-5 col-sm-5 items-col">
-                    <ItemList
-                      solutions={decoratedSolutions}
-                      items={decoratedItems}
-                      onChange={props.update}
-                    />
+  const Pair = (
+    <div className="row pair-items">
+      <div className="col-md-5 col-sm-5 items-col">
+        <ItemList
+          solutions={decoratedSolutions}
+          items={decoratedItems}
+          onChange={props.update}
+        />
 
-                    <OddList
-                      solutions={decoratedSolutions}
-                      items={decoratedItems}
-                      onChange={props.update}
-                    />
-                  </div>
+        <OddList
+          solutions={decoratedSolutions}
+          items={decoratedItems}
+          hasScore={props.hasAnswerScores}
+          hasExpectedAnswers={props.item.hasExpectedAnswers}
+          onChange={props.update}
+        />
+      </div>
 
-                  <div className="col-md-7 col-sm-7 pairs-col">
-                    <PairList
-                      solutions={decoratedSolutions}
-                      pin={utils.hasPinnedItems(pairItem.items) || pairItem._pinItems}
-                      items={decoratedItems}
-                      onChange={props.update}
-                    />
-                  </div>
-                </div>
-              )
+      <div className="col-md-7 col-sm-7 pairs-col">
+        <PairList
+          solutions={decoratedSolutions}
+          pin={utils.hasPinnedItems(props.item.items) || props.item._pinItems}
+          items={decoratedItems}
+          hasScore={props.hasAnswerScores}
+          hasExpectedAnswers={props.item.hasExpectedAnswers}
+          onChange={props.update}
+        />
+      </div>
+    </div>
+  )
 
-              return Pair
-            }
-          }, {
-            name: '_pinItems',
-            label: trans('pair_allow_pin_function', {}, 'quiz'),
-            type: 'boolean',
-            calculated: (pairItem) => utils.hasPinnedItems(pairItem.items) || pairItem._pinItems,
-            onChange: (checked) => {
-              if (!checked) {
-                removeAllCoordinates(props.item.items, props.update)
+  return (
+    <FormData
+      className="pair-item pair-editor"
+      embedded={true}
+      name={props.formName}
+      dataPart={props.path}
+      sections={[
+        {
+          title: trans('general'),
+          primary: true,
+          fields: [
+            {
+              name: 'pairs',
+              label: trans('answers', {}, 'quiz'),
+              hideLabel: true,
+              required: true,
+              component: Pair
+            }, {
+              name: '_pinItems',
+              label: trans('pair_allow_pin_function', {}, 'quiz'),
+              type: 'boolean',
+              calculated: (pairItem) => utils.hasPinnedItems(pairItem.items) || pairItem._pinItems,
+              onChange: (checked) => {
+                if (!checked) {
+                  removeAllCoordinates(props.item.items, props.update)
+                }
+              }
+            }, {
+              name: 'random',
+              label: trans('shuffle_answers', {}, 'quiz'),
+              help: [
+                trans('shuffle_answers_help', {}, 'quiz'),
+                trans('shuffle_answers_results_help', {}, 'quiz')
+              ],
+              type: 'boolean'
+            }, {
+              name: 'penalty',
+              label: trans('editor_penalty_label', {}, 'quiz'),
+              type: 'number',
+              required: true,
+              displayed: (item) => item.hasExpectedAnswers && props.hasAnswerScores && item.score.type === SCORE_SUM,
+              options: {
+                min: 0
               }
             }
-          }, {
-            name: 'random',
-            label: trans('shuffle_answers', {}, 'quiz'),
-            help: [
-              trans('shuffle_answers_help', {}, 'quiz'),
-              trans('shuffle_answers_results_help', {}, 'quiz')
-            ],
-            type: 'boolean'
-          }, {
-            name: 'penalty',
-            label: trans('editor_penalty_label', {}, 'quiz'),
-            type: 'number',
-            required: true,
-            options: {
-              min: 0
-            }
-          }
-        ]
-      }
-    ]}
-  />
+          ]
+        }
+      ]}
+    />
+  )
+}
 
 implementPropTypes(PairEditor, ItemEditorTypes, {
   item: T.shape(PairItemType.propTypes).isRequired

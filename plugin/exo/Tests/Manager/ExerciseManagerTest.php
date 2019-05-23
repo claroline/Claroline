@@ -5,7 +5,6 @@ namespace UJM\ExoBundle\Tests\Manager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Attempt\PaperGenerator;
 use UJM\ExoBundle\Library\Testing\Json\JsonDataTestCase;
 use UJM\ExoBundle\Library\Testing\Persister;
@@ -95,35 +94,6 @@ class ExerciseManagerTest extends JsonDataTestCase
         foreach ($papers as $paper) {
             $this->assertTrue($paper->isInvalidated());
         }
-    }
-
-    public function testCopy()
-    {
-        $copy = $this->manager->copy($this->exercise);
-
-        // Checks the copy has its own ids
-        $this->assertNotEquals($this->exercise->getId(), $copy->getId());
-
-        // Checks there is one more exercise in the DB
-        $exercises = $this->om->getRepository('UJMExoBundle:Exercise')->findAll();
-        $this->assertCount(2, $exercises);
-
-        // Check the copy contains the correct amount of steps
-        $this->assertCount($this->exercise->getSteps()->count(), $copy->getSteps());
-
-        // Checks steps have been duplicated (and not just referenced)
-        $firstStepOri = $this->exercise->getSteps()->get(0);
-        $firstStepCopy = $copy->getSteps()->get(0);
-
-        $this->assertNotEquals($firstStepOri->getId(), $firstStepCopy->getId());
-
-        // Checks questions have been duplicated
-        /** @var Item $questionOri */
-        $questionOri = $firstStepOri->getStepQuestions()->get(0)->getQuestion();
-        /** @var Item $questionCopy */
-        $questionCopy = $firstStepCopy->getStepQuestions()->get(0)->getQuestion();
-
-        $this->assertNotEquals($questionOri->getId(), $questionCopy->getId());
     }
 
     /**

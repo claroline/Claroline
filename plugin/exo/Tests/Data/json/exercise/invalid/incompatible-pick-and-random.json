@@ -11,7 +11,8 @@
     "showStatistics": false,
     "showFullCorrection": true,
     "showCorrectionAt": "validation",
-    "showScoreAt": "correction"
+    "showScoreAt": "correction",
+    "hasExpectedAnswer": true
   },
   "picking": {
     "type": "standard",
@@ -27,6 +28,7 @@
           "id": "1",
           "type": "application/x.choice+json",
           "content": "Question ?",
+          "hasExpectedAnswer": true,
           "score": {
             "type": "sum"
           },

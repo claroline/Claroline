@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {HtmlText} from '#/main/core/layout/components/html-text'
-import {Feedback} from '#/plugin/exo/items/components/feedback-btn'
+import {FeedbackButton as Feedback} from '#/plugin/exo/buttons/feedback/components/button'
 import {WarningIcon} from '#/plugin/exo/components/warning-icon'
 
 import {utils} from '#/plugin/exo/items/ordering/utils'
@@ -24,9 +24,15 @@ const OrderingFeedback = props =>  {
             props.answer.map((a) =>
               <div key={a.itemId} className={classes(
                 'item',
-                utils.answerIsValid(a, props.item.solutions) ? 'text-success positive-score' : 'text-danger negative-score'
+                props.item.hasExpectedAnswers ?
+                  utils.answerIsValid(a, props.item.solutions) ?
+                    'text-success positive-score' :
+                    'text-danger negative-score' :
+                  'no-score'
               )}>
-                <WarningIcon valid={utils.answerIsValid(a, props.item.solutions)}/>
+                {props.item.hasExpectedAnswers &&
+                  <WarningIcon valid={utils.answerIsValid(a, props.item.solutions)}/>
+                }
                 <HtmlText className="item-data">
                   {props.item.items.find(item => item.id === a.itemId).data}
                 </HtmlText>
@@ -41,9 +47,13 @@ const OrderingFeedback = props =>  {
             props.item.solutions.filter(solution => undefined === props.answer.find(answer => answer.itemId === solution.itemId)).map((solution) =>
               <div key={solution.itemId} className={classes(
                 'item',
-                solution.score > 0 ? 'text-danger negative-score' : 'text-success positive-score'
+                props.item.hasExpectedAnswers ?
+                  solution.score > 0 ? 'text-danger negative-score' : 'text-success positive-score' :
+                  'no-score'
               )}>
-                <WarningIcon valid={solution.score < 1}/>
+                {props.item.hasExpectedAnswers &&
+                  <WarningIcon valid={solution.score < 1}/>
+                }
                 <HtmlText className="item-data">
                   {props.item.items.find(item => item.id === solution.itemId).data}
                 </HtmlText>
@@ -62,9 +72,15 @@ const OrderingFeedback = props =>  {
             {props.answer.map((a) =>
               <div key={a.itemId} className={classes(
                 'item',
-                utils.answerIsValid(a, props.item.solutions) ? 'text-success positive-score' : 'text-danger negative-score'
+                props.item.hasExpectedAnswers ?
+                  utils.answerIsValid(a, props.item.solutions) ?
+                    'text-success positive-score' :
+                    'text-danger negative-score' :
+                  'no-score'
               )}>
-                <WarningIcon valid={utils.answerIsValid(a, props.item.solutions)}/>
+                {props.item.hasExpectedAnswers &&
+                  <WarningIcon valid={utils.answerIsValid(a, props.item.solutions)}/>
+                }
                 <HtmlText className="item-data">
                   {props.item.items.find(item => item.id === a.itemId).data}
                 </HtmlText>
@@ -83,9 +99,15 @@ const OrderingFeedback = props =>  {
             {props.answer.map((a) =>
               <div key={a.itemId} className={classes(
                 'item',
-                utils.answerIsValid(a, props.item.solutions) ? 'text-success positive-score' : 'text-danger negative-score'
+                props.item.hasExpectedAnswers ?
+                  utils.answerIsValid(a, props.item.solutions) ?
+                    'text-success positive-score' :
+                    'text-danger negative-score' :
+                  'no-score'
               )}>
-                <WarningIcon valid={utils.answerIsValid(a, props.item.solutions)}/>
+                {props.item.hasExpectedAnswers &&
+                  <WarningIcon valid={utils.answerIsValid(a, props.item.solutions)}/>
+                }
                 <HtmlText className="item-data">
                   {props.item.items.find(item => item.id === a.itemId).data}
                 </HtmlText>
@@ -110,7 +132,8 @@ OrderingFeedback.propTypes = {
     direction: T.string.isRequired,
     score: T.object.isRequired,
     items: T.arrayOf(T.object).isRequired,
-    solutions: T.arrayOf(T.object).isRequired
+    solutions: T.arrayOf(T.object).isRequired,
+    hasExpectedAnswers: T.bool.isRequired
   }).isRequired,
   answer: T.array.isRequired
 }

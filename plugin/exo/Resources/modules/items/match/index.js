@@ -2,9 +2,7 @@ import times from 'lodash/times'
 
 import {trans} from '#/main/app/intl/translation'
 
-import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
-import {emptyAnswer} from '#/plugin/exo/items/utils'
-
+import {emptyAnswer, CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
 import {MatchItem as MatchItemTypes} from '#/plugin/exo/items/match/prop-types'
 import {utils} from '#/plugin/exo/items/match/utils'
 
@@ -60,7 +58,7 @@ export default {
    *
    * @return {CorrectedAnswer}
    */
-  getCorrectedAnswer: (item, answers = {data: []}) => {
+  correctAnswer: (item, answers = {data: []}) => {
     const corrected = new CorrectedAnswer()
 
     item.solutions.forEach(solution => {
@@ -80,5 +78,23 @@ export default {
     times(item.solutions.filter(solution => solution.score > 0).length - answersCount, () => corrected.addPenalty(new Answerable(item.penalty)))
 
     return corrected
+  },
+
+  expectAnswer: (item) => {
+    if (item.solutions && item.solutions.associations) {
+      return item.solutions.associations
+        .filter(solution => 0 < solution.score)
+        .map(solution => new Answerable(solution.score, solution.id))
+    }
+
+    return []
+  },
+
+  allAnswers: (item) => {
+    if (item.solutions && item.solutions.associations) {
+      return item.solutions.associations.map(solution => new Answerable(solution.score))
+    }
+
+    return []
   }
 }

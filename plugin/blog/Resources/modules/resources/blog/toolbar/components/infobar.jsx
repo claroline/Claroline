@@ -1,10 +1,12 @@
 import React from 'react'
-import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
-import {trans} from '#/main/app/intl/translation'
-import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
+import {connect} from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
-import {selectors} from '#/plugin/blog/resources/blog/store'
+
+import {trans} from '#/main/app/intl/translation'
+import {HtmlText} from '#/main/core/layout/components/html-text'
+
+import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
 
 const InfobarComponent = props =>
   <div className="panel panel-default">

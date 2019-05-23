@@ -8,9 +8,7 @@ import {Axis} from '#/main/core/layout/chart/components/axis.jsx'
 import {scaleAxis, formatData} from '#/main/core/layout/chart/utils'
 import {
   AXIS_TYPE_X,
-  AXIS_TYPE_Y,
-  DATA_SERIES,
-  CHART_TYPES
+  AXIS_TYPE_Y
 } from '#/main/core/layout/chart/enums'
 
 /**
@@ -60,7 +58,7 @@ const AxisChart = props => {
         ticksAsValues={props.ticksAsYValues}
       />
 
-      {React.createElement(DATA_SERIES[props.type], {
+      {React.createElement(props.dataSeries, {
         data: formattedData,
         height: height,
         yScale: yScale,
@@ -74,7 +72,7 @@ const AxisChart = props => {
 }
 
 implementPropTypes(AxisChart, ChartTypes, {
-  type: T.oneOf(CHART_TYPES).isRequired
+  dataSeries: T.func.isRequired
 }, {
   width: 550,
   height: 400,

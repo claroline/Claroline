@@ -188,15 +188,11 @@ class Exercise extends AbstractResource
     private $showFeedback = false;
 
     /**
-     * Score on which we wish to render a paper.
-     * If 0, the score will be computed based on question maxs score.
-     * Else score will be computed based on this value.
+     * @ORM\Column(type="text", nullable=true)
      *
-     * @ORM\Column(type="float")
-     *
-     * @var float
+     * @var string
      */
-    private $totalScoreOn = 100;
+    private $scoreRule;
 
     /**
      * Score to obtain to pass the exercise.
@@ -245,21 +241,30 @@ class Exercise extends AbstractResource
     /**
      * If true, the time to answer the exercise will be limited by the defined duration.
      *
-     * @var bool
-     *
      * @ORM\Column(name="time_limited", type="boolean", options={"default" = 0})
      */
     private $timeLimited = false;
 
     /**
      * @ORM\Column(name="progression_displayed", type="boolean", options={"default" = 1})
+     *
+     * @var bool
      */
     private $progressionDisplayed = true;
 
     /**
      * @ORM\Column(name="answers_editable", type="boolean", options={"default" = 1})
+     *
+     * @var bool
      */
     private $answersEditable = true;
+
+    /**
+     * @ORM\Column(name="expected_answers", type="boolean")
+     *
+     * @var bool
+     */
+    private $expectedAnswers = true;
 
     /**
      * @ORM\OneToMany(targetEntity="Step", mappedBy="exercise", cascade={"all"}, orphanRemoval=true)
@@ -678,23 +683,23 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Sets totalScoreOn.
-     *
-     * @param float $totalScoreOn
+     * @return string
      */
-    public function setTotalScoreOn($totalScoreOn)
+    public function getScoreRule()
     {
-        $this->totalScoreOn = $totalScoreOn;
+        return $this->scoreRule;
     }
 
     /**
-     * Gets totalScoreOn.
+     * @param string $scoreRule
      *
-     * @return float
+     * @return string
      */
-    public function getTotalScoreOn()
+    public function setScoreRule($scoreRule)
     {
-        return $this->totalScoreOn;
+        $this->scoreRule = $scoreRule;
+
+        return $this->scoreRule;
     }
 
     /**
@@ -833,5 +838,21 @@ class Exercise extends AbstractResource
     public function setAnswersEditable($answersEditable)
     {
         $this->answersEditable = $answersEditable;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasExpectedAnswers()
+    {
+        return $this->expectedAnswers;
+    }
+
+    /**
+     * @param bool $expectedAnswers
+     */
+    public function setExpectedAnswers($expectedAnswers)
+    {
+        $this->expectedAnswers = $expectedAnswers;
     }
 }

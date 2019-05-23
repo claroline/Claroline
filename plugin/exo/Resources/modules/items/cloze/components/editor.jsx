@@ -1,16 +1,19 @@
 import React, {Component} from 'react'
-import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import cloneDeep from 'lodash/cloneDeep'
 
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
-import {makeId} from '#/main/core/scaffolding/id'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {FormGroup} from '#/main/app/content/form/components/group'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
+import {makeId} from '#/main/core/scaffolding/id'
+
+import {ItemEditor as ItemEditorType} from '#/plugin/exo/items/prop-types'
+import {ClozeItem as ClozeItemType} from '#/plugin/exo/items/cloze/prop-types'
 import {KeywordsPopover} from '#/plugin/exo/components/keywords'
 import {keywords as keywordsUtils} from '#/plugin/exo/utils/keywords'
 import {utils} from '#/plugin/exo/items/cloze/utils'
@@ -56,7 +59,8 @@ const HolePopover = props => {
       _errors={get(props, '_errors')}
       validating={props.validating}
       showCaseSensitive={true}
-      showScore={true}
+      showScore={props.hasExpectedAnswers && props.hasScore}
+      hasExpectedAnswers={props.hasExpectedAnswers}
       close={props.close}
       remove={props.remove}
       onChange={props.onChange}
@@ -93,6 +97,8 @@ HolePopover.propTypes = {
     answers: T.array.isRequired
   }).isRequired,
   validating: T.bool.isRequired,
+  hasExpectedAnswers: T.bool.isRequired,
+  hasScore: T.bool.isRequired,
   _errors: T.object,
   close: T.func.isRequired,
   remove:T.func.isRequired,
@@ -147,7 +153,7 @@ class MainField extends Component {
       // Replace hole with the best answer text
       const regex = new RegExp(`(\\[\\[${this.props.item._holeId}\\]\\])`, 'gi')
       newItem.text = newItem.text.replace(regex, bestAnswer ? bestAnswer.text : '')
-      this.setState({text: utils.setEditorHtml(newItem.text, newItem.holes, newItem.solutions)})
+      this.setState({text: utils.setEditorHtml(newItem.text, newItem.holes, newItem.solutions, newItem.hasExpectedAnswers)})
 
       if (newItem._holeId && newItem._holeId === this.props.item._holeId) {
         newItem._popover = false
@@ -191,7 +197,7 @@ class MainField extends Component {
     newItem._popover = true
     newItem._holeId = hole.id
 
-    const text = this.fnTextUpdate(utils.makeTinyHtml(hole, solution))
+    const text = this.fnTextUpdate(utils.makeTinyHtml(hole, solution, newItem.hasExpectedAnswers))
     newItem.text = utils.getTextWithPlacerHoldersFromHtml(text)
 
     this.props.update('holes', newItem.holes)
@@ -205,7 +211,7 @@ class MainField extends Component {
 
   render() {
     if (this.props.item.text && undefined === this.state.text) {
-      this.setState({text: utils.setEditorHtml(this.props.item.text, this.props.item.holes, this.props.item.solutions)})
+      this.setState({text: utils.setEditorHtml(this.props.item.text, this.props.item.holes, this.props.item.solutions, this.props.item.hasExpectedAnswers)})
     }
 
     return (
@@ -263,6 +269,8 @@ class MainField extends Component {
           <HolePopover
             hole={this.props.item.holes.find(hole => hole.id === this.props.item._holeId)}
             solution={this.props.item.solutions.find(solution => solution.holeId === this.props.item._holeId)}
+            hasExpectedAnswers={this.props.item.hasExpectedAnswers}
+            hasScore={this.props.hasScore}
             close={() => this.props.update('_popover', false)}
             remove={() => {
               const newItem = cloneDeep(this.props.item)
@@ -292,7 +300,7 @@ class MainField extends Component {
               this.props.update('text', newItem.text)
               this.props.update('holes', newItem.holes)
 
-              this.setState({text: utils.setEditorHtml(newItem.text, newItem.holes, newItem.solutions)})
+              this.setState({text: utils.setEditorHtml(newItem.text, newItem.holes, newItem.solutions, newItem.hasExpectedAnswers)})
             }}
             onChange={(property, value) => {
               const newItem = cloneDeep(this.props.item)
@@ -358,56 +366,50 @@ class MainField extends Component {
   }
 }
 
-const ClozeEditor = props =>
-  <FormData
-    className="cloze-editor"
-    embedded={true}
-    name={props.formName}
-    dataPart={props.path}
-    sections={[
-      {
-        title: trans('general'),
-        primary: true,
-        fields: [
-          {
-            name: 'clozeText',
-            label: trans('text'),
-            required: true,
-            render: (item, errors) => {
-              const ClozeText = (
-                <MainField
-                  {...props}
-                  item={item}
-                  errors={errors}
-                />
-              )
+const ClozeEditor = props => {
+  const newItem = cloneDeep(props.item)
+  newItem.solutions.forEach(solution => {
+    solution.answers = solution.answers.map(a => Object.assign({}, a, {
+      '_id': a._id ? a._id : makeId(),
+      '_deletable': 1 < solution.answers.length
+    }))
+  })
 
-              return ClozeText
+  const ClozeText = (
+    <MainField
+      {...props}
+      item={newItem}
+      hasScore={props.hasAnswerScores}
+    />
+  )
+
+  return (
+    <FormData
+      className="cloze-editor"
+      embedded={true}
+      name={props.formName}
+      dataPart={props.path}
+      sections={[
+        {
+          title: trans('general'),
+          primary: true,
+          fields: [
+            {
+              name: 'clozeText',
+              label: trans('text'),
+              required: true,
+              component: ClozeText
             }
-          }
-        ]
-      }
-    ]}
-  />
-
-ClozeEditor.propTypes = {
-  formName: T.string.isRequired,
-  path: T.string.isRequired,
-  item: T.shape({
-    id: T.string.isRequired,
-    text: T.string.isRequired,
-    _errors: T.object,
-    _popover: T.bool,
-    _holeId: T.string,
-    holes: T.arrayOf(T.shape({
-      id: T.string.isRequired
-    })).isRequired,
-    solutions: T.arrayOf(T.shape({
-      holeId: T.string.isRequired
-    })).isRequired
-  }),
-  update: T.func.isRequired
+          ]
+        }
+      ]}
+    />
+  )
 }
+
+implementPropTypes(ClozeEditor, ItemEditorType, {
+  item: T.shape(ClozeItemType.propTypes).isRequired
+})
 
 export {
   ClozeEditor

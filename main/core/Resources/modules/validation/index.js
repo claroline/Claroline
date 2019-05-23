@@ -4,6 +4,7 @@ import moment from 'moment'
 
 import {trans, tval} from '#/main/app/intl/translation'
 import {isValidDate} from '#/main/app/intl/date'
+import {isHtmlEmpty} from '#/main/app/data/types/html/validators'
 
 // TODO : break me
 
@@ -28,19 +29,6 @@ function notBlank(value, options = {}) {
   if (value === '' || value === null || (undefined !== options.isHtml && options.isHtml && isHtmlEmpty(value))) {
     return tval('This value should not be blank.')
   }
-}
-
-function isHtmlEmpty(html, allowedTags = ['img', 'audio', 'iframe', 'video']) {
-  if (!html) {
-    return true
-  }
-
-  const wrapper = document.createElement('div')
-  wrapper.innerHTML = html.trim()
-
-  return !(wrapper.textContent || allowedTags.some((tag) => {
-    return html.indexOf(tag) >= 0
-  }))
 }
 
 function array(value) {

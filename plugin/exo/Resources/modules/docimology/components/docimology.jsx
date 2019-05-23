@@ -12,11 +12,11 @@ import {
 } from '#/main/core/layout/page/index'
 import {URL_BUTTON} from '#/main/app/buttons'
 
-import {BarChart} from '#/main/core/layout/chart/bar/components/bar-chart.jsx'
-import {PieChart} from '#/main/core/layout/chart/pie/components/pie-chart.jsx'
-import {CircularGauge} from '#/main/core/layout/chart/gauge/components/circlular-gauge.jsx'
+import {BarChart} from '#/main/core/layout/chart/bar/components/bar-chart'
+import {PieChart} from '#/main/core/layout/chart/pie/components/pie-chart'
+import {CircularGauge} from '#/main/core/layout/chart/gauge/components/circlular-gauge'
 
-import {select} from './../selectors'
+import {select} from '#/plugin/exo/docimology/selectors'
 
 const COLOR_SUCCESS = '#4F7302'
 const COLOR_WARNING = '#F0AD4E'
@@ -306,6 +306,7 @@ const Docimology = props =>
 
 Docimology.propTypes = {
   resourceNode: T.shape({
+    id: T.string.isRequired,
     autoId: T.number.isRequired,
     meta: T.shape({
       type: T.string.isRequired

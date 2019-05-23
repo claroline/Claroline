@@ -7,6 +7,7 @@ use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\GraphicQuestion;
 use UJM\ExoBundle\Entity\Misc\Area;
+use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Csv\ArrayCompressor;
 use UJM\ExoBundle\Library\Item\ItemType;
@@ -142,11 +143,26 @@ class GraphicDefinition extends AbstractDefinition
         return $corrected;
     }
 
+    /**
+     * @param GraphicQuestion $question
+     *
+     * @return AnswerPartInterface[]
+     */
     public function expectAnswer(AbstractItem $question)
     {
         return array_filter($question->getAreas()->toArray(), function (Area $area) {
             return 0 < $area->getScore();
         });
+    }
+
+    /**
+     * @param GraphicQuestion $question
+     *
+     * @return AnswerPartInterface[]
+     */
+    public function allAnswers(AbstractItem $question)
+    {
+        return $question->getAreas()->toArray();
     }
 
     public function getStatistics(AbstractItem $graphicQuestion, array $answersData, $total)

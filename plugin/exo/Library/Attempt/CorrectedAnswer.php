@@ -90,7 +90,7 @@ class CorrectedAnswer
             }
         }
 
-        //avoid duplicatas here
+        // avoid duplicates here
         if (!$found) {
             $this->expected[] = $expected;
         } else {

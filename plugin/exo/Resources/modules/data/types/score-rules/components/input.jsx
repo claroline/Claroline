@@ -1,33 +1,24 @@
 import React from 'react'
 import classes from 'classnames'
 
-import {tex, trans} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 import {makeId} from '#/main/core/scaffolding/id'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
-import {FormGroup} from '#/main/app/content/form/components/group'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {SelectGroup}  from '#/main/core/layout/form/components/group/select-group'
 import {NumberGroup}  from '#/main/core/layout/form/components/group/number-group'
+import {AlertBlock} from '#/main/app/alert/components/alert-block'
 
 import {Rule as RuleType} from '#/plugin/exo/data/types/score-rules/prop-types'
-import {
-  RULE_TYPE_MORE,
-  RULE_TYPE_LESS,
-  RULE_TYPE_BETWEEN,
-  RULE_SOURCE_INCORRECT,
-  ruleTypes,
-  ruleSources,
-  ruleTargetsCorrect,
-  ruleTargetsIncorrect
-} from '#/plugin/exo/data/types/score-rules/constants'
+import {constants} from '#/plugin/exo/scores/rules/constants'
 
 const ScoreRule = props =>
   <li className="score-rule-item">
     <div className="score-rule-container">
       <div className="score-rule-row">
-        <span className="score-rule-component">{tex('score_rule_text_1')}</span>
+        <span className="score-rule-component">{trans('score_rule_text_1', {}, 'quiz')}</span>
 
         <SelectGroup
           id={`rule-${props.index}-type`}
@@ -37,14 +28,14 @@ const ScoreRule = props =>
           })}
           label="type"
           hideLabel={true}
-          choices={ruleTypes}
+          choices={constants.RULE_TYPES}
           disabled={props.disabled}
           value={props.rule.type}
           onChange={value => props.onChange('type', value)}
           size="sm"
         />
 
-        {-1 < [RULE_TYPE_MORE, RULE_TYPE_LESS].indexOf(props.rule.type) &&
+        {-1 < [constants.RULE_TYPE_MORE, constants.RULE_TYPE_LESS].indexOf(props.rule.type) &&
           <NumberGroup
             id={`rule-${props.index}-count`}
             className={classes('score-rule-component score-rule-number-component', {
@@ -61,7 +52,7 @@ const ScoreRule = props =>
           />
         }
 
-        {RULE_TYPE_BETWEEN === props.rule.type &&
+        {constants.RULE_TYPE_BETWEEN === props.rule.type &&
           <NumberGroup
             id={`rule-${props.index}-count-min`}
             className={classes('score-rule-component score-rule-number-component', {
@@ -78,11 +69,11 @@ const ScoreRule = props =>
           />
         }
 
-        {RULE_TYPE_BETWEEN === props.rule.type &&
-          <span className="score-rule-component">{tex('score_rule_and')}</span>
+        {constants.RULE_TYPE_BETWEEN === props.rule.type &&
+          <span className="score-rule-component">{trans('score_rule_and', {}, 'quiz')}</span>
         }
 
-        {RULE_TYPE_BETWEEN === props.rule.type &&
+        {constants.RULE_TYPE_BETWEEN === props.rule.type &&
           <NumberGroup
             id={`rule-${props.index}-count-max`}
             className={classes('score-rule-component score-rule-number-component', {
@@ -106,7 +97,7 @@ const ScoreRule = props =>
           })}
           label="source"
           hideLabel={true}
-          choices={ruleSources}
+          choices={constants.RULE_SOURCES}
           disabled={props.disabled}
           value={props.rule.source}
           onChange={value => props.onChange('source', value)}
@@ -116,7 +107,7 @@ const ScoreRule = props =>
       </div>
 
       <div className="score-rule-row">
-        <span className="score-rule-component">{tex('score_rule_text_2')}</span>
+        <span className="score-rule-component">{trans('score_rule_text_2', {}, 'quiz')}</span>
         <NumberGroup
           id={`rule-${props.index}-points`}
           className={classes('score-rule-component score-rule-number-component', {
@@ -130,7 +121,7 @@ const ScoreRule = props =>
           onChange={value => props.onChange('points', value)}
           size="sm"
         />
-        <span className="score-rule-component">{tex('score_rule_points')}</span>
+        <span className="score-rule-component">{trans('score_rule_points', {}, 'quiz')}</span>
         <SelectGroup
           id={`rule-${props.index}-target`}
           className={classes('score-rule-component', {
@@ -139,7 +130,7 @@ const ScoreRule = props =>
           })}
           label="target"
           hideLabel={true}
-          choices={props.rule.source === RULE_SOURCE_INCORRECT ? ruleTargetsIncorrect : ruleTargetsCorrect}
+          choices={props.rule.source === constants.RULE_SOURCE_INCORRECT ? constants.RULE_TARGETS_INCORRECT : constants.RULE_TARGETS_CORRECT}
           disabled={props.disabled}
           value={props.rule.target}
           onChange={value => props.onChange('target', value)}
@@ -177,19 +168,21 @@ ScoreRule.propTypes = {
 
 const ScoreRulesInput = props =>
   <div className="score-rules-group">
-    <div className="well well-sm">
-      <div>{tex('score_rule_considered')} <b>{tex('score_rule_correct_answers')}</b> :</div>
+    <AlertBlock
+      type="info"
+    >
+      <div>{trans('score_rule_considered', {}, 'quiz')} <b>{trans('score_rule_correct_answers', {}, 'quiz')}</b> :</div>
       <ul className="score-rules-info-list">
-        <li>{tex('selected_correct_choices')}</li>
-        <li>{tex('unselected_incorrect_choices')}</li>
+        <li>{trans('selected_correct_choices', {}, 'quiz')}</li>
+        <li>{trans('unselected_incorrect_choices', {}, 'quiz')}</li>
       </ul>
-      <div>{tex('score_rule_considered')} <b>{tex('score_rule_incorrect_answers')}</b> :</div>
+      <div>{trans('score_rule_considered', {}, 'quiz')} <b>{trans('score_rule_incorrect_answers', {}, 'quiz')}</b> :</div>
       <ul className="score-rules-info-list">
-        <li>{tex('selected_incorrect_choices')}</li>
-        <li>{tex('unselected_correct_choices')}</li>
+        <li>{trans('selected_incorrect_choices', {}, 'quiz')}</li>
+        <li>{trans('unselected_correct_choices', {}, 'quiz')}</li>
       </ul>
-      <div>{tex('score_rules_conflict_warning')}</div>
-    </div>
+      <div>{trans('score_rules_conflict_warning', {}, 'quiz')}</div>
+    </AlertBlock>
 
     {0!== props.value.length &&
       <ul>
@@ -224,13 +217,15 @@ const ScoreRulesInput = props =>
     }
 
     {0 === props.value.length &&
-      <div className="no-rule-info">{props.placeholder}</div>
+      <div className="no-item-info">{props.placeholder}</div>
     }
 
-    <button
-      className="btn btn-block btn-default"
-      type="button"
-      onClick={() => props.onChange([].concat(props.value, [{
+    <Button
+      className="btn btn-block "
+      type={CALLBACK_BUTTON}
+      icon="fa fa-fw fa-plus"
+      label={trans('add_rule', {}, 'quiz')}
+      callback={() => props.onChange([].concat(props.value, [{
         id: makeId(),
         type: '',
         source: '',
@@ -240,10 +235,7 @@ const ScoreRulesInput = props =>
         points: 0,
         target: ''
       }]))}
-    >
-      <span className="fa fa-fw fa-plus icon-with-text-right" />
-      {tex('add_rule')}
-    </button>
+    />
   </div>
 
 implementPropTypes(ScoreRulesInput, FormFieldTypes, {
@@ -255,7 +247,7 @@ implementPropTypes(ScoreRulesInput, FormFieldTypes, {
   error: T.oneOfType([T.string, T.object])
 }, {
   value: [],
-  placeholder: tex('no_rule')
+  placeholder: trans('no_rule', {}, 'quiz')
 })
 
 export {

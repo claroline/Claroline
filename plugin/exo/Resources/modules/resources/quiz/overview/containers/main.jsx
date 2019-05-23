@@ -4,7 +4,7 @@ import {hasPermission} from '#/main/app/security'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {OverviewMain as OverviewMainComponent} from '#/plugin/exo/resources/quiz/overview/components/main'
-import {selectors} from '#/plugin/exo/quiz/selectors'
+import {selectors} from '#/plugin/exo/resources/quiz/store'
 
 const OverviewMain = connect(
   (state) => ({

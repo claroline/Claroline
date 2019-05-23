@@ -4,6 +4,7 @@
   "content": "Question ?",
   "penalty": 1,
   "random": false,
+  "hasExpectedAnswer": true,
   "sets": [
     {
       "id": "2",

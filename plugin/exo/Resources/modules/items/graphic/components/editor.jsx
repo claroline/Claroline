@@ -6,7 +6,7 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {ItemEditor as ItemEditorTypes} from '#/plugin/exo/items/prop-types'
 
 import {resizeArea} from '#/plugin/exo/items/graphic/resize'
-import {makeId} from '#/plugin/exo/utils/utils'
+import {makeId} from '#/main/core/scaffolding/id'
 import {asset} from '#/main/app/config/asset'
 import {trans} from '#/main/app/intl/translation'
 import {makeDroppable} from '#/plugin/exo//utils/dragAndDrop'
@@ -346,6 +346,8 @@ class GraphicElement extends Component {
           <AreaPopover
             left={this.props.item._popover.left}
             top={this.props.item._popover.top}
+            hasScore={this.props.hasScore}
+            hasExpectedAnswers={this.props.item.hasExpectedAnswers}
             score={this.getCurrentArea().score}
             feedback={this.getCurrentArea().feedback}
             color={this.getCurrentArea().area.color}
@@ -548,37 +550,39 @@ class GraphicElement extends Component {
   }
 }
 
-const GraphicEditor = (props) =>
-  <FormData
-    className="graphic-editor"
-    embedded={true}
-    name={props.formName}
-    dataPart={props.path}
-    sections={[
-      {
-        title: trans('general'),
-        primary: true,
-        fields: [
-          {
-            name: 'data',
-            label: trans('image'),
-            hideLabel: true,
-            required: true,
-            render: (item) => {
-              const GraphicComponent = (
-                <GraphicElement
-                  {...props}
-                  item={item}
-                />
-              )
+const GraphicEditor = (props) => {
+  const GraphicComponent = (
+    <GraphicElement
+      {...props}
+      item={props.item}
+      hasScore={props.hasAnswerScores}
+    />
+  )
 
-              return GraphicComponent
+  return (
+    <FormData
+      className="graphic-editor"
+      embedded={true}
+      name={props.formName}
+      dataPart={props.path}
+      sections={[
+        {
+          title: trans('general'),
+          primary: true,
+          fields: [
+            {
+              name: 'data',
+              label: trans('image'),
+              hideLabel: true,
+              required: true,
+              component: GraphicComponent
             }
-          }
-        ]
-      }
-    ]}
-  />
+          ]
+        }
+      ]}
+    />
+  )
+}
 
 implementPropTypes(GraphicEditor, ItemEditorTypes, {
   item: T.shape(

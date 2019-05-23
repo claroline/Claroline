@@ -7,6 +7,7 @@ use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\BooleanQuestion;
 use UJM\ExoBundle\Entity\Misc\BooleanChoice;
+use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Serializer\Item\Type\BooleanQuestionSerializer;
@@ -139,13 +140,23 @@ class BooleanDefinition extends AbstractDefinition
     /**
      * @param BooleanQuestion $question
      *
-     * @return array
+     * @return AnswerPartInterface[]
      */
     public function expectAnswer(AbstractItem $question)
     {
         return array_filter($question->getChoices()->toArray(), function (BooleanChoice $choice) {
             return 0 < $choice->getScore();
         });
+    }
+
+    /**
+     * @param BooleanQuestion $question
+     *
+     * @return AnswerPartInterface[]
+     */
+    public function allAnswers(AbstractItem $question)
+    {
+        return $question->getChoices()->toArray();
     }
 
     public function getStatistics(AbstractItem $question, array $answersData, $total)

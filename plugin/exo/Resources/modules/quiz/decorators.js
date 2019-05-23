@@ -1,8 +1,9 @@
 import mapValues from 'lodash/mapValues'
 import cloneDeep from 'lodash/cloneDeep'
 import defaultsDeep from 'lodash/defaultsDeep'
-import defaults from './defaults'
-import {isQuestionType} from './../items/item-types'
+
+import defaults from '#/plugin/exo/quiz/defaults'
+import {isQuestionType} from '#/plugin/exo/items/item-types'
 import {tex} from '#/main/app/intl/translation'
 
 // augment normalized quiz data with editor state attributes and default values

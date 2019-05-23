@@ -1,23 +1,23 @@
-import {tex} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 
 export const utils = {}
 
-utils.setEditorHtml = (text, holes, solutions) => {
+utils.setEditorHtml = (text, holes, solutions, hasExpectedAnswers = true) => {
   holes.forEach(hole => {
     const solution = utils.getHoleSolution(hole, solutions)
     const regex = new RegExp(`(\\[\\[${solution.holeId}\\]\\])`, 'gi')
 
-    text = text.replace(regex, utils.makeTinyHtml(hole, solution))
+    text = text.replace(regex, utils.makeTinyHtml(hole, solution, hasExpectedAnswers))
   })
 
   return text
 }
 
-utils.makeTinyHtml = (hole, solution) => {
+utils.makeTinyHtml = (hole, solution, hasExpectedAnswers = true) => {
   let input = `<span class="cloze-hole answer-item" data-hole-id="${solution.holeId}" contentEditable="false">`
 
   if (hole.choices) {
-    input += getSelectInput(hole, solution)
+    input += getSelectInput(hole, solution, hasExpectedAnswers)
   } else {
     input += getTextInput(hole, solution)
   }
@@ -56,30 +56,45 @@ utils.getTextWithPlacerHoldersFromHtml = (text) => {
  *
  * @return {string}
  */
-function getSelectInput(hole, solution) {
+function getSelectInput(hole, solution, hasExpectedAnswers = true) {
   const bestAnswer = utils.getBestAnswer(solution.answers)
 
   let input = `<select class="form-control input-sm" data-hole-id="${solution.holeId}">`
 
-  // create correct answers group
-  input += `<optgroup label="${tex('hole_correct_answers')}">`
-  solution.answers.filter(answer => 0 < answer.score).map(correctAnswer => {
-    input += '<option'
-    if (bestAnswer && bestAnswer.text === correctAnswer.text) {
-      input += ' selected="true"'
-    }
-    input += '>'
-    input += correctAnswer.text
-    input += '</option>'
-  })
-  input += '</optgroup>'
+  if (hasExpectedAnswers) {
+    // create correct answers group
+    input += `<optgroup label="${trans('hole_correct_answers', {}, 'quiz')}">`
+    solution.answers.filter(answer => 0 < answer.score).map(correctAnswer => {
+      input += '<option'
+      if (bestAnswer && bestAnswer.text === correctAnswer.text) {
+        input += ' selected="true"'
+      }
+      input += '>'
+      input += correctAnswer.text
+      input += '</option>'
+    })
+    input += '</optgroup>'
 
-  const incorrectAnswers = solution.answers.filter(answer => 0 >= answer.score)
-  if (0 !== incorrectAnswers.length) {
-    input += `<optgroup label="${tex('hole_incorrect_answers')}">`
-    incorrectAnswers.map(incorrectAnswer => {
-      input += '<option>'
-      input += incorrectAnswer.text
+    const incorrectAnswers = solution.answers.filter(answer => 0 >= answer.score)
+    if (0 !== incorrectAnswers.length) {
+      input += `<optgroup label="${trans('hole_incorrect_answers', {}, 'quiz')}">`
+      incorrectAnswers.map(incorrectAnswer => {
+        input += '<option>'
+        input += incorrectAnswer.text
+        input += '</option>'
+      })
+      input += '</optgroup>'
+    }
+  } else {
+    // create answers group
+    input += `<optgroup label="${trans('answers', {}, 'quiz')}">`
+    solution.answers.map(answer => {
+      input += '<option'
+      if (bestAnswer && bestAnswer.text === answer.text) {
+        input += ' selected="true"'
+      }
+      input += '>'
+      input += answer.text
       input += '</option>'
     })
     input += '</optgroup>'

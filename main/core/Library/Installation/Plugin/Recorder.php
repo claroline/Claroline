@@ -118,7 +118,7 @@ class Recorder
         $errors = $this->validator->validate($plugin);
         $this->validator->deactivateUpdateMode();
 
-        if (0 !== count($errors)) {
+        if (!empty($errors)) {
             $report = "Plugin '{$plugin->getNamespace()}' cannot be installed, due to the "
                 .'following validation errors :'.PHP_EOL;
 

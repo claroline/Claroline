@@ -1,3 +1,4 @@
+import {trans} from '#/main/app/intl/translation'
 import {getApps} from '#/main/app/plugins'
 
 function getActions(users, refresher, withDefault = false) {
@@ -15,6 +16,15 @@ function getActions(users, refresher, withDefault = false) {
   )
 }
 
+function displayUsername(user = null) {
+  if (user) {
+    return user.firstName + ' ' + user.lastName
+  }
+
+  return trans('unknown')
+}
+
 export {
-  getActions
+  getActions,
+  displayUsername
 }

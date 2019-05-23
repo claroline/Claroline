@@ -55,9 +55,8 @@ class ChoicePlayer extends Component {
               }
               <input
                 checked={this.isChecked(choice.id, this.props.answer)}
-                id={choice.id}
+                id={`choice-${choice.id}`}
                 className="choice-item-tick"
-                name={this.props.item.id}
                 type={this.props.item.multiple ? 'checkbox': 'radio'}
                 disabled={this.props.disabled}
                 onChange={() => this.props.onChange(this.select(

@@ -1,35 +1,39 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
-import {ScoreGauge} from '#/main/core/layout/evaluation/components/score-gauge'
+import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
 
-import {utils as paperUtils} from '#/plugin/exo/quiz/papers/utils'
-import {selectors as paperSelectors} from '#/plugin/exo/quiz/papers/selectors'
+import {showCorrection, showScore} from '#/plugin/exo/resources/quiz/papers/restrictions'
 
 // TODO : merge with AttemptEnd
+// TODO : get correct admin flag
 
 const PlayerRestrictions = props => {
-  const showScore = paperUtils.showScore(false, props.lastAttempt.finished, paperSelectors.showScoreAt(props.lastAttempt), paperSelectors.showCorrectionAt(props.lastAttempt), paperSelectors.correctionDate(props.lastAttempt))
-  const showCorrection = paperUtils.showCorrection(false, props.lastAttempt.finished, paperSelectors.showCorrectionAt(props.lastAttempt), paperSelectors.correctionDate(props.lastAttempt))
-  const answers = Object.keys(props.lastAttempt.answers).map(key => props.lastAttempt.answers[key])
+  const showAttemptScore = showScore(props.lastAttempt, false)
+  const showAttemptCorrection = showCorrection(props.lastAttempt, false)
 
   return (
     <div className="quiz-player">
       <div className="row">
-        {showScore &&
+        {showAttemptScore &&
           <div className="col-md-3 text-center">
             <ScoreGauge
-              userScore={paperUtils.computeScore(props.lastAttempt, answers)}
-              maxScore={paperSelectors.paperScoreMax(props.lastAttempt)}
+              type="user"
+              value={get(props.lastAttempt, 'score')}
+              total={get(props.lastAttempt, 'total')}
+              width={140}
+              height={140}
+              displayValue={value => undefined === value || null === value ? '?' : value+''}
             />
           </div>
         }
 
-        <div className={showScore ? 'col-md-9':'col-md-12'}>
+        <div className={showAttemptScore ? 'col-md-9':'col-md-12'}>
           {props.message ?
             <HtmlText>{props.message}</HtmlText> :
             <div>
@@ -48,7 +52,7 @@ const PlayerRestrictions = props => {
                 icon: 'fa fa-fw fa-check-double',
                 label: trans('view_paper', {}, 'quiz'),
                 target: `/papers/${props.lastAttempt.id}`,
-                displayed: showCorrection,
+                displayed: showAttemptCorrection,
                 primary: true
               }, {
                 name: 'statistics',

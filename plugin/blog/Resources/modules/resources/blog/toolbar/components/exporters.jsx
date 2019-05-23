@@ -1,9 +1,11 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {PropTypes as T} from 'prop-types'
+
 import {trans} from '#/main/app/intl/translation'
 import {url} from '#/main/app/api'
-import {PropTypes as T} from 'prop-types'
-import {selectors} from '#/plugin/blog/resources/blog/store'
+
+import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
 
 const ExportersComponent = props =>
   <div className="panel panel-default">
