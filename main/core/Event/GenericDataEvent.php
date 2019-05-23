@@ -43,4 +43,14 @@ class GenericDataEvent extends Event
     {
         $this->response = $response;
     }
+
+    //will override stuff if you set other things than array
+    public function addData($data)
+    {
+        if (!is_array($this->data)) {
+            $this->data = [];
+        }
+
+        $this->data = array_merge($this->data, $data);
+    }
 }

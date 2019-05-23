@@ -6,6 +6,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceTypeSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Icon\ResourceIconItemFilename;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
@@ -15,6 +16,7 @@ use Claroline\CoreBundle\Manager\PluginManager;
 use Claroline\CoreBundle\Manager\VersionManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Asset\Packages;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -68,6 +70,7 @@ class ClientSerializer
      * @DI\InjectParams({
      *     "env"                    = @DI\Inject("%kernel.environment%"),
      *     "assets"                 = @DI\Inject("assets.packages"),
+     *     "eventDispatcher"        = @DI\Inject("event_dispatcher"),
      *     "tokenStorage"           = @DI\Inject("security.token_storage"),
      *     "requestStack"           = @DI\Inject("request_stack"),
      *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
@@ -105,7 +108,8 @@ class ClientSerializer
         VersionManager $versionManager,
         PluginManager $pluginManager,
         IconSetManager $iconManager,
-        ResourceTypeSerializer $resourceTypeSerializer
+        ResourceTypeSerializer $resourceTypeSerializer,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->env = $env;
         $this->assets = $assets;
@@ -119,6 +123,7 @@ class ClientSerializer
         $this->pluginManager = $pluginManager;
         $this->iconManager = $iconManager;
         $this->resourceTypeSerializer = $resourceTypeSerializer;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -132,7 +137,7 @@ class ClientSerializer
             'url' => $this->config->getParameter('logo'),
         ]);
 
-        return [
+        $data = [
             'maintenance' => MaintenanceHandler::isMaintenanceEnabled(),
             'logo' => $logo ? [
                 'url' => $logo->getUrl(),
@@ -165,6 +170,12 @@ class ClientSerializer
             'plugins' => $this->pluginManager->getEnabled(true),
             'javascripts' => $this->config->getParameter('javascripts'),
         ];
+
+        $event = new GenericDataEvent();
+        $this->eventDispatcher->dispatch('claroline_populate_client_config', $event);
+        $data = array_merge($data, $event->getData() ?? []);
+
+        return $data;
     }
 
     private function serializeLocale()
