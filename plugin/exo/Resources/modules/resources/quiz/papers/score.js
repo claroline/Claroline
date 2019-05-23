@@ -51,7 +51,12 @@ function calculateScore(paper) {
     })
   })
 
-  return calculateRuleScore(paper.structure.score, corrected)
+  let score = calculateRuleScore(paper.structure.score, corrected)
+  if (0 > score) {
+    score = 0
+  }
+
+  return score
 }
 
 /**

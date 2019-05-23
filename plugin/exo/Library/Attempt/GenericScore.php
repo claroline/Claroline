@@ -23,10 +23,6 @@ class GenericScore implements AnswerPartInterface
             throw new \InvalidArgumentException('score should be a number.');
         }
 
-        if (0 > $score) {
-            throw new \InvalidArgumentException('score should be greater than 0.');
-        }
-
         $this->score = floatval($score);
     }
 

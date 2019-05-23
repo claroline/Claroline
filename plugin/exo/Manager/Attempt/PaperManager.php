@@ -208,7 +208,12 @@ class PaperManager
                 }
             }
 
-            return $this->scoreManager->calculate($structure['score'], $corrected);
+            $score = $this->scoreManager->calculate($structure['score'], $corrected);
+            if (0 > $score) {
+                $score = 0;
+            }
+
+            return $score;
         }
 
         return null;
