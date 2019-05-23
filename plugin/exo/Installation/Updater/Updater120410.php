@@ -47,6 +47,11 @@ class Updater120410 extends Updater
 
             $this->migrateStructure($paper);
             $this->dumpTotal($paper);
+            
+            if (0 === $i % 100) {
+                $om->flush();
+                $this->log('flush');
+            }
         }
 
         $om->flush();
