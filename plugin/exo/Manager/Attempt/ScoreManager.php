@@ -176,7 +176,7 @@ class ScoreManager
                           $score = 'global' === $rule['target'] ? $rule['points'] : $rule['points'] * $nbChoices;
                           break;
                         case 'more':
-                          if ('global' === $rule->target) {
+                          if ('global' === $rule['target']) {
                               $score = $rule['count'] <= $nbChoices ? $rule['points'] : 0;
                           } else {
                               $score = $rule['count'] <= $nbChoices ? $rule['points'] * $nbChoices : 0;
