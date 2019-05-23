@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
+import cloneDeep from 'lodash/cloneDeep'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
@@ -84,7 +85,24 @@ const EditorParameters = props => {
                 help: [
                   trans('has_expected_answers_help', {}, 'quiz'),
                   trans('has_expected_answers_help_score', {}, 'quiz')
-                ]
+                ],
+                onChange: (value) => {
+                  if (!value) {
+                    // we need to change score rule
+                    props.update('score.type', ScoreNone.name)
+
+                    // we need to disable expected answers on items
+                    const newSteps = cloneDeep(props.steps)
+                    newSteps.map(step => {
+                      step.items.map(item => {
+                        item.hasExpectedAnswers = false
+                        item.score = {type: ScoreNone.name}
+                      })
+                    })
+
+                    props.update('steps', newSteps)
+                  }
+                }
               }
             ]
           }, {
@@ -222,7 +240,7 @@ const EditorParameters = props => {
                                   noEmpty={false}
                                   condensed={true}
                                   placeholder={trans('quiz_select_picking_tags', {}, 'quiz')}
-                                  choices={props.tags.reduce((acc, current) => Object.assign({}, {
+                                  choices={props.tags.reduce((acc, current) => Object.assign(acc, {
                                     [current]: current
                                   }), {})}
                                   value={pickedTag[0]}
@@ -446,12 +464,30 @@ const EditorParameters = props => {
                   condensed: true,
                   choices: availableScores
                 },
+                // TODO : make it a new dataType (duplicated in item editor)
                 linked: currentScore ? currentScore
                   // generate the list of fields for the score type
-                  .configure(props.score)
+                  .configure(props.score, (prop, value) => props.update(`score.${prop}`, value))
                   .map(scoreProp => Object.assign({}, scoreProp, {
-                    name: `score.${scoreProp.name}`
-                  })) : []
+                    name: `score.${scoreProp.name}`,
+                    // slightly ugly because I only support 1 level
+                    linked: scoreProp.linked ? scoreProp.linked.map(linkedProp => Object.assign({}, linkedProp, {
+                      name: `score.${linkedProp.name}`
+                    })) : []
+                  })) : [],
+                onChange: (scoreType) => {
+                  if (ScoreNone.name === scoreType) {
+                    // we need to change score on items
+                    const newSteps = cloneDeep(props.steps)
+                    newSteps.map(step => {
+                      step.items.map(item => {
+                        item.score = {type: ScoreNone.name}
+                      })
+                    })
+
+                    props.update('steps', newSteps)
+                  }
+                }
               }
             ]
           }, {
@@ -573,6 +609,9 @@ EditorParameters.propTypes = {
   score: T.shape({
     type: T.string.isRequired
   }).isRequired,
+  steps: T.arrayOf(T.shape({
+    // TODO : prop types
+  })),
   numberingType: T.string.isRequired,
   randomPick: T.string,
   tags: T.array.isRequired,

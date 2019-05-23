@@ -178,15 +178,16 @@ actions.handleAttemptEnd = (paper, navigate) => {
     // Finish the current attempt
     dispatch(actions.finishAttempt(paper))
     dispatch(paperAction.addPaper(paper))
+    dispatch(paperAction.setCurrentPaper(paper))
 
     // We will decide here if we show the correction now or not and where we redirect the user
     if (playerSelectors.hasEndPage(getState())) {
       // Show the end page
       navigate('play/end')
     } else {
+      // todo : reuse papers/restrictions.js
       switch (playerSelectors.showCorrectionAt(getState())) {
         case 'validation': {
-          dispatch(paperAction.setCurrentPaper(paper))
           navigate('papers/' + paper.id)
           break
         }
@@ -196,7 +197,6 @@ actions.handleAttemptEnd = (paper, navigate) => {
           const showPaper = today.diff(correctionDate, 'days') >= 0
 
           if (showPaper) {
-            dispatch(paperAction.setCurrentPaper(paper))
             navigate('papers/' + paper.id)
           } else {
             navigate('/')

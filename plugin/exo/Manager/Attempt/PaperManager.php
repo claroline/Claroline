@@ -198,6 +198,9 @@ class PaperManager
                                     $corrected->addExpected(new GenericScore($itemAnswer->getScore()));
                                 } else {
                                     $corrected->addUnexpected(new GenericScore($itemAnswer->getScore()));
+
+                                    // this may be problematic there will be score "rules" (item will be counted in 2 times)
+                                    $corrected->addMissing(new GenericScore($itemTotal));
                                 }
                             }
                         }

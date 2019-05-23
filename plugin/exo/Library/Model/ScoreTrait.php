@@ -12,9 +12,9 @@ trait ScoreTrait
     /**
      * @var float
      *
-     * @ORM\Column(name="score", type="float")
+     * @ORM\Column(name="score", type="float", nullable=true)
      */
-    private $score;
+    private $score = 0;
 
     /**
      * Sets score.

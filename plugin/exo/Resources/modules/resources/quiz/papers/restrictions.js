@@ -1,3 +1,5 @@
+import get from 'lodash/get'
+
 import {constants} from '#/plugin/exo/resources/quiz/constants'
 
 /**
@@ -13,8 +15,8 @@ function showCorrection(paper, admin = false) {
     return true
   }
 
-  const showCorrectionAt = paper.parameters.showCorrectionAt
-  const correctionDate = paper.parameters.correctionDate
+  const showCorrectionAt = get(paper, 'structure.parameters.showCorrectionAt')
+  const correctionDate = get(paper, 'structure.parameters.correctionDate')
 
   if (showCorrectionAt === constants.QUIZ_RESULTS_AT_VALIDATION || showCorrectionAt === constants.QUIZ_RESULTS_AT_LAST_ATTEMPT){
     return paper.finished
@@ -43,7 +45,7 @@ function showScore(paper, admin = false) {
     return true
   }
 
-  const showScoreAt = paper.parameters.showScoreAt
+  const showScoreAt = get(paper, 'structure.parameters.showScoreAt')
   if (showScoreAt === constants.QUIZ_SCORE_AT_CORRECTION){
     return showCorrection(paper, admin)
   }

@@ -67,6 +67,7 @@ const ItemEditor = props => {
               name: 'hasExpectedAnswers',
               label: trans('has_expected_answers', {}, 'quiz'),
               type: 'boolean',
+              displayed: props.enableScores,
               help: [
                 trans('has_expected_answers_help', {}, 'quiz'),
                 trans('has_expected_answers_help_score', {}, 'quiz')
@@ -117,7 +118,7 @@ const ItemEditor = props => {
         }, {
           icon: 'fa fa-fw fa-percentage',
           title: trans('score'),
-          displayed: props.definition.answerable && props.item.hasExpectedAnswers,
+          displayed: props.enableScores && props.definition.answerable && props.item.hasExpectedAnswers,
           fields: [
             {
               name: 'score.type',
@@ -130,11 +131,16 @@ const ItemEditor = props => {
                 // get the list of score supported by the current type
                 choices: availableScores
               },
+              // TODO : make it a new dataType (duplicated in quiz editor)
               linked: currentScore ? currentScore
                 // generate the list of fields for the score type
-                .configure(get(props.item, 'score'))
+                .configure(get(props.item, 'score'), (prop, value) => props.update(`score.${prop}`, value))
                 .map(scoreProp => Object.assign({}, scoreProp, {
-                  name: `score.${scoreProp.name}`
+                  name: `score.${scoreProp.name}`,
+                  // slightly ugly because I only support 1 level
+                  linked: scoreProp.linked ? scoreProp.linked.map(linkedProp => Object.assign({}, linkedProp, {
+                    name: `score.${linkedProp.name}`
+                  })) : []
                 })) : []
             }
           ]
@@ -195,6 +201,7 @@ ItemEditor.propTypes = {
   formName: T.string.isRequired,
   path: T.string,
   disabled: T.bool,
+  enableScores: T.bool, // used when the parent quiz disable the score
 
   /**
    * The item object currently edited.
@@ -216,7 +223,8 @@ ItemEditor.propTypes = {
 ItemEditor.defaultProps = {
   embedded: false,
   meta: false,
-  disabled: false
+  disabled: false,
+  enableScores: true
 }
 
 export {

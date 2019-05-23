@@ -219,7 +219,7 @@ const ChoiceEditor = props => {
         })
 
         let score = 1
-        if (!props.item.multiple -1 !== newSolutions.findIndex(solution => 0 < solution.score)) {
+        if (!props.item.multiple && -1 !== newSolutions.findIndex(solution => 0 < solution.score)) {
           // there is a correct answer so all new one should be incorrect
           score = 0
         }

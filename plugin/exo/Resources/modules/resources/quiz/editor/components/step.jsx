@@ -86,6 +86,7 @@ const EditorStep = props => {
                 formName={props.formName}
                 path={`${props.path}.items[${itemIndex}]`}
 
+                enableScores={props.hasExpectedAnswers}
                 numbering={getNumbering(props.numberingType, props.index, itemIndex)}
                 item={item}
                 update={(prop, value) => props.update(prop ? `items[${itemIndex}].${prop}`:`items[${itemIndex}]`, value)}
@@ -155,7 +156,17 @@ const EditorStep = props => {
             icon="fa fa-fw fa-plus"
             label={trans('add_question_from_new', {}, 'quiz')}
             modal={[MODAL_ITEM_CREATION, {
-              create: (item) => props.update('items', [].concat(props.items, [item]))
+              create: (item) => {
+                if (!props.hasExpectedAnswers) {
+                  item.hasExpectedAnswers = false
+                }
+
+                if (!props.hasExpectedAnswers || 'none' === props.score.type) {
+                  item.score = props.score
+                }
+
+                props.update('items', [].concat(props.items, [item]))
+              }
             }]}
             primary={true}
           />
@@ -168,7 +179,20 @@ const EditorStep = props => {
             modal={[MODAL_ITEM_IMPORT, {
               selectAction: (items) => ({
                 type: CALLBACK_BUTTON,
-                callback: () => props.update('items', uniqBy([].concat(props.items, items), (item) => item.id))
+                callback: () => {
+                  // append some quiz parameters to the item
+                  items = items.map(item => {
+                    if (!props.hasExpectedAnswers) {
+                      item.hasExpectedAnswers = false
+                    }
+
+                    if (!props.hasExpectedAnswers || 'none' === props.score.type) {
+                      item.score = props.score
+                    }
+                  })
+
+                  props.update('items', uniqBy([].concat(props.items, items), (item) => item.id))
+                }
               })
             }]}
           />
@@ -189,6 +213,10 @@ EditorStep.propsTypes = {
   actions: T.arrayOf(T.shape(
     ActionTypes.propTypes
   )),
+  hasExpectedAnswers: T.bool.isRequired,
+  score: T.shape({
+    type: T.string.isRequired
+  }).isRequired,
   items: T.arrayOf(T.shape({
     // TODO : prop types
   })),

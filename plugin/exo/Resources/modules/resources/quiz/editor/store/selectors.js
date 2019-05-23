@@ -35,6 +35,11 @@ const numberingType = createSelector(
   (quiz) => get(quiz, 'parameters.numbering')
 )
 
+const hasExpectedAnswers = createSelector(
+  [quiz],
+  (quiz) => get(quiz, 'parameters.hasExpectedAnswers')
+)
+
 const score = createSelector(
   [quiz],
   (quiz) => get(quiz, 'score')
@@ -47,7 +52,7 @@ const randomPick = createSelector(
 
 const tags = createSelector(
   [items],
-  (items) => uniq(Object.keys(items).map(key => items[key]).reduce((tags, item) => [...tags.concat(item.tags)], []))
+  (items) => uniq(items.reduce((tags, item) => tags.concat(item.tags), []))
 )
 
 export const selectors = {
@@ -59,5 +64,6 @@ export const selectors = {
   numberingType,
   randomPick,
   tags,
-  score
+  score,
+  hasExpectedAnswers
 }

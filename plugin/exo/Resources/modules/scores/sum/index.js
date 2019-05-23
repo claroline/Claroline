@@ -10,12 +10,17 @@ export default {
   },
 
   hasAnswerScores: true,
-  configure: (score) => [
+  configure: (score, update) => [
     {
       name: '_roundScore',
       label: trans('round_total_score', {}, 'quiz'),
       type: 'boolean',
       calculated: score.total || score._roundScore,
+      onChange: (checked) => {
+        if (!checked) {
+          update('total', null)
+        }
+      },
       linked: [
         {
           name: 'total',

@@ -31,7 +31,7 @@ const EditorItem = props =>
 
       return (
         <FormSection
-          {...omit(props, 'formName', 'path', 'index', 'item', 'update')}
+          {...omit(props, 'formName', 'path', 'index', 'item', 'update', 'enableScores')}
           id={props.item.id}
           className="embedded-form-section"
           icon={
@@ -53,6 +53,7 @@ const EditorItem = props =>
             formName={props.formName}
             path={props.path}
             disabled={!props.item.rights.edit}
+            enableScores={props.enableScores}
 
             definition={itemDefinition}
             item={props.item}
@@ -67,6 +68,7 @@ EditorItem.propTypes = {
   formName: T.string.isRequired,
   path: T.string.isRequired,
 
+  enableScores: T.bool,
   numbering: T.string,
   item: T.shape(
     ItemTypes.propTypes

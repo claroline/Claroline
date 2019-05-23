@@ -185,6 +185,9 @@ class Paper
     public function setStructure($structure)
     {
         $this->structure = $structure;
+
+        // reset stored decoded structure
+        $this->decodedStructure = null;
     }
 
     /**

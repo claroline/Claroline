@@ -42,6 +42,9 @@ function calculateScore(paper) {
             corrected.addExpected(new Answerable(calculateItemScore(item, answer), item.id))
           } else {
             corrected.addUnexpected(new Answerable(calculateItemScore(item, answer), item.id))
+
+            // this may be problematic there will be score "rules" (item will be counted in 2 times)
+            corrected.addMissing(new Answerable(itemTotal, item.id))
           }
         }
       }
