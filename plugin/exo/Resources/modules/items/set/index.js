@@ -72,11 +72,15 @@ export default {
 
     item.solutions.odd.forEach(odd => {
       const penalty = answer && answer.data ? answer.data.find(answer => answer.itemId === odd.itemId): null
-      if (penalty) corrected.addPenalty(new Answerable(-odd.score))
+      if (penalty) {
+        corrected.addPenalty(new Answerable(Math.abs(odd.score)))
+      }
     })
 
     const found = answer && answer.data ? answer.data.length: 0
-    times(item.solutions.associations.length - found, () => corrected.addPenalty(new Answerable(item.penalty)))
+    if (item.penalty && 0 !== item.solutions.associations.length - found) {
+      times(item.solutions.associations.length - found, () => corrected.addPenalty(new Answerable(item.penalty)))
+    }
 
     return corrected
   },

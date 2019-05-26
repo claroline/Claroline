@@ -46,9 +46,18 @@ const AttemptEndComponent = props =>
         {props.endNavigation &&
           <Toolbar
             buttonName="btn btn-block btn-emphasis"
-            toolbar="restart correction statistics home"
+            toolbar="test restart correction statistics home"
             actions={[
               {
+                name: 'test',
+                type: LINK_BUTTON,
+                icon: 'fa fa-fw fa-flask',
+                label: trans('test', {}, 'actions'),
+                target: '/test',
+                exact: true,
+                primary: true,
+                displayed: props.testMode
+              }, {
                 name: 'restart',
                 type: LINK_BUTTON,
                 icon: 'fa fa-fw fa-redo',
@@ -94,6 +103,7 @@ AttemptEndComponent.propTypes = {
     structure: T.object.isRequired,
     finished: T.bool.isRequired
   }).isRequired,
+  testMode: T.bool.isRequired,
   hasMoreAttempts: T.bool.isRequired,
   endMessage: T.string,
   endNavigation: T.bool.isRequired,
@@ -110,6 +120,7 @@ const AttemptEnd = connect(
     return {
       workspaceId: resourceSelect.workspaceId(state),
       paper: paper,
+      testMode: playerSelect.testMode(state),
       hasMoreAttempts: playerSelect.hasMoreAttempts(state),
       endMessage: playerSelect.quizEndMessage(state),
       endNavigation: playerSelect.quizEndNavigation(state),

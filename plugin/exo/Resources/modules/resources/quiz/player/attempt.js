@@ -16,13 +16,11 @@ import {calculateTotal} from '#/plugin/exo/resources/quiz/papers/score'
  * Generate a new paper for a quiz.
  *
  * @param {object} quiz - the quiz definition
- * @param {object} steps - the list of quiz steps
- * @param {object} items - the list of quiz items
  * @param {object} previousPaper - the previous attempt of the user if any
  *
  * @returns {{number: number, anonymized: boolean, structure}}
  */
-function generateAttempt(quiz, steps, items, previousPaper = null) {
+function generateAttempt(quiz, previousPaper = null) {
   const newPaper = {
     id: makeId(),
     finished: false,
@@ -31,7 +29,7 @@ function generateAttempt(quiz, steps, items, previousPaper = null) {
     user: currentUser(),
     number: previousPaper ? previousPaper.number + 1 : 1,
     anonymized: quiz.parameters.anonymizeAttempts,
-    structure: generateStructure(quiz, steps, items, previousPaper)
+    structure: generateStructure(quiz, previousPaper)
   }
 
   // dump paper total score
@@ -40,17 +38,17 @@ function generateAttempt(quiz, steps, items, previousPaper = null) {
   return newPaper
 }
 
-function generateStructure(quiz, steps, items, previousPaper = null) {
+function generateStructure(quiz, previousPaper = null) {
   switch (quiz.picking.type) {
     case constants.QUIZ_PICKING_TAGS:
-      return generateStructureByTags(quiz, steps, items, previousPaper)
+      return generateStructureByTags(quiz, previousPaper)
     case constants.QUIZ_PICKING_DEFAULT:
     default:
-      return generateStructureBySteps(quiz, steps, items, previousPaper)
+      return generateStructureBySteps(quiz, previousPaper)
   }
 }
 
-function generateStructureBySteps(quiz, steps, items, previousPaper = null) {
+function generateStructureBySteps(quiz, previousPaper = null) {
   const picking = quiz.picking
   const previousStructure = getPreviousStructure(quiz, previousPaper)
 
@@ -61,7 +59,7 @@ function generateStructureBySteps(quiz, steps, items, previousPaper = null) {
     pickedSteps = previousStructure.steps.slice(0)
   } else {
     // Pick a new set of steps
-    pickedSteps = pick(quiz.steps, picking.pick).map(stepId => steps[stepId])
+    pickedSteps = pick(quiz.steps, picking.pick)
   }
 
   // Shuffles steps if needed
@@ -82,7 +80,7 @@ function generateStructureBySteps(quiz, steps, items, previousPaper = null) {
         pickedItems = stepStructure.items.slice(0)
       } else {
         // Pick a new set of questions
-        pickedItems = pick(pickedStep.items, pickedStep.picking.pick).map(itemId => items[itemId])
+        pickedItems = pick(pickedStep.items, pickedStep.picking.pick)
       }
 
       // Shuffles items if needed
@@ -98,7 +96,7 @@ function generateStructureBySteps(quiz, steps, items, previousPaper = null) {
   })
 }
 
-function generateStructureByTags(quiz, steps, items, previousPaper = null) {
+function generateStructureByTags(quiz, previousPaper = null) {
   const picking = quiz.picking
   const previousStructure = getPreviousStructure(quiz, previousPaper)
 
@@ -107,18 +105,20 @@ function generateStructureByTags(quiz, steps, items, previousPaper = null) {
   if (previousPaper && constants.SHUFFLE_ONCE === picking.randomPick) {
     // Get picked steps from the last user paper
     previousStructure.steps.map(step => {
-      step.items.map(itemId => {
-        pickedItems.push(items[itemId])
-      })
+      pickedItems = pickedItems.concat(step.items || [])
     })
   } else {
     // Pick a new set of items
-    const quizItems = Object.keys(items).map(itemId => items[itemId])
-
     // Only pick wanted tags (format : ['tagName', itemCount])
     picking.pick.map(pickedTag => {
       pickedItems = pickedItems.concat(
-        quizItems.filter(item => item.tags && -1 !== item.tags.indexOf(pickedTag[0]))
+        quiz.steps.reduce((items, step) => {
+          if (step.items) {
+            return items.concat(step.items.filter(item => item.tags && -1 !== item.tags.indexOf(pickedTag[0])))
+          }
+
+          return items
+        }, [])
       )
     })
   }

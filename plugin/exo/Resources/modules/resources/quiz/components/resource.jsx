@@ -36,7 +36,7 @@ const QuizResource = props =>
         target: '/play'
       }, {
         type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-play',
+        icon: 'fa fa-fw fa-flask',
         label: trans('test', {}, 'actions'),
         displayed: props.editable,
         disabled: props.empty,

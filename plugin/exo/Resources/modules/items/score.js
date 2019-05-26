@@ -1,4 +1,5 @@
 import {getDefinition} from '#/plugin/exo/items/item-types'
+import {Answerable} from '#/plugin/exo/items/utils'
 import {
   calculateScore as calculateRuleScore,
   calculateTotal as calculateRuleTotal
@@ -24,7 +25,7 @@ function calculateScore(item, answer, applyHints = true) {
     if (applyHints && answer.usedHints) {
       answer.usedHints.map(hint => {
         if (hint.penalty) {
-          correctedAnswer.addPenalty(hint.penalty)
+          correctedAnswer.addPenalty(new Answerable(hint.penalty))
         }
       })
     }

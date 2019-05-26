@@ -7,10 +7,16 @@ import {selectors as playerSelectors} from '#/plugin/exo/resources/quiz/player/s
 
 const quizId = quizSelectors.id
 
-const offline = createSelector(
+const testMode = createSelector(
   [quizSelectors.resource],
   (resource) => resource.testMode || false
 )
+
+const offline = createSelector(
+  [testMode],
+  (testMode) => testMode
+)
+
 const paper = createSelector(
   [quizSelectors.resource],
   (resource) => resource.paper
@@ -215,6 +221,7 @@ const countItems = createSelector(
 
 export const select = {
   quizId,
+  testMode,
   offline,
   paper,
   steps,

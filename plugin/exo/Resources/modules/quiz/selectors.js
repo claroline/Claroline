@@ -38,11 +38,6 @@ const id = createSelector(
   (quiz) => quiz.id
 )
 
-const testMode = createSelector(
-  resource,
-  (resource) => resource.testMode || false
-)
-
 const quizSteps = createSelector(
   quiz,
   (quiz) => quiz.steps || []
@@ -111,7 +106,6 @@ export default {
   parameters,
   title,
   hasOverview,
-  testMode,
   quizNumbering,
   papersShowExpectedAnswers,
   papersShowStatistics,
@@ -134,7 +128,6 @@ export const select = {
   parameters,
   title,
   hasOverview,
-  testMode,
   quizNumbering,
   papersShowExpectedAnswers,
   papersShowStatistics,
@@ -157,7 +150,6 @@ export const selectors = {
   parameters,
   title,
   hasOverview,
-  testMode,
   quizNumbering,
   papersShowExpectedAnswers,
   papersShowStatistics,

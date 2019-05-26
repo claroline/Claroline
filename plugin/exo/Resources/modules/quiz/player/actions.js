@@ -7,7 +7,7 @@ import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
 import {actions as resourceActions} from '#/main/core/resource/store'
 
-import quizSelectors from '#/plugin/exo/quiz/selectors'
+import {selectors as quizSelectors} from '#/plugin/exo/resources/quiz/store/selectors'
 import {select as playerSelectors} from '#/plugin/exo/quiz/player/selectors'
 import {normalize, denormalizeAnswers, denormalize} from '#/plugin/exo/quiz/player/normalizer'
 import {generateAttempt} from '#/plugin/exo/resources/quiz/player/attempt'
@@ -74,15 +74,13 @@ actions.play = (previousPaper = null) => {
 
     if (!playerSelectors.offline(getState())) {
       // Normal : Request a paper from the API and open the player
-      return dispatch(actions.fetchAttempt(quizSelectors.quiz(getState()).id))
+      return dispatch(actions.fetchAttempt(quizSelectors.id(getState())))
     } else {
       // Offline & Tests : create a new local paper and open the player
       // Promise is to expose the same interface than when there are async calls
       return Promise.resolve(dispatch(
         actions.initPlayer(generateAttempt(
           quizSelectors.quiz(getState()),
-          quizSelectors.steps(getState()),
-          quizSelectors.items(getState()),
           previousPaper
         ))
       ))

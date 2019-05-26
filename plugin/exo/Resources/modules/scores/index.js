@@ -26,7 +26,11 @@ function calculateScore(scoreRule, correctedAnswer) {
   if (currentScore) {
     let score = currentScore.calculate(scoreRule, correctedAnswer)
     if (null !== score) {
-      score = correctedAnswer.getPenalties().reduce((score, penalty) => score - penalty, score)
+      score = correctedAnswer.getPenalties()
+        .reduce((score, penalty) => score - penalty.getScore(), score)
+
+      // round final score
+      score = Math.round(score * 100) / 100
     }
 
     return score
@@ -46,7 +50,13 @@ function calculateScore(scoreRule, correctedAnswer) {
 function calculateTotal(scoreRule, expectedAnswers = [], allAnswers = []) {
   const currentScore = SCORE_TYPES[scoreRule.type]
   if (currentScore) {
-    return currentScore.calculateTotal(scoreRule, expectedAnswers, allAnswers)
+    let total = currentScore.calculateTotal(scoreRule, expectedAnswers, allAnswers)
+    if (null !== total) {
+      // round total
+      total = Math.round(total * 100) / 100
+    }
+
+    return total
   }
 
   return null
