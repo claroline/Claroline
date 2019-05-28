@@ -92,7 +92,9 @@ class ResourceManager implements ToolImporterInterface
             $data['resources'][] = $resource;
 
             foreach ($root->getChildren() as $child) {
-                $data = $this->recursiveSerialize($child, $options, $data);
+                if ($child->isActive()) {
+                    $data = $this->recursiveSerialize($child, $options, $data);
+                }
             }
         }
 
