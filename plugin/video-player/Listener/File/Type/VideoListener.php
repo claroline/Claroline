@@ -2,7 +2,6 @@
 
 namespace Claroline\VideoPlayerBundle\Listener\File\Type;
 
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Event\Resource\File\LoadFileEvent;
 use Claroline\VideoPlayerBundle\Entity\Track;
@@ -12,8 +11,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service
- *
- * @todo : manage audio in it's own plugin
  */
 class VideoListener
 {
@@ -31,19 +28,16 @@ class VideoListener
      *     "manager"    = @DI\Inject("claroline.manager.video_player_manager")
      * })
      *
-     * @param SerializerProvider $serializer
+     * @param TrackSerializer    $serializer
      * @param VideoPlayerManager $manager
      */
-    public function __construct(
-        TrackSerializer $serializer,
-        VideoPlayerManager $manager)
+    public function __construct(TrackSerializer $serializer, VideoPlayerManager $manager)
     {
         $this->serializer = $serializer;
         $this->manager = $manager;
     }
 
     /**
-     * @DI\Observe("file.audio.load")
      * @DI\Observe("file.video.load")
      *
      * @param LoadFileEvent $event
@@ -54,11 +48,10 @@ class VideoListener
         $resource = $event->getResource();
         $tracks = $this->manager->getTracksByVideo($resource);
 
-        $event->setData([
+        $event->setData(array_merge([
             'tracks' => array_map(function (Track $track) {
                 return $this->serializer->serialize($track);
             }, $tracks),
-        ]);
-        $event->stopPropagation();
+        ], $event->getData()));
     }
 }

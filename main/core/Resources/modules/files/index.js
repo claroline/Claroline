@@ -24,6 +24,20 @@ function getFile(mimeType) {
   return Promise.resolve(null)
 }
 
+function getTypeName(mimeType) {
+  const mimeTypeParts = mimeType.split('/')
+
+  switch (mimeTypeParts[0]) {
+    case 'audio':
+    case 'video':
+    case 'image':
+      return mimeTypeParts[0]
+    default:
+      return mimeType
+  }
+}
+
 export {
-  getFile
+  getFile,
+  getTypeName
 }

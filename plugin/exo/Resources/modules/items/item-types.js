@@ -12,7 +12,7 @@ import words from '#/plugin/exo/items/words'
 import set from '#/plugin/exo/items/set'
 import grid from '#/plugin/exo/items/grid'
 import ordering from '#/plugin/exo/items/ordering'
-
+import waveform from '#/plugin/audio-player/quiz/items/waveform'
 
 let registeredTypes = {}
 let defaultRegistered = false
@@ -36,7 +36,7 @@ export function registerItemType(definition) {
 
 export function registerDefaultItemTypes() {
   if (!defaultRegistered) {
-    [choice, match, cloze, graphic, open, pair, words, set, grid, ordering, selection].forEach(registerItemType)
+    [choice, match, cloze, graphic, open, pair, words, set, grid, ordering, selection, waveform].forEach(registerItemType)
     defaultRegistered = true
   }
 }

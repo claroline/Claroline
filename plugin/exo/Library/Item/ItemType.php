@@ -92,6 +92,12 @@ final class ItemType
      * @var string
      */
     const SELECTION = 'application/x.selection+json';
+    /**
+     * The user has to write his answer.
+     *
+     * @var string
+     */
+    const WAVEFORM = 'application/x.waveform+json';
 
     /**
      * Get the list of managed item types.
@@ -114,6 +120,7 @@ final class ItemType
             static::CONTENT,
             static::ORDERING,
             static::BOOLEAN,
+            static::WAVEFORM,
         ];
     }
 

@@ -4,7 +4,11 @@ namespace Claroline\CoreBundle\API\Serializer\Resource\Types;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\Entity\Resource\File;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Event\GenericDataEvent;
+use Claroline\CoreBundle\Event\Resource\File\LoadFileEvent;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -20,21 +24,30 @@ class FileSerializer
 
     private $filesDir;
 
+    /** @var EventDispatcherInterface */
+    protected $eventDispatcher;
+
     /**
      * ResourceNodeManager constructor.
      *
      * @DI\InjectParams({
-     *     "router"    = @DI\Inject("router"),
-     *     "filesDir" = @DI\Inject("%claroline.param.files_directory%")
+     *     "router"          = @DI\Inject("router"),
+     *     "filesDir"        = @DI\Inject("%claroline.param.files_directory%"),
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher")
      * })
      *
-     * @param RouterInterface $router
-     * @param string          $filesDir
+     * @param RouterInterface          $router
+     * @param string                   $filesDir
+     * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(RouterInterface $router, $filesDir)
-    {
+    public function __construct(
+        RouterInterface $router,
+        $filesDir,
+        EventDispatcherInterface $eventDispatcher
+    ) {
         $this->router = $router;
         $this->filesDir = $filesDir;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -62,7 +75,18 @@ class FileSerializer
             ]),
         ];
 
-        return $options;
+        $additionalFileData = [];
+
+        $fallBackEvent = $this->eventDispatcher->dispatch(
+            $this->generateEventName($file->getResourceNode(), 'load'),
+            new LoadFileEvent($file, $this->filesDir.DIRECTORY_SEPARATOR.$file->getHashName())
+        );
+
+        if ($fallBackEvent->isPopulated()) {
+            $additionalFileData = $fallBackEvent->getData();
+        }
+
+        return array_merge($additionalFileData, $options);
     }
 
     public function deserialize($data, File $file, array $options = [])
@@ -75,5 +99,23 @@ class FileSerializer
             $resourceNode = $file->getResourceNode();
             $resourceNode->setCommentsActivated($data['commentsActivated']);
         }
+        if ($file->getResourceNode()) {
+            $dataEvent = new GenericDataEvent([
+                'resourceNode' => $file->getResourceNode(),
+                'data' => $data,
+            ]);
+            $this->eventDispatcher->dispatch('resource.file.deserialize', $dataEvent);
+        }
+    }
+
+    private function generateEventName(ResourceNode $node, $event)
+    {
+        $mimeType = $node->getMimeType();
+        $mimeElements = explode('/', $mimeType);
+        $suffix = strtolower($mimeElements[0]);
+        $eventName = strtolower(str_replace('/', '_', $suffix));
+        $eventName = str_replace('"', '', $eventName);
+
+        return 'file.'.$eventName.'.'.$event;
     }
 }

@@ -1,0 +1,23 @@
+{
+    "activate_rate_control": "Activer le contrôle de la vitesse de lecture",
+    "allow_comments": "Autoriser les commentaires",
+    "display_all_comments": "Afficher tous les commentaires",
+    "display_my_comments": "Afficher mes commentaires",
+    "display_sections": "Afficher les sections",
+    "end": "Fin",
+    "end_tolerance": "Tolérance de fin",
+    "pause": "Pause",
+    "play": "Play",
+    "section_deletion": "Suppression de la section",
+    "section_deletion_confirm_message": "Êtes-vous sûr de vouloir supprimer cette section ?",
+    "section_end": "Fin de section",
+    "section_start": "Début de section",
+    "section_type_manager": "Zones prédécoupées",
+    "section_type_user": "Zones à borner",
+    "sections_type": "Type de zones",
+    "show_help": "Afficher l'aide",
+    "show_section_audio": "Afficher le fichier audio associé à la section",
+    "start": "Début",
+    "start_tolerance": "Tolérance de début",
+    "transcript": "Transcription"
+}

@@ -110,7 +110,8 @@
         "icap/inwicast-plugin-bundle": "*",
         "claroline/drop-zone-bundle": "*",
         "claroline/link-bundle": "*",
-        "claroline/slideshow-bundle": "*"
+        "claroline/slideshow-bundle": "*",
+        "claroline/audio-player-bundle": "*"
     },
     "autoload": {
         "psr-4": {
@@ -165,7 +166,8 @@
             "Claroline\\PlannedNotificationBundle\\": "plugin/planned-notification",
             "Claroline\\LinkBundle\\": "plugin/link",
             "Claroline\\OpenBadgeBundle\\": "plugin/open-badge",
-            "Claroline\\SlideshowBundle\\": "plugin/slideshow"
+            "Claroline\\SlideshowBundle\\": "plugin/slideshow",
+            "Claroline\\AudioPlayerBundle\\": "plugin/audio-player"
         }
     },
     "extra": {
@@ -218,7 +220,8 @@
             "Claroline\\PlannedNotificationBundle\\ClarolinePlannedNotificationBundle",
             "Claroline\\LinkBundle\\ClarolineLinkBundle",
             "Claroline\\SlideshowBundle\\ClarolineSlideshowBundle",
-            "Claroline\\OpenBadgeBundle\\ClarolineOpenBadgeBundle"
+            "Claroline\\OpenBadgeBundle\\ClarolineOpenBadgeBundle",
+            "Claroline\\AudioPlayerBundle\\ClarolineAudioPlayerBundle"
         ]
     }
 }

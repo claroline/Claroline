@@ -7,7 +7,6 @@ import {registry} from '#/main/app/plugins/registry'
  */
 registry.add('ClarolineVideoPlayerBundle', {
   files: {
-    'audio/*': () => { return import(/* webpackChunkName: "plugin-audio-file-audio" */ '#/plugin/video-player/files/video') },
     'video/*': () => { return import(/* webpackChunkName: "plugin-video-file-video" */ '#/plugin/video-player/files/video') }
   }
 })

@@ -121,6 +121,7 @@
     "at_least_one_category_has_to_be_selected": "At least one category has to be selected",
     "attempt": "Attempt",
     "attempts": "Attempts",
+    "audio": "Audio",
     "auth_mode": "Authentication mode",
     "authentication": "Authentication",
     "authentication_invalid": "The authentication source %authentication% at line %line% is invalid.",

@@ -48,7 +48,7 @@
     "typeahead.js-bootstrap-css": "git://github.com/bassjobsen/typeahead.js-bootstrap-css.git#1.2.1",
     "uuid": "^3.3.2",
     "video.js": "^7.4.1",
-    "wavesurfer.js": "1.1.8",
+    "wavesurfer.js": "2.2.1",
     "whatwg-fetch": "^2.0.1"
   },
   "files": [
