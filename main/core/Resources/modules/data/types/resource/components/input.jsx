@@ -90,6 +90,7 @@ const ResourceInput = props => {
             title: props.picker.title,
             current: props.picker.current,
             root: props.picker.root,
+            filters: props.picker.filters,
             selectAction: (selected) => ({
               type: CALLBACK_BUTTON,
               label: trans('select', {}, 'actions'),
@@ -117,7 +118,8 @@ implementPropTypes(ResourceInput, FormFieldTypes, {
   picker: T.shape({
     title: T.string,
     current: T.shape(ResourceNodeTypes.propTypes),
-    root: T.shape(ResourceNodeTypes.propTypes)
+    root: T.shape(ResourceNodeTypes.propTypes),
+    filters: T.object
   }),
   onEmbeddedResourceClose: T.func
 }, {
@@ -125,6 +127,7 @@ implementPropTypes(ResourceInput, FormFieldTypes, {
   picker: {
     title: trans('resource_picker'),
     current: null,
+    filters: {},
     root: null
   }
 })

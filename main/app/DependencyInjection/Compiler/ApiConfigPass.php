@@ -24,6 +24,7 @@ class ApiConfigPass implements CompilerPassInterface
         $this->register($container, 'claroline.api.validator', 'claroline.validator');
         $this->register($container, 'claroline.api.transfer', 'claroline.transfer.adapter');
         $this->register($container, 'claroline.api.transfer', 'claroline.transfer.action');
+        $this->register($container, 'claroline.api.schema', 'claroline.serializer');
     }
 
     private function register(ContainerBuilder $container, $provider, $registerTag)

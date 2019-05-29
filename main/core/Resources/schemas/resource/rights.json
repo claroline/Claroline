@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "translationKey": {
+      "type": "string",
+      "description": "The role translationKey"
+    },
+    "name": {
+      "type": "string",
+      "description": "The role name"
+    },
+    "permission": {
+      "type": "object",
+      "properties": {
+        "open": {
+          "type": "boolean",
+          "description": "The open property"
+        },
+        "copy": {
+          "type": "boolean",
+          "description": "The copy property"
+        },
+        "delete": {
+          "type": "boolean",
+          "description": "The delete property"
+        },
+        "export": {
+          "type": "boolean",
+          "description": "The export property"
+        },
+        "edit": {
+          "type": "boolean",
+          "description": "The edit property"
+        },
+        "administrate": {
+          "type": "boolean",
+          "description": "The administrate property"
+        }
+      }
+    }
+  }
+}

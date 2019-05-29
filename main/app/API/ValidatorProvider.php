@@ -18,8 +18,8 @@ class ValidatorProvider
     const UPDATE = 'update';
     /** @var ObjectManager */
     private $om;
-    /** @var SerializerProvider */
-    private $serializer;
+    /** @var SchemaProvider */
+    private $schema;
 
     /**
      * The list of registered validators in the platform.
@@ -32,17 +32,17 @@ class ValidatorProvider
      * GroupValidator constructor.
      *
      * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
+     *     "om"     = @DI\Inject("claroline.persistence.object_manager"),
+     *     "schema" = @DI\Inject("claroline.api.schema")
      * })
      *
      * @param ObjectManager      $om
      * @param SerializerProvider $serializer
      */
-    public function __construct(ObjectManager $om, SerializerProvider $serializer)
+    public function __construct(ObjectManager $om, SchemaProvider $schema)
     {
         $this->om = $om;
-        $this->serializer = $serializer;
+        $this->schema = $schema;
     }
 
     /**
@@ -101,7 +101,7 @@ class ValidatorProvider
      */
     public function validate($class, $data, $mode, $throwException = false, array $options = [])
     {
-        $schema = $this->serializer->getSchema($class);
+        $schema = $this->schema->getSchema($class);
 
         //schema isn't always there yet
         if ($schema) {
@@ -126,10 +126,12 @@ class ValidatorProvider
         } catch (\Exception $e) {
             //no custom validator
             $uniqueFields = [];
-            $identifiers = $this->serializer->getIdentifiers($class);
+            $identifiers = $this->schema->getIdentifiers($class);
 
-            foreach ($identifiers as $identifier) {
-                $uniqueFields[$identifier] = $identifier;
+            if (is_array($identifiers)) {
+                foreach ($identifiers as $identifier) {
+                    $uniqueFields[$identifier] = $identifier;
+                }
             }
 
             return $this->validateUnique($uniqueFields, $data, $mode, $class);

@@ -114,6 +114,8 @@ class CsvAdapter implements AdapterInterface
         }
 
         ArrayUtils::set($object, $propertyName, $value);
+
+        return $object;
     }
 
     public function explainSchema(\stdClass $data, $mode)

@@ -398,8 +398,10 @@ class ObjectManager extends ObjectManagerDecorator
     /**
      * Fetch an object from database according to the class and the id/uuid of the data.
      */
-    public function getObject(array $data, $class)
+    public function getObject(array $data, $class, array $identifiers = [])
     {
+        $object = null;
+
         if (isset($data['id']) || isset($data['uuid'])) {
             if (isset($data['uuid'])) {
                 $object = $this->getRepository($class)->findOneByUuid($data['uuid']);
@@ -412,7 +414,13 @@ class ObjectManager extends ObjectManagerDecorator
             return $object;
         }
 
-        //else we look what's fetchable or no for that class
+        foreach (array_keys($data) as $property) {
+            if (in_array($property, $identifiers) && !$object) {
+                $object = $this->getRepository($class)->findOneBy([$property => $data[$property]]);
+            }
+        }
+
+        return $object;
     }
 
     public function ignoreForeignKeys()

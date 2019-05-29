@@ -3,8 +3,10 @@
 namespace Claroline\CoreBundle\API\Serializer\Transfer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\Entity\Import\File;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -22,14 +24,16 @@ class FileSerializer
      * ScheduledTaskSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "fileSerializer" = @DI\Inject("claroline.serializer.public_file")
+     *     "fileSerializer" = @DI\Inject("claroline.serializer.public_file"),
+     *     "om"             = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param PublicFileSerializer $fileSerializer
      */
-    public function __construct(PublicFileSerializer $fileSerializer)
+    public function __construct(PublicFileSerializer $fileSerializer, ObjectManager $om)
     {
         $this->fileSerializer = $fileSerializer;
+        $this->om = $om;
     }
 
     /** @return string */
@@ -83,6 +87,13 @@ class FileSerializer
             $uploadedFile = $this->fileSerializer->deserialize($data['uploadedFile']);
             if ($uploadedFile) {
                 $file->setFile($uploadedFile);
+            }
+        }
+
+        if (isset($data['workspace'])) {
+            $workspace = $this->om->getRepository(Workspace::class)->find($data['workspace']['id']);
+            if ($workspace) {
+                $file->setWorkspace($workspace);
             }
         }
 

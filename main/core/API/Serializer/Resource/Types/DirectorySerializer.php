@@ -114,4 +114,12 @@ class DirectorySerializer
 
         return $directory;
     }
+
+    /**
+     * @return string
+     */
+    public function getSchema()
+    {
+        return '#/main/core/resource/types/directory.json';
+    }
 }

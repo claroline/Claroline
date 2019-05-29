@@ -9,10 +9,10 @@ import {Routes, withRouter} from '#/main/app/router'
 import {Heading} from '#/main/core/layout/components/heading'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
-import {Logs} from '#/main/core/administration/transfer/log/components/logs'
-import {select} from '#/main/core/administration/transfer/selectors'
-import {actions} from '#/main/core/administration/transfer/actions'
-import {actions as logActions} from '#/main/core/administration/transfer/log/actions'
+import {Logs} from '#/main/core/tools/transfer/log/components/logs'
+import {select} from '#/main/core/tools/transfer/store/selectors'
+import {actions} from '#/main/core/tools/transfer/store/actions'
+import {actions as logActions} from '#/main/core/tools/transfer/log/actions'
 
 const Tabs = props =>
   <ul className="nav nav-pills nav-stacked">
@@ -81,13 +81,41 @@ class RoutedExplain extends Component {
     choices['none'] = ''
     Object.keys(props.explanation[entity]).reduce((o, key) => Object.assign(o, {[entity + '_' + key]: trans(key, {}, 'transfer')}), choices)
 
+    const defaultFields = [
+      {
+        name: 'action',
+        type: 'choice',
+        label: trans('action'),
+        onChange: (value) => {
+          props.history.push('/import/' + entity + '/' + value.substring(value.indexOf('_') + 1))
+          props.resetLog()
+        },
+        required: true,
+        options: {
+          noEmpty: true,
+          condensed: true,
+          choices: choices
+        }
+      }, {
+        name: 'file',
+        type: 'file',
+        label: trans('file'),
+        options: {
+          uploadUrl: ['apiv2_transfer_upload_file', {workspace: props.workspace ? props.workspace.id: 0}]
+        }
+      }
+    ]
+
+    const explanationAction = props.explanation[entity][action]
+    const additionalFields = explanationAction ? explanationAction.fields || []: []
+
     return (
       <div>
         <FormData
           level={2}
           name="import"
           title={trans(entity)}
-          target={['apiv2_transfer_start', {log: this.getLogId()}]}
+          target={['apiv2_transfer_start', {log: this.getLogId(), workspace: props.workspace ? props.workspace.uuid: null }]}
           buttons={true}
           save={{
             type: CALLBACK_BUTTON,
@@ -114,30 +142,7 @@ class RoutedExplain extends Component {
             {
               title: trans('general'),
               primary: true,
-              fields: [
-                {
-                  name: 'action',
-                  type: 'choice',
-                  label: trans('action'),
-                  onChange: (value) => {
-                    props.history.push('/import/' + entity + '/' + value.substring(value.indexOf('_') + 1))
-                    props.resetLog()
-                  },
-                  required: true,
-                  options: {
-                    noEmpty: true,
-                    condensed: true,
-                    choices: choices
-                  }
-                }, {
-                  name: 'file',
-                  type: 'file',
-                  label: trans('file'),
-                  options: {
-                    uploadUrl: ['apiv2_transfer_upload_file']
-                  }
-                }
-              ]
+              fields: defaultFields.concat(additionalFields)
             }
           ]}
         />
@@ -158,7 +163,8 @@ class RoutedExplain extends Component {
 const ConnectedExplain = withRouter(connect(
   state => ({
     explanation: select.explanation(state),
-    logs: state.log
+    logs: state.log,
+    workspace: state.currentContext.data
   }),
   dispatch =>({
     updateProp: (prop, value, form, entity) => dispatch(actions.updateProp(prop, value, form, entity)),
@@ -174,7 +180,6 @@ const Import = props =>
     <div className="col-md-3">
       <Tabs {...props} />
     </div>
-
     <div className="col-md-9">
       <Routes
         routes={[{
@@ -188,7 +193,9 @@ const Import = props =>
   </div>
 
 const ConnectedImport = connect(
-  state => ({explanation: select.explanation(state)}),
+  state => ({
+    explanation: select.explanation(state)
+  }),
   dispatch =>({
     openForm(params) {
       dispatch(actions.open('import', params))

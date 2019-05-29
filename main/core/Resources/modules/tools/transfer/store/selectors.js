@@ -1,5 +1,8 @@
 
-const explanation = (state) => state.explanation
+const explanation = (state) => {
+  return state.explanation
+}
+
 const log = (state) => state.log
 
 export const select = {

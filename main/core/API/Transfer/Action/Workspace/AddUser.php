@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\API\Transfer\Action\Workspace;
 
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Transfer\Action\AbstractAction;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -37,22 +38,23 @@ class AddUser extends AbstractAction
 
     public function execute(array $data, &$successData = [])
     {
-        $user = $this->om->getObject($data['user'], User::class);
+        $user = $this->om->getObject($data['user'], User::class, array_keys($data['user']));
 
-        if (!$user->getId()) {
+        if (!$user) {
             throw new \Exception('User '.$this->printError($data['user'])." doesn't exists.");
         }
 
-        $workspace = $this->om->getObject($data['workspace'], Workspace::class);
+        //todo find a generic way to find the identifiers
+        $workspace = $this->om->getObject($data['workspace'], Workspace::class, ['code']);
 
-        if (!$workspace->getId()) {
+        if (!$workspace) {
             throw new \Exception('Workspace '.$this->printError($data['workspace'])." doesn't exists.");
         }
 
         $role = $this->om->getRepository(Role::class)
           ->findOneBy(['workspace' => $workspace, 'translationKey' => $data['role']['translationKey']]);
 
-        if (!$role->getId()) {
+        if (!$role) {
             throw new \Exception('Role '.$this->printError($data['role'])." doesn't exists.");
         }
 
@@ -70,7 +72,7 @@ class AddUser extends AbstractAction
         return $string;
     }
 
-    public function getSchema()
+    public function getSchema(array $options = [], array $extra = [])
     {
         $roleSchema = [
           '$schema' => 'http:\/\/json-schema.org\/draft-04\/schema#',
@@ -90,11 +92,22 @@ class AddUser extends AbstractAction
 
         $schema = json_decode(json_encode($roleSchema));
 
-        return ['workspace' => Workspace::class, 'user' => User::class, 'role' => $schema];
+        $schema = ['user' => User::class, 'role' => $schema];
+
+        if (!in_array(Options::WORKSPACE_IMPORT, $options)) {
+            $schema['workspace'] = Workspace::class;
+        }
+
+        return $schema;
     }
 
     public function getAction()
     {
         return ['workspace', 'add_user'];
+    }
+
+    public function supports($format, array $options = [], array $extra = [])
+    {
+        return in_array($format, ['json', 'csv']);
     }
 }

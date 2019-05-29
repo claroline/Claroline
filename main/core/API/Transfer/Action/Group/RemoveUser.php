@@ -39,7 +39,7 @@ class RemoveUser extends AbstractAction
         $this->crud->patch($user, 'group', 'remove', [$group]);
     }
 
-    public function getSchema()
+    public function getSchema(array $options = [], array $extra = [])
     {
         return ['group' => Group::class, 'user' => User::class];
     }

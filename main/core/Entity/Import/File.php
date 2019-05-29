@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Entity\Import;
 
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -74,6 +75,15 @@ class File
      * @var \DateTime
      */
     protected $executionDate;
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace"
+     * )
+     * @ORM\JoinColumn(onDelete="CASCADE")
+     *
+     * @var Workspace
+     */
+    protected $workspace;
 
     public function __construct()
     {
@@ -134,5 +144,15 @@ class File
     public function getAction()
     {
         return $this->action;
+    }
+
+    public function setWorkspace(Workspace $workspace)
+    {
+        $this->workspace = $workspace;
+    }
+
+    public function getWorkspace()
+    {
+        return $this->workspace;
     }
 }

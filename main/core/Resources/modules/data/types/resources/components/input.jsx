@@ -111,14 +111,16 @@ implementPropTypes(ResourcesInput, FormFieldTypes, {
   picker: T.shape({
     title: T.string,
     current: T.shape(ResourceNodeTypes.propTypes),
-    root: T.shape(ResourceNodeTypes.propTypes)
+    root: T.shape(ResourceNodeTypes.propTypes),
+    filters: T.object
   })
 }, {
   value: null,
   picker: {
     title: trans('resource_picker'),
     current: null,
-    root: null
+    root: null,
+    filters: {}
   }
 })
 

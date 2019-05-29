@@ -39,7 +39,7 @@ class AddUser extends AbstractAction
         $this->crud->patch($user, 'group', 'add', [$group]);
     }
 
-    public function getSchema()
+    public function getSchema(array $options = [], array $extra = [])
     {
         return ['group' => Group::class, 'user' => User::class];
     }

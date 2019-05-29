@@ -41,16 +41,11 @@ class Create extends AbstractAction
     /**
      * @return array
      */
-    public function getSchema()
+    public function getSchema(array $options = [], array $extra = [])
     {
         return [
           '$root' => 'Claroline\CoreBundle\Entity\Facet\Facet',
         ];
-    }
-
-    public function supports($format)
-    {
-        return in_array($format, ['json']);
     }
 
     /**

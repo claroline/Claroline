@@ -2,6 +2,7 @@
 
 namespace Claroline\AppBundle\API\Transfer\Action;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 
@@ -17,7 +18,7 @@ abstract class AbstractAction
     abstract public function execute(array $data, &$successData = []);
 
     //better explain the structure
-    abstract public function getSchema();
+    abstract public function getSchema(/*array $options = [], array $extra = []*/);
 
     /**
      * return an array with the following element:
@@ -27,9 +28,13 @@ abstract class AbstractAction
      */
     abstract public function getAction();
 
-    public function supports($format)
+    public function supports($format, array $options = []/*, array $extra = []*/)
     {
-        return in_array($format, ['csv', 'json']);
+        if (in_array(Options::WORKSPACE_IMPORT, $options)) {
+            return false;
+        }
+
+        return in_array($format, ['json', 'csv']);
     }
 
     public function getBatchSize()
@@ -55,6 +60,11 @@ abstract class AbstractAction
     public function getMode()
     {
         return self::MODE_DEFAULT;
+    }
+
+    public function getExtraDefinition(array $options = [], array $extra = [])
+    {
+        return [];
     }
 
     public function export()

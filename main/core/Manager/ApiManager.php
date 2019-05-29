@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Api\Options;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Import\File as HistoryFile;
@@ -62,7 +63,7 @@ class ApiManager
         $this->crud = $crud;
     }
 
-    public function import(PublicFile $publicFile, $action, $log)
+    public function import(PublicFile $publicFile, $action, $log, array $extra = [])
     {
         $historyFile = $this->finder->fetch(
             HistoryFile::class,
@@ -75,12 +76,19 @@ class ApiManager
         $this->crud->replace($historyFile, 'status', HistoryFile::STATUS_ERROR);
 
         $content = $this->fileUt->getContents($publicFile);
+        $options = [];
+
+        if (isset($extra['workspace'])) {
+            $options[] = Options::WORKSPACE_IMPORT;
+        }
 
         $data = $this->transfer->execute(
           $content,
           $action,
           $publicFile->getMimeType(),
-          $log
+          $log,
+          $options,
+          $extra
       );
 
         //should probably reset entity manager here

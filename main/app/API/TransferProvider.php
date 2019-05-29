@@ -7,9 +7,11 @@ use Claroline\AppBundle\API\Transfer\Adapter\AdapterInterface;
 use Claroline\AppBundle\Logger\JsonLogger;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Filesystem\Filesystem;
+//should not be here because it's a corebundle dependency
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -38,6 +40,7 @@ class TransferProvider
      * @DI\InjectParams({
      *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
      *     "serializer" = @DI\Inject("claroline.api.serializer"),
+     *     "schema"     = @DI\Inject("claroline.api.schema"),
      *     "logDir"     = @DI\Inject("%claroline.param.import_log_dir%"),
      *     "translator" = @DI\Inject("translator")
      * })
@@ -50,6 +53,7 @@ class TransferProvider
     public function __construct(
         ObjectManager $om,
         SerializerProvider $serializer,
+        SchemaProvider $schema,
         $logDir,
         TranslatorInterface $translator
       ) {
@@ -58,6 +62,7 @@ class TransferProvider
         $this->om = $om;
         $this->serializer = $serializer;
         $this->logDir = $logDir;
+        $this->schema = $schema;
         $this->translator = $translator;
     }
 
@@ -82,8 +87,9 @@ class TransferProvider
      * @param string      $action
      * @param string      $mimeType
      * @param string|null $logFile
+     * @param mixed       $options  (currently used to pass the workspace so it' an entity but we might improve it later with an array of parameters)
      */
-    public function execute($data, $action, $mimeType, $logFile = null)
+    public function execute($data, $action, $mimeType, $logFile = null, array $options = [], array $extra = [])
     {
         if (!$logFile) {
             $logFile = uniqid();
@@ -106,16 +112,47 @@ class TransferProvider
         $jsonLogger->info('Building objects from data...');
 
         if (array_key_exists('$root', $schema)) {
-            $jsonSchema = $this->serializer->getSchema($schema['$root']);
-            //doesn't matter imo
-            $explanation = $adapter->explainSchema($jsonSchema, 'create');
-            $data = $adapter->decodeSchema($data, $explanation);
+            $jsonSchema = $this->schema->getSchema($schema['$root']);
+
+            //if we didn't find any but root it's set, it means that is is custom and already defined
+            if ($jsonSchema) {
+                $explanation = $adapter->explainSchema($jsonSchema, 'create');
+                $data = $adapter->decodeSchema($data, $explanation);
+            } else {
+                $content = $data;
+                $data = [];
+                $lines = str_getcsv($content, PHP_EOL);
+                $header = array_shift($lines);
+                $headers = array_filter(
+                  str_getcsv($header, ';'),
+                    function ($header) {
+                        return '' !== trim($header);
+                    }
+                );
+
+                foreach ($lines as $line) {
+                    $properties = array_filter(
+                      str_getcsv($line, ';'),
+                        function ($property) {
+                            return '' !== trim($property);
+                        }
+                    );
+                    $row = [];
+
+                    foreach ($properties as $index => $property) {
+                        $row[$headers[$index]] = $property;
+                    }
+
+                    $data[] = $row;
+                }
+            }
         } else {
             foreach ($schema as $prop => $value) {
                 //this is for the custom schema defined in the transfer stuff (atm add user to roles for workspace)
                 //there is probably a better way to handle this
                 if (!$value instanceof \stdClass) {
-                    $jsonSchema = $this->serializer->getSchema($value);
+                    $jsonSchema = $this->schema->getSchema($value, $options, $extra);
+
                     if ($jsonSchema) {
                         $identifiersSchema[$prop] = $jsonSchema;
                     }
@@ -127,6 +164,10 @@ class TransferProvider
             $explanation = $adapter->explainIdentifiers($identifiersSchema);
             $data = $adapter->decodeSchema($data, $explanation);
         }
+
+        $data = array_map(function ($el) use ($extra) {
+            return array_merge($el, $extra);
+        }, $data);
 
         $i = 0;
         $this->om->startFlushSuite();
@@ -142,13 +183,15 @@ class TransferProvider
         $loaded = [];
         $loggedSuccess = [];
 
-        foreach ($data as $data) {
+        //here we look for duplicates
+
+        foreach ($data as $el) {
             ++$i;
             $this->log("{$i}/{$total}: ".$this->getActionName($executor));
 
             try {
                 $successData = [];
-                $loaded[] = $executor->execute($data, $successData);
+                $loaded[] = $executor->execute($el, $successData);
                 $jsonLogger->info("Operation {$i}/{$total} is a success");
                 $jsonLogger->increment('success');
                 $loggedSuccess = array_merge_recursive($loggedSuccess, $successData);
@@ -251,36 +294,33 @@ class TransferProvider
      *
      * @return mixed|array
      */
-    public function explainAction($actionName, $format)
+    public function explainAction($actionName, $format, array $options = [], array $extra = [])
     {
         $adapter = $this->getAdapter($format);
         $action = $this->getExecutor($actionName);
-
-        if (!$action->supports($format)) {
-            throw new \Exception('This action is not supported for the '.$format.' format.');
-        }
-
-        $schema = $action->getSchema();
+        $schema = $action->getSchema($options, $extra);
 
         if (array_key_exists('$root', $schema)) {
-            $jsonSchema = $this->serializer->getSchema($schema['$root']);
+            $jsonSchema = $this->schema->getSchema($schema['$root']);
 
-            if ($jsonSchema) {
-                return $adapter->explainSchema($jsonSchema, $action->getMode());
+            $data = $jsonSchema ?
+                $adapter->explainSchema($jsonSchema, $action->getMode()) :
+                $adapter->explainSchema($schema['$root'], $action->getMode());
+        } else {
+            $identifiersSchema = [];
+
+            foreach ($schema as $prop => $value) {
+                if ($this->serializer->has($value)) {
+                    $identifiersSchema[$prop] = $this->schema->getSchema($value);
+                } else {
+                    $identifiersSchema[$prop] = $value;
+                }
             }
+
+            $data = $adapter->explainIdentifiers($identifiersSchema);
         }
 
-        $identifiersSchema = [];
-
-        foreach ($schema as $prop => $value) {
-            if ($this->serializer->has($value)) {
-                $identifiersSchema[$prop] = $this->serializer->getSchema($value);
-            } else {
-                $identifiersSchema[$prop] = $value;
-            }
-        }
-
-        return $adapter->explainIdentifiers($identifiersSchema);
+        return (object) array_merge((array) $data, $action->getExtraDefinition($options, $extra));
     }
 
     /**
@@ -290,15 +330,15 @@ class TransferProvider
      *
      * @return array
      */
-    public function getAvailableActions($format)
+    public function getAvailableActions($format, array $options = [], array $extra = [])
     {
         $availables = [];
 
-        foreach (array_filter($this->actions, function ($action) use ($format) {
-            return $action->supports($format);
+        foreach (array_filter($this->actions, function ($action) use ($format, $options, $extra) {
+            return $action->supports($format, $options, $extra);
         }) as $action) {
             $schema = $action->getAction();
-            $availables[$schema[0]][$schema[1]] = $this->explainAction($this->getActionName($action), $format);
+            $availables[$schema[0]][$schema[1]] = $this->explainAction($this->getActionName($action), $format, $options, $extra);
         }
 
         return $availables;

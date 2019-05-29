@@ -430,4 +430,12 @@ class ResourceNodeSerializer
             }
         }
     }
+
+    /**
+     * @return string
+     */
+    public function getSchema()
+    {
+        return '#/main/core/resource/resource-node.json';
+    }
 }

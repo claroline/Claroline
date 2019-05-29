@@ -41,7 +41,7 @@ abstract class AbstractDeleteAction extends AbstractAction
         }
     }
 
-    public function getSchema()
+    public function getSchema(array $options = [], array $extra = [])
     {
         //this is so we don't show all properties. See TransferProvider and search $root
         return [$this->getAction()[0] => $this->getClass()];

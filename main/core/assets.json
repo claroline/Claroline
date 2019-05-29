@@ -9,7 +9,7 @@
       "appearance-settings": "administration/parameters/appearance/bootstrap",
       "workspace-management": "administration/workspace",
       "workspace-list": "workspace/list/bootstrap",
-      "transfer-management": "administration/transfer",
+      "transfer-management": "tools/transfer/bootstrap",
       "scheduled-task-management": "administration/scheduled-task",
       "user-registration": "user/registration",
       "user-profile": "user/profile",

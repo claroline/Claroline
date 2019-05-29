@@ -109,4 +109,8 @@ final class Options
     //finder options
     const SQL_ARRAY_MAP = 'sql_array_map';
     const SQL_QUERY = 'sql_query';
+
+    //transfer_options
+    const WORKSPACE_IMPORT = 'workspace_import';
+    const ADMINISTRATION_IMPORT = 'administration_import';
 }

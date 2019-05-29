@@ -33,7 +33,7 @@ abstract class AbstractUpdateAction extends AbstractAction
         ];
     }
 
-    public function getSchema()
+    public function getSchema(array $options = [], array $extra = [])
     {
         return ['$root' => $this->getClass()];
     }

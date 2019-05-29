@@ -5,12 +5,6 @@ namespace Claroline\AppBundle\API;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use JMS\DiExtraBundle\Annotation as DI;
-use JVal\Context;
-use JVal\Registry;
-use JVal\Resolver;
-use JVal\Uri;
-use JVal\Utils;
-use JVal\Walker;
 
 /**
  * @DI\Service("claroline.api.serializer")
@@ -202,110 +196,5 @@ class SerializerProvider
         }
 
         return $object;
-    }
-
-    /**
-     * Get the identifier list from the json schema.
-     */
-    public function getIdentifiers($class)
-    {
-        $schema = $this->getSchema($class);
-
-        if (isset($schema->claroline)) {
-            return $schema->claroline->ids;
-        }
-
-        return [];
-    }
-
-    /**
-     * Gets the json schema of a class.
-     *
-     * @param string $class
-     *
-     * @return \stdClass
-     */
-    public function getSchema($class)
-    {
-        $serializer = $this->get($class);
-
-        if (method_exists($serializer, 'getSchema')) {
-            $url = $serializer->getSchema();
-            $path = explode('/', $url);
-            $absolutePath = $this->rootDir.'/vendor/claroline/distribution/'
-            .$path[1].'/'.$path[2].'/Resources/schemas/'.$path[3];
-
-            return $this->loadSchema($absolutePath);
-        }
-    }
-
-    /**
-     * Loads a json schema.
-     *
-     * @param string $path
-     *
-     * @return \stdClass
-     */
-    public function loadSchema($path)
-    {
-        $schema = Utils::LoadJsonFromFile($path);
-
-        $hook = function ($uri) {
-            return $this->resolveRef($uri);
-        };
-
-        //this is the resolution of the $ref thingy with Jval classes
-        //resolver can take a Closure parameter to change the $ref value
-        $resolver = new Resolver();
-        $resolver->setPreFetchHook($hook);
-        $walker = new Walker(new Registry(), $resolver);
-        $schema = $walker->resolveReferences($schema, new Uri(''));
-
-        return $walker->parseSchema($schema, new Context());
-    }
-
-    /**
-     * @param string $class
-     *
-     * @return string
-     */
-    public function getSampleDirectory($class)
-    {
-        $serializer = $this->get($class);
-
-        if (method_exists($serializer, 'getSamples')) {
-            $url = $serializer->getSamples();
-            $path = explode('/', $url);
-
-            return $this->rootDir.'/vendor/claroline/distribution/'
-              .$path[1].'/'.$path[2].'/Resources/samples/'.$path[3];
-        }
-    }
-
-    /**
-     * Checks if a class has a schema defined.
-     *
-     * @param string $class
-     *
-     * @return bool
-     */
-    public function hasSchema($class)
-    {
-        return method_exists($this->get($class), 'getSchema');
-    }
-
-    /**
-     * Converts distant schema URI to a local one to load schemas from source code.
-     *
-     * @param string $uri
-     *
-     * @return string mixed
-     */
-    private function resolveRef($uri)
-    {
-        $uri = str_replace($this->baseUri, '', $uri);
-        $schemaDir = realpath("{$this->rootDir}/vendor/claroline/distribution");
-
-        return $schemaDir.'/'.$uri;
     }
 }

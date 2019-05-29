@@ -25,7 +25,7 @@ class TransferProviderTest extends TransactionalTestCase
      */
     public function testActions($format)
     {
-        $availableActions = $this->provider->getAvailableActions($format);
+        $availableActions = $this->provider->getAvailableActions($format, [], []);
 
         foreach ($availableActions as $class) {
             foreach ($class as $action) {

@@ -13,13 +13,18 @@ namespace Claroline\CoreBundle\Controller\APINew;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\TransferProvider;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\File\PublicFile;
+use Claroline\CoreBundle\Entity\Import\File;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,11 +54,13 @@ class TransferController extends AbstractCrudController
     /**
      * @DI\InjectParams({
      *    "provider"   = @DI\Inject("claroline.api.transfer"),
+     *    "serializer" = @DI\Inject("claroline.api.serializer"),
      *    "router"     = @DI\Inject("router"),
      *    "schemaDir"  = @DI\Inject("%claroline.api.core_schema.dir%"),
      *    "fileUt"     = @DI\Inject("claroline.utilities.file"),
      *    "crud"       = @DI\Inject("claroline.api.crud"),
      *    "manager"    = @DI\Inject("claroline.manager.api_manager"),
+     *    "om"         = @DI\Inject("claroline.persistence.object_manager"),
      *    "async"      = @DI\Inject("claroline.async.command")
      * })
      *
@@ -63,8 +70,10 @@ class TransferController extends AbstractCrudController
      */
     public function __construct(
         TransferProvider $provider,
+        SerializerProvider $serializer,
         FileUtilities $fileUt,
         RouterInterface $router,
+        ObjectManager $om,
         Crud $crud,
         $schemaDir,
         $async
@@ -74,12 +83,14 @@ class TransferController extends AbstractCrudController
         $this->fileUt = $fileUt;
         $this->router = $router;
         $this->crud = $crud;
+        $this->serializer = $serializer;
         $this->async = $async;
+        $this->om = $om;
     }
 
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Entity\Import\File';
+        return File::class;
     }
 
     public function getIgnore()
@@ -89,23 +100,55 @@ class TransferController extends AbstractCrudController
 
     /**
      * @Route(
-     *    "/upload",
+     *    "/upload/{workspaceId}",
      *    name="apiv2_transfer_upload_file"
      * )
+     * @ParamConverter("organization", options={"mapping": {"id": "uuid"}})
      * @Method("POST")
      *
      * @param Request $request
      */
-    public function uploadFileAction(Request $request)
+    public function uploadFileAction(Request $request, $workspaceId = 0)
     {
         $file = $this->uploadFile($request);
+        $workspace = $this->om->getRepository(Workspace::class)->find($workspaceId);
+        if ($workspace) {
+            $workspace = $this->serializer->serialize($workspace);
+        }
 
         $this->crud->create(
-            'Claroline\CoreBundle\Entity\Import\File',
-            ['uploadedFile' => $file]
+            File::class,
+            ['uploadedFile' => $file, 'workspace' => $workspace]
         );
 
         return new JsonResponse([$file], 200);
+    }
+
+    /**
+     * @Route(
+     *    "/workspace/{workspaceId}",
+     *    name="apiv2_workspace_transfer_list"
+     * )
+     * @Method("GET")
+     *
+     * @param Request $request
+     */
+    public function workspaceListAction($workspaceId, Request $request)
+    {
+        $query = $request->query->all();
+        $options = $this->options['list'];
+
+        if (isset($query['options'])) {
+            $options = $query['options'];
+        }
+
+        $query['hiddenFilters'] = ['workspace' => $workspaceId];
+
+        return new JsonResponse($this->finder->search(
+          self::getClass(),
+          $query,
+          $options
+      ));
     }
 
     public function getName()
@@ -125,13 +168,24 @@ class TransferController extends AbstractCrudController
     public function startAction(Request $request)
     {
         $data = json_decode($request->getContent(), true);
+        $file = $data['file'];
+        unset($data['file']);
+        $action = $data['action'];
+        unset($data['action']);
 
-        $publicFile = $this->om->getObject($data['file'], PublicFile::class) ?? new PublicFile();
+        $publicFile = $this->om->getObject($file, PublicFile::class) ?? new PublicFile();
+        $uuid = $request->get('workspace');
+        $workspace = $this->om->getRepository(Workspace::class)->findOneByUuid($uuid);
+
+        if ($workspace) {
+            $data['workspace'] = $this->serializer->serialize($workspace, [Options::SERIALIZE_MINIMAL]);
+        }
 
         $this->container->get('claroline.manager.api_manager')->import(
             $publicFile,
-            $data['action'],
-            $this->getLogFile($request)
+            $action,
+            $this->getLogFile($request),
+            $data
         );
 
         //the following line doesn't work on our live server but it's supposed to be the proper way to do it
@@ -212,7 +266,7 @@ class TransferController extends AbstractCrudController
         $dispatcher = $this->container->get('claroline.event.event_dispatcher');
 
         $object = $this->crud->create(
-              'Claroline\CoreBundle\Entity\File\PublicFile',
+              PublicFile::class,
               [],
               ['file' => $file]
           );

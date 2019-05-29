@@ -19,6 +19,7 @@ class SerializerProviderTest extends TransactionalTestCase
         parent::setUp();
         $this->provider = $this->client->getContainer()->get('claroline.api.serializer');
         $this->validator = $this->client->getContainer()->get('claroline.api.validator');
+        $this->schema = $this->client->getContainer()->get('claroline.api.schema');
         $this->sampleDir = $this->client->getContainer()->getParameter('claroline.api.sample.dir');
 
         $tokenStorage = $this->client->getContainer()->get('security.token_storage');
@@ -35,8 +36,8 @@ class SerializerProviderTest extends TransactionalTestCase
      */
     public function testSchema($class)
     {
-        if ($this->provider->hasSchema($class)) {
-            $schema = $this->provider->getSchema($class);
+        if ($this->schema->has($class)) {
+            $schema = $this->schema->getSchema($class);
             $this->assertTrue(is_object($schema));
         } else {
             $this->markTestSkipped('No schema defined for class '.$class);
@@ -50,7 +51,7 @@ class SerializerProviderTest extends TransactionalTestCase
      */
     public function testSerializer($class)
     {
-        $iterator = new \DirectoryIterator($this->provider->getSampleDirectory($class).'/json/valid/create');
+        $iterator = new \DirectoryIterator($this->schema->getSampleDirectory($class).'/json/valid/create');
 
         foreach ($iterator as $file) {
             if ($file->isFile()) {
@@ -78,13 +79,14 @@ class SerializerProviderTest extends TransactionalTestCase
     {
         parent::setUp();
         $provider = $this->client->getContainer()->get('claroline.api.serializer');
+        $schemaProvider = $this->client->getContainer()->get('claroline.api.schema');
 
         $classes = array_map(function ($serializer) use ($provider) {
             return [$provider->getSerializerHandledClass($serializer)];
         }, $provider->all());
 
-        $classes = array_filter($classes, function ($class) use ($provider) {
-            return $provider->hasSchema($class[0]) && $provider->getSampleDirectory($class[0]) && class_exists($class[0]);
+        $classes = array_filter($classes, function ($class) use ($provider, $schemaProvider) {
+            return $schemaProvider->has($class[0]) && $schemaProvider->getSampleDirectory($class[0]) && class_exists($class[0]);
         });
 
         return $classes;
