@@ -16,6 +16,7 @@ use Claroline\CoreBundle\API\Serializer\Workspace\FullSerializer;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\ExportObjectEvent;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
@@ -246,6 +247,10 @@ class TransferManager
             $orderedTool = new OrderedTool();
             $this->ots->setLogger($this->logger);
             $this->ots->deserialize($orderedToolData, $orderedTool, [], $workspace, $bag);
+        }
+
+        if (!$workspace->getCreator() && $this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {
+            $workspace->setCreator($this->tokenStorage->getToken()->getUser());
         }
 
         return $workspace;
