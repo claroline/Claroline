@@ -183,7 +183,50 @@ class TransferProvider
         $loaded = [];
         $loggedSuccess = [];
 
-        //here we look for duplicates
+        //look for duplicatas here
+        //JsonSchema defined above
+        if (array_key_exists('$root', $schema) && $jsonSchema && isset($jsonSchema->claroline) && isset($jsonSchema->claroline->ids)) {
+            $ids = $jsonSchema->claroline->ids;
+
+            //make 3 array with the list of ids
+            $dataIds = [];
+
+            foreach ($ids as $id) {
+                foreach ($data as $el) {
+                    if (isset($el[$id])) {
+                        $dataIds[$id][] = $el[$id];
+                    }
+                }
+            }
+
+            $duplicateErrors = [];
+
+            foreach ($dataIds as $property => $dataList) {
+                $dataCount = array_count_values($dataList);
+
+                foreach ($dataCount as $value => $count) {
+                    if ($count > 1) {
+                        $duplicateErrors[$property][] = $value;
+                    }
+                }
+            }
+
+            if (count($duplicateErrors) > 0) {
+                foreach ($duplicateErrors as $property => $list) {
+                    foreach ($list as $value) {
+                        $jsonLogger->push('data.error', [
+                          'line' => 'unknown',
+                          'value' => "Duplicate {$property} found for value {$value}.",
+                        ]);
+                    }
+                }
+
+                $jsonLogger->set('total', 0);
+                $jsonLogger->set('processed', 0);
+
+                return $jsonLogger->get();
+            }
+        }
 
         foreach ($data as $el) {
             ++$i;
