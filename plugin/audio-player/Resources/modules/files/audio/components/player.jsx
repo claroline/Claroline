@@ -209,7 +209,10 @@ class Audio extends Component {
   render() {
     return (
       <div className="audio-resource-player">
-        {this.props.canEdit && constants.USER_TYPE === this.props.file.sectionsType &&
+        {this.props.canEdit && (
+          constants.USER_TYPE === this.props.file.sectionsType ||
+          (constants.MANAGER_TYPE === this.props.file.sectionsType && 0 < this.props.file.sections.filter(s => s.commentsAllowed).length)
+        ) &&
           <div className="comments-mode-btn">
             <CallbackButton
               className="btn"

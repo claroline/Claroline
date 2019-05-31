@@ -86,7 +86,10 @@ class SectionsCommentsComponent extends Component {
           <ListData
             name="audio.comments"
             fetch={{
-              url: ['apiv2_audioresourcesectioncomment_list_user', {resourceNode: this.props.resourceNodeId}],
+              url: ['apiv2_audioresourcesectioncomment_list_comments', {
+                resourceNode: this.props.resourceNodeId,
+                type: this.props.file.sectionsType
+              }],
               autoload: true
             }}
             primaryAction={(row) => ({

@@ -12,7 +12,6 @@
 namespace Claroline\AudioPlayerBundle\Controller\API;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\AudioPlayerBundle\Entity\Resource\AudioParams;
 use Claroline\AudioPlayerBundle\Entity\Resource\SectionComment;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -41,17 +40,18 @@ class SectionCommentController extends AbstractCrudController
 
     /**
      * @EXT\Route(
-     *     "/{resourceNode}/list/user",
-     *     name="apiv2_audioresourcesectioncomment_list_user"
+     *     "/{resourceNode}/list/{type}",
+     *     name="apiv2_audioresourcesectioncomment_list_comments"
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
      * @param ResourceNode $resourceNode
+     * @param string       $type
      * @param Request      $request
      *
      * @return JsonResponse
      */
-    public function userCommentsListAction(ResourceNode $resourceNode, Request $request)
+    public function sectionsCommentsListAction(ResourceNode $resourceNode, $type, Request $request)
     {
         $params = $request->query->all();
 
@@ -59,7 +59,7 @@ class SectionCommentController extends AbstractCrudController
             $params['hiddenFilters'] = [];
         }
         $params['hiddenFilters']['resourceNode'] = $resourceNode->getUuid();
-        $params['hiddenFilters']['type'] = AudioParams::USER_TYPE;
+        $params['hiddenFilters']['type'] = $type;
 
         return new JsonResponse(
             $this->finder->search(SectionComment::class, $params)
