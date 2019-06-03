@@ -101,15 +101,13 @@
     transform: translateX(-50%); // center popover and toggle button
 
     .popover-title {
-      > div {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
 
-        .btn-link,
-        .btn {
-          padding: 0 4px; // horizontal : same as feedback and delete item btns
-        }
+      .btn-link,
+      .btn {
+        padding: 0 4px; // horizontal : same as feedback and delete item btns
       }
     }
 
@@ -118,12 +116,11 @@
       align-items: center;
       justify-content: space-between;
 
-      .color-picker {
+      .color {
         margin-right: floor(@grid-gutter-width / 2);
       }
 
-      .area-score {
-        width: 60px;
+      .score {
         margin-right: floor(@grid-gutter-width / 2);
       }
     }

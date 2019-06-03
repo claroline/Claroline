@@ -7,7 +7,7 @@ import {trans}  from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlay/modal/components/modal'
-import {Checkbox} from '#/main/core/layout/form/components/field/checkbox'
+import {Checkbox} from '#/main/app/input/components/checkbox'
 
 import {ResourceRights} from '#/main/core/resource/components/rights'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'

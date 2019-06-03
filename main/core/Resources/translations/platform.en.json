@@ -1723,5 +1723,7 @@
     "update_anyway": "update anyway",
     "choices": "Choices",
     "medias": "Medias",
-    "archive": "Archive"
+    "archive": "Archive",
+    "form_not_validating_desc": "Work in progress: some information is missing or requires changes.",
+    "form_validating_desc": "Some errors or missing information prevent saving data."
 }

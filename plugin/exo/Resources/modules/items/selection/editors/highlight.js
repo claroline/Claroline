@@ -1,7 +1,7 @@
 import cloneDeep from 'lodash/cloneDeep'
 
 import {makeActionCreator} from '#/main/app/store/actions'
-import {tex} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 import {makeId} from '#/main/core/scaffolding/id'
 
 import {utils} from '#/plugin/exo/items/selection/utils/utils'
@@ -147,7 +147,7 @@ export function validate(item) {
 
   item.solutions.forEach(solution => {
     if (solution.answers.length === 0) {
-      _errors.text = tex('selection_solution_missing_colors_error')
+      _errors.text = trans('selection_solution_missing_colors_error', {}, 'quiz')
     }
 
     solution.answers.forEach(answer => {
@@ -158,7 +158,7 @@ export function validate(item) {
   })
 
   if (!hasValidAnswers) {
-    _errors.text = tex('selection_text_must_have_valid_answers_error')
+    _errors.text = trans('selection_text_must_have_valid_answers_error', {}, 'quiz')
   }
 
   if (item._selectionId) {
@@ -177,18 +177,18 @@ export function validate(item) {
     }
 
     if (!hasModalValidAnswer) {
-      _errors.solutions = tex('selection_must_have_valid_answers_errors')
+      _errors.solutions = trans('selection_must_have_valid_answers_errors', {}, 'quiz')
     }
 
     if (hasDuplicates(selectedColors)) {
-      _errors.solutions = tex('selection_answers_must_use_different_colors_errors ')
+      _errors.solutions = trans('selection_answers_must_use_different_colors_errors', {}, 'quiz')
     }
   }
 
   const allowedColors = item.colors.map(color => color.code)
 
   if (hasDuplicates(allowedColors)) {
-    _errors.colors = tex('selection_colors_must_be_differents')
+    _errors.colors = trans('selection_colors_must_be_differents', {}, 'quiz')
   }
 
 

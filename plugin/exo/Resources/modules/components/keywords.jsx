@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
@@ -280,7 +280,7 @@ const KeywordsPopover = props =>
     positionTop={props.positionTop}
     style={props.style}
     title={
-      <div>
+      <Fragment>
         {props.title}
 
         <div className="popover-actions">
@@ -307,7 +307,7 @@ const KeywordsPopover = props =>
             tooltip="top"
           />
         </div>
-      </div>
+      </Fragment>
     }
   >
     {props.children}

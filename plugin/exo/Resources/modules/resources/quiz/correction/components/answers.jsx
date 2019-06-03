@@ -8,7 +8,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
 
 import {HtmlText} from '#/main/core/layout/components/html-text'
-import {Textarea} from '#/main/core/layout/form/components/field/textarea'
+import {HtmlInput} from '#/main/app/data/types/html/components/input'
 
 import {actions} from '#/plugin/exo/resources/quiz/correction/store/actions'
 import {selectors as correctionSelectors} from '#/plugin/exo/resources/quiz/correction/store/selectors'
@@ -31,13 +31,13 @@ class AnswerRow extends Component {
             }
 
             {this.state.showFeedback &&
-            <div className="feedback-container">
-              <Textarea
-                id={`feedback-${this.props.id}-data`}
-                value={this.props.feedback}
-                onChange={(text) => this.props.updateFeedback(this.props.id, text)}
-              />
-            </div>
+              <div className="feedback-container">
+                <HtmlInput
+                  id={`feedback-${this.props.id}-data`}
+                  value={this.props.feedback}
+                  onChange={(text) => this.props.updateFeedback(this.props.id, text)}
+                />
+              </div>
             }
           </div>
 
@@ -82,43 +82,47 @@ AnswerRow.propTypes = {
 
 let Answers = props => {
   if (!props.question) {
-    return (<div>{trans('please_wait')}</div>)
+    return (
+      <div>{trans('please_wait')}</div>
+    )
   }
 
-  return (<div className="answers-list">
-    <h2 className="question-title">
-      <HtmlText>
-        {props.question.title || props.question.content}
-      </HtmlText>
+  return (
+    <div className="answers-list">
+      <h2 className="question-title">
+        <HtmlText>
+          {props.question.title || props.question.content}
+        </HtmlText>
 
-      {props.answers.length > 0 &&
-        <button
-          type="button"
-          className="btn btn-sm btn-primary"
-          disabled={!props.saveEnabled}
-          onClick={() => props.saveEnabled && props.saveCorrection(props.question.id)}
-        >
-          <span className="fa fa-fw fa-save"/>
-          {trans('save')}
-        </button>
+        {props.answers.length > 0 &&
+          <button
+            type="button"
+            className="btn btn-sm btn-primary"
+            disabled={!props.saveEnabled}
+            onClick={() => props.saveEnabled && props.saveCorrection(props.question.id)}
+          >
+            <span className="fa fa-fw fa-save"/>
+            {trans('save')}
+          </button>
+        }
+      </h2>
+      {props.answers.length > 0 ?
+        props.answers.map((answer, idx) =>
+          <AnswerRow
+            key={idx}
+            scoreMax={props.question.score && props.question.score.max}
+            updateScore={props.updateScore}
+            updateFeedback={props.updateFeedback}
+            {...answer}
+          />
+        ) :
+        <div className="alert alert-warning">
+          {trans('no_answer_to_correct', {}, 'quiz')}
+        </div>
       }
-    </h2>
-    {props.answers.length > 0 ?
-      props.answers.map((answer, idx) =>
-        <AnswerRow
-          key={idx}
-          scoreMax={props.question.score && props.question.score.max}
-          updateScore={props.updateScore}
-          updateFeedback={props.updateFeedback}
-          {...answer}
-        />
-      ) :
-      <div className="alert alert-warning">
-        {trans('no_answer_to_correct', {}, 'quiz')}
-      </div>
-    }
-  </div>
-  )}
+    </div>
+  )
+}
 
 Answers.propTypes = {
   question: T.shape({

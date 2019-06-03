@@ -26,7 +26,7 @@ const Main = props =>
         </Router>
 
         <OverlayStack>
-          <ModalOverlay key="modal" />,
+          <ModalOverlay key="modal" />
           <WalkthroughOverlay key="walkthrough" />
         </OverlayStack>
       </FileDrop>

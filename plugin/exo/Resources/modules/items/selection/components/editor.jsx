@@ -11,8 +11,8 @@ import {FormGroup} from '#/main/app/content/form/components/group'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {makeId} from '#/main/core/scaffolding/id'
-import {Textarea} from '#/main/core/layout/form/components/field/textarea'
-import {ColorPicker} from '#/main/core/layout/form/components/field/color-picker'
+import {HtmlInput} from '#/main/app/data/types/html/components/input'
+import {ColorInput} from '#/main/app/data/types/color/components/input'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
 
 import {SCORE_SUM} from '#/plugin/exo/quiz/enums'
@@ -284,7 +284,7 @@ class ChoiceItem extends Component {
 
         {this.state.showFeedback &&
           <div className="feedback-container selection-form-row">
-            <Textarea
+            <HtmlInput
               id={`choice-${this.getSelectionId()}-feedback`}
               value={this.props.solution.feedback}
               onChange={(text) => updateAnswer('feedback', text, this.getSelectionId(), this.props.item, this.props.update)}
@@ -441,7 +441,7 @@ class SelectionForm extends Component {
 
         {this.state.showFeedback &&
           <div className="feedback-container selection-form-row">
-            <Textarea
+            <HtmlInput
               id={`choice-${this.props.selectionId}-feedback`}
               value={this.props.item.feedback}
               onChange={(text) => updateAnswer('feedback', text, this.props.selectionId, this.props.item, this.props.update)}
@@ -466,9 +466,10 @@ class ColorElement extends Component {
   render() {
     return (
       <div>
-        <ColorPicker
+        <ColorInput
           id={`color-${this.props.index}`}
           value={this.props.color.code}
+          hideInput={true}
           onChange={(colorCode) => {
             const newColors = cloneDeep(this.props.item.colors)
             const color = newColors.find(c => c.id === this.props.color.id)
@@ -578,7 +579,7 @@ class HighlightAnswer extends Component {
             />
           </div>
           <div className={this.props.item.hasExpectedAnswers ? 'col-xs-3' : 'col-xs-4'}>
-            <i
+            <span
               className="fa fa-trash-o pointer checkbox"
               onClick={() => {
                 const newSolutions = cloneDeep(this.props.item.solutions)
@@ -589,12 +590,12 @@ class HighlightAnswer extends Component {
                   this.props.update('solutions', newSolutions)
                 }
               }}
-            ></i>
+            />
           </div>
         </div>
         {this.state.showFeedback &&
           <div className="feedback-container selection-form-row">
-            <Textarea
+            <HtmlInput
               id={`choice-${this.props.answer._answerId}-feedback`}
               onChange={(text) => updateAnswer('feedback', text, this.props.answer._answerId, this.props.item, this.props.update)}
               value={this.props.answer.feedback}
@@ -760,7 +761,7 @@ class SelectionText extends Component {
           id="selection-text-box"
           label=""
         >
-          <Textarea
+          <HtmlInput
             id={`selection-text-${this.props.item.id}`}
             onSelect={this.onSelect}
             onChange={(text, offsets) => {

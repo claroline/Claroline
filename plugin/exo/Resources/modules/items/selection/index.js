@@ -2,9 +2,14 @@ import merge from 'lodash/merge'
 import times from 'lodash/times'
 
 import {trans} from '#/main/app/intl/translation'
+import {notBlank} from '#/main/core/validation'
 
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
 import {SelectionItem as SelectionItemType} from '#/plugin/exo/items/selection/prop-types'
+
+import {validate as findValidate} from '#/plugin/exo/items/selection/editors/find'
+import {validate as selectValidate} from '#/plugin/exo/items/selection/editors/select'
+import {validate as highlightValidate} from '#/plugin/exo/items/selection/editors/highlight'
 
 // components
 import {SelectionEditor} from '#/plugin/exo/items/selection/components/editor'
@@ -99,6 +104,43 @@ export default {
    * @param {object} baseItem
    */
   create: (baseItem) => merge({}, baseItem, SelectionItemType.defaultProps),
+
+  /**
+   * Validate a selection item.
+   *
+   * @param {object} item
+   *
+   * @return {object} the list of item errors
+   */
+  validate: (item) => {
+    let errors = {}
+
+    switch (item.mode) {
+      case 'find': {
+        errors = Object.assign({}, errors, findValidate(item))
+        break
+      }
+      case 'select': {
+        errors = Object.assign({}, errors, selectValidate(item))
+        break
+      }
+      case 'highlight': {
+        errors = Object.assign({}, errors, highlightValidate(item))
+      }
+    }
+
+    if (notBlank(item.text, {isHtml: true})) {
+      errors.text = trans('selection_empty_text_error', {}, 'quiz')
+    }
+
+    if (!errors.text) {
+      if (item.solutions.length === 0) {
+        errors.text = trans('selection_text_must_contain_selections_error', {}, 'quiz')
+      }
+    }
+
+    return errors
+  },
 
   correctAnswer: (item, answer) => {
     const corrected = new CorrectedAnswer()

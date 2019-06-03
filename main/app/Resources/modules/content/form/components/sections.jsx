@@ -1,9 +1,11 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import isEmpty from 'lodash/isEmpty'
 import omit from 'lodash/omit'
 
 import {Section, Sections} from '#/main/app/content/components/sections'
+import {FormStatus} from '#/main/app/content/form/components/status'
 
 /**
  * Renders a form section.
@@ -11,13 +13,21 @@ import {Section, Sections} from '#/main/app/content/components/sections'
  * @param props
  * @constructor
  */
-const FormSection = props =>
-  <Section
-    {...omit(props, ['validating', 'errors'])}
-    className={classes('form-section', props.className)}
-  >
-    {props.children}
-  </Section>
+const FormSection = props => {
+
+  return (
+    <Section
+      {...omit(props, ['validating', 'errors'])}
+      className={classes('form-section', props.className)}
+      status={!isEmpty(props.errors) ?
+        <FormStatus id={props.id} validating={props.validating} position="left" /> :
+        undefined
+      }
+    >
+      {props.children}
+    </Section>
+  )
+}
 
 FormSection.propTypes = {
   id: T.string,
@@ -25,7 +35,7 @@ FormSection.propTypes = {
   children: T.node.isRequired,
   disabled: T.bool,
   validating: T.bool,
-  errors: T.object
+  errors: T.oneOfType([T.object, T.array])
 }
 
 FormSection.defaultProps = {

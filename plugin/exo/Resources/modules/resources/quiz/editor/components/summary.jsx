@@ -1,8 +1,12 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
+import omit from 'lodash/omit'
 
 import {scrollTo} from '#/main/app/dom/scroll'
 import {trans} from '#/main/app/intl/translation'
+import {FormStatus} from '#/main/app/content/form/components/status'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {LinkButton} from '#/main/app/buttons/link/components/button'
@@ -10,6 +14,14 @@ import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 
 const StepLink = props =>
   <li className="quiz-navlink">
+    {props.errors &&
+      <FormStatus
+        id={props.id}
+        validating={props.validating}
+        position="right"
+      />
+    }
+
     {props.actions &&
       <Toolbar
         id={props.id}
@@ -32,6 +44,8 @@ StepLink.propTypes = {
   id: T.string.isRequired,
   number: T.number.isRequired,
   title: T.string,
+  errors: T.bool.isRequired,
+  validating: T.bool.isRequired,
   actions: T.arrayOf(T.shape(
     ActionTypes.propTypes
   ))
@@ -57,6 +71,14 @@ class EditorSummary extends Component {
       <ul className="quiz-navbar scroller">
         <li className="quiz-navlink">
           <LinkButton target="/edit/parameters">
+            {!isEmpty(omit(this.props.errors, 'steps')) &&
+              <FormStatus
+                id="quiz-parameters-errors"
+                validating={this.props.validating}
+                position="right"
+              />
+            }
+
             <span className="fa fa-cog" />
             <span className="hidden-xs">{trans('parameters')}</span>
           </LinkButton>
@@ -69,6 +91,8 @@ class EditorSummary extends Component {
             number={index + 1}
             title={step.title}
             actions={step.actions}
+            validating={this.props.validating}
+            errors={!isEmpty(get(this.props.errors, `steps[${index}]`))}
           />
         )}
 
@@ -85,6 +109,8 @@ class EditorSummary extends Component {
 
 EditorSummary.propTypes = {
   active: T.string,
+  errors: T.object,
+  validating: T.bool.isRequired,
   steps: T.arrayOf(T.shape({
     id: T.string.isRequired,
     title: T.string,
@@ -96,6 +122,7 @@ EditorSummary.propTypes = {
 }
 
 EditorSummary.defaultProps = {
+  errors: {},
   steps: []
 }
 

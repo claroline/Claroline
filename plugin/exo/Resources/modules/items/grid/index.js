@@ -1,8 +1,11 @@
+import isEmpty from 'lodash/isEmpty'
+
 import {trans} from '#/main/app/intl/translation'
 import {stripDiacritics} from '#/main/core/scaffolding/text/strip-diacritics'
 
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
 import {constants} from '#/plugin/exo/items/grid/constants'
+import {keywords as keywordsUtils} from '#/plugin/exo/utils/keywords'
 
 // components
 import {GridEditor} from '#/plugin/exo/items/grid/components/editor'
@@ -148,6 +151,40 @@ export default {
 
   create: (item) => {
     return Object.assign(item, GridItemTypes.defaultProps)
+  },
+
+  /**
+   * Validate a grid item.
+   *
+   * @param {object} item
+   *
+   * @return {object} the list of item errors
+   */
+  validate: (item) => {
+    const errors = {}
+
+    if (item.solutions.length === 0) {
+      // no solution at all
+      errors.solutions = trans('grid_at_least_one_solution', {}, 'quiz')
+    } else {
+      item.cells.forEach(cell => {
+        const solution = item.solutions.find(solution => solution.cellId === cell.id)
+        if (solution) {
+          const cellErrors = {}
+
+          const keywordsErrors = keywordsUtils.validate(solution.answers, 'sum' === item.score.type && constants.SUM_CELL === item.sumMode, cell._multiple ? 2 : 1)
+          if (!isEmpty(keywordsErrors)) {
+            cellErrors.keywords = keywordsErrors
+          }
+
+          if (!isEmpty(cellErrors)) {
+            errors[cell.id] = cellErrors
+          }
+        }
+      })
+    }
+
+    return errors
   },
 
   correctAnswer: (item, answer = {data: []}) => {

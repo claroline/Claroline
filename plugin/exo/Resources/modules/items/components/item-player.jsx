@@ -5,7 +5,7 @@ import {Metadata as ItemMetadata} from '#/plugin/exo/items/components/metadata.j
 // import {Hint} from '#/plugin/exo/items/components/hint.jsx'
 
 import {HtmlText} from '#/main/core/layout/components/html-text'
-import {tex, transChoice} from '#/main/app/intl/translation'
+import {trans, transChoice} from '#/main/app/intl/translation'
 
 const UsedHint = props =>
   <div className="well well-sm used-hint">
@@ -33,7 +33,7 @@ const Hint = props =>
     onClick={props.showHint}
   >
     <span className="fa fa-fw fa-lightbulb-o"/>
-    &nbsp;{tex('hint')}&nbsp;{props.number}
+    &nbsp;{trans('hint', {}, 'quiz')}&nbsp;{props.number}
 
     {props.penalty > 0 &&
       <small className="text-danger hint-penalty-info">

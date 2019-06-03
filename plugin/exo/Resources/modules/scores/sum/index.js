@@ -27,7 +27,7 @@ export default {
           label: trans('total_score', {}, 'quiz'),
           type: 'number',
           required: true,
-          displayed: score.total || score._roundScore,
+          displayed: !!score.total || !!score._roundScore,
           options: {
             min: 0
           }

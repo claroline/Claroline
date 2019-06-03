@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import Popover from 'react-bootstrap/lib/Popover'
@@ -8,8 +8,8 @@ import {FormGroup} from '#/main/app/content/form/components/group'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
-import {ColorPicker} from '#/main/core/layout/form/components/field/color-picker'
-import {Textarea} from '#/main/core/layout/form/components/field/textarea'
+import {ColorInput} from '#/main/app/data/types/color/components/input'
+import {HtmlInput} from '#/main/app/data/types/html/components/input'
 
 export class AreaPopover extends Component {
   constructor(props) {
@@ -28,7 +28,7 @@ export class AreaPopover extends Component {
         positionLeft={this.props.left}
         positionTop={this.props.top}
         title={
-          <div>
+          <Fragment>
             {trans('graphic_area_edit', {}, 'quiz')}
 
             <div className="popover-actions">
@@ -53,18 +53,17 @@ export class AreaPopover extends Component {
                 tooltip="top"
               />
             </div>
-          </div>
+          </Fragment>
         }
       >
         <div className={classes('form-group', 'base-controls', {'form-last': !this.state.showFeedback})}>
-          <div>
-            <ColorPicker
-              id="popover-color-picker"
-              className="btn-default"
-              value={this.props.color}
-              onChange={color => this.props.onPickColor(color)}
-            />
-          </div>
+          <ColorInput
+            id="area-color"
+            className="color"
+            hideInput={true}
+            value={this.props.color}
+            onChange={this.props.onPickColor}
+          />
 
           <div className="right-controls">
             {this.props.hasExpectedAnswers && !this.props.hasScore &&
@@ -80,14 +79,13 @@ export class AreaPopover extends Component {
               <input
                 type="number"
                 id="area-score"
-                className="form-control area-score"
+                className="form-control score"
                 value={this.props.score}
                 onChange={e => this.props.onChangeScore(parseFloat(e.target.value))}
               />
             }
 
             <Button
-              id="area-popover-feedback-tip"
               className="btn-link"
               type={CALLBACK_BUTTON}
               icon="fa fa-fw fa-comments-o"
@@ -105,8 +103,8 @@ export class AreaPopover extends Component {
             hideLabel={true}
             className="feedback-container form-last"
           >
-            <Textarea
-              id="graphic-popover-feedback"
+            <HtmlInput
+              id="area-feedback"
               value={this.props.feedback}
               onChange={this.props.onChangeFeedback}
             />

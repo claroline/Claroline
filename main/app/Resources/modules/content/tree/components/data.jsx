@@ -5,7 +5,7 @@ import classes from 'classnames'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {Checkbox} from '#/main/core/layout/form/components/field/checkbox'
+import {Checkbox} from '#/main/app/input/components/checkbox'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
 import {

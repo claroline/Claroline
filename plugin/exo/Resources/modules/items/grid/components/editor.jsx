@@ -12,7 +12,7 @@ import {constants} from '#/plugin/exo/items/grid/constants'
 import {SCORE_SUM} from '#/plugin/exo/quiz/enums'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {ColorPicker} from '#/main/core/layout/form/components/field/color-picker'
+import {ColorInput} from '#/main/app/data/types/color/components/input'
 import {KeywordsPopover} from '#/plugin/exo/components/keywords'
 
 import {utils} from '#/plugin/exo/items/grid/utils/utils'
@@ -197,18 +197,21 @@ class GridCell extends Component {
       >
         <div className="cell-header">
           <div className="cell-actions">
-            <ColorPicker
+            <ColorInput
               id={`cell-${this.props.cell.id}-font`}
-              className="btn-link-default"
+              className="btn-link"
               value={this.props.cell.color}
+              colorIcon="fa fa-fw fa-font"
+              hideInput={true}
               onChange={color => this.props.update('color', color)}
-              forFontColor={true}
             />
 
-            <ColorPicker
+            <ColorInput
               id={`cell-${this.props.cell.id}-bg`}
-              className="btn-link-default"
+              className="btn-link"
               value={this.props.cell.background}
+              colorIcon="fa fa-fw fa-fill"
+              hideInput={true}
               onChange={color => this.props.update('background', color)}
             />
           </div>

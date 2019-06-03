@@ -623,9 +623,10 @@ OddList.propTypes = {
 
 const SetEditor = (props) => {
   const Set = (
-    <div className="row">
+    <div className="row" key="set-editor">
       <div key="items" className="items-col col-md-5 col-sm-5 col-xs-5">
         <ItemList
+          key="items"
           items={props.item.items}
           solutions={props.item.solutions}
           onChange={props.update}
@@ -635,6 +636,7 @@ const SetEditor = (props) => {
         />
 
         <OddList
+          key="odd"
           items={props.item.items}
           solutions={props.item.solutions}
           onChange={props.update}

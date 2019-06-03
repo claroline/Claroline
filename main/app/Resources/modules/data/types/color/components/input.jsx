@@ -36,10 +36,43 @@ class ColorInput extends Component {
     }
   }
 
-  render() {
+  renderPickerButton(className) {
     let color
     if (this.props.value) {
       color = tinycolor(this.props.value)
+    }
+
+    return (
+      <Button
+        className={classes('btn', className, {
+          'text-light': color && color.isDark(),
+          'text-dark': color && color.isLight()
+        })}
+        style={{
+          background: this.props.value,
+          borderColor: this.props.value
+        }}
+        type={MENU_BUTTON}
+        icon={this.props.colorIcon}
+        label={trans('show-colors', {}, 'actions')}
+        tooltip="right"
+        size={this.props.size}
+        disabled={this.props.disabled}
+        menu={
+          <div className="dropdown-menu">
+            <ColorChart
+              selected={this.props.value}
+              onChange={this.props.onChange}
+            />
+          </div>
+        }
+      />
+    )
+  }
+
+  render() {
+    if (this.props.hideInput) {
+      return this.renderPickerButton(this.props.className)
     }
 
     return (
@@ -47,30 +80,7 @@ class ColorInput extends Component {
         [`input-group-${this.props.size}`]: !!this.props.size
       })}>
         <span className="input-group-btn">
-          <Button
-            className={classes('btn', {
-              'text-light': color && color.isDark(),
-              'text-dark': color && color.isLight()
-            })}
-            style={{
-              background: this.props.value,
-              borderColor: this.props.value
-            }}
-            type={MENU_BUTTON}
-            icon={this.props.colorIcon}
-            label={trans('show-colors', {}, 'actions')}
-            tooltip="right"
-            size={this.props.size}
-            disabled={this.props.disabled}
-            menu={
-              <div className="dropdown-menu">
-                <ColorChart
-                  selected={this.props.value}
-                  onChange={this.props.onChange}
-                />
-              </div>
-            }
-          />
+          {this.renderPickerButton()}
         </span>
 
         <input
@@ -94,9 +104,11 @@ implementPropTypes(ColorInput, FormFieldTypes, {
   value: T.string,
 
   // custom options
+  hideInput: T.bool,
   colorIcon: T.string,
   colors: T.arrayOf(T.string)
 }, {
+  hideInput: false,
   colorIcon: 'fa fa-fw fa-palette',
   colors: [
     '#FF6900',

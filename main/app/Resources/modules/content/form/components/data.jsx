@@ -22,6 +22,22 @@ function getSectionId(section, formId = null) {
   return id
 }
 
+function getSectionErrors(sectionFields = [], errors = {}) {
+  let sectionErrors = []
+
+  sectionFields.map(field => {
+    if (get(errors, field.name)) {
+      sectionErrors.push(get(errors, field.name))
+
+      if (field.linked) {
+        sectionErrors = sectionErrors.concat(getSectionErrors(field.linked), errors)
+      }
+    }
+  })
+
+  return sectionErrors
+}
+
 const FormData = (props) => {
   const hLevel = props.level + (props.title ? 1 : 0)
   let hDisplay
@@ -102,7 +118,7 @@ const FormData = (props) => {
               icon={section.icon}
               title={section.title}
               subtitle={section.subtitle}
-              errors={props.errors}
+              errors={getSectionErrors(section.fields, props.errors)}
               validating={props.validating}
             >
               <FormFieldset

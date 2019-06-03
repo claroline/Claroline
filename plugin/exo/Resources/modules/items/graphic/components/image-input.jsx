@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {tex} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 
 export class ImageInput extends Component {
   render() {
@@ -26,7 +26,7 @@ export class ImageInput extends Component {
           onClick={() => this.input.click()}
         >
           <span className="fa fa-fw fa-file-o"/>
-          {tex('graphic_pick_image')}
+          {trans('graphic_pick_image', {}, 'quiz')}
         </button>
       </div>
     )

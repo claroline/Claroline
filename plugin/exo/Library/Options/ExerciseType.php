@@ -25,6 +25,11 @@ final class ExerciseType
     /**
      * @var string
      */
+    const CERTIFICATION = 'evaluative';
+
+    /**
+     * @var string
+     */
     const SURVEY = 'survey';
 
     /**

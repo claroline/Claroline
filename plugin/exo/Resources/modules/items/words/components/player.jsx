@@ -1,10 +1,10 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {Textarea} from '#/main/core/layout/form/components/field/textarea'
+import {HtmlInput} from '#/main/app/data/types/html/components/input'
 
 const WordsPlayer = (props) =>
-  <Textarea
+  <HtmlInput
     id={`open-${props.item.id}-data`}
     value={props.answer}
     disabled={props.disabled}

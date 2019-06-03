@@ -4,7 +4,7 @@ import Tab from 'react-bootstrap/lib/Tab'
 import Nav from 'react-bootstrap/lib/Nav'
 import NavItem from 'react-bootstrap/lib/NavItem'
 
-import {tex} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 
 export class PaperTabs extends Component {
   constructor(props) {
@@ -29,17 +29,17 @@ export class PaperTabs extends Component {
           <Nav bsStyle="tabs">
             {this.props.showYours &&
               <NavItem eventKey="first" onSelect={() => this.handleSelect('first')}>
-                <span className="fa fa-fw fa-user"></span> {tex('your_answer')}
+                <span className="fa fa-fw fa-user" /> {trans('your_answer', {}, 'quiz')}
               </NavItem>
             }
             {this.props.showExpected &&
               <NavItem eventKey="second" onSelect={() => this.handleSelect('second')}>
-                <span className="fa fa-fw fa-check"></span> {tex('expected_answer')}
+                <span className="fa fa-fw fa-check" /> {trans('expected_answer', {}, 'quiz')}
               </NavItem>
             }
             {this.props.showStats &&
               <NavItem eventKey="third" onSelect={() => this.handleSelect('third')}>
-                <span className="fa fa-fw fa-bar-chart"></span> {tex('stats')}
+                <span className="fa fa-fw fa-bar-chart" /> {trans('stats', {}, 'quiz')}
               </NavItem>
             }
           </Nav>

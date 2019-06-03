@@ -18,7 +18,7 @@ const UserProgression = props =>
     <h3 className="h2">{trans('resource_overview_progression', {}, 'resource')}</h3>
 
     <div className="panel panel-default">
-      <div className="panel-body">
+      <div className="panel-body text-center">
         {props.score && props.score.displayed &&
           <ScoreGauge
             type="user"

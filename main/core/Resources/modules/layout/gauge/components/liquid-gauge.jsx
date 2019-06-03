@@ -4,7 +4,6 @@ import classes from 'classnames'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {Liquid} from '#/main/app/animation/components/liquid'
 
-import {constants} from '#/main/core/layout/gauge/constants'
 import {Gauge as GaugeTypes} from '#/main/core/layout/gauge/prop-types'
 import {
   GaugeContainer,
@@ -20,13 +19,7 @@ const LIQUID_GAUGE_CONFIG = {
   // The outer circle thickness as a percentage of it's radius.
   circleThickness: 0.08,
   // The size of the gap between the outer circle and wave circle as a percentage of the outer circles radius.
-  circleFillGap: 0.06,
-  // The height at which to display the percentage text withing the wave circle. 0 = bottom, 1 = top.
-  textVertPosition: constants.GAUGE_TEXT_POSITION,
-  // The relative height of the text to display in the wave circle. 1 = 50%
-  textSize: constants.GAUGE_TEXT_SIZE,
-  // If true, a % symbol is displayed after the value.
-  displayPercent: true
+  circleFillGap: 0.06
 }
 
 const LiquidGauge = props => {
@@ -57,7 +50,6 @@ const LiquidGauge = props => {
         margin={fillCircleMargin}
         radius={radius}
         preFilled={props.preFilled}
-        unit={props.unit}
       />
 
       <Liquid
@@ -76,7 +68,6 @@ const LiquidGauge = props => {
           margin={fillCircleMargin}
           radius={radius}
           preFilled={props.preFilled}
-          unit={props.unit}
         />
       </Liquid>
     </GaugeContainer>

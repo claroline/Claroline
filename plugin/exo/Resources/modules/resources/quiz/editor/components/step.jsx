@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 import uniqBy from 'lodash/uniqBy'
 
 import {trans} from '#/main/app/intl/translation'
@@ -85,6 +86,7 @@ const EditorStep = props => {
                 key={itemIndex}
                 formName={props.formName}
                 path={`${props.path}.items[${itemIndex}]`}
+                errors={get(props.errors, `items[${itemIndex}]`)}
 
                 enableScores={props.hasExpectedAnswers}
                 numbering={getNumbering(props.numberingType, props.index, itemIndex)}
@@ -189,6 +191,8 @@ const EditorStep = props => {
                     if (!props.hasExpectedAnswers || 'none' === props.score.type) {
                       item.score = props.score
                     }
+
+                    return item
                   })
 
                   props.update('items', uniqBy([].concat(props.items, items), (item) => item.id))

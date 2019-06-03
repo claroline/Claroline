@@ -170,6 +170,9 @@ const EditorParameters = props => {
                 onChange: (pickingType) => {
                   if (constants.QUIZ_PICKING_TAGS === pickingType) {
                     props.update('picking.randomPick', constants.SHUFFLE_ALWAYS)
+                    props.update('picking.pick', [])
+                  } else {
+                    props.update('picking.pick', 0)
                   }
                 },
                 linked: [
@@ -299,6 +302,7 @@ const EditorParameters = props => {
                     props.update('parameters.duration', 0)
                   } else {
                     props.update('parameters.duration', null) // to force user to fill the field
+                    props.update('parameters.interruptible', false)
                   }
                 },
                 linked: [

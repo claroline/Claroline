@@ -1,10 +1,5 @@
 import {makeActionCreator} from '#/main/app/store/actions'
-import {API_REQUEST, url} from '#/main/app/api'
-
-import {
-  actions as formActions
-} from '#/main/app/content/form/store'
-
+import {API_REQUEST} from '#/main/app/api'
 
 export const LOAD_MODEL = 'LOAD_MODEL'
 export const LOAD_CURRENT = 'LOAD_CURRENT'
@@ -41,23 +36,6 @@ actions.fetchArchive = (url) => ({
     success: (response, dispatch) => {
       dispatch(actions.loadArchive(response))
     }
-  }
-})
-
-//récupérer l'action save du formulaire à la place
-actions.save = (workspace) => ({
-  [API_REQUEST]: {
-    url: ['apiv2_workspace_create'],
-    request: {
-      body: JSON.stringify(workspace),
-      method: 'POST'
-    },
-    success: (response) => {
-      const route = url(['claro_workspace_open', {workspaceId: response.id}])
-      window.location.href =  route
-    },
-    //todo use selector instead ?
-    error: (errors, status, dispatch) => dispatch(formActions.errors('workspaces.current', errors))
   }
 })
 

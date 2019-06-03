@@ -45,20 +45,6 @@ export function transChoice(key, count, placeholders = {}, domain = PLATFORM_DOM
 }
 
 /**
- * Shortcut to access `platform` messages.
- *
- * @param {string} message
- * @param {object} placeholders
- *
- * @returns {string}
- *
- * @deprecated use `trans()` instead.
- */
-export function t(message, placeholders = {}) {
-  return trans(message, placeholders, PLATFORM_DOMAIN)
-}
-
-/**
  * Shortcut to access `validators` messages.
  *
  * @param {string} message
@@ -68,21 +54,6 @@ export function t(message, placeholders = {}) {
  */
 export function tval(message, placeholders = {}) {
   return trans(message, placeholders, VALIDATION_DOMAIN)
-}
-
-/**
- * Shortcut to access simple translation without placeholders.
- *
- * @todo : to remove and put in quiz plugin
- *
- * @param {string} message
- * @param {object} placeholders
- * @param {string} domain
- *
- * @returns {string}
- */
-export function tex(message, placeholders = {}, domain = 'quiz') {
-  return trans(message, placeholders, domain)
 }
 
 // reexport translator object

@@ -1,8 +1,10 @@
 import {trans} from '#/main/app/intl/translation'
 
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
+
 import {GraphicItem as GraphicItemTypes} from '#/plugin/exo/items/graphic/prop-types'
 import {utils} from '#/plugin/exo/items/graphic/utils'
+import {MAX_IMG_SIZE} from '#/plugin/exo/items/graphic/constants'
 
 // components
 import {GraphicPaper} from '#/plugin/exo/items/graphic/components/paper'
@@ -44,6 +46,37 @@ export default {
    * @return {object}
    */
   create: (baseItem) => Object.assign(baseItem, GraphicItemTypes.defaultProps),
+
+  /**
+   * Validate a graphic item.
+   *
+   * @param {object} item
+   *
+   * @return {object} the list of item errors
+   */
+  validate: (item) => {
+    if (item.image.type && item.image.type.indexOf('image') !== 0) {
+      return {image: trans('graphic_error_not_an_image', {}, 'quiz')}
+    }
+
+    if (item.image._size && item.image._size > MAX_IMG_SIZE) {
+      return {image: trans('graphic_error_image_too_large', {}, 'quiz')}
+    }
+
+    if (!item.image.data && !item.image.url) {
+      return {image: trans('graphic_error_no_image', {}, 'quiz')}
+    }
+
+    if (item.solutions.length === 0) {
+      return {image: trans('graphic_error_no_solution', {}, 'quiz')}
+    }
+
+    if (!item.solutions.find(solution => solution.score > 0)) {
+      return {image: trans('graphic_error_no_positive_solution', {}, 'quiz')}
+    }
+
+    return {}
+  },
 
   /**
    * Correct an answer submitted to a graphic item.

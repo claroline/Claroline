@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import tinycolor from 'tinycolor2'
 
-import {tex, trans} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {makeDraggable} from '#/plugin/exo/utils/dragAndDrop'
@@ -123,7 +123,7 @@ export class AnswerArea extends Component {
               className="btn"
               type={CALLBACK_BUTTON}
               icon="fa fa-fw fa-pencil"
-              label={tex('graphic_area_edit')}
+              label={trans('graphic_area_edit', {}, 'quiz')}
               callback={e => {
                 const rect = e.target.classList.contains('btn') ?
                   e.target.getBoundingClientRect() : e.target.parentNode.getBoundingClientRect()

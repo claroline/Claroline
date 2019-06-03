@@ -104,6 +104,8 @@ class EditorMain extends Component {
         }}
       >
         <EditorSummary
+          validating={this.props.validating}
+          errors={this.props.errors}
           steps={this.props.steps.map((step, stepIndex) => ({
             id: step.id,
             title: step.title,

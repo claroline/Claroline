@@ -33,7 +33,7 @@ const EditorMain = withRouter(
        * @param {string} quizId - the id of the quiz to save
        */
       save(quizId) {
-        dispatch(formActions.save(selectors.FORM_NAME, ['exercise_update', {id: quizId}]))
+        dispatch(actions.save(quizId))
       },
 
       /**

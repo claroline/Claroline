@@ -12,7 +12,7 @@ import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {actions as modalActions} from '#/main/app/overlay/modal/store'
 import {select as workspaceSelect} from '#/main/core/workspace/selectors'
 import {MODAL_DATA_LIST} from '#/main/app/modals/list'
-import {Checkbox} from '#/main/core/layout/form/components/field/checkbox'
+import {Checkbox} from '#/main/app/input/components/checkbox'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
 import {Role as RoleTypes} from '#/main/core/user/prop-types'

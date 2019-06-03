@@ -35,12 +35,12 @@ class DataInput extends Component {
   }
 
   componentDidMount() {
-    this.loadDefinition()
+    this.load()
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.type !== this.props.type) {
-      this.loadDefinition()
+      this.load()
     }
   }
 
@@ -51,19 +51,25 @@ class DataInput extends Component {
     }
   }
 
-  loadDefinition() {
-    this.pending = makeCancelable(getType(this.props.type))
+  load() {
+    if (this.pending) {
+      this.pending.cancel()
+      this.pending = null
+    }
+
+    this.pending = makeCancelable(
+      Promise.all([
+        this.props.type ? getType(this.props.type) : Promise.resolve({})
+      ])
+    )
 
     this.pending.promise
       .then(
-        (definition) => this.setState({
+        (result = []) => this.setState({
           loaded: true,
-          group: get(definition, 'components.group'),
-          input: get(definition, 'components.input')
-        }),
-        () => {
-          // todo : do something
-        }
+          group: get(result[0], 'components.group'),
+          input: get(result[0], 'components.input')
+        })
       )
       .then(
         () => this.pending = null,
@@ -95,6 +101,14 @@ class DataInput extends Component {
       return 'error'
     }
 
+    if (this.props.children) {
+      return this.props.children
+    }
+
+    if (this.props.render) {
+      return this.props.render(this.props.value, this.props.error)
+    }
+
     if (this.state.input) {
       return createElement(this.state.input,
         // the props to pass to the input
@@ -106,6 +120,7 @@ class DataInput extends Component {
           placeholder: this.props.placeholder,
           disabled: this.props.disabled,
           size: this.props.size,
+          validating: this.props.validating,
           onChange: this.onChange
         })
       )
@@ -132,7 +147,7 @@ class DataInput extends Component {
 
 DataInput.propTypes = {
   id: T.string.isRequired,
-  type: T.string.isRequired,
+  type: T.string,
   label: T.string.isRequired,
   hideLabel: T.bool,
   options: T.object, // depends on the data type
@@ -150,12 +165,19 @@ DataInput.propTypes = {
   error: T.oneOfType([
     T.string,
     T.arrayOf(T.string),
+    T.arrayOf(T.arrayOf(T.string)),
     T.object
   ]),
 
   // field callbacks
   onChange: T.func.isRequired,
-  onError: T.func
+  onError: T.func,
+  validate: T.func,
+
+  // customization
+  // It will replace the render of the input.
+  children: T.node,
+  render: T.func
 }
 
 DataInput.defaultProps = {

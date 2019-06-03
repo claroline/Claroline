@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {trans, tex} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 import {
   Page,
   PageHeader,
@@ -39,11 +39,11 @@ CountCard.propTypes = {
 
 const GeneralStats = props =>
   <div className="general-stats">
-    <CountCard label={tex('steps')} icon="fa fa-th-list" count={props.statistics.nbSteps} />
-    <CountCard label={tex('questions')} icon="fa fa-question" count={props.statistics.nbQuestions} />
+    <CountCard label={trans('steps', {}, 'quiz')} icon="fa fa-th-list" count={props.statistics.nbSteps} />
+    <CountCard label={trans('questions', {}, 'quiz')} icon="fa fa-question" count={props.statistics.nbQuestions} />
     <CountCard label={trans('users')} icon="fa fa-user" count={props.statistics.nbRegisteredUsers} />
     <CountCard label={trans('anonymous')} icon="fa fa-user-secret" count={props.statistics.nbAnonymousUsers} />
-    <CountCard label={tex('papers')} icon="fa fa-file" count={props.statistics.nbPapers} />
+    <CountCard label={trans('papers', {}, 'quiz')} icon="fa fa-file" count={props.statistics.nbPapers} />
   </div>
 
 GeneralStats.propTypes = {
@@ -58,7 +58,7 @@ GeneralStats.propTypes = {
 
 const SuccessDistribution = props =>
   <div className="paper-success-distribution">
-    <h2>{tex('docimology_success_index')}</h2>
+    <h2>{trans('docimology_success_index', {}, 'quiz')}</h2>
 
     <div className="row">
       <div className="col-md-4" style={{marginBottom: '20px'}}>
@@ -79,19 +79,19 @@ const SuccessDistribution = props =>
           <li className="inline-flex">
             <span className="color-legend" style={{backgroundColor: COLOR_SUCCESS}} />
             <span className="legend-label">
-              {tex('docimology_papers_totally_successfull')} {`(${props.nbSuccess})`}
+              {trans('docimology_papers_totally_successfull', {}, 'quiz')} {`(${props.nbSuccess})`}
             </span>
           </li>
           <li className="inline-flex">
             <span className="color-legend" style={{backgroundColor: COLOR_WARNING}} />
             <span className="legend-label">
-              {tex('docimology_papers_partially_successfull')} {`(${props.nbPartialSuccess})`}
+              {trans('docimology_papers_partially_successfull', {}, 'quiz')} {`(${props.nbPartialSuccess})`}
             </span>
           </li>
           <li className="inline-flex">
             <span className="color-legend" style={{backgroundColor: COLOR_DANGER}} />
             <span className="legend-label">
-              {tex('docimology_papers_missed')} {`(${props.nbMissed})`}
+              {trans('docimology_papers_missed', {}, 'quiz')} {`(${props.nbMissed})`}
             </span>
           </li>
         </ul>
@@ -107,10 +107,10 @@ SuccessDistribution.propTypes = {
 
 const ScoreDistribution = props =>
   <div className="paper-score-distribution">
-    <h2>{tex('docimology_score_distribution')}</h2>
+    <h2>{trans('docimology_score_distribution')}</h2>
     <div className="help-block">
       <span className="fa fa-fw fa-info-circle" />
-      {tex('docimology_note_gauges_help')}
+      {trans('docimology_note_gauges_help', {}, 'quiz')}
     </div>
 
     <div className="row">
@@ -124,11 +124,11 @@ const ScoreDistribution = props =>
               margin={{top: 20, right: 20, bottom: 80, left: 80}}
               yAxisLabel={{
                 show: true,
-                text: tex('docimology_nb_papers')
+                text: trans('docimology_nb_papers', {}, 'quiz')
               }}
               xAxisLabel={{
                 show: true,
-                text: tex('docimology_score')
+                text: trans('docimology_score', {}, 'quiz')
               }}
             />
           </div>
@@ -136,7 +136,7 @@ const ScoreDistribution = props =>
       </div>
       <div className="note-gauges col-md-6">
         <CircularGauge
-          label={tex('minimum')}
+          label={trans('minimum', {}, 'quiz')}
           color={COLOR_DANGER}
           value={props.minMaxAndAvgScores.min}
           max={props.maxScore}
@@ -145,7 +145,7 @@ const ScoreDistribution = props =>
           showValue={false}
         />
         <CircularGauge
-          label={tex('average')}
+          label={trans('average', {}, 'quiz')}
           color={COLOR_WARNING}
           value={props.minMaxAndAvgScores.avg}
           max={props.maxScore}
@@ -154,7 +154,7 @@ const ScoreDistribution = props =>
           showValue={false}
         />
         <CircularGauge
-          label={tex('maximum')}
+          label={trans('maximum', {}, 'quiz')}
           color={COLOR_SUCCESS}
           value={props.minMaxAndAvgScores.max}
           max={props.maxScore}
@@ -178,7 +178,7 @@ ScoreDistribution.propTypes = {
 
 const DifficultyIndex = props =>
   <div className="difficulty-index">
-    <h2>{tex('docimology_difficulty_index')}</h2>
+    <h2>{trans('docimology_difficulty_index', {}, 'quiz')}</h2>
 
     <div className="panel panel-default">
       <div className="panel-body">
@@ -189,11 +189,11 @@ const DifficultyIndex = props =>
           margin={{top: 20, right: 20, bottom: 80, left: 80}}
           yAxisLabel={{
             show: true,
-            text: tex('docimology_difficulty_index')
+            text: trans('docimology_difficulty_index', {}, 'quiz')
           }}
           xAxisLabel={{
             show: true,
-            text: tex('docimology_question_title')
+            text: trans('docimology_question_title', {}, 'quiz')
           }}
         />
 
@@ -204,10 +204,10 @@ const DifficultyIndex = props =>
             </span>
           </div>
           <div className="text">
-            <span className="help-block">{tex('docimology_difficulty_index_help_part_1')}</span>
-            <span className="help-block">{tex('docimology_difficulty_index_help_part_2')}</span>
-            <span className="help-block">{tex('docimology_difficulty_index_help_part_3')}</span>
-            <span className="help-block">{tex('docimology_difficulty_index_help_part_4')}</span>
+            <span className="help-block">{trans('docimology_difficulty_index_help_part_1', {}, 'quiz')}</span>
+            <span className="help-block">{trans('docimology_difficulty_index_help_part_2', {}, 'quiz')}</span>
+            <span className="help-block">{trans('docimology_difficulty_index_help_part_3', {}, 'quiz')}</span>
+            <span className="help-block">{trans('docimology_difficulty_index_help_part_4', {}, 'quiz')}</span>
           </div>
         </div>
       </div>
@@ -220,7 +220,7 @@ DifficultyIndex.propTypes = {
 
 const DiscriminationIndex = props =>
   <div className="discrimination-index">
-    <h2>{tex('docimology_discrimination_coefficient')}</h2>
+    <h2>{trans('docimology_discrimination_coefficient', {}, 'quiz')}</h2>
 
     <div className="panel panel-default">
       <div className="panel-body">
@@ -231,11 +231,11 @@ const DiscriminationIndex = props =>
           margin={{top: 20, right: 20, bottom: 80, left: 80}}
           yAxisLabel={{
             show: true,
-            text: tex('docimology_discrimination_coefficient')
+            text: trans('docimology_discrimination_coefficient', {}, 'quiz')
           }}
           xAxisLabel={{
             show: true,
-            text: tex('docimology_question_title')
+            text: trans('docimology_question_title', {}, 'quiz')
           }}
           minMaxAsYDomain={true}
           ticksAsYValues={true}
@@ -248,10 +248,10 @@ const DiscriminationIndex = props =>
             </span>
           </div>
           <div className="text">
-            <span className="help-block">{tex('docimology_discrimination_coefficient_help_part_1')}</span>
-            <span className="help-block">{tex('docimology_discrimination_coefficient_help_part_2')}</span>
-            <span className="help-block">{tex('docimology_discrimination_coefficient_help_part_3')}</span>
-            <span className="help-block">{tex('docimology_discrimination_coefficient_help_part_4')}</span>
+            <span className="help-block">{trans('docimology_discrimination_coefficient_help_part_1', {}, 'quiz')}</span>
+            <span className="help-block">{trans('docimology_discrimination_coefficient_help_part_2', {}, 'quiz')}</span>
+            <span className="help-block">{trans('docimology_discrimination_coefficient_help_part_3', {}, 'quiz')}</span>
+            <span className="help-block">{trans('docimology_discrimination_coefficient_help_part_4', {}, 'quiz')}</span>
           </div>
         </div>
       </div>
@@ -266,13 +266,13 @@ const Docimology = props =>
   <Page id="quiz-docimology">
     <PageHeader
       title={props.quiz.title}
-      subtitle={tex('docimology')}
+      subtitle={trans('docimology', {}, 'quiz')}
     >
       <PageActions>
         <PageAction
           id="back-to-exercise"
           type={URL_BUTTON}
-          label={tex('back_to_the_quiz')}
+          label={trans('back_to_the_quiz', {}, 'quiz')}
           icon="fa fa-fw fa-sign-out"
           target={['claro_resource_show_short', {id: props.resourceNode.id}]}
         />

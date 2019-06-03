@@ -9,7 +9,6 @@ import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 
 import {toKey} from '#/main/core/scaffolding/text/utils'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
-import {Button} from '#/main/app/action/components/button'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {Heading} from '#/main/core/layout/components/heading'
 
@@ -52,15 +51,20 @@ const Section = props =>
           <small>{props.subtitle}</small>
         }
 
-        {0 !== props.actions.length &&
-          <Toolbar
-            id={`${props.id || toKey(props.title)}-actions`}
-            className="panel-actions"
-            buttonName="btn btn-link"
-            tooltip="top"
-            toolbar="more"
-            actions={props.actions}
-          />
+        {(props.status || 0 !== props.actions.length) &&
+          <div className="panel-actions">
+            {props.status}
+
+            {0 !== props.actions.length &&
+              <Toolbar
+                id={`${props.id || toKey(props.title)}-actions`}
+                buttonName="btn btn-link"
+                tooltip="top"
+                toolbar="more"
+                actions={props.actions}
+              />
+            }
+          </div>
         }
       </Heading>
     }
@@ -78,6 +82,7 @@ Section.propTypes = {
   subtitle: T.string,
   expanded: T.bool,
   disabled: T.bool,
+  status: T.element, // only used by FormSection to show validation. Maybe find better
   actions: T.arrayOf(T.shape(
     ActionTypes.propTypes
   )),

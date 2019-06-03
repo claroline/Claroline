@@ -13,6 +13,7 @@ use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Event\Log\LogExerciseUpdateEvent;
 use UJM\ExoBundle\Library\Item\Definition\AnswerableItemDefinitionInterface;
 use UJM\ExoBundle\Library\Item\ItemDefinitionsCollection;
+use UJM\ExoBundle\Library\Options\ExerciseType;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Library\Options\Validation;
 use UJM\ExoBundle\Manager\Attempt\PaperManager;
@@ -171,7 +172,9 @@ class ExerciseManager
      */
     public function isDeletable(Exercise $exercise)
     {
-        return !$exercise->getResourceNode()->isPublished() || 0 === $this->paperManager->countExercisePapers($exercise);
+        return ExerciseType::CERTIFICATION !== $exercise->getType()
+            || !$exercise->getResourceNode()->isPublished()
+            || 0 === $this->paperManager->countExercisePapers($exercise);
     }
 
     public function exportPapersToCsv(Exercise $exercise)

@@ -77,7 +77,7 @@ const createFormDefinition = memoize(doCreateFormDefinition)
  * @param {object} errors    - the previous error object
  * @param {object} newErrors - the new error object (removed errors are set to `undefined`)
  */
-function doCleanErrors(errors, newErrors) {
+function cleanErrors(errors, newErrors) {
   // manually manage arrays (omitBy works great, but it converts it into objects, which fuck up the react components)
   if (errors instanceof Array || newErrors instanceof Array) {
     if (newErrors) {
@@ -102,8 +102,6 @@ function doCleanErrors(errors, newErrors) {
     return (isObject(srcV) ? cleanErrors(objV, srcV) : srcV) || null
   }), isEmpty)
 }
-
-const cleanErrors = memoize(doCleanErrors)
 
 export {
   createFieldDefinition,

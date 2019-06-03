@@ -46,6 +46,7 @@ const EditorItem = props =>
           subtitle={(itemScore || 0 === itemScore) ? `(${transChoice('solution_score', itemScore, {score: itemScore}, 'quiz')})` : undefined}
           title={itemTitle}
 
+          errors={props.errors}
           actions={props.actions}
         >
           <ItemEditor
@@ -73,6 +74,7 @@ EditorItem.propTypes = {
   item: T.shape(
     ItemTypes.propTypes
   ).isRequired,
+  errors: T.object,
   actions: T.arrayOf(T.shape(
     ActionTypes.propTypes
   )),

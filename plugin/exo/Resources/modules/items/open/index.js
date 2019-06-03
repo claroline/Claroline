@@ -1,6 +1,7 @@
 import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
+import {notBlank, number, gteZero, chain} from '#/main/core/validation'
 
 import {CorrectedAnswer} from '#/plugin/exo/items/utils'
 import {OpenItem} from '#/plugin/exo/items/open/prop-types'
@@ -45,6 +46,21 @@ export default {
    * @return {object}
    */
   create: (baseItem) => merge({}, baseItem, OpenItem.defaultProps),
+
+  /**
+   * Validate a open item.
+   *
+   * @param {object} item
+   *
+   * @return {object} the list of item errors
+   */
+  validate: (item) => {
+    const errors = {}
+
+    errors.maxLength = chain(item.maxLength, {}, [notBlank, number, gteZero])
+
+    return errors
+  },
 
   /**
    * Correct an answer submitted to a open item.

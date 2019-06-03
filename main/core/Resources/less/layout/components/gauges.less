@@ -36,6 +36,12 @@
     }
 }
 
+.count-gauge {
+    .gauge-text {
+        font-weight: 900;
+    }
+}
+
 .liquid-gauge {
     .gauge-text {
         font-weight: 900;
@@ -92,6 +98,10 @@
 
 // mixin
 .gauge-variant(@color) {
+    .gauge-text {
+        fill: @color;
+    }
+
     .gauge-border-filled {
         fill: @color;
     }
@@ -102,10 +112,6 @@
 }
 
 .liquid-gauge-variant(@color, @liquid-opacity: .3) {
-    .gauge-text {
-        fill: @color;
-    }
-
     .gauge-liquid {
         fill: @color;
         fill-opacity: @liquid-opacity;
@@ -120,10 +126,6 @@
     .gauge-value {
         circle {
             fill: lighten(@color, 50%);
-        }
-
-        .gauge-text {
-            fill: @color;
         }
     }
 

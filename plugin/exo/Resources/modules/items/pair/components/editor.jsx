@@ -677,14 +677,16 @@ const PairEditor = props => {
 
   const Pair = (
     <div className="row pair-items">
-      <div className="col-md-5 col-sm-5 items-col">
+      <div className="col-md-5 col-sm-5 items-col" key="items-col">
         <ItemList
+          key="items"
           solutions={decoratedSolutions}
           items={decoratedItems}
           onChange={props.update}
         />
 
         <OddList
+          key="odd"
           solutions={decoratedSolutions}
           items={decoratedItems}
           hasScore={props.hasAnswerScores}
@@ -693,7 +695,7 @@ const PairEditor = props => {
         />
       </div>
 
-      <div className="col-md-7 col-sm-7 pairs-col">
+      <div className="col-md-7 col-sm-7 pairs-col" key="pairs-col">
         <PairList
           solutions={decoratedSolutions}
           pin={utils.hasPinnedItems(props.item.items) || props.item._pinItems}

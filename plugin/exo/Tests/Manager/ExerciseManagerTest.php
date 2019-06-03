@@ -6,6 +6,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Library\Attempt\PaperGenerator;
+use UJM\ExoBundle\Library\Options\ExerciseType;
 use UJM\ExoBundle\Library\Testing\Json\JsonDataTestCase;
 use UJM\ExoBundle\Library\Testing\Persister;
 use UJM\ExoBundle\Manager\ExerciseManager;
@@ -36,6 +37,7 @@ class ExerciseManagerTest extends JsonDataTestCase
             [$this->persist->openQuestion('Open question.')],
             [$this->persist->openQuestion('Open question.')],
         ], $this->persist->user('bob'));
+        $this->exercise->setType(ExerciseType::CERTIFICATION);
         $this->om->flush();
     }
 
@@ -120,9 +122,22 @@ class ExerciseManagerTest extends JsonDataTestCase
     }
 
     /**
-     * An exercise MUST NOT be deletable if it's published and has papers.
+     * An exercise MUST deletable if there are papers but quiz is not a certification.
      */
-    public function testIsNotDeletableIfPapers()
+    public function testIsDeletableIfNotCertificationAndPapers()
+    {
+        $this->addPapersToExercise();
+        $this->exercise->getResourceNode()->setPublished(true);
+        $this->exercise->setType(ExerciseType::FORMATIVE);
+        $this->om->flush();
+
+        $this->assertTrue($this->manager->isDeletable($this->exercise));
+    }
+
+    /**
+     * An exercise MUST NOT be deletable if it has papers and is certification.
+     */
+    public function testIsNotDeletableIfCertificationAndPapers()
     {
         $this->addPapersToExercise();
         $this->exercise->getResourceNode()->setPublished(true);

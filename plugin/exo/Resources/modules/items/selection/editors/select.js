@@ -1,7 +1,7 @@
 import cloneDeep from 'lodash/cloneDeep'
 
 import {makeActionCreator} from '#/main/app/store/actions'
-import {tex} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 import {makeId} from '#/main/core/scaffolding/id'
 
 import {utils} from '#/plugin/exo/items/selection/utils/utils'
@@ -91,7 +91,7 @@ export function validate(item) {
   })
 
   if (!hasValidAnswers) {
-    _errors.text = tex('selection_text_must_have_valid_answers_error')
+    _errors.text = trans('selection_text_must_have_valid_answers_error', {}, 'quiz')
   }
 
   return _errors

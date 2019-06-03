@@ -35,13 +35,11 @@ const CountGauge = props => {
       />
 
       <GaugeText
-        className="gauge-text"
         value={props.value}
         displayValue={props.displayValue}
         margin={fillCircleMargin}
         radius={radius}
         preFilled={props.preFilled}
-        unit={props.unit}
       />
     </GaugeContainer>
   )

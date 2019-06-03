@@ -26,11 +26,10 @@ import {
 } from '#/main/core/layout/page/index'
 import {LINK_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
 
-/*import {HelpBlock}    from '#/main/core/layout/form/components/help-block.jsx'*/
-//import {FormSection, FormSections} from '#/main/app/content/form/components/sections.jsx'
-import {FormGroup}    from '#/main/app/content/form/components/group.jsx'
-import {CheckGroup}   from '#/main/core/layout/form/components/group/check-group.jsx'
-import {TextGroup}    from '#/main/core/layout/form/components/group/text-group.jsx'
+//import {FormSection, FormSections} from '#/main/app/content/form/components/sections'
+import {FormGroup}    from '#/main/app/content/form/components/group'
+import {CheckGroup}   from '#/main/core/layout/form/components/group/check-group'
+import {TextGroup}    from '#/main/core/layout/form/components/group/text-group'
 
 /*import {Color}        from './fields/color.jsx'
 import {FontSize}     from './fields/font-size.jsx'

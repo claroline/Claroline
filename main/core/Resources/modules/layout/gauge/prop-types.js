@@ -25,8 +25,7 @@ const Gauge = {
      */
     height: T.number,
 
-    preFilled: T.bool,
-    unit: T.string
+    preFilled: T.bool
   },
   defaultProps: {
     type: 'primary',

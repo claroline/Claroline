@@ -1,6 +1,7 @@
 import times from 'lodash/times'
 
 import {trans} from '#/main/app/intl/translation'
+import {notBlank, number, chain} from '#/main/core/validation'
 
 import {emptyAnswer, CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
 import {MatchItem as MatchItemTypes} from '#/plugin/exo/items/match/prop-types'
@@ -49,6 +50,45 @@ export default {
     firstSet: [emptyAnswer()],
     secondSet: [emptyAnswer(), emptyAnswer()]
   }),
+
+  /**
+   * Validate a match item.
+   *
+   * @param {object} item
+   *
+   * @return {object} the list of item errors
+   */
+  validate: (item) => {
+    const errors = {}
+
+    // penalty greater than 0 and negatives score on solutions
+    if (item.penalty && item.penalty > 0 && item.solutions.length > 0 && item.solutions.filter(solution => solution.score < 0).length > 0) {
+      errors.warning = trans('match_warning_penalty_and_negative_scores', {}, 'quiz')
+    }
+
+    // at least one solution
+    if (item.solutions.length === 0) {
+      errors.solutions = trans('match_no_solution', {}, 'quiz')
+    } else if (undefined !== item.solutions.find(solution => chain(solution.score, {}, [notBlank, number]))) {
+      // each solution should have a valid score
+      errors.solutions = trans('match_score_not_valid', {}, 'quiz')
+    } else if (undefined === item.solutions.find(solution => solution.score > 0)) {
+      // at least one solution with a score that is greater than 0
+      errors.solutions = trans('match_no_valid_solution', {}, 'quiz')
+    }
+
+    // no blank item data
+    if (item.firstSet.find(set => notBlank(set.data, {isHtml: true})) || item.secondSet.find(set => notBlank(set.data, {isHtml: true}))) {
+      errors.items = trans('match_item_empty_data_error', {}, 'quiz')
+    }
+
+    // empty penalty
+    if (chain(item.penalty, {}, [notBlank, number])) {
+      errors.items = trans('match_penalty_not_valid', {}, 'quiz')
+    }
+
+    return errors
+  },
 
   /**
    * Correct an answer submitted to a match item.

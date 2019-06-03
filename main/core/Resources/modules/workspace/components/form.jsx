@@ -355,7 +355,7 @@ WorkspaceFormComponent.propTypes = {
   ).isRequired,
   children: T.any,
   tools: T.array,
-  models: T.array,
+  models: T.object,
   // from redux
   new: T.bool.isRequired,
   updateProp: T.func.isRequired

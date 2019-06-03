@@ -2,6 +2,7 @@ import merge from 'lodash/merge'
 import times from 'lodash/times'
 
 import {trans} from '#/main/app/intl/translation'
+import {notBlank, number, chain} from '#/main/core/validation'
 
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
 
@@ -49,6 +50,51 @@ export default {
    * @return {object}
    */
   create: (baseItem) => merge({}, PairItemType.defaultProps, baseItem),
+
+  /**
+   * Validate a pair item.
+   *
+   * @param {object} item
+   *
+   * @return {object} the list of item errors
+   */
+  validate: (item) => {
+    const errors = {}
+
+    // penalty should be greater or equal to 0
+    errors.penalty = chain(item.penalty, {}, [notBlank, number])
+
+    // random can not be used if no pinned item
+    if (item.random && item.items.filter(pItem => pItem.hasOwnProperty('coordinates') && pItem.coordinates.length === 2).length === 0) {
+      errors.items = trans('pair_random_needs_pin_item', {}, 'quiz')
+    }
+
+    // no blank items / odds
+    if (item.items.find(pItem => notBlank(pItem.data, {isHtml: true}))) {
+      // item / odd data should not be empty
+      errors.items = trans('item_empty_data_error', {}, 'quiz')
+    }
+
+    // solutions and odd
+    if (item.solutions.length > 0) {
+      // odd score not empty and valid number
+      if (undefined !== item.solutions.find(solution => solution.itemIds.length === 1 && chain(solution.score, {}, [notBlank, number]) && solution.score > 0)) {
+        errors.odd = trans('odd_score_not_valid', {}, 'quiz')
+      }
+
+      // no pair with no score
+      if (undefined !== item.solutions.find(solution => solution.itemIds.length === 2 && chain(solution.score, {}, [notBlank, number]))) {
+        errors.solutions = trans('solution_score_not_valid', {}, 'quiz')
+      }
+
+      // no pair with only one item...
+      if (undefined !== item.solutions.find(solution => solution.itemIds.length === 2 && solution.itemIds.indexOf(-1) !== -1)) {
+        errors.solutions = trans('pair_solution_at_least_two_items', {}, 'quiz')
+      }
+    }
+
+    return errors
+  },
 
   /**
    * Correct an answer submitted to a pair item.

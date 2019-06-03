@@ -412,7 +412,7 @@ const OrderingEditor = props => {
                 }
               }
             }, {
-              name: 'orderings',
+              name: 'items',
               label: trans('answer', {}, 'quiz'),
               required: true,
               component: Items

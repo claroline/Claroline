@@ -14,7 +14,7 @@ import {
   PageActions,
   PageAction
 } from '#/main/core/layout/page'
-import {Checkbox} from '#/main/core/layout/form/components/field/checkbox'
+import {Checkbox} from '#/main/app/input/components/checkbox'
 
 const ToolComponent = (props) =>
   <PageContainer>

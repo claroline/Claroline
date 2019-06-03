@@ -3,6 +3,7 @@ import get from 'lodash/get'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 
 import {FormData} from '#/main/app/content/form/containers/data'
+import {FormGroup} from '#/main/app/content/form/components/group'
 import {ItemEditor as ItemEditorTypes} from '#/plugin/exo/items/prop-types'
 
 import {resizeArea} from '#/plugin/exo/items/graphic/resize'
@@ -332,7 +333,10 @@ class GraphicElement extends Component {
 
   render() {
     return(
-      <div>
+      <FormGroup
+        id="graphic-img"
+        label={trans('image')}
+      >
         <div className="top-controls">
           <ImageInput onSelect={file => this.onSelectImage(file)}/>
 
@@ -412,140 +416,138 @@ class GraphicElement extends Component {
         }
 
         <div className="img-dropzone">
-          <div className="img-widget">
-            <AnswerDropZone onDrop={(item, props, offset) => {
-              if (item.item.type === TYPE_AREA_RESIZER) {
-                const newItem = Object.assign({}, this.props.item, {
-                  solutions: this.props.item.solutions.map(solution => {
-                    if (solution.area.id === item.item.areaId) {
-                      const area = resizeArea(
-                        this.getClientArea(solution.area),
-                        item.item.position,
-                        offset.x,
-                        offset.y
-                      )
-                      if (solution.area.shape === SHAPE_CIRCLE) {
-                        return Object.assign({}, solution, {
-                          area: Object.assign({}, solution.area, {
-                            center: {
-                              x: toAbs(area.center.x, this.props.item.image),
-                              y: toAbs(area.center.y, this.props.item.image),
-                              _clientX: area.center.x,
-                              _clientY: area.center.y
-                            },
-                            radius: toAbs(area.radius, this.props.item.image),
-                            _clientRadius: area.radius
-                          })
-                        })
-                      } else {
-                        return Object.assign({}, solution, {
-                          area: Object.assign({}, solution.area, {
-                            coords: solution.area.coords.map((coords, index) => ({
-                              x: toAbs(area.coords[index].x, this.props.item.image),
-                              y: toAbs(area.coords[index].y, this.props.item.image),
-                              _clientX: area.coords[index].x,
-                              _clientY: area.coords[index].y
-                            }))
-                          })
-                        })
-                      }
-                    }
-                    return solution
-                  })
-                })
-                this.props.update('solutions', newItem.solutions)
-              } else {
-                const newItem = Object.assign({}, this.props.item, {
-                  solutions: this.props.item.solutions.map(solution => {
-                    if (solution.area.id === item.id) {
-                      // action coordinates are the offset resulting from the move
-                      if (solution.area.shape === SHAPE_CIRCLE) {
-                        return Object.assign({}, solution, {
-                          area: Object.assign({}, solution.area, {
-                            center: {
-                              x: solution.area.center.x + toAbs(offset.x, this.props.item.image),
-                              y: solution.area.center.y + toAbs(offset.y, this.props.item.image),
-                              _clientX: solution.area.center._clientX + offset.x,
-                              _clientY: solution.area.center._clientY + offset.y
-                            }
-                          })
-                        })
-                      } else {
-                        return Object.assign({}, solution, {
-                          area: Object.assign({}, solution.area, {
-                            coords: solution.area.coords.map(coords => ({
-                              x: coords.x + toAbs(offset.x, this.props.item.image),
-                              y: coords.y + toAbs(offset.y, this.props.item.image),
-                              _clientX: coords._clientX + offset.x,
-                              _clientY: coords._clientY + offset.y
-                            }))
-                          })
-                        })
-                      }
-                    }
-                    return solution
-                  }),
-                  _popover: Object.assign({}, this.props.item._popover, {open: false})
-                })
-
-                this.props.update('solutions', newItem.solutions)
-                this.props.update('_popover', newItem._popover)
-              }
-            }}>
-              <div>
-                <div className="img-container" ref={el => this.imgContainer = el}/>
-                <ResizeDragLayer
-                  canDrag={!get(this.props.item, '_popover.open')}
-                  areas={this.props.item.solutions.map(
-                    solution => this.getClientArea(solution.area)
-                  )}
-                />
-                {this.props.item.solutions.map(solution =>
-                  <AnswerAreaDraggable
-                    key={solution.area.id}
-                    id={solution.area.id}
-                    color={solution.area.color}
-                    shape={solution.area.shape}
-                    selected={this.props.item._mode === MODE_SELECT && solution._selected}
-                    onSelect={id => {
-                      const newItem = Object.assign({}, this.props.item, {
-                        solutions: this.props.item.solutions.map(solution => Object.assign({}, solution, {
-                          _selected: solution.area.id === id
-                        })),
-                        _mode: MODE_SELECT,
-                        _popover: Object.assign({}, this.props.item._popover, {
-                          open: this.props.item._popover.open && this.props.item._popover.areaId === id
+          <AnswerDropZone onDrop={(item, props, offset) => {
+            if (item.item.type === TYPE_AREA_RESIZER) {
+              const newItem = Object.assign({}, this.props.item, {
+                solutions: this.props.item.solutions.map(solution => {
+                  if (solution.area.id === item.item.areaId) {
+                    const area = resizeArea(
+                      this.getClientArea(solution.area),
+                      item.item.position,
+                      offset.x,
+                      offset.y
+                    )
+                    if (solution.area.shape === SHAPE_CIRCLE) {
+                      return Object.assign({}, solution, {
+                        area: Object.assign({}, solution.area, {
+                          center: {
+                            x: toAbs(area.center.x, this.props.item.image),
+                            y: toAbs(area.center.y, this.props.item.image),
+                            _clientX: area.center.x,
+                            _clientY: area.center.y
+                          },
+                          radius: toAbs(area.radius, this.props.item.image),
+                          _clientRadius: area.radius
                         })
                       })
-                      this.props.update('solutions', newItem.solutions)
-                      this.props.update('_mode', newItem._mode)
-                      this.props.update('_popover', newItem._popover)
-                    }}
-                    onDelete={id => {
-                      const newItem = deleteArea(this.props.item, id)
-                      this.props.update('solutions', newItem.solutions)
-                      this.props.update('_popover', newItem._popover)
-                    }}
-                    canDrag={!get(this.props.item, '_popover.open') || this.props.item._popover.areaId !== solution.area.id}
-                    togglePopover={(areaId, left, top) => {
-                      const hasPopover = this.props.item._popover.open
-                        && this.props.item._popover.areaId === solution.area.id
-
-                      this.props.update('_popover', {
-                        areaId,
-                        open: !hasPopover,
-                        left,
-                        top
+                    } else {
+                      return Object.assign({}, solution, {
+                        area: Object.assign({}, solution.area, {
+                          coords: solution.area.coords.map((coords, index) => ({
+                            x: toAbs(area.coords[index].x, this.props.item.image),
+                            y: toAbs(area.coords[index].y, this.props.item.image),
+                            _clientX: area.coords[index].x,
+                            _clientY: area.coords[index].y
+                          }))
+                        })
                       })
-                    }}
-                    geometry={this.getClientArea(solution.area)}
-                  />
+                    }
+                  }
+                  return solution
+                })
+              })
+              this.props.update('solutions', newItem.solutions)
+            } else {
+              const newItem = Object.assign({}, this.props.item, {
+                solutions: this.props.item.solutions.map(solution => {
+                  if (solution.area.id === item.id) {
+                    // action coordinates are the offset resulting from the move
+                    if (solution.area.shape === SHAPE_CIRCLE) {
+                      return Object.assign({}, solution, {
+                        area: Object.assign({}, solution.area, {
+                          center: {
+                            x: solution.area.center.x + toAbs(offset.x, this.props.item.image),
+                            y: solution.area.center.y + toAbs(offset.y, this.props.item.image),
+                            _clientX: solution.area.center._clientX + offset.x,
+                            _clientY: solution.area.center._clientY + offset.y
+                          }
+                        })
+                      })
+                    } else {
+                      return Object.assign({}, solution, {
+                        area: Object.assign({}, solution.area, {
+                          coords: solution.area.coords.map(coords => ({
+                            x: coords.x + toAbs(offset.x, this.props.item.image),
+                            y: coords.y + toAbs(offset.y, this.props.item.image),
+                            _clientX: coords._clientX + offset.x,
+                            _clientY: coords._clientY + offset.y
+                          }))
+                        })
+                      })
+                    }
+                  }
+                  return solution
+                }),
+                _popover: Object.assign({}, this.props.item._popover, {open: false})
+              })
+
+              this.props.update('solutions', newItem.solutions)
+              this.props.update('_popover', newItem._popover)
+            }
+          }}>
+            <div className="img-widget">
+              <div className="img-container" ref={el => this.imgContainer = el}/>
+              <ResizeDragLayer
+                canDrag={!get(this.props.item, '_popover.open')}
+                areas={this.props.item.solutions.map(
+                  solution => this.getClientArea(solution.area)
                 )}
-              </div>
-            </AnswerDropZone>
-          </div>
+              />
+              {this.props.item.solutions.map(solution =>
+                <AnswerAreaDraggable
+                  key={solution.area.id}
+                  id={solution.area.id}
+                  color={solution.area.color}
+                  shape={solution.area.shape}
+                  selected={this.props.item._mode === MODE_SELECT && solution._selected}
+                  onSelect={id => {
+                    const newItem = Object.assign({}, this.props.item, {
+                      solutions: this.props.item.solutions.map(solution => Object.assign({}, solution, {
+                        _selected: solution.area.id === id
+                      })),
+                      _mode: MODE_SELECT,
+                      _popover: Object.assign({}, this.props.item._popover, {
+                        open: this.props.item._popover.open && this.props.item._popover.areaId === id
+                      })
+                    })
+                    this.props.update('solutions', newItem.solutions)
+                    this.props.update('_mode', newItem._mode)
+                    this.props.update('_popover', newItem._popover)
+                  }}
+                  onDelete={id => {
+                    const newItem = deleteArea(this.props.item, id)
+                    this.props.update('solutions', newItem.solutions)
+                    this.props.update('_popover', newItem._popover)
+                  }}
+                  canDrag={!get(this.props.item, '_popover.open') || this.props.item._popover.areaId !== solution.area.id}
+                  togglePopover={(areaId, left, top) => {
+                    const hasPopover = this.props.item._popover.open
+                      && this.props.item._popover.areaId === solution.area.id
+
+                    this.props.update('_popover', {
+                      areaId,
+                      open: !hasPopover,
+                      left,
+                      top
+                    })
+                  }}
+                  geometry={this.getClientArea(solution.area)}
+                />
+              )}
+            </div>
+          </AnswerDropZone>
         </div>
-      </div>
+      </FormGroup>
     )
   }
 }

@@ -14,8 +14,7 @@ const UserProgression = props =>
     id="user-progression"
     type="user"
     value={props.userEvaluation.progression ? props.userEvaluation.progression : 0}
-    displayValue={(value) => number(value)}
-    unit="%"
+    displayValue={(value) => number(value) + '%'}
     width={props.width}
     height={props.height}
   />

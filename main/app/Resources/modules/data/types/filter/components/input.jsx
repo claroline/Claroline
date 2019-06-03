@@ -8,7 +8,7 @@ import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {Select} from '#/main/core/layout/form/components/field/select'
+import {Select} from '#/main/app/input/components/select'
 
 import {getPropDefinition} from '#/main/app/content/list/utils'
 import {SearchProp} from '#/main/app/content/search/components/prop'

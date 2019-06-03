@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 
-import {Checkboxes} from '#/main/core/layout/form/components/field/checkboxes'
+import {Checkboxes} from '#/main/app/input/components/checkboxes'
 
 const FilterBar = props =>
   <div className="col-md-3">

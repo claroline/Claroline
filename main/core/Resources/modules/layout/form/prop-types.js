@@ -35,7 +35,7 @@ const FormGroup = {
     hideLabel: T.bool,
     help: T.oneOfType([T.string, T.arrayOf(T.string)]),
     warnOnly: T.bool,
-    error: T.oneOfType([T.string, T.arrayOf(T.string)]),
+    error: T.oneOfType([T.string, T.arrayOf(T.string), T.arrayOf(T.arrayOf(T.string))]),
     optional: T.bool
   },
   defaultProps: {

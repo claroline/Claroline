@@ -1598,9 +1598,9 @@
     "main_organization": "Organisation principale",
     "vat_number": "Numéro de TVA",
     "open_url": "Url d'ouverture",
-    "allowed_ips": "IPs authorisées",
+    "allowed_ips": "IPs autorisées",
     "add_ip": "Ajouter une adresse IP",
-    "no_allowed_ip": "Aucune IP n'est authorisée.",
+    "no_allowed_ip": "Aucune IP n'est autorisée.",
     "summary": "Sommaire",
     "overview": "Page d'accueil",
     "poster": "Image de couverture",
@@ -1756,5 +1756,7 @@
     "update_anyway": "Modifier quand même",
     "choices": "Choix",
     "medias": "Médias",
-    "archive": "Archive"
+    "archive": "Archive",
+    "form_not_validating_desc": "Travail en cours : certaines données sont manquantes ou nécessitent une correction.",
+    "form_validating_desc": "Des erreurs ou des informations manquantes empêchent la sauvegarde des données."
 }

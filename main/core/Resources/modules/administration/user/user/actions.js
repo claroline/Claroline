@@ -18,10 +18,12 @@ actions.open = (formName, id = null) => {
         success: (response, dispatch) => dispatch(formActions.resetForm(formName, response, false))
       }
     }
-  } else {
-    return formActions.resetForm(formName, UserTypes.defaultProps, true)
   }
+
+  return formActions.resetForm(formName, UserTypes.defaultProps, true)
 }
+
+actions.close = (formName) => formActions.resetForm(formName)
 
 actions.compareOpen = (data) => ({
   type: USER_COMPARE,

@@ -314,8 +314,12 @@ const ChoiceEditor = props => {
             }, {
               name: 'choices',
               label: trans('choices'),
+              type: 'collection',
               required: true,
-              component: ChoicesComponent
+              component: ChoicesComponent,
+              options: {
+                minLength: 3
+              }
             }, {
               name: 'direction',
               label: trans('choices_direction', {}, 'quiz'),

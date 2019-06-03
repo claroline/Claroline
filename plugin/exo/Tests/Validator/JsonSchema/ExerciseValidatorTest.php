@@ -104,7 +104,7 @@ class ExerciseValidatorTest extends JsonSchemaTestCase
      */
     public function testStepsAreValidatedToo()
     {
-        $exerciseData = $this->loadExampleData('quiz/examples/valid/quiz-metadata.json');
+        $exerciseData = $this->loadTestData('exercise/valid/with-steps.json');
 
         $this->stepValidator->expects($this->exactly(count($exerciseData['steps'])))
             ->method('validateAfterSchema');

@@ -1,4 +1,4 @@
-import {tex, transChoice} from '#/main/app/intl/translation'
+import {trans, transChoice} from '#/main/app/intl/translation'
 import {notBlank, number, chain} from '#/main/core/validation'
 
 import {makeId} from '#/main/core/scaffolding/id'
@@ -19,23 +19,23 @@ keywords.validate = (collection, useScore, minKeywords) => {
 
   // Checks all keywords have a text
   if (collection.find(keyword => notBlank(keyword.text))) {
-    errors.text = tex('words_empty_text_error')
+    errors.text = trans('words_empty_text_error', {}, 'quiz')
   }
 
   if (useScore) {
     // Checks score for all keywords is correct
     if (undefined !== collection.find(keyword => chain(keyword.score, {}, [notBlank, number]))) {
-      errors.score = tex('words_score_not_valid')
+      errors.score = trans('words_score_not_valid', {}, 'quiz')
     }
 
     // Checks there is at least one keyword with positive score
     if (undefined === collection.find(keyword => keyword.score > 0)) {
-      errors.noValidKeyword = tex('words_no_valid_solution')
+      errors.noValidKeyword = trans('words_no_valid_solution', {}, 'quiz')
     }
   } else {
     // Checks there is at least one expected keyword
     if (undefined === collection.find(keyword => keyword.expected)) {
-      errors.noValidKeyword = tex('words_no_expected_solution')
+      errors.noValidKeyword = trans('words_no_expected_solution', {}, 'quiz')
     }
   }
 
@@ -50,7 +50,7 @@ keywords.validate = (collection, useScore, minKeywords) => {
 
   // Checks there is no duplicate keywords
   if (keywords.hasDuplicates(collection)) {
-    errors.duplicate = tex('words_duplicate_answers')
+    errors.duplicate = trans('words_duplicate_answers', {}, 'quiz')
   }
 
   return errors

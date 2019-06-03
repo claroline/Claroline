@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {HtmlText} from '#/main/core/layout/components/html-text'
-import {tex} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 import {PaperTabs} from '#/plugin/exo/items/components/paper-tabs'
 import {FeedbackButton as Feedback} from '#/plugin/exo/buttons/feedback/components/button'
 
@@ -24,7 +24,7 @@ const OpenPaper = props =>
         {props.answer && 0 !== props.answer.length ?
           <HtmlText>{props.answer}</HtmlText>
           :
-          <div className="no-answer">{tex('no_answer')}</div>
+          <div className="no-answer">{trans('no_answer', {}, 'quiz')}</div>
         }
       </div>
     }

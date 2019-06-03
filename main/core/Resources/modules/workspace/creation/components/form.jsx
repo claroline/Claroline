@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
 
-import {withRouter} from '#/main/app/router'
+import {url} from '#/main/app/api'
 import {actions as formActions, selectors as formSelect} from '#/main/app/content/form/store'
 
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
@@ -54,7 +54,7 @@ class WorkspaceComponent extends Component {
         save={{
           type: 'callback',
           callback: () => {
-            this.props.save(this.props.workspace, this.props.history)
+            this.props.save()
             this.refreshLog()
             this.setState({refresh: true})
           }
@@ -67,13 +67,12 @@ class WorkspaceComponent extends Component {
 
 WorkspaceComponent.propTypes = {
   loadLog: T.func,
-  history: T.object,
   updateProp: T.func,
   save: T.func,
   workspace: T.shape(
     WorkspaceTypes.propTypes
   ).isRequired,
-  models: T.array.isRequired,
+  models: T.object.isRequired,
   logData: T.object
 }
 
@@ -81,7 +80,7 @@ WorkspaceComponent.defaultProps = {
   workspace: WorkspaceTypes.defaultProps
 }
 
-const ConnectedForm = withRouter(connect(
+const ConnectedForm = connect(
   (state) => ({
     models: state.models,
     log: state.workspaces.creation.log,
@@ -95,11 +94,13 @@ const ConnectedForm = withRouter(connect(
     loadLog(filename) {
       dispatch(actions.load(filename))
     },
-    save(workspace, history) {
-      dispatch(actions.save(workspace, history))
+    save() {
+      dispatch(formActions.save('workspaces.current', ['apiv2_workspace_create'])).then((response) => {
+        window.location.href = url(['claro_workspace_open', {workspaceId: response.id}])
+      })
     }
   })
-)(WorkspaceComponent))
+)(WorkspaceComponent)
 
 export {
   ConnectedForm as WorkspaceForm

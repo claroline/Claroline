@@ -1,8 +1,12 @@
+import isEmpty from 'lodash/isEmpty'
+
 import {trans} from '#/main/app/intl/translation'
+import {notBlank, notEmpty, chain} from '#/main/core/validation'
 
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
 import {ClozeItem as ClozeItemTypes} from '#/plugin/exo/items/cloze/prop-types'
 import {utils} from '#/plugin/exo/items/cloze/utils'
+import {keywords as keywordsUtils} from '#/plugin/exo/utils/keywords'
 
 // components
 import {ClozeEditor} from '#/plugin/exo/items/cloze/components/editor'
@@ -45,6 +49,45 @@ export default {
    */
   create: (baseItem) => {
     return Object.assign(baseItem, ClozeItemTypes.defaultProps)
+  },
+
+  /**
+   * Validate a cloze item.
+   *
+   * @param {object} item
+   *
+   * @return {object} the list of item errors
+   */
+  validate: (item) => {
+    const errors = {}
+
+    if (notBlank(item.text)) {
+      errors.text = chain(item.text, {isHtml: true}, [notBlank])
+    } else {
+      if (notEmpty(item.holes)) {
+        errors.text = trans('cloze_must_contains_clozes_error', {}, 'quiz')
+      }
+    }
+
+    item.holes.forEach(hole => {
+      const holeErrors = {}
+      const solution = utils.getHoleSolution(item, hole)
+
+      if (notBlank(hole.size)) {
+        holeErrors.size = trans('cloze_empty_size_error', {}, 'quiz')
+      }
+
+      const keywordsErrors = keywordsUtils.validate(solution.answers, true, hole._multiple ? 2 : 1)
+      if (!isEmpty(keywordsErrors)) {
+        holeErrors.keywords = keywordsErrors
+      }
+
+      if (!isEmpty(holeErrors)) {
+        errors[hole.id] = holeErrors
+      }
+    })
+
+    return errors
   },
 
   /**
