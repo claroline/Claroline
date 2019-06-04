@@ -59,6 +59,9 @@ class OrganizationSerializer
                 'default' => $organization->getDefault(),
                 'position' => $organization->getPosition(),
             ],
+            'limit' => [
+                'users' => $organization->getMaxUsers(),
+            ],
             'managers' => array_map(function (User $administrator) {
                 return [
                     'id' => $administrator->getId(),
@@ -89,6 +92,7 @@ class OrganizationSerializer
         $this->sipe('email', 'setEmail', $data, $organization);
         $this->sipe('type', 'setType', $data, $organization);
         $this->sipe('vat', 'setVat', $data, $organization);
+        $this->sipe('limit.users', 'setMaxUsers', $data, $organization);
 
         if (isset($data['parent'])) {
             if (empty($data['parent'])) {

@@ -1206,6 +1206,13 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
 
     public function addOrganization(Organization $organization, $main = false)
     {
+        if ($organization->getMaxUsers() > -1) {
+            $totalUsers = count($organization->getUserOrganizationReferecnes());
+            if ($totalUsers >= $organization->getMaxUsers()) {
+                throw new \Exception('The organization user limit has been reached');
+            }
+        }
+
         $found = false;
 
         foreach ($this->userOrganizationReferences as $userOrgaRef) {

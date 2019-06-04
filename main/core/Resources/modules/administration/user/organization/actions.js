@@ -1,5 +1,5 @@
 import merge from 'lodash/merge'
-
+import {makeActionCreator} from '#/main/app/store/actions'
 import {url} from '#/main/app/api'
 
 import {API_REQUEST} from '#/main/app/api'
@@ -8,7 +8,11 @@ import {actions as listActions} from '#/main/app/content/list/store'
 
 import {Organization as OrganizationTypes} from '#/main/core/user/prop-types'
 
+export const UPDATE_LIMIT = 'UPDATE_LIMIT'
+
 export const actions = {}
+
+actions.updateLimit = makeActionCreator(UPDATE_LIMIT, 'enable')
 
 actions.open = (formName, id = null, defaultProps = {}) => (dispatch) => {
   if (id) {

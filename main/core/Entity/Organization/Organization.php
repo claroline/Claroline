@@ -208,6 +208,13 @@ class Organization
      */
     private $keys;
 
+    /**
+     * @ORM\Column(type="integer")
+     *
+     * @var int
+     */
+    private $maxUsers = -1;
+
     private $referencesToRemove;
 
     public function __construct()
@@ -412,8 +419,20 @@ class Organization
         return $this->type;
     }
 
+    public function getUserOrganizationReferecnes()
+    {
+        return $this->userOrganizationReferences;
+    }
+
     public function addUser(User $user)
     {
+        if ($this->getMaxUsers() > -1) {
+            $totalUsers = count($this->getUserOrganizationReferecnes());
+            if ($totalUsers >= $this->getMaxUsers()) {
+                throw new \Exception('The organization user limit has been reached');
+            }
+        }
+
         $found = false;
 
         foreach ($this->userOrganizationReferences as $userOrgaRef) {
@@ -464,6 +483,16 @@ class Organization
     public function getKeys()
     {
         return $this->keys;
+    }
+
+    public function getMaxUsers()
+    {
+        return $this->maxUsers;
+    }
+
+    public function setMaxUsers($maxUsers)
+    {
+        $this->maxUsers = $maxUsers;
     }
 
     public function addWorkspace(Workspace $workspace)
