@@ -18,7 +18,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  * @DI\Service()
  * @DI\Tag("claroline.transfer.action")
  */
-class Create extends AbstractAction
+class CreateOrUpdate extends AbstractAction
 {
     /** @var Crud */
     private $crud;
@@ -100,16 +100,22 @@ class Create extends AbstractAction
 
         $parent = $this->om->getRepository(ResourceNode::class)->findOneByUuid($data['directory']['id']);
         /** @var ResourceNode $resourceNode */
-        $resourceNode = $this->crud->create(ResourceNode::class, $dataResourceNode, $options);
 
-        $resourceNode->setParent($parent);
-        $resourceNode->setWorkspace($parent->getWorkspace());
+        //search for the node if it exists
+        $resourceNode = $this->om->getRepository(ResourceNode::class)->findOneBy(['name' => $dataResourceNode['name'], 'parent' => $parent]);
 
-        $resource = $this->crud->create(Directory::class, [], $options);
-        $resource->setResourceNode($resourceNode);
+        if ($resourceNode) {
+            $resourceNode = $this->serializer->deserialize($dataResourceNode, $resourceNode, []);
+        } else {
+            $resourceNode = $this->crud->create(ResourceNode::class, $dataResourceNode, $options);
+            $resource = $this->crud->create(Directory::class, [], $options);
+            $resource->setResourceNode($resourceNode);
+            $resourceNode->setParent($parent);
+            $resourceNode->setWorkspace($parent->getWorkspace());
+            $this->om->persist($resource);
+        }
 
         $this->om->persist($resourceNode);
-        $this->om->persist($resource);
     }
 
     /**
@@ -218,7 +224,7 @@ class Create extends AbstractAction
      */
     public function getAction()
     {
-        return ['directory', 'create'];
+        return ['directory', 'create_or_update'];
     }
 
     public function getBatchSize()
