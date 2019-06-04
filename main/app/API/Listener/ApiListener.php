@@ -24,20 +24,22 @@ class ApiListener
      */
     public function onError(GetResponseForExceptionEvent $event)
     {
-        if ($event->getRequest()->isXmlHttpRequest()) {
-            $exception = $event->getException();
-            if ($exception instanceof InvalidDataException) {
-                // return correct status code for invalid data sent by the user
-                $response = new JsonResponse($exception->getErrors(), 422);
-            } else {
+        $exception = $event->getException();
+        if ($exception instanceof InvalidDataException) {
+            // return correct status code for invalid data sent by the user
+            $response = new JsonResponse($exception->getErrors(), 422);
+
+            $event->setResponse($response);
+        } else {
+            if ($event->getRequest()->isXmlHttpRequest()) {
                 $response = new JsonResponse([
                     'message' => $exception->getMessage(),
                     'trace' => $exception->getTrace(),
                     //if <200, not http error code
                 ], $exception->getCode() < 200 ? 500 : $exception->getCode());
-            }
 
-            $event->setResponse($response);
+                $event->setResponse($response);
+            }
         }
     }
 
