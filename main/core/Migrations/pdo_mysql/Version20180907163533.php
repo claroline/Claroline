@@ -14,6 +14,10 @@ class Version20180907163533 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        //in case null value exists...
+        $this->addSql('
+            UPDATE claro_home_tab_config SET centerTitle = false WHERE centerTitle IS NULL
+        ');
         $this->addSql('
             ALTER TABLE claro_home_tab_config CHANGE centerTitle centerTitle TINYINT(1) NOT NULL
         ');

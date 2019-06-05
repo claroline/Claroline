@@ -3,7 +3,6 @@
 namespace Claroline\ForumBundle\Installation\Updater;
 
 use Claroline\ForumBundle\Entity\Forum;
-use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Validation\User;
 use Claroline\InstallationBundle\Updater\Updater;
@@ -79,7 +78,7 @@ class Updater120000 extends Updater
         $this->log('Insert tags...');
 
         $sql = '
-            INSERT INTO claro_tagbundle_tag (tag_name)
+            INSERT IGNORE INTO claro_tagbundle_tag (tag_name)
             SELECT DISTINCT category.name
             FROM claro_forum_category category
             JOIN claro_forum forum on category.forum_id = forum.id
@@ -91,9 +90,9 @@ class Updater120000 extends Updater
         $this->executeSql($sql, true);
 
         $this->log('Insert tagged objects...');
-
+        //@see https://stackoverflow.com/questions/4596390/insert-on-duplicate-key-do-nothing
         $sql = "
-            INSERT INTO claro_tagbundle_tagged_object (tag_id, object_class, object_id, object_name)
+            INSERT IGNORE INTO claro_tagbundle_tagged_object (tag_id, object_class, object_id, object_name)
             SELECT DISTINCT tag.id, 'Claroline\\\\ForumBundle\\\\Entity\\\\Subject', subject.uuid, subject.title
             FROM claro_forum_category category
             JOIN claro_forum_subject_temp_new tmp on tmp.category_id = category.id
@@ -119,7 +118,7 @@ class Updater120000 extends Updater
             try {
                 $stmt->execute();
             } catch (\Exception $e) {
-                $this->log($sql.'; Failed to be executed');
+                $this->log('Failed to be executed: '.$e->getMessage());
             }
         }
 

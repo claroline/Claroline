@@ -171,9 +171,9 @@ class Updater120300 extends Updater
             $this->log('BadgeClass migration.');
             $sql = '
               INSERT INTO claro__open_badge_badge_class (
-                id, uuid, image, enabled, description, criteria, name, issuer_id
+                id, uuid, image, enabled, description, criteria, name, issuer_id, created, updated, issuingMode
               )
-              SELECT temp.id, temp.uuid, CONCAT("data/uploads/badges/", temp.image), true, trans.description, trans.criteria, trans.name, '.$mainOrganization->getId().' FROM claro_badge temp
+              SELECT temp.id, temp.uuid, CONCAT("data/uploads/badges/", temp.image), true, trans.description, trans.criteria, trans.name, '.$mainOrganization->getId().', CURDATE(), CURDATE(), "organization" FROM claro_badge temp
               JOIN claro_badge_translation trans ON trans.badge_id = temp.id
               WHERE trans.locale = "fr"';
 

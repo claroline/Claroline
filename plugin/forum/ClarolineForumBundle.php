@@ -31,4 +31,9 @@ class ClarolineForumBundle extends DistributionPluginBundle
     {
         return new AdditionalInstaller();
     }
+
+    public function getRequiredPlugins()
+    {
+        return ['Claroline\\TagBundle\\ClarolineTagBundle'];
+    }
 }

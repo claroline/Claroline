@@ -175,6 +175,7 @@
             "Claroline\\MigrationBundle\\ClarolineMigrationBundle",
             "Claroline\\KernelBundle\\ClarolineKernelBundle",
             "Claroline\\CoreBundle\\ClarolineCoreBundle",
+            "Claroline\\TagBundle\\ClarolineTagBundle",
             "Claroline\\AppBundle\\ClarolineAppBundle",
             "Claroline\\AuthenticationBundle\\ClarolineAuthenticationBundle",
             "Claroline\\AgendaBundle\\ClarolineAgendaBundle",

@@ -15,6 +15,9 @@ class Version20180904171934 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql('
+            DELETE FROM claro_forum_subject WHERE forum_id NOT IN (SELECT f.id FROM claro_forum f)
+        ');
+        $this->addSql('
             ALTER TABLE claro_forum_subject
             ADD CONSTRAINT FK_273AA20B29CCBAD0 FOREIGN KEY (forum_id)
             REFERENCES claro_forum (id)
@@ -23,6 +26,9 @@ class Version20180904171934 extends AbstractMigration
         $this->addSql('
             ALTER TABLE claro_forum_user
             DROP FOREIGN KEY FK_2CFBFDC429CCBAD0
+        ');
+        $this->addSql('
+            DELETE FROM claro_forum_user WHERE forum_id NOT IN (SELECT f.id FROM claro_forum f)
         ');
         $this->addSql('
             ALTER TABLE claro_forum_user

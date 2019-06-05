@@ -14,22 +14,14 @@ class Version20181212090304 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        // fixes tags on forum subjects
-        $this->addSql('
-            UPDATE claro_tagbundle_tagged_object AS t 
-            LEFT JOIN claro_forum_subject AS f ON (TRIM(t.object_name) = TRIM(f.title)) 
-            SET t.object_id = f.uuid 
-            WHERE t.object_id = "0" AND object_class = "Claroline\\ForumBundle\\Entity\\Subject"
-        ');
-
         // removes duplicated tagged objects
         $this->addSql('
-            DELETE t1 
-            FROM claro_tagbundle_tagged_object AS t1 
-            INNER JOIN claro_tagbundle_tagged_object AS t2 
-            WHERE t1.id < t2.id 
-            AND t1.object_class = t2.object_class 
-            AND t1.object_id = t2.object_id 
+            DELETE t1
+            FROM claro_tagbundle_tagged_object AS t1
+            INNER JOIN claro_tagbundle_tagged_object AS t2
+            WHERE t1.id < t2.id
+            AND t1.object_class = t2.object_class
+            AND t1.object_id = t2.object_id
             AND t1.tag_id = t2.tag_id
         ');
 

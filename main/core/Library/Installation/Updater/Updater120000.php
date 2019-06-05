@@ -270,9 +270,10 @@ class Updater120000 extends Updater
                     position,
                     layout,
                     widget_container_id,
-                    is_visible
+                    is_visible,
+                    alignName
                 )
-                SELECT container.id, (SELECT UUID()) as uuid, 'none', config.row_position, '[1]', container.id, true
+                SELECT container.id, (SELECT UUID()) as uuid, 'none', config.row_position, '[1]', container.id, true, 'left'
                 FROM claro_widget_container container
                 JOIN claro_widget_display_config_temp config ON config.id = container.id
             ";
@@ -626,11 +627,11 @@ class Updater120000 extends Updater
         $configs = $this->conn->query($sql);
 
         while ($row = $configs->fetch()) {
-              $sql = "
+            $sql = "
                   UPDATE claro_widget_container_config SET borderColor = '{$row['color']}' WHERE widget_container_id = {$row['id']}
               ";
-              $stmt = $this->conn->prepare($sql);
-              $stmt->execute();
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
         }
     }
 }
