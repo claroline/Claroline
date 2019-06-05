@@ -8,5 +8,5 @@ assetic:
         cssrewrite: ~
         less: ~
         cssmin:
-            file: '%kernel.root_dir%/../vendor/natxet/CssMin/src/CssMin.php'
+            file: '%kernel.root_dir%/../vendor/natxet/cssmin/src/CssMin.php'
             apply_to: '\.css$|\.less$'
