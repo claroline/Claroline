@@ -15,7 +15,6 @@ final class ToolsOptions
 {
     const EXCLUDED_TOOLS = [
         'all_my_badges',
-        'dashboard',
         'formalibre_bulletin_tool',
         'formalibre_presence_tool',
         'formalibre_reservation_agenda',

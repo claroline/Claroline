@@ -1,8 +1,0 @@
-plugin:
-  has_options: false
-  tools:
-    - name: dashboard
-      is_displayable_in_workspace: false
-      is_displayable_in_desktop: true
-      class: area-chart
-      desktop_category: tool

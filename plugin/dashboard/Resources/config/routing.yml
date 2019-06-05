@@ -1,4 +1,0 @@
-claro_dashboard_api:
-    resource: "@ClarolineDashboardBundle/Controller/Api/DashboardsController.php"
-    type: annotation
-    prefix: /api
