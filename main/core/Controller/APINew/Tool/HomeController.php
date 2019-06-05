@@ -19,9 +19,11 @@ use Claroline\CoreBundle\API\Serializer\Widget\HomeTabSerializer;
 use Claroline\CoreBundle\Entity\Tab\HomeTab;
 use Claroline\CoreBundle\Entity\Widget\WidgetContainer;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\LockManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -69,6 +71,38 @@ class HomeController extends AbstractApiController
         $this->lockManager = $lockManager;
         $this->serializer = $serializer;
         $this->om = $om;
+    }
+
+    /**
+     * @EXT\Route("/workspace/{workspace}", name="apiv2_home_get_workspace", options={"method_prefix"=false})
+     * @EXT\Method("GET")
+     * @ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
+     *
+     * @param Request $request
+     * @param string  $context
+     * @param string  $contextId
+     *
+     * @return JsonResponse
+     */
+    public function getWorkspaceAction(Request $request, Workspace $workspace)
+    {
+        $orderedTabs = [];
+
+        $tabs = $this->finder->search(HomeTab::class, [
+          'filters' => ['workspace' => $workspace->getUuid()],
+      ]);
+
+        // but why ? finder should never give you an empty row
+        $tabs = array_filter($tabs['data'], function ($data) {
+            return $data !== [];
+        });
+
+        foreach ($tabs as $tab) {
+            $orderedTabs[$tab['position']] = $tab;
+        }
+        ksort($orderedTabs);
+
+        return new JsonResponse(array_values($orderedTabs));
     }
 
     /**
