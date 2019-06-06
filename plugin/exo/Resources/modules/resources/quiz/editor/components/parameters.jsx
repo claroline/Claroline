@@ -26,7 +26,7 @@ const supportedScores = [
 ]
 
 const EditorParameters = props => {
-  const currentScore = supportedScores.find(score => score.name === props.score.type)
+  const currentScore = supportedScores.find(score => score.name === get(props.score, 'type'))
   const availableScores = supportedScores.reduce((scoreChoices, current) => Object.assign(scoreChoices, {
     [current.name]: current.meta.label
   }), {})
