@@ -95,7 +95,7 @@ class DashboardController
      */
     private function checkDashboardToolAccess(Workspace $workspace)
     {
-        if (!$this->authorizationChecker->isGranted('analytics', $workspace)) {
+        if (!$this->authorizationChecker->isGranted('dashboard', $workspace)) {
             throw new AccessDeniedHttpException();
         }
     }

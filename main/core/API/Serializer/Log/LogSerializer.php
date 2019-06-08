@@ -72,7 +72,7 @@ class LogSerializer
         if (!is_null($log->getWorkspace())) {
             $workspace = [
                 'id' => $log->getWorkspace()->getId(),
-                'name' => isset($details['workspace']['name']) ? $details['workspace']['name'] : $details['workspaceName'],
+                'name' => isset($details['workspace']['name']) ? $details['workspace']['name'] : $log->getWorkspace()->getName(),
             ];
         }
 
@@ -80,7 +80,7 @@ class LogSerializer
         if (!is_null($log->getResourceNode())) {
             $resourceNode = [
                 'id' => $log->getResourceNode()->getId(),
-                'name' => $details['resource']['name'],
+                'name' => isset($details['resource']['name']) ? $details['resource']['name'] : $log->getResourceNode()->getName(),
             ];
         }
 

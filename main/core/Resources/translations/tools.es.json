@@ -1,6 +1,5 @@
 {
     "agenda": "Calendario",
-    "analytics": "Tablero de control",
     "desktop_and_home": "Escritorio e inicio",
     "desktop_tools": "Herramientas del escritorio",
     "home": "Inicio",
@@ -10,8 +9,6 @@
     "logs": "Registros",
     "my_contacts": "Contactos",
     "parameters": "Parámetros",
-    "platform_analytics": "Tablero de control",
-    "platform_logs": "Registros de la plataforma",
     "platform_parameters": "Parámetros de la plataforma",
     "platform_plugins": "Plugins de la plataforma",
     "registration_to_workspace": "Inscripción a un espacio de actividades",

@@ -44,7 +44,10 @@ class Updater120412 extends Updater
         $this->log('Deleting dashboard tool...');
         $toolSql = '
             DELETE tool FROM claro_tools tool
+            JOIN claro_plugin plugin on plugin.id = tool.plugin_id
             WHERE tool.name = "dashboard"
+            AND plugin.vendor_name = "Claroline"
+            AND plugin.short_name = "DashboardBundle"
         ';
         $this->conn->prepare($toolSql)->execute();
         $this->log('Dashboard tool deleted.');

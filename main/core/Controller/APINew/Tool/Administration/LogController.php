@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 /**
  * @Route("/tools/admin/logs")
- * @SEC\PreAuthorize("canOpenAdminTool('platform_logs')")
+ * @SEC\PreAuthorize("canOpenAdminTool('platform_dashboard')")
  */
 class LogController
 {

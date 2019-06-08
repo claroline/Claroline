@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {ProgressionItem as ProgressionItemType} from '#/main/core/tools/progression/prop-types'
-import {List as ProgressionList} from '#/main/core/tools/progression/components/list'
+import {ProgressionItem as ProgressionItemType} from '#/main/core/tools/dashboard/prop-types'
+import {ProgressionList} from '#/main/core/tools/dashboard/components/progression-list'
 
 class ProgressionWidget extends Component {
   componentDidMount() {

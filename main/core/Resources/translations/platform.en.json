@@ -106,6 +106,7 @@
     "already_exists": "already exists",
     "already_exists_in_workspace": "already exists in the workspace",
     "an_error_occured_message": "An error occured. Please contact the administrator.",
+    "analytics": "General statistics",
     "analytics_connections": "Connections",
     "analytics_home": "Home",
     "analytics_resources": "Resources",

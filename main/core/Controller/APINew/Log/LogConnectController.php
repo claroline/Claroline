@@ -331,7 +331,7 @@ class LogConnectController
      */
     private function checkAdminToolAccess($rights = 'OPEN')
     {
-        $logsTool = $this->toolManager->getAdminToolByName('platform_logs');
+        $logsTool = $this->toolManager->getAdminToolByName('platform_dashboard');
 
         if (is_null($logsTool) || !$this->authorization->isGranted($rights, $logsTool)) {
             throw new AccessDeniedException();
@@ -344,7 +344,7 @@ class LogConnectController
      */
     private function checkWorkspaceToolAccess(Workspace $workspace, $rights = 'OPEN')
     {
-        if (!$this->authorization->isGranted(['logs', $rights], $workspace)) {
+        if (!$this->authorization->isGranted(['dashboard', $rights], $workspace)) {
             throw new AccessDeniedException();
         }
     }

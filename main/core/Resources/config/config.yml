@@ -164,14 +164,6 @@ plugin:
         - name: desktop_and_home
           class: home
 
-        # todo move as desktop tool
-        - name: platform_logs
-          class: line-chart
-
-        # todo move as desktop tool
-        - name: platform_analytics
-          class: pie-chart
-
         - name: tasks_scheduling
           class: clock-o
 
@@ -183,6 +175,9 @@ plugin:
 
         - name: integration
           class: plug
+
+        - name: platform_dashboard
+          class: tachometer
 
     widgets:
         - name: simple
@@ -268,30 +263,6 @@ plugin:
           is_locked_for_admin: false
           is_anonymous_excluded: false
 
-        - name: logs
-          class: line-chart
-          is_displayable_in_workspace: true
-          is_displayable_in_desktop: false
-          is_configurable_in_workspace: false
-          is_configurable_in_desktop: false
-          is_desktop_required: false
-          is_workspace_required: false
-          is_exportable: false
-          is_locked_for_admin: false
-          is_anonymous_excluded: true
-
-        - name: analytics
-          class: pie-chart
-          is_displayable_in_workspace: true
-          is_displayable_in_desktop: false
-          is_configurable_in_workspace: false
-          is_configurable_in_desktop: false
-          is_desktop_required: false
-          is_workspace_required: false
-          is_exportable: false
-          is_locked_for_admin: false
-          is_anonymous_excluded: true
-
         - name: users
           class: user
           is_displayable_in_workspace: true
@@ -317,8 +288,8 @@ plugin:
           is_anonymous_excluded: true
           desktop_category: user
 
-        - name: progression
-          class: tasks
+        - name: data_transfer
+          class: exchange
           is_displayable_in_workspace: true
           is_displayable_in_desktop: false
           is_configurable_in_workspace: false
@@ -329,8 +300,8 @@ plugin:
           is_locked_for_admin: false
           is_anonymous_excluded: true
 
-        - name: data_transfer
-          class: exchange
+        - name: dashboard
+          class: tachometer
           is_displayable_in_workspace: true
           is_displayable_in_desktop: false
           is_configurable_in_workspace: false

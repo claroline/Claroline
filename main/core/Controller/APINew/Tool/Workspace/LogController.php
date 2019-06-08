@@ -250,7 +250,7 @@ class LogController
      */
     private function checkLogToolAccess(Workspace $workspace)
     {
-        if (!$this->authorizationChecker->isGranted('logs', $workspace)) {
+        if (!$this->authorizationChecker->isGranted('dashboard', $workspace)) {
             throw new AccessDeniedHttpException();
         }
     }

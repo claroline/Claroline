@@ -1,0 +1,18 @@
+{% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'platform_dashboard' | trans({}, 'tools') | striptags | raw }}{% endblock %}
+
+{% block content %}
+    <div
+        class="page-container dashboard-container"
+        data-current-context="{{ context | json_encode | raw | escape }}"
+        data-actions="{{ actions | json_encode | raw | escape }}"
+    >
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ hotAsset('claroline-distribution-main-core-dashboard-admin-tool') }}"></script>
+{% endblock %}

@@ -1,6 +1,5 @@
 {
     "agenda": "Kalender",
-    "analytics": "Dashboard",
     "desktop_and_home": "Bureaublad en startpagina",
     "desktop_tools": "Tools van het bureaublad",
     "home": "Startpagina",
@@ -11,8 +10,6 @@
     "my_contacts": "Contactpersonen",
     "organization_management": "De organisaties beheren",
     "parameters": "Instellingen",
-    "platform_analytics": "Statistieken van het platform",
-    "platform_logs": "Toezicht van het platform",
     "platform_parameters": "Instellingen van het platform",
     "platform_plugins": "Plugins van het platform",
     "registration_to_workspace": "Inschrijving aan werkruimten",
