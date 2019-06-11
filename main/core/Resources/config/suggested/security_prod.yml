@@ -16,25 +16,6 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        oauth_token:
-            pattern:    ^/oauth/v2/token
-            security:   false
-
-        oauth_authorize:
-            pattern:    ^/oauth/v2/auth
-            form_login:
-                check_path: /oauth/v2/auth_login_check
-                login_path: /oauth/v2/auth_login
-                default_target_path: /oauth/v2/auth/form
-            anonymous: true
-
-        api:
-           pattern:    /(api|apiv2)/
-           claro_api: true #do something about me
-           #fos_oauth: true
-           #stateless:  true
-           security: true
-
         main:
             pattern: ^/
             simple_preauth:
@@ -68,7 +49,5 @@ security:
         allow_if_all_abstain: false
 
     access_control:
-        - { path: ^/oauth/v2/auth_login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api,                  role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/connect, role: IS_AUTHENTICATED_ANONYMOUSLY }

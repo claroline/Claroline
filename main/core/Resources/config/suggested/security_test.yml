@@ -5,6 +5,3 @@ security:
     firewalls:
         main:
             http_basic: ~
-        api:
-            http_basic: ~
-            stateless: true

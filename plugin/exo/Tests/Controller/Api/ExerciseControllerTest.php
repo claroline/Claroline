@@ -66,7 +66,7 @@ class ExerciseControllerTest extends TransactionalTestCase
     public function testAnonymousGet()
     {
         $this->request('GET', "/api/exercises/{$this->exercise->getUuid()}");
-        $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
     }
 
     public function testNonCreatorGet()

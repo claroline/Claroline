@@ -38,6 +38,5 @@ parameters:
     claroline.cache_dir: "%kernel.root_dir%/cache"
     claroline.param.home_custom_template_directory: "%kernel.root_dir%/Resources/ClarolineCoreBundle/views/Home/templates/custom"
     claroline.ip_range_white_list_file: "%kernel.root_dir%/config/white_list_ip_range.yml"
-    claroline.param.oauth_master_platforms: "%kernel.root_dir%/config/masters.yml"
     claroline.api.sample.dir: "%kernel.root_dir%/../vendor/claroline/distribution/main/core/Resources/samples"
     claroline.api.core_schema.dir: "%kernel.root_dir%/../vendor/claroline/distribution/main/core/Resources/schema"

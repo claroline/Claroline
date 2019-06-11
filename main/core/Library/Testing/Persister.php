@@ -250,16 +250,6 @@ class Persister
         $toolManager->addRoleToAdminTool($tool, $role);
     }
 
-    public function OauthClient($name, $grantTypes)
-    {
-        $client = $this->container->get('claroline.manager.oauth_manager')->createClient();
-        $client->setName($name);
-        $client->setAllowedGrantTypes($grantTypes);
-        $this->om->persist($client);
-
-        return $client;
-    }
-
     /**
      * shortcut for persisting (if we don't want/need to add the object manager for our tests).
      */

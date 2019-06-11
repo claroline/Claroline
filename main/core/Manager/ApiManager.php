@@ -28,7 +28,6 @@ class ApiManager
     /**
      * @DI\InjectParams({
      *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
-     *     "oauthManager" = @DI\Inject("claroline.manager.oauth_manager"),
      *     "curlManager"  = @DI\Inject("claroline.manager.curl_manager"),
      *     "viewHandler"  = @DI\Inject("fos_rest.view_handler"),
      *     "container"    = @DI\Inject("service_container"),
@@ -41,7 +40,6 @@ class ApiManager
      */
     public function __construct(
         ObjectManager $om,
-        OauthManager $oauthManager,
         CurlManager $curlManager,
         $viewHandler,
         $container,
@@ -52,7 +50,6 @@ class ApiManager
         $crud
     ) {
         $this->om = $om;
-        $this->oauthManager = $oauthManager;
         $this->curlManager = $curlManager;
         $this->viewHandler = $viewHandler;
         $this->container = $container;

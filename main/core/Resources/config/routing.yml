@@ -9,10 +9,6 @@ claro_security_logout:
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
 
-claro_oauth_authorize:
-    resource: "@ClarolineCoreBundle/Controller/OauthController.php"
-    type: annotation
-
 claro_index:
     resource: "@ClarolineCoreBundle/Controller/HomeController.php"
     type: annotation
@@ -113,20 +109,10 @@ claro_file:
     type: annotation
     prefix: file
 
-claro_admin_oauth:
-    resource: "@ClarolineCoreBundle/Controller/Administration/OauthController.php"
-    prefix: admin/oauth
-    type: annotation
-
 claro_admin_plugin:
     resource: "@ClarolineCoreBundle/Controller/Administration/PluginController.php"
     prefix: admin/plugins
     type: annotation
-
-claro_client:
-    resource: "@ClarolineCoreBundle/Controller/API/Admin/ClientController.php"
-    type: annotation
-    prefix: api
 
 claro_admin_resource_icons:
     resource: "@ClarolineCoreBundle/Controller/Administration/IconController.php"

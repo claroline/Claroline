@@ -80,7 +80,7 @@ class AttemptControllerTest extends TransactionalTestCase
     public function testAnonymousAttempt()
     {
         $this->request('POST', "/api/exercises/{$this->ex1->getUuid()}/attempts");
-        $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
     }
 
     public function testNewAttempt()
@@ -158,7 +158,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->om->flush();
 
         $this->request('PUT', "/api/exercises/{$this->ex1->getUuid()}/attempts/{$pa1->getUuid()}");
-        $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
     }
 
     public function testSubmitAfterPaperEnd()
@@ -263,7 +263,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->om->flush();
 
         $this->request('GET', "/api/exercises/{$this->ex1->getUuid()}/attempts/{$pa1->getUuid()}/{$this->hi1->getQuestion()->getUuid()}/hints/{$this->hi1->getUuid()}");
-        $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
     }
 
     public function testHintAfterPaperEnd()

@@ -18,13 +18,11 @@ use Claroline\CoreBundle\DependencyInjection\Compiler\MailingConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\PlatformConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\RouterPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\RuleConstraintsConfigPass;
-use Claroline\CoreBundle\DependencyInjection\Factory\ApiFactory;
 use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\CoreBundle\Library\Installation\AdditionalInstaller;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
-use FOS\OAuthServerBundle\FOSOAuthServerBundle;
 use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -41,9 +39,6 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements AutoConfig
         $container->addCompilerPass(new RuleConstraintsConfigPass());
         $container->addCompilerPass(new RouterPass());
         $container->addCompilerPass(new MailingConfigPass());
-
-        $extension = $container->getExtension('security');
-        $extension->addSecurityListenerFactory(new ApiFactory());
     }
 
     public function supports($environment)
@@ -109,13 +104,6 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements AutoConfig
             }
         } elseif ($bundle instanceof BazingaJsTranslationBundle) {
             return $config->addRoutingResource($this->buildPath('bazinga_routing'));
-        } elseif ($bundle instanceof FOSOAuthServerBundle) {
-            $config = new ConfigurationBuilder();
-            $config
-                ->addContainerResource($this->buildPath('fos_oauth_server_config'))
-                ->addRoutingResource($this->buildPath('fos_oauth_server_routing'));
-
-            return $config;
         } elseif (in_array($environment, ['dev', 'test'])) {
             if ($bundle instanceof WebProfilerBundle) {
                 return $config
