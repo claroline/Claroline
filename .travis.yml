@@ -8,6 +8,7 @@ env:
 
 services:
   - xvfb
+  - mysql
 
 before_install:
   - phpenv config-rm xdebug.ini
