@@ -17,6 +17,14 @@ before_install:
   - export DISPLAY=:99.0
 
 before_script:
+  # add swap
+  - sudo swapon -s
+  - sudo fallocate -l 4G /swapfile
+  - sudo chmod 600 /swapfile
+  - sudo mkswap /swapfile
+  - sudo swapon /swapfile
+  - sudo swapon -s
+  
   - composer validate
   - php scripts/configure.php --default
   - composer sync-dev
