@@ -25,6 +25,11 @@ const reducer = combineReducers({
     }, {
       [FORM_RESET + '/organizations.current']: (state) => {
         const data = cloneDeep(state)
+
+        if (!data.limit) {
+          data.limit = {}
+        }
+        
         data.limit.enable = data.limit.users > -1
 
         return data
