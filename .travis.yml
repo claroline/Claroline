@@ -23,6 +23,11 @@ env:
   matrix:
     - DB=mysql
 
+
+services:
+  - xvfb
+  - mysql
+  
 mysql:
   adapter: mysql2
   database: claroline_test
@@ -33,7 +38,6 @@ before_install:
   # prepare execution of chromium in js tests
   - export CHROME_BIN=chromium-browser
   - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
   # ensure the target branch is present (original clone is shallowed/single-branched)
   - git remote set-branches --add origin $TRAVIS_BRANCH
   - git fetch origin
