@@ -1,4 +1,3 @@
-dist: precise
 language: php
 
 php:
@@ -6,6 +5,9 @@ php:
 
 env:
   - DB=mysql
+
+services:
+  - xvfb
 
 before_install:
   - phpenv config-rm xdebug.ini
