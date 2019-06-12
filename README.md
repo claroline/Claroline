@@ -209,3 +209,4 @@ For development documentation, see
 [symfo-server]: http://symfony.com/doc/2.7/cookbook/web_server/built_in.html
 [symfo-config]: http://symfony.com/doc/2.7/book/installation.html#checking-symfony-application-configuration-and-setup
 [dist-doc]:     https://github.com/claroline/Distribution/blob/master/doc/index.md
+
