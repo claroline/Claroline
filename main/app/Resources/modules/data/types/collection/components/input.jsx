@@ -32,57 +32,63 @@ const CollectionInput = props =>
 
     {!isEmpty(props.value) &&
       <ul>
-        {props.value.map((value, index) =>
-          <li key={index} className="collection-item">
-            <DataInput
-              id={`${props.id}-${index}`}
-              type={props.type}
-              options={props.options}
+        {props.value.map((value, index) => {
+          let customInput
+          if (props.component) {
+            customInput = props.component
+          } else if (props.render) {
+            customInput = props.render(value, props.error instanceof Object ? props.error[index] : undefined, index)
+          }
 
-              label={`${props.label} #${index + 1}`}
-              size="sm"
-              hideLabel={true}
-              required={true}
-              disabled={props.disabled}
-              validating={props.validating}
+          return (
+            <li key={index} className="collection-item">
+              <DataInput
+                id={`${props.id}-${index}`}
+                type={props.type}
+                options={props.options}
 
-              error={props.error instanceof Object ? props.error[index] : undefined}
-              value={value}
+                label={`${props.label} #${index + 1}`}
+                size="sm"
+                hideLabel={true}
+                required={true}
+                disabled={props.disabled}
+                validating={props.validating}
 
-              onChange={(newValue) => {
-                const newCollection = cloneDeep(props.value)
+                error={props.error instanceof Object ? props.error[index] : undefined}
+                value={value}
 
-                // replace current item by updated one
-                newCollection[index] = newValue
+                onChange={(newValue) => {
+                  const newCollection = cloneDeep(props.value)
 
-                props.onChange(newCollection)
-              }}
-            >
-              {props.component}
-              {(!props.component && props.render) &&
-                props.render(value, props.error instanceof Object ? props.error[index] : undefined, index)
-              }
-            </DataInput>
+                  // replace current item by updated one
+                  newCollection[index] = newValue
 
-            <Button
-              className="btn-link btn-delete"
-              type={CALLBACK_BUTTON}
-              icon="fa fa-fw fa-trash-o"
-              label={trans('delete')}
-              tooltip="left"
-              disabled={props.disabled}
-              dangerous={true}
-              size="sm"
-              callback={() => {
-                const newCollection = cloneDeep(props.value)
+                  props.onChange(newCollection)
+                }}
+              >
+                {customInput}
+              </DataInput>
 
-                // remove item from collection
-                newCollection.splice(index, 1)
-                props.onChange(newCollection)
-              }}
-            />
-          </li>
-        )}
+              <Button
+                className="btn-link btn-delete"
+                type={CALLBACK_BUTTON}
+                icon="fa fa-fw fa-trash-o"
+                label={trans('delete')}
+                tooltip="left"
+                disabled={props.disabled}
+                dangerous={true}
+                size="sm"
+                callback={() => {
+                  const newCollection = cloneDeep(props.value)
+
+                  // remove item from collection
+                  newCollection.splice(index, 1)
+                  props.onChange(newCollection)
+                }}
+              />
+            </li>
+          )
+        })}
       </ul>
     }
 
