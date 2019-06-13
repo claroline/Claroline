@@ -203,6 +203,7 @@ class TransferManager
         $data = $this->replaceResourceIds($data);
 
         $defaultRole = $data['registration']['defaultRole'];
+
         unset($data['registration']['defaultRole']);
         //we don't want new workspaces to be considered as models
         $data['meta']['model'] = false;
@@ -215,9 +216,10 @@ class TransferManager
             $role = $this->serializer->deserialize($roleData, new Role());
             $role->setWorkspace($workspace);
             $this->om->persist($role);
+            $roles[] = $role;
         }
 
-        foreach ($workspace->getRoles() as $role) {
+        foreach ($roles as $role) {
             if ($defaultRole['translationKey'] === $role->getTranslationKey()) {
                 $workspace->setDefaultRole($role);
             }
