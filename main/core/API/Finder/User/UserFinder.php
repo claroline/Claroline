@@ -142,9 +142,32 @@ class UserFinder extends AbstractFinder
                    $qb->setParameter('organizationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                    break;
 
+               case 'organizationNameUser':
+                  $qb->leftJoin('obj.userOrganizationReferences', 'orefu');
+                  $qb->leftJoin('orefu.organization', 'ou');
+                  $qb->andWhere('UPPER(ou.name) LIKE :organizationName');
+                  $qb->setParameter('organizationName', '%'.strtoupper($filterValue).'%');
+                  break;
+
+                case '_organizationNameGroup':
+                   $qb->leftJoin('obj.groups', 'ugroup');
+                   $qb->leftJoin('ugroup.organizations', 'ogroup');
+                   $qb->andWhere('UPPER(ogroup.name) LIKE :organizationNameGroup');
+                   $qb->setParameter('organizationNameGroup', '%'.strtoupper($filterValue).'%');
+                   break;
+
+                case 'unionOrganizationName':
+                  $byUserSearch = $byGroupSearch = $searches;
+                  $byUserSearch['organizationNameUser'] = $filterValue;
+                  $byGroupSearch['_organizationNameGroup'] = $filterValue;
+                  unset($byUserSearch['unionOrganizationName']);
+                  unset($byGroupSearch['unionOrganizationName']);
+
+                  return $this->union($byUserSearch, $byGroupSearch, $options, $sortBy);
+
                 case 'recursiveOrXOrganization':
                     $value = is_array($filterValue) ? $filterValue : [$filterValue];
-                    $roots = $this->om->findList('Claroline\CoreBundle\Entity\Organization\Organization', 'uuid', $value);
+                    $roots = $this->om->findList(Organization::class, 'uuid', $value);
 
                     if (count($roots) > 0) {
                         $qb->leftJoin('obj.userOrganizationReferences', 'oref');

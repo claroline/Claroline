@@ -67,6 +67,11 @@ const UserList = {
       label: trans('group'),
       type: 'string',
       displayed: false
+    }, {
+      name: 'unionOrganizationName',
+      label: trans('organization'),
+      type: 'string',
+      displayed: false
     }
   ],
   card: UserCard

@@ -56,6 +56,13 @@ const UsersPickerModal = props => {
             displayed: false,
             displayable: false,
             sortable: false
+          }, {
+            name: 'unionOrganizationName',
+            type: 'string',
+            label: trans('group'),
+            displayed: false,
+            displayable: false,
+            sortable: false
           }
         ]}
         card={UserList.card}
