@@ -364,6 +364,7 @@ class PostManager
             $publicationOptions = ['published' => false];
         }
         $filters['hiddenFilters'] = array_merge($filters['hiddenFilters'], $publicationOptions);
+        $filters['sortBy'] = '-publicationDate';
 
         return $this->finder->search('Icap\BlogBundle\Entity\Post', $filters, [
             'abstract' => $abstract,
